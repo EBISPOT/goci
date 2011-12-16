@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/goci.iml" filepath="$PROJECT_DIR$/goci.iml" />
+      <module fileurl="file://$PROJECT_DIR$/goci-curation/goci-curation.iml" filepath="$PROJECT_DIR$/goci-curation/goci-curation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/goci-diagram/goci-diagram.iml" filepath="$PROJECT_DIR$/goci-diagram/goci-diagram.iml" />
+      <module fileurl="file://$PROJECT_DIR$/goci-ontology/goci-ontology.iml" filepath="$PROJECT_DIR$/goci-ontology/goci-ontology.iml" />
+      <module fileurl="file://$PROJECT_DIR$/goci-curation/goci-tracker-app/goci-tracker-app.iml" filepath="$PROJECT_DIR$/goci-curation/goci-tracker-app/goci-tracker-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/goci-curation/goci-tracker-web/goci-tracker-web.iml" filepath="$PROJECT_DIR$/goci-curation/goci-tracker-web/goci-tracker-web.iml" />
+    </modules>
+  </component>
+</project>
+

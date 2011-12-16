@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- Study DAO -->
+    <bean name="studyDAO" class="uk.ac.ebi.fgpt.goci.dao.JDBCGociStudyDAO">
+        <property name="jdbcTemplate" ref="hsqlJdbcTemplate" />
+        <property name="userDAO" ref="userDAO" />
+    </bean>
+
+    <!-- User DAO -->
+    <bean name="userDAO" class="uk.ac.ebi.fgpt.goci.dao.JDBCGociUserDAO">
+        <property name="jdbcTemplate" ref="hsqlJdbcTemplate" />
+    </bean>
+
+    <bean name="hsqlJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="hsqlDatasource" />
+    </bean>
+
+    <bean name="hsqlDatasource"
+          class="org.springframework.jdbc.datasource.SingleConnectionDataSource"
+          depends-on="hsqlInitializer">
+        <property name="driverClassName" value="org.hsqldb.jdbc.JDBCDriver" />
+        <property name="url" value="jdbc:hsqldb:file:~/.goci/hsql" />
+        <property name="username" value="sa" />
+        <property name="password" value="" />
+    </bean>
+
+    <bean name="hsqlInitializer"
+          class="uk.ac.ebi.fgpt.goci.dao.HSQLDBInitializer"
+          init-method="init"
+          destroy-method="destroy">
+        <property name="driverClassName" value="org.hsqldb.jdbc.JDBCDriver" />
+        <property name="url" value="jdbc:hsqldb:file:~/.goci/hsql" />
+        <property name="username" value="sa" />
+        <property name="password" value="" />
+    </bean>
+
+</beans>

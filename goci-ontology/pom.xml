@@ -11,6 +11,7 @@
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci-ontology</artifactId>
     <version>0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
     <name>GOCI Ontology Tools</name>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
 
