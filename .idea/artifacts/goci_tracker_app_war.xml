@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="goci-tracker-app:war">
-    <output-path>$PROJECT_DIR$/goci-curation/goci-tracker-app/target</output-path>
-    <root id="archive" name="goci-tracker.war">
-      <element id="artifact" artifact-name="goci-tracker-app:war exploded" />
-    </root>
-  </artifact>
-</component>
