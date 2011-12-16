@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>uk.ac.ebi.fgpt</groupId>
+    <artifactId>goci</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>GWAS Ontology and Curation Infrastructure</name>
+    <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-source</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- Reporting/Documentation output -->
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <id>aggregate</id>
+                        <reports>
+                            <report>aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <!-- Licensing -->
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License</name>
+            <url>http://www.gnu.org/copyleft/lesser.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <!-- Mailing Lists -->
+    <mailingLists>
+        <mailingList>
+	    <name>EBI GWAS Ontology/Curation List</name>
+            <subscribe>ebi-gwas-oc@ebi.ac.uk</subscribe>
+            <unsubscribe>ebi-gwas-oc@ebi.ac.uk</unsubscribe>
+            <post>ebi-gwas-oc@ebi.ac.uk</post>
+        </mailingList>
+    </mailingLists>
+
+    <!-- Bug Tracker -->
+    <issueManagement>
+        <system>jira</system>
+        <url>http://www.ebi.ac.uk/panda/jira/browse/GOCI</url>
+    </issueManagement>
+
+    <!-- Developer Listing -->
+    <developers>
+        <developer>
+            <id>tburdett</id>
+            <name>Tony Burdett</name>
+            <email>tburdett@ebi.ac.uk</email>
+            <organization>EBI</organization>
+            <organizationUrl>http://www.ebi.ac.uk</organizationUrl>
+            <roles>
+                <role>administrator</role>
+                <role>developer</role>
+            </roles>
+            <timezone>0</timezone>
+            <properties/>
+        </developer>
+        <developer>
+            <id>dwelter</id>
+            <name>Dani Welter</name>
+            <email>dwlter@ebi.ac.uk</email>
+            <organization>EBI</organization>
+            <organizationUrl>http://www.ebi.ac.uk</organizationUrl>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>0</timezone>
+            <properties/>
+        </developer>
+    </developers>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.6</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+  <modules>
+    <module>goci-curation</module>
+    <module>goci-ontology</module>
+    <module>goci-diagram</module>
+  </modules>
+</project>

@@ -1,0 +1,30 @@
+
+  +---------------------------------------------------+
+  |                                                   |
+  | GWAS Catalog Ontology and Curation Infrastructure |
+  |                                                   |
+  +---------------------------------------------------+
+
+
+  Introduction
+  ============
+
+This project is a result of a collaboration between the NHGRI and the EBI to produce ontology-based curation and search functionality for the GWAS catalog.  This includes ontology-based query expansion in the public interface and curator tools for annotating studies as they are entered into the GWAS catalog.
+
+Below is some developer information for working with the code held in this git repository.
+
+  Git vs. SVN
+  ===========
+
+
+
+  Maven Structure
+  ===============
+
+
+
+  Building this Project
+  =====================
+
+
+... more coming soon!
