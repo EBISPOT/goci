@@ -1,0 +1,21 @@
+<cftry>
+  <cfset uploader = createObject( "java", "SNPBatchLoader" )>
+
+  <cfset uploader.init(javaCast("String", filename), javaCast("int", gwasid))>
+POSSIBLY:
+ <cfset log = uploader.getLog()>
+<!-- do something with the log file>
+
+  <cfcatch type="java.lang.Exception">
+    <cfoutput>Exception: #cfcatch.Message# </cfoutput>
+OR
+    java.lang.Exception
+    <cfdump var=#cfcatch#>
+
+POSSIBLY:
+ <cfset log = uploader.getLog()>
+<!-- do something with the log file>
+
+  </cfcatch>
+</cftry>
+
