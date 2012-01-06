@@ -68,6 +68,8 @@ public interface GociStudy {
         GWAS_eligibility_confirmed,
         Added_to_GWAS,
         Ethnicity_extracted,
+        Ethnicity_checked,
+        SNPs_extracted,
         SNPs_checked,
         NCBI_checked,
         Published_to_catalog

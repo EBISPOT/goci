@@ -11,8 +11,9 @@
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci-tracker-web</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <name>GOCI Tracker web application</name>
     <packaging>war</packaging>
+
+    <name>GOCI Tracker web application</name>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
 
     <properties>
@@ -188,16 +189,16 @@
         </dependency>
 
         <!-- logging -->
-        <dependency> <!-- log4j binding: all logging captured via slf4j sinks to log4j -->
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.6.3</version>
             <scope>runtime</scope>
         </dependency>
-        <dependency> <!-- log4j itself (note the runtime scope) -->
+        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>1.2.15</version>
+            <version>1.2.16</version>
             <scope>runtime</scope>
         </dependency>
 
