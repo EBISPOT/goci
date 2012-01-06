@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>uk.ac.ebi.fgpt</groupId>
@@ -75,7 +77,7 @@
     <!-- Mailing Lists -->
     <mailingLists>
         <mailingList>
-	    <name>EBI GWAS Ontology/Curation List</name>
+            <name>EBI GWAS Ontology/Curation List</name>
             <subscribe>ebi-gwas-oc@ebi.ac.uk</subscribe>
             <unsubscribe>ebi-gwas-oc@ebi.ac.uk</unsubscribe>
             <post>ebi-gwas-oc@ebi.ac.uk</post>
@@ -87,6 +89,13 @@
         <system>jira</system>
         <url>http://www.ebi.ac.uk/panda/jira/browse/GOCI</url>
     </issueManagement>
+
+    <!-- Version control (project hosted on GitHub -->
+    <scm>
+        <connection>scm:git:https://github.com/tburdett/goci</connection>
+        <developerConnection>scm:git:https://github.com/tburdett/goci</developerConnection>
+        <url>https://github.com/tburdett/goci</url>
+    </scm>
 
     <!-- Developer Listing -->
     <developers>
@@ -101,7 +110,7 @@
                 <role>developer</role>
             </roles>
             <timezone>0</timezone>
-            <properties/>
+            <properties />
         </developer>
         <developer>
             <id>dwelter</id>
@@ -113,7 +122,7 @@
                 <role>developer</role>
             </roles>
             <timezone>0</timezone>
-            <properties/>
+            <properties />
         </developer>
     </developers>
 
@@ -132,9 +141,9 @@
         </dependency>
     </dependencies>
 
-  <modules>
-    <module>goci-curation</module>
-    <module>goci-ontology</module>
-    <module>goci-diagram</module>
-  </modules>
+    <modules>
+        <module>goci-curation</module>
+        <module>goci-ontology</module>
+        <module>goci-diagram</module>
+    </modules>
 </project>
