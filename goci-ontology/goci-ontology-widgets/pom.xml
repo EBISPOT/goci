@@ -4,23 +4,20 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>goci</artifactId>
+        <artifactId>goci-ontology</artifactId>
         <groupId>uk.ac.ebi.fgpt</groupId>
         <version>0.1-SNAPSHOT</version>
     </parent>
+
     <groupId>uk.ac.ebi.fgpt</groupId>
-    <artifactId>goci-ontology</artifactId>
+    <artifactId>goci-ontology-widgets</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <name>GOCI Ontology Tools</name>
+    <packaging>war</packaging>
+
+    <name>GOCI Browser Widgets (for viewing GWAS ontology annotations)</name>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <modules>
-        <module>goci-ontology-widgets</module>
-    </modules>
-
 </project>
