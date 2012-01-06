@@ -1,20 +1,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>uk.ac.ebi.fgpt</groupId>
-  <artifactId>SNPbatchLoader</artifactId>
-  <version>1.0.1</version>
-  <packaging>jar</packaging>
+    <groupId>uk.ac.ebi.fgpt</groupId>
+    <artifactId>SNPbatchLoader</artifactId>
+    <version>1.0.1</version>
+    <packaging>jar</packaging>
 
-  <name>SNPbatchLoader</name>
-  <url>http://maven.apache.org</url>
+    <name>GOCI SNPbatchLoader (coldfusion extension)</name>
+    <url>http://maven.apache.org</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-  
-     <build>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -22,69 +22,62 @@
                     <source>1.5</source>
                     <target>1.5</target>
                 </configuration>
-            </plugin>            
+            </plugin>
             <plugin>
-		       <artifactId>maven-assembly-plugin</artifactId>
-		       <configuration>
-		         <finalName>SNPbatchLoader</finalName>
-		         <descriptors>
-		           <descriptor>src/main/assembly/SNPbatchLoader-assembly.xml</descriptor>
-		         </descriptors>
-		       </configuration>
-		         <executions>
-		       <execution>
-		       <id>make-assembly</id>
-		       <phase>package</phase>
-		       <goals>
-		       <goal>attached</goal>
-		       </goals>
-		       </execution>
-		       </executions>
-    	</plugin>
-	  </plugins>
-	</build>
-  
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <finalName>SNPbatchLoader</finalName>
+                    <descriptors>
+                        <descriptor>src/main/assembly/SNPbatchLoader-assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attached</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    
-    <dependency>
-        <groupId>com.oracle</groupId>
-        <artifactId>ojdbc14</artifactId>
-        <version>11.2.0.3</version>
-	</dependency>
-	
-	<dependency>
-   		<groupId>org.apache.poi</groupId>
-    	<artifactId>poi-ooxml</artifactId>
-    	<version>3.5-beta6</version>
-    	<scope>provided</scope>
-	</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc6</artifactId>
+            <version>11.2.0.3</version>
+        </dependency>
 
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>1.5.6</version>
-      <scope>provided</scope>
-    </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.5-beta6</version>
+            <scope>provided</scope>
+        </dependency>
 
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>1.5.6</version>
-      <scope>provided</scope>
-    </dependency>
+        <!-- Using alternative slf4j/log4j dependencies: these should be provided -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.5.6</version>
+            <scope>provided</scope>
+        </dependency>
 
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.14</version>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.5.6</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.14</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 </project>
