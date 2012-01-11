@@ -82,6 +82,10 @@ public class SheetProcessor {
 				Double orpercopyrecip;
 				if(row.getCell(8) != null){
 					orpercopyrecip = row.getCell(8).getNumericCellValue();
+					
+					if(orpercopyrecip == 0){
+						orpercopyrecip = null;
+					}
 				}
 				else{
 					orpercopyrecip = null;
@@ -119,7 +123,7 @@ public class SheetProcessor {
 				}
 				
 				if((orpercopyrange == null) && (orpercopystderror !=  null)){
-					orpercopyrange = setRange(orpercopystderror, orpercopynum);				
+					orpercopyrange = setRange(orpercopystderror, orpercopynum);
 				}
 				
 				if((orpercopyrecip != null) && (orpercopyrange != null) && (orpercopystderror == null)){
