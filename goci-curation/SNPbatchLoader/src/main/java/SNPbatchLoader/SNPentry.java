@@ -5,7 +5,7 @@ public class SNPentry {
 	private String gene, strongest_allele, snp, riskfreq, pval_txt, orpc_range, orpc_unit, snp_type, pval_num; 
 	private int pval_mant, pval_exp, or_type;
 	private float pval_float;
-	private Double orpc_num, orpc_recip, orpc_stderr;
+	private Float orpc_num, orpc_recip, orpc_stderr;
 
 	public SNPentry(String gene, String allele, String snp, String risk, int pmant, int pexp, float pfloat, String pnum, String ptxt,
 			Double ornum, Double orrecip, char ortype, String orrange, String orunit, Double sterr, String snptype){
@@ -19,11 +19,28 @@ public class SNPentry {
 		pval_float = pfloat;
 		pval_num = pnum;
 		pval_txt = ptxt;
-		orpc_num = ornum;
-		orpc_recip = orrecip;
+		
+		if(ornum == null){
+			orpc_num = null;
+		}
+		else{
+			orpc_num = ornum.floatValue();
+		}
+		if(orrecip == null){
+			orpc_recip = null;
+		}
+		else{
+			orpc_recip = orrecip.floatValue();
+		}
 		orpc_range = orrange;
 		orpc_unit = orunit;
-		orpc_stderr = sterr;
+		
+		if(sterr == null){
+			orpc_stderr = null;
+		}
+		else{
+			orpc_stderr = sterr.floatValue();
+		}
 		snp_type = snptype;
 /*or type is entered as y/n in the spreadsheet but the database requires 0/1 format*/		
 		if(ortype == 'Y'){
@@ -73,13 +90,13 @@ public class SNPentry {
 	public float getpval(){
 		return pval_float;
 	}
-	public Double getORnum(){
+	public Float getORnum(){
 		return orpc_num;
 	}
-	public Double getORrecip(){
+	public Float getORrecip(){
 		return orpc_recip;
 	}
-	public Double getORstderr(){
+	public Float getORstderr(){
 		return orpc_stderr;
 	}
 }

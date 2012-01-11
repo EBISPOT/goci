@@ -101,7 +101,13 @@ public class SheetProcessor {
 					orpercopyrange = null;
 				}
 				
-				String orpercopyunitdescr = row.getCell(11).getRichStringCellValue().getString();	
+				String orpercopyunitdescr; 
+				if(row.getCell(11) != null){
+					orpercopyunitdescr = row.getCell(11).getRichStringCellValue().getString();
+				}
+				else{
+					orpercopyunitdescr = null;
+				}
 				
 				Double orpercopystderror;
 				

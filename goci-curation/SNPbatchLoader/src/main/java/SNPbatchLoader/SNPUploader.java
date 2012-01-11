@@ -72,7 +72,7 @@ public class SNPUploader {
 				 }
 				 
 				 if(current.getORnum() != null){
-					 writeToDB.setDouble(9, current.getORnum());
+					 writeToDB.setFloat(9, current.getORnum());
 				 }
 				 else{
 					 writeToDB.setNull(9, Types.NUMERIC);
@@ -83,8 +83,14 @@ public class SNPUploader {
 				 }
 				 else{
 					 writeToDB.setString(10, null);
-				 }				 
-				 writeToDB.setString(11, current.getUnit());
+				 }	
+				 
+				 if(current.getUnit() != null){
+					 writeToDB.setString(11, current.getUnit());
+				 }
+				 else{
+					 writeToDB.setString(11, null);
+				 }
 				 writeToDB.setInt(12, current.getORtype());
 				 writeToDB.setString(13, current.getSNPtype());
 				 writeToDB.setInt(14, snpcheck);
@@ -95,14 +101,14 @@ public class SNPUploader {
 				 writeToDB.setTimestamp(15, dbdate);
 				 
 				 if(current.getORrecip() != null){
-					 writeToDB.setDouble(16, current.getORrecip());
+					 writeToDB.setFloat(16, current.getORrecip());
 				 }
 				 else{
 					 writeToDB.setNull(16, Types.NUMERIC);
 				 }
 				 
 				 if(current.getORstderr() != null){
-					 writeToDB.setDouble(17, current.getORstderr());
+					 writeToDB.setFloat(17, current.getORstderr());
 				 }
 				 else{
 					 writeToDB.setNull(17, Types.NUMERIC);
