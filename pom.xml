@@ -10,6 +10,13 @@
     <packaging>pom</packaging>
 
     <name>GWAS Ontology and Curation Infrastructure</name>
+    <description>
+        An infrastructure for activities relating to the curation of publications that may be eligible to the NHGRI
+        GWAS catalog.
+
+        Tools are included for tracking publications in PubMed, loading information from those publications into the
+        GWAS catalog database, annotating publications with ontology terms and generating the GWAS catalog diagram.
+    </description>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
 
     <properties>
@@ -39,6 +46,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
+                <version>2.2</version>
             </plugin>
         </plugins>
     </build>
@@ -97,6 +105,32 @@
         <url>https://github.com/tburdett/goci</url>
     </scm>
 
+    <!-- Maven repository and site deployment -->
+    <distributionManagement>
+        <downloadUrl>http://www.ebi.ac.uk/~tburdett/goci/maven/repo</downloadUrl>
+        <repository>
+            <id>goci-repo</id>
+            <name>GOCI Maven Repository</name>
+            <url>
+                scp://localhost:6002/homes/tburdett/public_html/goci/maven/repo
+            </url>
+        </repository>
+        <snapshotRepository>
+            <id>goci-repo</id>
+            <name>GOCI Maven Repository</name>
+            <url>
+                scp://localhost:6002/homes/tburdett/public_html/goci/maven/repo
+            </url>
+        </snapshotRepository>
+        <site>
+            <id>goci-repo</id>
+            <name>GOCI Site</name>
+            <url>
+                scp://localhost:6002/homes/tburdett/public_html/goci/
+            </url>
+        </site>
+    </distributionManagement>
+
     <!-- Developer Listing -->
     <developers>
         <developer>
@@ -110,19 +144,19 @@
                 <role>developer</role>
             </roles>
             <timezone>0</timezone>
-            <properties />
+            <properties/>
         </developer>
         <developer>
             <id>dwelter</id>
             <name>Dani Welter</name>
-            <email>dwlter@ebi.ac.uk</email>
+            <email>dwelter@ebi.ac.uk</email>
             <organization>EBI</organization>
             <organizationUrl>http://www.ebi.ac.uk</organizationUrl>
             <roles>
                 <role>developer</role>
             </roles>
             <timezone>0</timezone>
-            <properties />
+            <properties/>
         </developer>
     </developers>
 

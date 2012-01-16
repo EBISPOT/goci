@@ -12,7 +12,13 @@
     <artifactId>goci-ontology</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
+
     <name>GOCI Ontology Tools</name>
+    <description>
+        Tools relating to the generation of ontology annotations for the GWAS catalog.  The ontology used in the GWAS
+        catalog itself is EFO (http://www.ebi.ac.uk/efo) but there are several customized tools in this package for
+        marking up GWAS papers against this ontology.
+    </description>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
 
     <properties>

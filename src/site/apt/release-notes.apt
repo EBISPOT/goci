@@ -1,0 +1,14 @@
+ -----
+ Release Notes
+ -----
+ Tony Burdett
+ -----
+ 16/01/2012
+ -----
+
+Release Notes
+
+* 0.1
+
+ First prototype release.  Includes tracking system, SNP batch loader components and a demo webapp for ontology widgets.
+ This is a first draft with core functionality in place but enhancements will be made moving forward.

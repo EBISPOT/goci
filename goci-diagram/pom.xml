@@ -14,6 +14,9 @@
     <packaging>pom</packaging>
 
     <name>GOCI Diagram Generation/Visualization Tools</name>
+    <description>
+        Tools relating to the production of the diagram representing the GWAS catalog.
+    </description>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
 
     <properties>

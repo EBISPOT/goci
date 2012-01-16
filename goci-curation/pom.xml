@@ -14,6 +14,11 @@
     <packaging>pom</packaging>
 
     <name>GOCI Curation Tools</name>
+    <description>
+        A series of modules designed to assist in curation activities relating to getting papers into the GWAS catalog.
+        This includes a tracking system, for labelling papers and assigning them to curators for review, a loader for
+        batch loading SNP information into the GWAS system, and any other curation-type tools.
+    </description>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
 
     <properties>
