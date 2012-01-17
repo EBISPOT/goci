@@ -110,21 +110,21 @@
             <id>goci-repo</id>
             <name>GOCI Maven Repository</name>
             <url>
-                scp://localhost:6002/homes/tburdett/public_html/goci/maven/repo
+                scp://orange.ebi.ac.uk/homes/tburdett/public_html/goci/maven/repo
             </url>
         </repository>
         <snapshotRepository>
             <id>goci-repo</id>
             <name>GOCI Maven Repository</name>
             <url>
-                scp://localhost:6002/homes/tburdett/public_html/goci/maven/repo
+                scp://orange.ebi.ac.uk/homes/tburdett/public_html/goci/maven/repo
             </url>
         </snapshotRepository>
         <site>
             <id>goci-repo</id>
             <name>GOCI Site</name>
             <url>
-                scp://localhost:6002/homes/tburdett/public_html/goci/
+                scp://orange.ebi.ac.uk/homes/tburdett/public_html/goci/
             </url>
         </site>
     </distributionManagement>
