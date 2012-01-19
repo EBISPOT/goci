@@ -9,3 +9,28 @@
 Downloads
 
  Below is a list of the latest downloads available for this project.
+
+* Latest Stable Version (0.1)
+
+** SNP Batch Loader
+
+ {{{./downloads/SNPbatchLoader.1.0.1.zip}SNP Batch Loader v1.0.1, .zip}}\
+ {{{./downloads/SNPbatchLoader.1.0.1.tar.gz}SNP Batch Loader v1.0.1, .tar.gz}}
+
+** GOCI Tracker
+
+ {{{./downloads/goci-server.0.1.zip}GOCI Tracker (standalone version), .zip}}\
+ {{{./downloads/goci-server.0.1.zip}GOCI Tracker (standalone version), .tar.gz}}\
+ {{{./downloads/goci-tracker.0.1.war}GOCI Tracker (web application), .war}}
+
+** GOCI Ontology Widget
+
+ {{{./downloads/gwas-oc.0.1.html}GOCI Ontology Widget (demo page, right click and select "save link as" to download source}}
+
+* Previous Releases
+
+ There are no previous releases currently available
+
+* Nightly Builds
+
+ There are no nightly builds currently available

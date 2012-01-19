@@ -44,7 +44,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>2.2</version>
+                <version>3.0</version>
             </plugin>
         </plugins>
     </build>
@@ -124,7 +124,7 @@
             <id>goci-repo</id>
             <name>GOCI Site</name>
             <url>
-                scp://orange.ebi.ac.uk/homes/tburdett/public_html/goci/
+              scp://orange.ebi.ac.uk/homes/tburdett/public_html/goci/
             </url>
         </site>
     </distributionManagement>
