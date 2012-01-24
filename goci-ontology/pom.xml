@@ -25,6 +25,7 @@
 
     <modules>
         <module>goci-ontology-widgets</module>
-    </modules>
+    <module>goci-datapublisher</module>
+  </modules>
 
 </project>
