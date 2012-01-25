@@ -41,30 +41,6 @@
             <version>1.3.4</version>
         </dependency>
 
-        <!-- ZOOMA for matching unmapped traits to EFO -->
-        <dependency>
-            <groupId>uk.ac.ebi.microarray</groupId>
-            <artifactId>zooma-plugin</artifactId>
-            <version>1.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>net.sourceforge.owlapi</groupId>
-                    <artifactId>owlapi</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>owlapi</groupId>
-                    <artifactId>owlapi</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>hermit</groupId>
-                    <artifactId>hermit</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.semanticweb</groupId>
-                    <artifactId>HermiT</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
     </dependencies>
 
 </project>

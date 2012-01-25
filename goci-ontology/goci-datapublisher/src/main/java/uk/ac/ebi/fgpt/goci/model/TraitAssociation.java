@@ -12,6 +12,13 @@ import org.semanticweb.owlapi.model.OWLClass;
  */
 public interface TraitAssociation {
     /**
+     * Gets the raw ID of the study that identified this assocation
+     *
+     * @return as study ID that identified this association
+     */
+    String getStudyID();
+
+    /**
      * Gets the SNP identified in this assocation
      *
      * @return the associated SNP
