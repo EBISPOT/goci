@@ -3,6 +3,8 @@ package uk.ac.ebi.fgpt.goci.dao;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import uk.ac.ebi.fgpt.goci.exception.AmbiguousOntologyTermException;
+import uk.ac.ebi.fgpt.goci.exception.MissingOntologyTermException;
 import uk.ac.ebi.fgpt.goci.exception.ObjectMappingException;
 import uk.ac.ebi.fgpt.goci.lang.Initializable;
 import uk.ac.ebi.fgpt.goci.model.SingleNucleotidePolymorphism;
@@ -65,22 +67,17 @@ public class TraitAssocationDAO extends Initializable {
     }
 
     public void doInitialization() {
-        try {
-            // select all SNPs and map them
-            Collection<SingleNucleotidePolymorphism> snps = getSNPDAO().retrieveAllSNPs();
-            for (SingleNucleotidePolymorphism snp : snps) {
-                if (!getSnpMap().containsKey(snp.getRSID())) {
-                    getSnpMap().put(snp.getRSID(), new HashSet<SingleNucleotidePolymorphism>());
-                }
-                getSnpMap().get(snp.getRSID()).add(snp);
+        // select all SNPs and map them
+        getLog().debug("Fetching SNPs from the database ready to map to Trait Associations...");
+        Collection<SingleNucleotidePolymorphism> snps = getSNPDAO().retrieveAllSNPs();
+        for (SingleNucleotidePolymorphism snp : snps) {
+            if (!getSnpMap().containsKey(snp.getRSID())) {
+                getSnpMap().put(snp.getRSID(), new HashSet<SingleNucleotidePolymorphism>());
             }
-            // we've populated all snps, so mark that we are ready
-            setReady(true);
+            getSnpMap().get(snp.getRSID()).add(snp);
         }
-        catch (Exception e) {
-            getLog().error("Failed to retrieve and map SNPs", e);
-            setInitializationException(e);
-        }
+        // we've populated all snps, so mark that we are ready
+        getLog().debug("Retrieved " + getSnpMap().keySet().size() + " SNP ids ready to map to Trait Associations");
     }
 
     public Collection<TraitAssociation> retrieveAllTraitAssociations() {
@@ -128,37 +125,43 @@ public class TraitAssocationDAO extends Initializable {
         }
 
         private void mapSNP() {
-            Set<SingleNucleotidePolymorphism> snps = getSnpMap().get(rsID);
-            if (snps.size() > 1) {
-                throw new ObjectMappingException(
-                        "Inconsistent SNP data: there are several different SNPs with rsID '" + rsID + "' present");
-            }
+            if (getSnpMap().containsKey(rsID)) {
+                Set<SingleNucleotidePolymorphism> snps = getSnpMap().get(rsID);
+                if (snps.size() > 1) {
+                    throw new ObjectMappingException(
+                            "Inconsistent SNP data: there are several different SNPs with rsID '" + rsID + "' present");
+                }
 
-            if (snps.size() == 0) {
-                throw new ObjectMappingException(
-                        "SNP '" + rsID + "' was not found in the database so could not be mapped");
-            }
+                if (snps.size() == 0) {
+                    throw new ObjectMappingException(
+                            "SNP '" + rsID + "' was not found in the database so could not be mapped");
+                }
 
-            // if we got to here, trait mapped ok
-            this.snp = snps.iterator().next();
+                // if we got to here, trait mapped ok
+                this.snp = snps.iterator().next();
+            }
+            else {
+                throw new ObjectMappingException(
+                        "Inconsistent data: a trait association was found for SNP rsID '" + rsID + "', " +
+                                "but this SNP was not found");
+            }
         }
 
         private void mapTrait() throws ObjectMappingException {
             Collection<OWLClass> traitClasses = getOntologyDAO().getOWLClassesByLabel(traitName);
             if (traitClasses.size() > 1) {
-                throw new ObjectMappingException(
+                throw new AmbiguousOntologyTermException(
                         "Trait label is ambiguous - multiple classes in EFO have the name '" + traitName + "'");
             }
 
             if (traitClasses.size() == 0) {
-                throw new ObjectMappingException(
+                throw new MissingOntologyTermException(
                         "Trait '" + traitName + "' was not found in EFO so could not be mapped");
             }
 
             // if we got to here, trait mapped ok
             this.trait = traitClasses.iterator().next();
         }
-
 
         public String getStudyID() {
             return studyID;

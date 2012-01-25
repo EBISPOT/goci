@@ -2,6 +2,7 @@ package uk.ac.ebi.fgpt.goci.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import uk.ac.ebi.fgpt.goci.exception.ObjectMappingException;
 import uk.ac.ebi.fgpt.goci.lang.Initializable;
 import uk.ac.ebi.fgpt.goci.model.Study;
 import uk.ac.ebi.fgpt.goci.model.TraitAssociation;
@@ -46,26 +47,29 @@ public class StudyDAO extends Initializable {
     }
 
     public void doInitialization() {
-        try {
-            // select all trait associations and map them
-            Collection<TraitAssociation> traitAssociations = getTraitAssocationDAO().retrieveAllTraitAssociations();
-            for (TraitAssociation ta : traitAssociations) {
-                if (!getTraitAssociationMap().containsKey(ta.getStudyID())) {
-                    getTraitAssociationMap().put(ta.getStudyID(), new HashSet<TraitAssociation>());
-                }
-                getTraitAssociationMap().get(ta.getStudyID()).add(ta);
+        // select all trait associations and map them
+        getLog().debug("Fetching Trait Associations from the database ready to map to studies...");
+        Collection<TraitAssociation> traitAssociations = getTraitAssocationDAO().retrieveAllTraitAssociations();
+        for (TraitAssociation ta : traitAssociations) {
+            if (!getTraitAssociationMap().containsKey(ta.getStudyID())) {
+                getTraitAssociationMap().put(ta.getStudyID(), new HashSet<TraitAssociation>());
             }
-            // we've populated all snps, so mark that we are ready
-            setReady(true);
+            getTraitAssociationMap().get(ta.getStudyID()).add(ta);
         }
-        catch (Exception e) {
-            getLog().error("Failed to retrieve and map Trait Associations", e);
-            setInitializationException(e);
-        }
+        // we've populated all snps, so mark that we are ready
+        getLog().debug("Retrieved Trait Associations, " +
+                               "mapped Traits for " + getTraitAssociationMap().keySet().size() + " studies");
     }
 
     public Collection<Study> retrieveAllStudies() {
-        return getJdbcTemplate().query(STUDY_SELECT, new StudyMapper());
+        try {
+            waitUntilReady();
+            return getJdbcTemplate().query(STUDY_SELECT, new StudyMapper());
+        }
+        catch (InterruptedException e) {
+            throw new ObjectMappingException(
+                    "Unexpectedly interrupted whilst waiting for initialization to complete", e);
+        }
     }
 
     private Map<String, Set<TraitAssociation>> getTraitAssociationMap() {
@@ -98,7 +102,12 @@ public class StudyDAO extends Initializable {
         }
 
         private void mapTraitAssociation() {
-            this.associations = getTraitAssociationMap().get(id);
+            if (getTraitAssociationMap().containsKey(id)) {
+                this.associations = getTraitAssociationMap().get(id);
+            }
+            else {
+                this.associations = Collections.emptySet();
+            }
         }
 
         public String getAuthorName() {

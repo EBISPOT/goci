@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- Ontology DAO -->
+    <bean name="ontologyDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init" />
+
+    <!-- SNP DAO -->
+    <bean name="snpDAO" class="uk.ac.ebi.fgpt.goci.dao.SingleNucleotidePolymorphismDAO">
+        <property name="jdbcTemplate" ref="jdbcTemplate" />
+    </bean>
+
+    <!-- Study DAO -->
+    <bean name="studyDAO" class="uk.ac.ebi.fgpt.goci.dao.StudyDAO" init-method="init">
+        <property name="jdbcTemplate" ref="jdbcTemplate" />
+        <property name="traitAssocationDAO" ref="traitAssociationDAO" />
+    </bean>
+
+    <!-- Trait Association DAO -->
+    <bean name="traitAssociationDAO" class="uk.ac.ebi.fgpt.goci.dao.TraitAssocationDAO" init-method="init">
+        <property name="jdbcTemplate" ref="jdbcTemplate" />
+        <property name="SNPDAO" ref="snpDAO" />
+        <property name="ontologyDAO" ref="ontologyDAO" />
+    </bean>
+
+    <bean name="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="datasource" />
+    </bean>
+
+    <!-- GWAS Database setup -->
+    <bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+        <property name="url" value="jdbc:oracle:thin:@todd.ebi.ac.uk:1521:AE2TST" />
+        <property name="username" value="gwas" />
+        <property name="password" value="gwasdb" />
+        <property name="defaultAutoCommit" value="false" />
+        <property name="initialSize" value="32" />
+        <property name="maxIdle" value="32" />
+        <property name="maxActive" value="32" />
+        <property name="maxWait" value="-1" />
+    </bean>
+
+</beans>

@@ -3,9 +3,6 @@ package uk.ac.ebi.fgpt.goci.lang;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 /**
  * An object that can do some initialization work in parallel at startup.  Implementing classes should extend {@link
  * #doInitialization} with the work they wish to do.  All methods that require initialization to complete can check the
@@ -16,20 +13,10 @@ import java.util.concurrent.Executors;
  * @date 25/01/12
  */
 public abstract class Initializable {
-    private ExecutorService service;
-
     private boolean ready;
     private Throwable initializationException;
 
     private Logger log = LoggerFactory.getLogger(getClass());
-
-    protected Initializable() {
-        this(1);
-    }
-
-    protected Initializable(int numberOfStartupThreads) {
-        this.service = Executors.newFixedThreadPool(numberOfStartupThreads);
-    }
 
     protected Logger getLog() {
         return log;
@@ -58,19 +45,31 @@ public abstract class Initializable {
     protected synchronized void waitUntilReady() throws IllegalStateException, InterruptedException {
         synchronized (this) {
             while (!isReady()) {
+                getLog().debug("Waiting until " + getClass().getSimpleName() + " is ready...");
                 wait();
+                getLog().debug(getClass().getSimpleName() + " is now ready");
             }
         }
     }
 
     protected void init() {
-        service.submit(new Runnable() {
+        // create new thread to do initialization
+        new Thread((new Runnable() {
             public void run() {
                 // call doInitialization() provided by subclasses
-                doInitialization();
+                try {
+                    getLog().debug("Initializing " + Initializable.this.getClass().getSimpleName() + "...");
+                    doInitialization();
+                    setReady(true);
+                    getLog().debug("..." + Initializable.this.getClass().getSimpleName() + " initialized ok");
+                }
+                catch (Exception e) {
+                    getLog().error("Failed to initialize " + Initializable.this.getClass().getSimpleName(), e);
+                    setInitializationException(e);
+                }
             }
-        });
+        })).start();
     }
 
-    public abstract void doInitialization();
+    public abstract void doInitialization() throws Exception;
 }
