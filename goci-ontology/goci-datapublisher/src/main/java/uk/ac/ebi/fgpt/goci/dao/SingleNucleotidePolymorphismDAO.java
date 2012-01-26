@@ -17,14 +17,14 @@ import java.util.Collection;
  */
 public class SingleNucleotidePolymorphismDAO {
     private static final String SNP_SELECT =
-            "select g.ID, s.SNP, r.REGION, g.CHR_ID as CHROMOSOME, g.CHR_POS as LOCATION from GWASSNP s " +
+            "select distinct ID, SNP, REGION, CHROMOSOME, LOCATION from (" +
+                    "select s.ID, s.SNP, r.REGION, g.CHR_ID as CHROMOSOME, g.CHR_POS as LOCATION from GWASSNP s " +
                     "join GWASSNPXREF sx on s.ID=sx.SNPID " +
                     "join GWASSTUDIESSNP g on sx.GWASSTUDIESSNPID=g.ID " +
                     "join GWASREGIONXREF rx on rx.GWASSTUDIESSNPID=g.ID " +
                     "join GWASREGION r on r.ID=rx.REGIONID " +
                     "where g.ID is not null and s.SNP is not null and r.REGION is not null " +
-                    "and g.CHR_ID is not null and g.CHR_POS is not null " +
-                    "order by g.ID";
+                    "and g.CHR_ID is not null and g.CHR_POS is not null)";
 
     private JdbcTemplate jdbcTemplate;
 

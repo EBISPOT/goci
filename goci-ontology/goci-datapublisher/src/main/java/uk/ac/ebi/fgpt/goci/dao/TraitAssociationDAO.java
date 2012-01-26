@@ -1,6 +1,8 @@
 package uk.ac.ebi.fgpt.goci.dao;
 
 import org.semanticweb.owlapi.model.OWLClass;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import uk.ac.ebi.fgpt.goci.exception.AmbiguousOntologyTermException;
@@ -10,6 +12,7 @@ import uk.ac.ebi.fgpt.goci.lang.Initializable;
 import uk.ac.ebi.fgpt.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.fgpt.goci.model.TraitAssociation;
 
+import java.net.URI;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -21,7 +24,7 @@ import java.util.*;
  * @author Tony Burdett
  * @date 24/01/12
  */
-public class TraitAssocationDAO extends Initializable {
+public class TraitAssociationDAO extends Initializable {
     private static final String TRAIT_SELECT =
             "select g.ID, st.ID as STUDY, s.SNP, t.DISEASETRAIT, g.PVALUEFLOAT from GWASSNP s " +
                     "join GWASSNPXREF sx on s.ID=sx.SNPID " +
@@ -38,7 +41,15 @@ public class TraitAssocationDAO extends Initializable {
 
     private Map<String, Set<SingleNucleotidePolymorphism>> snpMap;
 
-    public TraitAssocationDAO() {
+    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger snpLogger = LoggerFactory.getLogger("unmapped.snp.log");
+    private Logger traitLogger = LoggerFactory.getLogger("unmapped.trait.log");
+
+    protected Logger getLog() {
+        return log;
+    }
+
+    public TraitAssociationDAO() {
         this.snpMap = new HashMap<String, Set<SingleNucleotidePolymorphism>>();
     }
 
@@ -116,23 +127,36 @@ public class TraitAssocationDAO extends Initializable {
         private SingleNucleotidePolymorphism snp;
         private OWLClass trait;
 
+        private OWLClass experimentalFactor;
+
         private TraitAssocationFromDB(String id, String studyID, String rsID, String traitName, float pValue) {
             this.id = id;
             this.studyID = studyID;
             this.rsID = rsID;
             this.traitName = traitName;
             this.pValue = pValue;
+
+            this.experimentalFactor = getOntologyDAO().getOWLClassByURI(URI.create(
+                    "http://www.ebi.ac.uk/efo/EFO_0000001"));
         }
 
         private void mapSNP() {
             if (getSnpMap().containsKey(rsID)) {
                 Set<SingleNucleotidePolymorphism> snps = getSnpMap().get(rsID);
                 if (snps.size() > 1) {
+                    snpLogger.warn(rsID + "\t[multiple copies]");
                     throw new ObjectMappingException(
-                            "Inconsistent SNP data: there are several different SNPs with rsID '" + rsID + "' present");
+                            "Multiple distinct SNPs were defined with rsID '" + rsID + "'; " +
+                                    "there is inconsistent data in the database");
+
+//                    // use first SNP, but warn of duplication
+//                    snpLogger.warn(rsID + "\t[multiple copies]");
+//                    getLog().warn("Multiple SNPs were defined with rsID '" + rsID + "'; " +
+//                                          "the first will be used, but there may be inconsistent data in the database");
                 }
 
                 if (snps.size() == 0) {
+                    snpLogger.warn(rsID + "\t[no SNP]");
                     throw new ObjectMappingException(
                             "SNP '" + rsID + "' was not found in the database so could not be mapped");
                 }
@@ -141,26 +165,76 @@ public class TraitAssocationDAO extends Initializable {
                 this.snp = snps.iterator().next();
             }
             else {
+                snpLogger.warn(rsID + "\t[missing location data]");
                 throw new ObjectMappingException(
                         "Inconsistent data: a trait association was found for SNP rsID '" + rsID + "', " +
-                                "but this SNP was not found");
+                                "but this SNP was not fully specified (missing chromosome/region data)");
             }
         }
 
         private void mapTrait() throws ObjectMappingException {
             Collection<OWLClass> traitClasses = getOntologyDAO().getOWLClassesByLabel(traitName);
-            if (traitClasses.size() > 1) {
-                throw new AmbiguousOntologyTermException(
-                        "Trait label is ambiguous - multiple classes in EFO have the name '" + traitName + "'");
-            }
-
             if (traitClasses.size() == 0) {
+                traitLogger.warn(traitName + "\t[not in EFO]");
                 throw new MissingOntologyTermException(
-                        "Trait '" + traitName + "' was not found in EFO so could not be mapped");
+                        "Trait '" + traitName + "' was not found in EFO so could not be accurately mapped");
+//                traitLogger.warn(traitName + "\t[not in EFO]");
+//                getLog().warn("Trait '" + traitName + "' was not found in EFO so could not be accurately mapped");
+//                // create mapping to "Experimental Factor" and set trait label
+//                this.trait = experimentalFactor;
             }
+            else if (traitClasses.size() > 1) {
+                // ambiguous term - multiple classes have the same synonym.  We can try a few hacks...
 
-            // if we got to here, trait mapped ok
-            this.trait = traitClasses.iterator().next();
+                // workaround for cancer/neoplasm duplications...
+                if (traitName.toLowerCase().contains("cancer")) {
+                    for (OWLClass cls : traitClasses) {
+                        List<String> clsNames = getOntologyDAO().getClassNames(cls);
+                        boolean isCarcinoma = false;
+                        for (String clsName : clsNames) {
+                            if (clsName.toLowerCase().contains("carcinoma")) {
+                                isCarcinoma = true;
+                                break;
+                            }
+                        }
+                        if (isCarcinoma) {
+                            this.trait = cls;
+                            break;
+                        }
+                    }
+                }
+
+                // workaround for obesity/morbid obesity
+                if (traitName.toLowerCase().contains("obesity")) {
+                    for (OWLClass cls : traitClasses) {
+                        if (cls.getIRI().toURI().toString().equals("http://www.ebi.ac.uk/efo/EFO_0001073")) {
+                            this.trait = cls;
+                            break;
+                        }
+                    }
+                }
+
+                // workaround for Coronary heart disease
+                if (traitName.toLowerCase().contains("coronary heart disease")) {
+                    for (OWLClass cls : traitClasses) {
+                        if (cls.getIRI().toURI().toString().equals("http://www.ebi.ac.uk/efo/EFO_0001645")) {
+                            this.trait = cls;
+                            break;
+                        }
+                    }
+                }
+
+                // if none of these hacks worked, throw an exception
+                if (trait == null) {
+                    traitLogger.warn(traitName + "\t[ambiguous names/synonyms in EFO]");
+                    throw new AmbiguousOntologyTermException(
+                            "Trait label is ambiguous - multiple classes in EFO have the name '" + traitName + "'");
+                }
+            }
+            else {
+                // exactly one label <-> EFO mapping
+                this.trait = traitClasses.iterator().next();
+            }
         }
 
         public String getStudyID() {
@@ -183,6 +257,15 @@ public class TraitAssocationDAO extends Initializable {
 
         public float getPValue() {
             return pValue;
+        }
+
+        public String getUnmappedGWASLabel() {
+            if (getAssociatedTrait() == experimentalFactor) {
+                return traitName;
+            }
+            else {
+                return null;
+            }
         }
 
         @Override

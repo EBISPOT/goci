@@ -21,7 +21,7 @@ public class StudyDAO extends Initializable {
     private static final String STUDY_SELECT =
             "select ID, AUTHOR, PUBLISHDATE, PMID from GWASSTUDIES";
 
-    private TraitAssocationDAO traitAssocationDAO;
+    private TraitAssociationDAO traitAssociationDAO;
     private JdbcTemplate jdbcTemplate;
 
     private Map<String, Set<TraitAssociation>> traitAssociationMap;
@@ -30,12 +30,12 @@ public class StudyDAO extends Initializable {
         this.traitAssociationMap = new HashMap<String, Set<TraitAssociation>>();
     }
 
-    public TraitAssocationDAO getTraitAssocationDAO() {
-        return traitAssocationDAO;
+    public TraitAssociationDAO getTraitAssociationDAO() {
+        return traitAssociationDAO;
     }
 
-    public void setTraitAssocationDAO(TraitAssocationDAO traitAssocationDAO) {
-        this.traitAssocationDAO = traitAssocationDAO;
+    public void setTraitAssociationDAO(TraitAssociationDAO traitAssociationDAO) {
+        this.traitAssociationDAO = traitAssociationDAO;
     }
 
     public JdbcTemplate getJdbcTemplate() {
@@ -49,7 +49,7 @@ public class StudyDAO extends Initializable {
     public void doInitialization() {
         // select all trait associations and map them
         getLog().debug("Fetching Trait Associations from the database ready to map to studies...");
-        Collection<TraitAssociation> traitAssociations = getTraitAssocationDAO().retrieveAllTraitAssociations();
+        Collection<TraitAssociation> traitAssociations = getTraitAssociationDAO().retrieveAllTraitAssociations();
         for (TraitAssociation ta : traitAssociations) {
             if (!getTraitAssociationMap().containsKey(ta.getStudyID())) {
                 getTraitAssociationMap().put(ta.getStudyID(), new HashSet<TraitAssociation>());

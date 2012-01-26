@@ -144,7 +144,7 @@ public class OntologyDAO extends Initializable {
      * @param owlClass the owl class to derive names for
      * @return the list of strings representing labels or synonyms for this class
      */
-    private synchronized List<String> getClassNames(OWLClass owlClass) {
+    public synchronized List<String> getClassNames(OWLClass owlClass) {
         List<String> results = new ArrayList<String>();
         results.addAll(0, getClassRDFSLabels(owlClass));
         results.addAll(getClassSynonyms(owlClass));
@@ -159,7 +159,7 @@ public class OntologyDAO extends Initializable {
      * @param owlClass the class to recover labels for
      * @return the literal values of the rdfs:label annotation
      */
-    private synchronized Set<String> getClassRDFSLabels(OWLClass owlClass) {
+    public synchronized Set<String> getClassRDFSLabels(OWLClass owlClass) {
         Set<String> classNames = new HashSet<String>();
 
         // get label annotation property
