@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import uk.ac.ebi.fgpt.goci.exception.ObjectMappingException;
 import uk.ac.ebi.fgpt.goci.lang.Initializable;
+import uk.ac.ebi.fgpt.goci.lang.UniqueID;
 import uk.ac.ebi.fgpt.goci.model.Study;
 import uk.ac.ebi.fgpt.goci.model.TraitAssociation;
 
@@ -19,7 +20,7 @@ import java.util.*;
  */
 public class StudyDAO extends Initializable {
     private static final String STUDY_SELECT =
-            "select ID, AUTHOR, PUBLISHDATE, PMID from GWASSTUDIES";
+            "select ID, AUTHOR, PUBLISHDATE, PMID from GWASSTUDIES where PMID is not null";
 
     private TraitAssociationDAO traitAssociationDAO;
     private JdbcTemplate jdbcTemplate;
@@ -51,10 +52,10 @@ public class StudyDAO extends Initializable {
         getLog().debug("Fetching Trait Associations from the database ready to map to studies...");
         Collection<TraitAssociation> traitAssociations = getTraitAssociationDAO().retrieveAllTraitAssociations();
         for (TraitAssociation ta : traitAssociations) {
-            if (!getTraitAssociationMap().containsKey(ta.getStudyID())) {
-                getTraitAssociationMap().put(ta.getStudyID(), new HashSet<TraitAssociation>());
+            if (!getTraitAssociationMap().containsKey(ta.getPubMedID())) {
+                getTraitAssociationMap().put(ta.getPubMedID(), new HashSet<TraitAssociation>());
             }
-            getTraitAssociationMap().get(ta.getStudyID()).add(ta);
+            getTraitAssociationMap().get(ta.getPubMedID()).add(ta);
         }
         // we've populated all snps, so mark that we are ready
         getLog().debug("Retrieved Trait Associations, " +
@@ -102,8 +103,8 @@ public class StudyDAO extends Initializable {
         }
 
         private void mapTraitAssociation() {
-            if (getTraitAssociationMap().containsKey(id)) {
-                this.associations = getTraitAssociationMap().get(id);
+            if (getTraitAssociationMap().containsKey(pubmedID)) {
+                this.associations = getTraitAssociationMap().get(pubmedID);
             }
             else {
                 this.associations = Collections.emptySet();
@@ -114,6 +115,7 @@ public class StudyDAO extends Initializable {
             return author;
         }
 
+        @UniqueID
         public String getPubMedID() {
             return pubmedID;
         }

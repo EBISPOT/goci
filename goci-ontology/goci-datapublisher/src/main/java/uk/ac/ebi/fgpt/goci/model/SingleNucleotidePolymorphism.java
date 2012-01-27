@@ -1,5 +1,7 @@
 package uk.ac.ebi.fgpt.goci.model;
 
+import uk.ac.ebi.fgpt.goci.lang.UniqueID;
+
 /**
  * A simple object modelling a SNP, as represented by the data in the GWAS catalog database.  THis simply wraps up the
  * RS ID (SNP representative ID from dbSNP), the name of the chromosome on which this SNP is found, the cytogenetic band

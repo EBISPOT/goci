@@ -1,8 +1,9 @@
 package uk.ac.ebi.fgpt.goci.service;
 
 import org.semanticweb.owlapi.model.OWLOntology;
-import uk.ac.ebi.fgpt.goci.model.Study;
+import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.fgpt.goci.model.Study;
 import uk.ac.ebi.fgpt.goci.model.TraitAssociation;
 
 import java.util.Collection;
@@ -15,26 +16,44 @@ import java.util.Collection;
  */
 public interface GWASOWLConverter {
     /**
-     * Converts the provided studies into ontology entities and adds them to the supplied target ontology
+     * Creates a new empty ontology that can be used to do the data conversion.  This ontology will import the GWAS
+     * diagram ontology that declares the schema.
      *
-     * @param studies the studies retrieved from the GWAS catalog
-     * @param target  the ontology to write the studies to
+     * @return the newly created, empty, ontology
+     * @throws uk.ac.ebi.fgpt.goci.exception.OWLConversionException
+     *          if something went wrong whilst creating the ontology
      */
-    void addStudiesToOntology(Collection<Study> studies, OWLOntology target);
+    OWLOntology createConversionOntology() throws OWLConversionException;
 
     /**
-     * Converts the provided SNPs into ontology entities and adds them to the supplied target ontology
+     * Converts the provided studies into ontology entities and adds them to the supplied ontology ontology
      *
-     * @param snps   the SNPs retrieved from the GWAS catalog
-     * @param target the ontology to write the studies to
+     * @param studies  the studies retrieved from the GWAS catalog
+     * @param ontology the ontology to write the studies to
+     * @throws uk.ac.ebi.fgpt.goci.exception.OWLConversionException
+     *          if something went wrong whilst adding data to the ontology
      */
-    void addSNPsToOntology(Collection<SingleNucleotidePolymorphism> snps, OWLOntology target);
+    void addStudiesToOntology(Collection<Study> studies, OWLOntology ontology) throws OWLConversionException;
 
     /**
-     * Converts the provided trait assocations into ontology entities and adds them to the supplied target ontology
+     * Converts the provided SNPs into ontology entities and adds them to the supplied ontology ontology
+     *
+     * @param snps     the SNPs retrieved from the GWAS catalog
+     * @param ontology the ontology to write the studies to
+     * @throws uk.ac.ebi.fgpt.goci.exception.OWLConversionException
+     *          if something went wrong whilst adding data to the ontology
+     */
+    void addSNPsToOntology(Collection<SingleNucleotidePolymorphism> snps, OWLOntology ontology)
+            throws OWLConversionException;
+
+    /**
+     * Converts the provided trait assocations into ontology entities and adds them to the supplied ontology ontology
      *
      * @param associations the trait associations retrieved from the GWAS catalog
-     * @param target       the ontology to write the studies to
+     * @param ontology     the ontology to write the studies to
+     * @throws uk.ac.ebi.fgpt.goci.exception.OWLConversionException
+     *          if something went wrong whilst adding data to the ontology
      */
-    void addAssociationsToOntology(Collection<TraitAssociation> associations, OWLOntology target);
+    void addAssociationsToOntology(Collection<TraitAssociation> associations, OWLOntology ontology)
+            throws OWLConversionException;
 }

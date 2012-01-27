@@ -12,11 +12,21 @@ import org.semanticweb.owlapi.model.OWLClass;
  */
 public interface TraitAssociation {
     /**
-     * Gets the raw ID of the study that identified this assocation
+     * Gets the PubMed ID of the publication that identifies this assocation
      *
-     * @return as study ID that identified this association
+     * @return the PubMed ID of the study that identified this association
      */
-    String getStudyID();
+    String getPubMedID();
+
+    /**
+     * Returns the reference ID of the SNP identified in this association.  You may need to use this if there is missing
+     * information about the SNP: in such cases, {@link #getAssociatedSNP()} is likely to throw an {@link
+     * uk.ac.ebi.fgpt.goci.exception.ObjectMappingException} and yet in order for this association to be declared the
+     * SNP ID must be known.  In these cases, uses this method to fetch the known ID.
+     *
+     * @return the RSID of an incompletely specified SNP
+     */
+    String getAssociatedSNPReferenceId();
 
     /**
      * Gets the SNP identified in this assocation
@@ -42,8 +52,10 @@ public interface TraitAssociation {
     float getPValue();
 
     /**
-     * Gets the label declared in the GWAS catalog in cases where it could not be mapped to an ontology class.  If
-     * {@link #getAssociatedTrait()} returns "Experimental Factor", this should return a value.
+     * Gets the label declared in the GWAS catalog in cases where it could not be mapped to an ontology class.
+     * Generally, you will only need to use this method in cases where {@link #getAssociatedTrait()} throws an {@link
+     * uk.ac.ebi.fgpt.goci.exception.MissingOntologyTermException}, but if you are interested in the precise trait named
+     * used in the GWAS database you can get it using this method.
      *
      * @return the trait name as asserted in the underlying GWAS catalog data, probably taken directly from the source
      *         publication

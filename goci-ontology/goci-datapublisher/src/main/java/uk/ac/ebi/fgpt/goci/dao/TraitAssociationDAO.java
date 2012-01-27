@@ -9,6 +9,7 @@ import uk.ac.ebi.fgpt.goci.exception.AmbiguousOntologyTermException;
 import uk.ac.ebi.fgpt.goci.exception.MissingOntologyTermException;
 import uk.ac.ebi.fgpt.goci.exception.ObjectMappingException;
 import uk.ac.ebi.fgpt.goci.lang.Initializable;
+import uk.ac.ebi.fgpt.goci.lang.UniqueID;
 import uk.ac.ebi.fgpt.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.fgpt.goci.model.TraitAssociation;
 
@@ -26,7 +27,7 @@ import java.util.*;
  */
 public class TraitAssociationDAO extends Initializable {
     private static final String TRAIT_SELECT =
-            "select g.ID, st.ID as STUDY, s.SNP, t.DISEASETRAIT, g.PVALUEFLOAT from GWASSNP s " +
+            "select g.ID, st.PMID as STUDY, s.SNP, t.DISEASETRAIT, g.PVALUEFLOAT from GWASSNP s " +
                     "join GWASSNPXREF sx on s.ID=sx.SNPID " +
                     "join GWASSTUDIESSNP g on sx.GWASSTUDIESSNPID=g.ID " +
                     "join GWASSTUDIES st on g.GWASID=st.ID " +
@@ -109,17 +110,17 @@ public class TraitAssociationDAO extends Initializable {
     private class TraitAssociationMapper implements RowMapper<TraitAssociation> {
         public TraitAssociation mapRow(ResultSet resultSet, int i) throws SQLException {
             String associationID = resultSet.getString(1);
-            String studyID = resultSet.getString(2);
+            String pubMedID = resultSet.getString(2);
             String rsID = resultSet.getString(3);
             String traitName = resultSet.getString(4);
             float pValue = resultSet.getFloat(5);
-            return new TraitAssocationFromDB(associationID, studyID, rsID, traitName, pValue);
+            return new TraitAssocationFromDB(associationID, pubMedID, rsID, traitName, pValue);
         }
     }
 
     private class TraitAssocationFromDB implements TraitAssociation {
         private String id;
-        private String studyID;
+        private String pubMedID;
         private String rsID;
         private String traitName;
         private float pValue;
@@ -129,9 +130,9 @@ public class TraitAssociationDAO extends Initializable {
 
         private OWLClass experimentalFactor;
 
-        private TraitAssocationFromDB(String id, String studyID, String rsID, String traitName, float pValue) {
+        private TraitAssocationFromDB(String id, String pubMedID, String rsID, String traitName, float pValue) {
             this.id = id;
-            this.studyID = studyID;
+            this.pubMedID = pubMedID;
             this.rsID = rsID;
             this.traitName = traitName;
             this.pValue = pValue;
@@ -148,11 +149,6 @@ public class TraitAssociationDAO extends Initializable {
                     throw new ObjectMappingException(
                             "Multiple distinct SNPs were defined with rsID '" + rsID + "'; " +
                                     "there is inconsistent data in the database");
-
-//                    // use first SNP, but warn of duplication
-//                    snpLogger.warn(rsID + "\t[multiple copies]");
-//                    getLog().warn("Multiple SNPs were defined with rsID '" + rsID + "'; " +
-//                                          "the first will be used, but there may be inconsistent data in the database");
                 }
 
                 if (snps.size() == 0) {
@@ -178,13 +174,12 @@ public class TraitAssociationDAO extends Initializable {
                 traitLogger.warn(traitName + "\t[not in EFO]");
                 throw new MissingOntologyTermException(
                         "Trait '" + traitName + "' was not found in EFO so could not be accurately mapped");
-//                traitLogger.warn(traitName + "\t[not in EFO]");
-//                getLog().warn("Trait '" + traitName + "' was not found in EFO so could not be accurately mapped");
-//                // create mapping to "Experimental Factor" and set trait label
-//                this.trait = experimentalFactor;
             }
             else if (traitClasses.size() > 1) {
-                // ambiguous term - multiple classes have the same synonym.  We can try a few hacks...
+                // ambiguous term - multiple classes have the same synonym
+                traitLogger.warn(traitName + "\t[ambiguous names/synonyms in EFO]");
+
+                // but we can still try a few hacks...
 
                 // workaround for cancer/neoplasm duplications...
                 if (traitName.toLowerCase().contains("cancer")) {
@@ -226,7 +221,6 @@ public class TraitAssociationDAO extends Initializable {
 
                 // if none of these hacks worked, throw an exception
                 if (trait == null) {
-                    traitLogger.warn(traitName + "\t[ambiguous names/synonyms in EFO]");
                     throw new AmbiguousOntologyTermException(
                             "Trait label is ambiguous - multiple classes in EFO have the name '" + traitName + "'");
                 }
@@ -237,8 +231,17 @@ public class TraitAssociationDAO extends Initializable {
             }
         }
 
-        public String getStudyID() {
-            return studyID;
+        @UniqueID
+        public String getID() {
+            return id;
+        }
+
+        public String getPubMedID() {
+            return pubMedID;
+        }
+
+        public String getAssociatedSNPReferenceId() {
+            return rsID;
         }
 
         public SingleNucleotidePolymorphism getAssociatedSNP() {
@@ -260,12 +263,7 @@ public class TraitAssociationDAO extends Initializable {
         }
 
         public String getUnmappedGWASLabel() {
-            if (getAssociatedTrait() == experimentalFactor) {
-                return traitName;
-            }
-            else {
-                return null;
-            }
+            return traitName;
         }
 
         @Override

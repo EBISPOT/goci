@@ -1,22 +1,33 @@
 package uk.ac.ebi.fgpt.goci.service;
 
+import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.io.OWLXMLOntologyFormat;
+import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.reasoner.*;
+import org.semanticweb.owlapi.util.InferredAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredOntologyGenerator;
+import org.semanticweb.owlapi.util.InferredSubClassAxiomGenerator;
+import org.semanticweb.owlapi.util.SimpleIRIMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import uk.ac.ebi.fgpt.goci.dao.SingleNucleotidePolymorphismDAO;
 import uk.ac.ebi.fgpt.goci.dao.StudyDAO;
 import uk.ac.ebi.fgpt.goci.dao.TraitAssociationDAO;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.exception.ObjectMappingException;
 import uk.ac.ebi.fgpt.goci.exception.OntologyTermException;
+import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.fgpt.goci.model.Study;
 import uk.ac.ebi.fgpt.goci.model.TraitAssociation;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Javadocs go here!
@@ -25,15 +36,45 @@ import java.util.Collection;
  * @date 26/01/12
  */
 public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
+    private Resource efoResource;
+    private Resource gwasDiagramSchemaResource;
+
     private StudyDAO studyDAO;
     private TraitAssociationDAO traitAssociationDAO;
     private SingleNucleotidePolymorphismDAO singleNucleotidePolymorphismDAO;
     private GWASOWLConverter converter;
 
+    private OWLOntologyManager manager;
+    private OWLDataFactory factory;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
         return log;
+    }
+
+    public OWLOntologyManager getManager() {
+        return manager;
+    }
+
+    public OWLDataFactory getDataFactory() {
+        return factory;
+    }
+
+    public Resource getEfoResource() {
+        return efoResource;
+    }
+
+    public void setEfoResource(Resource efoResource) {
+        this.efoResource = efoResource;
+    }
+
+    public Resource getGwasDiagramSchemaResource() {
+        return gwasDiagramSchemaResource;
+    }
+
+    public void setGwasDiagramSchemaResource(Resource gwasDiagramSchemaResource) {
+        this.gwasDiagramSchemaResource = gwasDiagramSchemaResource;
     }
 
     public StudyDAO getStudyDAO() {
@@ -68,38 +109,154 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
         this.converter = converter;
     }
 
+    public void init() throws IOException {
+        this.manager = OWLManager.createOWLOntologyManager();
+        getLog().info("Mapping EFO to " + getEfoResource().getURI());
+        getLog().info("Mapping GWAS schema to " + getGwasDiagramSchemaResource().getURI());
+        this.manager.addIRIMapper(new SimpleIRIMapper(IRI.create(OntologyConstants.EFO_ONTOLOGY_SCHEMA_IRI),
+                                                      IRI.create(getEfoResource().getURI())));
+        this.manager.addIRIMapper(new SimpleIRIMapper(IRI.create(OntologyConstants.GWAS_ONTOLOGY_SCHEMA_IRI),
+                                                      IRI.create(getEfoResource().getURI())));
+        this.factory = manager.getOWLDataFactory();
+    }
+
     public OWLOntology publishGWASData() throws OWLConversionException {
+        // create new ontology
+        OWLOntology conversion = getConverter().createConversionOntology();
+
+        // grab all studies from the DAO
+        getLog().debug("Fetching studies that require conversion to OWL using StudyDAO...");
+        Collection<Study> studies = getStudyDAO().retrieveAllStudies();
+        getLog().debug("Query complete, got " + studies.size() + " studies");
+//            validateGWASData(studies);
+
+        // grab all other data from the DAO
+        getLog().debug("Fetching traits that require conversion to OWL using TraitAssociationDAO...");
+        Collection<TraitAssociation> traitAssociations = getTraitAssociationDAO().retrieveAllTraitAssociations();
+        getLog().debug("Fetching SNPs that require conversion to OWL using SingleNucleotidePolymorphismDAO...");
+        Collection<SingleNucleotidePolymorphism> snps = getSingleNucleotidePolymorphismDAO().retrieveAllSNPs();
+        getLog().debug("All data fetched");
+
+        // convert this data, starting with SNPs (no dependencies) and working up to studies
+        getLog().debug("Starting conversion to OWL...");
+        getLog().debug("Converting SNPs...");
+        getConverter().addSNPsToOntology(snps, conversion);
+        getLog().debug("Converting Trait Associations...");
+        getConverter().addAssociationsToOntology(traitAssociations, conversion);
+        getLog().debug("Converting Studies...");
+        getConverter().addStudiesToOntology(studies, conversion);
+        getLog().debug("All conversion done!");
+
+        return conversion;
+    }
+
+    public OWLReasoner publishGWASDataInferredView(IRI ontologyIRI) throws OWLConversionException {
         try {
-            // create a new ontology to represent our data dump
-            OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-            OWLOntology conversion = manager.createOntology();
-
-            // grab all studies from the DAO
-            getLog().debug("Fetching studies that require conversion to OWL using StudyDAO...");
-            Collection<Study> studies = getStudyDAO().retrieveAllStudies();
-            getLog().debug("Query complete, got " + studies.size() + " studies");
-            validateAndReportOnStudies(studies);
-
-            // grab all other data from the DAO
-            getLog().debug("Fetching traits that require conversion to OWL using TraitAssociationDAO...");
-            Collection<TraitAssociation> traitAssociations = getTraitAssociationDAO().retrieveAllTraitAssociations();
-            getLog().debug("Fetching SNPs that require conversion to OWL using SingleNucleotidePolymorphismDAO...");
-            Collection<SingleNucleotidePolymorphism> snps = getSingleNucleotidePolymorphismDAO().retrieveAllSNPs();
-            getLog().debug("All data fetched");
-
-            // convert this data, starting with SNPs (no dependencies) and working up to studies
-            getConverter().addSNPsToOntology(snps, conversion);
-            getConverter().addAssociationsToOntology(traitAssociations, conversion);
-            getConverter().addStudiesToOntology(studies, conversion);
-
-            return conversion;
+            // reload the supplied ontology
+            getLog().info("Classifying ontology from " + ontologyIRI);
+            getLog().debug("Reloading " + ontologyIRI);
+            OWLOntology ontology = getManager().loadOntology(ontologyIRI);
+            getLog().info("Loaded " + ontology.getOntologyID().getOntologyIRI() + " ok");
+            OWLReasonerFactory factory = new Reasoner.ReasonerFactory();
+            ConsoleProgressMonitor progressMonitor = new ConsoleProgressMonitor();
+            OWLReasonerConfiguration config = new SimpleConfiguration(progressMonitor);
+            getLog().debug("Creating reasoner...");
+            OWLReasoner reasoner = factory.createReasoner(ontology, config);
+            getLog().debug("Precomputing inferences...");
+            reasoner.precomputeInferences();
+            getLog().debug("Checking ontology consistency...");
+            if (reasoner.isConsistent()) {
+//            getLog().debug("Checking for unsatisfiable classes...");
+//            if (reasoner.getUnsatisfiableClasses().getEntitiesMinusBottom().size() > 0) {
+//                throw new OWLConversionException("Once classified, unsatisfiable classes were detected");
+//            }
+//            else {
+                getLog().info("Reasoning complete!");
+                return reasoner;
+            }
+            else {
+                throw new OWLConversionException("Ontology is not consistent!");
+            }
         }
         catch (OWLOntologyCreationException e) {
-            throw new OWLConversionException("Failed to create new ontology", e);
+            throw new OWLConversionException("Failed to load imported ontology", e);
         }
     }
 
-    public void validateAndReportOnStudies(Collection<Study> studies) {
+//    public OWLReasoner publishGWASDataInferredView(OWLOntology ontology) throws OWLConversionException {
+//        try {
+//            // load any missing imports
+//            for (OWLImportsDeclaration importsDeclaration : ontology.getImportsDeclarations()) {
+//                getLog().debug("Doing import of " + importsDeclaration.getIRI());
+//                getManager().makeLoadImportRequest(importsDeclaration);
+//                getLog().debug("Imported " + importsDeclaration.getIRI() + " ok");
+//            }
+//            getLog().info("Classifying ontology from " + ontology.getOntologyID().getOntologyIRI());
+//            OWLReasonerFactory factory = new Reasoner.ReasonerFactory();
+//            ConsoleProgressMonitor progressMonitor = new ConsoleProgressMonitor();
+//            OWLReasonerConfiguration config = new SimpleConfiguration(progressMonitor);
+//            getLog().debug("Creating reasoner...");
+//            OWLReasoner reasoner = factory.createReasoner(ontology, config);
+//            getLog().debug("Precomputing inferences...");
+//            reasoner.precomputeInferences();
+//            getLog().debug("Checking ontology consistency...");
+//            reasoner.isConsistent();
+////            getLog().debug("Checking for unsatisfiable classes...");
+////            if (reasoner.getUnsatisfiableClasses().getEntitiesMinusBottom().size() > 0) {
+////                throw new OWLConversionException("Once classified, unsatisfiable classes were detected");
+////            }
+////            else {
+//                getLog().info("Reasoning complete!");
+//                return reasoner;
+////            }
+//        }
+//        catch (OWLOntologyCreationException e) {
+//            throw new OWLConversionException("Failed to load imported ontology", e);
+//        }
+//    }
+
+    public void saveGWASData(OWLOntology ontology, File outputFile) throws OWLConversionException {
+        try {
+            getLog().info("Saving GWAS catalog data...");
+            OWLXMLOntologyFormat owlxmlFormat = new OWLXMLOntologyFormat();
+            getManager().saveOntology(ontology,
+                                      owlxmlFormat,
+                                      IRI.create(outputFile));
+            getLog().info("GWAS catalog data saved ok");
+            getLog().info("Resulting ontology contains " + ontology.getAxiomCount() + " axioms " +
+                                  "and is saved at " + outputFile.getAbsolutePath());
+        }
+        catch (OWLOntologyStorageException e) {
+            throw new OWLConversionException("Failed to save GWAS data", e);
+        }
+    }
+
+    public void saveGWASDataInferredView(OWLReasoner reasoner, File outputFile) throws OWLConversionException {
+        try {
+            getLog().info("Saving inferred view...");
+            List<InferredAxiomGenerator<? extends OWLAxiom>> gens =
+                    new ArrayList<InferredAxiomGenerator<? extends OWLAxiom>>();
+            gens.add(new InferredSubClassAxiomGenerator());
+            OWLOntology inferredOntology = getManager().createOntology();
+            InferredOntologyGenerator iog = new InferredOntologyGenerator(reasoner, gens);
+            iog.fillOntology(getManager(), inferredOntology);
+            getManager().saveOntology(inferredOntology, IRI.create(outputFile));
+            getLog().info("Inferred view saved ok");
+        }
+        catch (OWLOntologyStorageException e) {
+            throw new OWLConversionException("Failed to save GWAS data (inferred view)", e);
+        }
+        catch (OWLOntologyCreationException e) {
+            throw new OWLConversionException("Failed to save GWAS data (inferred view)", e);
+        }
+    }
+
+    /**
+     * Validates the data obtained from the GWAS catalog (prior to converting to OWL)
+     *
+     * @param studies the set of studies to validate
+     */
+    protected void validateGWASData(Collection<Study> studies) {
         // now check a random assortment of 5 studies for trait associations, abandoning broken ones
         int count = 0;
         int noAssocCount = 0;

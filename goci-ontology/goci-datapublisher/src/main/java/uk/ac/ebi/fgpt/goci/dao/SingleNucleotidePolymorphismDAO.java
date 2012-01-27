@@ -2,6 +2,7 @@ package uk.ac.ebi.fgpt.goci.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import uk.ac.ebi.fgpt.goci.lang.UniqueID;
 import uk.ac.ebi.fgpt.goci.model.SingleNucleotidePolymorphism;
 
 import java.sql.ResultSet;
@@ -68,6 +69,7 @@ public class SingleNucleotidePolymorphismDAO {
             this.location = location;
         }
 
+        @UniqueID
         public String getRSID() {
             return rsID;
         }

@@ -1,5 +1,7 @@
 package uk.ac.ebi.fgpt.goci.model;
 
+import uk.ac.ebi.fgpt.goci.lang.UniqueID;
+
 import java.util.Collection;
 import java.util.Date;
 
