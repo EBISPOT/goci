@@ -49,7 +49,7 @@ public class StudyDAO extends Initializable {
 
     public void doInitialization() {
         // select all trait associations and map them
-        getLog().debug("Fetching Trait Associations from the database ready to map to studies...");
+        getLog().info("Fetching Trait Associations from the database ready to map to studies...");
         Collection<TraitAssociation> traitAssociations = getTraitAssociationDAO().retrieveAllTraitAssociations();
         for (TraitAssociation ta : traitAssociations) {
             if (!getTraitAssociationMap().containsKey(ta.getPubMedID())) {
@@ -58,7 +58,7 @@ public class StudyDAO extends Initializable {
             getTraitAssociationMap().get(ta.getPubMedID()).add(ta);
         }
         // we've populated all snps, so mark that we are ready
-        getLog().debug("Retrieved Trait Associations, " +
+        getLog().info("Retrieved Trait Associations, " +
                                "mapped Traits for " + getTraitAssociationMap().keySet().size() + " studies");
     }
 
@@ -111,11 +111,15 @@ public class StudyDAO extends Initializable {
             }
         }
 
+        @UniqueID
+        private String getID() {
+            return id;
+        }
+
         public String getAuthorName() {
             return author;
         }
 
-        @UniqueID
         public String getPubMedID() {
             return pubmedID;
         }

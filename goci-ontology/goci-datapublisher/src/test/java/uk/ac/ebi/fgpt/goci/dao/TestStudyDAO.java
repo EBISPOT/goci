@@ -24,7 +24,7 @@ public class TestStudyDAO extends TestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("goci-datapublisher-dao.xml");
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("goci-datapublisher.xml");
         studyDAO = ctx.getBean("studyDAO", StudyDAO.class);
     }
 

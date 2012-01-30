@@ -13,7 +13,6 @@ import uk.ac.ebi.fgpt.goci.lang.UniqueID;
 import uk.ac.ebi.fgpt.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.fgpt.goci.model.TraitAssociation;
 
-import java.net.URI;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -80,7 +79,7 @@ public class TraitAssociationDAO extends Initializable {
 
     public void doInitialization() {
         // select all SNPs and map them
-        getLog().debug("Fetching SNPs from the database ready to map to Trait Associations...");
+        getLog().info("Fetching SNPs from the database ready to map to Trait Associations...");
         Collection<SingleNucleotidePolymorphism> snps = getSNPDAO().retrieveAllSNPs();
         for (SingleNucleotidePolymorphism snp : snps) {
             if (!getSnpMap().containsKey(snp.getRSID())) {
@@ -89,7 +88,7 @@ public class TraitAssociationDAO extends Initializable {
             getSnpMap().get(snp.getRSID()).add(snp);
         }
         // we've populated all snps, so mark that we are ready
-        getLog().debug("Retrieved " + getSnpMap().keySet().size() + " SNP ids ready to map to Trait Associations");
+        getLog().info("Retrieved " + getSnpMap().keySet().size() + " SNP ids ready to map to Trait Associations");
     }
 
     public Collection<TraitAssociation> retrieveAllTraitAssociations() {
@@ -128,17 +127,12 @@ public class TraitAssociationDAO extends Initializable {
         private SingleNucleotidePolymorphism snp;
         private OWLClass trait;
 
-        private OWLClass experimentalFactor;
-
         private TraitAssocationFromDB(String id, String pubMedID, String rsID, String traitName, float pValue) {
             this.id = id;
             this.pubMedID = pubMedID;
             this.rsID = rsID;
             this.traitName = traitName;
             this.pValue = pValue;
-
-            this.experimentalFactor = getOntologyDAO().getOWLClassByURI(URI.create(
-                    "http://www.ebi.ac.uk/efo/EFO_0000001"));
         }
 
         private void mapSNP() {
@@ -232,7 +226,7 @@ public class TraitAssociationDAO extends Initializable {
         }
 
         @UniqueID
-        public String getID() {
+        private String getID() {
             return id;
         }
 

@@ -70,6 +70,10 @@ public class SingleNucleotidePolymorphismDAO {
         }
 
         @UniqueID
+        private String getID() {
+            return id;
+        }
+
         public String getRSID() {
             return rsID;
         }

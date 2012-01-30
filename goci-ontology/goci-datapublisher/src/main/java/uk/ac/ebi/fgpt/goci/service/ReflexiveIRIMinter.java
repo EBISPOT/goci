@@ -23,61 +23,40 @@ public class ReflexiveIRIMinter implements IRIMinter<Object> {
     }
 
     public IRI mint(String base, Object o) {
-        try {
-            String iri;
-            String fragment = inspectObjectForID(o);
+        String iri;
+        String fragment = inspectObjectForID(o);
 
-            if (base.endsWith("/")) {
-                iri = base.concat(o.getClass().getSimpleName())
-                        .concat("/").concat(fragment);
-            }
-            else {
-                iri = base.concat("/").concat(o.getClass().getSimpleName())
-                        .concat("/").concat(fragment);
-            }
-            return IRI.create(iri);
+        if (base.endsWith("/")) {
+            iri = base.concat(o.getClass().getSimpleName())
+                    .concat("/").concat(fragment);
         }
-        catch (IllegalAccessException e) {
-            throw new RuntimeException("Unable to capture ID from supplied " + o.getClass().getSimpleName() +
-                                               ": @UniqueID method may be private", e);
+        else {
+            iri = base.concat("/").concat(o.getClass().getSimpleName())
+                    .concat("/").concat(fragment);
         }
-        catch (InvocationTargetException e) {
-            throw new RuntimeException("Unable to capture ID from supplied " + o.getClass().getSimpleName() +
-                                               ": @UniqueID method may require arguments", e);
-        }
+        return IRI.create(iri);
     }
 
     public IRI mint(String base, String prefix, Object o) {
-        try {
-            String iri;
-            String fragment = inspectObjectForID(o);
+        String iri;
+        String fragment = inspectObjectForID(o);
 
-            if (base.endsWith("/")) {
-                iri = base.concat(o.getClass().getSimpleName())
-                        .concat("/").concat(prefix)
-                        .concat("/").concat(fragment);
-            }
-            else {
-                iri = base.concat("/").concat(o.getClass().getSimpleName())
-                        .concat("/").concat(prefix)
-                        .concat("/").concat(fragment);
-            }
-            return IRI.create(iri);
+        if (base.endsWith("/")) {
+            iri = base.concat(o.getClass().getSimpleName())
+                    .concat("/").concat(prefix)
+                    .concat("/").concat(fragment);
         }
-        catch (IllegalAccessException e) {
-            throw new RuntimeException("Unable to capture ID from supplied " + o.getClass().getSimpleName() +
-                                               ": @UniqueID method may be private", e);
+        else {
+            iri = base.concat("/").concat(o.getClass().getSimpleName())
+                    .concat("/").concat(prefix)
+                    .concat("/").concat(fragment);
         }
-        catch (InvocationTargetException e) {
-            throw new RuntimeException("Unable to capture ID from supplied " + o.getClass().getSimpleName() +
-                                               ": @UniqueID method may require arguments", e);
-        }
+        return IRI.create(iri);
     }
 
-    private String inspectObjectForID(Object o)
-            throws IllegalArgumentException, InvocationTargetException, IllegalAccessException {
+    private String inspectObjectForID(Object o) {
         // get methods on o
-        Method[] methods = o.getClass().getMethods();
+        Method[] methods = o.getClass().getDeclaredMethods();
 
         // check methods for annotations
         Method annotatedMethod = null;
@@ -100,22 +79,32 @@ public class ReflexiveIRIMinter implements IRIMinter<Object> {
         }
         else {
             // invoke the method and return the result .toString()
-            annotatedMethod.setAccessible(true);
-            Object result = annotatedMethod.invoke(o);
-            if (result != null) {
-                if (result instanceof String) {
-                    return (String) result;
+            try {
+                annotatedMethod.setAccessible(true);
+                Object result = annotatedMethod.invoke(o);
+                if (result != null) {
+                    if (result instanceof String) {
+                        return (String) result;
+                    }
+                    else {
+                        getLog().debug(
+                                "Unique ID for supplied " + o.getClass().getSimpleName() +
+                                        " was not a string getter: " +
+                                        "the unique ID will be converted using toString(), " +
+                                        "but you should check this returns sensible IDs");
+                        return result.toString();
+                    }
                 }
                 else {
-                    getLog().debug(
-                            "Unique ID for supplied " + o.getClass().getSimpleName() + " was not a string getter: " +
-                                    "the unique ID will be converted using toString(), " +
-                                    "but you should check this returns sensible IDs");
-                    return result.toString();
+                    throw new NullPointerException(
+                            "Null ID for the supplied " + o.getClass().getSimpleName() + " object");
                 }
             }
-            else {
-                throw new NullPointerException("Null ID for the supplied " + o.getClass().getSimpleName() + " object");
+            catch (InvocationTargetException e) {
+                throw new RuntimeException(e.getCause());
+            }
+            catch (IllegalAccessException e) {
+                throw new RuntimeException("This should never happen", e);
             }
         }
     }

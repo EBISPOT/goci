@@ -57,12 +57,12 @@ public class OntologyDAO extends Initializable {
     public void doInitialization() throws OWLOntologyCreationException {
         // set property to make sure we can parse all of EFO
         System.setProperty("entityExpansionLimit", "128000");
-        getLog().debug("Loading EFO from " + getEfoURI() + "...");
+        getLog().info("Loading EFO from " + getEfoURI() + "...");
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
         IRI iri = IRI.create(getEfoURI());
         efo = manager.loadOntologyFromOntologyDocument(iri);
 
-        getLog().debug("Loaded " + efo.getOntologyID().getOntologyIRI() + " ok, creating indexes...");
+        getLog().info("Loaded " + efo.getOntologyID().getOntologyIRI() + " ok, creating indexes...");
         labelToClassMap = new HashMap<String, Set<OWLClass>>();
         classToLabelMap = new HashMap<OWLClass, List<String>>();
         iriToClassMap = new HashMap<IRI, OWLClass>();
@@ -101,7 +101,7 @@ public class OntologyDAO extends Initializable {
                 iriToClassMap.put(owlClass.getIRI(), owlClass);
             }
         }
-        getLog().debug("...indexing complete");
+        getLog().info("...ontology indexing complete");
     }
 
 

@@ -1,8 +1,8 @@
 package uk.ac.ebi.fgpt.goci;
 
-import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.io.OWLXMLOntologyFormat;
-import org.semanticweb.owlapi.model.*;
+import org.apache.commons.cli.*;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -23,34 +23,85 @@ public class GOCIDataPublisherDriver {
     private static File inferredOntologyFile;
 
     public static void main(String[] args) {
-        // parse arguments
-        parseArguments(args);
-
-        // execute publisher
-        GOCIDataPublisherDriver driver = new GOCIDataPublisherDriver();
         try {
+            // parse arguments
+            parseArguments(args);
+
+            // execute publisher
+            GOCIDataPublisherDriver driver = new GOCIDataPublisherDriver();
             driver.publishAndSave(assertedOntologyFile, inferredOntologyFile);
         }
-        catch (OWLConversionException e) {
+        catch (Exception e) {
             System.err.println("Failed to publish data to OWL: " + e.getMessage());
-            e.printStackTrace();
             System.exit(1);
         }
     }
 
-    public static void parseArguments(String[] args) {
-        // do stuff to parse args
-        assertedOntologyFile = new File(args[0]);
-        inferredOntologyFile = null;
-        if (args.length > 1) {
-            inferredOntologyFile = new File(args[1]);
+    private static void parseArguments(String[] args) {
+        CommandLineParser parser = new GnuParser();
+        HelpFormatter help = new HelpFormatter();
+        Options options = bindOptions();
+
+        try {
+            CommandLine cl = parser.parse(options, args, true);
+
+            // check for mode help option
+            if (cl.hasOption("")) {
+                // print out mode help
+                help.printHelp("publish", options, true);
+                System.exit(0);
+            }
+            else {
+                // find -o option (for asserted output file)
+                if (cl.hasOption("o")) {
+                    String assertedOutputFileName = cl.getOptionValue("o");
+                    assertedOntologyFile = new File(assertedOutputFileName);
+                }
+                else {
+                    System.err.println("-o (ontology output file) argument is required");
+                    help.printHelp("publish", options, true);
+                    System.exit(1);
+                }
+
+                if (cl.hasOption("i")) {
+                    String inferredOutputFileName = cl.getOptionValue("i");
+                    inferredOntologyFile = new File(inferredOutputFileName);
+                }
+            }
         }
+        catch (ParseException e) {
+            System.err.println("Failed to read supplied arguments");
+            help.printHelp("publish", options, true);
+            System.exit(1);
+        }
+    }
+
+    private static Options bindOptions() {
+        Options options = new Options();
+
+        // help
+        Option helpOption = new Option("h", "help", false, "Print the help");
+        options.addOption(helpOption);
+
+        // add output file arguments
+        Option outputFileOption = new Option("o", "output", true,
+                                             "The output file to write the published ontology to");
+        outputFileOption.setArgName("file");
+        outputFileOption.setRequired(true);
+        options.addOption(outputFileOption);
+
+        Option inferredOutputFileOption = new Option("i", "inferred", true,
+                                                     "The output file to write the inferred version of the published ontology to");
+        inferredOutputFileOption.setArgName("file");
+        options.addOption(inferredOutputFileOption);
+
+        return options;
     }
 
     private GWASOWLPublisher publisher;
 
     public GOCIDataPublisherDriver() {
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("goci-datapublisher-dao.xml");
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("goci-datapublisher.xml");
         publisher = ctx.getBean("publisher", GWASOWLPublisher.class);
     }
 
@@ -76,15 +127,5 @@ public class GOCIDataPublisherDriver {
             publisher.saveGWASDataInferredView(reasoner, inferredOntologyFile);
             System.out.println("..done!");
         }
-    }
-
-    public void writeOWLFile(OWLOntology ontology, File outputFile) throws OWLOntologyStorageException {
-        OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-        OWLOntologyFormat format = manager.getOntologyFormat(ontology);
-        OWLXMLOntologyFormat owlxmlFormat = new OWLXMLOntologyFormat();
-        if (format.isPrefixOWLOntologyFormat()) {
-            owlxmlFormat.copyPrefixesFrom(format.asPrefixOWLOntologyFormat());
-        }
-        manager.saveOntology(ontology, owlxmlFormat, IRI.create(outputFile.toURI()));
     }
 }
