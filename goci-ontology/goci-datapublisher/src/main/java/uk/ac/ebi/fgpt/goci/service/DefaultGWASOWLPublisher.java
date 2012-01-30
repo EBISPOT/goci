@@ -166,13 +166,14 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
             reasoner.precomputeInferences();
             getLog().debug("Checking ontology consistency...");
             if (reasoner.isConsistent()) {
-//            getLog().debug("Checking for unsatisfiable classes...");
-//            if (reasoner.getUnsatisfiableClasses().getEntitiesMinusBottom().size() > 0) {
-//                throw new OWLConversionException("Once classified, unsatisfiable classes were detected");
-//            }
-//            else {
-                getLog().info("Reasoning complete!");
-                return reasoner;
+                getLog().debug("Checking for unsatisfiable classes...");
+                if (reasoner.getUnsatisfiableClasses().getEntitiesMinusBottom().size() > 0) {
+                    throw new OWLConversionException("Once classified, unsatisfiable classes were detected");
+                }
+                else {
+                    getLog().info("Reasoning complete!");
+                    return reasoner;
+                }
             }
             else {
                 throw new OWLConversionException("Ontology is not consistent!");
