@@ -158,6 +158,18 @@
         </developer>
     </developers>
 
+    <!-- To keep things minimal, we only fetch from the GOCI maven repo -->
+    <repositories>
+        <repository>
+            <id>goci-repo</id>
+            <url>http://www.ebi.ac.uk/~tburdett/goci/maven/repo</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+
     <!-- Dependencies that are required in all submodules of GOCI -->
     <dependencies>
         <dependency>

@@ -209,7 +209,28 @@
     </dependencies>
 
     <profiles>
-        <!-- profile for devtest, uses properties files from resources-devtest -->
+        <!-- profile for devtest, uses properties files from resources-devtest optimised for install on orange.ebi.ac.uk-->
+        <profile>
+            <id>devtest</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources-devtest</directory>
+                    </resource>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <excludes>
+                            <exclude>goci.properties</exclude>
+                        </excludes>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+
+        <!-- profile for test, uses properties files from resources-test -->
         <profile>
             <id>devtest</id>
             <activation>
