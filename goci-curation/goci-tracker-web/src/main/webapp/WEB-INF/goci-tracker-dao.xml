@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:goci.properties" />
 
     <!-- Study DAO -->
     <bean name="studyDAO" class="uk.ac.ebi.fgpt.goci.dao.JDBCGociStudyDAO">
@@ -24,7 +26,7 @@
           class="org.springframework.jdbc.datasource.SingleConnectionDataSource"
           depends-on="hsqlInitializer">
         <property name="driverClassName" value="org.hsqldb.jdbc.JDBCDriver" />
-        <property name="url" value="jdbc:hsqldb:file:~/.goci/hsql" />
+        <property name="url" value="jdbc:hsqldb:file:${goci.home.directory}" />
         <property name="username" value="sa" />
         <property name="password" value="" />
     </bean>
@@ -34,7 +36,7 @@
           init-method="init"
           destroy-method="destroy">
         <property name="driverClassName" value="org.hsqldb.jdbc.JDBCDriver" />
-        <property name="url" value="jdbc:hsqldb:file:~/.goci/hsql" />
+        <property name="url" value="jdbc:hsqldb:file:${goci.home.directory}" />
         <property name="username" value="sa" />
         <property name="password" value="" />
     </bean>

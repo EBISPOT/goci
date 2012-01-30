@@ -19,7 +19,7 @@ public class GOCITrackerDriver {
             // create and configure webapp context
             WebAppContext webapp = new WebAppContext();
             webapp.setContextPath("/goci");
-            webapp.setWar("lib/goci-tracker-1.0-SNAPSHOT.war");
+            webapp.setWar("lib/goci-tracker-web-0.2-SNAPSHOT.war");
 
             // add webapp context to server 
             server.setHandler(webapp);

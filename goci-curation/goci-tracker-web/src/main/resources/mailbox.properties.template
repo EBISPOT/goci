@@ -1,0 +1,6 @@
+# Configuration file for setting up the account the system will use to email notifications to users
+
+mailbox.host=
+mailbox.port=
+mailbox.username=
+mailbox.password=
