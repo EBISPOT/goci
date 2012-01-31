@@ -2,14 +2,17 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jee="http://www.springframework.org/schema/jee"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context.xsd">
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/jee
+       http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
 
     <!-- properties loader: goci.properties is only used in goci-tracker-dao.xml config -->
-    <context:property-placeholder location="classpath:mailbox.properties,classpath:goci.properties" />
+    <context:property-placeholder location="classpath:goci.properties" />
 
     <!-- Study service -->
     <bean name="studyService" class="uk.ac.ebi.fgpt.goci.service.DefaultGociStudyService">
@@ -46,10 +49,11 @@
     </bean>
 
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-        <property name="host" value="${mailbox.host}" />
-        <property name="port" value="${mailbox.port}" />
-        <property name="username" value="${mailbox.username}" />
-        <property name="password" value="${mailbox.password}" />
+        <property name="session" value="mailSession" />
     </bean>
+
+    <jee:jndi-lookup id="mailSession"
+                     jndi-name="/mail/SESSION"
+                     resource-ref="true" />
 
 </beans>

@@ -228,6 +228,30 @@
                         </excludes>
                     </resource>
                 </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <version>2.1.1</version>
+                        <configuration>
+                            <webResources>
+                                <resource>
+                                    <directory>src/main/webapp</directory>
+                                    <excludes>
+                                        <exclude>WEB-INF/goci-tracker-service.xml</exclude>
+                                    </excludes>
+                                </resource>
+                                <resource>
+                                    <directory>src/main/webresources-devtest</directory>
+                                    <targetPath>WEB-INF</targetPath>
+                                    <includes>
+                                        <include>goci-tracker-service.xml</include>
+                                    </includes>
+                                </resource>
+                            </webResources>
+                        </configuration>
+                    </plugin>
+                </plugins>
             </build>
         </profile>
 
@@ -251,6 +275,30 @@
                         </excludes>
                     </resource>
                 </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <version>2.1.1</version>
+                        <configuration>
+                            <webResources>
+                                <resource>
+                                    <directory>src/main/webapp</directory>
+                                    <excludes>
+                                        <exclude>WEB-INF/goci-tracker-service.xml</exclude>
+                                    </excludes>
+                                </resource>
+                                <resource>
+                                    <directory>src/main/webresources-test</directory>
+                                    <targetPath>WEB-INF</targetPath>
+                                    <includes>
+                                        <include>goci-tracker-service.xml</include>
+                                    </includes>
+                                </resource>
+                            </webResources>
+                        </configuration>
+                    </plugin>
+                </plugins>
             </build>
         </profile>
 
@@ -274,6 +322,30 @@
                         </excludes>
                     </resource>
                 </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <version>2.1.1</version>
+                        <configuration>
+                            <webResources>
+                                <resource>
+                                    <directory>src/main/webapp</directory>
+                                    <excludes>
+                                        <exclude>WEB-INF/goci-tracker-service.xml</exclude>
+                                    </excludes>
+                                </resource>
+                                <resource>
+                                    <directory>src/main/webresources-production</directory>
+                                    <targetPath>WEB-INF</targetPath>
+                                    <includes>
+                                        <include>goci-tracker-service.xml</include>
+                                    </includes>
+                                </resource>
+                            </webResources>
+                        </configuration>
+                    </plugin>
+                </plugins>
             </build>
         </profile>
     </profiles>
