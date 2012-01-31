@@ -49,7 +49,7 @@
     </bean>
 
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-        <property name="session" value="mailSession" />
+        <property name="session" ref="mailSession" />
     </bean>
 
     <jee:jndi-lookup id="mailSession"
