@@ -30,9 +30,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.*;
 
 
@@ -56,6 +53,8 @@ public class PropertyFilePubMedDispatcherService implements GociPubMedDispatcher
     private String summaryString;
     private String fetchString;
 
+    private int queryEvery;
+
     private Scheduler scheduler;
 
     private GociStudyFactory studyFactory;
@@ -78,10 +77,16 @@ public class PropertyFilePubMedDispatcherService implements GociPubMedDispatcher
                     .concat(properties.getProperty("pubmed.gwas.summary"));
             this.fetchString = properties.getProperty("pubmed.root")
                     .concat(properties.getProperty("pubmed.gwas.fetch"));
+            this.queryEvery = Integer.parseInt(properties.getProperty("pubmed.query.interval.hours"));
         }
         catch (IOException e) {
             throw new RuntimeException(
                     "Unable to create dispatcher service: failed to read pubmed.properties resource", e);
+        }
+        catch (NumberFormatException e) {
+            throw new RuntimeException(
+                    "Unable to create dispatcher service: you must provide a integer query interval " +
+                            "in minutes (pubmed.query.interval.mins)", e);
         }
     }
 
@@ -274,7 +279,7 @@ public class PropertyFilePubMedDispatcherService implements GociPubMedDispatcher
                     .withIdentity("pubmedSearchTrigger", "defaultGroup")
                     .startNow()
                     .withSchedule(SimpleScheduleBuilder.simpleSchedule()
-                                          .withIntervalInMinutes(5) /* TODO: parameterize this */
+                                          .withIntervalInHours(queryEvery)
                                           .repeatForever())
                     .build();
 

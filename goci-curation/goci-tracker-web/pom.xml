@@ -224,27 +224,53 @@
                         <directory>src/main/resources</directory>
                         <excludes>
                             <exclude>goci.properties</exclude>
+                            <exclude>*.template</exclude>
                         </excludes>
                     </resource>
                 </resources>
             </build>
         </profile>
 
-        <!-- profile for test, uses properties files from resources-test -->
+        <!-- profile for test, uses properties files from resources-test, optimised for staging datacentre -->
         <profile>
-            <id>devtest</id>
+            <id>test</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
             <build>
                 <resources>
                     <resource>
-                        <directory>src/main/resources-devtest</directory>
+                        <directory>src/main/resources-test</directory>
                     </resource>
                     <resource>
                         <directory>src/main/resources</directory>
                         <excludes>
                             <exclude>goci.properties</exclude>
+                            <exclude>*.template</exclude>
+                            <exclude>log4j.xml</exclude>
+                        </excludes>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+
+        <!-- profile for production, uses properties files from resources-production, optimised for London datacentre -->
+        <profile>
+            <id>production</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources-production</directory>
+                    </resource>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <excludes>
+                            <exclude>goci.properties</exclude>
+                            <exclude>*.template</exclude>
+                            <exclude>log4j.xml</exclude>
                         </excludes>
                     </resource>
                 </resources>
