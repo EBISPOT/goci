@@ -34,22 +34,19 @@
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 
-    <!--&lt;!&ndash; define url rewrite filters &ndash;&gt;-->
-    <!--<filter>-->
-        <!--<filter-name>UrlRewriteFilter</filter-name>-->
-        <!--<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>-->
-    <!--</filter>-->
-
-    <!--<filter-mapping>-->
-        <!--<filter-name>UrlRewriteFilter</filter-name>-->
-        <!--<url-pattern>/*</url-pattern>-->
-    <!--</filter-mapping>-->
-
     <!-- listener to load context at startup -->
     <listener>
         <listener-class>
             org.springframework.web.context.ContextLoaderListener
         </listener-class>
     </listener>
+
+    <!-- mail seesion resource ref from JNDI -->
+    <resource-ref>
+        <description>Mail session</description>
+        <res-ref-name>mail/SESSION</res-ref-name>
+        <res-type>javax.mail.Session</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
 
 </web-app>

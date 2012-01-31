@@ -53,7 +53,7 @@
     </bean>
 
     <jee:jndi-lookup id="mailSession"
-                     jndi-name="/mail/SESSION"
+                     jndi-name="mail/SESSION"
                      resource-ref="true" />
 
 </beans>

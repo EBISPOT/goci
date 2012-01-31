@@ -181,18 +181,19 @@
             <version>3.0.3.RELEASE</version>
         </dependency>
 
-        <!-- for email support-->
-        <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.4.4</version>
-        </dependency>
-
         <!-- servlet - provided by container -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- for email support, provided by container -->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.1</version>
             <scope>provided</scope>
         </dependency>
 
@@ -209,6 +210,21 @@
     </dependencies>
 
     <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <!-- for email support-->
+                <dependency>
+                    <groupId>javax.mail</groupId>
+                    <artifactId>mail</artifactId>
+                    <version>1.4.1</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
         <!-- profile for devtest, uses properties files from resources-devtest optimised for install on orange.ebi.ac.uk-->
         <profile>
             <id>devtest</id>
