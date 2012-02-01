@@ -28,11 +28,11 @@ public class ReflexiveIRIMinter implements IRIMinter<Object> {
 
         if (base.endsWith("/")) {
             iri = base.concat(o.getClass().getSimpleName())
-                    .concat("/").concat(fragment);
+                    .concat("_").concat(fragment);
         }
         else {
             iri = base.concat("/").concat(o.getClass().getSimpleName())
-                    .concat("/").concat(fragment);
+                    .concat("_").concat(fragment);
         }
         return IRI.create(iri);
     }
@@ -43,13 +43,13 @@ public class ReflexiveIRIMinter implements IRIMinter<Object> {
 
         if (base.endsWith("/")) {
             iri = base.concat(o.getClass().getSimpleName())
-                    .concat("/").concat(prefix)
-                    .concat("/").concat(fragment);
+                    .concat("_").concat(prefix)
+                    .concat("_").concat(fragment);
         }
         else {
             iri = base.concat("/").concat(o.getClass().getSimpleName())
-                    .concat("/").concat(prefix)
-                    .concat("/").concat(fragment);
+                    .concat("_").concat(prefix)
+                    .concat("_").concat(fragment);
         }
         return IRI.create(iri);
     }
