@@ -35,7 +35,9 @@
     </bean>
 
     <!-- Ontology DAO -->
-    <bean name="ontologyDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init" />
+    <bean name="ontologyDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init">
+        <property name="efoResource" value="http://bar.ebi.ac.uk:8080/trac/export/head/branches/curator/ExperimentalFactorOntology/ExFactorInOWL/releasecandidate/efo_release_candidate.owl" />
+    </bean>
 
     <!-- GWAS Database setup and access -->
     <bean name="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">

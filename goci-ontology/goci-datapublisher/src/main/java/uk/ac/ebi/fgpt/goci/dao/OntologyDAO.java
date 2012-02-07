@@ -3,9 +3,11 @@ package uk.ac.ebi.fgpt.goci.dao;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
+import org.springframework.core.io.Resource;
 import uk.ac.ebi.fgpt.goci.exception.OntologyIndexingException;
 import uk.ac.ebi.fgpt.goci.lang.Initializable;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.*;
 
@@ -18,6 +20,8 @@ import java.util.*;
  */
 public class OntologyDAO extends Initializable {
     // configurable ontology elements with sensible defaults
+    private Resource efoResource;
+
     private String efoURI = "http://www.ebi.ac.uk/efo/efo.owl";
     private String efoSynonymAnnotationURI = "http://www.ebi.ac.uk/efo/alternative_term";
     private String efoObsoleteClassURI = "http://www.geneontology.org/formats/oboInOwl#ObsoleteClass";
@@ -29,6 +33,14 @@ public class OntologyDAO extends Initializable {
     private Map<OWLClass, List<String>> classToLabelMap;
     private Map<IRI, OWLClass> iriToClassMap;
     private Map<String, IRI> accessionToIRIMap;
+
+    public Resource getEfoResource() {
+        return efoResource;
+    }
+
+    public void setEfoResource(Resource efoResource) {
+        this.efoResource = efoResource;
+    }
 
     public String getEfoURI() {
         return efoURI;
@@ -55,53 +67,59 @@ public class OntologyDAO extends Initializable {
     }
 
     public void doInitialization() throws OWLOntologyCreationException {
-        // set property to make sure we can parse all of EFO
-        System.setProperty("entityExpansionLimit", "128000");
-        getLog().info("Loading EFO from " + getEfoURI() + "...");
-        OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-        IRI iri = IRI.create(getEfoURI());
-        efo = manager.loadOntologyFromOntologyDocument(iri);
+        try {
+            // set property to make sure we can parse all of EFO
+            System.setProperty("entityExpansionLimit", "128000");
+            getLog().info("Loading EFO from " + getEfoResource().getURI().toString() + "...");
+            OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+            IRI iri = IRI.create(getEfoResource().getURI());
+            efo = manager.loadOntologyFromOntologyDocument(iri);
 
-        getLog().info("Loaded " + efo.getOntologyID().getOntologyIRI() + " ok, creating indexes...");
-        labelToClassMap = new HashMap<String, Set<OWLClass>>();
-        classToLabelMap = new HashMap<OWLClass, List<String>>();
-        iriToClassMap = new HashMap<IRI, OWLClass>();
-        accessionToIRIMap = new HashMap<String, IRI>();
+            getLog().info("Loaded " + efo.getOntologyID().getOntologyIRI() + " ok, creating indexes...");
+            labelToClassMap = new HashMap<String, Set<OWLClass>>();
+            classToLabelMap = new HashMap<OWLClass, List<String>>();
+            iriToClassMap = new HashMap<IRI, OWLClass>();
+            accessionToIRIMap = new HashMap<String, IRI>();
 
-        // get obsolete class
-        for (OWLClass nextClass : efo.getClassesInSignature()) {
-            if (nextClass.getIRI().toURI().toString().equals(getEfoObsoleteClassURI())) {
-                obsoleteClass = nextClass;
-                break;
-            }
-        }
-        if (obsoleteClass == null) {
-            String message =
-                    "Unable to recover the relevant OWLClasses from EFO - ObsoleteClass was not found";
-            throw new OntologyIndexingException(message);
-        }
-
-        // loop over classes
-        for (OWLClass owlClass : efo.getClassesInSignature()) {
-            // check this isn't an obsolete class
-            if (!isObsolete(owlClass)) {
-                // get class names, and enter them in the maps
-                List<String> classNames = getClassNames(owlClass);
-
-                classToLabelMap.put(owlClass, classNames);
-                for (String name : getClassNames(owlClass)) {
-                    name = normalizeSearchString(name);
-                    if (!labelToClassMap.containsKey(name)) {
-                        labelToClassMap.put(name, new HashSet<OWLClass>());
-                    }
-                    labelToClassMap.get(name).add(owlClass);
+            // get obsolete class
+            for (OWLClass nextClass : efo.getClassesInSignature()) {
+                if (nextClass.getIRI().toURI().toString().equals(getEfoObsoleteClassURI())) {
+                    obsoleteClass = nextClass;
+                    break;
                 }
-
-                // get IRI, and enter it into the map
-                iriToClassMap.put(owlClass.getIRI(), owlClass);
             }
+            if (obsoleteClass == null) {
+                String message =
+                        "Unable to recover the relevant OWLClasses from EFO - ObsoleteClass was not found";
+                throw new OntologyIndexingException(message);
+            }
+
+            // loop over classes
+            for (OWLClass owlClass : efo.getClassesInSignature()) {
+                // check this isn't an obsolete class
+                if (!isObsolete(owlClass)) {
+                    // get class names, and enter them in the maps
+                    List<String> classNames = getClassNames(owlClass);
+
+                    classToLabelMap.put(owlClass, classNames);
+                    for (String name : getClassNames(owlClass)) {
+                        name = normalizeSearchString(name);
+                        if (!labelToClassMap.containsKey(name)) {
+                            labelToClassMap.put(name, new HashSet<OWLClass>());
+                        }
+                        labelToClassMap.get(name).add(owlClass);
+                    }
+
+                    // get IRI, and enter it into the map
+                    iriToClassMap.put(owlClass.getIRI(), owlClass);
+                }
+            }
+            getLog().info("...ontology indexing complete");
         }
-        getLog().info("...ontology indexing complete");
+        catch (IOException e) {
+            throw new OWLOntologyCreationException(
+                    "Unable to load EFO from supplied resource '" + getEfoResource().toString() + "'", e);
+        }
     }
 
 
