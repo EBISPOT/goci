@@ -52,7 +52,7 @@ public abstract class Initializable {
         }
     }
 
-    protected void init() {
+    public void init() {
         // create new thread to do initialization
         new Thread((new Runnable() {
             public void run() {
@@ -71,5 +71,5 @@ public abstract class Initializable {
         })).start();
     }
 
-    public abstract void doInitialization() throws Exception;
+    protected abstract void doInitialization() throws Exception;
 }

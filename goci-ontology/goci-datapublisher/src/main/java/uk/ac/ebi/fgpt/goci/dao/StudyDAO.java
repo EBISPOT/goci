@@ -47,7 +47,7 @@ public class StudyDAO extends Initializable {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void doInitialization() {
+    protected void doInitialization() {
         // select all trait associations and map them
         getLog().info("Fetching Trait Associations from the database ready to map to studies...");
         Collection<TraitAssociation> traitAssociations = getTraitAssociationDAO().retrieveAllTraitAssociations();

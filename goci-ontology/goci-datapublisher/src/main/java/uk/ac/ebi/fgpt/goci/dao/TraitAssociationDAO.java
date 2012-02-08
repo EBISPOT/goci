@@ -77,7 +77,7 @@ public class TraitAssociationDAO extends Initializable {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void doInitialization() {
+    protected void doInitialization() {
         // select all SNPs and map them
         getLog().info("Fetching SNPs from the database ready to map to Trait Associations...");
         Collection<SingleNucleotidePolymorphism> snps = getSNPDAO().retrieveAllSNPs();

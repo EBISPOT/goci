@@ -66,7 +66,7 @@ public class OntologyDAO extends Initializable {
         this.efoObsoleteClassURI = efoObsoleteClassURI;
     }
 
-    public void doInitialization() throws OWLOntologyCreationException {
+    protected void doInitialization() throws OWLOntologyCreationException {
         try {
             // set property to make sure we can parse all of EFO
             System.setProperty("entityExpansionLimit", "128000");
@@ -97,12 +97,12 @@ public class OntologyDAO extends Initializable {
             // loop over classes
             for (OWLClass owlClass : efo.getClassesInSignature()) {
                 // check this isn't an obsolete class
-                if (!isObsolete(owlClass)) {
+                if (!isObsolete(efo, obsoleteClass, owlClass)) {
                     // get class names, and enter them in the maps
-                    List<String> classNames = getClassNames(owlClass);
+                    List<String> classNames = getClassNames(efo, owlClass);
 
                     classToLabelMap.put(owlClass, classNames);
-                    for (String name : getClassNames(owlClass)) {
+                    for (String name : getClassNames(efo, owlClass)) {
                         name = normalizeSearchString(name);
                         if (!labelToClassMap.containsKey(name)) {
                             labelToClassMap.put(name, new HashSet<OWLClass>());
@@ -143,11 +143,39 @@ public class OntologyDAO extends Initializable {
         }
     }
 
+    /**
+     * Fetches an owl class by the URI of that class.  The string passed to this method should be a properly formatted
+     * string representation of the URI for this class.
+     *
+     * @param str the URI of the class
+     * @return the OWL class with this URI, if found, or null if not present
+     */
+    public OWLClass getOWLClassByURI(String str) {
+        return getOWLClassByURI(URI.create(str));
+    }
+
+    /**
+     * Fetches an owl class by URI.  Internally, this method converts the given URI to an IRI - this method is a
+     * convenience method that is shorthand for <code>getOWLClassByIRI(IRI.create(uri));</code>
+     *
+     * @param uri the URI of the class
+     * @return the OWL class with this URI, if found, or null if not present
+     */
     public OWLClass getOWLClassByURI(URI uri) {
+        return getOWLClassByIRI(IRI.create(uri));
+    }
+
+    /**
+     * Searches the index of owl class looking for a class with an IRI matching the one supplied.  This method will
+     * return null if the supplied IRI does not match that of any class in the loaded ontology.
+     *
+     * @param iri the IRI of the class to retrieve
+     * @return the OWL class with this IRI, if found, or null if absent
+     */
+    public OWLClass getOWLClassByIRI(IRI iri) {
         try {
             waitUntilReady();
-            IRI clsIRI = IRI.create(uri);
-            return iriToClassMap.get(clsIRI);
+            return iriToClassMap.get(iri);
         }
         catch (InterruptedException e) {
             throw new OntologyIndexingException(
@@ -163,11 +191,14 @@ public class OntologyDAO extends Initializable {
      * @return the list of strings representing labels or synonyms for this class
      */
     public synchronized List<String> getClassNames(OWLClass owlClass) {
-        List<String> results = new ArrayList<String>();
-        results.addAll(0, getClassRDFSLabels(owlClass));
-        results.addAll(getClassSynonyms(owlClass));
-
-        return results;
+        try {
+            waitUntilReady();
+            return getClassNames(efo, owlClass);
+        }
+        catch (InterruptedException e) {
+            throw new OntologyIndexingException(
+                    "Unexpectedly interrupted whilst waiting for indexing to complete", e);
+        }
     }
 
     /**
@@ -178,24 +209,14 @@ public class OntologyDAO extends Initializable {
      * @return the literal values of the rdfs:label annotation
      */
     public synchronized Set<String> getClassRDFSLabels(OWLClass owlClass) {
-        Set<String> classNames = new HashSet<String>();
-
-        // get label annotation property
-        OWLAnnotationProperty labelAnnotationProperty =
-                efo.getOWLOntologyManager().getOWLDataFactory()
-                        .getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
-
-        // get all label annotations
-        Set<OWLAnnotation> labelAnnotations = owlClass.getAnnotations(
-                efo, labelAnnotationProperty);
-
-        for (OWLAnnotation labelAnnotation : labelAnnotations) {
-            OWLAnnotationValue labelAnnotationValue = labelAnnotation.getValue();
-            if (labelAnnotationValue instanceof OWLLiteral) {
-                classNames.add(((OWLLiteral) labelAnnotationValue).getLiteral());
-            }
+        try {
+            waitUntilReady();
+            return getClassRDFSLabels(efo, owlClass);
         }
-        return classNames;
+        catch (InterruptedException e) {
+            throw new OntologyIndexingException(
+                    "Unexpectedly interrupted whilst waiting for indexing to complete", e);
+        }
     }
 
     /**
@@ -206,42 +227,14 @@ public class OntologyDAO extends Initializable {
      * @param owlClass the class to retrieve the synonyms of
      * @return a set of strings containing all aliases of the supplied class
      */
-    private synchronized Set<String> getClassSynonyms(OWLClass owlClass) {
-        Set<String> classSynonyms = new HashSet<String>();
-
-        // get synonym annotation property
-        OWLAnnotationProperty synonymAnnotationProperty =
-                efo.getOWLOntologyManager().getOWLDataFactory()
-                        .getOWLAnnotationProperty(IRI.create(getEfoSynonymAnnotationURI()));
-
-        // get all synonym annotations
-        Set<OWLAnnotation> synonymAnnotations = owlClass.getAnnotations(
-                efo, synonymAnnotationProperty);
-
-        for (OWLAnnotation synonymAnnotation : synonymAnnotations) {
-            OWLAnnotationValue synonymAnnotationValue = synonymAnnotation.getValue();
-            if (synonymAnnotationValue instanceof OWLLiteral) {
-                classSynonyms.add(((OWLLiteral) synonymAnnotationValue).getLiteral());
-            }
+    public synchronized Set<String> getClassSynonyms(OWLClass owlClass) {
+        try {
+            waitUntilReady();
+            return getClassSynonyms(efo, owlClass);
         }
-
-        return classSynonyms;
-    }
-
-    /**
-     * Searches the classes known to this retriever for any that may match the given search string.  This implementation
-     * uses very simple logic, simply looking for exact matches in class labels and synonyms.  Other implementions, with
-     * more advanced searching, can obviously be implemented.
-     *
-     * @param searchString the search string - this will usually be the class name/synonym
-     * @return a set of matching classes.
-     */
-    private Set<OWLClass> matchSearchString(String searchString) {
-        if (labelToClassMap.containsKey(searchString)) {
-            return labelToClassMap.get(searchString);
-        }
-        else {
-            return Collections.emptySet();
+        catch (InterruptedException e) {
+            throw new OntologyIndexingException(
+                    "Unexpectedly interrupted whilst waiting for indexing to complete", e);
         }
     }
 
@@ -265,16 +258,119 @@ public class OntologyDAO extends Initializable {
     }
 
     /**
+     * Searches the classes known to this retriever for any that may match the given search string.  This implementation
+     * uses very simple logic, simply looking for exact matches in class labels and synonyms.  Other implementions, with
+     * more advanced searching, can obviously be implemented.
+     *
+     * @param searchString the search string - this will usually be the class name/synonym
+     * @return a set of matching classes.
+     */
+    private Set<OWLClass> matchSearchString(String searchString) {
+        try {
+            waitUntilReady();
+            if (labelToClassMap.containsKey(searchString)) {
+                return labelToClassMap.get(searchString);
+            }
+            else {
+                return Collections.emptySet();
+            }
+        }
+        catch (InterruptedException e) {
+            throw new OntologyIndexingException(
+                    "Unexpectedly interrupted whilst waiting for indexing to complete", e);
+        }
+    }
+
+    /**
+     * Retrieve all possible names for the supplied class.  Class "names" include any labels attached to this class, or
+     * any synonyms supplied.
+     *
+     * @param owlOntology the ontology to search
+     * @param owlClass    the owl class to derive names for
+     * @return the list of strings representing labels or synonyms for this class
+     */
+    private List<String> getClassNames(OWLOntology owlOntology, OWLClass owlClass) {
+        List<String> results = new ArrayList<String>();
+        results.addAll(0, getClassRDFSLabels(owlOntology, owlClass));
+        results.addAll(getClassSynonyms(owlOntology, owlClass));
+
+        return results;
+    }
+
+    /**
+     * Recovers all string values of the rdfs:label annotation attribute on the supplied class.  This is computed over
+     * the inferred hierarchy, so labels of any equivalent classes will also be returned.
+     *
+     * @param owlOntology the ontology to search
+     * @param owlClass    the class to recover labels for
+     * @return the literal values of the rdfs:label annotation
+     */
+    private Set<String> getClassRDFSLabels(OWLOntology owlOntology, OWLClass owlClass) {
+        Set<String> classNames = new HashSet<String>();
+
+        // get label annotation property
+        OWLAnnotationProperty labelAnnotationProperty =
+                owlOntology.getOWLOntologyManager().getOWLDataFactory()
+                        .getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
+
+        // get all label annotations
+        Set<OWLAnnotation> labelAnnotations = owlClass.getAnnotations(
+                owlOntology, labelAnnotationProperty);
+
+        for (OWLAnnotation labelAnnotation : labelAnnotations) {
+            OWLAnnotationValue labelAnnotationValue = labelAnnotation.getValue();
+            if (labelAnnotationValue instanceof OWLLiteral) {
+                classNames.add(((OWLLiteral) labelAnnotationValue).getLiteral());
+            }
+        }
+        return classNames;
+    }
+
+    /**
+     * Recovers all synonyms for the supplied owl class, based on the literal value of the efo synonym annotation.  The
+     * actual URI for this annotation is recovered from zooma-uris.properties, but at the time of writing was
+     * 'http://www.ebi.ac.uk/efo/alternative_term'.  This class uses the
+     *
+     * @param owlOntology the ontology to search
+     * @param owlClass    the class to retrieve the synonyms of
+     * @return a set of strings containing all aliases of the supplied class
+     */
+    private Set<String> getClassSynonyms(OWLOntology owlOntology, OWLClass owlClass) {
+        Set<String> classSynonyms = new HashSet<String>();
+
+        // get synonym annotation property
+        OWLAnnotationProperty synonymAnnotationProperty =
+                owlOntology.getOWLOntologyManager().getOWLDataFactory()
+                        .getOWLAnnotationProperty(IRI.create(getEfoSynonymAnnotationURI()));
+
+        // get all synonym annotations
+        Set<OWLAnnotation> synonymAnnotations = owlClass.getAnnotations(
+                owlOntology, synonymAnnotationProperty);
+
+        for (OWLAnnotation synonymAnnotation : synonymAnnotations) {
+            OWLAnnotationValue synonymAnnotationValue = synonymAnnotation.getValue();
+            if (synonymAnnotationValue instanceof OWLLiteral) {
+                classSynonyms.add(((OWLLiteral) synonymAnnotationValue).getLiteral());
+            }
+        }
+
+        return classSynonyms;
+    }
+
+    /**
      * Returns true if this ontology term is obsolete in EFO, false otherwise.  In EFO, a term is defined to be obsolete
      * if and only if it is a subclass of ObsoleteTerm.
      *
-     * @param owlClass the owlClass to check for obsolesence
+     * @param owlOntology   the ontology to search
+     * @param obsoleteClass the owlClass that represents the "obsolete" superclass
+     * @param owlClass      the owlClass to check for obsolesence
      * @return true if obsoleted, false otherwise
      */
-    private synchronized boolean isObsolete(OWLClass owlClass) {
-        Set<OWLClassExpression> superclasses = owlClass.getSuperClasses(efo);
+    private boolean isObsolete(OWLOntology owlOntology, OWLClass obsoleteClass, OWLClass owlClass) {
+        Set<OWLClassExpression> superclasses = owlClass.getSuperClasses(owlOntology);
         for (OWLClassExpression oce : superclasses) {
-            if (!oce.isAnonymous() && oce.asOWLClass().getIRI().toURI().equals(obsoleteClass.getIRI().toURI())) {
+            if (!oce.isAnonymous() &&
+                    oce.asOWLClass().getIRI().toURI().equals(obsoleteClass.getIRI().toURI())) {
                 return true;
             }
         }
