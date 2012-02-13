@@ -1,6 +1,14 @@
 package uk.ac.ebi.fgpt.goci.dao;
 
 import junit.framework.TestCase;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import uk.ac.ebi.fgpt.goci.model.SingleNucleotidePolymorphism;
+
+import java.util.Collection;
+import java.util.Collections;
+
+import static org.mockito.Mockito.*;
 
 /**
  * Javadocs go here.
@@ -9,24 +17,28 @@ import junit.framework.TestCase;
  * @date 26-01-2012
  */
 public class TestSingleNucleotidePolymorphismDAO extends TestCase {
+    private SingleNucleotidePolymorphismDAO dao;
+    private SingleNucleotidePolymorphism snp;
+
     public void setUp() {
-        // add setup logic here
+        snp = mock(SingleNucleotidePolymorphism.class);
+
+        JdbcTemplate mockTemplate = mock(JdbcTemplate.class);
+        when(mockTemplate.query(anyString(), isA(RowMapper.class))).thenReturn(Collections.singletonList(snp));
+
+        dao = new SingleNucleotidePolymorphismDAO();
+        dao.setJdbcTemplate(mockTemplate);
     }
 
     public void tearDown() {
-        // add logic required to terminate the class here
+        snp = null;
+        dao = null;
     }
 
     public void testRetrieveAllSNPs() {
-        fail("Unimplemented test testRetrieveAllSNPs");
+        Collection<SingleNucleotidePolymorphism> snps = dao.retrieveAllSNPs();
+        assertEquals(1, snps.size());
+        SingleNucleotidePolymorphism fetchedSnp = snps.iterator().next();
+        assertEquals(snp, fetchedSnp);
     }
-
-    public void testGetJdbcTemplate() {
-        fail("Unimplemented test testGetJdbcTemplate");
-    }
-
-    public void testSetJdbcTemplate() {
-        fail("Unimplemented test testSetJdbcTemplate");
-    }
-
 }

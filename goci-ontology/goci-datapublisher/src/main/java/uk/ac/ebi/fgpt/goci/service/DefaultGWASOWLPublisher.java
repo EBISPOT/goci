@@ -65,6 +65,14 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
         return efoResource;
     }
 
+    /**
+     * Sets the location from which to load EFO, if required.  Setting this property creates a mapper that prompts the
+     * OWL API to load EFO from the given location, instead of attempting to resolve to the URL corresponding to the
+     * ontology IRI.  This property is optional.
+     *
+     * @param efoResource the resource at which EFO can be found, using spring configuration syntax (URLs,
+     *                    classpath:...)
+     */
     public void setEfoResource(Resource efoResource) {
         this.efoResource = efoResource;
     }
@@ -73,6 +81,14 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
         return gwasDiagramSchemaResource;
     }
 
+    /**
+     * Sets the location from which to load the gwas diagram schema, if required.  Setting this property creates a
+     * mapper that prompts the OWL API to load the gwas diagram schema from the given location, instead of attempting to
+     * resolve to the URL corresponding to the ontology IRI.  This property is optional.
+     *
+     * @param gwasDiagramSchemaResource the resource at which the gwas diagram schema can be found, using spring
+     *                                  configuration syntax (URLs, classpath:...)
+     */
     public void setGwasDiagramSchemaResource(Resource gwasDiagramSchemaResource) {
         this.gwasDiagramSchemaResource = gwasDiagramSchemaResource;
     }
@@ -111,12 +127,16 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
 
     public void init() throws IOException {
         this.manager = OWLManager.createOWLOntologyManager();
-        getLog().info("Mapping EFO to " + getEfoResource().getURI());
-        getLog().info("Mapping GWAS schema to " + getGwasDiagramSchemaResource().getURI());
-        this.manager.addIRIMapper(new SimpleIRIMapper(IRI.create(OntologyConstants.EFO_ONTOLOGY_SCHEMA_IRI),
-                                                      IRI.create(getEfoResource().getURI())));
-        this.manager.addIRIMapper(new SimpleIRIMapper(IRI.create(OntologyConstants.GWAS_ONTOLOGY_SCHEMA_IRI),
-                                                      IRI.create(getEfoResource().getURI())));
+        if (getEfoResource() != null) {
+            getLog().info("Mapping EFO to " + getEfoResource().getURI());
+            this.manager.addIRIMapper(new SimpleIRIMapper(IRI.create(OntologyConstants.EFO_ONTOLOGY_SCHEMA_IRI),
+                                                          IRI.create(getEfoResource().getURI())));
+        }
+        if (getGwasDiagramSchemaResource() != null) {
+            getLog().info("Mapping GWAS schema to " + getGwasDiagramSchemaResource().getURI());
+            this.manager.addIRIMapper(new SimpleIRIMapper(IRI.create(OntologyConstants.GWAS_ONTOLOGY_SCHEMA_IRI),
+                                                          IRI.create(getEfoResource().getURI())));
+        }
         this.factory = manager.getOWLDataFactory();
     }
 

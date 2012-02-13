@@ -3,8 +3,9 @@ package uk.ac.ebi.fgpt.goci.model;
 import org.semanticweb.owlapi.model.OWLClass;
 
 /**
- * A model object that links a SNP to it's associated trait.  The p-value of this association as identified in the
- * source publication is present, and the trait is described here with an OWL class derived from <a
+ * A model object that links a SNP to its associated trait.  Each TraitAssociation must declare a link between exactly
+ * one SNP and one Trait - neither of these fields must ever be null.  The p-value of this association as identified in
+ * the source publication is present, and the trait is described here with an OWL class derived from <a
  * href="http://www.ebi.ac.uk/efo>EFO</a>
  *
  * @author Tony Burdett
@@ -29,7 +30,8 @@ public interface TraitAssociation {
     String getAssociatedSNPReferenceId();
 
     /**
-     * Gets the SNP identified in this assocation
+     * Gets the SNP identified in this assocation.  This must never be null: by contract, a TraitAssociation instance
+     * must declare a one to one link between a SNP and a trait.
      *
      * @return the associated SNP
      */

@@ -18,13 +18,13 @@ import java.util.Set;
  * @date 26-01-2012
  */
 public class TestOntologyDAO extends TestCase {
-    private String testClassURI = "http://www.ebi.ac.uk/fgpt/ontologies/test/TEST_00001";
-    private String obsoleteTestClassURI = "http://www.ebi.ac.uk/fgpt/ontologies/test/TEST_00002";
+    public String testClassURI = "http://www.ebi.ac.uk/fgpt/ontologies/test/TEST_00001";
+    public String obsoleteTestClassURI = "http://www.ebi.ac.uk/fgpt/ontologies/test/TEST_00002";
 
-    private String testLabel = "test class";
-    private String testLabel2 = "TEST CLASS";
-    private String testLabel3 = "TesTcLAss";
-    private String testSynonym = "test";
+    public String testLabel = "test class";
+    public String testLabel2 = "TEST CLASS";
+    public String testLabel3 = "TesTcLAss";
+    public String testSynonym = "test";
 
     private OWLClass testClass;
     private OWLClass obsoleteClass;
@@ -74,6 +74,14 @@ public class TestOntologyDAO extends TestCase {
         Collection<OWLClass> classes = dao.getOWLClassesByLabel(testLabel);
         assertEquals("More than one class with label '" + testLabel + "'", 1, classes.size());
         assertEquals("Label search returned wrong class", testClass, classes.iterator().next());
+
+        Collection<OWLClass> classes2 = dao.getOWLClassesByLabel(testLabel2);
+        assertEquals("More than one class with label '" + testLabel2 + "'", 1, classes2.size());
+        assertEquals("Label search returned wrong class", testClass, classes2.iterator().next());
+
+        Collection<OWLClass> classes3 = dao.getOWLClassesByLabel(testLabel3);
+        assertEquals("More than one class with label '" + testLabel3 + "'", 1, classes3.size());
+        assertEquals("Label search returned wrong class", testClass, classes3.iterator().next());
     }
 
     public void testGetClassNames() {

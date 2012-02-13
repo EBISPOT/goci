@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
  * @date 25/01/12
  */
 public abstract class Initializable {
+    private Thread initThread;
+
     private boolean ready;
     private Throwable initializationException;
 
@@ -47,14 +49,24 @@ public abstract class Initializable {
             while (!isReady()) {
                 getLog().debug("Waiting until " + getClass().getSimpleName() + " is ready...");
                 wait();
-                getLog().debug(getClass().getSimpleName() + " is now ready");
             }
+            getLog().debug(getClass().getSimpleName() + " is now ready");
+        }
+    }
+
+    protected synchronized void interrupt() {
+        // if initializing, then interrupt
+        if (initThread != null) {
+            initThread.interrupt();
+        }
+        else {
+            setInitializationException(new InterruptedException("Initialization was forcibly interrupted"));
         }
     }
 
     public void init() {
         // create new thread to do initialization
-        new Thread((new Runnable() {
+        initThread = new Thread((new Runnable() {
             public void run() {
                 // call doInitialization() provided by subclasses
                 try {
@@ -68,7 +80,8 @@ public abstract class Initializable {
                     setInitializationException(e);
                 }
             }
-        })).start();
+        }));
+        initThread.start();
     }
 
     protected abstract void doInitialization() throws Exception;

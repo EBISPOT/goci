@@ -5,8 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.lang.UniqueID;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URLEncoder;
 
 /**
  * An {@link IRIMinter} implementation that looks for annotations on the supplied model object to identify the unique
@@ -23,35 +25,52 @@ public class ReflexiveIRIMinter implements IRIMinter<Object> {
     }
 
     public IRI mint(String base, Object o) {
-        String iri;
-        String fragment = inspectObjectForID(o);
+        try {
+            String iri;
+            String fragment = encodeToURI(inspectObjectForID(o));
 
-        if (base.endsWith("/")) {
-            iri = base.concat(o.getClass().getSimpleName())
-                    .concat("_").concat(fragment);
+            if (base.endsWith("/")) {
+                iri = base.concat(o.getClass().getSimpleName())
+                        .concat("_").concat(fragment);
+            }
+            else {
+                iri = base.concat("/").concat(o.getClass().getSimpleName())
+                        .concat("_").concat(fragment);
+            }
+            return IRI.create(iri);
         }
-        else {
-            iri = base.concat("/").concat(o.getClass().getSimpleName())
-                    .concat("_").concat(fragment);
+        catch (UnsupportedEncodingException e) {
+            throw new IllegalArgumentException("The unique id of the supplied object ('" + inspectObjectForID(o) +
+                                                       "') cannot be encoded as an IRI");
         }
-        return IRI.create(iri);
     }
 
     public IRI mint(String base, String prefix, Object o) {
-        String iri;
-        String fragment = inspectObjectForID(o);
+        try {
+            String iri;
+            String fragment = encodeToURI(inspectObjectForID(o));
 
-        if (base.endsWith("/")) {
-            iri = base.concat(o.getClass().getSimpleName())
-                    .concat("_").concat(prefix)
-                    .concat("_").concat(fragment);
+            if (base.endsWith("/")) {
+                iri = base.concat(o.getClass().getSimpleName())
+                        .concat("_").concat(prefix)
+                        .concat("_").concat(fragment);
+            }
+            else {
+                iri = base.concat("/").concat(o.getClass().getSimpleName())
+                        .concat("_").concat(prefix)
+                        .concat("_").concat(fragment);
+            }
+            return IRI.create(iri);
         }
-        else {
-            iri = base.concat("/").concat(o.getClass().getSimpleName())
-                    .concat("_").concat(prefix)
-                    .concat("_").concat(fragment);
+        catch (UnsupportedEncodingException e) {
+            throw new IllegalArgumentException("The unique id of the supplied object ('" + inspectObjectForID(o) +
+                                                       "') cannot be encoded as an IRI");
         }
-        return IRI.create(iri);
+    }
+
+    public String encodeToURI(String stringToEncode) throws UnsupportedEncodingException {
+        String encodedString = URLEncoder.encode(stringToEncode, "UTF-8");
+        return encodedString.replaceAll("\\+", "%20");
     }
 
     private String inspectObjectForID(Object o) {
@@ -75,7 +94,7 @@ public class ReflexiveIRIMinter implements IRIMinter<Object> {
         if (methodCount == 0 || methodCount > 1) {
             throw new IllegalArgumentException(
                     "Provided " + o.getClass().getSimpleName() + " contains " +
-                            annotatedMethod + " methods with an @UniqueID annotation");
+                            methodCount + " methods with a @UniqueID annotation");
         }
         else {
             // invoke the method and return the result .toString()

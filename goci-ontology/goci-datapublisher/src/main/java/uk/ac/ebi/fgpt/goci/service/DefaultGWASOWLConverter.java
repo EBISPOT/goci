@@ -126,9 +126,6 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         AddAxiom add_author = new AddAxiom(ontology, author_relation);
         getManager().applyChange(add_author);
 
-        //2002-10-10T12:00:00-05:00
-        //2011-05-20T00:00:00+0100
-
         // assert publication_date relation
         if (study.getPublishedDate() != null) {
             String rfcTimezone =
@@ -137,7 +134,6 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                     rfcTimezone.substring(0, 3).concat(":").concat(rfcTimezone.substring(3, rfcTimezone.length()));
             String xmlDatetimeStr =
                     new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(study.getPublishedDate()) + xsdTimezone;
-//            String xmlDatetimeStr = new SimpleDateFormat("yyyy-MM-dd").format(study.getPublishedDate());
             OWLLiteral publication_date = getDataFactory().getOWLLiteral(xmlDatetimeStr, OWL2Datatype.XSD_DATE_TIME);
             OWLDataPropertyAssertionAxiom publication_date_relation =
                     getDataFactory().getOWLDataPropertyAssertionAxiom(has_publication_date,
@@ -358,6 +354,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         OWLClassAssertionAxiom traitClassAssertion =
                 getDataFactory().getOWLClassAssertionAxiom(traitClass, traitIndiv);
         getManager().addAxiom(ontology, traitClassAssertion);
+
 
         // assert relation
         OWLObjectPropertyAssertionAxiom associated_with_trait_relation =

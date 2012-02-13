@@ -1,6 +1,15 @@
 package uk.ac.ebi.fgpt.goci.dao;
 
 import junit.framework.TestCase;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import uk.ac.ebi.fgpt.goci.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.fgpt.goci.model.TraitAssociation;
+
+import java.util.Collection;
+import java.util.Collections;
+
+import static org.mockito.Mockito.*;
 
 /**
  * Javadocs go here.
@@ -9,52 +18,36 @@ import junit.framework.TestCase;
  * @date 26-01-2012
  */
 public class TestTraitAssociationDAO extends TestCase {
-  public void setUp() {
-    // add setup logic here
-  }
+    private TraitAssociation traitAssociation;
+    private TraitAssociationDAO dao;
 
-  public void tearDown() {
-    // add logic required to terminate the class here
-  }
+    public void setUp() {
+        traitAssociation = mock(TraitAssociation.class);
 
-  public void testGetSnpMap() {
-    fail("Unimplemented test testGetSnpMap");
-  }
+        JdbcTemplate mockTemplate = mock(JdbcTemplate.class);
+        when(mockTemplate.query(anyString(), isA(RowMapper.class))).thenReturn(Collections.singletonList(traitAssociation));
 
-  public void testGetJdbcTemplate() {
-    fail("Unimplemented test testGetJdbcTemplate");
-  }
+        SingleNucleotidePolymorphismDAO snpDAO = mock(SingleNucleotidePolymorphismDAO.class);
+        OntologyDAO ontologyDAO = mock(OntologyDAO.class);
 
-  public void testSetSNPDAO() {
-    fail("Unimplemented test testSetSNPDAO");
-  }
+        // create trait association dao
+        dao = new TraitAssociationDAO();
+        // inject dependencies
+        dao.setJdbcTemplate(mockTemplate);
+        dao.setSNPDAO(snpDAO);
+        dao.setOntologyDAO(ontologyDAO);
+        dao.init();
+    }
 
-  public void testGetLog() {
-    fail("Unimplemented test testGetLog");
-  }
+    public void tearDown() {
+        traitAssociation = null;
+        dao = null;
+    }
 
-  public void testGetSNPDAO() {
-    fail("Unimplemented test testGetSNPDAO");
-  }
-
-  public void testSetOntologyDAO() {
-    fail("Unimplemented test testSetOntologyDAO");
-  }
-
-  public void testSetJdbcTemplate() {
-    fail("Unimplemented test testSetJdbcTemplate");
-  }
-
-  public void testDoInitialization() {
-    fail("Unimplemented test testDoInitialization");
-  }
-
-  public void testRetrieveAllTraitAssociations() {
-    fail("Unimplemented test testRetrieveAllTraitAssociations");
-  }
-
-  public void testGetOntologyDAO() {
-    fail("Unimplemented test testGetOntologyDAO");
-  }
-
+    public void testRetrieveAllTraitAssociations() {
+        Collection<TraitAssociation> associations = dao.retrieveAllTraitAssociations();
+        assertEquals(1, associations.size());
+        TraitAssociation fetchedAssocation = associations.iterator().next();
+        assertEquals(traitAssociation, fetchedAssocation);
+    }
 }

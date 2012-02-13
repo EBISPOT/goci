@@ -3,8 +3,18 @@ package uk.ac.ebi.fgpt.goci.dao;
 import junit.framework.TestCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import uk.ac.ebi.fgpt.goci.model.Study;
+import uk.ac.ebi.fgpt.goci.model.TraitAssociation;
+
+import java.util.Collection;
+import java.util.Collections;
+
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Javadocs go here.
@@ -13,52 +23,35 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @date 26-01-2012
  */
 public class TestStudyDAO extends TestCase {
-    private StudyDAO studyDAO;
+    private Study study;
+    private StudyDAO dao;
+    
+    public void setUp() {
+        study = mock(Study.class);
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+        JdbcTemplate mockTemplate = mock(JdbcTemplate.class);
+        when(mockTemplate.query(anyString(), isA(RowMapper.class))).thenReturn(Collections.singletonList(study));
 
-    protected Logger getLog() {
-        return log;
+        TraitAssociationDAO traitAssociationDAO = mock(TraitAssociationDAO.class);
+
+        // create study dao
+        dao = new StudyDAO();
+        // inject dependencies
+        dao.setJdbcTemplate(mockTemplate);
+        dao.setTraitAssociationDAO(traitAssociationDAO);
+        dao.init();
     }
 
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("goci-datapublisher.xml");
-        studyDAO = ctx.getBean("studyDAO", StudyDAO.class);
+    public void tearDown() {
+        study = null;
+        dao = null;
     }
 
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
-        studyDAO = null;
-    }
-
-    public void testGetTraitAssociationMap() {
-        fail("Unimplemented test testGetTraitAssociationMap");
-    }
-
-    public void testGetJdbcTemplate() {
-        fail("Unimplemented test testGetJdbcTemplate");
-    }
 
     public void testRetrieveAllStudies() {
-        fail("Unimplemented test testRetrieveAllStudies");
-    }
-
-    public void testSetTraitAssocationDAO() {
-        fail("Unimplemented test testSetTraitAssocationDAO");
-    }
-
-    public void testGetTraitAssocationDAO() {
-        fail("Unimplemented test testGetTraitAssocationDAO");
-    }
-
-    public void testSetJdbcTemplate() {
-        fail("Unimplemented test testSetJdbcTemplate");
-    }
-
-    public void testDoInitialization() {
-        fail("Unimplemented test testDoInitialization");
+        Collection<Study> studies = dao.retrieveAllStudies();
+        assertEquals(1, studies.size());
+        Study fetchedStudy = studies.iterator().next();
+        assertEquals(study, fetchedStudy);
     }
 }
