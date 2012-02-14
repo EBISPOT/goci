@@ -25,45 +25,53 @@ public class ReflexiveIRIMinter implements IRIMinter<Object> {
     }
 
     public IRI mint(String base, Object o) {
-        try {
-            String iri;
-            String fragment = encodeToURI(inspectObjectForID(o));
-
-            if (base.endsWith("/")) {
-                iri = base.concat(o.getClass().getSimpleName())
-                        .concat("_").concat(fragment);
-            }
-            else {
-                iri = base.concat("/").concat(o.getClass().getSimpleName())
-                        .concat("_").concat(fragment);
-            }
-            return IRI.create(iri);
-        }
-        catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException("The unique id of the supplied object ('" + inspectObjectForID(o) +
-                                                       "') cannot be encoded as an IRI");
-        }
+        // derive the prefix (which is the object type)
+        String prefix = o.getClass().getSimpleName();
+        String objectName = inspectObjectForID(o);
+        return mint(base, prefix, objectName);
     }
 
     public IRI mint(String base, String prefix, Object o) {
-        try {
-            String iri;
-            String fragment = encodeToURI(inspectObjectForID(o));
+        String fullPrefix;
+        if (prefix == null || prefix.equals("")) {
+            fullPrefix = o.getClass().getSimpleName();
+        }
+        else {
+            fullPrefix = o.getClass().getSimpleName().concat("_").concat(prefix);
+        }
+        String objectName = inspectObjectForID(o);
+        return mint(base, fullPrefix, objectName);
+    }
 
+    public IRI mint(String base, String objectName) {
+        return mint(base, "", objectName);
+    }
+
+    public IRI mint(String base, String prefix, String objectName) {
+        // derive the full object name
+        String fullName;
+        if (prefix == null || prefix.equals("")) {
+            fullName = objectName;
+        }
+        else {
+            fullName = prefix.concat("_").concat(objectName);
+        }
+
+        // encode as URI and generate IRI
+        try {
+            String fragment = encodeToURI(fullName);
+
+            String iri;
             if (base.endsWith("/")) {
-                iri = base.concat(o.getClass().getSimpleName())
-                        .concat("_").concat(prefix)
-                        .concat("_").concat(fragment);
+                iri = base.concat(fragment);
             }
             else {
-                iri = base.concat("/").concat(o.getClass().getSimpleName())
-                        .concat("_").concat(prefix)
-                        .concat("_").concat(fragment);
+                iri = base.concat("/").concat(fragment);
             }
             return IRI.create(iri);
         }
         catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException("The unique id of the supplied object ('" + inspectObjectForID(o) +
+            throw new IllegalArgumentException("The unique id of the supplied object ('" + fullName +
                                                        "') cannot be encoded as an IRI");
         }
     }

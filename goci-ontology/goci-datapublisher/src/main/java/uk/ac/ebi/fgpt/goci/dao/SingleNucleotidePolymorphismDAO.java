@@ -69,11 +69,12 @@ public class SingleNucleotidePolymorphismDAO {
             this.location = location;
         }
 
-        @UniqueID
+//        @UniqueID
         private String getID() {
             return id;
         }
 
+        @UniqueID
         public String getRSID() {
             return rsID;
         }

@@ -111,7 +111,7 @@ public class StudyDAO extends Initializable {
             }
         }
 
-        @UniqueID
+//        @UniqueID
         private String getID() {
             return id;
         }
@@ -120,6 +120,7 @@ public class StudyDAO extends Initializable {
             return author;
         }
 
+        @UniqueID
         public String getPubMedID() {
             return pubmedID;
         }

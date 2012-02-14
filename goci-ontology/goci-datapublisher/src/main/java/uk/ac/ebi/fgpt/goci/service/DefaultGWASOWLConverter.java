@@ -200,7 +200,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         getManager().applyChange(add_rsid);
 
         // assert bp_pos relation
-        OWLLiteral bp_pos = getDataFactory().getOWLLiteral(snp.getSNPLocation());
+        OWLLiteral bp_pos = getDataFactory().getOWLLiteral(snp.getSNPLocation(), OWL2Datatype.XSD_INT);
         OWLDataPropertyAssertionAxiom bp_pos_relation =
                 getDataFactory().getOWLDataPropertyAssertionAxiom(has_bp_pos, snpIndiv, bp_pos);
         AddAxiom add_bp_pos = new AddAxiom(ontology, bp_pos_relation);
@@ -211,7 +211,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
 
         // create a new band individual
         OWLNamedIndividual bandIndiv = getDataFactory().getOWLNamedIndividual(
-                getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "band", snp));
+                getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "band", snp.getCytogeneticBandName()));
 
         // assert class membership
         OWLClassAssertionAxiom bandClassAssertion = getDataFactory().getOWLClassAssertionAxiom(bandClass, bandIndiv);
@@ -243,7 +243,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
 
         // create a new chromosome individual
         OWLNamedIndividual chrIndiv = getDataFactory().getOWLNamedIndividual(
-                getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "chromosome", snp));
+                getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "chromosome", snp.getChromosomeName()));
 
         // assert class membership
         OWLClassAssertionAxiom chrClassAssertion = getDataFactory().getOWLClassAssertionAxiom(chrClass, chrIndiv);
@@ -306,8 +306,23 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                 getLog().warn(warning);
                 issuedWarnings.add(warning);
             }
+            // create a new snp instance
             snpIndiv = getDataFactory().getOWLNamedIndividual(
                     getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "snp", association));
+
+            // assert class membership
+            OWLClass snpClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.SNP_CLASS_IRI));
+            OWLClassAssertionAxiom snpClassAssertion = getDataFactory().getOWLClassAssertionAxiom(snpClass, snpIndiv);
+            getManager().addAxiom(ontology, snpClassAssertion);
+
+            // assert rsid relation
+            OWLDataProperty has_snp_rsid = getDataFactory().getOWLDataProperty(
+                    IRI.create(OntologyConstants.HAS_SNP_REFERENCE_ID_PROPERTY_IRI));
+            OWLLiteral rsid = getDataFactory().getOWLLiteral(association.getAssociatedSNPReferenceId());
+            OWLDataPropertyAssertionAxiom rsid_relation =
+                    getDataFactory().getOWLDataPropertyAssertionAxiom(has_snp_rsid, snpIndiv, rsid);
+            AddAxiom add_rsid = new AddAxiom(ontology, rsid_relation);
+            getManager().applyChange(add_rsid);
         }
 
         // get object properties

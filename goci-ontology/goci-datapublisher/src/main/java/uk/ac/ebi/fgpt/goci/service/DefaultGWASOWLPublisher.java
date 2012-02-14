@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -38,6 +39,8 @@ import java.util.List;
 public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
     private Resource efoResource;
     private Resource gwasDiagramSchemaResource;
+
+    private int studiesLimit = -1;
 
     private StudyDAO studyDAO;
     private TraitAssociationDAO traitAssociationDAO;
@@ -91,6 +94,14 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
      */
     public void setGwasDiagramSchemaResource(Resource gwasDiagramSchemaResource) {
         this.gwasDiagramSchemaResource = gwasDiagramSchemaResource;
+    }
+
+    public int getStudiesLimit() {
+        return studiesLimit;
+    }
+
+    public void setStudiesLimit(int studiesLimit) {
+        this.studiesLimit = studiesLimit;
     }
 
     public StudyDAO getStudyDAO() {
@@ -150,21 +161,63 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
         getLog().debug("Query complete, got " + studies.size() + " studies");
 //            validateGWASData(studies);
 
-        // grab all other data from the DAO
-        getLog().debug("Fetching traits that require conversion to OWL using TraitAssociationDAO...");
-        Collection<TraitAssociation> traitAssociations = getTraitAssociationDAO().retrieveAllTraitAssociations();
-        getLog().debug("Fetching SNPs that require conversion to OWL using SingleNucleotidePolymorphismDAO...");
-        Collection<SingleNucleotidePolymorphism> snps = getSingleNucleotidePolymorphismDAO().retrieveAllSNPs();
-        getLog().debug("All data fetched");
+        // if studies limit is not set, convert all data, else filter to first n studies and associated data
+        if (studiesLimit == -1) {
+            // grab all other data from the DAO
+            getLog().debug("Fetching traits that require conversion to OWL using TraitAssociationDAO...");
+            Collection<TraitAssociation> traitAssociations = getTraitAssociationDAO().retrieveAllTraitAssociations();
+            getLog().debug("Fetching SNPs that require conversion to OWL using SingleNucleotidePolymorphismDAO...");
+            Collection<SingleNucleotidePolymorphism> snps = getSingleNucleotidePolymorphismDAO().retrieveAllSNPs();
+            getLog().debug("All data fetched");
+
+            // convert this data, starting with SNPs (no dependencies) and working up to studies
+            getLog().debug("Starting conversion to OWL...");
+            getLog().debug("Converting SNPs...");
+            getConverter().addSNPsToOntology(snps, conversion);
+            getLog().debug("Converting Trait Associations...");
+            getConverter().addAssociationsToOntology(traitAssociations, conversion);
+            getLog().debug("Converting Studies...");
+            getConverter().addStudiesToOntology(studies, conversion);
+            getLog().debug("All conversion done!");
+
+            return conversion;
+        }
+        else {
+            return filterAndPublishGWASData(conversion, studies);
+        }
+    }
+
+    private OWLOntology filterAndPublishGWASData(OWLOntology conversion, Collection<Study> studies)
+            throws OWLConversionException {
+        Collection<Study> filteredStudies = new ArrayList<Study>();
+        Collection<TraitAssociation> filteredTraitAssociations = new ArrayList<TraitAssociation>();
+        Collection<SingleNucleotidePolymorphism> filteredSNPs = new ArrayList<SingleNucleotidePolymorphism>();
+
+        int count = 0;
+        Iterator<Study> studyIterator = studies.iterator();
+        while (count < studiesLimit && studyIterator.hasNext()) {
+            Study nextStudy = studyIterator.next();
+            filteredStudies.add(nextStudy);
+            for (TraitAssociation nextTA : nextStudy.getIdentifiedAssociations()) {
+                filteredTraitAssociations.add(nextTA);
+                try {
+                    filteredSNPs.add(nextTA.getAssociatedSNP());
+                }
+                catch (ObjectMappingException e) {
+                    // we can safely ignore this, a warning will be issued when we add each trait association
+                }
+            }
+            count++;
+        }
 
         // convert this data, starting with SNPs (no dependencies) and working up to studies
         getLog().debug("Starting conversion to OWL...");
-        getLog().debug("Converting SNPs...");
-        getConverter().addSNPsToOntology(snps, conversion);
-        getLog().debug("Converting Trait Associations...");
-        getConverter().addAssociationsToOntology(traitAssociations, conversion);
-        getLog().debug("Converting Studies...");
-        getConverter().addStudiesToOntology(studies, conversion);
+        getLog().debug("Converting " + filteredSNPs.size() + " filtered SNPs...");
+        getConverter().addSNPsToOntology(filteredSNPs, conversion);
+        getLog().debug("Converting " + filteredTraitAssociations.size() + " filtered Trait Associations...");
+        getConverter().addAssociationsToOntology(filteredTraitAssociations, conversion);
+        getLog().debug("Converting " + filteredStudies.size() + " filtered Studies...");
+        getConverter().addStudiesToOntology(filteredStudies, conversion);
         getLog().debug("All conversion done!");
 
         return conversion;

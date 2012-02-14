@@ -1,0 +1,809 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY efo "http://www.ebi.ac.uk/efo/" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.w3.org/2002/07/owl"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:efo="http://www.ebi.ac.uk/efo/"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <Ontology rdf:about="&efo;gwas-diagram">
+        <imports rdf:resource="http://www.ebi.ac.uk/efo/"/>
+    </Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Datatypes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00029 -->
+
+    <ObjectProperty rdf:about="&efo;gwas-diagram/EFO_GD00029">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+        <rdfs:label xml:lang="en">associated_with</rdfs:label>
+    </ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00030 -->
+
+    <DatatypeProperty rdf:about="&efo;gwas-diagram/EFO_GD00030">
+        <rdfs:label xml:lang="en">has_name</rdfs:label>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00031 -->
+
+    <DatatypeProperty rdf:about="&efo;gwas-diagram/EFO_GD00031">
+        <rdfs:label xml:lang="en">has_snp_reference_id</rdfs:label>
+        <efo:definition xml:lang="en">A single nucleotide polymorpism identifier, as assigned by the Single Nucleotide Polymorphism Database (dbSNP).</efo:definition>
+        <efo:definition_editor xml:lang="en">Tony Burdett</efo:definition_editor>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00032 -->
+
+    <DatatypeProperty rdf:about="&efo;gwas-diagram/EFO_GD00032">
+        <rdfs:label xml:lang="en">has_bp_position</rdfs:label>
+        <efo:definition xml:lang="en">The position, in base pairs, of a particular element on a genome</efo:definition>
+        <efo:definition_editor xml:lang="en">Tony Burdett</efo:definition_editor>
+        <rdfs:range rdf:resource="&xsd;int"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00034 -->
+
+    <DatatypeProperty rdf:about="&efo;gwas-diagram/EFO_GD00034">
+        <rdfs:label xml:lang="en">has_length</rdfs:label>
+        <efo:definition xml:lang="en">The length, in base pairs, of any genomic element.</efo:definition>
+        <efo:definition_editor>Tony Burdett</efo:definition_editor>
+        <rdfs:range rdf:resource="&xsd;int"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036 -->
+
+    <DatatypeProperty rdf:about="&efo;gwas-diagram/EFO_GD00036">
+        <rdfs:label xml:lang="en">has_p_value</rdfs:label>
+        <efo:definition xml:lang="en">The probability of obtaining a test statistic at least as extreme as the one that was actually observed.</efo:definition>
+        <efo:definition_editor xml:lang="en">Tony Burdett</efo:definition_editor>
+        <rdfs:range rdf:resource="&xsd;float"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00038 -->
+
+    <DatatypeProperty rdf:about="&efo;gwas-diagram/EFO_GD00038">
+        <rdfs:label xml:lang="en">has_pubmed_id</rdfs:label>
+        <efo:definition xml:lang="en">The publication ID of a scientific paper, as assigned by the PubMed database.</efo:definition>
+        <efo:definition_editor xml:lang="en">Tony Burdett</efo:definition_editor>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00039 -->
+
+    <DatatypeProperty rdf:about="&efo;gwas-diagram/EFO_GD00039">
+        <rdfs:label xml:lang="en">has_author</rdfs:label>
+        <efo:definition xml:lang="en">The primary author of a publication, usually expressed as surname followed by initial(s), e.g. Burdett, T.</efo:definition>
+        <efo:definition_editor xml:lang="en">Tony Burdett</efo:definition_editor>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00040 -->
+
+    <DatatypeProperty rdf:about="&efo;gwas-diagram/EFO_GD00040">
+        <rdfs:label xml:lang="en">has_publication_date</rdfs:label>
+        <efo:definition xml:lang="en">A date on which a given entity was published</efo:definition>
+        <rdfs:range rdf:resource="&xsd;dateTime"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041 -->
+
+    <DatatypeProperty rdf:about="&efo;gwas-diagram/EFO_GD00041">
+        <rdfs:label xml:lang="en">has_gwas_trait_name</rdfs:label>
+        <efo:definition xml:lang="en">An arbitrary text label used to add a text definition of a GWAS trait name that is does not specificially map.  Usually this will be used to annotate instances of Experimental Factor in order to retain information about a trait that was not defined in the ontology.</efo:definition>
+        <efo:definition_editor xml:lang="en">Tony Burdett</efo:definition_editor>
+    </DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/EFO_0000001 -->
+
+    <rdf:Description rdf:about="&efo;EFO_0000001">
+        <disjointWith rdf:resource="&efo;gwas-diagram/EFO_GD00001"/>
+        <disjointWith rdf:resource="&efo;gwas-diagram/EFO_GD00002"/>
+        <disjointWith rdf:resource="&efo;gwas-diagram/EFO_GD00003"/>
+        <disjointWith rdf:resource="&efo;gwas-diagram/EFO_GD00035"/>
+        <disjointWith rdf:resource="&efo;gwas-diagram/EFO_GD00037"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00001 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00001">
+        <rdfs:label xml:lang="en">Chromosome</rdfs:label>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00034"/>
+                <qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</qualifiedCardinality>
+                <onDataRange rdf:resource="&xsd;int"/>
+            </Restriction>
+        </rdfs:subClassOf>
+        <disjointWith rdf:resource="&efo;gwas-diagram/EFO_GD00002"/>
+        <disjointWith rdf:resource="&efo;gwas-diagram/EFO_GD00003"/>
+        <disjointWith rdf:resource="&efo;gwas-diagram/EFO_GD00035"/>
+        <disjointWith rdf:resource="&efo;gwas-diagram/EFO_GD00037"/>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00002 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00002">
+        <rdfs:label xml:lang="en">Cytogenetic Band</rdfs:label>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                <someValuesFrom rdf:resource="&rdfs;Literal"/>
+            </Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="http://www.obofoundry.org/ro/ro.owl#part_of"/>
+                <someValuesFrom rdf:resource="&efo;gwas-diagram/EFO_GD00001"/>
+            </Restriction>
+        </rdfs:subClassOf>
+        <disjointWith rdf:resource="&efo;gwas-diagram/EFO_GD00003"/>
+        <disjointWith rdf:resource="&efo;gwas-diagram/EFO_GD00035"/>
+        <disjointWith rdf:resource="&efo;gwas-diagram/EFO_GD00037"/>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00003 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00003">
+        <rdfs:label xml:lang="en">Single Nucleotide Polymorphism</rdfs:label>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00032"/>
+                <qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</qualifiedCardinality>
+                <onDataRange rdf:resource="&xsd;int"/>
+            </Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="http://www.obofoundry.org/ro/ro.owl#located_in"/>
+                <someValuesFrom rdf:resource="&efo;gwas-diagram/EFO_GD00002"/>
+            </Restriction>
+        </rdfs:subClassOf>
+        <disjointWith rdf:resource="&efo;gwas-diagram/EFO_GD00035"/>
+        <disjointWith rdf:resource="&efo;gwas-diagram/EFO_GD00037"/>
+        <hasKey rdf:parseType="Collection">
+            <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00031"/>
+        </hasKey>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00005 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00005">
+        <rdfs:label xml:lang="en">Chromosome 1</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>1</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00006 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00006">
+        <rdfs:label xml:lang="en">Chromosome 2</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>2</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00007 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00007">
+        <rdfs:label xml:lang="en">Chromosome 3</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>3</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00008 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00008">
+        <rdfs:label xml:lang="en">Chromosome 4</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>4</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00009 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00009">
+        <rdfs:label xml:lang="en">Chromosome 5</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>5</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00010 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00010">
+        <rdfs:label xml:lang="en">Chromosome 6</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>6</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00011 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00011">
+        <rdfs:label xml:lang="en">Chromosome 7</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>7</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00012 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00012">
+        <rdfs:label xml:lang="en">Chromosome 8</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>8</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00013 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00013">
+        <rdfs:label xml:lang="en">Chromosome 9</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>9</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00014 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00014">
+        <rdfs:label xml:lang="en">Chromosome 10</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>10</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00015 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00015">
+        <rdfs:label xml:lang="en">Chromosome 11</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>11</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00016 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00016">
+        <rdfs:label xml:lang="en">Chromosome 12</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>12</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00017 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00017">
+        <rdfs:label xml:lang="en">Chromosome 13</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>13</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00018 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00018">
+        <rdfs:label xml:lang="en">Chromosome 14</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>14</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00019 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00019">
+        <rdfs:label xml:lang="en">Chromosome 15</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>15</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00020 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00020">
+        <rdfs:label xml:lang="en">Chromosome 16</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>16</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00021 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00021">
+        <rdfs:label xml:lang="en">Chromosome 17</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>17</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00022 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00022">
+        <rdfs:label xml:lang="en">Chromosome 18</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>18</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00023 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00023">
+        <rdfs:label xml:lang="en">Chromosome 19</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>19</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00024 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00024">
+        <rdfs:label xml:lang="en">Chromosome 20</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>20</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00025 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00025">
+        <rdfs:label xml:lang="en">Chromosome 21</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>21</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00026 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00026">
+        <rdfs:label xml:lang="en">Chromosome 22</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                        <hasValue>22</hasValue>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00027 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00027">
+        <rdfs:label xml:lang="en">Chromosome X</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Class>
+                        <unionOf rdf:parseType="Collection">
+                            <Restriction>
+                                <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                                <hasValue>X</hasValue>
+                            </Restriction>
+                            <Restriction>
+                                <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                                <hasValue>x</hasValue>
+                            </Restriction>
+                        </unionOf>
+                    </Class>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00028 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00028">
+        <rdfs:label xml:lang="en">Chromosome Y</rdfs:label>
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00001"/>
+                    <Class>
+                        <unionOf rdf:parseType="Collection">
+                            <Restriction>
+                                <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                                <hasValue>Y</hasValue>
+                            </Restriction>
+                            <Restriction>
+                                <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                                <hasValue>y</hasValue>
+                            </Restriction>
+                        </unionOf>
+                    </Class>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00035 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00035">
+        <rdfs:label xml:lang="en">Trait Association</rdfs:label>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00036"/>
+                <someValuesFrom rdf:resource="&xsd;float"/>
+            </Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="http://www.obofoundry.org/ro/ro.owl#part_of"/>
+                <someValuesFrom rdf:resource="&efo;gwas-diagram/EFO_GD00037"/>
+            </Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00029"/>
+                        <someValuesFrom rdf:resource="&efo;EFO_0000001"/>
+                    </Restriction>
+                    <Restriction>
+                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00029"/>
+                        <someValuesFrom rdf:resource="&efo;gwas-diagram/EFO_GD00003"/>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </rdfs:subClassOf>
+        <disjointWith rdf:resource="&efo;gwas-diagram/EFO_GD00037"/>
+        <efo:definition xml:lang="en">An association that can be asserted between two entities with a degree of confidence expressed as a p-value.</efo:definition>
+        <efo:definition_editor xml:lang="en">Tony Burdett</efo:definition_editor>
+    </Class>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00037 -->
+
+    <Class rdf:about="&efo;gwas-diagram/EFO_GD00037">
+        <rdfs:label xml:lang="en">GWAS Study</rdfs:label>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00038"/>
+                <cardinality rdf:datatype="&xsd;nonNegativeInteger">1</cardinality>
+            </Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00040"/>
+                <qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</qualifiedCardinality>
+                <onDataRange rdf:resource="&xsd;dateTime"/>
+            </Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00039"/>
+                <someValuesFrom rdf:resource="&rdfs;Literal"/>
+            </Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+                <someValuesFrom rdf:resource="&efo;gwas-diagram/EFO_GD00035"/>
+            </Restriction>
+        </rdfs:subClassOf>
+        <efo:definition xml:lang="en">A study, described by a scientific publication, that identifies genome wide associations between single nucleotide polymorphisms and phylogenetic traits or disorders.</efo:definition>
+        <efo:definition_editor xml:lang="en">Tony Burdett</efo:definition_editor>
+        <hasKey rdf:parseType="Collection">
+            <rdf:Description rdf:about="&efo;gwas-diagram/EFO_GD00038"/>
+        </hasKey>
+    </Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.2.5.1912) http://owlapi.sourceforge.net -->
+
