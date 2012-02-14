@@ -86,6 +86,7 @@
     <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00031 -->
 
     <DatatypeProperty rdf:about="&efo;gwas-diagram/EFO_GD00031">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:label xml:lang="en">has_snp_reference_id</rdfs:label>
         <efo:definition xml:lang="en">A single nucleotide polymorpism identifier, as assigned by the Single Nucleotide Polymorphism Database (dbSNP).</efo:definition>
         <efo:definition_editor xml:lang="en">Tony Burdett</efo:definition_editor>
@@ -129,6 +130,7 @@
     <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00038 -->
 
     <DatatypeProperty rdf:about="&efo;gwas-diagram/EFO_GD00038">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:label xml:lang="en">has_pubmed_id</rdfs:label>
         <efo:definition xml:lang="en">The publication ID of a scientific paper, as assigned by the PubMed database.</efo:definition>
         <efo:definition_editor xml:lang="en">Tony Burdett</efo:definition_editor>
@@ -191,14 +193,14 @@
         <rdfs:label xml:lang="en">Cytogenetic Band</rdfs:label>
         <rdfs:subClassOf>
             <Restriction>
-                <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
-                <someValuesFrom rdf:resource="&rdfs;Literal"/>
+                <onProperty rdf:resource="http://www.obofoundry.org/ro/ro.owl#part_of"/>
+                <someValuesFrom rdf:resource="&efo;gwas-diagram/EFO_GD00001"/>
             </Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <Restriction>
-                <onProperty rdf:resource="http://www.obofoundry.org/ro/ro.owl#part_of"/>
-                <someValuesFrom rdf:resource="&efo;gwas-diagram/EFO_GD00001"/>
+                <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00030"/>
+                <someValuesFrom rdf:resource="&rdfs;Literal"/>
             </Restriction>
         </rdfs:subClassOf>
     </Class>
@@ -705,12 +707,6 @@
             </Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
-            <Restriction>
-                <onProperty rdf:resource="http://www.obofoundry.org/ro/ro.owl#part_of"/>
-                <someValuesFrom rdf:resource="&efo;gwas-diagram/EFO_GD00037"/>
-            </Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
             <Class>
                 <intersectionOf rdf:parseType="Collection">
                     <Restriction>
@@ -723,6 +719,12 @@
                     </Restriction>
                 </intersectionOf>
             </Class>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="http://www.obofoundry.org/ro/ro.owl#part_of"/>
+                <someValuesFrom rdf:resource="&efo;gwas-diagram/EFO_GD00037"/>
+            </Restriction>
         </rdfs:subClassOf>
         <efo:definition xml:lang="en">An association that can be asserted between two entities with a degree of confidence expressed as a p-value.</efo:definition>
         <efo:definition_editor xml:lang="en">Tony Burdett</efo:definition_editor>
