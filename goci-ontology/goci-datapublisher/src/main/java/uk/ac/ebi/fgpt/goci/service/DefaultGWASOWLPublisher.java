@@ -5,10 +5,7 @@ import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.io.OWLXMLOntologyFormat;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.*;
-import org.semanticweb.owlapi.util.InferredAxiomGenerator;
-import org.semanticweb.owlapi.util.InferredOntologyGenerator;
-import org.semanticweb.owlapi.util.InferredSubClassAxiomGenerator;
-import org.semanticweb.owlapi.util.SimpleIRIMapper;
+import org.semanticweb.owlapi.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -25,10 +22,7 @@ import uk.ac.ebi.fgpt.goci.model.TraitAssociation;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Javadocs go here!
@@ -310,7 +304,20 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
             getLog().info("Saving inferred view...");
             List<InferredAxiomGenerator<? extends OWLAxiom>> gens =
                     new ArrayList<InferredAxiomGenerator<? extends OWLAxiom>>();
+            // we require all inferred stuff except for disjoints...
+            gens.add(new InferredClassAssertionAxiomGenerator());
+            gens.add(new InferredDataPropertyCharacteristicAxiomGenerator());
+            gens.add(new InferredEquivalentClassAxiomGenerator());
+            gens.add(new InferredEquivalentDataPropertiesAxiomGenerator());
+            gens.add(new InferredEquivalentObjectPropertyAxiomGenerator());
+            gens.add(new InferredInverseObjectPropertiesAxiomGenerator());
+            gens.add(new InferredObjectPropertyCharacteristicAxiomGenerator());
+            gens.add(new InferredPropertyAssertionGenerator());
             gens.add(new InferredSubClassAxiomGenerator());
+            gens.add(new InferredSubDataPropertyAxiomGenerator());
+            gens.add(new InferredSubObjectPropertyAxiomGenerator());
+
+            // now create the target ontology and save
             OWLOntology inferredOntology = getManager().createOntology();
             InferredOntologyGenerator iog = new InferredOntologyGenerator(reasoner, gens);
             iog.fillOntology(getManager(), inferredOntology);
