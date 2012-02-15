@@ -8,6 +8,11 @@
 
 Release Notes
 
+* 0.2
+
+Second release. Includes some minor updates and a new GOCI component, the GOCI data publisher, which generates a triplestore from the GWAS database and the ontology. The triplestore will form the basis of the diagram automation.
+
+
 * 0.1
 
  First prototype release.  Includes tracking system, SNP batch loader components and a demo webapp for ontology widgets.
