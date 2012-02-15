@@ -1,6 +1,5 @@
 package uk.ac.ebi.fgpt.goci.service;
 
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
@@ -27,12 +26,16 @@ public interface GWASOWLPublisher {
     /**
      * Publishes the inferred view of the GWAS catalog data from the asserted ontology.
      *
-     * @param ontologyIRI the saved version ontology (usually the result of {@link #publishGWASData()} that has been
-     *                    written somewhere)
+     * @param ontology the ontology to reason over and then publish
      * @return the reasoner that results from inferring over this ontology
      * @throws OWLConversionException if the inferreed view failed to calculate
      */
-    OWLReasoner publishGWASDataInferredView(IRI ontologyIRI) throws OWLConversionException;
+    OWLReasoner publishGWASDataInferredView(OWLOntology ontology) throws OWLConversionException;
+
+
+//     * @param ontologyIRI the saved version ontology (usually the result of {@link #publishGWASData()} that has been
+//     *                    written somewhere)
+//    OWLReasoner publishGWASDataInferredView(IRI ontologyIRI) throws OWLConversionException;
 
     /**
      * Saves the supplied ontology to the given location

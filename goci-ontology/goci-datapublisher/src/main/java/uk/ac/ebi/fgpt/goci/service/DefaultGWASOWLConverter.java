@@ -1,6 +1,5 @@
 package uk.ac.ebi.fgpt.goci.service;
 
-import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.slf4j.Logger;
@@ -8,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.exception.ObjectMappingException;
 import uk.ac.ebi.fgpt.goci.exception.OntologyTermException;
+import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.fgpt.goci.model.Study;
@@ -27,8 +27,7 @@ import java.util.Set;
  * @date 26/01/12
  */
 public class DefaultGWASOWLConverter implements GWASOWLConverter {
-    private OWLOntologyManager manager;
-    private OWLDataFactory factory;
+    private OntologyConfiguration configuration;
 
     private ReflexiveIRIMinter minter;
 
@@ -39,17 +38,19 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
     }
 
     public DefaultGWASOWLConverter() {
-        this.manager = OWLManager.createOWLOntologyManager();
-        this.factory = manager.getOWLDataFactory();
         this.minter = new ReflexiveIRIMinter();
     }
 
+    public void setConfiguration(OntologyConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
     public OWLOntologyManager getManager() {
-        return manager;
+        return configuration.getOWLOntologyManager();
     }
 
     public OWLDataFactory getDataFactory() {
-        return factory;
+        return configuration.getOWLDataFactory();
     }
 
     public ReflexiveIRIMinter getMinter() {
@@ -62,6 +63,27 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
             String iri = "http://www.ebi.ac.uk/efo/gwas-diagram/" +
                     new SimpleDateFormat("yyyy/MM/dd").format(new Date()) +
                     "/data";
+            OWLOntology conversion = getManager().createOntology(IRI.create(iri));
+
+            // import the gwas ontology schema
+            OWLImportsDeclaration importDecl = getDataFactory().getOWLImportsDeclaration(
+                    IRI.create(OntologyConstants.GWAS_ONTOLOGY_SCHEMA_IRI));
+            ImportChange change = new AddImport(conversion, importDecl);
+            getManager().applyChange(change);
+
+            return conversion;
+        }
+        catch (OWLOntologyCreationException e) {
+            throw new OWLConversionException("Failed to create new ontology", e);
+        }
+    }
+
+    public OWLOntology createInferredConversionOntology() throws OWLConversionException {
+        try {
+            // create a new ontology to represent our data dump
+            String iri = "http://www.ebi.ac.uk/efo/gwas-diagram/" +
+                    new SimpleDateFormat("yyyy/MM/dd").format(new Date()) +
+                    "/inferred-data";
             OWLOntology conversion = getManager().createOntology(IRI.create(iri));
 
             // import the gwas ontology schema

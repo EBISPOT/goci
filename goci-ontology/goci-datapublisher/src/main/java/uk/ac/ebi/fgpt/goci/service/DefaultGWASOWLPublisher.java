@@ -8,13 +8,13 @@ import org.semanticweb.owlapi.reasoner.*;
 import org.semanticweb.owlapi.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
 import uk.ac.ebi.fgpt.goci.dao.SingleNucleotidePolymorphismDAO;
 import uk.ac.ebi.fgpt.goci.dao.StudyDAO;
 import uk.ac.ebi.fgpt.goci.dao.TraitAssociationDAO;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.exception.ObjectMappingException;
 import uk.ac.ebi.fgpt.goci.exception.OntologyTermException;
+import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.fgpt.goci.model.Study;
@@ -22,7 +22,10 @@ import uk.ac.ebi.fgpt.goci.model.TraitAssociation;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Javadocs go here!
@@ -31,9 +34,7 @@ import java.util.*;
  * @date 26/01/12
  */
 public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
-    private Resource efoResource;
-    private Resource gwasDiagramSchemaResource;
-
+    private OntologyConfiguration configuration;
     private int studiesLimit = -1;
 
     private StudyDAO studyDAO;
@@ -41,53 +42,14 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
     private SingleNucleotidePolymorphismDAO singleNucleotidePolymorphismDAO;
     private GWASOWLConverter converter;
 
-    private OWLOntologyManager manager;
-    private OWLDataFactory factory;
-
     private Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
         return log;
     }
 
-    public OWLOntologyManager getManager() {
-        return manager;
-    }
-
-    public OWLDataFactory getDataFactory() {
-        return factory;
-    }
-
-    public Resource getEfoResource() {
-        return efoResource;
-    }
-
-    /**
-     * Sets the location from which to load EFO, if required.  Setting this property creates a mapper that prompts the
-     * OWL API to load EFO from the given location, instead of attempting to resolve to the URL corresponding to the
-     * ontology IRI.  This property is optional.
-     *
-     * @param efoResource the resource at which EFO can be found, using spring configuration syntax (URLs,
-     *                    classpath:...)
-     */
-    public void setEfoResource(Resource efoResource) {
-        this.efoResource = efoResource;
-    }
-
-    public Resource getGwasDiagramSchemaResource() {
-        return gwasDiagramSchemaResource;
-    }
-
-    /**
-     * Sets the location from which to load the gwas diagram schema, if required.  Setting this property creates a
-     * mapper that prompts the OWL API to load the gwas diagram schema from the given location, instead of attempting to
-     * resolve to the URL corresponding to the ontology IRI.  This property is optional.
-     *
-     * @param gwasDiagramSchemaResource the resource at which the gwas diagram schema can be found, using spring
-     *                                  configuration syntax (URLs, classpath:...)
-     */
-    public void setGwasDiagramSchemaResource(Resource gwasDiagramSchemaResource) {
-        this.gwasDiagramSchemaResource = gwasDiagramSchemaResource;
+    public void setConfiguration(OntologyConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     public int getStudiesLimit() {
@@ -130,19 +92,8 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
         this.converter = converter;
     }
 
-    public void init() throws IOException {
-        this.manager = OWLManager.createOWLOntologyManager();
-        if (getEfoResource() != null) {
-            getLog().info("Mapping EFO to " + getEfoResource().getURI());
-            this.manager.addIRIMapper(new SimpleIRIMapper(IRI.create(OntologyConstants.EFO_ONTOLOGY_SCHEMA_IRI),
-                                                          IRI.create(getEfoResource().getURI())));
-        }
-        if (getGwasDiagramSchemaResource() != null) {
-            getLog().info("Mapping GWAS schema to " + getGwasDiagramSchemaResource().getURI());
-            this.manager.addIRIMapper(new SimpleIRIMapper(IRI.create(OntologyConstants.GWAS_ONTOLOGY_SCHEMA_IRI),
-                                                          IRI.create(getEfoResource().getURI())));
-        }
-        this.factory = manager.getOWLDataFactory();
+    public OWLOntologyManager getManager() {
+        return configuration.getOWLOntologyManager();
     }
 
     public OWLOntology publishGWASData() throws OWLConversionException {
@@ -156,7 +107,7 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
 //            validateGWASData(studies);
 
         // if studies limit is not set, convert all data, else filter to first n studies and associated data
-        if (studiesLimit == -1) {
+        if (getStudiesLimit() == -1) {
             // grab all other data from the DAO
             getLog().debug("Fetching traits that require conversion to OWL using TraitAssociationDAO...");
             Collection<TraitAssociation> traitAssociations = getTraitAssociationDAO().retrieveAllTraitAssociations();
@@ -189,7 +140,7 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
 
         int count = 0;
         Iterator<Study> studyIterator = studies.iterator();
-        while (count < studiesLimit && studyIterator.hasNext()) {
+        while (count < getStudiesLimit() && studyIterator.hasNext()) {
             Study nextStudy = studyIterator.next();
             filteredStudies.add(nextStudy);
             for (TraitAssociation nextTA : nextStudy.getIdentifiedAssociations()) {
@@ -217,71 +168,45 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
         return conversion;
     }
 
-    public OWLReasoner publishGWASDataInferredView(IRI ontologyIRI) throws OWLConversionException {
+    public OWLReasoner publishGWASDataInferredView(OWLOntology ontology) throws OWLConversionException {
         try {
-            // reload the supplied ontology
-            getLog().info("Classifying ontology from " + ontologyIRI);
-            getLog().debug("Reloading " + ontologyIRI);
-            OWLOntology ontology = getManager().loadOntology(ontologyIRI);
-            getLog().info("Loaded " + ontology.getOntologyID().getOntologyIRI() + " ok");
+            getLog().debug("Loading any missing imports...");
+            OWLOntologyLoaderConfiguration loadConfig = new OWLOntologyLoaderConfiguration();
+            for (OWLImportsDeclaration decl : ontology.getImportsDeclarations()) {
+                getLog().debug("Manager has not loaded '" + decl.getIRI() + "', making load request...");
+                if (!ontology.getOWLOntologyManager().contains(decl.getIRI())) {
+                    ontology.getOWLOntologyManager().makeLoadImportRequest(decl, loadConfig);
+                    getLog().debug("Ontology '" + decl.getIRI() + "' loaded ok");
+                }
+            }
+            getLog().debug("Number of loaded ontologies: " + ontology.getOWLOntologyManager().getOntologies().size());
+
+            getLog().info("Classifying ontology from " + ontology.getOntologyID().getOntologyIRI());
+            getLog().debug("Creating reasoner...");
             OWLReasonerFactory factory = new Reasoner.ReasonerFactory();
             ConsoleProgressMonitor progressMonitor = new ConsoleProgressMonitor();
             OWLReasonerConfiguration config = new SimpleConfiguration(progressMonitor);
-            getLog().debug("Creating reasoner...");
             OWLReasoner reasoner = factory.createReasoner(ontology, config);
+
             getLog().debug("Precomputing inferences...");
             reasoner.precomputeInferences();
+
             getLog().debug("Checking ontology consistency...");
-            if (reasoner.isConsistent()) {
-                getLog().debug("Checking for unsatisfiable classes...");
-                if (reasoner.getUnsatisfiableClasses().getEntitiesMinusBottom().size() > 0) {
-                    throw new OWLConversionException("Once classified, unsatisfiable classes were detected");
-                }
-                else {
-                    getLog().info("Reasoning complete!");
-                    return reasoner;
-                }
+            reasoner.isConsistent();
+
+            getLog().debug("Checking for unsatisfiable classes...");
+            if (reasoner.getUnsatisfiableClasses().getEntitiesMinusBottom().size() > 0) {
+                throw new OWLConversionException("Once classified, unsatisfiable classes were detected");
             }
             else {
-                throw new OWLConversionException("Ontology is not consistent!");
+                getLog().info("Reasoning complete!");
+                return reasoner;
             }
         }
-        catch (OWLOntologyCreationException e) {
-            throw new OWLConversionException("Failed to load imported ontology", e);
+        catch (UnloadableImportException e) {
+            throw new OWLConversionException("Failed to load imports", e);
         }
     }
-
-//    public OWLReasoner publishGWASDataInferredView(OWLOntology ontology) throws OWLConversionException {
-//        try {
-//            // load any missing imports
-//            for (OWLImportsDeclaration importsDeclaration : ontology.getImportsDeclarations()) {
-//                getLog().debug("Doing import of " + importsDeclaration.getIRI());
-//                getManager().makeLoadImportRequest(importsDeclaration);
-//                getLog().debug("Imported " + importsDeclaration.getIRI() + " ok");
-//            }
-//            getLog().info("Classifying ontology from " + ontology.getOntologyID().getOntologyIRI());
-//            OWLReasonerFactory factory = new Reasoner.ReasonerFactory();
-//            ConsoleProgressMonitor progressMonitor = new ConsoleProgressMonitor();
-//            OWLReasonerConfiguration config = new SimpleConfiguration(progressMonitor);
-//            getLog().debug("Creating reasoner...");
-//            OWLReasoner reasoner = factory.createReasoner(ontology, config);
-//            getLog().debug("Precomputing inferences...");
-//            reasoner.precomputeInferences();
-//            getLog().debug("Checking ontology consistency...");
-//            reasoner.isConsistent();
-////            getLog().debug("Checking for unsatisfiable classes...");
-////            if (reasoner.getUnsatisfiableClasses().getEntitiesMinusBottom().size() > 0) {
-////                throw new OWLConversionException("Once classified, unsatisfiable classes were detected");
-////            }
-////            else {
-//                getLog().info("Reasoning complete!");
-//                return reasoner;
-////            }
-//        }
-//        catch (OWLOntologyCreationException e) {
-//            throw new OWLConversionException("Failed to load imported ontology", e);
-//        }
-//    }
 
     public void saveGWASData(OWLOntology ontology, File outputFile) throws OWLConversionException {
         try {
@@ -301,6 +226,9 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
 
     public void saveGWASDataInferredView(OWLReasoner reasoner, File outputFile) throws OWLConversionException {
         try {
+            // create new ontology to hold inferred axioms
+            OWLOntology inferredOntology = getConverter().createInferredConversionOntology();
+
             getLog().info("Saving inferred view...");
             List<InferredAxiomGenerator<? extends OWLAxiom>> gens =
                     new ArrayList<InferredAxiomGenerator<? extends OWLAxiom>>();
@@ -318,16 +246,13 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
             gens.add(new InferredSubObjectPropertyAxiomGenerator());
 
             // now create the target ontology and save
-            OWLOntology inferredOntology = getManager().createOntology();
+            OWLOntologyManager inferredManager = inferredOntology.getOWLOntologyManager();
             InferredOntologyGenerator iog = new InferredOntologyGenerator(reasoner, gens);
-            iog.fillOntology(getManager(), inferredOntology);
-            getManager().saveOntology(inferredOntology, IRI.create(outputFile));
+            iog.fillOntology(inferredManager, inferredOntology);
+            inferredManager.saveOntology(inferredOntology, IRI.create(outputFile));
             getLog().info("Inferred view saved ok");
         }
         catch (OWLOntologyStorageException e) {
-            throw new OWLConversionException("Failed to save GWAS data (inferred view)", e);
-        }
-        catch (OWLOntologyCreationException e) {
             throw new OWLConversionException("Failed to save GWAS data (inferred view)", e);
         }
     }

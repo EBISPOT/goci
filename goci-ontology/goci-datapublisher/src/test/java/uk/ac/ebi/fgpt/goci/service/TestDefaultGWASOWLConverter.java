@@ -6,13 +6,20 @@ import org.semanticweb.owlapi.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
+import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.lang.UniqueID;
 import uk.ac.ebi.fgpt.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.fgpt.goci.model.Study;
 import uk.ac.ebi.fgpt.goci.model.TraitAssociation;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Javadocs go here.
@@ -23,7 +30,8 @@ import java.util.*;
 public class TestDefaultGWASOWLConverter extends TestCase {
     private DefaultGWASOWLConverter converter;
 
-    private OWLOntology ontology;
+    private OWLOntology testOntology;
+
     private Study study;
     private TraitAssociation association;
     private SingleNucleotidePolymorphism snp;
@@ -35,12 +43,22 @@ public class TestDefaultGWASOWLConverter extends TestCase {
     }
 
     public void setUp() {
-        // add setup logic here
-        this.converter = new DefaultGWASOWLConverter();
-
         try {
-            ontology = converter.getManager().createOntology();
-            // create some mock objects we can use to convert
+            OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+            OWLDataFactory factory = manager.getOWLDataFactory();
+
+            // create test ontology
+            testOntology = manager.createOntology();
+
+            // create converter
+            converter = new DefaultGWASOWLConverter();
+
+            // create mocked objects and inject dependencies
+            OntologyConfiguration config = mock(OntologyConfiguration.class);
+            when(config.getOWLOntologyManager()).thenReturn(manager);
+            when(config.getOWLDataFactory()).thenReturn(factory);
+            converter.setConfiguration(config);
+
             study = new MockStudy();
             association = new MockAssociation();
             snp = new MockSNP();
@@ -96,15 +114,15 @@ public class TestDefaultGWASOWLConverter extends TestCase {
 
     public void invokeAddStudiesToOntology(Study s) {
         // check there's nothing in the ontology
-        assertEquals(0, ontology.getIndividualsInSignature().size());
+        assertEquals(0, testOntology.getIndividualsInSignature().size());
         // add a single study
-        converter.addStudiesToOntology(Collections.singletonList(s), ontology);
+        converter.addStudiesToOntology(Collections.singletonList(s), testOntology);
         // verify that the number of instances in the ontology has increased to one
-        assertEquals(1, ontology.getIndividualsInSignature().size());
+        assertEquals(1, testOntology.getIndividualsInSignature().size());
         // verify that the individual is an instance of the study class
-        OWLNamedIndividual individual = ontology.getIndividualsInSignature().iterator().next();
+        OWLNamedIndividual individual = testOntology.getIndividualsInSignature().iterator().next();
         OWLClass studyCls = converter.getDataFactory().getOWLClass(IRI.create(OntologyConstants.STUDY_CLASS_IRI));
-        assertTrue(individual.getTypes(ontology).contains(studyCls));
+        assertTrue(individual.getTypes(testOntology).contains(studyCls));
     }
 
     public void testAddAssociationsToOntology() {
@@ -120,15 +138,15 @@ public class TestDefaultGWASOWLConverter extends TestCase {
 
     public void invokeAddAssociationsToOntology(TraitAssociation ta) {
         // check there's nothing in the ontology
-        assertEquals(0, ontology.getIndividualsInSignature().size());
+        assertEquals(0, testOntology.getIndividualsInSignature().size());
         Collection<SingleNucleotidePolymorphism> snps = new ArrayList<SingleNucleotidePolymorphism>();
         // converter assumes snps will already be present
         snps.add(ta.getAssociatedSNP());
-        converter.addSNPsToOntology(snps, ontology);
+        converter.addSNPsToOntology(snps, testOntology);
         // add a single association
-        converter.addAssociationsToOntology(Collections.singletonList(ta), ontology);
+        converter.addAssociationsToOntology(Collections.singletonList(ta), testOntology);
         // verify that the number of instances in the ontology has increased to three
-        assertEquals(5, ontology.getIndividualsInSignature().size());
+        assertEquals(5, testOntology.getIndividualsInSignature().size());
         // verify that the individual is an instance of the association or trait class
         int traitCount = 0;
         int associationCount = 0;
@@ -136,11 +154,11 @@ public class TestDefaultGWASOWLConverter extends TestCase {
                 converter.getDataFactory().getOWLClass(IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));
         OWLClass efCls =
                 converter.getDataFactory().getOWLClass(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI));
-        for (OWLNamedIndividual individual : ontology.getIndividualsInSignature()) {
-            if (individual.getTypes(ontology).contains(associationCls)) {
+        for (OWLNamedIndividual individual : testOntology.getIndividualsInSignature()) {
+            if (individual.getTypes(testOntology).contains(associationCls)) {
                 associationCount++;
             }
-            if (individual.getTypes(ontology).contains(efCls)) {
+            if (individual.getTypes(testOntology).contains(efCls)) {
                 traitCount++;
             }
         }
@@ -161,11 +179,11 @@ public class TestDefaultGWASOWLConverter extends TestCase {
 
     public void invokeAddSNPsToOntology(SingleNucleotidePolymorphism snp) {
         // check there's nothing in the ontology
-        assertEquals(0, ontology.getIndividualsInSignature().size());
+        assertEquals(0, testOntology.getIndividualsInSignature().size());
         // add a single study
-        converter.addSNPsToOntology(Collections.singletonList(snp), ontology);
+        converter.addSNPsToOntology(Collections.singletonList(snp), testOntology);
         // verify that the number of instances in the ontology has increased to three (one snp, one chromosome, one band)
-        assertEquals(3, ontology.getIndividualsInSignature().size());
+        assertEquals(3, testOntology.getIndividualsInSignature().size());
         // verify that the individual is an instance of the study class
         int snpCount = 0;
         int chromCount = 0;
@@ -175,14 +193,14 @@ public class TestDefaultGWASOWLConverter extends TestCase {
                 converter.getDataFactory().getOWLClass(IRI.create(OntologyConstants.CHROMOSOME_CLASS_IRI));
         OWLClass bandCls =
                 converter.getDataFactory().getOWLClass(IRI.create(OntologyConstants.CYTOGENIC_REGION_CLASS_IRI));
-        for (OWLNamedIndividual individual : ontology.getIndividualsInSignature()) {
-            if (individual.getTypes(ontology).contains(snpCls)) {
+        for (OWLNamedIndividual individual : testOntology.getIndividualsInSignature()) {
+            if (individual.getTypes(testOntology).contains(snpCls)) {
                 snpCount++;
             }
-            if (individual.getTypes(ontology).contains(chromCls)) {
+            if (individual.getTypes(testOntology).contains(chromCls)) {
                 chromCount++;
             }
-            if (individual.getTypes(ontology).contains(bandCls)) {
+            if (individual.getTypes(testOntology).contains(bandCls)) {
                 bandCount++;
             }
         }

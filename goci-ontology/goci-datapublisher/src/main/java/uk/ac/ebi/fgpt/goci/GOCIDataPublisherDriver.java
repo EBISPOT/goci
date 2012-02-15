@@ -1,12 +1,14 @@
 package uk.ac.ebi.fgpt.goci;
 
 import org.apache.commons.cli.*;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
+import uk.ac.ebi.fgpt.goci.service.DefaultGWASOWLPublisher;
 import uk.ac.ebi.fgpt.goci.service.GWASOWLPublisher;
 
 import java.io.File;
@@ -25,23 +27,29 @@ public class GOCIDataPublisherDriver {
     public static void main(String[] args) {
         try {
             // parse arguments
-            parseArguments(args);
-
-            // execute publisher
-            GOCIDataPublisherDriver driver = new GOCIDataPublisherDriver();
-            driver.publishAndSave(assertedOntologyFile, inferredOntologyFile);
+            int parseArgs = parseArguments(args);
+            if (parseArgs == 0) {
+                // execute publisher
+                GOCIDataPublisherDriver driver = new GOCIDataPublisherDriver();
+                driver.publishAndSave(assertedOntologyFile, inferredOntologyFile);
+            }
+            else {
+                // could not parse arguments, exit with exit code >1 (depending on parsing problem)
+                System.exit(1 + parseArgs);
+            }
         }
         catch (Exception e) {
-            System.err.println("Failed to publish data to OWL: " + e.getMessage());
+            // failed to execute, exit with exit code 1
             System.exit(1);
         }
     }
 
-    private static void parseArguments(String[] args) {
+    private static int parseArguments(String[] args) {
         CommandLineParser parser = new GnuParser();
         HelpFormatter help = new HelpFormatter();
         Options options = bindOptions();
 
+        int parseArgs = 0;
         try {
             CommandLine cl = parser.parse(options, args, true);
 
@@ -49,31 +57,32 @@ public class GOCIDataPublisherDriver {
             if (cl.hasOption("")) {
                 // print out mode help
                 help.printHelp("publish", options, true);
-                System.exit(0);
+                parseArgs += 1;
             }
             else {
                 // find -o option (for asserted output file)
                 if (cl.hasOption("o")) {
                     String assertedOutputFileName = cl.getOptionValue("o");
                     assertedOntologyFile = new File(assertedOutputFileName);
+
+                    if (cl.hasOption("i")) {
+                        String inferredOutputFileName = cl.getOptionValue("i");
+                        inferredOntologyFile = new File(inferredOutputFileName);
+                    }
                 }
                 else {
                     System.err.println("-o (ontology output file) argument is required");
                     help.printHelp("publish", options, true);
-                    System.exit(1);
-                }
-
-                if (cl.hasOption("i")) {
-                    String inferredOutputFileName = cl.getOptionValue("i");
-                    inferredOntologyFile = new File(inferredOutputFileName);
+                    parseArgs += 2;
                 }
             }
         }
         catch (ParseException e) {
             System.err.println("Failed to read supplied arguments");
             help.printHelp("publish", options, true);
-            System.exit(1);
+            parseArgs += 4;
         }
+        return parseArgs;
     }
 
     private static Options bindOptions() {
@@ -100,32 +109,43 @@ public class GOCIDataPublisherDriver {
 
     private GWASOWLPublisher publisher;
 
-    public GOCIDataPublisherDriver() {
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("goci-datapublisher.xml");
-        publisher = ctx.getBean("publisher", GWASOWLPublisher.class);
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    private Logger getLog() {
+        return log;
     }
 
-    public void publishAndSave(File assertedOntologyFile, File inferredOntologyFile)
-            throws OWLConversionException {
-        // publishAndSave the data
-        System.out.println("Attempting to convert and publish GWAS data as OWL...");
-        OWLOntology ontology = publisher.publishGWASData();
+    public GOCIDataPublisherDriver() {
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("goci-datapublisher.xml");
+        publisher = ctx.getBean("publisher", DefaultGWASOWLPublisher.class);
+    }
 
-        // and save the result
-        System.out.print("Ontology converted, saving asserted results...");
-        publisher.saveGWASData(ontology, assertedOntologyFile);
-        System.out.println("..done!");
+    public void publishAndSave(File assertedOntologyFile, File inferredOntologyFile) throws RuntimeException {
+        try {
+            // publishAndSave the data
+            System.out.println("Attempting to convert and publish GWAS data as OWL...");
+            OWLOntology ontology = publisher.publishGWASData();
 
-        if (inferredOntologyFile != null) {
-            // now get the inferred view
-            System.out.println("Evaluating inferred view...");
-            OWLReasoner reasoner = publisher.publishGWASDataInferredView(IRI.create(assertedOntologyFile));
-//            OWLReasoner reasoner = publisher.publishGWASDataInferredView(ontology);
-
-            // now save inferred view
-            System.out.print("Ontology fully classified, saving inferred results...");
-            publisher.saveGWASDataInferredView(reasoner, inferredOntologyFile);
+            // and save the result
+            System.out.print("Ontology converted, saving asserted results...");
+            publisher.saveGWASData(ontology, assertedOntologyFile);
             System.out.println("..done!");
+
+            if (inferredOntologyFile != null) {
+                // now get the inferred view
+                System.out.println("Evaluating inferred view...");
+                OWLReasoner reasoner = publisher.publishGWASDataInferredView(ontology);
+
+                // now save inferred view
+                System.out.print("Ontology fully classified, saving inferred results...");
+                publisher.saveGWASDataInferredView(reasoner, inferredOntologyFile);
+                System.out.println("..done!");
+            }
+        }
+        catch (OWLConversionException e) {
+            System.err.println("Failed to publish data to OWL: " + e.getMessage());
+            getLog().error("Failed to publish data to OWL: ", e);
+            throw new RuntimeException(e);
         }
     }
 }
