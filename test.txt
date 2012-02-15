@@ -1,0 +1,3 @@
+foo bar test git test
+
+and some day i'll learn my vim commands
