@@ -85,5 +85,5 @@ to build all binaries of this project.
   Performing a Release
   ====================
 
-We will use the maven release plugin for this.  Coming soon!
+We will use the maven release plugin for this.  For clever stuff, see: http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Release+Process
 
