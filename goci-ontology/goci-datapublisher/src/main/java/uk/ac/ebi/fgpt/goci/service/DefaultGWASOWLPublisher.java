@@ -1,7 +1,6 @@
 package uk.ac.ebi.fgpt.goci.service;
 
 import org.semanticweb.HermiT.Reasoner;
-import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.io.OWLXMLOntologyFormat;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.*;
@@ -15,13 +14,11 @@ import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.exception.ObjectMappingException;
 import uk.ac.ebi.fgpt.goci.exception.OntologyTermException;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
-import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.fgpt.goci.model.Study;
 import uk.ac.ebi.fgpt.goci.model.TraitAssociation;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -171,16 +168,14 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
     public OWLReasoner publishGWASDataInferredView(OWLOntology ontology) throws OWLConversionException {
         try {
             getLog().debug("Loading any missing imports...");
-            OWLOntologyLoaderConfiguration loadConfig = new OWLOntologyLoaderConfiguration();
-            for (OWLImportsDeclaration decl : ontology.getImportsDeclarations()) {
-                getLog().debug("Manager has not loaded '" + decl.getIRI() + "', making load request...");
-                if (!ontology.getOWLOntologyManager().contains(decl.getIRI())) {
-                    ontology.getOWLOntologyManager().makeLoadImportRequest(decl, loadConfig);
-                    getLog().debug("Ontology '" + decl.getIRI() + "' loaded ok");
-                }
+            collectImports(ontology.getOWLOntologyManager(), ontology);
+            StringBuilder loadedOntologies = new StringBuilder();
+            int n = 1;
+            for (OWLOntology o : ontology.getOWLOntologyManager().getOntologies()) {
+                loadedOntologies.append("\t" + n++ + ") " + o.getOntologyID().getOntologyIRI() + "\n");
             }
-            getLog().debug("Number of loaded ontologies: " + ontology.getOWLOntologyManager().getOntologies().size());
-
+            getLog().debug("Imports collected: the following ontologies have been loaded in this session:\n" +
+                                   loadedOntologies.toString());
             getLog().info("Classifying ontology from " + ontology.getOntologyID().getOntologyIRI());
             getLog().debug("Creating reasoner...");
             OWLReasonerFactory factory = new Reasoner.ReasonerFactory();
@@ -306,5 +301,55 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
                               " studies could be completely mapped after passing all checks.\n" +
                               termMismatches + "/" + correctCount +
                               " failed due to missing or duplicated terms in EFO");
+    }
+
+    private void collectImports(final OWLOntologyManager manager, OWLOntology ontology)
+            throws UnloadableImportException {
+        // register a listener to the manager so we can transitively load all imports
+        manager.addOntologyLoaderListener(new OWLOntologyLoaderListener() {
+            public void startedLoadingOntology(LoadingStartedEvent evt) {
+                getLog().debug("Loading '" + evt.getOntologyID().getOntologyIRI() + "'...");
+            }
+
+            public void finishedLoadingOntology(LoadingFinishedEvent evt) {
+                if (evt.isSuccessful()) {
+                    getLog().debug("Ontology '" + evt.getOntologyID().getOntologyIRI() + "' loaded ok");
+                    try {
+                        loadImports(manager, manager.getOntology(evt.getOntologyID().getOntologyIRI()));
+                    }
+                    catch (UnloadableImportException e) {
+                        getLog().error("Failed to load imports for ");
+                    }
+                }
+                else {
+                    getLog().warn("Ontology '" + evt.getOntologyID().getOntologyIRI() + "' " +
+                                          "did not load successfully, results may not be valid");
+                }
+            }
+        });
+
+        // and load the direct imports we can get from the current ontology
+        loadImports(manager, ontology);
+    }
+
+    private void loadImports(OWLOntologyManager manager, OWLOntology ontology) throws UnloadableImportException {
+        OWLOntologyLoaderConfiguration loadConfig = new OWLOntologyLoaderConfiguration();
+        // get each ontology the current ontology imports
+        getLog().debug("Collecting imports of '" + ontology.getOntologyID().getOntologyIRI() + "'...");
+        for (OWLImportsDeclaration decl : ontology.getImportsDeclarations()) {
+            // check if this ontology is already loaded
+            IRI importedOntologyIRI = decl.getIRI();
+            getLog().debug("Ontology '" + ontology.getOntologyID().getOntologyIRI() + "' " +
+                                   "imports '" + importedOntologyIRI + "', " +
+                                   "checking whether this ontology is already loaded...");
+            if (!manager.contains(importedOntologyIRI)) {
+                getLog().debug("Ontology '" + importedOntologyIRI + "' has not been loaded in this session, " +
+                                       "making import request...");
+                manager.makeLoadImportRequest(decl, loadConfig);
+            }
+            else {
+                getLog().debug("Imported ontology '" + importedOntologyIRI + "' was already loaded");
+            }
+        }
     }
 }

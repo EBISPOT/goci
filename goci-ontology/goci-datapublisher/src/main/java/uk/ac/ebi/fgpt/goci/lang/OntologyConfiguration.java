@@ -75,7 +75,7 @@ public class OntologyConfiguration {
         if (getGwasDiagramSchemaResource() != null) {
             getLog().info("Mapping GWAS schema to " + getGwasDiagramSchemaResource().getURI());
             this.manager.addIRIMapper(new SimpleIRIMapper(IRI.create(OntologyConstants.GWAS_ONTOLOGY_SCHEMA_IRI),
-                                                          IRI.create(getEfoResource().getURI())));
+                                                          IRI.create(getGwasDiagramSchemaResource().getURI())));
         }
         this.factory = manager.getOWLDataFactory();
         initialized = true;

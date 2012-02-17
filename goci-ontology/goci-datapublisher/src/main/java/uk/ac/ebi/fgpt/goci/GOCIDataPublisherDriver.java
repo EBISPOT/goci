@@ -147,5 +147,10 @@ public class GOCIDataPublisherDriver {
             getLog().error("Failed to publish data to OWL: ", e);
             throw new RuntimeException(e);
         }
+        catch (Exception e) {
+            System.err.println("Failed to publish data to OWL (an unexpected exception occurred): " + e.getMessage());
+            getLog().error("Failed to publish data to OWL (an unexpected exception occurred): ", e);
+            throw new RuntimeException(e);
+        }
     }
 }
