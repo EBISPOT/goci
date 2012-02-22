@@ -21,4 +21,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <modules>
+        <module>goci-pussycat</module>
+        <module>goci-pussycat-renderlet</module>
+    <module>goci-sparql-client</module>
+  </modules>
 </project>

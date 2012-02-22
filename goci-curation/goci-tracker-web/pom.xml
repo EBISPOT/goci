@@ -70,59 +70,6 @@
         <finalName>goci-tracker</finalName>
     </build>
 
-    <!-- Reporting/Documentation output -->
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.2</version>
-            </plugin>
-        </plugins>
-    </reporting>
-
-    <!-- Licensing -->
-    <licenses>
-        <license>
-            <name>GNU Lesser General Public License</name>
-            <url>http://www.gnu.org/copyleft/lesser.html</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <!-- Mailing Lists -->
-    <mailingLists>
-        <mailingList>
-            <name>EBI GOCI Mailing List</name>
-            <subscribe>ebi-gwas-oc-request@ebi.ac.uk</subscribe>
-            <unsubscribe>ebi-gwas-oc-request@ebi.ac.uk</unsubscribe>
-            <post>ebi-gwas-oc@ebi.ac.uk</post>
-        </mailingList>
-    </mailingLists>
-
-    <!-- Bug Tracker -->
-    <issueManagement>
-        <system>JIRA</system>
-        <url>http://www.ebi.ac.uk/panda/jira</url>
-    </issueManagement>
-
-    <!-- Developer Listing -->
-    <developers>
-        <developer>
-            <id>tburdett</id>
-            <name>Tony Burdett</name>
-            <email>tburdett@ebi.ac.uk</email>
-            <organization>EBI</organization>
-            <organizationUrl>http://www.ebi.ac.uk</organizationUrl>
-            <roles>
-                <role>administrator</role>
-                <role>developer</role>
-            </roles>
-            <timezone>0</timezone>
-            <properties />
-        </developer>
-    </developers>
-
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
