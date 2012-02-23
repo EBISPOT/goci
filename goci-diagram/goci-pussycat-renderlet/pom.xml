@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>goci-diagram</artifactId>
+        <groupId>uk.ac.ebi.fgpt</groupId>
+        <version>0.3-SNAPSHOT</version>
+    </parent>
+
+    <groupId>uk.ac.ebi.fgpt</groupId>
+    <artifactId>goci-pussycat-renderlet</artifactId>
+    <version>0.3-SNAPSHOT</version>
+
+    <name>GOCI Pussycat Renderlet API (renders OWL entities as SVG)</name>
+    <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+</project>
