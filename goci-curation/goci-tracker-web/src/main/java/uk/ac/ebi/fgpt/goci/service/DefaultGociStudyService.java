@@ -49,6 +49,10 @@ public class DefaultGociStudyService implements GociStudyService {
     public Collection<GociStudy> retrieveAllStudies() {
         return getStudyDAO().getAllStudies();
     }
+    
+    public Collection<GociStudy> retrieveProcessableStudies(){
+    	return getStudyDAO().getProcessableStudies();
+    }
 
     public Collection<GociStudy> retrieveStudiesByState(GociStudy.State studyState) {
         return getStudyDAO().getStudiesByState(studyState);

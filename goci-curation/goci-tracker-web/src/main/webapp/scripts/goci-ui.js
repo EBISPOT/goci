@@ -273,7 +273,7 @@ function serverCommunicationFail() {
 function requestPublications() {
     $("#goci-publications-loading").show();
     $("#goci-publications-content").hide();
-    $.getJSON('api/studies', function (json) {
+    $.getJSON('api/studies?processable=true', function (json) {
         publications = json;
         displayPublications();
     })
