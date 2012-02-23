@@ -20,13 +20,13 @@ import java.util.*;
  */
 public class OntologyDAO extends Initializable {
     // configurable ontology elements with sensible defaults
-    private Resource efoResource;
+    private Resource ontologyResource;
 
-    private String efoURI = "http://www.ebi.ac.uk/efo/efo.owl";
-    private String efoSynonymAnnotationURI = "http://www.ebi.ac.uk/efo/alternative_term";
-    private String efoObsoleteClassURI = "http://www.geneontology.org/formats/oboInOwl#ObsoleteClass";
+    private String ontologyURI = "http://www.ebi.ac.uk/efo/efo.owl";
+    private String ontologySynonymAnnotationURI = "http://www.ebi.ac.uk/efo/alternative_term";
+    private String ontologyObsoleteClassURI = "http://www.geneontology.org/formats/oboInOwl#ObsoleteClass";
 
-    private OWLOntology efo;
+    private OWLOntology ontology;
     private OWLClass obsoleteClass;
 
     private Map<String, Set<OWLClass>> labelToClassMap;
@@ -34,75 +34,73 @@ public class OntologyDAO extends Initializable {
     private Map<IRI, OWLClass> iriToClassMap;
     private Map<String, IRI> accessionToIRIMap;
 
-    public Resource getEfoResource() {
-        return efoResource;
+    public Resource getOntologyResource() {
+        return ontologyResource;
     }
 
-    public void setEfoResource(Resource efoResource) {
-        this.efoResource = efoResource;
+    public void setOntologyResource(Resource ontologyResource) {
+        this.ontologyResource = ontologyResource;
     }
 
-    public String getEfoURI() {
-        return efoURI;
+    public String getOntologyURI() {
+        return ontologyURI;
     }
 
-    public void setEfoURI(String efoURI) {
-        this.efoURI = efoURI;
+    public void setOntologyURI(String ontologyURI) {
+        this.ontologyURI = ontologyURI;
     }
 
-    public String getEfoSynonymAnnotationURI() {
-        return efoSynonymAnnotationURI;
+    public String getOntologySynonymAnnotationURI() {
+        return ontologySynonymAnnotationURI;
     }
 
-    public void setEfoSynonymAnnotationURI(String efoSynonymAnnotationURI) {
-        this.efoSynonymAnnotationURI = efoSynonymAnnotationURI;
+    public void setOntologySynonymAnnotationURI(String ontologySynonymAnnotationURI) {
+        this.ontologySynonymAnnotationURI = ontologySynonymAnnotationURI;
     }
 
-    public String getEfoObsoleteClassURI() {
-        return efoObsoleteClassURI;
+    public String getOntologyObsoleteClassURI() {
+        return ontologyObsoleteClassURI;
     }
 
-    public void setEfoObsoleteClassURI(String efoObsoleteClassURI) {
-        this.efoObsoleteClassURI = efoObsoleteClassURI;
+    public void setOntologyObsoleteClassURI(String ontologyObsoleteClassURI) {
+        this.ontologyObsoleteClassURI = ontologyObsoleteClassURI;
     }
 
     protected void doInitialization() throws OWLOntologyCreationException {
         try {
             // set property to make sure we can parse all of EFO
             System.setProperty("entityExpansionLimit", "128000");
-            getLog().info("Loading EFO from " + getEfoResource().getURI().toString() + "...");
+            getLog().info("Loading Ontology from " + getOntologyResource().getURI().toString() + "...");
             OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-            IRI iri = IRI.create(getEfoResource().getURI());
-            efo = manager.loadOntologyFromOntologyDocument(iri);
+            IRI iri = IRI.create(getOntologyResource().getURI());
+            ontology = manager.loadOntologyFromOntologyDocument(iri);
 
-            getLog().info("Loaded " + efo.getOntologyID().getOntologyIRI() + " ok, creating indexes...");
+            getLog().info("Loaded " + ontology.getOntologyID().getOntologyIRI() + " ok, creating indexes...");
             labelToClassMap = new HashMap<String, Set<OWLClass>>();
             classToLabelMap = new HashMap<OWLClass, List<String>>();
             iriToClassMap = new HashMap<IRI, OWLClass>();
             accessionToIRIMap = new HashMap<String, IRI>();
 
             // get obsolete class
-            for (OWLClass nextClass : efo.getClassesInSignature()) {
-                if (nextClass.getIRI().toURI().toString().equals(getEfoObsoleteClassURI())) {
+            for (OWLClass nextClass : ontology.getClassesInSignature()) {
+                if (nextClass.getIRI().toURI().toString().equals(getOntologyObsoleteClassURI())) {
                     obsoleteClass = nextClass;
                     break;
                 }
             }
             if (obsoleteClass == null) {
-                String message =
-                        "Unable to recover the relevant OWLClasses from EFO - ObsoleteClass was not found";
-                throw new OntologyIndexingException(message);
+                getLog().warn("ObsoleteClass was not found: obsoleted classes may appear in search results");
             }
 
             // loop over classes
-            for (OWLClass owlClass : efo.getClassesInSignature()) {
+            for (OWLClass owlClass : ontology.getClassesInSignature()) {
                 // check this isn't an obsolete class
-                if (!isObsolete(efo, obsoleteClass, owlClass)) {
+                if (!isObsolete(ontology, obsoleteClass, owlClass)) {
                     // get class names, and enter them in the maps
-                    List<String> classNames = getClassNames(efo, owlClass);
+                    List<String> classNames = getClassNames(ontology, owlClass);
 
                     classToLabelMap.put(owlClass, classNames);
-                    for (String name : getClassNames(efo, owlClass)) {
+                    for (String name : getClassNames(ontology, owlClass)) {
                         name = normalizeSearchString(name);
                         if (!labelToClassMap.containsKey(name)) {
                             labelToClassMap.put(name, new HashSet<OWLClass>());
@@ -118,7 +116,7 @@ public class OntologyDAO extends Initializable {
         }
         catch (IOException e) {
             throw new OWLOntologyCreationException(
-                    "Unable to load EFO from supplied resource '" + getEfoResource().toString() + "'", e);
+                    "Unable to load EFO from supplied resource '" + getOntologyResource().toString() + "'", e);
         }
     }
 
@@ -193,7 +191,7 @@ public class OntologyDAO extends Initializable {
     public synchronized List<String> getClassNames(OWLClass owlClass) {
         try {
             waitUntilReady();
-            return getClassNames(efo, owlClass);
+            return getClassNames(ontology, owlClass);
         }
         catch (InterruptedException e) {
             throw new OntologyIndexingException(
@@ -211,7 +209,7 @@ public class OntologyDAO extends Initializable {
     public synchronized Set<String> getClassRDFSLabels(OWLClass owlClass) {
         try {
             waitUntilReady();
-            return getClassRDFSLabels(efo, owlClass);
+            return getClassRDFSLabels(ontology, owlClass);
         }
         catch (InterruptedException e) {
             throw new OntologyIndexingException(
@@ -230,7 +228,7 @@ public class OntologyDAO extends Initializable {
     public synchronized Set<String> getClassSynonyms(OWLClass owlClass) {
         try {
             waitUntilReady();
-            return getClassSynonyms(efo, owlClass);
+            return getClassSynonyms(ontology, owlClass);
         }
         catch (InterruptedException e) {
             throw new OntologyIndexingException(
@@ -341,7 +339,7 @@ public class OntologyDAO extends Initializable {
         // get synonym annotation property
         OWLAnnotationProperty synonymAnnotationProperty =
                 owlOntology.getOWLOntologyManager().getOWLDataFactory()
-                        .getOWLAnnotationProperty(IRI.create(getEfoSynonymAnnotationURI()));
+                        .getOWLAnnotationProperty(IRI.create(getOntologySynonymAnnotationURI()));
 
         // get all synonym annotations
         Set<OWLAnnotation> synonymAnnotations = owlClass.getAnnotations(
@@ -367,14 +365,16 @@ public class OntologyDAO extends Initializable {
      * @return true if obsoleted, false otherwise
      */
     private boolean isObsolete(OWLOntology owlOntology, OWLClass obsoleteClass, OWLClass owlClass) {
-        Set<OWLClassExpression> superclasses = owlClass.getSuperClasses(owlOntology);
-        for (OWLClassExpression oce : superclasses) {
-            if (!oce.isAnonymous() &&
-                    oce.asOWLClass().getIRI().toURI().equals(obsoleteClass.getIRI().toURI())) {
-                return true;
+        if (obsoleteClass != null) {
+            Set<OWLClassExpression> superclasses = owlClass.getSuperClasses(owlOntology);
+            for (OWLClassExpression oce : superclasses) {
+                if (!oce.isAnonymous() &&
+                        oce.asOWLClass().getIRI().toURI().equals(obsoleteClass.getIRI().toURI())) {
+                    return true;
+                }
             }
         }
-        // if no superclasses are obsolete, this class isn't obsolete
+        // if no superclasses are obsolete, or if the obsolete class wasn't found, this class isn't obsolete
         return false;
     }
 }

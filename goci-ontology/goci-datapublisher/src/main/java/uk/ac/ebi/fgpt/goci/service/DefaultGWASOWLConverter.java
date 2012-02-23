@@ -4,6 +4,7 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.ac.ebi.fgpt.goci.dao.OntologyDAO;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.exception.ObjectMappingException;
 import uk.ac.ebi.fgpt.goci.exception.OntologyTermException;
@@ -29,6 +30,8 @@ import java.util.Set;
 public class DefaultGWASOWLConverter implements GWASOWLConverter {
     private OntologyConfiguration configuration;
 
+    private OntologyDAO ontologyDAO;
+
     private ReflexiveIRIMinter minter;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -43,6 +46,14 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
 
     public void setConfiguration(OntologyConfiguration configuration) {
         this.configuration = configuration;
+    }
+
+    public OntologyDAO getOntologyDAO() {
+        return ontologyDAO;
+    }
+
+    public void setOntologyDAO(OntologyDAO ontologyDAO) {
+        this.ontologyDAO = ontologyDAO;
     }
 
     public OWLOntologyManager getManager() {
@@ -260,8 +271,8 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         AddAxiom add_located_in = new AddAxiom(ontology, located_in_relation);
         getManager().applyChange(add_located_in);
 
-        // get the chromosome class
-        OWLClass chrClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.CHROMOSOME_CLASS_IRI));
+        // get the appropriate chromosome class given the chromosome name
+        OWLClass chrClass = getChromosomeClass(snp.getChromosomeName());
 
         // create a new chromosome individual
         OWLNamedIndividual chrIndiv = getDataFactory().getOWLNamedIndividual(
@@ -291,6 +302,18 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                 getDataFactory().getOWLObjectPropertyAssertionAxiom(has_part, chrIndiv, bandIndiv);
         AddAxiom add_has_part = new AddAxiom(ontology, has_part_relation);
         getManager().applyChange(add_has_part);
+    }
+
+    private OWLClass getChromosomeClass(String chromosomeName) {
+        String classLabel = "chromosome " + chromosomeName;
+        Collection<OWLClass> labelledClasses = getOntologyDAO().getOWLClassesByLabel(classLabel);
+        if (labelledClasses.size() != 1) {
+            throw new OntologyTermException("Unexpected number of classes have label '" + classLabel + "'. " +
+                                                    "Expected 1, actual " + labelledClasses.size());
+        }
+        else {
+            return getDataFactory().getOWLClass(labelledClasses.iterator().next().getIRI());
+        }
     }
 
     protected void convertAssociation(TraitAssociation association, OWLOntology ontology, Set<String> issuedWarnings) {

@@ -23,6 +23,7 @@
     <!-- converter: all the hard work of OWL conversion is here -->
     <bean name="converter" class="uk.ac.ebi.fgpt.goci.service.DefaultGWASOWLConverter">
         <property name="configuration" ref="config" />
+        <property name="ontologyDAO" ref="gwasSchemaDAO" />
     </bean>
 
     <!-- SNP DAO -->
@@ -34,7 +35,7 @@
     <bean name="traitAssociationDAO" class="uk.ac.ebi.fgpt.goci.dao.TraitAssociationDAO" init-method="init">
         <property name="jdbcTemplate" ref="jdbcTemplate" />
         <property name="SNPDAO" ref="snpDAO" />
-        <property name="ontologyDAO" ref="ontologyDAO" />
+        <property name="ontologyDAO" ref="efoDAO" />
     </bean>
 
     <!-- Study DAO -->
@@ -43,10 +44,14 @@
         <property name="traitAssociationDAO" ref="traitAssociationDAO" />
     </bean>
 
-    <!-- Ontology DAO -->
-    <bean name="ontologyDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init">
-        <property name="efoResource"
+    <!-- Ontology DAOs -->
+    <bean name="efoDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init">
+        <property name="ontologyResource"
                   value="http://bar.ebi.ac.uk:8080/trac/export/head/branches/curator/ExperimentalFactorOntology/ExFactorInOWL/releasecandidate/efo_release_candidate.owl" />
+    </bean>
+
+    <bean name="gwasSchemaDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init">
+        <property name="ontologyResource" value="classpath:gwas-diagram-relaxed.owl" />
     </bean>
 
     <!-- GWAS Database setup and access -->

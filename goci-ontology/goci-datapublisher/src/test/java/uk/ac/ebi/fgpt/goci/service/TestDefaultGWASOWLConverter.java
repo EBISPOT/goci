@@ -5,6 +5,7 @@ import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.ac.ebi.fgpt.goci.dao.OntologyDAO;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
@@ -18,6 +19,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -31,6 +33,7 @@ public class TestDefaultGWASOWLConverter extends TestCase {
     private DefaultGWASOWLConverter converter;
 
     private OWLOntology testOntology;
+    private OWLClass testChromosomeClass;
 
     private Study study;
     private TraitAssociation association;
@@ -49,6 +52,8 @@ public class TestDefaultGWASOWLConverter extends TestCase {
 
             // create test ontology
             testOntology = manager.createOntology();
+            // create a single test owlclass to represent the chromosome class
+            testChromosomeClass = factory.getOWLClass(IRI.create("http://test.com/chromosome"));
 
             // create converter
             converter = new DefaultGWASOWLConverter();
@@ -58,6 +63,10 @@ public class TestDefaultGWASOWLConverter extends TestCase {
             when(config.getOWLOntologyManager()).thenReturn(manager);
             when(config.getOWLDataFactory()).thenReturn(factory);
             converter.setConfiguration(config);
+            
+            OntologyDAO ontologyDAO = mock(OntologyDAO.class);
+            when(ontologyDAO.getOWLClassesByLabel(anyString())).thenReturn(Collections.singletonList(testChromosomeClass));
+            converter.setOntologyDAO(ontologyDAO);
 
             study = new MockStudy();
             association = new MockAssociation();
@@ -189,15 +198,13 @@ public class TestDefaultGWASOWLConverter extends TestCase {
         int chromCount = 0;
         int bandCount = 0;
         OWLClass snpCls = converter.getDataFactory().getOWLClass(IRI.create(OntologyConstants.SNP_CLASS_IRI));
-        OWLClass chromCls =
-                converter.getDataFactory().getOWLClass(IRI.create(OntologyConstants.CHROMOSOME_CLASS_IRI));
         OWLClass bandCls =
                 converter.getDataFactory().getOWLClass(IRI.create(OntologyConstants.CYTOGENIC_REGION_CLASS_IRI));
         for (OWLNamedIndividual individual : testOntology.getIndividualsInSignature()) {
             if (individual.getTypes(testOntology).contains(snpCls)) {
                 snpCount++;
             }
-            if (individual.getTypes(testOntology).contains(chromCls)) {
+            if (individual.getTypes(testOntology).contains(testChromosomeClass)) {
                 chromCount++;
             }
             if (individual.getTypes(testOntology).contains(bandCls)) {
