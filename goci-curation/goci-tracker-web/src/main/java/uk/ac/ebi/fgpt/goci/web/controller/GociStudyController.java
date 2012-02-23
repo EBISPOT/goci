@@ -95,9 +95,15 @@ public class GociStudyController {
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody Collection<GociStudy> searchStudies(
             @RequestParam(value = "state", required = false) String state,
-            @RequestParam(value = "owner", required = false) String username) {
+            @RequestParam(value = "owner", required = false) String username,
+            @RequestParam(value = "processable", required = false) boolean processable) {
         if (state == null && username == null) {
-            return retrieveAllStudies();
+        	if(!processable){
+        		return retrieveAllStudies();
+        	}
+        	else{
+        		return retrieveProcessableStudies();
+        	}
         }
         else {
             if (state != null && username == null) {
@@ -174,6 +180,11 @@ public class GociStudyController {
     public Collection<GociStudy> retrieveAllStudies() {
         getLog().debug("Retrieving all studies");
         return getStudyService().retrieveAllStudies();
+    }
+    
+    public Collection<GociStudy> retrieveProcessableStudies() {
+        getLog().debug("Retrieving studies the require further processing");
+        return getStudyService().retrieveProcessableStudies();
     }
 
     public Collection<GociStudy> retrieveStudiesByState(String state) {

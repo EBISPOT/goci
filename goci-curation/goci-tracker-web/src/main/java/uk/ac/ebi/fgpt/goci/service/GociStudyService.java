@@ -26,6 +26,13 @@ public interface GociStudyService {
      * @return the collection of all known studies
      */
     Collection<GociStudy> retrieveAllStudies();
+    
+    /**
+     * Returns a collection of studies entered into the tracking system that require further processing, i.e. that are GWAS eligible but have not yet been published to the catalog. 
+     *
+     * @return the collection of all studies that require further processing.
+     */
+    Collection<GociStudy> retrieveProcessableStudies();
 
     /**
      * Returns a collection of all studies with the given state.

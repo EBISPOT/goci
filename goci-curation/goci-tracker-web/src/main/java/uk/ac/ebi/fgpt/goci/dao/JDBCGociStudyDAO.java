@@ -31,6 +31,10 @@ public class JDBCGociStudyDAO implements GociStudyDAO {
     public static final String STUDY_SELECT =
             "select ID, PUBMED_ID, TITLE, ABSTRACT, USER_ID, STATE, GWAS_ELIGIBILITY " +
                     "from STUDY";
+    
+    public static final String STUDY_SELECT_TODO_FILTER = STUDY_SELECT + " " +     
+    		"where (STATE <> 'Published_to_catalog') and (GWAS_ELIGIBILITY <> 'Not_GWAS')";     
+
     public static final String STUDY_SELECT_BY_ID = STUDY_SELECT + " " +
             "where ID = ?";
     public static final String STUDY_SELECT_BY_STATE = STUDY_SELECT + " " +
@@ -92,6 +96,10 @@ public class JDBCGociStudyDAO implements GociStudyDAO {
 
     public Collection<GociStudy> getAllStudies() {
         return getJdbcTemplate().query(STUDY_SELECT, new StudyMapper());
+    }
+    
+    public Collection<GociStudy> getProcessableStudies() {
+    	return getJdbcTemplate().query(STUDY_SELECT_TODO_FILTER, new StudyMapper());
     }
 
     public Collection<GociStudy> getStudiesByState(GociStudy.State studyState) {
