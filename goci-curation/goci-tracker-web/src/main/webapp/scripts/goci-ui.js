@@ -48,7 +48,7 @@ function configureUI() {
     // create datatables
     $("#goci-publications-table").dataTable({
                                                 "aaSorting":[
-                                                    [ 4, "desc" ]
+                                                    [ 0, "asc" ]
                                                 ],
                                                 "bPaginate":false,
                                                 "bStateSave":true,
