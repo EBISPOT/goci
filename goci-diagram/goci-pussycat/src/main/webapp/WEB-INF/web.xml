@@ -14,10 +14,10 @@
 
     <!--Define configuration to load-->
     <!--<context-param>-->
-        <!--<param-name>contextConfigLocation</param-name>-->
-        <!--<param-value>-->
-            <!--&lt;!&ndash; todo: spring config goes here &ndash;&gt;-->
-        <!--</param-value>-->
+    <!--<param-name>contextConfigLocation</param-name>-->
+    <!--<param-value>-->
+    <!--&lt;!&ndash; todo: spring config goes here &ndash;&gt;-->
+    <!--</param-value>-->
     <!--</context-param>-->
 
     <!--Define Servlets -->
@@ -37,6 +37,11 @@
     <listener>
         <listener-class>
             org.springframework.web.context.ContextLoaderListener
+        </listener-class>
+    </listener>
+    <listener>
+        <listener-class>
+            uk.ac.ebi.fgpt.goci.pussycat.PussycatAppListener
         </listener-class>
     </listener>
 
