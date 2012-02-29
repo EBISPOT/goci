@@ -17,8 +17,8 @@ public interface RenderletNexus {
     /**
      * Register a renderlet to this nexus.
      *
-     * @param renderlet
-     * @return
+     * @param renderlet a renderlet to register against this nexus, notifying of updates
+     * @return true if the registration was successful
      */
     boolean register(Renderlet renderlet);
 

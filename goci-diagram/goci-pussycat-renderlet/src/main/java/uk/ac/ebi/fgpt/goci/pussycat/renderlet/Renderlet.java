@@ -35,6 +35,7 @@ public interface Renderlet<O> {
     /**
      * Returns true if this renderlet is capable of rendering the supplied object as SVG, false if it cannot
      *
+     * @param nexus the renderlet nexus, allowing renderlets to query for dependencies on other renderings
      * @param owlEntity the entity we are attempting to render
      * @return true if this renderlet can render the supplied entity
      */
@@ -43,6 +44,7 @@ public interface Renderlet<O> {
     /**
      * Render the supplied entity as SVG, and return a valid SVG string
      *
+     * @param nexus the renderlet nexus, allowing renderlets to query for dependencies on other renderings
      * @param owlEntity the entity to render
      * @return a well formatted SVG element that can be used to display the supplied owl entity
      */
