@@ -1,5 +1,7 @@
 package uk.ac.ebi.fgpt.goci.pussycat.renderlet;
 
+import net.sourceforge.fluxion.spi.Spi;
+
 /**
  * A renderlet is a small plugin that is capable of rendering small chunks of semantically meaningful data into SVG
  * fragments.  Renderlets can be generically typed by the type of objects they are capable of rendering (usually OWLAPI
@@ -9,6 +11,7 @@ package uk.ac.ebi.fgpt.goci.pussycat.renderlet;
  * @author Rob Davey
  * @date 27/02/12
  */
+@Spi
 public interface Renderlet<O> {
     /**
      * The name of this renderlet - ideally, should be unique.  Names should be specified in lower case with underscores
@@ -35,7 +38,7 @@ public interface Renderlet<O> {
     /**
      * Returns true if this renderlet is capable of rendering the supplied object as SVG, false if it cannot
      *
-     * @param nexus the renderlet nexus, allowing renderlets to query for dependencies on other renderings
+     * @param nexus     the renderlet nexus, allowing renderlets to query for dependencies on other renderings
      * @param owlEntity the entity we are attempting to render
      * @return true if this renderlet can render the supplied entity
      */
@@ -44,7 +47,7 @@ public interface Renderlet<O> {
     /**
      * Render the supplied entity as SVG, and return a valid SVG string
      *
-     * @param nexus the renderlet nexus, allowing renderlets to query for dependencies on other renderings
+     * @param nexus     the renderlet nexus, allowing renderlets to query for dependencies on other renderings
      * @param owlEntity the entity to render
      * @return a well formatted SVG element that can be used to display the supplied owl entity
      */

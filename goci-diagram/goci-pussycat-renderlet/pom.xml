@@ -19,4 +19,34 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <!-- Fluxion implementation of SPI spec -->
+        <dependency>
+            <groupId>net.sourceforge.fluxion</groupId>
+            <artifactId>fluxion-spi</artifactId>
+            <version>1.0-alpha</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>owlapi</groupId>
+                    <artifactId>owlapi</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>hasbanana-repo</id>
+            <url>http://www.hasbanana.com/maven/repo</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
 </project>
