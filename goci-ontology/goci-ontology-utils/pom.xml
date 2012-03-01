@@ -4,16 +4,19 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>goci-diagram</artifactId>
+        <artifactId>goci-ontology</artifactId>
         <groupId>uk.ac.ebi.fgpt</groupId>
         <version>0.3-SNAPSHOT</version>
     </parent>
-
     <groupId>uk.ac.ebi.fgpt</groupId>
-    <artifactId>goci-pussycat-renderlet</artifactId>
+    <artifactId>goci-ontology-utils</artifactId>
     <version>0.3-SNAPSHOT</version>
 
-    <name>GOCI Pussycat Renderlet API (renders OWL entities as SVG)</name>
+    <name>GOCI Ontology Utils</name>
+    <description>
+        Some core utilities that are useful across all modules that deal with the OWLAPI and the GWAS catalog ontology
+        schema
+    </description>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
 
     <properties>
@@ -21,23 +24,6 @@
     </properties>
 
     <dependencies>
-        <!-- Fluxion implementation of SPI spec -->
-        <dependency>
-            <groupId>net.sourceforge.fluxion</groupId>
-            <artifactId>fluxion-spi</artifactId>
-            <version>1.0-alpha</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>owlapi</groupId>
-                    <artifactId>owlapi</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <!-- OWL API and HermiT reasoner, for converting GWAS concepts -->
         <dependency>
             <groupId>org.semanticweb.owlapi</groupId>
@@ -49,16 +35,29 @@
             <artifactId>hermit</artifactId>
             <version>1.3.4</version>
         </dependency>
+
+        <!-- spring core, for using classpath resources -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>3.0.3.RELEASE</version>
+        </dependency>
+
+        <!-- logging dependencies for testing -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+
     </dependencies>
-
-    <repositories>
-        <repository>
-            <id>hasbanana-repo</id>
-            <url>http://www.hasbanana.com/maven/repo</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
 </project>

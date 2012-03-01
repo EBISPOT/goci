@@ -80,6 +80,38 @@
             <version>1.6.3</version>
         </dependency>
 
+        <!-- OWL API and HermiT reasoner, for converting GWAS concepts -->
+        <dependency>
+            <groupId>org.semanticweb.owlapi</groupId>
+            <artifactId>owlapi</artifactId>
+            <version>3.2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>hermit</groupId>
+            <artifactId>hermit</artifactId>
+            <version>1.3.4</version>
+        </dependency>
+
+        <!-- ontology utils -->
+        <dependency>
+            <groupId>uk.ac.ebi.fgpt</groupId>
+            <artifactId>goci-ontology-utils</artifactId>
+            <version>0.3-SNAPSHOT</version>
+        </dependency>
+
+        <!-- renderlet and querying dependencies -->
+        <dependency>
+            <groupId>uk.ac.ebi.fgpt</groupId>
+            <artifactId>goci-pussycat-renderlet</artifactId>
+            <version>0.3-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.ac.ebi.fgpt</groupId>
+            <artifactId>goci-sparql-client</artifactId>
+            <version>0.3-SNAPSHOT</version>
+        </dependency>
+
         <!-- spring webmvc framework -->
         <dependency>
             <groupId>org.springframework</groupId>

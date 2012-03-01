@@ -3,7 +3,6 @@ package uk.ac.ebi.fgpt.goci.dao;
 import junit.framework.TestCase;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import uk.ac.ebi.fgpt.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.fgpt.goci.model.TraitAssociation;
 
 import java.util.Collection;

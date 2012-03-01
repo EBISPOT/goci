@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC
+        "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en" lang="eng">
+<head>
+    <title>GOCI | Pussycat</title>
+
+    <link href="css/pussycat.css" type="text/css" rel="stylesheet"/>
+    <link href="css/jquery-ui-1.8.18.custom.css" type="text/css" rel="stylesheet"/>
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="scripts/pussycat.js"></script>
+
+</head>
+<body onload="init();">
+<div id="page_wrapper">
+
+    <div id="header_wrapper">
+
+        <div id="header">
+            <h1>GOCI Pussycat</h1>
+
+            <h2>Exploring Genome-wide Association Studies</h2>
+        </div>
+
+        <!--<div id="navcontainer">-->
+        <!--<ul id="navlist">-->
+        <!--<li><a href='index.html'>Pussycat</a></li>-->
+        <!--</ul>-->
+        <!--</div>-->
+
+    </div>
+
+    <div id="divtable">
+
+        <div id="ontologyviewarea">
+            <div id="ontologyview">
+            </div>
+        </div>
+
+        <div id="browsertabs">
+            <ul>
+                <li><a href="#hometab">Home</a></li>
+                <li><a href="#servicetab">Datasources</a></li>
+                <li><a href="#helptab">Help</a></li>
+                <li><a href="#logtab">Log</a></li>
+            </ul>
+
+            <div id="hometab">
+                <h3>Summary</h3>
+                Some summary text, session info, and stats on loaded data goes here
+            </div>
+            <div id="servicetab">
+                <h3>GWAS Catalog Diagram</h3>
+                The catalog diagram itself should be generated here
+            </div>
+            <div id="helptab">
+                This is really useful help
+            </div>
+            <div id="logtab">
+                log log log log
+            </div>
+        </div>
+
+        <div id='contentholder' class='contentstyle'>
+
+            <div id='indexarea' class='tabcontent'>
+                <div id='indexcontent'>
+                </div>
+
+            </div>
+
+            <div id='mappingarea' class='tabcontent'>
+                <!-- map div -->
+                <div id='svgmapdragarea' class='drsElement'>
+                    <div id='svgmapdragareaconstraint'>
+                        <div id='svgmaparea'>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- query area -->
+            <div id='queryarea' class='tabcontent'>
+                <div id='querycontent'>
+                </div>
+            </div>
+
+            <!-- logging -->
+            <div id='logarea' class='tabcontent'>
+                <div id='pussycatlog'>
+                </div>
+            </div>
+
+            <!-- end contentholder -->
+        </div>
+
+        <!-- end divtable -->
+    </div>
+
+    <div id='trash' class='h'></div>
+
+    <!-- pagewrapper -->
+</div>
+
+</body>
+</html>
