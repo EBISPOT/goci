@@ -30,11 +30,11 @@ public interface RenderletNexus {
     <O> void renderingEventOccurred(RenderingEvent<O> evt);
 
     /**
-     * Gets the area of SVG, relative to the whole SVG canvas, in which the supplied OWL entity was rendered.
+     * Gets the area of SVG, relative to the whole SVG canvas, in which the supplied entity was rendered.
      *
-     * @param owlEntity the entity being rendered
-     * @param <O>       the type of owl entity that was rendered
+     * @param renderedEntity the entity being rendered
+     * @param <O>            the type of entity that was rendered
      * @return the area of svg in which this entity was rendered
      */
-    <O> SVGArea getLocationOfRenderedEntity(O owlEntity);
+    <O> SVGArea getLocationOfRenderedEntity(O renderedEntity);
 }

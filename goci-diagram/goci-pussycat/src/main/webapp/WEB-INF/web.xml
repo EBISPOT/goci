@@ -12,13 +12,14 @@
         GOCI Pussycat - GWAS catalog interactive diagram
     </description>
 
-    <!--Define configuration to load-->
-    <!--<context-param>-->
-    <!--<param-name>contextConfigLocation</param-name>-->
-    <!--<param-value>-->
-    <!--&lt;!&ndash; todo: spring config goes here &ndash;&gt;-->
-    <!--</param-value>-->
-    <!--</context-param>-->
+    Define configuration to load
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath:goci-pussycat.xml
+            classpath:goci-datapublisher.xml
+        </param-value>
+    </context-param>
 
     <!--Define Servlets -->
     <servlet>
