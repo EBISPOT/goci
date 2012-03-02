@@ -1,10 +1,15 @@
 package uk.ac.ebi.fgpt.goci.pussycat.session;
 
-import org.semanticweb.owlapi.model.OWLOntology;
+import com.googlecode.ehcache.annotations.Cacheable;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * A Pussycat session maintains the loaded data required by Pussycat in order to render an informative display to the
@@ -23,15 +28,6 @@ public interface PussycatSession {
     String getSessionID();
 
     /**
-     * Returns the data this session has currently loaded, as an OWL Ontology.  How this OWL ontology is populated
-     * depends on underlying implementations: implementations may choose to query for data from a remote service, or may
-     * load this ontology directly.
-     *
-     * @return the data that is loaded into this session
-     */
-    OWLOntology getLoadedData();
-
-    /**
      * Returns the {@link uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus} that controls interactions between the
      * configured renderlets for this pussycat session
      *
@@ -48,12 +44,22 @@ public interface PussycatSession {
     Collection<Renderlet> getAvailableRenderlets();
 
     /**
-     * An enum that encapsulates strategies for dealing with {@link PussycatSession}s.  {@link #JOIN} indicates that new
-     * HttpSessions should join an existing serverside PussycatSession, if one is available.  {@link #CREATE} indicates
-     * that a new serverside PussycatSession should always be created.
+     * Fetches all data that fulfils the given class expression and renders it using any available renderlets.  The
+     * RenderletNexus for this session is used to ensure available renderlets know how to arrange their output.
+     *
+     * @param classExpression an OWL class expression describing the data we wish to render
+     * @return a well formatted SVG string that should be returned to the client
      */
-    public enum Strategy {
-        JOIN,
-        CREATE
-    }
+    String performRendering(OWLClassExpression classExpression);
+
+    /**
+     * Clears any data that is currently rendered in this session
+     *
+     * @return true if this operation suceeded, otherwise false
+     */
+    boolean clearRendering();
+
+    @Cacheable(cacheName = "reasonerCache") OWLReasoner getReasoner() throws OWLConversionException;
+
+    @Cacheable(cacheName = "queryCache") Set<OWLNamedIndividual> query(OWLClassExpression classExpression) throws OWLConversionException;
 }

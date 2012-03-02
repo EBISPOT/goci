@@ -31,6 +31,14 @@ public interface PussycatSessionManager {
     PussycatSession getPussycatSession(HttpSession session);
 
     /**
+     * Sets a collection of pussycat sessions that are immediately available for subsequent HttpSessions to join and
+     * use
+     *
+     * @param pussycatSessions the pussycat sessions to make available
+     */
+    void setPussycatSessions(Collection<PussycatSession> pussycatSessions);
+
+    /**
      * Returns the collection of currently active sessions
      *
      * @return all currently active {@link PussycatSession}s
@@ -38,21 +46,28 @@ public interface PussycatSessionManager {
     Collection<PussycatSession> getPussycatSessions();
 
     /**
-     * Binds the supplied {@link HttpSession} to the {@link PussycatSession} with the supplied ID.  An
-     * IllegalArgumentException is thrown if there is no active session with the supplied ID.
+     * Adds a pussycat session to this manager, making it available for use by subsequent HTTP sessions.  Sessions that
+     * wish to utilise this pussycat session must call {@link #joinPussycatSession(javax.servlet.http.HttpSession,
+     * PussycatSession)} to associate themselves with it
      *
-     * @param session           the HttpSession to bind
-     * @param pussycatSessionID the ID of the pussycat session to join
+     * @param pussycatSession the pussycat session to add
+     */
+    void addPussycatSession(PussycatSession pussycatSession);
+
+    /**
+     * Binds the supplied {@link HttpSession} to the supplied {@link PussycatSession}.
+     *
+     * @param session         the HttpSession to bind
+     * @param pussycatSession the pussycat session to join
      * @return the active PussycatSession that has just been joined
      * @throws IllegalArgumentException if there is no pussycat session with the supplied ID
      */
-    PussycatSession joinPussycatSession(HttpSession session, String pussycatSessionID) throws IllegalArgumentException;
+    PussycatSession joinPussycatSession(HttpSession session, PussycatSession pussycatSession);
 
     /**
      * Creates a new {@link PussycatSession}, and binds the supplied {@link HttpSession} to it.
      *
-     * @param session the HttpSession to create a new PussycatSession for
      * @return the newly created pussycat session
      */
-    PussycatSession createPussycatSession(HttpSession session);
+    PussycatSession createPussycatSession();
 }

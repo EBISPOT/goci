@@ -35,8 +35,8 @@ public class RenderletNexusFactory {
             renderedEntityLocations.put(evt.getRenderedEntity(), evt.getSvgArea());
         }
 
-        public <O> SVGArea getLocationOfRenderedEntity(O owlEntity) {
-            return renderedEntityLocations.get(owlEntity);
+        public <O> SVGArea getLocationOfRenderedEntity(O renderedEntity) {
+            return renderedEntityLocations.get(renderedEntity);
         }
     }
 }

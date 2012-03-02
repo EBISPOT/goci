@@ -1,12 +1,11 @@
 package uk.ac.ebi.fgpt.goci.pussycat.manager;
 
-import uk.ac.ebi.fgpt.goci.pussycat.session.DummyPussycatSession;
+import uk.ac.ebi.fgpt.goci.pussycat.session.GOCIDataPublisherPussycatSession;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSession;
+import uk.ac.ebi.fgpt.goci.service.GWASOWLPublisher;
 
 import javax.servlet.http.HttpSession;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A basic implementation of a {@link PussycatSessionManager} that stores mappngs between http sessions and pussycat
@@ -16,10 +15,22 @@ import java.util.Map;
  * @date 01/03/12
  */
 public class DefaultPussycatSessionManager implements PussycatSessionManager {
-    Map<HttpSession, PussycatSession> sessionMap;
+    private Set<PussycatSession> pussycatSessions;
+    private Map<HttpSession, PussycatSession> sessionMap;
+
+    private GWASOWLPublisher publisher;
 
     public DefaultPussycatSessionManager() {
+        this.pussycatSessions = new HashSet<PussycatSession>();
         this.sessionMap = new HashMap<HttpSession, PussycatSession>();
+    }
+
+    public GWASOWLPublisher getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(GWASOWLPublisher publisher) {
+        this.publisher = publisher;
     }
 
     public boolean hasAvailableSession(HttpSession session) {
@@ -30,24 +41,30 @@ public class DefaultPussycatSessionManager implements PussycatSessionManager {
         return sessionMap.get(session);
     }
 
+    public void setPussycatSessions(Collection<PussycatSession> pussycatSessions) {
+        this.pussycatSessions.addAll(pussycatSessions);
+    }
+
     public Collection<PussycatSession> getPussycatSessions() {
-        return sessionMap.values();
+        return pussycatSessions;
     }
 
-    public PussycatSession joinPussycatSession(HttpSession session, String pussycatSessionID)
-            throws IllegalArgumentException {
-        for (PussycatSession pussycatSession : getPussycatSessions()) {
-            if (pussycatSession.getSessionID().equals(pussycatSessionID)) {
-                return sessionMap.put(session, pussycatSession);
-            }
+    public void addPussycatSession(PussycatSession pussycatSession) {
+        pussycatSessions.add(pussycatSession);
+    }
+
+
+    public PussycatSession joinPussycatSession(HttpSession session, PussycatSession pussycatSession) {
+        if (!pussycatSessions.contains(pussycatSession)) {
+            pussycatSessions.add(pussycatSession);
         }
-        // if we got to here, pussycat session with the supplied ID was not found
-        throw new IllegalArgumentException("There was no active PussycatSession with id '" + pussycatSessionID + "'");
+        return sessionMap.put(session, pussycatSession);
     }
 
-    public PussycatSession createPussycatSession(HttpSession session) {
-        PussycatSession pussycatSession = new DummyPussycatSession();
-        sessionMap.put(session, pussycatSession);
+    public PussycatSession createPussycatSession() {
+        GOCIDataPublisherPussycatSession pussycatSession = new GOCIDataPublisherPussycatSession();
+        pussycatSession.setPublisher(publisher);
+        pussycatSessions.add(pussycatSession);
         return pussycatSession;
     }
 }

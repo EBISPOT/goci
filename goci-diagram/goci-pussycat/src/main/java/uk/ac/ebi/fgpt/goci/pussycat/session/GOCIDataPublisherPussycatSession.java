@@ -1,15 +1,17 @@
 package uk.ac.ebi.fgpt.goci.pussycat.session;
 
-import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.IRI;
+import com.googlecode.ehcache.annotations.Cacheable;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
+import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexusFactory;
+import uk.ac.ebi.fgpt.goci.service.GWASOWLPublisher;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -17,6 +19,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.ServiceLoader;
+import java.util.Set;
 
 /**
  * Javadocs go here!
@@ -24,13 +27,12 @@ import java.util.ServiceLoader;
  * @author Tony Burdett
  * @date 01/03/12
  */
-public class DummyPussycatSession implements PussycatSession {
+public class GOCIDataPublisherPussycatSession implements PussycatSession {
     private String sessionID;
     private Collection<Renderlet> renderlets;
     private RenderletNexus renderletNexus;
 
-    private Resource ontologyResource;
-    private OWLOntology loadedData;
+    private GWASOWLPublisher publisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -38,42 +40,28 @@ public class DummyPussycatSession implements PussycatSession {
         return log;
     }
 
-    public Resource getOntologyResource() {
-        return ontologyResource;
+    public GOCIDataPublisherPussycatSession() {
+        // set up this session
+        this.sessionID = generateSessionID();
+        this.renderletNexus = RenderletNexusFactory.createDefaultRenderletNexus();
+        this.renderlets = getAvailableRenderlets();
+
+        // register all renderlets
+        for (Renderlet r : renderlets) {
+            renderletNexus.register(r);
+        }
     }
 
-    public void setOntologyResource(Resource ontologyResource) {
-        this.ontologyResource = ontologyResource;
+    public GWASOWLPublisher getPublisher() {
+        return publisher;
     }
 
-    public void init() {
-        try {
-            // load the ontology data from the supplied resource
-            OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-            IRI iri = IRI.create(getOntologyResource().getURI());
-            this.loadedData = manager.loadOntologyFromOntologyDocument(iri);
-
-            // set up this session
-            this.sessionID = generateSessionID();
-            this.renderletNexus = RenderletNexusFactory.createDefaultRenderletNexus();
-            this.renderlets = getAvailableRenderlets();
-
-            // register all renderlets
-            for (Renderlet r : renderlets) {
-                renderletNexus.register(r);
-            }
-        }
-        catch (Exception e) {
-            throw new RuntimeException("Failed to initialize pussycat session", e);
-        }
+    public void setPublisher(GWASOWLPublisher publisher) {
+        this.publisher = publisher;
     }
 
     public String getSessionID() {
         return sessionID;
-    }
-
-    public OWLOntology getLoadedData() {
-        return loadedData;
     }
 
     public RenderletNexus getRenderletNexus() {
@@ -94,7 +82,29 @@ public class DummyPussycatSession implements PussycatSession {
         }
     }
 
-    protected String generateSessionID() {
+    public String performRendering(OWLClassExpression classExpression) {
+        return null;
+    }
+
+    public boolean clearRendering() {
+        return false;
+    }
+
+    @Cacheable(cacheName = "reasonerCache")
+    public OWLReasoner getReasoner() throws OWLConversionException {
+        getLog().info("Publishing GWAS data");
+        OWLOntology gwasData = getPublisher().publishGWASData();
+        getLog().info("Publishing GWAS data (inferred view)");
+        return getPublisher().publishGWASDataInferredView(gwasData);
+    }
+
+    @Cacheable(cacheName = "queryCache")
+    public Set<OWLNamedIndividual> query(OWLClassExpression classExpression) throws OWLConversionException {
+        getLog().info("Searching reasoner for instances of " + classExpression.toString());
+        return getReasoner().getInstances(classExpression, false).getFlattened();
+    }
+
+    private String generateSessionID() {
         String timestamp = Long.toString(System.currentTimeMillis());
         getLog().debug("Generating new session ID for session created at " + timestamp);
         try {
@@ -117,7 +127,7 @@ public class DummyPussycatSession implements PussycatSession {
 
     private static final String HEXES = "0123456789ABCDEF";
 
-    protected String getHexRepresentation(byte[] raw) {
+    private String getHexRepresentation(byte[] raw) {
         if (raw == null) {
             return null;
         }
