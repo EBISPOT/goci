@@ -9,8 +9,11 @@
        http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.2.xsd
        ">
 
-    <ehcache:annotation-driven cache-manager="ehCacheManager" proxy-target-class="true"/>
-    <bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"/>
+    <ehcache:annotation-driven />
+
+    <ehcache:config cache-manager="cacheManager" />
+
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" />
 
     <bean id="pussycatSessionStrategy"
           class="uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSessionStrategy"
@@ -20,8 +23,12 @@
         </constructor-arg>
     </bean>
 
-    <bean id="pussycatSessionManager" class="uk.ac.ebi.fgpt.goci.pussycat.manager.DefaultPussycatSessionManager">
+    <bean id="reasonerSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.CacheableReasonerSession">
         <property name="publisher" ref="publisher" />
+    </bean>
+
+    <bean id="pussycatSessionManager" class="uk.ac.ebi.fgpt.goci.pussycat.manager.DefaultPussycatSessionManager">
+        <property name="reasonerSession" ref="reasonerSession" />
         <property name="pussycatSessions">
             <set>
                 <ref bean="pussycatSession" />
@@ -30,6 +37,6 @@
     </bean>
 
     <bean id="pussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.GOCIDataPublisherPussycatSession">
-        <property name="publisher" ref="publisher" />
+        <property name="reasonerSession" ref="reasonerSession" />
     </bean>
 </beans>

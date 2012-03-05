@@ -51,14 +51,14 @@
         </dependency>
     </dependencies>
 
-    <repositories>
-        <repository>
-            <id>hasbanana-repo</id>
-            <url>http://www.hasbanana.com/maven/repo</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+    <!--<repositories>-->
+        <!--<repository>-->
+            <!--<id>hasbanana-repo</id>-->
+            <!--<url>http://www.hasbanana.com/maven/repo</url>-->
+            <!--<snapshots>-->
+                <!--<enabled>true</enabled>-->
+            <!--</snapshots>-->
+        <!--</repository>-->
+    <!--</repositories>-->
 
 </project>

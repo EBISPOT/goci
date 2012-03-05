@@ -1,34 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="true" monitoring="autodetect" dynamicConfig="true">
-    <diskStore path="java.io.tmpdir/goci/publisher/cache" />
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
+         updateCheck="false">
+
+    <diskStore path="user.home/.goci/publisher/cache" />
 
     <defaultCache
-            maxElementsInMemory="10000"
-            eternal="false"
-            timeToIdleSeconds="120"
-            timeToLiveSeconds="120"
-            overflowToDisk="true"
-            diskPersistent="true"
-            diskExpiryThreadIntervalSeconds="120"
-            memoryStoreEvictionPolicy="LRU">
-    </defaultCache>
-
-    <cache name="queryCache"
-           maxElementsOnDisk="0"
-           maxElementsInMemory="500"
-           eternal="true"
-           overflowToDisk="true"
-           diskPersistent="true"
-           memoryStoreEvictionPolicy="LRU">
-    </cache>
+            eternal="true"
+            maxElementsInMemory="100"
+            overflowToDisk="false" />
 
     <cache name="reasonerCache"
-           maxElementsOnDisk="0"
-           maxElementsInMemory="500"
+           maxElementsInMemory="1"
            eternal="true"
-           overflowToDisk="true"
-           diskPersistent="true"
-           memoryStoreEvictionPolicy="LRU">
-    </cache>
+           overflowToDisk="true" />
+
+    <!--<cache name="reasonerCache"-->
+           <!--maxElementsInMemory="1"-->
+           <!--eternal="true"-->
+           <!--diskPersistent="true"-->
+           <!--overflowToDisk="true" />-->
 
 </ehcache>

@@ -37,10 +37,10 @@
         <appender-ref ref="console" />
     </logger>
 
-    <!--<logger name="uk.ac.ebi.fgpt.goci.service.DefaultGWASOWLPublisher" additivity="false">-->
-        <!--<level value="DEBUG" />-->
-        <!--<appender-ref ref="console" />-->
-    <!--</logger>-->
+    <logger name="uk.ac.ebi.fgpt.goci.pussycat.session" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="console" />
+    </logger>
 
     <!--<logger name="net.sf.ehcache" additivity="false">-->
         <!--<level value="DEBUG" />-->
@@ -49,7 +49,7 @@
 
     <root>
         <priority value="INFO" />
-        <appender-ref ref="console" />
+        <appender-ref ref="goci-log" />
     </root>
 
 </log4j:configuration>

@@ -1,9 +1,7 @@
 package uk.ac.ebi.fgpt.goci.pussycat.session;
 
-import com.googlecode.ehcache.annotations.Cacheable;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +11,7 @@ import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexusFactory;
 import uk.ac.ebi.fgpt.goci.service.GWASOWLPublisher;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -32,6 +31,7 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
     private Collection<Renderlet> renderlets;
     private RenderletNexus renderletNexus;
 
+    private ReasonerSession reasonerSession;
     private GWASOWLPublisher publisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -52,12 +52,12 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
         }
     }
 
-    public GWASOWLPublisher getPublisher() {
-        return publisher;
+    public ReasonerSession getReasonerSession() {
+        return reasonerSession;
     }
 
-    public void setPublisher(GWASOWLPublisher publisher) {
-        this.publisher = publisher;
+    public void setReasonerSession(ReasonerSession reasonerSession) {
+        this.reasonerSession = reasonerSession;
     }
 
     public String getSessionID() {
@@ -90,15 +90,10 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
         return false;
     }
 
-    @Cacheable(cacheName = "reasonerCache")
     public OWLReasoner getReasoner() throws OWLConversionException {
-        getLog().info("Publishing GWAS data");
-        OWLOntology gwasData = getPublisher().publishGWASData();
-        getLog().info("Publishing GWAS data (inferred view)");
-        return getPublisher().publishGWASDataInferredView(gwasData);
+        return getReasonerSession().getReasoner();
     }
 
-    @Cacheable(cacheName = "queryCache")
     public Set<OWLNamedIndividual> query(OWLClassExpression classExpression) throws OWLConversionException {
         getLog().info("Searching reasoner for instances of " + classExpression.toString());
         return getReasoner().getInstances(classExpression, false).getFlattened();

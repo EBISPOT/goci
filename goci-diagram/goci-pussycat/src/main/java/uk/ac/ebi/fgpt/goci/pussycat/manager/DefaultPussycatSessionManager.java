@@ -2,7 +2,7 @@ package uk.ac.ebi.fgpt.goci.pussycat.manager;
 
 import uk.ac.ebi.fgpt.goci.pussycat.session.GOCIDataPublisherPussycatSession;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSession;
-import uk.ac.ebi.fgpt.goci.service.GWASOWLPublisher;
+import uk.ac.ebi.fgpt.goci.pussycat.session.ReasonerSession;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
@@ -18,27 +18,19 @@ public class DefaultPussycatSessionManager implements PussycatSessionManager {
     private Set<PussycatSession> pussycatSessions;
     private Map<HttpSession, PussycatSession> sessionMap;
 
-    private GWASOWLPublisher publisher;
+    private ReasonerSession reasonerSession;
 
     public DefaultPussycatSessionManager() {
         this.pussycatSessions = new HashSet<PussycatSession>();
         this.sessionMap = new HashMap<HttpSession, PussycatSession>();
     }
 
-    public GWASOWLPublisher getPublisher() {
-        return publisher;
+    public ReasonerSession getReasonerSession() {
+        return reasonerSession;
     }
 
-    public void setPublisher(GWASOWLPublisher publisher) {
-        this.publisher = publisher;
-    }
-
-    public boolean hasAvailableSession(HttpSession session) {
-        return sessionMap.containsKey(session);
-    }
-
-    public PussycatSession getPussycatSession(HttpSession session) {
-        return sessionMap.get(session);
+    public void setReasonerSession(ReasonerSession reasonerSession) {
+        this.reasonerSession = reasonerSession;
     }
 
     public void setPussycatSessions(Collection<PussycatSession> pussycatSessions) {
@@ -53,6 +45,13 @@ public class DefaultPussycatSessionManager implements PussycatSessionManager {
         pussycatSessions.add(pussycatSession);
     }
 
+    public boolean hasAvailableSession(HttpSession session) {
+        return sessionMap.containsKey(session);
+    }
+
+    public PussycatSession getPussycatSession(HttpSession session) {
+        return sessionMap.get(session);
+    }
 
     public PussycatSession joinPussycatSession(HttpSession session, PussycatSession pussycatSession) {
         if (!pussycatSessions.contains(pussycatSession)) {
@@ -62,9 +61,12 @@ public class DefaultPussycatSessionManager implements PussycatSessionManager {
     }
 
     public PussycatSession createPussycatSession() {
+        // create a new pussycat session
         GOCIDataPublisherPussycatSession pussycatSession = new GOCIDataPublisherPussycatSession();
-        pussycatSession.setPublisher(publisher);
-        pussycatSessions.add(pussycatSession);
+        pussycatSession.setReasonerSession(getReasonerSession());
+
+        // add the new session to the set of available sessions
+        getPussycatSessions().add(pussycatSession);
         return pussycatSession;
     }
 }

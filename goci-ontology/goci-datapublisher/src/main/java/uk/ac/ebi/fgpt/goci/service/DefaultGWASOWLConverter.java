@@ -71,10 +71,24 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
     public OWLOntology createConversionOntology() throws OWLConversionException {
         try {
             // create a new ontology to represent our data dump
-            String iri = "http://www.ebi.ac.uk/efo/gwas-diagram/" +
-                    new SimpleDateFormat("yyyy/MM/dd").format(new Date()) +
-                    "/data";
-            OWLOntology conversion = getManager().createOntology(IRI.create(iri));
+            OWLOntology conversion = null;
+
+            String basicIri = "http://www.ebi.ac.uk/efo/gwas-diagram/" +
+                    new SimpleDateFormat("yyyy/MM/dd").format(new Date());
+            String iri = basicIri + "/data";
+            int index = 2;
+            boolean created = false;
+            while (!created) {
+                try {
+                    conversion = getManager().createOntology(IRI.create(iri));
+                    created = true;
+                }
+                catch (OWLOntologyAlreadyExistsException e) {
+                    // if ontology already exists, incrememt counter and try again
+                    iri = basicIri + "/" + index + "/data";
+                    index++;
+                }
+            }
 
             // import the gwas ontology schema
             OWLImportsDeclaration importDecl = getDataFactory().getOWLImportsDeclaration(
@@ -92,10 +106,24 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
     public OWLOntology createInferredConversionOntology() throws OWLConversionException {
         try {
             // create a new ontology to represent our data dump
-            String iri = "http://www.ebi.ac.uk/efo/gwas-diagram/" +
-                    new SimpleDateFormat("yyyy/MM/dd").format(new Date()) +
-                    "/inferred-data";
-            OWLOntology conversion = getManager().createOntology(IRI.create(iri));
+            OWLOntology conversion = null;
+
+            String basicIri = "http://www.ebi.ac.uk/efo/gwas-diagram/" +
+                    new SimpleDateFormat("yyyy/MM/dd").format(new Date());
+            String iri = basicIri + "/inferred-data";
+            int index = 2;
+            boolean created = false;
+            while (!created) {
+                try {
+                    conversion = getManager().createOntology(IRI.create(iri));
+                    created = true;
+                }
+                catch (OWLOntologyAlreadyExistsException e) {
+                    // if ontology already exists, incrememt counter and try again
+                    iri = basicIri + "/" + index + "/inferred-data";
+                    index++;
+                }
+            }
 
             // import the gwas ontology schema
             OWLImportsDeclaration importDecl = getDataFactory().getOWLImportsDeclaration(

@@ -59,7 +59,7 @@ public interface PussycatSession {
      */
     boolean clearRendering();
 
-    @Cacheable(cacheName = "reasonerCache") OWLReasoner getReasoner() throws OWLConversionException;
+    OWLReasoner getReasoner() throws OWLConversionException;
 
-    @Cacheable(cacheName = "queryCache") Set<OWLNamedIndividual> query(OWLClassExpression classExpression) throws OWLConversionException;
+    Set<OWLNamedIndividual> query(OWLClassExpression classExpression) throws OWLConversionException;
 }
