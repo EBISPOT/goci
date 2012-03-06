@@ -16,8 +16,8 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            classpath:goci-pussycat.xml
-            classpath:src/main/appresources/goci-datapublisher.xml
+            WEB-INF/goci-pussycat.xml
+            WEB-INF/goci-datapublisher.xml
         </param-value>
     </context-param>
 
