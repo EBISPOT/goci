@@ -57,7 +57,8 @@ public class DefaultPussycatSessionManager implements PussycatSessionManager {
         if (!pussycatSessions.contains(pussycatSession)) {
             pussycatSessions.add(pussycatSession);
         }
-        return sessionMap.put(session, pussycatSession);
+        sessionMap.put(session, pussycatSession);
+        return pussycatSession;
     }
 
     public PussycatSession createPussycatSession() {

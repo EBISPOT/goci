@@ -11,7 +11,6 @@ import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexusFactory;
 import uk.ac.ebi.fgpt.goci.service.GWASOWLPublisher;
 
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -83,7 +82,9 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
     }
 
     public String performRendering(OWLClassExpression classExpression) {
-        return null;
+        return "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">" +
+                "<circle cx=\"100\" cy=\"50\" r=\"40\" stroke=\"black\" stroke-width=\"2\" fill=\"red\"/>" +
+                "</svg>";
     }
 
     public boolean clearRendering() {

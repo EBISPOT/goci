@@ -12,7 +12,7 @@
         GOCI Pussycat - GWAS catalog interactive diagram
     </description>
 
-    Define configuration to load
+    <!--Define configuration to load-->
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
@@ -40,10 +40,10 @@
             org.springframework.web.context.ContextLoaderListener
         </listener-class>
     </listener>
-    <listener>
-        <listener-class>
-            uk.ac.ebi.fgpt.goci.pussycat.PussycatAppListener
-        </listener-class>
-    </listener>
+    <!--<listener>-->
+        <!--<listener-class>-->
+            <!--uk.ac.ebi.fgpt.goci.pussycat.PussycatAppListener-->
+        <!--</listener-class>-->
+    <!--</listener>-->
 
 </web-app>

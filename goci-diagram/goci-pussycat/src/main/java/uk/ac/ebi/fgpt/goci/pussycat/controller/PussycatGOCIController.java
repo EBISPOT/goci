@@ -3,6 +3,8 @@ package uk.ac.ebi.fgpt.goci.pussycat.controller;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLOntologyWalker;
 import org.semanticweb.owlapi.util.OWLOntologyWalkerVisitor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +35,12 @@ public class PussycatGOCIController {
     private PussycatSessionManager pussycatManager;
 
     private OntologyConfiguration ontologyConfiguration;
+
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
 
     public PussycatSessionStrategy getSessionStrategy() {
         return sessionStrategy;
@@ -158,18 +166,24 @@ public class PussycatGOCIController {
     }
 
     protected PussycatSession getPussycatSession(HttpSession session) {
+        getLog().debug("Attempting to obtain Pussycat session for HttpSession '" + session.getId() + "'");
         if (getPussycatManager().hasAvailableSession(session)) {
+            getLog().debug("Pussycat manager has an available session for HttpSession '" + session.getId() + "'");
             return getPussycatManager().getPussycatSession(session);
         }
         else {
             PussycatSession pussycatSession;
-            if (sessionStrategy == PussycatSessionStrategy.JOIN &&
+            if (getSessionStrategy() == PussycatSessionStrategy.JOIN &&
                     getPussycatManager().getPussycatSessions().size() > 0) {
                 pussycatSession = getPussycatManager().getPussycatSessions().iterator().next();
             }
             else {
                 pussycatSession = getPussycatManager().createPussycatSession();
+                getLog().debug("Created new pussycat session, id '" + pussycatSession.getSessionID() + "'");
             }
+            getLog().debug("Pussycat manager has no available session, but can join HttpSession " +
+                                   "'" + session.getId() + "' to pussycat session " +
+                                   "'" + pussycatSession.getSessionID() + "'");
             return getPussycatManager().joinPussycatSession(session, pussycatSession);
         }
     }
