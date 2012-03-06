@@ -1,6 +1,8 @@
 package uk.ac.ebi.fgpt.goci.pussycat.renderlet.chromosome;
 
 
+import net.sourceforge.fluxion.spi.ServiceProvider;
+
 import java.net.URL;
 
 /**
@@ -10,6 +12,8 @@ import java.net.URL;
  * Time: 10:31
  * To change this template use File | Settings | File Templates.
  */
+
+@ServiceProvider
 public class ChrOne extends ChromosomeRenderlet{
 
     @Override

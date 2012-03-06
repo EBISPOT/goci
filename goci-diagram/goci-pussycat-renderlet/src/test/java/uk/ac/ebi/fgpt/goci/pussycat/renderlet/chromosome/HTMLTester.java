@@ -16,7 +16,7 @@ public class HTMLTester {
 
 
     public static void main(String[] args){
-        String filename = "/home/dwelter/karyotype1.html";
+        String filename = "/home/dwelter/karyotype2.html";
 
         new HTMLWriter(filename);
 
@@ -75,14 +75,18 @@ public class HTMLTester {
                 ChromosomeRenderlet chrom;
 
                 chrom = new ChrOne();
-                String line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
+                
+                String line = chrom.render(null, null);
+   //             String line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrTwo();
-                line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
+
+                line = chrom.render(null, null);
+   //             line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
-                chrom = new ChrThree();
+     /*           chrom = new ChrThree();
                 line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
@@ -171,7 +175,7 @@ public class HTMLTester {
 
                 chrom = new ChrY();
                 line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
-                writer.write(line);
+                writer.write(line);                                                                  */
             }
 
             catch(IOException ex){
