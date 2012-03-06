@@ -116,7 +116,7 @@ public class GOCIDataPublisherDriver {
     }
 
     public GOCIDataPublisherDriver() {
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("goci-datapublisher.xml");
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("src/main/appresources/goci-datapublisher.xml");
         publisher = ctx.getBean("publisher", DefaultGWASOWLPublisher.class);
     }
 

@@ -71,12 +71,6 @@
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.6.3</version>
-        </dependency>
-
         <!-- http client, so we can execute processes over http (e.g. RESTful services) -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
