@@ -26,7 +26,7 @@
         <dependency>
             <groupId>net.sourceforge.fluxion</groupId>
             <artifactId>fluxion-spi</artifactId>
-            <version>1.0-alpha</version>
+            <version>1.0-alpha-3</version>
             <exclusions>
                 <exclusion>
                     <groupId>owlapi</groupId>
@@ -76,14 +76,14 @@
         </dependency>
     </dependencies>
 
-    <!--<repositories>-->
-    <!--<repository>-->
-    <!--<id>hasbanana-repo</id>-->
-    <!--<url>http://www.hasbanana.com/maven/repo</url>-->
-    <!--<snapshots>-->
-    <!--<enabled>true</enabled>-->
-    <!--</snapshots>-->
-    <!--</repository>-->
-    <!--</repositories>-->
+    <repositories>
+        <repository>
+            <id>hasbanana-repo</id>
+            <url>http://www.hasbanana.com/maven/repo</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
 </project>
