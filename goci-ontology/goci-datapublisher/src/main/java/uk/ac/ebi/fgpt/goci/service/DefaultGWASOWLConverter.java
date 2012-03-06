@@ -71,24 +71,10 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
     public OWLOntology createConversionOntology() throws OWLConversionException {
         try {
             // create a new ontology to represent our data dump
-            OWLOntology conversion = null;
-
-            String basicIri = "http://www.ebi.ac.uk/efo/gwas-diagram/" +
-                    new SimpleDateFormat("yyyy/MM/dd").format(new Date());
-            String iri = basicIri + "/data";
-            int index = 2;
-            boolean created = false;
-            while (!created) {
-                try {
-                    conversion = getManager().createOntology(IRI.create(iri));
-                    created = true;
-                }
-                catch (OWLOntologyAlreadyExistsException e) {
-                    // if ontology already exists, incrememt counter and try again
-                    iri = basicIri + "/" + index + "/data";
-                    index++;
-                }
-            }
+            String iri = "http://www.ebi.ac.uk/efo/gwas-diagram/" +
+                    new SimpleDateFormat("yyyy/MM/dd").format(new Date()) +
+                    "/data";
+            OWLOntology conversion = getManager().createOntology(IRI.create(iri));
 
             // import the gwas ontology schema
             OWLImportsDeclaration importDecl = getDataFactory().getOWLImportsDeclaration(
@@ -106,24 +92,10 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
     public OWLOntology createInferredConversionOntology() throws OWLConversionException {
         try {
             // create a new ontology to represent our data dump
-            OWLOntology conversion = null;
-
-            String basicIri = "http://www.ebi.ac.uk/efo/gwas-diagram/" +
-                    new SimpleDateFormat("yyyy/MM/dd").format(new Date());
-            String iri = basicIri + "/inferred-data";
-            int index = 2;
-            boolean created = false;
-            while (!created) {
-                try {
-                    conversion = getManager().createOntology(IRI.create(iri));
-                    created = true;
-                }
-                catch (OWLOntologyAlreadyExistsException e) {
-                    // if ontology already exists, incrememt counter and try again
-                    iri = basicIri + "/" + index + "/inferred-data";
-                    index++;
-                }
-            }
+            String iri = "http://www.ebi.ac.uk/efo/gwas-diagram/" +
+                    new SimpleDateFormat("yyyy/MM/dd").format(new Date()) +
+                    "/inferred-data";
+            OWLOntology conversion = getManager().createOntology(IRI.create(iri));
 
             // import the gwas ontology schema
             OWLImportsDeclaration importDecl = getDataFactory().getOWLImportsDeclaration(
@@ -399,14 +371,16 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         }
 
         // get object properties
-        OWLObjectProperty associated_with = getDataFactory().getOWLObjectProperty(
-                IRI.create(OntologyConstants.ASSOCIATED_WITH_PROPERTY_IRI));
+	OWLObjectProperty is_about = getDataFactory().getOWLObjectProperty(   
+                IRI.create(OntologyConstants.IS_ABOUT_IRI));         
+	
 
         // assert relation
-        OWLObjectPropertyAssertionAxiom associated_with_snp_relation =
-                getDataFactory().getOWLObjectPropertyAssertionAxiom(associated_with, taIndiv, snpIndiv);
-        AddAxiom add_associated_with_snp = new AddAxiom(ontology, associated_with_snp_relation);
-        getManager().applyChange(add_associated_with_snp);
+        OWLObjectPropertyAssertionAxiom is_about_snp_relation =
+                getDataFactory().getOWLObjectPropertyAssertionAxiom(is_about, taIndiv, snpIndiv);
+        AddAxiom add_is_about_snp = new AddAxiom(ontology, is_about_snp_relation);
+        getManager().applyChange(add_is_about_snp);
+
 
         // create a new trait association instance
         OWLNamedIndividual traitIndiv = getDataFactory().getOWLNamedIndividual(
@@ -445,9 +419,10 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
 
 
         // assert relation
-        OWLObjectPropertyAssertionAxiom associated_with_trait_relation =
-                getDataFactory().getOWLObjectPropertyAssertionAxiom(associated_with, taIndiv, traitIndiv);
-        AddAxiom add_associated_with_trait = new AddAxiom(ontology, associated_with_trait_relation);
-        getManager().applyChange(add_associated_with_trait);
+        OWLObjectPropertyAssertionAxiom is_about_trait_relation =
+                getDataFactory().getOWLObjectPropertyAssertionAxiom(is_about, taIndiv, traitIndiv);
+        AddAxiom add_is_about_trait = new AddAxiom(ontology, is_about_trait_relation);
+        getManager().applyChange(add_is_about_trait);
+
     }
 }

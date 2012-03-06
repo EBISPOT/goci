@@ -3,18 +3,26 @@
 
 <!DOCTYPE rdf:RDF [
     <!ENTITY efo "http://www.ebi.ac.uk/efo/" >
+    <!ENTITY obo "http://purl.obolibrary.org/obo/" >
     <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY ro "http://www.obofoundry.org/ro/ro.owl#" >
     <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY gwas-diagram2 "http://www.ebi.ac.uk/efo/gwas-diagram#" >
+    <!ENTITY gwas-diagram "http://www.ebi.ac.uk/efo/gwas-diagram/" >
     <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
 ]>
 
 
 <rdf:RDF xmlns="http://www.w3.org/2002/07/owl#"
      xml:base="http://www.w3.org/2002/07/owl"
+     xmlns:obo="http://purl.obolibrary.org/obo/"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:ro="http://www.obofoundry.org/ro/ro.owl#"
      xmlns:efo="http://www.ebi.ac.uk/efo/"
+     xmlns:gwas-diagram2="&efo;gwas-diagram#"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
-     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:gwas-diagram="&efo;gwas-diagram/">
     <Ontology rdf:about="&efo;gwas-diagram">
         <imports rdf:resource="http://www.ebi.ac.uk/efo/"/>
     </Ontology>
@@ -54,12 +62,17 @@
     
 
 
-    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00029 -->
+    <!-- http://purl.obolibrary.org/obo/IAO_0000136 -->
 
-    <ObjectProperty rdf:about="&efo;gwas-diagram/EFO_GD00029">
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
-        <rdfs:label xml:lang="en">associated_with</rdfs:label>
+    <rdf:Description rdf:about="&obo;IAO_0000136"/>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram#EFO_GD00042 -->
+
+    <ObjectProperty rdf:about="&efo;gwas-diagram#EFO_GD00042">
+        <rdfs:label rdf:datatype="&xsd;string">has_about</rdfs:label>
+        <inverseOf rdf:resource="&obo;IAO_0000136"/>
     </ObjectProperty>
     
 
@@ -189,7 +202,7 @@
         <rdfs:label xml:lang="en">cytogenetic band</rdfs:label>
         <rdfs:subClassOf>
             <Restriction>
-                <onProperty rdf:resource="http://www.obofoundry.org/ro/ro.owl#part_of"/>
+                <onProperty rdf:resource="&ro;part_of"/>
                 <someValuesFrom rdf:resource="&efo;gwas-diagram/EFO_GD00001"/>
             </Restriction>
         </rdfs:subClassOf>
@@ -203,7 +216,7 @@
         <rdfs:label xml:lang="en">single nucleotide polymorphism</rdfs:label>
         <rdfs:subClassOf>
             <Restriction>
-                <onProperty rdf:resource="http://www.obofoundry.org/ro/ro.owl#located_in"/>
+                <onProperty rdf:resource="&ro;located_in"/>
                 <someValuesFrom rdf:resource="&efo;gwas-diagram/EFO_GD00002"/>
             </Restriction>
         </rdfs:subClassOf>
@@ -432,24 +445,24 @@
     <Class rdf:about="&efo;gwas-diagram/EFO_GD00035">
         <rdfs:label xml:lang="en">trait association</rdfs:label>
         <rdfs:subClassOf>
-            <Restriction>
-                <onProperty rdf:resource="http://www.obofoundry.org/ro/ro.owl#part_of"/>
-                <someValuesFrom rdf:resource="&efo;gwas-diagram/EFO_GD00037"/>
-            </Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
             <Class>
                 <intersectionOf rdf:parseType="Collection">
                     <Restriction>
-                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00029"/>
+                        <onProperty rdf:resource="&obo;IAO_0000136"/>
                         <someValuesFrom rdf:resource="&efo;EFO_0000001"/>
                     </Restriction>
                     <Restriction>
-                        <onProperty rdf:resource="&efo;gwas-diagram/EFO_GD00029"/>
+                        <onProperty rdf:resource="&obo;IAO_0000136"/>
                         <someValuesFrom rdf:resource="&efo;gwas-diagram/EFO_GD00003"/>
                     </Restriction>
                 </intersectionOf>
             </Class>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="&ro;part_of"/>
+                <someValuesFrom rdf:resource="&efo;gwas-diagram/EFO_GD00037"/>
+            </Restriction>
         </rdfs:subClassOf>
         <efo:definition xml:lang="en">An association that can be asserted between two entities with a degree of confidence expressed as a p-value.</efo:definition>
         <efo:definition_editor xml:lang="en">Tony Burdett</efo:definition_editor>
@@ -463,7 +476,7 @@
         <rdfs:label xml:lang="en">GWAS study</rdfs:label>
         <rdfs:subClassOf>
             <Restriction>
-                <onProperty rdf:resource="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+                <onProperty rdf:resource="&ro;has_part"/>
                 <someValuesFrom rdf:resource="&efo;gwas-diagram/EFO_GD00035"/>
             </Restriction>
         </rdfs:subClassOf>
@@ -483,5 +496,5 @@
 
 
 
-<!-- Generated by the OWL API (version 3.2.5.1912) http://owlapi.sourceforge.net -->
+<!-- Generated by the OWL API (version 3.2.3.1824) http://owlapi.sourceforge.net -->
 
