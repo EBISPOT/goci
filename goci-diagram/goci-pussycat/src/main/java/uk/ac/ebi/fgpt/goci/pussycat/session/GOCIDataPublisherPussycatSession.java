@@ -9,7 +9,6 @@ import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexusFactory;
-import uk.ac.ebi.fgpt.goci.service.GWASOWLPublisher;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -31,7 +30,6 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
     private RenderletNexus renderletNexus;
 
     private ReasonerSession reasonerSession;
-    private GWASOWLPublisher publisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -82,6 +80,29 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
     }
 
     public String performRendering(OWLClassExpression classExpression) {
+//        StringBuilder sb = new StringBuilder();
+//        // todo - maybe get class label from the class expression to use as svg id? and set width and height of svg
+//        sb.append(SVGUtils.buildSVGHeader(String.valueOf(System.currentTimeMillis())));
+//        try {
+//            // get all individuals that satisfy this class expression
+//            Set<OWLNamedIndividual> individuals = query(classExpression);
+//            for (OWLNamedIndividual individual : individuals) {
+//                // render each individual with a renderlet that can render it
+//                for (Renderlet r : getAvailableRenderlets()) {
+//                    if (r.canRender(getRenderletNexus(), individual)) {
+//                        sb.append(r.render(getRenderletNexus(), individual));
+//                        sb.append("\n");
+//                    }
+//                }
+//            }
+//            sb.append(SVGUtils.closeSVG());
+//            return sb.toString();
+//        }
+//        catch (OWLConversionException e) {
+//            // todo - do something sane here
+//            throw new RuntimeException("Failed to render - querying the reasoner failed", e);
+//        }
+
         return "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">" +
                 "<circle cx=\"100\" cy=\"50\" r=\"40\" stroke=\"black\" stroke-width=\"2\" fill=\"red\"/>" +
                 "</svg>";

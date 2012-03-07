@@ -1,6 +1,5 @@
 package uk.ac.ebi.fgpt.goci.pussycat.session;
 
-import com.googlecode.ehcache.annotations.Cacheable;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
@@ -59,7 +58,21 @@ public interface PussycatSession {
      */
     boolean clearRendering();
 
+    /**
+     * Returns an OWL reasoner that has been initialized with a classified version of the data this pussycat session
+     * works with
+     *
+     * @return a pre-initialized reasoner
+     * @throws OWLConversionException if something went wrong during classification of the ontology
+     */
     OWLReasoner getReasoner() throws OWLConversionException;
 
+    /**
+     * Returns the set of OWL individuals that satisfy the given class expression and should therefore be rendered.
+     *
+     * @param classExpression an class expression to lookup individuals that satisfy it
+     * @return a set of individuals satisfying the supplied class expression
+     * @throws OWLConversionException is something went wrong querying the underlying reasoner
+     */
     Set<OWLNamedIndividual> query(OWLClassExpression classExpression) throws OWLConversionException;
 }

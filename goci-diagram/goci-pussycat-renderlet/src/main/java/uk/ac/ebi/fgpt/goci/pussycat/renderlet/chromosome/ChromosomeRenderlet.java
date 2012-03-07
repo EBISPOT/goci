@@ -1,5 +1,7 @@
 package uk.ac.ebi.fgpt.goci.pussycat.renderlet.chromosome;
 
+import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
+import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderingEvent;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 
@@ -62,8 +64,18 @@ abstract class ChromosomeRenderlet implements Renderlet{
 
         finally {
             try {
-                if (svgstream != null)
+                if (svgstream != null){
                     svgstream.close();
+
+                    SVGArea currentArea = new SVGArea(0,0,0,0,0); //TODO put something useful into the SVG area constructor
+
+                    // todo - work out how to do this! --> consider adding new method to each chromRenderlet along the lines of getChromToLeft and hardcode
+                    // id of previous chrom into it, then query by chromID
+                    // nexus.getLocationOfRenderedEntity(chromosomeToTheLeft);
+
+                    RenderingEvent event = new RenderingEvent(owlEntity, fileContent, currentArea, this);
+                    nexus.renderingEventOccurred(event);
+                }
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

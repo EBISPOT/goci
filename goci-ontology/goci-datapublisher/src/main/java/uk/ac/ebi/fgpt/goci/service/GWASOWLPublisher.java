@@ -32,11 +32,6 @@ public interface GWASOWLPublisher {
      */
     OWLReasoner publishGWASDataInferredView(OWLOntology ontology) throws OWLConversionException;
 
-
-//     * @param ontologyIRI the saved version ontology (usually the result of {@link #publishGWASData()} that has been
-//     *                    written somewhere)
-//    OWLReasoner publishGWASDataInferredView(IRI ontologyIRI) throws OWLConversionException;
-
     /**
      * Saves the supplied ontology to the given location
      *
