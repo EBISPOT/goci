@@ -16,7 +16,7 @@ public class HTMLTester {
 
 
     public static void main(String[] args){
-        String filename = "/home/dwelter/karyotype2.html";
+        String filename = "/home/karyotype2.html";
 
         new HTMLWriter(filename);
 
