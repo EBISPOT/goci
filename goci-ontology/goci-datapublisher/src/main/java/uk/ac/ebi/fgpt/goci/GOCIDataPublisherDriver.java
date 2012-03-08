@@ -35,11 +35,13 @@ public class GOCIDataPublisherDriver {
             }
             else {
                 // could not parse arguments, exit with exit code >1 (depending on parsing problem)
+                System.err.println("Failed to parse supplied arguments");
                 System.exit(1 + parseArgs);
             }
         }
         catch (Exception e) {
             // failed to execute, exit with exit code 1
+            System.err.println("An unexpected error occurred\n\t(" + e.getMessage() + ")");
             System.exit(1);
         }
     }
@@ -116,7 +118,7 @@ public class GOCIDataPublisherDriver {
     }
 
     public GOCIDataPublisherDriver() {
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("src/main/appresources/goci-datapublisher.xml");
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("goci-datapublisher.xml");
         publisher = ctx.getBean("publisher", DefaultGWASOWLPublisher.class);
     }
 

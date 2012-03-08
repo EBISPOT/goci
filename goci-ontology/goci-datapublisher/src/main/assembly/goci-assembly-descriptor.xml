@@ -47,12 +47,6 @@
     <!-- copy all parent pom dependencies into lib/ -->
     <dependencySets>
         <dependencySet>
-            <includes>
-                <include>org.slf4j:slf4j-log4j12:jar:1.6.3</include>
-                <include>log4j:log4j:jar:1.2.16</include>
-            </includes>
-        </dependencySet>
-        <dependencySet>
             <useTransitiveDependencies>true</useTransitiveDependencies>
             <fileMode>0644</fileMode>
             <outputDirectory>lib/</outputDirectory>
