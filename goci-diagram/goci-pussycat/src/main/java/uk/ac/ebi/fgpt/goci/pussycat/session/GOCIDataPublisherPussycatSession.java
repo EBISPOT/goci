@@ -6,6 +6,7 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
+import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexusFactory;
@@ -112,11 +113,17 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
         return false;
     }
 
-    public OWLReasoner getReasoner() throws OWLConversionException {
-        return getReasonerSession().getReasoner();
+    public OWLReasoner getReasoner() throws OWLConversionException, PussycatSessionNotReadyException {
+        if (getReasonerSession().isReasonerInitialized()) {
+            return getReasonerSession().getReasoner();
+        }
+        else {
+            throw new PussycatSessionNotReadyException("Reasoner is being initialized");
+        }
     }
 
-    public Set<OWLNamedIndividual> query(OWLClassExpression classExpression) throws OWLConversionException {
+    public Set<OWLNamedIndividual> query(OWLClassExpression classExpression)
+            throws OWLConversionException, PussycatSessionNotReadyException {
         getLog().info("Searching reasoner for instances of " + classExpression.toString());
         return getReasoner().getInstances(classExpression, false).getFlattened();
     }

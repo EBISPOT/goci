@@ -4,6 +4,7 @@ import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
+import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 
@@ -64,8 +65,10 @@ public interface PussycatSession {
      *
      * @return a pre-initialized reasoner
      * @throws OWLConversionException if something went wrong during classification of the ontology
+     * @throws uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException
+     *                                if the reasoner for this session is not yet fully initialized
      */
-    OWLReasoner getReasoner() throws OWLConversionException;
+    OWLReasoner getReasoner() throws OWLConversionException, PussycatSessionNotReadyException;
 
     /**
      * Returns the set of OWL individuals that satisfy the given class expression and should therefore be rendered.
@@ -73,6 +76,9 @@ public interface PussycatSession {
      * @param classExpression an class expression to lookup individuals that satisfy it
      * @return a set of individuals satisfying the supplied class expression
      * @throws OWLConversionException is something went wrong querying the underlying reasoner
+     * @throws uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException
+     *                                if the reasoner for this session is not yet fully initialized
      */
-    Set<OWLNamedIndividual> query(OWLClassExpression classExpression) throws OWLConversionException;
+    Set<OWLNamedIndividual> query(OWLClassExpression classExpression)
+            throws OWLConversionException, PussycatSessionNotReadyException;
 }
