@@ -12,6 +12,13 @@ import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
  */
 
 abstract class TraitRenderlet implements Renderlet {
+
+    /*
+    * TraitRenderlet should retrieve the appropriate RGB colour for the trait being rendered from a hardcoded resource file
+    *
+    *
+    * */
+
     @Override
     public String getName() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
