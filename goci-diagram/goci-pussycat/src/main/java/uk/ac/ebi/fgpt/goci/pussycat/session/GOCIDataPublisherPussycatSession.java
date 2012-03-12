@@ -2,6 +2,7 @@ package uk.ac.ebi.fgpt.goci.pussycat.session;
 
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,18 +82,22 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
         }
     }
 
-    public String performRendering(OWLClassExpression classExpression) throws PussycatSessionNotReadyException {
+    public String performRendering(OWLClassExpression classExpression)
+            throws PussycatSessionNotReadyException {
         StringBuilder sb = new StringBuilder();
         // todo - maybe get class label from the class expression to use as svg id? and set width and height of svg
         sb.append(SVGUtils.buildSVGHeader(String.valueOf(System.currentTimeMillis())));
         try {
+            // get the ontology loaded into the reasoner
+            OWLOntology ontology = getReasoner().getRootOntology();
+
             // get all individuals that satisfy this class expression
             Set<OWLNamedIndividual> individuals = query(classExpression);
             for (OWLNamedIndividual individual : individuals) {
                 // render each individual with a renderlet that can render it
                 for (Renderlet r : getAvailableRenderlets()) {
-                    if (r.canRender(getRenderletNexus(), null, individual)) {
-                        sb.append(r.render(getRenderletNexus(), null, individual));
+                    if (r.canRender(getRenderletNexus(), ontology, individual)) {
+                        sb.append(r.render(getRenderletNexus(), ontology, individual));
                         sb.append("\n");
                     }
                 }

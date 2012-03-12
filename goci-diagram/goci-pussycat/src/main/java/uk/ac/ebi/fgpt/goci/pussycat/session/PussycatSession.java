@@ -2,6 +2,7 @@ package uk.ac.ebi.fgpt.goci.pussycat.session;
 
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
