@@ -7,12 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
@@ -172,11 +168,12 @@ public class PussycatGOCIController {
         return getPussycatSession(session).performRendering(efCls);
     }
 
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     @ExceptionHandler(PussycatSessionNotReadyException.class)
-    public String handlePussycatSessionNotReadyException(PussycatSessionNotReadyException e,
-                                                         ServerHttpResponse response) {
-        response.setStatusCode(HttpStatus.SERVICE_UNAVAILABLE);
-        return e.getMessage();
+    public @ResponseBody String handlePussycatSessionNotReadyException(PussycatSessionNotReadyException e) {
+        String responseMsg = "Please wait: the PussycatSession is not yet ready (" + e.getMessage() + ")";
+        getLog().error(responseMsg, e);
+        return responseMsg;
     }
 
     protected PussycatSession getPussycatSession(HttpSession session) {

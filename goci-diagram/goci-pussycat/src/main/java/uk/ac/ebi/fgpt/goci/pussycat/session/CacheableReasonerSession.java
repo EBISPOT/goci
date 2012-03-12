@@ -17,6 +17,7 @@ import uk.ac.ebi.fgpt.goci.service.GWASOWLPublisher;
  */
 public class CacheableReasonerSession extends Initializable implements ReasonerSession {
     private GWASOWLPublisher publisher;
+    private OWLReasoner reasoner;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -26,7 +27,7 @@ public class CacheableReasonerSession extends Initializable implements ReasonerS
 
     @Override
     protected void doInitialization() throws Exception {
-        getLog().info("Initializing reasoner session... this may take some time");
+        getLog().debug("Initializing reasoner session, this may take some time...");
         getReasoner();
     }
 
@@ -45,9 +46,15 @@ public class CacheableReasonerSession extends Initializable implements ReasonerS
     @Override
     @Cacheable(cacheName = "reasonerCache")
     public OWLReasoner getReasoner() throws OWLConversionException {
-        getLog().info("Publishing GWAS data");
-        OWLOntology gwasData = getPublisher().publishGWASData();
-        getLog().info("Publishing GWAS data (inferred view)");
-        return getPublisher().publishGWASDataInferredView(gwasData);
+        if (reasoner == null) {
+            getLog().debug("Publishing GWAS data");
+            OWLOntology gwasData = getPublisher().publishGWASData();
+            getLog().debug("Publishing GWAS data (inferred view)");
+            reasoner = getPublisher().publishGWASDataInferredView(gwasData);
+        }
+        else {
+            getLog().warn("Failed to retrieve reasoner from ehcache, returning reference");
+        }
+        return reasoner;
     }
 }

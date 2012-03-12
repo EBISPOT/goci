@@ -85,18 +85,26 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
     public String performRendering(OWLClassExpression classExpression)
             throws PussycatSessionNotReadyException {
         StringBuilder sb = new StringBuilder();
+
         // todo - maybe get class label from the class expression to use as svg id? and set width and height of svg
-        sb.append(SVGUtils.buildSVGHeader(String.valueOf(System.currentTimeMillis())));
+        String svgID = "foo";
+        int width = 800;
+        int height = 600;
+
+        sb.append(SVGUtils.buildSVGHeader(svgID, width, height));
         try {
             // get the ontology loaded into the reasoner
             OWLOntology ontology = getReasoner().getRootOntology();
 
             // get all individuals that satisfy this class expression
             Set<OWLNamedIndividual> individuals = query(classExpression);
+            getLog().debug("There are " + individuals.size() + " owl individuals that satisfy the expression " +
+                                   classExpression);
             for (OWLNamedIndividual individual : individuals) {
                 // render each individual with a renderlet that can render it
                 for (Renderlet r : getAvailableRenderlets()) {
                     if (r.canRender(getRenderletNexus(), ontology, individual)) {
+                        getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
                         sb.append(r.render(getRenderletNexus(), ontology, individual));
                         sb.append("\n");
                     }
@@ -121,16 +129,18 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
 
     public OWLReasoner getReasoner() throws OWLConversionException, PussycatSessionNotReadyException {
         if (getReasonerSession().isReasonerInitialized()) {
+            getLog().debug("Pussycat Session '" + getSessionID() + "' is fully initialized and ready to serve data");
             return getReasonerSession().getReasoner();
         }
         else {
+            getLog().debug("Pussycat Session '" + getSessionID() + "' is not yet initialized - waiting for reasoner");
             throw new PussycatSessionNotReadyException("Reasoner is being initialized");
         }
     }
 
     public Set<OWLNamedIndividual> query(OWLClassExpression classExpression)
             throws OWLConversionException, PussycatSessionNotReadyException {
-        getLog().info("Searching reasoner for instances of " + classExpression.toString());
+        getLog().debug("Searching reasoner for instances of " + classExpression.toString());
         return getReasoner().getInstances(classExpression, false).getFlattened();
     }
 
@@ -167,5 +177,4 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
         }
         return hex.toString();
     }
-
 }
