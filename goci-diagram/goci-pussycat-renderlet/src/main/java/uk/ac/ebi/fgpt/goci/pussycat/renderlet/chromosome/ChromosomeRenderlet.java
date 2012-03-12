@@ -1,5 +1,7 @@
 package uk.ac.ebi.fgpt.goci.pussycat.renderlet.chromosome;
 
+import org.semanticweb.owlapi.model.OWLIndividual;
+import org.semanticweb.owlapi.model.OWLOntology;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderingEvent;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
@@ -16,7 +18,7 @@ import java.net.URL;
  * Time: 16:44
  * To change this template use File | Settings | File Templates.
  */
-abstract class ChromosomeRenderlet implements Renderlet{
+abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
 
     public String getDisplayName(){
         return getName();
@@ -26,7 +28,7 @@ abstract class ChromosomeRenderlet implements Renderlet{
         return ("This is a renderlet displaying " + getDisplayName());
     }
 
-    public boolean canRender(RenderletNexus nexus, Object owlEntity) {
+    public boolean canRender(RenderletNexus nexus, Object renderingContext, Object owlEntity) {
 
         /*
         * probably won't need nexus for rendering chromosomes, except possibly to check that chromosomes are rendered first
@@ -40,7 +42,7 @@ abstract class ChromosomeRenderlet implements Renderlet{
          return false;
     }
 
-    public String render(RenderletNexus nexus, Object owlEntity) {
+    public String render(RenderletNexus nexus, OWLOntology renderingContext, OWLIndividual owlEntity) {
         String fileContent = null;
         BufferedInputStream svgstream = null;
         byte[] buffer = new byte[1024];

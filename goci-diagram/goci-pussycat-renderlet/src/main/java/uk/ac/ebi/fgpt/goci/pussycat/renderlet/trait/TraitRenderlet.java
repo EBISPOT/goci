@@ -1,5 +1,7 @@
 package uk.ac.ebi.fgpt.goci.pussycat.renderlet.trait;
 
+import org.semanticweb.owlapi.model.OWLIndividual;
+import org.semanticweb.owlapi.model.OWLOntology;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 
@@ -11,7 +13,7 @@ import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
  * To change this template use File | Settings | File Templates.
  */
 
-abstract class TraitRenderlet implements Renderlet {
+abstract class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
 
     /*
     * TraitRenderlet should retrieve the appropriate RGB colour for the trait being rendered from a hardcoded resource file
@@ -35,12 +37,11 @@ abstract class TraitRenderlet implements Renderlet {
     }
 
     @Override
-    public boolean canRender(RenderletNexus nexus, Object renderingEntity) {
+    public boolean canRender(RenderletNexus nexus, Object renderingContext, Object renderingEntity) {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
-    public String render(RenderletNexus nexus, Object renderingEntity) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    @Override public String render(RenderletNexus nexus, OWLOntology renderingContext, OWLIndividual renderingEntity) {
+        return null;
     }
 }

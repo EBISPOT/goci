@@ -49,8 +49,10 @@ public interface PussycatSession {
      *
      * @param classExpression an OWL class expression describing the data we wish to render
      * @return a well formatted SVG string that should be returned to the client
+     * @throws uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException
+     *          if this Pussycat session is not yet initialized and therefore unable to perform any rendering
      */
-    String performRendering(OWLClassExpression classExpression);
+    String performRendering(OWLClassExpression classExpression) throws PussycatSessionNotReadyException;
 
     /**
      * Clears any data that is currently rendered in this session

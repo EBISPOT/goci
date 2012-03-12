@@ -12,7 +12,7 @@ import net.sourceforge.fluxion.spi.Spi;
  * @date 27/02/12
  */
 @Spi
-public interface Renderlet<O> {
+public interface Renderlet<C, O> {
     /**
      * The name of this renderlet - ideally, should be unique.  Names should be specified in lower case with underscores
      * instead of spaces where possible.
@@ -38,18 +38,21 @@ public interface Renderlet<O> {
     /**
      * Returns true if this renderlet is capable of rendering the supplied object as SVG, false if it cannot
      *
-     * @param nexus           the renderlet nexus, allowing renderlets to query for dependencies on other renderings
-     * @param renderingEntity the entity we are attempting to render
-     * @return true if this renderlet can render the supplied entity
+     * @param nexus            the renderlet nexus, allowing renderlets to query for dependencies on other renderings
+     * @param renderingContext the context in which this entity should be rendered
+     * @param renderingEntity  the entity we are attempting to render  @return true if this renderlet can render the
+     *                         supplied entity
+     * @return true if this renderlet can render the given entity, false otherwise
      */
-    boolean canRender(RenderletNexus nexus, Object renderingEntity);
+    boolean canRender(RenderletNexus nexus, Object renderingContext, Object renderingEntity);
 
     /**
      * Render the supplied entity as SVG, and return a valid SVG string
      *
-     * @param nexus           the renderlet nexus, allowing renderlets to query for dependencies on other renderings
-     * @param renderingEntity the entity to render
+     * @param nexus            the renderlet nexus, allowing renderlets to query for dependencies on other renderings
+     * @param renderingContext the context in which this entity should be rendered
+     * @param renderingEntity  the entity to render
      * @return a well formatted SVG element that can be used to display the supplied entity
      */
-    String render(RenderletNexus nexus, O renderingEntity);
+    String render(RenderletNexus nexus, C renderingContext, O renderingEntity);
 }

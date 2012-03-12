@@ -21,7 +21,7 @@ public class FileContentTest extends TestCase{
 
         ChromosomeRenderlet chrom = new ChrOne();
 
-        content = chrom.render(null, null);
+        content = chrom.render(null, null, null);
         
         System.out.println(content);
         

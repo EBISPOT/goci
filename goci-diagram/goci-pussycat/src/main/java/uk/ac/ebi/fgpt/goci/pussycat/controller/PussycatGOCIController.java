@@ -6,12 +6,16 @@ import org.semanticweb.owlapi.util.OWLOntologyWalkerVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
+import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.manager.PussycatSessionManager;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSession;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSessionStrategy;
@@ -75,7 +79,7 @@ public class PussycatGOCIController {
     }
 
     @RequestMapping(value = "/gwasdiagram")
-    public @ResponseBody String renderGWASDiagram(HttpSession session) {
+    public @ResponseBody String renderGWASDiagram(HttpSession session) throws PussycatSessionNotReadyException {
         // get OWLThing, to indicate that we want to draw all data in the GWAS catalog
         OWLClass thingCls = getOntologyConfiguration().getOWLDataFactory().getOWLThing();
         // render all individuals using the pussycat session for this http session
@@ -83,7 +87,7 @@ public class PussycatGOCIController {
     }
 
     @RequestMapping(value = "/chromosomes")
-    public @ResponseBody String renderChromosomes(HttpSession session) {
+    public @ResponseBody String renderChromosomes(HttpSession session) throws PussycatSessionNotReadyException {
         // retrieve a reference to the chromosome class
         IRI chromIRI = IRI.create(OntologyConstants.CHROMOSOME_CLASS_IRI);
         OWLClass chromCls = getOntologyConfiguration().getOWLDataFactory().getOWLClass(chromIRI);
@@ -92,7 +96,8 @@ public class PussycatGOCIController {
     }
 
     @RequestMapping(value = "/chromosomes/{chromosomeName}")
-    public @ResponseBody String renderChromosome(@PathVariable String chromosomeName, HttpSession session) {
+    public @ResponseBody String renderChromosome(@PathVariable String chromosomeName, HttpSession session)
+            throws PussycatSessionNotReadyException {
         // retrieve a reference to the chromosome class
         IRI chromIRI = IRI.create(OntologyConstants.CHROMOSOME_CLASS_IRI);
         OWLClass chromCls = getOntologyConfiguration().getOWLDataFactory().getOWLClass(chromIRI);
@@ -111,7 +116,7 @@ public class PussycatGOCIController {
     }
 
     @RequestMapping(value = "/snps")
-    public @ResponseBody String renderSNPs(HttpSession session) {
+    public @ResponseBody String renderSNPs(HttpSession session) throws PussycatSessionNotReadyException {
         // retrieve a reference to the SNP class
         IRI snpIRI = IRI.create(OntologyConstants.SNP_CLASS_IRI);
         OWLClass snpCls = getOntologyConfiguration().getOWLDataFactory().getOWLClass(snpIRI);
@@ -120,7 +125,8 @@ public class PussycatGOCIController {
     }
 
     @RequestMapping(value = "/snps/{rsID}")
-    public @ResponseBody String renderSNP(@PathVariable String rsID, HttpSession session) {
+    public @ResponseBody String renderSNP(@PathVariable String rsID, HttpSession session)
+            throws PussycatSessionNotReadyException {
         // retrieve a reference to the SNP class
         IRI snpIRI = IRI.create(OntologyConstants.SNP_CLASS_IRI);
         OWLClass snpCls = getOntologyConfiguration().getOWLDataFactory().getOWLClass(snpIRI);
@@ -139,7 +145,7 @@ public class PussycatGOCIController {
     }
 
     @RequestMapping(value = "/associations")
-    public @ResponseBody String renderAssociations(HttpSession session) {
+    public @ResponseBody String renderAssociations(HttpSession session) throws PussycatSessionNotReadyException {
         // retrieve a reference to the trait association class
         IRI taIRI = IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI);
         OWLClass taCls = getOntologyConfiguration().getOWLDataFactory().getOWLClass(taIRI);
@@ -148,7 +154,7 @@ public class PussycatGOCIController {
     }
 
     @RequestMapping(value = "/traits")
-    public @ResponseBody String renderTraits(HttpSession session) {
+    public @ResponseBody String renderTraits(HttpSession session) throws PussycatSessionNotReadyException {
         // retrieve a reference to the EFO class
         IRI efIRI = IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI);
         OWLClass efCls = getOntologyConfiguration().getOWLDataFactory().getOWLClass(efIRI);
@@ -157,12 +163,20 @@ public class PussycatGOCIController {
     }
 
     @RequestMapping(value = "/traits/{efoURI}")
-    public @ResponseBody String renderTrait(@PathVariable String efoURI, HttpSession session) {
+    public @ResponseBody String renderTrait(@PathVariable String efoURI, HttpSession session)
+            throws PussycatSessionNotReadyException {
         // retrieve a reference to the EFO class with the supplied IRI
         IRI efIRI = IRI.create(efoURI);
         OWLClass efCls = getOntologyConfiguration().getOWLDataFactory().getOWLClass(efIRI);
         // render all individuals using the pussycat session for this http session
         return getPussycatSession(session).performRendering(efCls);
+    }
+
+    @ExceptionHandler(PussycatSessionNotReadyException.class)
+    public String handlePussycatSessionNotReadyException(PussycatSessionNotReadyException e,
+                                                         ServerHttpResponse response) {
+        response.setStatusCode(HttpStatus.SERVICE_UNAVAILABLE);
+        return e.getMessage();
     }
 
     protected PussycatSession getPussycatSession(HttpSession session) {

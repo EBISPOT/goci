@@ -76,13 +76,13 @@ public class HTMLTester {
 
                 chrom = new ChrOne();
                 
-                String line = chrom.render(null, null);
+                String line = chrom.render(null, null, null);
    //             String line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrTwo();
 
-                line = chrom.render(null, null);
+                line = chrom.render(null, null, null);
    //             line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
