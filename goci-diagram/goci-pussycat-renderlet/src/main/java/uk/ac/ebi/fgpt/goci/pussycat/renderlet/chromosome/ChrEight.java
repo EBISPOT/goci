@@ -1,6 +1,7 @@
 package uk.ac.ebi.fgpt.goci.pussycat.renderlet.chromosome;
 
 import net.sourceforge.fluxion.spi.ServiceProvider;
+import org.semanticweb.owlapi.model.IRI;
 
 import java.net.URL;
 
@@ -15,6 +16,8 @@ import java.net.URL;
 @ServiceProvider
 public class ChrEight extends ChromosomeRenderlet{
 
+    private IRI chromIRI = IRI.create("http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00012");
+
     @Override
     protected URL getSVGFile() {
         return getClass().getClassLoader().getResource("chromosomes/8.svg");
@@ -23,5 +26,9 @@ public class ChrEight extends ChromosomeRenderlet{
 
     public String getName() {
         return "Chromosome 8";
+    }
+
+    public IRI getIRI(){
+        return chromIRI;
     }
 }

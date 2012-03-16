@@ -1,5 +1,7 @@
 package uk.ac.ebi.fgpt.goci.pussycat.renderlet.chromosome;
 
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLOntology;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
@@ -38,8 +40,26 @@ abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLIndividu
         * then check return of that method against the chromosome in the owlEntity to make sure the right chromosome in rendered
         *
         * */
+        boolean renderable = false;
 
-         return false;
+        if (renderingContext instanceof OWLOntology){
+
+            IRI chromIRI =  getIRI();
+            OWLOntology ontology =  (OWLOntology)renderingContext;
+
+            OWLClass currentChrom = ontology.getOWLOntologyManager().getOWLDataFactory().getOWLClass(chromIRI);
+
+            if (owlEntity instanceof OWLIndividual){
+                OWLIndividual individual = (OWLIndividual)owlEntity;
+
+                if(individual.getTypes(ontology).contains(currentChrom)){
+                      renderable = true;
+                }
+
+            }
+        }
+
+         return renderable;
     }
 
     public String render(RenderletNexus nexus, OWLOntology renderingContext, OWLIndividual owlEntity) {
@@ -87,4 +107,8 @@ abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLIndividu
     }
 
     protected abstract URL getSVGFile();
+
+    protected abstract IRI getIRI();
+
+
 }

@@ -100,6 +100,9 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
             Set<OWLNamedIndividual> individuals = query(classExpression);
             getLog().debug("There are " + individuals.size() + " owl individuals that satisfy the expression " +
                                    classExpression);
+            
+            int counter = 0;
+            
             for (OWLNamedIndividual individual : individuals) {
                 // render each individual with a renderlet that can render it
                 for (Renderlet r : getAvailableRenderlets()) {
@@ -107,9 +110,18 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
                         getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
                         sb.append(r.render(getRenderletNexus(), ontology, individual));
                         sb.append("\n");
+/*WARNING - REMOVE ME! this is just a little cheeky insert to stop the chromosomes from all being on top of each other*/
+                        sb.append("<g transform=\"translate(50,0)\">");
+                        counter++;
                     }
                 }
             }
+
+/**WARNING - REMOVE ME*/
+            for(int i = 0; i < counter; i++){
+                sb.append("</g>");
+            }
+            
             sb.append(SVGUtils.closeSVG());
             return sb.toString();
         }
