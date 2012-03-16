@@ -329,7 +329,25 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
         });
 
         // and load the direct imports we can get from the current ontology
-        loadImports(manager, ontology);
+        for (int i = 0; i < 5; i++) {
+            try {
+                loadImports(manager, ontology);
+                break;
+            }
+            catch (UnloadableImportException e) {
+                // max 5 tries, if this was our last try throw the exception
+                if (i < 4) {
+                    // unloadable import, we can catch this and retry, might be a connection problem
+                    getLog().warn("Loading imported ontology failed (" + e.getMessage() + ") retrying...    \t" +
+                                          "[" + (4 - i) + " attempts remaining]");
+                }
+                else {
+                    getLog().error("Failed to load imported ontology (" + e.getMessage() + ").  " +
+                                           "Maximum number of retries reached");
+                    throw e;
+                }
+            }
+        }
     }
 
     private void loadImports(OWLOntologyManager manager, OWLOntology ontology) throws UnloadableImportException {
