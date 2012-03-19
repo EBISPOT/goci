@@ -4,11 +4,11 @@
     <parent>
         <artifactId>goci-curation</artifactId>
         <groupId>uk.ac.ebi.fgpt</groupId>
-        <version>0.3</version>
+        <version>0.4-SNAPSHOT</version>
     </parent>
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci-tracker-web</artifactId>
-    <version>0.3</version>
+    <version>0.4-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>GOCI Tracker web application</name>
