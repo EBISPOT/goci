@@ -68,6 +68,29 @@ abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLIndividu
         byte[] buffer = new byte[1024];
         StringBuilder builder = new StringBuilder();
 
+        int position = getPosition();
+        int height = nexus.getCanvasHeight();
+        int width = nexus.getCanvasWidth();
+
+        int chromWidth = width/12;
+
+        int xCoordinate = 0;
+        int yCoordinate = 0;
+
+        if (position < 12){
+            xCoordinate = position * chromWidth;
+        }
+        else{
+            xCoordinate = (position-12) * chromWidth;
+            yCoordinate = height/2;
+        }
+
+        builder.append("<g transform=\"translate(");
+        builder.append(Integer.toString(xCoordinate));
+        builder.append(",");
+        builder.append(Integer.toString(yCoordinate));
+        builder.append(")\"> \n");
+
         try {
             svgstream = new BufferedInputStream(getSVGFile().openStream());
 
@@ -76,6 +99,8 @@ abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLIndividu
             while ((bytesRead = svgstream.read(buffer, 0, buffer.length)) != -1) {
                 builder.append(new String(buffer, 0, bytesRead));
             }
+
+            builder.append("</g>");
 
             fileContent = builder.toString();
 
@@ -109,6 +134,8 @@ abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLIndividu
     protected abstract URL getSVGFile();
 
     protected abstract IRI getIRI();
+    
+    protected abstract int getPosition();
 
 
 }

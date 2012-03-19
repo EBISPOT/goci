@@ -101,45 +101,14 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
             getLog().debug("There are " + individuals.size() + " owl individuals that satisfy the expression " +
                                    classExpression);
             
-            int chrWidth = 100;
-            int chrHeight = 0;
 
-            int xCoordinate = 0;
-            int yCoordinate = 0;
-
-            int counter = 0;
-
-            int halfway = 12;
-            
             for (OWLNamedIndividual individual : individuals) {
                 // render each individual with a renderlet that can render it
                 for (Renderlet r : getAvailableRenderlets()) {
                     if (r.canRender(getRenderletNexus(), ontology, individual)) {
                         getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
-
-                        if (counter < halfway){
-                            xCoordinate = counter * chrWidth;
-
-   /*WARNING - REMOVE ME! this is just a little cheeky insert to stop the chromosomes from all being on top of each other*/
-
-                        }
-                        else{
-                            xCoordinate = (counter-halfway) * chrWidth;
-                            yCoordinate = 500;
-                        }
-
-                        StringBuilder gTrans = new StringBuilder();
-                        gTrans.append("<g transform=\"translate(");
-                        gTrans.append(Integer.toString(xCoordinate));
-                        gTrans.append(",");
-                        gTrans.append(Integer.toString(yCoordinate));
-                        gTrans.append(")\">");
-
-                        sb.append(gTrans.toString());
                         sb.append(r.render(getRenderletNexus(), ontology, individual));
                         sb.append("\n");
-                        sb.append("</g>");
-                        counter++;
                     }
 
                 }

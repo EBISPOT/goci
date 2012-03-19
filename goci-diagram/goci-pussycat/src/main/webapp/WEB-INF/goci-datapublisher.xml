@@ -13,7 +13,7 @@
     <!-- publisher: this does al the work and is the main API point of access -->
     <bean name="publisher" class="uk.ac.ebi.fgpt.goci.service.DefaultGWASOWLPublisher">
         <property name="configuration" ref="config" />
-        <property name="studiesLimit" value="10" />
+        <property name="studiesLimit" value="20" />
         <property name="singleNucleotidePolymorphismDAO" ref="snpDAO" />
         <property name="traitAssociationDAO" ref="traitAssociationDAO" />
         <property name="studyDAO" ref="studyDAO" />
