@@ -88,8 +88,8 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
 
         // todo - maybe get class label from the class expression to use as svg id? and set width and height of svg
         String svgID = "foo";
-        int width = 800;
-        int height = 600;
+        int width = 1400;
+        int height = 1000;
 
         sb.append(SVGUtils.buildSVGHeader(svgID, width, height));
         try {
@@ -101,27 +101,50 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
             getLog().debug("There are " + individuals.size() + " owl individuals that satisfy the expression " +
                                    classExpression);
             
+            int chrWidth = 100;
+            int chrHeight = 0;
+
+            int xCoordinate = 0;
+            int yCoordinate = 0;
+
             int counter = 0;
+
+            int halfway = 12;
             
             for (OWLNamedIndividual individual : individuals) {
                 // render each individual with a renderlet that can render it
                 for (Renderlet r : getAvailableRenderlets()) {
                     if (r.canRender(getRenderletNexus(), ontology, individual)) {
                         getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
+
+                        if (counter < halfway){
+                            xCoordinate = counter * chrWidth;
+
+   /*WARNING - REMOVE ME! this is just a little cheeky insert to stop the chromosomes from all being on top of each other*/
+
+                        }
+                        else{
+                            xCoordinate = (counter-halfway) * chrWidth;
+                            yCoordinate = 500;
+                        }
+
+                        StringBuilder gTrans = new StringBuilder();
+                        gTrans.append("<g transform=\"translate(");
+                        gTrans.append(Integer.toString(xCoordinate));
+                        gTrans.append(",");
+                        gTrans.append(Integer.toString(yCoordinate));
+                        gTrans.append(")\">");
+
+                        sb.append(gTrans.toString());
                         sb.append(r.render(getRenderletNexus(), ontology, individual));
                         sb.append("\n");
-/*WARNING - REMOVE ME! this is just a little cheeky insert to stop the chromosomes from all being on top of each other*/
-                        sb.append("<g transform=\"translate(50,0)\">");
+                        sb.append("</g>");
                         counter++;
                     }
+
                 }
             }
 
-/**WARNING - REMOVE ME*/
-            for(int i = 0; i < counter; i++){
-                sb.append("</g>");
-            }
-            
             sb.append(SVGUtils.closeSVG());
             return sb.toString();
         }
