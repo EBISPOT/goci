@@ -129,10 +129,6 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
             // todo - do something sane here
             throw new RuntimeException("Failed to render - querying the reasoner failed", e);
         }
-
-//        return "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">" +
-//                "<circle cx=\"100\" cy=\"50\" r=\"40\" stroke=\"black\" stroke-width=\"2\" fill=\"red\"/>" +
-//                "</svg>";
     }
 
     public boolean clearRendering() {

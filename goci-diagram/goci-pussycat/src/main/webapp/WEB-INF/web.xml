@@ -40,10 +40,5 @@
             org.springframework.web.context.ContextLoaderListener
         </listener-class>
     </listener>
-    <!--<listener>-->
-        <!--<listener-class>-->
-            <!--uk.ac.ebi.fgpt.goci.pussycat.PussycatAppListener-->
-        <!--</listener-class>-->
-    <!--</listener>-->
 
 </web-app>

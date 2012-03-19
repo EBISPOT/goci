@@ -10,7 +10,7 @@
 
     <appender name="goci-log" class="org.apache.log4j.DailyRollingFileAppender">
         <param name="DatePattern" value="'.'yyyy-MM-dd" />
-        <param name="File" value="goci.log" />
+        <param name="File" value="${catalina.home}/logs/goci.log" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="[%d] %-5p (%F:%L) - %m%n" />
         </layout>
@@ -18,21 +18,16 @@
 
     <logger name="org.springframework" additivity="false">
         <level value="WARN" />
-        <appender-ref ref="console" />
-    </logger>
-
-    <logger name="uk.ac.ebi.fgpt.goci.dao" additivity="false">
-        <level value="ERROR" />
-        <appender-ref ref="console" />
+        <appender-ref ref="goci-log" />
     </logger>
 
     <logger name="uk.ac.ebi.fgpt.goci.pussycat" additivity="false">
         <level value="DEBUG" />
-        <appender-ref ref="console" />
+        <appender-ref ref="goci-log" />
     </logger>
 
     <root>
-        <priority value="INFO" />
+        <priority value="ERROR" />
         <appender-ref ref="console" />
     </root>
 
