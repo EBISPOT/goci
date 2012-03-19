@@ -14,6 +14,9 @@
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
     <script type="text/javascript" src="scripts/pussycat.js"></script>
+    <script type="text/javascript" src="scripts/jquery.mousewheel.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery.event.drag-2.0.min.js"></script>
+
 </head>
 
 <body onload="init();">
@@ -50,6 +53,11 @@
             <div id="diagramtab">
                 <h3>GWAS Catalog Diagram</h3>
 
+                <div id="sclae-debugging" style="display: none;">
+                    Scale | <span id="scale"></span><br/>
+                    Div Drag | x: <span id="xOffset"></span>; y: <span id="yOffset"></span><br/>
+                    SVG Drag | x: <span id="xOffsetSVG"></span>; y: <span id="yOffsetSVG"></span>;
+                </div>
                 <div id="diagramarea" class="ui-widget-content">
                     <div id="diagramareaerror" style="text-align: center; display: none">
                         <img src="images/loader.gif" alt="Please wait - diagram loading"/><br/>

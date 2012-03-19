@@ -87,7 +87,7 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
         StringBuilder sb = new StringBuilder();
 
         // todo - maybe get class label from the class expression to use as svg id? and set width and height of svg
-        String svgID = "foo";
+        String svgID = "goci-svg";
         int width = 800;
         int height = 600;
 
@@ -100,9 +100,9 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
             Set<OWLNamedIndividual> individuals = query(classExpression);
             getLog().debug("There are " + individuals.size() + " owl individuals that satisfy the expression " +
                                    classExpression);
-            
+
             int counter = 0;
-            
+
             for (OWLNamedIndividual individual : individuals) {
                 // render each individual with a renderlet that can render it
                 for (Renderlet r : getAvailableRenderlets()) {
@@ -121,7 +121,7 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
             for(int i = 0; i < counter; i++){
                 sb.append("</g>");
             }
-            
+
             sb.append(SVGUtils.closeSVG());
             return sb.toString();
         }
