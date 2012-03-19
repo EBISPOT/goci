@@ -14,8 +14,8 @@
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
     <script type="text/javascript" src="scripts/pussycat.js"></script>
-
 </head>
+
 <body onload="init();">
 <div id="page_wrapper">
 
@@ -26,13 +26,6 @@
 
             <h2>Exploring Genome-wide Association Studies</h2>
         </div>
-
-        <!--<div id="navcontainer">-->
-        <!--<ul id="navlist">-->
-        <!--<li><a href='index.html'>Pussycat</a></li>-->
-        <!--</ul>-->
-        <!--</div>-->
-
     </div>
 
     <div id="divtable">
@@ -45,7 +38,7 @@
         <div id="browsertabs">
             <ul>
                 <li><a href="#hometab">Home</a></li>
-                <li><a href="#servicetab">GWAS Diagram</a></li>
+                <li><a href="#diagramtab">GWAS Diagram</a></li>
                 <li><a href="#helptab">Help</a></li>
                 <li><a href="#logtab">Log</a></li>
             </ul>
@@ -54,9 +47,18 @@
                 <h3>Summary</h3>
                 Some summary text, session info, and stats on loaded data goes here
             </div>
-            <div id="servicetab">
+            <div id="diagramtab">
                 <h3>GWAS Catalog Diagram</h3>
-                The catalog diagram itself should be generated here
+
+                <div id="diagramarea" class="ui-widget-content">
+                    <div id="diagramareaerror" style="text-align: center; display: none">
+                        <img src="images/loader.gif" alt="Please wait - diagram loading"/><br/>
+                        <span id="diagramareaerrortext"></span><br/>
+                        <a id="retrybutton" href="#" style="font-weight: bold">Retry</a>
+                    </div>
+                    <div id="diagramareacontent">
+                    </div>
+                </div>
             </div>
             <div id="helptab">
                 This is really useful help
