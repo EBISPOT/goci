@@ -17,6 +17,7 @@ import java.net.URL;
 public class ChrEleven extends ChromosomeRenderlet{
 
     private IRI chromIRI = IRI.create("http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00015");
+    private int position = 10;
 
     @Override
     protected URL getSVGFile() {
@@ -27,9 +28,14 @@ public class ChrEleven extends ChromosomeRenderlet{
     public String getName() {
         return "Chromosome 11";
     }
-    
+
     public IRI getIRI(){
         return chromIRI;
+    }
+
+    @Override
+    protected int getPosition() {
+        return position;
     }
 
 }

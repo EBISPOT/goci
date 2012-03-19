@@ -88,8 +88,8 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
 
         // todo - maybe get class label from the class expression to use as svg id? and set width and height of svg
         String svgID = "goci-svg";
-        int width = 800;
-        int height = 600;
+        int width = 1400;
+        int height = 1000;
 
         sb.append(SVGUtils.buildSVGHeader(svgID, width, height));
         try {
@@ -101,7 +101,6 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
             getLog().debug("There are " + individuals.size() + " owl individuals that satisfy the expression " +
                                    classExpression);
 
-            int counter = 0;
 
             for (OWLNamedIndividual individual : individuals) {
                 // render each individual with a renderlet that can render it
@@ -110,16 +109,8 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
                         getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
                         sb.append(r.render(getRenderletNexus(), ontology, individual));
                         sb.append("\n");
-/*WARNING - REMOVE ME! this is just a little cheeky insert to stop the chromosomes from all being on top of each other*/
-                        sb.append("<g transform=\"translate(50,0)\">");
-                        counter++;
                     }
                 }
-            }
-
-/**WARNING - REMOVE ME*/
-            for(int i = 0; i < counter; i++){
-                sb.append("</g>");
             }
 
             sb.append(SVGUtils.closeSVG());

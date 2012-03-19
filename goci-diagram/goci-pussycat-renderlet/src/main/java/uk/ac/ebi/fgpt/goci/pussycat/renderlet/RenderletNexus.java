@@ -37,4 +37,8 @@ public interface RenderletNexus {
      * @return the area of svg in which this entity was rendered
      */
     <O> SVGArea getLocationOfRenderedEntity(O renderedEntity);
+    
+    int getCanvasHeight();
+    
+    int getCanvasWidth();
 }

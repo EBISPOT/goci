@@ -21,10 +21,13 @@ public class RenderletNexusFactory {
     private static final class DefaultRenderletNexus implements RenderletNexus {
         private Set<Renderlet> renderlets;
         private Map<Object, SVGArea> renderedEntityLocations;
+        private int canvasWidth, canvasHeight;
 
         private DefaultRenderletNexus() {
             this.renderlets = new HashSet<Renderlet>();
             this.renderedEntityLocations = new HashMap<Object, SVGArea>();
+            this.canvasHeight = 1000;
+            this.canvasWidth = 1200;
         }
 
         public boolean register(Renderlet renderlet) {
@@ -38,5 +41,16 @@ public class RenderletNexusFactory {
         public <O> SVGArea getLocationOfRenderedEntity(O renderedEntity) {
             return renderedEntityLocations.get(renderedEntity);
         }
+        
+        public int getCanvasWidth(){
+            return canvasWidth;
+        }
+        
+        public int getCanvasHeight(){
+            return canvasHeight;
+        }
+
+        
+                
     }
 }
