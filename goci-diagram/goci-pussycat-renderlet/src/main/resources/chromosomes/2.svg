@@ -107,10 +107,10 @@
 <path style="fill:#555358;fill-opacity:1;fill-rule:nonzero;stroke:none" d="m 50.13962500000001,93.54124999999999 -0.283625,-0.0 0.0,-2.9325 0.283625,0.0 0.0,2.9325 m -11.021,-0.0 -0.283625,-0.0 0.0,-2.9325 0.283625,0.0 0.0,2.9325 " id="path3629"/>
 <path style="fill:#211c1d;fill-opacity:1;fill-rule:nonzero;stroke:none" d="m 50.216750000000005,93.61874999999998 -0.36075,-0.0 0.0,-0.0775 0.283625,0.0 0.0,-2.9325 -0.283625,-0.0 0.0,-0.07875 0.36075,0.0 0.0,3.08875 m -0.0385,-0.03875 0.0,-0.03875 0.0,0.03875 m -11.059625000000002,0.03875 -0.360875,-0.0 0.0,-3.08875 0.360875,0.0 0.0,0.07875 -0.283625,-0.0 0.0,2.9325 0.283625,0.0 0.0,0.0775 " id="path3631"/>
 <path style="fill:#555358;fill-opacity:1;fill-rule:nonzero;stroke:none" d="m 50.13962500000001,86.51624999999999 -0.283625,-0.0 0.0,-4.06625 0.283625,0.0 0.0,4.06625 m -11.021,-0.0 -0.283625,-0.0 0.0,-4.06625 0.283625,0.0 0.0,4.06625 " id="path3633"/>
-<path style="fill:#211c1d;fill-opacity:1;fill-rule:nonzero;stroke:none" d="m 50.216750000000005,86.59249999999997 -0.36075,-0.0 0.0,-0.07625 0.283625,0.0 0.0,-4.06625 -0.283625,-0.0 0.0,-0.0775 0.36075,0.0 0.0,4.22 m -0.0385,-0.0375 0.0,-0.03875 0.0,0.03875 m -11.059625000000002,0.0375 -0.360875,-0.0 0.0,-4.22 0.360875,0.0 0.0,0.0775 -0.283625,-0.0 0.0,4.06625 0.283625,0.0 0.0,0.07625 " id="path3635"/>
-<path style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none;display:none" d="m 0.0,122.69749999999996 41.349125,0.0 0.0,-0.625 -41.349125,-0.0 0.0,0.625 z " id="path3637"/>
+<path style="fill:#211c1d;fill-opacity:1;fill-rule:nonzero;stroke:none" d="m 50.216750000000005,86.59249999999997 -0.36075,-0.0 0.0,-0.07625 0.283625,0.0 0.0,-4.06625 -0.283625,-0.0 0.0,-0.0775 0.36075,0.0 0.0,4.22 m -0.0385,-0.0375 0.0,-0.03875 0.0,0.03875 m -11.059625000000002,0.0375 -0.360875,-0.0 0.0,-4.22 0.360875,0.0 0.0,0.0775 -0.283625,-0.0 0.0,4.06625 0.283625,0.0 0.0,0.07625 " id="outline2"/>
+<path style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none;display:none" d="m 0.0,122.69749999999996 41.349125,0.0 0.0,-0.625 -41.349125,-0.0 0.0,0.625 z " id="centre2"/>
 <text>
-<tspan x="41.7905" y="325.21513749999997" id="tspan3425" style="font-size:7.19543791px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#211c1d;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Helvetica;-inkscape-font-specification:Helvetica">2</tspan>
+<tspan x="41.7905" y="325.21513749999997" id="label2" style="font-size:7.19543791px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#211c1d;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Helvetica;-inkscape-font-specification:Helvetica">2</tspan>
 </text>
 </g>
 </svg>
