@@ -1,16 +1,17 @@
 package uk.ac.ebi.fgpt.goci.pussycat.session;
 
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
+import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexusFactory;
+import uk.ac.ebi.fgpt.goci.pussycat.renderlet.chromosome.ChromosomeRenderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.utils.SVGUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -90,13 +91,31 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
         String svgID = "goci-svg";
         int width = 1400;
         int height = 1000;
+        
 
         sb.append(SVGUtils.buildSVGHeader(svgID, width, height));
         try {
             // get the ontology loaded into the reasoner
             OWLOntology ontology = getReasoner().getRootOntology();
 
-            // get all individuals that satisfy this class expression
+            for (Renderlet r : getAvailableRenderlets()) {
+                if(r instanceof ChromosomeRenderlet){
+                    OWLClass chromosome = ontology.getOWLOntologyManager().getOWLDataFactory().getOWLClass(IRI.create(OntologyConstants.CHROMOSOME_CLASS_IRI));
+                    NodeSet<OWLClass> all = getReasoner().getSubClasses(chromosome, true);
+                    Set<OWLClass> allChroms = all.getFlattened();
+
+                    for(OWLClass chrom : allChroms){
+                        if (r.canRender(getRenderletNexus(), ontology, chrom)) {
+                            getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
+                            sb.append(r.render(getRenderletNexus(), ontology, chrom));
+                            sb.append("\n");
+                        }
+                    }
+                }
+            }
+
+
+                // get all individuals that satisfy this class expression
             Set<OWLNamedIndividual> individuals = query(classExpression);
             getLog().debug("There are " + individuals.size() + " owl individuals that satisfy the expression " +
                                    classExpression);

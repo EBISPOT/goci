@@ -20,7 +20,7 @@ import java.net.URL;
  * Time: 16:44
  * To change this template use File | Settings | File Templates.
  */
-abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
+public abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLClass> {
 
     public String getDisplayName(){
         return getName();
@@ -45,14 +45,11 @@ abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLIndividu
         if (renderingContext instanceof OWLOntology){
 
             IRI chromIRI =  getIRI();
-            OWLOntology ontology =  (OWLOntology)renderingContext;
 
-            OWLClass currentChrom = ontology.getOWLOntologyManager().getOWLDataFactory().getOWLClass(chromIRI);
+            if (owlEntity instanceof OWLClass){
+                OWLClass thisClass = (OWLClass)owlEntity;
 
-            if (owlEntity instanceof OWLIndividual){
-                OWLIndividual individual = (OWLIndividual)owlEntity;
-
-                if(individual.getTypes(ontology).contains(currentChrom)){
+                if(thisClass.getIRI().equals(chromIRI)){
                       renderable = true;
                 }
 
@@ -62,7 +59,7 @@ abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLIndividu
          return renderable;
     }
 
-    public String render(RenderletNexus nexus, OWLOntology renderingContext, OWLIndividual owlEntity) {
+    public String render(RenderletNexus nexus, OWLOntology renderingContext, OWLClass owlEntity) {
         String fileContent = null;
         BufferedInputStream svgstream = null;
         byte[] buffer = new byte[1024];
@@ -118,7 +115,7 @@ abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLIndividu
 
                     // todo - work out how to do this! --> consider adding new method to each chromRenderlet along the lines of getChromToLeft and hardcode
                     // id of previous chrom into it, then query by chromID
-                    // nexus.getLocationOfRenderedEntity(chromosomeToTheLeft);
+                    //nexus.getLocationOfRenderedEntity(chromosomeToTheLeft);
 
                     RenderingEvent event = new RenderingEvent(owlEntity, fileContent, currentArea, this);
                     nexus.renderingEventOccurred(event);

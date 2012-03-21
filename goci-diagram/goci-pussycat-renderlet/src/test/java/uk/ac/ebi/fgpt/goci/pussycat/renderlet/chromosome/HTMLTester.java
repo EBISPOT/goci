@@ -18,7 +18,7 @@ public class HTMLTester {
 
 
     public static void main(String[] args){
-        String filename = "/home/dani/karyotype.svg";
+        String filename = "/home/dwelter/karyotype.svg";
 
         new HTMLWriter(filename);
 
@@ -93,93 +93,123 @@ public class HTMLTester {
                 writer.write(line);
 
                 chrom = new ChrThree();
+                line = chrom.render(null, null, null);
+
    //             line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrFour();
+                line = chrom.render(null, null, null);
+
    //             line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrFive();
+                line = chrom.render(null, null, null);
+
    //             line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrSix();
+                line = chrom.render(null, null, null);
+
    //             line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrSeven();
+                line = chrom.render(null, null, null);
+
     //            line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrEight();
+                line = chrom.render(null, null, null);
+
    //             line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrNine();
+                line = chrom.render(null, null, null);
+
  //               line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrTen();
+                line = chrom.render(null, null, null);
+
   //              line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrEleven();
-  //              line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
+                line = chrom.render(null, null, null);
+ //              line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrTwelve();
-  //              line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
+                line = chrom.render(null, null, null);
+ //              line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
       /*          line = "<br> \n";
                 writer.write(line);    */
 
                 chrom = new ChrThirteen();
- //               line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
+                line = chrom.render(null, null, null);
+//               line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrFourteen();
-  //              line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
+                line = chrom.render(null, null, null);
+ //              line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrFifteen();
-  //              line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
+                line = chrom.render(null, null, null);
+ //              line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrSixteen();
-  //              line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
+                line = chrom.render(null, null, null);
+ //              line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrSeventeen();
-   //             line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
+                line = chrom.render(null, null, null);
+ //             line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrEighteen();
-    //            line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
+                line = chrom.render(null, null, null);
+  //            line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrNineteen();
-  //              line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
+                line = chrom.render(null, null, null);
+ //              line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrTwenty();
-   //             line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
+                line = chrom.render(null, null, null);
+ //             line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrTwentyone();
- //               line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
+                line = chrom.render(null, null, null);
+//               line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrTwentytwo();
+                line = chrom.render(null, null, null);
  //               line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrX();
+                line = chrom.render(null, null, null);
   //              line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
 
                 chrom = new ChrY();
+                line = chrom.render(null, null, null);
   //              line = "<embed src=\"" + chrom.getSVGFile() + "\" type=\"image/svg+xml\"> \n";
                 writer.write(line);
             }

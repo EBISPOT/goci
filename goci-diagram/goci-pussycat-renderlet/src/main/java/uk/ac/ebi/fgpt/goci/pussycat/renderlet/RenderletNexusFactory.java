@@ -26,7 +26,7 @@ public class RenderletNexusFactory {
         private DefaultRenderletNexus() {
             this.renderlets = new HashSet<Renderlet>();
             this.renderedEntityLocations = new HashMap<Object, SVGArea>();
-            this.canvasHeight = 1000;
+            this.canvasHeight = 800;
             this.canvasWidth = 1200;
         }
 

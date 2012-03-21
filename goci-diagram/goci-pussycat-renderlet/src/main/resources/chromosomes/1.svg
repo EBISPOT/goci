@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" contentScriptType="text/ecmascript" zoomAndPan="magnify" contentStyleType="text/css" preserveAspectRatio="xMidYMid meet" version="1.0">
-<g>
+<g id="chromosome1">
 <path style="fill:#a4bdc8;fill-opacity:1;fill-rule:nonzero;stroke:none" d="m 50.169,175.28125 0.0,-1.9275 c 0.0,-0.9625 -1.1792500000000001,-2.5475 -2.923375,-3.45375 1.744125,-0.9062500000000001 2.923375,-2.4925 2.923375,-3.4575 l 0.0,-1.35875 -11.363375,-0.0 0.0,1.35875 c 0.0,0.96875 1.1875,2.55125 2.9405,3.4575 -1.7530000000000001,0.9050000000000001 -2.9405,2.48875 -2.9405,3.45375 l 0.0,1.9275 11.363375,0.0 " id="centromere1-f"/>
 <path style="fill:none;stroke:#100f0d;stroke-width:0.8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" d="m 50.169,175.28125 0.0,-1.9275 c 0.0,-0.9625 -1.1792500000000001,-2.5475 -2.923375,-3.45375 1.744125,-0.9062500000000001 2.923375,-2.4925 2.923375,-3.4575 l 0.0,-1.35875 -11.363375,-0.0 0.0,1.35875 c 0.0,0.96875 1.1875,2.55125 2.9405,3.4575 -1.7530000000000001,0.9050000000000001 -2.9405,2.48875 -2.9405,3.45375 l 0.0,1.9275 11.363375,0.0 z " id="centromere1-o"/>
 <path style="fill:#211c1d;fill-opacity:1;fill-rule:nonzero;stroke:none" d="m 38.795875,112.90624999999997 11.382812500000002,0.0 0.0,-14.896000000000003 -11.382812500000002,-0.0 0.0,14.896000000000003 z " id="1p31.1"/>
