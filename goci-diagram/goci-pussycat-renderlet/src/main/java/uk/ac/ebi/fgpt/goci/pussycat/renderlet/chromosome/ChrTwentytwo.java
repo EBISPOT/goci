@@ -26,7 +26,7 @@ public class ChrTwentytwo extends ChromosomeRenderlet{
     }
 
     @Override
-    protected IRI getIRI() {
+    protected IRI getChromIRI() {
         return chromIRI;
     }
 

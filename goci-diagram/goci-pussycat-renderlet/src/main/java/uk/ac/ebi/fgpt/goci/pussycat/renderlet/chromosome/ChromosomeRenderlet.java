@@ -2,7 +2,6 @@ package uk.ac.ebi.fgpt.goci.pussycat.renderlet.chromosome;
 
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLOntology;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderingEvent;
@@ -44,7 +43,7 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLC
 
         if (renderingContext instanceof OWLOntology){
 
-            IRI chromIRI =  getIRI();
+            IRI chromIRI =  getChromIRI();
 
             if (owlEntity instanceof OWLClass){
                 OWLClass thisClass = (OWLClass)owlEntity;
@@ -71,7 +70,7 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLC
 
         int chromWidth = width/12;
 
-        int xCoordinate = 0;
+        int xCoordinate;
         int yCoordinate = 0;
 
         if (position < 12){
@@ -130,7 +129,7 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLC
 
     protected abstract URL getSVGFile();
 
-    protected abstract IRI getIRI();
+    protected abstract IRI getChromIRI();
     
     protected abstract int getPosition();
 

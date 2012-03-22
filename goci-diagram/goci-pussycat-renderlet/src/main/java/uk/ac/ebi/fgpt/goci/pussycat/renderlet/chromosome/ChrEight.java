@@ -29,7 +29,7 @@ public class ChrEight extends ChromosomeRenderlet{
         return "Chromosome 8";
     }
 
-    public IRI getIRI(){
+    public IRI getChromIRI(){
         return chromIRI;
     }
 

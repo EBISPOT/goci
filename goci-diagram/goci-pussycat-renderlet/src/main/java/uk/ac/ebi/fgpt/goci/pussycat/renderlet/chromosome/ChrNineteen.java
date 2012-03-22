@@ -29,7 +29,7 @@ public class ChrNineteen extends ChromosomeRenderlet{
         return "Chromosome 19";
     }
 
-    public IRI getIRI(){
+    public IRI getChromIRI(){
         return chromIRI;
     }
 

@@ -91,6 +91,8 @@ public class PussycatGOCIController {
         return getPussycatSession(session).performRendering(chromCls);
     }
 
+    /*this currently doesn't work as all chromosomes are rendered by default, not if a given chromosome individual exists
+    *as some chromosomes don't have any instances and would therefore never be rendered*/
     @RequestMapping(value = "/chromosomes/{chromosomeName}")
     public @ResponseBody String renderChromosome(@PathVariable String chromosomeName, HttpSession session)
             throws PussycatSessionNotReadyException {
