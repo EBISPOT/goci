@@ -1,6 +1,7 @@
 package uk.ac.ebi.fgpt.goci.pussycat.renderlet;
 
 import net.sourceforge.fluxion.spi.Spi;
+import org.w3c.dom.Element;
 
 /**
  * A renderlet is a small plugin that is capable of rendering small chunks of semantically meaningful data into SVG
@@ -54,5 +55,5 @@ public interface Renderlet<C, O> {
      * @param renderingEntity  the entity to render
      * @return a well formatted SVG element that can be used to display the supplied entity
      */
-    String render(RenderletNexus nexus, C renderingContext, O renderingEntity);
+    Element render(RenderletNexus nexus, C renderingContext, O renderingEntity);
 }

@@ -9,11 +9,11 @@ package uk.ac.ebi.fgpt.goci.pussycat.layout;
  * @date 27/02/12
  */
 public class SVGArea {
-    private int x, y;
-    private int width, height;
+    private double x, y;
+    private double width, height;
     private int zIndex;
 
-    public SVGArea(int x, int y, int width, int height, int zIndex) {
+    public SVGArea(double x, double y, double width, double height, int zIndex) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -21,19 +21,19 @@ public class SVGArea {
         this.zIndex = zIndex;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
-    public int getWidth() {
+    public double getWidth() {
         return width;
     }
 
-    public int getHeight() {
+    public double getHeight() {
         return height;
     }
 

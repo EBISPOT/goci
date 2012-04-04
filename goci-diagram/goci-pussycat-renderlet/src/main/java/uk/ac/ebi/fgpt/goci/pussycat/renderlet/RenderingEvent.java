@@ -1,5 +1,6 @@
 package uk.ac.ebi.fgpt.goci.pussycat.renderlet;
 
+import org.w3c.dom.Element;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 
 /**
@@ -11,14 +12,14 @@ import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
  */
 public class RenderingEvent<O> {
     private O renderedEntity;
-    private String renderedSVG;
+    private Element renderedSVG;
 
     private SVGArea svgArea;
 
     private Renderlet renderingRenderlet;
 
     public RenderingEvent(O renderedEntity,
-                          String renderedSVG,
+                          Element renderedSVG,
                           SVGArea svgArea,
                           Renderlet renderingRenderlet) {
         this.renderedEntity = renderedEntity;
@@ -31,7 +32,7 @@ public class RenderingEvent<O> {
         return renderedEntity;
     }
 
-    public String getRenderedSVG() {
+    public Element getRenderedSVG() {
         return renderedSVG;
     }
 

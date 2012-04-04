@@ -2,6 +2,7 @@ package uk.ac.ebi.fgpt.goci.pussycat.renderlet.trait;
 
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.w3c.dom.Element;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 
@@ -41,7 +42,7 @@ abstract class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override public String render(RenderletNexus nexus, OWLOntology renderingContext, OWLIndividual renderingEntity) {
+    @Override public Element render(RenderletNexus nexus, OWLOntology renderingContext, OWLIndividual renderingEntity) {
         return null;
     }
 }

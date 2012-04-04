@@ -2,7 +2,6 @@ package uk.ac.ebi.fgpt.goci.pussycat.session;
 
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
@@ -29,14 +28,6 @@ public interface PussycatSession {
     String getSessionID();
 
     /**
-     * Returns the {@link uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus} that controls interactions between the
-     * configured renderlets for this pussycat session
-     *
-     * @return the renderlet nexus configured for this session
-     */
-    RenderletNexus getRenderletNexus();
-
-    /**
      * Returns a collection of all available renderlets.  Whether available renderlets are instantiated on demand or
      * returned from a cache depends on the underlying implementation.
      *
@@ -48,12 +39,14 @@ public interface PussycatSession {
      * Fetches all data that fulfils the given class expression and renders it using any available renderlets.  The
      * RenderletNexus for this session is used to ensure available renderlets know how to arrange their output.
      *
+     *
      * @param classExpression an OWL class expression describing the data we wish to render
+     * @param renderletNexus a renderletNexus that controls interactions between the configured renderlets for this pussycat session
      * @return a well formatted SVG string that should be returned to the client
      * @throws uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException
      *          if this Pussycat session is not yet initialized and therefore unable to perform any rendering
      */
-    String performRendering(OWLClassExpression classExpression) throws PussycatSessionNotReadyException;
+    String performRendering(OWLClassExpression classExpression, RenderletNexus renderletNexus) throws PussycatSessionNotReadyException;
 
     /**
      * Clears any data that is currently rendered in this session

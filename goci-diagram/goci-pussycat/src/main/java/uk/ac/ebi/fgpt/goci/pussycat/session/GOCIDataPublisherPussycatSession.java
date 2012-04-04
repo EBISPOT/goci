@@ -1,18 +1,14 @@
 package uk.ac.ebi.fgpt.goci.pussycat.session;
 
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.reasoner.NodeSet;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
-import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
-import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexusFactory;
-import uk.ac.ebi.fgpt.goci.pussycat.renderlet.chromosome.ChromosomeRenderlet;
-import uk.ac.ebi.fgpt.goci.pussycat.utils.SVGUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -31,7 +27,6 @@ import java.util.Set;
 public class GOCIDataPublisherPussycatSession implements PussycatSession {
     private String sessionID;
     private Collection<Renderlet> renderlets;
-    private RenderletNexus renderletNexus;
 
     private ReasonerSession reasonerSession;
 
@@ -44,13 +39,8 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
     public GOCIDataPublisherPussycatSession() {
         // set up this session
         this.sessionID = generateSessionID();
-        this.renderletNexus = RenderletNexusFactory.createDefaultRenderletNexus();
         this.renderlets = getAvailableRenderlets();
 
-        // register all renderlets
-        for (Renderlet r : renderlets) {
-            renderletNexus.register(r);
-        }
     }
 
     public ReasonerSession getReasonerSession() {
@@ -63,10 +53,6 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
 
     public String getSessionID() {
         return sessionID;
-    }
-
-    public RenderletNexus getRenderletNexus() {
-        return renderletNexus;
     }
 
     public Collection<Renderlet> getAvailableRenderlets() {
@@ -83,62 +69,17 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
         }
     }
 
-    public String performRendering(OWLClassExpression classExpression)
+    public String performRendering(OWLClassExpression classExpression, RenderletNexus renderletNexus)
             throws PussycatSessionNotReadyException {
-        StringBuilder sb = new StringBuilder();
 
-        // todo - maybe get class label from the class expression to use as svg id? and set width and height of svg
-        String svgID = "goci-svg";
-        int width = 1400;
-        int height = 1000;
-        
-
-        sb.append(SVGUtils.buildSVGHeader(svgID, width, height));
+        String svgString = null;
         try {
-            // get the ontology loaded into the reasoner
-            OWLOntology ontology = getReasoner().getRootOntology();
-
-            for (Renderlet r : getAvailableRenderlets()) {
-                if(r instanceof ChromosomeRenderlet){
-                    OWLClass chromosome = ontology.getOWLOntologyManager().getOWLDataFactory().getOWLClass(IRI.create(OntologyConstants.CHROMOSOME_CLASS_IRI));
-                    NodeSet<OWLClass> all = getReasoner().getSubClasses(chromosome, true);
-                    Set<OWLClass> allChroms = all.getFlattened();
-
-                    for(OWLClass chrom : allChroms){
-                        if (r.canRender(getRenderletNexus(), ontology, chrom)) {
-                            getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
-                            sb.append(r.render(getRenderletNexus(), ontology, chrom));
-                            sb.append("\n");
-                        }
-                    }
-                }
-            }
-
-
-                // get all individuals that satisfy this class expression
-            Set<OWLNamedIndividual> individuals = query(classExpression);
-            getLog().debug("There are " + individuals.size() + " owl individuals that satisfy the expression " +
-                                   classExpression);
-
-
-            for (OWLNamedIndividual individual : individuals) {
-                // render each individual with a renderlet that can render it
-                for (Renderlet r : getAvailableRenderlets()) {
-                    if (r.canRender(getRenderletNexus(), ontology, individual)) {
-                        getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
-                        sb.append(r.render(getRenderletNexus(), ontology, individual));
-                        sb.append("\n");
-                    }
-                }
-            }
-
-            sb.append(SVGUtils.closeSVG());
-            return sb.toString();
+            svgString = renderletNexus.getSVG(classExpression, getReasoner());
+        } catch (OWLConversionException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        catch (OWLConversionException e) {
-            // todo - do something sane here
-            throw new RuntimeException("Failed to render - querying the reasoner failed", e);
-        }
+
+        return svgString;
     }
 
     public boolean clearRendering() {

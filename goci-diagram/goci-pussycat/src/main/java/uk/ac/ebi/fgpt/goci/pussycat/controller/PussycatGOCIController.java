@@ -13,13 +13,14 @@ import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.manager.PussycatSessionManager;
+import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
+import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
+import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexusFactory;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSession;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSessionStrategy;
 
 import javax.servlet.http.HttpSession;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.*;
 
 /**
  * A MVC controller for Pussycat.  This controller can be used to create a new session, load ontology data and create
@@ -33,6 +34,8 @@ import java.util.HashSet;
 public class PussycatGOCIController {
     private PussycatSessionStrategy sessionStrategy;
     private PussycatSessionManager pussycatManager;
+
+    private Map<HttpSession, RenderletNexus> nexusMap = new HashMap<HttpSession, RenderletNexus>();
 
     private OntologyConfiguration ontologyConfiguration;
 
@@ -79,7 +82,7 @@ public class PussycatGOCIController {
         // get OWLThing, to indicate that we want to draw all data in the GWAS catalog
         OWLClass thingCls = getOntologyConfiguration().getOWLDataFactory().getOWLThing();
         // render all individuals using the pussycat session for this http session
-        return getPussycatSession(session).performRendering(thingCls);
+        return getPussycatSession(session).performRendering(thingCls, getRenderletNexus(session));
     }
 
     @RequestMapping(value = "/chromosomes")
@@ -88,7 +91,7 @@ public class PussycatGOCIController {
         IRI chromIRI = IRI.create(OntologyConstants.CHROMOSOME_CLASS_IRI);
         OWLClass chromCls = getOntologyConfiguration().getOWLDataFactory().getOWLClass(chromIRI);
         // render all individuals using the pussycat session for this http session
-        return getPussycatSession(session).performRendering(chromCls);
+        return getPussycatSession(session).performRendering(chromCls, getRenderletNexus(session));
     }
 
     /*this currently doesn't work as all chromosomes are rendered by default, not if a given chromosome individual exists
@@ -110,7 +113,7 @@ public class PussycatGOCIController {
                 getOntologyConfiguration().getOWLDataFactory().getOWLObjectIntersectionOf(chromCls, hasNameValue);
 
         // render all individuals using the pussycat session for this http session
-        return getPussycatSession(session).performRendering(query);
+        return getPussycatSession(session).performRendering(query, getRenderletNexus(session));
     }
 
     @RequestMapping(value = "/snps")
@@ -119,7 +122,7 @@ public class PussycatGOCIController {
         IRI snpIRI = IRI.create(OntologyConstants.SNP_CLASS_IRI);
         OWLClass snpCls = getOntologyConfiguration().getOWLDataFactory().getOWLClass(snpIRI);
         // render all individuals using the pussycat session for this http session
-        return getPussycatSession(session).performRendering(snpCls);
+        return getPussycatSession(session).performRendering(snpCls, getRenderletNexus(session));
     }
 
     @RequestMapping(value = "/snps/{rsID}")
@@ -139,7 +142,7 @@ public class PussycatGOCIController {
                 getOntologyConfiguration().getOWLDataFactory().getOWLObjectIntersectionOf(snpCls, hasRsidValue);
 
         // render all individuals using the pussycat session for this http session
-        return getPussycatSession(session).performRendering(query);
+        return getPussycatSession(session).performRendering(query, getRenderletNexus(session));
     }
 
     @RequestMapping(value = "/associations")
@@ -148,7 +151,7 @@ public class PussycatGOCIController {
         IRI taIRI = IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI);
         OWLClass taCls = getOntologyConfiguration().getOWLDataFactory().getOWLClass(taIRI);
         // render all individuals using the pussycat session for this http session
-        return getPussycatSession(session).performRendering(taCls);
+        return getPussycatSession(session).performRendering(taCls, getRenderletNexus(session));
     }
 
     @RequestMapping(value = "/traits")
@@ -157,7 +160,7 @@ public class PussycatGOCIController {
         IRI efIRI = IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI);
         OWLClass efCls = getOntologyConfiguration().getOWLDataFactory().getOWLClass(efIRI);
         // render all individuals using the pussycat session for this http session
-        return getPussycatSession(session).performRendering(efCls);
+        return getPussycatSession(session).performRendering(efCls, getRenderletNexus(session));
     }
 
     @RequestMapping(value = "/traits/{efoURI}")
@@ -167,7 +170,7 @@ public class PussycatGOCIController {
         IRI efIRI = IRI.create(efoURI);
         OWLClass efCls = getOntologyConfiguration().getOWLDataFactory().getOWLClass(efIRI);
         // render all individuals using the pussycat session for this http session
-        return getPussycatSession(session).performRendering(efCls);
+        return getPussycatSession(session).performRendering(efCls, getRenderletNexus(session));
     }
 
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
@@ -198,6 +201,31 @@ public class PussycatGOCIController {
                                    "'" + session.getId() + "' to pussycat session " +
                                    "'" + pussycatSession.getSessionID() + "'");
             return getPussycatManager().joinPussycatSession(session, pussycatSession);
+        }
+    }
+
+    protected RenderletNexus getRenderletNexus(HttpSession session){
+        getLog().debug("Attempting to obtain RenderletNexus session for HttpSession '" + session.getId() + "'");
+
+        RenderletNexus renderletNexus;
+
+        if(nexusMap.containsKey(session)){
+           renderletNexus = nexusMap.get(session);
+           getLog().debug("RenderletNexus available for HttpSession '" + session.getId() + "'");
+           return renderletNexus;
+        }
+        else {
+           renderletNexus = RenderletNexusFactory.createDefaultRenderletNexus();
+           nexusMap.put(session, renderletNexus);
+
+           Collection<Renderlet> renderlets = getPussycatSession(session).getAvailableRenderlets();
+
+           for (Renderlet r : renderlets) {
+               renderletNexus.register(r);
+           }
+
+           getLog().debug("Created new RenderletNexus for HttpSession '" + session + "'");
+           return renderletNexus;
         }
     }
 

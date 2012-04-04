@@ -1,5 +1,7 @@
 package uk.ac.ebi.fgpt.goci.pussycat.renderlet;
 
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 
 /**
@@ -37,7 +39,16 @@ public interface RenderletNexus {
      * @return the area of svg in which this entity was rendered
      */
     <O> SVGArea getLocationOfRenderedEntity(O renderedEntity);
-    
+
+
+    /**
+     * Gets a string of SVG to be rendered
+     *
+     * @param classExpression the class expression to be rendered
+     * @return the SVG in the form of a string
+     */
+    String getSVG(OWLClassExpression classExpression, OWLReasoner reasoner);
+
     int getCanvasHeight();
     
     int getCanvasWidth();
