@@ -9,6 +9,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
+import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGCanvas;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderingEvent;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
@@ -79,8 +80,8 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLC
         Element g=null;
 
         int position = getPosition();
-        int height = nexus.getCanvasHeight();
-        int width = nexus.getCanvasWidth();
+        int height = SVGCanvas.canvasHeight;
+        int width = SVGCanvas.canvasWidth;
 
         double chromWidth = (double)width/12;
         double chromHeight = (double)height/2;

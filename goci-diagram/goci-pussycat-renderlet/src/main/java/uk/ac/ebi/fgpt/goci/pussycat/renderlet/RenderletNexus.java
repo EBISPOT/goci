@@ -48,8 +48,4 @@ public interface RenderletNexus {
      * @return the SVG in the form of a string
      */
     String getSVG(OWLClassExpression classExpression, OWLReasoner reasoner);
-
-    int getCanvasHeight();
-    
-    int getCanvasWidth();
 }

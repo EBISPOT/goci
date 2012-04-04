@@ -5,16 +5,13 @@ import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGBuilder;
+import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGCanvas;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.chromosome.ChromosomeRenderlet;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A factory that is capable of producing {@link RenderletNexus} instances.
@@ -36,15 +33,16 @@ public class RenderletNexusFactory {
 
         private Set<Renderlet> renderlets;
         private Map<Object, SVGArea> renderedEntityLocations;
+        private List<RenderingEvent> renderedEntities;
         private int canvasWidth, canvasHeight;
-        private Document doc;
         private SVGBuilder svgBuilder;
 
         private DefaultRenderletNexus() {
             this.renderlets = new HashSet<Renderlet>();
             this.renderedEntityLocations = new HashMap<Object, SVGArea>();
-            this.canvasHeight = 700;
-            this.canvasWidth = 1600;
+            this.renderedEntities = new ArrayList<RenderingEvent>();
+            this.canvasHeight = SVGCanvas.canvasHeight;
+            this.canvasWidth = SVGCanvas.canvasWidth;
             this.svgBuilder = new SVGBuilder(canvasWidth, canvasHeight);
         }
 
@@ -54,24 +52,35 @@ public class RenderletNexusFactory {
 
         public <O> void renderingEventOccurred(RenderingEvent<O> evt) {
             renderedEntityLocations.put(evt.getRenderedEntity(), evt.getSvgArea());
+            renderedEntities.add(evt);
         }
 
         public <O> SVGArea getLocationOfRenderedEntity(O renderedEntity) {
             return renderedEntityLocations.get(renderedEntity);
         }
 
-        public int getCanvasWidth(){
-            return canvasWidth;
-        }
-
-        public int getCanvasHeight(){
-            return canvasHeight;
-        }
 
         @Override
         public String getSVG(OWLClassExpression classExpression, OWLReasoner reasoner) {
 
-            renderChromosomes(reasoner);
+//check if the chromosomes have already been rendered, otherwise render them
+            boolean check = false;
+            int i = 0;
+
+            while(!check && (i < renderedEntities.size())){
+                Renderlet rendered = renderedEntities.get(i).getRenderingRenderlet();
+
+                if (rendered instanceof ChromosomeRenderlet){
+                    check = true;
+                }
+                else{
+                    i++;
+                }
+            }
+
+            if(! check){
+                renderChromosomes(reasoner);
+            }
 
             // get the ontology loaded into the reasoner
             OWLOntology ontology = reasoner.getRootOntology();
@@ -94,11 +103,6 @@ public class RenderletNexusFactory {
 
             return svgBuilder.getSVG();
 
-            /*
-            * first, check if chromosomes have been rendered.
-            * If not, render chromosomes
-            * then render classExpression
-            * */
         }
 
         public void renderChromosomes(OWLReasoner reasoner){
