@@ -161,7 +161,6 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLC
                 continue;
             }
             else {
-System.out.println(id);
                 StringTokenizer tokenizer = new StringTokenizer(d);
                 ArrayList<String> pathElements = new ArrayList<String>();
 
@@ -286,7 +285,5 @@ System.out.println(id);
     protected abstract IRI getChromIRI();
     
     protected abstract int getPosition();
-
-
 }
 

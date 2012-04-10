@@ -92,6 +92,7 @@ public class RenderletNexusFactory {
 
             for (OWLNamedIndividual individual : individuals) {
                 // render each individual with a renderlet that can render it
+
                 for (Renderlet r : renderlets) {
                     if (r.canRender(this, ontology, individual)) {
                         getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
@@ -100,6 +101,22 @@ public class RenderletNexusFactory {
                     }
                 }
             }
+            
+  /*          for(int q = 0; q < renderedEntities.size(); q++){
+                Renderlet chrom = renderedEntities.get(q).getRenderingRenderlet();
+                
+                if(chrom instanceof ChromosomeRenderlet){
+                   Object[] bands = ((ChromosomeRenderlet)chrom).getBands().keySet().toArray();
+                    
+                    System.out.println("Bands from chromosome: " + chrom.getName());
+                    for(int s = 0; s < bands.length; s++){
+                        System.out.print(bands[s] + "\t");
+                    }
+                    System.out.print("\n");
+                    
+                }
+
+            }         */
 
             return svgBuilder.getSVG();
 
