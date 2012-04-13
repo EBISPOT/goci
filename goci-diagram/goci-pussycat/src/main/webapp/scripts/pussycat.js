@@ -7,7 +7,8 @@ function init() {
     $(document).ready(function() {
         // create tabs
         $("#browsertabs").tabs({
-                                   show:tabShow
+                                   show:tabShow,
+                                   selected:1
                                });
         $("#retrybutton").button();
         $("#retrybutton").click(renderDiagram);
@@ -103,8 +104,8 @@ function zoomOut() {
 function pan(deltaX, deltaY) {
     var viewBox = document.getElementById('goci-svg').getAttribute("viewBox");
     var elements = viewBox.split(' ');
-    var newX = (parseFloat(-deltaX)*scalingFactor) + parseFloat(dragOffsetX);
-    var newY = (parseFloat(-deltaY)*scalingFactor) + parseFloat(dragOffsetY);
+    var newX = (parseFloat(-deltaX) * scalingFactor) + parseFloat(dragOffsetX);
+    var newY = (parseFloat(-deltaY) * scalingFactor) + parseFloat(dragOffsetY);
     $("#xOffsetSVG").html(newX);
     $("#yOffsetSVG").html(newY);
     // get width and height
