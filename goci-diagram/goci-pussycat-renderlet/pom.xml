@@ -38,11 +38,11 @@
         </dependency>
 
         <!-- OWL API and HermiT reasoner, for converting GWAS concepts -->
-        <dependency>
-            <groupId>org.semanticweb.owlapi</groupId>
-            <artifactId>owlapi</artifactId>
-            <version>3.2.4</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.semanticweb.owlapi</groupId>-->
+            <!--<artifactId>owlapi</artifactId>-->
+            <!--<version>3.2.4</version>-->
+        <!--</dependency>-->
         <!--<dependency>-->
             <!--<groupId>hermit</groupId>-->
             <!--<artifactId>hermit</artifactId>-->
@@ -60,31 +60,6 @@
             <artifactId>xml-apis-ext</artifactId>
             <version>1.3.04</version>
         </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>batik</groupId>-->
-            <!--<artifactId>batik-rasterizer</artifactId>-->
-            <!--<version>1.6-1</version>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-            <!--<groupId>batik</groupId>-->
-            <!--<artifactId>batik-swing</artifactId>-->
-            <!--<version>1.6</version>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-            <!--<groupId>batik</groupId>-->
-            <!--<artifactId>batik-transcoder</artifactId>-->
-            <!--<version>1.6-1</version>-->
-            <!--<scope>compile</scope>-->
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<artifactId>fop</artifactId>-->
-                    <!--<groupId>fop</groupId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
-        <!--</dependency>-->
 
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
@@ -111,15 +86,16 @@
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>uk.ac.ebi.fgpt</groupId>
-            <artifactId>goci-ontology-utils</artifactId>
-            <version>0.4-SNAPSHOT</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>uk.ac.ebi.fgpt</groupId>-->
+            <!--<artifactId>goci-ontology-utils</artifactId>-->
+            <!--<version>0.4-SNAPSHOT</version>-->
+        <!--</dependency>-->
+
         <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
             <artifactId>goci-datapublisher</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <version>0.4-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
