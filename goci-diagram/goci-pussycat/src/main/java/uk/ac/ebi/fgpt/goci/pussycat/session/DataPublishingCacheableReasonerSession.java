@@ -10,12 +10,15 @@ import uk.ac.ebi.fgpt.goci.lang.Initializable;
 import uk.ac.ebi.fgpt.goci.service.GWASOWLPublisher;
 
 /**
- * Javadocs go here!
+ * A reasoner session that uses a GOCI DataPublisher to generate the gwas data ontology and then generates an inferred
+ * view using the reasoning mechanisms provided by that data publisher.
+ * <p/>
+ * The resulting reasoner is cached in-memory using ehcache to provide caching functionality.
  *
  * @author Tony Burdett
  * @date 05/03/12
  */
-public class CacheableReasonerSession extends Initializable implements ReasonerSession {
+public class DataPublishingCacheableReasonerSession extends Initializable implements ReasonerSession {
     private GWASOWLPublisher publisher;
     private OWLReasoner reasoner;
 
