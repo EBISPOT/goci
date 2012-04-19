@@ -4,11 +4,11 @@
     <parent>
         <artifactId>goci</artifactId>
         <groupId>uk.ac.ebi.fgpt</groupId>
-        <version>0.4-SNAPSHOT</version>
+        <version>0.4</version>
     </parent>
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci-ontology</artifactId>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.4</version>
     <packaging>pom</packaging>
 
     <name>GOCI Ontology Tools</name>
