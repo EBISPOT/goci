@@ -63,7 +63,7 @@
                 <version>2.8</version>
 		<configuration>
 		     <skip>true</skip>
-		<configuration>
+		</configuration>
                 <reportSets>
                     <reportSet>
                         <id>aggregate</id>
