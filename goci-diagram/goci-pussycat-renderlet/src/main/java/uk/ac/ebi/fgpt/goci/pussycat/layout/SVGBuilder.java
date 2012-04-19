@@ -23,16 +23,20 @@ public class SVGBuilder {
     Document doc;
     Element svgRoot;
     String svgNS;
+    int width, height;
 
 
-    public SVGBuilder(int width, int height){
+    public SVGBuilder(){
 
         DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
         svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
         doc = impl.createDocument(svgNS, "svg", null);
+        width = SVGCanvas.canvasWidth;
+        height = SVGCanvas.canvasHeight;
+
 
         svgRoot = doc.getDocumentElement();
-        buildHeader(width, height);
+        buildHeader();
 
     }
     
@@ -43,6 +47,10 @@ public class SVGBuilder {
     
     public void removeElement(Element element){
         svgRoot.removeChild(element);
+    }
+
+    public Element createElement(String type){
+        return doc.createElement(type);
     }
 
     public String getSVG(){
@@ -68,7 +76,7 @@ public class SVGBuilder {
         return xmlString;
     }
 
-    public void buildHeader(int width, int height){
+    public void buildHeader(){
         svgRoot.setAttribute("id", "goci-svg");
         svgRoot.setAttribute("width", Integer.toString(width));
         svgRoot.setAttribute("height", Integer.toString(height));

@@ -43,12 +43,22 @@
                 <li><a href="#hometab">Home</a></li>
                 <li><a href="#diagramtab">GWAS Diagram</a></li>
                 <li><a href="#helptab">Help</a></li>
-                <li><a href="#logtab">Log</a></li>
+ <!--               <li><a href="#logtab">Log</a></li> -->
             </ul>
 
             <div id="hometab">
-                <h3>Summary</h3>
-                Some summary text, session info, and stats on loaded data goes here
+                <h3>Background</h3>
+
+                <p>The National Human Genome Research Institute (NHGRI) Catalog of Published Genome-Wide Association Studies or GWAS catalogue provides a quality controlled, manually curated, literature-derived collection of all published GWA studies assaying at least 100000 SNPs and all SNP-trait associations with p-values < 1.0 &lowast; 10<sup>-5</sup> <i>(Hindorff et al., 2009)</i>. Publicly available at <a href="http://www.genome.gov/gwastudies">http://www.genome.gov/gwastudies</a>, the catalogue can be searched by a number of options including journal, first author, trait, chromosomal region, gene, SNP, odds ratio and p-value threshold. As of 06/04/12, it includes 1233 publications and 6186 SNPs. In addition to the SNP-trait association data, the catalogue also publishes the iconic GWAS diagram of all SNP-trait associations mapped to the SNPs&rsquo; chromosomal locations. The diagram is released quarterly and the latest version of the diagram is made available on the GWAS catalogue website in PDF format and as a PowerPoint slide.</p>
+                <p>This page hosts a beta version of a novel system that generates the GWAS diagram dynamically using an ontology and scalable vector graphics (SVG). Ultimately, the diagram produced on this fashion can be filtered and searched at different levels of granularity and by different criteria, including
+                    trait, chromosomal region and time. It is going to be possible to zoom in over chromosomes in order to see all SNP-trait associations for a given region. SNP-trait associations are also going to be interactive, providing summary information on mouse-over as well as being clickable to allow proceeding from an association to the catalogue entry and to the publication.</p>
+
+                <br>
+                <h3>Status update</h3>
+                <p>Filtering capabilities are currently under development and each new feature will be deployed for testing as soon as it is completed. In its current form, the diagram shows 12 studies. As the colour scheme used in the static version of the GWAS diagram is not particularly informative, a new colour scheme based on disease categories is currently under development in collaboration with the catalog curation team at the NHGRI. Until a draft version of this colour scheme is available, colour allocation is temporarily performed randomly. Please select the "Help" tab for a list of currently available features.</p>
+                <br>
+                <p style="font-size:80%">Hindorff, L.A., Sethupathy, P., Junkins, H.A., Ramos, E.M., Mehta, J.P., Collins, F.S. and Manolio, T.A. (2009) Potential Etiologic and Functional Implications of Genome-Wide Association Loci of Human Diseases and Traits. <i>Proc. Natl. Acad. Sci. USA.</i> 106, 9362&ndash;9367.</p>
+                    
             </div>
             <div id="diagramtab">
                 <h3>GWAS Catalog Diagram</h3>
@@ -64,16 +74,22 @@
                 </div>
             </div>
             <div id="helptab">
-                This is really useful help
+                This is a list of features currently (or soon to be) available in the diagram:
+                <ul>
+                    <li><b>Colours:</b> Allocation of colours to traits is temporarily done at random, until a trait-based colour scheme has been designed.</li>
+                    <li><b>Number of studies:</b> In order to minimise ontology reasoning times, the beta version of the diagram only displays a dozen studies.</li>
+                    <li><b>Mouse-over:</b> Current mouse-over events only provide the name of the chromosome and identify the coloured circles as GWAS traits. The name of each trait should be available through mouse-over by 24/04/2012.</li>
+                    <li><b>Filtering options:</b> Filtering capabilities will be rolled out for testing as soon as they are implemented. Basic filtering options should be available by 04/05/2012.</li>
+                </ul>
             </div>
-            <div id="logtab">
-                SVG transform debugging:
-                <div id="scale-debugging" style="display: none;">
-                    Scale | <span id="scale"></span><br/>
-                    Div Drag | x: <span id="xOffset"></span>; y: <span id="yOffset"></span><br/>
-                    SVG Drag | x: <span id="xOffsetSVG"></span>; y: <span id="yOffsetSVG"></span>;
-                </div>
-            </div>
+            <!--<div id="logtab">-->
+                <!--SVG transform debugging:-->
+                <!--<div id="scale-debugging" style="display: none;">-->
+                    <!--Scale | <span id="scale"></span><br/>-->
+                    <!--Div Drag | x: <span id="xOffset"></span>; y: <span id="yOffset"></span><br/>-->
+                    <!--SVG Drag | x: <span id="xOffsetSVG"></span>; y: <span id="yOffsetSVG"></span>;-->
+                <!--</div>-->
+            <!--</div>-->
         </div>
 
         <div id='contentholder' class='contentstyle'>

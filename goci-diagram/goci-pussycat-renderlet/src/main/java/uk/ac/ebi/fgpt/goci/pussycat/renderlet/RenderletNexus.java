@@ -2,7 +2,11 @@ package uk.ac.ebi.fgpt.goci.pussycat.renderlet;
 
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.w3c.dom.Element;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
+
+import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * A RenderletNexus represents the intersection between Renderlets, allowing Renderlets that are dependent on each
@@ -48,4 +52,16 @@ public interface RenderletNexus {
      * @return the SVG in the form of a string
      */
     String getSVG(OWLClassExpression classExpression, OWLReasoner reasoner);
+
+    ArrayList<Object> getAssociations(String band);
+    
+    
+    <O> void setAssociation(String band, O renderedEntity);
+    
+    Set<Renderlet> getRenderlets();
+
+    Element createSVGElement(String g);
+
+    void addSVGElement(Element e);
+
 }

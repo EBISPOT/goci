@@ -1,10 +1,9 @@
-package uk.ac.ebi.fgpt.goci.pussycat.renderlet.trait;
+package uk.ac.ebi.fgpt.goci.pussycat.renderlet;
 
+import net.sourceforge.fluxion.spi.ServiceProvider;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.w3c.dom.Element;
-import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
-import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,7 +13,8 @@ import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
  * To change this template use File | Settings | File Templates.
  */
 
-abstract class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
+@ServiceProvider
+public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
 
     /*
     * TraitRenderlet should retrieve the appropriate RGB colour for the trait being rendered from a hardcoded resource file
@@ -42,7 +42,8 @@ abstract class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override public Element render(RenderletNexus nexus, OWLOntology renderingContext, OWLIndividual renderingEntity) {
+    @Override
+    public Element render(RenderletNexus nexus, OWLOntology renderingContext, OWLIndividual renderingEntity) {
         return null;
     }
 }
