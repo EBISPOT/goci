@@ -10,7 +10,7 @@ import java.util.Collection;
  * name and email
  *
  * @author Tony Burdett
- * @date 26/10/11
+ * Date 26/10/11
  */
 public interface GociUserService {
     /**

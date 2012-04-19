@@ -16,7 +16,7 @@ import uk.ac.ebi.fgpt.goci.service.GWASOWLPublisher;
  * The resulting reasoner is cached in-memory using ehcache to provide caching functionality.
  *
  * @author Tony Burdett
- * @date 05/03/12
+ * Date 05/03/12
  */
 public class DataPublishingCacheableReasonerSession extends Initializable implements ReasonerSession {
     private GWASOWLPublisher publisher;

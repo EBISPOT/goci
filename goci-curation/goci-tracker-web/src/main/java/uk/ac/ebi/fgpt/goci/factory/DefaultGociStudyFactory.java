@@ -10,7 +10,7 @@ import uk.ac.ebi.fgpt.goci.model.UserCreatedGociStudy;
  * TODO: register listeners on creation to track changes to studies
  *
  * @author Tony Burdett
- * @date 26/10/11
+ * Date 26/10/11
  */
 public class DefaultGociStudyFactory implements GociStudyFactory {
     public GociStudy createStudy(String pubMedID, String title, String abstractText) {

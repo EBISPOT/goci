@@ -16,7 +16,7 @@ import java.util.*;
  * ontology, and operates over the raw, unclassified version of the ontology.
  *
  * @author Tony Burdett
- * @date 24/01/12
+ * Date 24/01/12
  */
 public class OntologyDAO extends Initializable {
     // configurable ontology elements with sensible defaults

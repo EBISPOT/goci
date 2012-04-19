@@ -8,7 +8,7 @@ import uk.ac.ebi.fgpt.goci.model.GociUser;
  * A service that allows tracked studies to be curated with a series of updates that can be applied by the user.
  *
  * @author Tony Burdett
- * @date 26/10/11
+ * Date 26/10/11
  */
 public interface GociCurationService {
     /**

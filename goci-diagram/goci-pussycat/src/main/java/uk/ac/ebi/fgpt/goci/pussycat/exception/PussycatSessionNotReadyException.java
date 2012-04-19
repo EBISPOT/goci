@@ -5,7 +5,7 @@ package uk.ac.ebi.fgpt.goci.pussycat.exception;
  * on a session that is not yet ready to be used, due to an initialization delay.
  *
  * @author Tony Burdett
- * @date 09/03/12
+ * Date 09/03/12
  */
 public class PussycatSessionNotReadyException extends Exception {
     public PussycatSessionNotReadyException() {

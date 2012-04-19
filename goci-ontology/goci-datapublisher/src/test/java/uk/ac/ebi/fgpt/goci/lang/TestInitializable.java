@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
  * Javadocs go here.
  *
  * @author Junit Generation Plugin for Maven, written by Tony Burdett
- * @date 26-01-2012
+ * Date 26-01-2012
  */
 public class TestInitializable extends TestCase {
     private SuccessfulInitializable succeedCase;

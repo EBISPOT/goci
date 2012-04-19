@@ -25,7 +25,7 @@ import java.util.Set;
  * uk.ac.ebi.fgpt.goci.dao.StudyDAO} and converts all obtained {@link Study} objects to OWL.
  *
  * @author Tony Burdett
- * @date 26/01/12
+ * Date 26/01/12
  */
 public class DefaultGWASOWLConverter implements GWASOWLConverter {
     private OntologyConfiguration configuration;

@@ -7,7 +7,7 @@ import uk.ac.ebi.fgpt.goci.model.GociUser;
  * An abstract factory that is capable of generating fully formed {@link uk.ac.ebi.fgpt.goci.model.GociStudy} objects.
  *
  * @author Tony Burdett
- * @date 26/10/11
+ * Date 26/10/11
  */
 public interface GociStudyFactory {
     /**

@@ -12,7 +12,7 @@ import java.util.Collection;
  * A service that will convert GWAS model objects into entities in a given ontology
  *
  * @author Tony Burdett
- * @date 24/01/12
+ * Date 24/01/12
  */
 public interface GWASOWLConverter {
     /**

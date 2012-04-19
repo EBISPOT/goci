@@ -14,7 +14,7 @@ import java.util.Collection;
  * in order to retrieve studies from an underlying datasource.
  *
  * @author Tony Burdett
- * @date 27/10/11
+ * Date 27/10/11
  */
 public class DefaultGociStudyService implements GociStudyService {
     private GociStudyDAO studyDAO;

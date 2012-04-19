@@ -15,7 +15,7 @@ import java.util.Collection;
  * A basic implementation of a user DAO that can read and write GOCI users from an underlying JDBC datasource.
  *
  * @author Tony Burdett
- * @date 27/10/11
+ * Date 27/10/11
  */
 public class JDBCGociUserDAO implements GociUserDAO {
     public static final String SEQUENCE_SELECT =

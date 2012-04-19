@@ -20,7 +20,7 @@ import java.util.Map;
  * Javadocs go here!
  *
  * @author Tony Burdett
- * @date 27/10/11
+ * Date 27/10/11
  */
 public class PubMedSearchJob implements Job {
     private GociPubMedDispatcherService dispatcherService;

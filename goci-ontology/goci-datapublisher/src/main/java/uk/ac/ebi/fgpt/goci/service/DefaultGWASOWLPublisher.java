@@ -28,7 +28,7 @@ import java.util.List;
  * Javadocs go here!
  *
  * @author Tony Burdett
- * @date 26/01/12
+ * Date 26/01/12
  */
 public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
     private OntologyConfiguration configuration;

@@ -8,7 +8,7 @@ import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
  * entity rendered, the renderlet that rendered it, and the size and position of the glyph that was rendered
  *
  * @author Tony Burdett
- * @date 27/02/12
+ * Date 27/02/12
  */
 public class RenderingEvent<O> {
     private O renderedEntity;

@@ -18,7 +18,7 @@ import java.io.File;
  * GWAS catalog data into OWL.
  *
  * @author Tony Burdett
- * @date 26/01/12
+ * Date 26/01/12
  */
 public class GOCIDataPublisherDriver {
     private static File assertedOntologyFile;

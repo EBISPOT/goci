@@ -10,7 +10,7 @@ import java.util.Date;
  * series of SNP/Trait associations.
  *
  * @author Tony Burdett
- * @date 24/01/12
+ * Date 24/01/12
  */
 public interface Study {
     /**

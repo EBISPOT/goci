@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
  * Javadocs go here.
  *
  * @author Junit Generation Plugin for Maven, written by Tony Burdett
- * @date 26-01-2012
+ * Date 26-01-2012
  */
 public class TestStudyDAO extends TestCase {
     private Study study;

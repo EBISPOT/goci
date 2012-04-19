@@ -9,7 +9,7 @@ import java.util.Map;
  * A service that periodically dispatches queries to PubMed and enters the resulting studies into the tracking system.
  *
  * @author Tony Burdett
- * @date 26/10/11
+ * Date 26/10/11
  */
 public interface GociPubMedDispatcherService {
     /**

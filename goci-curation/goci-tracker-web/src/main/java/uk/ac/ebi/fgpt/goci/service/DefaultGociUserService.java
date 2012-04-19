@@ -19,7 +19,7 @@ import java.util.Collection;
  * order to retrieve users from an underlying datasource.
  *
  * @author Tony Burdett
- * @date 27/10/11
+ * Date 27/10/11
  */
 public class DefaultGociUserService implements GociUserService {
 

@@ -4,7 +4,7 @@ package uk.ac.ebi.fgpt.goci.exception;
  * Javadocs go here!
  *
  * @author Tony Burdett
- * @date 12/12/11
+ * Date 12/12/11
  */
 public class UserCreationException extends Exception {
     public UserCreationException() {

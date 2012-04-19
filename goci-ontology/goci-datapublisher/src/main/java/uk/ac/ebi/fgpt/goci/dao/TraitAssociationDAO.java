@@ -22,7 +22,7 @@ import java.util.*;
  * database
  *
  * @author Tony Burdett
- * @date 24/01/12
+ * Date 24/01/12
  */
 public class TraitAssociationDAO extends Initializable {
     private static final String TRAIT_SELECT =

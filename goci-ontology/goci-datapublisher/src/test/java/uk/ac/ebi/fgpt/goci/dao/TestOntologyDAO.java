@@ -15,7 +15,7 @@ import java.util.Set;
  * Javadocs go here.
  *
  * @author Junit Generation Plugin for Maven, written by Tony Burdett
- * @date 26-01-2012
+ * Date 26-01-2012
  */
 public class TestOntologyDAO extends TestCase {
     public String testClassURI = "http://www.ebi.ac.uk/fgpt/ontologies/test/TEST_00001";

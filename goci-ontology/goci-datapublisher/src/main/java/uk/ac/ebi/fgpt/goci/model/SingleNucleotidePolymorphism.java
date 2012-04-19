@@ -8,7 +8,7 @@ import uk.ac.ebi.fgpt.goci.lang.UniqueID;
  * in which the SNP is located, and the absolute position (in base pairs) of the SNP in the genome.
  *
  * @author Tony Burdett
- * @date 24/01/12
+ * Date 24/01/12
  */
 public interface SingleNucleotidePolymorphism {
     /**

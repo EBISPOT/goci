@@ -4,7 +4,7 @@ package uk.ac.ebi.fgpt.goci.model;
  * Javadocs go here!
  *
  * @author Tony Burdett
- * @date 28/10/11
+ * Date 28/10/11
  */
 public class GuestUser implements GociUser {
     private final String email;

@@ -11,7 +11,7 @@ import java.util.Set;
  * the GOCI tracking web application.
  *
  * @author Tony Burdett
- * @date 12/12/11
+ * Date 12/12/11
  */
 public class GOCITrackerDriver {
     public static void main(String[] args) {

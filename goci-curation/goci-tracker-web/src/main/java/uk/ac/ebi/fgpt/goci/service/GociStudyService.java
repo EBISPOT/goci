@@ -9,7 +9,7 @@ import java.util.Collection;
  * A service that provides various methods for accessing the set of studies that are currently tracked.
  *
  * @author Tony Burdett
- * @date 26/10/11
+ * Date 26/10/11
  */
 public interface GociStudyService {
     /**

@@ -6,7 +6,7 @@ package uk.ac.ebi.fgpt.goci.pussycat.session;
  * a new serverside PussycatSession should always be created.
  *
  * @author Tony Burdett
- * @date 02/03/12
+ * Date 02/03/12
  */
 public enum PussycatSessionStrategy {
     JOIN,

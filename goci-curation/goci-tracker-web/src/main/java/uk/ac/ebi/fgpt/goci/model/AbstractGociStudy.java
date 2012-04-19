@@ -10,7 +10,7 @@ import java.util.Set;
  * An abstract class that provides methods for listening to and updating GociStudies.
  *
  * @author Tony Burdett
- * @date 01/11/11
+ * Date 01/11/11
  */
 public abstract class AbstractGociStudy implements GociStudy {
     private Set<GociStudyListener> listeners = new HashSet<GociStudyListener>();

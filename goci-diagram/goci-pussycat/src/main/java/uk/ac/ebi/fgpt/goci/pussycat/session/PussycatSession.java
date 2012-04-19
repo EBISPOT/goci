@@ -16,7 +16,7 @@ import java.util.Set;
  * user(s).  One Pussycat session may be shared across multiple user http sessions.
  *
  * @author Tony Burdett
- * @date 27/02/12
+ * Date 27/02/12
  */
 public interface PussycatSession {
     /**

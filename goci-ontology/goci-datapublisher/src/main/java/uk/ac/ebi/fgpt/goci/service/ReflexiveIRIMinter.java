@@ -15,7 +15,7 @@ import java.net.URLEncoder;
  * ID, which is then used to mint a new IRI for that object
  *
  * @author Tony Burdett
- * @date 26/01/12
+ * Date 26/01/12
  */
 public class ReflexiveIRIMinter implements IRIMinter<Object> {
     private Logger log = LoggerFactory.getLogger(getClass());

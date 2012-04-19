@@ -16,7 +16,7 @@ import java.util.*;
  * A data access object capable of retrieving {@link uk.ac.ebi.fgpt.goci.model.Study} objects from the GWAS database
  *
  * @author Tony Burdett
- * @date 24/01/12
+ * Date 24/01/12
  */
 public class StudyDAO extends Initializable {
     private static final String STUDY_SELECT =

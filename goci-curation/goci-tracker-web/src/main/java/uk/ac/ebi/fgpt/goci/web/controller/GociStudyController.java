@@ -22,7 +22,7 @@ import java.util.Collection;
  * Otherwise, it functions basically as a means to delegate calls to underlying service implementations.
  *
  * @author Tony Burdett
- * @date 26/10/11
+ * Date 26/10/11
  */
 @Controller
 @RequestMapping("/studies")

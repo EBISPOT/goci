@@ -8,7 +8,7 @@ import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
  * A cacheable reasoner session that can be used to load reasoners for the GWAS ontology given a GWASOWLPublisher.
  *
  * @author Tony Burdett
- * @date 05/03/12
+ * Date 05/03/12
  */
 public interface ReasonerSession {
     /**

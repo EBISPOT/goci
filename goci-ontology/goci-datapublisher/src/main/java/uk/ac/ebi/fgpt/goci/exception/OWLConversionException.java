@@ -4,7 +4,7 @@ package uk.ac.ebi.fgpt.goci.exception;
  * An exception thrown whenever converting model objects into OWL fails.
  *
  * @author Tony Burdett
- * @date 24/01/12
+ * Date 24/01/12
  */
 public class OWLConversionException extends Exception {
     public OWLConversionException() {

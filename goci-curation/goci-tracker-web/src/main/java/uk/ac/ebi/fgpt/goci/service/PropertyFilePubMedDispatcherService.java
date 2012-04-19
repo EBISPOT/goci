@@ -41,7 +41,7 @@ import java.util.*;
  * not need to call startDispatcher().
  *
  * @author Tony Burdett
- * @date 26/10/11
+ * Date 26/10/11
  */
 public class PropertyFilePubMedDispatcherService implements GociPubMedDispatcherService {
     public static final int PUBMED_MAXRECORDS = 100;

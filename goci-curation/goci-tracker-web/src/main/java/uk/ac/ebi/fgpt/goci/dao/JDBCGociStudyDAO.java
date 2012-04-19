@@ -22,7 +22,7 @@ import java.util.Map;
  * template.
  *
  * @author Tony Burdett
- * @date 27/10/11
+ * Date 27/10/11
  */
 public class JDBCGociStudyDAO implements GociStudyDAO {
     public static final String SEQUENCE_SELECT =

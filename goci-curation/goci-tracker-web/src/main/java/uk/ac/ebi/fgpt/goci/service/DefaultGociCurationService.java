@@ -18,7 +18,7 @@ import java.net.UnknownHostException;
  * database)
  *
  * @author Tony Burdett
- * @date 26/10/11
+ * Date 26/10/11
  */
 public class DefaultGociCurationService implements GociCurationService {
     private GociStudyService studyService;

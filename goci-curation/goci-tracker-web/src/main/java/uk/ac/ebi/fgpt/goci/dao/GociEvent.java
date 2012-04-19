@@ -6,7 +6,7 @@ import uk.ac.ebi.fgpt.goci.model.GociStudy;
  * An event that encapsulates a change that may occur to a GociStudy
  *
  * @author Tony Burdett
- * @date 01/11/11
+ * Date 01/11/11
  */
 public class GociEvent {
     private GociStudy study;

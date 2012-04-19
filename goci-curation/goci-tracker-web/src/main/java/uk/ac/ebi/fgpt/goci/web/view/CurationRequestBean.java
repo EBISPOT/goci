@@ -4,7 +4,7 @@ package uk.ac.ebi.fgpt.goci.web.view;
  * A simple bean that encapsulates the data sent in a request to curate a study
  *
  * @author Tony Burdett
- * @date 26/10/11
+ * Date 26/10/11
  */
 public class CurationRequestBean {
     private String updatedState;

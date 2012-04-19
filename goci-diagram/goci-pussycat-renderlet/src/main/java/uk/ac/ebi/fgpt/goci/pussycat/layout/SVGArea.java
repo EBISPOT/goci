@@ -6,7 +6,7 @@ package uk.ac.ebi.fgpt.goci.pussycat.layout;
  * or background).
  *
  * @author Tony Burdett
- * @date 27/02/12
+ * Date 27/02/12
  */
 public class SVGArea {
     private double x, y;

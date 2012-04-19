@@ -6,7 +6,7 @@ import java.lang.annotation.*;
  * An annotation that can be used on model objects to flag getter methods that uniquely identify that object
  *
  * @author Tony Burdett
- * @date 26/01/12
+ * Date 26/01/12
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

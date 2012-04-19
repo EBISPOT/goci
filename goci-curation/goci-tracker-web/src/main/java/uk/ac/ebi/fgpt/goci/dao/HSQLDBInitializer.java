@@ -12,7 +12,7 @@ import java.sql.SQLException;
  * A specialization of the basic JDBC study DAO that controls creation, startup and shutdown of a HSQL DB instance.
  *
  * @author Tony Burdett
- * @date 27/10/11
+ * Date 27/10/11
  */
 public class HSQLDBInitializer {
     // select ID, PUBMED_ID, TITLE, ABSTRACT, USER_ID, STATE, GWAS_ELIGIBILITY from STUDY

@@ -23,7 +23,7 @@ import java.net.URI;
  * The resulting reasoner is cached in-memory using ehcache to provide caching functionality.
  *
  * @author Tony Burdett
- * @date 13/04/12
+ * Date 13/04/12
  */
 public class OntologyLoadingCacheableReasonerSession extends Initializable implements ReasonerSession {
     private OntologyConfiguration configuration;

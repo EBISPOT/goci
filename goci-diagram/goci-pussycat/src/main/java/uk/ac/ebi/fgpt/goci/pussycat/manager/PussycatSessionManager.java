@@ -10,7 +10,7 @@ import java.util.Collection;
  * Using this manager, it is possible to share a single PussycatSession across many user sessions.
  *
  * @author Tony Burdett
- * @date 01/03/12
+ * Date 01/03/12
  */
 public interface PussycatSessionManager {
     /**

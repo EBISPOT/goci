@@ -6,7 +6,7 @@ import org.semanticweb.owlapi.model.IRI;
  * Mints an IRI for a type of object given a base IRI and an object
  *
  * @author Tony Burdett
- * @date 26/01/12
+ * Date 26/01/12
  */
 public interface IRIMinter<T> {
     /**

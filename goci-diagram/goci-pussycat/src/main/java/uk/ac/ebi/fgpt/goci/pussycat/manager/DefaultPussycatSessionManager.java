@@ -12,7 +12,7 @@ import java.util.*;
  * sessions in an internal memory-based map.
  *
  * @author Tony Burdett
- * @date 01/03/12
+ * Date 01/03/12
  */
 public class DefaultPussycatSessionManager implements PussycatSessionManager {
     private Set<PussycatSession> pussycatSessions;

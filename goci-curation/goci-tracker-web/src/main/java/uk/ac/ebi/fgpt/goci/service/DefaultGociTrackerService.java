@@ -7,7 +7,7 @@ import uk.ac.ebi.fgpt.goci.model.GociStudy;
  * A default tracker service that uses a study dao to enter new studies into the underlying datasource
  *
  * @author Tony Burdett
- * @date 27/10/11
+ * Date 27/10/11
  */
 public class DefaultGociTrackerService implements GociTrackerService {
     private GociStudyDAO studyDAO;

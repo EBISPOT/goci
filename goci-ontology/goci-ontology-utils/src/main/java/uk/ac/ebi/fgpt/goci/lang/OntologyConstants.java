@@ -4,7 +4,7 @@ package uk.ac.ebi.fgpt.goci.lang;
  * Some constants for IRIs from the ontology
  *
  * @author Tony Burdett
- * @date 26/01/12
+ * Date 26/01/12
  */
 public class OntologyConstants {
     // Ontology IRIs

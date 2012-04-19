@@ -11,7 +11,7 @@ import java.io.File;
  * catalog database and converting relevant concepts into OWL entities which are then written to an ontology.
  *
  * @author Tony Burdett
- * @date 24/01/12
+ * Date 24/01/12
  */
 public interface GWASOWLPublisher {
     /**

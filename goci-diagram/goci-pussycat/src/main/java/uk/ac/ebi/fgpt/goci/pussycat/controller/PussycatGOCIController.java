@@ -27,7 +27,7 @@ import java.util.*;
  * the SVG canvas Pussycat will display.
  *
  * @author Tony Burdett
- * @date 27/02/12
+ * Date 27/02/12
  */
 @Controller
 @RequestMapping("/views")

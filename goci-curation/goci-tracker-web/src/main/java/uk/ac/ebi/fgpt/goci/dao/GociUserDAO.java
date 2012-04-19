@@ -8,7 +8,7 @@ import java.util.Collection;
  * A DAO interface for accessing Users from some underlying Datasource
  *
  * @author Tony Burdett
- * @date 27/10/11
+ * Date 27/10/11
  */
 public interface GociUserDAO {
     /**

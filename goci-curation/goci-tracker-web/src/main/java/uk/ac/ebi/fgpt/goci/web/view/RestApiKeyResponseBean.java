@@ -8,7 +8,7 @@ import uk.ac.ebi.fgpt.goci.model.GociUser;
  * for, and the number of REST API keys this user now holds.
  *
  * @author Tony Burdett
- * @date 01-Nov-2010
+ * Date 01-Nov-2010
  */
 public class RestApiKeyResponseBean {
     private GociUser gociUser;

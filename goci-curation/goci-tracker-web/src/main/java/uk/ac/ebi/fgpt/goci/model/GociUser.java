@@ -10,7 +10,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
  * permission level of at least {@link Permissions#CURATOR}.
  *
  * @author Tony Burdett
- * @date 26/10/11
+ * Date 26/10/11
  */
 @JsonSerialize(typing = JsonSerialize.Typing.STATIC)
 public interface GociUser {

@@ -4,7 +4,7 @@ package uk.ac.ebi.fgpt.goci.web.view;
  * A bean that encapsulates the information required to sign up a new user to the GOCI tracking system.
  *
  * @author Tony Burdett
- * @date 12/12/11
+ * Date 12/12/11
  */
 public class UserRequestBean {
     private String firstName;

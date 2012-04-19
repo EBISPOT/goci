@@ -4,7 +4,7 @@ package uk.ac.ebi.fgpt.goci.exception;
  * Javadocs go here!
  *
  * @author Tony Burdett
- * @date 25/01/12
+ * Date 25/01/12
  */
 public class MissingOntologyTermException extends OntologyTermException {
     public MissingOntologyTermException() {

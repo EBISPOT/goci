@@ -11,7 +11,7 @@ import java.sql.SQLException;
  * Javadocs go here!
  *
  * @author Tony Burdett
- * @date 27/10/11
+ * Date 27/10/11
  */
 public class HsqlEmbeddedWithoutDropTest extends TestCase {
     public void setUp() {

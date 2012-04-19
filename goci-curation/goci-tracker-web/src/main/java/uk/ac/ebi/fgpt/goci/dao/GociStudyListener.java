@@ -6,7 +6,7 @@ import java.util.EventListener;
  * A listener interface that can react to changes in GociStudies.
  *
  * @author Tony Burdett
- * @date 01/11/11
+ * Date 01/11/11
  */
 public interface GociStudyListener extends EventListener {
     /**

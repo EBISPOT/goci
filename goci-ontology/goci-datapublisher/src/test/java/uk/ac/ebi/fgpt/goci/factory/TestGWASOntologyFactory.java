@@ -10,7 +10,7 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
  * Javadocs go here.
  *
  * @author Junit Generation Plugin for Maven, written by Tony Burdett
- * @date 26-01-2012
+ * Date 26-01-2012
  */
 public class TestGWASOntologyFactory extends TestCase {
     private GWASOntologyFactory factory;

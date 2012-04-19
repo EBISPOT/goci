@@ -4,7 +4,7 @@ package uk.ac.ebi.fgpt.goci.model;
  * A basic implementation of a {@link GociUser}.
  *
  * @author Tony Burdett
- * @date 26/10/11
+ * Date 26/10/11
  */
 public class SimpleGociUser implements GociUser {
     private String id;

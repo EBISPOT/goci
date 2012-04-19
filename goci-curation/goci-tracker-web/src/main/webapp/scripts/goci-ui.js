@@ -5,7 +5,7 @@
  * Note that this requires jQuery to be present for UI effects and ajax functionality
  *
  * @author Tony Burdett
- * @date 27th September 2010
+ * Date 27th September 2010
  */
 
 // cached global variables to minimise ajax requests

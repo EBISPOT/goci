@@ -8,7 +8,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
  * been curated, and can have a flag set to indicate whether it is eligible or not eligible for the GWAS catalog.
  *
  * @author Tony Burdett
- * @date 26/10/11
+ * Date 26/10/11
  */
 @JsonSerialize(typing = JsonSerialize.Typing.STATIC)
 public interface GociStudy {

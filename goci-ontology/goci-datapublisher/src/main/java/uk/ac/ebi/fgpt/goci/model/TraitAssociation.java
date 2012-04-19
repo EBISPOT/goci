@@ -9,7 +9,7 @@ import org.semanticweb.owlapi.model.OWLClass;
  * href="http://www.ebi.ac.uk/efo>EFO</a>
  *
  * @author Tony Burdett
- * @date 24/01/12
+ * Date 24/01/12
  */
 public interface TraitAssociation {
     /**

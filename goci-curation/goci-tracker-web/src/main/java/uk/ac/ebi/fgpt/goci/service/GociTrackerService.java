@@ -6,7 +6,7 @@ import uk.ac.ebi.fgpt.goci.model.GociStudy;
  * A service for tracking all studies entered into the GOCI Tracking system.
  *
  * @author Tony Burdett
- * @date 26/10/11
+ * Date 26/10/11
  */
 public interface GociTrackerService {
     /**

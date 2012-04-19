@@ -14,7 +14,7 @@ import java.util.Collection;
  * from the GWAS database
  *
  * @author Tony Burdett
- * @date 24/01/12
+ * Date 24/01/12
  */
 public class SingleNucleotidePolymorphismDAO {
     private static final String SNP_SELECT =

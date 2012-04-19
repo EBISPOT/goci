@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
  * Javadocs go here.
  *
  * @author Junit Generation Plugin for Maven, written by Tony Burdett
- * @date 13-02-2012
+ * Date 13-02-2012
  */
 public class TestDefaultGWASOWLPublisher extends TestCase {
     private DefaultGWASOWLPublisher publisher;

@@ -6,7 +6,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
  * An abstract factory interface used to define the logic for loading the GWAS ontology into
  *
  * @author Tony Burdett
- * @date 24/01/12
+ * Date 24/01/12
  */
 public interface GWASOntologyFactory {
     /**

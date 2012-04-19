@@ -7,7 +7,7 @@ import uk.ac.ebi.fgpt.goci.dao.GociEvent;
  * A basic implementation of a {@link GociStudy}
  *
  * @author Tony Burdett
- * @date 26/10/11
+ * Date 26/10/11
  */
 public class UserCreatedGociStudy extends AbstractGociStudy {
     private String id;

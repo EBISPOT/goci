@@ -16,7 +16,7 @@ import java.io.IOException;
  * manager based on mapping ontology IRIs to physical locations in order to be used across several classes.
  *
  * @author Tony Burdett
- * @date 15/02/12
+ * Date 15/02/12
  */
 public class OntologyConfiguration {
     private Resource efoResource;

@@ -8,7 +8,7 @@ import uk.ac.ebi.fgpt.goci.dao.GociEvent;
  * all fields to enable a DAO to set these values.
  *
  * @author Tony Burdett
- * @date 27/10/11
+ * Date 27/10/11
  */
 public class DatabaseRecoveredGociStudy extends AbstractGociStudy {
     private String id;

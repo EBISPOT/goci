@@ -22,7 +22,7 @@ import java.util.Set;
  * Javadocs go here!
  *
  * @author Tony Burdett
- * @date 01/03/12
+ * Date 01/03/12
  */
 public class GOCIDataPublisherPussycatSession implements PussycatSession {
     private String sessionID;

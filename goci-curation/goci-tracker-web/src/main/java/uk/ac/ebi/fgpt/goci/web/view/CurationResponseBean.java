@@ -4,7 +4,7 @@ package uk.ac.ebi.fgpt.goci.web.view;
  * A simple bean indicating whether a submission request was successful, and if so returns the created task.
  *
  * @author Tony Burdett
- * @date 26/10/11
+ * Date 26/10/11
  */
 public class CurationResponseBean {
     private final boolean operationSuccessful;
