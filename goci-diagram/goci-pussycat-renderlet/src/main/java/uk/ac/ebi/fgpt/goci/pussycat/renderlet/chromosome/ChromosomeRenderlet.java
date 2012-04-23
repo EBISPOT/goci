@@ -71,7 +71,7 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLC
          return renderable;
     }
 
-    public Element render(RenderletNexus nexus, OWLOntology renderingContext, OWLClass owlEntity) {
+    public void render(RenderletNexus nexus, OWLOntology renderingContext, OWLClass owlEntity) {
 
         String parser = XMLResourceDescriptor.getXMLParserClassName();
         SAXSVGDocumentFactory f = new SAXSVGDocumentFactory(parser);
@@ -131,7 +131,7 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLC
                     // todo - work out how to do this! --> consider adding new method to each chromRenderlet along the lines of getChromToLeft and hardcode
                     // id of previous chrom into it, then query by chromID
                     //nexus.getLocationOfRenderedEntity(chromosomeToTheLeft);
-
+                    nexus.addSVGElement(g);
                     RenderingEvent event = new RenderingEvent(owlEntity, g, currentArea, this);
                     nexus.renderingEventOccurred(event);
                 }
@@ -139,8 +139,6 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLC
                 ex.printStackTrace();
             }
         }
-
-        return g;
     }
 
     public Map<String, SVGArea> getBands(){

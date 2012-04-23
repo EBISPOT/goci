@@ -3,7 +3,6 @@ package uk.ac.ebi.fgpt.goci.pussycat.renderlet;
 import net.sourceforge.fluxion.spi.ServiceProvider;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.w3c.dom.Element;
 
 /**
  * Created by IntelliJ IDEA.
@@ -43,7 +42,60 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
     }
 
     @Override
-    public Element render(RenderletNexus nexus, OWLOntology renderingContext, OWLIndividual renderingEntity) {
-        return null;
-    }
+    public void render(RenderletNexus nexus, OWLOntology renderingContext, OWLIndividual renderingEntity) {
+
+ /*       //get all the is_about individuals of this trait-assocation
+         OWLDataFactory dataFactory = OWLManager.createOWLOntologyManager().getOWLDataFactory();
+
+        OWLObjectProperty is_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
+        OWLNamedIndividual[] related = individual.getObjectPropertyValues(is_about,ontology).toArray(new OWLNamedIndividual[0]);
+        OWLClassExpression[] allTraits = null;
+
+        System.out.println("No of is-about axioms: " + related.length);
+
+        for(int k = 0; k < related.length; k++){
+            OWLClassExpression[] allTypes = related[k].getTypes(ontology).toArray(new OWLClassExpression[0]);
+
+
+//find the individual that is of type "experimental factor"
+            for(int i = 0; i < allTypes.length; i++){
+                OWLClass typeClass = allTypes[i].asOWLClass();
+
+                if(typeClass.getIRI().equals(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI))){
+                    System.out.println("Found the trait   " + allTypes.length);
+                    allTraits = allTypes;
+                }
+            }
+        }
+
+        OWLClass leaf = null;
+
+        if(allTraits.length > 0){
+            leaf = allTraits[0].asOWLClass();
+            int largest = leaf.getSuperClasses(ontology).size();
+            System.out.println(largest);
+            for(int j = 1; j < allTraits.length; j++){
+                OWLClass current = allTraits[j].asOWLClass();
+                int parents = current.getSuperClasses(ontology).size();
+
+                if(parents > largest){
+                    System.out.println(parents + "\t" + largest);
+                    largest = parents;
+                    leaf = current;
+                    System.out.println(largest);
+                }
+            }
+        }
+
+        OWLAnnotationProperty label = dataFactory.getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
+
+        for (OWLAnnotation annotation : leaf.getAnnotations(ontology, label)) {
+            if (annotation.getValue() instanceof OWLLiteral) {
+                OWLLiteral val = (OWLLiteral) annotation.getValue();
+                name = val.getLiteral();
+                System.out.println(name);
+            }
+        }            */
+
+     }
 }

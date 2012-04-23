@@ -64,4 +64,6 @@ public interface RenderletNexus {
 
     void addSVGElement(Element e);
 
+    OWLReasoner getReasoner();
+
 }

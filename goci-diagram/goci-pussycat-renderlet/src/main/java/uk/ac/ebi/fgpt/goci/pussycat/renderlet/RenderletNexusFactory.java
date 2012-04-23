@@ -36,6 +36,7 @@ public class RenderletNexusFactory {
         private Map<String, ArrayList<Object>> renderedAssociations;
         private List<RenderingEvent> renderedEntities;
         private SVGBuilder svgBuilder;
+        private OWLReasoner reasoner;
 
         private DefaultRenderletNexus() {
             this.renderlets = new HashSet<Renderlet>();
@@ -85,7 +86,12 @@ public class RenderletNexusFactory {
         public void addSVGElement(Element element){
             svgBuilder.addElement(element);
         }
-        
+
+        @Override
+        public OWLReasoner getReasoner() {
+            return reasoner;
+        }
+
         public Element createSVGElement(String type){
             return svgBuilder.createElement(type);
         }
@@ -93,6 +99,7 @@ public class RenderletNexusFactory {
         @Override
         public String getSVG(OWLClassExpression classExpression, OWLReasoner reasoner) {
 //check if the chromosomes have already been rendered, otherwise render them
+            this.reasoner = reasoner;
             System.out.println(renderlets.size());
             boolean check = false;
             int i = 0;
@@ -119,6 +126,8 @@ public class RenderletNexusFactory {
             getLog().debug("There are " + individuals.size() + " owl individuals that satisfy the expression " +
                     classExpression);
 
+            int counter = 0;
+
             for (OWLNamedIndividual individual : individuals) {
 
                 boolean isAssociation = checkType(individual,ontology,IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));
@@ -128,11 +137,11 @@ public class RenderletNexusFactory {
                     for (Renderlet r : renderlets) {
                         if (r.canRender(this, ontology, individual)) {
                             getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
-                            svgBuilder.addElement(r.render(this, ontology, individual));
+                            r.render(this, ontology, individual);
                         }
                     }
                 }
-              }
+            }
 
             return svgBuilder.getSVG();
 
@@ -150,7 +159,7 @@ public class RenderletNexusFactory {
                     for(OWLClass chrom : allChroms){
                         if (r.canRender(this, ontology, chrom)) {
                             getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
-                            svgBuilder.addElement(r.render(this, ontology, chrom));
+                            r.render(this, ontology, chrom);
                         }
                     }
                 }
