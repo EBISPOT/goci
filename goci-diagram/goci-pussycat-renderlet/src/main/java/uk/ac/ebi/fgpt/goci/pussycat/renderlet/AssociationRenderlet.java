@@ -12,7 +12,7 @@ import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGCanvas;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.chromosome.ChromosomeRenderlet;
 
-import java.util.Random;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,7 +26,6 @@ import java.util.Random;
 @ServiceProvider
 public class AssociationRenderlet implements Renderlet<OWLOntology, OWLNamedIndividual> {
 
-    private String bandName;
 
     private Logger log = LoggerFactory.getLogger(getClass());
     protected Logger getLog() {
@@ -55,27 +54,32 @@ public class AssociationRenderlet implements Renderlet<OWLOntology, OWLNamedIndi
 
         boolean renderable = false;
         if (renderingContext instanceof OWLOntology){
-            OWLOntology ontology = (OWLOntology)renderingContext;
-
             if (owlEntity instanceof OWLNamedIndividual){
-                OWLNamedIndividual individual = (OWLNamedIndividual)owlEntity;
+                OWLOntology ontology = (OWLOntology)renderingContext;
 
-                if(nexus.getLocationOfRenderedEntity(individual)==null){
-                    getSNPLocation(individual, ontology);
+                if (owlEntity instanceof OWLNamedIndividual){
+                    OWLNamedIndividual individual = (OWLNamedIndividual)owlEntity;
 
-//there is no other association in this chromosmal band yet - render
-                    if(nexus.getAssociations(bandName) == null){
-                        renderable = true;
+                    if(nexus.getLocationOfRenderedEntity(individual)==null){
+                        OWLClassExpression[] allTypes = individual.getTypes(ontology).toArray(new OWLClassExpression[0]);
+
+                        for(int i = 0; i < allTypes.length; i++){
+                            OWLClass typeClass = allTypes[i].asOWLClass();
+
+                            if(typeClass.getIRI().equals(IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI))){
+                                renderable = true;
+                                break;
+                            }
+                        }
                     }
-                    /*
-//there is already another association in this band - can't render the association but need to render the trait as well as add to various nexus lists
-else{
-
-}
-}
-else{
-//means this has already been rendered, e.g. if this is a second query - does this case need to be dealt with?*/
                 }
+
+                    /*
+
+else{
+//means this has already been rendered, e.g. if this is a second query - does this case need to be dealt with?
+}*/
+
             }
         }
 
@@ -85,11 +89,14 @@ else{
 
     @Override
     public void render(RenderletNexus nexus, OWLOntology renderingContext, OWLNamedIndividual renderingEntity) {
+        String bandName = getSNPLocation(renderingEntity, renderingContext);
+        Element g;
+//there is no other association in this chromosmal band yet - render
 
         if(nexus.getAssociations(bandName) == null){
-
+            System.out.println("Rendering " + renderingEntity);
+            g = nexus.createSVGElement("g");
             String chromosome;
-            Element g = nexus.createSVGElement("g");
 
             if(bandName.contains("p")){
                 chromosome = bandName.split("p")[0];
@@ -103,13 +110,12 @@ else{
                     String comp = r.getName().split(" ")[1];
 
                     if(comp.equals(chromosome)){
-
                         g.setAttribute("id",renderingEntity.getIRI().toString());
                         g.setAttribute("transform", chromosomeTransform(chromosome));
 
                         SVGArea band = ((ChromosomeRenderlet) r).getBands().get(bandName);
     //print statement to keep track of which band is being processed as I've had trouble with some bands
-     //          System.out.println(bandName);
+               System.out.println(bandName);
 
                         if(band != null){
 
@@ -140,105 +146,67 @@ else{
                             RenderingEvent event = new RenderingEvent(renderingEntity, g, currentArea, this);
                             nexus.renderingEventOccurred(event);
                             nexus.setAssociation(bandName, renderingEntity);
-
-
-
-    //THIS PART IS ONLY TEMPORARY - CREATE A MORE ELEGANT SOLUTION SOON!
-
-                            Element trait = nexus.createSVGElement("circle");
-
-                            double radius = 0.4*width;
-                            double cx = x+length+radius;
-                            double cy = newY;
-                            trait.setAttribute("cx", Double.toString(cx));
-                            trait.setAttribute("cy", Double.toString(cy));
-                            trait.setAttribute("r", Double.toString(radius));
-                  //          trait.setAttribute("style", "fill:blue;stroke:#211c1d;stroke-width:0.8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none");
-
-
-                            Random generator = new Random();
-                            int index = generator.nextInt(5);
-
-                            String colour = getColour(index);
-
-                            trait.setAttribute("fill",colour);
-                            trait.setAttribute("stroke","black");
-                            trait.setAttribute("stroke-width", "0.5");
-
-                            String name = getTrait(renderingEntity,renderingContext, nexus);
-                            trait.setAttribute("id",name);
-                            trait.setAttribute("title",name);
-                            g.appendChild(trait);
-
                             nexus.addSVGElement(g);
-
                             break;
+
                         }
                         else{
-                            log.debug(bandName + " is not a known cytogenetic band");
+                            log.error(bandName + " is not a known cytogenetic band");
                         }
                     }
                 }
             }
         }
+
+//there is already another association in this band - can't render the association but need to render the trait as well as add to various nexus lists
+        else{
+            System.out.println("Dealing with " + renderingEntity);
+//get the SVG for the first assocation rendered for this band and reuse it for this association, but without adding it to the SVG file
+            OWLNamedIndividual previousEntity = (OWLNamedIndividual)nexus.getAssociations(bandName).get(0);
+            g = nexus.getRenderingEvent(previousEntity).getRenderedSVG();
+            g.setAttribute("id",renderingEntity.getIRI().toString());
+            RenderingEvent event = new RenderingEvent(renderingEntity, g, nexus.getLocationOfRenderedEntity(previousEntity),this);
+            nexus.renderingEventOccurred(event);
+            nexus.setAssociation(bandName,renderingEntity);
+        }
+
+        OWLNamedIndividual trait = getTrait(renderingEntity, renderingContext, nexus);
+
+        for (Renderlet r : nexus.getRenderlets()){
+            if (r.canRender(nexus, renderingContext, trait)) {
+                System.out.println("Rendering trait " + trait);
+                getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
+                r.render(nexus, renderingContext, trait);
+            }
+
+        }
     }
 
 
-    public String getTrait(OWLNamedIndividual individual, OWLOntology ontology, RenderletNexus nexus){
+    public OWLNamedIndividual getTrait(OWLNamedIndividual individual, OWLOntology ontology, RenderletNexus nexus){
         OWLReasoner reasoner = nexus.getReasoner();
         OWLNamedIndividual trait = null;
         String name = "GWAS trait";
 
-        /*OWLDataFactory dataFactory = new OntologyConfiguration().getOWLDataFactory();
-        OWLObjectProperty is_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
-        OWLNamedIndividual[] related = individual.getObjectPropertyValues(is_about,ontology).toArray(new OWLNamedIndividual[0]);
+        OWLDataFactory dataFactory = OWLManager.createOWLOntologyManager().getOWLDataFactory();
 
+        OWLObjectProperty is_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
+        OWLIndividual[] related = individual.getObjectPropertyValues(is_about,ontology).toArray(new OWLIndividual[0]);
         OWLClass ef = dataFactory.getOWLClass(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI));
 
         Set<OWLNamedIndividual> allEFs = reasoner.getInstances(ef,false).getFlattened();
-        
+
         for(int i = 0; i < related.length; i++){
             if(allEFs.contains(related[i])){
-                trait = related[i];
+                trait = (OWLNamedIndividual)related[i];
             }
         }
 
-        Set<OWLClass> allTraits = reasoner.getTypes(trait,false).getFlattened();
-        OWLClass leaf = null;
-        int largest = 0;
-
-        for(OWLClass current : allTraits){
-            int parents = reasoner.getSuperClasses(current, false).getFlattened().size();
-
-            if(parents > largest){
-                largest = parents;
-                leaf = current;
-            }
-        }
-
-        OWLAnnotationProperty label = dataFactory.getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
-        System.out.println(leaf);
-
-        for(OWLAxiom axiom: ontology.getReferencingAxioms(leaf)){
-            System.out.println(axiom);
-        }
-
-        for (OWLAnnotation annotation : dataFactory.getOWLClass(leaf.getIRI()).getAnnotations(ontology, label)) {
-            System.out.println("Magic! I made it this far...");
-            if (annotation.getValue() instanceof OWLLiteral) {
-                System.out.println("... but apparently annotation isn't an OWLLiteral");
-                OWLLiteral val = (OWLLiteral) annotation.getValue();
-                name = val.getLiteral();
-                System.out.println(name);
-            }
-        }
-                       */
-
-        return name;
+        return trait;
     }
 
-    public void getSNPLocation(OWLNamedIndividual individual, OWLOntology ontology){
-        bandName = null;
+    public String getSNPLocation(OWLNamedIndividual individual, OWLOntology ontology){
+        String bandName = null;
         OWLDataFactory dataFactory = OWLManager.createOWLOntologyManager().getOWLDataFactory();
 
 //get all the is_about individuals of this trait-assocation
@@ -266,6 +234,7 @@ else{
                 }
             }
         }
+        return bandName;
     }
 
     public String chromosomeTransform(String chromosome){
@@ -304,8 +273,5 @@ else{
         return builder.toString();
     }
     
-    protected String getColour(int i){
-        String[] colours = {"blue", "green", "red", "yellow", "purple", "orange"};
-        return colours[i];
-    }
+
 }

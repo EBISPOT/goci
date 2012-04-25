@@ -66,4 +66,6 @@ public interface RenderletNexus {
 
     OWLReasoner getReasoner();
 
+    <O> RenderingEvent getRenderingEvent(O renderedEntity);
+
 }

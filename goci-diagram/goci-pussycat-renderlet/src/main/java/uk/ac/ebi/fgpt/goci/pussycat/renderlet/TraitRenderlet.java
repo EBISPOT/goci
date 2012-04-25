@@ -1,8 +1,14 @@
 package uk.ac.ebi.fgpt.goci.pussycat.renderlet;
 
 import net.sourceforge.fluxion.spi.ServiceProvider;
-import org.semanticweb.owlapi.model.OWLIndividual;
-import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.w3c.dom.Element;
+import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
+import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
+
+import java.util.Random;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,81 +27,198 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
     *
     * */
 
+    private String traitName;
+
     @Override
     public String getName() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        if(traitName == null){
+            return "GWAS trait";
+        }
+        else{
+            return traitName;
+        }
     }
 
     @Override
     public String getDisplayName() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getName();
     }
 
     @Override
     public String getDescription() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return ("This is a renderlet displaying " + getDisplayName());
     }
 
     @Override
     public boolean canRender(RenderletNexus nexus, Object renderingContext, Object renderingEntity) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        boolean renderable = false;
+        if (renderingContext instanceof OWLOntology){
+            OWLOntology ontology = (OWLOntology)renderingContext;
+
+            if (renderingEntity instanceof OWLNamedIndividual){
+                OWLNamedIndividual individual = (OWLNamedIndividual)renderingEntity;
+
+                if(nexus.getLocationOfRenderedEntity(individual)==null){
+                    OWLClassExpression[] allTypes = nexus.getReasoner().getTypes(individual,false).getFlattened().toArray(new OWLClassExpression[0]);
+
+                    for(int i = 0; i < allTypes.length; i++){
+                        OWLClass typeClass = allTypes[i].asOWLClass();
+
+                        if(typeClass.getIRI().equals(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI))){
+                            renderable = true;
+                            break;
+                        }
+                    }
+               }
+
+            }
+        }
+
+        return renderable;
     }
 
     @Override
     public void render(RenderletNexus nexus, OWLOntology renderingContext, OWLIndividual renderingEntity) {
+        OWLNamedIndividual gwasTrait = (OWLNamedIndividual)renderingEntity;
+        setTraitName(gwasTrait, renderingContext, nexus);
+        OWLNamedIndividual association = getAssociation(nexus, gwasTrait, renderingContext);
 
- /*       //get all the is_about individuals of this trait-assocation
-         OWLDataFactory dataFactory = OWLManager.createOWLOntologyManager().getOWLDataFactory();
+        SVGArea associationSVG = nexus.getLocationOfRenderedEntity(association);
+        Element assocG = nexus.getRenderingEvent(association).getRenderedSVG();
 
-        OWLObjectProperty is_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
-        OWLNamedIndividual[] related = individual.getObjectPropertyValues(is_about,ontology).toArray(new OWLNamedIndividual[0]);
-        OWLClassExpression[] allTraits = null;
-
-        System.out.println("No of is-about axioms: " + related.length);
-
-        for(int k = 0; k < related.length; k++){
-            OWLClassExpression[] allTypes = related[k].getTypes(ontology).toArray(new OWLClassExpression[0]);
+        String location = assocG.getAttribute("transform");
 
 
-//find the individual that is of type "experimental factor"
-            for(int i = 0; i < allTypes.length; i++){
-                OWLClass typeClass = allTypes[i].asOWLClass();
+        Element trait = nexus.createSVGElement("circle");
+        trait.setAttribute("transform",location);
 
-                if(typeClass.getIRI().equals(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI))){
-                    System.out.println("Found the trait   " + allTypes.length);
-                    allTraits = allTypes;
-                }
-            }
+        String bandName = getSNPLocation(association,renderingContext);
+
+        double alength =  associationSVG.getWidth();
+        double radius = 0.2*alength;
+        double ax = associationSVG.getX();
+        double cx;
+
+        if(nexus.getAssociations(bandName) == null){
+            cx = ax+alength+radius;
+        }
+        else{
+            int position = nexus.getAssociations(bandName).size();
+            cx = ax+alength+((position+(position-1))*radius);
         }
 
+        double cy = associationSVG.getY();
+        trait.setAttribute("cx", Double.toString(cx));
+        trait.setAttribute("cy", Double.toString(cy));
+        trait.setAttribute("r", Double.toString(radius));
+        //          trait.setAttribute("style", "fill:blue;stroke:#211c1d;stroke-width:0.8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none");
+
+
+         Random generator = new Random();
+         int index = generator.nextInt(5);
+
+         String colour = getColour(index);
+
+         trait.setAttribute("fill",colour);
+         trait.setAttribute("stroke","black");
+         trait.setAttribute("stroke-width", "0.5");
+
+         trait.setAttribute("id",traitName);
+         trait.setAttribute("title",traitName);
+
+         nexus.addSVGElement(trait);
+
+     }
+
+    public void setTraitName(OWLNamedIndividual individual, OWLOntology ontology, RenderletNexus nexus){
+
+        /*OWLDataFactory dataFactory = new OntologyConfiguration().getOWLDataFactory();
+
+        Set<OWLClass> allTraits = reasoner.getTypes(trait,false).getFlattened();
         OWLClass leaf = null;
+        int largest = 0;
 
-        if(allTraits.length > 0){
-            leaf = allTraits[0].asOWLClass();
-            int largest = leaf.getSuperClasses(ontology).size();
-            System.out.println(largest);
-            for(int j = 1; j < allTraits.length; j++){
-                OWLClass current = allTraits[j].asOWLClass();
-                int parents = current.getSuperClasses(ontology).size();
+        for(OWLClass current : allTraits){
+            int parents = reasoner.getSuperClasses(current, false).getFlattened().size();
 
-                if(parents > largest){
-                    System.out.println(parents + "\t" + largest);
-                    largest = parents;
-                    leaf = current;
-                    System.out.println(largest);
-                }
+            if(parents > largest){
+                largest = parents;
+                leaf = current;
             }
         }
 
         OWLAnnotationProperty label = dataFactory.getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
+        System.out.println(leaf);
 
-        for (OWLAnnotation annotation : leaf.getAnnotations(ontology, label)) {
-            if (annotation.getValue() instanceof OWLLiteral) {
-                OWLLiteral val = (OWLLiteral) annotation.getValue();
-                name = val.getLiteral();
-                System.out.println(name);
+        for(OWLAxiom axiom: ontology.getReferencingAxioms(leaf)){
+             System.out.println(axiom);
+        }
+
+        for (OWLAnnotation annotation : dataFactory.getOWLClass(leaf.getIRI()).getAnnotations(ontology, label)) {
+        System.out.println("Magic! I made it this far...");
+        if (annotation.getValue() instanceof OWLLiteral) {
+        System.out.println("... but apparently annotation isn't an OWLLiteral");
+        OWLLiteral val = (OWLLiteral) annotation.getValue();
+        name = val.getLiteral();
+        System.out.println(name);
+        }
+        }
+        */
+
+        traitName = "GWAS trait";
+    }
+
+    public OWLNamedIndividual getAssociation(RenderletNexus nexus, OWLNamedIndividual trait, OWLOntology ontology){
+        OWLReasoner reasoner = nexus.getReasoner();
+
+        OWLDataFactory dataFactory = OWLManager.createOWLOntologyManager().getOWLDataFactory();
+        OWLObjectProperty is_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
+
+        OWLObjectPropertyExpression has_about = is_about.getInverseProperty();
+ //       System.out.println(has_about.asOWLObjectProperty().getIRI().toString());
+
+        OWLNamedIndividual association = (OWLNamedIndividual)reasoner.getObjectPropertyValues(trait,has_about).getFlattened().toArray(new OWLIndividual[0])[0];
+
+        return association;
+    }
+
+    public String getSNPLocation(OWLNamedIndividual association, OWLOntology ontology){
+        String bandName = null;
+        OWLDataFactory dataFactory = OWLManager.createOWLOntologyManager().getOWLDataFactory();
+
+//get all the is_about individuals of this trait-assocation
+        OWLObjectProperty is_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
+        OWLIndividual[] related = association.getObjectPropertyValues(is_about,ontology).toArray(new OWLIndividual[0]);
+
+        for(int k = 0; k < related.length; k++){
+            OWLClassExpression[] allTypes = related[k].getTypes(ontology).toArray(new OWLClassExpression[0]);
+
+//find the association that is of type SNP
+            for(int i = 0; i < allTypes.length; i++){
+                OWLClass typeClass = allTypes[i].asOWLClass();
+
+                if(typeClass.getIRI().equals(IRI.create(OntologyConstants.SNP_CLASS_IRI))){
+                    OWLNamedIndividual SNP = (OWLNamedIndividual)related[k];
+
+//get the SNP's cytogenetic band
+                    OWLObjectProperty has_band = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.LOCATED_IN_PROPERTY_IRI));
+                    OWLIndividual band = SNP.getObjectPropertyValues(has_band,ontology).toArray(new OWLIndividual[0])[0];
+
+//get the band's name
+                    OWLDataProperty has_name = dataFactory.getOWLDataProperty(IRI.create(OntologyConstants.HAS_NAME_PROPERTY_IRI));
+                    bandName = band.getDataPropertyValues(has_name,ontology).toArray(new OWLLiteral[0])[0].getLiteral();
+
+                }
             }
-        }            */
+        }
+        return bandName;
+    }
 
-     }
+    protected String getColour(int i){
+        String[] colours = {"blue", "green", "red", "yellow", "purple", "orange"};
+        return colours[i];
+    }
 }
+
+
+

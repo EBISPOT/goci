@@ -34,14 +34,14 @@ public class RenderletNexusFactory {
         private Set<Renderlet> renderlets;
         private Map<Object, SVGArea> renderedEntityLocations;
         private Map<String, ArrayList<Object>> renderedAssociations;
-        private List<RenderingEvent> renderedEntities;
+        private Map<Object, RenderingEvent> renderedEntities;
         private SVGBuilder svgBuilder;
         private OWLReasoner reasoner;
 
         private DefaultRenderletNexus() {
             this.renderlets = new HashSet<Renderlet>();
             this.renderedEntityLocations = new HashMap<Object, SVGArea>();
-            this.renderedEntities = new ArrayList<RenderingEvent>();
+            this.renderedEntities = new HashMap<Object, RenderingEvent>();
             this.renderedAssociations = new HashMap<String, ArrayList<Object>>();
             this.svgBuilder = new SVGBuilder();
         }
@@ -56,11 +56,15 @@ public class RenderletNexusFactory {
 
         public <O> void renderingEventOccurred(RenderingEvent<O> evt) {
             renderedEntityLocations.put(evt.getRenderedEntity(), evt.getSvgArea());
-            renderedEntities.add(evt);
+            renderedEntities.put(evt.getRenderedEntity(),evt);
         }
 
         public <O> SVGArea getLocationOfRenderedEntity(O renderedEntity) {
             return renderedEntityLocations.get(renderedEntity);
+        }
+
+        public <O> RenderingEvent getRenderingEvent(O renderedEntity){
+            return renderedEntities.get(renderedEntity);
         }
         
         public <O> void setAssociation(String band, O renderedEntity){
