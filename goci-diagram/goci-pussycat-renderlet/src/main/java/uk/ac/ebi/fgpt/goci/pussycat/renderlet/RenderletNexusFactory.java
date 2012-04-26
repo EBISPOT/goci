@@ -106,16 +106,14 @@ public class RenderletNexusFactory {
             this.reasoner = reasoner;
             System.out.println(renderlets.size());
             boolean check = false;
-            int i = 0;
 
-            while(!check && (i < renderedEntities.size())){
-                Renderlet rendered = renderedEntities.get(i).getRenderingRenderlet();
+            Set<Object> keys = renderedEntities.keySet();
 
-                if (rendered instanceof ChromosomeRenderlet){
+            for(Object key : keys){
+
+                if (renderedEntities.get(key).getRenderingRenderlet() instanceof ChromosomeRenderlet){
                     check = true;
-                }
-                else{
-                    i++;
+                    break;
                 }
             }
 

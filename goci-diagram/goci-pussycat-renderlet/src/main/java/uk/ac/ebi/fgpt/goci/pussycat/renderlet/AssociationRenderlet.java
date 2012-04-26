@@ -89,12 +89,14 @@ else{
 
     @Override
     public void render(RenderletNexus nexus, OWLOntology renderingContext, OWLNamedIndividual renderingEntity) {
+        System.out.println("Association: " + renderingEntity);
+
         String bandName = getSNPLocation(renderingEntity, renderingContext);
         Element g;
+        boolean bandflag = false;
 //there is no other association in this chromosmal band yet - render
 
         if(nexus.getAssociations(bandName) == null){
-            System.out.println("Rendering " + renderingEntity);
             g = nexus.createSVGElement("g");
             String chromosome;
 
@@ -116,7 +118,6 @@ else{
                         SVGArea band = ((ChromosomeRenderlet) r).getBands().get(bandName);
     //print statement to keep track of which band is being processed as I've had trouble with some bands
                System.out.println(bandName);
-
                         if(band != null){
 
                             double x = band.getX();
@@ -152,6 +153,7 @@ else{
                         }
                         else{
                             log.error(bandName + " is not a known cytogenetic band");
+                            bandflag = true;
                         }
                     }
                 }
@@ -160,7 +162,7 @@ else{
 
 //there is already another association in this band - can't render the association but need to render the trait as well as add to various nexus lists
         else{
-            System.out.println("Dealing with " + renderingEntity);
+            System.out.println("Secondary association: " + renderingEntity + " for band " + bandName);
 //get the SVG for the first assocation rendered for this band and reuse it for this association, but without adding it to the SVG file
             OWLNamedIndividual previousEntity = (OWLNamedIndividual)nexus.getAssociations(bandName).get(0);
             g = nexus.getRenderingEvent(previousEntity).getRenderedSVG();
@@ -172,13 +174,16 @@ else{
 
         OWLNamedIndividual trait = getTrait(renderingEntity, renderingContext, nexus);
 
-        for (Renderlet r : nexus.getRenderlets()){
-            if (r.canRender(nexus, renderingContext, trait)) {
-                System.out.println("Rendering trait " + trait);
-                getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
-                r.render(nexus, renderingContext, trait);
-            }
+        System.out.println("Trait: " + trait);
 
+        if(!bandflag){
+            for (Renderlet r : nexus.getRenderlets()){
+                if (r.canRender(nexus, renderingContext, trait)) {
+                    getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
+                    r.render(nexus, renderingContext, trait);
+                }
+
+            }
         }
     }
 
