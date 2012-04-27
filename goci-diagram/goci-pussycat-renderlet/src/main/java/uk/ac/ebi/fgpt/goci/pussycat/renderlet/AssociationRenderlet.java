@@ -89,96 +89,109 @@ else{
 
     @Override
     public void render(RenderletNexus nexus, OWLOntology renderingContext, OWLNamedIndividual renderingEntity) {
+        System.out.println("Association: " + renderingEntity);
+
         String bandName = getSNPLocation(renderingEntity, renderingContext);
         Element g;
-//there is no other association in this chromosmal band yet - render
+        boolean bandflag = false;
 
-        if(nexus.getAssociations(bandName) == null){
-            System.out.println("Rendering " + renderingEntity);
-            g = nexus.createSVGElement("g");
-            String chromosome;
+        if(bandName == null){
+            log.error("There is no location available for the SNP in association " + renderingEntity);
+        }
 
-            if(bandName.contains("p")){
-                chromosome = bandName.split("p")[0];
-            }
-            else{
-                chromosome = bandName.split("q")[0];
-            }
+        else{
+    //there is no other association in this chromosmal band yet - render
 
-            for(Renderlet r : nexus.getRenderlets()){
-                if(r instanceof ChromosomeRenderlet){
-                    String comp = r.getName().split(" ")[1];
+            if(nexus.getAssociations(bandName) == null){
+                g = nexus.createSVGElement("g");
+                String chromosome;
 
-                    if(comp.equals(chromosome)){
-                        g.setAttribute("id",renderingEntity.getIRI().toString());
-                        g.setAttribute("transform", chromosomeTransform(chromosome));
+                if(bandName.contains("p")){
+                    chromosome = bandName.split("p")[0];
+                }
+                else{
+                    chromosome = bandName.split("q")[0];
+                }
 
-                        SVGArea band = ((ChromosomeRenderlet) r).getBands().get(bandName);
-    //print statement to keep track of which band is being processed as I've had trouble with some bands
-               System.out.println(bandName);
+                for(Renderlet r : nexus.getRenderlets()){
+                    if(r instanceof ChromosomeRenderlet){
+                        String comp = r.getName().split(" ")[1];
 
-                        if(band != null){
+                        if(comp.equals(chromosome)){
+                            g.setAttribute("id",renderingEntity.getIRI().toString());
+                            g.setAttribute("transform", chromosomeTransform(chromosome));
 
-                            double x = band.getX();
-                            double y = band.getY();
-                            double width = band.getWidth();
-                            double  height = band.getHeight();
+                            SVGArea band = ((ChromosomeRenderlet) r).getBands().get(bandName);
+        //print statement to keep track of which band is being processed as I've had trouble with some bands
+                   System.out.println(bandName);
+                            if(band != null){
 
-                            double newY = y+(height/2);
-                            double length = 1.75*width;
+                                double x = band.getX();
+                                double y = band.getY();
+                                double width = band.getWidth();
+                                double  height = band.getHeight();
 
-                            StringBuilder d = new StringBuilder();
-                            d.append("m ");
-                            d.append(Double.toString(x));
-                            d.append(",");
-                            d.append(Double.toString(newY));
-                            d.append(" ");
-                            d.append(Double.toString(length));
-                            d.append(",0.0");
+                                double newY = y+(height/2);
+                                double length = 1.75*width;
 
-                            Element path = nexus.createSVGElement("path");
-                            path.setAttribute("d",d.toString());
-                            path.setAttribute("style","fill:none;stroke:#211c1d;stroke-width:1.1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none");
+                                StringBuilder d = new StringBuilder();
+                                d.append("m ");
+                                d.append(Double.toString(x));
+                                d.append(",");
+                                d.append(Double.toString(newY));
+                                d.append(" ");
+                                d.append(Double.toString(length));
+                                d.append(",0.0");
 
-                            g.appendChild(path);
+                                Element path = nexus.createSVGElement("path");
+                                path.setAttribute("d",d.toString());
+                                path.setAttribute("style","fill:none;stroke:#211c1d;stroke-width:1.1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none");
 
-                            SVGArea currentArea = new SVGArea(x,newY,length,0,0);
-                            RenderingEvent event = new RenderingEvent(renderingEntity, g, currentArea, this);
-                            nexus.renderingEventOccurred(event);
-                            nexus.setAssociation(bandName, renderingEntity);
-                            nexus.addSVGElement(g);
-                            break;
+                                g.appendChild(path);
 
-                        }
-                        else{
-                            log.error(bandName + " is not a known cytogenetic band");
+                                SVGArea currentArea = new SVGArea(x,newY,length,0,0);
+                                RenderingEvent event = new RenderingEvent(renderingEntity, g, currentArea, this);
+                                nexus.renderingEventOccurred(event);
+                                nexus.setAssociation(bandName, renderingEntity);
+                                nexus.addSVGElement(g);
+                                break;
+
+                            }
+                            else{
+                                log.error(bandName + " is not a known cytogenetic band");
+                                bandflag = true;
+                            }
                         }
                     }
                 }
             }
-        }
 
-//there is already another association in this band - can't render the association but need to render the trait as well as add to various nexus lists
-        else{
-            System.out.println("Dealing with " + renderingEntity);
-//get the SVG for the first assocation rendered for this band and reuse it for this association, but without adding it to the SVG file
-            OWLNamedIndividual previousEntity = (OWLNamedIndividual)nexus.getAssociations(bandName).get(0);
-            g = nexus.getRenderingEvent(previousEntity).getRenderedSVG();
-            g.setAttribute("id",renderingEntity.getIRI().toString());
-            RenderingEvent event = new RenderingEvent(renderingEntity, g, nexus.getLocationOfRenderedEntity(previousEntity),this);
-            nexus.renderingEventOccurred(event);
-            nexus.setAssociation(bandName,renderingEntity);
-        }
 
-        OWLNamedIndividual trait = getTrait(renderingEntity, renderingContext, nexus);
-
-        for (Renderlet r : nexus.getRenderlets()){
-            if (r.canRender(nexus, renderingContext, trait)) {
-                System.out.println("Rendering trait " + trait);
-                getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
-                r.render(nexus, renderingContext, trait);
+    //there is already another association in this band - can't render the association but need to render the trait as well as add to various nexus lists
+            else{
+                System.out.println("Secondary association: " + renderingEntity + " for band " + bandName);
+    //get the SVG for the first assocation rendered for this band and reuse it for this association, but without adding it to the SVG file
+                OWLNamedIndividual previousEntity = (OWLNamedIndividual)nexus.getAssociations(bandName).get(0);
+                g = nexus.getRenderingEvent(previousEntity).getRenderedSVG();
+                g.setAttribute("id",renderingEntity.getIRI().toString());
+                RenderingEvent event = new RenderingEvent(renderingEntity, g, nexus.getLocationOfRenderedEntity(previousEntity),this);
+                nexus.renderingEventOccurred(event);
+                nexus.setAssociation(bandName,renderingEntity);
             }
 
+            OWLNamedIndividual trait = getTrait(renderingEntity, renderingContext, nexus);
+
+            System.out.println("Trait: " + trait);
+
+            if(!bandflag){
+                for (Renderlet r : nexus.getRenderlets()){
+                    if (r.canRender(nexus, renderingContext, trait)) {
+                        getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
+                        r.render(nexus, renderingContext, trait);
+                    }
+
+                }
+            }
         }
     }
 
