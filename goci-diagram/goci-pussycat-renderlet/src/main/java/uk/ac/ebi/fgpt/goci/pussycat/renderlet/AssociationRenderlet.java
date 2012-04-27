@@ -92,16 +92,16 @@ else{
         System.out.println("Association: " + renderingEntity);
 
         String bandName = getSNPLocation(renderingEntity, renderingContext);
-        Element g;
-        boolean bandflag = false;
-
+//SNP does not have any positional information
         if(bandName == null){
             log.error("There is no location available for the SNP in association " + renderingEntity);
         }
 
         else{
-    //there is no other association in this chromosmal band yet - render
+            Element g;
+            boolean bandflag = false;
 
+//there is no other association in this chromosmal band yet - render
             if(nexus.getAssociations(bandName) == null){
                 g = nexus.createSVGElement("g");
                 String chromosome;
@@ -113,6 +113,7 @@ else{
                     chromosome = bandName.split("q")[0];
                 }
 
+
                 for(Renderlet r : nexus.getRenderlets()){
                     if(r instanceof ChromosomeRenderlet){
                         String comp = r.getName().split(" ")[1];
@@ -123,7 +124,7 @@ else{
 
                             SVGArea band = ((ChromosomeRenderlet) r).getBands().get(bandName);
         //print statement to keep track of which band is being processed as I've had trouble with some bands
-                   System.out.println(bandName);
+        //           System.out.println(bandName);
                             if(band != null){
 
                                 double x = band.getX();
@@ -156,16 +157,22 @@ else{
                                 nexus.addSVGElement(g);
                                 break;
 
+
                             }
                             else{
                                 log.error(bandName + " is not a known cytogenetic band");
                                 bandflag = true;
                             }
+
+                        }
+                        else{
+                            log.error(bandName + " is not a known cytogenetic band");
+                            bandflag = true;
                         }
                     }
                 }
-            }
 
+             }
 
     //there is already another association in this band - can't render the association but need to render the trait as well as add to various nexus lists
             else{
