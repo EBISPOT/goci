@@ -128,8 +128,6 @@ public class RenderletNexusFactory {
             getLog().debug("There are " + individuals.size() + " owl individuals that satisfy the expression " +
                     classExpression);
 
-            int counter = 0;
-
             for (OWLNamedIndividual individual : individuals) {
 
                 boolean isAssociation = checkType(individual,ontology,IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));

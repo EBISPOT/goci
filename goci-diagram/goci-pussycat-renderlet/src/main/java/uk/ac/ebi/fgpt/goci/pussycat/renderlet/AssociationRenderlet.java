@@ -99,6 +99,7 @@ else{
 
         else{
             Element g;
+//flag to deal with bands that don't actually exist
             boolean bandflag = false;
 
 //there is no other association in this chromosmal band yet - render
@@ -164,10 +165,6 @@ else{
                                 bandflag = true;
                             }
 
-                        }
-                        else{
-                            log.error(bandName + " is not a known cytogenetic band");
-                            bandflag = true;
                         }
                     }
                 }

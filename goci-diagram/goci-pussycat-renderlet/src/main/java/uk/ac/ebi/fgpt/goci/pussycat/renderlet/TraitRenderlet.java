@@ -99,7 +99,7 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
         double ax = associationSVG.getX();
         double cx;
 
-        if(nexus.getAssociations(bandName) == null){
+        if(nexus.getAssociations(bandName).size() == 1){
             cx = ax+alength+radius;
         }
         else{
@@ -123,8 +123,8 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
          trait.setAttribute("stroke","black");
          trait.setAttribute("stroke-width", "0.5");
 
-         trait.setAttribute("id",traitName);
-         trait.setAttribute("title",traitName);
+         trait.setAttribute("id",getName());
+         trait.setAttribute("title",getName());
 
          nexus.addSVGElement(trait);
 
@@ -132,9 +132,12 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
 
     public void setTraitName(OWLNamedIndividual individual, OWLOntology ontology, RenderletNexus nexus){
 
-        /*OWLDataFactory dataFactory = new OntologyConfiguration().getOWLDataFactory();
+/*       OWLOntologyManager manager = new OntologyConfiguration().getOWLOntologyManager();
 
-        Set<OWLClass> allTraits = reasoner.getTypes(trait,false).getFlattened();
+        System.out.println("Manager handles: "  + manager.getOntologies().size() + " ontologies");
+        OWLReasoner reasoner = nexus.getReasoner();
+
+        Set<OWLClass> allTraits = reasoner.getTypes(individual,false).getFlattened();
         OWLClass leaf = null;
         int largest = 0;
 
@@ -147,6 +150,8 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
             }
         }
 
+        OWLDataFactory dataFactory = manager.getOWLDataFactory();
+
         OWLAnnotationProperty label = dataFactory.getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
         System.out.println(leaf);
 
@@ -155,17 +160,14 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
         }
 
         for (OWLAnnotation annotation : dataFactory.getOWLClass(leaf.getIRI()).getAnnotations(ontology, label)) {
-        System.out.println("Magic! I made it this far...");
-        if (annotation.getValue() instanceof OWLLiteral) {
-        System.out.println("... but apparently annotation isn't an OWLLiteral");
-        OWLLiteral val = (OWLLiteral) annotation.getValue();
-        name = val.getLiteral();
-        System.out.println(name);
-        }
-        }
-        */
-
-        traitName = "GWAS trait";
+            System.out.println("Magic! I made it this far...");
+            if (annotation.getValue() instanceof OWLLiteral) {
+                System.out.println("... but apparently annotation isn't an OWLLiteral");
+                OWLLiteral val = (OWLLiteral) annotation.getValue();
+                traitName = val.getLiteral();
+                System.out.println(traitName);
+            }
+        }                               */
     }
 
     public OWLNamedIndividual getAssociation(RenderletNexus nexus, OWLNamedIndividual trait, OWLOntology ontology){
