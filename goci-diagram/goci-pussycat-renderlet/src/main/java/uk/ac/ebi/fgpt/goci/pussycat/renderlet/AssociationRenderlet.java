@@ -90,6 +90,7 @@ else{
     @Override
     public void render(RenderletNexus nexus, OWLOntology renderingContext, OWLNamedIndividual renderingEntity) {
         System.out.println("Association: " + renderingEntity);
+//        getLog().debug("Association: " + renderingEntity);
 
         String bandName = getSNPLocation(renderingEntity, renderingContext);
 //SNP does not have any positional information

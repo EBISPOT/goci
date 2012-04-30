@@ -62,6 +62,7 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
             for (Renderlet renderlet : renderletLoader) {
                 loadedRenderlets.add(renderlet);
             }
+            getLog().debug("Loaded " + loadedRenderlets.size() + " renderlets");
             return loadedRenderlets;
         }
         else {

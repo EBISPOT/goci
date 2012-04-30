@@ -16,8 +16,7 @@ import java.util.*;
 /**
  * A factory that is capable of producing {@link RenderletNexus} instances.
  *
- * @author Tony Burdett
- * Date 01/03/12
+ * @author Tony Burdett Date 01/03/12
  */
 public class RenderletNexusFactory {
     public static RenderletNexus createDefaultRenderletNexus() {
@@ -27,6 +26,7 @@ public class RenderletNexusFactory {
     private static final class DefaultRenderletNexus implements RenderletNexus {
 
         private Logger log = LoggerFactory.getLogger(getClass());
+
         protected Logger getLog() {
             return log;
         }
@@ -47,47 +47,51 @@ public class RenderletNexusFactory {
         }
 
         public boolean register(Renderlet renderlet) {
+            getLog().debug("Registering renderlet '" + renderlet.getName() + "' " +
+                                   "(" + renderlet.getDescription() + ") " +
+                                   "[" + renderlet.getClass().getSimpleName() + "]");
+            getLog().debug("Renderlets now: " + (renderlets.size()+1));
             return renderlets.add(renderlet);
         }
-        
-        public Set<Renderlet> getRenderlets(){
+
+        public Set<Renderlet> getRenderlets() {
             return renderlets;
         }
 
         public <O> void renderingEventOccurred(RenderingEvent<O> evt) {
             renderedEntityLocations.put(evt.getRenderedEntity(), evt.getSvgArea());
-            renderedEntities.put(evt.getRenderedEntity(),evt);
+            renderedEntities.put(evt.getRenderedEntity(), evt);
         }
 
         public <O> SVGArea getLocationOfRenderedEntity(O renderedEntity) {
             return renderedEntityLocations.get(renderedEntity);
         }
 
-        public <O> RenderingEvent getRenderingEvent(O renderedEntity){
+        public <O> RenderingEvent getRenderingEvent(O renderedEntity) {
             return renderedEntities.get(renderedEntity);
         }
-        
-        public <O> void setAssociation(String band, O renderedEntity){
-            if(renderedAssociations.containsKey(band)){
+
+        public <O> void setAssociation(String band, O renderedEntity) {
+            if (renderedAssociations.containsKey(band)) {
                 renderedAssociations.get(band).add(renderedEntity);
             }
-            else{
+            else {
                 ArrayList<Object> list = new ArrayList<Object>();
                 list.add(renderedEntity);
-                renderedAssociations.put(band,list);
+                renderedAssociations.put(band, list);
             }
         }
 
-        public ArrayList<Object> getAssociations(String band){
-            if(renderedAssociations.containsKey(band)){
+        public ArrayList<Object> getAssociations(String band) {
+            if (renderedAssociations.containsKey(band)) {
                 return renderedAssociations.get(band);
             }
-            else{
+            else {
                 return null;
             }
         }
 
-        public void addSVGElement(Element element){
+        public void addSVGElement(Element element) {
             svgBuilder.addElement(element);
         }
 
@@ -96,7 +100,7 @@ public class RenderletNexusFactory {
             return reasoner;
         }
 
-        public Element createSVGElement(String type){
+        public Element createSVGElement(String type) {
             return svgBuilder.createElement(type);
         }
 
@@ -105,34 +109,36 @@ public class RenderletNexusFactory {
 //check if the chromosomes have already been rendered, otherwise render them
             this.reasoner = reasoner;
             System.out.println(renderlets.size());
+            getLog().debug("There are " + renderlets.size() + " registered renderlets");
             boolean check = false;
 
             Set<Object> keys = renderedEntities.keySet();
 
-            for(Object key : keys){
+            for (Object key : keys) {
 
-                if (renderedEntities.get(key).getRenderingRenderlet() instanceof ChromosomeRenderlet){
+                if (renderedEntities.get(key).getRenderingRenderlet() instanceof ChromosomeRenderlet) {
                     check = true;
                     break;
                 }
             }
 
-            if(! check){
+            if (!check) {
                 renderChromosomes(reasoner);
             }
 
-     // get the ontology loaded into the reasoner
+            // get the ontology loaded into the reasoner
             OWLOntology ontology = reasoner.getRootOntology();
 
             Set<OWLNamedIndividual> individuals = reasoner.getInstances(classExpression, false).getFlattened();
             getLog().debug("There are " + individuals.size() + " owl individuals that satisfy the expression " +
-                    classExpression);
+                                   classExpression);
 
             for (OWLNamedIndividual individual : individuals) {
 
-                boolean isAssociation = checkType(individual,ontology,IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));
+                boolean isAssociation =
+                        checkType(individual, ontology, IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));
 
-                if(isAssociation){
+                if (isAssociation) {
                     // render each individual with a renderlet that can render it
                     for (Renderlet r : renderlets) {
                         if (r.canRender(this, ontology, individual)) {
@@ -147,16 +153,18 @@ public class RenderletNexusFactory {
 
         }
 
-        public void renderChromosomes(OWLReasoner reasoner){
+        public void renderChromosomes(OWLReasoner reasoner) {
             OWLOntology ontology = reasoner.getRootOntology();
 
             for (Renderlet r : renderlets) {
-                if(r instanceof ChromosomeRenderlet){
-                    OWLClass chromosome = ontology.getOWLOntologyManager().getOWLDataFactory().getOWLClass(IRI.create(OntologyConstants.CHROMOSOME_CLASS_IRI));
+                if (r instanceof ChromosomeRenderlet) {
+                    OWLClass chromosome = ontology.getOWLOntologyManager()
+                            .getOWLDataFactory()
+                            .getOWLClass(IRI.create(OntologyConstants.CHROMOSOME_CLASS_IRI));
                     NodeSet<OWLClass> all = reasoner.getSubClasses(chromosome, true);
                     Set<OWLClass> allChroms = all.getFlattened();
 
-                    for(OWLClass chrom : allChroms){
+                    for (OWLClass chrom : allChroms) {
                         if (r.canRender(this, ontology, chrom)) {
                             getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
                             r.render(this, ontology, chrom);
@@ -166,21 +174,21 @@ public class RenderletNexusFactory {
             }
         }
 
-        public boolean checkType(OWLNamedIndividual individual, OWLOntology ontology, IRI typeIRI){
+        public boolean checkType(OWLNamedIndividual individual, OWLOntology ontology, IRI typeIRI) {
             boolean type = false;
 
             OWLClassExpression[] allTypes = individual.getTypes(ontology).toArray(new OWLClassExpression[0]);
-            
-            for(int i = 0; i < allTypes.length; i++){
+
+            for (int i = 0; i < allTypes.length; i++) {
                 OWLClass typeClass = allTypes[i].asOWLClass();
 
-                if(typeClass.getIRI().equals(typeIRI)){
+                if (typeClass.getIRI().equals(typeIRI)) {
                     type = true;
                     break;
                 }
             }
 
-           return type;
+            return type;
         }
     }
 }
