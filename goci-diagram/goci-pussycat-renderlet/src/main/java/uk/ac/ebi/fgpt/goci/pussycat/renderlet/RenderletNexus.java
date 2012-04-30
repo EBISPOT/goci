@@ -51,7 +51,7 @@ public interface RenderletNexus {
      * @param classExpression the class expression to be rendered
      * @return the SVG in the form of a string
      */
-    String getSVG(OWLClassExpression classExpression, OWLReasoner reasoner);
+    String getSVG(OWLClassExpression classExpression);
 
     ArrayList<Object> getAssociations(String band);
     

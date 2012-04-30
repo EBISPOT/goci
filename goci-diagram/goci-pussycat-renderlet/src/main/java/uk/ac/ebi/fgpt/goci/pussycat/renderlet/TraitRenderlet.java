@@ -131,7 +131,6 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
      }
 
     public void setTraitName(OWLNamedIndividual individual, OWLOntology ontology, RenderletNexus nexus){
-
 /*       OWLOntologyManager manager = new OntologyConfiguration().getOWLOntologyManager();
 
         System.out.println("Manager handles: "  + manager.getOntologies().size() + " ontologies");

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
@@ -26,8 +27,7 @@ import java.util.*;
  * A MVC controller for Pussycat.  This controller can be used to create a new session, load ontology data and create
  * the SVG canvas Pussycat will display.
  *
- * @author Tony Burdett
- * Date 27/02/12
+ * @author Tony Burdett Date 27/02/12
  */
 @Controller
 @RequestMapping("/views")
@@ -204,28 +204,37 @@ public class PussycatGOCIController {
         }
     }
 
-    protected RenderletNexus getRenderletNexus(HttpSession session){
+    protected RenderletNexus getRenderletNexus(HttpSession session) throws PussycatSessionNotReadyException {
         getLog().debug("Attempting to obtain RenderletNexus session for HttpSession '" + session.getId() + "'");
 
-        RenderletNexus renderletNexus;
+        try {
+            RenderletNexus renderletNexus;
 
-        if(nexusMap.containsKey(session)){
-           renderletNexus = nexusMap.get(session);
-           getLog().debug("RenderletNexus available for HttpSession '" + session.getId() + "'");
-           return renderletNexus;
+            if (nexusMap.containsKey(session)) {
+                renderletNexus = nexusMap.get(session);
+                getLog().debug("RenderletNexus available for HttpSession '" + session.getId() + "'");
+                return renderletNexus;
+            }
+            else {
+//           renderletNexus = RenderletNexusFactory.createDefaultRenderletNexus();
+                renderletNexus = RenderletNexusFactory.createDefaultRenderletNexus(
+                        getOntologyConfiguration().getOWLOntologyManager(),
+                        getPussycatSession(session).getReasoner());
+
+                nexusMap.put(session, renderletNexus);
+
+                Collection<Renderlet> renderlets = getPussycatSession(session).getAvailableRenderlets();
+
+                for (Renderlet r : renderlets) {
+                    renderletNexus.register(r);
+                }
+
+                getLog().debug("Created new RenderletNexus for HttpSession '" + session + "'");
+                return renderletNexus;
+            }
         }
-        else {
-           renderletNexus = RenderletNexusFactory.createDefaultRenderletNexus();
-           nexusMap.put(session, renderletNexus);
-
-           Collection<Renderlet> renderlets = getPussycatSession(session).getAvailableRenderlets();
-
-           for (Renderlet r : renderlets) {
-               renderletNexus.register(r);
-           }
-
-           getLog().debug("Created new RenderletNexus for HttpSession '" + session + "'");
-           return renderletNexus;
+        catch (OWLConversionException e) {
+            throw new RuntimeException("Unexpected exception occurred obtaining reasoner", e);
         }
     }
 

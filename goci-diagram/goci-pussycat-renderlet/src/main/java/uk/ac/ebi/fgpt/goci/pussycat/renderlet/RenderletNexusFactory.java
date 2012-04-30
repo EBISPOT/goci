@@ -19,8 +19,12 @@ import java.util.*;
  * @author Tony Burdett Date 01/03/12
  */
 public class RenderletNexusFactory {
-    public static RenderletNexus createDefaultRenderletNexus() {
-        return new DefaultRenderletNexus();
+    public static RenderletNexus createDefaultRenderletNexus(OWLOntologyManager manager, OWLReasoner reasoner) {
+//        return new DefaultRenderletNexus();
+        DefaultRenderletNexus nexus = new DefaultRenderletNexus();
+        nexus.setOWLOntologyManager(manager);
+        nexus.setReasoner(reasoner);
+        return nexus;
     }
 
     private static final class DefaultRenderletNexus implements RenderletNexus {
@@ -36,6 +40,8 @@ public class RenderletNexusFactory {
         private Map<String, ArrayList<Object>> renderedAssociations;
         private Map<Object, RenderingEvent> renderedEntities;
         private SVGBuilder svgBuilder;
+
+        private OWLOntologyManager manager;
         private OWLReasoner reasoner;
 
         private DefaultRenderletNexus() {
@@ -46,11 +52,29 @@ public class RenderletNexusFactory {
             this.svgBuilder = new SVGBuilder();
         }
 
+
+        public void setOWLOntologyManager(OWLOntologyManager manager) {
+            this.manager = manager;
+        }
+
+        public OWLOntologyManager getManager() {
+            return manager;
+        }
+
+        public void setReasoner(OWLReasoner reasoner) {
+            this.reasoner = reasoner;
+        }
+
+        @Override
+        public OWLReasoner getReasoner() {
+            return reasoner;
+        }
+
         public boolean register(Renderlet renderlet) {
             getLog().debug("Registering renderlet '" + renderlet.getName() + "' " +
                                    "(" + renderlet.getDescription() + ") " +
                                    "[" + renderlet.getClass().getSimpleName() + "]");
-            getLog().debug("Renderlets now: " + (renderlets.size()+1));
+            getLog().debug("Renderlets now: " + (renderlets.size() + 1));
             return renderlets.add(renderlet);
         }
 
@@ -95,19 +119,13 @@ public class RenderletNexusFactory {
             svgBuilder.addElement(element);
         }
 
-        @Override
-        public OWLReasoner getReasoner() {
-            return reasoner;
-        }
-
         public Element createSVGElement(String type) {
             return svgBuilder.createElement(type);
         }
 
         @Override
-        public String getSVG(OWLClassExpression classExpression, OWLReasoner reasoner) {
+        public String getSVG(OWLClassExpression classExpression) {
 //check if the chromosomes have already been rendered, otherwise render them
-            this.reasoner = reasoner;
             System.out.println(renderlets.size());
             getLog().debug("There are " + renderlets.size() + " registered renderlets");
             boolean check = false;
