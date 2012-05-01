@@ -5,6 +5,8 @@ var scalingFactor = 1.0;
 var dragOffsetX = 0;
 var dragOffsetY = 0;
 
+var renderingComplete = false;
+
 function init() {
     $(document).ready(function() {
         if (enableDebugging) {
@@ -87,7 +89,8 @@ function resizePage() {
     $(".tabcontent").height($("#tabs").height() - maxPadding);
 
     // update the diagramarea to fill the available space
-    $("#diagramarea").height($("#diagramtab").height() - ($("#diagramarea").position().top - $("#diagramtab").position().top));
+    $("#diagramarea").height($("#diagramtab").height() -
+                                     ($("#diagramarea").position().top - $("#diagramtab").position().top));
     log("Window resized: new size = " + $("#page_wrapper").height() + ", " + $("#page_wrapper").width());
 }
 
@@ -98,14 +101,19 @@ function tabShow(event, ui) {
 }
 
 function renderDiagram() {
-    // call to api/views/gwasdiagram to get required svg
-    log("Rendering GWAS diagram - calling api/views/gwasdiagram...");
-    $.ajax({
-               url:'api/views/gwasdiagram',
-               dataType:'html',
-               success:insertSVG,
-               error:serverCommunicationFail
-           });
+    if (!renderingComplete) {
+        // call to api/views/gwasdiagram to get required svg
+        log("Rendering GWAS diagram - calling api/views/gwasdiagram...");
+        $.ajax({
+                   url:'api/views/gwasdiagram',
+                   dataType:'html',
+                   success:insertSVG,
+                   error:serverCommunicationFail
+               });
+    }
+    else {
+        log("Rendering already complete, update request not sent");
+    }
 }
 
 function insertSVG(svg) {
@@ -113,6 +121,7 @@ function insertSVG(svg) {
     log("Obtained SVG from server OK, rendering...");
     $("#diagramareaerror").css({"display":"none"});
     $("#diagramareacontent").html(svg);
+    renderingComplete = true;
     log("Diagram area div updated with SVG content OK");
 }
 
