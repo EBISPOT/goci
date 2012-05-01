@@ -16,6 +16,11 @@ h3.nomargin {
 
 .tabcontent {
     height: 100%;
+    overflow: auto;
+}
+
+.debugging {
+    border: #f08080 dashed 1px;
 }
 
 #page_wrapper {

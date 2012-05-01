@@ -43,7 +43,7 @@
                 <li><a href="#hometab">Home</a></li>
                 <li><a href="#diagramtab">GWAS Diagram</a></li>
                 <li><a href="#helptab">Help</a></li>
-                <!--               <li><a href="#logtab">Log</a></li> -->
+                <li id="logitem" style="display: none"><a href="#logtab">Log</a></li>
             </ul>
 
             <div id="tabs">
@@ -121,14 +121,20 @@
                         </li>
                     </ul>
                 </div>
-                <!--<div id="logtab">-->
-                    <!--SVG transform debugging:-->
-                    <!--<div id="scale-debugging" style="display: none;">-->
-                        <!--Scale | <span id="scale"></span><br/>-->
-                        <!--Div Drag | x: <span id="xOffset"></span>; y: <span id="yOffset"></span><br/>-->
-                        <!--SVG Drag | x: <span id="xOffsetSVG"></span>; y: <span id="yOffsetSVG"></span>;-->
-                    <!--</div>-->
-                <!--</div>-->
+                <div id="logtab" class="tabcontent" style="display: none;">
+                    <h4>SVG transform debugging:</h4>
+
+                    <div id="scale-debugging" class="debugging">
+                        Scale | <span id="scale"></span><br/>
+                        Div Drag | x: <span id="xOffset"></span>; y: <span id="yOffset"></span><br/>
+                        SVG Drag | x: <span id="xOffsetSVG"></span>; y: <span id="yOffsetSVG"></span>;
+                    </div>
+                    <h4>Log output:</h4>
+
+                    <div id="log" class="debugging">
+
+                    </div>
+                </div>
             </div>
         </div>
         <!-- end divtable -->

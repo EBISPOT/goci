@@ -1,3 +1,5 @@
+var enableDebugging = false;
+
 var currentScale = 0;
 var scalingFactor = 1.0;
 var dragOffsetX = 0;
@@ -5,6 +7,16 @@ var dragOffsetY = 0;
 
 function init() {
     $(document).ready(function() {
+        if (enableDebugging) {
+            $("#logitem").show();
+            $("#logtab").show();
+        }
+        else {
+            $("#logitem").hide();
+            $("#logtab").hide();
+        }
+
+        log("Initializing pussycat UI...");
         // create tabs
         $("#browsertabs").tabs({
                                    show:tabShow,
@@ -44,6 +56,7 @@ function init() {
                       }
         );
     });
+    log("Pussycat UI initialized OK");
 }
 
 function resizePage() {
@@ -75,6 +88,7 @@ function resizePage() {
 
     // update the diagramarea to fill the available space
     $("#diagramarea").height($("#diagramtab").height() - ($("#diagramarea").position().top - $("#diagramtab").position().top));
+    log("Window resized: new size = " + $("#page_wrapper").height() + ", " + $("#page_wrapper").width());
 }
 
 function tabShow(event, ui) {
@@ -85,6 +99,7 @@ function tabShow(event, ui) {
 
 function renderDiagram() {
     // call to api/views/gwasdiagram to get required svg
+    log("Rendering GWAS diagram - calling api/views/gwasdiagram...");
     $.ajax({
                url:'api/views/gwasdiagram',
                dataType:'html',
@@ -95,12 +110,15 @@ function renderDiagram() {
 
 function insertSVG(svg) {
     // update diagramarea div with returned SVG
+    log("Obtained SVG from server OK, rendering...");
     $("#diagramareaerror").css({"display":"none"});
     $("#diagramareacontent").html(svg);
+    log("Diagram area div updated with SVG content OK");
 }
 
 function serverCommunicationFail(jqXHR, textStatus, errorThrown) {
     // show diagram area error div
+    log("Failed to acquire SVG from server - possible communication fail?");
     $("#diagramareaerror").css({"display":"block"});
     $("#diagramareaerrortext").html(jqXHR.responseText);
 }
@@ -120,6 +138,7 @@ function zoomIn() {
     var newHeight = height * 0.95;
     var newViewBox = elements[0] + " " + elements[1] + " " + newWidth + " " + newHeight;
     document.getElementById('goci-svg').setAttribute("viewBox", newViewBox);
+    log("Zoom in over SVG event.  New zoom level: " + scalingFactor + ", viewBox now set to " + newViewBox);
 }
 
 function zoomOut() {
@@ -137,6 +156,7 @@ function zoomOut() {
     var newHeight = height * 1.05;
     var newViewBox = elements[0] + " " + elements[1] + " " + newWidth + " " + newHeight;
     document.getElementById('goci-svg').setAttribute("viewBox", newViewBox);
+    log("Zoom out over SVG event.  New zoom level: " + scalingFactor + ", viewBox now set to " + newViewBox);
 }
 
 function pan(deltaX, deltaY) {
@@ -149,6 +169,7 @@ function pan(deltaX, deltaY) {
     // get width and height
     var newViewBox = newX + " " + newY + " " + elements[2] + " " + elements[3];
     document.getElementById('goci-svg').setAttribute("viewBox", newViewBox);
+    log("Pan over SVG event.  ViewBox now set to " + newViewBox);
 }
 
 function updateOffset() {
@@ -156,4 +177,8 @@ function updateOffset() {
     var elements = viewBox.split(' ');
     dragOffsetX = elements[0];
     dragOffsetY = elements[1];
+}
+
+function log(msg) {
+    $('#log').append('<div class=\"logmessage\">' + msg + '</div>');
 }
