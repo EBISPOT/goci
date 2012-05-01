@@ -10,6 +10,13 @@ function init() {
                                    show:tabShow,
                                    selected:1
                                });
+
+        // calculate position of diagramarea div
+        resizePage();
+        $(window).resize(function() {
+            resizePage();
+        });
+
         $("#retrybutton").button();
         $("#retrybutton").click(renderDiagram);
 
@@ -37,6 +44,37 @@ function init() {
                       }
         );
     });
+}
+
+function resizePage() {
+    // get sizes of borders around body and page_wrapper element
+    var bodyMargin = parseInt($('body').css('margin-top')) + parseInt($('body').css('margin-bottom'));
+    var pageMargin = parseInt($("#page_wrapper").css('margin-top')) + parseInt($("#page_wrapper").css('margin-bottom'));
+    var pageBorder = parseInt($("#page_wrapper").css('border-top-width')) +
+            parseInt($("#page_wrapper").css('border-bottom-width'));
+    var offset = bodyMargin + pageMargin + pageBorder;
+
+    // update the size of the page_wrapper to fill document
+    $("#page_wrapper").height($(document).height() - offset);
+
+    // update the size of divtable to fill the available space
+    $("#divtable").height($("#page_wrapper").height() - $("#divtable").offset().top);
+
+    // update the size of tabs to fill the available space
+    $("#tabs").height($("#page_wrapper").height() - $("#tabs").offset().top);
+
+    // update the size of tabcontent to match the size of max tabs child
+    var maxPadding = 0;
+    $('.tabcontent').each(function(i) {
+        var padding = parseFloat($(this).css("padding-top")) + parseFloat($(this).css("padding-bottom"));
+        if (padding > maxPadding) {
+            maxPadding = padding;
+        }
+    });
+    $(".tabcontent").height($("#tabs").height() - maxPadding);
+
+    // update the diagramarea to fill the available space
+    $("#diagramarea").height($("#diagramtab").height() - ($("#diagramarea").position().top - $("#diagramtab").position().top));
 }
 
 function tabShow(event, ui) {
