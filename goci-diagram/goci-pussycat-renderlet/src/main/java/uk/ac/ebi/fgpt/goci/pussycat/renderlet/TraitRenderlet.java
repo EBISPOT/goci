@@ -99,8 +99,7 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
 
         String bandName = getSNPLocation(association,renderingContext);
 
-   //     if(nexus.getAssociations(bandName).size() < 2){
-
+        if(nexus.getAssociations(bandName).size() < 7){
             Element trait = nexus.createSVGElement("circle");
             trait.setAttribute("transform",location);
 
@@ -137,9 +136,9 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
              trait.setAttribute("title",getName());
 
              nexus.addSVGElement(trait);
-/*        }
-//11th trait - put in an ellipsis
-        else if(nexus.getAssociations(bandName).size() == 2){
+        }
+//7th trait - put in an ellipsis
+        else if(nexus.getAssociations(bandName).size() == 7){
             Element ellipsis = nexus.createSVGElement("g");
             ellipsis.setAttribute("transform",location);
             double alength =  associationSVG.getWidth();
@@ -165,6 +164,10 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
             c2.setAttribute("cy", Double.toString(cy));
             c3.setAttribute("cy", Double.toString(cy));
 
+            c1.setAttribute("r", Double.toString(r));
+            c2.setAttribute("r", Double.toString(r));
+            c3.setAttribute("r", Double.toString(r));
+
             c1.setAttribute("fill", "black");
             c2.setAttribute("fill", "black");
             c3.setAttribute("fill", "black");
@@ -177,14 +180,14 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
         }
         else{
 //too many traits to render
-           getLog().debug("Trait " + traitName + " cannot be rendered as there are already more than 10 traits for chromosomal band " + bandName);
-        }       */
+           getLog().debug("Trait " + traitName + " cannot be rendered as there are already more than 6 traits for chromosomal band " + bandName);
+        }
      }
 
     public void setTraitName(OWLNamedIndividual individual, OWLOntology ontology, RenderletNexus nexus){
        OWLOntologyManager manager = nexus.getManager();
 
-        System.out.println("Manager handles: "  + manager.getOntologies().size() + " ontologies");
+  //      System.out.println("Manager handles: "  + manager.getOntologies().size() + " ontologies");
         OWLReasoner reasoner = nexus.getReasoner();
 
         Set<OWLClass> allTraits = reasoner.getTypes(individual,false).getFlattened();
@@ -203,10 +206,10 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
         OWLDataFactory dataFactory = manager.getOWLDataFactory();
 
         OWLAnnotationProperty label = dataFactory.getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
-        System.out.println(leaf);
+        //System.out.println(leaf);
 
         for(OWLAxiom axiom: ontology.getReferencingAxioms(leaf)){
-             System.out.println(axiom);
+          //   System.out.println(axiom);
         }
 
         for (OWLAnnotation annotation : dataFactory.getOWLClass(leaf.getIRI()).getAnnotations(ontology, label)) {

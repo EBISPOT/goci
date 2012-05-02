@@ -27,6 +27,7 @@ import java.util.Set;
 public class AssociationRenderlet implements Renderlet<OWLOntology, OWLNamedIndividual> {
 
 
+    private Set<OWLNamedIndividual> allEFs;
     private Logger log = LoggerFactory.getLogger(getClass());
     protected Logger getLog() {
         return log;
@@ -202,16 +203,19 @@ else{
 
 
     public OWLNamedIndividual getTrait(OWLNamedIndividual individual, OWLOntology ontology, RenderletNexus nexus){
-        OWLReasoner reasoner = nexus.getReasoner();
-        OWLNamedIndividual trait = null;
 
+        OWLNamedIndividual trait = null;
         OWLDataFactory dataFactory = OWLManager.createOWLOntologyManager().getOWLDataFactory();
 
         OWLObjectProperty is_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
         OWLIndividual[] related = individual.getObjectPropertyValues(is_about,ontology).toArray(new OWLIndividual[0]);
-        OWLClass ef = dataFactory.getOWLClass(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI));
 
-        Set<OWLNamedIndividual> allEFs = reasoner.getInstances(ef,false).getFlattened();
+
+        if(allEFs == null){
+            OWLReasoner reasoner = nexus.getReasoner();
+            OWLClass ef = dataFactory.getOWLClass(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI));
+            allEFs = reasoner.getInstances(ef,false).getFlattened();
+        }
 
         for(int i = 0; i < related.length; i++){
             if(allEFs.contains(related[i])){

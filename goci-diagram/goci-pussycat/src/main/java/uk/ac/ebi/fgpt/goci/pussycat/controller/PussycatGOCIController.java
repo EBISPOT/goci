@@ -37,6 +37,8 @@ public class PussycatGOCIController {
 
     private Map<HttpSession, RenderletNexus> nexusMap = new HashMap<HttpSession, RenderletNexus>();
 
+    private Map<HttpSession, String> svgMap = new HashMap<HttpSession, String>();
+
     private OntologyConfiguration ontologyConfiguration;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -82,7 +84,11 @@ public class PussycatGOCIController {
         // get OWLThing, to indicate that we want to draw all data in the GWAS catalog
         OWLClass thingCls = getOntologyConfiguration().getOWLDataFactory().getOWLThing();
         // render all individuals using the pussycat session for this http session
-        return getPussycatSession(session).performRendering(thingCls, getRenderletNexus(session));
+
+        if(svgMap.get(session) == null){
+            svgMap.put(session, getPussycatSession(session).performRendering(thingCls, getRenderletNexus(session)));
+        }
+        return svgMap.get(session);
     }
 
     @RequestMapping(value = "/chromosomes")
