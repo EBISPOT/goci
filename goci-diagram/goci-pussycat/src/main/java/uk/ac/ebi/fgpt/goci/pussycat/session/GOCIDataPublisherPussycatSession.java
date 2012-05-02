@@ -73,14 +73,7 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
     public String performRendering(OWLClassExpression classExpression, RenderletNexus renderletNexus)
             throws PussycatSessionNotReadyException {
 
-        String svgString = null;
-        try {
-            svgString = renderletNexus.getSVG(classExpression, getReasoner());
-        } catch (OWLConversionException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-
-        return svgString;
+        return renderletNexus.getSVG(classExpression);
     }
 
     public boolean clearRendering() {

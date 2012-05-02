@@ -23,7 +23,9 @@
         </constructor-arg>
     </bean>
 
-    <!--<bean id="reasonerSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.DataPublishingCacheableReasonerSession" init-method="init">--><!--<property name="publisher" ref="publisher" />--><!--</bean>-->
+    <!--<bean id="reasonerSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.DataPublishingCacheableReasonerSession" init-method="init">-->
+            <!--<property name="publisher" ref="publisher" />-->
+    <!--</bean>-->
 
     <bean id="reasonerSession"
           class="uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession"

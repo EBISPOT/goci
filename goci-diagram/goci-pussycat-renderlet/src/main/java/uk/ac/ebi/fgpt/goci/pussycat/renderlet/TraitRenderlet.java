@@ -4,11 +4,15 @@ import net.sourceforge.fluxion.spi.ServiceProvider;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,6 +32,11 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
     * */
 
     private String traitName;
+
+    private Logger log = LoggerFactory.getLogger(getClass());
+    protected Logger getLog() {
+        return log;
+    }
 
     @Override
     public String getName() {
@@ -88,50 +97,92 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
 
         String location = assocG.getAttribute("transform");
 
-
-        Element trait = nexus.createSVGElement("circle");
-        trait.setAttribute("transform",location);
-
         String bandName = getSNPLocation(association,renderingContext);
 
-        double alength =  associationSVG.getWidth();
-        double radius = 0.2*alength;
-        double ax = associationSVG.getX();
-        double cx;
+   //     if(nexus.getAssociations(bandName).size() < 2){
 
-        if(nexus.getAssociations(bandName).size() == 1){
-            cx = ax+alength+radius;
+            Element trait = nexus.createSVGElement("circle");
+            trait.setAttribute("transform",location);
+
+            double alength =  associationSVG.getWidth();
+            double radius = 0.2*alength;
+            double ax = associationSVG.getX();
+            double cx;
+
+            if(nexus.getAssociations(bandName).size() == 1){
+                cx = ax+alength+radius;
+            }
+            else{
+                int position = nexus.getAssociations(bandName).size();
+                cx = ax+alength+((position+(position-1))*radius);
+            }
+
+            double cy = associationSVG.getY();
+            trait.setAttribute("cx", Double.toString(cx));
+            trait.setAttribute("cy", Double.toString(cy));
+            trait.setAttribute("r", Double.toString(radius));
+            //          trait.setAttribute("style", "fill:blue;stroke:#211c1d;stroke-width:0.8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none");
+
+
+             Random generator = new Random();
+             int index = generator.nextInt(5);
+
+             String colour = getColour(index);
+
+             trait.setAttribute("fill",colour);
+             trait.setAttribute("stroke","black");
+             trait.setAttribute("stroke-width", "0.5");
+
+             trait.setAttribute("id",getName());
+             trait.setAttribute("title",getName());
+
+             nexus.addSVGElement(trait);
+/*        }
+//11th trait - put in an ellipsis
+        else if(nexus.getAssociations(bandName).size() == 2){
+            Element ellipsis = nexus.createSVGElement("g");
+            ellipsis.setAttribute("transform",location);
+            double alength =  associationSVG.getWidth();
+            double radius = 0.2*alength;
+            double ax = associationSVG.getX();
+            int position = nexus.getAssociations(bandName).size();
+            double x1 = ax+alength+((position+(position-1))*radius);
+            double x2 = x1 + radius;
+            double x3 = x2 + radius;
+            double cy = associationSVG.getY();
+
+            double r = 1;
+
+            Element c1 = nexus.createSVGElement("circle");
+            Element c2 = nexus.createSVGElement("circle");
+            Element c3 = nexus.createSVGElement("circle");
+
+            c1.setAttribute("cx", Double.toString(x1));
+            c2.setAttribute("cx", Double.toString(x2));
+            c3.setAttribute("cx", Double.toString(x3));
+
+            c1.setAttribute("cy", Double.toString(cy));
+            c2.setAttribute("cy", Double.toString(cy));
+            c3.setAttribute("cy", Double.toString(cy));
+
+            c1.setAttribute("fill", "black");
+            c2.setAttribute("fill", "black");
+            c3.setAttribute("fill", "black");
+
+            ellipsis.appendChild(c1);
+            ellipsis.appendChild(c2);
+            ellipsis.appendChild(c3);
+
+            nexus.addSVGElement(ellipsis);
         }
         else{
-            int position = nexus.getAssociations(bandName).size();
-            cx = ax+alength+((position+(position-1))*radius);
-        }
-
-        double cy = associationSVG.getY();
-        trait.setAttribute("cx", Double.toString(cx));
-        trait.setAttribute("cy", Double.toString(cy));
-        trait.setAttribute("r", Double.toString(radius));
-        //          trait.setAttribute("style", "fill:blue;stroke:#211c1d;stroke-width:0.8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none");
-
-
-         Random generator = new Random();
-         int index = generator.nextInt(5);
-
-         String colour = getColour(index);
-
-         trait.setAttribute("fill",colour);
-         trait.setAttribute("stroke","black");
-         trait.setAttribute("stroke-width", "0.5");
-
-         trait.setAttribute("id",getName());
-         trait.setAttribute("title",getName());
-
-         nexus.addSVGElement(trait);
-
+//too many traits to render
+           getLog().debug("Trait " + traitName + " cannot be rendered as there are already more than 10 traits for chromosomal band " + bandName);
+        }       */
      }
 
     public void setTraitName(OWLNamedIndividual individual, OWLOntology ontology, RenderletNexus nexus){
-/*       OWLOntologyManager manager = new OntologyConfiguration().getOWLOntologyManager();
+       OWLOntologyManager manager = nexus.getManager();
 
         System.out.println("Manager handles: "  + manager.getOntologies().size() + " ontologies");
         OWLReasoner reasoner = nexus.getReasoner();
@@ -166,7 +217,7 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
                 traitName = val.getLiteral();
                 System.out.println(traitName);
             }
-        }                               */
+        }
     }
 
     public OWLNamedIndividual getAssociation(RenderletNexus nexus, OWLNamedIndividual trait, OWLOntology ontology){

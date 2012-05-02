@@ -1,6 +1,7 @@
 package uk.ac.ebi.fgpt.goci.pussycat.renderlet;
 
 import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.w3c.dom.Element;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
@@ -27,6 +28,15 @@ public interface RenderletNexus {
      * @return true if the registration was successful
      */
     boolean register(Renderlet renderlet);
+
+
+    void setOWLOntologyManager(OWLOntologyManager manager);
+
+    OWLOntologyManager getManager();
+
+    void setReasoner(OWLReasoner reasoner);
+
+    OWLReasoner getReasoner();
 
     /**
      * Called whenever a renderlet renders an entity
@@ -63,8 +73,6 @@ public interface RenderletNexus {
     Element createSVGElement(String g);
 
     void addSVGElement(Element e);
-
-    OWLReasoner getReasoner();
 
     <O> RenderingEvent getRenderingEvent(O renderedEntity);
 

@@ -89,13 +89,13 @@ else{
 
     @Override
     public void render(RenderletNexus nexus, OWLOntology renderingContext, OWLNamedIndividual renderingEntity) {
-        System.out.println("Association: " + renderingEntity);
-//        getLog().debug("Association: " + renderingEntity);
+ //       System.out.println("Association: " + renderingEntity);
+       getLog().debug("Association: " + renderingEntity);
 
         String bandName = getSNPLocation(renderingEntity, renderingContext);
 //SNP does not have any positional information
         if(bandName == null){
-            log.error("There is no location available for the SNP in association " + renderingEntity);
+            getLog().error("There is no location available for the SNP in association " + renderingEntity);
         }
 
         else{
@@ -174,7 +174,7 @@ else{
 
     //there is already another association in this band - can't render the association but need to render the trait as well as add to various nexus lists
             else{
-                System.out.println("Secondary association: " + renderingEntity + " for band " + bandName);
+                getLog().debug("Secondary association: " + renderingEntity + " for band " + bandName);
     //get the SVG for the first assocation rendered for this band and reuse it for this association, but without adding it to the SVG file
                 OWLNamedIndividual previousEntity = (OWLNamedIndividual)nexus.getAssociations(bandName).get(0);
                 g = nexus.getRenderingEvent(previousEntity).getRenderedSVG();
@@ -186,7 +186,7 @@ else{
 
             OWLNamedIndividual trait = getTrait(renderingEntity, renderingContext, nexus);
 
-            System.out.println("Trait: " + trait);
+            getLog().debug("Trait: " + trait);
 
             if(!bandflag){
                 for (Renderlet r : nexus.getRenderlets()){
@@ -204,7 +204,6 @@ else{
     public OWLNamedIndividual getTrait(OWLNamedIndividual individual, OWLOntology ontology, RenderletNexus nexus){
         OWLReasoner reasoner = nexus.getReasoner();
         OWLNamedIndividual trait = null;
-        String name = "GWAS trait";
 
         OWLDataFactory dataFactory = OWLManager.createOWLOntologyManager().getOWLDataFactory();
 
@@ -243,12 +242,16 @@ else{
 
 //get the SNP's cytogenetic band
                     OWLObjectProperty has_band = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.LOCATED_IN_PROPERTY_IRI));
-                    OWLIndividual band = SNP.getObjectPropertyValues(has_band,ontology).toArray(new OWLIndividual[0])[0];
 
-//get the band's name
-                    OWLDataProperty has_name = dataFactory.getOWLDataProperty(IRI.create(OntologyConstants.HAS_NAME_PROPERTY_IRI));
-                    bandName = band.getDataPropertyValues(has_name,ontology).toArray(new OWLLiteral[0])[0].getLiteral();
+                    OWLIndividual[] bands = SNP.getObjectPropertyValues(has_band,ontology).toArray(new OWLIndividual[0]);
 
+                    if(bands.length > 0){
+                        OWLIndividual band = bands[0];
+                        //get the band's name
+                        OWLDataProperty has_name = dataFactory.getOWLDataProperty(IRI.create(OntologyConstants.HAS_NAME_PROPERTY_IRI));
+                        bandName = band.getDataPropertyValues(has_name,ontology).toArray(new OWLLiteral[0])[0].getLiteral();
+
+                    }
                 }
             }
         }
