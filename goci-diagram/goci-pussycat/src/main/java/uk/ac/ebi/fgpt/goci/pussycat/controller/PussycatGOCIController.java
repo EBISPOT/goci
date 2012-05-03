@@ -225,7 +225,8 @@ public class PussycatGOCIController {
 //           renderletNexus = RenderletNexusFactory.createDefaultRenderletNexus();
                 renderletNexus = RenderletNexusFactory.createDefaultRenderletNexus(
                         getOntologyConfiguration().getOWLOntologyManager(),
-                        getPussycatSession(session).getReasoner());
+                        getPussycatSession(session).getReasoner(),
+                        getOntologyConfiguration().getEfoLabels());
 
                 nexusMap.put(session, renderletNexus);
 

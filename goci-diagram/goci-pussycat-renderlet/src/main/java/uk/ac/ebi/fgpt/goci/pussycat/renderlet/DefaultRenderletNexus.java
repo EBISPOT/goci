@@ -33,6 +33,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
     private Map<String, ArrayList<Object>> renderedAssociations;
     private Map<Object, RenderingEvent> renderedEntities;
     private SVGBuilder svgBuilder;
+    private Map<IRI, String> efoLabels;
 
     private OWLOntologyManager manager;
     private OWLReasoner reasoner;
@@ -65,6 +66,17 @@ public class DefaultRenderletNexus implements RenderletNexus {
     public OWLReasoner getReasoner() {
         return reasoner;
     }
+
+    @Override
+    public void setEfoLabels(Map<IRI, String> efoLabels) {
+        this.efoLabels = efoLabels;
+    }
+
+    @Override
+    public Map<IRI, String> getEfoLabels() {
+        return efoLabels;
+    }
+
 
     public boolean register(Renderlet renderlet) {
         getLog().debug("Registering renderlet '" + renderlet.getName() + "' " +
@@ -136,7 +148,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
         }
 
         if (!check) {
-            renderChromosomes(reasoner);
+            renderChromosomes();
         }
 
         // get the ontology loaded into the reasoner
@@ -166,7 +178,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
 
     }
 
-    public void renderChromosomes(OWLReasoner reasoner) {
+    public void renderChromosomes() {
         OWLOntology ontology = reasoner.getRootOntology();
 
         for (Renderlet r : renderlets) {

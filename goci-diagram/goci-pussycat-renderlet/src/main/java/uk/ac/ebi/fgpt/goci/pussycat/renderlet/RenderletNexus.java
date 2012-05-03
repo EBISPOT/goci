@@ -1,5 +1,6 @@
 package uk.ac.ebi.fgpt.goci.pussycat.renderlet;
 
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
@@ -7,6 +8,7 @@ import org.w3c.dom.Element;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -37,6 +39,10 @@ public interface RenderletNexus {
     void setReasoner(OWLReasoner reasoner);
 
     OWLReasoner getReasoner();
+
+    void setEfoLabels(Map<IRI, String> efoLabels);
+
+    Map<IRI, String> getEfoLabels();
 
     /**
      * Called whenever a renderlet renders an entity
