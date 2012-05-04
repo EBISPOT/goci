@@ -26,10 +26,10 @@ function init() {
                                });
 
         // resize the page so it fills window
-        resizePage();
+        resizeDisplay();
         // register resize handler so that the page resizes when the window size changes
         $(window).resize(function() {
-            resizePage();
+            resizeDisplay();
         });
 
         $("#retrybutton").button();
@@ -62,7 +62,7 @@ function init() {
     log("Pussycat UI initialized OK");
 }
 
-function resizePage() {
+function resizeDisplay() {
     // get sizes of borders around body and page_wrapper element
     var bodyMargin = parseInt($('body').css('margin-top')) + parseInt($('body').css('margin-bottom'));
     var pageMargin = parseInt($("#page_wrapper").css('margin-top')) + parseInt($("#page_wrapper").css('margin-bottom'));
@@ -93,6 +93,27 @@ function resizePage() {
     $("#diagramarea").height($("#diagramtab").height() -
                                      ($("#diagramarea").position().top - $("#diagramtab").position().top));
     log("Window resized: new size = " + $("#page_wrapper").height() + ", " + $("#page_wrapper").width());
+
+    // update the svg size to fill the space available in the diagram area
+    try {
+        var width = $("#diagramarea").width();
+        var height = $("#diagramarea").height();
+        $("#goci-svg").attr("width", width);
+        $("#goci-svg").attr("height", height);
+        // update the svg viewBox to match width and height adjusting for scaling
+        var newWidth = width * scalingFactor;
+        var newHeight = height * scalingFactor;
+        var viewBox = document.getElementById('goci-svg').getAttribute("viewBox");
+        var elements = viewBox.split(' ');
+        var newViewBox = elements[0] + " " + elements[1] + " " + newWidth + " " + newHeight;
+//        document.getElementById('goci-svg').setAttribute("viewBox", newViewBox);
+        $("#goci-svg").attr("viewBox", newViewBox);
+        log("Adjusted SVG dimensions - SVG now width = " + width + ", height = " + height + ", viewBox = " +
+                    newViewBox);
+    }
+    catch (ex) {
+        log("Failed to adjust SVG dimensions: " + ex);
+    }
 }
 
 function tabShow(event, ui) {
@@ -122,6 +143,7 @@ function insertSVG(svg) {
     log("Obtained SVG from server OK, rendering...");
     $("#diagramareaerror").css({"display":"none"});
     $("#diagramareacontent").html(svg);
+    resizeDisplay();
     renderingComplete = true;
     log("Diagram area div updated with SVG content OK");
 }
