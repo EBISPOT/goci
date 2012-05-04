@@ -21,15 +21,14 @@
         <appender-ref ref="goci-log" />
     </logger>
 
-    <!--<logger name="uk.ac.ebi.fgpt.goci.pussycat" additivity="false">-->
-        <!--<level value="DEBUG" />-->
-        <!--<appender-ref ref="console" />-->
-    <!--</logger>-->
+    <logger name="uk.ac.ebi.fgpt.goci.pussycat" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="console" />
+    </logger>
 
     <root>
         <priority value="INFO" />
         <appender-ref ref="goci-log" />
-        <!--<appender-ref ref="console" />-->
     </root>
 
 </log4j:configuration>

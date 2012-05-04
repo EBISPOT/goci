@@ -1,4 +1,4 @@
-var enableDebugging = false;
+var enableDebugging = true;
 
 var currentScale = 0;
 var scalingFactor = 1.0;
@@ -25,8 +25,9 @@ function init() {
                                    selected:1
                                });
 
-        // calculate position of diagramarea div
+        // resize the page so it fills window
         resizePage();
+        // register resize handler so that the page resizes when the window size changes
         $(window).resize(function() {
             resizePage();
         });
@@ -70,7 +71,7 @@ function resizePage() {
     var offset = bodyMargin + pageMargin + pageBorder;
 
     // update the size of the page_wrapper to fill document
-    $("#page_wrapper").height($(document).height() - offset);
+    $("#page_wrapper").height($(window).height() - offset);
 
     // update the size of divtable to fill the available space
     $("#divtable").height($("#page_wrapper").height() - $("#divtable").offset().top);
@@ -127,9 +128,9 @@ function insertSVG(svg) {
 
 function serverCommunicationFail(jqXHR, textStatus, errorThrown) {
     // show diagram area error div
-    log("Failed to acquire SVG from server - possible communication fail?");
     $("#diagramareaerror").css({"display":"block"});
     $("#diagramareaerrortext").html(jqXHR.responseText);
+    log("Failed to acquire SVG from server - " + jqXHR.responseText);
 }
 
 function zoomIn() {
