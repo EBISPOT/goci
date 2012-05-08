@@ -106,8 +106,7 @@ function resizeDisplay() {
         var viewBox = document.getElementById('goci-svg').getAttribute("viewBox");
         var elements = viewBox.split(' ');
         var newViewBox = elements[0] + " " + elements[1] + " " + newWidth + " " + newHeight;
-//        document.getElementById('goci-svg').setAttribute("viewBox", newViewBox);
-        $("#goci-svg").attr("viewBox", newViewBox);
+//        document.getElementById('goci-svg').setAttribute("viewBox", newViewBox); // this uses server SVG size.  If commented out, default view is zoomed
         log("Adjusted SVG dimensions - SVG now width = " + width + ", height = " + height + ", viewBox = " +
                     newViewBox);
     }
