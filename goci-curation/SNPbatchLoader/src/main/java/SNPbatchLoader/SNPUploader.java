@@ -157,19 +157,36 @@ public class SNPUploader {
 					 stmt.executeUpdate("Insert into GWASGENEXREF(geneid, gwasstudiessnpid) values(" + newid + "," + snpID + ")");
 				 }
 /*update SNP list*/
-				 ResultSet rs3 = stmt.executeQuery("Select * from GWASSNP where snp = '" + current.getSNP() + "'");
-				 rs3 = stmt.getResultSet();
-				 if(!rs.next()){
-					 stmt.executeUpdate("Insert into GWASSNP(snp) values('" + current.getSNP() + "')");
-				 }
-				 rs3 = stmt.executeQuery("Select id from GWASSNP where snp = '" + current.getSNP() + "'");
-				 rs3 = stmt.getResultSet();
-				 rs3.next();
-				 int newid = rs3.getInt(1);
-				 stmt.executeUpdate("Insert into GWASSNPXREF(snpid, gwasstudiessnpid) values(" + newid + "," + snpID + ")");
-				 
-			 
-			 } 
+                 if(current.getSNP().indexOf(',') != -1){
+                     StringTokenizer stn = new StringTokenizer(current.getSNP(), ",");
+                     while(stn.hasMoreTokens()){
+                         String newsnp = stn.nextToken();
+                         ResultSet rs3 = stmt.executeQuery("Select * from GWASSNP where snp = '" + newsnp + "'");
+                         rs3 = stmt.getResultSet();
+                         if(!rs.next()){
+                             stmt.executeUpdate("Insert into GWASSNP(snp) values('" + newsnp + "')");
+                         }
+                         rs3 = stmt.executeQuery("Select id from GWASSNP where snp = '" + newsnp + "'");
+                         rs3 = stmt.getResultSet();
+                         rs3.next();
+                         int newid = rs3.getInt(1);
+                         stmt.executeUpdate("Insert into GWASSNPXREF(snpid, gwasstudiessnpid) values(" + newid + "," + snpID + ")");
+                     }
+                 }
+                 else{
+                     ResultSet rs3 = stmt.executeQuery("Select * from GWASSNP where snp = '" + current.getSNP() + "'");
+                     rs3 = stmt.getResultSet();
+                     if(!rs.next()){
+                         stmt.executeUpdate("Insert into GWASSNP(snp) values('" + current.getSNP() + "')");
+                     }
+                     rs3 = stmt.executeQuery("Select id from GWASSNP where snp = '" + current.getSNP() + "'");
+                     rs3 = stmt.getResultSet();
+                     rs3.next();
+                     int newid = rs3.getInt(1);
+                     stmt.executeUpdate("Insert into GWASSNPXREF(snpid, gwasstudiessnpid) values(" + newid + "," + snpID + ")");
+
+                 }
+			 }
 		 }
 		catch (SQLException ex) {
 				throw new Exception("Attempting to write to the database has generated an SQL exception", ex);
