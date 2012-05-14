@@ -66,7 +66,8 @@
                         using an ontology and scalable vector graphics (SVG). Ultimately, the diagram produced on this
                         fashion can be filtered and searched at different levels of granularity and by different
                         criteria, including trait, chromosomal region and time. It is going to be possible to zoom in
-                        over chromosomes in order to see all SNP-trait associations for a given region. SNP-trait associations are also
+                        over chromosomes in order to see all SNP-trait associations for a given region. SNP-trait
+                        associations are also
                         going to be interactive, providing summary information on mouse-over as well as being clickable
                         to allow proceeding from an association to the catalogue entry and to the publication.</p>
 
@@ -77,14 +78,17 @@
                     <p>
                         This is a list of features currently (or soon to be) available in the diagram:
                     <ul>
-                        <li><b>Colours:</b> A new colour scheme for the diagram is under development in collaboration with the
+                        <li><b>Colours:</b> A new colour scheme for the diagram is under development in collaboration
+                            with the
                             NHGRI GWAS catalog curation team.
                         </li>
                         <li><b>Number of studies:</b> In order to minimise ontology reasoning times, the beta version of
                             the diagram only displays a dozen studies.
                         </li>
-                        <li><b>Mouse-over:</b> Hovering over a chromosome or coloured circle displays the name of the corresponding
-                            chromosome or trait. This feature is not supported by all web browsers - it is known to work in Mozilla
+                        <li><b>Mouse-over:</b> Hovering over a chromosome or coloured circle displays the name of the
+                            corresponding
+                            chromosome or trait. This feature is not supported by all web browsers - it is known to work
+                            in Mozilla
                             Firefox but not Google Chrome.
                         </li>
                         <li><b>Filtering options:</b> Filtering capabilities will be rolled out for testing as soon as
@@ -114,24 +118,31 @@
                     </div>
                 </div>
                 <div id="helptab" class="tabcontent">
-                    <p> This section aims to provide some guidance on how the use the new dynamic GWAS diagram. For an introduction
+                    <p> This section aims to provide some guidance on how the use the new dynamic GWAS diagram. For an
+                        introduction
                         to the GWAS catalog, see the "Home" tab.</p>
                     <ul>
-                        <li><b>Initial diagram generation:</b> When the "Diagram" tab is first selected, there may be a delay of up to
-                         30s before the diagram is rendered. This is because all the information in the diagram is rendered dynamically,
-                        and this requires a certain amount of processing. Please be patient and do not try to reload as this will simply
-                        cause the rendering process to restart.
+                        <li><b>Initial diagram generation:</b> When the "Diagram" tab is first selected, there may be a
+                            delay of up to
+                            30s before the diagram is rendered. This is because all the information in the diagram is
+                            rendered dynamically,
+                            and this requires a certain amount of processing. Please be patient and do not try to reload
+                            as this will simply
+                            cause the rendering process to restart.
                         </li>
                         <li><b>Number of studies:</b> The beta version of the GWAS diagram shows only a dozen studies in order to reduce
                         processing overheads during the testing phase. More studies will be added soon.</li>
                         <li><b>Zooming:</b> It is possible to zoom the diagram in and out by using the scroll wheel on the mouse. Scrolling
                         up zooms in and scrolling down zooms out. Scrolling should also work on most laptops using the touchpad but this feature
                         has not yet been widely tested.
-                        </li>
-                        <li><b>Moving the diagram:</b> When zooming in, part of the diagram appears off the right side of the screen. This is
-                        because the area of the screen in which diagram can be viewed remains the same size, even as the size of the underlying
-                        diagram changes. The diagram can be moved around the viewing area by clicking on any part of the diagram with the left
-                        mouse button and, holding the mouse button down, dragging the diagram around the screen until the desired part is visible.
+                        <li><b>Moving the diagram:</b> When zooming in, part of the diagram appears off the right side
+                            of the screen. This is
+                            because the area of the screen in which diagram can be viewed remains the same size, even as
+                            the size of the underlying
+                            diagram changes. The diagram can be moved around the viewing area by clicking on any part of
+                            the diagram with the left
+                            mouse button and, holding the mouse button down, dragging the diagram around the screen
+                            until the desired part is visible.
                         </li>
                         <li><b>Labels:</b> Chromosomes and traits (coloured circles) have labels that display when hovering the mouse pointer over
                         a given feature. Note that this functionality is only available in some web browsers, such a Mozilla Firefox. It does not work
@@ -214,7 +225,6 @@
                           </g>
                     </svg>
 
-
                 </div>
                 <div id="logtab" class="tabcontent" style="display: none;">
                     <h4>SVG transform debugging:</h4>
@@ -232,9 +242,19 @@
                 </div>
             </div>
         </div>
-        <!-- end divtable -->
     </div>
-    <!-- pagewrapper -->
+</div>
+
+<div id="tooltip" class="ui-widget-header tooltip" style="display: none;">
+    <span id="tooltip-text"></span>
+</div>
+
+<div id="zoom-and-pan" class="navbar" style="display: none;">
+    <div id="pan"></div>
+    <!-- todo - do we need a pan button too? -->
+    <div id="zoomInButton" class="zoom-button ui-icon ui-icon-circle-plus"></div>
+    <div id="zoom" style="height: 90%"></div>
+    <div id="zoomOutButton" class="zoom-button ui-icon ui-icon-circle-minus"></div>
 </div>
 
 </body>

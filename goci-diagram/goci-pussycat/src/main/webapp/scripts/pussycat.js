@@ -1,6 +1,7 @@
 var enableDebugging = true;
 
-var currentScale = 0;
+var maxScale = 100;
+var currentScale = maxScale / 2;
 var scalingFactor = 1.0;
 var dragOffsetX = 0;
 var dragOffsetY = 0;
@@ -35,8 +36,13 @@ function init() {
         $("#retrybutton").button();
         $("#retrybutton").click(renderDiagram);
 
+        // bind mousemove handler
+        $(document).mousemove(function(ev){
+            $('#tooltip').css({"left":ev.pageX + 20, "top":ev.pageY});
+        });
+
         // bind mousewheel event handler
-        $('#diagramareacontent').mousewheel(function(event, delta) {
+        $('#diagramareacontent').mousewheel(function(ev, delta) {
             if (delta > 0) {
                 currentScale++;
                 zoomIn();
@@ -58,6 +64,30 @@ function init() {
                           updateOffset();
                       }
         );
+
+        // initialize slider
+        var navbarPos = $("#diagramarea").offset().top + 25;
+        $(".navbar").css({"top":navbarPos});
+        log("Setting navigation bar offset to " + navbarPos);
+        $("#zoom").slider({
+                              orientation:"vertical",
+                              max:maxScale,
+                              value:currentScale,
+                              slide:function(event, ui) {
+                                  slideZoom(ui.value);
+                              }
+                          });
+        $("#zoomInButton").button();
+        $("#zoomInButton").click(function() {
+            currentScale++;
+            zoomIn();
+        });
+        $("#zoomOutButton").button();
+        $("#zoomOutButton").click(function() {
+            currentScale--;
+            zoomOut();
+        });
+        log("Initialized zoom sidebar OK");
     });
     log("Pussycat UI initialized OK");
 }
@@ -90,9 +120,14 @@ function resizeDisplay() {
     $(".tabcontent").height($("#tabs").height() - maxPadding);
 
     // update the diagramarea to fill the available space
-    $("#diagramarea").height($("#diagramtab").height() -
-                                     ($("#diagramarea").position().top - $("#diagramtab").position().top));
+    var availableHeight = $("#diagramtab").height() -
+            ($("#diagramarea").position().top - $("#diagramtab").position().top);
+    $("#diagramarea").height(availableHeight);
     log("Window resized: new size = " + $("#page_wrapper").height() + ", " + $("#page_wrapper").width());
+
+    // resize the navbar to match
+    $(".navbar").height(availableHeight - 50);
+    log("navbar resized: new size = " + $(".navbar").height());
 
     // update the svg size to fill the space available in the diagram area
     try {
@@ -117,12 +152,18 @@ function resizeDisplay() {
 
 function tabShow(event, ui) {
     if (ui.panel.id == "diagramtab") {
+        $(".navbar").show();
         renderDiagram();
+    }
+    else {
+        $(".navbar").hide();
     }
 }
 
 function renderDiagram() {
     if (!renderingComplete) {
+        log("Hiding navbar...");
+        $(".navbar").hide();
         // call to api/views/gwasdiagram to get required svg
         log("Rendering GWAS diagram - calling api/views/gwasdiagram...");
         $.ajax({
@@ -142,6 +183,8 @@ function insertSVG(svg) {
     log("Obtained SVG from server OK, rendering...");
     $("#diagramareaerror").css({"display":"none"});
     $("#diagramareacontent").html(svg);
+    log("Displaying navbar...");
+    $(".navbar").show();
     resizeDisplay();
     renderingComplete = true;
     log("Diagram area div updated with SVG content OK");
@@ -152,6 +195,56 @@ function serverCommunicationFail(jqXHR, textStatus, errorThrown) {
     $("#diagramareaerror").css({"display":"block"});
     $("#diagramareaerrortext").html(jqXHR.responseText);
     log("Failed to acquire SVG from server - " + jqXHR.responseText);
+}
+
+function showTooltip(tooltipText) {
+    $("#tooltip-text").html(tooltipText);
+    $("#tooltip").show();
+}
+
+function hideTooltip() {
+    $("#tooltip").hide();
+}
+
+function slideZoom(newScale) {
+    if (currentScale < 0) {
+        // try and recover from excessive zooming out!
+        log("Attempting to recover from zooming waaaay out - current scale is " + currentScale);
+        currentScale++;
+        zoomIn();
+        slideZoom(newScale);
+    }
+    else if (currentScale > maxScale) {
+        // try and recover from excessive zooming in!
+        log("Attempting to recover from zooming waaaay in - current scale is " + currentScale);
+        currentScale--;
+        zoomOut();
+        slideZoom(newScale);
+    }
+    else {
+        // zooming inside normal ranges, so adjust
+        var times;
+        var i;
+        if (newScale > currentScale) {
+            times = newScale - currentScale;
+            log("Zooming in - zoom operations required = " + times);
+            currentScale = newScale;
+            for (i = 0; i < times; i++) {
+                zoomIn();
+            }
+        }
+        else if (newScale < currentScale) {
+            times = currentScale - newScale;
+            log("Zooming out - zoom operations required = " + times);
+            currentScale = newScale;
+            for (i = 0; i < times; i++) {
+                zoomOut();
+            }
+        }
+        else {
+            log("Detected sidebar zoom event, current scale matches required scale");
+        }
+    }
 }
 
 function zoomIn() {
@@ -170,6 +263,11 @@ function zoomIn() {
     var newViewBox = elements[0] + " " + elements[1] + " " + newWidth + " " + newHeight;
     document.getElementById('goci-svg').setAttribute("viewBox", newViewBox);
     log("Zoom in over SVG event.  New zoom level: " + scalingFactor + ", viewBox now set to " + newViewBox);
+    // make sure zoom bar matches currentScale
+    if (currentScale > 0 && currentScale < maxScale) {
+        $("#zoom").slider("option", "value", currentScale);
+        log("Set zoom bar value to " + currentScale);
+    }
 }
 
 function zoomOut() {
@@ -188,6 +286,11 @@ function zoomOut() {
     var newViewBox = elements[0] + " " + elements[1] + " " + newWidth + " " + newHeight;
     document.getElementById('goci-svg').setAttribute("viewBox", newViewBox);
     log("Zoom out over SVG event.  New zoom level: " + scalingFactor + ", viewBox now set to " + newViewBox);
+    // make sure zoom bar matches currentScale (between min and max)
+    if (currentScale > 0 && currentScale < maxScale) {
+        $("#zoom").slider("option", "value", currentScale);
+        log("Set zoom bar value to " + currentScale);
+    }
 }
 
 function pan(deltaX, deltaY) {
