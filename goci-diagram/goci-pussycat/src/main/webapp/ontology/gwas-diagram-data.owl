@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <Ontology xmlns="http://www.w3.org/2002/07/owl#"
-     xml:base="http://www.ebi.ac.uk/efo/gwas-diagram/2012/04/13/data"
+     xml:base="http://www.ebi.ac.uk/efo/gwas-diagram/2012/05/11/data"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:xml="http://www.w3.org/XML/1998/namespace"
-     ontologyIRI="http://www.ebi.ac.uk/efo/gwas-diagram/2012/04/13/data">
+     ontologyIRI="http://www.ebi.ac.uk/efo/gwas-diagram/2012/05/11/data">
     <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
     <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
     <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
@@ -684,39 +684,39 @@
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_13508"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004462"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14443"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004462"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14444"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004462"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14445"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004462"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14446"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004462"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14447"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004462"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14448"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004462"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14449"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004462"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14450"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004462"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14451"/>
     </ClassAssertion>
     <ClassAssertion>
@@ -728,115 +728,115 @@
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14456"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14469"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14470"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14471"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14472"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14473"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14474"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14475"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14476"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14477"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14478"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14479"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14480"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14481"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14482"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14483"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14484"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14485"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14486"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14487"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14488"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14489"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14490"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14491"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14492"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004466"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14494"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004466"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14495"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004466"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14496"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004466"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14497"/>
     </ClassAssertion>
     <ClassAssertion>
@@ -856,15 +856,15 @@
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14508"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14511"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14512"/>
     </ClassAssertion>
     <ClassAssertion>
-        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0000001"/>
+        <Class IRI="http://www.ebi.ac.uk/efo/EFO_0004465"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14515"/>
     </ClassAssertion>
     <ClassAssertion>
@@ -1498,32 +1498,7 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19525955"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13350"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19525955"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13351"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19525955"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13352"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19525955"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13353"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19525955"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13354"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19525955"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13355"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13358"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -1533,22 +1508,37 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19525955"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13358"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13355"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19525955"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13354"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19525955"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13353"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19525955"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13352"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19525955"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13351"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19525955"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13350"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19567438"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13419"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19567438"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13418"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19567438"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13416"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13415"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -1558,27 +1548,22 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19567438"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13415"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13416"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19567438"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13418"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19567438"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13419"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19581569"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13487"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19581569"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13488"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19581569"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13486"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19581569"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13484"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13483"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -1588,12 +1573,27 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19581569"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13483"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13484"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19581569"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13486"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19581569"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13488"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19581569"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13487"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19597492"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13508"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13506"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -1603,42 +1603,7 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_19597492"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13506"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20062060"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14450"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20062060"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14443"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20062060"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14447"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20062060"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14446"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20062060"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14445"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20062060"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14444"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20062060"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14449"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13508"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -1648,12 +1613,42 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20062060"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14449"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20062060"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14444"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20062060"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14445"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20062060"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14446"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20062060"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14447"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20062060"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14443"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20062060"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14451"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20066004"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14455"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20062060"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14450"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -1662,93 +1657,63 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14490"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20066004"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14455"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14491"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14497"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14492"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14481"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14487"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14482"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14479"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14480"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14478"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14485"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14477"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14494"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14489"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14486"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14488"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14469"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14476"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14495"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14515"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14483"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14475"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14474"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14473"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14472"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14511"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14512"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14471"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14484"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -1763,57 +1728,92 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14484"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14471"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14483"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14512"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14495"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14511"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14469"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14472"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14486"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14473"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14494"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14474"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14485"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14475"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14480"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14515"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14482"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14476"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14481"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14488"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14497"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14489"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14477"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14478"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14479"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14487"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14492"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14491"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20081858"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14490"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -1823,7 +1823,7 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20101243"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14506"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14507"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -1833,7 +1833,7 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_20101243"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14507"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14506"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -1843,17 +1843,7 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_21149283"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_16966"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_21149283"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_16967"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_21149283"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_16965"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_17112"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -1863,7 +1853,17 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_21149283"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_17112"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_16965"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_21149283"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_16967"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/StudyFromDB_21149283"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_16966"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -1878,17 +1878,12 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13351"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_13351"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13351"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs6074022"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13352"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs9271366"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13351"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_13351"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -1897,8 +1892,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13353"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_13353"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13352"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs9271366"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -1907,8 +1902,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13354"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs6604026"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13353"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_13353"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -1917,8 +1912,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13355"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_13355"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13354"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs6604026"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -1927,8 +1922,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13356"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs6984045"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13355"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_13355"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -1937,8 +1932,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13358"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs8049603"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13356"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs6984045"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -1947,8 +1942,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13415"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_13415"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13358"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs8049603"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -1957,8 +1952,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13416"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs4537545"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13415"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_13415"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -1967,8 +1962,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13417"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs7553007"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13416"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs4537545"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -1977,8 +1972,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13418"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs1183910"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13417"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs7553007"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -1987,8 +1982,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13419"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_13419"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13418"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs1183910"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -1997,8 +1992,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13483"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_13483"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13419"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_13419"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2007,8 +2002,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13484"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs13160562"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13483"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_13483"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2017,8 +2012,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13485"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs1864982"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13484"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs13160562"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2027,8 +2022,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13486"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs6902771"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13485"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs1864982"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2037,8 +2032,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13487"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_13487"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13486"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs6902771"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2047,8 +2042,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13488"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_13488"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13487"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_13487"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2057,8 +2052,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13506"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs17042171"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13488"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_13488"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2067,8 +2062,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13507"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_13507"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13506"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs17042171"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2077,8 +2072,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13508"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs17375901"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13507"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_13507"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2087,8 +2082,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14443"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14443"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_13508"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs17375901"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2097,8 +2092,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14444"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14444"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14443"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14443"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2107,8 +2102,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14445"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14445"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14444"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14444"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2117,8 +2112,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14446"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs7692808"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14445"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14445"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2127,8 +2122,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14447"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs251253"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14446"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs7692808"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2137,8 +2132,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14448"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs3807989"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14447"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs251253"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2147,8 +2142,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14449"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14449"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14448"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs3807989"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2157,8 +2152,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14450"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs11047543"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14449"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14449"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2167,8 +2162,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14451"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14451"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14450"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs11047543"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2177,8 +2172,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14455"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs4343"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14451"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14451"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2187,8 +2182,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14456"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14456"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14455"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs4343"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2197,8 +2192,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14469"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14469"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14456"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14456"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2207,8 +2202,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14470"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs10830963"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14469"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14469"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2217,8 +2212,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14471"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs4607517"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14470"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs10830963"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2227,13 +2222,23 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14472"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14472"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14471"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs4607517"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14472"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs2191349"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14472"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14472"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14473"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs780094"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2242,8 +2247,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14473"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs780094"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14474"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs11708067"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2252,8 +2257,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14474"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs11708067"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14475"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14475"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2262,8 +2267,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14475"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14475"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14476"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs10885122"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2272,23 +2277,13 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14476"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs10885122"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14477"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs174550"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14477"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14477"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14478"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs11605924"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14477"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs174550"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2297,13 +2292,23 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14479"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14479"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14478"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs11605924"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14479"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs11920090"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14479"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14479"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14480"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs7034200"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2312,23 +2317,13 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14480"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs7034200"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14481"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs340874"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14481"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14481"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14482"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14482"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14481"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs340874"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2337,8 +2332,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14483"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14483"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14482"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14482"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2347,8 +2342,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14484"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14484"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14483"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14483"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2357,8 +2352,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14485"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs4607517"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14484"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14484"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2367,8 +2362,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14486"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14486"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14485"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs4607517"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2377,8 +2372,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14487"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14487"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14486"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14486"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2387,8 +2382,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14488"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14488"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14487"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14487"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2397,8 +2392,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14489"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs174550"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14488"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14488"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2407,8 +2402,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14490"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14490"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14489"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs174550"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2417,8 +2412,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14491"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs7034200"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14490"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14490"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2427,8 +2422,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14492"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14492"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14491"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs7034200"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2437,8 +2432,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14494"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs780094"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14492"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14492"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2447,8 +2442,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14495"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14495"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14494"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs780094"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2457,18 +2452,18 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14495"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14495"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14496"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs35767"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14496"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14496"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14496"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs35767"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14497"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs35767"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2477,8 +2472,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14503"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14503"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14497"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs35767"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2487,8 +2482,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14506"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14506"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14503"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14503"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2497,8 +2492,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14507"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs3790844"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14506"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14506"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2507,8 +2502,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14508"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs401681"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14507"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs3790844"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2517,8 +2512,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14511"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs11558471"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14508"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs401681"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2527,8 +2522,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14512"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14512"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14511"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs11558471"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2537,8 +2532,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14515"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs35767"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14512"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14512"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2547,8 +2542,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14530"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14530"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14515"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs35767"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2557,8 +2552,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_16965"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_16965"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14530"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_14530"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2567,8 +2562,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_16966"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_16966"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_16965"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_16965"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2577,8 +2572,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_16967"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_16967"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_16966"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_16966"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2587,8 +2582,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_16968"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_16968"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_16967"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_16967"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2597,8 +2592,8 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_17112"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs10047462"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_16968"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_16968"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
@@ -2606,34 +2601,14 @@
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_trait_17112"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_1"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_1p31.3"/>
+        <ObjectProperty IRI="http://purl.obolibrary.org/obo/IAO_0000136"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_17112"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/SnpFromDB_rs10047462"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_1"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_1q21.3"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_1"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_1p22.1"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_1"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_1q23.2"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_1"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_1p13.1"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_1"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_1p36.22"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_1q32.3"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -2643,12 +2618,32 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_1"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_1q32.3"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_1p36.22"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_10"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_10p15.1"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_1"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_1p13.1"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_1"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_1q23.2"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_1"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_1p22.1"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_1"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_1q21.3"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_1"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_1p31.3"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -2657,18 +2652,13 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_11"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_11q13.5"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_10"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_10p15.1"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_11"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_11q12.2"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_11"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_11q21"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_11p11.2"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -2678,22 +2668,22 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_11"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_11p11.2"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_11q21"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_11"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_11q12.2"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_11"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_11q13.5"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_12"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_12p12.1"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_12"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_12q24.21"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_12"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_12q14.1"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_12q24.31"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -2703,7 +2693,17 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_12"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_12q24.31"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_12q14.1"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_12"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_12q24.21"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_12"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_12p12.1"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -2723,12 +2723,12 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_16"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_16p12.1"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_16q22.3"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_16"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_16q22.3"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_16p12.1"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -2743,12 +2743,7 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_2"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_2q31.1"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_2"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_2p14"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_2q35"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -2758,17 +2753,22 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_2"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_2q35"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_2p14"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_20"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_20p12.2"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_2"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_2q31.1"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_20"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_20q13.12"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_20"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_20p12.2"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -2783,7 +2783,7 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_3"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_3q26.2"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_3q21.1"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -2793,12 +2793,7 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_3"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_3q21.1"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_4"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_4q21.23"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_3q26.2"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -2807,13 +2802,13 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_5"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_5q35.1"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_4"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_4q21.23"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_5"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_5q32"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_5p15.33"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -2823,12 +2818,17 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_5"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_5p15.33"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_5q32"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_5"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_5q35.1"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_6"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_6p21.32"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_6q25.1"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -2838,17 +2838,12 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_6"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_6q25.1"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_6p21.32"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_7"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_7q31.2"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_7"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_7q22.3"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_7p13"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -2858,12 +2853,12 @@
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_7"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_7p13"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_7q22.3"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_8"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_8q24.21"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_7"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_7q31.2"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
@@ -2872,13 +2867,18 @@
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_9"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_9p24.2"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_8"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_8q24.21"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_9"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_9q34.2"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="http://www.obofoundry.org/ro/ro.owl#has_part"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/chromosome_9"/>
+        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/band_9p24.2"/>
     </ObjectPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00031"/>
@@ -3801,19 +3801,9 @@
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">5.0E-11</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14443"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">PR interval</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14444"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">6.0E-26</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14444"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">PR interval</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -3821,19 +3811,9 @@
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">0.0</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14445"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">PR interval</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14446"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">6.0E-20</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14446"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">PR interval</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -3841,19 +3821,9 @@
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">9.0E-13</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14447"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">PR interval</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14448"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">4.0E-28</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14448"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">PR interval</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -3861,29 +3831,14 @@
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">3.0E-8</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14449"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">PR interval</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14450"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">3.0E-13</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14450"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">PR interval</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14451"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">3.0E-17</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14451"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">PR interval</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -3911,29 +3866,14 @@
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">0.0</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14469"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14470"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">0.0</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14470"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14471"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">0.0</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14471"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -3941,19 +3881,9 @@
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">2.9E-44</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14472"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14473"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">6.0E-38</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14473"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -3961,19 +3891,9 @@
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">7.0E-22</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14474"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14475"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">2.0E-18</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14475"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -3981,19 +3901,9 @@
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">3.0E-16</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14476"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14477"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">2.0E-15</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14477"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -4001,19 +3911,9 @@
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">1.0E-14</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14478"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14479"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">8.0E-13</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14479"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -4021,19 +3921,9 @@
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">1.0E-12</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14480"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14481"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">7.0E-12</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14481"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -4041,19 +3931,9 @@
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">4.0E-8</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14482"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14483"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">0.0</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14483"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -4061,19 +3941,9 @@
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">3.0E-43</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14484"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14485"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">2.0E-16</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14485"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -4081,19 +3951,9 @@
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">3.0E-17</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14486"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14487"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">3.0E-12</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14487"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -4101,29 +3961,14 @@
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">2.0E-6</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14488"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14489"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">5.0E-13</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14489"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14490"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">5.0E-6</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14490"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -4131,19 +3976,9 @@
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">1.0E-13</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14491"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14492"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">5.0E-6</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14492"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -4151,19 +3986,9 @@
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">4.0E-20</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14494"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting insulin-related traits</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14495"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">3.0E-24</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14495"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting insulin-related traits</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -4171,19 +3996,9 @@
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">3.0E-8</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14496"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting insulin-related traits</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14497"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">2.0E-9</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14497"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting insulin-related traits</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -4211,29 +4026,14 @@
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">3.0E-11</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14511"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14512"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">1.0E-8</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14512"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14515"/>
         <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#float">3.0E-8</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
-        <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_14515"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Fasting glucose-related traits</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -4248,7 +4048,7 @@
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_16965"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Serum markers of iron status</Literal>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Iron status biomarkers</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -4258,7 +4058,7 @@
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_16966"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Serum markers of iron status</Literal>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Iron status biomarkers</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -4268,7 +4068,7 @@
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_16967"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Serum markers of iron status</Literal>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Iron status biomarkers</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -4278,7 +4078,7 @@
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_16968"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Serum markers of iron status</Literal>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Iron status biomarkers</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00036"/>
@@ -4288,7 +4088,7 @@
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00041"/>
         <NamedIndividual IRI="http://www.ebi.ac.uk/efo/gwas-diagram/TraitAssocationFromDB_17112"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Serum markers of iron status</Literal>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">Iron status biomarkers</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
         <DataProperty IRI="http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00030"/>
