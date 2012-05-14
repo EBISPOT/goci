@@ -79,17 +79,13 @@
                         This is a list of features currently (or soon to be) available in the diagram:
                     <ul>
                         <li><b>Colours:</b> A new colour scheme for the diagram is under development in collaboration
-                            with the
-                            NHGRI GWAS catalog curation team.
+                            with the NHGRI GWAS catalog curation team.
                         </li>
                         <li><b>Number of studies:</b> In order to minimise ontology reasoning times, the beta version of
                             the diagram only displays a dozen studies.
                         </li>
                         <li><b>Mouse-over:</b> Hovering over a chromosome or coloured circle displays the name of the
-                            corresponding
-                            chromosome or trait. This feature is not supported by all web browsers - it is known to work
-                            in Mozilla
-                            Firefox but not Google Chrome.
+                            corresponding chromosome or trait.
                         </li>
                         <li><b>Filtering options:</b> Filtering capabilities will be rolled out for testing as soon as
                             they are implemented. Basic filtering options should be available in the next few weeks.
@@ -122,7 +118,7 @@
                         introduction
                         to the GWAS catalog, see the "Home" tab.</p>
                     <ul>
-                        <li><b>Initial diagram generation:</b> When the "Diagram" tab is first selected, there may be a
+                        <li><b>Initial diagram generation:</b> When the "GWAS Diagram" tab is first selected, there may be a
                             delay of up to
                             30s before the diagram is rendered. This is because all the information in the diagram is
                             rendered dynamically,
@@ -132,35 +128,32 @@
                         </li>
                         <li><b>Number of studies:</b> The beta version of the GWAS diagram shows only a dozen studies in order to reduce
                         processing overheads during the testing phase. More studies will be added soon.</li>
-                        <li><b>Zooming:</b> It is possible to zoom the diagram in and out by using the scroll wheel on the mouse. Scrolling
-                        up zooms in and scrolling down zooms out. Scrolling should also work on most laptops using the touchpad but this feature
-                        has not yet been widely tested.
-                        <li><b>Moving the diagram:</b> When zooming in, part of the diagram appears off the right side
-                            of the screen. This is
-                            because the area of the screen in which diagram can be viewed remains the same size, even as
-                            the size of the underlying
-                            diagram changes. The diagram can be moved around the viewing area by clicking on any part of
-                            the diagram with the left
-                            mouse button and, holding the mouse button down, dragging the diagram around the screen
-                            until the desired part is visible.
+                        <li><b>Zooming:</b> There are two ways in which the diagram can be zoomed. The easiest option is to use the scroll wheel on the mouse or touch pad on a laptop. Scrolling
+                        up zooms in and scrolling down zooms out. This feature may not work with all touch pads. Alternatively, the right-hand side of the diagram features a zoom bar which can be
+                        used to generate exactly the same effect, by dragging the little square up or down the bar with the mouse pointer. </li>
+                        <li><b>Moving the diagram:</b> The diagram can be moved around the viewing area by clicking on any part of the diagram with the left mouse button and,
+                            holding the mouse button down, dragging the diagram around the screen until the desired part is visible. This feature is particularly useful for centering the
+                            diagram on a specific location at higher zoom levels.
                         </li>
                         <li><b>Labels:</b> Chromosomes and traits (coloured circles) have labels that display when hovering the mouse pointer over
-                        a given feature. Note that this functionality is only available in some web browsers, such a Mozilla Firefox. It does not work
-                        in Google Chrome.</li>
+                        a given element.</li>
                         <li><b>Number of traits:</b> Some chromosomal regions have large numbers of traits associated with them. In order to keep the
                         diagram readable, no more than six traits will be displayed for any region for the full diagram. If there are more traits available
                         for a given region, this is indicated by the presence of an ellipsis (...) at the end of a line of traits. At present, this ellipsis
                         is static, i.e. it is not possible to access the undisplayed traits through it. We are currently working on a feature that
                         generates a zoomed-in version of the corresponding region if an ellipsis is clicked on.</li>
-                        <li><b>Colours:</b> A new colour scheme for the GWAS diagram is currently under development. A draft legend detailing which colour represents
-                        which trait or category of traits is given below. This will soon be added to the diagram page. At present, yellow represents traits for which
+                        <li><b>Colours:</b> A new colour scheme for the GWAS diagram is currently under development. A draft legend, based on the EFO class hierarchy, detailing which colour
+                        represents which trait or category of traits is given below. This will soon be added to the diagram page. At present, yellow represents traits for which
                         not colour category is available yet.</li>
                         <li><b>Filtering:</b> Various filtering capabilities are currently under development. They will include filtering the diagram by
                         one or more GWAS traits or trait categories, filtering by study, chromosomal region and p-value. New features will be made
                         available for testing as soon as they are implemented so check back regularly for updates.</li>
                     </ul>
                     <br>
-                    <p>For questions, feature requests or bug reports, please contact <a href="mailto:dwelter@ebi.ac.uk">Dani Welter</a> at EBI.</p>
+                    <p>For questions, feature requests or bug reports, please contact <a href="mailto:dwelter@ebi.ac.uk">Dani Welter</a> at EBI. In particular, please let
+                    us know if a given feature does not behave as described. Always specify in which web browser, including which version, and which operating system the problem occurred.
+                    We aim to test all features in the latest versions of Mozilla Firefox, Google Chrome and Internet Explorer but cannot necessarily guarantee testing for other browsers
+                        or older versions. </p>
                     <br>
                     <p>
                     <b>Legend</b>
@@ -176,7 +169,7 @@
                         <text x="20" y="12" font-family="Verdana" font-size="8" fill="black" > Experimental factor </text>
 
                         <circle id="CARDIO_VASCULAR" fill= "#CC0000" r="5" cx="10" cy="25" stroke="black" stroke-width="0.5"></circle>
-                        <text x="20" y="27" font-family="Verdana" font-size="8" fill="black" > Cardio vascular disorder </text>
+                        <text x="20" y="27" font-family="Verdana" font-size="8" fill="black" > Cardio-vascular disorder </text>
 
                         <circle id="NEURO" fill= "#660099" r="5" cx="10" cy="40" stroke="black" stroke-width="0.5"></circle>
                         <text x="20" y="42" font-family="Verdana" font-size="8" fill="black" > Neurological disorder </text>
@@ -202,7 +195,7 @@
                         <circle id="MEASUREMENT" fill= "#FF6314" r="5" cx="10" cy="145" stroke="black" stroke-width="0.5"></circle>
                         <text x="20" y="147" font-family="Verdana" font-size="8" fill="black" > Measurement </text>
 
-                        <circle id="SIGN_SYMPTOM" fill= "#FFFF00" r="5" cx="10" cy="160" stroke="black" stroke-width="0.5"></circle>
+                        <circle id="SIGN_SYMPTOM" fill= "#FFCC00" r="5" cx="10" cy="160" stroke="black" stroke-width="0.5"></circle>
                         <text x="20" y="162" font-family="Verdana" font-size="8" fill="black" > Sign or symptom </text>
 
                         <circle id="MATERIAL_ENTITY" fill= "#003399" r="5" cx="10" cy="175" stroke="black" stroke-width="0.5"></circle>

@@ -55,7 +55,7 @@ public class ColourMapper {
         COLOUR_MAP.put(GENETIC,"#990099");
         COLOUR_MAP.put(DISEASE, "#660033");
         COLOUR_MAP.put(MEASUREMENT, "#FF6314");
-        COLOUR_MAP.put(SIGN_SYMPTOM, "#FFFF00");
+        COLOUR_MAP.put(SIGN_SYMPTOM, "#FFCC00");
         COLOUR_MAP.put(MATERIAL_ENTITY, "#003399");
         COLOUR_MAP.put(FUNCTION, "#006699");
         COLOUR_MAP.put(QUALITY, "#66CCFF");

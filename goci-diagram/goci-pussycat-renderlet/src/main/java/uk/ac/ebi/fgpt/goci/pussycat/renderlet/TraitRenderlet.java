@@ -128,7 +128,7 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
              trait.setAttribute("id",getName());
              String mo = "showTooltip('" + getName() + "')";
              trait.setAttribute("onmouseover",mo);
-             trait.setAttribute("onmouseout", "hideToolTip();");
+             trait.setAttribute("onmouseout", "hideTooltip()");
 
              nexus.addSVGElement(trait);
         }
