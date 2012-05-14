@@ -114,6 +114,10 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLC
                 builder.append(")");
 
                 g.setAttribute("transform", builder.toString());
+
+                String mo = "showTooltip('" + getName() + "')";
+                g.setAttribute("onmouseover",mo);
+                g.setAttribute("onmouseout", "hideToolTip();");
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

@@ -3,7 +3,7 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 
-<html xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html"
       xml:lang="en" lang="eng">
 <head>
     <title>GOCI | Pussycat</title>
@@ -125,7 +125,8 @@
                         <li><b>Number of studies:</b> The beta version of the GWAS diagram shows only a dozen studies in order to reduce
                         processing overheads during the testing phase. More studies will be added soon.</li>
                         <li><b>Zooming:</b> It is possible to zoom the diagram in and out by using the scroll wheel on the mouse. Scrolling
-                        up zooms in and scrolling down zooms out.
+                        up zooms in and scrolling down zooms out. Scrolling should also work on most laptops using the touchpad but this feature
+                        has not yet been widely tested.
                         </li>
                         <li><b>Moving the diagram:</b> When zooming in, part of the diagram appears off the right side of the screen. This is
                         because the area of the screen in which diagram can be viewed remains the same size, even as the size of the underlying
@@ -140,8 +141,8 @@
                         for a given region, this is indicated by the presence of an ellipsis (...) at the end of a line of traits. At present, this ellipsis
                         is static, i.e. it is not possible to access the undisplayed traits through it. We are currently working on a feature that
                         generates a zoomed-in version of the corresponding region if an ellipsis is clicked on.</li>
-                        <li><b>Colours:</b> A new colour scheme for the GWAS diagram is currently under development. A legend will soon be added to the
-                        diagram page, detailing which colour represents which trait or category of traits. At present, blue represents traits for which
+                        <li><b>Colours:</b> A new colour scheme for the GWAS diagram is currently under development. A draft legend detailing which colour represents
+                        which trait or category of traits is given below. This will soon be added to the diagram page. At present, yellow represents traits for which
                         not colour category is available yet.</li>
                         <li><b>Filtering:</b> Various filtering capabilities are currently under development. They will include filtering the diagram by
                         one or more GWAS traits or trait categories, filtering by study, chromosomal region and p-value. New features will be made
@@ -149,6 +150,71 @@
                     </ul>
                     <br>
                     <p>For questions, feature requests or bug reports, please contact <a href="mailto:dwelter@ebi.ac.uk">Dani Welter</a> at EBI.</p>
+                    <br>
+                    <p>
+                    <b>Legend</b>
+                    </p>
+
+                    <svg
+                            xmlns="http://www.w3.org/2000/svg" version="1.1"
+                            height ="800"
+                            width = "800">
+                        <title>Colour tester</title>
+                       <g transform="scale(1.5,1.5)">
+                        <circle id="EXPERIMENTAL_FACTOR" fill= "#FFFF33" r="5" cx="10" cy="10" stroke="black" stroke-width="0.5"></circle>
+                        <text x="20" y="12" font-family="Verdana" font-size="8" fill="black" > Experimental factor </text>
+
+                        <circle id="CARDIO_VASCULAR" fill= "#CC0000" r="5" cx="10" cy="25" stroke="black" stroke-width="0.5"></circle>
+                        <text x="20" y="27" font-family="Verdana" font-size="8" fill="black" > Cardio vascular disorder </text>
+
+                        <circle id="NEURO" fill= "#660099" r="5" cx="10" cy="40" stroke="black" stroke-width="0.5"></circle>
+                        <text x="20" y="42" font-family="Verdana" font-size="8" fill="black" > Neurological disorder </text>
+
+                        <circle id="MENTAL" fill= "#6600FF" r="5" cx="10" cy="55" stroke="black" stroke-width="0.5"></circle>
+                        <text x="20" y="57" font-family="Verdana" font-size="8" fill="black" > Mental disorder </text>
+
+                        <circle id="SKELETAL" fill= "#FF6666" r="5" cx="10" cy="70" stroke="black" stroke-width="0.5"></circle>
+                        <text x="20" y="72" font-family="Verdana" font-size="8" fill="black" > Skeletal disorder </text>
+
+                        <circle id="NEOPLASM" fill= "#CC33FF" r="5" cx="10" cy="85" stroke="black" stroke-width="0.5"></circle>
+                        <text x="20" y="87" font-family="Verdana" font-size="8" fill="black" > Neoplasm </text>
+
+                        <circle id="CONGENITAL" fill= "#FF00CC" r="5" cx="10" cy="100" stroke="black" stroke-width="0.5"></circle>
+                        <text x="20" y="102" font-family="Verdana" font-size="8" fill="black" > Congenital disorder </text>
+
+                        <circle id="GENETIC" fill="#990099" r="5" cx="10" cy="115" stroke="black" stroke-width="0.5"></circle>
+                        <text x="20" y="117" font-family="Verdana" font-size="8" fill="black" > Genetic disorder </text>
+
+                        <circle id="DISEASE" fill= "#660033" r="5" cx="10" cy="130" stroke="black" stroke-width="0.5"></circle>
+                        <text x="20" y="132" font-family="Verdana" font-size="8" fill="black" > Disease </text>
+
+                        <circle id="MEASUREMENT" fill= "#FF6314" r="5" cx="10" cy="145" stroke="black" stroke-width="0.5"></circle>
+                        <text x="20" y="147" font-family="Verdana" font-size="8" fill="black" > Measurement </text>
+
+                        <circle id="SIGN_SYMPTOM" fill= "#FFFF00" r="5" cx="10" cy="160" stroke="black" stroke-width="0.5"></circle>
+                        <text x="20" y="162" font-family="Verdana" font-size="8" fill="black" > Sign or symptom </text>
+
+                        <circle id="MATERIAL_ENTITY" fill= "#003399" r="5" cx="10" cy="175" stroke="black" stroke-width="0.5"></circle>
+                        <text x="20" y="177" font-family="Verdana" font-size="8" fill="black" > Material entity </text>
+
+                        <circle id="FUNCTION" fill= "#006699" r="5" cx="10" cy="190" stroke="black" stroke-width="0.5"></circle>
+                        <text x="20" y="192" font-family="Verdana" font-size="8" fill="black" > Function </text>
+
+                        <circle id="QUALITY" fill= "#66CCFF" r="5" cx="10" cy="205" stroke="black" stroke-width="0.5"></circle>
+                        <text x="20" y="207" font-family="Verdana" font-size="8" fill="black" > Quality </text>
+
+                        <circle id="BEHAVIOUR" fill= "#336600" r="5" cx="10" cy="220" stroke="black" stroke-width="0.5"></circle>
+                        <text x="20" y="222" font-family="Verdana" font-size="8" fill="black" > Behaviour </text>
+
+                        <circle id="MENTAL_PROCESS" fill= "#66CC33" r="5" cx="10" cy="235" stroke="black" stroke-width="0.5"></circle>
+                        <text x="20" y="237" font-family="Verdana" font-size="8" fill="black" > Mental process </text>
+
+                        <circle id="PHYSIO_PROCESS" fill= "#CCFF00" r="5" cx="10" cy="250" stroke="black" stroke-width="0.5"></circle>
+                        <text x="20" y="252" font-family="Verdana" font-size="8" fill="black" > Physiological process </text>
+                          </g>
+                    </svg>
+
+
                 </div>
                 <div id="logtab" class="tabcontent" style="display: none;">
                     <h4>SVG transform debugging:</h4>
