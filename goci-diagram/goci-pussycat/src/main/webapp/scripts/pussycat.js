@@ -36,8 +36,13 @@ function init() {
         $("#retrybutton").button();
         $("#retrybutton").click(renderDiagram);
 
+        // bind mousemove handler
+        $(document).mousemove(function(ev){
+            $('#tooltip').css({"left":ev.pageX + 20, "top":ev.pageY});
+        });
+
         // bind mousewheel event handler
-        $('#diagramareacontent').mousewheel(function(event, delta) {
+        $('#diagramareacontent').mousewheel(function(ev, delta) {
             if (delta > 0) {
                 currentScale++;
                 zoomIn();
@@ -192,9 +197,13 @@ function serverCommunicationFail(jqXHR, textStatus, errorThrown) {
     log("Failed to acquire SVG from server - " + jqXHR.responseText);
 }
 
-function showTooltip(tooltipText, posX, posY) {
-    $("#tooltip").css({"display":"block", "top":posX + "px", "left":posY + "px"});
+function showTooltip(tooltipText) {
     $("#tooltip-text").html(tooltipText);
+    $("#tooltip").show();
+}
+
+function hideTooltip() {
+    $("#tooltip").hide();
 }
 
 function slideZoom(newScale) {

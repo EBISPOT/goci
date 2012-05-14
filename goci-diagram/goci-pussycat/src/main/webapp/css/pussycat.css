@@ -71,10 +71,7 @@ h3.nomargin {
     top: 0;
     left: 0;
     z-index: 100;
-    background-color: #B1C6EB;
-    border-color: #000000;
-    border-style: solid;
-    border-width: 1px
+    padding: 2px;
 }
 
 .navbar {
