@@ -88,94 +88,99 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
     public void render(RenderletNexus nexus, OWLOntology renderingContext, OWLIndividual renderingEntity) {
         OWLNamedIndividual gwasTrait = (OWLNamedIndividual)renderingEntity;
         OWLNamedIndividual association = getAssociation(nexus, gwasTrait, renderingContext);
-        setTraitName(gwasTrait, renderingContext, nexus, association);
 
-        SVGArea associationSVG = nexus.getLocationOfRenderedEntity(association);
-        Element assocG = nexus.getRenderingEvent(association).getRenderedSVG();
+        if(association != null){
+            setTraitName(gwasTrait, renderingContext, nexus, association);
 
-        String location = assocG.getAttribute("transform");
+            SVGArea associationSVG = nexus.getLocationOfRenderedEntity(association);
+            Element assocG = nexus.getRenderingEvent(association).getRenderedSVG();
 
-        String bandName = getSNPLocation(nexus, association,renderingContext);
+            String location = assocG.getAttribute("transform");
 
-        if(nexus.getAssociations(bandName).size() < 7){
-            Element trait = nexus.createSVGElement("circle");
-            trait.setAttribute("transform",location);
+            String bandName = getSNPLocation(nexus, association,renderingContext);
 
-            double alength =  associationSVG.getWidth();
-            double radius = 0.2*alength;
-            double ax = associationSVG.getX();
-            double cx;
+            if(bandName != null){
+                if(nexus.getAssociations(bandName).size() < 7){
+                    Element trait = nexus.createSVGElement("circle");
+                    trait.setAttribute("transform",location);
 
-            if(nexus.getAssociations(bandName).size() == 1){
-                cx = ax+alength+radius;
+                    double alength =  associationSVG.getWidth();
+                    double radius = 0.2*alength;
+                    double ax = associationSVG.getX();
+                    double cx;
+
+                    if(nexus.getAssociations(bandName).size() == 1){
+                        cx = ax+alength+radius;
+                    }
+                    else{
+                        int position = nexus.getAssociations(bandName).size();
+                        cx = ax+alength+((position+(position-1))*radius);
+                    }
+
+                    double cy = associationSVG.getY();
+                    trait.setAttribute("cx", Double.toString(cx));
+                    trait.setAttribute("cy", Double.toString(cy));
+                    trait.setAttribute("r", Double.toString(radius));
+
+                     String colour = getColour(gwasTrait, nexus);
+
+                     trait.setAttribute("fill",colour);
+                     trait.setAttribute("stroke","black");
+                     trait.setAttribute("stroke-width", "0.5");
+
+                     trait.setAttribute("id",getName());
+                     String mo = "showTooltip('" + getName() + "')";
+                     trait.setAttribute("onmouseover",mo);
+                     trait.setAttribute("onmouseout", "hideTooltip()");
+
+                     nexus.addSVGElement(trait);
+                }
+        //7th trait - put in an ellipsis
+                else if(nexus.getAssociations(bandName).size() == 7){
+                    Element ellipsis = nexus.createSVGElement("g");
+                    ellipsis.setAttribute("transform",location);
+                    double alength =  associationSVG.getWidth();
+                    double radius = 0.2*alength;
+                    double ax = associationSVG.getX();
+                    int position = nexus.getAssociations(bandName).size();
+                    double x1 = ax+alength+((position+(position-1))*radius);
+                    double x2 = x1 + radius;
+                    double x3 = x2 + radius;
+                    double cy = associationSVG.getY();
+
+                    double r = 1;
+
+                    Element c1 = nexus.createSVGElement("circle");
+                    Element c2 = nexus.createSVGElement("circle");
+                    Element c3 = nexus.createSVGElement("circle");
+
+                    c1.setAttribute("cx", Double.toString(x1));
+                    c2.setAttribute("cx", Double.toString(x2));
+                    c3.setAttribute("cx", Double.toString(x3));
+
+                    c1.setAttribute("cy", Double.toString(cy));
+                    c2.setAttribute("cy", Double.toString(cy));
+                    c3.setAttribute("cy", Double.toString(cy));
+
+                    c1.setAttribute("r", Double.toString(r));
+                    c2.setAttribute("r", Double.toString(r));
+                    c3.setAttribute("r", Double.toString(r));
+
+                    c1.setAttribute("fill", "black");
+                    c2.setAttribute("fill", "black");
+                    c3.setAttribute("fill", "black");
+
+                    ellipsis.appendChild(c1);
+                    ellipsis.appendChild(c2);
+                    ellipsis.appendChild(c3);
+
+                    nexus.addSVGElement(ellipsis);
+                }
+                else{
+        //too many traits to render
+                   getLog().debug("Trait " + traitName + " cannot be rendered as there are already more than 6 traits for chromosomal band " + bandName);
+                }
             }
-            else{
-                int position = nexus.getAssociations(bandName).size();
-                cx = ax+alength+((position+(position-1))*radius);
-            }
-
-            double cy = associationSVG.getY();
-            trait.setAttribute("cx", Double.toString(cx));
-            trait.setAttribute("cy", Double.toString(cy));
-            trait.setAttribute("r", Double.toString(radius));
-
-             String colour = getColour(gwasTrait, nexus);
-
-             trait.setAttribute("fill",colour);
-             trait.setAttribute("stroke","black");
-             trait.setAttribute("stroke-width", "0.5");
-
-             trait.setAttribute("id",getName());
-             String mo = "showTooltip('" + getName() + "')";
-             trait.setAttribute("onmouseover",mo);
-             trait.setAttribute("onmouseout", "hideTooltip()");
-
-             nexus.addSVGElement(trait);
-        }
-//7th trait - put in an ellipsis
-        else if(nexus.getAssociations(bandName).size() == 7){
-            Element ellipsis = nexus.createSVGElement("g");
-            ellipsis.setAttribute("transform",location);
-            double alength =  associationSVG.getWidth();
-            double radius = 0.2*alength;
-            double ax = associationSVG.getX();
-            int position = nexus.getAssociations(bandName).size();
-            double x1 = ax+alength+((position+(position-1))*radius);
-            double x2 = x1 + radius;
-            double x3 = x2 + radius;
-            double cy = associationSVG.getY();
-
-            double r = 1;
-
-            Element c1 = nexus.createSVGElement("circle");
-            Element c2 = nexus.createSVGElement("circle");
-            Element c3 = nexus.createSVGElement("circle");
-
-            c1.setAttribute("cx", Double.toString(x1));
-            c2.setAttribute("cx", Double.toString(x2));
-            c3.setAttribute("cx", Double.toString(x3));
-
-            c1.setAttribute("cy", Double.toString(cy));
-            c2.setAttribute("cy", Double.toString(cy));
-            c3.setAttribute("cy", Double.toString(cy));
-
-            c1.setAttribute("r", Double.toString(r));
-            c2.setAttribute("r", Double.toString(r));
-            c3.setAttribute("r", Double.toString(r));
-
-            c1.setAttribute("fill", "black");
-            c2.setAttribute("fill", "black");
-            c3.setAttribute("fill", "black");
-
-            ellipsis.appendChild(c1);
-            ellipsis.appendChild(c2);
-            ellipsis.appendChild(c3);
-
-            nexus.addSVGElement(ellipsis);
-        }
-        else{
-//too many traits to render
-           getLog().debug("Trait " + traitName + " cannot be rendered as there are already more than 6 traits for chromosomal band " + bandName);
         }
      }
 
@@ -189,8 +194,14 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
 
             if(typeIRI.toString().equals(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI)){
                 OWLDataProperty has_name = nexus.getManager().getOWLDataFactory().getOWLDataProperty(IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
-                OWLLiteral name = association.getDataPropertyValues(has_name,ontology).toArray(new OWLLiteral[0])[0];
-                traitName = name.getLiteral();
+
+                if(association.getDataPropertyValues(has_name,ontology).size() != 0){
+                    OWLLiteral name = association.getDataPropertyValues(has_name,ontology).iterator().next();
+                    traitName = name.getLiteral();
+                }
+                else{
+                    getLog().warn("Trait " + individual + " has no name");
+                }
             }
             else{
                 traitName = nexus.getEfoLabels().get(typeIRI);
@@ -205,7 +216,14 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
         OWLObjectProperty is_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
 
         OWLObjectPropertyExpression has_about = is_about.getInverseProperty();
-        OWLNamedIndividual association = (OWLNamedIndividual)reasoner.getObjectPropertyValues(trait,has_about).getFlattened().toArray(new OWLIndividual[0])[0];
+
+        OWLNamedIndividual association = null;
+        if(reasoner.getObjectPropertyValues(trait,has_about).getFlattened().size() != 0){
+            association = reasoner.getObjectPropertyValues(trait,has_about).getFlattened().iterator().next();
+        }
+        else{
+            getLog().warn("Trait " + trait + " has no association");
+        }
 
         return association;
     }
@@ -230,12 +248,16 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
 
 //get the SNP's cytogenetic band
                     OWLObjectProperty has_band = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.LOCATED_IN_PROPERTY_IRI));
-                    OWLIndividual band = SNP.getObjectPropertyValues(has_band,ontology).toArray(new OWLIndividual[0])[0];
 
-//get the band's name
-                    OWLDataProperty has_name = dataFactory.getOWLDataProperty(IRI.create(OntologyConstants.HAS_NAME_PROPERTY_IRI));
-                    bandName = band.getDataPropertyValues(has_name,ontology).toArray(new OWLLiteral[0])[0].getLiteral();
-
+                    if(SNP.getObjectPropertyValues(has_band,ontology).size() != 0){
+                        OWLIndividual band = SNP.getObjectPropertyValues(has_band,ontology).iterator().next();
+   //get the band's name
+                        OWLDataProperty has_name = dataFactory.getOWLDataProperty(IRI.create(OntologyConstants.HAS_NAME_PROPERTY_IRI));
+                        bandName = band.getDataPropertyValues(has_name,ontology).iterator().next().getLiteral();
+                    }
+                    else{
+                        getLog().warn("SNP " + SNP + " does not have a cytogentic band");
+                    }
                 }
             }
         }
