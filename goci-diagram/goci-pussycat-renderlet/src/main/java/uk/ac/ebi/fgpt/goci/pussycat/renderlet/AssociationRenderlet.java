@@ -185,17 +185,35 @@ else{
                 nexus.setAssociation(bandName,renderingEntity);
             }
 
-            OWLNamedIndividual trait = getTrait(renderingEntity, renderingContext, nexus);
-
-            getLog().debug("Trait: " + trait);
 
             if(!bandflag){
-                for (Renderlet r : nexus.getRenderlets()){
-                    if (r.canRender(nexus, renderingContext, trait)) {
-                        getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
-                        r.render(nexus, renderingContext, trait);
-                    }
+                OWLNamedIndividual trait = getTrait(renderingEntity, renderingContext, nexus);
+                getLog().debug("Trait: " + trait);
 
+                String traitName = getTraitName(trait, renderingContext, nexus, renderingEntity);
+
+                if(nexus.getRenderedTraits(bandName) != null){
+                    if(nexus.getRenderedTraits(bandName).contains(traitName)){
+                        getLog().debug("Trait " + traitName + " already rendered at this location");
+                    }
+                    else{
+                        for (Renderlet r : nexus.getRenderlets()){
+                            if (r.canRender(nexus, renderingContext, trait)) {
+                                getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
+                                r.render(nexus, renderingContext, trait);
+                            }
+                        }
+                    }
+                }
+
+                else{
+                    for (Renderlet r : nexus.getRenderlets()){
+                        if (r.canRender(nexus, renderingContext, trait)) {
+                            getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
+                            r.render(nexus, renderingContext, trait);
+                        }
+
+                    }
                 }
             }
         }
@@ -224,6 +242,33 @@ else{
         }
 
         return trait;
+    }
+
+    public String getTraitName(OWLNamedIndividual individual, OWLOntology ontology, RenderletNexus nexus, OWLNamedIndividual association){
+        String traitName = null;
+
+        OWLClassExpression[] allTypes = individual.getTypes(ontology).toArray(new OWLClassExpression[0]);
+
+        for(int i = 0; i < allTypes.length; i++){
+            OWLClass typeClass = allTypes[i].asOWLClass();
+            IRI typeIRI = typeClass.getIRI();
+
+            if(typeIRI.toString().equals(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI)){
+                OWLDataProperty has_name = nexus.getManager().getOWLDataFactory().getOWLDataProperty(IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
+
+                if(association.getDataPropertyValues(has_name,ontology).size() != 0){
+                    OWLLiteral name = association.getDataPropertyValues(has_name,ontology).iterator().next();
+                    traitName = name.getLiteral();
+                }
+                else{
+                    getLog().warn("Trait " + individual + " has no name");
+                }
+            }
+            else{
+                traitName = nexus.getEfoLabels().get(typeIRI);
+            }
+        }
+        return traitName;
     }
 
     public String getSNPLocation(OWLNamedIndividual individual, OWLOntology ontology){

@@ -97,6 +97,11 @@
             <artifactId>goci-datapublisher</artifactId>
             <version>0.6-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>net.sourceforge.fluxion</groupId>
+            <artifactId>fluxion-spi</artifactId>
+            <version>1.0-alpha-3</version>
+        </dependency>
     </dependencies>
 
     <repositories>

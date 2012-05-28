@@ -31,6 +31,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
     private Set<Renderlet> renderlets;
     private Map<Object, SVGArea> renderedEntityLocations;
     private Map<String, ArrayList<Object>> renderedAssociations;
+    private HashMap<String, ArrayList<String>> renderedTraits;
     private Map<Object, RenderingEvent> renderedEntities;
     private SVGBuilder svgBuilder;
     private Map<IRI, String> efoLabels;
@@ -44,6 +45,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
         this.renderedEntities = new HashMap<Object, RenderingEvent>();
         this.renderedAssociations = new HashMap<String, ArrayList<Object>>();
         this.svgBuilder = new SVGBuilder();
+        this.renderedTraits = new HashMap<String, ArrayList<String>>();
     }
 
 
@@ -117,6 +119,29 @@ public class DefaultRenderletNexus implements RenderletNexus {
     public ArrayList<Object> getAssociations(String band) {
         if (renderedAssociations.containsKey(band)) {
             return renderedAssociations.get(band);
+        }
+        else {
+            return null;
+        }
+    }
+
+
+    @Override
+    public void setTrait(String location, String trait) {
+        if (renderedTraits.containsKey(location)){
+            renderedTraits.get(location).add(trait);
+        }
+        else{
+            ArrayList<String> list = new ArrayList<String>();
+            list.add(trait);
+            renderedTraits.put(location, list);
+        }
+    }
+
+    @Override
+    public ArrayList<String> getRenderedTraits(String location) {
+        if(renderedTraits.containsKey(location)){
+            return renderedTraits.get(location);
         }
         else {
             return null;

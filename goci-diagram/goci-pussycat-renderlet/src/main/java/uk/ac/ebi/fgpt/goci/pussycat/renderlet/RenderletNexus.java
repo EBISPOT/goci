@@ -73,6 +73,10 @@ public interface RenderletNexus {
     
     
     <O> void setAssociation(String band, O renderedEntity);
+
+    ArrayList<String> getRenderedTraits(String location);
+
+    void setTrait(String location, String trait);
     
     Set<Renderlet> getRenderlets();
 

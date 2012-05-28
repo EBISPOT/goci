@@ -100,7 +100,7 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
             String bandName = getSNPLocation(nexus, association,renderingContext);
 
             if(bandName != null){
-                if(nexus.getAssociations(bandName).size() < 7){
+                if((nexus.getRenderedTraits(bandName) == null) || (nexus.getRenderedTraits(bandName).size() < 6)){
                     Element trait = nexus.createSVGElement("circle");
                     trait.setAttribute("transform",location);
 
@@ -109,12 +109,12 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
                     double ax = associationSVG.getX();
                     double cx;
 
-                    if(nexus.getAssociations(bandName).size() == 1){
+                    if(nexus.getRenderedTraits(bandName) == null){
                         cx = ax+alength+radius;
                     }
                     else{
-                        int position = nexus.getAssociations(bandName).size();
-                        cx = ax+alength+((position+(position-1))*radius);
+                        int position = nexus.getRenderedTraits(bandName).size();
+                        cx = ax+alength+(((2*position)+1)*radius);
                     }
 
                     double cy = associationSVG.getY();
@@ -134,16 +134,17 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
                      trait.setAttribute("onmouseout", "hideTooltip()");
 
                      nexus.addSVGElement(trait);
+                     nexus.setTrait(bandName, traitName);
                 }
         //7th trait - put in an ellipsis
-                else if(nexus.getAssociations(bandName).size() == 7){
+                else if(nexus.getRenderedTraits(bandName).size() == 6){
                     Element ellipsis = nexus.createSVGElement("g");
                     ellipsis.setAttribute("transform",location);
                     double alength =  associationSVG.getWidth();
                     double radius = 0.2*alength;
                     double ax = associationSVG.getX();
-                    int position = nexus.getAssociations(bandName).size();
-                    double x1 = ax+alength+((position+(position-1))*radius);
+                    int position = nexus.getRenderedTraits(bandName).size();
+                    double x1 = ax+alength+(((2*position)+1)*radius);
                     double x2 = x1 + radius;
                     double x3 = x2 + radius;
                     double cy = associationSVG.getY();
