@@ -45,7 +45,7 @@ public class ColourMapper {
 //    }
 
     static {
-        COLOUR_MAP.put(EXPERIMENTAL_FACTOR, /*"#663300"*/ "#FFFF33");
+        COLOUR_MAP.put(EXPERIMENTAL_FACTOR, /*"#663300" "#FFFF33"*/ "#BEBEBE");
         COLOUR_MAP.put(CARDIO_VASCULAR, "#CC0000");
         COLOUR_MAP.put(NEURO, "#660099");
         COLOUR_MAP.put(MENTAL, "#6600FF");

@@ -35,6 +35,8 @@ public class DefaultRenderletNexus implements RenderletNexus {
     private Map<Object, RenderingEvent> renderedEntities;
     private SVGBuilder svgBuilder;
     private Map<IRI, String> efoLabels;
+    private Map<String, BandInformation> traitLocations;
+    private Set<OWLNamedIndividual> allTraits;
 
     private OWLOntologyManager manager;
     private OWLReasoner reasoner;
@@ -46,6 +48,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
         this.renderedAssociations = new HashMap<String, ArrayList<Object>>();
         this.svgBuilder = new SVGBuilder();
         this.renderedTraits = new HashMap<String, ArrayList<String>>();
+        this.traitLocations = new HashMap<String, BandInformation>();
     }
 
 
@@ -183,7 +186,28 @@ public class DefaultRenderletNexus implements RenderletNexus {
         getLog().debug("There are " + individuals.size() + " owl individuals that satisfy the expression " +
                 classExpression);
 
-        for (OWLNamedIndividual individual : individuals) {
+        ArrayList<String> renderingOrder = new ArrayList<String>();
+        if(traitLocations.size() == 0){
+            renderingOrder =  buildTraitMap(individuals, ontology);
+        }
+
+        for(String band : renderingOrder){
+            ArrayList<OWLNamedIndividual> assocs = traitLocations.get(band).getAssociations();
+
+            for(OWLNamedIndividual ind : assocs){
+                if(individuals.contains(ind)){
+                    for (Renderlet r : renderlets) {
+                        if (r.canRender(this, ontology, ind)) {
+                            getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
+                            r.render(this, ontology, ind);
+                        }
+                    }
+
+                }
+            }
+        }
+
+ /*       for (OWLNamedIndividual individual : individuals) {
 
             boolean isAssociation =
                     checkType(individual, ontology, IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));
@@ -197,7 +221,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
                     }
                 }
             }
-        }
+        }         */
 
         return svgBuilder.getSVG();
 
@@ -226,7 +250,6 @@ public class DefaultRenderletNexus implements RenderletNexus {
 
     public boolean checkType(OWLNamedIndividual individual, OWLOntology ontology, IRI typeIRI) {
         boolean type = false;
-
         OWLClassExpression[] allTypes = individual.getTypes(ontology).toArray(new OWLClassExpression[0]);
 
         for (int i = 0; i < allTypes.length; i++) {
@@ -237,8 +260,165 @@ public class DefaultRenderletNexus implements RenderletNexus {
                 break;
             }
         }
-
         return type;
+    }
+
+    public ArrayList<String> buildTraitMap(Set<OWLNamedIndividual> individuals, OWLOntology ontology){
+
+        for (OWLNamedIndividual individual : individuals) {
+            boolean isBand =
+                    checkType(individual, ontology, IRI.create(OntologyConstants.CYTOGENIC_REGION_CLASS_IRI));
+
+            if (isBand) {
+                OWLDataFactory df = manager.getOWLDataFactory();
+                OWLDataProperty has_name = df.getOWLDataProperty(IRI.create(OntologyConstants.HAS_NAME_PROPERTY_IRI));
+                String bandName = null;
+
+                if(individual.getDataPropertyValues(has_name,ontology).size() != 0){
+                    OWLLiteral cytoband = individual.getDataPropertyValues(has_name,ontology).iterator().next();
+                    bandName = cytoband.getLiteral();
+                }
+
+                BandInformation info = new BandInformation(bandName);
+
+/*band - SNP - association via chained DL query --> 5 minutes for 12-study-test ontology*/
+//                OWLObjectProperty located_in = df.getOWLObjectProperty(IRI.create(OntologyConstants.LOCATED_IN_PROPERTY_IRI));
+//                OWLObjectHasValue inBand = df.getOWLObjectHasValue(located_in, individual);
+//                OWLClass snp = df.getOWLClass(IRI.create(OntologyConstants.SNP_CLASS_IRI));
+//
+//                OWLObjectIntersectionOf snp_band = df.getOWLObjectIntersectionOf(snp, inBand);
+//                OWLObjectProperty is_about = df.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
+//
+//                OWLObjectSomeValuesFrom some_snps = df.getOWLObjectSomeValuesFrom(is_about, snp_band);
+//
+//                OWLClass association = df.getOWLClass(IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));
+//
+//                OWLObjectIntersectionOf assocs = df.getOWLObjectIntersectionOf(association, some_snps);
+//
+//                if(reasoner.getInstances(assocs,false).getFlattened().size() != 0){
+//                    Set<OWLNamedIndividual> set = reasoner.getInstances(assocs,false).getFlattened();
+//                    for(OWLNamedIndividual ind : set){
+//                        associations.add(ind.getIRI().toString());
+//                    }
+//
+//                }
+/*band - SNP - association via 2 reasoner queries --> 2s for 12-study-test ontology*/
+                OWLObjectProperty located_in = df.getOWLObjectProperty(IRI.create(OntologyConstants.LOCATED_IN_PROPERTY_IRI));
+                OWLObjectPropertyExpression location_of = located_in.getInverseProperty();
+
+                OWLObjectProperty is_about = df.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
+                OWLObjectPropertyExpression has_about = is_about.getInverseProperty();
+
+                 Set<OWLNamedIndividual> snps = reasoner.getObjectPropertyValues(individual,location_of).getFlattened();
+
+                for(OWLNamedIndividual snp : snps){
+                    Set<OWLNamedIndividual> assocs = reasoner.getObjectPropertyValues(snp,has_about).getFlattened();
+
+                    for(OWLNamedIndividual ind : assocs){
+                        info.setAssociation(ind);
+                        String name = getTraitName(ind, ontology, df);
+                        if(!info.getTraitNames().contains(name)){
+                            info.setTraitName(name);
+                        }
+                    }
+                }
+
+                traitLocations.put(bandName, info);
+             }
+        }
+
+        return sortBands(new ArrayList<String>(traitLocations.keySet()));
+    }
+
+    public String getTraitName(OWLNamedIndividual association, OWLOntology ontology, OWLDataFactory dataFactory){
+        String traitName = null;
+
+        OWLObjectProperty is_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
+        OWLIndividual[] related = association.getObjectPropertyValues(is_about,ontology).toArray(new OWLIndividual[0]);
+
+        if(allTraits == null){
+            OWLClass ef = dataFactory.getOWLClass(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI));
+            allTraits = reasoner.getInstances(ef,false).getFlattened();
+        }
+
+        for(int i = 0; i < related.length; i++){
+            if(allTraits.contains(related[i])){
+                OWLNamedIndividual trait = (OWLNamedIndividual)related[i];
+                OWLClassExpression[] allTypes = trait.getTypes(ontology).toArray(new OWLClassExpression[0]);
+
+                for(int j = 0; j < allTypes.length; j++){
+                    OWLClass typeClass = allTypes[j].asOWLClass();
+                    IRI typeIRI = typeClass.getIRI();
+                    if(typeIRI.toString().equals(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI)){
+                        OWLDataProperty has_name = dataFactory.getOWLDataProperty(IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
+
+                        if(association.getDataPropertyValues(has_name,ontology).size() != 0){
+                            OWLLiteral name = association.getDataPropertyValues(has_name,ontology).iterator().next();
+                            traitName = name.getLiteral();
+                        }
+                        else{
+                            getLog().warn("Trait " + trait + " has no name");
+                        }
+                    }
+                    else{
+                        traitName = efoLabels.get(typeIRI);
+                    }
+                }
+            }
+        }
+        return traitName;
+    }
+
+    public ArrayList<String> sortBands(ArrayList<String> bands){
+
+        Collections.sort(bands);
+        ArrayList<String> sorted = new ArrayList<String>();
+        int index = 0;
+        ArrayList<String> ps = new ArrayList<String>();
+        ArrayList<String> qs = new ArrayList<String>();
+
+        while(index < bands.size()){
+            String current = bands.get(index);
+            String chrom1, chrom2;
+
+ //split the current and next bands, taking into account the case where there is no next band
+            if(current.contains("p")){
+                chrom1 = current.split("p")[0];
+                ps.add(current);
+            }
+            else{
+                chrom1 = current.split("q")[0];
+                qs.add(current);
+            }
+
+            if(index == bands.size()-1){
+                chrom2 = null;
+            }
+            else  {
+                String next = bands.get(index+1);
+                  if(next.contains("p")){
+                    chrom2 = next.split("p")[0];
+                }
+                else{
+                    chrom2 = next.split("q")[0];
+                }
+            }
+//if the two bands are not on the same chromosome, sort the ps and add them to the list of sorted bands, then add the qs
+            if(!chrom1.equals(chrom2)){
+                Collections.reverse(ps);
+                for(String p : ps){
+                    sorted.add(p);
+                }
+                for(String q : qs){
+                    sorted.add(q);
+                }
+                ps.clear();
+                qs.clear();
+            }
+
+            index++;
+        }
+        return sorted;
     }
 }
 

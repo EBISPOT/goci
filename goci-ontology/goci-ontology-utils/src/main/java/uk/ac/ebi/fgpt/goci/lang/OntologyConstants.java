@@ -34,6 +34,7 @@ public class OntologyConstants {
     // Object Property IRIs
     public static final String HAS_PART_PROPERTY_IRI = "http://www.obofoundry.org/ro/ro.owl#has_part";
     public static final String LOCATED_IN_PROPERTY_IRI = "http://www.obofoundry.org/ro/ro.owl#located_in";
+    public static final String LOCATION_OF_PROPERTY_IRI =  "http://www.obofoundry.org/ro/ro.owl#location_of";
     public static final String ASSOCIATED_WITH_PROPERTY_IRI = GWAS_ONTOLOGY_BASE_IRI + "/EFO_GD00029";
     public static final String IS_ABOUT_IRI = "http://purl.obolibrary.org/obo/IAO_0000136";
     public static final String HAS_ABOUT_IRI = GWAS_ONTOLOGY_BASE_IRI + "/EFO_GD00042";
