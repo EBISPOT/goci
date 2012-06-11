@@ -86,4 +86,6 @@ public interface RenderletNexus {
 
     <O> RenderingEvent getRenderingEvent(O renderedEntity);
 
+    Map<String, BandInformation> getTraitLocations();
+
 }

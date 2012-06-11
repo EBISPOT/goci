@@ -117,7 +117,17 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
                         cx = ax+alength+(((2*position)+1)*radius);
                     }
 
-                    double cy = associationSVG.getY();
+                    double ay = associationSVG.getY();
+                    double displacement = associationSVG.getHeight();
+                    double cy=ay + displacement;
+
+           /*         if(bandName.contains("p")){
+                        cy = ay + displacement;
+                    }
+                    else{
+                        cy = ay + displacement;
+                    }            */
+
                     trait.setAttribute("cx", Double.toString(cx));
                     trait.setAttribute("cy", Double.toString(cy));
                     trait.setAttribute("r", Double.toString(radius));
@@ -147,7 +157,9 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
                     double x1 = ax+alength+(((2*position)+1)*radius);
                     double x2 = x1 + radius;
                     double x3 = x2 + radius;
-                    double cy = associationSVG.getY();
+                    double ay = associationSVG.getY();
+                    double displacement = associationSVG.getHeight();
+                    double cy = ay + displacement;
 
                     double r = 1;
 

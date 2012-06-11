@@ -133,34 +133,73 @@ else{
                                 double x = band.getX();
                                 double y = band.getY();
                                 double width = band.getWidth();
-                                double  height = band.getHeight();
-
+                                double height = band.getHeight();
                                 double newY = y+(height/2);
+                                double endY = newY;
                                 double length = 1.75*width;
+                                double newHeight=0;
+
+// start of the new fanning algorithm
+                                BandInformation info = nexus.getTraitLocations().get(bandName);
+
+                                if(info.getPreviousBand() != null){
+                                    BandInformation previous = nexus.getTraitLocations().get(info.getPreviousBand());
+                                    double prevY = previous.getY();
+                                    double diam = 2*(0.35*width);
+
+                                     if(bandName.contains("p")){
+                                       double min = prevY - diam;
+                                       if(min <= newY){
+                                           endY = min;
+                                           newHeight = endY-newY;
+                                       }
+                                    }
+                                    else{
+                                        double min = prevY + diam;
+                                        if(min >= newY){
+                                            endY = min;
+                                            newHeight = endY - newY;
+                                        }
+                                    }
+                                 }
+                                info.setY(endY);
 
                                 StringBuilder d = new StringBuilder();
-                                d.append("m ");
-                                d.append(Double.toString(x));
-                                d.append(",");
-                                d.append(Double.toString(newY));
-                                d.append(" ");
-                                d.append(Double.toString(length));
-                                d.append(",0.0");
+                                if(info.getPreviousBand() == null || newHeight == 0){
+                                    d.append("m ");
+                                    d.append(Double.toString(x));
+                                    d.append(",");
+                                    d.append(Double.toString(newY));
+                                    d.append(" ");
+                                    d.append(Double.toString(length));
+                                    d.append(",0.0");
+                                }
+
+                                else{
+                                    double width2 = 0.75*width;
+                                    d.append("m ");
+                                    d.append(Double.toString(x));
+                                    d.append(",");
+                                    d.append(Double.toString(newY));
+                                    d.append(" ");
+                                    d.append(Double.toString(width));
+                                    d.append(",0.0, ");
+                                    d.append(Double.toString(width2));
+                                    d.append(",");
+                                    d.append(Double.toString(newHeight));
+                                }
 
                                 Element path = nexus.createSVGElement("path");
                                 path.setAttribute("d",d.toString());
                                 path.setAttribute("style","fill:none;stroke:#211c1d;stroke-width:1.1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none");
 
                                 g.appendChild(path);
-
-                                SVGArea currentArea = new SVGArea(x,newY,length,0,0);
+                                SVGArea currentArea = new SVGArea(x,newY,length,newHeight,0);
                                 RenderingEvent event = new RenderingEvent(renderingEntity, g, currentArea, this);
                                 nexus.renderingEventOccurred(event);
                                 nexus.setAssociation(bandName, renderingEntity);
                                 nexus.addSVGElement(g);
                                 break;
-
-
                             }
                             else{
                                 log.error(bandName + " is not a known cytogenetic band");

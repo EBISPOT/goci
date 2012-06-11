@@ -51,6 +51,9 @@ public class DefaultRenderletNexus implements RenderletNexus {
         this.traitLocations = new HashMap<String, BandInformation>();
     }
 
+    public Map<String, BandInformation> getTraitLocations(){
+        return traitLocations;
+    }
 
     @Override
     public void setOWLOntologyManager(OWLOntologyManager manager) {
@@ -369,55 +372,82 @@ public class DefaultRenderletNexus implements RenderletNexus {
         return traitName;
     }
 
+//sort all cytogenetic bands by chromosome, and for each chromosome, sort the p-arm bands in descending and the q-arm bands in ascending order
     public ArrayList<String> sortBands(ArrayList<String> bands){
 
         Collections.sort(bands);
-        ArrayList<String> sorted = new ArrayList<String>();
+        ArrayList<String> sorted = bands;
         int index = 0;
-        ArrayList<String> ps = new ArrayList<String>();
-        ArrayList<String> qs = new ArrayList<String>();
+ /*       ArrayList<String> ps = new ArrayList<String>();
+        ArrayList<String> qs = new ArrayList<String>();       */
 
         while(index < bands.size()){
             String current = bands.get(index);
-            String chrom1, chrom2;
 
- //split the current and next bands, taking into account the case where there is no next band
-            if(current.contains("p")){
-                chrom1 = current.split("p")[0];
-                ps.add(current);
+            if(index == 0){
+                traitLocations.get(current).setPreviousBand(null);
             }
-            else{
-                chrom1 = current.split("q")[0];
-                qs.add(current);
-            }
+
+            String next;
 
             if(index == bands.size()-1){
-                chrom2 = null;
+                traitLocations.get(current).setNextBand(null);
             }
             else  {
-                String next = bands.get(index+1);
-                  if(next.contains("p")){
-                    chrom2 = next.split("p")[0];
+                next = bands.get(index+1);
+    //if both bands are on the same arm, check that they're on the same chromosome
+                if((current.contains("p") && next.contains("p")) || (current.contains("q") && next.contains("q"))){
+                    String chrom1, chrom2;
+                    if(current.contains("p")){
+                        chrom1 = current.split("p")[0];
+                    }
+                    else{
+                        chrom1 = current.split("q")[0];
+                    }
+                    if(next.contains("p")){
+                        chrom2 = next.split("p")[0];
+                    }
+                    else{
+                        chrom2 = next.split("q")[0];
+                    }
+
+                    if(chrom1.equals(chrom2)){
+                        traitLocations.get(current).setNextBand(next);
+                        traitLocations.get(next).setPreviousBand(current);
+                    }
+                    else {
+                        traitLocations.get(current).setNextBand(null);
+                        traitLocations.get(next).setPreviousBand(null);
+                    }
                 }
                 else{
-                    chrom2 = next.split("q")[0];
+                    traitLocations.get(current).setNextBand(null);
+                    traitLocations.get(next).setPreviousBand(null);
                 }
-            }
-//if the two bands are not on the same chromosome, sort the ps and add them to the list of sorted bands, then add the qs
-            if(!chrom1.equals(chrom2)){
-                Collections.reverse(ps);
-                for(String p : ps){
-                    sorted.add(p);
-                }
-                for(String q : qs){
-                    sorted.add(q);
-                }
-                ps.clear();
-                qs.clear();
             }
 
             index++;
         }
+
+  /*      for(int i = 0; i < bands.size(); i++){
+            if(traitLocations.get(bands.get(i)).getPreviousBand() == null){
+                System.out.print("bottom \t");
+            }
+            else{
+                System.out.print(traitLocations.get(bands.get(i)).getPreviousBand() + "\t");
+            }
+            System.out.print(bands.get(i) + "\t");
+
+            if(traitLocations.get(bands.get(i)).getNextBand() == null){
+                System.out.println("top");
+            }
+            else{
+                System.out.println(traitLocations.get(bands.get(i)).getNextBand());
+            }
+
+
+        }             */
+
         return sorted;
     }
 }
