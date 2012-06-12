@@ -131,6 +131,10 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLC
                 if (svgstream != null){
                     svgstream.close();
 
+                    for(String band : chromBands.keySet()){
+                        nexus.setRenderableBand(band);
+                    }
+
                     SVGArea currentArea = new SVGArea(xCoordinate,yCoordinate,chromWidth,chromHeight,0); 
 
                     // todo - work out how to do this! --> consider adding new method to each chromRenderlet along the lines of getChromToLeft and hardcode

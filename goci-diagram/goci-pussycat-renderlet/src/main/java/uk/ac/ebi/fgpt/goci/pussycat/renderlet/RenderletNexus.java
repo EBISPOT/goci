@@ -88,4 +88,6 @@ public interface RenderletNexus {
 
     Map<String, BandInformation> getTraitLocations();
 
+    void setRenderableBand(String bandName);
+
 }

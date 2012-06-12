@@ -37,6 +37,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
     private Map<IRI, String> efoLabels;
     private Map<String, BandInformation> traitLocations;
     private Set<OWLNamedIndividual> allTraits;
+    private List<String> renderabledBands;
 
     private OWLOntologyManager manager;
     private OWLReasoner reasoner;
@@ -49,10 +50,15 @@ public class DefaultRenderletNexus implements RenderletNexus {
         this.svgBuilder = new SVGBuilder();
         this.renderedTraits = new HashMap<String, ArrayList<String>>();
         this.traitLocations = new HashMap<String, BandInformation>();
+        this.renderabledBands = new ArrayList<String>();
     }
 
     public Map<String, BandInformation> getTraitLocations(){
         return traitLocations;
+    }
+
+    public void setRenderableBand(String bandName){
+        renderabledBands.add(bandName);
     }
 
     @Override
@@ -282,51 +288,57 @@ public class DefaultRenderletNexus implements RenderletNexus {
                     bandName = cytoband.getLiteral();
                 }
 
-                BandInformation info = new BandInformation(bandName);
+                if(renderabledBands.contains(bandName)){
 
-/*band - SNP - association via chained DL query --> 5 minutes for 12-study-test ontology*/
-//                OWLObjectProperty located_in = df.getOWLObjectProperty(IRI.create(OntologyConstants.LOCATED_IN_PROPERTY_IRI));
-//                OWLObjectHasValue inBand = df.getOWLObjectHasValue(located_in, individual);
-//                OWLClass snp = df.getOWLClass(IRI.create(OntologyConstants.SNP_CLASS_IRI));
-//
-//                OWLObjectIntersectionOf snp_band = df.getOWLObjectIntersectionOf(snp, inBand);
-//                OWLObjectProperty is_about = df.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
-//
-//                OWLObjectSomeValuesFrom some_snps = df.getOWLObjectSomeValuesFrom(is_about, snp_band);
-//
-//                OWLClass association = df.getOWLClass(IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));
-//
-//                OWLObjectIntersectionOf assocs = df.getOWLObjectIntersectionOf(association, some_snps);
-//
-//                if(reasoner.getInstances(assocs,false).getFlattened().size() != 0){
-//                    Set<OWLNamedIndividual> set = reasoner.getInstances(assocs,false).getFlattened();
-//                    for(OWLNamedIndividual ind : set){
-//                        associations.add(ind.getIRI().toString());
-//                    }
-//
-//                }
-/*band - SNP - association via 2 reasoner queries --> 2s for 12-study-test ontology*/
-                OWLObjectProperty located_in = df.getOWLObjectProperty(IRI.create(OntologyConstants.LOCATED_IN_PROPERTY_IRI));
-                OWLObjectPropertyExpression location_of = located_in.getInverseProperty();
+                    BandInformation info = new BandInformation(bandName);
 
-                OWLObjectProperty is_about = df.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
-                OWLObjectPropertyExpression has_about = is_about.getInverseProperty();
+    /*band - SNP - association via chained DL query --> 5 minutes for 12-study-test ontology*/
+    //                OWLObjectProperty located_in = df.getOWLObjectProperty(IRI.create(OntologyConstants.LOCATED_IN_PROPERTY_IRI));
+    //                OWLObjectHasValue inBand = df.getOWLObjectHasValue(located_in, individual);
+    //                OWLClass snp = df.getOWLClass(IRI.create(OntologyConstants.SNP_CLASS_IRI));
+    //
+    //                OWLObjectIntersectionOf snp_band = df.getOWLObjectIntersectionOf(snp, inBand);
+    //                OWLObjectProperty is_about = df.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
+    //
+    //                OWLObjectSomeValuesFrom some_snps = df.getOWLObjectSomeValuesFrom(is_about, snp_band);
+    //
+    //                OWLClass association = df.getOWLClass(IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));
+    //
+    //                OWLObjectIntersectionOf assocs = df.getOWLObjectIntersectionOf(association, some_snps);
+    //
+    //                if(reasoner.getInstances(assocs,false).getFlattened().size() != 0){
+    //                    Set<OWLNamedIndividual> set = reasoner.getInstances(assocs,false).getFlattened();
+    //                    for(OWLNamedIndividual ind : set){
+    //                        associations.add(ind.getIRI().toString());
+    //                    }
+    //
+    //                }
+    /*band - SNP - association via 2 reasoner queries --> 2s for 12-study-test ontology*/
+                    OWLObjectProperty located_in = df.getOWLObjectProperty(IRI.create(OntologyConstants.LOCATED_IN_PROPERTY_IRI));
+                    OWLObjectPropertyExpression location_of = located_in.getInverseProperty();
 
-                 Set<OWLNamedIndividual> snps = reasoner.getObjectPropertyValues(individual,location_of).getFlattened();
+                    OWLObjectProperty is_about = df.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
+                    OWLObjectPropertyExpression has_about = is_about.getInverseProperty();
 
-                for(OWLNamedIndividual snp : snps){
-                    Set<OWLNamedIndividual> assocs = reasoner.getObjectPropertyValues(snp,has_about).getFlattened();
+                     Set<OWLNamedIndividual> snps = reasoner.getObjectPropertyValues(individual,location_of).getFlattened();
 
-                    for(OWLNamedIndividual ind : assocs){
-                        info.setAssociation(ind);
-                        String name = getTraitName(ind, ontology, df);
-                        if(!info.getTraitNames().contains(name)){
-                            info.setTraitName(name);
+                    for(OWLNamedIndividual snp : snps){
+                        Set<OWLNamedIndividual> assocs = reasoner.getObjectPropertyValues(snp,has_about).getFlattened();
+
+                        for(OWLNamedIndividual ind : assocs){
+                            info.setAssociation(ind);
+                            String name = getTraitName(ind, ontology, df);
+                            if(!info.getTraitNames().contains(name)){
+                                info.setTraitName(name);
+                            }
                         }
                     }
-                }
 
-                traitLocations.put(bandName, info);
+                    traitLocations.put(bandName, info);
+                }
+                else{
+                    getLog().debug("Band " + bandName + " is not a renderable cytogenetic band");
+                }
              }
         }
 
