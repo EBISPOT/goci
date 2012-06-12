@@ -161,21 +161,6 @@ else{
                                             newHeight = endY - newY;
                                         }
                                     }
-System.out.print(bandName + "\t");
-            if(info.getPreviousBand() == null){
-                System.out.print("bottom \t");
-            }
-            else{
-                System.out.print(info.getPreviousBand() + "\t");
-            }
-
-            if(info.getNextBand() == null){
-                System.out.println("top");
-            }
-            else{
-                System.out.print(info.getNextBand() + "\t");
-            }
-System.out.println(prevY + "\t" + diam + "\t" + endY + "\t" + newHeight);
                                  }
                                 info.setY(endY);
 
