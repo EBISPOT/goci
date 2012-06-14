@@ -129,7 +129,6 @@ else{
         //print statement to keep track of which band is being processed as I've had trouble with some bands
         //           System.out.println(bandName);
                             if(band != null){
-
                                 double x = band.getX();
                                 double y = band.getY();
                                 double width = band.getWidth();
@@ -145,22 +144,26 @@ else{
                                 if(info.getPreviousBand() != null){
                                     BandInformation previous = nexus.getTraitLocations().get(info.getPreviousBand());
                                     double prevY = previous.getY();
-                                    double diam = 2*(0.35*width);
+                                    double radius = 0.35*width;
 
                                      if(bandName.contains("p")){
-                                       double min = prevY - diam;
-                                       if(min <= newY){
-                                           endY = min;
-                                           newHeight = endY-newY;
-                                       }
+                                         int drop = (info.getTraitNames().size()/6)+2;
+                                         double min = prevY - (drop*radius);
+                                         if(min <= newY){
+                                            endY = min;
+                                            newHeight = endY-newY;
+                                         }
+                                    System.out.println(bandName + "\t" + drop + "\t" + endY);
                                     }
                                     else{
-                                        double min = prevY + diam;
-                                        if(min >= newY){
+                                         int drop = (previous.getTraitNames().size()/6)+2;
+                                         double min = prevY + (drop*radius);
+                                         if(min >= newY){
                                             endY = min;
                                             newHeight = endY - newY;
-                                        }
-                                    }
+                                         }
+                                System.out.println(bandName + "\t" + drop + "\t" + endY);
+                                     }
                                  }
                                 info.setY(endY);
 

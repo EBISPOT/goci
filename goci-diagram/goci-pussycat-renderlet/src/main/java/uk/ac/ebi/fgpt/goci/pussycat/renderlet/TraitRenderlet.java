@@ -100,99 +100,114 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
             String bandName = getSNPLocation(nexus, association,renderingContext);
 
             if(bandName != null){
-                if((nexus.getRenderedTraits(bandName) == null) || (nexus.getRenderedTraits(bandName).size() < 6)){
-                    Element trait = nexus.createSVGElement("circle");
-                    trait.setAttribute("transform",location);
+                Element trait = nexus.createSVGElement("circle");
+                trait.setAttribute("transform",location);
 
-                    double alength =  associationSVG.getWidth();
-                    double radius = 0.2*alength;
-                    double ax = associationSVG.getX();
-                    double cx;
+                double alength =  associationSVG.getWidth();
+                double radius = 0.2*alength;
+                double ax = associationSVG.getX();
+                double ay = associationSVG.getY();
+                double displacement = associationSVG.getHeight();
+                double cx, cy;
+                int size;
 
-                    if(nexus.getRenderedTraits(bandName) == null){
-                        cx = ax+alength+radius;
-                    }
-                    else{
-                        int position = nexus.getRenderedTraits(bandName).size();
-                        cx = ax+alength+(((2*position)+1)*radius);
-                    }
-
-                    double ay = associationSVG.getY();
-                    double displacement = associationSVG.getHeight();
-                    double cy=ay + displacement;
-
-           /*         if(bandName.contains("p")){
-                        cy = ay + displacement;
-                    }
-                    else{
-                        cy = ay + displacement;
-                    }            */
-
-                    trait.setAttribute("cx", Double.toString(cx));
-                    trait.setAttribute("cy", Double.toString(cy));
-                    trait.setAttribute("r", Double.toString(radius));
-
-                     String colour = getColour(gwasTrait, nexus);
-
-                     trait.setAttribute("fill",colour);
-                     trait.setAttribute("stroke","black");
-                     trait.setAttribute("stroke-width", "0.5");
-
-                     trait.setAttribute("id",getName());
-                     String mo = "showTooltip('" + getName() + "')";
-                     trait.setAttribute("onmouseover",mo);
-                     trait.setAttribute("onmouseout", "hideTooltip()");
-
-                     nexus.addSVGElement(trait);
-                     nexus.setTrait(bandName, traitName);
-                }
-        //7th trait - put in an ellipsis
-                else if(nexus.getRenderedTraits(bandName).size() == 6){
-                    Element ellipsis = nexus.createSVGElement("g");
-                    ellipsis.setAttribute("transform",location);
-                    double alength =  associationSVG.getWidth();
-                    double radius = 0.2*alength;
-                    double ax = associationSVG.getX();
-                    int position = nexus.getRenderedTraits(bandName).size();
-                    double x1 = ax+alength+(((2*position)+1)*radius);
-                    double x2 = x1 + radius;
-                    double x3 = x2 + radius;
-                    double ay = associationSVG.getY();
-                    double displacement = associationSVG.getHeight();
-                    double cy = ay + displacement;
-
-                    double r = 1;
-
-                    Element c1 = nexus.createSVGElement("circle");
-                    Element c2 = nexus.createSVGElement("circle");
-                    Element c3 = nexus.createSVGElement("circle");
-
-                    c1.setAttribute("cx", Double.toString(x1));
-                    c2.setAttribute("cx", Double.toString(x2));
-                    c3.setAttribute("cx", Double.toString(x3));
-
-                    c1.setAttribute("cy", Double.toString(cy));
-                    c2.setAttribute("cy", Double.toString(cy));
-                    c3.setAttribute("cy", Double.toString(cy));
-
-                    c1.setAttribute("r", Double.toString(r));
-                    c2.setAttribute("r", Double.toString(r));
-                    c3.setAttribute("r", Double.toString(r));
-
-                    c1.setAttribute("fill", "black");
-                    c2.setAttribute("fill", "black");
-                    c3.setAttribute("fill", "black");
-
-                    ellipsis.appendChild(c1);
-                    ellipsis.appendChild(c2);
-                    ellipsis.appendChild(c3);
-
-                    nexus.addSVGElement(ellipsis);
+                if(nexus.getRenderedTraits(bandName) == null){
+                    size = 0;
                 }
                 else{
-        //too many traits to render
-                   getLog().debug("Trait " + traitName + " cannot be rendered as there are already more than 6 traits for chromosomal band " + bandName);
+                    size = nexus.getRenderedTraits(bandName).size();
                 }
+                int horizontal = size%6;
+                int vertical = size/6;
+
+
+//                if((nexus.getRenderedTraits(bandName) == null) || (nexus.getRenderedTraits(bandName).size() < 6 )){
+                if(nexus.getRenderedTraits(bandName) == null){
+                    cx = ax+alength+radius;
+                }
+                else{
+                     if(vertical%2 == 0){
+                        cx = ax+alength+(((2*horizontal)+1)*radius);
+                     }
+                     else{
+                         cx = ax+alength+(((2*horizontal)+2)*radius);
+                     }
+                }
+                cy=ay + displacement + (vertical*radius);
+
+  //              }
+    //            else if ((nexus.getRenderedTraits(bandName).size() >= 6) && (nexus.getRenderedTraits(bandName).size() < 12)){
+             /*       int position = nexus.getRenderedTraits(bandName).size()-5;
+                    cx = ax+alength+((2*position)*radius);
+                    cy=ay + displacement + radius;     */
+
+      //          }
+
+//        //7th trait - put in an ellipsis
+//                else if(nexus.getRenderedTraits(bandName).size() == 6){
+//                    Element ellipsis = nexus.createSVGElement("g");
+//                    ellipsis.setAttribute("transform",location);
+//                    double alength =  associationSVG.getWidth();
+//                    double radius = 0.2*alength;
+//                    double ax = associationSVG.getX();
+//                    int position = nexus.getRenderedTraits(bandName).size();
+//                    double x1 = ax+alength+(((2*position)+1)*radius);
+//                    double x2 = x1 + radius;
+//                    double x3 = x2 + radius;
+//                    double ay = associationSVG.getY();
+//                    double displacement = associationSVG.getHeight();
+//                    double cy = ay + displacement;
+//
+//                    double r = 1;
+//
+//                    Element c1 = nexus.createSVGElement("circle");
+//                    Element c2 = nexus.createSVGElement("circle");
+//                    Element c3 = nexus.createSVGElement("circle");
+//
+//                    c1.setAttribute("cx", Double.toString(x1));
+//                    c2.setAttribute("cx", Double.toString(x2));
+//                    c3.setAttribute("cx", Double.toString(x3));
+//
+//                    c1.setAttribute("cy", Double.toString(cy));
+//                    c2.setAttribute("cy", Double.toString(cy));
+//                    c3.setAttribute("cy", Double.toString(cy));
+//
+//                    c1.setAttribute("r", Double.toString(r));
+//                    c2.setAttribute("r", Double.toString(r));
+//                    c3.setAttribute("r", Double.toString(r));
+//
+//                    c1.setAttribute("fill", "black");
+//                    c2.setAttribute("fill", "black");
+//                    c3.setAttribute("fill", "black");
+//
+//                    ellipsis.appendChild(c1);
+//                    ellipsis.appendChild(c2);
+//                    ellipsis.appendChild(c3);
+//
+//                    nexus.addSVGElement(ellipsis);
+//                }
+//                else{
+//        //too many traits to render
+//                   getLog().debug("Trait " + traitName + " cannot be rendered as there are already more than 6 traits for chromosomal band " + bandName);
+//                }
+
+                trait.setAttribute("cx", Double.toString(cx));
+                trait.setAttribute("cy", Double.toString(cy));
+                trait.setAttribute("r", Double.toString(radius));
+
+                String colour = getColour(gwasTrait, nexus);
+
+                trait.setAttribute("fill",colour);
+                trait.setAttribute("stroke","black");
+                trait.setAttribute("stroke-width", "0.5");
+
+                trait.setAttribute("id",getName());
+                String mo = "showTooltip('" + getName() + "')";
+                trait.setAttribute("onmouseover",mo);
+                trait.setAttribute("onmouseout", "hideTooltip()");
+
+                nexus.addSVGElement(trait);
+                nexus.setTrait(bandName, traitName);
             }
         }
      }
