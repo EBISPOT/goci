@@ -162,7 +162,6 @@ else{
                                             endY = min;
                                             newHeight = endY - newY;
                                          }
-                                System.out.println(bandName + "\t" + drop + "\t" + endY);
                                      }
                                  }
                                 info.setY(endY);
