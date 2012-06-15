@@ -4,12 +4,12 @@
     <parent>
         <artifactId>goci-ontology</artifactId>
         <groupId>uk.ac.ebi.fgpt</groupId>
-        <version>0.7-SNAPSHOT</version>
+        <version>0.6-SNAPSHOT</version>
     </parent>
 
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci-ontology-widgets</artifactId>
-    <version>0.7-SNAPSHOT</version>
+    <version>0.6-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>GOCI Browser Widgets (for viewing GWAS ontology annotations)</name>
