@@ -10,6 +10,6 @@ package uk.ac.ebi.fgpt.goci.pussycat.layout;
 public class SVGCanvas {
     
     public static final int canvasWidth = 1000;
-    public static final int canvasHeight = 700;
+    public static final int canvasHeight = 800;
 
 }

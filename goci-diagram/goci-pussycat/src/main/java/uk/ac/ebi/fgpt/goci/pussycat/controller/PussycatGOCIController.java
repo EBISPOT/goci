@@ -85,6 +85,22 @@ public class PussycatGOCIController {
         return getPussycatSession(session).performRendering(thingCls, getRenderletNexus(session));
     }
 
+    @RequestMapping(value = "/gwasdiagram/timeseries/{year}/{month}")
+    public @ResponseBody String renderGWASDiagramTimeSeries(@PathVariable String year, @PathVariable String month, HttpSession session) throws PussycatSessionNotReadyException {
+        // get OWLThing, to indicate that we want to draw all data in the GWAS catalog
+        OWLClassExpression timeCls = getOntologyConfiguration().getOWLDataFactory().getOWLThing();
+        // render all individuals using the pussycat session for this http session
+        return getPussycatSession(session).performRendering(timeCls, getRenderletNexus(session));
+    }
+
+    @RequestMapping(value = "/gwasdiagram/pre2011")
+    public @ResponseBody String renderGWASDiagramBefore2011(HttpSession session) throws PussycatSessionNotReadyException {
+        // get OWLThing, to indicate that we want to draw all data in the GWAS catalog
+        OWLClassExpression timeCls = getOntologyConfiguration().getOWLDataFactory().getOWLThing();
+        // render all individuals using the pussycat session for this http session
+        return getPussycatSession(session).performRendering(timeCls, getRenderletNexus(session));
+    }
+
     @RequestMapping(value = "/chromosomes")
     public @ResponseBody String renderChromosomes(HttpSession session) throws PussycatSessionNotReadyException {
         // retrieve a reference to the chromosome class

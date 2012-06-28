@@ -216,22 +216,6 @@ public class DefaultRenderletNexus implements RenderletNexus {
             }
         }
 
- /*       for (OWLNamedIndividual individual : individuals) {
-
-            boolean isAssociation =
-                    checkType(individual, ontology, IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));
-
-            if (isAssociation) {
-                // render each individual with a renderlet that can render it
-                for (Renderlet r : renderlets) {
-                    if (r.canRender(this, ontology, individual)) {
-                        getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
-                        r.render(this, ontology, individual);
-                    }
-                }
-            }
-        }         */
-
         return svgBuilder.getSVG();
 
     }

@@ -37,7 +37,7 @@ public class AssociationRenderlet implements Renderlet<OWLOntology, OWLNamedIndi
     public String getName() {
 
         //this should be name of the trait this is associated with
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return "Association renderlet";  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -106,6 +106,7 @@ else{
 
 //there is no other association in this chromosmal band yet - render
             if(nexus.getAssociations(bandName) == null){
+                getLog().debug("First association for this band");
                 g = nexus.createSVGElement("g");
                 String chromosome;
 
@@ -147,16 +148,15 @@ else{
                                     double radius = 0.35*width;
 
                                      if(bandName.contains("p")){
-                                         int drop = (info.getTraitNames().size()/6)+2;
+                                         int drop = ((info.getTraitNames().size()-1)/6)+2;
                                          double min = prevY - (drop*radius);
                                          if(min <= newY){
                                             endY = min;
                                             newHeight = endY-newY;
                                          }
-                                    System.out.println(bandName + "\t" + drop + "\t" + endY);
                                     }
                                     else{
-                                         int drop = (previous.getTraitNames().size()/6)+2;
+                                         int drop = ((previous.getTraitNames().size()-1)/6)+2;
                                          double min = prevY + (drop*radius);
                                          if(min >= newY){
                                             endY = min;
@@ -229,32 +229,38 @@ else{
 
             if(!bandflag){
                 OWLNamedIndividual trait = getTrait(renderingEntity, renderingContext, nexus);
-                getLog().debug("Trait: " + trait);
 
-                String traitName = getTraitName(trait, renderingContext, nexus, renderingEntity);
+                if(trait != null){
+                    getLog().debug("Trait: " + trait);
 
-                if(nexus.getRenderedTraits(bandName) != null){
-                    if(nexus.getRenderedTraits(bandName).contains(traitName)){
-                        getLog().debug("Trait " + traitName + " already rendered at this location");
+                    String traitName = getTraitName(trait, renderingContext, nexus, renderingEntity);
+
+                    if(nexus.getRenderedTraits(bandName) != null){
+                        if(nexus.getRenderedTraits(bandName).contains(traitName)){
+                            getLog().debug("Trait " + traitName + " already rendered at this location");
+                        }
+                        else{
+                            for (Renderlet r : nexus.getRenderlets()){
+                                if (r.canRender(nexus, renderingContext, trait)) {
+                                    getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
+                                    r.render(nexus, renderingContext, trait);
+                                }
+                            }
+                        }
                     }
+
                     else{
                         for (Renderlet r : nexus.getRenderlets()){
                             if (r.canRender(nexus, renderingContext, trait)) {
                                 getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
                                 r.render(nexus, renderingContext, trait);
                             }
+
                         }
                     }
                 }
-
                 else{
-                    for (Renderlet r : nexus.getRenderlets()){
-                        if (r.canRender(nexus, renderingContext, trait)) {
-                            getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
-                            r.render(nexus, renderingContext, trait);
-                        }
-
-                    }
+                    getLog().debug("The trait for association " + renderingEntity + " is null");
                 }
             }
         }

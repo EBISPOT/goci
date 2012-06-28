@@ -25,7 +25,9 @@ public class SingleNucleotidePolymorphismDAO {
                     "join GWASREGIONXREF rx on rx.GWASSTUDIESSNPID=g.ID " +
                     "join GWASREGION r on r.ID=rx.REGIONID " +
                     "where g.ID is not null and s.SNP is not null and r.REGION is not null " +
-                    "and g.CHR_ID is not null and g.CHR_POS is not null)";
+                //    "and g.CHR_ID is not null and g.CHR_POS is not null)";
+                    "and g.CHR_ID is not null and g.CHR_POS is not null " +
+                    "and g.PVALUEFLOAT < 5E-8)";
 
     private JdbcTemplate jdbcTemplate;
 

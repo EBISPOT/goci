@@ -32,8 +32,12 @@ public class TraitAssociationDAO extends Initializable {
                     "join GWASSTUDIES st on g.GWASID=st.ID " +
                     "join GWASDISEASETRAITS t on st.DISEASEID=t.ID " +
                     "where g.ID is not null and s.SNP is not null " +
+          /*          "and t.DISEASETRAIT is not null and g.PVALUEFLOAT is not null " +
+                    "order by g.ID";  */
                     "and t.DISEASETRAIT is not null and g.PVALUEFLOAT is not null " +
+                    "and g.PVALUEFLOAT < 5E-8 " +
                     "order by g.ID";
+
 
     private SingleNucleotidePolymorphismDAO snpDAO;
     private OntologyDAO ontologyDAO;

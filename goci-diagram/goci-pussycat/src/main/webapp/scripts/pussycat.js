@@ -168,6 +168,8 @@ function renderDiagram() {
         log("Rendering GWAS diagram - calling api/views/gwasdiagram...");
         $.ajax({
                    url:'api/views/gwasdiagram',
+
+           //        url:'api/views/gwasdiagram/pre2011',
                    dataType:'html',
                    success:insertSVG,
                    error:serverCommunicationFail
