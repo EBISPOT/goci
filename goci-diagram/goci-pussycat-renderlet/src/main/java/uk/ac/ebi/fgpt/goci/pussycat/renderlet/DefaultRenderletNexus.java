@@ -248,7 +248,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
         for (int i = 0; i < allTypes.length; i++) {
             OWLClass typeClass = allTypes[i].asOWLClass();
 
-            if (typeClass.getIRI().equals(typeIRI)) {
+            if (typeIRI.equals(typeClass.getIRI())) {
                 type = true;
                 break;
             }
@@ -348,7 +348,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
                 for(int j = 0; j < allTypes.length; j++){
                     OWLClass typeClass = allTypes[j].asOWLClass();
                     IRI typeIRI = typeClass.getIRI();
-                    if(typeIRI.toString().equals(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI)){
+                    if(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI.equals(typeIRI.toString())){
                         OWLDataProperty has_name = dataFactory.getOWLDataProperty(IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
 
                         if(association.getDataPropertyValues(has_name,ontology).size() != 0){

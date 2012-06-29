@@ -31,7 +31,7 @@
           class="uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession"
           init-method="init">
         <property name="configuration" ref="config" />
-        <property name="ontologyResource" value="ontology/gwas-diagram-data-large.owl" />
+        <property name="ontologyResource" value="ontology/gwas-diagram-data-all-pval.owl" />
         <property name="publisher" ref="publisher" />
     </bean>
 
