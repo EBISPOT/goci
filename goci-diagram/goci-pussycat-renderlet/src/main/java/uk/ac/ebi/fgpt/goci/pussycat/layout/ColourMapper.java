@@ -46,22 +46,22 @@ public class ColourMapper {
 
     static {
         COLOUR_MAP.put(EXPERIMENTAL_FACTOR, /*"#663300" "#FFFF33"*/ "#BEBEBE");
-        COLOUR_MAP.put(CARDIO_VASCULAR, "#CC0000");
-        COLOUR_MAP.put(NEURO, "#660099");
-        COLOUR_MAP.put(MENTAL, "#6600FF");
-        COLOUR_MAP.put(SKELETAL, "#FF6666");
-        COLOUR_MAP.put(NEOPLASM, "#CC33FF");
-        COLOUR_MAP.put(CONGENITAL, "#FF00CC");
-        COLOUR_MAP.put(GENETIC,"#990099");
-        COLOUR_MAP.put(DISEASE, "#660033");
-        COLOUR_MAP.put(MEASUREMENT, "#FF6314");
-        COLOUR_MAP.put(SIGN_SYMPTOM, "#FFCC00");
-        COLOUR_MAP.put(MATERIAL_ENTITY, "#003399");
-        COLOUR_MAP.put(FUNCTION, "#006699");
-        COLOUR_MAP.put(QUALITY, "#66CCFF");
-        COLOUR_MAP.put(BEHAVIOUR, "#336600");
-        COLOUR_MAP.put(MENTAL_PROCESS, "#66CC33");
-        COLOUR_MAP.put(PHYSIO_PROCESS, "#CCFF00");
+        COLOUR_MAP.put(CARDIO_VASCULAR, "#8DD3C7");
+        COLOUR_MAP.put(NEURO, "#FFFFB3");
+        COLOUR_MAP.put(MENTAL, "#BEBADA");
+        COLOUR_MAP.put(SKELETAL, "#FB8072");
+        COLOUR_MAP.put(NEOPLASM, "#80B1D3");
+        COLOUR_MAP.put(CONGENITAL, "#FDB462");
+        COLOUR_MAP.put(GENETIC,"#B3DE69");
+        COLOUR_MAP.put(DISEASE, "#FCCDE5");
+        COLOUR_MAP.put(MEASUREMENT, "#66CCFF");
+        COLOUR_MAP.put(SIGN_SYMPTOM, "#BC80BD");
+        COLOUR_MAP.put(MATERIAL_ENTITY, "#CCEBC5");
+        COLOUR_MAP.put(FUNCTION, "#FFED6F");
+        COLOUR_MAP.put(QUALITY, "#006699");
+        COLOUR_MAP.put(BEHAVIOUR, "#669900");
+        COLOUR_MAP.put(MENTAL_PROCESS, "#FF3399");
+        COLOUR_MAP.put(PHYSIO_PROCESS, "#993300");
     }
           /*
     public static HashMap<String, String> getColourMap(){
