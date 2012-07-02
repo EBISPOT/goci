@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ehcache="http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring
+       http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.2.xsd
+       ">
+
+    <ehcache:annotation-driven />
+
+    <ehcache:config cache-manager="cacheManager" />
+
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" />
+
+    <bean id="pussycatSessionStrategy"
+          class="uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSessionStrategy"
+          factory-method="valueOf">
+        <constructor-arg>
+            <value>JOIN</value>
+        </constructor-arg>
+    </bean>
+
+    <!--<bean id="reasonerSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.DataPublishingCacheableReasonerSession" init-method="init">-->
+            <!--<property name="publisher" ref="publisher" />-->
+    <!--</bean>-->
+
+    <bean id="reasonerSession"
+          class="uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession"
+          init-method="init">
+        <property name="configuration" ref="config" />
+        <property name="ontologyResource" value="ontology/gwas-diagram-data-all-pval.owl" />
+        <property name="publisher" ref="publisher" />
+    </bean>
+
+    <bean id="pussycatSessionManager" class="uk.ac.ebi.fgpt.goci.pussycat.manager.DefaultPussycatSessionManager">
+        <property name="reasonerSession" ref="reasonerSession" />
+        <property name="pussycatSessions">
+            <set>
+                <ref bean="pussycatSession" />
+            </set>
+        </property>
+    </bean>
+
+    <bean id="pussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.GOCIDataPublisherPussycatSession">
+        <property name="reasonerSession" ref="reasonerSession" />
+        <property name="ontologyConfiguration" ref="config" />
+    </bean>
+
+</beans>

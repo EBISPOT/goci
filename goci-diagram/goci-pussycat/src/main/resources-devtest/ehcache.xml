@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
+         updateCheck="false">
+
+    <diskStore path="/ebi/microarray/home/fgpt/test/goci-home/publisher/cache" />
+
+    <defaultCache
+            eternal="true"
+            maxElementsInMemory="100"
+            overflowToDisk="false" />
+
+    <cache name="reasonerCache"
+           maxElementsInMemory="1"
+           eternal="true"
+           overflowToDisk="true" />
+
+    <!--<cache name="reasonerCache"-->
+           <!--maxElementsInMemory="1"-->
+           <!--eternal="true"-->
+           <!--diskPersistent="true"-->
+           <!--overflowToDisk="true" />-->
+
+</ehcache>
