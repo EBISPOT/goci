@@ -205,7 +205,7 @@
         <profile>
             <id>devtest</id>
             <activation>
-                <activeByDefault>false</activeByDefault>
+                <activeByDefault>true</activeByDefault>
             </activation>
             <build>
                 <resources>
