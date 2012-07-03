@@ -1,4 +1,4 @@
-var enableDebugging = true;
+var enableDebugging = false;
 
 var maxScale = 100;
 var currentScale = maxScale / 2;
@@ -23,7 +23,7 @@ function init() {
         // create tabs
         $("#browsertabs").tabs({
                                    show:tabShow,
-                                   selected:1
+                                   selected:0
                                });
 
         // resize the page so it fills window

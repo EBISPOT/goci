@@ -40,9 +40,11 @@ h3.nomargin {
 
 #header {
     height: 60px;
-    padding-top: 92px;
+    padding-top: 20px;
     padding-bottom: 15px;
-    background: url('../images/topbanner.jpg') top left no-repeat;
+    /*padding-top: 92px;*/
+    /*padding-bottom: 15px;*/
+    /*background: url('../images/topbanner.jpg') top left no-repeat;*/
     margin: 0;
 }
 

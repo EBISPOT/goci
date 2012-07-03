@@ -16,8 +16,8 @@ public class ColourMapper {
     public static final String CARDIO_VASCULAR = EFO_ONTOLOGY_BASE_IRI + "/EFO_0000319";
     public static final String NEURO = EFO_ONTOLOGY_BASE_IRI + "/EFO_0000618";
     public static final String MENTAL = EFO_ONTOLOGY_BASE_IRI + "/EFO_0000677";
-    public static final String SKELETAL = EFO_ONTOLOGY_BASE_IRI + "/EFO_0000616";
-    public static final String NEOPLASM = EFO_ONTOLOGY_BASE_IRI + "/EFO_0002461";
+    public static final String SKELETAL = EFO_ONTOLOGY_BASE_IRI + "/EFO_0002461";
+    public static final String NEOPLASM = EFO_ONTOLOGY_BASE_IRI + "/EFO_0000616";
     public static final String CONGENITAL = EFO_ONTOLOGY_BASE_IRI + "/EFO_0003915";
     public static final String GENETIC = EFO_ONTOLOGY_BASE_IRI + "/EFO_0000508";
     public static final String DISEASE = EFO_ONTOLOGY_BASE_IRI + "/EFO_0000408";
@@ -45,12 +45,12 @@ public class ColourMapper {
 //    }
 
     static {
-        COLOUR_MAP.put(EXPERIMENTAL_FACTOR, /*"#663300" "#FFFF33"*/ "#BEBEBE");
+        COLOUR_MAP.put(EXPERIMENTAL_FACTOR, /*"#663300" "#FFFF33" "#BEBEBE"*/ "#FFFFFF");
         COLOUR_MAP.put(CARDIO_VASCULAR, "#8DD3C7");
         COLOUR_MAP.put(NEURO, "#FFFFB3");
         COLOUR_MAP.put(MENTAL, "#BEBADA");
-        COLOUR_MAP.put(SKELETAL, "#FB8072");
-        COLOUR_MAP.put(NEOPLASM, "#80B1D3");
+        COLOUR_MAP.put(SKELETAL, "#80B1D3");
+        COLOUR_MAP.put(NEOPLASM, "#FB8072");
         COLOUR_MAP.put(CONGENITAL, "#FDB462");
         COLOUR_MAP.put(GENETIC,"#B3DE69");
         COLOUR_MAP.put(DISEASE, "#FCCDE5");
