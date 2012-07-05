@@ -26,11 +26,13 @@ import java.util.*;
  */
 public class TraitAssociationDAO extends Initializable {
     private static final String TRAIT_SELECT =
-            "select g.ID, st.PMID as STUDY, s.SNP, t.DISEASETRAIT, g.PVALUEFLOAT from GWASSNP s " +
+            "select distinct g.ID, st.PMID as STUDY, s.SNP, t.DISEASETRAIT, g.PVALUEFLOAT, e.EFOURI from GWASSNP s " +
                     "join GWASSNPXREF sx on s.ID=sx.SNPID " +
                     "join GWASSTUDIESSNP g on sx.GWASSTUDIESSNPID=g.ID " +
                     "join GWASSTUDIES st on g.GWASID=st.ID " +
                     "join GWASDISEASETRAITS t on st.DISEASEID=t.ID " +
+                    "left join GWASEFOXREF ex on ex.STUDYID = st.ID " +
+                    "left join GWASEFOTRAITS e on e.ID = ex.TRAITID " +
                     "where g.ID is not null and s.SNP is not null " +
           /*          "and t.DISEASETRAIT is not null and g.PVALUEFLOAT is not null " +
                     "order by g.ID";  */
@@ -117,7 +119,8 @@ public class TraitAssociationDAO extends Initializable {
             String rsID = resultSet.getString(3);
             String traitName = resultSet.getString(4);
             float pValue = resultSet.getFloat(5);
-            return new TraitAssocationFromDB(associationID, pubMedID, rsID, traitName, pValue);
+            String efoURI = resultSet.getString(6);
+            return new TraitAssocationFromDB(associationID, pubMedID, rsID, traitName, pValue, efoURI);
         }
     }
 
@@ -127,16 +130,18 @@ public class TraitAssociationDAO extends Initializable {
         private String rsID;
         private String traitName;
         private float pValue;
+        private String efoURI;
 
         private SingleNucleotidePolymorphism snp;
         private OWLClass trait;
 
-        private TraitAssocationFromDB(String id, String pubMedID, String rsID, String traitName, float pValue) {
+        private TraitAssocationFromDB(String id, String pubMedID, String rsID, String traitName, float pValue, String efoURI) {
             this.id = id;
             this.pubMedID = pubMedID;
             this.rsID = rsID;
             this.traitName = traitName;
             this.pValue = pValue;
+            this.efoURI = efoURI;
         }
 
         private void mapSNP() {
@@ -167,65 +172,74 @@ public class TraitAssociationDAO extends Initializable {
         }
 
         private void mapTrait() throws ObjectMappingException {
-            Collection<OWLClass> traitClasses = getOntologyDAO().getOWLClassesByLabel(traitName);
-            if (traitClasses.size() == 0) {
-                traitLogger.warn(traitName + "\t[not in EFO]");
-                throw new MissingOntologyTermException(
-                        "Trait '" + traitName + "' was not found in EFO so could not be accurately mapped");
-            }
-            else if (traitClasses.size() > 1) {
-                // ambiguous term - multiple classes have the same synonym
-                traitLogger.warn(traitName + "\t[ambiguous names/synonyms in EFO]");
+//if there is no mapped efoURI found the catalogue database
+            if(efoURI == null){
+                Collection<OWLClass>traitClasses = getOntologyDAO().getOWLClassesByLabel(traitName);
 
-                // but we can still try a few hacks...
+                 if (traitClasses.size() == 0) {
+                    traitLogger.warn(traitName + "\t[not in EFO]");
+                    throw new MissingOntologyTermException(
+                            "Trait '" + traitName + "' was not found in EFO so could not be accurately mapped");
+                }
+                else if (traitClasses.size() > 1) {
+                    // ambiguous term - multiple classes have the same synonym
+                    traitLogger.warn(traitName + "\t[ambiguous names/synonyms in EFO]");
 
-                // workaround for cancer/neoplasm duplications...
-                if (traitName.toLowerCase().contains("cancer")) {
-                    for (OWLClass cls : traitClasses) {
-                        List<String> clsNames = getOntologyDAO().getClassNames(cls);
-                        boolean isCarcinoma = false;
-                        for (String clsName : clsNames) {
-                            if (clsName.toLowerCase().contains("carcinoma")) {
-                                isCarcinoma = true;
+                    // but we can still try a few hacks...
+
+                    // workaround for cancer/neoplasm duplications...
+                    if (traitName.toLowerCase().contains("cancer")) {
+                        for (OWLClass cls : traitClasses) {
+                            List<String> clsNames = getOntologyDAO().getClassNames(cls);
+                            boolean isCarcinoma = false;
+                            for (String clsName : clsNames) {
+                                if (clsName.toLowerCase().contains("carcinoma")) {
+                                    isCarcinoma = true;
+                                    break;
+                                }
+                            }
+                            if (isCarcinoma) {
+                                this.trait = cls;
                                 break;
                             }
                         }
-                        if (isCarcinoma) {
-                            this.trait = cls;
-                            break;
+                    }
+
+                    // workaround for obesity/morbid obesity
+                    if (traitName.toLowerCase().contains("obesity")) {
+                        for (OWLClass cls : traitClasses) {
+                            if (cls.getIRI().toURI().toString().equals("http://www.ebi.ac.uk/efo/EFO_0001073")) {
+                                this.trait = cls;
+                                break;
+                            }
                         }
                     }
-                }
 
-                // workaround for obesity/morbid obesity
-                if (traitName.toLowerCase().contains("obesity")) {
-                    for (OWLClass cls : traitClasses) {
-                        if (cls.getIRI().toURI().toString().equals("http://www.ebi.ac.uk/efo/EFO_0001073")) {
-                            this.trait = cls;
-                            break;
+                    // workaround for Coronary heart disease
+                    if (traitName.toLowerCase().contains("coronary heart disease")) {
+                        for (OWLClass cls : traitClasses) {
+                            if (cls.getIRI().toURI().toString().equals("http://www.ebi.ac.uk/efo/EFO_0001645")) {
+                                this.trait = cls;
+                                break;
+                            }
                         }
                     }
-                }
 
-                // workaround for Coronary heart disease
-                if (traitName.toLowerCase().contains("coronary heart disease")) {
-                    for (OWLClass cls : traitClasses) {
-                        if (cls.getIRI().toURI().toString().equals("http://www.ebi.ac.uk/efo/EFO_0001645")) {
-                            this.trait = cls;
-                            break;
-                        }
+                    // if none of these hacks worked, throw an exception
+                    if (trait == null) {
+                        throw new AmbiguousOntologyTermException(
+                                "Trait label is ambiguous - multiple classes in EFO have the name '" + traitName + "'");
                     }
                 }
-
-                // if none of these hacks worked, throw an exception
-                if (trait == null) {
-                    throw new AmbiguousOntologyTermException(
-                            "Trait label is ambiguous - multiple classes in EFO have the name '" + traitName + "'");
+                else {
+                    // exactly one label <-> EFO mapping
+                    this.trait = traitClasses.iterator().next();
                 }
             }
-            else {
-                // exactly one label <-> EFO mapping
-                this.trait = traitClasses.iterator().next();
+//if there is a specified URI, get it
+            else{
+                this.trait = getOntologyDAO().getOWLClassByURI(efoURI);
+                getLog().debug("Trait " + traitName + " has a mapping in the catalogue database");
             }
         }
 

@@ -171,7 +171,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
     @Override
     public String getSVG(OWLClassExpression classExpression) {
 //check if the chromosomes have already been rendered, otherwise render them
-        getLog().debug("There are " + renderlets.size() + " registered renderlets");
+        getLog().trace("There are " + renderlets.size() + " registered renderlets");
         boolean check = false;
 
         Set<Object> keys = renderedEntities.keySet();
@@ -185,6 +185,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
         }
 
         if (!check) {
+            getLog().debug("Rendering chromosomes");
             renderChromosomes();
         }
 
@@ -200,6 +201,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
             renderingOrder =  buildTraitMap(individuals, ontology);
         }
 
+        getLog().debug("Starting rendering of trait associations");
         for(String band : renderingOrder){
             ArrayList<OWLNamedIndividual> assocs = traitLocations.get(band).getAssociations();
 
@@ -207,7 +209,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
                 if(individuals.contains(ind)){
                     for (Renderlet r : renderlets) {
                         if (r.canRender(this, ontology, ind)) {
-                            getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
+                            getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
                             r.render(this, ontology, ind);
                         }
                     }
@@ -215,6 +217,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
                 }
             }
         }
+        getLog().debug("Rendering complete");
 
         return svgBuilder.getSVG();
 
@@ -233,7 +236,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
 
                 for (OWLClass chrom : allChroms) {
                     if (r.canRender(this, ontology, chrom)) {
-                        getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
+                        getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
                         r.render(this, ontology, chrom);
                     }
                 }

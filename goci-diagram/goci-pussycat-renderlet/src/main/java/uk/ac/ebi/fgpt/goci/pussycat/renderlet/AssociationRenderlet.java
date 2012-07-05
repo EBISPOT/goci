@@ -91,7 +91,7 @@ else{
     @Override
     public void render(RenderletNexus nexus, OWLOntology renderingContext, OWLNamedIndividual renderingEntity) {
  //       System.out.println("Association: " + renderingEntity);
-       getLog().debug("Association: " + renderingEntity);
+       getLog().trace("Association: " + renderingEntity);
 
         String bandName = getSNPLocation(renderingEntity, renderingContext);
 //SNP does not have any positional information
@@ -106,7 +106,7 @@ else{
 
 //there is no other association in this chromosmal band yet - render
             if(nexus.getAssociations(bandName) == null){
-                getLog().debug("First association for this band");
+                getLog().trace("First association for this band");
                 g = nexus.createSVGElement("g");
                 String chromosome;
 
@@ -216,7 +216,7 @@ else{
 
     //there is already another association in this band - can't render the association but need to render the trait as well as add to various nexus lists
             else{
-                getLog().debug("Secondary association: " + renderingEntity + " for band " + bandName);
+                getLog().trace("Secondary association: " + renderingEntity + " for band " + bandName);
     //get the SVG for the first assocation rendered for this band and reuse it for this association, but without adding it to the SVG file
                 OWLNamedIndividual previousEntity = (OWLNamedIndividual)nexus.getAssociations(bandName).get(0);
                 g = nexus.getRenderingEvent(previousEntity).getRenderedSVG();
@@ -231,18 +231,18 @@ else{
                 OWLNamedIndividual trait = getTrait(renderingEntity, renderingContext, nexus);
 
                 if(trait != null){
-                    getLog().debug("Trait: " + trait);
+                    getLog().trace("Trait: " + trait);
 
                     String traitName = getTraitName(trait, renderingContext, nexus, renderingEntity);
 
                     if(nexus.getRenderedTraits(bandName) != null){
                         if(nexus.getRenderedTraits(bandName).contains(traitName)){
-                            getLog().debug("Trait " + traitName + " already rendered at this location");
+                            getLog().trace("Trait " + traitName + " already rendered at this location");
                         }
                         else{
                             for (Renderlet r : nexus.getRenderlets()){
                                 if (r.canRender(nexus, renderingContext, trait)) {
-                                    getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
+                                    getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
                                     r.render(nexus, renderingContext, trait);
                                 }
                             }
@@ -252,7 +252,7 @@ else{
                     else{
                         for (Renderlet r : nexus.getRenderlets()){
                             if (r.canRender(nexus, renderingContext, trait)) {
-                                getLog().debug("Dispatching render() request to renderlet '" + r.getName() + "'");
+                                getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
                                 r.render(nexus, renderingContext, trait);
                             }
 
