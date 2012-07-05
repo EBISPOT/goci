@@ -19,7 +19,10 @@ import uk.ac.ebi.fgpt.goci.model.Study;
 import uk.ac.ebi.fgpt.goci.model.TraitAssociation;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Javadocs go here!
@@ -175,7 +178,7 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
                                    loadedOntologies.toString());
             getLog().info("Classifying ontology from " + ontology.getOntologyID().getOntologyIRI());
 
-            getLog().debug("Creating reasoner... " + new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
+            getLog().debug("Creating reasoner... ");
             OWLReasonerFactory factory = new Reasoner.ReasonerFactory();
             ConsoleProgressMonitor progressMonitor = new ConsoleProgressMonitor();
             OWLReasonerConfiguration config = new SimpleConfiguration(progressMonitor);
@@ -192,7 +195,7 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
                 throw new OWLConversionException("Once classified, unsatisfiable classes were detected");
             }
             else {
-                getLog().info("Reasoning complete! " + new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
+                getLog().info("Reasoning complete! ");
                 return reasoner;
             }
         }
