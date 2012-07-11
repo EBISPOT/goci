@@ -1,6 +1,7 @@
 package uk.ac.ebi.fgpt.goci;
 
 import org.apache.commons.cli.*;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.slf4j.Logger;
@@ -8,17 +9,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
-import uk.ac.ebi.fgpt.goci.service.DefaultGWASOWLPublisher;
+import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.service.GWASOWLPublisher;
 
 import java.io.File;
+import java.net.URI;
 
 /**
  * A driver class, containing a {@link #main(String[])} method, that can be used to run the datapublisher to convert the
  * GWAS catalog data into OWL.
  *
- * @author Tony Burdett
- * Date 26/01/12
+ * @author Tony Burdett Date 26/01/12
  */
 public class GOCIDataPublisherDriver {
     private static File assertedOntologyFile;
@@ -32,6 +33,7 @@ public class GOCIDataPublisherDriver {
                 // execute publisher
                 GOCIDataPublisherDriver driver = new GOCIDataPublisherDriver();
                 driver.publishAndSave(assertedOntologyFile, inferredOntologyFile);
+//                driver.loadAndPrintStats(assertedOntologyFile); // AJCB - This just dumps out some stats about the knowledgebase provided
             }
             else {
                 // could not parse arguments, exit with exit code >1 (depending on parsing problem)
@@ -110,6 +112,7 @@ public class GOCIDataPublisherDriver {
     }
 
     private GWASOWLPublisher publisher;
+    private OntologyConfiguration config;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -119,7 +122,8 @@ public class GOCIDataPublisherDriver {
 
     public GOCIDataPublisherDriver() {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("goci-datapublisher.xml");
-        publisher = ctx.getBean("publisher", DefaultGWASOWLPublisher.class);
+        publisher = ctx.getBean("publisher", GWASOWLPublisher.class);
+        config = ctx.getBean("config", OntologyConfiguration.class);
     }
 
     public void publishAndSave(File assertedOntologyFile, File inferredOntologyFile) throws RuntimeException {
@@ -148,6 +152,28 @@ public class GOCIDataPublisherDriver {
             System.err.println("Failed to publish data to OWL: " + e.getMessage());
             getLog().error("Failed to publish data to OWL: ", e);
             throw new RuntimeException(e);
+        }
+        catch (Exception e) {
+            System.err.println("Failed to publish data to OWL (an unexpected exception occurred): " + e.getMessage());
+            getLog().error("Failed to publish data to OWL (an unexpected exception occurred): ", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void loadAndPrintStats(File assertedOntologyFile) {
+        try {
+            // load ontology
+            URI gwasDataURI = assertedOntologyFile.toURI();
+            getLog().info("Loading GWAS data from " + gwasDataURI);
+            OWLOntology ontology = config.getOWLOntologyManager().loadOntology(IRI.create(gwasDataURI));
+
+            // print some stats
+            int individualCount = ontology.getIndividualsInSignature().size();
+            int axiomCount = ontology.getAxiomCount();
+
+            System.out.println("Ontology '" + ontology.getOntologyID().getOntologyIRI() + "' contains:\n\t" +
+                                       individualCount + " indivuals,\n\t" +
+                                       axiomCount + " axioms");
         }
         catch (Exception e) {
             System.err.println("Failed to publish data to OWL (an unexpected exception occurred): " + e.getMessage());
