@@ -107,9 +107,13 @@
 
     <!-- Version control (project hosted on GitHub -->
     <scm>
-        <connection>scm:git:https://github.com/tburdett/goci</connection>
-        <developerConnection>scm:git:https://github.com/tburdett/goci</developerConnection>
-        <url>https://github.com/tburdett/goci</url>
+        <!--<connection>scm:git:https://github.com/tburdett/goci</connection>-->
+        <!--<developerConnection>scm:git:https://github.com/tburdett/goci</developerConnection>-->
+        <!--<url>https://github.com/tburdett/goci</url>-->
+        <!-- TODO: using git protocol instead of https to avoid username prompting, not sure if this works at release? -->
+        <connection>scm:git:git@github.com:tburdett/goci.git</connection>
+        <developerConnection>scm:git:git@github.com:tburdett/goci.git</developerConnection>
+        <url>git@github.com:tburdett/goci.git</url>
     </scm>
 
     <!-- Maven repository and site deployment -->
