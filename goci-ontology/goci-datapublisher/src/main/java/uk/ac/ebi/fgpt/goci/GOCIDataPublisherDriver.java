@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
+import uk.ac.ebi.fgpt.goci.lang.FilterProperties;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.service.GWASOWLPublisher;
 
@@ -73,6 +74,16 @@ public class GOCIDataPublisherDriver {
                         String inferredOutputFileName = cl.getOptionValue("i");
                         inferredOntologyFile = new File(inferredOutputFileName);
                     }
+
+                    if(cl.hasOption("p")){
+                        String pvalueFilter = cl.getOptionValue("p");
+                        FilterProperties.setPvalueFilter(pvalueFilter);
+                    }
+
+                    if(cl.hasOption("d")) {
+                        String dateFilter = cl.getOptionValue("d");
+                        FilterProperties.setDateFilter(dateFilter);
+                    }
                 }
                 else {
                     System.err.println("-o (ontology output file) argument is required");
@@ -107,6 +118,12 @@ public class GOCIDataPublisherDriver {
                                                      "The output file to write the inferred version of the published ontology to");
         inferredOutputFileOption.setArgName("file");
         options.addOption(inferredOutputFileOption);
+
+        Option pvalueFilterOption = new Option("p", "pvalue", true, "The minimum p-value on which to filter the knowledge base, in format nE-x, e.g. 5E-8");
+        options.addOption(pvalueFilterOption);
+
+        Option dateFilterOption = new Option("d", "date", true, "The date on which to filter the knowledge base, in format YYYY-MM-DD");
+        options.addOption(dateFilterOption);
 
         return options;
     }

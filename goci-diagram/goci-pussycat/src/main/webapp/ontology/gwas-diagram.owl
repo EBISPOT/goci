@@ -68,9 +68,9 @@
     
 
 
-    <!-- http://www.ebi.ac.uk/efo/gwas-diagram#EFO_GD00042 -->
+    <!-- http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00042 -->
 
-    <ObjectProperty rdf:about="&efo;gwas-diagram#EFO_GD00042">
+    <ObjectProperty rdf:about="&efo;gwas-diagram/EFO_GD00042">
         <rdfs:label rdf:datatype="&xsd;string">has_about</rdfs:label>
         <inverseOf rdf:resource="&obo;IAO_0000136"/>
     </ObjectProperty>

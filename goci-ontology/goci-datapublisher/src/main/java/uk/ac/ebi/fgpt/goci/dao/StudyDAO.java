@@ -3,6 +3,7 @@ package uk.ac.ebi.fgpt.goci.dao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import uk.ac.ebi.fgpt.goci.exception.ObjectMappingException;
+import uk.ac.ebi.fgpt.goci.lang.FilterProperties;
 import uk.ac.ebi.fgpt.goci.lang.Initializable;
 import uk.ac.ebi.fgpt.goci.lang.UniqueID;
 import uk.ac.ebi.fgpt.goci.model.Study;
@@ -20,7 +21,7 @@ import java.util.*;
  */
 public class StudyDAO extends Initializable {
     private static final String STUDY_SELECT =
-            "select ID, AUTHOR, PUBLISHDATE, PMID from GWASSTUDIES where PMID is not null";
+            "select ID, AUTHOR, STUDYDATE, PMID from GWASSTUDIES where PMID is not null";
 
     private TraitAssociationDAO traitAssociationDAO;
     private JdbcTemplate jdbcTemplate;
@@ -65,7 +66,14 @@ public class StudyDAO extends Initializable {
     public Collection<Study> retrieveAllStudies() {
         try {
             waitUntilReady();
-            return getJdbcTemplate().query(STUDY_SELECT, new StudyMapper());
+            if(FilterProperties.getDateFilter() == null){
+                return getJdbcTemplate().query(STUDY_SELECT, new StudyMapper());
+            }
+            else{
+                String filter = " and STUDYDATE < to_date('" + FilterProperties.getDateFilter() + "','yyyy-mm-dd')";
+                String date_filter_query = STUDY_SELECT.concat(filter);
+                return getJdbcTemplate().query(date_filter_query, new StudyMapper());
+            }
         }
         catch (InterruptedException e) {
             throw new ObjectMappingException(

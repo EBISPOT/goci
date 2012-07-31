@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import uk.ac.ebi.fgpt.goci.exception.AmbiguousOntologyTermException;
 import uk.ac.ebi.fgpt.goci.exception.MissingOntologyTermException;
 import uk.ac.ebi.fgpt.goci.exception.ObjectMappingException;
+import uk.ac.ebi.fgpt.goci.lang.FilterProperties;
 import uk.ac.ebi.fgpt.goci.lang.Initializable;
 import uk.ac.ebi.fgpt.goci.lang.UniqueID;
 import uk.ac.ebi.fgpt.goci.model.SingleNucleotidePolymorphism;
@@ -25,7 +26,7 @@ import java.util.*;
  * Date 24/01/12
  */
 public class TraitAssociationDAO extends Initializable {
-    private static final String TRAIT_SELECT =
+    private static final String TRAIT_SELECT_MAIN =
             "select distinct g.ID, st.PMID as STUDY, s.SNP, t.DISEASETRAIT, g.PVALUEFLOAT, e.EFOURI from GWASSNP s " +
                     "join GWASSNPXREF sx on s.ID=sx.SNPID " +
                     "join GWASSTUDIESSNP g on sx.GWASSTUDIESSNPID=g.ID " +
@@ -34,12 +35,9 @@ public class TraitAssociationDAO extends Initializable {
                     "left join GWASEFOXREF ex on ex.STUDYID = st.ID " +
                     "left join GWASEFOTRAITS e on e.ID = ex.TRAITID " +
                     "where g.ID is not null and s.SNP is not null " +
-          /*          "and t.DISEASETRAIT is not null and g.PVALUEFLOAT is not null " +
-                    "order by g.ID";  */
-                    "and t.DISEASETRAIT is not null and g.PVALUEFLOAT is not null " +
-                    "and g.PVALUEFLOAT < 5E-8 " +
-                    "order by g.ID";
+                    "and t.DISEASETRAIT is not null and g.PVALUEFLOAT is not null ";
 
+    private static final String TRAIT_SELECT_ORDER = " order by g.ID";
 
     private SingleNucleotidePolymorphismDAO snpDAO;
     private OntologyDAO ontologyDAO;
@@ -100,7 +98,15 @@ public class TraitAssociationDAO extends Initializable {
     public Collection<TraitAssociation> retrieveAllTraitAssociations() {
         try {
             waitUntilReady();
-            return getJdbcTemplate().query(TRAIT_SELECT, new TraitAssociationMapper());
+            if(FilterProperties.getPvalueFilter() == null){
+                String full_query = TRAIT_SELECT_MAIN.concat(TRAIT_SELECT_ORDER);
+                return getJdbcTemplate().query(full_query, new TraitAssociationMapper());
+            }
+            else{
+                String pval_filter = "and g.PVALUEFLOAT <= " + FilterProperties.getPvalueFilter();
+                String filtered_query = TRAIT_SELECT_MAIN.concat(pval_filter).concat(TRAIT_SELECT_ORDER);
+                return getJdbcTemplate().query(filtered_query, new TraitAssociationMapper());
+            }
         }
         catch (InterruptedException e) {
             throw new ObjectMappingException(
