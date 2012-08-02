@@ -1,6 +1,11 @@
 package uk.ac.ebi.fgpt.goci.pussycat.controller;
 
+import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxClassExpressionParser;
+import org.semanticweb.owlapi.expression.ParserException;
+import org.semanticweb.owlapi.expression.ShortFormEntityChecker;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.util.AnnotationValueShortFormProvider;
+import org.semanticweb.owlapi.util.BidirectionalShortFormProviderAdapter;
 import org.semanticweb.owlapi.util.OWLOntologyWalker;
 import org.semanticweb.owlapi.util.OWLOntologyWalkerVisitor;
 import org.slf4j.Logger;
@@ -93,11 +98,47 @@ public class PussycatGOCIController {
         return getPussycatSession(session).performRendering(timeCls, getRenderletNexus(session));
     }
 
-    @RequestMapping(value = "/gwasdiagram/pre2011")
-    public @ResponseBody String renderGWASDiagramBefore2011(HttpSession session) throws PussycatSessionNotReadyException {
-        // get OWLThing, to indicate that we want to draw all data in the GWAS catalog
-        OWLClassExpression timeCls = getOntologyConfiguration().getOWLDataFactory().getOWLThing();
-        // render all individuals using the pussycat session for this http session
+    @RequestMapping(value = "/gwasdiagram/pre2009")
+    public @ResponseBody String renderGWASDiagramBefore2009(HttpSession session) throws PussycatSessionNotReadyException, ParserException {
+        // get the subset of studies published before 2009
+
+System.out.println("Received a new rendering request - putting together the query");
+        OWLOntologyManager manager = getOntologyConfiguration().getOWLOntologyManager();
+        OWLDataFactory df = getOntologyConfiguration().getOWLDataFactory();
+
+        List<OWLAnnotationProperty> properties = Arrays.asList(df.getRDFSLabel());
+        AnnotationValueShortFormProvider annoSFP = new AnnotationValueShortFormProvider(
+                properties, new HashMap<OWLAnnotationProperty, List<String>>(), manager);
+        ShortFormEntityChecker checker = new ShortFormEntityChecker(new BidirectionalShortFormProviderAdapter(manager, manager.getOntologies(), annoSFP));
+        ManchesterOWLSyntaxClassExpressionParser parser = new ManchesterOWLSyntaxClassExpressionParser(df, checker);
+
+        String date = "has_publication_date some dateTime[< \"2009-01-01T00:00:00+00:00\"^^dateTime]";
+
+        OWLClassExpression pre2009 = parser.parse(date);
+
+        OWLClass study = df.getOWLClass(IRI.create(OntologyConstants.STUDY_CLASS_IRI));
+        OWLClassExpression pre2009_studies = df.getOWLObjectIntersectionOf(study,pre2009);
+
+        OWLObjectProperty part_of = df.getOWLObjectProperty(IRI.create(OntologyConstants.PART_OF_IRI));
+        OWLObjectSomeValuesFrom part_of_assoc = df.getOWLObjectSomeValuesFrom(part_of, pre2009_studies);
+
+        OWLClass association = df.getOWLClass(IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));
+        OWLClassExpression trait_associations = df.getOWLObjectIntersectionOf(association, part_of_assoc);
+
+        OWLObjectProperty has_about = df.getOWLObjectProperty(IRI.create(OntologyConstants.HAS_ABOUT_IRI));
+        OWLObjectSomeValuesFrom some_snps = df.getOWLObjectSomeValuesFrom(has_about, trait_associations);
+
+        OWLClass snp = df.getOWLClass(IRI.create(OntologyConstants.SNP_CLASS_IRI));
+        OWLClassExpression pre2009_snps = df.getOWLObjectIntersectionOf(snp, some_snps);
+
+        OWLObjectProperty location_of = df.getOWLObjectProperty(IRI.create(OntologyConstants.LOCATION_OF_PROPERTY_IRI));
+        OWLObjectSomeValuesFrom some_bands = df.getOWLObjectSomeValuesFrom(location_of, pre2009_snps);
+
+        OWLClass cyto_band = df.getOWLClass(IRI.create(OntologyConstants.CYTOGENIC_REGION_CLASS_IRI));
+        OWLClassExpression timeCls = df.getOWLObjectIntersectionOf(cyto_band, some_bands);
+
+        System.out.println("Query put together succesfully");
+       // render all individuals using the pussycat session for this http session
         return getPussycatSession(session).performRendering(timeCls, getRenderletNexus(session));
     }
 
@@ -188,6 +229,24 @@ public class PussycatGOCIController {
         // render all individuals using the pussycat session for this http session
         return getPussycatSession(session).performRendering(efCls, getRenderletNexus(session));
     }
+
+    /*This method returns all the children of the provided URI in order to allow filtering based on URIs*/
+    @RequestMapping(value = "/filter/{efoURI}")
+    public @ResponseBody ArrayList<String> filterTrait(@PathVariable String efoURI, HttpSession session)
+            throws PussycatSessionNotReadyException, OWLConversionException {
+        ArrayList<String> childClasses = new ArrayList<String>();
+        // retrieve a reference to the EFO class with the supplied IRI
+        IRI efIRI = IRI.create(efoURI);
+        OWLClass efCls = getOntologyConfiguration().getOWLDataFactory().getOWLClass(efIRI);
+
+        Set<OWLClass> allChildren = getPussycatSession(session).getReasoner().getSubClasses(efCls, false).getFlattened();
+        for(OWLClass child : allChildren){
+            childClasses.add(child.getIRI().toString());
+        }
+        // return the URIs of all classes that are children, asserted or inferred, of the provided parent class
+        return childClasses;
+    }
+
 
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     @ExceptionHandler(PussycatSessionNotReadyException.class)
