@@ -17,9 +17,15 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 /**
- * Javadocs go here!
+ * A pussycat session that uses a {@link ReasonerSession} created from a GOCI DataPublisher to obtain the data to
+ * render.  This session requires that a reasoner is created, pre-classifie and held in memory for the life of the
+ * application.  For large knowledge bases this represents a significant amount of memory and computational resources
+ * and a significant start up time, so it may not be wise to use this in live, production instances.
  *
- * @author Tony Burdett Date 01/03/12
+ * @author Tony Burdett
+ * @date 01/03/12
+ * @see GOCIDataPublisherPussycatSession
+ * @see uk.ac.ebi.fgpt.goci.service.GWASOWLPublisher
  */
 public class GOCIDataPublisherPussycatSession implements PussycatSession {
     private String sessionID;
@@ -123,12 +129,6 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
             getLog().debug("Pussycat Session '" + getSessionID() + "' is not yet initialized - waiting for reasoner");
             throw new PussycatSessionNotReadyException("Reasoner is being initialized");
         }
-    }
-
-    public Set<OWLNamedIndividual> query(OWLClassExpression classExpression)
-            throws OWLConversionException, PussycatSessionNotReadyException {
-        getLog().debug("Searching reasoner for instances of " + classExpression.toString());
-        return getReasoner().getInstances(classExpression, false).getFlattened();
     }
 
     private String initialRender = null;
