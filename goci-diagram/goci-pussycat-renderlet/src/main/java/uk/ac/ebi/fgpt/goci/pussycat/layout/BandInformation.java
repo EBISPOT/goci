@@ -1,4 +1,4 @@
-package uk.ac.ebi.fgpt.goci.pussycat.renderlet;
+package uk.ac.ebi.fgpt.goci.pussycat.layout;
 
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
