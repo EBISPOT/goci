@@ -3,11 +3,11 @@ package uk.ac.ebi.fgpt.goci.pussycat.session;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
+import uk.ac.ebi.fgpt.goci.pussycat.ReasonerSessionBasedReasonerProxy;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
@@ -25,13 +25,14 @@ import java.util.Collection;
  * @date 02/08/12
  */
 public class SVGCachingPussycatSession extends AbstractSVGIOPussycatSession implements PussycatSession {
-    private PussycatSession proxiedSession;
+    private GOCIDataPublisherPussycatSession proxiedSession;
+    private ReasonerSessionBasedReasonerProxy reasonerProxy;
 
-    public PussycatSession getProxiedSession() {
+    public GOCIDataPublisherPussycatSession getProxiedSession() {
         return proxiedSession;
     }
 
-    public void setProxiedSession(PussycatSession proxiedSession) {
+    public void setProxiedSession(GOCIDataPublisherPussycatSession proxiedSession) {
         this.proxiedSession = proxiedSession;
     }
 
@@ -45,15 +46,18 @@ public class SVGCachingPussycatSession extends AbstractSVGIOPussycatSession impl
 
     @Override public String performRendering(OWLClassExpression classExpression, RenderletNexus renderletNexus)
             throws PussycatSessionNotReadyException {
-        String filename = generateFilename(classExpression, renderletNexus);
+        String filename = generateFilename(classExpression);
         String svg;
         try {
             if (isInCache(filename)) {
                 // this document already exists in cache, load document
+                getLog().debug("Reusing cached SVG file for '" + classExpression + "' (file " + filename + ")");
                 svg = readSVG(filename);
             }
             else {
                 // need to perform rendering, delegate to proxy
+                getLog().debug("No cached SVG file for '" + classExpression + "' " +
+                                       "(filename expected: " + filename + "), delegating request");
                 svg = getProxiedSession().performRendering(classExpression, renderletNexus);
                 // and write the svg to disk
                 writeSVG(filename, svg);
@@ -77,6 +81,9 @@ public class SVGCachingPussycatSession extends AbstractSVGIOPussycatSession impl
     }
 
     @Override public OWLReasoner getReasoner() throws OWLConversionException, PussycatSessionNotReadyException {
-        return getProxiedSession().getReasoner();
+        if (reasonerProxy == null) {
+            reasonerProxy = new ReasonerSessionBasedReasonerProxy(getProxiedSession().getReasonerSession());
+        }
+        return reasonerProxy;
     }
 }

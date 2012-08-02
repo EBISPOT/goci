@@ -131,7 +131,7 @@ abstract class AbstractSVGIOPussycatSession implements PussycatSession {
             }
 
             getLog().trace("Generated new " + ENCODING + " based, hex encoded ID string: " + hexedHashedArgs);
-            return hexedHashedArgs;
+            return hexedHashedArgs + ".svg";
         }
         catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("UTF-8 not supported!");
