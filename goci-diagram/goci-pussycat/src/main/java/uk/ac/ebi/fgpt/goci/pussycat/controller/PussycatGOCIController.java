@@ -91,7 +91,10 @@ public class PussycatGOCIController {
     }
 
     @RequestMapping(value = "/gwasdiagram/timeseries/{year}/{month}")
-    public @ResponseBody String renderGWASDiagramTimeSeries(@PathVariable String year, @PathVariable String month, HttpSession session) throws PussycatSessionNotReadyException {
+    public @ResponseBody String renderGWASDiagramTimeSeries(@PathVariable String year,
+                                                            @PathVariable String month,
+                                                            HttpSession session)
+            throws PussycatSessionNotReadyException {
         // get OWLThing, to indicate that we want to draw all data in the GWAS catalog
         OWLClassExpression timeCls = getOntologyConfiguration().getOWLDataFactory().getOWLThing();
         // render all individuals using the pussycat session for this http session
@@ -99,17 +102,18 @@ public class PussycatGOCIController {
     }
 
     @RequestMapping(value = "/gwasdiagram/pre2009")
-    public @ResponseBody String renderGWASDiagramBefore2009(HttpSession session) throws PussycatSessionNotReadyException, ParserException {
+    public @ResponseBody String renderGWASDiagramBefore2009(HttpSession session)
+            throws PussycatSessionNotReadyException, ParserException {
         // get the subset of studies published before 2009
-
-System.out.println("Received a new rendering request - putting together the query");
+        getLog().debug("Received a new rendering request - putting together the query");
         OWLOntologyManager manager = getOntologyConfiguration().getOWLOntologyManager();
         OWLDataFactory df = getOntologyConfiguration().getOWLDataFactory();
 
         List<OWLAnnotationProperty> properties = Arrays.asList(df.getRDFSLabel());
         AnnotationValueShortFormProvider annoSFP = new AnnotationValueShortFormProvider(
                 properties, new HashMap<OWLAnnotationProperty, List<String>>(), manager);
-        ShortFormEntityChecker checker = new ShortFormEntityChecker(new BidirectionalShortFormProviderAdapter(manager, manager.getOntologies(), annoSFP));
+        ShortFormEntityChecker checker = new ShortFormEntityChecker(
+                new BidirectionalShortFormProviderAdapter(manager, manager.getOntologies(), annoSFP));
         ManchesterOWLSyntaxClassExpressionParser parser = new ManchesterOWLSyntaxClassExpressionParser(df, checker);
 
         String date = "has_publication_date some dateTime[< \"2009-01-01T00:00:00+00:00\"^^dateTime]";
@@ -117,7 +121,7 @@ System.out.println("Received a new rendering request - putting together the quer
         OWLClassExpression pre2009 = parser.parse(date);
 
         OWLClass study = df.getOWLClass(IRI.create(OntologyConstants.STUDY_CLASS_IRI));
-        OWLClassExpression pre2009_studies = df.getOWLObjectIntersectionOf(study,pre2009);
+        OWLClassExpression pre2009_studies = df.getOWLObjectIntersectionOf(study, pre2009);
 
         OWLObjectProperty part_of = df.getOWLObjectProperty(IRI.create(OntologyConstants.PART_OF_IRI));
         OWLObjectSomeValuesFrom part_of_assoc = df.getOWLObjectSomeValuesFrom(part_of, pre2009_studies);
@@ -137,8 +141,8 @@ System.out.println("Received a new rendering request - putting together the quer
         OWLClass cyto_band = df.getOWLClass(IRI.create(OntologyConstants.CYTOGENIC_REGION_CLASS_IRI));
         OWLClassExpression timeCls = df.getOWLObjectIntersectionOf(cyto_band, some_bands);
 
-        System.out.println("Query put together succesfully");
-       // render all individuals using the pussycat session for this http session
+        getLog().debug("Query put together succesfully");
+        // render all individuals using the pussycat session for this http session
         return getPussycatSession(session).performRendering(timeCls, getRenderletNexus(session));
     }
 
@@ -239,8 +243,9 @@ System.out.println("Received a new rendering request - putting together the quer
         IRI efIRI = IRI.create(efoURI);
         OWLClass efCls = getOntologyConfiguration().getOWLDataFactory().getOWLClass(efIRI);
 
-        Set<OWLClass> allChildren = getPussycatSession(session).getReasoner().getSubClasses(efCls, false).getFlattened();
-        for(OWLClass child : allChildren){
+        Set<OWLClass> allChildren =
+                getPussycatSession(session).getReasoner().getSubClasses(efCls, false).getFlattened();
+        for (OWLClass child : allChildren) {
             childClasses.add(child.getIRI().toString());
         }
         // return the URIs of all classes that are children, asserted or inferred, of the provided parent class

@@ -46,7 +46,7 @@ public class SVGCachingPussycatSession extends AbstractSVGIOPussycatSession impl
 
     @Override public String performRendering(OWLClassExpression classExpression, RenderletNexus renderletNexus)
             throws PussycatSessionNotReadyException {
-        String filename = generateFilename(classExpression);
+        String filename = generateFilename(classExpression.toString());
         String svg;
         try {
             if (isInCache(filename)) {
