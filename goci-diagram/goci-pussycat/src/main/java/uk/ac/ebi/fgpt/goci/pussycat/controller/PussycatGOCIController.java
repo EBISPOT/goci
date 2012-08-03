@@ -111,8 +111,8 @@ public class PussycatGOCIController {
 
         String date =
                 "has_publication_date some dateTime[< \"" + year + "-" + month + "-01T00:00:00+00:00\"^^dateTime]";
-
         try {
+            getLog().debug("Attempting to parse date expression\n\t'" + date + "'");
             OWLClassExpression dateExpression = parser.parse(date);
 
             OWLClass study = df.getOWLClass(IRI.create(OntologyConstants.STUDY_CLASS_IRI));
@@ -142,8 +142,10 @@ public class PussycatGOCIController {
             return getPussycatSession(session).performRendering(timeCls, getRenderletNexus(session));
         }
         catch (ParserException e) {
+            getLog().error("Bad date in URL /gwasdiagram/timeseries/" + year + "/" + month + " - " +
+                                   "use /gwasdiagram/timeseries/YYYY/MM", e);
             throw new RuntimeException("Bad date in URL /gwasdiagram/timeseries/" + year + "/" + month + " - " +
-                                               "use /gwasdiagram/timeseries/YYYY/MM");
+                                               "use /gwasdiagram/timeseries/YYYY/MM", e);
         }
     }
 
