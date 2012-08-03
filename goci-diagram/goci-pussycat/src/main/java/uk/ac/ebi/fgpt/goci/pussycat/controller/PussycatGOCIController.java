@@ -11,6 +11,7 @@ import org.semanticweb.owlapi.util.OWLOntologyWalkerVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -73,7 +74,7 @@ public class PussycatGOCIController {
     }
 
     @Autowired
-    public void setOntologyConfiguration(OntologyConfiguration ontologyConfiguration) {
+    public void setOntologyConfiguration(@Qualifier("config") OntologyConfiguration ontologyConfiguration) {
         this.ontologyConfiguration = ontologyConfiguration;
     }
 
@@ -141,7 +142,7 @@ public class PussycatGOCIController {
             return getPussycatSession(session).performRendering(timeCls, getRenderletNexus(session));
         }
         catch (ParserException e) {
-            throw new RuntimeException("Bad date in URL /gwasdiagram/timeseries/" + year + "/" + month +" - " +
+            throw new RuntimeException("Bad date in URL /gwasdiagram/timeseries/" + year + "/" + month + " - " +
                                                "use /gwasdiagram/timeseries/YYYY/MM");
         }
     }
@@ -289,29 +290,32 @@ public class PussycatGOCIController {
 
         try {
             RenderletNexus renderletNexus;
-
             if (nexusMap.containsKey(session)) {
                 renderletNexus = nexusMap.get(session);
                 getLog().debug("RenderletNexus available for HttpSession '" + session.getId() + "'");
                 return renderletNexus;
             }
             else {
-//           renderletNexus = RenderletNexusFactory.createDefaultRenderletNexus();
-                renderletNexus = RenderletNexusFactory.createDefaultRenderletNexus(
-                        getOntologyConfiguration().getOWLOntologyManager(),
-                        getPussycatSession(session).getReasoner(),
-                        getOntologyConfiguration().getEfoLabels());
-
-                nexusMap.put(session, renderletNexus);
-
                 Collection<Renderlet> renderlets = getPussycatSession(session).getAvailableRenderlets();
+                if (renderlets.size() > 0) {
+                    renderletNexus = RenderletNexusFactory.createDefaultRenderletNexus(
+                            getOntologyConfiguration().getOWLOntologyManager(),
+                            getPussycatSession(session).getReasoner(),
+                            getOntologyConfiguration().getEfoLabels());
 
-                for (Renderlet r : renderlets) {
-                    renderletNexus.register(r);
+                    for (Renderlet r : renderlets) {
+                        renderletNexus.register(r);
+                    }
+
+                    getLog().debug("Created new RenderletNexus for HttpSession '" + session + "'");
+                    nexusMap.put(session, renderletNexus);
+                    return renderletNexus;
                 }
-
-                getLog().debug("Created new RenderletNexus for HttpSession '" + session + "'");
-                return renderletNexus;
+                else {
+                    getLog().debug("There are no available renderlets, " +
+                                           "leaving RenderletNexus for HttpSession '" + session + "' as null");
+                    return null;
+                }
             }
         }
         catch (OWLConversionException e) {

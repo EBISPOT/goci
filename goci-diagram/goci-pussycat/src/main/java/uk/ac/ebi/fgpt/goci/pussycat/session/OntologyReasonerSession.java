@@ -3,13 +3,13 @@ package uk.ac.ebi.fgpt.goci.pussycat.session;
 import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyDocumentAlreadyExistsException;
 import org.semanticweb.owlapi.reasoner.*;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.lang.Initializable;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
+import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.utils.OntologyUtils;
-
-import java.net.URI;
 
 /**
  * A simple reasoner session that returns a reasoner over EFO.
@@ -31,22 +31,40 @@ public class OntologyReasonerSession extends Initializable implements ReasonerSe
     }
 
     @Override protected void doInitialization() throws Exception {
-        URI efoURI = getOntologyConfiguration().getEfoResource().getURI();
-        OWLOntology ontology = getOntologyConfiguration().getOWLOntologyManager().loadOntology(IRI.create(efoURI));
-        OntologyUtils.loadImports(getOntologyConfiguration().getOWLOntologyManager(), ontology);
+        IRI efoLocationIRI = IRI.create(getOntologyConfiguration().getEfoResource().getURI());
+        IRI efoLogicalIRI = IRI.create(OntologyConstants.EFO_ONTOLOGY_SCHEMA_IRI + "/");
 
-        StringBuilder loadedOntologies = new StringBuilder();
-        int n = 1;
-        for (OWLOntology o : ontology.getOWLOntologyManager().getOntologies()) {
-            loadedOntologies.append("\t")
-                    .append(n++)
-                    .append(") ")
-                    .append(o.getOntologyID().getOntologyIRI())
-                    .append("\n");
+        OWLOntology ontology;
+        getLog().debug("Trying to create a reasoner over ontology from '" + efoLocationIRI + "'");
+        try {
+            ontology = getOntologyConfiguration().getOWLOntologyManager().loadOntology(efoLocationIRI);
+            OntologyUtils.loadImports(getOntologyConfiguration().getOWLOntologyManager(), ontology);
+
+            StringBuilder loadedOntologies = new StringBuilder();
+            int n = 1;
+            for (OWLOntology o : ontology.getOWLOntologyManager().getOntologies()) {
+                loadedOntologies.append("\t")
+                        .append(n++)
+                        .append(") ")
+                        .append(o.getOntologyID().getOntologyIRI())
+                        .append("\n");
+            }
+            getLog().debug("Imports collected: the following ontologies have been loaded in this session:\n" +
+                                   loadedOntologies.toString());
         }
-        getLog().debug("Imports collected: the following ontologies have been loaded in this session:\n" +
-                               loadedOntologies.toString());
-        getLog().info("Classifying ontology from " + ontology.getOntologyID().getOntologyIRI());
+        catch (OWLOntologyDocumentAlreadyExistsException e) {
+            getLog().debug("Ontology already exists: attempting to retrieve '" + efoLogicalIRI + "'");
+            if (getOntologyConfiguration().getOWLOntologyManager().contains(efoLogicalIRI)) {
+                ontology = getOntologyConfiguration().getOWLOntologyManager().getOntology(efoLogicalIRI);
+            }
+            else {
+                String msg = "Ontology from '" + efoLocationIRI + "' has already been loaded, " +
+                        "but EFO ('" + efoLogicalIRI + "') was not found";
+                getLog().error(msg);
+                throw new NullPointerException(msg);
+            }
+        }
+        getLog().info("Classifying ontology from " + efoLogicalIRI);
 
         getLog().debug("Creating reasoner... ");
         OWLReasonerFactory factory = new Reasoner.ReasonerFactory();

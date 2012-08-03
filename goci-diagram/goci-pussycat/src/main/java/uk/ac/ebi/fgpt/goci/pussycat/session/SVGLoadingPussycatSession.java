@@ -1,21 +1,15 @@
 package uk.ac.ebi.fgpt.goci.pussycat.session;
 
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
-import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
-import uk.ac.ebi.fgpt.goci.utils.OntologyUtils;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * A pussycat session that acts as a proxy over a disk based cache of SVG documents, but performs no actual rendering
@@ -38,7 +32,7 @@ import java.util.Collection;
  * @author Tony Burdett
  * @date 02/08/12
  */
-public class SVGLoadingPussycatSession extends AbstractSVGIOPussycatSession implements PussycatSession {
+public class SVGLoadingPussycatSession extends AbstractSVGIOPussycatSession {
     private ReasonerSession reasonerSession;
 
     public ReasonerSession getReasonerSession() {
@@ -50,21 +44,21 @@ public class SVGLoadingPussycatSession extends AbstractSVGIOPussycatSession impl
     }
 
     @Override public Collection<Renderlet> getAvailableRenderlets() {
-        throw new UnsupportedOperationException("This operation is not available in this implementation");
+        return Collections.emptyList();
     }
 
     @Override public String performRendering(OWLClassExpression classExpression, RenderletNexus renderletNexus)
             throws PussycatSessionNotReadyException {
-        String filename = generateFilename(classExpression, renderletNexus);
-        File cacheFile = new File(getCacheDirectory(), filename);
-
+        String filename = generateFilename(classExpression.toString());
+        String svg;
         try {
-            String svg;
-            if (cacheFile.exists()) {
+            if (isInCache(filename)) {
                 // this document already exists in cache, load document
+                getLog().debug("Reusing cached SVG file for '" + classExpression + "' (file " + filename + ")");
                 svg = readSVG(filename);
             }
             else {
+                getLog().debug("Expected cached SVG file '" + filename + "' but this file is absent");
                 throw new PussycatSessionNotReadyException("The requested view is not currently available.");
             }
             return svg;

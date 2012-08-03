@@ -26,18 +26,21 @@
         </constructor-arg>
     </bean>
 
-    <bean id="reasonerSession"
-          class="uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession"
-          init-method="init">
-        <property name="configuration" ref="config" />
-        <property name="ontologyResource" value="ontology/gwas-diagram-data.owl" />
-        <property name="publisher" ref="publisher" />
-    </bean>
+    <!-- NB: which implementation to use depends on whether
+    a) we are dynamically generating the knowledgebase (uk.ac.ebi.fgpt.goci.pussycat.session.DataPublishingCacheableReasonerSession) or
+    b) statically loading a precanned version (uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession) -->
+    <!--<bean id="reasonerSession"-->
+          <!--class="uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession"-->
+          <!--init-method="init">-->
+        <!--<property name="configuration" ref="config" />-->
+        <!--<property name="ontologyResource" value="ontology/gwas-diagram-data.owl" />-->
+        <!--<property name="publisher" ref="publisher" />-->
+    <!--</bean>-->
 
-    <bean id="efoReasonerSession"
+    <bean id="reasonerSession"
           class="uk.ac.ebi.fgpt.goci.pussycat.session.OntologyReasonerSession"
           init-method="init">
-        <property name="ontologyConfiguration" ref="efoConfig" />
+        <property name="ontologyConfiguration" ref="config" />
     </bean>
 
     <bean id="pussycatSessionManager" class="uk.ac.ebi.fgpt.goci.pussycat.manager.DefaultPussycatSessionManager">
@@ -50,19 +53,13 @@
         </property>
     </bean>
 
-    <bean id="proxiedPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.GOCIDataPublisherPussycatSession">
-        <property name="reasonerSession" ref="reasonerSession" />
-        <property name="ontologyConfiguration" ref="config" />
-    </bean>
+    <!--<bean id="proxiedPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.GOCIDataPublisherPussycatSession">--><!--<property name="reasonerSession" ref="reasonerSession" />--><!--<property name="ontologyConfiguration" ref="config" />--><!--</bean>-->
 
-    <bean id="cachingPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.SVGCachingPussycatSession">
-        <property name="cacheDirectory" value="${user.home}/.goci/svg_cache/" />
-        <property name="proxiedSession" ref="proxiedPussycatSession" />
-    </bean>
+    <!--<bean id="cachingPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.SVGCachingPussycatSession">--><!--<property name="cacheDirectory" value="${user.home}/.goci/svg_cache/" />--><!--<property name="proxiedSession" ref="proxiedPussycatSession" />--><!--</bean>-->
 
     <bean id="loadingPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.SVGLoadingPussycatSession">
         <property name="cacheDirectory" value="${user.home}/.goci/svg_cache/" />
-        <property name="reasonerSession" ref="efoReasonerSession" />
+        <property name="reasonerSession" ref="reasonerSession" />
     </bean>
 
     <bean name="efoConfig" class="uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration" init-method="init">
