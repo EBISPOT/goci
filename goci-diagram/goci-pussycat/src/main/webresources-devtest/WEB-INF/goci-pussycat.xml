@@ -23,6 +23,18 @@
         </constructor-arg>
     </bean>
 
+    <bean id="pussycatSessionManager" class="uk.ac.ebi.fgpt.goci.pussycat.manager.DefaultPussycatSessionManager">
+        <property name="reasonerSession" ref="reasonerSession" />
+        <property name="pussycatSessions">
+            <set>
+                <ref bean="cachingPussycatSession" />
+            </set>
+        </property>
+    </bean>
+
+    <!-- NB: which implementation to use depends on whether
+    a) we are dynamically generating the knowledgebase (uk.ac.ebi.fgpt.goci.pussycat.session.DataPublishingCacheableReasonerSession) or
+    b) statically loading a precanned version (uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession) -->
     <bean id="reasonerSession"
           class="uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession"
           init-method="init">
@@ -31,18 +43,14 @@
         <property name="publisher" ref="publisher" />
     </bean>
 
-    <bean id="pussycatSessionManager" class="uk.ac.ebi.fgpt.goci.pussycat.manager.DefaultPussycatSessionManager">
-        <property name="reasonerSession" ref="reasonerSession" />
-        <property name="pussycatSessions">
-            <set>
-                <ref bean="pussycatSession" />
-            </set>
-        </property>
-    </bean>
-
-    <bean id="pussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.GOCIDataPublisherPussycatSession">
+    <bean id="proxiedPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.GOCIDataPublisherPussycatSession">
         <property name="reasonerSession" ref="reasonerSession" />
         <property name="ontologyConfiguration" ref="config" />
+    </bean>
+
+    <bean id="cachingPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.SVGCachingPussycatSession">
+        <property name="cacheDirectory" value="/ebi/microarray/home/fgpt/test/goci-home/diagram/cache/" />
+        <property name="proxiedSession" ref="proxiedPussycatSession" />
     </bean>
 
 </beans>
