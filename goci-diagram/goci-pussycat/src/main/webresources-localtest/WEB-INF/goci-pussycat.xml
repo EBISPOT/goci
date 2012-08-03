@@ -34,11 +34,18 @@
         <property name="publisher" ref="publisher" />
     </bean>
 
+    <bean id="efoReasonerSession"
+          class="uk.ac.ebi.fgpt.goci.pussycat.session.OntologyReasonerSession"
+          init-method="init">
+        <property name="ontologyConfiguration" ref="efoConfig" />
+    </bean>
+
     <bean id="pussycatSessionManager" class="uk.ac.ebi.fgpt.goci.pussycat.manager.DefaultPussycatSessionManager">
         <property name="reasonerSession" ref="reasonerSession" />
         <property name="pussycatSessions">
             <set>
-                <ref bean="pussycatSession" />
+                <!--<ref bean="cachingPussycatSession" />-->
+                <ref bean="loadingPussycatSession" />
             </set>
         </property>
     </bean>
@@ -48,9 +55,19 @@
         <property name="ontologyConfiguration" ref="config" />
     </bean>
 
-    <bean id="pussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.SVGCachingPussycatSession">
+    <bean id="cachingPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.SVGCachingPussycatSession">
         <property name="cacheDirectory" value="${user.home}/.goci/svg_cache/" />
         <property name="proxiedSession" ref="proxiedPussycatSession" />
+    </bean>
+
+    <bean id="loadingPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.SVGLoadingPussycatSession">
+        <property name="cacheDirectory" value="${user.home}/.goci/svg_cache/" />
+        <property name="reasonerSession" ref="efoReasonerSession" />
+    </bean>
+
+    <bean name="efoConfig" class="uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration" init-method="init">
+        <property name="efoResource"
+                  value="http://bar.ebi.ac.uk:8080/trac/export/head/branches/curator/ExperimentalFactorOntology/ExFactorInOWL/releasecandidate/efo_release_candidate.owl" />
     </bean>
 
 </beans>

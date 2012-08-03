@@ -1,14 +1,20 @@
 package uk.ac.ebi.fgpt.goci.pussycat.session;
 
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
+import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
+import uk.ac.ebi.fgpt.goci.utils.OntologyUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Collection;
 
 /**
@@ -24,13 +30,23 @@ import java.util.Collection;
  * This implementation is a good one to use in live, production environments as it means it is possible to pre-calculate
  * SVG-based views somewhere else, caching them to disk and copying them to a production enviroment.  This massively
  * reduces the computational workload for the live version.
+ * <p/>
+ * All pussycat sessions need to support some reasoner requests, however, to enable the clients to perform subclass
+ * requests.  This implementation does not load any data, but will load and use EFO to support reasoner queries.
+ * However, if any instance level requests are made no instances will be returned.
  *
  * @author Tony Burdett
  * @date 02/08/12
  */
 public class SVGLoadingPussycatSession extends AbstractSVGIOPussycatSession implements PussycatSession {
-    @Override public String getSessionID() {
-        throw new UnsupportedOperationException("This operation is not available in this implementation");
+    private ReasonerSession reasonerSession;
+
+    public ReasonerSession getReasonerSession() {
+        return reasonerSession;
+    }
+
+    public void setReasonerSession(ReasonerSession reasonerSession) {
+        this.reasonerSession = reasonerSession;
     }
 
     @Override public Collection<Renderlet> getAvailableRenderlets() {
@@ -63,6 +79,13 @@ public class SVGLoadingPussycatSession extends AbstractSVGIOPussycatSession impl
     }
 
     @Override public OWLReasoner getReasoner() throws OWLConversionException, PussycatSessionNotReadyException {
-        throw new UnsupportedOperationException("This operation is not available in this implementation");
+        if (getReasonerSession().isReasonerInitialized()) {
+            getLog().debug("Pussycat Session '" + getSessionID() + "' is fully initialized and ready to serve data");
+            return getReasonerSession().getReasoner();
+        }
+        else {
+            getLog().debug("Pussycat Session '" + getSessionID() + "' is not yet initialized - waiting for reasoner");
+            throw new PussycatSessionNotReadyException("Reasoner is being initialized");
+        }
     }
 }

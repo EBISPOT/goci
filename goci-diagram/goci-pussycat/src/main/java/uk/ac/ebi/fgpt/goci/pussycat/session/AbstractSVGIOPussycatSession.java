@@ -1,8 +1,7 @@
 package uk.ac.ebi.fgpt.goci.pussycat.session;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
+import uk.ac.ebi.fgpt.goci.pussycat.utils.StringUtils;
 
 import java.io.*;
 import java.security.MessageDigest;
@@ -17,17 +16,15 @@ import java.util.Map;
  * @author Tony Burdett
  * @date 02/08/12
  */
-abstract class AbstractSVGIOPussycatSession implements PussycatSession {
+abstract class AbstractSVGIOPussycatSession extends AbstractPussycatSession {
+    private static final String ENCODING = "SHA-1";
+
     private File cacheDirectory;
 
-    private static final String ENCODING = "SHA-1";
-    private static final String HEX_CHARACTERS = "0123456789ABCDEF";
     private Map<String, Object[]> hashArgsMap = new HashMap<String, Object[]>();
 
-    private Logger log = LoggerFactory.getLogger(getClass());
-
-    protected Logger getLog() {
-        return log;
+    protected AbstractSVGIOPussycatSession() {
+        super();
     }
 
     public File getCacheDirectory() {
@@ -106,7 +103,7 @@ abstract class AbstractSVGIOPussycatSession implements PussycatSession {
             byte[] digest = messageDigest.digest(hashedArgs.toString().getBytes("UTF-8"));
 
             // now translate the resulting byte array to hex
-            String hexedHashedArgs = getHexRepresentation(digest);
+            String hexedHashedArgs = StringUtils.getHexRepresentation(digest);
             if (hashArgsMap.containsKey(hexedHashedArgs)) {
                 // key match, check contents
                 Object[] matchedKeyContents = hashArgsMap.get(hexedHashedArgs);
@@ -140,16 +137,4 @@ abstract class AbstractSVGIOPussycatSession implements PussycatSession {
             throw new RuntimeException(ENCODING + " algorithm not available, this is required to generate ID");
         }
     }
-
-    private String getHexRepresentation(byte[] raw) {
-        if (raw == null) {
-            return null;
-        }
-        final StringBuilder hex = new StringBuilder(2 * raw.length);
-        for (final byte b : raw) {
-            hex.append(HEX_CHARACTERS.charAt((b & 0xF0) >> 4)).append(HEX_CHARACTERS.charAt((b & 0x0F)));
-        }
-        return hex.toString();
-    }
-
 }

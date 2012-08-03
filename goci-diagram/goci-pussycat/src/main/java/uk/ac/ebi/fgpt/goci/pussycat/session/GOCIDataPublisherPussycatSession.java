@@ -27,8 +27,7 @@ import java.util.*;
  * @see GOCIDataPublisherPussycatSession
  * @see uk.ac.ebi.fgpt.goci.service.GWASOWLPublisher
  */
-public class GOCIDataPublisherPussycatSession implements PussycatSession {
-    private String sessionID;
+public class GOCIDataPublisherPussycatSession extends AbstractPussycatSession {
     private Collection<Renderlet> renderlets;
 
     private ReasonerSession reasonerSession;
@@ -36,15 +35,10 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
 
     private Map<OWLClassExpression, String> svgCache;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
-
-    protected Logger getLog() {
-        return log;
-    }
-
     public GOCIDataPublisherPussycatSession() {
+        super();
+
         // set up this session
-        this.sessionID = generateSessionID();
         this.renderlets = getAvailableRenderlets();
 
         // setup a cache to retain SVG documents by OWLClassExpression
@@ -66,10 +60,6 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
 
     public void setOntologyConfiguration(OntologyConfiguration ontologyConfiguration) {
         this.ontologyConfiguration = ontologyConfiguration;
-    }
-
-    public String getSessionID() {
-        return sessionID;
     }
 
     public Collection<Renderlet> getAvailableRenderlets() {
@@ -220,39 +210,5 @@ public class GOCIDataPublisherPussycatSession implements PussycatSession {
                 throw new PussycatSessionNotReadyException("Started GWAS diagram calculation");
             }
         }
-    }
-
-    private String generateSessionID() {
-        String timestamp = Long.toString(System.currentTimeMillis());
-        getLog().debug("Generating new session ID for session created at " + timestamp);
-        try {
-            // encode the email using SHA-1
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
-            byte[] digest = messageDigest.digest(timestamp.getBytes("UTF-8"));
-
-            // now translate the resulting byte array to hex
-            String restKey = getHexRepresentation(digest);
-            getLog().debug("Session ID was generated: " + restKey);
-            return restKey;
-        }
-        catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException("UTF-8 not supported!");
-        }
-        catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("SHA-1 algorithm not available, required to generate session ID");
-        }
-    }
-
-    private static final String HEXES = "0123456789ABCDEF";
-
-    private String getHexRepresentation(byte[] raw) {
-        if (raw == null) {
-            return null;
-        }
-        final StringBuilder hex = new StringBuilder(2 * raw.length);
-        for (final byte b : raw) {
-            hex.append(HEXES.charAt((b & 0xF0) >> 4)).append(HEXES.charAt((b & 0x0F)));
-        }
-        return hex.toString();
     }
 }
