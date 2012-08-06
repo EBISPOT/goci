@@ -16,13 +16,12 @@ import uk.ac.ebi.fgpt.goci.utils.OntologyUtils;
 import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA.
- * User: dwelter
- * Date: 06/03/12
- * Time: 13:51
- * To change this template use File | Settings | File Templates.
+ * A renderlet that is capable of rendering visualisations of "traits".  A trait is an OWL class from the
+ * experimental factor ontology (EFO)
+ *
+ * @author Dani Welter
+ * @date 06/03/12
  */
-
 @ServiceProvider
 public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
 
@@ -90,7 +89,7 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
 
         Element trait = null;
 
-        if(association != null){
+        if (association != null) {
             SVGArea associationSVG = nexus.getLocationOfEntity(association);
 
             if (nexus.getRenderingEvent(association) != null) {
@@ -145,12 +144,12 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
                     trait.setAttribute("onmouseout", "hideTooltip()");
                     trait.setAttribute("id", traitName);
 
-                    IRI iri = getTraitClass(gwasTrait, renderingContext, nexus, association);
+                    IRI iri = getTraitClass(gwasTrait, renderingContext);
                     String traitClass = OntologyUtils.getShortForm(iri, renderingContext);
                     getLog().trace("Setting CSS class for trait '" + gwasTrait + "' to " + traitClass);
                     trait.setAttribute("class", traitClass + " gwas-trait");
 
-                    SVGArea currentArea = new SVGArea(cx,cy,2*radius,2*radius,0);
+                    SVGArea currentArea = new SVGArea(cx, cy, 2 * radius, 2 * radius, 0);
                     RenderingEvent<OWLIndividual> event = new RenderingEvent<OWLIndividual>(
                             renderingEntity, trait, currentArea, this);
                     nexus.renderingEventOccurred(event);
@@ -162,12 +161,10 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
     }
 
     private IRI getTraitClass(OWLNamedIndividual individual,
-                              OWLOntology ontology,
-                              RenderletNexus nexus,
-                              OWLNamedIndividual association) {
+                              OWLOntology ontology) {
         IRI traitClass = null;
 
-        // this gets the first non-experimental factor class and then breaks
+        // this gets the first, asserted, non-experimental factor class and then exits
         // todo - fix this so that we get the most specific known type
         Set<OWLClassExpression> allTypes = individual.getTypes(ontology);
         if (allTypes.size() > 0) {
@@ -191,7 +188,7 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
                                 OWLNamedIndividual association) {
         String traitName = null;
 
-        IRI traitClass = getTraitClass(individual, ontology, nexus, association);
+        IRI traitClass = getTraitClass(individual, ontology);
         if (traitClass.toString().equals(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI)) {
             OWLDataProperty has_name = nexus.getManager().getOWLDataFactory().getOWLDataProperty(
                     IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));

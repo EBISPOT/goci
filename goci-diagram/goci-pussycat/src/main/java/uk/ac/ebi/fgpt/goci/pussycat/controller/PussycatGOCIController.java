@@ -69,7 +69,7 @@ public class PussycatGOCIController {
     }
 
     @Autowired
-    public void setPussycatSessionManager(PussycatSessionManager pussycatManager) {http://localhost:8080/gwas/
+    public void setPussycatSessionManager(PussycatSessionManager pussycatManager) {
         this.pussycatManager = pussycatManager;
     }
 
