@@ -2,9 +2,7 @@ package uk.ac.ebi.fgpt.goci.pussycat.layout;
 
 
 import org.apache.batik.dom.svg.SVGDOMImplementation;
-import org.w3c.dom.DOMImplementation;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.w3c.dom.*;
 
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
@@ -34,15 +32,33 @@ public class SVGBuilder {
         width = SVGCanvas.canvasWidth;
         height = SVGCanvas.canvasHeight;
 
-
         svgRoot = doc.getDocumentElement();
         buildHeader();
 
     }
-    
-    
+
+    public boolean hasElements(){
+        boolean flag = false;
+
+        if(svgRoot.hasChildNodes()){
+            flag = true;
+        }
+
+        return flag;
+    }
+
+    public void removeAllElements(){
+        NodeList allElements = svgRoot.getChildNodes();
+
+        for(int i = 0; i < allElements.getLength(); i++){
+            svgRoot.removeChild(allElements.item(i));
+        }
+    }
+
     public void addElement(Element element){
-        svgRoot.appendChild((Element)doc.importNode(element,true));
+        if(element != null){
+            svgRoot.appendChild(doc.importNode(element,true));
+        }
     }
     
     public void removeElement(Element element){

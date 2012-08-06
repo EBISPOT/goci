@@ -8,7 +8,9 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
+import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGBuilder;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGCanvas;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderingEvent;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
@@ -19,8 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
@@ -31,8 +31,6 @@ import java.util.StringTokenizer;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLClass> {
-    
-    private Map<String, SVGArea> chromBands;
 
     public String getDisplayName(){
         return getName();
@@ -44,20 +42,11 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLC
 
     public boolean canRender(RenderletNexus nexus, Object renderingContext, Object owlEntity) {
 
-        /*
-        * probably won't need nexus for rendering chromosomes, except possibly to check that chromosomes are rendered first
-        *
-        * extract OWL class type from owlEntity, then check if it is type chromosome
-        * hardcode chromosome type into each individual chromosome renderlet into some new method liked "checkChromType",
-        * then check return of that method against the chromosome in the owlEntity to make sure the right chromosome in rendered
-        *
-        * */
         boolean renderable = false;
 
         if (renderingContext instanceof OWLOntology){
 
             IRI chromIRI =  getChromIRI();
-
             if (owlEntity instanceof OWLClass){
                 OWLClass thisClass = (OWLClass)owlEntity;
 
@@ -71,12 +60,12 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLC
          return renderable;
     }
 
-    public void render(RenderletNexus nexus, OWLOntology renderingContext, OWLClass owlEntity) {
+    public Element render(RenderletNexus nexus, OWLOntology renderingContext, OWLClass owlEntity, SVGBuilder svgBuilder) {
 
         String parser = XMLResourceDescriptor.getXMLParserClassName();
         SAXSVGDocumentFactory f = new SAXSVGDocumentFactory(parser);
         InputStream svgstream = null;
-        Document chromSVG = null;
+        Document chromSVG;
         Element g=null;
 
         int position = getPosition();
@@ -104,7 +93,7 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLC
                 Element root = chromSVG.getDocumentElement();
                 g = (Element)root.getElementsByTagName("g").item(0).cloneNode(true);
 
-                setChromBands(g);
+                setChromBands(g, nexus);
 
                 StringBuilder builder = new StringBuilder();
                 builder.append("translate(");
@@ -131,16 +120,7 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLC
                 if (svgstream != null){
                     svgstream.close();
 
-                    for(String band : chromBands.keySet()){
-                        nexus.setRenderableBand(band);
-                    }
-
-                    SVGArea currentArea = new SVGArea(xCoordinate,yCoordinate,chromWidth,chromHeight,0); 
-
-                    // todo - work out how to do this! --> consider adding new method to each chromRenderlet along the lines of getChromToLeft and hardcode
-                    // id of previous chrom into it, then query by chromID
-                    //nexus.getLocationOfRenderedEntity(chromosomeToTheLeft);
-                    nexus.addSVGElement(g);
+                    SVGArea currentArea = new SVGArea(xCoordinate,yCoordinate,chromWidth,chromHeight,0);
                     RenderingEvent event = new RenderingEvent(owlEntity, g, currentArea, this);
                     nexus.renderingEventOccurred(event);
                 }
@@ -148,14 +128,10 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLC
                 ex.printStackTrace();
             }
         }
+        return g;
     }
 
-    public Map<String, SVGArea> getBands(){
-        return chromBands;
-    }
-
-    protected void setChromBands(Element g){
-        chromBands = new HashMap<String, SVGArea>();
+    protected void setChromBands(Element g, RenderletNexus nexus){
 
         NodeList paths = g.getElementsByTagName("path");
 
@@ -282,7 +258,14 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLC
 /*SVG area for the chromosomal bands gives the x&y coordinates for its top left corner, and its width and height*/
                 SVGArea band = new SVGArea(x,y,width,height,0);
 
-                chromBands.put(id, band);
+                String chromName = getName().split(" ")[1];
+
+                BandInformation info = new BandInformation(id, chromName);
+                info.setCoordinates(band);
+
+                nexus.setBandLocation(id, info);
+
+
             }
         }
     }

@@ -1,19 +1,13 @@
 package uk.ac.ebi.fgpt.goci.pussycat.session;
 
 import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 /**
