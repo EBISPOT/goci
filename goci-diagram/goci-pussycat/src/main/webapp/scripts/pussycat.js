@@ -33,6 +33,9 @@ function init() {
             resizeDisplay();
         });
 
+        $("#clearbutton").button();
+        $("#clearbutton").click(showAllTraits);
+
         $("#retrybutton").button();
         $("#retrybutton").click(renderDiagram);
 
