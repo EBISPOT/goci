@@ -1,8 +1,12 @@
 package uk.ac.ebi.fgpt.goci.utils;
 
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.util.QNameShortFormProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.URI;
+import java.util.Set;
 
 /**
  * A convenience class of useful ontology manipulation functions
@@ -63,6 +67,38 @@ public class OntologyUtils {
                 }
             }
         }
+    }
+
+    public static String getShortForm(String entityURI, OWLOntology ontology) {
+        return getShortForm(URI.create(entityURI), ontology);
+    }
+
+    public static String getShortForm(URI entityURI, OWLOntology ontology) {
+        return getShortForm(IRI.create(entityURI), ontology);
+    }
+
+    public static String getShortForm(IRI entityIRI, OWLOntology ontology) {
+        // preferentially use classes
+        Set<OWLClass> clses = ontology.getClassesInSignature();
+        for (OWLClass cls : clses) {
+            if (cls.getIRI().equals(entityIRI)) {
+                return getShortForm(cls);
+            }
+        }
+
+        // no class with this iri, return first entity (or null)
+        Set<OWLEntity> entities = ontology.getEntitiesInSignature(entityIRI);
+        if (!entities.isEmpty()) {
+            return getShortForm(entities.iterator().next());
+        }
+        else {
+            throw new NullPointerException("No entity with IRI '" + entityIRI + "' could be found");
+        }
+    }
+
+    public static String getShortForm(OWLEntity entity) {
+        QNameShortFormProvider shortener = new QNameShortFormProvider();
+        return shortener.getShortForm(entity);
     }
 
     private static void recursivelyLoadImports(OWLOntologyManager manager, OWLOntology ontology)
