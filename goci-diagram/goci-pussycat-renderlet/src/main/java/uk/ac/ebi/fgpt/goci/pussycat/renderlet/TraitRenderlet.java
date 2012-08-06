@@ -10,6 +10,7 @@ import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.ColourMapper;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
+import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGBuilder;
 import uk.ac.ebi.fgpt.goci.utils.OntologyUtils;
 
 import java.util.Set;
@@ -58,19 +59,17 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
     @Override
     public boolean canRender(RenderletNexus nexus, Object renderingContext, Object renderingEntity) {
         boolean renderable = false;
-        if (renderingContext instanceof OWLOntology){
-            OWLOntology ontology = (OWLOntology)renderingContext;
+        if (renderingContext instanceof OWLOntology) {
+            if (renderingEntity instanceof OWLNamedIndividual) {
+                OWLNamedIndividual individual = (OWLNamedIndividual) renderingEntity;
 
-            if (renderingEntity instanceof OWLNamedIndividual){
-                OWLNamedIndividual individual = (OWLNamedIndividual)renderingEntity;
+                if (nexus.getLocationOfEntity(individual) == null) {
+                    Set<OWLClass> allTypes = nexus.getReasoner()
+                                                  .getTypes(individual, false)
+                                                  .getFlattened();
 
-                if(nexus.getLocationOfRenderedEntity(individual)==null){
-                    OWLClassExpression[] allTypes = nexus.getReasoner().getTypes(individual,false).getFlattened().toArray(new OWLClassExpression[0]);
-
-                    for(int i = 0; i < allTypes.length; i++){
-                        OWLClass typeClass = allTypes[i].asOWLClass();
-
-                        if(typeClass.getIRI().equals(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI))){
+                    for (OWLClass typeClass : allTypes) {
+                        if (typeClass.getIRI().equals(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI))) {
                             renderable = true;
                             break;
                         }
@@ -82,8 +81,11 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
     }
 
     @Override
-    public Element render(RenderletNexus nexus, OWLOntology renderingContext, OWLIndividual renderingEntity, SVGBuilder builder) {
-        OWLNamedIndividual gwasTrait = (OWLNamedIndividual)renderingEntity;
+    public Element render(RenderletNexus nexus,
+                          OWLOntology renderingContext,
+                          OWLIndividual renderingEntity,
+                          SVGBuilder builder) {
+        OWLNamedIndividual gwasTrait = (OWLNamedIndividual) renderingEntity;
         OWLNamedIndividual association = getAssociation(nexus, gwasTrait);
 
         Element trait = null;
@@ -91,42 +93,41 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
         if(association != null){
             SVGArea associationSVG = nexus.getLocationOfEntity(association);
 
-            if(nexus.getRenderingEvent(association) != null){
+            if (nexus.getRenderingEvent(association) != null) {
                 Element assocG = nexus.getRenderingEvent(association).getRenderedSVG();
 
                 String location = assocG.getAttribute("transform");
+                String bandName = getSNPLocation(nexus, association, renderingContext);
 
-                String bandName = getSNPLocation(nexus, association,renderingContext);
-
-                if(bandName != null){
+                if (bandName != null) {
                     trait = builder.createElement("circle");
                     BandInformation band = nexus.getBandLocations().get(bandName);
 
-                    trait.setAttribute("transform",location);
+                    trait.setAttribute("transform", location);
 
-                    double alength =  associationSVG.getWidth();
-                    double radius = 0.2*alength;
+                    double alength = associationSVG.getWidth();
+                    double radius = 0.2 * alength;
                     double ax = associationSVG.getX();
                     double ay = associationSVG.getY();
                     double displacement = associationSVG.getHeight();
                     double cx, cy;
                     int size = band.getRenderedTraits().size();
 
-                    int horizontal = size%6;
-                    int vertical = size/6;
+                    int horizontal = size % 6;
+                    int vertical = size / 6;
 
-                    if(size == 0){
-                        cx = ax+alength+radius;
+                    if (size == 0) {
+                        cx = ax + alength + radius;
                     }
-                    else{
-                         if(vertical%2 == 0){
-                            cx = ax+alength+(((2*horizontal)+1)*radius);
-                         }
-                         else{
-                             cx = ax+alength+(((2*horizontal)+2)*radius);
-                         }
+                    else {
+                        if (vertical % 2 == 0) {
+                            cx = ax + alength + (((2 * horizontal) + 1) * radius);
+                        }
+                        else {
+                            cx = ax + alength + (((2 * horizontal) + 2) * radius);
+                        }
                     }
-                    cy=ay + displacement + (vertical*radius);
+                    cy = ay + displacement + (vertical * radius);
 
                     trait.setAttribute("cx", Double.toString(cx));
                     trait.setAttribute("cy", Double.toString(cy));
@@ -134,32 +135,30 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
 
                     String colour = getColour(gwasTrait, nexus);
 
-                    trait.setAttribute("fill",colour);
-                    trait.setAttribute("stroke","black");
+                    trait.setAttribute("fill", colour);
+                    trait.setAttribute("stroke", "black");
                     trait.setAttribute("stroke-width", "0.5");
 
+                    String traitName = getTraitName(gwasTrait, renderingContext, nexus, association);
+                    String mo = "showTooltip('" + traitName + "')";
+                    trait.setAttribute("onmouseover", mo);
+                    trait.setAttribute("onmouseout", "hideTooltip()");
+                    trait.setAttribute("id", traitName);
 
-                String mo = "showTooltip('" + traitName + "')";
-                trait.setAttribute("onmouseover", mo);
-                trait.setAttribute("onmouseout", "hideTooltip()");
-                trait.setAttribute("id", traitName);
-
-                IRI iri = getTraitClass(gwasTrait, renderingContext, nexus, association);
-                String traitClass = OntologyUtils.getShortForm(iri, renderingContext);
-                getLog().trace("Setting CSS class for trait '" + gwasTrait + "' to " + traitClass);
-                trait.setAttribute("class", traitClass + " gwas-trait");
-
-                    String iri = gwasTrait.getIRI().toString();
-                    trait.setAttribute("class", iri);
-
+                    IRI iri = getTraitClass(gwasTrait, renderingContext, nexus, association);
+                    String traitClass = OntologyUtils.getShortForm(iri, renderingContext);
+                    getLog().trace("Setting CSS class for trait '" + gwasTrait + "' to " + traitClass);
+                    trait.setAttribute("class", traitClass + " gwas-trait");
 
                     SVGArea currentArea = new SVGArea(cx,cy,2*radius,2*radius,0);
-                    RenderingEvent event = new RenderingEvent(renderingEntity, trait, currentArea, this);
+                    RenderingEvent<OWLIndividual> event = new RenderingEvent<OWLIndividual>(
+                            renderingEntity, trait, currentArea, this);
                     nexus.renderingEventOccurred(event);
                     band.setRenderedTrait(traitName);
                 }
             }
         }
+        return trait;
     }
 
     private IRI getTraitClass(OWLNamedIndividual individual,
@@ -211,7 +210,7 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
         return traitName;
     }
 
-    public OWLNamedIndividual getAssociation(RenderletNexus nexus, OWLNamedIndividual trait){
+    public OWLNamedIndividual getAssociation(RenderletNexus nexus, OWLNamedIndividual trait) {
         OWLReasoner reasoner = nexus.getReasoner();
 
         OWLDataFactory dataFactory = nexus.getManager().getOWLDataFactory();
