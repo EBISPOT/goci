@@ -4,10 +4,9 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import org.w3c.dom.Element;
+import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -58,7 +57,7 @@ public interface RenderletNexus {
      * @param <O>            the type of entity that was rendered
      * @return the area of svg in which this entity was rendered
      */
-    <O> SVGArea getLocationOfRenderedEntity(O renderedEntity);
+    <O> SVGArea getLocationOfEntity(O renderedEntity);
 
 
     /**
@@ -69,25 +68,12 @@ public interface RenderletNexus {
      */
     String getSVG(OWLClassExpression classExpression);
 
-    ArrayList<Object> getAssociations(String band);
-    
-    
-    <O> void setAssociation(String band, O renderedEntity);
-
-    ArrayList<String> getRenderedTraits(String location);
-
-    void setTrait(String location, String trait);
-    
     Set<Renderlet> getRenderlets();
-
-    Element createSVGElement(String g);
-
-    void addSVGElement(Element e);
 
     <O> RenderingEvent getRenderingEvent(O renderedEntity);
 
-    Map<String, BandInformation> getTraitLocations();
+    void setBandLocation(String band, BandInformation information);
 
-    void setRenderableBand(String bandName);
+    Map<String, BandInformation> getBandLocations();
 
 }

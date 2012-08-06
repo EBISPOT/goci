@@ -5,12 +5,13 @@ import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
-import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
-import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGBuilder;
+import uk.ac.ebi.fgpt.goci.pussycat.layout.*;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.chromosome.ChromosomeRenderlet;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -29,36 +30,28 @@ public class DefaultRenderletNexus implements RenderletNexus {
     }
 
     private Set<Renderlet> renderlets;
-    private Map<Object, SVGArea> renderedEntityLocations;
-    private Map<String, ArrayList<Object>> renderedAssociations;
-    private HashMap<String, ArrayList<String>> renderedTraits;
+    private Map<Object, SVGArea> entityLocations;
     private Map<Object, RenderingEvent> renderedEntities;
-    private SVGBuilder svgBuilder;
     private Map<IRI, String> efoLabels;
-    private Map<String, BandInformation> traitLocations;
+    private Map<String, BandInformation> bandLocations;
     private Set<OWLNamedIndividual> allTraits;
-    private List<String> renderabledBands;
 
     private OWLOntologyManager manager;
     private OWLReasoner reasoner;
 
     public DefaultRenderletNexus() {
         this.renderlets = new HashSet<Renderlet>();
-        this.renderedEntityLocations = new HashMap<Object, SVGArea>();
+        this.entityLocations = new HashMap<Object, SVGArea>();
         this.renderedEntities = new HashMap<Object, RenderingEvent>();
-        this.renderedAssociations = new HashMap<String, ArrayList<Object>>();
-        this.svgBuilder = new SVGBuilder();
-        this.renderedTraits = new HashMap<String, ArrayList<String>>();
-        this.traitLocations = new HashMap<String, BandInformation>();
-        this.renderabledBands = new ArrayList<String>();
+        this.bandLocations = new HashMap<String, BandInformation>();
     }
 
-    public Map<String, BandInformation> getTraitLocations(){
-        return traitLocations;
+    public Map<String, BandInformation> getBandLocations(){
+        return bandLocations;
     }
 
-    public void setRenderableBand(String bandName){
-        renderabledBands.add(bandName);
+    public void setBandLocation(String band, BandInformation info){
+        bandLocations.put(band, info);
     }
 
     @Override
@@ -105,125 +98,91 @@ public class DefaultRenderletNexus implements RenderletNexus {
     }
 
     public <O> void renderingEventOccurred(RenderingEvent<O> evt) {
-        renderedEntityLocations.put(evt.getRenderedEntity(), evt.getSvgArea());
+        entityLocations.put(evt.getRenderedEntity(), evt.getSvgArea());
         renderedEntities.put(evt.getRenderedEntity(), evt);
     }
 
-    public <O> SVGArea getLocationOfRenderedEntity(O renderedEntity) {
-        return renderedEntityLocations.get(renderedEntity);
+    public <O> SVGArea getLocationOfEntity(O entity) {
+        return entityLocations.get(entity);
     }
 
     public <O> RenderingEvent getRenderingEvent(O renderedEntity) {
         return renderedEntities.get(renderedEntity);
     }
 
-    public <O> void setAssociation(String band, O renderedEntity) {
-        if (renderedAssociations.containsKey(band)) {
-            renderedAssociations.get(band).add(renderedEntity);
-        }
-        else {
-            ArrayList<Object> list = new ArrayList<Object>();
-            list.add(renderedEntity);
-            renderedAssociations.put(band, list);
-        }
-    }
-
-    public ArrayList<Object> getAssociations(String band) {
-        if (renderedAssociations.containsKey(band)) {
-            return renderedAssociations.get(band);
-        }
-        else {
-            return null;
-        }
-    }
-
-
-    @Override
-    public void setTrait(String location, String trait) {
-        if (renderedTraits.containsKey(location)){
-            renderedTraits.get(location).add(trait);
-        }
-        else{
-            ArrayList<String> list = new ArrayList<String>();
-            list.add(trait);
-            renderedTraits.put(location, list);
-        }
-    }
-
-    @Override
-    public ArrayList<String> getRenderedTraits(String location) {
-        if(renderedTraits.containsKey(location)){
-            return renderedTraits.get(location);
-        }
-        else {
-            return null;
-        }
-    }
-
-    public void addSVGElement(Element element) {
-        svgBuilder.addElement(element);
-    }
-
-    public Element createSVGElement(String type) {
-        return svgBuilder.createElement(type);
-    }
 
     @Override
     public String getSVG(OWLClassExpression classExpression) {
 //check if the chromosomes have already been rendered, otherwise render them
-        getLog().trace("There are " + renderlets.size() + " registered renderlets");
-        boolean check = false;
-
-        Set<Object> keys = renderedEntities.keySet();
-
-        for (Object key : keys) {
-
-            if (renderedEntities.get(key).getRenderingRenderlet() instanceof ChromosomeRenderlet) {
-                check = true;
-                break;
-            }
-        }
-
-        if (!check) {
-            getLog().debug("Rendering chromosomes");
-            renderChromosomes();
-        }
+        SVGBuilder svgBuilder = new SVGBuilder();
 
         // get the ontology loaded into the reasoner
         OWLOntology ontology = reasoner.getRootOntology();
 
-        Set<OWLNamedIndividual> individuals = reasoner.getInstances(classExpression, false).getFlattened();
-        getLog().debug("There are " + individuals.size() + " owl individuals that satisfy the expression " +
-                classExpression);
+        getLog().trace("There are " + renderlets.size() + " registered renderlets");
 
-        ArrayList<String> renderingOrder = new ArrayList<String>();
-        if(traitLocations.size() == 0){
-            renderingOrder =  buildTraitMap(individuals, ontology);
-        }
+        if(renderedEntities.size() == 0){
+            renderChromosomes(svgBuilder);
 
-        getLog().debug("Starting rendering of trait associations");
-        for(String band : renderingOrder){
-            ArrayList<OWLNamedIndividual> assocs = traitLocations.get(band).getAssociations();
+            Set<OWLNamedIndividual> individuals = reasoner.getInstances(classExpression, false).getFlattened();
+            getLog().debug("There are " + individuals.size() + " owl individuals that satisfy the expression " +
+                    classExpression);
 
-            for(OWLNamedIndividual ind : assocs){
-                if(individuals.contains(ind)){
-                    for (Renderlet r : renderlets) {
-                        if (r.canRender(this, ontology, ind)) {
-                            getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
-                            r.render(this, ontology, ind);
+            ArrayList<String> renderingOrder =  buildTraitMap(individuals, ontology);
+
+            getLog().debug("Starting rendering of trait associations");
+            for(String band : renderingOrder){
+                ArrayList<Association> assocs = bandLocations.get(band).getAssociations();
+
+                for(Association assoc : assocs){
+                    OWLNamedIndividual ind = assoc.getAssociation();
+                    if(individuals.contains(ind)){
+                        for (Renderlet ra : renderlets) {
+                            if (ra.canRender(this, ontology, ind)) {
+                                getLog().trace("Dispatching render() request to renderlet '" + ra.getName() + "'");
+                                svgBuilder.addElement(ra.render(this, ontology, ind, svgBuilder));
+
+                                OWLNamedIndividual trait = getTrait(ind, ontology);
+getLog().debug("Association " + ind + " has trait " + trait);
+
+                                if(trait != null){
+                                    getLog().trace("Trait: " + trait);
+
+                                    String traitName = getTraitName(trait, ontology, ind);
+
+                                    if(bandLocations.get(band).getRenderedTraits().contains(trait)){
+                                        getLog().trace("Trait " + traitName + " already rendered at this location");
+                                    }
+                                    else{
+                                        for (Renderlet rt : getRenderlets()){
+                                            if (rt.canRender(this, ontology, trait)) {
+                                                getLog().trace("Dispatching render() request to renderlet '" + rt.getName() + "'");
+                                                svgBuilder.addElement(rt.render(this, ontology, trait, svgBuilder));
+                                            }
+                                        }
+                                    }
+                                }
+                                else{
+                                    getLog().debug("The trait for association " + ind + " is null");
+                                }
+                            }
                         }
-                    }
 
+                    }
                 }
+
             }
+            getLog().debug("Rendering complete");
         }
-        getLog().debug("Rendering complete");
+        else{
+         /*PUT TOGETHER SVG FROM EXISTING ELEMENTS*/
+        }
 
         return svgBuilder.getSVG();
 
     }
 
-    public void renderChromosomes() {
+    public void renderChromosomes(SVGBuilder builder) {
         OWLOntology ontology = reasoner.getRootOntology();
 
         for (Renderlet r : renderlets) {
@@ -237,7 +196,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
                 for (OWLClass chrom : allChroms) {
                     if (r.canRender(this, ontology, chrom)) {
                         getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
-                        r.render(this, ontology, chrom);
+                        builder.addElement(r.render(this, ontology, chrom, null));
                     }
                 }
             }
@@ -259,7 +218,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
         return type;
     }
 
-    public ArrayList<String> buildTraitMap(Set<OWLNamedIndividual> individuals, OWLOntology ontology){
+    public ArrayList<String> buildTraitMap(Set<OWLNamedIndividual> individuals, OWLOntology ontology) {
 
         for (OWLNamedIndividual individual : individuals) {
             boolean isBand =
@@ -275,32 +234,11 @@ public class DefaultRenderletNexus implements RenderletNexus {
                     bandName = cytoband.getLiteral();
                 }
 
-                if(renderabledBands.contains(bandName)){
+                if(bandLocations.containsKey(bandName)){
 
-                    BandInformation info = new BandInformation(bandName);
+                    BandInformation info = bandLocations.get(bandName);
 
-    /*band - SNP - association via chained DL query --> 5 minutes for 12-study-test ontology*/
-    //                OWLObjectProperty located_in = df.getOWLObjectProperty(IRI.create(OntologyConstants.LOCATED_IN_PROPERTY_IRI));
-    //                OWLObjectHasValue inBand = df.getOWLObjectHasValue(located_in, individual);
-    //                OWLClass snp = df.getOWLClass(IRI.create(OntologyConstants.SNP_CLASS_IRI));
-    //
-    //                OWLObjectIntersectionOf snp_band = df.getOWLObjectIntersectionOf(snp, inBand);
-    //                OWLObjectProperty is_about = df.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
-    //
-    //                OWLObjectSomeValuesFrom some_snps = df.getOWLObjectSomeValuesFrom(is_about, snp_band);
-    //
-    //                OWLClass association = df.getOWLClass(IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));
-    //
-    //                OWLObjectIntersectionOf assocs = df.getOWLObjectIntersectionOf(association, some_snps);
-    //
-    //                if(reasoner.getInstances(assocs,false).getFlattened().size() != 0){
-    //                    Set<OWLNamedIndividual> set = reasoner.getInstances(assocs,false).getFlattened();
-    //                    for(OWLNamedIndividual ind : set){
-    //                        associations.add(ind.getIRI().toString());
-    //                    }
-    //
-    //                }
-    /*band - SNP - association via 2 reasoner queries --> 2s for 12-study-test ontology*/
+    /*band - SNP - association via 2 reasoner queries --> 2s for 12-study-test ontology (compared to 5 minutes via chained DL query*/
                     OWLObjectProperty located_in = df.getOWLObjectProperty(IRI.create(OntologyConstants.LOCATED_IN_PROPERTY_IRI));
                     OWLObjectPropertyExpression location_of = located_in.getInverseProperty();
 
@@ -313,15 +251,48 @@ public class DefaultRenderletNexus implements RenderletNexus {
                         Set<OWLNamedIndividual> assocs = reasoner.getObjectPropertyValues(snp,has_about).getFlattened();
 
                         for(OWLNamedIndividual ind : assocs){
-                            info.setAssociation(ind);
-                            String name = getTraitName(ind, ontology, df);
-                            if(!info.getTraitNames().contains(name)){
-                                info.setTraitName(name);
+                            Date pubDate = null;
+                            float pval=0;
+                            OWLNamedIndividual trait = getTrait(ind,ontology);
+                            String name = null;
+
+                            if(trait != null){
+                                name = getTraitName(trait, ontology, ind);
+                                if(!info.getTraitNames().contains(name)){
+                                    info.setTraitName(name);
+                                }
                             }
+                            else{
+                                getLog().debug("Trait for association " + ind + " is null");
+                            }
+
+                            OWLDataProperty has_pval = df.getOWLDataProperty(IRI.create(OntologyConstants.HAS_P_VALUE_PROPERTY_IRI));
+                            Set<OWLLiteral> pvals = ind.getDataPropertyValues(has_pval,ontology);
+
+                            for(OWLLiteral p : pvals){
+                                pval = p.parseFloat();
+                            }
+
+                            OWLObjectProperty part_of = df.getOWLObjectProperty(IRI.create(OntologyConstants.PART_OF_IRI));
+                            Set<OWLNamedIndividual> studies = reasoner.getObjectPropertyValues(ind,part_of).getFlattened();
+                            OWLDataProperty has_pub_date = df.getOWLDataProperty(IRI.create(OntologyConstants.HAS_PUBLICATION_DATE_PROPERTY_IRI));
+
+                            for(OWLNamedIndividual study : studies){
+                                Set<OWLLiteral> pubdate = study.getDataPropertyValues(has_pub_date, ontology);
+                                for(OWLLiteral date : pubdate){
+                                    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss+HH:mm");
+                                    try {
+                                        pubDate = formatter.parse(date.getLiteral().toString());
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                                    }
+                                }
+                            }
+
+                            info.setAssociation(ind, name, pval, pubDate);
                         }
                     }
-
-                    traitLocations.put(bandName, info);
+                    info.sortByDate();
                 }
                 else{
                     getLog().debug("Band " + bandName + " is not a renderable cytogenetic band");
@@ -329,43 +300,47 @@ public class DefaultRenderletNexus implements RenderletNexus {
              }
         }
 
-        return sortBands(new ArrayList<String>(traitLocations.keySet()));
+        return sortBands(new ArrayList<String>(bandLocations.keySet()));
     }
 
-    public String getTraitName(OWLNamedIndividual association, OWLOntology ontology, OWLDataFactory dataFactory){
-        String traitName = null;
-
-        OWLObjectProperty is_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
+    public OWLNamedIndividual getTrait(OWLNamedIndividual association, OWLOntology ontology){
+        OWLNamedIndividual trait = null;
+        OWLObjectProperty is_about = manager.getOWLDataFactory().getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
         OWLIndividual[] related = association.getObjectPropertyValues(is_about,ontology).toArray(new OWLIndividual[0]);
 
         if(allTraits == null){
-            OWLClass ef = dataFactory.getOWLClass(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI));
+            OWLClass ef = manager.getOWLDataFactory().getOWLClass(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI));
             allTraits = reasoner.getInstances(ef,false).getFlattened();
         }
 
         for(int i = 0; i < related.length; i++){
             if(allTraits.contains(related[i])){
-                OWLNamedIndividual trait = (OWLNamedIndividual)related[i];
-                OWLClassExpression[] allTypes = trait.getTypes(ontology).toArray(new OWLClassExpression[0]);
+                trait = (OWLNamedIndividual)related[i];
+            }
+        }
+        return trait;
+    }
 
-                for(int j = 0; j < allTypes.length; j++){
-                    OWLClass typeClass = allTypes[j].asOWLClass();
-                    IRI typeIRI = typeClass.getIRI();
-                    if(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI.equals(typeIRI.toString())){
-                        OWLDataProperty has_name = dataFactory.getOWLDataProperty(IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
+    public String getTraitName(OWLNamedIndividual trait, OWLOntology ontology, OWLNamedIndividual association){
+        String traitName = null;
+        OWLClassExpression[] allTypes = trait.getTypes(ontology).toArray(new OWLClassExpression[0]);
 
-                        if(association.getDataPropertyValues(has_name,ontology).size() != 0){
-                            OWLLiteral name = association.getDataPropertyValues(has_name,ontology).iterator().next();
-                            traitName = name.getLiteral();
-                        }
-                        else{
-                            getLog().warn("Trait " + trait + " has no name");
-                        }
-                    }
-                    else{
-                        traitName = efoLabels.get(typeIRI);
-                    }
+        for(int j = 0; j < allTypes.length; j++){
+            OWLClass typeClass = allTypes[j].asOWLClass();
+            IRI typeIRI = typeClass.getIRI();
+            if(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI.equals(typeIRI.toString())){
+                OWLDataProperty has_name = manager.getOWLDataFactory().getOWLDataProperty(IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
+
+                if(association.getDataPropertyValues(has_name,ontology).size() != 0){
+                    OWLLiteral name = association.getDataPropertyValues(has_name,ontology).iterator().next();
+                    traitName = name.getLiteral();
                 }
+                else{
+                    getLog().warn("Trait " + trait + " has no name");
+                }
+            }
+            else{
+                traitName = efoLabels.get(typeIRI);
             }
         }
         return traitName;
@@ -377,23 +352,30 @@ public class DefaultRenderletNexus implements RenderletNexus {
         Collections.sort(bands);
         ArrayList<String> sorted = bands;
         int index = 0;
- /*       ArrayList<String> ps = new ArrayList<String>();
-        ArrayList<String> qs = new ArrayList<String>();       */
 
-        while(index < bands.size()){
-            String current = bands.get(index);
+/*"previous" and "next" band are for necessary for determining rendering offset. Bands that do not contain any trait associations don't need to considered*/
+        ArrayList<String> renderable = new ArrayList<String>();
+
+        for(String band : bands){
+            if(bandLocations.get(band).getAssociations().size() != 0){
+                renderable.add(band);
+            }
+        }
+
+        while(index < renderable.size()){
+            String current = renderable.get(index);
 
             if(index == 0){
-                traitLocations.get(current).setPreviousBand(null);
+                bandLocations.get(current).setPreviousBand(null);
             }
 
             String next;
 
-            if(index == bands.size()-1){
-                traitLocations.get(current).setNextBand(null);
+            if(index == renderable.size()-1){
+                bandLocations.get(current).setNextBand(null);
             }
             else  {
-                next = bands.get(index+1);
+                next = renderable.get(index+1);
     //if both bands are on the same arm, check that they're on the same chromosome
                 if((current.contains("p") && next.contains("p")) || (current.contains("q") && next.contains("q"))){
                     String chrom1, chrom2;
@@ -411,41 +393,24 @@ public class DefaultRenderletNexus implements RenderletNexus {
                     }
 
                     if(chrom1.equals(chrom2)){
-                        traitLocations.get(current).setNextBand(next);
-                        traitLocations.get(next).setPreviousBand(current);
+
+                        bandLocations.get(current).setNextBand(next);
+                        bandLocations.get(next).setPreviousBand(current);
                     }
                     else {
-                        traitLocations.get(current).setNextBand(null);
-                        traitLocations.get(next).setPreviousBand(null);
+                        bandLocations.get(current).setNextBand(null);
+                        bandLocations.get(next).setPreviousBand(null);
                     }
                 }
                 else{
-                    traitLocations.get(current).setNextBand(null);
-                    traitLocations.get(next).setPreviousBand(null);
+                    bandLocations.get(current).setNextBand(null);
+                    bandLocations.get(next).setPreviousBand(null);
                 }
             }
 
+
             index++;
         }
-
-  /*      for(int i = 0; i < bands.size(); i++){
-            if(traitLocations.get(bands.get(i)).getPreviousBand() == null){
-                System.out.print("bottom \t");
-            }
-            else{
-                System.out.print(traitLocations.get(bands.get(i)).getPreviousBand() + "\t");
-            }
-            System.out.print(bands.get(i) + "\t");
-
-            if(traitLocations.get(bands.get(i)).getNextBand() == null){
-                System.out.println("top");
-            }
-            else{
-                System.out.println(traitLocations.get(bands.get(i)).getNextBand());
-            }
-
-
-        }             */
 
         return sorted;
     }

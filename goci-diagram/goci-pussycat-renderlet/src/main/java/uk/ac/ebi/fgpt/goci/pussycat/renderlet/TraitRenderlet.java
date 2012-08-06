@@ -7,8 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
+import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.ColourMapper;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
+import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGBuilder;
 
 import java.util.Set;
 
@@ -65,7 +67,7 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
             if (renderingEntity instanceof OWLNamedIndividual){
                 OWLNamedIndividual individual = (OWLNamedIndividual)renderingEntity;
 
-                if(nexus.getLocationOfRenderedEntity(individual)==null){
+                if(nexus.getLocationOfEntity(individual)==null){
                     OWLClassExpression[] allTypes = nexus.getReasoner().getTypes(individual,false).getFlattened().toArray(new OWLClassExpression[0]);
 
                     for(int i = 0; i < allTypes.length; i++){
@@ -85,87 +87,90 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
     }
 
     @Override
-    public void render(RenderletNexus nexus, OWLOntology renderingContext, OWLIndividual renderingEntity) {
+    public Element render(RenderletNexus nexus, OWLOntology renderingContext, OWLIndividual renderingEntity, SVGBuilder builder) {
         OWLNamedIndividual gwasTrait = (OWLNamedIndividual)renderingEntity;
-        OWLNamedIndividual association = getAssociation(nexus, gwasTrait, renderingContext);
+        OWLNamedIndividual association = getAssociation(nexus, gwasTrait);
+
+        Element trait = null;
 
         if(association != null){
             setTraitName(gwasTrait, renderingContext, nexus, association);
 
-            SVGArea associationSVG = nexus.getLocationOfRenderedEntity(association);
-            Element assocG = nexus.getRenderingEvent(association).getRenderedSVG();
+            SVGArea associationSVG = nexus.getLocationOfEntity(association);
 
-            String location = assocG.getAttribute("transform");
+            if(nexus.getRenderingEvent(association) != null){
+                Element assocG = nexus.getRenderingEvent(association).getRenderedSVG();
 
-            String bandName = getSNPLocation(nexus, association,renderingContext);
+                String location = assocG.getAttribute("transform");
 
-            if(bandName != null){
-                Element trait = nexus.createSVGElement("circle");
-                trait.setAttribute("transform",location);
+                String bandName = getSNPLocation(nexus, association,renderingContext);
 
-                double alength =  associationSVG.getWidth();
-                double radius = 0.2*alength;
-                double ax = associationSVG.getX();
-                double ay = associationSVG.getY();
-                double displacement = associationSVG.getHeight();
-                double cx, cy;
-                int size;
+                if(bandName != null){
+                    trait = builder.createElement("circle");
+                    BandInformation band = nexus.getBandLocations().get(bandName);
 
-                if(nexus.getRenderedTraits(bandName) == null){
-                    size = 0;
+                    trait.setAttribute("transform",location);
+
+                    double alength =  associationSVG.getWidth();
+                    double radius = 0.2*alength;
+                    double ax = associationSVG.getX();
+                    double ay = associationSVG.getY();
+                    double displacement = associationSVG.getHeight();
+                    double cx, cy;
+                    int size = band.getRenderedTraits().size();
+
+                    int horizontal = size%6;
+                    int vertical = size/6;
+
+                    if(size == 0){
+                        cx = ax+alength+radius;
+                    }
+                    else{
+                         if(vertical%2 == 0){
+                            cx = ax+alength+(((2*horizontal)+1)*radius);
+                         }
+                         else{
+                             cx = ax+alength+(((2*horizontal)+2)*radius);
+                         }
+                    }
+                    cy=ay + displacement + (vertical*radius);
+
+                    trait.setAttribute("cx", Double.toString(cx));
+                    trait.setAttribute("cy", Double.toString(cy));
+                    trait.setAttribute("r", Double.toString(radius));
+
+                    String colour = getColour(gwasTrait, nexus);
+
+                    trait.setAttribute("fill",colour);
+                    trait.setAttribute("stroke","black");
+                    trait.setAttribute("stroke-width", "0.5");
+
+                    trait.setAttribute("id",getName());
+
+                    String display;
+                    if(getName().contains("'")){
+                         display = getName().replace("'", "\\'");
+                    }
+                    else{
+                        display = getName();
+                    }
+
+                    String mo = "showTooltip('" + display + "')";
+                    trait.setAttribute("onmouseover",mo);
+                    trait.setAttribute("onmouseout", "hideTooltip()");
+
+                    String iri = gwasTrait.getIRI().toString();
+                    trait.setAttribute("class", iri);
+
+
+                    SVGArea currentArea = new SVGArea(cx,cy,2*radius,2*radius,0);
+                    RenderingEvent event = new RenderingEvent(renderingEntity, trait, currentArea, this);
+                    nexus.renderingEventOccurred(event);
+                    band.setRenderedTrait(traitName);
                 }
-                else{
-                    size = nexus.getRenderedTraits(bandName).size();
-                }
-                int horizontal = size%6;
-                int vertical = size/6;
-
-
-//                if((nexus.getRenderedTraits(bandName) == null) || (nexus.getRenderedTraits(bandName).size() < 6 )){
-                if(nexus.getRenderedTraits(bandName) == null){
-                    cx = ax+alength+radius;
-                }
-                else{
-                     if(vertical%2 == 0){
-                        cx = ax+alength+(((2*horizontal)+1)*radius);
-                     }
-                     else{
-                         cx = ax+alength+(((2*horizontal)+2)*radius);
-                     }
-                }
-                cy=ay + displacement + (vertical*radius);
-
-                trait.setAttribute("cx", Double.toString(cx));
-                trait.setAttribute("cy", Double.toString(cy));
-                trait.setAttribute("r", Double.toString(radius));
-
-                String colour = getColour(gwasTrait, nexus);
-
-                trait.setAttribute("fill",colour);
-                trait.setAttribute("stroke","black");
-                trait.setAttribute("stroke-width", "0.5");
-
-                trait.setAttribute("id",getName());
-
-                String display;
-                if(getName().contains("'")){
-                     display = getName().replace("'", "\\'");
-                }
-                else{
-                    display = getName();
-                }
-
-                String mo = "showTooltip('" + display + "')";
-                trait.setAttribute("onmouseover",mo);
-                trait.setAttribute("onmouseout", "hideTooltip()");
-
-                String iri = gwasTrait.getIRI().toString();
-                trait.setAttribute("class", iri);
-
-                nexus.addSVGElement(trait);
-                nexus.setTrait(bandName, traitName);
             }
         }
+        return trait;
      }
 
     public void setTraitName(OWLNamedIndividual individual, OWLOntology ontology, RenderletNexus nexus, OWLNamedIndividual association){
@@ -193,7 +198,7 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
           }
     }
 
-    public OWLNamedIndividual getAssociation(RenderletNexus nexus, OWLNamedIndividual trait, OWLOntology ontology){
+    public OWLNamedIndividual getAssociation(RenderletNexus nexus, OWLNamedIndividual trait){
         OWLReasoner reasoner = nexus.getReasoner();
 
         OWLDataFactory dataFactory = nexus.getManager().getOWLDataFactory();
