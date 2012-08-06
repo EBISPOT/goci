@@ -7,6 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.*;
+import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
+import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
+import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGBuilder;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.chromosome.ChromosomeRenderlet;
 
 import java.text.DateFormat;
@@ -143,8 +146,6 @@ public class DefaultRenderletNexus implements RenderletNexus {
                                 svgBuilder.addElement(ra.render(this, ontology, ind, svgBuilder));
 
                                 OWLNamedIndividual trait = getTrait(ind, ontology);
-getLog().debug("Association " + ind + " has trait " + trait);
-
                                 if(trait != null){
                                     getLog().trace("Trait: " + trait);
 

@@ -11,6 +11,7 @@ import org.semanticweb.owlapi.util.OWLOntologyWalkerVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -73,7 +74,7 @@ public class PussycatGOCIController {
     }
 
     @Autowired
-    public void setOntologyConfiguration(OntologyConfiguration ontologyConfiguration) {
+    public void setOntologyConfiguration(@Qualifier("config") OntologyConfiguration ontologyConfiguration) {
         this.ontologyConfiguration = ontologyConfiguration;
     }
 
@@ -91,55 +92,61 @@ public class PussycatGOCIController {
     }
 
     @RequestMapping(value = "/gwasdiagram/timeseries/{year}/{month}")
-    public @ResponseBody String renderGWASDiagramTimeSeries(@PathVariable String year, @PathVariable String month, HttpSession session) throws PussycatSessionNotReadyException {
-        // get OWLThing, to indicate that we want to draw all data in the GWAS catalog
-        OWLClassExpression timeCls = getOntologyConfiguration().getOWLDataFactory().getOWLThing();
-        // render all individuals using the pussycat session for this http session
-        return getPussycatSession(session).performRendering(timeCls, getRenderletNexus(session));
-    }
-
-    @RequestMapping(value = "/gwasdiagram/pre2009")
-    public @ResponseBody String renderGWASDiagramBefore2009(HttpSession session) throws PussycatSessionNotReadyException, ParserException {
-        // get the subset of studies published before 2009
-
-System.out.println("Received a new rendering request - putting together the query");
+    public @ResponseBody String renderGWASDiagramTimeSeries(@PathVariable String year,
+                                                            @PathVariable String month,
+                                                            HttpSession session)
+            throws PussycatSessionNotReadyException {
+        // get the subset of studies published before the supplied date
+        getLog().debug("Received a new rendering request - " +
+                               "putting together the query for year '" + year + "' and month '" + month + "'");
         OWLOntologyManager manager = getOntologyConfiguration().getOWLOntologyManager();
         OWLDataFactory df = getOntologyConfiguration().getOWLDataFactory();
 
         List<OWLAnnotationProperty> properties = Arrays.asList(df.getRDFSLabel());
         AnnotationValueShortFormProvider annoSFP = new AnnotationValueShortFormProvider(
                 properties, new HashMap<OWLAnnotationProperty, List<String>>(), manager);
-        ShortFormEntityChecker checker = new ShortFormEntityChecker(new BidirectionalShortFormProviderAdapter(manager, manager.getOntologies(), annoSFP));
+        ShortFormEntityChecker checker = new ShortFormEntityChecker(
+                new BidirectionalShortFormProviderAdapter(manager, manager.getOntologies(), annoSFP));
         ManchesterOWLSyntaxClassExpressionParser parser = new ManchesterOWLSyntaxClassExpressionParser(df, checker);
 
-        String date = "has_publication_date some dateTime[< \"2009-01-01T00:00:00+00:00\"^^dateTime]";
+        String date =
+                "has_publication_date some dateTime[< \"" + year + "-" + month + "-01T00:00:00+00:00\"^^dateTime]";
+        try {
+            getLog().debug("Attempting to parse date expression\n\t'" + date + "'");
+            OWLClassExpression dateExpression = parser.parse(date);
 
-        OWLClassExpression pre2009 = parser.parse(date);
+            OWLClass study = df.getOWLClass(IRI.create(OntologyConstants.STUDY_CLASS_IRI));
+            OWLClassExpression studies = df.getOWLObjectIntersectionOf(study, dateExpression);
 
-        OWLClass study = df.getOWLClass(IRI.create(OntologyConstants.STUDY_CLASS_IRI));
-        OWLClassExpression pre2009_studies = df.getOWLObjectIntersectionOf(study,pre2009);
+            OWLObjectProperty part_of = df.getOWLObjectProperty(IRI.create(OntologyConstants.PART_OF_IRI));
+            OWLObjectSomeValuesFrom part_of_assoc = df.getOWLObjectSomeValuesFrom(part_of, studies);
 
-        OWLObjectProperty part_of = df.getOWLObjectProperty(IRI.create(OntologyConstants.PART_OF_IRI));
-        OWLObjectSomeValuesFrom part_of_assoc = df.getOWLObjectSomeValuesFrom(part_of, pre2009_studies);
+            OWLClass association = df.getOWLClass(IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));
+            OWLClassExpression trait_associations = df.getOWLObjectIntersectionOf(association, part_of_assoc);
 
-        OWLClass association = df.getOWLClass(IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));
-        OWLClassExpression trait_associations = df.getOWLObjectIntersectionOf(association, part_of_assoc);
+            OWLObjectProperty has_about = df.getOWLObjectProperty(IRI.create(OntologyConstants.HAS_ABOUT_IRI));
+            OWLObjectSomeValuesFrom some_snps = df.getOWLObjectSomeValuesFrom(has_about, trait_associations);
 
-        OWLObjectProperty has_about = df.getOWLObjectProperty(IRI.create(OntologyConstants.HAS_ABOUT_IRI));
-        OWLObjectSomeValuesFrom some_snps = df.getOWLObjectSomeValuesFrom(has_about, trait_associations);
+            OWLClass snp = df.getOWLClass(IRI.create(OntologyConstants.SNP_CLASS_IRI));
+            OWLClassExpression snps = df.getOWLObjectIntersectionOf(snp, some_snps);
 
-        OWLClass snp = df.getOWLClass(IRI.create(OntologyConstants.SNP_CLASS_IRI));
-        OWLClassExpression pre2009_snps = df.getOWLObjectIntersectionOf(snp, some_snps);
+            OWLObjectProperty location_of =
+                    df.getOWLObjectProperty(IRI.create(OntologyConstants.LOCATION_OF_PROPERTY_IRI));
+            OWLObjectSomeValuesFrom some_bands = df.getOWLObjectSomeValuesFrom(location_of, snps);
 
-        OWLObjectProperty location_of = df.getOWLObjectProperty(IRI.create(OntologyConstants.LOCATION_OF_PROPERTY_IRI));
-        OWLObjectSomeValuesFrom some_bands = df.getOWLObjectSomeValuesFrom(location_of, pre2009_snps);
+            OWLClass cyto_band = df.getOWLClass(IRI.create(OntologyConstants.CYTOGENIC_REGION_CLASS_IRI));
+            OWLClassExpression timeCls = df.getOWLObjectIntersectionOf(cyto_band, some_bands);
 
-        OWLClass cyto_band = df.getOWLClass(IRI.create(OntologyConstants.CYTOGENIC_REGION_CLASS_IRI));
-        OWLClassExpression timeCls = df.getOWLObjectIntersectionOf(cyto_band, some_bands);
-
-        System.out.println("Query put together succesfully");
-       // render all individuals using the pussycat session for this http session
-        return getPussycatSession(session).performRendering(timeCls, getRenderletNexus(session));
+            getLog().debug("Query put together succesfully");
+            // render all individuals using the pussycat session for this http session
+            return getPussycatSession(session).performRendering(timeCls, getRenderletNexus(session));
+        }
+        catch (ParserException e) {
+            getLog().error("Bad date in URL /gwasdiagram/timeseries/" + year + "/" + month + " - " +
+                                   "use /gwasdiagram/timeseries/YYYY/MM", e);
+            throw new RuntimeException("Bad date in URL /gwasdiagram/timeseries/" + year + "/" + month + " - " +
+                                               "use /gwasdiagram/timeseries/YYYY/MM", e);
+        }
     }
 
     @RequestMapping(value = "/chromosomes")
@@ -239,8 +246,9 @@ System.out.println("Received a new rendering request - putting together the quer
         IRI efIRI = IRI.create(efoURI);
         OWLClass efCls = getOntologyConfiguration().getOWLDataFactory().getOWLClass(efIRI);
 
-        Set<OWLClass> allChildren = getPussycatSession(session).getReasoner().getSubClasses(efCls, false).getFlattened();
-        for(OWLClass child : allChildren){
+        Set<OWLClass> allChildren =
+                getPussycatSession(session).getReasoner().getSubClasses(efCls, false).getFlattened();
+        for (OWLClass child : allChildren) {
             childClasses.add(child.getIRI().toString());
         }
         // return the URIs of all classes that are children, asserted or inferred, of the provided parent class
@@ -284,29 +292,32 @@ System.out.println("Received a new rendering request - putting together the quer
 
         try {
             RenderletNexus renderletNexus;
-
             if (nexusMap.containsKey(session)) {
                 renderletNexus = nexusMap.get(session);
                 getLog().debug("RenderletNexus available for HttpSession '" + session.getId() + "'");
                 return renderletNexus;
             }
             else {
-//           renderletNexus = RenderletNexusFactory.createDefaultRenderletNexus();
-                renderletNexus = RenderletNexusFactory.createDefaultRenderletNexus(
-                        getOntologyConfiguration().getOWLOntologyManager(),
-                        getPussycatSession(session).getReasoner(),
-                        getOntologyConfiguration().getEfoLabels());
-
-                nexusMap.put(session, renderletNexus);
-
                 Collection<Renderlet> renderlets = getPussycatSession(session).getAvailableRenderlets();
+                if (renderlets.size() > 0) {
+                    renderletNexus = RenderletNexusFactory.createDefaultRenderletNexus(
+                            getOntologyConfiguration().getOWLOntologyManager(),
+                            getPussycatSession(session).getReasoner(),
+                            getOntologyConfiguration().getEfoLabels());
 
-                for (Renderlet r : renderlets) {
-                    renderletNexus.register(r);
+                    for (Renderlet r : renderlets) {
+                        renderletNexus.register(r);
+                    }
+
+                    getLog().debug("Created new RenderletNexus for HttpSession '" + session + "'");
+                    nexusMap.put(session, renderletNexus);
+                    return renderletNexus;
                 }
-
-                getLog().debug("Created new RenderletNexus for HttpSession '" + session + "'");
-                return renderletNexus;
+                else {
+                    getLog().debug("There are no available renderlets, " +
+                                           "leaving RenderletNexus for HttpSession '" + session + "' as null");
+                    return null;
+                }
             }
         }
         catch (OWLConversionException e) {

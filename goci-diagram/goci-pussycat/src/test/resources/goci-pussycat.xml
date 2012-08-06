@@ -39,4 +39,9 @@
     <bean id="pussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.GOCIDataPublisherPussycatSession">
         <property name="reasonerSession" ref="reasonerSession" />
     </bean>
+
+    <!--<bean id="pussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.GOCIDataPublisherPussycatSession">-->
+        <!--<property name="reasonerSession" ref="reasonerSession" />-->
+    <!--</bean>-->
+
 </beans>

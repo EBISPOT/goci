@@ -65,16 +65,4 @@ public interface PussycatSession {
      *                                if the reasoner for this session is not yet fully initialized
      */
     OWLReasoner getReasoner() throws OWLConversionException, PussycatSessionNotReadyException;
-
-    /**
-     * Returns the set of OWL individuals that satisfy the given class expression and should therefore be rendered.
-     *
-     * @param classExpression an class expression to lookup individuals that satisfy it
-     * @return a set of individuals satisfying the supplied class expression
-     * @throws OWLConversionException is something went wrong querying the underlying reasoner
-     * @throws uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException
-     *                                if the reasoner for this session is not yet fully initialized
-     */
-    Set<OWLNamedIndividual> query(OWLClassExpression classExpression)
-            throws OWLConversionException, PussycatSessionNotReadyException;
 }
