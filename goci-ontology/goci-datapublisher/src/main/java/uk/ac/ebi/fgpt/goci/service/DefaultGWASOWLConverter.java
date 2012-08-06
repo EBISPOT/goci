@@ -25,7 +25,7 @@ import java.util.Set;
  * uk.ac.ebi.fgpt.goci.dao.StudyDAO} and converts all obtained {@link Study} objects to OWL.
  *
  * @author Tony Burdett
- * Date 26/01/12
+ *         Date 26/01/12
  */
 public class DefaultGWASOWLConverter implements GWASOWLConverter {
     private OntologyConfiguration configuration;
@@ -72,8 +72,8 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         try {
             // create a new ontology to represent our data dump
             String iri = "http://www.ebi.ac.uk/efo/gwas-diagram/" +
-                    new SimpleDateFormat("yyyy/MM/dd").format(new Date()) +
-                    "/data";
+                         new SimpleDateFormat("yyyy/MM/dd").format(new Date()) +
+                         "/data";
             OWLOntology conversion = getManager().createOntology(IRI.create(iri));
 
             // import the gwas ontology schema
@@ -93,8 +93,8 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         try {
             // create a new ontology to represent our data dump
             String iri = "http://www.ebi.ac.uk/efo/gwas-diagram/" +
-                    new SimpleDateFormat("yyyy/MM/dd").format(new Date()) +
-                    "/inferred-data";
+                         new SimpleDateFormat("yyyy/MM/dd").format(new Date()) +
+                         "/inferred-data";
             OWLOntology conversion = getManager().createOntology(IRI.create(iri));
 
             // import the gwas ontology schema
@@ -309,7 +309,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         Collection<OWLClass> labelledClasses = getOntologyDAO().getOWLClassesByLabel(classLabel);
         if (labelledClasses.size() != 1) {
             throw new OntologyTermException("Unexpected number of classes have label '" + classLabel + "'. " +
-                                                    "Expected 1, actual " + labelledClasses.size());
+                                            "Expected 1, actual " + labelledClasses.size());
         }
         else {
             return getDataFactory().getOWLClass(labelledClasses.iterator().next().getIRI());
@@ -371,9 +371,9 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         }
 
         // get object properties
-	OWLObjectProperty is_about = getDataFactory().getOWLObjectProperty(   
-                IRI.create(OntologyConstants.IS_ABOUT_IRI));         
-	
+        OWLObjectProperty is_about = getDataFactory().getOWLObjectProperty(
+                IRI.create(OntologyConstants.IS_ABOUT_IRI));
+
 
         // assert relation
         OWLObjectPropertyAssertionAxiom is_about_snp_relation =

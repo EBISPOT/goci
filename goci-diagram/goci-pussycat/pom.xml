@@ -106,6 +106,13 @@
             <version>3.0.3.RELEASE</version>
         </dependency>
 
+        <!-- jackson json mapping library, describes mappings from java to json for model objects -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.5.3</version>
+        </dependency>
+
         <!-- ehcache, allows us to cache reasoners and queries using spring annotations (requires cglib)-->
         <dependency>
             <groupId>com.googlecode.ehcache-spring-annotations</groupId>

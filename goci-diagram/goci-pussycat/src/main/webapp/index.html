@@ -24,6 +24,20 @@
         <h1>GWAS Diagram Browser</h1>
 
         <h2>Exploring Genome-wide Association Studies</h2>
+
+        <p>
+            <label for="trait-filter">Filter:</label>
+            <input type="text"
+                   id="trait-filter"
+                   name="trait-filter"
+                   title="Filter Traits"
+                   onkeypress="doFilterOnEnter(event);"
+                   size="50"/>
+            <button id="clear-filter"
+                    name="clear-filter"
+                    title="Clear filters"
+                    onclick="showAllTraits();">Clear filters</button>
+        </p>
     </div>
 </div>
 
@@ -208,6 +222,9 @@
             pointer over
             a given element.
         </li>
+
+
+
         <!--             <li><b>Number of traits:</b> Some chromosomal regions have large numbers of traits associated with them. In order to keep the
 diagram readable, no more than six traits will be displayed for any region for the full diagram. If there are more traits available
 for a given region, this is indicated by the presence of an ellipsis (...) at the end of a line of traits. At present, this ellipsis

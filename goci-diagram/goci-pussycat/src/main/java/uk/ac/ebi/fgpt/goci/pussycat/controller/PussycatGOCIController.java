@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import uk.ac.ebi.fgpt.goci.dao.OntologyDAO;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
@@ -25,6 +26,7 @@ import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexusFactory;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSession;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSessionStrategy;
+import uk.ac.ebi.fgpt.goci.utils.OntologyUtils;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
@@ -44,6 +46,8 @@ public class PussycatGOCIController {
     private Map<HttpSession, RenderletNexus> nexusMap = new HashMap<HttpSession, RenderletNexus>();
 
     private OntologyConfiguration ontologyConfiguration;
+
+    private OntologyDAO ontologyDAO;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -65,7 +69,7 @@ public class PussycatGOCIController {
     }
 
     @Autowired
-    public void setPussycatSessionManager(PussycatSessionManager pussycatManager) {
+    public void setPussycatSessionManager(PussycatSessionManager pussycatManager) {http://localhost:8080/gwas/
         this.pussycatManager = pussycatManager;
     }
 
@@ -76,6 +80,15 @@ public class PussycatGOCIController {
     @Autowired
     public void setOntologyConfiguration(@Qualifier("config") OntologyConfiguration ontologyConfiguration) {
         this.ontologyConfiguration = ontologyConfiguration;
+    }
+
+    public OntologyDAO getOntologyDAO() {
+        return ontologyDAO;
+    }
+
+    @Autowired
+    public void setOntologyDAO(OntologyDAO ontologyDAO) {
+        this.ontologyDAO = ontologyDAO;
     }
 
     @RequestMapping(params = "clear")
@@ -98,7 +111,7 @@ public class PussycatGOCIController {
             throws PussycatSessionNotReadyException {
         // get the subset of studies published before the supplied date
         getLog().debug("Received a new rendering request - " +
-                               "putting together the query for year '" + year + "' and month '" + month + "'");
+                       "putting together the query for year '" + year + "' and month '" + month + "'");
         OWLOntologyManager manager = getOntologyConfiguration().getOWLOntologyManager();
         OWLDataFactory df = getOntologyConfiguration().getOWLDataFactory();
 
@@ -143,9 +156,9 @@ public class PussycatGOCIController {
         }
         catch (ParserException e) {
             getLog().error("Bad date in URL /gwasdiagram/timeseries/" + year + "/" + month + " - " +
-                                   "use /gwasdiagram/timeseries/YYYY/MM", e);
+                           "use /gwasdiagram/timeseries/YYYY/MM", e);
             throw new RuntimeException("Bad date in URL /gwasdiagram/timeseries/" + year + "/" + month + " - " +
-                                               "use /gwasdiagram/timeseries/YYYY/MM", e);
+                                       "use /gwasdiagram/timeseries/YYYY/MM", e);
         }
     }
 
@@ -158,7 +171,8 @@ public class PussycatGOCIController {
         return getPussycatSession(session).performRendering(chromCls, getRenderletNexus(session));
     }
 
-    /*this currently doesn't work as all chromosomes are rendered by default, not if a given chromosome individual exists
+    /*this currently doesn't work as all chromosomes are rendered by default, not if a given chromosome individual
+    exists
     *as some chromosomes don't have any instances and would therefore never be rendered*/
     @RequestMapping(value = "/chromosomes/{chromosomeName}")
     public @ResponseBody String renderChromosome(@PathVariable String chromosomeName, HttpSession session)
@@ -238,21 +252,33 @@ public class PussycatGOCIController {
     }
 
     /*This method returns all the children of the provided URI in order to allow filtering based on URIs*/
-    @RequestMapping(value = "/filter/{efoURI}")
-    public @ResponseBody ArrayList<String> filterTrait(@PathVariable String efoURI, HttpSession session)
+    @RequestMapping(value = "/filter/{traitName}")
+    public @ResponseBody Set<String> filterTrait(@PathVariable String traitName, HttpSession session)
             throws PussycatSessionNotReadyException, OWLConversionException {
-        ArrayList<String> childClasses = new ArrayList<String>();
-        // retrieve a reference to the EFO class with the supplied IRI
-        IRI efIRI = IRI.create(efoURI);
-        OWLClass efCls = getOntologyConfiguration().getOWLDataFactory().getOWLClass(efIRI);
+        // lookup class from label
+        getLog().debug("Identifying class with label '" + traitName + "'...");
+        Collection<OWLClass> labelledClasses = getOntologyDAO().getOWLClassesByLabel(traitName);
 
-        Set<OWLClass> allChildren =
-                getPussycatSession(session).getReasoner().getSubClasses(efCls, false).getFlattened();
-        for (OWLClass child : allChildren) {
-            childClasses.add(child.getIRI().toString());
+        // get the set of all classes and subclasses
+        Set<OWLClass> allClasses = new HashSet<OWLClass>();
+
+        for (OWLClass labelledClass : labelledClasses) {
+            allClasses.add(labelledClass);
+            allClasses.addAll(getPussycatSession(session).getReasoner()
+                                      .getSubClasses(labelledClass, false)
+                                      .getFlattened());
         }
+
+        // now get the short forms for each class in allClasses
+        Set<String> classNames = new HashSet<String>();
+        for (OWLClass cls : allClasses) {
+            String shortform = OntologyUtils.getShortForm(cls);
+            getLog().debug("Next shortform in subclass set: '" + shortform + "'");
+            classNames.add(shortform);
+        }
+
         // return the URIs of all classes that are children, asserted or inferred, of the provided parent class
-        return childClasses;
+        return classNames;
     }
 
 
@@ -273,7 +299,7 @@ public class PussycatGOCIController {
         else {
             PussycatSession pussycatSession;
             if (getSessionStrategy() == PussycatSessionStrategy.JOIN &&
-                    getPussycatManager().getPussycatSessions().size() > 0) {
+                getPussycatManager().getPussycatSessions().size() > 0) {
                 pussycatSession = getPussycatManager().getPussycatSessions().iterator().next();
             }
             else {
@@ -281,8 +307,8 @@ public class PussycatGOCIController {
                 getLog().debug("Created new pussycat session, id '" + pussycatSession.getSessionID() + "'");
             }
             getLog().debug("Pussycat manager has no available session, but can join HttpSession " +
-                                   "'" + session.getId() + "' to pussycat session " +
-                                   "'" + pussycatSession.getSessionID() + "'");
+                           "'" + session.getId() + "' to pussycat session " +
+                           "'" + pussycatSession.getSessionID() + "'");
             return getPussycatManager().joinPussycatSession(session, pussycatSession);
         }
     }
@@ -315,7 +341,7 @@ public class PussycatGOCIController {
                 }
                 else {
                     getLog().debug("There are no available renderlets, " +
-                                           "leaving RenderletNexus for HttpSession '" + session + "' as null");
+                                   "leaving RenderletNexus for HttpSession '" + session + "' as null");
                     return null;
                 }
             }

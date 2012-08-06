@@ -1,4 +1,4 @@
-var enableDebugging = false;
+var enableDebugging = true;
 
 var maxScale = 100;
 var currentScale = maxScale / 2;
@@ -9,7 +9,7 @@ var dragOffsetY = 0;
 var renderingComplete = false;
 
 function init() {
-    $(document).ready(function() {
+    $(document).ready(function () {
         if (enableDebugging) {
             $("#logitem").show();
             $("#logtab").show();
@@ -29,7 +29,7 @@ function init() {
         // resize the page so it fills window
         resizeDisplay();
         // register resize handler so that the page resizes when the window size changes
-        $(window).resize(function() {
+        $(window).resize(function () {
             resizeDisplay();
         });
 
@@ -37,12 +37,12 @@ function init() {
         $("#retrybutton").click(renderDiagram);
 
         // bind mousemove handler
-        $(document).mousemove(function(ev){
+        $(document).mousemove(function (ev) {
             $('#tooltip').css({"left":ev.pageX + 20, "top":ev.pageY});
         });
 
         // bind mousewheel event handler
-        $('#diagramareacontent').mousewheel(function(ev, delta) {
+        $('#diagramareacontent').mousewheel(function (ev, delta) {
             if (delta > 0) {
                 currentScale++;
                 zoomIn();
@@ -55,14 +55,14 @@ function init() {
 
         // bind drag handler
         $('#diagramareacontent')
-                .drag(function(ev, dd) {
-                          $("#xOffset").html(dd.deltaX);
-                          $("#yOffset").html(dd.deltaY);
-                          pan(dd.deltaX, dd.deltaY);
-                      }, {relative:true})
-                .drag("end", function(ev, dd) {
-                          updateOffset();
-                      }
+            .drag(function (ev, dd) {
+                      $("#xOffset").html(dd.deltaX);
+                      $("#yOffset").html(dd.deltaY);
+                      pan(dd.deltaX, dd.deltaY);
+                  }, {relative:true})
+            .drag("end", function (ev, dd) {
+                      updateOffset();
+                  }
         );
 
         // initialize slider
@@ -73,17 +73,17 @@ function init() {
                               orientation:"vertical",
                               max:maxScale,
                               value:currentScale,
-                              slide:function(event, ui) {
+                              slide:function (event, ui) {
                                   slideZoom(ui.value);
                               }
                           });
         $("#zoomInButton").button();
-        $("#zoomInButton").click(function() {
+        $("#zoomInButton").click(function () {
             currentScale++;
             zoomIn();
         });
         $("#zoomOutButton").button();
-        $("#zoomOutButton").click(function() {
+        $("#zoomOutButton").click(function () {
             currentScale--;
             zoomOut();
         });
@@ -97,7 +97,7 @@ function resizeDisplay() {
     var bodyMargin = parseInt($('body').css('margin-top')) + parseInt($('body').css('margin-bottom'));
     var pageMargin = parseInt($("#page_wrapper").css('margin-top')) + parseInt($("#page_wrapper").css('margin-bottom'));
     var pageBorder = parseInt($("#page_wrapper").css('border-top-width')) +
-            parseInt($("#page_wrapper").css('border-bottom-width'));
+                     parseInt($("#page_wrapper").css('border-bottom-width'));
     var offset = bodyMargin + pageMargin + pageBorder;
 
     // update the size of the page_wrapper to fill document
@@ -111,7 +111,7 @@ function resizeDisplay() {
 
     // update the size of tabcontent to match the size of max tabs child
     var maxPadding = 0;
-    $('.tabcontent').each(function(i) {
+    $('.tabcontent').each(function (i) {
         var padding = parseFloat($(this).css("padding-top")) + parseFloat($(this).css("padding-bottom"));
         if (padding > maxPadding) {
             maxPadding = padding;
@@ -121,7 +121,7 @@ function resizeDisplay() {
 
     // update the diagramarea to fill the available space
     var availableHeight = $("#diagramtab").height() -
-            ($("#diagramarea").position().top - $("#diagramtab").position().top);
+                          ($("#diagramarea").position().top - $("#diagramtab").position().top);
     $("#diagramarea").height(availableHeight);
     log("Window resized: new size = " + $("#page_wrapper").height() + ", " + $("#page_wrapper").width());
 
@@ -143,7 +143,7 @@ function resizeDisplay() {
         var newViewBox = elements[0] + " " + elements[1] + " " + newWidth + " " + newHeight;
 //        document.getElementById('goci-svg').setAttribute("viewBox", newViewBox); // this uses server SVG size.  If commented out, default view is zoomed
         log("Adjusted SVG dimensions - SVG now width = " + width + ", height = " + height + ", viewBox = " +
-                    newViewBox);
+            newViewBox);
     }
     catch (ex) {
         log("Failed to adjust SVG dimensions: " + ex);
@@ -169,7 +169,7 @@ function renderDiagram() {
         $.ajax({
                    url:'api/views/gwasdiagram',
 
-           //        url:'api/views/gwasdiagram/pre2011',
+                   //        url:'api/views/gwasdiagram/pre2011',
                    dataType:'html',
                    success:insertSVG,
                    error:serverCommunicationFail
@@ -206,6 +206,43 @@ function showTooltip(tooltipText) {
 
 function hideTooltip() {
     $("#tooltip").hide();
+}
+
+function filterTraits(traitName) {
+    hideAllTraits();
+
+    // expand query to get all filtered sets
+    $.getJSON('api/views/filter/' + traitName, function (data) {
+        $.each(data, function (index, val) {
+            try {
+                var trait = val.replace(":", "\\:");
+                log("Showing trait '" + trait + "' element");
+                $("." + trait).show();
+            }
+            catch (ex) {
+                log("Failed to show element '" + val + "'");
+            }
+        });
+        log("All filtered traits should now be shown");
+    });
+}
+
+function showAllTraits() {
+    log("Showing all 'gwas-trait' elements");
+    $(".gwas-trait").show();
+}
+
+function hideAllTraits() {
+    log("Hiding all 'gwas-trait' elements");
+    $(".gwas-trait").hide();
+}
+
+function doFilterOnEnter(e) {
+    var key = e.keyCode || e.which;
+    if (key == 13) {
+        log("Detected filter keypress - " + $("#trait-filter").val())
+        filterTraits($("#trait-filter").val());
+    }
 }
 
 function slideZoom(newScale) {

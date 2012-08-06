@@ -150,7 +150,7 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
                 IRI iri = getTraitClass(gwasTrait, renderingContext, nexus, association);
                 String traitClass = OntologyUtils.getShortForm(iri, renderingContext);
                 getLog().trace("Setting CSS class for trait '" + gwasTrait + "' to " + traitClass);
-                trait.setAttribute("class", traitClass);
+                trait.setAttribute("class", traitClass + " gwas-trait");
 
                 nexus.addSVGElement(trait);
                 nexus.setTrait(bandName, traitName);
