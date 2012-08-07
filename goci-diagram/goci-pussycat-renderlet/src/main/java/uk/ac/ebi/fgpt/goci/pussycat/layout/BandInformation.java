@@ -108,13 +108,20 @@ public class BandInformation {
 
         for(int i = 0; i < n; i++){
            for(int j = 1; j < (n-i); j++){
-               if(associations.get(j-1).getDate().compareTo(associations.get(j).getDate()) > 0){
-                    current = associations.get(j-1);
-                    associations.set(j - 1, associations.get(j));
-                    associations.set(j, current);
-                }
-
-            }
+               if((associations.get(j-1).getDate() != null) && (associations.get(j).getDate() != null)){
+                    if(associations.get(j-1).getDate().compareTo(associations.get(j).getDate()) > 0){
+                        current = associations.get(j-1);
+                        associations.set(j - 1, associations.get(j));
+                        associations.set(j, current);
+                    }
+               }
+//render any associatons with a null date last
+               else if (associations.get(j-1).getDate() == null){
+                   current = associations.get(j-1);
+                   associations.set(j - 1, associations.get(j));
+                   associations.set(j, current);
+               }
+           }
         }
     }
 }
