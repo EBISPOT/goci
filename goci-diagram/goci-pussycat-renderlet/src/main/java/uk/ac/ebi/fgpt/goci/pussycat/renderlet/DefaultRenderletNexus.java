@@ -123,16 +123,14 @@ public class DefaultRenderletNexus implements RenderletNexus {
         OWLOntology ontology = reasoner.getRootOntology();
 
         getLog().trace("There are " + renderlets.size() + " registered renderlets");
+        Set<OWLNamedIndividual> individuals = reasoner.getInstances(classExpression, false).getFlattened();
+        getLog().debug("There are " + individuals.size() + " owl individuals that satisfy the expression " +
+                classExpression);
 
         if(renderedEntities.size() == 0){
             renderChromosomes(svgBuilder);
 
-            Set<OWLNamedIndividual> individuals = reasoner.getInstances(classExpression, false).getFlattened();
-            getLog().debug("There are " + individuals.size() + " owl individuals that satisfy the expression " +
-                    classExpression);
-
             ArrayList<String> renderingOrder =  buildTraitMap(individuals, ontology);
-
             getLog().debug("Starting rendering of trait associations");
             for(String band : renderingOrder){
                 ArrayList<Association> assocs = bandLocations.get(band).getAssociations();
@@ -177,6 +175,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
         }
         else{
          /*PUT TOGETHER SVG FROM EXISTING ELEMENTS*/
+
         }
 
         return svgBuilder.getSVG();
