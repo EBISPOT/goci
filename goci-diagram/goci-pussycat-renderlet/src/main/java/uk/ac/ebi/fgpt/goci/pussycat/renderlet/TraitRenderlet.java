@@ -186,9 +186,9 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
                                 OWLOntology ontology,
                                 RenderletNexus nexus,
                                 OWLNamedIndividual association) {
-        String traitName = null;
+        String traitName;
 
-        IRI traitClass = getTraitClass(individual, ontology);
+  /*      IRI traitClass = getTraitClass(individual, ontology);
         if (traitClass.toString().equals(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI)) {
             OWLDataProperty has_name = nexus.getManager().getOWLDataFactory().getOWLDataProperty(
                     IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
@@ -201,6 +201,18 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
             }
         }
         else {
+            traitName = nexus.getEfoLabels().get(traitClass);
+        }      */
+
+        OWLDataProperty has_name = nexus.getManager().getOWLDataFactory().getOWLDataProperty(IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
+
+        if(association.getDataPropertyValues(has_name,ontology).size() != 0){
+            OWLLiteral name = association.getDataPropertyValues(has_name,ontology).iterator().next();
+            traitName = name.getLiteral();
+        }
+        else{
+            getLog().warn("Trait " + individual + " has no name");
+            IRI traitClass = getTraitClass(individual, ontology);
             traitName = nexus.getEfoLabels().get(traitClass);
         }
 

@@ -323,7 +323,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
 
     public String getTraitName(OWLNamedIndividual trait, OWLOntology ontology, OWLNamedIndividual association){
         String traitName = null;
-        OWLClassExpression[] allTypes = trait.getTypes(ontology).toArray(new OWLClassExpression[0]);
+ /*       OWLClassExpression[] allTypes = trait.getTypes(ontology).toArray(new OWLClassExpression[0]);
 
         for(int j = 0; j < allTypes.length; j++){
             OWLClass typeClass = allTypes[j].asOWLClass();
@@ -340,6 +340,23 @@ public class DefaultRenderletNexus implements RenderletNexus {
                 }
             }
             else{
+                traitName = efoLabels.get(typeIRI);
+            }
+        }       */
+
+        OWLDataProperty has_name = manager.getOWLDataFactory().getOWLDataProperty(IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
+
+        if(association.getDataPropertyValues(has_name,ontology).size() != 0){
+            OWLLiteral name = association.getDataPropertyValues(has_name,ontology).iterator().next();
+            traitName = name.getLiteral();
+        }
+        else{
+            getLog().warn("Trait " + trait + " has no name");
+
+            OWLClassExpression[] allTypes = trait.getTypes(ontology).toArray(new OWLClassExpression[0]);
+            for(int j = 0; j < allTypes.length; j++){
+                OWLClass typeClass = allTypes[j].asOWLClass();
+                IRI typeIRI = typeClass.getIRI();
                 traitName = efoLabels.get(typeIRI);
             }
         }
