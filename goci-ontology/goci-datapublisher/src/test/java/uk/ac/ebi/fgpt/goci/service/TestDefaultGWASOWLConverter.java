@@ -262,7 +262,7 @@ public class TestDefaultGWASOWLConverter extends TestCase {
             return 0;
         }
 
-        public String getUnmappedGWASLabel() {
+        public String getGWASCuratorLabel() {
             return "chromosome";
         }
     }

@@ -8,8 +8,7 @@ import org.semanticweb.owlapi.model.OWLClass;
  * the source publication is present, and the trait is described here with an OWL class derived from <a
  * href="http://www.ebi.ac.uk/efo>EFO</a>
  *
- * @author Tony Burdett
- * Date 24/01/12
+ * @author Tony Burdett Date 24/01/12
  */
 public interface TraitAssociation {
     /**
@@ -40,7 +39,7 @@ public interface TraitAssociation {
     /**
      * Gets the EFO class that represents the trait identified in this association.  In cases where the trait is linked
      * to the "Experimental Factor" class from EFO  ('http://www.ebi.ac.uk/efo/EFO_0000001'), you can use {@link
-     * #getUnmappedGWASLabel()} to return the trait name that was asserted in the GWAS catalog.
+     * #getGWASCuratorLabel} to return the trait name that was asserted in the GWAS catalog.
      *
      * @return the associated trait (as an EFO class)
      */
@@ -54,13 +53,13 @@ public interface TraitAssociation {
     float getPValue();
 
     /**
-     * Gets the label declared in the GWAS catalog in cases where it could not be mapped to an ontology class.
-     * Generally, you will only need to use this method in cases where {@link #getAssociatedTrait()} throws an {@link
-     * uk.ac.ebi.fgpt.goci.exception.MissingOntologyTermException}, but if you are interested in the precise trait named
-     * used in the GWAS database you can get it using this method.
+     * Gets the label declared by a curator in the GWAS catalog. This may or may not exactly match the label of the
+     * OWLClass obtained by calling {@link #getAssociatedTrait()}.  You will need to use this method to obtain useful
+     * information in cases where {@link #getAssociatedTrait()} throws an {@link uk.ac.ebi.fgpt.goci.exception.MissingOntologyTermException},
+     * but if you are interested in the precise trait named used in the GWAS database you can get it using this method.
      *
      * @return the trait name as asserted in the underlying GWAS catalog data, probably taken directly from the source
      *         publication
      */
-    String getUnmappedGWASLabel();
+    String getGWASCuratorLabel();
 }

@@ -399,18 +399,16 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                 issuedWarnings.add(warning);
             }
             traitClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI));
-
-            // and also add the gwas label to the individual so we don't lose it
-            OWLDataProperty has_gwas_trait_name = getDataFactory().getOWLDataProperty(
-                    IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
-
-            // assert pValue relation
-            OWLLiteral gwasTrait = getDataFactory().getOWLLiteral(association.getUnmappedGWASLabel());
-            OWLDataPropertyAssertionAxiom gwas_trait_relation =
-                    getDataFactory().getOWLDataPropertyAssertionAxiom(has_gwas_trait_name, taIndiv, gwasTrait);
-            AddAxiom add_gwas_trait_name = new AddAxiom(ontology, gwas_trait_relation);
-            getManager().applyChange(add_gwas_trait_name);
         }
+
+        // and also add the gwas label to the individual so we don't lose curated data
+        OWLDataProperty has_gwas_trait_name = getDataFactory().getOWLDataProperty(
+                IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
+        OWLLiteral gwasTrait = getDataFactory().getOWLLiteral(association.getGWASCuratorLabel());
+        OWLDataPropertyAssertionAxiom gwas_trait_relation =
+                getDataFactory().getOWLDataPropertyAssertionAxiom(has_gwas_trait_name, taIndiv, gwasTrait);
+        AddAxiom add_gwas_trait_name = new AddAxiom(ontology, gwas_trait_relation);
+        getManager().applyChange(add_gwas_trait_name);
 
         // assert class membership
         OWLClassAssertionAxiom traitClassAssertion =

@@ -45,13 +45,8 @@ public class TraitAssociationDAO extends Initializable {
 
     private Map<String, Set<SingleNucleotidePolymorphism>> snpMap;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
     private Logger snpLogger = LoggerFactory.getLogger("unmapped.snp.log");
     private Logger traitLogger = LoggerFactory.getLogger("unmapped.trait.log");
-
-    protected Logger getLog() {
-        return log;
-    }
 
     public TraitAssociationDAO() {
         this.snpMap = new HashMap<String, Set<SingleNucleotidePolymorphism>>();
@@ -178,7 +173,7 @@ public class TraitAssociationDAO extends Initializable {
         }
 
         private void mapTrait() throws ObjectMappingException {
-//if there is no mapped efoURI found the catalogue database
+            // if there is no mapped efoURI found the catalogue database
             if(efoURI == null){
                 Collection<OWLClass>traitClasses = getOntologyDAO().getOWLClassesByLabel(traitName);
 
@@ -242,7 +237,7 @@ public class TraitAssociationDAO extends Initializable {
                     this.trait = traitClasses.iterator().next();
                 }
             }
-//if there is a specified URI, get it
+            // if there is a specified URI, get it
             else{
                 this.trait = getOntologyDAO().getOWLClassByURI(efoURI);
                 getLog().debug("Trait " + traitName + " has a mapping in the catalogue database");
@@ -280,7 +275,7 @@ public class TraitAssociationDAO extends Initializable {
             return pValue;
         }
 
-        public String getUnmappedGWASLabel() {
+        public String getGWASCuratorLabel() {
             return traitName;
         }
 
