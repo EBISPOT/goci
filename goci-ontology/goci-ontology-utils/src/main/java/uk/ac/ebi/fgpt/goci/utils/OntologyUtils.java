@@ -2,8 +2,10 @@ package uk.ac.ebi.fgpt.goci.utils;
 
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.QNameShortFormProvider;
+import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.ac.ebi.fgpt.goci.exception.UnexpectedOntologyStructureException;
 
 import java.net.URI;
 import java.util.Set;
@@ -20,7 +22,6 @@ public class OntologyUtils {
     private static Logger getLog() {
         return log;
     }
-
 
     public static void loadImports(final OWLOntologyManager manager, OWLOntology ontology)
             throws UnloadableImportException {
@@ -99,6 +100,29 @@ public class OntologyUtils {
     public static String getShortForm(OWLEntity entity) {
         QNameShortFormProvider shortener = new QNameShortFormProvider();
         return shortener.getShortForm(entity);
+    }
+
+    public static String getClassLabel(OWLOntology ontology, OWLClass cls) {
+        OWLDataFactory factory = ontology.getOWLOntologyManager().getOWLDataFactory();
+        OWLAnnotationProperty label = factory.getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
+
+        String className = null;
+        for (OWLAnnotation annotation : cls.getAnnotations(ontology, label)) {
+            if (annotation.getValue() instanceof OWLLiteral) {
+                OWLLiteral val = (OWLLiteral) annotation.getValue();
+                className = val.getLiteral();
+            }
+            if (cls.getAnnotations(ontology, label).size() != 1) {
+                throw new UnexpectedOntologyStructureException("More than one label for class " + cls);
+            }
+        }
+
+        if (className != null) {
+            return className;
+        }
+        else {
+            throw new UnexpectedOntologyStructureException("There is no label for class " + cls);
+        }
     }
 
     private static void recursivelyLoadImports(OWLOntologyManager manager, OWLOntology ontology)

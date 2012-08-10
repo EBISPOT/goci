@@ -10,10 +10,10 @@
     </parent>
 
     <groupId>uk.ac.ebi.fgpt</groupId>
-    <artifactId>goci-datapublisher</artifactId>
+    <artifactId>goci-kb-metrics</artifactId>
     <version>0.8-SNAPSHOT</version>
 
-    <name>GOCI DataPublisher (converts GWAS data to OWL)</name>
+    <name>GOCI KnowledgeBase data metrics</name>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
 
     <properties>
@@ -26,7 +26,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.3</version>
                 <configuration>
-                    <finalName>goci-datapublisher</finalName>
+                    <finalName>goci-kb-metrics</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
                         <descriptor>src/main/assembly/goci-assembly-descriptor.xml</descriptor>
@@ -34,7 +34,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>uk.ac.ebi.fgpt.goci.GOCIDataPublisherDriver</mainClass>
+                            <mainClass>uk.ac.ebi.fgpt.goci.KBMetricsDriver</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -59,13 +59,6 @@
             <version>0.8-SNAPSHOT</version>
         </dependency>
 
-        <!-- spring jdbc for database access -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <version>3.0.3.RELEASE</version>
-        </dependency>
-
         <!-- OWL API and HermiT reasoner, for converting GWAS concepts -->
         <dependency>
             <groupId>org.semanticweb.owlapi</groupId>
@@ -76,23 +69,6 @@
             <groupId>hermit</groupId>
             <artifactId>hermit</artifactId>
             <version>1.3.4</version>
-        </dependency>
-
-        <!-- oracle JDBC drivers for db comms -->
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>ojdbc6</artifactId>
-            <version>11.2.0.3</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-            <version>1.2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-pool</groupId>
-            <artifactId>commons-pool</artifactId>
-            <version>1.5.4</version>
         </dependency>
 
         <!-- commons-cli for command line functionality -->
@@ -117,19 +93,5 @@
         </dependency>
 
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>fgservers</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-
-            <properties>
-                <java.location>/ebi/research/software/Linux_x86_64/opt/java/jdk1.7/bin/java</java.location>
-                <java.args>-Dhttp.proxyHost=wwwcache.ebi.ac.uk -Dhttp.proxyPort=3128 -Dhttp.nonProxyHosts=*.ebi.ac.uk -DproxyHost=wwwcache.ebi.ac.uk -DproxyPort=3128 -DproxySet=true -Xmx16g</java.args>
-            </properties>
-        </profile>
-    </profiles>
 
 </project>
