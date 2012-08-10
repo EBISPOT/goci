@@ -29,6 +29,7 @@
         <fileSet>
             <directory>src/main/bin/</directory>
             <outputDirectory>bin/</outputDirectory>
+            <directoryMode>0755</directoryMode>
             <fileMode>0755</fileMode>
             <filtered>true</filtered>
         </fileSet>
