@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>uk.ac.ebi.fgpt</groupId>
@@ -65,9 +67,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.8</version>
-                <!--<configuration>-->
-                    <!--<skip>true</skip>-->
-                <!--</configuration>-->
                 <reportSets>
                     <reportSet>
                         <id>aggregate</id>
@@ -107,10 +106,6 @@
 
     <!-- Version control (project hosted on GitHub -->
     <scm>
-        <!--<connection>scm:git:https://github.com/tburdett/goci</connection>-->
-        <!--<developerConnection>scm:git:https://github.com/tburdett/goci</developerConnection>-->
-        <!--<url>https://github.com/tburdett/goci</url>-->
-        <!-- TODO: using git protocol instead of https to avoid username prompting, not sure if this works at release? -->
         <connection>scm:git:git@github.com:tburdett/goci.git</connection>
         <developerConnection>scm:git:git@github.com:tburdett/goci.git</developerConnection>
         <url>git@github.com:tburdett/goci.git</url>
@@ -228,4 +223,31 @@
         <module>goci-ontology</module>
         <module>goci-diagram</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+            <properties>
+                <java.location>java</java.location>
+                <java.args />
+            </properties>
+        </profile>
+
+        <profile>
+            <id>fgservers</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+
+            <properties>
+                <java.location>/ebi/research/software/Linux_x86_64/opt/java/jdk1.7/bin/java</java.location>
+                <java.args>-Dhttp.proxyHost=wwwcache.ebi.ac.uk -Dhttp.proxyPort=3128 -Dhttp.nonProxyHosts=*.ebi.ac.uk -DproxyHost=wwwcache.ebi.ac.uk -DproxyPort=3128 -DproxySet=true</java.args>
+            </properties>
+        </profile>
+    </profiles>
+
 </project>
