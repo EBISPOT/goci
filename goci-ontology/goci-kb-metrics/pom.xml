@@ -24,8 +24,10 @@
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.3</version>
                 <configuration>
                     <finalName>goci-kb-metrics</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
                         <descriptor>src/main/assembly/goci-assembly-descriptor.xml</descriptor>
                     </descriptors>
