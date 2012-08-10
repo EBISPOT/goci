@@ -2,6 +2,7 @@ package uk.ac.ebi.fgpt.goci.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import uk.ac.ebi.fgpt.goci.lang.FilterProperties;
 import uk.ac.ebi.fgpt.goci.lang.UniqueID;
 import uk.ac.ebi.fgpt.goci.model.SingleNucleotidePolymorphism;
 
@@ -17,7 +18,7 @@ import java.util.Collection;
  * Date 24/01/12
  */
 public class SingleNucleotidePolymorphismDAO {
-    private static final String SNP_SELECT =
+    private static final String SNP_SELECT_MAIN =
             "select distinct ID, SNP, REGION, CHROMOSOME, LOCATION from (" +
                     "select s.ID, s.SNP, r.REGION, g.CHR_ID as CHROMOSOME, g.CHR_POS as LOCATION from GWASSNP s " +
                     "join GWASSNPXREF sx on s.ID=sx.SNPID " +
@@ -25,8 +26,9 @@ public class SingleNucleotidePolymorphismDAO {
                     "join GWASREGIONXREF rx on rx.GWASSTUDIESSNPID=g.ID " +
                     "join GWASREGION r on r.ID=rx.REGIONID " +
                     "where g.ID is not null and s.SNP is not null and r.REGION is not null " +
-                    "and g.CHR_ID is not null and g.CHR_POS is not null " +
-                    "and g.PVALUEFLOAT < 5E-8)";
+                    "and g.CHR_ID is not null and g.CHR_POS is not null ";
+
+    private static final String SNP_SELECT_END = ")";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -39,7 +41,14 @@ public class SingleNucleotidePolymorphismDAO {
     }
 
     public Collection<SingleNucleotidePolymorphism> retrieveAllSNPs() {
-        return getJdbcTemplate().query(SNP_SELECT, new SNPMapper());
+        if(FilterProperties.getPvalueFilter() == null){
+            String snp_select = SNP_SELECT_MAIN.concat(SNP_SELECT_END);
+            return getJdbcTemplate().query(snp_select, new SNPMapper());        }
+        else{
+            String pval_filter = "and g.PVALUEFLOAT <= " + FilterProperties.getPvalueFilter();
+            String filtered_query = SNP_SELECT_MAIN.concat(pval_filter).concat(SNP_SELECT_END);
+            return getJdbcTemplate().query(filtered_query, new SNPMapper());
+        }
     }
 
 
