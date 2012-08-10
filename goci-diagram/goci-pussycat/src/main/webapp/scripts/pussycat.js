@@ -9,7 +9,7 @@ var dragOffsetY = 0;
 var renderingComplete = false;
 
 function init() {
-    $(document).ready(function () {
+    $(document).ready(function() {
         if (enableDebugging) {
             $("#logitem").show();
             $("#logtab").show();
@@ -29,7 +29,7 @@ function init() {
         // resize the page so it fills window
         resizeDisplay();
         // register resize handler so that the page resizes when the window size changes
-        $(window).resize(function () {
+        $(window).resize(function() {
             resizeDisplay();
         });
 
@@ -40,12 +40,12 @@ function init() {
         $("#retrybutton").click(renderDiagram);
 
         // bind mousemove handler
-        $(document).mousemove(function (ev) {
+        $(document).mousemove(function(ev) {
             $('#tooltip').css({"left":ev.pageX + 20, "top":ev.pageY});
         });
 
         // bind mousewheel event handler
-        $('#diagramareacontent').mousewheel(function (ev, delta) {
+        $('#diagramareacontent').mousewheel(function(ev, delta) {
             if (delta > 0) {
                 currentScale++;
                 zoomIn();
@@ -58,14 +58,14 @@ function init() {
 
         // bind drag handler
         $('#diagramareacontent')
-            .drag(function (ev, dd) {
-                      $("#xOffset").html(dd.deltaX);
-                      $("#yOffset").html(dd.deltaY);
-                      pan(dd.deltaX, dd.deltaY);
-                  }, {relative:true})
-            .drag("end", function (ev, dd) {
-                      updateOffset();
-                  }
+                .drag(function(ev, dd) {
+                          $("#xOffset").html(dd.deltaX);
+                          $("#yOffset").html(dd.deltaY);
+                          pan(dd.deltaX, dd.deltaY);
+                      }, {relative:true})
+                .drag("end", function(ev, dd) {
+                          updateOffset();
+                      }
         );
 
         // initialize slider
@@ -76,17 +76,17 @@ function init() {
                               orientation:"vertical",
                               max:maxScale,
                               value:currentScale,
-                              slide:function (event, ui) {
+                              slide:function(event, ui) {
                                   slideZoom(ui.value);
                               }
                           });
         $("#zoomInButton").button();
-        $("#zoomInButton").click(function () {
+        $("#zoomInButton").click(function() {
             currentScale++;
             zoomIn();
         });
         $("#zoomOutButton").button();
-        $("#zoomOutButton").click(function () {
+        $("#zoomOutButton").click(function() {
             currentScale--;
             zoomOut();
         });
@@ -100,7 +100,7 @@ function resizeDisplay() {
     var bodyMargin = parseInt($('body').css('margin-top')) + parseInt($('body').css('margin-bottom'));
     var pageMargin = parseInt($("#page_wrapper").css('margin-top')) + parseInt($("#page_wrapper").css('margin-bottom'));
     var pageBorder = parseInt($("#page_wrapper").css('border-top-width')) +
-                     parseInt($("#page_wrapper").css('border-bottom-width'));
+            parseInt($("#page_wrapper").css('border-bottom-width'));
     var offset = bodyMargin + pageMargin + pageBorder;
 
     // update the size of the page_wrapper to fill document
@@ -114,7 +114,7 @@ function resizeDisplay() {
 
     // update the size of tabcontent to match the size of max tabs child
     var maxPadding = 0;
-    $('.tabcontent').each(function (i) {
+    $('.tabcontent').each(function(i) {
         var padding = parseFloat($(this).css("padding-top")) + parseFloat($(this).css("padding-bottom"));
         if (padding > maxPadding) {
             maxPadding = padding;
@@ -124,7 +124,7 @@ function resizeDisplay() {
 
     // update the diagramarea to fill the available space
     var availableHeight = $("#diagramtab").height() -
-                          ($("#diagramarea").position().top - $("#diagramtab").position().top);
+            ($("#diagramarea").position().top - $("#diagramtab").position().top);
     $("#diagramarea").height(availableHeight);
     log("Window resized: new size = " + $("#page_wrapper").height() + ", " + $("#page_wrapper").width());
 
@@ -146,7 +146,7 @@ function resizeDisplay() {
         var newViewBox = elements[0] + " " + elements[1] + " " + newWidth + " " + newHeight;
 //        document.getElementById('goci-svg').setAttribute("viewBox", newViewBox); // this uses server SVG size.  If commented out, default view is zoomed
         log("Adjusted SVG dimensions - SVG now width = " + width + ", height = " + height + ", viewBox = " +
-            newViewBox);
+                    newViewBox);
     }
     catch (ex) {
         log("Failed to adjust SVG dimensions: " + ex);
@@ -171,9 +171,8 @@ function renderDiagram() {
         log("Rendering GWAS diagram - calling api/views/gwasdiagram...");
         $.ajax({
                    url:'api/views/gwasdiagram',
-
-                   //        url:'api/views/gwasdiagram/pre2011',
                    dataType:'html',
+                   beforeSend:showSVGLoadWhirly,
                    success:insertSVG,
                    error:serverCommunicationFail
                });
@@ -181,6 +180,18 @@ function renderDiagram() {
     else {
         log("Rendering already complete, update request not sent");
     }
+}
+
+function showSVGLoadWhirly() {
+    $("#diagramareacontent").html(
+            "<div id=\"svgload\" style=\"text-align: center;\">" +
+                    "<p>Getting GWAS Diagram from server...</p>" +
+                    "<img src=\"images/svg-load.gif\" alt=\"Please wait - diagram loading\"/><br/>" +
+                    "<p><a href=\"images/GWASdiagram.png\">" +
+                    "A static version of the diagram in PNG format can be found here" +
+                    "</a>" +
+                    "</p>" +
+                    "</div>");
 }
 
 function insertSVG(svg) {
@@ -197,6 +208,7 @@ function insertSVG(svg) {
 
 function serverCommunicationFail(jqXHR, textStatus, errorThrown) {
     // show diagram area error div
+    $("#diagramareacontent").html("");
     $("#diagramareaerror").css({"display":"block"});
     $("#diagramareaerrortext").html(jqXHR.responseText);
     log("Failed to acquire SVG from server - " + jqXHR.responseText);
@@ -215,8 +227,8 @@ function filterTraits(traitName) {
     hideAllTraits();
 
     // expand query to get all filtered sets
-    $.getJSON('api/views/filter/' + traitName, function (data) {
-        $.each(data, function (index, val) {
+    $.getJSON('api/views/filter/' + traitName, function(data) {
+        $.each(data, function(index, val) {
             try {
                 var trait = val.replace(":", "\\:");
                 log("Showing trait '" + trait + "' element");
