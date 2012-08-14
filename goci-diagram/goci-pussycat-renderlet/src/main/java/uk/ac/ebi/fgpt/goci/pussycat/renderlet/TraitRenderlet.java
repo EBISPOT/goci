@@ -301,6 +301,7 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
         }
         else {
             colour = "magenta";
+            getLog().error("Could not identify a suitable colour category for trait " + trait);
         }
 
 

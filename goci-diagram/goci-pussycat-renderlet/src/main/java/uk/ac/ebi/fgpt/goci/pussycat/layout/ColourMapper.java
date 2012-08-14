@@ -34,15 +34,6 @@ public class ColourMapper {
 
     public static final HashMap<String, String> COLOUR_MAP = new HashMap<String, String>();
 
-//    static {
-//        COLOUR_MAP.put(EXPERIMENTAL_FACTOR, "#2166AC");
-//        COLOUR_MAP.put(CARDIO_VASCULAR, "#A50026");
-//        COLOUR_MAP.put(NEURO, "#FDAE61");
-//        COLOUR_MAP.put(MENTAL, "#F46D43");
-//        COLOUR_MAP.put(SKELETAL, "#D9EF8B");
-//        COLOUR_MAP.put(NEOPLASM, "#D73027");
-//        COLOUR_MAP.put(MEASUREMENT, "#006837");
-//    }
 
     static {
         COLOUR_MAP.put(EXPERIMENTAL_FACTOR, /*"#663300" "#FFFF33" "#BEBEBE"*/ "#FFFFFF");
