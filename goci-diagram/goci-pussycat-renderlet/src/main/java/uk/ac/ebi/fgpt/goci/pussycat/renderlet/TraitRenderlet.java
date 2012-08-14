@@ -287,21 +287,27 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
         OWLClass leaf = null;
         int largest = 0;
 
-        for (OWLClass t : allTypes) {
-            String iri = t.getIRI().toString();
-            int parents = reasoner.getSuperClasses(t, false).getFlattened().size();
+        if(allTypes.size() == 1){
+            colour = "#FFFFFF";
+            getLog().debug("Trait " + trait + " is not mapped");
+        }
+        else{
+            for (OWLClass t : allTypes) {
+                String iri = t.getIRI().toString();
+                int parents = reasoner.getSuperClasses(t, false).getFlattened().size();
 
-            if (parents > largest && available.contains(iri)) {
-                largest = parents;
-                leaf = t;
+                if (parents > largest && available.contains(iri)) {
+                    largest = parents;
+                    leaf = t;
+                }
             }
-        }
-        if (leaf != null) {
-            colour = ColourMapper.COLOUR_MAP.get(leaf.getIRI().toString());
-        }
-        else {
-            colour = "magenta";
-            getLog().error("Could not identify a suitable colour category for trait " + trait);
+            if (leaf != null) {
+                colour = ColourMapper.COLOUR_MAP.get(leaf.getIRI().toString());
+            }
+            else {
+                colour = "magenta";
+                getLog().error("Could not identify a suitable colour category for trait " + trait);
+            }
         }
 
 
