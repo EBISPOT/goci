@@ -13,6 +13,7 @@ import uk.ac.ebi.fgpt.goci.dao.TraitAssociationDAO;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.exception.ObjectMappingException;
 import uk.ac.ebi.fgpt.goci.exception.OntologyTermException;
+import uk.ac.ebi.fgpt.goci.lang.FilterProperties;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.fgpt.goci.model.Study;
@@ -104,7 +105,9 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
 //            validateGWASData(studies);
 
         // if studies limit is not set, convert all data, else filter to first n studies and associated data
-        if (getStudiesLimit() == -1) {
+        if (getStudiesLimit() == -1 &&
+                FilterProperties.getDateFilter() == null &&
+                FilterProperties.getPvalueFilter() == null) {
             // grab all other data from the DAO
             getLog().debug("Fetching traits that require conversion to OWL using TraitAssociationDAO...");
             Collection<TraitAssociation> traitAssociations = getTraitAssociationDAO().retrieveAllTraitAssociations();
@@ -136,8 +139,9 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
         Collection<SingleNucleotidePolymorphism> filteredSNPs = new ArrayList<SingleNucleotidePolymorphism>();
 
         int count = 0;
+        int studyLimit = getStudiesLimit() == -1 ? Integer.MAX_VALUE : getStudiesLimit();
         Iterator<Study> studyIterator = studies.iterator();
-        while (count < getStudiesLimit() && studyIterator.hasNext()) {
+        while (count < studyLimit && studyIterator.hasNext()) {
             Study nextStudy = studyIterator.next();
             filteredStudies.add(nextStudy);
             for (TraitAssociation nextTA : nextStudy.getIdentifiedAssociations()) {
