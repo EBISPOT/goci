@@ -58,7 +58,7 @@
 <div id="tabs">
 <div id="diagramtab" class="tabcontent">
     <div>This diagram shows all SNP-trait associations with a p-value smaller than 5 x 10<sup>-8</sup>, published in the
-        catalogue up to June 2012. For information on how to navigate the diagram, see the help tab.
+        catalogue up to the end of June 2012. For information on how to navigate the diagram, see the help tab.
     </div>
 
     <div id="diagramarea" class="ui-widget-content">
@@ -81,108 +81,82 @@
             width="800">
         <title>Colour key</title>
         <g transform="scale(1.5,1.5)">
-            <circle id="EXPERIMENTAL_FACTOR"
+
+            <circle id="CARDIO_VASCULAR" fill="#8DD3C7" r="5" cx="10" cy="10" stroke="black" stroke-width="0.5"></circle>
+            <text x="20" y="12" font-family="Verdana" font-size="8" fill="black">Cardio vascular disorder</text>
+            <circle id="NEURO" fill="#FFFFB3" r="5" cx="10" cy="25" stroke="black" stroke-width="0.5"></circle>
+            <text x="20" y="27" font-family="Verdana" font-size="8" fill="black">Neurological disorder</text>
+            <circle id="IMMUNE" fill="#BEBADA" r="5" cx="10" cy="40" stroke="black" stroke-width="0.5"></circle>
+            <text x="20" y="42" font-family="Verdana" font-size="8" fill="black">Immune system disorder</text>
+            <circle id="DIGESTIVE" fill="#80B1D3" r="5" cx="10" cy="55" stroke="black" stroke-width="0.5"></circle>
+            <text x="20" y="57" font-family="Verdana" font-size="8" fill="black">Digestive system disorder</text>
+            <circle id="NEOPLASM" fill="#FB8072" r="5" cx="10" cy="70" stroke="black" stroke-width="0.5"></circle>
+            <text x="20" y="72" font-family="Verdana" font-size="8" fill="black">Cancer</text>
+
+            <circle id="METABOLIC" fill="#FDB462" r="5" cx="10" cy="85" stroke="black" stroke-width="0.5"></circle>
+            <text x="20" y="87" font-family="Verdana" font-size="8" fill="black">Metabolic disorder</text>
+
+            <circle id="DISEASE" fill="#FCCDE5" r="5" cx="10" cy="100" stroke="black" stroke-width="0.5"></circle>
+            <text x="20" y="102" font-family="Verdana" font-size="8" fill="black">Other disease [1]</text>
+
+            <circle id="BODY_MSR" fill="#66CCFF" r="5" cx="10" cy="115" stroke="black" stroke-width="0.5"></circle>
+            <text x="20" y="117" font-family="Verdana" font-size="8" fill="black">Body measurements</text>
+
+            <circle id="LIPID_LIPOPROT_MSR" fill="#FF3399" r="5" cx="10" cy="130" stroke="black" stroke-width="0.5"></circle>
+            <text x="20" y="132" font-family="Verdana" font-size="8" fill="black">Lipid or lipoprotein measurement</text>
+
+            <circle id="CARDIO_MSR" fill="#BC80BD" r="5" cx="10" cy="145" stroke="black" stroke-width="0.5"></circle>
+            <text x="20" y="147" font-family="Verdana" font-size="8" fill="black">Cardio vascular measurements</text>
+
+            <circle id="HEMATOLOGICAL_MSR" fill="#FFED6F" r="5" cx="10" cy="160" stroke="black" stroke-width="0.5"></circle>
+            <text x="20" y="162" font-family="Verdana" font-size="8" fill="black">Hematological measurement</text>
+
+            <circle id="INFLAMMATORY_MSR" fill="#006699" r="5" cx="10" cy="175" stroke="black" stroke-width="0.5"></circle>
+            <text x="20" y="177" font-family="Verdana" font-size="8" fill="black">Inflammatory marker measurement</text>
+
+            <circle id="LIVER_ENZYME" fill="#669900" r="5" cx="10" cy="190" stroke="black" stroke-width="0.5"></circle>
+            <text x="20" y="192" font-family="Verdana" font-size="8" fill="black">Liver enzyme measurement</text>
+
+            <circle id="MEASUREMENT" fill="#B3DE69" r="5" cx="10" cy="205 115" stroke="black" stroke-width="0.5"></circle>
+            <text x="20" y="207" font-family="Verdana" font-size="8" fill="black">Other measurement [2]</text>
+
+            <circle id="CHEMICAL" fill="#CCEBC5" r="5" cx="10" cy="220" stroke="black" stroke-width="0.5"></circle>
+            <text x="20" y="222" font-family="Verdana" font-size="8" fill="black">Chemical compound</text>
+
+            <circle id="BIO_PROCESS" fill="#B7704C" r="5" cx="10" cy="235" stroke="black" stroke-width="0.5"></circle>
+            <text x="20" y="237" font-family="Verdana" font-size="8" fill="black">Biological process</text>
+
+            <circle id="OTHER" fill="#A10000" r="5" cx="10" cy="250" stroke="black" stroke-width="0.5"></circle>
+            <text x="20" y="252" font-family="Verdana" font-size="8" fill="black">Miscellaneous traits</text>
+
+            <circle id="UNMAPPED"
                     fill="#FFFFFF"
                     r="5"
                     cx="10"
-                    cy="10"
+                    cy="265"
                     stroke="black"
                     stroke-width="0.5"></circle>
-            <text x="20" y="12" font-family="Verdana" font-size="8" fill="black"> Trait mapping in progress</text>
+            <text x="20" y="267" font-family="Verdana" font-size="8" fill="black"> Trait mapping in progress</text>
 
-            <circle id="CARDIO_VASCULAR"
-                    fill="#8DD3C7"
-                    r="5"
-                    cx="10"
-                    cy="25"
-                    stroke="black"
-                    stroke-width="0.5"></circle>
-            <text x="20" y="27" font-family="Verdana" font-size="8" fill="black"> Cardio vascular disorder</text>
 
-            <circle id="NEURO" fill="#FFFFB3" r="5" cx="10" cy="40" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="42" font-family="Verdana" font-size="8" fill="black"> Neurological disorder</text>
-
-            <circle id="MENTAL" fill="#BEBADA" r="5" cx="10" cy="55" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="57" font-family="Verdana" font-size="8" fill="black"> Mental disorder</text>
-
-            <circle id="NEOPLASM" fill="#FB8072" r="5" cx="10" cy="85" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="87" font-family="Verdana" font-size="8" fill="black"> Cancer</text>
-
-            <circle id="SKELETAL" fill="#80B1D3" r="5" cx="10" cy="70" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="72" font-family="Verdana" font-size="8" fill="black"> Skeletal disorder</text>
-
-            <circle id="CONGENITAL" fill="#FDB462" r="5" cx="10" cy="100" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="102" font-family="Verdana" font-size="8" fill="black"> Congenital disorder</text>
-
-            <circle id="GENETIC" fill="#B3DE69" r="5" cx="10" cy="115" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="117" font-family="Verdana" font-size="8" fill="black"> Genetic disorder</text>
-
-            <circle id="DISEASE" fill="#FCCDE5" r="5" cx="10" cy="130" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="132" font-family="Verdana" font-size="8" fill="black"> Other disease</text>
-
-            <circle id="MEASUREMENT" fill="#66CCFF" r="5" cx="10" cy="145" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="147" font-family="Verdana" font-size="8" fill="black"> Measurement [1]</text>
-
-            <circle id="SIGN_SYMPTOM" fill="#BC80BD" r="5" cx="10" cy="160" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="162" font-family="Verdana" font-size="8" fill="black"> Sign or symptom [2]</text>
-
-            <circle id="MATERIAL_ENTITY"
-                    fill="#CCEBC5"
-                    r="5"
-                    cx="10"
-                    cy="175"
-                    stroke="black"
-                    stroke-width="0.5"></circle>
-            <text x="20" y="177" font-family="Verdana" font-size="8" fill="black"> Material entity [3]</text>
-
-            <circle id="MENTAL_PROCESS"
-                    fill="#FF3399"
-                    r="5"
-                    cx="10"
-                    cy="190"
-                    stroke="black"
-                    stroke-width="0.5"></circle>
-            <text x="20" y="192" font-family="Verdana" font-size="8" fill="black"> Mental process [4]</text>
-
-            <circle id="FUNCTION" fill="#FFED6F" r="5" cx="10" cy="205" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="207" font-family="Verdana" font-size="8" fill="black"> Function [5]</text>
-
-            <circle id="QUALITY" fill="#006699" r="5" cx="10" cy="220" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="222" font-family="Verdana" font-size="8" fill="black"> Quality [6]</text>
-
-            <circle id="BEHAVIOUR" fill="#669900" r="5" cx="10" cy="235" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="237" font-family="Verdana" font-size="8" fill="black"> Behaviour [7]</text>
-
-            <circle id="PHYSIO_PROCESS"
-                    fill="#993300"
-                    r="5"
-                    cx="10"
-                    cy="250"
-                    stroke="black"
-                    stroke-width="0.5"></circle>
-            <text x="20" y="252" font-family="Verdana" font-size="8" fill="black"> Biological process [8]</text>
         </g>
     </svg>
 
+    <p>[1] Includes any kind of disease not included in any of the preceeding categories.</p>
 
-    <p>[1] Includes any kind of measurement, from levels of metabolites or drugs in the blood such as adiponection
-        measurement, to clinical diagnostic tests such as electrocardiography, to body measurements such as height and
-        weight</p>
+    <p>[2] Includes any kind of measurement, from levels of metabolites or drugs in the blood such as adiponection
+        measurement, to clinical diagnostic tests such as electrocardiograph, that is not covered by one of the preceeding categories</p>
 
-    <p>[2] Observable manifestation such as pain or menopause</p>
+    <!--<p>[2] Observable manifestation such as pain or menopause</p>-->
 
-    <p>[3] Includes chemical compounds such as HDL cholesterol or protein, cell types such as neutrophil and organism
-        parts such as corneal structure. <b>This classification is currently undergoing revision!</b></p>
+    <!--<p>[3] Includes chemical compounds such as HDL cholesterol or protein, cell types such as neutrophil and organism-->
+        <!--parts such as corneal structure. <b>This classification is currently undergoing revision!</b></p>-->
 
-    <p>[4] Includes processes such as reasoning and speech recognition.</p>
+    <!--<p>[4] Includes processes such as reasoning and speech recognition.</p>-->
 
-    <p>[5] Trait that describes a characteristic of an individual such as hair colour or eye colour</p>
+    <!--<p>[5] Trait that describes a characteristic of an individual such as hair colour or eye colour</p>-->
 
-    <p>[6] <i>Mapping in progress</i></p>
 
-    <p>[7] <i>Mapping in progress</i></p>
-
-    <p>[8] <i>Mapping in progress</i></p>
 </div>
 
 <div id="helptab" class="tabcontent">
@@ -199,13 +173,13 @@
             cause the rendering process to restart.
         </li>
         <li><b>Number of studies:</b> The beta version of the GWAS diagram shows SNP-trait associations with a p-value
-            smaller than 5 &lowast; 10<sup>-8</sup>, for all studies published in the catalogue up to the beginning of
+            smaller than 5 &lowast; 10<sup>-8</sup>, for all studies published in the catalogue up to the end of
             June 2012.
         </li>
         <li><b>Zooming:</b> There are two ways in which the diagram can be zoomed. The easiest option is to use the
             scroll wheel on the mouse or touch pad on a laptop. Scrolling
             up zooms in and scrolling down zooms out. This feature may not work with all touch pads. Alternatively, the
-            right-hand side of the diagram features a zoom bar which can be
+            left-hand side of the diagram features a zoom bar which can be
             used to generate exactly the same effect, by dragging the little square up or down the bar with the mouse
             pointer.
         </li>

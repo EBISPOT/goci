@@ -29,7 +29,7 @@ public class ColourMapper {
     public static final String BIO_PROCESS = "http://purl.obolibrary.org/obo/GO_0008150";
     public static final String CHEMICAL = "http://purl.obolibrary.org/obo/CHEBI_37577";
 
-    public static final String HEMATOLIGICAL_MSR = EFO_ONTOLOGY_BASE_IRI + "/EFO_0004503";
+    public static final String HEMATOLOGICAL_MSR = EFO_ONTOLOGY_BASE_IRI + "/EFO_0004503";
     public static final String INFLAMMATORY_MSR = EFO_ONTOLOGY_BASE_IRI + "/EFO_0004872";
 
     public static final String LIPID_MSR = EFO_ONTOLOGY_BASE_IRI + "/EFO_0004529";
@@ -52,7 +52,7 @@ public class ColourMapper {
         COLOUR_MAP.put(BODY_MSR, "#66CCFF");
         COLOUR_MAP.put(CARDIO_MSR, "#BC80BD");
         COLOUR_MAP.put(CHEMICAL, "#CCEBC5");
-        COLOUR_MAP.put(HEMATOLIGICAL_MSR, "#FFED6F");
+        COLOUR_MAP.put(HEMATOLOGICAL_MSR, "#FFED6F");
         COLOUR_MAP.put(INFLAMMATORY_MSR, "#006699");
         COLOUR_MAP.put(LIVER_ENZYME, "#669900");
         COLOUR_MAP.put(LIPID_MSR, "#FF3399");
@@ -83,7 +83,7 @@ public class ColourMapper {
         COLOUR_MAP.put(NEOPLASM, "#D4FFFF");
         COLOUR_MAP.put(CARDIO_VASCULAR, "#FF904E");
         COLOUR_MAP.put(METABOLIC, "#A296BF");
-        COLOUR_MAP.put(HEMATOLIGICAL_MSR, "#FFFFA9");
+        COLOUR_MAP.put(HEMATOLOGICAL_MSR, "#FFFFA9");
         COLOUR_MAP.put(MEASUREMENT, "#4069B2");
         COLOUR_MAP.put(CHEMICAL, "#DEFFBF");
         COLOUR_MAP.put(BODY_MSR, "#71B2D0");
@@ -106,7 +106,7 @@ public class ColourMapper {
         COLOUR_MAP.put(NEOPLASM, "#C4583D");
         COLOUR_MAP.put(CARDIO_VASCULAR, "#DEFFBF");
         COLOUR_MAP.put(METABOLIC, "#FF9092");
-        COLOUR_MAP.put(HEMATOLIGICAL_MSR, "#F6EB16");
+        COLOUR_MAP.put(HEMATOLOGICAL_MSR, "#F6EB16");
         COLOUR_MAP.put(MEASUREMENT, "#DEE338");
         COLOUR_MAP.put(CHEMICAL, "#6ABD45");
         COLOUR_MAP.put(BODY_MSR, "#0091BA");
@@ -127,7 +127,7 @@ public class ColourMapper {
         COLOUR_MAP.put(NEOPLASM, "#4463AE");
         COLOUR_MAP.put(CARDIO_VASCULAR, "#EE282B");
         COLOUR_MAP.put(METABOLIC, "#C8473F");
-        COLOUR_MAP.put(HEMATOLIGICAL_MSR, "#996633");
+        COLOUR_MAP.put(HEMATOLOGICAL_MSR, "#996633");
         COLOUR_MAP.put(MEASUREMENT, "#F3FFBF");
         COLOUR_MAP.put(CHEMICAL, "#BD0DF");
         COLOUR_MAP.put(BODY_MSR, "#99CC33");
