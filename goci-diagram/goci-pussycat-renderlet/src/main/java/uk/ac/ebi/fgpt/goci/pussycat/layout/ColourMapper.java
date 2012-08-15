@@ -40,7 +40,7 @@ public class ColourMapper {
 
 
     static {
-        COLOUR_MAP.put(OTHER, "#A10000");
+       COLOUR_MAP.put(OTHER, "#A10000");
         COLOUR_MAP.put(CARDIO_VASCULAR, "#8DD3C7");
         COLOUR_MAP.put(NEURO, "#FFFFB3");
         COLOUR_MAP.put(IMMUNE, "#BEBADA");
@@ -78,7 +78,7 @@ public class ColourMapper {
 
 
         //       Jackie
-/*        COLOUR_MAP.put(LIVER_ENZYME, "#6C7F00");
+        /*COLOUR_MAP.put(LIVER_ENZYME, "#6C7F00");
         COLOUR_MAP.put(BIO_PROCESS, "#7E412D");
         COLOUR_MAP.put(NEOPLASM, "#D4FFFF");
         COLOUR_MAP.put(CARDIO_VASCULAR, "#FF904E");
