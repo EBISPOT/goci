@@ -5,8 +5,6 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.lang.Initializable;
@@ -17,25 +15,19 @@ import java.io.IOException;
 import java.net.URI;
 
 /**
- * /** A reasoner session that uses loads an OWL ontology from the provided resource, and then uses the GOCI
- * DataPublisher to generate the inferred view using the reasoning mechanisms provided by that data publisher.
+ * A reasoner session that uses loads an OWL ontology from the provided resource, and then uses the GOCI DataPublisher
+ * to generate the inferred view using the reasoning mechanisms provided by that data publisher.
  * <p/>
  * The resulting reasoner is cached in-memory using ehcache to provide caching functionality.
  *
  * @author Tony Burdett
- * Date 13/04/12
+ * @date 13/04/12
  */
 public class OntologyLoadingCacheableReasonerSession extends Initializable implements ReasonerSession {
     private OntologyConfiguration configuration;
     private Resource ontologyResource;
     private GWASOWLPublisher publisher;
     private OWLReasoner reasoner;
-
-    private Logger log = LoggerFactory.getLogger(getClass());
-
-    protected Logger getLog() {
-        return log;
-    }
 
     @Override
     protected void doInitialization() throws Exception {

@@ -49,7 +49,7 @@
     </bean>
 
     <bean id="cachingPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.SVGCachingPussycatSession">
-        <property name="cacheDirectory" value="/ebi/microarray/home/fgpt/goci-home/diagram/cache/" />
+        <property name="cacheDirectory" value="/nfs/public/rw/fg/fgpt/goci-home/diagram/cache/" />
         <property name="proxiedSession" ref="proxiedPussycatSession" />
     </bean>
 

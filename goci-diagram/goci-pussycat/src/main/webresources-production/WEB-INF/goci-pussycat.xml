@@ -23,26 +23,27 @@
         </constructor-arg>
     </bean>
 
-    <bean id="reasonerSession"
-          class="uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession"
-          init-method="init">
-        <property name="configuration" ref="config" />
-        <property name="ontologyResource" value="ontology/gwas-diagram-data-20120815.owl" />
-        <property name="publisher" ref="publisher" />
-    </bean>
-
     <bean id="pussycatSessionManager" class="uk.ac.ebi.fgpt.goci.pussycat.manager.DefaultPussycatSessionManager">
         <property name="reasonerSession" ref="reasonerSession" />
         <property name="pussycatSessions">
             <set>
-                <ref bean="pussycatSession" />
+                <ref bean="loadingPussycatSession" />
             </set>
         </property>
     </bean>
 
-    <bean id="pussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.GOCIDataPublisherPussycatSession">
-        <property name="reasonerSession" ref="reasonerSession" />
-        <property name="ontologyConfiguration" ref="config" />
+    <!-- NB: which implementation to use depends on whether
+             a) we are dynamically generating the knowledgebase (uk.ac.ebi.fgpt.goci.pussycat.session.DataPublishingCacheableReasonerSession) or
+             b) statically loading a precanned version (uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession) or
+             c) never recalculating SVG and only loading from cache (uk.ac.ebi.fgpt.goci.pussycat.session.OntologyReasonerSession) -->
+    <bean id="reasonerSession"
+          class="uk.ac.ebi.fgpt.goci.pussycat.session.OntologyReasonerSession"
+          init-method="init">
+        <property name="configuration" ref="config" />
+    </bean>
+
+    <bean id="loadingPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.SVGLoadingPussycatSession">
+        <property name="cacheDirectory" value="/nfs/public/rw/fg/fgpt/goci-home/diagram/cache/" />
     </bean>
 
 </beans>

@@ -22,23 +22,23 @@ public class OntologyReasonerSession extends Initializable implements ReasonerSe
 
     private OWLReasoner reasoner;
 
-    public OntologyConfiguration getOntologyConfiguration() {
+    public OntologyConfiguration getConfiguration() {
         return ontologyConfiguration;
     }
 
-    public void setOntologyConfiguration(OntologyConfiguration ontologyConfiguration) {
+    public void setConfiguration(OntologyConfiguration ontologyConfiguration) {
         this.ontologyConfiguration = ontologyConfiguration;
     }
 
     @Override protected void doInitialization() throws Exception {
-        IRI efoLocationIRI = IRI.create(getOntologyConfiguration().getEfoResource().getURI());
+        IRI efoLocationIRI = IRI.create(getConfiguration().getEfoResource().getURI());
         IRI efoLogicalIRI = IRI.create(OntologyConstants.EFO_ONTOLOGY_SCHEMA_IRI + "/");
 
         OWLOntology ontology;
         getLog().debug("Trying to create a reasoner over ontology from '" + efoLocationIRI + "'");
         try {
-            ontology = getOntologyConfiguration().getOWLOntologyManager().loadOntology(efoLocationIRI);
-            OntologyUtils.loadImports(getOntologyConfiguration().getOWLOntologyManager(), ontology);
+            ontology = getConfiguration().getOWLOntologyManager().loadOntology(efoLocationIRI);
+            OntologyUtils.loadImports(getConfiguration().getOWLOntologyManager(), ontology);
 
             StringBuilder loadedOntologies = new StringBuilder();
             int n = 1;
@@ -54,8 +54,8 @@ public class OntologyReasonerSession extends Initializable implements ReasonerSe
         }
         catch (OWLOntologyDocumentAlreadyExistsException e) {
             getLog().debug("Ontology already exists: attempting to retrieve '" + efoLogicalIRI + "'");
-            if (getOntologyConfiguration().getOWLOntologyManager().contains(efoLogicalIRI)) {
-                ontology = getOntologyConfiguration().getOWLOntologyManager().getOntology(efoLogicalIRI);
+            if (getConfiguration().getOWLOntologyManager().contains(efoLogicalIRI)) {
+                ontology = getConfiguration().getOWLOntologyManager().getOntology(efoLogicalIRI);
             }
             else {
                 String msg = "Ontology from '" + efoLocationIRI + "' has already been loaded, " +
