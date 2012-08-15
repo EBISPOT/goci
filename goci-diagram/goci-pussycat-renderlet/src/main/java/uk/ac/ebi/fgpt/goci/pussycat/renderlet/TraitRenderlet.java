@@ -139,6 +139,9 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
                     trait.setAttribute("stroke-width", "0.5");
 
                     String traitName = getTraitName(gwasTrait, renderingContext, nexus, association);
+                    if(traitName.contains("'")){
+                        traitName = traitName.replace("'", "\\'");
+                    }
                     String mo = "showTooltip('" + traitName + "')";
                     trait.setAttribute("onmouseover", mo);
                     trait.setAttribute("onmouseout", "hideTooltip()");
