@@ -94,7 +94,8 @@ public class ColourMapper {
         COLOUR_MAP.put(DISEASE, "#81009F");
         COLOUR_MAP.put(INFLAMMATORY_MSR, "#EE282B");
         COLOUR_MAP.put(CARDIO_MSR, "#FFD67F");
-        COLOUR_MAP.put(DIGESTIVE, "#6ABD45");   */
+        COLOUR_MAP.put(DIGESTIVE, "#6ABD45");
+          COLOUR_MAP.put(OTHER, "#A10000");*/
 
 
 
@@ -117,6 +118,7 @@ public class ColourMapper {
         COLOUR_MAP.put(INFLAMMATORY_MSR, "#CBC8C8");
         COLOUR_MAP.put(CARDIO_MSR, "#DFC7E1");
         COLOUR_MAP.put(DIGESTIVE, "#BDCFFF");
+        COLOUR_MAP.put(OTHER, "#A10000");
         */
 
         //Dani
@@ -136,7 +138,8 @@ public class ColourMapper {
         COLOUR_MAP.put(DISEASE, "#F3961F");
         COLOUR_MAP.put(INFLAMMATORY_MSR, "#D4FFFF");
         COLOUR_MAP.put(CARDIO_MSR, "#7F044");
-        COLOUR_MAP.put(DIGESTIVE, "#BF7C9C");
+        COLOUR_MAP.put(DIGESTIVE, "#BF7C9C");  .
+        COLOUR_MAP.put(OTHER, "#A10000");
         */
     }
           /*
