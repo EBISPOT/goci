@@ -287,7 +287,7 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
         OWLClass leaf = null;
         int largest = 0;
 
-        if(allTypes.size() == 1){
+        if(allTypes.size() == 2){
             colour = "#FFFFFF";
             getLog().debug("Trait " + trait + " is not mapped");
         }
