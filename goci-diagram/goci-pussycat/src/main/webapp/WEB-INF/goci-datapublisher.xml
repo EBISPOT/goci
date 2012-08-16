@@ -6,7 +6,6 @@
 
     <!-- Ontology DAO -->
     <bean name="efoDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init">
-        <!-- TODO: use EFO release -->
         <property name="ontologyResource">
             <util:property-path path="config.efoResource" />
         </property>

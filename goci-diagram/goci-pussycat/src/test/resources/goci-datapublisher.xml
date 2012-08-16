@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
     <!-- configuration: sets up ontology manager and data factory given mappings to the set resources -->
     <bean name="config" class="uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration" init-method="init">
@@ -46,8 +47,9 @@
 
     <!-- Ontology DAOs -->
     <bean name="efoDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init">
-        <!-- TODO: use EFO release -->
-        <property name="ontologyResource" value="classpath:efo_release_candidate.2.26.owl" />
+        <property name="ontologyResource">
+            <util:property-path path="config.efoResource" />
+        </property>
     </bean>
 
     <bean name="gwasSchemaDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init">
