@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-
-    <!-- configuration: sets up ontology manager and data factory given mappings to the set resources -->
-    <bean name="config" class="uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration" init-method="init">
-        <!-- TODO: use EFO release -->
-        <property name="efoResource" value="classpath:efo_release_candidate.2.26.owl" />
-        <property name="gwasDiagramSchemaResource" value="classpath:gwas-diagram-relaxed.owl"/>
-    </bean>
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
     <!-- Ontology DAO -->
     <bean name="efoDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init">
-        <property name="ontologyResource"
-                  value="http://bar.ebi.ac.uk:8080/trac/export/head/branches/curator/ExperimentalFactorOntology/ExFactorInOWL/releasecandidate/efo_release_candidate.owl"/>
+        <!-- TODO: use EFO release -->
+        <property name="ontologyResource">
+            <util:property-path path="config.efoResource" />
+        </property>
     </bean>
 
     <!-- publisher: this does all the work and is the main API point of access -->
     <bean name="publisher" class="uk.ac.ebi.fgpt.goci.service.DefaultGWASOWLPublisher">
-        <property name="configuration" ref="config"/>
+        <property name="configuration" ref="config" />
     </bean>
 
 </beans>

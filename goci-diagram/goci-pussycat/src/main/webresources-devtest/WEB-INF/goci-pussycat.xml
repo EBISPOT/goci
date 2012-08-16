@@ -15,6 +15,13 @@
 
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" />
 
+    <!-- configuration: sets up ontology manager and data factory given mappings to the set resources -->
+    <bean name="config" class="uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration" init-method="init">
+        <!-- TODO: use EFO release -->
+        <property name="efoResource" value="classpath:efo_release_candidate.2.26.owl" />
+        <property name="gwasDiagramSchemaResource" value="classpath:gwas-diagram-relaxed.owl"/>
+    </bean>
+
     <bean id="pussycatSessionStrategy"
           class="uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSessionStrategy"
           factory-method="valueOf">
@@ -27,7 +34,7 @@
         <property name="reasonerSession" ref="reasonerSession" />
         <property name="pussycatSessions">
             <set>
-                <ref bean="cachingPussycatSession" />
+                <ref bean="pussycatSession" />
             </set>
         </property>
     </bean>
@@ -39,20 +46,13 @@
           class="uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession"
           init-method="init">
         <property name="configuration" ref="config" />
-
         <property name="ontologyResource" value="ontology/gwas-diagram-data-2007-12.owl" />
-
         <property name="publisher" ref="publisher" />
     </bean>
 
-    <bean id="proxiedPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.GOCIDataPublisherPussycatSession">
+    <bean id="pussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.GOCIDataPublisherPussycatSession">
         <property name="reasonerSession" ref="reasonerSession" />
         <property name="ontologyConfiguration" ref="config" />
-    </bean>
-
-    <bean id="cachingPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.SVGCachingPussycatSession">
-        <property name="cacheDirectory" value="/ebi/microarray/home/fgpt/test/goci-home/diagram/cache/" />
-        <property name="proxiedSession" ref="proxiedPussycatSession" />
     </bean>
 
 </beans>
