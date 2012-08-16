@@ -8,6 +8,8 @@ and their various default setups are documented below.
  1. Production
  =============
 
+ -P production
+
  Intended for running in production environments.  This setup suits London Datacentre deployment.
  Is built after each release.
 
@@ -29,6 +31,8 @@ and their various default setups are documented below.
 
  2. Test
  =======
+
+  -P test
 
   Intended for running in test (wwwdev) environments.  This setup suits test staging area deployment (ves-hx-73).
   Is built weekly, on Friday nights.
@@ -60,18 +64,20 @@ and their various default setups are documented below.
  3. Devtest
  ==========
 
+   -P devtest
+
    Intended for running in developer test (orange) environment.
    Is built after every committed change to the codebase.
 
    Configuration files located in:
     /src
       /main
-        /resources-test
-        /webresources-test
+        /resources-devtest
+        /webresources-devtest
 
     Logs to ${catalina.base}/logs/goci.log at a debug level
 
-    Uses release candidate of EFO from http://www.ebi.ac.uk/efo/efo.owl
+    Uses release candidate of EFO from http://bar.ebi.ac.uk:8080/trac/export/head/branches/curator/ExperimentalFactorOntology/ExFactorInOWL/releasecandidate/efo_release_candidate.owl
 
     Classifies and reasons over the knowledgebase everytime.  Does not use a cache.
 
@@ -83,8 +89,50 @@ and their various default setups are documented below.
              /gwas-diagram-data-2007-12.owl
 
 
- 4. Localtest
+ 4. Timeseries
  ============
+
+   -P timeseries
+
+   Intended for running in developer test (orange) environment.
+   Is built by hand for generating timeseries views
+
+   Configuration files located in:
+    /src
+      /main
+        /resources-timeseries
+        /webresources-timeseries
+
+   Logs to ${catalina.base}/logs/goci.log at a debug level
+
+   Uses bundled version of EFO from classpath:efo_release_candidate.2.26.owl
+
+   Classifies and reasons over the knowledgebase, but utilises cache if present.  Manually delete SVG files to force
+   rerendering.
+
+   Knowledgebase file used to perform rendering:
+    /src
+      /main
+        /webapp
+          /ontology
+            /gwas-diagram-data-local.owl
+
+    Knowledgebase file used to perform rendering:
+     /src
+       /main
+         /webapp
+           /ontology
+             /gwas-diagram-data-2007-12.owl
+
+   SVG cache (only accessible from staging machine) located in:
+    /{user.home}/.goci/svg_cache/
+
+
+
+ 5. Localtest
+ ============
+
+   -P localtest [NOTE: this is active by default]
 
    Intended as a template testing setup for developers to run on their local machine.  Change this as appropriate.
    Can be built at will! (Ideally before committing any changes...)
@@ -97,7 +145,7 @@ and their various default setups are documented below.
 
    Logs to ${catalina.base}/logs/${tomcat.hostname}/goci.log at debug/trace level
 
-   Uses release candidate of EFO from http://www.ebi.ac.uk/efo/efo.owl
+   Uses release candidate of EFO from http://bar.ebi.ac.uk:8080/trac/export/head/branches/curator/ExperimentalFactorOntology/ExFactorInOWL/releasecandidate/efo_release_candidate.owl
 
    Classifies and reasons over the knowledgebase, but utilises cache if present.  Manually delete SVG files to force
    rerendering.
@@ -109,5 +157,5 @@ and their various default setups are documented below.
           /ontology
             /gwas-diagram-data-local.owl
 
-   SVG cache (only accessible from staging machine) located in:
+   SVG cache located in:
     /{user.home}/.goci/svg_cache/

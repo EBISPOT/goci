@@ -17,8 +17,9 @@
 
     <!-- configuration: sets up ontology manager and data factory given mappings to the set resources -->
     <bean name="config" class="uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration" init-method="init">
-        <property name="efoResource" value="http://bar.ebi.ac.uk:8080/trac/export/head/branches/curator/ExperimentalFactorOntology/ExFactorInOWL/releasecandidate/efo_release_candidate.owl" />
-        <property name="gwasDiagramSchemaResource" value="classpath:gwas-diagram-relaxed.owl"/>
+        <!-- TODO: use EFO release -->
+        <property name="efoResource" value="classpath:efo_release_candidate.2.26.owl" />
+        <property name="gwasDiagramSchemaResource" value="classpath:gwas-diagram-relaxed.owl" />
     </bean>
 
     <bean id="pussycatSessionStrategy"
@@ -33,14 +34,11 @@
         <property name="reasonerSession" ref="reasonerSession" />
         <property name="pussycatSessions">
             <set>
-                <ref bean="pussycatSession" />
+                <ref bean="proxiedPussycatSession" />
             </set>
         </property>
     </bean>
 
-    <!-- NB: which implementation to use depends on whether
-             a) we are dynamically generating the knowledgebase (uk.ac.ebi.fgpt.goci.pussycat.session.DataPublishingCacheableReasonerSession) or
-             b) statically loading a precanned version (uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession) -->
     <bean id="reasonerSession"
           class="uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession"
           init-method="init">
@@ -49,9 +47,14 @@
         <property name="publisher" ref="publisher" />
     </bean>
 
-    <bean id="pussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.GOCIDataPublisherPussycatSession">
+    <bean id="proxiedPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.GOCIDataPublisherPussycatSession">
         <property name="reasonerSession" ref="reasonerSession" />
         <property name="ontologyConfiguration" ref="config" />
+    </bean>
+
+    <bean id="cachingPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.SVGCachingPussycatSession">
+        <property name="cacheDirectory" value="/ebi/microarray/home/fgpt/test/goci-home/diagram/cache/200712/" />
+        <property name="proxiedSession" ref="proxiedPussycatSession" />
     </bean>
 
 </beans>
