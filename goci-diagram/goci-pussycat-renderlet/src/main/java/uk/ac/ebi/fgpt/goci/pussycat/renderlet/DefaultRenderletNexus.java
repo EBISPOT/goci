@@ -150,9 +150,10 @@ public class DefaultRenderletNexus implements RenderletNexus {
                                     String traitName = getTraitName(trait, ontology, ind);
 
                                     if(bandLocations.get(band).getRenderedTraits().contains(traitName)){
-                                        getLog().trace("Trait " + traitName + " already rendered at this location");
+                                        getLog().trace("Trait " + traitName + " already rendered at band " + band);
                                     }
                                     else{
+                                        getLog().trace("Trait " + traitName + " was not previously rendered at band " + band);
                                         for (Renderlet rt : getRenderlets()){
                                             if (rt.canRender(this, ontology, trait)) {
                                                 getLog().trace("Dispatching render() request to renderlet '" + rt.getName() + "'");

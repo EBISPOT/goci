@@ -5,8 +5,8 @@
 
     <!-- configuration: sets up ontology manager and data factory given mappings to the set resources -->
     <bean name="config" class="uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration" init-method="init">
-        <property name="efoResource"
-                  value="http://bar.ebi.ac.uk:8080/trac/export/head/branches/curator/ExperimentalFactorOntology/ExFactorInOWL/releasecandidate/efo_release_candidate.owl"/>
+        <!-- TODO: use EFO release -->
+        <property name="efoResource" value="classpath:efo_release_candidate.2.26.owl" />
         <property name="gwasDiagramSchemaResource" value="classpath:gwas-diagram-relaxed.owl"/>
     </bean>
 
