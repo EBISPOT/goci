@@ -15,8 +15,7 @@ import java.util.*;
  * Retrieves classes from an ontology file in OWL or OBO formats.  This DAO uses the OWLAPI to load and handle the
  * ontology, and operates over the raw, unclassified version of the ontology.
  *
- * @author Tony Burdett
- * Date 24/01/12
+ * @author Tony Burdett Date 24/01/12
  */
 public class OntologyDAO extends Initializable {
     // configurable ontology elements with sensible defaults
@@ -173,7 +172,13 @@ public class OntologyDAO extends Initializable {
     public OWLClass getOWLClassByIRI(IRI iri) {
         try {
             waitUntilReady();
-            return iriToClassMap.get(iri);
+            if (iriToClassMap.containsKey(iri)) {
+                return iriToClassMap.get(iri);
+            }
+            else {
+                throw new IllegalArgumentException("There is no OWLClass with IRI '" + iri.toString() + "' " +
+                                                           "in the ontology '" + getOntologyURI() + "'");
+            }
         }
         catch (InterruptedException e) {
             throw new OntologyIndexingException(
