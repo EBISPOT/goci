@@ -147,8 +147,28 @@ public class SVGBuilder {
         linGrad2.appendChild(stop3);
         linGrad2.appendChild(stop4);
 
+        Element mask = doc.createElement("mask");
+        mask.setAttribute("id", "traitMask");
+        mask.setAttribute("maskUnits", "userSpaceOnUse");
+        mask.setAttribute("x", "0");
+        mask.setAttribute("y", "0");
+        mask.setAttribute("width", Integer.toString(width));
+        mask.setAttribute("height", Integer.toString(height));
+
+        Element maskRect = doc.createElement("rect");
+        maskRect.setAttribute("x", "0");
+        maskRect.setAttribute("y", "0");
+        maskRect.setAttribute("width", Integer.toString(width));
+        maskRect.setAttribute("height", Integer.toString(height));
+        maskRect.setAttribute("opacity", ".5");
+        maskRect.setAttribute("fill", "grey");
+
+        mask.appendChild(maskRect);
+
+
         defs.appendChild(linGrad1);
         defs.appendChild(linGrad2);
+        defs.appendChild(mask);
         svgRoot.appendChild(defs);
     }
 

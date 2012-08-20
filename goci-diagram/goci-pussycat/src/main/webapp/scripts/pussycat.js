@@ -232,7 +232,7 @@ function filterTraits(traitName) {
             try {
                 var trait = val.replace(":", "\\:");
                 log("Showing trait '" + trait + "' element");
-                $("." + trait).show();
+                  $("." + trait).attr("mask", "");
             }
             catch (ex) {
                 log("Failed to show element '" + val + "'");
@@ -244,12 +244,12 @@ function filterTraits(traitName) {
 
 function showAllTraits() {
     log("Showing all 'gwas-trait' elements");
-    $(".gwas-trait").show();
+    $(".gwas-trait").attr("mask", "");
 }
 
 function hideAllTraits() {
     log("Hiding all 'gwas-trait' elements");
-    $(".gwas-trait").hide();
+    $(".gwas-trait").attr("mask", "url(#traitMask)");
 }
 
 function doFilterOnEnter(e) {
