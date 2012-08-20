@@ -148,6 +148,9 @@ public class DefaultRenderletNexus implements RenderletNexus {
                                     getLog().trace("Trait: " + trait);
 
                                     String traitName = getTraitName(trait, ontology, ind);
+                                    if(traitName.contains("'")){
+                                        traitName = traitName.replace("'", "\\'");
+                                    }
 
                                     if(bandLocations.get(band).getRenderedTraits().contains(traitName)){
                                         getLog().trace("Trait " + traitName + " already rendered at band " + band);
