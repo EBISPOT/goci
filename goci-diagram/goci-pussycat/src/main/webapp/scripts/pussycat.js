@@ -1,4 +1,4 @@
-var enableDebugging = true;
+var enableDebugging = false;
 
 var maxScale = 100;
 var currentScale = maxScale / 2;
@@ -25,6 +25,15 @@ function init() {
                                    show:tabShow,
                                    selected:0
                                });
+        // create slides for timeseries
+        $('#timeseriestab').slides({
+                                       preload:true,
+                                       play:2000,
+                                       pause:2500,
+                                       hoverPause:true,
+                                       effect:'fade',
+                                       crossfade:true
+                                   });
 
         // resize the page so it fills window
         resizeDisplay();
@@ -35,6 +44,9 @@ function init() {
 
         $("#clearbutton").button();
         $("#clearbutton").click(showAllTraits);
+
+        $("#legendbutton").button({icons:{primary:'ui-icon-newwin'}});
+        $("#legendbutton").click(revealLegend);
 
         $("#retrybutton").button();
         $("#retrybutton").click(renderDiagram);
@@ -255,8 +267,23 @@ function hideAllTraits() {
 function doFilterOnEnter(e) {
     var key = e.keyCode || e.which;
     if (key == 13) {
-        log("Detected filter keypress - " + $("#trait-filter").val())
+        log("Detected filter keypress - " + $("#trait-filter").val());
         filterTraits($("#trait-filter").val());
+    }
+}
+
+function revealLegend() {
+    if ($(".legend").css("display") == "none") {
+        // show legend
+        $(".legend").show('fold');
+        // update text
+        $("#legendbutton .ui-button-text").html("Hide Legend");
+    }
+    else {
+        // hide legend
+        $(".legend").hide('fold');
+        // update text
+        $("#legendbutton .ui-button-text").html("Show Legend");
     }
 }
 

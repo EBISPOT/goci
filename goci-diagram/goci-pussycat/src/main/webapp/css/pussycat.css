@@ -63,6 +63,27 @@ h3.nomargin {
     letter-spacing: 1px;
 }
 
+.legend {
+    display: none;
+    position: fixed;
+    width: 220px;
+    right: 38px;
+    background: #f4f4f4;
+    border: #777788 1px solid;
+    padding: 8px;
+    z-index: 15;
+}
+
+#legendrevealer {
+    width: 100%;
+}
+
+#legendwrapper {
+    float: right;
+    margin-right: 13px;
+    margin-top: 4px;
+}
+
 #diagramarea {
     width: 100%;
     /*height: 600px;*/
@@ -90,3 +111,64 @@ h3.nomargin {
     right: 4px;
 }
 
+.slides_container {
+    width: 1024px;
+    height: 680px;
+    border: 1px solid #777788;
+}
+
+.slides_container div {
+    width: 1024px;
+    height: 680px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.slides_container img {
+    width: 99%;
+    padding-top: 20px;
+}
+
+.slides_container h3 {
+    position: absolute;
+    text-align: center;
+    padding-left: 443px;
+}
+
+.pagination {
+    margin: 6px 6px 6px -40px;
+    list-style: none;
+}
+
+.pagination li {
+    float: left;
+    margin: 0 1px;
+}
+
+.pagination li a {
+    display: block;
+    width: 13px;
+    height: 0;
+    padding-top: 13px;
+    background-image: url(../images/timeseries/pagination.png);
+    background-position: 0 0;
+    /*float: left;*/
+    overflow: hidden;
+}
+
+.pagination li.current a, .pagination li.current a:hover {
+    background-position: 0 -13px
+}
+
+.pagination li a:hover {
+    background-position: 0 -26px
+}
+
+#slides a:link, #slides a:visited {
+    color: #333
+}
+
+#slides a:hover, #slides a:active {
+    color: #9e2020
+}

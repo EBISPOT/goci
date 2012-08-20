@@ -12,6 +12,7 @@
     <script type="text/javascript" src="scripts/pussycat.js"></script>
     <script type="text/javascript" src="scripts/jquery.mousewheel.min.js"></script>
     <script type="text/javascript" src="scripts/jquery.event.drag-2.0.min.js"></script>
+    <script type="text/javascript" src="scripts/slides.min.jquery.js"></script>
 
 </head>
 
@@ -40,18 +41,126 @@
 
 <div id="divtable">
 
-<div id="ontologyviewarea">
-    <div id="ontologyview">
+<div id="browsertabs">
+
+<div id="legendrevealer">
+    <div id="legendwrapper">
+        <a id="legendbutton" href="#" style="font-weight: bold; width: 120px;">
+            Show Legend
+        </a>
+
+        <div class="legend">
+            <h4>SNP-associated trait categories</h4>
+            <svg
+                    xmlns="http://www.w3.org/2000/svg" version="1.1"
+                    height="405"
+                    width="800">
+                <title>Colour key</title>
+                <g transform="scale(1.5,1.5)">
+
+                    <circle id="CARDIO_VASCULAR"
+                            fill="#8DD3C7"
+                            r="5"
+                            cx="10"
+                            cy="10"
+                            stroke="black"
+                            stroke-width="0.5"></circle>
+                    <text x="20" y="12" font-family="Verdana" font-size="8" fill="black">Cardiovascular disorder</text>
+                    <circle id="NEURO" fill="#FFFFB3" r="5" cx="10" cy="25" stroke="black" stroke-width="0.5"></circle>
+                    <text x="20" y="27" font-family="Verdana" font-size="8" fill="black">Neurological disorder</text>
+                    <circle id="IMMUNE" fill="#BEBADA" r="5" cx="10" cy="40" stroke="black" stroke-width="0.5"></circle>
+                    <text x="20" y="42" font-family="Verdana" font-size="8" fill="black">Immune system disorder</text>
+                    <circle id="DIGESTIVE" fill="#80B1D3" r="5" cx="10" cy="55" stroke="black" stroke-width="0.5"></circle>
+                    <text x="20" y="57" font-family="Verdana" font-size="8" fill="black">Digestive system disorder</text>
+                    <circle id="NEOPLASM" fill="#FB8072" r="5" cx="10" cy="70" stroke="black" stroke-width="0.5"></circle>
+                    <text x="20" y="72" font-family="Verdana" font-size="8" fill="black">Cancer</text>
+
+                    <circle id="METABOLIC" fill="#FDB462" r="5" cx="10" cy="85" stroke="black" stroke-width="0.5"></circle>
+                    <text x="20" y="87" font-family="Verdana" font-size="8" fill="black">Metabolic disorder</text>
+
+                    <circle id="DISEASE" fill="#FCCDE5" r="5" cx="10" cy="100" stroke="black" stroke-width="0.5"></circle>
+                    <text x="20" y="102" font-family="Verdana" font-size="8" fill="black">Other disease [1]</text>
+
+                    <circle id="BODY_MSR" fill="#66CCFF" r="5" cx="10" cy="115" stroke="black" stroke-width="0.5"></circle>
+                    <text x="20" y="117" font-family="Verdana" font-size="8" fill="black">Body measurements</text>
+
+                    <circle id="LIPID_LIPOPROT_MSR"
+                            fill="#FF3399"
+                            r="5"
+                            cx="10"
+                            cy="130"
+                            stroke="black"
+                            stroke-width="0.5"></circle>
+                    <text x="20" y="132" font-family="Verdana" font-size="8" fill="black">Lipid or lipoprotein measurement
+                    </text>
+
+                    <circle id="CARDIO_MSR" fill="#BC80BD" r="5" cx="10" cy="145" stroke="black" stroke-width="0.5"></circle>
+                    <text x="20" y="147" font-family="Verdana" font-size="8" fill="black">Cardio vascular measurements</text>
+
+                    <circle id="HEMATOLOGICAL_MSR"
+                            fill="#FFED6F"
+                            r="5"
+                            cx="10"
+                            cy="160"
+                            stroke="black"
+                            stroke-width="0.5"></circle>
+                    <text x="20" y="162" font-family="Verdana" font-size="8" fill="black">Hematological measurement</text>
+
+                    <circle id="INFLAMMATORY_MSR"
+                            fill="#006699"
+                            r="5"
+                            cx="10"
+                            cy="175"
+                            stroke="black"
+                            stroke-width="0.5"></circle>
+                    <text x="20" y="177" font-family="Verdana" font-size="8" fill="black">Inflammatory marker measurement</text>
+
+                    <circle id="LIVER_ENZYME" fill="#669900" r="5" cx="10" cy="190" stroke="black" stroke-width="0.5"></circle>
+                    <text x="20" y="192" font-family="Verdana" font-size="8" fill="black">Liver enzyme measurement</text>
+
+                    <circle id="MEASUREMENT" fill="#B3DE69" r="5" cx="10" cy="205" stroke="black" stroke-width="0.5"></circle>
+                    <text x="20" y="207" font-family="Verdana" font-size="8" fill="black">Other measurement [2]</text>
+
+                    <circle id="CHEMICAL" fill="#CCEBC5" r="5" cx="10" cy="220" stroke="black" stroke-width="0.5"></circle>
+                    <text x="20" y="222" font-family="Verdana" font-size="8" fill="black">Chemical compound</text>
+
+                    <circle id="BIO_PROCESS" fill="#B7704C" r="5" cx="10" cy="235" stroke="black" stroke-width="0.5"></circle>
+                    <text x="20" y="237" font-family="Verdana" font-size="8" fill="black">Biological process</text>
+
+                    <circle id="OTHER" fill="#B33232" r="5" cx="10" cy="250" stroke="black" stroke-width="0.5"></circle>
+                    <text x="20" y="252" font-family="Verdana" font-size="8" fill="black">Other traits</text>
+
+                    <circle id="UNMAPPED"
+                            fill="#FFFFFF"
+                            r="5"
+                            cx="10"
+                            cy="265"
+                            stroke="black"
+                            stroke-width="0.5"></circle>
+                    <text x="20" y="267" font-family="Verdana" font-size="8" fill="black"> Trait mapping in progress</text>
+
+
+                </g>
+            </svg>
+
+            <!--<p>[1] Includes any kind of disease not included in any of the preceeding categories.</p>-->
+
+            <!--<p>[2] Includes any kind of measurement, from levels of metabolites or drugs in the blood such as adiponection-->
+                <!--measurement, to clinical diagnostic tests such as electrocardiograph, that is not covered by one of the-->
+                <!--preceeding categories</p>-->
+
+        </div>
     </div>
 </div>
 
-<div id="browsertabs">
 <ul id="pussycattabs">
     <li><a href="#diagramtab">GWAS Diagram</a></li>
-    <li><a href="#keytab">Key</a></li>
+    <li><a href="#timeseriestab">Time Series View</a></li>
+    <li><a href="#downloadstab">Downloads</a></li>
+    <!--<li><a href="#keytab">Key</a></li>-->
     <li><a href="#helptab">Help</a></li>
-    <li><a href="#abouttab">About</a></li>
     <li><a href="#contacttab">Contact</a></li>
+    <li><a href="#abouttab">About</a></li>
     <li id="logitem" style="display: none"><a href="#logtab">Log</a></li>
 </ul>
 
@@ -67,95 +176,197 @@
             <span id="diagramareaerrortext"></span><br/>
             <a id="retrybutton" href="#" style="font-weight: bold">Retry</a>
 
-            <p><a href="images/GWASdiagram.png">A static version of the diagram in PNG format can be found here</a></p>
+            <p><a href="images/timeseries/gwas-2012-06.png">A static version of the diagram in PNG format can be found
+                here</a></p>
         </div>
         <div id="diagramareacontent">
         </div>
     </div>
 </div>
-<div id="keytab" class="tabcontent">
-    <h3>SNP-associated trait categories</h3>
-    <svg
-            xmlns="http://www.w3.org/2000/svg" version="1.1"
-            height="500"
-            width="800">
-        <title>Colour key</title>
-        <g transform="scale(1.5,1.5)">
 
-            <circle id="CARDIO_VASCULAR" fill="#8DD3C7" r="5" cx="10" cy="10" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="12" font-family="Verdana" font-size="8" fill="black">Cardio vascular disorder</text>
-            <circle id="NEURO" fill="#FFFFB3" r="5" cx="10" cy="25" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="27" font-family="Verdana" font-size="8" fill="black">Neurological disorder</text>
-            <circle id="IMMUNE" fill="#BEBADA" r="5" cx="10" cy="40" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="42" font-family="Verdana" font-size="8" fill="black">Immune system disorder</text>
-            <circle id="DIGESTIVE" fill="#80B1D3" r="5" cx="10" cy="55" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="57" font-family="Verdana" font-size="8" fill="black">Digestive system disorder</text>
-            <circle id="NEOPLASM" fill="#FB8072" r="5" cx="10" cy="70" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="72" font-family="Verdana" font-size="8" fill="black">Cancer</text>
+<div id="timeseriestab" class="tabcontent">
+    <div class="slides_container">
+        <div>
+            <h3>
+                GWAS Catalog<br/>
+                <span class="y2005">2005</span><br/>
+            </h3>
+            <img src="images/timeseries/gwas-2005-12.png" alt="GWAS Catalog, 2005" title="GWAS Catalog, 2005">
+        </div>
+        <div>
+            <h3>
+                GWAS Catalog<br/>
+                <span class="y2006">2006</span><br/>
+                <span class="june">June</span>
+            </h3>
+            <img src="images/timeseries/gwas-2006-06.png"
+                 alt="GWAS Catalog, June 2006"
+                 title="GWAS Catalog, June 2006"/>
+        </div>
+        <div>
+            <h3>
+                GWAS Catalog<br/>
+                <span class="y2006">2006</span><br/>
+                <span class="december">December</span>
+            </h3>
+            <img src="images/timeseries/gwas-2006-12.png"
+                 alt="GWAS Catalog, December 2006"
+                 title="GWAS Catalog, December 2006"/>
+        </div>
+        <div>
+            <h3>
+                GWAS Catalog<br/>
+                <span class="y2007">2007</span><br/>
+                <span class="june">June</span>
+            </h3>
+            <img src="images/timeseries/gwas-2007-06.png"
+                 alt="GWAS Catalog, June 2007"
+                 title="GWAS Catalog, June 2007"/>
+        </div>
+        <div>
+            <h3>
+                GWAS Catalog<br/>
+                <span class="y2007">2007</span><br/>
+                <span class="december">December</span>
+            </h3>
+            <img src="images/timeseries/gwas-2007-12.png"
+                 alt="GWAS Catalog, December 2007"
+                 title="GWAS Catalog, December 2007"/>
+        </div>
+        <div>
+            <h3>
+                GWAS Catalog<br/>
+                <span class="y2008">2008</span><br/>
+                <span class="june">June</span>
+            </h3>
+            <img src="images/timeseries/gwas-2008-06.png"
+                 alt="GWAS Catalog, June 2008"
+                 title="GWAS Catalog, June 2008"/>
+        </div>
+        <div>
+            <h3>
+                GWAS Catalog<br/>
+                <span class="y2008">2008</span><br/>
+                <span class="december">December</span>
+            </h3>
+            <img src="images/timeseries/gwas-2008-12.png"
+                 alt="GWAS Catalog, December 2008"
+                 title="GWAS Catalog, December 2008"/>
+        </div>
+        <div>
+            <h3>
+                GWAS Catalog<br/>
+                <span class="y2009">2009</span><br/>
+                <span class="june">June</span>
+            </h3>
+            <img src="images/timeseries/gwas-2009-06.png"
+                 alt="GWAS Catalog, June 2009"
+                 title="GWAS Catalog, June 2009"/>
+        </div>
+        <div>
+            <h3>
+                GWAS Catalog<br/>
+                <span class="y2009">2009</span><br/>
+                <span class="december">December</span>
+            </h3>
+            <img src="images/timeseries/gwas-2009-12.png"
+                 alt="GWAS Catalog, December 2009"
+                 title="GWAS Catalog, December 2009"/>
+        </div>
+        <div>
+            <h3>
+                GWAS Catalog<br/>
+                <span class="y2010">2010</span><br/>
+                <span class="june">June</span>
+            </h3>
+            <img src="images/timeseries/gwas-2010-06.png"
+                 alt="GWAS Catalog, June 2010"
+                 title="GWAS Catalog, June 2010"/>
+        </div>
+        <div>
+            <h3>
+                GWAS Catalog<br/>
+                <span class="y2010">2010</span><br/>
+                <span class="june">December</span>
+            </h3>
+            <img src="images/timeseries/gwas-2010-12.png"
+                 alt="GWAS Catalog, December 2010"
+                 title="GWAS Catalog, December 2010"/>
+        </div>
+        <div>
+            <h3>
+                GWAS Catalog<br/>
+                <span class="y2011">2011</span><br/>
+                <span class="june">June</span>
+            </h3>
+            <img src="images/timeseries/gwas-2011-06.png"
+                 alt="GWAS Catalog, June 2011"
+                 title="GWAS Catalog, June 2011"/>
+        </div>
+        <div>
+            <h3>
+                GWAS Catalog<br/>
+                <span class="y2011">2011</span><br/>
+                <span class="december">December</span>
+            </h3>
+            <img src="images/timeseries/gwas-2011-12.png"
+                 alt="GWAS Catalog, December 2011"
+                 title="GWAS Catalog, December 2011"/>
+        </div>
+        <div>
+            <h3>
+                GWAS Catalog<br/>
+                <span class="y2012">2012</span><br/>
+                <span class="june">June</span>
+            </h3>
+            <img src="images/timeseries/gwas-2012-06.png"
+                 alt="GWAS Catalog, June 2012"
+                 title="GWAS Catalog, June 2012"/>
+        </div>
+    </div>
+</div>
 
-            <circle id="METABOLIC" fill="#FDB462" r="5" cx="10" cy="85" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="87" font-family="Verdana" font-size="8" fill="black">Metabolic disorder</text>
+<div id="downloadstab" class="tabcontent">
+    <p>Several resources are used to generate the GWAS diagram browser. Some of the files available for download are
+        listed below.</p>
 
-            <circle id="DISEASE" fill="#FCCDE5" r="5" cx="10" cy="100" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="102" font-family="Verdana" font-size="8" fill="black">Other disease [1]</text>
+    <h3>Images</h3>
+    <h4>Most Recent GWAS Diagram</h4>
+    <ul>
+        <li><a href="images/timeseries/gwas-2012-06.png">Full GWAS diagram, PNG</a></li>
+    </ul>
+    <h4>Older GWAS Diagrams</h4>
+    <ul>
+        <li><a href="images/timeseries/gwas-2012-06.png">GWAS diagram, Quarter 2, 2012, PNG</a></li>
+        <li><a href="images/timeseries/gwas-2011-12.png">GWAS diagram, Quarter 4, 2011, PNG</a></li>
+        <li><a href="images/timeseries/gwas-2011-06.png">GWAS diagram, Quarter 2, 2011, PNG</a></li>
+        <li><a href="images/timeseries/gwas-2010-12.png">GWAS diagram, Quarter 4, 2010, PNG</a></li>
+        <li><a href="images/timeseries/gwas-2010-06.png">GWAS diagram, Quarter 2, 2010, PNG</a></li>
+        <li><a href="images/timeseries/gwas-2009-12.png">GWAS diagram, Quarter 4, 2009, PNG</a></li>
+        <li><a href="images/timeseries/gwas-2009-06.png">GWAS diagram, Quarter 2, 2009, PNG</a></li>
+        <li><a href="images/timeseries/gwas-2008-12.png">GWAS diagram, Quarter 4, 2008, PNG</a></li>
+        <li><a href="images/timeseries/gwas-2008-06.png">GWAS diagram, Quarter 2, 2008, PNG</a></li>
+        <li><a href="images/timeseries/gwas-2007-12.png">GWAS diagram, Quarter 4, 2007, PNG</a></li>
+        <li><a href="images/timeseries/gwas-2007-06.png">GWAS diagram, Quarter 2, 2007, PNG</a></li>
+        <li><a href="images/timeseries/gwas-2006-12.png">GWAS diagram, Quarter 4, 2006, PNG</a></li>
+        <li><a href="images/timeseries/gwas-2006-06.png">GWAS diagram, Quarter 2, 2006, PNG</a></li>
+        <li><a href="images/timeseries/gwas-2005-12.png">GWAS diagram, Quarter 4, 2005, PNG</a></li>
+    </ul>
 
-            <circle id="BODY_MSR" fill="#66CCFF" r="5" cx="10" cy="115" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="117" font-family="Verdana" font-size="8" fill="black">Body measurements</text>
+    <h3>Ontology Files</h3>
+    <span style="font-weight: bold; color: red;">CAUTION:</span> Some of these files may be very large - attempting to
+    open them in your browser may take a very long time.<br/>
+    It is usually safest to right-click and choose "save as..." to download these files.
 
-            <circle id="LIPID_LIPOPROT_MSR" fill="#FF3399" r="5" cx="10" cy="130" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="132" font-family="Verdana" font-size="8" fill="black">Lipid or lipoprotein measurement</text>
-
-            <circle id="CARDIO_MSR" fill="#BC80BD" r="5" cx="10" cy="145" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="147" font-family="Verdana" font-size="8" fill="black">Cardio vascular measurements</text>
-
-            <circle id="HEMATOLOGICAL_MSR" fill="#FFED6F" r="5" cx="10" cy="160" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="162" font-family="Verdana" font-size="8" fill="black">Hematological measurement</text>
-
-            <circle id="INFLAMMATORY_MSR" fill="#006699" r="5" cx="10" cy="175" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="177" font-family="Verdana" font-size="8" fill="black">Inflammatory marker measurement</text>
-
-            <circle id="LIVER_ENZYME" fill="#669900" r="5" cx="10" cy="190" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="192" font-family="Verdana" font-size="8" fill="black">Liver enzyme measurement</text>
-
-            <circle id="MEASUREMENT" fill="#B3DE69" r="5" cx="10" cy="205" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="207" font-family="Verdana" font-size="8" fill="black">Other measurement [2]</text>
-
-            <circle id="CHEMICAL" fill="#CCEBC5" r="5" cx="10" cy="220" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="222" font-family="Verdana" font-size="8" fill="black">Chemical compound</text>
-
-            <circle id="BIO_PROCESS" fill="#B7704C" r="5" cx="10" cy="235" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="237" font-family="Verdana" font-size="8" fill="black">Biological process</text>
-
-            <circle id="OTHER" fill="#A10000" r="5" cx="10" cy="250" stroke="black" stroke-width="0.5"></circle>
-            <text x="20" y="252" font-family="Verdana" font-size="8" fill="black">Other traits</text>
-
-            <circle id="UNMAPPED"
-                    fill="#FFFFFF"
-                    r="5"
-                    cx="10"
-                    cy="265"
-                    stroke="black"
-                    stroke-width="0.5"></circle>
-            <text x="20" y="267" font-family="Verdana" font-size="8" fill="black"> Trait mapping in progress</text>
-
-
-        </g>
-    </svg>
-
-    <p>[1] Includes any kind of disease not included in any of the preceeding categories.</p>
-
-    <p>[2] Includes any kind of measurement, from levels of metabolites or drugs in the blood such as adiponection
-        measurement, to clinical diagnostic tests such as electrocardiograph, that is not covered by one of the preceeding categories</p>
-
-    <!--<p>[2] Observable manifestation such as pain or menopause</p>-->
-
-    <!--<p>[3] Includes chemical compounds such as HDL cholesterol or protein, cell types such as neutrophil and organism-->
-        <!--parts such as corneal structure. <b>This classification is currently undergoing revision!</b></p>-->
-
-    <!--<p>[4] Includes processes such as reasoning and speech recognition.</p>-->
-
-    <!--<p>[5] Trait that describes a characteristic of an individual such as hair colour or eye colour</p>-->
-
+    <h4>Experimental Factor Ontology</h4>
+    <ul>
+        <li><a href="http://www.ebi.ac.uk/efo/efo.owl">http://www.ebi.ac.uk/efo/efo.owl, OWL</a> [ ~10MB ]</li>
+    </ul>
+    <h4>GWAS Catalog Ontologies</h4>
+    <ul>
+        <li><a href="ontology/gwas-diagram.owl">GWAS Catalog schema ontology, OWL</a> [ ~16 KB ]</li>
+        <li><a href="ontology/gwas-diagram-data-2012-08.owl">GWAS Catalog data knowledgebase, OWL</a> [ ~14MB ]</li>
+    </ul>
 
 </div>
 
@@ -173,7 +384,7 @@
             cause the rendering process to restart.
         </li>
         <li><b>Number of studies:</b> The beta version of the GWAS diagram shows SNP-trait associations with a p-value
-            smaller than 5 &lowast; 10<sup>-8</sup>, for all studies published in the catalogue up to the end of
+            smaller than 5 &#215; 10<sup>-8</sup>, for all studies published in the catalogue up to the end of
             June 2012.
         </li>
         <li><b>Zooming:</b> There are two ways in which the diagram can be zoomed. The easiest option is to use the
@@ -226,7 +437,10 @@ generates a zoomed-in version of the corresponding region if an ellipsis is clic
 </div>
 
 <div id="abouttab" class="tabcontent">
-    <div><img src="images/topbanner.jpg" alt="NHGRI banner"/></div>
+    <div>
+        <img src="images/topbanner.jpg" alt="NHGRI banner"/>
+        <img src="images/ebilogo.gif" alt="EBI banner" style="float: right">
+    </div>
 
     <h3>Background</h3>
 
