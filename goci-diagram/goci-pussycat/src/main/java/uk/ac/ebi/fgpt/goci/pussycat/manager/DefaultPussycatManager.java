@@ -96,11 +96,19 @@ public class DefaultPussycatManager implements PussycatManager {
                            "HttpSession '" + session.getId() + "'");
             sessionUnbound = true;
         }
+        else {
+            getLog().debug("Cannot unbind PussycatSession for HttpSession '" + session.getId() + "' " +
+                           "- no linked PussycatSession resource");
+        }
         if (nexusMap.containsKey(session)) {
             RenderletNexus rn = nexusMap.remove(session);
             getLog().debug("RenderletNexus '" + rn + "' is no longer bound to " +
                            "HttpSession '" + session.getId() + "'");
             nexusUnbound = true;
+        }
+        else {
+            getLog().debug("Cannot unbind RenderletNexus for HttpSession '" + session.getId() + "' " +
+                           "- no linked RenderletNexus resource");
         }
         return sessionUnbound && nexusUnbound;
     }
