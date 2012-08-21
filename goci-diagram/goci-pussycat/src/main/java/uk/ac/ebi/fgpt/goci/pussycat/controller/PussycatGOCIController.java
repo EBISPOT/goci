@@ -252,7 +252,7 @@ public class PussycatGOCIController {
     public @ResponseBody Set<String> filterTrait(@PathVariable String traitName, HttpSession session)
             throws PussycatSessionNotReadyException, OWLConversionException {
         // lookup class from label
-        getLog().debug("Identifying class with label '" + traitName + "'...");
+        getLog().debug("Filtering on classes with label '" + traitName + "'");
         Collection<OWLClass> labelledClasses = getOntologyDAO().getOWLClassesByLabel(traitName);
 
         // get the set of all classes and subclasses
@@ -269,7 +269,7 @@ public class PussycatGOCIController {
         Set<String> classNames = new HashSet<String>();
         for (OWLClass cls : allClasses) {
             String shortform = OntologyUtils.getShortForm(cls);
-            getLog().debug("Next shortform in subclass set: '" + shortform + "'");
+            getLog().trace("Next shortform in subclass set: '" + shortform + "'");
             classNames.add(shortform);
         }
 
