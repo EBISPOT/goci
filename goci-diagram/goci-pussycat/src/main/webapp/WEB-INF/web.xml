@@ -41,4 +41,11 @@
         </listener-class>
     </listener>
 
+    <!-- listener to manage session cleanup -->
+    <listener>
+        <listener-class>
+            uk.ac.ebi.fgpt.goci.pussycat.listener.PussycatAwareHttpSessionListener
+        </listener-class>
+    </listener>
+
 </web-app>
