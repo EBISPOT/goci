@@ -29,7 +29,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="pussycatSessionManager" class="uk.ac.ebi.fgpt.goci.pussycat.manager.DefaultPussycatSessionManager">
+    <bean id="pussycatManager" class="uk.ac.ebi.fgpt.goci.pussycat.manager.DefaultPussycatManager">
         <property name="reasonerSession" ref="reasonerSession" />
         <property name="pussycatSessions">
             <set>

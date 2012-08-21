@@ -20,10 +20,8 @@ import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
-import uk.ac.ebi.fgpt.goci.pussycat.manager.PussycatSessionManager;
-import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
+import uk.ac.ebi.fgpt.goci.pussycat.manager.PussycatManager;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
-import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexusFactory;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSession;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSessionStrategy;
 import uk.ac.ebi.fgpt.goci.utils.OntologyUtils;
@@ -41,9 +39,7 @@ import java.util.*;
 @RequestMapping("/views")
 public class PussycatGOCIController {
     private PussycatSessionStrategy sessionStrategy;
-    private PussycatSessionManager pussycatManager;
-
-    private Map<HttpSession, RenderletNexus> nexusMap = new HashMap<HttpSession, RenderletNexus>();
+    private PussycatManager pussycatManager;
 
     private OntologyConfiguration ontologyConfiguration;
 
@@ -64,12 +60,12 @@ public class PussycatGOCIController {
         this.sessionStrategy = sessionStrategy;
     }
 
-    public PussycatSessionManager getPussycatManager() {
+    public PussycatManager getPussycatManager() {
         return pussycatManager;
     }
 
     @Autowired
-    public void setPussycatSessionManager(PussycatSessionManager pussycatManager) {
+    public void setPussycatSessionManager(PussycatManager pussycatManager) {
         this.pussycatManager = pussycatManager;
     }
 
@@ -292,7 +288,7 @@ public class PussycatGOCIController {
 
     protected PussycatSession getPussycatSession(HttpSession session) {
         getLog().debug("Attempting to obtain Pussycat session for HttpSession '" + session.getId() + "'");
-        if (getPussycatManager().hasAvailableSession(session)) {
+        if (getPussycatManager().hasAvailablePussycatSession(session)) {
             getLog().debug("Pussycat manager has an available session for HttpSession '" + session.getId() + "'");
             return getPussycatManager().getPussycatSession(session);
         }
@@ -309,46 +305,26 @@ public class PussycatGOCIController {
             getLog().debug("Pussycat manager has no available session, but can join HttpSession " +
                            "'" + session.getId() + "' to pussycat session " +
                            "'" + pussycatSession.getSessionID() + "'");
-            return getPussycatManager().joinPussycatSession(session, pussycatSession);
+            return getPussycatManager().bindPussycatSession(session, pussycatSession);
         }
     }
 
     protected RenderletNexus getRenderletNexus(HttpSession session) throws PussycatSessionNotReadyException {
         getLog().debug("Attempting to obtain RenderletNexus session for HttpSession '" + session.getId() + "'");
 
-        try {
-            RenderletNexus renderletNexus;
-            if (nexusMap.containsKey(session)) {
-                renderletNexus = nexusMap.get(session);
-                getLog().debug("RenderletNexus available for HttpSession '" + session.getId() + "'");
-                return renderletNexus;
-            }
-            else {
-                Collection<Renderlet> renderlets = getPussycatSession(session).getAvailableRenderlets();
-                if (renderlets.size() > 0) {
-                    renderletNexus = RenderletNexusFactory.createDefaultRenderletNexus(
-                            getOntologyConfiguration().getOWLOntologyManager(),
-                            getPussycatSession(session).getReasoner(),
-                            getOntologyConfiguration().getEfoLabels());
-
-                    for (Renderlet r : renderlets) {
-                        renderletNexus.register(r);
-                    }
-
-                    getLog().debug("Created new RenderletNexus for HttpSession '" + session + "'");
-                    nexusMap.put(session, renderletNexus);
-                    return renderletNexus;
-                }
-                else {
-                    getLog().debug("There are no available renderlets, " +
-                                   "leaving RenderletNexus for HttpSession '" + session + "' as null");
-                    return null;
-                }
-            }
+        RenderletNexus renderletNexus;
+        if (getPussycatManager().hasAvailableRenderletNexus(session)) {
+            getLog().debug("RenderletNexus available for HttpSession '" + session.getId() + "'");
+            renderletNexus = getPussycatManager().getRenderletNexus(session);
         }
-        catch (OWLConversionException e) {
-            throw new RuntimeException("Unexpected exception occurred obtaining reasoner", e);
+        else {
+            renderletNexus = getPussycatManager().createRenderletNexus(
+                    getOntologyConfiguration(),
+                    getPussycatManager().getPussycatSession(session));
+            getPussycatManager().bindRenderletNexus(session, renderletNexus);
         }
+
+        return renderletNexus;
     }
 
     protected Collection<OWLIndividual> fetchInstancesOf(final OWLOntology ontology, final OWLClass cls) {
