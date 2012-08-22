@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="eng">
+<html lang="eng" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
     <title>GOCI | GWAS Diagram Browser</title>
 
@@ -45,11 +45,11 @@
 
 <div id="legendrevealer">
     <div id="legendwrapper">
-        <a id="legendbutton" href="#" style="font-weight: bold; width: 120px;">
+        <a id="legendbutton" href="#" style="font-weight: bold; width: 130px;">
             Show Legend
         </a>
 
-        <div class="legend">
+        <div class="legend" style="width: 250px;">
             <h4>SNP-associated trait categories</h4>
             <svg
                     xmlns="http://www.w3.org/2000/svg" version="1.1"
@@ -79,7 +79,7 @@
                     <text x="20" y="87" font-family="Verdana" font-size="8" fill="black">Metabolic disorder</text>
 
                     <circle id="DISEASE" fill="#FCCDE5" r="5" cx="10" cy="100" stroke="black" stroke-width="0.5"></circle>
-                    <text x="20" y="102" font-family="Verdana" font-size="8" fill="black">Other disease [1]</text>
+                    <text x="20" y="102" font-family="Verdana" font-size="8" fill="black">Other disease</text>
 
                     <circle id="BODY_MSR" fill="#66CCFF" r="5" cx="10" cy="115" stroke="black" stroke-width="0.5"></circle>
                     <text x="20" y="117" font-family="Verdana" font-size="8" fill="black">Body measurements</text>
@@ -119,7 +119,7 @@
                     <text x="20" y="192" font-family="Verdana" font-size="8" fill="black">Liver enzyme measurement</text>
 
                     <circle id="MEASUREMENT" fill="#B3DE69" r="5" cx="10" cy="205" stroke="black" stroke-width="0.5"></circle>
-                    <text x="20" y="207" font-family="Verdana" font-size="8" fill="black">Other measurement [2]</text>
+                    <text x="20" y="207" font-family="Verdana" font-size="8" fill="black">Other measurement</text>
 
                     <circle id="CHEMICAL" fill="#CCEBC5" r="5" cx="10" cy="220" stroke="black" stroke-width="0.5"></circle>
                     <text x="20" y="222" font-family="Verdana" font-size="8" fill="black">Chemical compound</text>
@@ -159,14 +159,14 @@
     <li><a href="#downloadstab">Downloads</a></li>
     <!--<li><a href="#keytab">Key</a></li>-->
     <li><a href="#helptab">Help</a></li>
-    <li><a href="#contacttab">Contact</a></li>
+    <!--<li><a href="#contacttab">Contact</a></li>-->
     <li><a href="#abouttab">About</a></li>
     <li id="logitem" style="display: none"><a href="#logtab">Log</a></li>
 </ul>
 
 <div id="tabs">
 <div id="diagramtab" class="tabcontent">
-    <div>This diagram shows all SNP-trait associations with a p-value smaller than 5 x 10<sup>-8</sup>, published in the
+    <div>This diagram shows all SNP-trait associations with a p-value smaller than 5 &#215; 10<sup>-8</sup>, published in the
         catalogue up to the end of June 2012. For information on how to navigate the diagram, see the help tab.
     </div>
 
@@ -370,10 +370,12 @@
 
 </div>
 
-<div id="helptab" class="tabcontent">
-    <p> This section aims to provide some guidance on how the use the new dynamic GWAS diagram. For an
+<div id="helptab" class="tabcontent linespacewide">
+    <p> This section aims to provide some guidance on how to use the new dynamic GWAS diagram. For an
         introduction
         to the GWAS catalog, see the "About" tab.</p>
+
+    <h3>Diagram features</h3>
     <ul>
         <li><b>Initial diagram generation:</b> When the "GWAS Diagram" tab is first selected, there may be a
             delay of up to
@@ -383,16 +385,17 @@
             as this will simply
             cause the rendering process to restart.
         </li>
-        <li><b>Number of studies:</b> The beta version of the GWAS diagram shows SNP-trait associations with a p-value
-            smaller than 5 &#215; 10<sup>-8</sup>, for all studies published in the catalogue up to the end of
-            June 2012.
-        </li>
+        <!--<li><b>Number of studies:</b> The beta version of the GWAS diagram shows SNP-trait associations with a p-value-->
+            <!--smaller than 5 &#215; 10<sup>-8</sup>, for all studies published in the catalogue up to the end of-->
+            <!--June 2012.-->
+        <!--</li>-->
         <li><b>Zooming:</b> There are two ways in which the diagram can be zoomed. The easiest option is to use the
             scroll wheel on the mouse or touch pad on a laptop. Scrolling
             up zooms in and scrolling down zooms out. This feature may not work with all touch pads. Alternatively, the
             left-hand side of the diagram features a zoom bar which can be
             used to generate exactly the same effect, by dragging the little square up or down the bar with the mouse
-            pointer.
+            pointer. The diagram currently zooms from the top left corner, so even if you zoom using a mouse scroll wheel,
+            you may have to move the diagram to get to the desired area.
         </li>
         <li><b>Moving the diagram:</b> The diagram can be moved around the viewing area by clicking on any part of the
             diagram with the left mouse button and,
@@ -401,8 +404,8 @@
             diagram on a specific location at higher zoom levels.
         </li>
         <li><b>Labels:</b> Chromosomes and traits (coloured circles) have labels that display when hovering the mouse
-            pointer over
-            a given element.
+            pointer over a given element. The displayed labels correspond to the trait names assigned to a study by the
+            catalogue curators.
         </li>
 
 
@@ -412,93 +415,152 @@ diagram readable, no more than six traits will be displayed for any region for t
 for a given region, this is indicated by the presence of an ellipsis (...) at the end of a line of traits. At present, this ellipsis
 is static, i.e. it is not possible to access the undisplayed traits through it. We are currently working on a feature that
 generates a zoomed-in version of the corresponding region if an ellipsis is clicked on.</li> -->
-        <li><b>Colours:</b> A new colour scheme for the GWAS diagram is currently under development. A legend of the
-            colour scheme, based on the EFO class hierarchy, detailing which colour
-            represents which trait or category of traits is given in the "Key" tab. This will soon be added to the
-            diagram page. At present, white represents traits for which
-            not colour category is available yet.
+        <li><b>Colours:</b> A new colour scheme for the GWAS diagram has been developed in collaboration with the catalogue curators.
+            A legend of the colour scheme is available in the "Legend" box in the top right corner of the diagram.
+            Simply click on the box to expand or hide the legend.
         </li>
-        <li><b>Filtering:</b> Various filtering capabilities are currently under development. They will include
-            filtering the diagram by
-            one or more GWAS traits or trait categories, filtering by study, chromosomal region and p-value. New
-            features will be made
-            available for testing as soon as they are implemented so check back regularly for updates.
+        <li><b>Filtering:</b> The full diagram can be filtered by typing a trait into the "Filter" text box above the diagram and hitting "Enter".
+            <ul><li>If the trait is available in the diagram, all other traits will be faded to a lower visibility to highlight the desired trait.</li>
+            <li>Searchable traits are based on EFO categories and may not coincide with curator-assigned trait names, e.g. a search for "hair color"
+            will highlight SNP-trait associations labelled hair color as well as "black vs blond hair" and "red vs non-red hair".</li>
+            <li>Trait filtering is also spelling-sensitive, i.e. a search for "hair colour" will return no results. Auto-complete functionality for the filtering box is currently
+            under development.</li>
+             <li>More advanced filtering capabilities, such as p-value and time, are also under development, so check back regularly for updates.</li></ul>
         </li>
+        <li><b>Time series:</b> A slide show of consecutive GWAS diagrams from 2005 to present is available in the "Time series view" tab. The time interval between
+        each diagram is six months, including all dates up to the end of either June or December of that year. The slide show auto-advances at a pace of 2 seconds per slide.
+        It can be stopped at any time by clicking on the diagram. Any diagram in the series can be selected by clicking on the dot for that diagram in the dotted time series
+        indicator below the slide show.
+        </li>
+        <li><b>Downloads:</b> All time series images are available for download as png files in the "Downloads" tab. Various ontology files are also available, including Experimental
+        Factor Ontology and the GWAS schema ontology and knowledge base.</li>
     </ul>
     <br>
 
+    <h3>Colour categories</h3>
+    A new colour scheme for the GWAS diagram has been developed in collaboration with the catalogue curators. The selection of the different
+    colour categories is data-driven; categories used in more than 150 individual SNP-trait associations were given their own colour, while less used categories
+    were aggregated into broader categories such as "Other disease". Categories are EFO classes and a category is "used" if it or any of its subclasses has been mapped
+    to a GWAS trait and this trait is in turn part of a SNP-trait association. Below is a list of examples of the kind of traits that belong to each category. Some traits may belong to multiple categories.
+
+    <ul>
+        <li><b>Cardiovascular disorder:</b> any disease of the cardiovascular system, such as aortic aneurysm or coronary heart disease.</li>
+        <li><b>Neurological disorder:</b> any disease of the nervous system, including Alzheimer's disease or autism</li>
+        <li><b>Immune system disorder:</b> any disease of the immune system, such lupus erythematosus, psoriasis or sarcoidosis </li>
+        <li><b>Digestive system disorder:</b> any disease that affects a part of the digestive system, such as celiac disease or pancreatitis</li>
+        <li><b>Cancer:</b> this category includes any kind of tissue growth resulting from uncontrolled cell proliferation, usually, although not necessarily, malignant. Examples include breast cancer
+        and Hodgkins lymphoma</li>
+        <li><b>Metabolic disorder:</b> any disorder caused by an abnormal metabolic process, such as type II diabetes, metabolic syndrome or vitamin D deficiency </li>
+        <li><b>Other disease:</b> any disease that does not fit into any of the preceeding categories. Examples include genetic disorders and skeletal system diseases.</li>
+        <li><b>Body measurements:</b> this category includes measurements of height, weight, area etc of the human body and its parts, such as body weight or body mass index. </li>
+        <li><b>Lipid or lipoprotein measurement:</b> any quantification of some circulating lipid or some lipoprotein in all or part of the body, such as LDL cholesterol measurement</li>
+        <li><b>Cardiovascular measurements:</b> measurement of some part of the cardiovascular system, e.g. ankle brachial index or QT interval</li>
+        <li><b>Hematological measurement:</b> a measurement quantifying some blood cell or component, including hematocrit and platelet count</li>
+        <li><b>Inflammatory marker measurement:</b> any measurement of a protein with a known inflammatory response, e.g. C-reactive protein measurement or interleukin 10 measurement</li>
+        <li><b>Liver enzyme measurement:</b> any quantification of liver enzymes, typically in blood, such as alanine transaminase measurement or gamma glutamyl transpeptidase measurement</li>
+        <li><b>Other measurement:</b> any measurement not covered by the preceeding categories, including cortical thickness or fasting blood glucose measurement</li>
+        <li><b>Chemical compound:</b> any chemical compound trait that has not yet been mapped to a measurement</li>
+        <li><b>Biological process:</b> any activity of a living organism that supports life, e.g. odontogenesis or behaviour</li>
+        <li><b>Other traits:</b> any trait that does not fit into any of the preceeding categories, e.g. hair color, eye color or brain structure</li>
+        <!--<li><b>Trait mapping in progress</b> </li>-->
+    </ul>
+
+
+    <br>
+
+    <h3>Questions, requests and bug reports</h3>
     <p>For questions, feature requests or bug reports, please contact <a href="mailto:dwelter@ebi.ac.uk">Dani Welter</a>
         at EBI. In particular, please let
         us know if a given feature does not behave as described. Always specify in which web browser, including which
         version, and which operating system the problem occurred.
         This application is tested in all the latest versions of Mozilla Firefox, Google Chrome, Safari and Internet
         Explorer. If you find an older browser version which does not work, please let us know. In this event, <b><a
-                href="images/GWASdiagram.png">click here for a static version of the diagram in PNG format</a></b>.</p>
+                href="images/timeseries/gwas-2012-06.png">click here for a static version of the diagram in PNG format</a></b>.</p>
 </div>
 
-<div id="abouttab" class="tabcontent">
+<div id="abouttab" class="tabcontent linespacewide">
     <div>
-        <img src="images/topbanner.jpg" alt="NHGRI banner"/>
-        <img src="images/ebilogo.gif" alt="EBI banner" style="float: right">
+        <a href="http://www.genome.gov"><img src="images/topbanner.jpg" alt="NHGRI banner"/> </a>
+        <a href="http://www.ebi.ac.uk"><img src="images/ebilogo.gif" alt="EBI banner" style="float: right"></a>
     </div>
 
     <h3>Background</h3>
 
-    <p>The National Human Genome Research Institute (NHGRI) Catalog of Published Genome-Wide Association
-        Studies or GWAS catalogue provides a quality controlled, manually curated, literature-derived
-        collection of all published GWA studies assaying at least 100,000 SNPs and all SNP-trait
-        associations with p-values < 1.0 &lowast; 10<sup>-5</sup> <i>(Hindorff et al., 2009)</i>.
-        Publicly available at <a href="http://www.genome.gov/gwastudies">http://www.genome.gov/gwastudies</a>,
-        the catalogue can be searched by a number of options including journal, first author, trait,
-        chromosomal region, gene, SNP, odds ratio and p-value threshold. As of 06/04/12, it includes
-        1233 publications and 6186 SNPs. In addition to the SNP-trait association data, the catalogue
-        also publishes the iconic GWAS diagram of all SNP-trait associations mapped to the SNPs&rsquo;
+    <p>The National Human Genome Research Institute (NHGRI) <a href="http://www.genome.gov/gwastudies">Catalog of Published Genome-Wide Association
+        Studies</a> or GWAS catalogue provides a quality controlled, manually curated, literature-derived
+        collection of all published <a href="http://en.wikipedia.org/wiki/Genome-wide_association_study">GWA studies</a> assaying at
+        least 100,000 <a href="http://en.wikipedia.org/wiki/Single-nucleotide_polymorphism">SNPs</a> and all SNP-trait
+        associations with p-values < 1.0 &#215; 10<sup>-5</sup> <i>(Hindorff et al., 2009)</i>.
+        The catalogue can be searched by a number of options including journal, first author, trait,
+        chromosomal region, gene, SNP, odds ratio and p-value threshold. As of 20/08/12, it includes
+        1355 publications and 7226 SNPs. In addition to the SNP-trait association data, the catalogue
+        also publishes the iconic GWAS diagram of all SNP-trait associations, with p-values &#8804; 5.0 &#215; 10<sup>-8</sup>, mapped to the SNPs&rsquo;
         chromosomal locations. The diagram is released quarterly and the latest version of the diagram
         is made available on the GWAS catalogue website in PDF format and as a PowerPoint slide.</p>
 
+
+    <br>
+
+    <!--<h3>Status update</h3>-->
+
+    <!--<p>-->
+        <!--This is a list of features currently (or soon to be) available in the diagram:-->
+    <!--<ul>-->
+        <!--<li><b>Colours:</b> A new colour scheme for the diagram is under development in collaboration-->
+            <!--with the NHGRI GWAS catalog curation team.-->
+        <!--</li>-->
+        <!--<li><b>Mouse-over:</b> Hovering over a chromosome or coloured circle displays the name of the-->
+            <!--corresponding chromosome or trait.-->
+        <!--</li>-->
+        <!--<li><b>Filtering options:</b> Filtering capabilities will be rolled out for testing as soon as-->
+            <!--they are implemented. Basic filtering options should be available in the next few weeks.-->
+        <!--</li>-->
+    <!--</ul>-->
+    <!--Please select the "Help" tab for a guide on how to use the GWAS diagram.-->
+    <!--<br>-->
+
+    <h3>The GWAS diagram browser</h3>
+
     <p>This page hosts a novel system that generates the GWAS diagram dynamically
-        using semantic web technologies. Ultimately, the diagram produced in this
+        using semantic web technologies. The diagram produced in this
         fashion can be filtered and searched at different levels of granularity and by different
-        criteria, including trait, chromosomal region and publication date. It is going to be possible to zoom in
+        criteria, currently including trait (main diagram tab) and publication date (time series tab, currently availabe for a fixed set of time points only). It is possible to zoom in
         over chromosomes in order to see all SNP-trait associations for a given region. SNP-trait
-        associations are also
-        going to be interactive, providing summary information on mouse-over as well as being clickable
-        to allow proceeding from an association to the catalogue entry and to the publication.</p>
+        associations are shortly going to be fully interactive. Trait name information is already available on mouse-over and traits being clickable
+        to allow proceeding from an association to the catalogue entry and to the publication is currently under development.</p>
+
+    <p>The diagram is generated in SVG (Scalable Vector Graphics) as a web application with a Java back-end using an Apache Tomcat server. The catalogue data is presented as
+        a knowledge base, based on the GWAS Catalog schema ontology, which formalises the relationship between various concepts such as SNP, trait and study. Both the knowledge base
+        and the schema ontology can be found in the "Downloads" tab. The traits in the GWAS catalog are formalised by mapping each trait to one or more terms in the
+        <a href="http://www.ebi.ac.uk/efo/">Experimental Factor Ontology</a> (EFO). Mapping traits to an ontology provides querying capabilities across multiple traits and trait categories.
+        In the case of cancer for example, a single query can identify all traits related to cancer whereas in the GWAS catalog, such a query would require each cancer-related trait to be
+        selected manually. The EFO-driven SNP-trait associations also form the basis of the new colour scheme of the dynamic GWAS diagram.
+    </p>
+
+
 
     <br>
 
-    <h3>Status update</h3>
-
-    <p>
-        This is a list of features currently (or soon to be) available in the diagram:
-    <ul>
-        <li><b>Colours:</b> A new colour scheme for the diagram is under development in collaboration
-            with the NHGRI GWAS catalog curation team.
-        </li>
-        <li><b>Mouse-over:</b> Hovering over a chromosome or coloured circle displays the name of the
-            corresponding chromosome or trait.
-        </li>
-        <li><b>Filtering options:</b> Filtering capabilities will be rolled out for testing as soon as
-            they are implemented. Basic filtering options should be available in the next few weeks.
-        </li>
-    </ul>
-    Please select the "Help" tab for a guide on how to use the GWAS diagram.
-    <br>
-
-    <p style="font-size:80%">Hindorff, L.A., Sethupathy, P., Junkins, H.A., Ramos, E.M., Mehta, J.P.,
-        Collins, F.S. and Manolio, T.A. (2009) Potential Etiologic and Functional Implications of
-        Genome-Wide Association Loci of Human Diseases and Traits. <i>Proc. Natl. Acad. Sci. USA.</i>
-        106, 9362&ndash;9367.</p>
-
-</div>
-
-<div id="contacttab" class="tabcontent">
+    <h3>Contact</h3>
     <p>For questions and to provide feedback, please contact <a href="mailto:dwelter@ebi.ac.uk">Dani Welter</a> at EBI.
     </p>
 
     <p>For bug reports and feature requests, please use our <a href="http://www.ebi.ac.uk/panda/jira/browse/GOCI">bug
         tracker</a>. </p>
+
+    <br>
+    <br>
+
+    <a href="http://www.ncbi.nlm.nih.gov/pubmed/19474294"> <p style="font-size:80%">Hindorff, L.A., Sethupathy, P., Junkins, H.A., Ramos, E.M., Mehta, J.P.,
+        Collins, F.S. and Manolio, T.A. (2009) Potential Etiologic and Functional Implications of
+        Genome-Wide Association Loci of Human Diseases and Traits. <i>Proc. Natl. Acad. Sci. USA.</i>
+        106, 9362&ndash;9367.</p>  </a>
+
 </div>
+
+<!--<div id="contacttab" class="tabcontent">-->
+
+<!--</div>-->
 
 <div id="logtab" class="tabcontent" style="display: none;">
     <h4>SVG transform debugging:</h4>

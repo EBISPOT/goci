@@ -19,6 +19,10 @@ h3.nomargin {
     overflow: auto;
 }
 
+.linespacewide {
+    line-height: 140%;
+}
+
 .debugging {
     border: #f08080 dashed 1px;
 }
