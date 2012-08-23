@@ -59,6 +59,7 @@
                 <version>2.3</version>
                 <configuration>
                     <finalName>goci-server</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
                         <descriptor>src/main/assembly/goci-assembly-descriptor.xml</descriptor>
                     </descriptors>

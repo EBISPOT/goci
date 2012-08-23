@@ -32,6 +32,7 @@
                 <version>2.3</version>
                 <configuration>
                     <finalName>SNPbatchLoader</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
                         <descriptor>src/main/assembly/SNPbatchLoader-assembly.xml</descriptor>
                     </descriptors>
