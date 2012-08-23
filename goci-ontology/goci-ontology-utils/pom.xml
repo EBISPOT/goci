@@ -24,14 +24,12 @@
     <dependencies>
         <!-- OWL API and HermiT reasoner, for converting GWAS concepts -->
         <dependency>
-            <groupId>org.semanticweb.owlapi</groupId>
-            <artifactId>owlapi</artifactId>
-            <version>3.2.4</version>
+            <groupId>net.sourceforge.owlapi</groupId>
+            <artifactId>owlapi-distribution</artifactId>
         </dependency>
         <dependency>
-            <groupId>hermit</groupId>
-            <artifactId>hermit</artifactId>
-            <version>1.3.4</version>
+            <groupId>org.semanticweb</groupId>
+            <artifactId>HermiT</artifactId>
         </dependency>
 
         <!-- spring core, for using classpath resources -->

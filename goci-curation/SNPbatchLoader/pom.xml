@@ -57,8 +57,9 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>3.5-beta6</version>
-            <scope>provided</scope>
+            <version>3.7</version>
+            <!--<version>3.5-beta6</version>-->
+            <!--<scope>provided</scope>-->
         </dependency>
 
         <!-- Using alternative slf4j/log4j dependencies: these should be provided -->
@@ -82,10 +83,6 @@
             <version>1.2.14</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>3.7</version>
-        </dependency>
+
     </dependencies>
 </project>
