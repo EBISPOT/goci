@@ -175,6 +175,11 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
+        <repository>
+            <id>Sonatype repository</id>
+            <name>Sonatype's Maven repository</name>
+            <url>https://oss.sonatype.org/content/repositories/releases/</url>
+        </repository>
     </repositories>
 
 
@@ -197,10 +202,16 @@
     <!-- Dependencies that can be used as required, declared here for -->
     <dependencyManagement>
         <dependencies>
+            <!-- TODO - HermiT 1.3.6 doesn't appear to like owlapi 3.3+ -->
             <dependency>
                 <groupId>net.sourceforge.owlapi</groupId>
                 <artifactId>owlapi-distribution</artifactId>
                 <version>3.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.semanticweb.owlapi</groupId>
+                <artifactId>owlapi</artifactId>
+                <version>3.2.4</version>
             </dependency>
             <dependency>
                 <groupId>org.semanticweb</groupId>

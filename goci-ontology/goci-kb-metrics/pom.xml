@@ -61,8 +61,10 @@
 
         <!-- OWL API and HermiT reasoner, for converting GWAS concepts -->
         <dependency>
-            <groupId>net.sourceforge.owlapi</groupId>
-            <artifactId>owlapi-distribution</artifactId>
+            <groupId>org.semanticweb.owlapi</groupId>
+            <artifactId>owlapi</artifactId>
+            <!--<groupId>net.sourceforge.owlapi</groupId>-->
+            <!--<artifactId>owlapi-distribution</artifactId>-->
         </dependency>
         <dependency>
             <groupId>org.semanticweb</groupId>
