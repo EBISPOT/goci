@@ -50,6 +50,7 @@
 
     <bean id="loadingPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.SVGLoadingPussycatSession">
         <property name="cacheDirectory" value="/nfs/public/rw/fg/fgpt/goci-home/diagram/cache/" />
+        <property name="reasonerSession" ref="reasonerSession" />
     </bean>
 
 </beans>
