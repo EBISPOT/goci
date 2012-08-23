@@ -5,12 +5,12 @@
     <parent>
         <artifactId>goci-diagram</artifactId>
         <groupId>uk.ac.ebi.fgpt</groupId>
-        <version>0.8-SNAPSHOT</version>
+        <version>0.8</version>
     </parent>
 
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci-pussycat-renderlet</artifactId>
-    <version>0.8-SNAPSHOT</version>
+    <version>0.8</version>
 
     <name>GOCI Pussycat Renderlet API (renders OWL entities as SVG)</name>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
@@ -77,7 +77,7 @@
         <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
             <artifactId>goci-datapublisher</artifactId>
-            <version>0.8-SNAPSHOT</version>
+            <version>0.8</version>
         </dependency>
 
     </dependencies>
