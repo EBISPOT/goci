@@ -22,9 +22,15 @@ function init() {
         log("Initializing pussycat UI...");
         // create tabs
         $("#browsertabs").tabs({
-                                   show:tabShow,
-                                   selected:0
+                                   show:tabShow
                                });
+
+        $("#browsertabs ul").localScroll({
+                                         target:"#browsertabs",
+                                         duration:0,
+                                         hash:true
+                                     });
+
         // create slides for timeseries
         $('#timeseriestab').slides({
                                        preload:true,
