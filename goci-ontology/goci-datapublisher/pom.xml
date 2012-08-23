@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>goci-ontology</artifactId>
         <groupId>uk.ac.ebi.fgpt</groupId>
-        <version>0.8-SNAPSHOT</version>
+        <version>0.8</version>
     </parent>
 
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci-datapublisher</artifactId>
-    <version>0.8-SNAPSHOT</version>
+    <version>0.8</version>
 
     <name>GOCI DataPublisher (converts GWAS data to OWL)</name>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
@@ -56,7 +54,7 @@
         <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
             <artifactId>goci-ontology-utils</artifactId>
-            <version>0.8-SNAPSHOT</version>
+            <version>0.8</version>
         </dependency>
 
         <!-- spring jdbc for database access -->
