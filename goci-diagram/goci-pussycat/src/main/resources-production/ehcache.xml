@@ -3,7 +3,7 @@
          xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
          updateCheck="false">
 
-    <diskStore path="/ebi/microarray/home/fgpt/test/goci-home/publisher/cache" />
+    <diskStore path="user.home/.goci/publisher/cache" />
 
     <defaultCache
             eternal="true"
