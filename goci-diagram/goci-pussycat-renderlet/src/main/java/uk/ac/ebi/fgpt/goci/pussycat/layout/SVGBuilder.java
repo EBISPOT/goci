@@ -19,7 +19,7 @@ import java.io.StringWriter;
 public class SVGBuilder {
 
     Document doc;
-    Element svgRoot;
+    Element svgRoot, baseTranslate;
     String svgNS;
     int width, height;
 
@@ -29,7 +29,9 @@ public class SVGBuilder {
         DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
         svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
         doc = impl.createDocument(svgNS, "svg", null);
-        width = SVGCanvas.canvasWidth;
+        int canvasWidth = SVGCanvas.canvasWidth;
+        int widthOffset = 200;
+        width = canvasWidth + widthOffset;
         height = SVGCanvas.canvasHeight;
 
         svgRoot = doc.getDocumentElement();
@@ -40,7 +42,7 @@ public class SVGBuilder {
     public boolean hasElements(){
         boolean flag = false;
 
-        if(svgRoot.hasChildNodes()){
+        if(baseTranslate != null && baseTranslate.hasChildNodes()){
             flag = true;
         }
 
@@ -48,21 +50,21 @@ public class SVGBuilder {
     }
 
     public void removeAllElements(){
-        NodeList allElements = svgRoot.getChildNodes();
+        NodeList allElements = baseTranslate.getChildNodes();
 
         for(int i = 0; i < allElements.getLength(); i++){
-            svgRoot.removeChild(allElements.item(i));
+            baseTranslate.removeChild(allElements.item(i));
         }
     }
 
     public void addElement(Element element){
         if(element != null){
-            svgRoot.appendChild(doc.importNode(element,true));
+            baseTranslate.appendChild(doc.importNode(element,true));
         }
     }
     
     public void removeElement(Element element){
-        svgRoot.removeChild(element);
+        baseTranslate.removeChild(element);
     }
 
     public Element createElement(String type){
@@ -151,16 +153,16 @@ public class SVGBuilder {
         mask.setAttribute("id", "traitMask");
         mask.setAttribute("maskUnits", "userSpaceOnUse");
         mask.setAttribute("x", "0");
-        mask.setAttribute("y", "0");
+        mask.setAttribute("y", "-100");
         mask.setAttribute("width", Integer.toString(width));
         mask.setAttribute("height", Integer.toString(height));
 
         Element maskRect = doc.createElement("rect");
         maskRect.setAttribute("x", "0");
-        maskRect.setAttribute("y", "0");
+        maskRect.setAttribute("y", "-100");
         maskRect.setAttribute("width", Integer.toString(width));
         maskRect.setAttribute("height", Integer.toString(height));
-        maskRect.setAttribute("opacity", ".5");
+        maskRect.setAttribute("opacity", ".25");
         maskRect.setAttribute("fill", "grey");
 
         mask.appendChild(maskRect);
@@ -170,6 +172,11 @@ public class SVGBuilder {
         defs.appendChild(linGrad2);
         defs.appendChild(mask);
         svgRoot.appendChild(defs);
+
+        Element translate = doc.createElement("g");
+        translate.setAttribute("transform", "translate(0,100)");
+        svgRoot.appendChild(translate);
+        baseTranslate = translate;
     }
 
 }

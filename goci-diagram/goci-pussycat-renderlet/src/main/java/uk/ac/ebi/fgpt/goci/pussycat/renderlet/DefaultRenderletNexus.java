@@ -214,7 +214,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
         for (int i = 0; i < allTypes.length; i++) {
             OWLClass typeClass = allTypes[i].asOWLClass();
 
-            if (typeIRI.equals(typeClass.getIRI())) {
+            if (typeClass.getIRI().equals(typeIRI)) {
                 type = true;
                 break;
             }
