@@ -108,6 +108,7 @@ public class AssociationRenderlet implements Renderlet<OWLOntology, OWLNamedIndi
 
                     g.setAttribute("id",renderingEntity.getIRI().toString());
                     g.setAttribute("transform", chromosomeTransform(band.getChromosome()));
+                    g.setAttribute("class", "gwas-trait ");
 
                     SVGArea bandCoords = band.getCoordinates();
             //print statement to keep track of which band is being processed as I've had trouble with some bands

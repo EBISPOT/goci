@@ -5,12 +5,14 @@ import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
-import uk.ac.ebi.fgpt.goci.pussycat.layout.*;
+import uk.ac.ebi.fgpt.goci.pussycat.layout.Association;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGBuilder;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.chromosome.ChromosomeRenderlet;
+import uk.ac.ebi.fgpt.goci.utils.OntologyUtils;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -135,13 +137,25 @@ public class DefaultRenderletNexus implements RenderletNexus {
             for(String band : renderingOrder){
                 ArrayList<Association> assocs = bandLocations.get(band).getAssociations();
 
+                Element associationSVG = null;
+                ArrayList<Element> traits = new ArrayList<Element>();
+                OWLNamedIndividual temp = null;
+
                 for(Association assoc : assocs){
                     OWLNamedIndividual ind = assoc.getAssociation();
                     if(individuals.contains(ind)){
                         for (Renderlet ra : renderlets) {
                             if (ra.canRender(this, ontology, ind)) {
                                 getLog().trace("Dispatching render() request to renderlet '" + ra.getName() + "'");
-                                svgBuilder.addElement(ra.render(this, ontology, ind, svgBuilder));
+                    //            svgBuilder.addElement(ra.render(this, ontology, ind, svgBuilder));
+
+                                Element current =  ra.render(this, ontology, ind, svgBuilder);
+                                getLog().debug("Acquired SVG for association " + ind);
+
+                                if(current != null){
+                                    associationSVG = current;
+                                    temp = ind;
+                                }
 
                                 OWLNamedIndividual trait = getTrait(ind, ontology);
                                 if(trait != null){
@@ -160,7 +174,17 @@ public class DefaultRenderletNexus implements RenderletNexus {
                                         for (Renderlet rt : getRenderlets()){
                                             if (rt.canRender(this, ontology, trait)) {
                                                 getLog().trace("Dispatching render() request to renderlet '" + rt.getName() + "'");
-                                                svgBuilder.addElement(rt.render(this, ontology, trait, svgBuilder));
+                          //                      svgBuilder.addElement(rt.render(this, ontology, trait, svgBuilder));
+                                                Element newTrait = rt.render(this, ontology, trait, svgBuilder);
+                                                traits.add(newTrait);
+                                                getLog().debug("Acquired SVG for trait " + trait);
+
+                                                IRI traitIRI = getTraitClass(trait, ontology);
+                                                String traitClass = OntologyUtils.getShortForm(traitIRI, ontology);
+                                                String existingClass = associationSVG.getAttribute("class");
+                                                associationSVG.setAttribute("class", existingClass + " " + traitClass   );
+                                                getLog().debug("Adding trait " + traitClass + " to CSS classes for association " + temp);
+
                                             }
                                         }
                                     }
@@ -172,6 +196,18 @@ public class DefaultRenderletNexus implements RenderletNexus {
                         }
 
                     }
+                }
+                svgBuilder.addElement(associationSVG);
+                getLog().debug("Added SVG for associaton " + temp);
+
+                for(Association assoc : assocs){
+                    getRenderingEvent(assoc.getAssociation()).updateRenderedSVG(associationSVG);
+                    getLog().debug("Updated SVG for association " + assoc.getAssociation());
+                }
+
+                for(Element trait : traits){
+                    svgBuilder.addElement(trait);
+                    getLog().debug("Added SVG for trait " + trait);
                 }
 
             }
@@ -214,7 +250,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
         for (int i = 0; i < allTypes.length; i++) {
             OWLClass typeClass = allTypes[i].asOWLClass();
 
-            if (typeIRI.equals(typeClass.getIRI())) {
+            if (typeClass.getIRI().equals(typeIRI)) {
                 type = true;
                 break;
             }
@@ -434,6 +470,28 @@ public class DefaultRenderletNexus implements RenderletNexus {
         }
 
         return sorted;
+    }
+
+    public IRI getTraitClass(OWLNamedIndividual individual,
+                              OWLOntology ontology) {
+        IRI traitClass = null;
+
+        // this gets the first, asserted, non-experimental factor class and then exits
+        // todo - fix this so that we get the most specific known type
+        Set<OWLClassExpression> allTypes = individual.getTypes(ontology);
+        if (allTypes.size() > 0) {
+            for (OWLClassExpression typeClassExpression : allTypes) {
+                OWLClass typeClass = typeClassExpression.asOWLClass();
+                traitClass = typeClass.getIRI();
+                if (!traitClass.toString().equals(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI)) {
+                    break;
+                }
+            }
+        }
+        else {
+            getLog().error("Trait " + individual + " has no determinable type");
+        }
+        return traitClass;
     }
 }
 

@@ -44,6 +44,10 @@ public class RenderingEvent<O> {
         this.svgArea = svgArea;
     }
 
+    public void updateRenderedSVG(Element svg){
+        renderedSVG = svg;
+    }
+
     public Renderlet getRenderingRenderlet() {
         return renderingRenderlet;
     }
