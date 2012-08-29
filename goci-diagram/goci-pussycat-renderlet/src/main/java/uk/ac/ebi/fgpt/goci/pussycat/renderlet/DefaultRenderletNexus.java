@@ -130,87 +130,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
                 classExpression);
 
         if(renderedEntities.size() == 0){
-            renderChromosomes(svgBuilder);
-
-            ArrayList<String> renderingOrder =  buildTraitMap(individuals, ontology);
-            getLog().debug("Starting rendering of trait associations");
-            for(String band : renderingOrder){
-                ArrayList<Association> assocs = bandLocations.get(band).getAssociations();
-
-                Element associationSVG = null;
-                ArrayList<Element> traits = new ArrayList<Element>();
-                OWLNamedIndividual temp = null;
-
-                for(Association assoc : assocs){
-                    OWLNamedIndividual ind = assoc.getAssociation();
-                    if(individuals.contains(ind)){
-                        for (Renderlet ra : renderlets) {
-                            if (ra.canRender(this, ontology, ind)) {
-                                getLog().trace("Dispatching render() request to renderlet '" + ra.getName() + "'");
-                    //            svgBuilder.addElement(ra.render(this, ontology, ind, svgBuilder));
-
-                                Element current =  ra.render(this, ontology, ind, svgBuilder);
-                                getLog().debug("Acquired SVG for association " + ind);
-
-                                if(current != null){
-                                    associationSVG = current;
-                                    temp = ind;
-                                }
-
-                                OWLNamedIndividual trait = getTrait(ind, ontology);
-                                if(trait != null){
-                                    getLog().trace("Trait: " + trait);
-
-                                    String traitName = getTraitName(trait, ontology, ind);
-                                    if(traitName.contains("'")){
-                                        traitName = traitName.replace("'", "\\'");
-                                    }
-
-                                    if(bandLocations.get(band).getRenderedTraits().contains(traitName)){
-                                        getLog().trace("Trait " + traitName + " already rendered at band " + band);
-                                    }
-                                    else{
-                                        getLog().trace("Trait " + traitName + " was not previously rendered at band " + band);
-                                        for (Renderlet rt : getRenderlets()){
-                                            if (rt.canRender(this, ontology, trait)) {
-                                                getLog().trace("Dispatching render() request to renderlet '" + rt.getName() + "'");
-                          //                      svgBuilder.addElement(rt.render(this, ontology, trait, svgBuilder));
-                                                Element newTrait = rt.render(this, ontology, trait, svgBuilder);
-                                                traits.add(newTrait);
-                                                getLog().debug("Acquired SVG for trait " + trait);
-
-                                                IRI traitIRI = getTraitClass(trait, ontology);
-                                                String traitClass = OntologyUtils.getShortForm(traitIRI, ontology);
-                                                String existingClass = associationSVG.getAttribute("class");
-                                                associationSVG.setAttribute("class", existingClass + " " + traitClass   );
-                                                getLog().debug("Adding trait " + traitClass + " to CSS classes for association " + temp);
-
-                                            }
-                                        }
-                                    }
-                                }
-                                else{
-                                    getLog().debug("The trait for association " + ind + " is null");
-                                }
-                            }
-                        }
-
-                    }
-                }
-                svgBuilder.addElement(associationSVG);
-                getLog().debug("Added SVG for associaton " + temp);
-
-                for(Association assoc : assocs){
-                    getRenderingEvent(assoc.getAssociation()).updateRenderedSVG(associationSVG);
-                    getLog().debug("Updated SVG for association " + assoc.getAssociation());
-                }
-
-                for(Element trait : traits){
-                    svgBuilder.addElement(trait);
-                    getLog().debug("Added SVG for trait " + trait);
-                }
-
-            }
+            renderSVGFromScratch(svgBuilder, ontology, individuals);
             getLog().debug("Rendering complete");
         }
         else{
@@ -239,6 +159,84 @@ public class DefaultRenderletNexus implements RenderletNexus {
                         builder.addElement(r.render(this, ontology, chrom, null));
                     }
                 }
+            }
+        }
+    }
+
+    public void renderSVGFromScratch(SVGBuilder svgBuilder, OWLOntology ontology, Set<OWLNamedIndividual> individuals){
+        renderChromosomes(svgBuilder);
+
+        ArrayList<String> renderingOrder =  buildTraitMap(individuals, ontology);
+        getLog().debug("Starting rendering of trait associations");
+        for(String band : renderingOrder){
+            ArrayList<Association> assocs = bandLocations.get(band).getAssociations();
+
+            Element associationSVG = null;
+            ArrayList<Element> traits = new ArrayList<Element>();
+
+            for(Association assoc : assocs){
+                OWLNamedIndividual ind = assoc.getAssociation();
+                if(individuals.contains(ind)){
+                    for (Renderlet ra : renderlets) {
+                        if (ra.canRender(this, ontology, ind)) {
+                            getLog().trace("Dispatching render() request to renderlet '" + ra.getName() + "'");
+
+                            Element current =  ra.render(this, ontology, ind, svgBuilder);
+
+                            if(current != null){
+                                associationSVG = current;
+                            }
+
+                            OWLNamedIndividual trait = getTrait(ind, ontology);
+                            if(trait != null){
+                                getLog().trace("Trait: " + trait);
+
+                                String traitName = getTraitName(trait, ontology, ind);
+                                if(traitName.contains("'")){
+                                    traitName = traitName.replace("'", "\\'");
+                                }
+
+                                if(bandLocations.get(band).getRenderedTraits().contains(traitName)){
+                                    getLog().trace("Trait " + traitName + " already rendered at band " + band);
+                                }
+                                else{
+                                    getLog().trace("Trait " + traitName + " was not previously rendered at band " + band);
+                                    for (Renderlet rt : getRenderlets()){
+                                        if (rt.canRender(this, ontology, trait)) {
+                                            getLog().trace("Dispatching render() request to renderlet '" + rt.getName() + "'");
+                                            Element newTrait = rt.render(this, ontology, trait, svgBuilder);
+                                            traits.add(newTrait);
+
+                                            IRI traitIRI = getTraitClass(trait, ontology);
+                                            String traitClass = OntologyUtils.getShortForm(traitIRI, ontology);
+
+                                            if(associationSVG != null){
+                                                String existingClass = associationSVG.getAttribute("class");
+                                                associationSVG.setAttribute("class", existingClass + " " + traitClass);
+                                            }
+                                            else{
+                                                getLog().debug("Could not add CSS class element for association " + ind);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else{
+                                getLog().debug("The trait for association " + ind + " is null");
+                            }
+                        }
+                    }
+
+                }
+            }
+            svgBuilder.addElement(associationSVG);
+
+            for(Association assoc : assocs){
+                getRenderingEvent(assoc.getAssociation()).updateRenderedSVG(associationSVG);
+            }
+
+            for(Element trait : traits){
+                svgBuilder.addElement(trait);
             }
         }
     }
@@ -351,6 +349,8 @@ public class DefaultRenderletNexus implements RenderletNexus {
         if(allTraits == null){
             OWLClass ef = manager.getOWLDataFactory().getOWLClass(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI));
             allTraits = reasoner.getInstances(ef,false).getFlattened();
+
+
         }
 
         for(int i = 0; i < related.length; i++){
@@ -472,8 +472,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
         return sorted;
     }
 
-    public IRI getTraitClass(OWLNamedIndividual individual,
-                              OWLOntology ontology) {
+    public IRI getTraitClass(OWLNamedIndividual individual, OWLOntology ontology) {
         IRI traitClass = null;
 
         // this gets the first, asserted, non-experimental factor class and then exits
