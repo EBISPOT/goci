@@ -106,6 +106,7 @@ public class PussycatGOCIController {
                                                             HttpSession session)
             throws PussycatSessionNotReadyException {
         // get the subset of studies published before the supplied date
+        /*trait association'  and part_of some ('GWAS study' and has_publication_date some dateTime[< "  "^^dateTime])*/
         getLog().debug("Received a new rendering request - " +
                        "putting together the query for year '" + year + "' and month '" + month + "'");
         OWLOntologyManager manager = getOntologyConfiguration().getOWLOntologyManager();
@@ -117,6 +118,21 @@ public class PussycatGOCIController {
         ShortFormEntityChecker checker = new ShortFormEntityChecker(
                 new BidirectionalShortFormProviderAdapter(manager, manager.getOntologies(), annoSFP));
         ManchesterOWLSyntaxClassExpressionParser parser = new ManchesterOWLSyntaxClassExpressionParser(df, checker);
+
+        int monthVar = Integer.parseInt(month);
+        int yearVar = Integer.parseInt(year);
+
+        //API call provides date for "up to and including the end of" - must increment month for query
+        if(monthVar == 12){
+            month = "01";
+            yearVar++;
+            year = Integer.toString(yearVar);
+        }
+        else {
+            monthVar++;
+            month = Integer.toString(monthVar);
+        }
+
 
         String date =
                 "has_publication_date some dateTime[< \"" + year + "-" + month + "-01T00:00:00+00:00\"^^dateTime]";
@@ -133,22 +149,9 @@ public class PussycatGOCIController {
             OWLClass association = df.getOWLClass(IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));
             OWLClassExpression trait_associations = df.getOWLObjectIntersectionOf(association, part_of_assoc);
 
-            OWLObjectProperty has_about = df.getOWLObjectProperty(IRI.create(OntologyConstants.HAS_ABOUT_IRI));
-            OWLObjectSomeValuesFrom some_snps = df.getOWLObjectSomeValuesFrom(has_about, trait_associations);
-
-            OWLClass snp = df.getOWLClass(IRI.create(OntologyConstants.SNP_CLASS_IRI));
-            OWLClassExpression snps = df.getOWLObjectIntersectionOf(snp, some_snps);
-
-            OWLObjectProperty location_of =
-                    df.getOWLObjectProperty(IRI.create(OntologyConstants.LOCATION_OF_PROPERTY_IRI));
-            OWLObjectSomeValuesFrom some_bands = df.getOWLObjectSomeValuesFrom(location_of, snps);
-
-            OWLClass cyto_band = df.getOWLClass(IRI.create(OntologyConstants.CYTOGENIC_REGION_CLASS_IRI));
-            OWLClassExpression timeCls = df.getOWLObjectIntersectionOf(cyto_band, some_bands);
-
             getLog().debug("Query put together succesfully");
             // render all individuals using the pussycat session for this http session
-            return getPussycatSession(session).performRendering(timeCls, getRenderletNexus(session));
+            return getPussycatSession(session).performRendering(trait_associations, getRenderletNexus(session));
         }
         catch (ParserException e) {
             getLog().error("Bad date in URL /gwasdiagram/timeseries/" + year + "/" + month + " - " +

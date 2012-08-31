@@ -130,12 +130,24 @@ public class DefaultRenderletNexus implements RenderletNexus {
                 classExpression);
 
         if(renderedEntities.size() == 0){
-            renderSVGFromScratch(svgBuilder, ontology, individuals);
-            getLog().debug("Rendering complete");
+//if the map is empty but OWLClassExpression isn't OWLThing, do a dummy rendering to rebuild the map
+            if(!classExpression.isOWLThing()){
+                getLog().debug("Empty maps and a subset to rendered - rebuild maps via dummy OWLThing rendering");
+                OWLClassExpression everything = manager.getOWLDataFactory().getOWLThing();
+                Set<OWLNamedIndividual> allIndividuals = reasoner.getInstances(everything,false).getFlattened();
+                renderSVGFromScratch(svgBuilder, ontology, allIndividuals);
+                getLog().trace("Rendering OWLClassExpression");
+                svgBuilder = new SVGBuilder();
+                renderFromExistingSVG(svgBuilder, ontology, individuals);
+            }
+            else {
+                renderSVGFromScratch(svgBuilder, ontology, individuals);
+                getLog().debug("Rendering complete");
+            }
         }
         else{
-         /*PUT TOGETHER SVG FROM EXISTING ELEMENTS*/
-
+            renderFromExistingSVG(svgBuilder, ontology, individuals);
+            getLog().debug("Rendering complete");
         }
 
         return svgBuilder.getSVG();
@@ -159,6 +171,96 @@ public class DefaultRenderletNexus implements RenderletNexus {
                         builder.addElement(r.render(this, ontology, chrom, null));
                     }
                 }
+            }
+        }
+    }
+
+    public void renderFromExistingSVG(SVGBuilder builder, OWLOntology ontology, Set<OWLNamedIndividual> individuals){
+        getLog().trace("Rendering from existing SVG");
+        OWLClass chromosome = ontology.getOWLOntologyManager()
+                .getOWLDataFactory()
+                .getOWLClass(IRI.create(OntologyConstants.CHROMOSOME_CLASS_IRI));
+        NodeSet<OWLClass> all = reasoner.getSubClasses(chromosome, true);
+        Set<OWLClass> allChroms = all.getFlattened();
+
+        getLog().trace("There are " + allChroms.size() + " chromosomes");
+
+        for(OWLClass chrom : allChroms){
+            getLog().trace("Trying to render chromosome " + chrom);
+            if(getRenderingEvent(chrom) != null){
+                Element element = getRenderingEvent(chrom).getRenderedSVG();
+                builder.addElement(element);
+                getLog().trace("Rendering successful");
+            }
+            else {
+                getLog().trace("Trying to render a chromosome that doesn't exist");
+            }
+        }
+        getLog().trace("Chromsomes rendered");
+
+        HashMap<String, ArrayList<OWLNamedIndividual>> currentBands = new HashMap<String, ArrayList<OWLNamedIndividual>>();
+
+        Set<String> allBands = bandLocations.keySet();
+
+        getLog().trace("Building the local band map");
+        for(String band : allBands){
+            ArrayList<OWLNamedIndividual> renderedAssociations = bandLocations.get(band).getRenderedAssociations();
+            ArrayList<OWLNamedIndividual> toRender = new ArrayList<OWLNamedIndividual>();
+
+            for(OWLNamedIndividual association : individuals){
+                if(renderedAssociations.contains(association)){
+                    toRender.add(association);
+                }
+            }
+            if(toRender.size() != 0){
+                currentBands.put(band,toRender);
+            }
+        }
+
+        Set<String> bands = currentBands.keySet();
+
+        getLog().trace("Starting to gather SVG elements");
+        for(String band : bands){
+            getLog().trace("Processing band " + band);
+            int index = 1;
+            Element associationSVG = null;
+            ArrayList<Element> traits = new ArrayList<Element>();
+            getLog().trace("There are " +currentBands.get(band).size() + " associations");
+            for(OWLNamedIndividual association : currentBands.get(band)){
+                if(index == 1){
+                    getLog().trace("First association");
+                    associationSVG = getRenderingEvent(association).getRenderedSVG();
+                    associationSVG.setAttribute("class", "gwas-trait");
+                    index++;
+                }
+
+                OWLNamedIndividual trait = getTrait(association, ontology);
+                if(trait != null){
+                    getLog().debug("Rendering trait " + trait);
+                    if(getRenderingEvent(trait) != null){
+                        Element traitSVG = getRenderingEvent(trait).getRenderedSVG();
+                        traits.add(traitSVG);
+                    }
+                    else{
+                        getLog().debug("Oh dear, this trait wasn't rendered the first time round - implement a solution");
+                    }
+                    IRI traitIRI = getTraitClass(trait, ontology);
+                    String traitClass = OntologyUtils.getShortForm(traitIRI, ontology);
+
+                    if(associationSVG != null){
+                        String existingClass = associationSVG.getAttribute("class");
+                        associationSVG.setAttribute("class", existingClass + " " + traitClass);
+                    }
+                    else{
+                        getLog().debug("Could not add CSS class element for association " + association);
+                    }
+
+                }
+            }
+            builder.addElement(associationSVG);
+
+            for(Element svg : traits){
+                builder.addElement(svg);
             }
         }
     }
@@ -350,7 +452,13 @@ public class DefaultRenderletNexus implements RenderletNexus {
             OWLClass ef = manager.getOWLDataFactory().getOWLClass(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI));
             allTraits = reasoner.getInstances(ef,false).getFlattened();
 
+            Set<OWLNamedIndividual> allAssociations = reasoner.getInstances(manager.getOWLDataFactory().getOWLClass(IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI)),false).getFlattened();
 
+            for(OWLNamedIndividual ta : allAssociations){
+                if (allTraits.contains(ta)){
+                    allTraits.remove(ta);
+                }
+            }
         }
 
         for(int i = 0; i < related.length; i++){
@@ -363,27 +471,6 @@ public class DefaultRenderletNexus implements RenderletNexus {
 
     public String getTraitName(OWLNamedIndividual trait, OWLOntology ontology, OWLNamedIndividual association){
         String traitName = null;
- /*       OWLClassExpression[] allTypes = trait.getTypes(ontology).toArray(new OWLClassExpression[0]);
-
-        for(int j = 0; j < allTypes.length; j++){
-            OWLClass typeClass = allTypes[j].asOWLClass();
-            IRI typeIRI = typeClass.getIRI();
-            if(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI.equals(typeIRI.toString())){
-                OWLDataProperty has_name = manager.getOWLDataFactory().getOWLDataProperty(IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
-
-                if(association.getDataPropertyValues(has_name,ontology).size() != 0){
-                    OWLLiteral name = association.getDataPropertyValues(has_name,ontology).iterator().next();
-                    traitName = name.getLiteral();
-                }
-                else{
-                    getLog().warn("Trait " + trait + " has no name");
-                }
-            }
-            else{
-                traitName = efoLabels.get(typeIRI);
-            }
-        }       */
-
         OWLDataProperty has_name = manager.getOWLDataFactory().getOWLDataProperty(IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
 
         if(association.getDataPropertyValues(has_name,ontology).size() != 0){
