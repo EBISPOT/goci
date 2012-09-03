@@ -130,7 +130,12 @@ public class PussycatGOCIController {
         }
         else {
             monthVar++;
-            month = Integer.toString(monthVar);
+            if(monthVar > 9){
+                month = Integer.toString(monthVar);
+            }
+            else {
+                month = "0".concat(Integer.toString(monthVar));
+            }
         }
 
 

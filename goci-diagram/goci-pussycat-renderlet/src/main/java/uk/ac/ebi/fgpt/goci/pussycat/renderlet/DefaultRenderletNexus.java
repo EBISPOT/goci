@@ -125,7 +125,15 @@ public class DefaultRenderletNexus implements RenderletNexus {
         OWLOntology ontology = reasoner.getRootOntology();
 
         getLog().trace("There are " + renderlets.size() + " registered renderlets");
+
+        long start, end;
+        start = System.currentTimeMillis();
+        getLog().debug("Obtaining OWL individuals from reasoner");
         Set<OWLNamedIndividual> individuals = reasoner.getInstances(classExpression, false).getFlattened();
+        end = System.currentTimeMillis();
+        double time = ((double) (end - start)) / 1000;
+        getLog().info("OWL individuals for OWLClassExpression " + classExpression + " acquired in " + time + " s.");
+
         getLog().debug("There are " + individuals.size() + " owl individuals that satisfy the expression " +
                 classExpression);
 

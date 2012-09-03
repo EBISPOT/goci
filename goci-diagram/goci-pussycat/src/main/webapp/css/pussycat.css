@@ -68,7 +68,7 @@ h3.nomargin {
 }
 
 .legend {
-    display: none;
+    display: block;
     position: fixed;
     width: 220px;
     right: 38px;
