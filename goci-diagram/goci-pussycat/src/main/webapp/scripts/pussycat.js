@@ -1,5 +1,8 @@
 var enableDebugging = false;
 
+var enableFiltering = true;
+var enableSVG = true;
+
 var maxScale = 100;
 var currentScale = maxScale / 2;
 var scalingFactor = 1.0;
@@ -19,6 +22,23 @@ function init() {
             $("#logtab").hide();
         }
 
+        // detect browser version, disable features if required
+        if ($.browser.mozilla) {
+            enableFiltering = false;
+            var mozVersion = parseInt($.browser.version);
+            if (mozVersion < 3) {
+                enableSVG = false;
+            }
+        }
+
+        if ($.browser.msie) {
+            enableFiltering = false;
+            var ieVersion = parseInt($.browser.version);
+            if (ieVersion < 9) {
+                enableSVG = false;
+            }
+        }
+
         log("Initializing pussycat UI...");
         // create tabs
         $("#browsertabs").tabs({
@@ -26,10 +46,10 @@ function init() {
                                });
 
         $("#browsertabs ul").localScroll({
-                                         target:"#browsertabs",
-                                         duration:0,
-                                         hash:true
-                                     });
+                                             target:"#browsertabs",
+                                             duration:0,
+                                             hash:true
+                                         });
 
         // create slides for timeseries
         $('#timeseriestab').slides({
@@ -110,7 +130,26 @@ function init() {
         });
         log("Initialized zoom sidebar OK");
     });
-    log("Pussycat UI initialized OK");
+    log("Pussycat UI features initialized OK");
+
+    // switch on all containers
+    $(".container").show();
+    log("Pussycat display enabled");
+
+    if (!enableFiltering) {
+        if (!enableSVG) {
+            alert("Unfortunately, the browser you are using does not support SVG rendering.\n" +
+                          "Interactive diagram features will not be available.");
+        }
+        else {
+            alert("Unfortunately, the browser you are using does not support some features.\n" +
+                          "Whilst you will be able to use most interactive features of the diagram browser,\n" +
+                          "but you will not be able to see views of the diagram filtered by trait.")
+        }
+    }
+    else {
+        $(".filtering").show();
+    }
 }
 
 function resizeDisplay() {
@@ -250,7 +289,7 @@ function filterTraits(traitName) {
             try {
                 var trait = val.replace(":", "\\:");
                 log("Showing trait '" + trait + "' element");
-                  $("." + trait).attr("mask", "");
+                $("." + trait).attr("mask", "");
             }
             catch (ex) {
                 log("Failed to show element '" + val + "'");

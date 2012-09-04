@@ -115,13 +115,13 @@ h3.nomargin {
     right: 4px;
 }
 
-.slides_container {
+.slides {
     width: 1024px;
     height: 680px;
     border: 1px solid #777788;
 }
 
-.slides_container div {
+.slides div {
     width: 1024px;
     height: 680px;
     display: block;
@@ -129,12 +129,12 @@ h3.nomargin {
     margin-right: auto;
 }
 
-.slides_container img {
+.slides img {
     width: 99%;
     padding-top: 20px;
 }
 
-.slides_container h3 {
+.slides h3 {
     position: absolute;
     text-align: center;
     padding-left: 443px;

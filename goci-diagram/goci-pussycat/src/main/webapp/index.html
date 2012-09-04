@@ -48,7 +48,7 @@
 <div id="legendrevealer">
     <div id="legendwrapper">
         <a id="legendbutton" href="#" style="font-weight: bold; width: 130px;">
-            Hide Legend
+            Show Legend
         </a>
 
         <div class="legend" style="width: 250px;">
@@ -84,7 +84,7 @@
                     <text x="20" y="102" font-family="Verdana" font-size="8" fill="black">Other disease</text>
 
                     <circle id="BODY_MSR" fill="#66CCFF" r="5" cx="10" cy="115" stroke="black" stroke-width="0.5"></circle>
-                    <text x="20" y="117" font-family="Verdana" font-size="8" fill="black">Body measurement</text>
+                    <text x="20" y="117" font-family="Verdana" font-size="8" fill="black">Body measurements</text>
 
                     <circle id="LIPID_LIPOPROT_MSR"
                             fill="#FF3399"
@@ -97,7 +97,7 @@
                     </text>
 
                     <circle id="CARDIO_MSR" fill="#BC80BD" r="5" cx="10" cy="145" stroke="black" stroke-width="0.5"></circle>
-                    <text x="20" y="147" font-family="Verdana" font-size="8" fill="black">Cardiovascular measurement</text>
+                    <text x="20" y="147" font-family="Verdana" font-size="8" fill="black">Cardio vascular measurements</text>
 
                     <circle id="HEMATOLOGICAL_MSR"
                             fill="#FFED6F"
@@ -130,7 +130,7 @@
                     <text x="20" y="237" font-family="Verdana" font-size="8" fill="black">Biological process</text>
 
                     <circle id="OTHER" fill="#B33232" r="5" cx="10" cy="250" stroke="black" stroke-width="0.5"></circle>
-                    <text x="20" y="252" font-family="Verdana" font-size="8" fill="black">Other trait</text>
+                    <text x="20" y="252" font-family="Verdana" font-size="8" fill="black">Other traits</text>
 
                     <circle id="UNMAPPED"
                             fill="#FFFFFF"
@@ -169,7 +169,7 @@
 <div id="tabs">
 <div id="diagramtab" class="tabcontent">
     <div>This diagram shows all SNP-trait associations with a p-value smaller than 5 &#215; 10<sup>-8</sup>, published in the
-        <a href="http://www.genome.gov/gwastudies">GWAS catalog</a> up to the end of June 2012. For information on how to navigate the diagram, see the help tab.
+        catalogue up to the end of June 2012. For information on how to navigate the diagram, see the help tab.
     </div>
 
     <div id="diagramarea" class="ui-widget-content">
@@ -355,11 +355,6 @@
         <li><a href="images/timeseries/gwas-2005-12.png">GWAS diagram, Quarter 4, 2005, PNG</a></li>
     </ul>
 
-    <h3>Colour Legend</h3>
-    <ul>
-        <li><a href="images/Legend.png">Colour legend, PNG</a></li>
-    </ul>
-
     <h3>Ontology Files</h3>
     <span style="font-weight: bold; color: red;">CAUTION:</span> Some of these files may be very large - attempting to
     open them in your browser may take a very long time.<br/>
@@ -382,40 +377,6 @@
         introduction
         to the GWAS catalog, see the "About" tab.</p>
 
-    <h3>How to ...</h3>
-    <ul>
-        <li><b>Zoom:</b> There are two ways in which the diagram can be zoomed. The easiest option is to use the
-            scroll wheel on the mouse or touch pad on a laptop. Scrolling
-            up zooms in and scrolling down zooms out. This feature may not work with all touch pads. Alternatively, the
-            left-hand side of the diagram features a zoom bar which can be
-            used to generate exactly the same effect, by dragging the little square up or down the bar with the mouse
-            pointer. The diagram currently zooms from the top left corner, so even if you zoom using a mouse scroll wheel,
-            you may have to move the diagram to get to the desired area.
-        </li>
-        <li><b>Move the diagram:</b> The diagram can be moved around the viewing area by clicking on any part of the
-            diagram with the left mouse button and,
-            holding the mouse button down, dragging the diagram around the screen until the desired part is visible.
-            This feature is particularly useful for centering the
-            diagram on a specific location at higher zoom levels.
-        </li>
-        <li><b>Display the legend:</b> A legend of the colour scheme is available in the "Legend" box in the top right corner of the diagram.
-            Simply click on the box to expand ("Show legend") or hide ("Hide legend") the legend.</li>
-        <li><b>Display labels:</b> Chromosomes and traits (coloured circles) have labels that display when hovering the mouse
-            pointer over a given element. The displayed labels correspond to the trait names assigned to a study by the
-            catalogue curators.
-        </li>
-
-        <li><b>Filter the diagram:</b> The full diagram can be filtered by typing a trait into the "Filter" text box above the diagram and hitting "Enter".
-            <ul><li>If the trait is available in the diagram, all other traits will be faded to a lower visibility to highlight the desired trait.</li>
-                <li>Searchable traits are based on EFO categories and may not coincide with curator-assigned trait names, e.g. a search for "hair color"
-                    will highlight SNP-trait associations labelled hair color as well as "black vs blond hair" and "red vs non-red hair".</li>
-                <li>Trait filtering is also spelling-sensitive, i.e. a search for "hair colour" will return no results. Auto-complete functionality for the filtering box is currently
-                    under development.</li>
-                <li>More advanced filtering capabilities, such as p-value and time, are also under development, so check back regularly for updates.</li></ul>
-        </li>
-    </ul>
-
-
     <h3>Diagram features</h3>
     <ul>
         <li><b>Initial diagram generation:</b> When the "GWAS Diagram" tab is first selected, there may be a
@@ -430,7 +391,24 @@
             <!--smaller than 5 &#215; 10<sup>-8</sup>, for all studies published in the catalogue up to the end of-->
             <!--June 2012.-->
         <!--</li>-->
-
+        <li><b>Zooming:</b> There are two ways in which the diagram can be zoomed. The easiest option is to use the
+            scroll wheel on the mouse or touch pad on a laptop. Scrolling
+            up zooms in and scrolling down zooms out. This feature may not work with all touch pads. Alternatively, the
+            left-hand side of the diagram features a zoom bar which can be
+            used to generate exactly the same effect, by dragging the little square up or down the bar with the mouse
+            pointer. The diagram currently zooms from the top left corner, so even if you zoom using a mouse scroll wheel,
+            you may have to move the diagram to get to the desired area.
+        </li>
+        <li><b>Moving the diagram:</b> The diagram can be moved around the viewing area by clicking on any part of the
+            diagram with the left mouse button and,
+            holding the mouse button down, dragging the diagram around the screen until the desired part is visible.
+            This feature is particularly useful for centering the
+            diagram on a specific location at higher zoom levels.
+        </li>
+        <li><b>Labels:</b> Chromosomes and traits (coloured circles) have labels that display when hovering the mouse
+            pointer over a given element. The displayed labels correspond to the trait names assigned to a study by the
+            catalogue curators.
+        </li>
 
 
 
@@ -439,10 +417,18 @@ diagram readable, no more than six traits will be displayed for any region for t
 for a given region, this is indicated by the presence of an ellipsis (...) at the end of a line of traits. At present, this ellipsis
 is static, i.e. it is not possible to access the undisplayed traits through it. We are currently working on a feature that
 generates a zoomed-in version of the corresponding region if an ellipsis is clicked on.</li> -->
-        <li><b>Colours:</b> A new colour scheme for the GWAS diagram has been developed in collaboration with the catalogue curators. The legend is available for viewing
-            in the top right corner of the diagram. It can also be downloaded as a PNG file from the "Downloads" tab. For more details on the colour categories, see below.
+        <li><b>Colours:</b> A new colour scheme for the GWAS diagram has been developed in collaboration with the catalogue curators.
+            A legend of the colour scheme is available in the "Legend" box in the top right corner of the diagram.
+            Simply click on the box to expand or hide the legend.
         </li>
-
+        <li><b>Filtering:</b> The full diagram can be filtered by typing a trait into the "Filter" text box above the diagram and hitting "Enter".
+            <ul><li>If the trait is available in the diagram, all other traits will be faded to a lower visibility to highlight the desired trait.</li>
+            <li>Searchable traits are based on EFO categories and may not coincide with curator-assigned trait names, e.g. a search for "hair color"
+            will highlight SNP-trait associations labelled hair color as well as "black vs blond hair" and "red vs non-red hair".</li>
+            <li>Trait filtering is also spelling-sensitive, i.e. a search for "hair colour" will return no results. Auto-complete functionality for the filtering box is currently
+            under development.</li>
+             <li>More advanced filtering capabilities, such as p-value and time, are also under development, so check back regularly for updates.</li></ul>
+        </li>
         <li><b>Time series:</b> A slide show of consecutive GWAS diagrams from 2005 to present is available in the "Time series view" tab. The time interval between
         each diagram is six months, including all dates up to the end of either June or December of that year. The slide show auto-advances at a pace of 2 seconds per slide.
         It can be stopped at any time by clicking on the diagram. Any diagram in the series can be selected by clicking on the dot for that diagram in the dotted time series
