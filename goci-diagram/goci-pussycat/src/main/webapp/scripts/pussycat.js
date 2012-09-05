@@ -101,6 +101,10 @@ function init() {
                       }
         );
 
+        // switch on all containers
+        $(".container").show();
+        log("Pussycat display enabled");
+
         // initialize slider
         var navbarPos = $("#diagramarea").offset().top + 25;
         $(".navbar").css({"top":navbarPos});
@@ -126,10 +130,6 @@ function init() {
         log("Initialized zoom sidebar OK");
     });
     log("Pussycat UI features initialized OK");
-
-    // switch on all containers
-    $(".container").show();
-    log("Pussycat display enabled");
 
     // resize the page so it fills window
     resizeDisplay();
