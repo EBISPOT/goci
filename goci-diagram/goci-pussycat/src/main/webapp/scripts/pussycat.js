@@ -64,6 +64,16 @@ function init() {
                                        crossfade:true
                                    });
 
+        // create slides for filtered views
+        $('#filteredtab').slides({
+                                       preload:true,
+                                       play:2000,
+                                       pause:2500,
+                                       hoverPause:true,
+                                       effect:'fade',
+                                       crossfade:true
+                                   });
+
         $("#clearbutton").button();
         $("#clearbutton").click(showAllTraits);
 

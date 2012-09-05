@@ -141,7 +141,8 @@ h3.nomargin {
 .slides_container h3 {
     position: absolute;
     text-align: center;
-    padding-left: 443px;
+    width: 100%;
+    /*padding-left: 443px;*/
 }
 
 .pagination {
