@@ -134,9 +134,16 @@ function init() {
     // resize the page so it fills window
     resizeDisplay();
     // register resize handler so that the page resizes when the window size changes
-    $(window).resize(function() {
-        resizeDisplay();
-    });
+    if (enableSVG) {
+        $(window).resize(function() {
+            resizeDisplay();
+        });
+    }
+    else {
+        document.body.resize(function() {
+            resizeDisplay();
+        });
+    }
     log("Pussycat display resized to fit window");
 
     if (!enableFiltering) {
@@ -187,63 +194,71 @@ function highlightMessage() {
 }
 
 function resizeDisplay() {
-    // get sizes of borders around body and page_wrapper element
-    var bodyMargin = parseInt($('body').css('margin-top')) + parseInt($('body').css('margin-bottom'));
-    var pageMargin = parseInt($("#page_wrapper").css('margin-top')) + parseInt($("#page_wrapper").css('margin-bottom'));
-    var pageBorder = parseInt($("#page_wrapper").css('border-top-width')) +
-            parseInt($("#page_wrapper").css('border-bottom-width'));
-    var offset = bodyMargin + pageMargin + pageBorder;
+//    if (enableSVG) {
+        // get sizes of borders around body and page_wrapper element
+        var bodyMargin = parseInt($('body').css('margin-top')) + parseInt($('body').css('margin-bottom'));
+        var pageMargin = parseInt($("#page_wrapper").css('margin-top')) +
+                parseInt($("#page_wrapper").css('margin-bottom'));
+        var pageBorder = parseInt($("#page_wrapper").css('border-top-width')) +
+                parseInt($("#page_wrapper").css('border-bottom-width'));
+        var offset = bodyMargin + pageMargin + pageBorder;
 
-    // update the size of the page_wrapper to fill document
-    $("#page_wrapper").height($(window).height() - offset);
+        // update the size of the page_wrapper to fill document
+        $("#page_wrapper").height($(window).height() - offset);
 
-    // update the size of divtable to fill the available space
-    $("#divtable").height($("#page_wrapper").height() - $("#divtable").offset().top);
+        // update the size of divtable to fill the available space
+        $("#divtable").height($("#page_wrapper").height() - $("#divtable").offset().top);
 
-    // update the size of tabs to fill the available space
-    $("#tabs").height($("#page_wrapper").height() - $("#tabs").offset().top);
+        // update the size of tabs to fill the available space
+        $("#tabs").height($("#page_wrapper").height() - $("#tabs").offset().top);
 
-    // update the size of tabcontent to match the size of max tabs child
-    var maxPadding = 0;
-    $('.tabcontent').each(function(i) {
-        var padding = parseFloat($(this).css("padding-top")) + parseFloat($(this).css("padding-bottom"));
-        if (padding > maxPadding) {
-            maxPadding = padding;
-        }
-    });
-    $(".tabcontent").height($("#tabs").height() - maxPadding);
+        // update the size of tabcontent to match the size of max tabs child
+        var maxPadding = 0;
+        $('.tabcontent').each(function(i) {
+            var padding = parseFloat($(this).css("padding-top")) + parseFloat($(this).css("padding-bottom"));
+            if (padding > maxPadding) {
+                maxPadding = padding;
+            }
+        });
+        $(".tabcontent").height($("#tabs").height() - maxPadding);
 
-    // update the diagramarea to fill the available space
-    var availableHeight = $("#diagramtab").height() -
-            ($("#diagramarea").position().top - $("#diagramtab").position().top);
-    $("#diagramarea").height(availableHeight);
-    log("Window resized: new size = " + $("#page_wrapper").height() + ", " + $("#page_wrapper").width());
+        // update the diagramarea to fill the available space
+        var availableHeight = $("#diagramtab").height() -
+                ($("#diagramarea").position().top - $("#diagramtab").position().top);
+        $("#diagramarea").height(availableHeight);
+        log("Window resized: new size = " + $("#page_wrapper").height() + ", " + $("#page_wrapper").width());
 
-    // resize the navbar to match
-    $(".navbar").height(availableHeight - 50);
-    log("navbar resized: new size = " + $(".navbar").height());
+        // resize the navbar to match
+        $(".navbar").height(availableHeight - 50);
+        log("navbar resized: new size = " + $(".navbar").height());
 
-    // update the svg size to fill the space available in the diagram area
-    if (enableSVG) {
-        try {
-            var width = $("#diagramarea").width();
-            var height = $("#diagramarea").height();
-            $("#goci-svg").attr("width", width);
-            $("#goci-svg").attr("height", height);
-            // update the svg viewBox to match width and height adjusting for scaling
-            var newWidth = width * scalingFactor;
-            var newHeight = height * scalingFactor;
-            var viewBox = document.getElementById('goci-svg').getAttribute("viewBox");
-            var elements = viewBox.split(' ');
-            var newViewBox = elements[0] + " " + elements[1] + " " + newWidth + " " + newHeight;
+        // update the svg size to fill the space available in the diagram area
+        if (enableSVG) {
+            try {
+                var width = $("#diagramarea").width();
+                var height = $("#diagramarea").height();
+                $("#goci-svg").attr("width", width);
+                $("#goci-svg").attr("height", height);
+                // update the svg viewBox to match width and height adjusting for scaling
+                var newWidth = width * scalingFactor;
+                var newHeight = height * scalingFactor;
+                var viewBox = document.getElementById('goci-svg').getAttribute("viewBox");
+                var elements = viewBox.split(' ');
+                var newViewBox = elements[0] + " " + elements[1] + " " + newWidth + " " + newHeight;
 //        document.getElementById('goci-svg').setAttribute("viewBox", newViewBox); // this uses server SVG size.  If commented out, default view is zoomed
-            log("Adjusted SVG dimensions - SVG now width = " + width + ", height = " + height + ", viewBox = " +
-                        newViewBox);
+                log("Adjusted SVG dimensions - SVG now width = " + width + ", height = " + height + ", viewBox = " +
+                            newViewBox);
+            }
+            catch (ex) {
+                log("Failed to adjust SVG dimensions: " + ex);
+            }
         }
-        catch (ex) {
-            log("Failed to adjust SVG dimensions: " + ex);
-        }
-    }
+//    }
+//    else {
+//        // if no SVG enabled, there is no need for any dynamic resize - all content is static
+//        // so don't even bother attempting a resize
+//        log("Resize event suppressed, no dynamic features");
+//    }
 }
 
 function tabShow(event, ui) {
