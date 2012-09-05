@@ -158,10 +158,11 @@ function disableFilteringFeatures() {
             "<div id=\"notification\" style=\"float: left\">" +
                     "<span class=\"ui-icon ui-icon-alert\"  style=\"float: left; margin-right: .3em;\" />" +
                     "<span id=\"message\">" +
-                    "The browser you are using does not support some <a href='#helptab'>features</a>." +
+                    "The browser you are using does not support some " +
+                    "<a href='#' onclick='$(\"#browsertabs\").tabs(\"select\", 3)'>features</a>." +
                     "You will still be able to explore traits with mouse-over and zoom in and out on the diagram, " +
                     "but filtering is disabled.  " +
-                    "This website works best when viewed in <a href='http://www.google.com/chrome'>Google Chrome</a> " +
+                    "This website works best when viewed in <a href='http://www.google.com/chrome'>Chrome</a> " +
                     "or <a href='http://www.apple.com/safari/'>Safari</a>." +
                     "</span>" +
                     "</div>");
@@ -175,9 +176,10 @@ function disableInteractiveFeatures() {
                     "<span class=\"ui-icon ui-icon-alert\"  style=\"float: left; margin-right: .3em;\" />" +
                     "<span id=\"message\">" +
                     "The browser you are using does not support SVG, which is used to display the diagram. " +
-                    "Interactive diagram <a href='#helptab'>features</a>, like mouse-over, zooming and filtering, " +
+                    "Interactive diagram <a href='#' onclick='$(\"#browsertabs\").tabs(\"select\", 3)'>features</a>, " +
+                    "like mouse-over, zooming and filtering, " +
                     "will not be available." +
-                    "This website works best when viewed in <a href='http://www.google.com/chrome'>Google Chrome</a> " +
+                    "This website works best when viewed in <a href='http://www.google.com/chrome'>Chrome</a> " +
                     "or <a href='http://www.apple.com/safari/'>Safari</a>." +
                     "</span>" +
                     "</div>");
