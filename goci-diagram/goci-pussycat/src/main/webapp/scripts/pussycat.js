@@ -157,7 +157,7 @@ function disableFilteringFeatures() {
                     "<span id=\"message\">" +
                     "Unfortunately, the browser you are using does not support some features. " +
                     "Whilst you will be able to use most interactive features of the diagram browser, " +
-                    "but you will not be able to see views of the diagram filtered by trait." +
+                    "you will not be able to see views of the diagram filtered by trait." +
                     "</span>" +
                     "</div>");
     highlightMessage();
