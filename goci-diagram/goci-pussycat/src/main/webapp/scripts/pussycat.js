@@ -1,4 +1,6 @@
-var enableDebugging = false;
+// FINAL VARIABLES - tweak these to adjust standard configuration
+var enableDebugging = true;
+var gwasLatest = "images/timeseries/gwas-2012-06.png";
 
 var enableFiltering = true;
 var enableSVG = true;
@@ -61,18 +63,11 @@ function init() {
                                        crossfade:true
                                    });
 
-        // resize the page so it fills window
-        resizeDisplay();
-        // register resize handler so that the page resizes when the window size changes
-        $(window).resize(function() {
-            resizeDisplay();
-        });
-
         $("#clearbutton").button();
         $("#clearbutton").click(showAllTraits);
 
         $("#legendbutton").button({icons:{primary:'ui-icon-newwin'}});
-        $("#legendbutton").click(revealLegend);
+        $("#legendbutton").click(toggleLegend);
 
         $("#retrybutton").button();
         $("#retrybutton").click(renderDiagram);
@@ -136,20 +131,59 @@ function init() {
     $(".container").show();
     log("Pussycat display enabled");
 
+    // resize the page so it fills window
+    resizeDisplay();
+    // register resize handler so that the page resizes when the window size changes
+    $(window).resize(function() {
+        resizeDisplay();
+    });
+    log("Pussycat display resized to fit window");
+
     if (!enableFiltering) {
         if (!enableSVG) {
-            alert("Unfortunately, the browser you are using does not support SVG rendering.\n" +
-                          "Interactive diagram features will not be available.");
+            disableInteractiveFeatures();
         }
         else {
-            alert("Unfortunately, the browser you are using does not support some features.\n" +
-                          "Whilst you will be able to use most interactive features of the diagram browser,\n" +
-                          "but you will not be able to see views of the diagram filtered by trait.")
+            disableFilteringFeatures();
         }
     }
-    else {
-        $(".filtering").show();
-    }
+}
+
+function disableFilteringFeatures() {
+    $("#filtering").empty("");
+    $("#filtering").html(
+            "<div id=\"notification\" style=\"float: left\">" +
+                    "<span class=\"ui-icon ui-icon-alert\"  style=\"float: left; margin-right: .3em;\" />" +
+                    "<span id=\"message\">" +
+                    "Unfortunately, the browser you are using does not support some features. " +
+                    "Whilst you will be able to use most interactive features of the diagram browser, " +
+                    "but you will not be able to see views of the diagram filtered by trait." +
+                    "</span>" +
+                    "</div>");
+    highlightMessage();
+}
+
+function disableInteractiveFeatures() {
+    $("#filtering").empty("");
+    $("#filtering").html(
+            "<div id=\"notification\" style=\"float: left\">" +
+                    "<span class=\"ui-icon ui-icon-alert\"  style=\"float: left; margin-right: .3em;\" />" +
+                    "<span id=\"message\">" +
+                    "Unfortunately, the browser you are using does not support SVG rendering. " +
+                    "Interactive diagram features will not be available." +
+                    "</span>" +
+                    "</div>");
+    highlightMessage();
+}
+
+function highlightMessage() {
+    $("#notification")
+            .addClass("ui-state-error ui-corner-all");
+
+    $("#message")
+            .stop()
+            .css("background-color", "#CD0A0A")
+            .animate({backgroundColor:"#FEF1EC"}, 750);
 }
 
 function resizeDisplay() {
@@ -190,23 +224,25 @@ function resizeDisplay() {
     log("navbar resized: new size = " + $(".navbar").height());
 
     // update the svg size to fill the space available in the diagram area
-    try {
-        var width = $("#diagramarea").width();
-        var height = $("#diagramarea").height();
-        $("#goci-svg").attr("width", width);
-        $("#goci-svg").attr("height", height);
-        // update the svg viewBox to match width and height adjusting for scaling
-        var newWidth = width * scalingFactor;
-        var newHeight = height * scalingFactor;
-        var viewBox = document.getElementById('goci-svg').getAttribute("viewBox");
-        var elements = viewBox.split(' ');
-        var newViewBox = elements[0] + " " + elements[1] + " " + newWidth + " " + newHeight;
+    if (enableSVG) {
+        try {
+            var width = $("#diagramarea").width();
+            var height = $("#diagramarea").height();
+            $("#goci-svg").attr("width", width);
+            $("#goci-svg").attr("height", height);
+            // update the svg viewBox to match width and height adjusting for scaling
+            var newWidth = width * scalingFactor;
+            var newHeight = height * scalingFactor;
+            var viewBox = document.getElementById('goci-svg').getAttribute("viewBox");
+            var elements = viewBox.split(' ');
+            var newViewBox = elements[0] + " " + elements[1] + " " + newWidth + " " + newHeight;
 //        document.getElementById('goci-svg').setAttribute("viewBox", newViewBox); // this uses server SVG size.  If commented out, default view is zoomed
-        log("Adjusted SVG dimensions - SVG now width = " + width + ", height = " + height + ", viewBox = " +
-                    newViewBox);
-    }
-    catch (ex) {
-        log("Failed to adjust SVG dimensions: " + ex);
+            log("Adjusted SVG dimensions - SVG now width = " + width + ", height = " + height + ", viewBox = " +
+                        newViewBox);
+        }
+        catch (ex) {
+            log("Failed to adjust SVG dimensions: " + ex);
+        }
     }
 }
 
@@ -221,21 +257,27 @@ function tabShow(event, ui) {
 }
 
 function renderDiagram() {
-    if (!renderingComplete) {
-        log("Hiding navbar...");
-        $(".navbar").hide();
-        // call to api/views/gwasdiagram to get required svg
-        log("Rendering GWAS diagram - calling api/views/gwasdiagram...");
-        $.ajax({
-                   url:'api/views/gwasdiagram',
-                   dataType:'html',
-                   beforeSend:showSVGLoadWhirly,
-                   success:insertSVG,
-                   error:serverCommunicationFail
-               });
+    if (enableSVG) {
+        if (!renderingComplete) {
+            log("Hiding navbar...");
+            $(".navbar").hide();
+            // call to api/views/gwasdiagram to get required svg
+            log("Rendering GWAS diagram - calling api/views/gwasdiagram...");
+            $.ajax({
+                       url:'api/views/gwasdiagram',
+                       dataType:'html',
+                       beforeSend:showSVGLoadWhirly,
+                       success:insertSVG,
+                       error:serverCommunicationFail
+                   });
+        }
+        else {
+            log("Rendering already complete, update request not sent");
+        }
     }
     else {
-        log("Rendering already complete, update request not sent");
+        log("Browser doesn't support SVG rendering, showing static image only");
+        insertPNG();
     }
 }
 
@@ -261,6 +303,19 @@ function insertSVG(svg) {
     resizeDisplay();
     renderingComplete = true;
     log("Diagram area div updated with SVG content OK");
+}
+
+function insertPNG() {
+    // update diagramarea div with stock PNG
+    $("#diagramareaerror").css({"display":"none"});
+    $("#diagramareacontent").html("<img src=\"" + gwasLatest + "\" alt=\"GWAS Diagram, static image\"/>");
+    log("Hiding navbar...");
+    $(".navbar").hide();
+    resizeDisplay();
+    log("Enabling scrolling...");
+    $("#diagramarea").css("overflow", "auto");
+    renderingComplete = true;
+    log("Diagram area div updated with PNG image OK");
 }
 
 function serverCommunicationFail(jqXHR, textStatus, errorThrown) {
@@ -317,7 +372,7 @@ function doFilterOnEnter(e) {
     }
 }
 
-function revealLegend() {
+function toggleLegend() {
     if ($(".legend").css("display") == "none") {
         // show legend
         $(".legend").show('fold');

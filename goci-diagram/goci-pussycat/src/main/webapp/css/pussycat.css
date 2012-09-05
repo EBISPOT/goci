@@ -67,6 +67,10 @@ h3.nomargin {
     letter-spacing: 1px;
 }
 
+#filtering {
+    margin-top: 1em;
+}
+
 .legend {
     display: block;
     position: fixed;
@@ -115,13 +119,13 @@ h3.nomargin {
     right: 4px;
 }
 
-.slides {
+.slides_container {
     width: 1024px;
     height: 680px;
     border: 1px solid #777788;
 }
 
-.slides div {
+.slides_container div {
     width: 1024px;
     height: 680px;
     display: block;
@@ -129,12 +133,12 @@ h3.nomargin {
     margin-right: auto;
 }
 
-.slides img {
+.slides_container img {
     width: 99%;
     padding-top: 20px;
 }
 
-.slides h3 {
+.slides_container h3 {
     position: absolute;
     text-align: center;
     padding-left: 443px;
