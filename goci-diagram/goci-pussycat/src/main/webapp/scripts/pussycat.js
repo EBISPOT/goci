@@ -158,9 +158,11 @@ function disableFilteringFeatures() {
             "<div id=\"notification\" style=\"float: left\">" +
                     "<span class=\"ui-icon ui-icon-alert\"  style=\"float: left; margin-right: .3em;\" />" +
                     "<span id=\"message\">" +
-                    "Unfortunately, the browser you are using does not support some features. " +
-                    "Whilst you will be able to use most interactive features of the diagram browser, " +
-                    "you will not be able to see views of the diagram filtered by trait." +
+                    "The browser you are using does not support some <a href='#helptab'>features</a>." +
+                    "You will still be able to explore traits with mouse-over and zoom in and out on the diagram, " +
+                    "but filtering is disabled.  " +
+                    "This website works best when viewed in <a href='http://www.google.com/chrome'>Google Chrome</a> " +
+                    "or <a href='http://www.apple.com/safari/'>Safari</a>." +
                     "</span>" +
                     "</div>");
     highlightMessage();
@@ -172,8 +174,11 @@ function disableInteractiveFeatures() {
             "<div id=\"notification\" style=\"float: left\">" +
                     "<span class=\"ui-icon ui-icon-alert\"  style=\"float: left; margin-right: .3em;\" />" +
                     "<span id=\"message\">" +
-                    "Unfortunately, the browser you are using does not support SVG rendering. " +
-                    "Interactive diagram features will not be available." +
+                    "The browser you are using does not support SVG, which is used to display the diagram. " +
+                    "Interactive diagram <a href='#helptab'>features</a>, like mouse-over, zooming and filtering, " +
+                    "will not be available." +
+                    "This website works best when viewed in <a href='http://www.google.com/chrome'>Google Chrome</a> " +
+                    "or <a href='http://www.apple.com/safari/'>Safari</a>." +
                     "</span>" +
                     "</div>");
     highlightMessage();
