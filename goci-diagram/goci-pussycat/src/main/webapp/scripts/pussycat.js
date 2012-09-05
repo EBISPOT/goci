@@ -25,6 +25,7 @@ function init() {
         }
 
         // detect browser version, disable features if required
+        log("Browser detection says: " + JSON.stringify($.browser));
         if ($.browser.mozilla) {
             enableFiltering = false;
             var mozVersion = parseInt($.browser.version);
@@ -77,29 +78,31 @@ function init() {
             $('#tooltip').css({"left":ev.pageX + 20, "top":ev.pageY});
         });
 
-        // bind mousewheel event handler
-        $('#diagramareacontent').mousewheel(function(ev, delta) {
-            if (delta > 0) {
-                currentScale++;
-                zoomIn();
-            }
-            else if (delta < 0) {
-                currentScale--;
-                zoomOut();
-            }
-        });
+        if (enableSVG) {
+            // bind mousewheel event handler
+            $('#diagramareacontent').mousewheel(function(ev, delta) {
+                if (delta > 0) {
+                    currentScale++;
+                    zoomIn();
+                }
+                else if (delta < 0) {
+                    currentScale--;
+                    zoomOut();
+                }
+            });
 
-        // bind drag handler
-        $('#diagramareacontent')
-                .drag(function(ev, dd) {
-                          $("#xOffset").html(dd.deltaX);
-                          $("#yOffset").html(dd.deltaY);
-                          pan(dd.deltaX, dd.deltaY);
-                      }, {relative:true})
-                .drag("end", function(ev, dd) {
-                          updateOffset();
-                      }
-        );
+            // bind drag handler
+            $('#diagramareacontent')
+                    .drag(function(ev, dd) {
+                              $("#xOffset").html(dd.deltaX);
+                              $("#yOffset").html(dd.deltaY);
+                              pan(dd.deltaX, dd.deltaY);
+                          }, {relative:true})
+                    .drag("end", function(ev, dd) {
+                              updateOffset();
+                          }
+            );
+        }
 
         // switch on all containers
         $(".container").show();
@@ -134,16 +137,9 @@ function init() {
     // resize the page so it fills window
     resizeDisplay();
     // register resize handler so that the page resizes when the window size changes
-    if (enableSVG) {
-        $(window).resize(function() {
-            resizeDisplay();
-        });
-    }
-    else {
-        document.body.resize(function() {
-            resizeDisplay();
-        });
-    }
+    $(window).resize(function() {
+        resizeDisplay();
+    });
     log("Pussycat display resized to fit window");
 
     if (!enableFiltering) {
@@ -194,7 +190,7 @@ function highlightMessage() {
 }
 
 function resizeDisplay() {
-//    if (enableSVG) {
+    if (enableSVG) {
         // get sizes of borders around body and page_wrapper element
         var bodyMargin = parseInt($('body').css('margin-top')) + parseInt($('body').css('margin-bottom'));
         var pageMargin = parseInt($("#page_wrapper").css('margin-top')) +
@@ -239,26 +235,26 @@ function resizeDisplay() {
                 var height = $("#diagramarea").height();
                 $("#goci-svg").attr("width", width);
                 $("#goci-svg").attr("height", height);
-                // update the svg viewBox to match width and height adjusting for scaling
-                var newWidth = width * scalingFactor;
-                var newHeight = height * scalingFactor;
-                var viewBox = document.getElementById('goci-svg').getAttribute("viewBox");
-                var elements = viewBox.split(' ');
-                var newViewBox = elements[0] + " " + elements[1] + " " + newWidth + " " + newHeight;
-//        document.getElementById('goci-svg').setAttribute("viewBox", newViewBox); // this uses server SVG size.  If commented out, default view is zoomed
-                log("Adjusted SVG dimensions - SVG now width = " + width + ", height = " + height + ", viewBox = " +
-                            newViewBox);
+//                // update the svg viewBox to match width and height adjusting for scaling
+//                var newWidth = width * scalingFactor;
+//                var newHeight = height * scalingFactor;
+//                var viewBox = document.getElementById('goci-svg').getAttribute("viewBox");
+//                var elements = viewBox.split(' ');
+//                var newViewBox = elements[0] + " " + elements[1] + " " + newWidth + " " + newHeight;
+//                document.getElementById('goci-svg').setAttribute("viewBox", newViewBox); // this uses server SVG size.  If commented out, default view is zoomed
+//                log("Adjusted SVG dimensions - SVG now width = " + width + ", height = " + height + ", viewBox = " +
+//                            newViewBox);
+                log("Adjusted SVG dimensions - SVG now width = " + width + ", height = " + height);
             }
             catch (ex) {
                 log("Failed to adjust SVG dimensions: " + ex);
             }
         }
-//    }
-//    else {
-//        // if no SVG enabled, there is no need for any dynamic resize - all content is static
-//        // so don't even bother attempting a resize
-//        log("Resize event suppressed, no dynamic features");
-//    }
+    }
+    else {
+        // if no SVG enabled, there is no need for any dynamic resize - all content is static
+        // so don't even bother attempting a resize
+    }
 }
 
 function tabShow(event, ui) {
