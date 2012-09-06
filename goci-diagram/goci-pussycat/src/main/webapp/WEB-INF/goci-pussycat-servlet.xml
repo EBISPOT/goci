@@ -8,14 +8,15 @@
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/mvc
-       http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd"
-        >
+       http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+    <context:property-placeholder location="classpath:build.properties" />
 
     <!-- autowire this context only (just controllers, not services) based on annotations -->
     <context:annotation-config />
 
     <!-- scan for controllers in uk.ac.ebi.fgpt.conan.web.controllers and autowires them -->
-    <context:component-scan base-package="uk.ac.ebi.fgpt.goci.pussycat.controller" />
+    <context:component-scan base-package="uk.ac.ebi.fgpt.goci.pussycat.controller, uk.ac.ebi.fgpt.goci.status" />
 
     <!-- drive MVC setup based on @Controller, @RequestMapping annotations etc -->
     <mvc:annotation-driven />

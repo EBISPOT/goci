@@ -1,5 +1,5 @@
 // FINAL VARIABLES - tweak these to adjust standard configuration
-var enableDebugging = false;
+var enableDebugging = true;
 var gwasLatest = "images/timeseries/gwas-2012-06.png";
 
 var enableFiltering = true;
@@ -66,14 +66,25 @@ function init() {
 
         // create slides for filtered views
         $('#filteredtab').slides({
-                                       preload:true,
-                                       play:2000,
-                                       pause:2500,
-                                       hoverPause:true,
-                                       effect:'fade',
-                                       crossfade:true
-                                   });
+                                     preload:true,
+                                     play:2000,
+                                     pause:2500,
+                                     hoverPause:true,
+                                     effect:'fade',
+                                     crossfade:true
+                                 });
 
+        // fetch server info
+        $.getJSON('api/status', function(data) {
+            $("#version").html(data.version);
+            $("#build-number").html(data.buildNumber);
+            $("#release-date").html(data.releaseDate);
+            var date = new Date(data.startupTime);
+            $("#uptime").html(date.toLocaleTimeString() + " on " + date.toLocaleDateString());
+            log("Added server status: " + JSON.stringify(data));
+        });
+
+        // enable buttons
         $("#clearbutton").button();
         $("#clearbutton").click(showAllTraits);
 

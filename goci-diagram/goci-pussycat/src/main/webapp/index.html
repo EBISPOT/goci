@@ -577,8 +577,6 @@ generates a zoomed-in version of the corresponding region if an ellipsis is clic
             available on the GWAS catalogue website in PDF format and as a PowerPoint slide.</p>
 
 
-        <br>
-
         <!--<h3>Status update</h3>-->
 
         <!--<p>--><!--This is a list of features currently (or soon to be) available in the diagram:--><!--<ul>-->
@@ -613,14 +611,31 @@ generates a zoomed-in version of the corresponding region if an ellipsis is clic
             dynamic GWAS diagram.
         </p>
 
-        <br>
-
-
-        <h3>Status</h3>
-
-        <p>This is version 0.8 of the GWAS Diagram Browser, released on 23/08/2012.</p>
-
-        <br>
+        <!--<p>This is version 0.8 of the GWAS Diagram Browser, released on 23/08/2012.</p>-->
+        <!-- Dynamically fetch status information from server -->
+        <div id="status">
+            <h3>
+                Information
+            </h3>
+            <table style="margin-left: 25px;">
+                <tr>
+                    <td style="font-style: italic;">Version:</td>
+                    <td id="version"></td>
+                </tr>
+                <tr>
+                    <td style="font-style: italic;">Release Date:</td>
+                    <td id="release-date"></td>
+                </tr>
+                <tr>
+                    <td style="font-style: italic;">Build number:</td>
+                    <td id="build-number"></td>
+                </tr>
+                <tr>
+                    <td style="font-style: italic;">Up since:</td>
+                    <td id="uptime"></td>
+                </tr>
+            </table>
+        </div>
 
         <h3>Contact</h3>
 
