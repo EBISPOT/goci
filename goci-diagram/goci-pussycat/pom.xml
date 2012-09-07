@@ -85,6 +85,7 @@
                             <goal>create</goal>
                         </goals>
                         <configuration>
+                            <revisionOnScmFailure>[unknown]</revisionOnScmFailure>
                             <buildNumberPropertyName>buildRevision</buildNumberPropertyName>
                         </configuration>
                     </execution>
