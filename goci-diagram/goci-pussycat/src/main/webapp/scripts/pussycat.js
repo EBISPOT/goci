@@ -1,5 +1,5 @@
 // FINAL VARIABLES - tweak these to adjust standard configuration
-var enableDebugging = true;
+var enableDebugging = false;
 var gwasLatest = "images/timeseries/gwas-2012-06.png";
 
 var enableFiltering = true;
