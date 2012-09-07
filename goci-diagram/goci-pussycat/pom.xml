@@ -85,7 +85,6 @@
                             <goal>create</goal>
                         </goals>
                         <configuration>
-                            <shortRevisionLength>6</shortRevisionLength>
                             <buildNumberPropertyName>buildRevision</buildNumberPropertyName>
                         </configuration>
                     </execution>
