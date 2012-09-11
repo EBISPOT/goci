@@ -1,7 +1,6 @@
 package uk.ac.ebi.fgpt.goci.pussycat.session;
 
 import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
@@ -9,7 +8,6 @@ import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 
 import java.util.Collection;
-import java.util.Set;
 
 /**
  * A Pussycat session maintains the loaded data required by Pussycat in order to render an informative display to the

@@ -1,13 +1,18 @@
 package uk.ac.ebi.fgpt.goci.pussycat.session;
 
+import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
+import org.apache.batik.util.XMLResourceDescriptor;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.w3c.dom.Document;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.*;
 
 /**
@@ -95,6 +100,19 @@ public class GOCIDataPublisherPussycatSession extends AbstractPussycatSession {
                 double time = ((double) (end - start)) / 1000;
                 getLog().info("Rendering complete in  " + time + " s.  " +
                                       "New SVG for '" + classExpression + "' added to cache");
+
+                //save SVG out as PNG
+                StringReader reader = new StringReader(svg);
+                String uri = "urn:gwas.svg";
+
+                String parser = XMLResourceDescriptor.getXMLParserClassName();
+                SAXSVGDocumentFactory f = new SAXSVGDocumentFactory(parser);
+                try {
+                    Document doc = f.createSVGDocument(uri, reader);
+                } catch (IOException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+
                 return svg;
             }
         }
