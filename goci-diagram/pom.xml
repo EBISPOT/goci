@@ -25,5 +25,6 @@
         <module>goci-pussycat</module>
         <module>goci-pussycat-renderlet</module>
         <module>goci-sparql-client</module>
-    </modules>
+        <module>goci-pussycat-metrics</module>
+  </modules>
 </project>

@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>uk.ac.ebi.fgpt</groupId>
+    <artifactId>goci-diagram</artifactId>
+    <version>0.9-SNAPSHOT</version>
+  </parent>
+      <groupId>uk.ac.ebi.fgpt</groupId>
+      <artifactId>goci-pussycat-metrics</artifactId>
+      <version>0.9-SNAPSHOT</version>
+      <name>goci-pussycat-metrics</name>
+      <url>http://maven.apache.org</url>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+     <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <finalName>goci-pussycat-metrics</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptors>
+                        <descriptor>src/main/assembly/goci-assembly-descriptor.xml</descriptor>
+                    </descriptors>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>uk.ac.ebi.fgpt.goci.pussycat.GOCIPussycatMetricsDriver</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attached</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- goci ontology utils -->
+        <dependency>
+            <groupId>uk.ac.ebi.fgpt</groupId>
+            <artifactId>goci-ontology-utils</artifactId>
+            <version>0.9-SNAPSHOT</version>
+        </dependency>
+
+        <!-- spring jdbc for database access -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>3.0.3.RELEASE</version>
+        </dependency>
+
+        <!-- OWL API and HermiT reasoner, for converting GWAS concepts -->
+        <dependency>
+            <groupId>org.semanticweb.owlapi</groupId>
+            <artifactId>owlapi</artifactId>
+            <!--<groupId>net.sourceforge.owlapi</groupId>-->
+            <!--<artifactId>owlapi-distribution</artifactId>-->
+        </dependency>
+        <dependency>
+            <groupId>org.semanticweb</groupId>
+            <artifactId>HermiT</artifactId>
+        </dependency>
+
+        <!-- commons-cli for command line functionality -->
+        <dependency>
+            <groupId>commons-cli</groupId>
+            <artifactId>commons-cli</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+        <!-- logging dependencies for testing -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.fgpt</groupId>
+            <artifactId>goci-pussycat-renderlet</artifactId>
+            <version>0.9-SNAPSHOT</version>
+        </dependency>
+
+    </dependencies>
+
+    <!--<profiles>-->
+        <!--<profile>-->
+            <!--<id>fgservers</id>-->
+            <!--<activation>-->
+                <!--<activeByDefault>false</activeByDefault>-->
+            <!--</activation>-->
+
+            <!--<properties>-->
+                <!--<java.location>/ebi/research/software/Linux_x86_64/opt/java/jdk1.7/bin/java</java.location>-->
+                <!--<java.args>-Dhttp.proxyHost=wwwcache.ebi.ac.uk -Dhttp.proxyPort=3128 -Dhttp.nonProxyHosts=*.ebi.ac.uk -DproxyHost=wwwcache.ebi.ac.uk -DproxyPort=3128 -DproxySet=true -Xmx16g</java.args>-->
+            <!--</properties>-->
+        <!--</profile>-->
+    <!--</profiles>-->
+</project>
