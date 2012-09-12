@@ -2,15 +2,13 @@ package uk.ac.ebi.fgpt.goci.pussycat;
 
 import org.apache.commons.cli.*;
 
-import java.io.File;
-
 /**
  * Hello world!
  *
  */
 public class GOCIPussycatMetricsDriver
 {
-    private static File inferredOntologyFile;
+  //  private static File inferredOntologyFile;
 
     public static void main(String[] args) {
         try {
@@ -53,23 +51,23 @@ public class GOCIPussycatMetricsDriver
             else {
                 // find -o option (for asserted output file)
                 if (cl.hasOption("o")) {
-                    String assertedOutputFileName = cl.getOptionValue("o");
-         //           assertedOntologyFile = new File(assertedOutputFileName);
-
-                    if (cl.hasOption("i")) {
-                        String inferredOutputFileName = cl.getOptionValue("i");
-                        inferredOntologyFile = new File(inferredOutputFileName);
-                    }
-
-                    if(cl.hasOption("p")){
-                        String pvalueFilter = cl.getOptionValue("p");
-           //             FilterProperties.setPvalueFilter(pvalueFilter);
-                    }
-
-                    if(cl.hasOption("d")) {
-                        String dateFilter = cl.getOptionValue("d");
-             //           FilterProperties.setDateFilter(dateFilter);
-                    }
+//                    String assertedOutputFileName = cl.getOptionValue("o");
+//         //           assertedOntologyFile = new File(assertedOutputFileName);
+//
+//                    if (cl.hasOption("i")) {
+//                        String inferredOutputFileName = cl.getOptionValue("i");
+//                        inferredOntologyFile = new File(inferredOutputFileName);
+//                    }
+//
+//                    if(cl.hasOption("p")){
+//                        String pvalueFilter = cl.getOptionValue("p");
+//           //             FilterProperties.setPvalueFilter(pvalueFilter);
+//                    }
+//
+//                    if(cl.hasOption("d")) {
+//                        String dateFilter = cl.getOptionValue("d");
+//             //           FilterProperties.setDateFilter(dateFilter);
+//                    }
                 }
                 else {
                     System.err.println("-o (ontology output file) argument is required");
@@ -117,6 +115,7 @@ public class GOCIPussycatMetricsDriver
 
     public GOCIPussycatMetricsDriver(){
 
+        /*set up something like a GOCIDataPublisherPussycatSession taht in turn intitalises a ReasonerSession*/
     }
 
     public void runBenchmark(){

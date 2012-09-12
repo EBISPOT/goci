@@ -11,7 +11,7 @@ import java.sql.Timestamp;
  */
 public class DateTimeStamp {
 
-    public String getCurentTimeStamp(){
+    public static String getCurrentTimeStamp(){
         java.util.Date date= new java.util.Date();
         Timestamp current = new Timestamp(date.getTime());
         return current.toString();

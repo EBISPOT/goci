@@ -16,14 +16,27 @@
         </layout>
     </appender>
 
+    <appender name="benchmark-log" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="DatePattern" value="'.'yyyy-MM-dd" />
+        <param name="File" value="bench-marking.log" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%m%n" />
+        </layout>
+    </appender>
+
     <logger name="org.springframework" additivity="false">
         <level value="WARN" />
-        <appender-ref ref="console" />
+        <appender-ref ref="goci-metrics-log" />
     </logger>
 
-    <logger name="uk.ac.ebi.fgpt.goci.service.DefaultGWASOWLPublisher" additivity="false">
+    <logger name="uk.ac.ebi.fgpt.goci.pussycat.GOCIPussycatMetricsDriver" additivity="false">
         <level value="DEBUG" />
         <appender-ref ref="goci-metrics-log" />
+    </logger>
+
+    <logger name="benchmark.output.log" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="benchmark-log" />
     </logger>
 
     <root>
