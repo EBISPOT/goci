@@ -111,19 +111,19 @@
     </issueManagement>
 
     <!-- Version control (project hosted on GitHub) -->
-    <!--<scm>-->
-        <!--<connection>scm:git:git@github.com:tburdett/goci.git</connection>-->
-        <!--<developerConnection>scm:git:git@github.com:tburdett/goci.git</developerConnection>-->
-        <!--<url>git@github.com:tburdett/goci.git</url>-->
-    <!--</scm>-->
+    <scm>
+        <connection>scm:git:git@github.com:tburdett/goci.git</connection>
+        <developerConnection>scm:git:git@github.com:tburdett/goci.git</developerConnection>
+        <url>git@github.com:tburdett/goci.git</url>
+    </scm>
 
     <!-- Alternative version control (SVN over git) -->
     <!-- NOTE: This allows buildnumbers to be extracted when doing automated builds (better SVN support in tools) -->
-    <scm>
-        <connection>scm:svn:https://github.com/tburdett/goci</connection>
-        <developerConnection>scm:svn:https://github.com/tburdett/goci</developerConnection>
-        <url>http://github.com/tburdett/goci</url>
-    </scm>
+    <!--<scm>-->
+        <!--<connection>scm:svn:https://github.com/tburdett/goci</connection>-->
+        <!--<developerConnection>scm:svn:https://github.com/tburdett/goci</developerConnection>-->
+        <!--<url>http://github.com/tburdett/goci</url>-->
+    <!--</scm>-->
 
     <!-- Maven repository and site deployment -->
     <distributionManagement>
