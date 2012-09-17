@@ -10,20 +10,20 @@
         <property name="gwasDiagramSchemaResource" value="classpath:gwas-diagram-relaxed.owl"/>
     </bean>
 
-    <bean id="pussycatSessionStrategy"
-          class="uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSessionStrategy"
-          factory-method="valueOf">
-        <constructor-arg value="JOIN" />
-    </bean>
+    <!--<bean id="pussycatSessionStrategy"-->
+          <!--class="uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSessionStrategy"-->
+          <!--factory-method="valueOf">-->
+        <!--<constructor-arg value="JOIN" />-->
+    <!--</bean>-->
 
-    <bean id="pussycatManager" class="uk.ac.ebi.fgpt.goci.pussycat.manager.DefaultPussycatManager">
-        <property name="reasonerSession" ref="reasonerSession" />
-        <property name="pussycatSessions">
-            <set>
-                <ref bean="pussycatSession" />
-            </set>
-        </property>
-    </bean>
+    <!--<bean id="pussycatManager" class="uk.ac.ebi.fgpt.goci.pussycat.manager.DefaultPussycatManager">-->
+        <!--<property name="reasonerSession" ref="reasonerSession" />-->
+        <!--<property name="pussycatSessions">-->
+            <!--<set>-->
+                <!--<ref bean="pussycatSession" />-->
+            <!--</set>-->
+        <!--</property>-->
+    <!--</bean>-->
 
     <!-- NB: which implementation to use depends on whether
              a) we are dynamically generating the knowledgebase (uk.ac.ebi.fgpt.goci.pussycat.session.DataPublishingCacheableReasonerSession) or
