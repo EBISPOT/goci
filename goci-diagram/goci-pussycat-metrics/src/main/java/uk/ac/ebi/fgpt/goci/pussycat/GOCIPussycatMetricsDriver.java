@@ -1,6 +1,10 @@
 package uk.ac.ebi.fgpt.goci.pussycat;
 
 import org.apache.commons.cli.*;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
+import uk.ac.ebi.fgpt.goci.service.GWASOWLPublisher;
 
 /**
  * Hello world!
@@ -112,8 +116,14 @@ public class GOCIPussycatMetricsDriver
         return options;
     }
 
+    private GWASOWLPublisher publisher;
+    private OntologyConfiguration config;
+
 
     public GOCIPussycatMetricsDriver(){
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("goci-pussycat-metrics.xml");
+        publisher = ctx.getBean("publisher", GWASOWLPublisher.class);
+        config = ctx.getBean("config", OntologyConfiguration.class);
 
         /*set up something like a GOCIDataPublisherPussycatSession taht in turn intitalises a ReasonerSession*/
     }

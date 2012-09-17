@@ -33,7 +33,7 @@
           init-method="init">
         <property name="configuration" ref="config" />
         <property name="ontologyResource" value="ontology/gwas-diagram-data-2007-12.owl" />
-        <property name="publisher" ref="publisher" />
+        <!--<property name="publisher" ref="publisher" />-->
     </bean>
 
     <bean id="pussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.GOCIDataPublisherPussycatSession">

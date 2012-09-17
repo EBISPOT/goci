@@ -48,62 +48,64 @@
 
     <dependencies>
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>junit</groupId>-->
+            <!--<artifactId>junit</artifactId>-->
+            <!--<version>3.8.1</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
         <!-- goci ontology utils -->
-        <dependency>
-            <groupId>uk.ac.ebi.fgpt</groupId>
-            <artifactId>goci-ontology-utils</artifactId>
-            <version>0.9-SNAPSHOT</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>uk.ac.ebi.fgpt</groupId>-->
+            <!--<artifactId>goci-ontology-utils</artifactId>-->
+            <!--<version>0.9-SNAPSHOT</version>-->
+        <!--</dependency>-->
 
         <!-- spring jdbc for database access -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <version>3.0.3.RELEASE</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework</groupId>-->
+            <!--<artifactId>spring-jdbc</artifactId>-->
+            <!--<version>3.0.3.RELEASE</version>-->
+        <!--</dependency>-->
 
-        <!-- OWL API and HermiT reasoner, for converting GWAS concepts -->
-        <dependency>
-            <groupId>org.semanticweb.owlapi</groupId>
-            <artifactId>owlapi</artifactId>
-            <!--<groupId>net.sourceforge.owlapi</groupId>-->
-            <!--<artifactId>owlapi-distribution</artifactId>-->
-        </dependency>
-        <dependency>
-            <groupId>org.semanticweb</groupId>
-            <artifactId>HermiT</artifactId>
-        </dependency>
+        <!--&lt;!&ndash; OWL API and HermiT reasoner, for converting GWAS concepts &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>org.semanticweb.owlapi</groupId>-->
+            <!--<artifactId>owlapi</artifactId>-->
+            <!--&lt;!&ndash;<groupId>net.sourceforge.owlapi</groupId>&ndash;&gt;-->
+            <!--&lt;!&ndash;<artifactId>owlapi-distribution</artifactId>&ndash;&gt;-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.semanticweb</groupId>-->
+            <!--<artifactId>HermiT</artifactId>-->
+        <!--</dependency>-->
 
         <!-- commons-cli for command line functionality -->
-        <dependency>
-            <groupId>commons-cli</groupId>
-            <artifactId>commons-cli</artifactId>
-            <version>1.2</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>commons-cli</groupId>-->
+            <!--<artifactId>commons-cli</artifactId>-->
+            <!--<version>1.2</version>-->
+        <!--</dependency>-->
 
-        <!-- logging dependencies for testing -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-        </dependency>
+        <!--&lt;!&ndash; logging dependencies for testing &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>org.slf4j</groupId>-->
+            <!--<artifactId>slf4j-log4j12</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>log4j</groupId>-->
+            <!--<artifactId>log4j</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.mockito</groupId>-->
+            <!--<artifactId>mockito-core</artifactId>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
-            <artifactId>goci-pussycat-renderlet</artifactId>
+            <artifactId>goci-pussycat</artifactId>
             <version>0.9-SNAPSHOT</version>
+            <type>jar</type>
+            <classifier>classes</classifier>
         </dependency>
 
     </dependencies>
