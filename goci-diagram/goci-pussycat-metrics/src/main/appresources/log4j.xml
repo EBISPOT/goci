@@ -20,7 +20,7 @@
         <param name="DatePattern" value="'.'yyyy-MM-dd" />
         <param name="File" value="bench-marking.log" />
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%m%n" />
+            <param name="ConversionPattern" value="[%d] %-5p (%F:%L) - %m%n" />
         </layout>
     </appender>
 
@@ -33,7 +33,7 @@
         <level value="DEBUG" />
         <appender-ref ref="goci-metrics-log" />
     </logger>
-
+lo
     <logger name="benchmark.output.log" additivity="false">
         <level value="INFO" />
         <appender-ref ref="benchmark-log" />

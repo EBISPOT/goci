@@ -16,7 +16,6 @@ import java.util.Map;
  */
 public class RenderletNexusFactory {
     public static RenderletNexus createBenchmarkRenderletNexus(OWLOntologyManager manager, OWLReasoner reasoner, Map<IRI, String> efoLabels) {
-//        return new DefaultRenderletNexus();
         BenchmarkRenderletNexus nexus = new BenchmarkRenderletNexus();
         nexus.setOWLOntologyManager(manager);
         nexus.setReasoner(reasoner);

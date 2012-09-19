@@ -14,7 +14,7 @@ import java.security.NoSuchAlgorithmException;
  * @author Tony Burdett
  * @date 03/08/12
  */
-abstract class AbstractPussycatSession implements PussycatSession {
+public abstract class AbstractPussycatSession implements PussycatSession {
     private String sessionID;
 
     private Logger log = LoggerFactory.getLogger(getClass());
