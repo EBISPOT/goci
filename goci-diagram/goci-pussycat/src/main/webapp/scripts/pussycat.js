@@ -396,6 +396,7 @@ function filterTraits(traitName) {
 function showAllTraits() {
     log("Showing all 'gwas-trait' elements");
     $(".gwas-trait").attr("mask", "");
+    $("#trait-filter").val("");
 }
 
 function hideAllTraits() {
