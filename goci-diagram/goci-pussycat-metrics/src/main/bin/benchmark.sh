@@ -10,7 +10,7 @@ do
   jars=$jars:$base/lib/$file;
 done
 
-classpath="$jars:$base/config";
+classpath="$base/config:$jars";
 
 $java $args -classpath $classpath uk.ac.ebi.fgpt.goci.pussycat.GOCIPussycatMetricsDriver $@ 2>&1;
 exit $?;
