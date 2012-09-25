@@ -33,7 +33,7 @@
         <level value="DEBUG" />
         <appender-ref ref="goci-metrics-log" />
     </logger>
-lo
+
     <logger name="benchmark.output.log" additivity="false">
         <level value="INFO" />
         <appender-ref ref="benchmark-log" />
