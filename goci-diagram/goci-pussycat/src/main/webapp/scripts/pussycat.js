@@ -99,6 +99,12 @@ function init() {
             $('#tooltip').css({"left":ev.pageX + 20, "top":ev.pageY});
         });
 
+        //bind mouseclick handler
+        $(document).click(function(ev) {
+            $('#popup').css({"left":ev.pageX + 20, "top":ev.pageY});
+
+        });
+
         if (enableSVG) {
             // bind mousewheel event handler
             $('#diagramareacontent').mousewheel(function(ev, delta) {
@@ -372,6 +378,53 @@ function showTooltip(tooltipText) {
 
 function hideTooltip() {
     $("#tooltip").hide();
+}
+
+function showSummary(associations){
+    $("#popup").hide();
+    hideTooltip();
+
+    $.getJSON('api/summaries/associations/' + associations, function(data) {
+        alert(JSON.stringify(data));
+//        $.each(data, function(key, val) {
+//            alert("Current data item " + key + " " + val);
+//        });
+        $("#trait").html(data.gwasTrait);
+        try{
+        var index = data.snpsummaries.length;
+
+        for(var i=0; i<index; i++){
+            var snpsummary = data.snpsummaries[i];
+            alert(JSON.stringify(snpsummary))
+            $("#SNP").html(snpsummary.snp);
+            $("#study").html(snpsummary.study);
+            $("#pval").html(snpsummary.pval);
+            $("#efo").html(snpsummary.efotrait);
+
+
+        }
+        }
+        catch(ex){
+              alert(ex);
+        }
+
+    })        ;
+    $("#popup").show();
+
+/*
+
+ <h4>This is a pop-up for trait <span id="trait"></span></h4>
+ <ul>
+ <li>SNP: <span id="SNP"></span></li>
+ <li>Study: <span id="study"></span> </li>
+ <li>p-value: <span id="pval"></span></li>
+ <li>EFO mapping: <span id="efo"></span> </li>
+ </ul>
+
+ <span id="popup-text"></span>*/
+
+
+
 }
 
 function filterTraits(traitName) {

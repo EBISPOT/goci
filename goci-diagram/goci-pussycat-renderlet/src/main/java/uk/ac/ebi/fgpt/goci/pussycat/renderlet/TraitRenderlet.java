@@ -152,11 +152,16 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
                     getLog().trace("Setting CSS class for trait '" + gwasTrait + "' to " + traitClass);
                     trait.setAttribute("class", traitClass + " gwas-trait");
 
+                    String assocIRI = OntologyUtils.getShortForm(association.getIRI(), renderingContext);
+                    getLog().trace("Setting on-click event for trait '" + gwasTrait + "' to " + assocIRI);
+                    String summaryFunction = "showSummary('" + assocIRI;
+                    trait.setAttribute("onclick", summaryFunction);
+
                     SVGArea currentArea = new SVGArea(cx, cy, 2 * radius, 2 * radius, 0);
                     RenderingEvent<OWLIndividual> event = new RenderingEvent<OWLIndividual>(
                             renderingEntity, trait, currentArea, this);
                     nexus.renderingEventOccurred(event);
-                    band.setRenderedTrait(traitName);
+                    band.setRenderedTrait(traitName, gwasTrait);
                 }
             }
         }

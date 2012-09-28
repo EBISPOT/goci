@@ -4,6 +4,8 @@ import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,7 +22,7 @@ public class BandInformation {
     private double traitY;
     private SVGArea coordinates;
     private ArrayList<OWLNamedIndividual> renderedAssociations;
-    private ArrayList<String> renderedTraits;
+    private HashMap<String, OWLNamedIndividual> renderedTraits;
 
     public BandInformation(String name, String chrom){
         bandName = name;
@@ -29,7 +31,7 @@ public class BandInformation {
  //       shift = false;
         traitY = 0;
         renderedAssociations = new ArrayList<OWLNamedIndividual>();
-        renderedTraits = new ArrayList<String>();
+        renderedTraits = new HashMap<String, OWLNamedIndividual>();
         chromosome = chrom;
     }
 
@@ -94,12 +96,16 @@ public class BandInformation {
         return renderedAssociations;
     }
 
-    public void setRenderedTrait(String traitName){
-        renderedTraits.add(traitName);
+    public void setRenderedTrait(String traitName, OWLNamedIndividual trait){
+        renderedTraits.put(traitName, trait);
     }
 
-    public ArrayList<String> getRenderedTraits(){
-        return renderedTraits;
+    public Set<String> getRenderedTraits(){
+        return renderedTraits.keySet();
+    }
+
+    public OWLNamedIndividual getRenderedTrait(String name){
+        return renderedTraits.get(name);
     }
 
     public void sortByDate(){

@@ -242,15 +242,44 @@ public class DefaultRenderletNexus implements RenderletNexus {
                     index++;
                 }
 
+                String assocIRI = OntologyUtils.getShortForm(association.getIRI(), ontology);
                 OWLNamedIndividual trait = getTrait(association, ontology);
                 if(trait != null){
                     getLog().debug("Rendering trait " + trait);
-                    if(getRenderingEvent(trait) != null){
-                        Element traitSVG = getRenderingEvent(trait).getRenderedSVG();
-                        traits.add(traitSVG);
+                    String name = getTraitName(trait,ontology,association);
+                    boolean queued = false;
+
+//if the SVG for this trait has already been queued for this band...
+                    for(Element rendered : traits){
+                        if(rendered.getAttribute("id").equals(name)){
+                            getLog().debug("SVG for this trait name is already queued for rendering");
+                            String mouseclick = rendered.getAttribute("onclick");
+                            rendered.setAttribute("onclick", mouseclick + "," + assocIRI);
+                            queued = true;
+                        }
                     }
-                    else{
-                        getLog().debug("Oh dear, this trait wasn't rendered the first time round - implement a solution");
+
+
+                    if(!queued){
+//scenario 1: this trait individual was rendered in the full rendering
+                        if(getRenderingEvent(trait) != null){
+                            Element traitSVG = getRenderingEvent(trait).getRenderedSVG();
+                            traitSVG.setAttribute("onclick", "showSummary(" + assocIRI);
+                            traits.add(traitSVG);
+                        }
+//scenario 2: this trait individual was not rendered in the full rendering --> find a trait of the same name that was
+                        else{
+                            getLog().debug("Trait " + trait + " was not explicitly rendered in the full diagram");
+                            if(bandLocations.get(band).getRenderedTraits().contains(name)){
+                                OWLNamedIndividual rep = bandLocations.get(band).getRenderedTrait(name);
+                                if(getRenderingEvent(rep) != null){
+                                    Element traitSVG = getRenderingEvent(rep).getRenderedSVG();
+                                    traitSVG.setAttribute("onclick", "showSummary(" + assocIRI);
+                                    traits.add(traitSVG);
+                                }
+
+                            }
+                        }
                     }
                     IRI traitIRI = getTraitClass(trait, ontology);
                     String traitClass = OntologyUtils.getShortForm(traitIRI, ontology);
@@ -268,6 +297,8 @@ public class DefaultRenderletNexus implements RenderletNexus {
             builder.addElement(associationSVG);
 
             for(Element svg : traits){
+                String onclick = svg.getAttribute("onclick");
+                svg.setAttribute("onclick", onclick + "')");
                 builder.addElement(svg);
             }
         }
@@ -308,6 +339,13 @@ public class DefaultRenderletNexus implements RenderletNexus {
 
                                 if(bandLocations.get(band).getRenderedTraits().contains(traitName)){
                                     getLog().trace("Trait " + traitName + " already rendered at band " + band);
+                                    String assocIRI = OntologyUtils.getShortForm(ind.getIRI(), ontology);
+                                    for(Element rendered : traits){
+                                        if(rendered.getAttribute("id").equals(traitName)){
+                                            String mouseclick = rendered.getAttribute("onclick");
+                                            rendered.setAttribute("onclick", mouseclick + "," + assocIRI);
+                                        }
+                                    }
                                 }
                                 else{
                                     getLog().trace("Trait " + traitName + " was not previously rendered at band " + band);
@@ -346,6 +384,8 @@ public class DefaultRenderletNexus implements RenderletNexus {
             }
 
             for(Element trait : traits){
+                String onclick = trait.getAttribute("onclick");
+                trait.setAttribute("onclick", onclick + "')");
                 svgBuilder.addElement(trait);
             }
         }
