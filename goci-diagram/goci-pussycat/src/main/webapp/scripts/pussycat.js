@@ -98,12 +98,13 @@ function init() {
         $(document).mousemove(function(ev) {
             $('#tooltip').css({"left":ev.pageX + 20, "top":ev.pageY});
         });
+//
+//        //bind mouseclick handler
+//        $(document).click(function(ev) {
+//            $('#popup').css({"left":ev.pageX + 20, "top":ev.pageY});
+//
+//        });
 
-        //bind mouseclick handler
-        $(document).click(function(ev) {
-            $('#popup').css({"left":ev.pageX + 20, "top":ev.pageY});
-
-        });
 
         if (enableSVG) {
             // bind mousewheel event handler
@@ -348,6 +349,26 @@ function insertSVG(svg) {
     resizeDisplay();
     renderingComplete = true;
     log("Diagram area div updated with SVG content OK");
+
+    /*TO DO: add selector to ensure that only circles that are traits get mouse-overs, not any potential future circles*/
+
+    $("circle").hover(
+        function () {
+            var trait = $(this).attr("gwasname");
+             $("#tooltip-text").html(trait);
+            $("#tooltip").show();
+        },
+        function () {
+            $("#tooltip").hide();
+        }
+    )
+
+    $("circle").click(function(){
+            var associations = $(this).attr("gwasassociation");
+            showSummary(associations);
+        }
+    );
+
 }
 
 function insertPNG() {
@@ -371,60 +392,52 @@ function serverCommunicationFail(jqXHR, textStatus, errorThrown) {
     log("Failed to acquire SVG from server - " + jqXHR.responseText);
 }
 
-function showTooltip(tooltipText) {
-    $("#tooltip-text").html(tooltipText);
-    $("#tooltip").show();
-}
-
-function hideTooltip() {
-    $("#tooltip").hide();
-}
+//function showTooltip(tooltipText) {
+//    $("#tooltip-text").html(tooltipText);
+//    $("#tooltip").show();
+//}
+//
+//function hideTooltip() {
+//    $("#tooltip").hide();
+//}
 
 function showSummary(associations){
-    $("#popup").hide();
-    hideTooltip();
+    $("#tooltip").hide();
 
     $.getJSON('api/summaries/associations/' + associations, function(data) {
-        alert(JSON.stringify(data));
-//        $.each(data, function(key, val) {
-//            alert("Current data item " + key + " " + val);
-//        });
-        $("#trait").html(data.gwasTrait);
+
+        var trait = data.gwasTrait;
+
+        var summaryTable = $("<table>");
+        summaryTable.html("<th>SNP</th><th>Study</th><th>p-Value</th><th>EFO mapping</th>");
+
         try{
-        var index = data.snpsummaries.length;
+            var index = data.snpsummaries.length;
+            for(var i=0; i<index; i++){
+                var row = $("<tr>");
+                var snpsummary = data.snpsummaries[i];
+                var snp = "http://www.ensembl.org/Homo_sapiens/Variation/Phenotype?v=".concat(snpsummary.snp);
+                var snpurl =  "<a href='".concat(snp).concat("' target='_blank'>").concat(snpsummary.snp).concat("</a>");
+                row.append($("<td>").html(snpurl));
+                var study = "http://www.ncbi.nlm.nih.gov/pubmed/".concat(snpsummary.study);
+                var studyurl = "<a href='".concat(study).concat("' target='_blank'>").concat(study).concat("</a>");
+                row.append($("<td>").html(studyurl));
+                row.append($("<td>").html(snpsummary.pval));
+                var efourl =  "<a href='".concat(snpsummary.efouri).concat("' target='_blank'>").concat(snpsummary.efotrait).concat("</a>");
+                row.append($("<td>").html(efourl));
+                summaryTable.append(row);
 
-        for(var i=0; i<index; i++){
-            var snpsummary = data.snpsummaries[i];
-            alert(JSON.stringify(snpsummary))
-            $("#SNP").html(snpsummary.snp);
-            $("#study").html(snpsummary.study);
-            $("#pval").html(snpsummary.pval);
-            $("#efo").html(snpsummary.efotrait);
 
+            }
 
-        }
+            $("<div>").append(summaryTable).dialog({"title": trait,"draggable":false, "width":800});
+
         }
         catch(ex){
               alert(ex);
         }
 
-    })        ;
-    $("#popup").show();
-
-/*
-
- <h4>This is a pop-up for trait <span id="trait"></span></h4>
- <ul>
- <li>SNP: <span id="SNP"></span></li>
- <li>Study: <span id="study"></span> </li>
- <li>p-value: <span id="pval"></span></li>
- <li>EFO mapping: <span id="efo"></span> </li>
- </ul>
-
- <span id="popup-text"></span>*/
-
-
-
+    });
 }
 
 function filterTraits(traitName) {

@@ -142,10 +142,12 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
                     if(traitName.contains("'")){
                         traitName = traitName.replace("'", "\\'");
                     }
-                    String mo = "showTooltip('" + traitName + "')";
-                    trait.setAttribute("onmouseover", mo);
-                    trait.setAttribute("onmouseout", "hideTooltip()");
-                    trait.setAttribute("id", traitName);
+//                    String mo = "showTooltip('" + traitName + "')";
+//                    trait.setAttribute("onmouseover", mo);
+//                    trait.setAttribute("onmouseout", "hideTooltip()");
+//                    trait.setAttribute("id", traitName);
+
+                    trait.setAttribute("gwasname" , traitName);
 
                     IRI iri = getTraitClass(gwasTrait, renderingContext);
                     String traitClass = OntologyUtils.getShortForm(iri, renderingContext);
@@ -154,8 +156,10 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
 
                     String assocIRI = OntologyUtils.getShortForm(association.getIRI(), renderingContext);
                     getLog().trace("Setting on-click event for trait '" + gwasTrait + "' to " + assocIRI);
-                    String summaryFunction = "showSummary('" + assocIRI;
-                    trait.setAttribute("onclick", summaryFunction);
+//                    String summaryFunction = "showSummary('" + assocIRI;
+//                    trait.setAttribute("onclick", summaryFunction);
+
+                    trait.setAttribute("gwasassociation", assocIRI);
 
                     SVGArea currentArea = new SVGArea(cx, cy, 2 * radius, 2 * radius, 0);
                     RenderingEvent<OWLIndividual> event = new RenderingEvent<OWLIndividual>(

@@ -251,10 +251,14 @@ public class DefaultRenderletNexus implements RenderletNexus {
 
 //if the SVG for this trait has already been queued for this band...
                     for(Element rendered : traits){
-                        if(rendered.getAttribute("id").equals(name)){
+                        if(rendered.getAttribute("gwasname").equals(name)){
                             getLog().debug("SVG for this trait name is already queued for rendering");
-                            String mouseclick = rendered.getAttribute("onclick");
-                            rendered.setAttribute("onclick", mouseclick + "," + assocIRI);
+//                            String mouseclick = rendered.getAttribute("onclick");
+//                            rendered.setAttribute("onclick", mouseclick + "," + assocIRI);
+
+                            String existing = rendered.getAttribute("gwasassociation");
+                            rendered.setAttribute("gwasassociation", existing + "," + assocIRI);
+
                             queued = true;
                         }
                     }
@@ -264,7 +268,8 @@ public class DefaultRenderletNexus implements RenderletNexus {
 //scenario 1: this trait individual was rendered in the full rendering
                         if(getRenderingEvent(trait) != null){
                             Element traitSVG = getRenderingEvent(trait).getRenderedSVG();
-                            traitSVG.setAttribute("onclick", "showSummary(" + assocIRI);
+//                            traitSVG.setAttribute("onclick", "showSummary(" + assocIRI);
+                            traitSVG.setAttribute("gwasassociation", assocIRI);
                             traits.add(traitSVG);
                         }
 //scenario 2: this trait individual was not rendered in the full rendering --> find a trait of the same name that was
@@ -274,7 +279,8 @@ public class DefaultRenderletNexus implements RenderletNexus {
                                 OWLNamedIndividual rep = bandLocations.get(band).getRenderedTrait(name);
                                 if(getRenderingEvent(rep) != null){
                                     Element traitSVG = getRenderingEvent(rep).getRenderedSVG();
-                                    traitSVG.setAttribute("onclick", "showSummary(" + assocIRI);
+//                                    traitSVG.setAttribute("onclick", "showSummary(" + assocIRI);
+                                    traitSVG.setAttribute("gwasassociation", assocIRI);
                                     traits.add(traitSVG);
                                 }
 
@@ -297,8 +303,9 @@ public class DefaultRenderletNexus implements RenderletNexus {
             builder.addElement(associationSVG);
 
             for(Element svg : traits){
-                String onclick = svg.getAttribute("onclick");
-                svg.setAttribute("onclick", onclick + "')");
+//                String onclick = svg.getAttribute("onclick");
+//                svg.setAttribute("onclick", onclick + "')");
+
                 builder.addElement(svg);
             }
         }
@@ -341,9 +348,11 @@ public class DefaultRenderletNexus implements RenderletNexus {
                                     getLog().trace("Trait " + traitName + " already rendered at band " + band);
                                     String assocIRI = OntologyUtils.getShortForm(ind.getIRI(), ontology);
                                     for(Element rendered : traits){
-                                        if(rendered.getAttribute("id").equals(traitName)){
-                                            String mouseclick = rendered.getAttribute("onclick");
-                                            rendered.setAttribute("onclick", mouseclick + "," + assocIRI);
+                                        if(rendered.getAttribute("gwasname").equals(traitName)){
+//                                            String mouseclick = rendered.getAttribute("onclick");
+//                                            rendered.setAttribute("onclick", mouseclick + "," + assocIRI);
+                                            String existing = rendered.getAttribute("gwasassociation");
+                                            rendered.setAttribute("gwasassociation", existing + "," + assocIRI);
                                         }
                                     }
                                 }
@@ -384,8 +393,8 @@ public class DefaultRenderletNexus implements RenderletNexus {
             }
 
             for(Element trait : traits){
-                String onclick = trait.getAttribute("onclick");
-                trait.setAttribute("onclick", onclick + "')");
+//                String onclick = trait.getAttribute("onclick");
+//                trait.setAttribute("onclick", onclick + "')");
                 svgBuilder.addElement(trait);
             }
         }
@@ -398,7 +407,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
         for (int i = 0; i < allTypes.length; i++) {
             OWLClass typeClass = allTypes[i].asOWLClass();
 
-            if (typeClass.getIRI().equals(typeIRI)) {
+            if (typeIRI.equals(typeClass.getIRI())) {
                 type = true;
                 break;
             }
@@ -617,7 +626,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
             for (OWLClassExpression typeClassExpression : allTypes) {
                 OWLClass typeClass = typeClassExpression.asOWLClass();
                 traitClass = typeClass.getIRI();
-                if (!traitClass.toString().equals(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI)) {
+                if (!OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI.equals(traitClass.toString())) {
                     break;
                 }
             }

@@ -98,8 +98,8 @@ public class SVGBuilder {
         svgRoot.setAttribute("id", "goci-svg");
         svgRoot.setAttribute("width", Integer.toString(width));
         svgRoot.setAttribute("height", Integer.toString(height));
-        svgRoot.setAttribute("xmlns:svg", "http://www.w3.org/2000/svg");
-        svgRoot.setAttribute("xmlns:sodipodi", "http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd");
+//        svgRoot.setAttribute("xmlns:svg", "http://www.w3.org/2000/svg");
+//        svgRoot.setAttribute("xmlns:sodipodi", "http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd");
 
         String viewBox = "0 0 " + width + " " + height;
         svgRoot.setAttribute("viewBox", viewBox);
@@ -111,7 +111,7 @@ public class SVGBuilder {
 
 
         Element defs = doc.createElement("defs");
-        defs.setAttribute("xmlns", svgNS);
+//        defs.setAttribute("xmlns", svgNS);
         
         Element linGrad1 = doc.createElement("linearGradient");
         linGrad1.setAttribute("id", "blacktobg");
