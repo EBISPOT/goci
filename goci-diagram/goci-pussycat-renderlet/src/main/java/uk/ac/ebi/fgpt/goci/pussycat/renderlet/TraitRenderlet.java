@@ -139,15 +139,15 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
                     trait.setAttribute("stroke-width", "0.5");
 
                     String traitName = getTraitName(gwasTrait, renderingContext, nexus, association);
-                    if(traitName.contains("'")){
-                        traitName = traitName.replace("'", "\\'");
-                    }
+//                    if(traitName.contains("'")){
+//                        traitName = traitName.replace("'", "\\'");
+//                    }
 //                    String mo = "showTooltip('" + traitName + "')";
 //                    trait.setAttribute("onmouseover", mo);
 //                    trait.setAttribute("onmouseout", "hideTooltip()");
 //                    trait.setAttribute("id", traitName);
 
-                    trait.setAttribute("gwasname" , traitName);
+                    trait.setAttribute("gwasname", traitName);
 
                     IRI iri = getTraitClass(gwasTrait, renderingContext);
                     String traitClass = OntologyUtils.getShortForm(iri, renderingContext);
@@ -155,7 +155,7 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
                     trait.setAttribute("class", traitClass + " gwas-trait");
 
                     String assocIRI = OntologyUtils.getShortForm(association.getIRI(), renderingContext);
-                    getLog().trace("Setting on-click event for trait '" + gwasTrait + "' to " + assocIRI);
+                    getLog().trace("Setting gwasassociation attribute for trait '" + gwasTrait + "' to " + assocIRI);
 //                    String summaryFunction = "showSummary('" + assocIRI;
 //                    trait.setAttribute("onclick", summaryFunction);
 

@@ -416,10 +416,10 @@ function showSummary(associations){
             for(var i=0; i<index; i++){
                 var row = $("<tr>");
                 var snpsummary = data.snpsummaries[i];
-                var snp = "http://www.ensembl.org/Homo_sapiens/Variation/Phenotype?v=".concat(snpsummary.snp);
+                var snp = "http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(snpsummary.snp);
                 var snpurl =  "<a href='".concat(snp).concat("' target='_blank'>").concat(snpsummary.snp).concat("</a>");
                 row.append($("<td>").html(snpurl));
-                var study = "http://www.ncbi.nlm.nih.gov/pubmed/".concat(snpsummary.study);
+                var study = "http://www.ukpmc.ac.uk/abstract/MED/".concat(snpsummary.study);
                 var studyurl = "<a href='".concat(study).concat("' target='_blank'>").concat(study).concat("</a>");
                 row.append($("<td>").html(studyurl));
                 row.append($("<td>").html(snpsummary.pval));
