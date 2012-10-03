@@ -106,13 +106,32 @@ h3.nomargin {
     padding: 2px;
 }
 
-.popup {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 200;
-    padding: 2px;
+
+
+#traitpopup table {
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-style: hidden;
+    width: 100%;
 }
+
+#traitpopup th {
+    border-style: solid;
+    border-width: 1px;
+    padding: 8px;
+
+}
+
+#traitpopup td {
+    border-style: solid;
+    border-width: 1px;
+    padding: 5px;
+}
+
+#traitpopup td.center{
+    text-align: center;
+}
+
 
 .navbar {
     position: absolute;
@@ -203,7 +222,27 @@ h3.nomargin {
     text-indent: -99999px;
 }
 
-.icon-trait-cardio{background-position: -7px -6px;}
+.icon-trait-haemo-measure{background-position: -7px -6px;}
+.icon-trait-neuro{background-position: -7px -29px;}
+.icon-trait-process{background-position: -7px -52px;}
+.icon-trait-cardio-measure{background-position: -7px -74px;}
+.icon-trait-other{background-position: -7px -96px;}
+.icon-trait-metabolic{background-position: -7px -119px;}
+.icon-trait-chemical{background-position: -7px -141px;}
+.icon-trait-body-measure{background-position: -7px -164px;}
+.icon-trait-disease{background-position: -7px -187px;}
+.icon-trait-neoplasm{background-position: -7px -209px;}
+.icon-trait-immune{background-position: -7px -231px;}
+.icon-trait-measure{background-position: -7px -253px;}
+.icon-trait-liver-measure{background-position: -7px -275px;}
+.icon-trait-lipid-measure{background-position: -7px -298px;}
+.icon-trait-inflam-measure{background-position: -7px -321px;}
+.icon-trait-digestive{background-position: -7px -343px;}
+.icon-trait-cardio{background-position: -7px -366px;}
+.icon-trait-unmapped{background-position: -7px -389px;}
+
+
+/*.icon-trait-cardio{background-position: -7px -6px;}
 .icon-trait-neuro{background-position: -7px -29px;}
 .icon-trait-immune{background-position: -7px -52px;}
 .icon-trait-digestive{background-position: -7px -74px;}
@@ -221,3 +260,4 @@ h3.nomargin {
 .icon-trait-process{background-position: -7px -343px;}
 .icon-trait-other{background-position: -7px -366px;}
 .icon-trait-unmapped{background-position: -7px -389px;}
+*/

@@ -16,7 +16,6 @@ import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.manager.PussycatManager;
 import uk.ac.ebi.fgpt.goci.pussycat.model.TraitSummary;
-import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSession;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSessionStrategy;
 
@@ -142,23 +141,23 @@ public class PussycatSummariesController {
         }
     }
 
-    protected RenderletNexus getRenderletNexus(HttpSession session) throws PussycatSessionNotReadyException {
-        getLog().debug("Attempting to obtain RenderletNexus session for HttpSession '" + session.getId() + "'");
-
-        RenderletNexus renderletNexus;
-        if (getPussycatManager().hasAvailableRenderletNexus(session)) {
-            getLog().debug("RenderletNexus available for HttpSession '" + session.getId() + "'");
-            renderletNexus = getPussycatManager().getRenderletNexus(session);
-        }
-        else {
-            renderletNexus = getPussycatManager().createRenderletNexus(
-                    getOntologyConfiguration(),
-                    getPussycatManager().getPussycatSession(session));
-            getPussycatManager().bindRenderletNexus(session, renderletNexus);
-        }
-
-        return renderletNexus;
-    }
+//    protected RenderletNexus getRenderletNexus(HttpSession session) throws PussycatSessionNotReadyException {
+//        getLog().debug("Attempting to obtain RenderletNexus session for HttpSession '" + session.getId() + "'");
+//
+//        RenderletNexus renderletNexus;
+//        if (getPussycatManager().hasAvailableRenderletNexus(session)) {
+//            getLog().debug("RenderletNexus available for HttpSession '" + session.getId() + "'");
+//            renderletNexus = getPussycatManager().getRenderletNexus(session);
+//        }
+//        else {
+//            renderletNexus = getPussycatManager().createRenderletNexus(
+//                    getOntologyConfiguration(),
+//                    getPussycatManager().getPussycatSession(session));
+//            getPussycatManager().bindRenderletNexus(session, renderletNexus);
+//        }
+//
+//        return renderletNexus;
+//    }
 
     protected TraitSummary getSummary(ArrayList<String> associationURIs, HttpSession session) throws PussycatSessionNotReadyException, OWLConversionException {
         TraitSummary summary = new TraitSummary();
@@ -172,6 +171,8 @@ public class PussycatSummariesController {
 
             String rs_id = null;
             String pm_id = null;
+            String author = null;
+            String pub_date = null;
             String pval = null;
             String efoTrait = null;
             String efoUri = null;
@@ -200,7 +201,7 @@ public class PussycatSummariesController {
 
 //get the SNP and the trait
             OWLObjectProperty is_about = df.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
-            OWLIndividual[] related = association.getObjectPropertyValues(is_about, ontology).toArray(new OWLIndividual[0]);
+            Set<OWLIndividual> related = association.getObjectPropertyValues(is_about, ontology);
 
             IRI snp_class = IRI.create(OntologyConstants.SNP_CLASS_IRI);
             OWLNamedIndividual snp = null;
@@ -226,6 +227,23 @@ public class PussycatSummariesController {
                     rs_id = id.getLiteral();
                     getLog().debug("The RS id is " + rs_id);
                 }
+
+                if(summary.getChromBand() == null){
+                    OWLObjectProperty located_in = df.getOWLObjectProperty(IRI.create(OntologyConstants.LOCATED_IN_PROPERTY_IRI));
+                    Set<OWLIndividual> bands = snp.getObjectPropertyValues(located_in, ontology);
+
+                    for(OWLIndividual ind : bands){
+                        OWLNamedIndividual band = (OWLNamedIndividual) ind;
+                        OWLDataProperty band_name = df.getOWLDataProperty(IRI.create(OntologyConstants.HAS_NAME_PROPERTY_IRI));
+
+                        if(band.getDataPropertyValues(band_name,ontology).size() != 0){
+                            OWLLiteral name = band.getDataPropertyValues(band_name,ontology).iterator().next();
+                            summary.setChromBand(name.getLiteral());
+                            getLog().debug("The chromosomal band is " + name.getLiteral());
+                        }
+                    }
+
+                }
             }
 
             if(trait != null){
@@ -245,6 +263,8 @@ public class PussycatSummariesController {
             OWLObjectProperty part_of = df.getOWLObjectProperty(IRI.create(OntologyConstants.PART_OF_IRI));
             Set<OWLNamedIndividual> studies = reasoner.getObjectPropertyValues(association,part_of).getFlattened();
             OWLDataProperty has_pmid = df.getOWLDataProperty(IRI.create(OntologyConstants.HAS_PUBMED_ID_PROPERTY_IRI));
+            OWLDataProperty has_author = df.getOWLDataProperty((IRI.create((OntologyConstants.HAS_AUTHOR_PROPERTY_IRI))));
+            OWLDataProperty has_pubdate = df.getOWLDataProperty((IRI.create(OntologyConstants.HAS_PUBLICATION_DATE_PROPERTY_IRI)));
 
             for(OWLNamedIndividual study : studies){
                 Set<OWLLiteral> pmids = study.getDataPropertyValues(has_pmid, ontology);
@@ -253,9 +273,25 @@ public class PussycatSummariesController {
                     getLog().debug("The Pubmed id is " + pm_id);
 
                 }
+
+                Set<OWLLiteral> authors = study.getDataPropertyValues(has_author, ontology);
+                for(OWLLiteral a : authors){
+                    author = a.getLiteral();
+                    getLog().debug("The author is " + author);
+
+                }
+
+                Set<OWLLiteral> dates = study.getDataPropertyValues(has_pubdate, ontology);
+                for(OWLLiteral date : dates){
+                    pub_date = date.getLiteral();
+                    pub_date = pub_date.substring(0,4);
+                    getLog().debug("The publication date is " + pub_date);
+
+                }
+
             }
 
-            summary.addSNP(pm_id,rs_id,pval,efoTrait,efoUri);
+            summary.addSNP(pm_id,author, pub_date, rs_id,pval,efoTrait,efoUri);
 
         }
 

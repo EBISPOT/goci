@@ -404,12 +404,14 @@ function serverCommunicationFail(jqXHR, textStatus, errorThrown) {
 function showSummary(associations){
     $("#tooltip").hide();
 
+    $("#traitpopup").html("").dialog("close");
+
     $.getJSON('api/summaries/associations/' + associations, function(data) {
 
-        var trait = data.gwasTrait;
+        var trait = "All SNPs associated with GWAS trait '".concat(data.gwasTrait).concat("' in band ").concat(data.chromBand);
 
         var summaryTable = $("<table>");
-        summaryTable.html("<th>SNP</th><th>Study</th><th>p-Value</th><th>EFO mapping</th>");
+        summaryTable.html("<th>SNP</th><th>p-Value</th><th>EFO ontology map</th><th>Study</th>");
 
         try{
             var index = data.snpsummaries.length;
@@ -419,18 +421,18 @@ function showSummary(associations){
                 var snp = "http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(snpsummary.snp);
                 var snpurl =  "<a href='".concat(snp).concat("' target='_blank'>").concat(snpsummary.snp).concat("</a>");
                 row.append($("<td>").html(snpurl));
-                var study = "http://www.ukpmc.ac.uk/abstract/MED/".concat(snpsummary.study);
-                var studyurl = "<a href='".concat(study).concat("' target='_blank'>").concat(study).concat("</a>");
-                row.append($("<td>").html(studyurl));
-                row.append($("<td>").html(snpsummary.pval));
+                row.append($("<td class='center'>").html(snpsummary.pval));
                 var efourl =  "<a href='".concat(snpsummary.efouri).concat("' target='_blank'>").concat(snpsummary.efotrait).concat("</a>");
                 row.append($("<td>").html(efourl));
+                var study = snpsummary.author.concat(" et al., ").concat(snpsummary.date);
+                var studyurl = "http://www.ukpmc.ac.uk/abstract/MED/".concat(snpsummary.study);
+                var studyentry = "<a href='".concat(studyurl).concat("' target='_blank'>").concat(study).concat("</a>");
+                row.append($("<td>").html(studyentry));
                 summaryTable.append(row);
-
 
             }
 
-            $("<div>").append(summaryTable).dialog({"title": trait,"draggable":false, "width":800});
+            $("#traitpopup").append(summaryTable).dialog({"title": trait,"draggable":false, "width":800});
 
         }
         catch(ex){

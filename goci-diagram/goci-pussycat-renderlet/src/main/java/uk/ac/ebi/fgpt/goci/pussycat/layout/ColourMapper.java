@@ -40,7 +40,27 @@ public class ColourMapper {
 
 
     static {
-       COLOUR_MAP.put(OTHER, "#B33232");
+
+        COLOUR_MAP.put(CARDIO_VASCULAR, "#B33232");
+        COLOUR_MAP.put(HEMATOLOGICAL_MSR, "#8DD3C7");
+        COLOUR_MAP.put(NEURO, "#FFFFB3");
+        COLOUR_MAP.put(BIO_PROCESS, "#BEBADA");
+        COLOUR_MAP.put(CARDIO_MSR, "#80B1D3");
+        COLOUR_MAP.put(OTHER, "#FB8072");
+        COLOUR_MAP.put(METABOLIC, "#FDB462");
+        COLOUR_MAP.put(CHEMICAL, "#FCCDE5");
+        COLOUR_MAP.put(LIPID_MSR,"#B3DE69");
+        COLOUR_MAP.put(LIPOPROT_MSR,"#B3DE69");
+        COLOUR_MAP.put(BODY_MSR, "#66CCFF");
+        COLOUR_MAP.put(NEOPLASM, "#BC80BD");
+        COLOUR_MAP.put(INFLAMMATORY_MSR, "#CCEBC5");
+        COLOUR_MAP.put(IMMUNE, "#FFED6F");
+        COLOUR_MAP.put(MEASUREMENT, "#006699");
+        COLOUR_MAP.put(LIVER_ENZYME, "#669900");
+        COLOUR_MAP.put(DISEASE, "#FF3399");
+        COLOUR_MAP.put(DIGESTIVE, "#B7704C");
+
+/*      COLOUR_MAP.put(OTHER, "#B33232");
         COLOUR_MAP.put(CARDIO_VASCULAR, "#8DD3C7");
         COLOUR_MAP.put(NEURO, "#FFFFB3");
         COLOUR_MAP.put(IMMUNE, "#BEBADA");
@@ -57,24 +77,7 @@ public class ColourMapper {
         COLOUR_MAP.put(LIVER_ENZYME, "#669900");
         COLOUR_MAP.put(LIPID_MSR, "#FF3399");
         COLOUR_MAP.put(LIPOPROT_MSR, "#FF3399");
-        COLOUR_MAP.put(BIO_PROCESS, "#B7704C");
-
-/*        Behaviour       = liver enzyme
-        Biological Process
-        Cancer
-        Cardiovascular disorder
-        Congenital Disorder    = metabolic
-        Function             = hemato
-        Genetic Disorder     = measurement
-        Material entity          = chemical
-        Measurement     =  body_msr
-        Mental Disorder            = immune
-        Mental process              = lipid
-        Neurological Disorder
-        Other disease
-        Quality                = inflammatory
-        sign or symptom         = cardio_msr
-        Skeletal Disorder  = digestive            */
+        COLOUR_MAP.put(BIO_PROCESS, "#B7704C");         */
 
 
         //       Jackie

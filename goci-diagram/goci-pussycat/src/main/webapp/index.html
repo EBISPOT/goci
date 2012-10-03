@@ -13,7 +13,7 @@
     <link href="css/jquery-ui-1.8.18.custom.css" type="text/css" rel="stylesheet"/>
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.22/jquery-ui.min.js"></script>
     <script type="text/javascript" src="scripts/pussycat.js"></script>
     <script type="text/javascript" src="scripts/jquery.mousewheel.min.js"></script>
     <script type="text/javascript" src="scripts/jquery.event.drag-2.0.min.js"></script>
@@ -75,39 +75,39 @@
         <div class="legend" style="width: 250px;">
             <h4>SNP-associated trait categories</h4>
 
-            <p><span class="icon-trait icon-trait-process"></span>Biological process</p>
+            <p><span class="icon-trait icon-trait-digestive"></span>Digestive system disorder</p>
 
-            <p><span class="icon-trait icon-trait-other"></span>Other trait</p>
+            <p><span class="icon-trait icon-trait-cardio"></span>Cardiovascular disorder</p>
 
             <p><span class="icon-trait icon-trait-metabolic"></span>Metabolic disorder</p>
 
-            <p><span class="icon-trait icon-trait-haemo-measure"></span>Hematological measurement</p>
+            <p><span class="icon-trait icon-trait-immune"></span>Immune system disorder</p>
 
             <p><span class="icon-trait icon-trait-neuro"></span>Neurological disorder</p>
 
             <p><span class="icon-trait icon-trait-liver-measure"></span>Liver enzyme measurement</p>
 
+            <p><span class="icon-trait icon-trait-lipid-measure"></span>Lipid or lipoprotein measurement</p>
+
+            <p><span class="icon-trait icon-trait-inflam-measure"></span>Inflammatory marker measurement</p>
+
+            <p><span class="icon-trait icon-trait-haemo-measure"></span>Hematological measurement</p>
+
+            <p><span class="icon-trait icon-trait-body-measure"></span>Body measurement</p>
+
+            <p><span class="icon-trait icon-trait-cardio-measure"></span>Cardiovascular measurement</p>
+
             <p><span class="icon-trait icon-trait-measure"></span>Other measurement</p>
 
             <p><span class="icon-trait icon-trait-chemical"></span>Chemical compound</p>
 
-            <p><span class="icon-trait icon-trait-cardio"></span>Cardiovascular disorder</p>
+            <p><span class="icon-trait icon-trait-process"></span>Biological process</p>
 
-            <p><span class="icon-trait icon-trait-body-measure"></span>Body measurement</p>
-
-            <p><span class="icon-trait icon-trait-digestive"></span>Digestive system disorder</p>
-
-            <p><span class="icon-trait icon-trait-inflam-measure"></span>Inflammatory marker measurement</p>
+            <p><span class="icon-trait icon-trait-neoplasm"></span>Cancer</p>
 
             <p><span class="icon-trait icon-trait-disease"></span>Other disease</p>
 
-            <p><span class="icon-trait icon-trait-immune"></span>Immune system disorder</p>
-
-            <p><span class="icon-trait icon-trait-cardio-measure"></span>Cardiovascular measurement</p>
-
-            <p><span class="icon-trait icon-trait-lipid-measure"></span>Lipid or lipoprotein measurement</p>
-
-            <p><span class="icon-trait icon-trait-neoplasm"></span>Cancer</p>
+            <p><span class="icon-trait icon-trait-other"></span>Other trait</p>
 
             <p><span class="icon-trait icon-trait-unmapped"></span>Trait mapping in progress</p>
 
@@ -696,17 +696,9 @@
     <span id="tooltip-text"></span>
 </div>
 
-<!--<div id="popup" class="ui-widget-header popup" style="display: none;">-->
-    <!--<h4>This is a pop-up for trait <span id="trait"></span></h4>-->
-    <!--<ul>-->
-        <!--<li>SNP: <span id="SNP"></span></li>-->
-        <!--<li>Study: <span id="study"></span> </li>-->
-        <!--<li>p-value: <span id="pval"></span></li>-->
-        <!--<li>EFO mapping: <span id="efo"></span> </li>-->
-    <!--</ul>-->
+<div id="traitpopup" style="display: none;">
 
-    <!--<span id="popup-text"></span>-->
-<!--</div>-->
+</div>
 
 <div id="zoom-and-pan" class="navbar" style="display: none;">
     <div id="pan"></div>
