@@ -339,42 +339,52 @@ public class DefaultRenderletNexus implements RenderletNexus {
                             if(trait != null){
                                 getLog().trace("Trait: " + trait);
 
-                                String traitName = getTraitName(trait, ontology, ind);
-//                                if(traitName.contains("'")){
-//                                    traitName = traitName.replace("'", "\\'");
-//                                }
+                                if(!allTraits.contains(trait))       {
+                                    getLog().debug("This is probably a trait association!" + trait);
+                                }
 
-                                if(bandLocations.get(band).getRenderedTraits().contains(traitName)){
-                                    getLog().trace("Trait " + traitName + " already rendered at band " + band);
-                                    String assocIRI = OntologyUtils.getShortForm(ind.getIRI(), ontology);
-                                    for(Element rendered : traits){
-                                        if(rendered.getAttribute("gwasname") != null) {
-                                            if(rendered.getAttribute("gwasname").equals(traitName)){
-//                                            String mouseclick = rendered.getAttribute("onclick");
-//                                            rendered.setAttribute("onclick", mouseclick + "," + assocIRI);
-                                                String existing = rendered.getAttribute("gwasassociation");
-                                                rendered.setAttribute("gwasassociation", existing + "," + assocIRI);
+                                else{
+                                    String traitName = getTraitName(trait, ontology, ind);
+    //                                if(traitName.contains("'")){
+    //                                    traitName = traitName.replace("'", "\\'");
+    //                                }
+
+                                    if(bandLocations.get(band).getRenderedTraits().contains(traitName)){
+                                        getLog().trace("Trait " + traitName + " already rendered at band " + band);
+                                        String assocIRI = OntologyUtils.getShortForm(ind.getIRI(), ontology);
+                                        for(Element rendered : traits){
+                                            if(rendered.getAttribute("gwasname") != null) {
+                                                if(rendered.getAttribute("gwasname").equals(traitName)){
+    //                                            String mouseclick = rendered.getAttribute("onclick");
+    //                                            rendered.setAttribute("onclick", mouseclick + "," + assocIRI);
+                                                    String existing = rendered.getAttribute("gwasassociation");
+                                                    rendered.setAttribute("gwasassociation", existing + "," + assocIRI);
+                                                }
                                             }
                                         }
                                     }
-                                }
-                                else{
-                                    getLog().trace("Trait " + traitName + " was not previously rendered at band " + band);
-                                    for (Renderlet rt : getRenderlets()){
-                                        if (rt.canRender(this, ontology, trait)) {
-                                            getLog().trace("Dispatching render() request to renderlet '" + rt.getName() + "'");
-                                            Element newTrait = rt.render(this, ontology, trait, svgBuilder);
-                                            traits.add(newTrait);
+                                    else{
+                                        getLog().trace("Trait " + traitName + " was not previously rendered at band " + band);
+                                        for (Renderlet rt : getRenderlets()){
+                                            if (rt.canRender(this, ontology, trait)) {
+                                                getLog().trace("Dispatching render() request to renderlet '" + rt.getName() + "'");
+                                                Element newTrait = rt.render(this, ontology, trait, svgBuilder);
+                                                if(newTrait != null){
+                                                    traits.add(newTrait);
+                                                    IRI traitIRI = getTraitClass(trait, ontology);
+                                                    String traitClass = OntologyUtils.getShortForm(traitIRI, ontology);
 
-                                            IRI traitIRI = getTraitClass(trait, ontology);
-                                            String traitClass = OntologyUtils.getShortForm(traitIRI, ontology);
-
-                                            if(associationSVG != null){
-                                                String existingClass = associationSVG.getAttribute("class");
-                                                associationSVG.setAttribute("class", existingClass + " " + traitClass);
-                                            }
-                                            else{
-                                                getLog().debug("Could not add CSS class element for association " + ind);
+                                                    if(associationSVG != null){
+                                                        String existingClass = associationSVG.getAttribute("class");
+                                                        associationSVG.setAttribute("class", existingClass + " " + traitClass);
+                                                    }
+                                                    else{
+                                                        getLog().debug("Could not add CSS class element for association " + ind);
+                                                    }
+                                                }
+                                                else{
+                                                    getLog().debug("No SVG was returned for trait " + trait);
+                                                }
                                             }
                                         }
                                     }
@@ -516,6 +526,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
             for(OWLNamedIndividual ta : allAssociations){
                 if (allTraits.contains(ta)){
                     allTraits.remove(ta);
+                    getLog().debug("Removed trait assocation " + ta.toString() + " from EF list");
                 }
             }
         }

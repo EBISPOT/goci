@@ -68,7 +68,7 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
                                                   .getFlattened();
 
                     for (OWLClass typeClass : allTypes) {
-                        if (typeClass.getIRI().equals(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI))) {
+                        if (IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI).equals(typeClass.getIRI())) {
                             renderable = true;
                             break;
                         }
@@ -183,7 +183,7 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
             for (OWLClassExpression typeClassExpression : allTypes) {
                 OWLClass typeClass = typeClassExpression.asOWLClass();
                 traitClass = typeClass.getIRI();
-                if (!traitClass.toString().equals(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI)) {
+                if (!OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI.equals(traitClass.toString())) {
                     break;
                 }
             }
@@ -238,6 +238,7 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
         OWLObjectProperty is_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
 
         OWLObjectPropertyExpression has_about = is_about.getInverseProperty();
+        getLog().debug("Inverse property of is_about is " + has_about.toString());
 
         OWLNamedIndividual association = null;
         if (reasoner.getObjectPropertyValues(trait, has_about).getFlattened().size() != 0) {
@@ -264,7 +265,7 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
 //find the association that is of type SNP
             for (OWLClassExpression typeClassExpression : allTypes) {
                 OWLClass typeClass = typeClassExpression.asOWLClass();
-                if (typeClass.getIRI().equals(IRI.create(OntologyConstants.SNP_CLASS_IRI))) {
+                if (IRI.create(OntologyConstants.SNP_CLASS_IRI).equals(typeClass.getIRI())) {
                     OWLNamedIndividual SNP = related.asOWLNamedIndividual();
 
 //get the SNP's cytogenetic band
