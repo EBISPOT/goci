@@ -238,7 +238,6 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
         OWLObjectProperty is_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
 
         OWLObjectPropertyExpression has_about = is_about.getInverseProperty();
-        getLog().debug("Inverse property of is_about is " + has_about.toString());
 
         OWLNamedIndividual association = null;
         if (reasoner.getObjectPropertyValues(trait, has_about).getFlattened().size() != 0) {

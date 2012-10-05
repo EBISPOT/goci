@@ -432,7 +432,7 @@ function showSummary(associations){
 
             }
 
-            $("#traitpopup").append(summaryTable).dialog({"title": trait,"draggable":false, "width":800});
+            $("#traitpopup").append(summaryTable).dialog({"title": trait,/*"draggable":false,*/ "width":800});
 
         }
         catch(ex){
