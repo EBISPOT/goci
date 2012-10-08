@@ -18,7 +18,7 @@
     <!-- configuration: sets up ontology manager and data factory given mappings to the set resources -->
     <bean name="config" class="uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration" init-method="init">
         <!-- TODO: use EFO release -->
-        <property name="efoResource" value="classpath:efo_release_candidate.2.26.owl" />
+        <property name="efoResource" value="http://www.ebi.ac.uk/efo/efo.owl" />
         <property name="gwasDiagramSchemaResource" value="classpath:gwas-diagram-relaxed.owl" />
     </bean>
 
@@ -32,7 +32,7 @@
         <property name="reasonerSession" ref="reasonerSession" />
         <property name="pussycatSessions">
             <set>
-                <ref bean="proxiedPussycatSession" />
+                <ref bean="cachingPussycatSession" />
             </set>
         </property>
     </bean>
@@ -41,7 +41,7 @@
           class="uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession"
           init-method="init">
         <property name="configuration" ref="config" />
-        <property name="ontologyResource" value="ontology/gwas-diagram-data-2012-06.owl" />
+        <property name="ontologyResource" value="ontology/gwas-data-2012-07-strict.owl" />
         <property name="publisher" ref="publisher" />
     </bean>
 
@@ -51,7 +51,7 @@
     </bean>
 
     <bean id="cachingPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.SVGCachingPussycatSession">
-        <property name="cacheDirectory" value="/ebi/microarray/home/fgpt/test/goci-home/diagram/cache/201206_ts/" />
+        <property name="cacheDirectory" value="/ebi/microarray/home/fgpt/test/goci-home/diagram/cache/201207strict/" />
         <property name="proxiedSession" ref="proxiedPussycatSession" />
     </bean>
 

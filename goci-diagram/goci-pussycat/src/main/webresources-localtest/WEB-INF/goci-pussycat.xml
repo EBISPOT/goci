@@ -21,7 +21,7 @@
     <!-- configuration: sets up ontology manager and data factory given mappings to the set resources -->
     <bean name="config" class="uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration" init-method="init">
         <!-- TODO: use EFO release -->
-        <property name="efoResource" value="classpath:efo_release_candidate.2.26.owl" />
+        <property name="efoResource" value="http://www.ebi.ac.uk/efo/efo.owl" />
         <property name="gwasDiagramSchemaResource" value="classpath:gwas-diagram-relaxed.owl"/>
     </bean>
 
@@ -48,7 +48,7 @@
           class="uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession"
           init-method="init">
         <property name="configuration" ref="config" />
-        <property name="ontologyResource" value="ontology/gwas-diagram-data-2006-12.owl" />
+        <property name="ontologyResource" value="ontology/gwas-data-2006-12.owl" />
         <property name="publisher" ref="publisher" />
     </bean>
 
