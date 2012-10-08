@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 
-<html lang="eng" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<html lang="eng"
+      xmlns="http://www.w3.org/1999/html"
+      xmlns="http://www.w3.org/1999/html"
+      xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
     <title>GOCI | GWAS Diagram Browser</title>
 
@@ -17,7 +20,7 @@
     <script type="text/javascript" src="scripts/pussycat.js"></script>
     <script type="text/javascript" src="scripts/jquery.mousewheel.min.js"></script>
     <script type="text/javascript" src="scripts/jquery.event.drag-2.0.min.js"></script>
-    <script type="text/javascript" src="scripts/slides.min.jquery.js"></script>
+    <script type="text/javascript" src="scripts/jquery.cycle.min.js"></script>
     <script type="text/javascript" src="scripts/jquery.scrollTo-1.4.3-min.js"></script>
     <script type="text/javascript" src="scripts/jquery.localscroll-1.2.7-min.js"></script>
 
@@ -137,8 +140,9 @@
 <div id="diagramtab" class="tabcontent">
     <div class="container" style="display: none;">
         <div>This diagram shows all SNP-trait associations with a p-value smaller than 5 &#215; 10<sup>-8</sup>,
-            published in the GWAS catalogue (<a href="http://www.genome.gov/gwastudies">http://www.genome.gov/gwastudies</a>) up to the end of June 2012. For information on how to navigate the diagram, see
-            the help tab.
+            published in the GWAS catalogue
+            (<a href="http://www.genome.gov/gwastudies">http://www.genome.gov/gwastudies</a>) up to the end of June
+            2012. For information on how to navigate the diagram, see the help tab.
         </div>
 
         <div id="diagramarea" class="ui-widget-content">
@@ -156,7 +160,24 @@
 </div>
 
 <div id="timeseriestab" class="tabcontent">
-    <div class="slides_container container" style="display: none;">
+    <div id="timeserieswrapper" class="slides_wrapper">
+    <div id="timeseriescontrols" class="slides_controlpanel">
+        <ul class="iconlist">
+            <li class="ui-state-default ui-corner-all">
+                <a href="" id="ts-prev"><span class="ui-icon ui-icon-seek-prev"></span>Previous</a>
+            </li>
+            <li class="ui-state-default ui-corner-all">
+                <a href="" id="ts-pause"><span class="ui-icon ui-icon-pause"></span></a>
+            </li>
+            <li class="ui-state-default ui-corner-all">
+                <a href="" id="ts-play"><span class="ui-icon ui-icon-play"></span></a>
+            </li>
+            <li class="ui-state-default ui-corner-all">
+                <a href="" id="ts-next">Next<span class="ui-icon ui-icon-seek-next" style="float: right !important"></span></a>
+            </li>
+        </ul>
+    </div>
+    <div id="timeseriescontent" class="slides_container container" style="display: none;">
         <div>
             <h3>
                 GWAS Catalog<br/> <span class="y2005">2005</span><br/>
@@ -268,10 +289,28 @@
                  title="GWAS Catalog, June 2012"/>
         </div>
     </div>
+    </div>
 </div>
 
 <div id="filteredtab" class="tabcontent">
-    <div class="slides_container container" style="display: none;">
+    <div id="filteredwrapper" class="slides_wrapper">
+    <div id="filteredcontrols" class="slides_controlpanel">
+        <ul class="iconlist">
+            <li class="ui-state-default ui-corner-all">
+                <a href="" id="f-prev"><span class="ui-icon ui-icon-seek-prev"></span>Previous</a>
+            </li>
+            <li class="ui-state-default ui-corner-all">
+                <a href="" id="f-pause"><span class="ui-icon ui-icon-pause"></span></a>
+            </li>
+            <li class="ui-state-default ui-corner-all">
+                <a href="" id="f-play"><span class="ui-icon ui-icon-play"></span></a>
+            </li>
+            <li class="ui-state-default ui-corner-all">
+                <a href="" id="f-next">Next<span class="ui-icon ui-icon-seek-next"  style="float: right !important"></span></a>
+            </li>
+        </ul>
+    </div>
+    <div id="filteredcontent" class="slides_container container" style="display: none;">
         <div>
             <h3>
                 GWAS Catalog<br/> Filtered on "breast cancer"<br/>
@@ -344,6 +383,7 @@
                  alt="GWAS Catalog, prostate cancer"
                  title="GWAS Catalog, prostate cancer">
         </div>
+    </div>
     </div>
 </div>
 

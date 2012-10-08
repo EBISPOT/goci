@@ -54,25 +54,51 @@ function init() {
                                              hash:true
                                          });
 
-        // create slides for timeseries
-        $('#timeseriestab').slides({
-                                       preload:true,
-                                       play:2000,
-                                       pause:2500,
-                                       hoverPause:true,
-                                       effect:'fade',
-                                       crossfade:true
-                                   });
+        $(".iconlist li")
+                .mouseenter(function() {
+                                $(this).addClass('ui-state-hover');
+                            })
+                .mouseleave(function() {
+                                $(this).removeClass("ui-state-hover");
+                            });
 
-        // create slides for filtered views
-        $('#filteredtab').slides({
-                                     preload:true,
-                                     play:2000,
-                                     pause:2500,
-                                     hoverPause:true,
-                                     effect:'fade',
-                                     crossfade:true
-                                 });
+        // create cycle for timeseries
+        $('#ts-pause').click(function() {
+            $('#timeseriescontent').cycle('pause');
+            return false;
+        });
+        $('#ts-play').click(function() {
+            $('#timeseriescontent').cycle('resume');
+            return false;
+        });
+        $('#timeserieswrapper').hover(
+                function() {
+                    $('#timeseriescontrols').fadeIn();
+                },
+                function() {
+                    $('#timeseriescontrols').fadeOut('fast');
+                }
+        );
+        $('#timeseriescontent').cycle({fx:'none', next:'#ts-next', prev:'#ts-prev'});
+
+        // create cycle for filtered views
+        $('#f-pause').click(function() {
+            $('#filteredcontent').cycle('pause');
+            return false;
+        });
+        $('#f-play').click(function() {
+            $('#filteredcontent').cycle('resume');
+            return false;
+        });
+        $('#filteredwrapper').hover(
+                function() {
+                    $('#filteredcontrols').fadeIn();
+                },
+                function() {
+                    $('#filteredcontrols').fadeOut('fast');
+                }
+        );
+        $('#filteredcontent').cycle({fx:'fade', next:'#f-next', prev:'#f-prev'});
 
         // fetch server info
         $.getJSON('api/status', function(data) {
@@ -353,20 +379,20 @@ function insertSVG(svg) {
     /*TO DO: add selector to ensure that only circles that are traits get mouse-overs, not any potential future circles*/
 
     $("circle").hover(
-        function () {
-            var trait = $(this).attr("gwasname");
-             $("#tooltip-text").html(trait);
-            $("#tooltip").show();
-        },
-        function () {
-            $("#tooltip").hide();
-        }
-    )
+            function() {
+                var trait = $(this).attr("gwasname");
+                $("#tooltip-text").html(trait);
+                $("#tooltip").show();
+            },
+            function() {
+                $("#tooltip").hide();
+            }
+    );
 
-    $("circle").click(function(){
-            var associations = $(this).attr("gwasassociation");
-            showSummary(associations);
-        }
+    $("circle").click(function() {
+                          var associations = $(this).attr("gwasassociation");
+                          showSummary(associations);
+                      }
     );
 
 }
@@ -401,7 +427,7 @@ function serverCommunicationFail(jqXHR, textStatus, errorThrown) {
 //    $("#tooltip").hide();
 //}
 
-function showSummary(associations){
+function showSummary(associations) {
     $("#tooltip").hide();
 
     $("#traitpopup").html("").dialog("close");
@@ -413,16 +439,16 @@ function showSummary(associations){
         var summaryTable = $("<table>");
         summaryTable.html("<th>SNP</th><th>p-Value</th><th>EFO ontology map</th><th>Study</th>");
 
-        try{
+        try {
             var index = data.snpsummaries.length;
-            for(var i=0; i<index; i++){
+            for (var i = 0; i < index; i++) {
                 var row = $("<tr>");
                 var snpsummary = data.snpsummaries[i];
                 var snp = "http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(snpsummary.snp);
-                var snpurl =  "<a href='".concat(snp).concat("' target='_blank'>").concat(snpsummary.snp).concat("</a>");
+                var snpurl = "<a href='".concat(snp).concat("' target='_blank'>").concat(snpsummary.snp).concat("</a>");
                 row.append($("<td>").html(snpurl));
                 row.append($("<td class='center'>").html(snpsummary.pval));
-                var efourl =  "<a href='".concat(snpsummary.efouri).concat("' target='_blank'>").concat(snpsummary.efotrait).concat("</a>");
+                var efourl = "<a href='".concat(snpsummary.efouri).concat("' target='_blank'>").concat(snpsummary.efotrait).concat("</a>");
                 row.append($("<td>").html(efourl));
                 var study = snpsummary.author.concat(" et al., ").concat(snpsummary.date);
                 var studyurl = "http://www.ukpmc.ac.uk/abstract/MED/".concat(snpsummary.study);
@@ -432,11 +458,11 @@ function showSummary(associations){
 
             }
 
-            $("#traitpopup").append(summaryTable).dialog({"title": trait,/*"draggable":false,*/ "width":800});
+            $("#traitpopup").append(summaryTable).dialog({"title":trait, /*"draggable":false,*/ "width":800});
 
         }
-        catch(ex){
-              alert(ex);
+        catch (ex) {
+            alert(ex);
         }
 
     });
