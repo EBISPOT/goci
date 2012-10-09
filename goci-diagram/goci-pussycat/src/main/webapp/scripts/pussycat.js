@@ -47,6 +47,19 @@ function init() {
         $("#browsertabs").tabs({
                                    show:tabShow
                                });
+        // enable buttons
+        $("#clearbutton").button();
+        $("#clearbutton").click(showAllTraits);
+
+        $("#legendbutton").button({icons:{primary:'ui-icon-newwin'}});
+        $("#legendbutton").click(toggleLegend);
+
+        $("#retrybutton").button();
+        $("#retrybutton").click(renderDiagram);
+
+        // show tabs, this is the point on load that display becomes visible
+        $("#pussycattabs").show();
+        resizeDisplay();
 
         $("#browsertabs ul").localScroll({
                                              target:"#browsertabs",
@@ -98,7 +111,7 @@ function init() {
                     $('#filteredcontrols').fadeOut('fast');
                 }
         );
-        $('#filteredcontent').cycle({fx:'fade', next:'#f-next', prev:'#f-prev'});
+        $('#filteredcontent').cycle({fx:'none', next:'#f-next', prev:'#f-prev'});
 
         // fetch server info
         $.getJSON('api/status', function(data) {
@@ -110,27 +123,10 @@ function init() {
             log("Added server status: " + JSON.stringify(data));
         });
 
-        // enable buttons
-        $("#clearbutton").button();
-        $("#clearbutton").click(showAllTraits);
-
-        $("#legendbutton").button({icons:{primary:'ui-icon-newwin'}});
-        $("#legendbutton").click(toggleLegend);
-
-        $("#retrybutton").button();
-        $("#retrybutton").click(renderDiagram);
-
         // bind mousemove handler
         $(document).mousemove(function(ev) {
             $('#tooltip').css({"left":ev.pageX + 20, "top":ev.pageY});
         });
-//
-//        //bind mouseclick handler
-//        $(document).click(function(ev) {
-//            $('#popup').css({"left":ev.pageX + 20, "top":ev.pageY});
-//
-//        });
-
 
         if (enableSVG) {
             // bind mousewheel event handler
@@ -203,6 +199,16 @@ function init() {
         else {
             disableFilteringFeatures();
         }
+    }
+    else {
+        $("#trait-filter").change(function() {
+            log("Detected change() event on bioportal widget");
+            doFilter();
+        });
+        $("#trait-filter").blur(function() {
+            log("Focus lost on bioportal widget");
+            doFilter();
+        })
     }
 }
 
@@ -296,15 +302,6 @@ function resizeDisplay() {
                 var height = $("#diagramarea").height();
                 $("#goci-svg").attr("width", width);
                 $("#goci-svg").attr("height", height);
-//                // update the svg viewBox to match width and height adjusting for scaling
-//                var newWidth = width * scalingFactor;
-//                var newHeight = height * scalingFactor;
-//                var viewBox = document.getElementById('goci-svg').getAttribute("viewBox");
-//                var elements = viewBox.split(' ');
-//                var newViewBox = elements[0] + " " + elements[1] + " " + newWidth + " " + newHeight;
-//                document.getElementById('goci-svg').setAttribute("viewBox", newViewBox); // this uses server SVG size.  If commented out, default view is zoomed
-//                log("Adjusted SVG dimensions - SVG now width = " + width + ", height = " + height + ", viewBox = " +
-//                            newViewBox);
                 log("Adjusted SVG dimensions - SVG now width = " + width + ", height = " + height);
             }
             catch (ex) {
@@ -468,6 +465,19 @@ function showSummary(associations) {
     });
 }
 
+function doFilterOnEnter(e) {
+    var key = e.keyCode || e.which;
+    if (key == 13) {
+        log("Detected filter keypress - " + $("#trait-filter").val());
+        filterTraits($("#trait-filter").val());
+    }
+}
+
+function doFilter() {
+    log("Detected bioportal widget filtering event - " + $("#trait-filter").val());
+    filterTraits($("#trait-filter").val());
+}
+
 function filterTraits(traitName) {
     hideAllTraits();
 
@@ -496,14 +506,6 @@ function showAllTraits() {
 function hideAllTraits() {
     log("Hiding all 'gwas-trait' elements");
     $(".gwas-trait").attr("mask", "url(#traitMask)");
-}
-
-function doFilterOnEnter(e) {
-    var key = e.keyCode || e.which;
-    if (key == 13) {
-        log("Detected filter keypress - " + $("#trait-filter").val());
-        filterTraits($("#trait-filter").val());
-    }
 }
 
 function toggleLegend() {
