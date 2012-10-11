@@ -48,6 +48,9 @@ function init() {
                                    show:tabShow
                                });
         // enable buttons
+        $("#submitbutton").button();
+        $("#submitbutton").click(doFilter);
+
         $("#clearbutton").button();
         $("#clearbutton").click(showAllTraits);
 
@@ -415,14 +418,14 @@ function serverCommunicationFail(jqXHR, textStatus, errorThrown) {
     log("Failed to acquire SVG from server - " + jqXHR.responseText);
 }
 
-//function showTooltip(tooltipText) {
-//    $("#tooltip-text").html(tooltipText);
-//    $("#tooltip").show();
-//}
-//
-//function hideTooltip() {
-//    $("#tooltip").hide();
-//}
+function showTooltip(tooltipText) {
+    $("#tooltip-text").html(tooltipText);
+    $("#tooltip").show();
+}
+
+function hideTooltip() {
+    $("#tooltip").hide();
+}
 
 function showSummary(associations) {
     $("#tooltip").hide();
@@ -465,13 +468,13 @@ function showSummary(associations) {
     });
 }
 
-function doFilterOnEnter(e) {
-    var key = e.keyCode || e.which;
-    if (key == 13) {
-        log("Detected filter keypress - " + $("#trait-filter").val());
-        filterTraits($("#trait-filter").val());
-    }
-}
+//function doFilterOnEnter(e) {
+//    var key = e.keyCode || e.which;
+//    if (key == 13) {
+//        log("Detected filter keypress - " + $("#trait-filter").val());
+//        filterTraits($("#trait-filter").val());
+//    }
+//}
 
 function doFilter() {
     log("Detected bioportal widget filtering event - " + $("#trait-filter").val());

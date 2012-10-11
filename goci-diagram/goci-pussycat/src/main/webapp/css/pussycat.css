@@ -10,6 +10,11 @@ h3.nomargin {
     margin-bottom: 1px;
 }
 
+h5{
+    margin-left: 25px;
+    font-style: italic;
+}
+
 .fullheight {
     height: 100%;
 }

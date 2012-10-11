@@ -56,14 +56,20 @@
         <h2>Exploring Genome-wide Association Studies</h2>
 
         <div id="filtering">
-            <label for="trait-filter">Filter:</label> <input type="text"
-                                                             id="trait-filter"
-                                                             class="bp_form_complete-1136-name"
-                                                             name="trait-filter"
-                                                             title="Filter Traits"
-                                                             size="50"/> <a id="clearbutton"
-                                                                            href="#"
-                                                                            style="font-weight: bold">Clear filters</a>
+            <!--<label for="trait-filter">Filter:</label> -->
+            <input type="text"
+                     id="trait-filter"
+                     class="bp_form_complete-1136-name"
+                     name="trait-filter"
+                     title="Filter Traits"
+                     size="50"/>
+            <a id="submitbutton"
+               href="#"
+               style="font-weight: bold">Query</a>
+             <a id="clearbutton"
+                href="#"
+                style="font-weight: bold">Clear</a>
+           <i>To show only traits of a certain type, e.g. "breast cancer" or "schizophrenia", type the trait into the box on the left and hit "Query"</i>
         </div>
     </div>
 </div>
@@ -127,8 +133,8 @@
 
 <ul id="pussycattabs" style="display:none;">
     <li><a href="#diagramtab">GWAS Diagram</a></li>
+    <li><a href="#filteredtab">Trait-specific Views</a></li>
     <li><a href="#timeseriestab">Time Series Views</a></li>
-    <li><a href="#filteredtab">Filtered Views</a></li>
     <li><a href="#downloadstab">Downloads</a></li>
     <!--<li><a href="#keytab">Key</a></li>-->
     <li><a href="#helptab">Help</a></li>
@@ -140,9 +146,9 @@
 <div id="tabs">
 <div id="diagramtab" class="tabcontent">
     <div class="container" style="display: none;">
-        <div>This diagram shows all SNP-trait associations with a p-value smaller than 5 &#215; 10<sup>-8</sup>,
+        <div>This diagram shows all SNP-trait associations with p-value &#8804; 5.0 &#215; 10<sup>-8</sup>,
             published in the GWAS catalogue
-            (<a href="http://www.genome.gov/gwastudies">http://www.genome.gov/gwastudies</a>) up to the end of June
+            (<a href="http://www.genome.gov/gwastudies">http://www.genome.gov/gwastudies</a>) up to the end of July
             2012. For information on how to navigate the diagram, see the help tab.
         </div>
 
@@ -419,6 +425,7 @@
         </ul>
 
         <h4>Filtered Views</h4>
+        <h5>Trait filtering</h5>
         <ul>
             <li><a href="images/filtering/breast-cancer.png">GWAS diagram, filtered for breast cancer, PNG</a></li>
             <li><a href="images/filtering/diabetes.png">GWAS diagram, filtered for diabetes, PNG</a></li>
@@ -430,6 +437,10 @@
             <li><a href="images/filtering/schizophrenia.png">GWAS diagram, filtered for schizophrenia, PNG</a></li>
             <li><a href="images/filtering/asthma.png">GWAS diagram, filtered for asthma, PNG</a></li>
             <li><a href="images/filtering/prostate-cancer.png">GWAS diagram, filtered for prostate cancer, PNG</a></li>
+        </ul>
+        <h5>p-Value filtering</h5>
+        <ul>
+            <li><a href="images/filtering/gwas-2012-07-p1E11.png">GWAS diagram, SNP-trait associations with p-value &#8804; 1&#215;10<sup>-11</sup>, PNG</a></li>
         </ul>
 
         <h3>Colour Legend</h3>
@@ -482,8 +493,8 @@
                 study by the catalogue curators.
             </li>
 
-            <li><b>Filter the diagram:</b> The full diagram can be filtered by typing a trait into the "Filter" text box
-                above the diagram and hitting "Enter".
+            <li><b>Filter the diagram:</b> The full diagram can be filtered by typing a trait into the text box
+                above the diagram and hitting "Enter" or clicking the "Query" button.
                 <ul>
                     <li>If the trait is available in the diagram, all other traits will be faded to a lower visibility
                         to highlight the desired trait.
@@ -492,10 +503,13 @@
                         names, e.g. a search for "hair color" will highlight SNP-trait associations labelled hair color
                         as well as "black vs blond hair" and "red vs non-red hair".
                     </li>
-                    <li>Trait filtering is also spelling-sensitive, i.e. a search for "hair colour" will return no
-                        results. Auto-complete functionality for the filtering box is currently under development.
+                    <li>The text box has auto-complete functionality based on EFO. The auto-complete may take a moment
+                        to start loading. Only a limited number of terms can be displayed at a time, so if your term
+                        does not appear immediately, carry on typing. Due to the structure of the ontology, <b>the
+                        presence of a term in the auto-complete does not guarantee that there are any corresponding
+                        traits in the diagram!</b>
                     </li>
-                    <li>More advanced filtering capabilities, such as p-value and time, are also under development, so
+                    <li>More advanced filtering capabilities, such as p-value and time, are under development, so
                         check back regularly for updates.
                     </li>
                 </ul>
