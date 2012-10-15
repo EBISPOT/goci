@@ -4,12 +4,12 @@
     <parent>
         <artifactId>goci-diagram</artifactId>
         <groupId>uk.ac.ebi.fgpt</groupId>
-        <version>0.9.5-SNAPSHOT</version>
+        <version>0.9.5</version>
     </parent>
 
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci-pussycat</artifactId>
-    <version>0.9.5-SNAPSHOT</version>
+    <version>0.9.5</version>
     <packaging>war</packaging>
 
     <name>GOCI Pussycat (serves GWAS catalog diagram)</name>
@@ -122,27 +122,27 @@
         <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
             <artifactId>goci-ontology-utils</artifactId>
-            <version>0.9.5-SNAPSHOT</version>
+            <version>0.9.5</version>
         </dependency>
 
         <!-- goci datapublisher for obtaining catalog data -->
         <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
             <artifactId>goci-datapublisher</artifactId>
-            <version>0.9.5-SNAPSHOT</version>
+            <version>0.9.5</version>
         </dependency>
 
         <!-- renderlet and querying dependencies -->
         <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
             <artifactId>goci-pussycat-renderlet</artifactId>
-            <version>0.9.5-SNAPSHOT</version>
+            <version>0.9.5</version>
         </dependency>
 
         <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
             <artifactId>goci-sparql-client</artifactId>
-            <version>0.9.5-SNAPSHOT</version>
+            <version>0.9.5</version>
         </dependency>
 
         <!-- spring webmvc framework -->
