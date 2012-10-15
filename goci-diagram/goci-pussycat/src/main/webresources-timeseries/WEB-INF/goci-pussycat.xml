@@ -41,7 +41,7 @@
           class="uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession"
           init-method="init">
         <property name="configuration" ref="config" />
-        <property name="ontologyResource" value="ontology/gwas-data-2012-07-strict.owl" />
+        <property name="ontologyResource" value="ontology/gwas-data-2012-07.owl" />
         <property name="publisher" ref="publisher" />
     </bean>
 
@@ -51,7 +51,7 @@
     </bean>
 
     <bean id="cachingPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.SVGCachingPussycatSession">
-        <property name="cacheDirectory" value="/ebi/microarray/home/fgpt/test/goci-home/diagram/cache/201207strict/" />
+        <property name="cacheDirectory" value="/ebi/microarray/home/fgpt/test/goci-home/diagram/cache/201207/" />
         <property name="proxiedSession" ref="proxiedPussycatSession" />
     </bean>
 
