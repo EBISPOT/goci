@@ -389,11 +389,11 @@ function insertSVG(svg) {
             }
     );
 
-    $("circle").click(function() {
-                          var associations = $(this).attr("gwasassociation");
-                          showSummary(associations);
-                      }
-    );
+//    $("circle").click(function() {
+//                          var associations = $(this).attr("gwasassociation");
+//                          showSummary(associations);
+//                      }
+//    );
 
 }
 
