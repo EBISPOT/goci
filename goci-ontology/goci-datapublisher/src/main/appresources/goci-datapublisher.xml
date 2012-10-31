@@ -51,10 +51,12 @@
         <property name="ontologyResource">
             <util:property-path path="config.efoResource" />
         </property>
+        <property name="ontologyConfiguration" ref="config"/>
     </bean>
 
     <bean name="gwasSchemaDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init">
         <property name="ontologyResource" value="classpath:gwas-diagram-relaxed.owl" />
+        <property name="ontologyConfiguration" ref="config"/>
     </bean>
 
     <!-- GWAS Database setup and access -->

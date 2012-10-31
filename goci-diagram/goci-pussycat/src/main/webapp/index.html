@@ -55,6 +55,8 @@
 
         <h2>Exploring Genome-wide Association Studies</h2>
 
+        <div class="survey_link"><h3>Please take our <a href="http://www.surveymonkey.com/s/GWASdiagram"  target='_blank'>short survey</a></h3></div>
+
         <div id="filtering">
             <!--<label for="trait-filter">Filter:</label> -->
             <input type="text"
@@ -148,7 +150,7 @@
     <div class="container" style="display: none;">
         <div>This diagram shows all SNP-trait associations with p-value &#8804; 5.0 &#215; 10<sup>-8</sup>,
             published in the GWAS catalogue
-            (<a href="http://www.genome.gov/gwastudies">http://www.genome.gov/gwastudies</a>) up to the end of July
+            (<a href="http://www.genome.gov/gwastudies"  target='_blank'>http://www.genome.gov/gwastudies</a>) up to the end of July
             2012. For information on how to navigate the diagram, see the help tab.
         </div>
 
@@ -167,6 +169,10 @@
 </div>
 
 <div id="timeseriestab" class="tabcontent">
+    <div class="container" style="display: none;">
+    <div>This is a set of static views of the GWAS diagram through time. The views advance automatically. Moving the cursor into
+        the diagram area brings up a set of control buttons in the top-left corner that can be used to navigate through the series.
+    </div>
     <div id="timeserieswrapper" class="slides_wrapper">
     <div id="timeseriescontrols" class="slides_controlpanel">
         <ul class="iconlist">
@@ -297,9 +303,14 @@
         </div>
     </div>
     </div>
+    </div>
 </div>
 
 <div id="filteredtab" class="tabcontent">
+<div class="container" style="display: none;">
+    <div>This is a set of static views of the GWAS diagram for common disease traits. The views advance automatically. Moving the cursor into
+        the diagram area brings up a set of control buttons in the top-left corner that can be used to navigate through the series.
+    </div>
     <div id="filteredwrapper" class="slides_wrapper">
     <div id="filteredcontrols" class="slides_controlpanel">
         <ul class="iconlist">
@@ -392,6 +403,7 @@
         </div>
     </div>
     </div>
+    </div>
 </div>
 
 <div id="downloadstab" class="tabcontent">
@@ -461,7 +473,7 @@
         <h4>GWAS Catalog Ontologies</h4>
         <ul>
             <li><a href="ontology/gwas-diagram.owl">GWAS Catalog schema ontology, OWL</a> [ ~16 KB ]</li>
-            <li><a href="ontology/gwas-diagram-data-2012-08.owl">GWAS Catalog data knowledgebase, OWL</a> [ ~14MB ]</li>
+            <li><a href="ontology/gwas-data-2012-07.owl">GWAS Catalog data knowledgebase, OWL</a> [ ~14MB ]</li>
         </ul>
     </div>
 </div>
@@ -478,7 +490,8 @@
                 This feature may not work with all touch pads. Alternatively, the left-hand side of the diagram features
                 a zoom bar which can be used to generate exactly the same effect, by dragging the little square up or
                 down the bar with the mouse pointer. The diagram currently zooms from the top left corner, so even if
-                you zoom using a mouse scroll wheel, you may have to move the diagram to get to the desired area.
+                you zoom using a mouse scroll wheel, you may have to move the diagram to get to the desired area. The zoom bar
+                occasionally appears in the wrong place. This is a known bug. Refreshing the browser window usually solves the problem.
             </li>
             <li><b>Move the diagram:</b> The diagram can be moved around the viewing area by clicking on any part of the
                 diagram with the left mouse button and, holding the mouse button down, dragging the diagram around the
@@ -493,6 +506,13 @@
                 the mouse pointer over a given element. The displayed labels correspond to the trait names assigned to a
                 study by the catalogue curators.
             </li>
+            <li><b>Display SNP information:</b> To view all the SNPs associated with any trait in a given location, simply
+            click on the trait you are interested in. An interactive pop-up will display the SNPs for that trait, the p-value
+            for each SNP-trait association, the study in which the association was identified and the EFO term the
+            SNP-trait association is mapped to. The SNP, EFO term and study fields are interactive, linking out to Ensembl,
+            EFO and UKPMC, respectively. There is also a link to the entry for this SNP in the GWAS catalog.
+            The pop-up can be moved around the screen. Clicking on another trait automatically
+            closes the current pop-up. Alternatively, close the pop-up by clicking on the cross in its top right corner. </li>
 
             <li><b>Filter the diagram:</b> The full diagram can be filtered by typing a trait into the text box
                 above the diagram and hitting "Enter" or clicking the "Query" button.
@@ -520,11 +540,11 @@
 
         <h3>Diagram features</h3>
         <ul>
-            <li><b>Initial diagram generation:</b> When the "GWAS Diagram" tab is first selected, there may be a delay
-                of up to 30s before the diagram is rendered. This is because all the information in the diagram is
-                rendered dynamically, and this requires a certain amount of processing. Please be patient and do not try
-                to reload as this will simply cause the rendering process to restart.
-            </li>
+            <!--<li><b>Initial diagram generation:</b> When the "GWAS Diagram" tab is first selected, there may be a delay-->
+                <!--of up to 30s before the diagram is rendered. This is because all the information in the diagram is-->
+                <!--rendered dynamically, and this requires a certain amount of processing. Please be patient and do not try-->
+                <!--to reload as this will simply cause the rendering process to restart.-->
+            <!--</li>-->
 
             <li><b>Colours:</b> A new colour scheme for the GWAS diagram has been developed in collaboration with the
                 catalogue curators. The legend is available for viewing in the top right corner of the diagram. It can
@@ -533,13 +553,17 @@
             </li>
 
             <li><b>Time series:</b> A slide show of consecutive GWAS diagrams from 2005 to present is available in the
-                "Time series view" tab. The time interval between each diagram is six months, including all dates up to
+                "Time series views" tab. The time interval between each diagram is six months, including all dates up to
                 the end of either June or December of that year. The slide show auto-advances at a pace of 2 seconds per
-                slide. It can be stopped at any time by clicking on the diagram. Any diagram in the series can be
-                selected by clicking on the dot for that diagram in the dotted time series indicator below the slide
-                show.
+                slide. It can be paused, started and navigated by moving the cursor into the diagram area, which brings
+                up a set of navigation button in the top left corner.
             </li>
-            <li><b>Downloads:</b> All time series images are available for download as png files in the "Downloads" tab.
+            <li><b>Trait-specific views:</b> A slide show of GWAS diagrams for common traits is available in the
+                "Trait-specific views" tab. The slide show auto-advances at a pace of 2 seconds per
+                slide. It can be paused, started and navigated by moving the cursor into the diagram area, which brings
+                up a set of navigation button in the top left corner.
+            </li>
+            <li><b>Downloads:</b> All time series and trait-specific images are available for download as png files in the "Downloads" tab.
                 Various ontology files are also available, including Experimental Factor Ontology and the GWAS schema
                 ontology and knowledge base.
             </li>

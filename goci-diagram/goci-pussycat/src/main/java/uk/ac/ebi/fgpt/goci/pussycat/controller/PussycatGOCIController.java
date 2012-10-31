@@ -83,7 +83,7 @@ public class PussycatGOCIController {
     }
 
     @Autowired
-    public void setOntologyDAO(OntologyDAO ontologyDAO) {
+    public void setOntologyDAO(@Qualifier("efoDAO") OntologyDAO ontologyDAO) {
         this.ontologyDAO = ontologyDAO;
     }
 
@@ -148,7 +148,7 @@ public class PussycatGOCIController {
             OWLClass study = df.getOWLClass(IRI.create(OntologyConstants.STUDY_CLASS_IRI));
             OWLClassExpression studies = df.getOWLObjectIntersectionOf(study, dateExpression);
 
-            OWLObjectProperty part_of = df.getOWLObjectProperty(IRI.create(OntologyConstants.PART_OF_IRI));
+            OWLObjectProperty part_of = df.getOWLObjectProperty(IRI.create(OntologyConstants.PART_OF_PROPERTY_IRI));
             OWLObjectSomeValuesFrom part_of_assoc = df.getOWLObjectSomeValuesFrom(part_of, studies);
 
             OWLClass association = df.getOWLClass(IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));

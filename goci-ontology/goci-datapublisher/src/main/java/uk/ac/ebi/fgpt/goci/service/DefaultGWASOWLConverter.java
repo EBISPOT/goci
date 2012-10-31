@@ -15,10 +15,7 @@ import uk.ac.ebi.fgpt.goci.model.Study;
 import uk.ac.ebi.fgpt.goci.model.TraitAssociation;
 
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A default implementation of {@link GWASOWLConverter} that fetches data from the GWAS catalog using a {@link
@@ -189,19 +186,28 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         OWLObjectProperty has_part = getDataFactory().getOWLObjectProperty(
                 IRI.create(OntologyConstants.HAS_PART_PROPERTY_IRI));
 
+        OWLObjectProperty part_of = getDataFactory().getOWLObjectProperty(
+                IRI.create(OntologyConstants.PART_OF_PROPERTY_IRI));
+
         // for this study, get all trait associations 
         Collection<TraitAssociation> associations = study.getIdentifiedAssociations();
         // and create an study has_part association assertion for each one
         for (TraitAssociation association : associations) {
             // get the trait association instance for this association
-            OWLNamedIndividual taIndiv = getDataFactory().getOWLNamedIndividual(
-                    getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, association));
 
+            IRI traitIRI = getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, association);
+            OWLNamedIndividual taIndiv = getDataFactory().getOWLNamedIndividual(traitIRI);
             // assert relation
-            OWLObjectPropertyAssertionAxiom relation =
+            OWLObjectPropertyAssertionAxiom relationSTA =
                     getDataFactory().getOWLObjectPropertyAssertionAxiom(has_part, studyIndiv, taIndiv);
-            AddAxiom addAxiomChange = new AddAxiom(ontology, relation);
+            AddAxiom addAxiomChange = new AddAxiom(ontology, relationSTA);
             getManager().applyChange(addAxiomChange);
+
+            OWLObjectPropertyAssertionAxiom relationTAS =
+                    getDataFactory().getOWLObjectPropertyAssertionAxiom(part_of, taIndiv, studyIndiv);
+            AddAxiom addAxiomChangeRev = new AddAxiom(ontology, relationTAS);
+            getManager().applyChange(addAxiomChangeRev);
+
         }
     }
 
@@ -320,9 +326,10 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         // get the trait association class
         OWLClass taClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));
 
+        IRI taIndIRI = getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, association);
+
         // create a new trait association instance
-        OWLNamedIndividual taIndiv = getDataFactory().getOWLNamedIndividual(
-                getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, association));
+        OWLNamedIndividual taIndiv = getDataFactory().getOWLNamedIndividual(taIndIRI);
 
         // assert class membership
         OWLClassAssertionAxiom classAssertion = getDataFactory().getOWLClassAssertionAxiom(taClass, taIndiv);
@@ -383,8 +390,15 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
 
 
         // create a new trait association instance
-        OWLNamedIndividual traitIndiv = getDataFactory().getOWLNamedIndividual(
-                getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "trait", association));
+
+        IRI traitIRI = getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "trait", association);
+
+        if(ontology.containsIndividualInSignature(traitIRI)){
+            getLog().debug(traitIRI.toString() + " already exists");
+  //          traitIRI = incrementAssociationIRI(traitIRI, ontology);
+        }
+
+        OWLNamedIndividual traitIndiv = getDataFactory().getOWLNamedIndividual(traitIRI);
 
         // create new instance of it's trait
         OWLClass traitClass;

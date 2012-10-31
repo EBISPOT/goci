@@ -27,13 +27,14 @@ import java.util.*;
  */
 public class TraitAssociationDAO extends Initializable {
     private static final String TRAIT_SELECT_MAIN =
-            "select distinct g.ID, st.PMID as STUDY, s.SNP, t.DISEASETRAIT, g.PVALUEFLOAT, e.EFOURI from GWASSNP s " +
+            "SELECT ROWNUM, ID, STUDYID, STUDY, SNP, DISEASETRAIT, PVALUEFLOAT, EFOURI FROM " +
+                    "(select distinct g.ID, st.ID as STUDYID, st.PMID as STUDY, s.SNP, t.DISEASETRAIT, g.PVALUEFLOAT, e.EFOURI from GWASSNP s " +
                     "join GWASSNPXREF sx on s.ID=sx.SNPID " +
                     "join GWASSTUDIESSNP g on sx.GWASSTUDIESSNPID=g.ID " +
                     "join GWASSTUDIES st on g.GWASID=st.ID " +
                     "join GWASDISEASETRAITS t on st.DISEASEID=t.ID " +
-                    "left join GWASEFOXREF ex on ex.STUDYID = st.ID " +
-                    "left join GWASEFOTRAITS e on e.ID = ex.TRAITID " +
+                    "join GWASEFOXREF ex on ex.STUDYID = st.ID " +
+                    "join GWASEFOTRAITS e on e.ID = ex.TRAITID " +
                     "where g.ID is not null and s.SNP is not null " +
                     "and t.DISEASETRAIT is not null and g.PVALUEFLOAT is not null ";
 
@@ -94,12 +95,20 @@ public class TraitAssociationDAO extends Initializable {
         try {
             waitUntilReady();
             if(FilterProperties.getPvalueFilter() == null){
-                String full_query = TRAIT_SELECT_MAIN.concat(TRAIT_SELECT_ORDER);
+                String full_query = TRAIT_SELECT_MAIN.concat(TRAIT_SELECT_ORDER).concat(")");
                 return getJdbcTemplate().query(full_query, new TraitAssociationMapper());
             }
             else{
                 String pval_filter = "and g.PVALUEFLOAT <= " + FilterProperties.getPvalueFilter();
-                String filtered_query = TRAIT_SELECT_MAIN.concat(pval_filter).concat(TRAIT_SELECT_ORDER);
+
+                String filtered_query;
+                if(FilterProperties.getDateFilter() == null){
+                    filtered_query = TRAIT_SELECT_MAIN.concat(pval_filter).concat(TRAIT_SELECT_ORDER).concat(")");
+                }
+                else {
+                    String date_filter = " and st.STUDYDATE < to_date('" + FilterProperties.getDateFilter() + "','yyyy-mm-dd')";
+                    filtered_query = TRAIT_SELECT_MAIN.concat(pval_filter).concat(date_filter).concat(TRAIT_SELECT_ORDER).concat(")");
+                }
                 return getJdbcTemplate().query(filtered_query, new TraitAssociationMapper());
             }
         }
@@ -115,18 +124,22 @@ public class TraitAssociationDAO extends Initializable {
 
     private class TraitAssociationMapper implements RowMapper<TraitAssociation> {
         public TraitAssociation mapRow(ResultSet resultSet, int i) throws SQLException {
-            String associationID = resultSet.getString(1);
-            String pubMedID = resultSet.getString(2);
-            String rsID = resultSet.getString(3);
-            String traitName = resultSet.getString(4);
-            float pValue = resultSet.getFloat(5);
-            String efoURI = resultSet.getString(6);
-            return new TraitAssocationFromDB(associationID, pubMedID, rsID, traitName, pValue, efoURI);
+            String rownum = resultSet.getString(1);
+            String associationID = resultSet.getString(2);
+            String studyID = resultSet.getString(3);
+            String pubMedID = resultSet.getString(4);
+            String rsID = resultSet.getString(5);
+            String traitName = resultSet.getString(6);
+            float pValue = resultSet.getFloat(7);
+            String efoURI = resultSet.getString(8);
+            return new TraitAssocationFromDB(rownum, associationID, studyID, pubMedID, rsID, traitName, pValue, efoURI);
         }
+
     }
 
     private class TraitAssocationFromDB implements TraitAssociation {
         private String id;
+        private String studyID;
         private String pubMedID;
         private String rsID;
         private String traitName;
@@ -136,13 +149,16 @@ public class TraitAssociationDAO extends Initializable {
         private SingleNucleotidePolymorphism snp;
         private OWLClass trait;
 
-        private TraitAssocationFromDB(String id, String pubMedID, String rsID, String traitName, float pValue, String efoURI) {
-            this.id = id;
+        private TraitAssocationFromDB(String rowNum, String id, String studyID, String pubMedID, String rsID, String traitName, float pValue, String efoURI) {
+            this.id = rowNum.concat("_").concat(id);
+            this.studyID = studyID;
             this.pubMedID = pubMedID;
             this.rsID = rsID;
             this.traitName = traitName;
             this.pValue = pValue;
             this.efoURI = efoURI;
+
+            getLog().debug(id + "\t" + traitName + "\t" + efoURI);
         }
 
         private void mapSNP() {
@@ -247,6 +263,10 @@ public class TraitAssociationDAO extends Initializable {
         @UniqueID
         private String getID() {
             return id;
+        }
+
+        public String getStudyID(){
+            return studyID;
         }
 
         public String getPubMedID() {

@@ -389,11 +389,11 @@ function insertSVG(svg) {
             }
     );
 
-//    $("circle").click(function() {
-//                          var associations = $(this).attr("gwasassociation");
-//                          showSummary(associations);
-//                      }
-//    );
+    $("circle").click(function() {
+                          var associations = $(this).attr("gwasassociation");
+                          showSummary(associations);
+                      }
+    );
 
 }
 
@@ -437,7 +437,7 @@ function showSummary(associations) {
         var trait = "All SNPs associated with GWAS trait '".concat(data.gwasTrait).concat("' in band ").concat(data.chromBand);
 
         var summaryTable = $("<table>");
-        summaryTable.html("<th>SNP</th><th>p-Value</th><th>EFO ontology map</th><th>Study</th>");
+        summaryTable.html("<th>SNP</th><th>p-Value</th><th>EFO ontology map</th><th>Study</th><th>GWAS catalog</th>");
 
         try {
             var index = data.snpsummaries.length;
@@ -454,6 +454,9 @@ function showSummary(associations) {
                 var studyurl = "http://www.ukpmc.ac.uk/abstract/MED/".concat(snpsummary.study);
                 var studyentry = "<a href='".concat(studyurl).concat("' target='_blank'>").concat(study).concat("</a>");
                 row.append($("<td>").html(studyentry));
+                var gwasurl = "http://www.genome.gov/gwastudies/index.cfm?snp=".concat(snpsummary.snp).concat("#result_table");
+                var gwaslink = "<a href='".concat(gwasurl).concat("' target='_blank'>More information</a>");
+                row.append($("<td>").html(gwaslink));
                 summaryTable.append(row);
 
             }

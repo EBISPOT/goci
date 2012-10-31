@@ -1,7 +1,6 @@
 package uk.ac.ebi.fgpt.goci.pussycat.controller;
 
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +78,7 @@ public class PussycatSummariesController {
     }
 
     @Autowired
-    public void setOntologyDAO(OntologyDAO ontologyDAO) {
+    public void setOntologyDAO(@Qualifier("gwasDAO") OntologyDAO ontologyDAO) {
         this.ontologyDAO = ontologyDAO;
     }
 
@@ -162,8 +161,7 @@ public class PussycatSummariesController {
     protected TraitSummary getSummary(ArrayList<String> associationURIs, HttpSession session) throws PussycatSessionNotReadyException, OWLConversionException {
         TraitSummary summary = new TraitSummary();
 
-        OWLReasoner reasoner = getPussycatSession(session).getReasoner();
-        OWLOntology ontology = reasoner.getRootOntology();
+        OWLOntology ontology = getOntologyDAO().getOntology();
         OWLDataFactory df = ontologyConfiguration.getOWLDataFactory();
 
         for(String associationURI : associationURIs){
@@ -260,13 +258,13 @@ public class PussycatSummariesController {
             }
 
 //get the Pubmed ID of the study
-            OWLObjectProperty part_of = df.getOWLObjectProperty(IRI.create(OntologyConstants.PART_OF_IRI));
-            Set<OWLNamedIndividual> studies = reasoner.getObjectPropertyValues(association,part_of).getFlattened();
+            OWLObjectProperty part_of = df.getOWLObjectProperty(IRI.create(OntologyConstants.PART_OF_PROPERTY_IRI));
+            Set<OWLIndividual> studies = association.getObjectPropertyValues(part_of, ontology);
             OWLDataProperty has_pmid = df.getOWLDataProperty(IRI.create(OntologyConstants.HAS_PUBMED_ID_PROPERTY_IRI));
             OWLDataProperty has_author = df.getOWLDataProperty((IRI.create((OntologyConstants.HAS_AUTHOR_PROPERTY_IRI))));
             OWLDataProperty has_pubdate = df.getOWLDataProperty((IRI.create(OntologyConstants.HAS_PUBLICATION_DATE_PROPERTY_IRI)));
 
-            for(OWLNamedIndividual study : studies){
+            for(OWLIndividual study : studies){
                 Set<OWLLiteral> pmids = study.getDataPropertyValues(has_pmid, ontology);
                 for(OWLLiteral id : pmids){
                     pm_id = id.getLiteral();

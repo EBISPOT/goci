@@ -241,6 +241,10 @@ public class TestDefaultGWASOWLConverter extends TestCase {
             return "1234";
         }
 
+        public String getStudyID(){
+            return "1234";
+        }
+
         public String getPubMedID() {
             return "5678";
         }

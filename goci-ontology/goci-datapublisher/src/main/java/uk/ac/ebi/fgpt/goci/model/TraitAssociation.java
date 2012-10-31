@@ -18,6 +18,8 @@ public interface TraitAssociation {
      */
     String getPubMedID();
 
+    String getStudyID();
+
     /**
      * Returns the reference ID of the SNP identified in this association.  You may need to use this if there is missing
      * information about the SNP: in such cases, {@link #getAssociatedSNP()} is likely to throw an {@link

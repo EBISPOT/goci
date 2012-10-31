@@ -42,6 +42,11 @@
         <appender-ref ref="goci-log" />
     </logger>
 
+    <logger name="uk.ac.ebi.fgpt.goci.service.DefaultGWASOWLConverter" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="goci-log" />
+    </logger>
+
     <logger name="unmapped.snp.log" additivity="false">
         <level value="INFO" />
         <appender-ref ref="snp-log" />

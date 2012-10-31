@@ -72,8 +72,23 @@ h5{
     letter-spacing: 1px;
 }
 
+#header h3{
+    margin: 0;
+    font-size: 20px;
+    color: #C50D04;
+    /*letter-spacing: 1px;*/
+}
+
+
 #filtering {
     margin-top: 1em;
+}
+
+.survey_link {
+    position: absolute;
+    top: 30px;
+    left: 700px;
+    z-index: 100;
 }
 
 .legend {
@@ -149,19 +164,19 @@ h5{
 }
 
 .slides_wrapper {
-    width: 1024px;
+    width: 1300px;
 }
 
 .slides_container {
-    width: 1024px;
-    height: 696px;
+    width: 1300px;
+    height: 1000px;
     border: 1px solid #777788;
     position: relative;
 }
 
 .slides_container div {
-    width: 1024px;
-    height: 680px;
+    width: 1300px;
+    height: 1000px;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -238,7 +253,7 @@ ul.iconlist span {
 }
 
 .gwas-trait {
-    /*cursor: pointer;*/
+    cursor: pointer;
 }
 
 .icon-trait {

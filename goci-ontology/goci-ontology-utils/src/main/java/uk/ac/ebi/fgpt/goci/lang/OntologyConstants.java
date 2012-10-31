@@ -10,7 +10,7 @@ public class OntologyConstants {
     // Ontology IRIs
     public static final String EFO_ONTOLOGY_SCHEMA_IRI = "http://www.ebi.ac.uk/efo";
     public static final String GWAS_ONTOLOGY_SCHEMA_IRI = "http://www.ebi.ac.uk/efo/gwas-diagram";
-    public static final String GWAS_ONTOLOGY_BASE_IRI = "http://www.ebi.ac.uk/efo/gwas-diagram";
+    public static final String GWAS_ONTOLOGY_BASE_IRI = GWAS_ONTOLOGY_SCHEMA_IRI;
 
     // Class IRIs
     public static final String STUDY_CLASS_IRI = GWAS_ONTOLOGY_BASE_IRI + "/EFO_GD00037";
@@ -38,7 +38,7 @@ public class OntologyConstants {
     public static final String ASSOCIATED_WITH_PROPERTY_IRI = GWAS_ONTOLOGY_BASE_IRI + "/EFO_GD00029";
     public static final String IS_ABOUT_IRI = "http://purl.obolibrary.org/obo/IAO_0000136";
     public static final String HAS_ABOUT_IRI = GWAS_ONTOLOGY_BASE_IRI + "/EFO_GD00042";
-    public static final String PART_OF_IRI = "http://www.obofoundry.org/ro/ro.owl#part_of";
+    public static final String PART_OF_PROPERTY_IRI = "http://www.obofoundry.org/ro/ro.owl#part_of";
 
     //Datatype IRIs
     public static final String DATE_TIME_DATA_TYPE_IRI = "http://www.w3.org/2001/XMLSchema#dateTime";

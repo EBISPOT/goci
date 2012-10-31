@@ -53,13 +53,13 @@ public class StudyDAO extends Initializable {
         getLog().info("Fetching Trait Associations from the database ready to map to studies...");
         Collection<TraitAssociation> traitAssociations = getTraitAssociationDAO().retrieveAllTraitAssociations();
         for (TraitAssociation ta : traitAssociations) {
-            if (!getTraitAssociationMap().containsKey(ta.getPubMedID())) {
+            if (!getTraitAssociationMap().containsKey(ta.getPubMedID())){
                 getTraitAssociationMap().put(ta.getPubMedID(), new HashSet<TraitAssociation>());
             }
             getTraitAssociationMap().get(ta.getPubMedID()).add(ta);
         }
         // we've populated all snps, so mark that we are ready
-        getLog().info("Retrieved Trait Associations, " +
+        getLog().info("Retrieved "  +  traitAssociations.size() + " Trait Associations, " +
                                "mapped Traits for " + getTraitAssociationMap().keySet().size() + " studies");
     }
 

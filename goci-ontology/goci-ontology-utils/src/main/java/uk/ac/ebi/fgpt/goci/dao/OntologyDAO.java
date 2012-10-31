@@ -1,11 +1,11 @@
 package uk.ac.ebi.fgpt.goci.dao;
 
-import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.springframework.core.io.Resource;
 import uk.ac.ebi.fgpt.goci.exception.OntologyIndexingException;
 import uk.ac.ebi.fgpt.goci.lang.Initializable;
+import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 
 import java.io.IOException;
 import java.net.URI;
@@ -32,6 +32,7 @@ public class OntologyDAO extends Initializable {
     private Map<OWLClass, List<String>> classToLabelMap;
     private Map<IRI, OWLClass> iriToClassMap;
     private Map<String, IRI> accessionToIRIMap;
+    private OntologyConfiguration ontologyConfiguration;
 
     public Resource getOntologyResource() {
         return ontologyResource;
@@ -53,6 +54,10 @@ public class OntologyDAO extends Initializable {
         return ontologySynonymAnnotationURI;
     }
 
+    public OWLOntology getOntology(){
+        return ontology;
+    }
+
     public void setOntologySynonymAnnotationURI(String ontologySynonymAnnotationURI) {
         this.ontologySynonymAnnotationURI = ontologySynonymAnnotationURI;
     }
@@ -65,14 +70,32 @@ public class OntologyDAO extends Initializable {
         this.ontologyObsoleteClassURI = ontologyObsoleteClassURI;
     }
 
+    public OntologyConfiguration getOntologyConfiguration() {
+        return ontologyConfiguration;
+    }
+
+    public void setOntologyConfiguration(OntologyConfiguration ontologyConfiguration) {
+        this.ontologyConfiguration = ontologyConfiguration;
+    }
+
     protected void doInitialization() throws OWLOntologyCreationException {
         try {
-            // set property to make sure we can parse all of EFO
+            // set property to make sure we can parse all of the ontology
             System.setProperty("entityExpansionLimit", "128000");
             getLog().info("Loading Ontology from " + getOntologyResource().getURI().toString() + "...");
-            OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+
+            OWLOntologyManager manager = getOntologyConfiguration().getOWLOntologyManager();
             IRI iri = IRI.create(getOntologyResource().getURI());
-            ontology = manager.loadOntologyFromOntologyDocument(iri);
+
+
+            try{
+                ontology = manager.loadOntologyFromOntologyDocument(iri);
+            }
+            catch(OWLOntologyAlreadyExistsException e){
+                iri = e.getOntologyID().getOntologyIRI();
+                ontology = manager.getOntology(iri);
+
+            }
 
             getLog().info("Loaded " + ontology.getOntologyID().getOntologyIRI() + " ok, creating indexes...");
             labelToClassMap = new HashMap<String, Set<OWLClass>>();
@@ -115,7 +138,7 @@ public class OntologyDAO extends Initializable {
         }
         catch (IOException e) {
             throw new OWLOntologyCreationException(
-                    "Unable to load EFO from supplied resource '" + getOntologyResource().toString() + "'", e);
+                    "Unable to load ontology from supplied resource '" + getOntologyResource().toString() + "'", e);
         }
     }
 

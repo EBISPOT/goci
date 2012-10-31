@@ -482,7 +482,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
                                 pval = p.parseFloat();
                             }
 
-                            OWLObjectProperty part_of = df.getOWLObjectProperty(IRI.create(OntologyConstants.PART_OF_IRI));
+                            OWLObjectProperty part_of = df.getOWLObjectProperty(IRI.create(OntologyConstants.PART_OF_PROPERTY_IRI));
                             Set<OWLNamedIndividual> studies = reasoner.getObjectPropertyValues(ind,part_of).getFlattened();
                             OWLDataProperty has_pub_date = df.getOWLDataProperty(IRI.create(OntologyConstants.HAS_PUBLICATION_DATE_PROPERTY_IRI));
 
