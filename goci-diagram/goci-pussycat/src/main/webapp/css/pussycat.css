@@ -48,10 +48,12 @@ h5{
 }
 
 #header {
-    height: 80px;
-    padding-top: 20px;
+    height: 100px; /*80px*/
+    padding-top: 10px;
     padding-bottom: 15px;
-    background: url('../images/dual-logo2.png') top right no-repeat;
+    background: url('../images/dual-logo2.png') no-repeat;
+    background-position: 100% 10%;
+    background-size: 25%;
     /*padding-top: 92px;*/
     /*padding-bottom: 15px;*/
     /*background: url('../images/topbanner.jpg') top left no-repeat;*/
@@ -60,7 +62,7 @@ h5{
 
 #header h1 {
     margin: 0;
-    font-size: 28px;
+    font-size: 24px;
     color: #000000;
     letter-spacing: -1px;
 }
@@ -74,22 +76,20 @@ h5{
 
 #header h3{
     margin: 0;
-    font-size: 20px;
+    font-size: 24px;
     color: #C50D04;
     /*letter-spacing: 1px;*/
 }
 
-
-#filtering {
-    margin-top: 1em;
-}
-
 .survey_link {
-    position: absolute;
-    top: 30px;
-    left: 700px;
+    text-align: center;
     z-index: 100;
 }
+
+#filtering {
+    margin-top: 0.5em;
+}
+
 
 .legend {
     display: block;
@@ -169,14 +169,14 @@ h5{
 
 .slides_container {
     width: 1200px;
-    height: 915px;
+    height: 850px;
     border: 1px solid #777788;
     position: relative;
 }
 
 .slides_container div {
     width: 1200px;
-    height: 915px;
+    height: 850px;
     display: block;
     margin-left: auto;
     margin-right: auto;

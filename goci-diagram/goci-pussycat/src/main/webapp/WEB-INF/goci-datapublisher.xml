@@ -12,11 +12,6 @@
         <property name="ontologyConfiguration" ref="config"/>
     </bean>
 
-    <bean name="gwasDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init">
-        <property name="ontologyResource" value="ontology/gwas-data-2007-12.owl"/>
-        <property name="ontologyConfiguration" ref="config"/>
-    </bean>
-
     <!-- publisher: this does all the work and is the main API point of access -->
     <bean name="publisher" class="uk.ac.ebi.fgpt.goci.service.DefaultGWASOWLPublisher">
         <property name="configuration" ref="config" />
