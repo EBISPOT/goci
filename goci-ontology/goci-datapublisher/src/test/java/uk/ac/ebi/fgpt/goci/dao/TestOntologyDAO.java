@@ -4,7 +4,6 @@ import junit.framework.TestCase;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.springframework.core.io.ClassPathResource;
-import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -36,7 +35,7 @@ public class TestOntologyDAO extends TestCase {
         try {
             // load the ontology
             URL resource = getClass().getClassLoader().getResource("test.owl");
-            OntologyConfiguration config = new OntologyConfiguration();
+
             OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
             IRI iri = IRI.create(resource.toURI());
             OWLOntology ontology = manager.loadOntologyFromOntologyDocument(iri);

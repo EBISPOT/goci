@@ -1,5 +1,6 @@
 package uk.ac.ebi.fgpt.goci.dao;
 
+import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.springframework.core.io.Resource;
@@ -84,7 +85,14 @@ public class OntologyDAO extends Initializable {
             System.setProperty("entityExpansionLimit", "128000");
             getLog().info("Loading Ontology from " + getOntologyResource().getURI().toString() + "...");
 
-            OWLOntologyManager manager = getOntologyConfiguration().getOWLOntologyManager();
+            OWLOntologyManager manager;
+
+            if(getOntologyConfiguration() != null){
+                manager = getOntologyConfiguration().getOWLOntologyManager();
+            }
+            else{
+                manager = OWLManager.createOWLOntologyManager();
+            }
             IRI iri = IRI.create(getOntologyResource().getURI());
 
 
