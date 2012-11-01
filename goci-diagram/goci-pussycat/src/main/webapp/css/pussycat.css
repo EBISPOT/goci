@@ -168,15 +168,15 @@ h5{
 }
 
 .slides_container {
-    width: 1300px;
-    height: 1000px;
+    width: 1200px;
+    height: 915px;
     border: 1px solid #777788;
     position: relative;
 }
 
 .slides_container div {
-    width: 1300px;
-    height: 1000px;
+    width: 1200px;
+    height: 915px;
     display: block;
     margin-left: auto;
     margin-right: auto;
