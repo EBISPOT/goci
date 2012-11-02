@@ -4,11 +4,11 @@
     <parent>
         <artifactId>goci</artifactId>
         <groupId>uk.ac.ebi.fgpt</groupId>
-        <version>0.9.5.1</version>
+        <version>0.9.6-SNAPSHOT</version>
     </parent>
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci-diagram</artifactId>
-    <version>0.9.5.1</version>
+    <version>0.9.6-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>GOCI Diagram Generation/Visualization Tools</name>
