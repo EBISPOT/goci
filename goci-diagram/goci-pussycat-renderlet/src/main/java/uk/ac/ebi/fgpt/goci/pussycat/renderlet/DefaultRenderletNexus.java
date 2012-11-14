@@ -29,6 +29,7 @@ import java.util.*;
 public class DefaultRenderletNexus implements RenderletNexus {
 
     private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger diagramLogger = LoggerFactory.getLogger("diagram.log");
 
     protected Logger getLog() {
         return log;
@@ -118,11 +119,15 @@ public class DefaultRenderletNexus implements RenderletNexus {
 
     @Override
     public String getSVG(OWLClassExpression classExpression) {
+        diagramLogger.info("Rendering diagram for OWLClassExpression " + classExpression);
 //check if the chromosomes have already been rendered, otherwise render them
         SVGBuilder svgBuilder = new SVGBuilder();
 
         // get the ontology loaded into the reasoner
         OWLOntology ontology = reasoner.getRootOntology();
+
+        OWLClass ta = manager.getOWLDataFactory().getOWLClass(IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));
+        diagramLogger.info("There are " + ta.getIndividuals(ontology).size() + " potential trait associations that could be rendered");
 
         getLog().trace("There are " + renderlets.size() + " registered renderlets");
 
@@ -314,6 +319,9 @@ public class DefaultRenderletNexus implements RenderletNexus {
     public void renderSVGFromScratch(SVGBuilder svgBuilder, OWLOntology ontology, Set<OWLNamedIndividual> individuals){
         renderChromosomes(svgBuilder);
 
+        int assocCount=0;
+        int dotCount=0;
+
         ArrayList<String> renderingOrder =  buildTraitMap(individuals, ontology);
         getLog().debug("Starting rendering of trait associations");
         for(String band : renderingOrder){
@@ -403,13 +411,21 @@ public class DefaultRenderletNexus implements RenderletNexus {
             for(Association assoc : assocs){
                 getRenderingEvent(assoc.getAssociation()).updateRenderedSVG(associationSVG);
             }
+            diagramLogger.info("Number of trait associations for band " + band + ": " + traits.size());
 
             for(Element trait : traits){
-//                String onclick = trait.getAttribute("onclick");
-//                trait.setAttribute("onclick", onclick + "')");
+                String name = trait.getAttribute("gwasname");
+                String[] subs = trait.getAttribute("gwasassociation").split(",");
+
+                diagramLogger.info("Trait " + name + " contains " + subs.length + " associations");
+                dotCount = dotCount+1;
+                assocCount = assocCount + subs.length;
+
                 svgBuilder.addElement(trait);
             }
         }
+
+        diagramLogger.info("There are " + dotCount + " dots representing " + assocCount + " associations on this diagram");
     }
 
     public boolean checkType(OWLNamedIndividual individual, OWLOntology ontology, IRI typeIRI) {
