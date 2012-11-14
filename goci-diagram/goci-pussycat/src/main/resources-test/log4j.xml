@@ -24,16 +24,15 @@
         </layout>
     </appender>
 
-    <logger name="org.springframework" additivity="false">
-        <level value="WARN" />
-        <appender-ref ref="goci-log" />
-    </logger>
-
     <logger name="diagram.log" additivity="false">
         <level value="INFO" />
         <appender-ref ref="diagram-log" />
     </logger>
 
+    <logger name="org.springframework" additivity="false">
+        <level value="WARN" />
+        <appender-ref ref="goci-log" />
+    </logger>
 
     <root>
         <priority value="INFO" />
