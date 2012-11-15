@@ -4,12 +4,12 @@
     <parent>
         <artifactId>goci-diagram</artifactId>
         <groupId>uk.ac.ebi.fgpt</groupId>
-        <version>1.0rc-SNAPSHOT</version>
+        <version>0.9.6-SNAPSHOT</version>
     </parent>
 
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci-sparql-client</artifactId>
-    <version>1.0rc-SNAPSHOT</version>
+    <version>0.9.6-SNAPSHOT</version>
 
     <name>GOCI SPARQL client (utils for easily querying a sparql endpoint)</name>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
