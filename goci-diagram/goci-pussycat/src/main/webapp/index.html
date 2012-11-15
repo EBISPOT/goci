@@ -18,7 +18,7 @@
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.22/jquery-ui.min.js"></script>
     <script type="text/javascript" src="scripts/pussycat.js"></script>
-    <!--<script type="text/javascript" src="http://wwwdev.ebi.ac.uk/fgpt/zooma/scripts/zooma.min.js"></script>-->
+    <!--<script type="text/javascript" src="scripts/zooma.min.js"></script>-->
     <script type="text/javascript" src="scripts/form_complete.js"></script>
     <script type="text/javascript" src="scripts/jquery.mousewheel.min.js"></script>
     <script type="text/javascript" src="scripts/jquery.event.drag-2.0.min.js"></script>
@@ -68,13 +68,11 @@
                      size="50"/>
 
             <!--<input type="text"-->
-                    <!--id="zooma-search"   />-->
+                    <!--id="trait-filter"   />-->
                     <!--&lt;!&ndash;name="trait-filter"&ndash;&gt;-->
                     <!--&lt;!&ndash;title="Filter Traits"&ndash;&gt;-->
                     <!--&lt;!&ndash;size="50"/>&ndash;&gt;-->
-            <!--<script type="text/javascript">-->
-                <!--$("#zooma-search").zooma();-->
-            <!--</script>-->
+
             <a id="submitbutton"
                href="#"
                style="font-weight: bold">Query by trait</a>
@@ -97,39 +95,73 @@
         <div class="legend" style="width: 250px;">
             <h4>SNP-associated trait categories</h4>
 
-            <p><span class="icon-trait icon-trait-digestive"></span>Digestive system disorder</p>
+            <p><span class="icon-trait icon-trait-digestive"></span>
+                <a href="http://bioportal.bioontology.org/ontologies/49352/?p=terms&conceptid=efo%3AEFO_0000405" target='_blank'>
+                    Digestive system disorder</a></p>
 
-            <p><span class="icon-trait icon-trait-cardio"></span>Cardiovascular disorder</p>
+            <p><span class="icon-trait icon-trait-cardio"></span>
+                <a href="http://bioportal.bioontology.org/ontologies/49352/?p=terms&conceptid=efo%3AEFO_0000319" target='_blank'>
+                    Cardiovascular disorder</a></p>
 
-            <p><span class="icon-trait icon-trait-metabolic"></span>Metabolic disorder</p>
+            <p><span class="icon-trait icon-trait-metabolic"></span>
+                <a href="http://bioportal.bioontology.org/ontologies/49352/?p=terms&conceptid=efo%3AEFO_0000589" target='_blank'>
+                    Metabolic disorder</a></p>
 
-            <p><span class="icon-trait icon-trait-immune"></span>Immune system disorder</p>
+            <p><span class="icon-trait icon-trait-immune"></span>
+                <a href="http://bioportal.bioontology.org/ontologies/49352/?p=terms&conceptid=efo%3AEFO_0000540" target='_blank'>
+                    Immune system disorder</a></p>
 
-            <p><span class="icon-trait icon-trait-neuro"></span>Neurological disorder</p>
+            <p><span class="icon-trait icon-trait-neuro"></span>
+                <a href="http://bioportal.bioontology.org/ontologies/49352/?p=terms&conceptid=efo%3AEFO_0000618" target='_blank'>
+                    Neurological disorder</a></p>
 
-            <p><span class="icon-trait icon-trait-liver-measure"></span>Liver enzyme measurement</p>
+            <p><span class="icon-trait icon-trait-liver-measure"></span>
+                <a href="http://bioportal.bioontology.org/ontologies/49352/?p=terms&conceptid=efo%3AEFO_0004582" target='_blank'>
+                    Liver enzyme measurement</a></p>
 
-            <p><span class="icon-trait icon-trait-lipid-measure"></span>Lipid or lipoprotein measurement</p>
+            <p><span class="icon-trait icon-trait-lipid-measure"></span>
+                <a href="http://bioportal.bioontology.org/ontologies/49352/?p=terms&conceptid=efo%3AEFO_0004529" target='_blank'>
+                    Lipid or lipoprotein measurement</p>
 
-            <p><span class="icon-trait icon-trait-inflam-measure"></span>Inflammatory marker measurement</p>
+            <p><span class="icon-trait icon-trait-inflam-measure"></span>
+                <a href="http://bioportal.bioontology.org/ontologies/49352/?p=terms&conceptid=efo%3AEFO_0004872" target='_blank'>
+                    Inflammatory marker measurement</a></p>
 
-            <p><span class="icon-trait icon-trait-haemo-measure"></span>Hematological measurement</p>
+            <p><span class="icon-trait icon-trait-haemo-measure"></span>
+                <a href="http://bioportal.bioontology.org/ontologies/49352/?p=terms&conceptid=efo%3AEFO_0004503" target='_blank'>
+                    Hematological measurement</a></p>
 
-            <p><span class="icon-trait icon-trait-body-measure"></span>Body measurement</p>
+            <p><span class="icon-trait icon-trait-body-measure"></span>
+                <a href="http://bioportal.bioontology.org/ontologies/49352/?p=terms&conceptid=efo%3AEFO_0004324" target='_blank'>
+                    Body measurement</a></p>
 
-            <p><span class="icon-trait icon-trait-cardio-measure"></span>Cardiovascular measurement</p>
+            <p><span class="icon-trait icon-trait-cardio-measure"></span>
+                <a href="http://bioportal.bioontology.org/ontologies/49352/?p=terms&conceptid=efo%3AEFO_0004298" target='_blank'>
+                    Cardiovascular measurement</a></p>
 
-            <p><span class="icon-trait icon-trait-measure"></span>Other measurement</p>
+            <p><span class="icon-trait icon-trait-measure"></span>
+                <a href="http://bioportal.bioontology.org/ontologies/49352/?p=terms&conceptid=efo%3AEFO_0001444" target='_blank'>
+                    Other measurement</a></p>
 
-            <p><span class="icon-trait icon-trait-chemical"></span>Chemical compound</p>
+            <p><span class="icon-trait icon-trait-chemical"></span>
+                <a href="http://bioportal.bioontology.org/ontologies/49352/?p=terms&conceptid=obo%3ACHEBI_37577" target='_blank'>
+                    Chemical compound</a></p>
 
-            <p><span class="icon-trait icon-trait-process"></span>Biological process</p>
+            <p><span class="icon-trait icon-trait-process"></span>
+                <a href="http://bioportal.bioontology.org/ontologies/49352/?p=terms&conceptid=obo%3AGO_0008150" target='_blank'>
+                    Biological process</a></p>
 
-            <p><span class="icon-trait icon-trait-neoplasm"></span>Cancer</p>
+            <p><span class="icon-trait icon-trait-neoplasm"></span>
+                <a href="http://bioportal.bioontology.org/ontologies/49352/?p=terms&conceptid=efo%3AEFO_0000616" target='_blank'>
+                    Cancer</a></p>
 
-            <p><span class="icon-trait icon-trait-disease"></span>Other disease</p>
+            <p><span class="icon-trait icon-trait-disease"></span>
+                <a href="http://bioportal.bioontology.org/ontologies/49352/?p=terms&conceptid=efo%3AEFO_0000408" target='_blank'>
+                    Other disease</a></p>
 
-            <p><span class="icon-trait icon-trait-other"></span>Other trait</p>
+            <p><span class="icon-trait icon-trait-other"></span>
+                <a href="http://bioportal.bioontology.org/ontologies/49352/?p=terms&conceptid=efo%3AEFO_0000001" target='_blank'>
+                    Other trait</a></p>
 
             <p><span class="icon-trait icon-trait-unmapped"></span>Trait mapping in progress</p>
 
@@ -585,8 +617,9 @@
         selection of the different colour categories is data-driven; categories used in more than 150 individual
         SNP-trait associations were given their own colour, while less used categories were aggregated into broader
         categories such as "Other disease". Categories are EFO classes and a category is "used" if it or any of its
-        subclasses has been mapped to a GWAS trait and this trait is in turn part of a SNP-trait association. Below is a
-        list of examples of the kind of traits that belong to each category. Some traits may belong to multiple
+        subclasses has been mapped to a GWAS trait and this trait is in turn part of a SNP-trait association. To see which
+        subclasses belong to any category, click on that category in the legend to proceed to a view of the EFO tree in
+        Bioportal. Below is a list of examples of the kind of traits that belong to each category. Some traits may belong to multiple
         categories.
 
         <ul>

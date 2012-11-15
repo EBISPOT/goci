@@ -353,9 +353,6 @@ public class DefaultRenderletNexus implements RenderletNexus {
 
                                 else{
                                     String traitName = getTraitName(trait, ontology, ind);
-    //                                if(traitName.contains("'")){
-    //                                    traitName = traitName.replace("'", "\\'");
-    //                                }
 
                                     if(bandLocations.get(band).getRenderedTraits().contains(traitName)){
                                         getLog().trace("Trait " + traitName + " already rendered at band " + band);
@@ -363,10 +360,8 @@ public class DefaultRenderletNexus implements RenderletNexus {
                                         for(Element rendered : traits){
                                             if(rendered.getAttribute("gwasname") != null) {
                                                 if(rendered.getAttribute("gwasname").equals(traitName)){
-    //                                            String mouseclick = rendered.getAttribute("onclick");
-    //                                            rendered.setAttribute("onclick", mouseclick + "," + assocIRI);
-                                                    String existing = rendered.getAttribute("gwasassociation");
-                                                    rendered.setAttribute("gwasassociation", existing + "," + assocIRI);
+                                                  String existing = rendered.getAttribute("gwasassociation");
+                                                  rendered.setAttribute("gwasassociation", existing + "," + assocIRI);
                                                 }
                                             }
                                         }

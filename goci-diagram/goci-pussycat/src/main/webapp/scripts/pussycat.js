@@ -15,6 +15,11 @@ var renderingComplete = false;
 
 function init() {
     $(document).ready(function() {
+
+//        $("#trait-filter").zooma().change(function(evt){
+//            doFilter();
+//        });
+
         if (enableDebugging) {
             $("#logitem").show();
             $("#logtab").show();
