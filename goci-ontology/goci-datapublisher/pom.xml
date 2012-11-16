@@ -4,12 +4,12 @@
     <parent>
         <artifactId>goci-ontology</artifactId>
         <groupId>uk.ac.ebi.fgpt</groupId>
-        <version>0.9.6</version>
+        <version>1.0rc-SNAPSHOT</version>
     </parent>
 
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci-datapublisher</artifactId>
-    <version>0.9.6</version>
+    <version>1.0rc-SNAPSHOT</version>
 
     <name>GOCI DataPublisher (converts GWAS data to OWL)</name>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
             <artifactId>goci-ontology-utils</artifactId>
-            <version>0.9.6</version>
+            <version>1.0rc-SNAPSHOT</version>
         </dependency>
 
         <!-- spring jdbc for database access -->
