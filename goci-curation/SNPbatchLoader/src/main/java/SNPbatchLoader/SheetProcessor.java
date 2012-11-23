@@ -1,12 +1,12 @@
 package SNPbatchLoader;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 
 /**
@@ -64,15 +64,16 @@ public class SheetProcessor {
 				String pval_num = setpvalnum(pvalue_mantissa, pvalue_exponent);	
 				
 				String pvaluetxt;
-				if(row.getCell(6) != null){
+				if(row.getCell(6, row.RETURN_BLANK_AS_NULL) != null){
 					pvaluetxt = row.getCell(6).getRichStringCellValue().getString();
+                    System.out.println("pvalue text was null");
 				}
 				else{
 					pvaluetxt = null;
 				}
 				
 				Double orpercopynum;
-				if(row.getCell(7) != null){
+				if(row.getCell(7, row.RETURN_BLANK_AS_NULL) != null){
 					orpercopynum = row.getCell(7).getNumericCellValue();
 				}
 				else{
@@ -80,7 +81,7 @@ public class SheetProcessor {
 				}
 
 				Double orpercopyrecip;
-				if(row.getCell(8) != null){
+				if(row.getCell(8, row.RETURN_BLANK_AS_NULL) != null){
 					orpercopyrecip = row.getCell(8).getNumericCellValue();
 					
 					if(orpercopyrecip == 0){
@@ -98,7 +99,7 @@ public class SheetProcessor {
 				char ortype	= row.getCell(9).getRichStringCellValue().getString().charAt(0);
 				
 				String orpercopyrange; 
-				if(row.getCell(10) != null){
+				if(row.getCell(10, row.RETURN_BLANK_AS_NULL) != null){
 					orpercopyrange = row.getCell(10).getRichStringCellValue().getString();
 				}
 				else{
@@ -115,7 +116,7 @@ public class SheetProcessor {
 				
 				Double orpercopystderror;
 				
-				if(row.getCell(12) != null){
+				if(row.getCell(12, row.RETURN_BLANK_AS_NULL) != null){
 					orpercopystderror = row.getCell(12).getNumericCellValue();
 				}
 				else{
@@ -129,10 +130,12 @@ public class SheetProcessor {
 				if((orpercopyrecip != null) && (orpercopyrange != null) && (orpercopystderror == null)){
 					orpercopyrange = reverseCI(orpercopyrange);				
 				}
-				
+
+
+
 				
 				String snptype = row.getCell(13).getRichStringCellValue().getString();
-				
+
 				SNPentry thisSNP = 
 					new SNPentry(gene, strongestallele, snp, riskfrequency, pvalue_mantissa, pvalue_exponent, pval_float, pval_num, pvaluetxt, orpercopynum, orpercopyrecip, ortype, orpercopyrange, orpercopyunitdescr, orpercopystderror, snptype);
 					
@@ -145,8 +148,8 @@ public class SheetProcessor {
 
 /**
  * This method sets the String form of the p-value from the mantissa and the exponent
- * @param int mantissa the mantissa of the p-value
- * @param int exponent the exponenet of the p-value
+ * @param mantissa the mantissa of the p-value
+ * @param exponent the exponenet of the p-value
  * @return String the p-value in String form
  * 
  * */	
@@ -159,8 +162,8 @@ public class SheetProcessor {
 	
 /**
  * This method calculates the confidence interval based on the standard error - formatting code taken from Kent's Coldfusion code.
- * @param double orpc_stderr The standard error
- * @param double orpc_num The odds-ratio or beta value for the SNP
+ * @param orpc_stderr The standard error
+ * @param orpc_num The odds-ratio or beta value for the SNP
  * @return String The confidence interval for the odds-ratio or beta value  
  * 
  * */	
@@ -198,44 +201,52 @@ public class SheetProcessor {
 	
 /**
 * This method reverses the confidence interval for SNPs where the reciprocal odds-ratio was provided.
-* @param String interval The confidence interval
+* @param interval The confidence interval
 * @return String The reversed confidence interval  
 *
 * */
 	public String reverseCI(String interval){
-		String ci = interval.replace("[","");
+		String newInterval;
+        String ci = interval.replace("[","");
 		ci = ci.replace("]","");
-		String[] num = ci.split("-");
-		double one = Double.parseDouble(num[0]);
-		double two = Double.parseDouble(num[1]);
-		
-		double high = ((100/one)/100);
-		double low = ((100/two)/100);
-		
-		String lowval, highval;
-		
-		if(low < 0.001){
-			DecimalFormat df = new DecimalFormat("#.#####");
-			lowval = df.format(low);
-			highval = df.format(high);
-		}
-		else if(low >= 0.001 && low < 0.01){
-			DecimalFormat df = new DecimalFormat("#.####");
-			lowval = df.format(low);
-			highval = df.format(high);
-		}
-		else if(low >= 0.01 && low < 0.1){
-			DecimalFormat df = new DecimalFormat("#.###");
-			lowval = df.format(low);
-			highval = df.format(high);
-		}
-		else {
-			DecimalFormat df = new DecimalFormat("#.##");
-			lowval = df.format(low);
-			highval = df.format(high);
-		}
-		
-		String newInterval = ("["+ lowval + "-" + highval + "]");
+
+        if(ci.equals("NR")){
+             newInterval = interval;
+        }
+
+        else{
+            String[] num = ci.split("-");
+            double one = Double.parseDouble(num[0]);
+            double two = Double.parseDouble(num[1]);
+
+            double high = ((100/one)/100);
+            double low = ((100/two)/100);
+
+            String lowval, highval;
+
+            if(low < 0.001){
+                DecimalFormat df = new DecimalFormat("#.#####");
+                lowval = df.format(low);
+                highval = df.format(high);
+            }
+            else if(low >= 0.001 && low < 0.01){
+                DecimalFormat df = new DecimalFormat("#.####");
+                lowval = df.format(low);
+                highval = df.format(high);
+            }
+            else if(low >= 0.01 && low < 0.1){
+                DecimalFormat df = new DecimalFormat("#.###");
+                lowval = df.format(low);
+                highval = df.format(high);
+            }
+            else {
+                DecimalFormat df = new DecimalFormat("#.##");
+                lowval = df.format(low);
+                highval = df.format(high);
+            }
+
+            newInterval = ("["+ lowval + "-" + highval + "]");
+        }
 		
 		return newInterval;		
 	}
