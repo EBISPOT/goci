@@ -3,11 +3,11 @@
     <parent>
         <artifactId>goci-curation</artifactId>
         <groupId>uk.ac.ebi.fgpt</groupId>
-        <version>1.0rc-SNAPSHOT</version>
+        <version>1.0rc</version>
     </parent>
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>SNPbatchLoader</artifactId>
-    <version>1.1rc-SNAPSHOT</version>
+    <version>1.1rc</version>
     <packaging>jar</packaging>
 
     <name>GOCI SNPbatchLoader (coldfusion extension)</name>
