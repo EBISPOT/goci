@@ -27,7 +27,7 @@ public class ColourMapper {
     public static final String CARDIO_MSR = EFO_ONTOLOGY_BASE_IRI + "/EFO_0004298";
     public static final String LIVER_ENZYME = EFO_ONTOLOGY_BASE_IRI + "/EFO_0004582";
     public static final String BIO_PROCESS = "http://purl.obolibrary.org/obo/GO_0008150";
-    public static final String CHEMICAL = "http://purl.obolibrary.org/obo/CHEBI_37577";
+    public static final String DRUG_RESP = "http://purl.obolibrary.org/obo/GO_0042493";
 
     public static final String HEMATOLOGICAL_MSR = EFO_ONTOLOGY_BASE_IRI + "/EFO_0004503";
     public static final String INFLAMMATORY_MSR = EFO_ONTOLOGY_BASE_IRI + "/EFO_0004872";
@@ -48,7 +48,7 @@ public class ColourMapper {
         COLOUR_MAP.put(CARDIO_MSR, "#80B1D3");
         COLOUR_MAP.put(OTHER, "#FB8072");
         COLOUR_MAP.put(METABOLIC, "#FDB462");
-        COLOUR_MAP.put(CHEMICAL, "#FCCDE5");
+        COLOUR_MAP.put(DRUG_RESP, "#FCCDE5");
         COLOUR_MAP.put(LIPID_MSR,"#B3DE69");
         COLOUR_MAP.put(LIPOPROT_MSR,"#B3DE69");
         COLOUR_MAP.put(BODY_MSR, "#66CCFF");

@@ -48,7 +48,7 @@ h5{
 }
 
 #header {
-    height: 100px; /*80px*/
+    height: /*100px;*/ 80px;
     padding-top: 10px;
     padding-bottom: 15px;
     background: url('../images/dual-logo2.png') no-repeat;
@@ -81,10 +81,10 @@ h5{
     /*letter-spacing: 1px;*/
 }
 
-.survey_link {
-    text-align: center;
-    z-index: 100;
-}
+/*.survey_link {*/
+    /*text-align: center;*/
+    /*z-index: 100;*/
+/*}*/
 
 #filtering {
     margin-top: 0.5em;
@@ -293,7 +293,7 @@ ul.iconlist span {
     background-position: -7px -119px;
 }
 
-.icon-trait-chemical {
+.icon-trait-drug {
     background-position: -7px -141px;
 }
 
