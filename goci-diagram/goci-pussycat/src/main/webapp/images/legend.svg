@@ -34,8 +34,8 @@
         <circle id="MEASUREMENT" fill="#006699" r="5" cx="10" cy="175" stroke="black" stroke-width="0.5"></circle>
         <text x="20" y="177" font-family="Verdana" font-size="8" fill="black">Other measurement</text>
 
-        <circle id="CHEMICAL" fill="#FCCDE5" r="5" cx="10" cy="190" stroke="black" stroke-width="0.5"></circle>
-        <text x="20" y="192" font-family="Verdana" font-size="8" fill="black">Chemical compound</text>
+        <circle id="DRUG_RESP" fill="#FCCDE5" r="5" cx="10" cy="190" stroke="black" stroke-width="0.5"></circle>
+        <text x="20" y="192" font-family="Verdana" font-size="8" fill="black">Response to drug</text>
 
         <circle id="BIO_PROCESS" fill="#BEBADA" r="5" cx="10" cy="205" stroke="black" stroke-width="0.5"></circle>
         <text x="20" y="207" font-family="Verdana" font-size="8" fill="black">Biological process</text>
