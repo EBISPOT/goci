@@ -385,9 +385,12 @@ function insertSVG(svg) {
 
     $("circle").hover(
             function() {
-                var trait = $(this).attr("gwasname");
-                $("#tooltip-text").html(trait);
-                $("#tooltip").show();
+                var vis = $(this).attr("fading");
+                if(vis == "false"){
+                    var trait = $(this).attr("gwasname");
+                    $("#tooltip-text").html(trait);
+                    $("#tooltip").show();
+                }
             },
             function() {
                 $("#tooltip").hide();
@@ -395,9 +398,12 @@ function insertSVG(svg) {
     );
 
     $("circle").click(function() {
-                          var associations = $(this).attr("gwasassociation");
-                          showSummary(associations);
-                      }
+            var vis = $(this).attr("fading");
+            if(vis == "false"){
+                var associations = $(this).attr("gwasassociation");
+                showSummary(associations);
+            }
+        }
     );
 
 }
@@ -499,6 +505,7 @@ function filterTraits(traitName) {
                 var trait = val.replace(":", "\\:");
                 log("Showing trait '" + trait + "' element");
                 $("." + trait).attr("mask", "");
+                $("circle." + trait).attr("fading", "false");
             }
             catch (ex) {
                 log("Failed to show element '" + val + "'");
@@ -512,11 +519,13 @@ function showAllTraits() {
     log("Showing all 'gwas-trait' elements");
     $(".gwas-trait").attr("mask", "");
     $("#trait-filter").val("");
+    $("circle.gwas-trait").attr("fading", "false");
 }
 
 function hideAllTraits() {
     log("Hiding all 'gwas-trait' elements");
     $(".gwas-trait").attr("mask", "url(#traitMask)");
+    $("circle.gwas-trait").attr("fading", "true");
 }
 
 function toggleLegend() {

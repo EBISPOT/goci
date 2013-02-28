@@ -152,7 +152,8 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
                     IRI iri = getTraitClass(gwasTrait, renderingContext);
                     String traitClass = OntologyUtils.getShortForm(iri, renderingContext);
                     getLog().trace("Setting CSS class for trait '" + gwasTrait + "' to " + traitClass);
-                    trait.setAttribute("class", traitClass + " gwas-trait");
+                    trait.setAttribute("class", "gwas-trait " + traitClass);
+                    trait.setAttribute("fading", "false");
 
                     String assocIRI = OntologyUtils.getShortForm(association.getIRI(), renderingContext);
                     getLog().trace("Setting gwasassociation attribute for trait '" + gwasTrait + "' to " + assocIRI);

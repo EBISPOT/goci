@@ -252,9 +252,19 @@ ul.iconlist span {
     color: #9e2020
 }
 
-.gwas-trait {
+/*.gwas-trait {*/
+    /*cursor: pointer;*/
+/*}*/
+
+
+circle[fading="false"] {
     cursor: pointer;
 }
+
+circle[fading="true"]{
+    cursor: default;
+}
+
 
 .icon-trait {
     height: 18px;

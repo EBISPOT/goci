@@ -188,6 +188,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
         }
     }
 
+    /*TO DO: double-check this entire method because there may be lots wrong with it, especially with adding multipe gwas-trait classes*/
     public void renderFromExistingSVG(SVGBuilder builder, OWLOntology ontology, Set<OWLNamedIndividual> individuals){
         getLog().trace("Rendering from existing SVG");
         OWLClass chromosome = ontology.getOWLOntologyManager()
@@ -263,6 +264,10 @@ public class DefaultRenderletNexus implements RenderletNexus {
 
                             String existing = rendered.getAttribute("gwasassociation");
                             rendered.setAttribute("gwasassociation", existing + "," + assocIRI);
+                            IRI traitIri = getTraitClass(trait, ontology);
+                            String traitClass = OntologyUtils.getShortForm(traitIri, ontology);
+                            String existingClass = rendered.getAttribute("class");
+                            rendered.setAttribute("class", existingClass + " " + traitClass);
 
                             queued = true;
                         }
@@ -286,6 +291,10 @@ public class DefaultRenderletNexus implements RenderletNexus {
                                     Element traitSVG = getRenderingEvent(rep).getRenderedSVG();
 //                                    traitSVG.setAttribute("onclick", "showSummary(" + assocIRI);
                                     traitSVG.setAttribute("gwasassociation", assocIRI);
+                                    IRI traitIri = getTraitClass(rep, ontology);
+                                    String traitClass = OntologyUtils.getShortForm(traitIri, ontology);
+                                    String existingClass = traitSVG.getAttribute("class");
+                                    traitSVG.setAttribute("class", existingClass + " " + traitClass);
                                     traits.add(traitSVG);
                                 }
 
@@ -362,6 +371,17 @@ public class DefaultRenderletNexus implements RenderletNexus {
                                                 if(rendered.getAttribute("gwasname").equals(traitName)){
                                                   String existing = rendered.getAttribute("gwasassociation");
                                                   rendered.setAttribute("gwasassociation", existing + "," + assocIRI);
+
+                                                  IRI traitIri = getTraitClass(trait, ontology);
+                                                  String traitClass = OntologyUtils.getShortForm(traitIri, ontology);
+
+                                                  if(!traitClass.contains("gwas-diagram")){
+                                                    String existingClass = rendered.getAttribute("class");
+
+                                                      if(!existingClass.contains(traitClass)){
+                                                        rendered.setAttribute("class", existingClass + " " + traitClass);
+                                                      }
+                                                  }
                                                 }
                                             }
                                         }
@@ -415,7 +435,6 @@ public class DefaultRenderletNexus implements RenderletNexus {
                 diagramLogger.info("Trait " + name + " contains " + subs.length + " associations");
                 dotCount = dotCount+1;
                 assocCount = assocCount + subs.length;
-
                 svgBuilder.addElement(trait);
             }
         }

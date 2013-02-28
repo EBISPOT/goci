@@ -4,6 +4,8 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -21,8 +23,13 @@ public class SheetProcessor {
 
 	private XSSFSheet sheet;
 	private ArrayList<SNPentry> allSNPs;
-	
-	public SheetProcessor(XSSFSheet sheet){
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
+
+    public SheetProcessor(XSSFSheet sheet){
 		
 		this.sheet = sheet;
 			
@@ -39,38 +46,90 @@ public class SheetProcessor {
 
 			if(row == null){
 				done = true;
+                getLog().debug("Last row read");
 			}
 			else{
-				String gene = row.getCell(0).getRichStringCellValue().getString();
+                String gene, strongestallele, snp;
+                if(row.getCell(0, row.RETURN_BLANK_AS_NULL) != null){
+				    gene = row.getCell(0).getRichStringCellValue().getString();
+                }
+                else {
+                    gene = null;
+                    getLog().debug("Gene is null in row " + row.getRowNum());
+                }
 
-				String strongestallele = row.getCell(1).getRichStringCellValue().getString();
-				String snp	= row.getCell(2).getRichStringCellValue().getString();
-	
+                if(row.getCell(1, row.RETURN_BLANK_AS_NULL) != null){
+                    strongestallele = row.getCell(1).getRichStringCellValue().getString();
+                }
+                else {
+                    strongestallele = null;
+                    getLog().debug("Risk allele is null in row " + row.getRowNum());
+                }
+
+                if(row.getCell(2, row.RETURN_BLANK_AS_NULL) != null){
+                    snp	= row.getCell(2).getRichStringCellValue().getString();
+                }
+                else {
+                    snp = null;
+                    getLog().debug("SNP is null in row " + row.getRowNum());
+                }
+
 				String riskfrequency = null;
-				XSSFCell risk = row.getCell(3);
-				
-				switch(risk.getCellType()){
+
+                if(row.getCell(3, row.RETURN_BLANK_AS_NULL) != null){
+                    XSSFCell risk = row.getCell(3);
+				    switch(risk.getCellType()){
 					case Cell.CELL_TYPE_STRING:
 						riskfrequency = risk.getRichStringCellValue().getString();
 						break;
 					case Cell.CELL_TYPE_NUMERIC:
 						riskfrequency = Double.toString(risk.getNumericCellValue());
 						break;
-				}
-						
-				int pvalue_mantissa	= (int)row.getCell(4).getNumericCellValue();				
-				int pvalue_exponent	= (int)row.getCell(5).getNumericCellValue();
-				float pval_float = (float) (pvalue_mantissa * Math.pow(10, pvalue_exponent));
-				String pval_num = setpvalnum(pvalue_mantissa, pvalue_exponent);	
+				    }
+                }
+                else{
+                    getLog().debug("RF is null in row " + row.getRowNum());
+                }
+
+                Integer pvalue_mantissa, pvalue_exponent;
+
+                if(row.getCell(4, row.RETURN_BLANK_AS_NULL) != null){
+                    pvalue_mantissa	= (int)row.getCell(4).getNumericCellValue();
+                }
+                else{
+                    pvalue_mantissa = null;
+                    getLog().debug("pvalue mantissa is null in row " + row.getRowNum());
+                }
+
+                if(row.getCell(5, row.RETURN_BLANK_AS_NULL) != null){
+                    pvalue_exponent	= (int)row.getCell(5).getNumericCellValue();
+                }
+                else{
+                    pvalue_exponent = null;
+                    getLog().debug("pvalue exponent is null in row " + row.getRowNum());
+                }
+
+                float pval_float;
+                String pval_num;
+
+                if(pvalue_exponent != null && pvalue_mantissa == null){
+                    pval_float = (float) (pvalue_mantissa * Math.pow(10, pvalue_exponent));
+                    pval_num = setpvalnum(pvalue_mantissa, pvalue_exponent);
+                }
+                else{
+                    pval_float = 0;
+                    pval_num = null;
+                }
+
 				
 				String pvaluetxt;
 				if(row.getCell(6, row.RETURN_BLANK_AS_NULL) != null){
 					pvaluetxt = row.getCell(6).getRichStringCellValue().getString();
-                    System.out.println("pvalue text was null");
 				}
 				else{
 					pvaluetxt = null;
-				}
+                    getLog().debug("pvalue text is null in row " + row.getRowNum());
+                }
 				
 				Double orpercopynum;
 				if(row.getCell(7, row.RETURN_BLANK_AS_NULL) != null){
@@ -78,7 +137,8 @@ public class SheetProcessor {
 				}
 				else{
 					orpercopynum = null;
-				}
+                    getLog().debug("OR is null in row " + row.getRowNum());
+                }
 
 				Double orpercopyrecip;
 				if(row.getCell(8, row.RETURN_BLANK_AS_NULL) != null){
@@ -90,13 +150,21 @@ public class SheetProcessor {
 				}
 				else{
 					orpercopyrecip = null;
-				}
+                    getLog().debug("OR recip is null in row " + row.getRowNum());
+                }
 				
 				if(orpercopyrecip != null){
 					orpercopynum = ((100/orpercopyrecip)/100);			
 				}
-								
-				char ortype	= row.getCell(9).getRichStringCellValue().getString().charAt(0);
+
+                char ortype;
+                if(row.getCell(9, row.RETURN_BLANK_AS_NULL) != null){
+                    ortype	= row.getCell(9).getRichStringCellValue().getString().charAt(0);
+                }
+                else{
+                    ortype = Character.UNASSIGNED;
+                    getLog().debug("OR type is null in row " + row.getRowNum());
+                }
 				
 				String orpercopyrange; 
 				if(row.getCell(10, row.RETURN_BLANK_AS_NULL) != null){
@@ -104,7 +172,8 @@ public class SheetProcessor {
 				}
 				else{
 					orpercopyrange = null;
-				}
+                    getLog().debug("CI is null in row " + row.getRowNum());
+                }
 				
 				String orpercopyunitdescr; 
 				if(row.getCell(11) != null){
@@ -112,7 +181,8 @@ public class SheetProcessor {
 				}
 				else{
 					orpercopyunitdescr = null;
-				}
+                    getLog().debug("OR direction is null in row " + row.getRowNum());
+                }
 				
 				Double orpercopystderror;
 				
@@ -121,25 +191,39 @@ public class SheetProcessor {
 				}
 				else{
 					orpercopystderror = null;
-				}
+                    getLog().debug("SE is null in row " + row.getRowNum());
+                }
 				
 				if((orpercopyrange == null) && (orpercopystderror !=  null)){
 					orpercopyrange = setRange(orpercopystderror, orpercopynum);
 				}
 				
 				if((orpercopyrecip != null) && (orpercopyrange != null) && (orpercopystderror == null)){
-					orpercopyrange = reverseCI(orpercopyrange);				
+					orpercopyrange = reverseCI(orpercopyrange);
 				}
 
+                String snptype;
+                if(row.getCell(13, row.RETURN_BLANK_AS_NULL) != null){
+                    snptype = row.getCell(13).getRichStringCellValue().getString();
+                }
+                else{
+                    snptype = null;
+                    getLog().debug("SNP type is null in row " + row.getRowNum());
+                }
 
 
-				
-				String snptype = row.getCell(13).getRichStringCellValue().getString();
-
-				SNPentry thisSNP = 
+                if(gene==null && strongestallele==null && snp == null && riskfrequency == null){
+                    done = true;
+                    getLog().debug("Empty row that wasn't caught via 'row = null'");
+                }
+                else{
+				    SNPentry thisSNP =
 					new SNPentry(gene, strongestallele, snp, riskfrequency, pvalue_mantissa, pvalue_exponent, pval_float, pval_num, pvaluetxt, orpercopynum, orpercopyrecip, ortype, orpercopyrange, orpercopyunitdescr, orpercopystderror, snptype);
 					
-				allSNPs.add(thisSNP);
+				    allSNPs.add(thisSNP);
+                }
+
+
 			}
 			
 			rownum++;			
