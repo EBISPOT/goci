@@ -217,17 +217,17 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
             traitName = nexus.getEfoLabels().get(traitClass);
         }      */
 
-        OWLDataProperty has_name = nexus.getManager().getOWLDataFactory().getOWLDataProperty(IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
-
-        if(association.getDataPropertyValues(has_name,ontology).size() != 0){
-            OWLLiteral name = association.getDataPropertyValues(has_name,ontology).iterator().next();
-            traitName = name.getLiteral();
-        }
-        else{
-            getLog().warn("Trait " + individual + " has no name");
+//        OWLDataProperty has_name = nexus.getManager().getOWLDataFactory().getOWLDataProperty(IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
+//
+//        if(association.getDataPropertyValues(has_name,ontology).size() != 0){
+//            OWLLiteral name = association.getDataPropertyValues(has_name,ontology).iterator().next();
+//            traitName = name.getLiteral();
+//        }
+//        else{
+//            getLog().warn("Trait " + individual + " has no name");
             IRI traitClass = getTraitClass(individual, ontology);
             traitName = nexus.getEfoLabels().get(traitClass);
-        }
+//        }
 
         return traitName;
     }

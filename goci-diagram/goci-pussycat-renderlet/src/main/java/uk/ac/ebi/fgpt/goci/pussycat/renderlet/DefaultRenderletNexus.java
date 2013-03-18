@@ -534,7 +534,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
                     info.sortByDate();
                 }
                 else{
-                    getLog().debug("Band " + bandName + " is not a renderable cytogenetic band");
+                    getLog().warn("Band " + bandName + " is not a renderable cytogenetic band");
                 }
              }
         }
@@ -571,14 +571,14 @@ public class DefaultRenderletNexus implements RenderletNexus {
 
     public String getTraitName(OWLNamedIndividual trait, OWLOntology ontology, OWLNamedIndividual association){
         String traitName = null;
-        OWLDataProperty has_name = manager.getOWLDataFactory().getOWLDataProperty(IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
-
-        if(association.getDataPropertyValues(has_name,ontology).size() != 0){
-            OWLLiteral name = association.getDataPropertyValues(has_name,ontology).iterator().next();
-            traitName = name.getLiteral();
-        }
-        else{
-            getLog().warn("Trait " + trait + " has no name");
+//        OWLDataProperty has_name = manager.getOWLDataFactory().getOWLDataProperty(IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
+//
+//        if(association.getDataPropertyValues(has_name,ontology).size() != 0){
+//            OWLLiteral name = association.getDataPropertyValues(has_name,ontology).iterator().next();
+//            traitName = name.getLiteral();
+//        }
+//        else{
+//            getLog().warn("Trait " + trait + " has no name");
 
             OWLClassExpression[] allTypes = trait.getTypes(ontology).toArray(new OWLClassExpression[0]);
             for(int j = 0; j < allTypes.length; j++){
@@ -586,7 +586,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
                 IRI typeIRI = typeClass.getIRI();
                 traitName = efoLabels.get(typeIRI);
             }
-        }
+//        }
         return traitName;
     }
 

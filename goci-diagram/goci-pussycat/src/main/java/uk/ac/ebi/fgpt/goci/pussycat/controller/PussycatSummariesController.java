@@ -172,32 +172,13 @@ public class PussycatSummariesController {
             String author = null;
             String pub_date = null;
             String pval = null;
-            String efoTrait = null;
-            String efoUri = null;
+            String gwastrait = null;
 
             IRI iri = IRI.create(associationURI);
             OWLNamedIndividual association = df.getOWLNamedIndividual(iri);
             getLog().debug("Got the OWL individual " + association);
 
-            if(summary.getGwasTrait() == null){
-                OWLDataProperty has_name = df.getOWLDataProperty(IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
-
-                if(association.getDataPropertyValues(has_name,ontology).size() != 0){
-                    OWLLiteral name = association.getDataPropertyValues(has_name,ontology).iterator().next();
-                    summary.setGwasTrait(name.getLiteral());
-                    getLog().debug("The GWAS trait for this association is " + summary.getGwasTrait());
-                }
-            }
-
-//get the pvalue
-            OWLDataProperty has_pval = df.getOWLDataProperty((IRI.create(OntologyConstants.HAS_P_VALUE_PROPERTY_IRI)));
-            if(association.getDataPropertyValues(has_pval,ontology).size() != 0){
-                OWLLiteral p = association.getDataPropertyValues(has_pval, ontology).iterator().next();
-                pval = p.getLiteral();
-                getLog().debug("The p-value for this association is " + pval);
-            }
-
-//get the SNP and the trait
+            //get the SNP and the trait
             OWLObjectProperty is_about = df.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
             Set<OWLIndividual> related = association.getObjectPropertyValues(is_about, ontology);
 
@@ -216,6 +197,42 @@ public class PussycatSummariesController {
                     getLog().debug("The trait for this association is " + trait);
                 }
             }
+
+
+            if(summary.getEfoTrait() == null){
+                if(trait != null){
+                    Set<OWLClassExpression> allTypes = trait.getTypes(ontology);
+                    for(OWLClassExpression expr : allTypes){
+                        OWLClass typeClass = expr.asOWLClass();
+                        IRI typeIRI = typeClass.getIRI();
+                        summary.setEfoUri(typeIRI.toString());
+                        summary.setEfoTrait(ontologyConfiguration.getEfoLabels().get(typeIRI));
+
+                        getLog().debug("The EFO label and URI are " + summary.getEfoTrait() + " and " + summary.getEfoUri());
+
+                    }
+                }
+
+
+            }
+
+
+            OWLDataProperty has_name = df.getOWLDataProperty(IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
+
+            if(association.getDataPropertyValues(has_name,ontology).size() != 0){
+                OWLLiteral name = association.getDataPropertyValues(has_name,ontology).iterator().next();
+                gwastrait = name.getLiteral();
+                getLog().debug("The GWAS trait for this association is " + gwastrait);
+            }
+
+//get the pvalue
+            OWLDataProperty has_pval = df.getOWLDataProperty((IRI.create(OntologyConstants.HAS_P_VALUE_PROPERTY_IRI)));
+            if(association.getDataPropertyValues(has_pval,ontology).size() != 0){
+                OWLLiteral p = association.getDataPropertyValues(has_pval, ontology).iterator().next();
+                pval = p.getLiteral();
+                getLog().debug("The p-value for this association is " + pval);
+            }
+
 
  //get the RS id for the SNP
             if(snp != null){
@@ -244,18 +261,6 @@ public class PussycatSummariesController {
                 }
             }
 
-            if(trait != null){
-                Set<OWLClassExpression> allTypes = trait.getTypes(ontology);
-                for(OWLClassExpression expr : allTypes){
-                    OWLClass typeClass = expr.asOWLClass();
-                    IRI typeIRI = typeClass.getIRI();
-                    efoUri = typeIRI.toString();
-                    efoTrait = ontologyConfiguration.getEfoLabels().get(typeIRI);
-
-                    getLog().debug("The EFO label and URI are " + efoTrait + " and " + efoUri);
-
-                }
-            }
 
 //get the Pubmed ID of the study
             OWLObjectProperty part_of = df.getOWLObjectProperty(IRI.create(OntologyConstants.PART_OF_PROPERTY_IRI));
@@ -289,7 +294,7 @@ public class PussycatSummariesController {
 
             }
 
-            summary.addSNP(pm_id,author, pub_date, rs_id,pval,efoTrait,efoUri);
+            summary.addSNP(pm_id,author, pub_date, rs_id,pval, gwastrait);
 
         }
 
