@@ -48,7 +48,7 @@ public class ReflexiveIRIMinter implements IRIMinter<Object> {
     }
 
     public IRI mint(String base, String prefix, String objectName) {
-        // derive the full object name
+        // derive the full object    name
         String fullName;
         if (prefix == null || prefix.equals("")) {
             fullName = objectName;

@@ -75,7 +75,18 @@ public class SingleNucleotidePolymorphismDAO {
         public SnpFromDB(String id, String rsID, String chromosomeName, String bandName, String location) {
             this.id = id;
             this.rsID = rsID;
-            this.chromosomeName = chromosomeName;
+
+            if(chromosomeName == null){
+                if(bandName.contains("p")){
+                    this.chromosomeName = bandName.split("p")[0];
+                }
+                else{
+                    this.chromosomeName = bandName.split("q")[0];
+                }
+            }
+            else{
+                this.chromosomeName = chromosomeName;
+            }
             this.bandName = bandName;
             this.location = location;
         }

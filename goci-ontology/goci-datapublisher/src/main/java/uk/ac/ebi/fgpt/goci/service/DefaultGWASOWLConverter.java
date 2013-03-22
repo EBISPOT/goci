@@ -239,11 +239,16 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         getManager().applyChange(add_rsid);
 
         // assert bp_pos relation
-        OWLLiteral bp_pos = getDataFactory().getOWLLiteral(snp.getSNPLocation(), OWL2Datatype.XSD_INT);
-        OWLDataPropertyAssertionAxiom bp_pos_relation =
-                getDataFactory().getOWLDataPropertyAssertionAxiom(has_bp_pos, snpIndiv, bp_pos);
-        AddAxiom add_bp_pos = new AddAxiom(ontology, bp_pos_relation);
-        getManager().applyChange(add_bp_pos);
+        if(snp.getSNPLocation() != null){
+            OWLLiteral bp_pos = getDataFactory().getOWLLiteral(snp.getSNPLocation(), OWL2Datatype.XSD_INT);
+            OWLDataPropertyAssertionAxiom bp_pos_relation =
+                    getDataFactory().getOWLDataPropertyAssertionAxiom(has_bp_pos, snpIndiv, bp_pos);
+            AddAxiom add_bp_pos = new AddAxiom(ontology, bp_pos_relation);
+            getManager().applyChange(add_bp_pos);
+        }
+        else{
+            getLog().debug("No SNP location available for SNP " + rsid);
+        }
 
         // get the band class
         OWLClass bandClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.CYTOGENIC_REGION_CLASS_IRI));
