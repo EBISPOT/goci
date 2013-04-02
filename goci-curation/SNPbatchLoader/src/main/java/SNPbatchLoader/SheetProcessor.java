@@ -112,7 +112,7 @@ public class SheetProcessor {
                 float pval_float;
                 String pval_num;
 
-                if(pvalue_exponent != null && pvalue_mantissa == null){
+                if(pvalue_exponent != null && pvalue_mantissa != null){
                     pval_float = (float) (pvalue_mantissa * Math.pow(10, pvalue_exponent));
                     pval_num = setpvalnum(pvalue_mantissa, pvalue_exponent);
                 }
@@ -298,10 +298,10 @@ public class SheetProcessor {
              newInterval = interval;
         }
 
-        else{
+        else if(ci.matches("[\\d\\s.-]+")){
             String[] num = ci.split("-");
-            double one = Double.parseDouble(num[0]);
-            double two = Double.parseDouble(num[1]);
+            double one = Double.parseDouble(num[0].trim());
+            double two = Double.parseDouble(num[1].trim());
 
             double high = ((100/one)/100);
             double low = ((100/two)/100);
@@ -330,6 +330,10 @@ public class SheetProcessor {
             }
 
             newInterval = ("["+ lowval + "-" + highval + "]");
+        }
+        else {
+             newInterval = null;
+            getLog().info("Unprocessable character in the CI");
         }
 		
 		return newInterval;		
