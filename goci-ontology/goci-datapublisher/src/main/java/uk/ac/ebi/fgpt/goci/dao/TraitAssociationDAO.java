@@ -36,7 +36,7 @@ public class TraitAssociationDAO extends Initializable {
                     "join GWASEFOXREF ex on ex.STUDYID = st.ID " +
                     "join GWASEFOTRAITS e on e.ID = ex.TRAITID " +
                     "where g.ID is not null and s.SNP is not null " +
-                    "and t.DISEASETRAIT is not null and g.PVALUEFLOAT is not null ";
+                    "and t.DISEASETRAIT is not null and g.PVALUEFLOAT is not null and st.publish = 1 ";
 
     private static final String TRAIT_SELECT_ORDER = " order by g.ID";
 

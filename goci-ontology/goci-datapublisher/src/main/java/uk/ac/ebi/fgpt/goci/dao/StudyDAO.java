@@ -21,7 +21,7 @@ import java.util.*;
  */
 public class StudyDAO extends Initializable {
     private static final String STUDY_SELECT =
-            "select ID, AUTHOR, STUDYDATE, PMID from GWASSTUDIES where PMID is not null";
+            "select ID, AUTHOR, STUDYDATE, PMID from GWASSTUDIES where PMID is not null and PUBLISH = 1";
 
     private TraitAssociationDAO traitAssociationDAO;
     private JdbcTemplate jdbcTemplate;
