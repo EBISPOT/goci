@@ -451,11 +451,12 @@ function showSummary(associations) {
     $("#traitpopup").html("").dialog("close");
 
     $.getJSON('api/summaries/associations/' + associations, function(data) {
+        var efourl = "<a href='".concat(data.efoUri).concat("' target='_blank'>").concat(data.efoTrait).concat("</a>");
 
-        var trait = "All SNPs associated with GWAS trait '".concat(data.gwasTrait).concat("' in band ").concat(data.chromBand);
+        var trait = "All SNPs associated with trait '".concat(efourl).concat("' in band ").concat(data.chromBand);
 
         var summaryTable = $("<table>");
-        summaryTable.html("<th>SNP</th><th>p-Value</th><th>EFO ontology map</th><th>Study</th><th>GWAS catalog</th>");
+        summaryTable.html("<th>SNP</th><th>p-Value</th><th>GWAS trait</th><th>Study</th><th>GWAS catalog</th>");
 
         try {
             var index = data.snpsummaries.length;
@@ -466,8 +467,7 @@ function showSummary(associations) {
                 var snpurl = "<a href='".concat(snp).concat("' target='_blank'>").concat(snpsummary.snp).concat("</a>");
                 row.append($("<td>").html(snpurl));
                 row.append($("<td class='center'>").html(snpsummary.pval));
-                var efourl = "<a href='".concat(snpsummary.efouri).concat("' target='_blank'>").concat(snpsummary.efotrait).concat("</a>");
-                row.append($("<td>").html(efourl));
+                row.append($("<td class='center'>").html(snpsummary.gwastrait));
                 var study = snpsummary.author.concat(" et al., ").concat(snpsummary.date);
                 var studyurl = "http://www.ukpmc.ac.uk/abstract/MED/".concat(snpsummary.study);
                 var studyentry = "<a href='".concat(studyurl).concat("' target='_blank'>").concat(study).concat("</a>");

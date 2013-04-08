@@ -26,6 +26,18 @@ import java.util.*;
  * Date 24/01/12
  */
 public class TraitAssociationDAO extends Initializable {
+//    private static final String TRAIT_SELECT_MAIN =
+//            "SELECT ROWNUM, ID, STUDYID, STUDY, SNP, DISEASETRAIT, PVALUEFLOAT, EFOURI FROM " +
+//                    "(select distinct g.ID, st.ID as STUDYID, st.PMID as STUDY, s.SNP, t.DISEASETRAIT, g.PVALUEFLOAT, e.EFOURI from GWASSNP s " +
+//                    "join GWASSNPXREF sx on s.ID=sx.SNPID " +
+//                    "join GWASSTUDIESSNP g on sx.GWASSTUDIESSNPID=g.ID " +
+//                    "join GWASSTUDIES st on g.GWASID=st.ID " +
+//                    "join GWASDISEASETRAITS t on st.DISEASEID=t.ID " +
+//                    "join GWASEFOXREF ex on ex.STUDYID = st.ID " +
+//                    "join GWASEFOTRAITS e on e.ID = ex.TRAITID " +
+//                    "where g.ID is not null and s.SNP is not null " +
+//                    "and t.DISEASETRAIT is not null and g.PVALUEFLOAT is not null ";
+
     private static final String TRAIT_SELECT_MAIN =
             "SELECT ROWNUM, ID, STUDYID, STUDY, SNP, DISEASETRAIT, PVALUEFLOAT, EFOURI FROM " +
                     "(select distinct g.ID, st.ID as STUDYID, st.PMID as STUDY, s.SNP, t.DISEASETRAIT, g.PVALUEFLOAT, e.EFOURI from GWASSNP s " +
@@ -33,7 +45,7 @@ public class TraitAssociationDAO extends Initializable {
                     "join GWASSTUDIESSNP g on sx.GWASSTUDIESSNPID=g.ID " +
                     "join GWASSTUDIES st on g.GWASID=st.ID " +
                     "join GWASDISEASETRAITS t on st.DISEASEID=t.ID " +
-                    "join GWASEFOXREF ex on ex.STUDYID = st.ID " +
+                    "join GWASEFOSNPXREF ex on ex.SNPID = g.ID " +
                     "join GWASEFOTRAITS e on e.ID = ex.TRAITID " +
                     "where g.ID is not null and s.SNP is not null " +
                     "and t.DISEASETRAIT is not null and g.PVALUEFLOAT is not null and st.publish = 1 ";

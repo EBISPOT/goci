@@ -10,5 +10,8 @@ public class App
     {
         System.out.println( "Hello World!" );
 
+        String foobar = "Hello World";
+
+        System.out.println(foobar.getClass().getSimpleName());
     }
 }
