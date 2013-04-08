@@ -32,9 +32,7 @@ public class ColourMapper {
     public static final String HEMATOLOGICAL_MSR = EFO_ONTOLOGY_BASE_IRI + "/EFO_0004503";
     public static final String INFLAMMATORY_MSR = EFO_ONTOLOGY_BASE_IRI + "/EFO_0004872";
 
-    public static final String LIPID_MSR = EFO_ONTOLOGY_BASE_IRI + "/EFO_0004529";
-    public static final String LIPOPROT_MSR = EFO_ONTOLOGY_BASE_IRI + "/EFO_0004732";
-
+    public static final String LIPID_MSR = EFO_ONTOLOGY_BASE_IRI + "/EFO_0005105";
 
     public static final HashMap<String, String> COLOUR_MAP = new HashMap<String, String>();
 
@@ -50,7 +48,6 @@ public class ColourMapper {
         COLOUR_MAP.put(METABOLIC, "#FDB462");
         COLOUR_MAP.put(DRUG_RESP, "#FCCDE5");
         COLOUR_MAP.put(LIPID_MSR,"#B3DE69");
-        COLOUR_MAP.put(LIPOPROT_MSR,"#B3DE69");
         COLOUR_MAP.put(BODY_MSR, "#66CCFF");
         COLOUR_MAP.put(NEOPLASM, "#BC80BD");
         COLOUR_MAP.put(INFLAMMATORY_MSR, "#CCEBC5");

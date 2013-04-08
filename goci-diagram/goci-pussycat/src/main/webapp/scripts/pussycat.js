@@ -52,7 +52,8 @@ function init() {
         $("#browsertabs").tabs({
                                    show:tabShow
                                });
-        // enable buttons
+
+    // enable buttons
         $("#submitbutton").button();
         $("#submitbutton").click(doFilter);
 
@@ -64,6 +65,12 @@ function init() {
 
         $("#retrybutton").button();
         $("#retrybutton").click(renderDiagram);
+
+
+        $(".legenditem").click(function(){
+               filterTraits($(this).attr("id"));
+        });
+
 
         // show tabs, this is the point on load that display becomes visible
         $("#pussycattabs").show();

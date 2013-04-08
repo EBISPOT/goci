@@ -257,6 +257,18 @@ ul.iconlist span {
 /*}*/
 
 
+
+#clear {
+    text-indent: -1000em;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    /*background-image: url(../images/foo.png);*/
+    background-repeat: no-repeat;
+    position: relative;
+    left: -25px;
+}
+
 circle[fading="false"] {
     cursor: pointer;
 }
