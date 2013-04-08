@@ -173,6 +173,8 @@ public class PussycatSummariesController {
             String pub_date = null;
             String pval = null;
             String gwastrait = null;
+            String efotrait = null;
+            String efouri = null;
 
             IRI iri = IRI.create(associationURI);
             OWLNamedIndividual association = df.getOWLNamedIndividual(iri);
@@ -199,22 +201,21 @@ public class PussycatSummariesController {
             }
 
 
-            if(summary.getEfoTrait() == null){
-                if(trait != null){
-                    Set<OWLClassExpression> allTypes = trait.getTypes(ontology);
-                    for(OWLClassExpression expr : allTypes){
-                        OWLClass typeClass = expr.asOWLClass();
-                        IRI typeIRI = typeClass.getIRI();
-                        summary.setEfoUri(typeIRI.toString());
-                        summary.setEfoTrait(ontologyConfiguration.getEfoLabels().get(typeIRI));
+            if(trait != null){
+                Set<OWLClassExpression> allTypes = trait.getTypes(ontology);
+                for(OWLClassExpression expr : allTypes){
+                    OWLClass typeClass = expr.asOWLClass();
+                    IRI typeIRI = typeClass.getIRI();
+                    efouri = typeIRI.toString();
+                    efotrait = ontologyConfiguration.getEfoLabels().get(typeIRI);
 
-                        getLog().debug("The EFO label and URI are " + summary.getEfoTrait() + " and " + summary.getEfoUri());
+                    getLog().debug("The EFO label and URI are " + efotrait + " and " + efouri);
 
-                    }
                 }
-
-
             }
+
+
+
 
 
             OWLDataProperty has_name = df.getOWLDataProperty(IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
@@ -294,7 +295,7 @@ public class PussycatSummariesController {
 
             }
 
-            summary.addSNP(pm_id,author, pub_date, rs_id,pval, gwastrait);
+            summary.addSNP(pm_id,author, pub_date, rs_id,pval, gwastrait, efotrait, efouri);
 
         }
 

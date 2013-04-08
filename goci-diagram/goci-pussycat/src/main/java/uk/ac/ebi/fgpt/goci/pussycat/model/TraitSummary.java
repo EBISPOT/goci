@@ -12,30 +12,13 @@ import java.util.ArrayList;
 public class TraitSummary {
 
     private ArrayList<SNPSummary> summary;
-    private String efoTrait, efoUri, chromBand;
+    private String chromBand;
 
     public TraitSummary(){
-        this.efoTrait = null;
-        this.efoUri = null;
-        this.chromBand = null;
+         this.chromBand = null;
         summary = new ArrayList<SNPSummary>();
     }
 
-    public void setEfoTrait(String efoTrait){
-        this.efoTrait = efoTrait;
-    }
-
-    public String getEfoTrait(){
-        return efoTrait;
-    }
-
-    public void setEfoUri(String efoUri){
-        this.efoUri = efoUri;
-    }
-
-    public String getEfoUri(){
-        return efoUri;
-    }
 
     public void setChromBand(String chromBand){
         this.chromBand = chromBand;
@@ -50,21 +33,23 @@ public class TraitSummary {
         return summary;
     }
 
-    public void addSNP(String study, String author, String date, String snp, String pval, String gwastrait){
-        SNPSummary snpSummary = new SNPSummary(study, author, date, snp,pval,gwastrait);
+    public void addSNP(String study, String author, String date, String snp, String pval, String gwastrait, String efotrait, String efouri){
+        SNPSummary snpSummary = new SNPSummary(study, author, date, snp,pval,gwastrait, efotrait, efouri);
         summary.add(snpSummary);
     }
 
     public class SNPSummary{
-        private String study, author, date, snp, pval, gwastrait;
+        private String study, author, date, snp, pval, gwastrait, efotrait, efouri;
 
-        public SNPSummary(String study, String author, String date, String snp, String pval, String gwastrait){
+        public SNPSummary(String study, String author, String date, String snp, String pval, String gwastrait, String efotrait, String efouri){
             this.study = study;
             this.author = author;
             this.date = date;
             this.snp = snp;
             this.pval = pval;
             this.gwastrait = gwastrait;
+            this.efotrait = efotrait;
+            this.efouri = efouri;
         }
 
         public String getStudy(){
@@ -83,16 +68,22 @@ public class TraitSummary {
             return gwastrait;
         }
 
-//        public String getEfouri(){
-//            return efouri;
-//        }
-
         public String getAuthor(){
             return author;
         }
 
         public String getDate(){
             return date;
+        }
+
+
+        public String getEfoTrait(){
+            return efotrait;
+        }
+
+
+        public String getEfoUri(){
+            return efouri;
         }
     }
 }

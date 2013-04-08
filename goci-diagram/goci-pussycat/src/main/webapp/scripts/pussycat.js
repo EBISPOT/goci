@@ -408,7 +408,8 @@ function insertSVG(svg) {
             var vis = $(this).attr("fading");
             if(vis == "false"){
                 var associations = $(this).attr("gwasassociation");
-                showSummary(associations);
+                var name = $(this).attr("gwasname");
+                showSummary(associations,name);
             }
         }
     );
@@ -445,18 +446,17 @@ function hideTooltip() {
     $("#tooltip").hide();
 }
 
-function showSummary(associations) {
+function showSummary(associations,name) {
     $("#tooltip").hide();
 
     $("#traitpopup").html("").dialog("close");
 
     $.getJSON('api/summaries/associations/' + associations, function(data) {
-        var efourl = "<a href='".concat(data.efoUri).concat("' target='_blank'>").concat(data.efoTrait).concat("</a>");
 
-        var trait = "All SNPs associated with trait '".concat(efourl).concat("' in band ").concat(data.chromBand);
+        var trait = "All SNPs associated with trait '".concat(name).concat("' in band ").concat(data.chromBand);
 
         var summaryTable = $("<table>");
-        summaryTable.html("<th>SNP</th><th>p-Value</th><th>GWAS trait</th><th>Study</th><th>GWAS catalog</th>");
+        summaryTable.html("<th>SNP</th><th>p-Value</th><th>EFO mapping</th><th>GWAS trait</th><th>Study</th><th>GWAS catalog</th>");
 
         try {
             var index = data.snpsummaries.length;
@@ -467,6 +467,9 @@ function showSummary(associations) {
                 var snpurl = "<a href='".concat(snp).concat("' target='_blank'>").concat(snpsummary.snp).concat("</a>");
                 row.append($("<td>").html(snpurl));
                 row.append($("<td class='center'>").html(snpsummary.pval));
+                var efoterm = snpsummary.efoTrait;
+                var efourl = "<a href='".concat(snpsummary.efoUri).concat("' target='_blank'>").concat(efoterm).concat("</a>");
+                row.append($("<td class='center'>").html(efourl));
                 row.append($("<td class='center'>").html(snpsummary.gwastrait));
                 var study = snpsummary.author.concat(" et al., ").concat(snpsummary.date);
                 var studyurl = "http://www.ukpmc.ac.uk/abstract/MED/".concat(snpsummary.study);
