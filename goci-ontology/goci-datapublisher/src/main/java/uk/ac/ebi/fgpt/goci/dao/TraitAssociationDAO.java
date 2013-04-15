@@ -45,7 +45,7 @@ public class TraitAssociationDAO extends Initializable {
                     "join GWASSTUDIESSNP g on sx.GWASSTUDIESSNPID=g.ID " +
                     "join GWASSTUDIES st on g.GWASID=st.ID " +
                     "join GWASDISEASETRAITS t on st.DISEASEID=t.ID " +
-                    "join GWASEFOSNPXREF ex on ex.SNPID = g.ID " +
+                    "join GWASEFOSNPXREF ex on ex.GWASSTUDIESSNPID = g.ID " +
                     "join GWASEFOTRAITS e on e.ID = ex.TRAITID " +
                     "where g.ID is not null and s.SNP is not null " +
                     "and t.DISEASETRAIT is not null and g.PVALUEFLOAT is not null and st.publish = 1 ";
