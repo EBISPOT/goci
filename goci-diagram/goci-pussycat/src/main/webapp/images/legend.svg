@@ -3,15 +3,15 @@
     <g transform="scale(1.5,1.5)">
 
         <circle id="DIGESTIVE" fill="#B7704C" r="5" cx="10" cy="10" stroke="black" stroke-width="0.5"></circle>
-        <text x="20" y="12" font-family="Verdana" font-size="8" fill="black">Digestive system disorder</text>
+        <text x="20" y="12" font-family="Verdana" font-size="8" fill="black">Digestive system disease</text>
         <circle id="CARDIO_VASCULAR" fill="#B33232" r="5" cx="10" cy="25" stroke="black" stroke-width="0.5"></circle>
-        <text x="20" y="27" font-family="Verdana" font-size="8" fill="black">Cardiovascular disorder</text>
+        <text x="20" y="27" font-family="Verdana" font-size="8" fill="black">Cardiovascular disease</text>
         <circle id="METABOLIC" fill="#FDB462" r="5" cx="10" cy="40" stroke="black" stroke-width="0.5"></circle>
-        <text x="20" y="42" font-family="Verdana" font-size="8" fill="black">Metabolic disorder</text>
+        <text x="20" y="42" font-family="Verdana" font-size="8" fill="black">Metabolic disease</text>
         <circle id="IMMUNE" fill="#FFED6F" r="5" cx="10" cy="55" stroke="black" stroke-width="0.5"></circle>
-        <text x="20" y="57" font-family="Verdana" font-size="8" fill="black">Immune system disorder</text>
+        <text x="20" y="57" font-family="Verdana" font-size="8" fill="black">Immune system disease</text>
         <circle id="NEURO" fill="#FFFFB3" r="5" cx="10" cy="70" stroke="black" stroke-width="0.5"></circle>
-        <text x="20" y="72" font-family="Verdana" font-size="8" fill="black">Neurological disorder</text>
+        <text x="20" y="72" font-family="Verdana" font-size="8" fill="black">Nervous system disease</text>
 
         <circle id="LIVER_ENZYME" fill="#669900" r="5" cx="10" cy="85" stroke="black" stroke-width="0.5"></circle>
         <text x="20" y="87" font-family="Verdana" font-size="8" fill="black">Liver enzyme measurement</text>
@@ -49,8 +49,6 @@
         <circle id="OTHER" fill="#FB8072" r="5" cx="10" cy="250" stroke="black" stroke-width="0.5"></circle>
         <text x="20" y="252" font-family="Verdana" font-size="8" fill="black">Other trait</text>
 
-        <circle id="UNMAPPED" fill="#FFFFFF" r="5" cx="10" cy="265" stroke="black" stroke-width="0.5"></circle>
-        <text x="20" y="267" font-family="Verdana" font-size="8" fill="black">Trait mapping in progress</text>
     </g>
 </svg>
  
