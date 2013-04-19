@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <beans  xmlns="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:util="http://www.springframework.org/schema/util"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+
+<!-- processor -->
+     <bean name="processor" class="uk.ac.ebi.fgpt.goci.processor.DataProcessor">
+         <property name="dataLoader" ref="dataLoader" />
+         <property name="config" ref="config" />
+         <property name="ontologyDAO" ref="efoDAO" />
+     </bean>
+
+     <!-- data loader -->
+     <bean name="dataLoader" class="uk.ac.ebi.fgpt.goci.dataloader.DataLoader">
+               <property name="jdbcTemplate" ref="jdbcTemplate" />
+           </bean>
+
+    <bean name="config" class="uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration" init-method="init">
+             <property name="efoResource" value="http://www.ebi.ac.uk/efo/efo.owl" />
+             <!--<property name="efoResource" value="http://bar.ebi.ac.uk:8080/trac/export/head/branches/curator/ExperimentalFactorOntology/ExFactorInOWL/releasecandidate/efo_release_candidate.owl" />-->
+         </bean>
+
+    <!-- Ontology DAOs -->
+    <bean name="efoDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init">
+        <property name="ontologyResource">
+            <util:property-path path="config.efoResource" />
+        </property>
+        <property name="ontologyConfiguration" ref="config"/>
+    </bean>
+
+
+    <!-- GWAS Database setup and access -->
+     <bean name="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+         <property name="dataSource" ref="datasource" />
+     </bean>
+
+     <bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+         <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+         <property name="url" value="jdbc:oracle:thin:@todd.ebi.ac.uk:1521:AE2TST" />
+         <property name="username" value="gwas" />
+         <property name="password" value="gwa5d6" />
+         <property name="defaultAutoCommit" value="false" />
+         <property name="initialSize" value="32" />
+         <property name="maxIdle" value="32" />
+         <property name="maxActive" value="32" />
+         <property name="maxWait" value="-1" />
+     </bean>
+  </beans>

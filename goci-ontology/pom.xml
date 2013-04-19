@@ -28,6 +28,8 @@
         <module>goci-datapublisher</module>
         <module>goci-ontology-utils</module>
         <module>goci-kb-metrics</module>
-    </modules>
+    <module>goci-mappingsextractor</module>
+    <module>goci-urilabelchecker</module>
+  </modules>
 
 </project>
