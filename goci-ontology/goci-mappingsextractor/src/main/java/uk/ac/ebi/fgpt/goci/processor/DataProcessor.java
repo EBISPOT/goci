@@ -3,8 +3,6 @@ package uk.ac.ebi.fgpt.goci.processor;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.*;
 import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.dao.OntologyDAO;
 import uk.ac.ebi.fgpt.goci.dataloader.DataLoader;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
@@ -51,11 +49,6 @@ import java.util.Set;
              return ontologyDAO;
          }
 
-    private Logger log = LoggerFactory.getLogger(getClass());
-
-    protected Logger getLog() {
-             return log;
-         }
 
     public OWLOntologyManager getManager(){
         return config.getOWLOntologyManager();
@@ -68,7 +61,10 @@ import java.util.Set;
 
 
     public Collection<Mapping> processData(){
+        System.out.println("Loading data from GWAS database");
         Collection<Mapping> allMappings = dataLoader.retrieveAllMappings();
+
+        System.out.println("Data loading complete");
 
         OWLOntology efo = getOntologyDAO().getOntology();
 
@@ -77,10 +73,12 @@ import java.util.Set;
         OWLReasonerConfiguration con = new SimpleConfiguration(progressMonitor);
         reasoner = reasonerFactory.createReasoner(efo, con);
 
+        System.out.println("Mapping parent classes");
         for(Mapping mapping : allMappings){
             findParent(mapping);
         }
 
+        System.out.println("Parent mapping complete");
         return allMappings;
     }
 

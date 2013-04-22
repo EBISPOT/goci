@@ -1,8 +1,6 @@
 package uk.ac.ebi.fgpt.goci;
 
 import org.apache.commons.cli.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import uk.ac.ebi.fgpt.goci.lang.FilterProperties;
@@ -22,12 +20,14 @@ public class GOCIMappingsExtractorDriver
               try {
                   int parseArgs = parseArguments(args);
                   if(parseArgs == 0){
+                      System.out.println("Arguments parsed, data loading in progress");
                       GOCIMappingsExtractorDriver driver = new GOCIMappingsExtractorDriver();
                       driver.generateMappingsFile();
 
                       if (_out != System.out) {
                           _out.close();
                       }
+                      System.out.println("Process complete!");
                   }
                   else {
                       // could not parse arguments, exit with exit code >1 (depending on parsing problem)
@@ -123,11 +123,6 @@ public class GOCIMappingsExtractorDriver
          return options;
      }
 
-     private Logger log = LoggerFactory.getLogger(getClass());
-
-     private Logger getLog() {
-         return log;
-     }
 
      private DataProcessor processor;
 
@@ -140,6 +135,7 @@ public class GOCIMappingsExtractorDriver
      public void generateMappingsFile(){
 
          Collection<Mapping> allMappings = processor.processData();
+         System.out.println("Writing data to file");
          printToFile(allMappings);
 
      }
