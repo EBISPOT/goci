@@ -4,8 +4,8 @@ import org.apache.commons.cli.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import uk.ac.ebi.fgpt.goci.lang.FilterProperties;
-import uk.ac.ebi.fgpt.goci.processor.DataProcessor;
-import uk.ac.ebi.fgpt.goci.processor.Mapping;
+import uk.ac.ebi.fgpt.goci.checker.DataProcessor;
+import uk.ac.ebi.fgpt.goci.checker.Mapping;
 
 import java.io.*;
 import java.util.Collection;
@@ -16,36 +16,36 @@ public class GOCIMappingsExtractorDriver
      private static OutputStream _out;
 
      public static void main( String[] args )
-          {
-              try {
-                  int parseArgs = parseArguments(args);
-                  if(parseArgs == 0){
-                      System.out.println("Arguments parsed, data loading in progress");
-                      GOCIMappingsExtractorDriver driver = new GOCIMappingsExtractorDriver();
-                      driver.generateMappingsFile();
+      {
+          try {
+              int parseArgs = parseArguments(args);
+              if(parseArgs == 0){
+                  System.out.println("Arguments parsed, data loading in progress");
+                  GOCIMappingsExtractorDriver driver = new GOCIMappingsExtractorDriver();
+                  driver.generateMappingsFile();
 
-                      if (_out != System.out) {
-                          _out.close();
-                      }
-                      System.out.println("Process complete!");
+                  if (_out != System.out) {
+                      _out.close();
                   }
-                  else {
-                      // could not parse arguments, exit with exit code >1 (depending on parsing problem)
-                      System.err.println("Failed to parse supplied arguments");
-                      System.exit(1 + parseArgs);
-                  }
+                  System.out.println("Process complete!");
+              }
+              else {
+                  // could not parse arguments, exit with exit code >1 (depending on parsing problem)
+                  System.err.println("Failed to parse supplied arguments");
+                  System.exit(1 + parseArgs);
+              }
 
-              }
-              catch (Exception e) {
-                  System.err.println("An unexpected error occurred\n\t(" + e.getMessage() + ")");
-                  e.printStackTrace();
-                  System.exit(1);
-              }
+          }
+          catch (Exception e) {
+              System.err.println("An unexpected error occurred\n\t(" + e.getMessage() + ")");
+              e.printStackTrace();
+              System.exit(1);
+          }
 //              catch (IOException e) {
 //                  System.err.println("Failed to close output stream - report may not have written correctly");
 //                  System.exit(-1);
 //              }
-          }
+      }
 
      private static int parseArguments(String[] args) {
          CommandLineParser parser = new GnuParser();

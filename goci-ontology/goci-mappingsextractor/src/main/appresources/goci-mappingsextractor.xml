@@ -6,8 +6,8 @@
 
 
 
-<!-- processor -->
-     <bean name="processor" class="uk.ac.ebi.fgpt.goci.processor.DataProcessor">
+<!-- checker -->
+     <bean name="processor" class="uk.ac.ebi.fgpt.goci.checker.DataProcessor">
          <property name="dataLoader" ref="dataLoader" />
          <property name="config" ref="config" />
          <property name="ontologyDAO" ref="efoDAO" />

@@ -3,7 +3,7 @@ package uk.ac.ebi.fgpt.goci.dataloader;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import uk.ac.ebi.fgpt.goci.lang.FilterProperties;
-import uk.ac.ebi.fgpt.goci.processor.Mapping;
+import uk.ac.ebi.fgpt.goci.checker.Mapping;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

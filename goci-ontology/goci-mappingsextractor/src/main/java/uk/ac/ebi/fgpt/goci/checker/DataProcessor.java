@@ -1,4 +1,4 @@
-package uk.ac.ebi.fgpt.goci.processor;
+package uk.ac.ebi.fgpt.goci.checker;
 
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.*;

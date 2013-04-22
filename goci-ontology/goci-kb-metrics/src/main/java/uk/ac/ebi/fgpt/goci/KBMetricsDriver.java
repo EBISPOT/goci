@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.exception.MetricsCalculationException;
 import uk.ac.ebi.fgpt.goci.kb.KBLoader;
-import uk.ac.ebi.fgpt.goci.processor.IRITreeProcessor;
+import uk.ac.ebi.fgpt.goci.checker.IRITreeProcessor;
 import uk.ac.ebi.fgpt.goci.tree.IRINode;
 import uk.ac.ebi.fgpt.goci.tree.IRITree;
 import uk.ac.ebi.fgpt.goci.tree.IRITreeBuilder;
