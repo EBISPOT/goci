@@ -18,7 +18,7 @@
     </bean>
 
     <!--Study factory -->
-    <bean name="studyFactory" class="uk.ac.ebi.fgpt.goci.factory.DefaultGociStudyFactory" />
+    <bean name="studyFactory" class="uk.ac.ebi.fgpt.goci.factory.DefaultGwasStudyFactory" />
 
     <!-- User service -->
     <bean name="userService" class="uk.ac.ebi.fgpt.goci.service.DefaultGociUserService" init-method="addStandardUsers">

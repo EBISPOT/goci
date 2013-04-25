@@ -27,6 +27,6 @@
         <module>goci-tracker-web</module>
         <module>goci-tracker-app</module>
         <module>SNPbatchLoader</module>
-    <module>pubmedsearch</module>
+    <module>goci-pubmedsearch</module>
   </modules>
 </project>

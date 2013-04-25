@@ -1,6 +1,7 @@
 package uk.ac.ebi.fgpt.goci.service;
 
 import uk.ac.ebi.fgpt.goci.exception.DispatcherException;
+import uk.ac.ebi.fgpt.goci.model.GwasStudy;
 
 import java.util.Collection;
 import java.util.Map;
@@ -11,7 +12,7 @@ import java.util.Map;
  * @author Tony Burdett
  * Date 26/10/11
  */
-public interface    GociPubMedDispatcherService {
+public interface GwasPubMedDispatcherService {
     /**
      * Dispatches the pubmed query associated with the service and returns the resulting PubMed IDs as a collection of
      * strings.
@@ -31,7 +32,7 @@ public interface    GociPubMedDispatcherService {
      * @throws uk.ac.ebi.fgpt.goci.exception.DispatcherException
      *          if a problem was encountered whilst querying PubMed
      */
-    Map<String, String> dispatchSummaryQuery(Collection<String> pubmedIDs) throws DispatcherException;
+    Map<String, GwasStudy> dispatchSummaryQuery(Collection<String> pubmedIDs) throws DispatcherException;
 
     /**
      * Dispatches a PubMed fetch query to obtain the abstract text for a collection of PubMed IDs.  The abstract test
@@ -45,23 +46,6 @@ public interface    GociPubMedDispatcherService {
      */
     Map<String, String> dispatchFetchQuery(Collection<String> pubmedIDs) throws DispatcherException;
 
-    /**
-     * Starts the dispatcher service, ensuring that it periodically dispatches pubmed queries according to it's
-     * configured schedule.  Studies are automatically added to the tracking system each time they are detected by the
-     * dispatcher.
-     *
-     * @throws uk.ac.ebi.fgpt.goci.exception.DispatcherException
-     *          if a problem was encountered whilst querying PubMed
-     */
-    void startDispatcher() throws DispatcherException;
-
-    /**
-     * Stops the dispatcher service.  No further queries will be dispatched.
-     *
-     * @throws uk.ac.ebi.fgpt.goci.exception.DispatcherException
-     *          if a problem was encountered whilst querying PubMed
-     */
-    void stopDispatcher() throws DispatcherException;
 
     /**
      * Manually adds a PubMed ID to the dispatcher.  This will, at some point (immediately or at the next query run),

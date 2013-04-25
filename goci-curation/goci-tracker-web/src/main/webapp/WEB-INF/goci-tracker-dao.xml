@@ -5,7 +5,7 @@
        http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <!-- Study DAO -->
-    <bean name="studyDAO" class="uk.ac.ebi.fgpt.goci.dao.JDBCGociStudyDAO">
+    <bean name="studyDAO" class="uk.ac.ebi.fgpt.goci.dao.JDBCGwasStudyDAO">
         <property name="jdbcTemplate" ref="hsqlJdbcTemplate" />
         <property name="userDAO" ref="userDAO" />
     </bean>
