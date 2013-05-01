@@ -16,9 +16,9 @@ var renderingComplete = false;
 function init() {
     $(document).ready(function() {
 
-//        $("#trait-filter").zooma().change(function(evt){
-//            doFilter();
-//        });
+        $("#trait-filter").zooma({'zIndex': '100', 'onSelect': function(json) {
+            doFilter();
+        }});
 
         if (enableDebugging) {
             $("#logitem").show();
@@ -50,25 +50,25 @@ function init() {
         log("Initializing pussycat UI...");
         // create tabs
         $("#browsertabs").tabs({
-                                   show:tabShow
+                                   show: tabShow
                                });
 
-    // enable buttons
+        // enable buttons
         $("#submitbutton").button();
         $("#submitbutton").click(doFilter);
 
         $("#clearbutton").button();
         $("#clearbutton").click(showAllTraits);
 
-        $("#legendbutton").button({icons:{primary:'ui-icon-newwin'}});
+        $("#legendbutton").button({icons: {primary: 'ui-icon-newwin'}});
         $("#legendbutton").click(toggleLegend);
 
         $("#retrybutton").button();
         $("#retrybutton").click(renderDiagram);
 
 
-        $(".legenditem").click(function(){
-               filterTraits($(this).attr("id"));
+        $(".legenditem").click(function() {
+            filterTraits($(this).attr("id"));
         });
 
 
@@ -77,9 +77,9 @@ function init() {
         resizeDisplay();
 
         $("#browsertabs ul").localScroll({
-                                             target:"#browsertabs",
-                                             duration:0,
-                                             hash:true
+                                             target: "#browsertabs",
+                                             duration: 0,
+                                             hash: true
                                          });
 
         $(".iconlist li")
@@ -107,7 +107,7 @@ function init() {
                     $('#timeseriescontrols').fadeOut('fast');
                 }
         );
-        $('#timeseriescontent').cycle({fx:'none', next:'#ts-next', prev:'#ts-prev'});
+        $('#timeseriescontent').cycle({fx: 'none', next: '#ts-next', prev: '#ts-prev'});
 
         // create cycle for filtered views
         $('#f-pause').click(function() {
@@ -126,7 +126,7 @@ function init() {
                     $('#filteredcontrols').fadeOut('fast');
                 }
         );
-        $('#filteredcontent').cycle({fx:'none', next:'#f-next', prev:'#f-prev'});
+        $('#filteredcontent').cycle({fx: 'none', next: '#f-next', prev: '#f-prev'});
 
         // fetch server info
         $.getJSON('api/status', function(data) {
@@ -140,7 +140,7 @@ function init() {
 
         // bind mousemove handler
         $(document).mousemove(function(ev) {
-            $('#tooltip').css({"left":ev.pageX + 20, "top":ev.pageY});
+            $('#tooltip').css({"left": ev.pageX + 20, "top": ev.pageY});
         });
 
         if (enableSVG) {
@@ -162,7 +162,7 @@ function init() {
                               $("#xOffset").html(dd.deltaX);
                               $("#yOffset").html(dd.deltaY);
                               pan(dd.deltaX, dd.deltaY);
-                          }, {relative:true})
+                          }, {relative: true})
                     .drag("end", function(ev, dd) {
                               updateOffset();
                           }
@@ -175,13 +175,13 @@ function init() {
 
         // initialize slider
         var navbarPos = $("#diagramarea").offset().top + 25;
-        $(".navbar").css({"top":navbarPos});
+        $(".navbar").css({"top": navbarPos});
         log("Setting navigation bar offset to " + navbarPos);
         $("#zoom").slider({
-                              orientation:"vertical",
-                              max:maxScale,
-                              value:currentScale,
-                              slide:function(event, ui) {
+                              orientation: "vertical",
+                              max: maxScale,
+                              value: currentScale,
+                              slide: function(event, ui) {
                                   slideZoom(ui.value);
                               }
                           });
@@ -217,11 +217,11 @@ function init() {
     }
     else {
         $("#trait-filter").change(function() {
-            log("Detected change() event on bioportal widget");
+            log("Detected change() event on filtering widget");
             doFilter();
         });
         $("#trait-filter").blur(function() {
-            log("Focus lost on bioportal widget");
+            log("Focus lost on filtering widget");
             doFilter();
         })
     }
@@ -268,7 +268,7 @@ function highlightMessage() {
     $("#message")
             .stop()
             .css("background-color", "#CD0A0A")
-            .animate({backgroundColor:"#FEF1EC"}, 750);
+            .animate({backgroundColor: "#FEF1EC"}, 750);
 }
 
 function resizeDisplay() {
@@ -348,11 +348,11 @@ function renderDiagram() {
             // call to api/views/gwasdiagram to get required svg
             log("Rendering GWAS diagram - calling api/views/gwasdiagram...");
             $.ajax({
-                       url:'api/views/gwasdiagram',
-                       dataType:'html',
-                       beforeSend:showSVGLoadWhirly,
-                       success:insertSVG,
-                       error:serverCommunicationFail
+                       url: 'api/views/gwasdiagram',
+                       dataType: 'html',
+                       beforeSend: showSVGLoadWhirly,
+                       success: insertSVG,
+                       error: serverCommunicationFail
                    });
         }
         else {
@@ -380,7 +380,7 @@ function showSVGLoadWhirly() {
 function insertSVG(svg) {
     // update diagramarea div with returned SVG
     log("Obtained SVG from server OK, rendering...");
-    $("#diagramareaerror").css({"display":"none"});
+    $("#diagramareaerror").css({"display": "none"});
     $("#diagramareacontent").html(svg);
     log("Displaying navbar...");
     $(".navbar").show();
@@ -393,7 +393,7 @@ function insertSVG(svg) {
     $("circle").hover(
             function() {
                 var vis = $(this).attr("fading");
-                if(vis == "false"){
+                if (vis == "false") {
                     var trait = $(this).attr("gwasname");
                     $("#tooltip-text").html(trait);
                     $("#tooltip").show();
@@ -405,20 +405,20 @@ function insertSVG(svg) {
     );
 
     $("circle").click(function() {
-            var vis = $(this).attr("fading");
-            if(vis == "false"){
-                var associations = $(this).attr("gwasassociation");
-                var name = $(this).attr("gwasname");
-                showSummary(associations,name);
-            }
-        }
+                          var vis = $(this).attr("fading");
+                          if (vis == "false") {
+                              var associations = $(this).attr("gwasassociation");
+                              var name = $(this).attr("gwasname");
+                              showSummary(associations, name);
+                          }
+                      }
     );
 
 }
 
 function insertPNG() {
     // update diagramarea div with stock PNG
-    $("#diagramareaerror").css({"display":"none"});
+    $("#diagramareaerror").css({"display": "none"});
     $("#diagramareacontent").html("<img src=\"" + gwasLatest + "\" alt=\"GWAS Diagram, static image\"/>");
     log("Hiding navbar...");
     $(".navbar").hide();
@@ -432,7 +432,7 @@ function insertPNG() {
 function serverCommunicationFail(jqXHR, textStatus, errorThrown) {
     // show diagram area error div
     $("#diagramareacontent").html("");
-    $("#diagramareaerror").css({"display":"block"});
+    $("#diagramareaerror").css({"display": "block"});
     $("#diagramareaerrortext").html(jqXHR.responseText);
     log("Failed to acquire SVG from server - " + jqXHR.responseText);
 }
@@ -446,7 +446,7 @@ function hideTooltip() {
     $("#tooltip").hide();
 }
 
-function showSummary(associations,name) {
+function showSummary(associations, name) {
     $("#tooltip").hide();
 
     $("#traitpopup").html("").dialog("close");
@@ -482,7 +482,7 @@ function showSummary(associations,name) {
 
             }
 
-            $("#traitpopup").append(summaryTable).dialog({"title":trait, /*"draggable":false,*/ "width":800});
+            $("#traitpopup").append(summaryTable).dialog({"title": trait, /*"draggable":false,*/ "width": 800});
 
         }
         catch (ex) {
@@ -500,9 +500,23 @@ function showSummary(associations,name) {
 //    }
 //}
 
+//function doFilter() {
+//    log("Detected bioportal widget filtering event - " + $("#trait-filter").val());
+//    filterTraits($("#trait-filter").val());
+//}
+
 function doFilter() {
-    log("Detected bioportal widget filtering event - " + $("#trait-filter").val());
+    log("Doing filtering - " + $("#trait-filter").val());
     filterTraits($("#trait-filter").val());
+}
+
+function doJSONFilter(json) {
+    var tags = json.semanticTags;
+    if (tags.length > 0) {
+        var tag = tags[0];
+        log("Detected zooma widget filtering event - " + tag);
+        filterTraits($("#trait-filter").val());
+    }
 }
 
 function filterTraits(traitName) {
