@@ -17,7 +17,7 @@ public interface GwasStudyDAO {
      *
      * @return the collection of all known studies
      */
-    Collection<GwasStudy> getAllStudies();
+    Collection<GwasStudy> getAllStudies(String table);
     
 
     /**
@@ -26,7 +26,7 @@ public interface GwasStudyDAO {
      * @param pubMedID the PubMed ID of study to retrieve
      * @return true or false
      */
-    boolean getStudyByPubMedID(String pubMedID);
+    boolean studyExists(String pubMedID);
 
     /**
      * Saves the supplied study in the underlying datasource.  This does an insert or update as appropriate, making the

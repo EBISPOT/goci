@@ -24,7 +24,7 @@ import java.util.Collection;
 public class JDBCGwasStudyDAO implements GwasStudyDAO {
 
     public static final String STUDY_SELECT =
-            "select ID, PMID, AUTHOR, STUDYDATE, PUBLICATION, LINKTITLE, ELIGIBILITY from ";
+            "select ID, PMID, AUTHOR, STUDYDATE, PUBLICATION, LINKTITLE from ";
 
 
 
@@ -33,21 +33,20 @@ public class JDBCGwasStudyDAO implements GwasStudyDAO {
                     "PMID, AUTHOR, STUDYDATE, PUBLICATION, LINKTITLE, ELIGIBILITY) " +
                     "values (?, ?, ?, ?, ?, ?)";
 
-    private final GwasStudyListener listener;
 
     private JdbcTemplate jdbcTemplate;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    public JDBCGwasStudyDAO() {
-        listener = new GwasStudyListener() {
-            public void studyUpdated(GwasEvent evt) {
-                getLog().debug("Listener event triggered from " + evt.getStudy());
-                saveStudy(evt.getStudy());
-                getLog().debug("Study saved!");
-            }
-        };
-    }
+//    public JDBCGwasStudyDAO() {
+//        listener = new GwasStudyListener() {
+//            public void studyUpdated(GwasEvent evt) {
+//                getLog().debug("Listener event triggered from " + evt.getStudy());
+//                saveStudy(evt.getStudy());
+//                getLog().debug("Study saved!");
+//            }
+//        };
+//    }
 
     protected Logger getLog() {
         return log;
@@ -62,31 +61,14 @@ public class JDBCGwasStudyDAO implements GwasStudyDAO {
     }
 
 
-    public Collection<GwasStudy> getAllStudies() {
-        return getJdbcTemplate().query(STUDY_SELECT, new StudyMapper());
+    public Collection<GwasStudy> getAllStudies(String table) {
+        String query = STUDY_SELECT + table;
+        return getJdbcTemplate().query(query, new StudyMapper());
     }
 
-//    public GwasStudy getStudyByPubMedID(String pubmedID){
-//        String gwas = "gwasstudies";
-//        String notgwas = "notgwasstudies";
-//        String unclassified = "unclassifiedstudies";
-//
-//        GwasStudy existing = getStudyByPubMedID(pubmedID, gwas);
-//
-//        if(existing == null){
-//            existing = getStudyByPubMedID(pubmedID, notgwas);
-//
-//            if(existing == null){
-//                existing = getStudyByPubMedID(pubmedID, unclassified);
-//            }
-//        }
-//
-//        return existing;
-//    }
-//
-//
+
     public GwasStudy getStudyByPubMedID(String pubmedID, String table) {
-        String query = STUDY_SELECT + table + " where PUBMED_ID = ?";
+        String query = STUDY_SELECT + table + " where PMID = ?";
         try {
             return getJdbcTemplate().queryForObject(query, new StudyMapper(), pubmedID);
         }
@@ -96,7 +78,7 @@ public class JDBCGwasStudyDAO implements GwasStudyDAO {
         }
     }
 
-    public boolean getStudyByPubMedID(String pubmedID){
+    public boolean studyExists(String pubmedID){
         String gwas = "gwasstudies";
         String notgwas = "notgwasstudies";
         String unclassified = "unclassifiedstudies";
@@ -133,7 +115,7 @@ public class JDBCGwasStudyDAO implements GwasStudyDAO {
         }
         else {
             getLog().error("Unable to save this study: it was not user created " +
-                                   "(actually " + study.getClass() + ")");
+                    "(actually " + study.getClass() + ")");
             throw new RuntimeException("Unable to save this study: it was not user created " +
                                                "(actually " + study.getClass() + ")");
         }

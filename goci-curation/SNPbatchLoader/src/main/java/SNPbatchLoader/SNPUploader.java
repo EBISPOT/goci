@@ -131,7 +131,7 @@ public class SNPUploader {
 				 if(current.getGene().indexOf(',') != -1){
 					 StringTokenizer stn = new StringTokenizer(current.getGene(), ",");
 					 while(stn.hasMoreTokens()){
-						 String newgene = stn.nextToken();
+						 String newgene = stn.nextToken().trim();
 						 ResultSet rs2 = stmt.executeQuery("Select * from GWASGENE where gene = '" + newgene + "'");
 						 rs2 = stmt.getResultSet();
 						 if(!rs.next()){
@@ -160,7 +160,7 @@ public class SNPUploader {
                  if(current.getSNP().indexOf(',') != -1){
                      StringTokenizer stn = new StringTokenizer(current.getSNP(), ",");
                      while(stn.hasMoreTokens()){
-                         String newsnp = stn.nextToken();
+                         String newsnp = stn.nextToken().trim();
                          ResultSet rs3 = stmt.executeQuery("Select * from GWASSNP where snp = '" + newsnp + "'");
                          rs3 = stmt.getResultSet();
                          if(!rs.next()){

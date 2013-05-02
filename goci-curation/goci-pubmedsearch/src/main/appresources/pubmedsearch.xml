@@ -5,7 +5,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:property-placeholder location="classpath:dbcon.properties,classpath:goci.properties" />
+    <context:property-placeholder location="classpath:dbcon.properties" />
 
     <!-- Study DAO -->
     <bean name="studyDAO" class="uk.ac.ebi.fgpt.goci.dao.JDBCGwasStudyDAO">
@@ -18,7 +18,7 @@
     </bean>
 
     <!-- Study service -->
-    <bean name="studyService" class="uk.ac.ebi.fgpt.goci.PubmedSearchDriver">
+    <bean name="searcher" class="uk.ac.ebi.fgpt.goci.service.GwasPubmedSearcher">
         <property name="studyDAO" ref="studyDAO" />
         <property name="dispatcherService" ref="dispatcherService" />
     </bean>
