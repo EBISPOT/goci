@@ -426,7 +426,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
             for(Association assoc : assocs){
                 getRenderingEvent(assoc.getAssociation()).updateRenderedSVG(associationSVG);
             }
-            diagramLogger.info("Number of trait associations for band " + band + ": " + traits.size());
+            diagramLogger.info("Number of traits for band " + band + ": " + traits.size());
 
             for(Element trait : traits){
                 String name = trait.getAttribute("gwasname");

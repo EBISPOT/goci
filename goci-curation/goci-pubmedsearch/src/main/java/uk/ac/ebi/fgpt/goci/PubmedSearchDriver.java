@@ -18,7 +18,7 @@ public class PubmedSearchDriver {
     private GwasPubmedSearcher searcher;
 
     public PubmedSearchDriver(){
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("goci-datapublisher.xml");
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("classpath*:pubmedsearch.xml");
         searcher = ctx.getBean("searcher", GwasPubmedSearcher.class);
 
     }

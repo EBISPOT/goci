@@ -15,10 +15,15 @@
     <includeBaseDirectory>false</includeBaseDirectory>
 
     <fileSets>
-        <!-- copy config files into lib/ -->
+           <!-- copy any resources or config files into config/ -->
         <fileSet>
             <directory>src/main/config/</directory>
-            <outputDirectory>lib/</outputDirectory>
+            <outputDirectory>config/</outputDirectory>
+        </fileSet>
+        <!-- copy application resources (required for command line app) into config/ -->
+        <fileSet>
+            <directory>src/main/appresources/</directory>
+            <outputDirectory>config/</outputDirectory>
         </fileSet>
         <!-- copy all scripts into bin/ -->
         <fileSet>
@@ -26,11 +31,6 @@
             <outputDirectory>bin/</outputDirectory>
             <fileMode>0755</fileMode>
             <directoryMode>0755</directoryMode>
-        </fileSet>
-        <!-- include resources -->
-        <fileSet>
-            <directory>src/main/resources/</directory>
-            <outputDirectory></outputDirectory>
         </fileSet>
 
     </fileSets>

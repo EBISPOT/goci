@@ -44,7 +44,8 @@ public class JDBCGwasStudyDAOTest {
 
         study = mock(GwasStudy.class);
 
-  //      when(dao.getStudyByPubMedID(pmid,table)).thenReturn(study);
+
+        //when(dao.getStudyByPubMedID(pmid,table)).thenReturn(study);
 
 
 
@@ -52,8 +53,8 @@ public class JDBCGwasStudyDAOTest {
 
     @Test
     public void testStudyExists(){
-//         assertEquals(template, dao.getJdbcTemplate());
-//        System.out.println("this works");
+ //        assertEquals(template, dao.getJdbcTemplate());
+        System.out.println("this works");
 //
 //        dao.studyExists(pmid);
 //

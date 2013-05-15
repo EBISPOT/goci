@@ -3,6 +3,7 @@ package uk.ac.ebi.fgpt.goci.dao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.util.Assert;
@@ -25,6 +26,9 @@ public class JDBCGwasStudyDAO implements GwasStudyDAO {
 
     public static final String STUDY_SELECT =
             "select ID, PMID, AUTHOR, STUDYDATE, PUBLICATION, LINKTITLE from ";
+
+    public static final String STUDY_LIMIT =
+            " and ROWNUM < 2";
 
 
 
@@ -68,13 +72,20 @@ public class JDBCGwasStudyDAO implements GwasStudyDAO {
 
 
     public GwasStudy getStudyByPubMedID(String pubmedID, String table) {
-        String query = STUDY_SELECT + table + " where PMID = ?";
+        String query = STUDY_SELECT + table + " where PMID = ?" + STUDY_LIMIT;
+        String[] pmid = {pubmedID};
+
         try {
-            return getJdbcTemplate().queryForObject(query, new StudyMapper(), pubmedID);
+            return getJdbcTemplate().queryForObject(query, pmid, new StudyMapper());
         }
         catch (EmptyResultDataAccessException e) {
             // if there is no study with this pubmed ID
             return null;
+        }
+        catch(IncorrectResultSizeDataAccessException e){
+            e.printStackTrace();
+            return new DefaultGwasStudy(pubmedID, null, null, null, null);
+
         }
     }
 
@@ -87,12 +98,18 @@ public class JDBCGwasStudyDAO implements GwasStudyDAO {
 
         if(getStudyByPubMedID(pubmedID, gwas) != null){
             existing = true;
+            getLog().info("Pubmed ID " + pubmedID + " already exists in table gwasstudies");
+
         }
         else if(getStudyByPubMedID(pubmedID, notgwas) != null){
             existing = true;
+            getLog().info("Pubmed ID " + pubmedID + " already exists in table notgwasstudies");
+
         }
         else if(getStudyByPubMedID(pubmedID, unclassified) != null){
             existing = true;
+            getLog().info("Pubmed ID " + pubmedID + " already exists in table unclassifiedstudies");
+
         }
 
         return existing;
@@ -136,6 +153,8 @@ public class JDBCGwasStudyDAO implements GwasStudyDAO {
 
             DefaultGwasStudy study = new DefaultGwasStudy(pubMedId, author, studydate, publication, title);
             study.setId(id);
+
+            getLog().trace(id + "\t" + pubMedId + "\t" + author + "\t" + studydate + "\t" + publication  + "\t" + title);
 
             return study;
         }

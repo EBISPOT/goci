@@ -12,10 +12,7 @@ import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 import uk.ac.ebi.fgpt.goci.exception.DispatcherException;
 import uk.ac.ebi.fgpt.goci.model.DefaultGwasStudy;
@@ -27,8 +24,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.*;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 /**
@@ -51,6 +50,7 @@ public class PropertyFilePubMedDispatcherService implements GwasPubMedDispatcher
     private String summaryString;
     private String fetchString;
     private String dateProp;
+    private String xmlVersion;
 
 
 
@@ -72,6 +72,7 @@ public class PropertyFilePubMedDispatcherService implements GwasPubMedDispatcher
             this.fetchString = properties.getProperty("pubmed.root")
                     .concat(properties.getProperty("pubmed.gwas.fetch"));
             this.dateProp = properties.getProperty("pubmed.gwas.search.time");
+            this.xmlVersion = properties.getProperty("pubmed.xml.version");
         }
         catch (IOException e) {
             throw new RuntimeException(
@@ -138,6 +139,8 @@ public class PropertyFilePubMedDispatcherService implements GwasPubMedDispatcher
     }
 
     public Map<String, GwasStudy> dispatchSummaryQuery(Collection<String> pubmedIDs) throws DispatcherException {
+        Map<String, GwasStudy> results = new HashMap<String, GwasStudy>();
+
         try {
             // convert set of supplied pubmed IDs to comma separated list
             String idList = "";
@@ -149,53 +152,91 @@ public class PropertyFilePubMedDispatcherService implements GwasPubMedDispatcher
                 }
             }
 
-            Map<String, GwasStudy> results = new HashMap<String, GwasStudy>();
-            Document response = doPubmedQuery(URI.create(summaryString.replace("{idlist}", idList)));
-            NodeList docSumNodes = response.getElementsByTagName("DocSum");
+            Document response = doPubmedQuery(URI.create(summaryString.replace("{idlist}", idList) + xmlVersion));
+
+            getLog().info("Pubmed query is " + summaryString.replace("{idlist}", idList) + xmlVersion);
+
+            NodeList docSumNodes = response.getElementsByTagName("DocumentSummary");
+
+            //NodeList docSumNodes = response.getFirstChild().getChildNodes();
+
             for (int i = 0; i < docSumNodes.getLength(); i++) {
                 Node docSumNode = docSumNodes.item(i);
 
                 // init id, title strings for each docSumNode
-                String id = null;
+                String pmid = null;
                 String title = "";
                 Date pubDate = null;
                 String author = "";
                 String publication = "";
 
-                // get the ID element (should only be one, take first regardless
-                id = getChildNodes(docSumNode, "Id").iterator().next().getTextContent();
 
-                Collection<Node> items = getChildNodes(docSumNode, "Item");
-                for (Node item : items) {
-                    NamedNodeMap attributes = item.getAttributes();
-                    if (attributes.getNamedItem("Name").getNodeValue().equals("Title")) {
-                        // should only be one <Item Name="Title">, this will overwrite if more
-                        title = item.getTextContent();
-                        getLog().trace("PubMed ID: " + id + "; Title: " + title);
-                    }
-                    else if(attributes.getNamedItem("Name").getNodeValue().equals("PubDate")) {
-                        pubDate = Date.valueOf(item.getTextContent());
-                    }
-                    else if(attributes.getNamedItem("Name").getNodeValue().equals("Source")) {
-                        publication = item.getTextContent();
-                    }
-                    else if(attributes.getNamedItem("Name").getNodeValue().equals("AuthorList")) {
-                        author = item.getFirstChild().getTextContent();
-                    }
+                // get the ID element (should only be one, take first regardless
+
+                Element study = (Element) docSumNode;
+
+                pmid = study.getAttribute("uid");
+
+                title = study.getElementsByTagName("Title").item(0).getTextContent();
+                publication = study.getElementsByTagName("Source").item(0).getTextContent();
+                author = study.getElementsByTagName("SortFirstAuthor").item(0).getTextContent();
+
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+                String date = study.getElementsByTagName("SortPubDate").item(0).getTextContent();
+
+                if(date.contains("/")){
+                    date = date.replace("/","-");
                 }
 
-                        // add results
-                if (id != null) {
-                    GwasStudy newStudy = new DefaultGwasStudy(id, author, pubDate, publication, title);
+                java.util.Date studyDate = format.parse(date);
 
-                    results.put(id, newStudy);
+
+                pubDate = new java.sql.Date(studyDate.getTime());
+
+
+//                study.getElementsByTagName()
+
+//                Collection<Node> items = getChildNodes(docSumNode, "Item");
+//                for (Node item : items) {
+//                    NamedNodeMap attributes = item.getAttributes();
+//                    if (attributes.getNamedItem("Name").getNodeValue().equals("Title")) {
+//                        // should only be one <Item Name="Title">, this will overwrite if more
+//                        title = item.getTextContent();
+//                        getLog().trace("PubMed ID: " + id + "; Title: " + title);
+//                    }
+//                    else if(attributes.getNamedItem("Name").getNodeValue().equals("Source")) {
+//                        publication = item.getTextContent();
+//                    }
+//                    else if(attributes.getNamedItem("Name").getNodeValue().equals("Authors")) {
+//                        author = item.getFirstChild().getFirstChild().getTextContent();
+//                    }
+//                    else if(attributes.getNamedItem("Name").getNodeValue().equals("PubDate")) {
+//                        //         pubDate = Date.valueOf(item.getTextContent());
+//
+//
+//                        pubDate = DateFormat.getDateInstance().parse(item.getTextContent());
+//                    }
+//
+//                }
+
+//                        // add results
+                if (pmid != null) {
+                    GwasStudy newStudy = new DefaultGwasStudy(pmid, author, pubDate, publication, title);
+
+                    results.put(pmid, newStudy);
                 }
             }
-            return results;
         }
         catch (IOException e) {
             throw new DispatcherException("Communication problem with PubMed", e);
+
+        } catch (ParseException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
+
+        return results;
+
     }
 
     public Map<String, String> dispatchFetchQuery(Collection<String> pubmedIDs) throws DispatcherException {

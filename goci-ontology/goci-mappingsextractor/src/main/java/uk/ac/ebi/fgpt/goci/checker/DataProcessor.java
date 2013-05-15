@@ -111,7 +111,7 @@ import java.util.Set;
                 parent = leaf.getIRI().toString();
             }
             else {
-                System.out.println("Could not identify a suitable  parent category for trait " + mapping.getEfotrait());
+                System.out.println("Could not identify a suitable parent category for trait " + mapping.getEfotrait());
             }
         }
         mapping.setParent(ParentList.PARENT_URI.get(parent));

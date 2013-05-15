@@ -69,7 +69,7 @@ public class GwasPubmedSearcher {
         for (String pubmedID : newPubMedIDs) {
             getLog().debug("Study ID '" + pubmedID + "' is new, will be entered into tracking system");
             GwasStudy study = studiesMap.get(pubmedID);
-            getStudyDAO().saveStudy(study);
+      //      getStudyDAO().saveStudy(study);
             getLog().info("Added study '" + study.getPubMedID() + "' (\"" + study.getTitle() + "\") " +
                     "into the tracking system.");
         }
