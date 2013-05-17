@@ -35,7 +35,7 @@
         <property name="url" value="${DB_URL}" />
         <property name="username" value="${USER}" />
         <property name="password" value="${PASSWORD}" />
-        <property name="defaultAutoCommit" value="false" />
+        <property name="defaultAutoCommit" value="true" />
         <property name="initialSize" value="32" />
         <property name="maxIdle" value="32" />
         <property name="maxActive" value="32" />

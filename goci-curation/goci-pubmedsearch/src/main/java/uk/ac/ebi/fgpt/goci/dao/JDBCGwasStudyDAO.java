@@ -33,24 +33,14 @@ public class JDBCGwasStudyDAO implements GwasStudyDAO {
 
 
     public static final String STUDY_INSERT =
-            "insert into UNCLASSIFIEDSTUDY ( " +
-                    "PMID, AUTHOR, STUDYDATE, PUBLICATION, LINKTITLE, ELIGIBILITY) " +
-                    "values (?, ?, ?, ?, ?, ?)";
+            "insert into UNCLASSIFIEDSTUDIES (" +
+                    "PMID, AUTHOR, STUDYDATE, PUBLICATION, LINKTITLE) " +
+                    "values (?, ?, ?, ?, ?)";
 
 
     private JdbcTemplate jdbcTemplate;
 
     private Logger log = LoggerFactory.getLogger(getClass());
-
-//    public JDBCGwasStudyDAO() {
-//        listener = new GwasStudyListener() {
-//            public void studyUpdated(GwasEvent evt) {
-//                getLog().debug("Listener event triggered from " + evt.getStudy());
-//                saveStudy(evt.getStudy());
-//                getLog().debug("Study saved!");
-//            }
-//        };
-//    }
 
     protected Logger getLog() {
         return log;
@@ -118,25 +108,33 @@ public class JDBCGwasStudyDAO implements GwasStudyDAO {
 
     public void saveStudy(GwasStudy study) {
         Assert.notNull(getJdbcTemplate(), "JDBC Template must not be null");
-        int eligibility = 0;
 
         if (study.getPubMedID() != null) {
-            getLog().debug("Saving study:\n" + study.toString());
-            getJdbcTemplate().update(STUDY_INSERT,
-                                     study.getPubMedID(),
+            getLog().debug("Saving study: " + study.getPubMedID());
+
+   //         int[] types = new int[] {Types.VARCHAR, Types.VARCHAR, Types.DATE, Types.VARCHAR, Types.VARCHAR};
+
+            try{
+                int result = getJdbcTemplate().update(STUDY_INSERT,
+                                     new Object[] {study.getPubMedID(),
                                      study.getAuthor(),
                                      study.getPublicationDate(),
                                      study.getPublication(),
-                                     study.getTitle(),
-                                     eligibility);
-        }
-        else {
-            getLog().error("Unable to save this study: it was not user created " +
-                    "(actually " + study.getClass() + ")");
-            throw new RuntimeException("Unable to save this study: it was not user created " +
-                                               "(actually " + study.getClass() + ")");
-        }
+                                     study.getTitle()});
+     //                                types);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
 
+//            if(result < 1){
+//                getLog().debug("Failed to insert study");
+//            }
+//            else{
+//                getLog().debug("Insert complete: " + result + " rows were affected");
+//            }
+
+        }
 
     }
 
