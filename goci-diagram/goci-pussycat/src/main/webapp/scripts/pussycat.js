@@ -1,6 +1,6 @@
 // FINAL VARIABLES - tweak these to adjust standard configuration
 var enableDebugging = false;
-var gwasLatest = "images/timeseries/gwas-2012-06.png";
+var gwasLatest = "images/timeseries/gwas-2012-12.png";
 
 var enableFiltering = true;
 var enableSVG = true;
@@ -12,6 +12,8 @@ var dragOffsetX = 0;
 var dragOffsetY = 0;
 
 var renderingComplete = false;
+
+var mouseX, mouseY;
 
 function init() {
     $(document).ready(function() {
@@ -141,19 +143,23 @@ function init() {
         // bind mousemove handler
         $(document).mousemove(function(ev) {
             $('#tooltip').css({"left": ev.pageX + 20, "top": ev.pageY});
+            mouseX = ev.pageX;
+            mouseY = ev.pageY;
         });
 
         if (enableSVG) {
             // bind mousewheel event handler
-            $('#diagramareacontent').mousewheel(function(ev, delta) {
+            $('#diagramareacontent').mousewheel(function(ev, delta, deltaX, deltaY) {
+                console.log(mouseX, mouseY);
                 if (delta > 0) {
                     currentScale++;
-                    zoomIn();
+                    zoomIn(mouseX,mouseY);
                 }
                 else if (delta < 0) {
                     currentScale--;
-                    zoomOut();
+                    zoomOut(mouseX,mouseY);
                 }
+
             });
 
             // bind drag handler
@@ -188,12 +194,12 @@ function init() {
         $("#zoomInButton").button();
         $("#zoomInButton").click(function() {
             currentScale++;
-            zoomIn();
+            zoomIn(0,0);
         });
         $("#zoomOutButton").button();
         $("#zoomOutButton").click(function() {
             currentScale--;
-            zoomOut();
+            zoomOut(0,0);
         });
         log("Initialized zoom sidebar OK");
     });
@@ -572,14 +578,14 @@ function slideZoom(newScale) {
         // try and recover from excessive zooming out!
         log("Attempting to recover from zooming waaaay out - current scale is " + currentScale);
         currentScale++;
-        zoomIn();
+        zoomIn(0,0);
         slideZoom(newScale);
     }
     else if (currentScale > maxScale) {
         // try and recover from excessive zooming in!
         log("Attempting to recover from zooming waaaay in - current scale is " + currentScale);
         currentScale--;
-        zoomOut();
+        zoomOut(0,0);
         slideZoom(newScale);
     }
     else {
@@ -591,7 +597,7 @@ function slideZoom(newScale) {
             log("Zooming in - zoom operations required = " + times);
             currentScale = newScale;
             for (i = 0; i < times; i++) {
-                zoomIn();
+                zoomIn(0,0);
             }
         }
         else if (newScale < currentScale) {
@@ -599,7 +605,7 @@ function slideZoom(newScale) {
             log("Zooming out - zoom operations required = " + times);
             currentScale = newScale;
             for (i = 0; i < times; i++) {
-                zoomOut();
+                zoomOut(0,0);
             }
         }
         else {
@@ -608,20 +614,35 @@ function slideZoom(newScale) {
     }
 }
 
-function zoomIn() {
+function zoomIn(zoomX, zoomY) {
     var viewBox = document.getElementById('goci-svg').getAttribute("viewBox");
     var elements = viewBox.split(' ');
     // get width and height
-    var width = elements[2];
-    var height = elements[3];
-    // update scaling factor
+    var origX = parseFloat(elements[0]);
+    var origY = parseFloat(elements[1]);
+    var width = parseFloat(elements[2]);
+    var height = parseFloat(elements[3]);
+
+    var centX = (width/2)+origX;
+    var centY = (height/2)+origY;
+
+     // update scaling factor
     scalingFactor = scalingFactor * 0.95;
     $("#scale").html(scalingFactor);
     // calculate new sizes
     // transform width and height by multiplying by 0.95
     var newWidth = width * 0.95;
     var newHeight = height * 0.95;
-    var newViewBox = elements[0] + " " + elements[1] + " " + newWidth + " " + newHeight;
+
+    var newX = centX-(newWidth/2);
+    var newY = centY-(newHeight/2);
+
+//    if(zoomX != 0 || zoomY != 0){
+//        newX = zoomX - newX;
+//        newY = zoomY - newY;
+//    }
+
+    var newViewBox = newX +  " " + newY + " " + newWidth + " " + newHeight;
     document.getElementById('goci-svg').setAttribute("viewBox", newViewBox);
     log("Zoom in over SVG event.  New zoom level: " + scalingFactor + ", viewBox now set to " + newViewBox);
     // make sure zoom bar matches currentScale
@@ -631,12 +652,20 @@ function zoomIn() {
     }
 }
 
-function zoomOut() {
+function zoomOut(zoomX, zoomY) {
+
+
     var viewBox = document.getElementById('goci-svg').getAttribute("viewBox");
     var elements = viewBox.split(' ');
     // get width and height
-    var width = elements[2];
-    var height = elements[3];
+    var origX = parseFloat(elements[0]);
+    var origY = parseFloat(elements[1]);
+    var width = parseFloat(elements[2]);
+    var height = parseFloat(elements[3]);
+
+    var centX = (width/2)+origX;
+    var centY = (height/2)+origY;
+
     // update scaling factor
     scalingFactor = scalingFactor * 1.05;
     $("#scale").html(scalingFactor);
@@ -644,7 +673,16 @@ function zoomOut() {
     // transform width and height by multiplying by 1.05
     var newWidth = width * 1.05;
     var newHeight = height * 1.05;
-    var newViewBox = elements[0] + " " + elements[1] + " " + newWidth + " " + newHeight;
+
+    var newX = centX-(newWidth/2);
+    var newY = centY-(newHeight/2);
+
+//    if(zoomX != 0 || zoomY != 0){
+//        newX = zoomX - newX;
+//        newY = zoomY - newY;
+//    }
+
+    var newViewBox = newX + " " + newY + " " + newWidth + " " + newHeight;
     document.getElementById('goci-svg').setAttribute("viewBox", newViewBox);
     log("Zoom out over SVG event.  New zoom level: " + scalingFactor + ", viewBox now set to " + newViewBox);
     // make sure zoom bar matches currentScale (between min and max)
