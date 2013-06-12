@@ -1,0 +1,9 @@
+#!/bin/sh
+
+base=${0%/*};
+current=`pwd`;
+
+bsub -I -M 20000 -q research-rh6 -R "rusage[mem=20000]" $base/enexport.sh $@
+
+
+

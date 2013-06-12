@@ -28,5 +28,6 @@
         <module>goci-tracker-app</module>
         <module>SNPbatchLoader</module>
     <module>goci-pubmedsearch</module>
+    <module>goci-enexport</module>
   </modules>
 </project>
