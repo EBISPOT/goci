@@ -9,25 +9,16 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 import uk.ac.ebi.fgpt.goci.exception.DispatcherException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -71,21 +62,41 @@ public class PubMedQueryService {
         }
     }
 
-    public String dispatchFetchQuery(Collection<String> pubmedIDs) throws DispatcherException {
+    public String dispatchFetchQuery(ArrayList<String> pubmedIDs) throws DispatcherException {
+
         try {
             // convert set of supplied pubmed IDs to comma separated list
-            String idList = "";
-            Iterator<String> pubmedIdIterator = pubmedIDs.iterator();
-            while (pubmedIdIterator.hasNext()) {
-                idList += pubmedIdIterator.next();
-                if (pubmedIdIterator.hasNext()) {
-                    idList += ",";
+            int it = 0;
+            String output = "";
+
+            while(pubmedIDs.size() > it){
+                getLog().debug("Interation " + it + " size " + pubmedIDs.size());
+                List<String> sublist;
+
+                if(it+100 < pubmedIDs.size()){
+                    sublist = pubmedIDs.subList(it,it+100);
                 }
+                else {
+                    sublist = pubmedIDs.subList(it,pubmedIDs.size()-1);
+                }
+
+                String idList = "";
+                Iterator<String> pubmedIdIterator = sublist.iterator();
+                while (pubmedIdIterator.hasNext()) {
+                    idList += pubmedIdIterator.next();
+                    if (pubmedIdIterator.hasNext()) {
+                        idList += ",";
+                    }
+                }
+                getLog().debug(idList);
+
+               String response = doPubmedQuery(URI.create(fetchString.replace("{idlist}", idList)));
+
+               output = output.concat(response);
+                it = it + 100;
             }
 
-            Document response = doPubmedQuery(URI.create(fetchString.replace("{idlist}", idList)));
-
-            return response.toString();
+            return output;
 
         }
         catch (IOException e) {
@@ -93,34 +104,43 @@ public class PubMedQueryService {
         }
     }
 
-    private Document doPubmedQuery(URI queryUri) throws IOException {
+    private String doPubmedQuery(URI queryUri) throws IOException {
+        getLog().debug("Dispatching query for " + queryUri.toString());
         HttpGet httpGet = new HttpGet(queryUri);
         HttpResponse response = httpClient.execute(httpGet, httpContext);
+
         HttpEntity entity = response.getEntity();
-        InputStream entityIn = entity.getContent();
-        try {
-            if (response.getStatusLine().getStatusCode() == HttpStatus.OK.value()) {
-                try {
-                    DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-                    return db.parse(entityIn);
-                }
-                catch (SAXException e) {
-                    throw new IOException("Could not parse response from PubMed due to an exception reading content",
-                            e);
-                }
-                catch (ParserConfigurationException e) {
-                    throw new IOException("Could not parse response from PubMed due to an exception reading content",
-                            e);
-                }
-            }
-            else {
-                throw new IOException(
-                        "Could not obtain results from '" + queryUri + "' due to an unknown communication problem");
-            }
-        }
-        finally {
-            entityIn.close();
-        }
+//        InputStream entityIn = entity.getContent();
+//        try {
+           if(entity != null){
+               return EntityUtils.toString(entity);
+           }
+        else{
+               return "";
+           }
+
+//            if (response.getStatusLine().getStatusCode() == HttpStatus.OK.value()) {
+//                try {
+//                    DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+//                    return db.parse(entityIn);
+//                }
+//                catch (SAXException e) {
+//                    throw new IOException("Could not parse response from PubMed due to an exception reading content",
+//                            e);
+//                }
+//                catch (ParserConfigurationException e) {
+//                    throw new IOException("Could not parse response from PubMed due to an exception reading content",
+//                            e);
+//                }
+//            }
+//            else {
+//                throw new IOException(
+//                        "Could not obtain results from '" + queryUri + "' due to an unknown communication problem");
+//            }
+//        }
+//        finally {
+//            entityIn.close();
+//        }
     }
 
     private Collection<Node> getChildNodes(Node parent, String tagName) {

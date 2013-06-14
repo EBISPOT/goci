@@ -11,12 +11,12 @@ import uk.ac.ebi.fgpt.goci.service.EndnoteExporter;
  */
 public class EndnoteExportDriver
 {
-    //    public static void main(String[] args){
+//        public static void main(String[] args){
 //
-//        PubmedSearchDriver driver = new PubmedSearchDriver();
-//        driver.launchSearcher();
+//         new EndnoteExportDriver("notgwasstudies");
+//        //driver.launchExporter("notgwasstudies");
 //    }
-
+//
 
     /*For Coldfusion integration, we don't need a main method*/
 
@@ -25,13 +25,14 @@ public class EndnoteExportDriver
 
     public EndnoteExportDriver(String table){
         ApplicationContext ctx = new ClassPathXmlApplicationContext("classpath*:enexport.xml");
-        exporter = ctx.getBean("searcher", EndnoteExporter.class);
+        exporter = ctx.getBean("exporter", EndnoteExporter.class);
         launchExporter(table);
     }
 
     public void launchExporter(String table){
         try{
             data = exporter.dispatchQuery(table);
+            System.out.println(data);
         }
 
         catch (DispatcherException e) {
