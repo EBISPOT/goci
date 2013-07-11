@@ -1,5 +1,7 @@
 package uk.ac.ebi.fgpt.goci;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import uk.ac.ebi.fgpt.goci.exception.DispatcherException;
@@ -8,11 +10,17 @@ import uk.ac.ebi.fgpt.goci.service.GwasPubmedSearcher;
 
 public class PubmedSearchDriver {
 
-    public static void main(String[] args){
+    private Logger log = LoggerFactory.getLogger(getClass());
 
-        PubmedSearchDriver driver = new PubmedSearchDriver();
-        driver.launchSearcher();
+    protected Logger getLog() {
+        return log;
     }
+
+//    public static void main(String[] args){
+//
+//        PubmedSearchDriver driver = new PubmedSearchDriver();
+//        driver.launchSearcher();
+//    }
 
 
     /*For Coldfusion integration, we don't need a main method*/
@@ -20,14 +28,17 @@ public class PubmedSearchDriver {
     private GwasPubmedSearcher searcher;
 
     public PubmedSearchDriver(){
+        getLog().debug("PubmedSearchDriver initialised");
         ApplicationContext ctx = new ClassPathXmlApplicationContext("classpath*:pubmedsearch.xml");
         searcher = ctx.getBean("searcher", GwasPubmedSearcher.class);
-  //      launchSearcher();
+        launchSearcher();
     }
 
     public void launchSearcher(){
         try{
+            getLog().debug("Dispatching the searcher");
             searcher.dispatchSearch();
+            getLog().info("Search finished");
         }
 
         catch (DispatcherException e) {

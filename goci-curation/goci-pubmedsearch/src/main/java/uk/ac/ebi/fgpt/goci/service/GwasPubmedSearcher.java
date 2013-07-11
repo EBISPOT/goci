@@ -65,13 +65,19 @@ public class GwasPubmedSearcher {
         // fetch titles and abstracts for the new pubmed ids
         getLog().info("PubMed search ran, and identified " + pubmedIDs.size() + " publications.  " +
                 "Of these, " + newPubMedIDs.size() + " are new.");
-        Map<String, GwasStudy> studiesMap = getDispatcherService().dispatchSummaryQuery(newPubMedIDs);
-        for (String pubmedID : newPubMedIDs) {
-            getLog().debug("Study ID '" + pubmedID + "' is new, will be entered into tracking system");
-            GwasStudy study = studiesMap.get(pubmedID);
-            getStudyDAO().saveStudy(study);
-            getLog().info("Added study '" + study.getPubMedID() + "' (\"" + study.getTitle() + "\") " +
-                    "into the tracking system.");
+
+        if(newPubMedIDs.size() > 0){
+            Map<String, GwasStudy> studiesMap = getDispatcherService().dispatchSummaryQuery(newPubMedIDs);
+            for (String pubmedID : newPubMedIDs) {
+                getLog().debug("Study ID '" + pubmedID + "' is new, will be entered into tracking system");
+                GwasStudy study = studiesMap.get(pubmedID);
+                getStudyDAO().saveStudy(study);
+                getLog().info("Added study '" + study.getPubMedID() + "' (\"" + study.getTitle() + "\") " +
+                        "into the tracking system.");
+            }
+        }
+        else {
+            getLog().info("No new studies to be added.");
         }
 
     }
