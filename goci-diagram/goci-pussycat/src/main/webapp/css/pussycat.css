@@ -48,7 +48,7 @@ h5{
 }
 
 #header {
-    height: /*100px;*/ 80px;
+    height: 120px;/* 80px;*/
     padding-top: 10px;
     padding-bottom: 15px;
     background: url('../images/dual-logo2.png') no-repeat;
@@ -76,7 +76,8 @@ h5{
 
 #header h3{
     margin: 0;
-    font-size: 24px;
+    padding-top: 18px;
+    font-size: 18px;
     color: #C50D04;
     /*letter-spacing: 1px;*/
 }
