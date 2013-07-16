@@ -1,0 +1,71 @@
+^[PREFIX]
+PREFIX swo:<http://www.ebi.ac.uk/swo/>
+PREFIX efo:<http://www.ebi.ac.uk/efo/>
+PREFIX snap:<http://www.ifomis.org/bfo/1.1/snap#>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX OBO_REL:<http://purl.org/obo/owl/OBO_REL#>
+PREFIX PATO:<http://purl.org/obo/owl/PATO#>
+PREFIX foaf:<http://xmlns.com/foaf/0.1/>
+PREFIX NCBITaxon:<http://purl.org/obo/owl/NCBITaxon#>
+PREFIX owl:<http://www.w3.org/2002/07/owl#>
+PREFIX atlas:<http://rdf.ebi.ac.uk/terms/atlas>
+PREFIX dct:<http://purl.org/dc/terms/>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX pav:<http://purl.org/pav/2.0/>
+PREFIX rdfns:<http://www.orphanet.org/rdfns#>
+PREFIX sio:<http://semanticscience.org/resource/>
+PREFIX void:<http://rdfs.org/ns/void#>
+PREFIX obo2:<http://purl.obolibrary.org/obo#>
+PREFIX ncbitaxon:<http://purl.obolibrary.org/obo/ncbitaxon#>
+PREFIX obo:<http://purl.obolibrary.org/obo/>
+PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>
+PREFIX oboInOwl:<http://www.geneontology.org/formats/oboInOwl#>
+PREFIX skos:<http://www.w3.org/2004/02/skos/core#>
+PREFIX dc:<http://purl.org/dc/elements/1.1/>
+PREFIX CL:<http://purl.org/obo/owl/CL#>
+
+
+^[ALL.EXPERIMENTS.QUERY]
+SELECT ?expUri
+WHERE {
+?expUri rdf:type atlas:Experiment .
+}
+
+^[RELATEDTO.PROPERTIES.QUERY]
+SELECT DISTINCT ?property ?propertyLabel ?resource ?resourceLabel ?resourceDescription ?resourceType ?resourceTypeLabel ?resourceTypeDesc WHERE {
+
+?bound ?property ?resource .
+OPTIONAL {?property rdfs:label ?propertyLabel}
+OPTIONAL {
+    ?resource rdf:type ?resourceType
+        OPTIONAL {?resourceType rdfs:label ?resourceTypeLabel}
+        OPTIONAL {?resourceType dc:description ?resourceTypeDesc}
+}
+OPTIONAL { ?resource rdfs:label  ?resourceLabel}
+OPTIONAL { ?resource dc:description  ?resourceDescription}
+
+}
+
+
+^[RELATEDFROM.PROPERTIES.QUERY]
+SELECT DISTINCT ?property ?propertyLabel ?resource ?resourceLabel ?resourceDescription ?resourceType ?resourceTypeLabel ?resourceTypeDesc WHERE {
+
+?resource ?property ?bound .
+OPTIONAL {?property rdfs:label ?propertyLabel}
+OPTIONAL {
+    ?resource rdf:type ?resourceType
+        OPTIONAL {?resourceType rdfs:label ?resourceTypeLabel}
+        OPTIONAL {?resourceType dc:description ?resourceTypeDesc}
+}
+OPTIONAL { ?resource rdfs:label  ?resourceLabel}
+OPTIONAL { ?resource dc:description  ?resourceDescription}
+}
+
+
+
+
+
+^[PROPERTIES.QUERY]
+SELECT DISTINCT ?property WHERE {
+?subject ?property ?object .
+}

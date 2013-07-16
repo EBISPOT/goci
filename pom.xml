@@ -1,0 +1,161 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>ebi-lode</groupId>
+    <artifactId>ebi-lode</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0</version>
+    <modules>
+        <module>lode-core-api</module>
+        <module>web-ui</module>
+        <module>lode-core-servlet</module>
+    </modules>
+    <name>ebi-lode Maven Webapp</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <org.springframework.version>3.2.2.RELEASE</org.springframework.version>
+        <org.slf4j.version>1.6.4</org.slf4j.version>
+    </properties>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.1.2</version>
+                <executions>
+                    <execution>
+                        <id>attach-source</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.0</version>
+            </plugin>
+        </plugins>
+        <extensions>
+            <!-- Enabling the use of SCP -->
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>2.2</version>
+            </extension>
+        </extensions>
+    </build>
+
+    <!-- Reporting/Documentation output -->
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.8.1
+                </version>
+                <reportSets>
+                    <reportSet>
+                        <id>aggregate</id>
+                        <reports>
+                            <report>aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <!-- Maven repository deploy -->
+    <distributionManagement>
+        <repository>
+            <id>coconut.ebi.ac.uk</id>
+            <name>coconut.ebi.ac.uk</name>
+            <url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo</url>
+        </repository>
+        <snapshotRepository>
+            <id>coconut.ebi.ac.uk</id>
+            <name>coconut.ebi.ac.uk-snapshots</name>
+            <url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo</url>
+        </snapshotRepository>
+        <site>
+            <id>coconut.ebi.ac.uk</id>
+            <name>coconut.ebi.ac.uk-snapshots</name>
+            <url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo</url>
+        </site>
+    </distributionManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${org.slf4j.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${org.slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.16</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <!-- dependencies that may be required in several zooma modules but which aren't enforced -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- spring dependencies should be declared here and used in submodules if required -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${org.springframework.version}</version>
+            </dependency>
+
+            <!-- test scope dependencies -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${org.slf4j.version}</version>
+                <scope>test</scope>
+                <!-- override test scope if required for CLI, webapp modules -->
+            </dependency>
+
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>1.2.16</version>
+                <scope>test</scope>
+                <!-- override test scope if required for CLI, webapp modules -->
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+</project>

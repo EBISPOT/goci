@@ -1,0 +1,82 @@
+^[PREFIX]
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX foaf:<http://xmlns.com/foaf/0.1/>
+PREFIX owl:<http://www.w3.org/2002/07/owl#>
+PREFIX dct:<http://purl.org/dc/terms/>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX void:<http://rdfs.org/ns/void#>
+PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>
+PREFIX skos:<http://www.w3.org/2004/02/skos/core#>
+PREFIX dc:<http://purl.org/dc/elements/1.1/>
+
+
+^[ALL.EXPERIMENTS.QUERY]
+SELECT ?expUri
+WHERE {
+?expUri rdf:type atlas:Experiment .
+}
+
+^[RELATEDTO.PROPERTIES.QUERY]
+SELECT DISTINCT ?property ?propertyLabel ?resource ?resourceLabel ?resourceDescription ?resourceType ?resourceTypeLabel ?resourceTypeDesc WHERE {
+
+?bound ?property ?resource .
+OPTIONAL {?property rdfs:label ?propertyLabel}
+OPTIONAL {
+    ?resource rdf:type ?resourceType
+        OPTIONAL {?resourceType rdfs:label ?resourceTypeLabel}
+        OPTIONAL {?resourceType dc:description ?resourceTypeDesc}
+}
+OPTIONAL { ?resource rdfs:label  ?resourceLabel}
+OPTIONAL { ?resource dc:description  ?resourceDescription}
+}
+
+
+^[RELATEDFROM.PROPERTIES.QUERY]
+SELECT DISTINCT ?property ?propertyLabel ?resource ?resourceLabel ?resourceDescription ?resourceType ?resourceTypeLabel ?resourceTypeDesc WHERE {
+
+?resource ?property ?bound .
+OPTIONAL {?property rdfs:label ?propertyLabel}
+OPTIONAL {
+    ?resource rdf:type ?resourceType
+        OPTIONAL {?resourceType rdfs:label ?resourceTypeLabel}
+        OPTIONAL {?resourceType dc:description ?resourceTypeDesc}
+}
+OPTIONAL { ?resource rdfs:label  ?resourceLabel}
+OPTIONAL { ?resource dc:description  ?resourceDescription}
+}
+
+^[ALLTYPES.QUERY]
+SELECT DISTINCT ?resource ?resourceLabel ?resourceDescription WHERE {
+?bound a ?resource .
+?resource rdfs:label  ?resourceLabel .
+?resource dc:description  ?resourceDescription .
+
+}
+
+^[DATASET.QUERY]
+SELECT DISTINCT ?dataset WHERE {
+GRAPH ?dataset {
+    ?subject ?property ?object .
+}
+?dataset a void:Dataset
+}
+
+
+^[DEPICT.QUERY]
+SELECT DISTINCT ?img WHERE {
+{
+ {?subject ?depict ?img}
+ UNION
+ {?subject a [ ?depict ?img]}
+}
+}
+
+^[PROPERTIES.QUERY]
+SELECT DISTINCT ?property WHERE {
+?subject ?property ?object .
+}
+
+^[OBJECTS.QUERY]
+SELECT DISTINCT ?object WHERE {
+?subject ?property ?object .
+}

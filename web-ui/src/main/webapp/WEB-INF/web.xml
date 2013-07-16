@@ -1,0 +1,73 @@
+<!DOCTYPE web-app PUBLIC
+        "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+         http://java.sun.com/xml/ns/j2ee
+         http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+         version="2.4">
+    <display-name>EBI - Linked Data Explorer</display-name>
+
+
+    <description>
+        SPARQL endpoint and Linked Data Browser
+    </description>
+    <!--Define configuration to load-->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            WEB-INF/ebi-lode-service.xml
+        </param-value>
+    </context-param>
+
+    <!--Define Servlets -->
+    <servlet>
+        <servlet-name>lode</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <!--Define servlet mappings -->
+    <servlet-mapping>
+        <servlet-name>lode</servlet-name>
+        <url-pattern>/servlet/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- listener to load context at startup -->
+    <listener>
+        <listener-class>
+            org.springframework.web.context.ContextLoaderListener
+        </listener-class>
+    </listener>
+
+    <!-- enable cors -->
+    <filter>
+        <filter-name>cors</filter-name>
+        <filter-class>uk.ac.ebi.fgpt.lode.servlet.CorsFilter</filter-class>
+      </filter>
+      <filter-mapping>
+        <filter-name>cors</filter-name>
+        <url-pattern>/*</url-pattern>
+      </filter-mapping>
+    <!-- tukey URL rewrite filters -->
+    <filter>
+           <filter-name>UrlRewriteFilter</filter-name>
+           <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+
+           <init-param>
+               <param-name>logLevel</param-name>
+               <param-value>INFO</param-value>
+           </init-param>
+
+       </filter>
+       <filter-mapping>
+           <filter-name>UrlRewriteFilter</filter-name>
+           <url-pattern>/*</url-pattern>
+           <dispatcher>REQUEST</dispatcher>
+           <dispatcher>FORWARD</dispatcher>
+       </filter-mapping>
+
+
+</web-app>

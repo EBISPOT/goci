@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>ebi-lode</artifactId>
+        <groupId>ebi-lode</groupId>
+        <version>1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>lode-core-api</artifactId>
+    <dependencies>
+
+
+        <!-- logging dependencies -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+
+        <!--<dependency>-->
+        <!--<groupId>org.apache.jena</groupId>-->
+        <!--<artifactId>apache-jena-libs</artifactId>-->
+        <!--<version>2.10.0</version>-->
+        <!--<type>pom</type>-->
+        <!--</dependency>-->
+
+
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${org.springframework.version}</version>
+        </dependency>
+
+
+        <!--<dependency>-->
+        <!--<groupId>com.hp.hpl.jena</groupId>-->
+        <!--<artifactId>arq</artifactId>-->
+        <!--<version>2.6.0</version>-->
+        <!--</dependency>-->
+
+        <!-- These are jars required to run Jena with the openlink virtuoso jdbc adaptor
+            cuurently loaded into internal artifactory, so will break build for external developers
+            -->
+        <dependency>
+            <groupId>openlinksw.com</groupId>
+            <artifactId>virt-jena</artifactId>
+            <version>1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>openlinksw.com</groupId>
+            <artifactId>virt-jdbc</artifactId>
+            <version>3.6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>openlinksw.com</groupId>
+            <artifactId>jena-arq</artifactId>
+            <version>0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>openlinksw.com</groupId>
+            <artifactId>jena-iri</artifactId>
+            <version>0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>openlinksw.com</groupId>
+            <artifactId>jena</artifactId>
+            <version>0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>openlinksw.com</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>openlinksw.com</groupId>
+            <artifactId>axis</artifactId>
+            <version>0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>openlinksw.com</groupId>
+            <artifactId>xerces</artifactId>
+            <version>0.1</version>
+        </dependency>
+
+        <!-- end internal jars -->
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20090211</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.1</version>
+        </dependency>
+
+        <!-- jackson json mapping library, describes mappings from java to json for model objects -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.5.3</version>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>org.apache.jena</id>
+            <url>https://repository.apache.org/content/repositories/releases/</url>
+
+        </repository>
+
+        <repository>
+            <id>coconut.ebi.ac.uk</id>
+            <name>coconut.ebi.ac.uk-releases</name>
+            <url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo</url>
+        </repository>
+
+    </repositories>
+
+
+</project>

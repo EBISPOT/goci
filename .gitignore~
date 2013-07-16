@@ -1,0 +1,7 @@
+.svn
+*.iml
+*.idea
+.DS_Store
+*.class
+target/
+out/

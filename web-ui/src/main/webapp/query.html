@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>SPARQL Explorer</title>
+    <link rel="stylesheet" type="text/css" href="css/lode-style.css" />
+    <link rel="stylesheet" type="text/css" href="codemirror/codemirror.css" />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="codemirror/codemirror.js"></script>
+    <script type="text/javascript" src="codemirror/sparql.js"></script>
+    <script type="text/javascript" src="scripts/namespaces.js"></script>
+    <script type="text/javascript" src="scripts/queries.js"></script>
+    <script type="text/javascript" src="scripts/lode.js"></script>
+</head>
+
+<body onload="$('#sparql-content').sparql({namespaces : lodeNamespacePrefixes});">
+
+<div class="grid_24" id="sparql-content">
+</div>
+
+</body>
+
+</html>

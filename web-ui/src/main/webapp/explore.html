@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2013 EMBL - European Bioinformatics Institute
+  ~ Licensed under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the
+  ~ License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+  ~ either express or implied. See the License for the specific language governing permissions
+  ~ and limitations under the License.
+  -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>SPARQL Explorer</title>
+    <link rel="stylesheet" type="text/css" href="css/lode-style.css" />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="codemirror/codemirror.js"></script>
+    <script type="text/javascript" src="codemirror/sparql.js"></script>
+    <script type="text/javascript" src="scripts/namespaces.js"></script>
+    <script type="text/javascript" src="scripts/queries.js"></script>
+    <script type="text/javascript" src="scripts/lode.js"></script>
+</head>
+
+<body onload="$('#data-explorer-content').explore({namespaces : lodeNamespacePrefixes});">
+<div class="grid_24" id="data-explorer-content">
+</div>
+
+</body>
+
+</html>
