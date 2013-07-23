@@ -57,8 +57,8 @@
 
         <h2>Exploring Genome-wide Association Studies</h2>
 
-        <div class="survey_link"><h3><a href="http://www.genome.gov/27554296"  target='_blank'>On Thursday, 18 July 2013 2pm GMT/09am EST, there will be a webinar to highlight current uses
-            and explore priorities and future directions for the GWAS catalog.</a></h3></div>
+        <!--<div class="survey_link"><h3><a href="http://www.genome.gov/27554296"  target='_blank'>On Thursday, 18 July 2013 2pm GMT/09am EST, there will be a webinar to highlight current uses-->
+            <!--and explore priorities and future directions for the GWAS catalog.</a></h3></div>-->
 
 
         <div id="filtering">
@@ -194,8 +194,8 @@
     <div class="container" style="display: none;">
         <div>This diagram shows all SNP-trait associations with p-value &#8804; 5.0 &#215; 10<sup>-8</sup>,
             published in the GWAS catalogue
-            (<a href="http://www.genome.gov/gwastudies"  target='_blank'>http://www.genome.gov/gwastudies</a>) up to the end of December
-            2012. For information on how to navigate the diagram, see the help tab.
+            (<a href="http://www.genome.gov/gwastudies"  target='_blank'>http://www.genome.gov/gwastudies</a>) up to the end of February
+            2013. For information on how to navigate the diagram, see the help tab.
         </div>
 
         <div id="diagramarea" class="ui-widget-content">
@@ -203,7 +203,7 @@
                 <img src="images/loader.gif" alt="Please wait - diagram loading"/><br/>
                 <span id="diagramareaerrortext"></span><br/> <a id="retrybutton" href="#" style="font-weight: bold">Retry</a>
 
-                <p><a href="images/timeseries/gwas-2012-12.png">A static version of the diagram in PNG format can be
+                <p><a href="images/timeseries/gwas-latest.png">A static version of the diagram in PNG format can be
                     found here</a></p>
             </div>
             <div id="diagramareacontent">
@@ -468,11 +468,12 @@
 
         <h4>Most Recent GWAS Diagram</h4>
         <ul>
-            <li><a href="images/timeseries/gwas-2012-12.png">Full GWAS diagram, PNG</a></li>
+            <li><a href="images/timeseries/gwas-latest.png">Full GWAS diagram, PNG</a></li>
         </ul>
 
         <h4>Older GWAS Diagrams</h4>
         <ul>
+            <li><a href="images/timeseries/gwas-2012-12.png">GWAS diagram, Quarter 4, 2012, PNG</a></li>
             <li><a href="images/timeseries/gwas-2012-09.png">GWAS diagram, Quarter 3, 2012, PNG</a></li>
             <li><a href="images/timeseries/gwas-2012-06.png">GWAS diagram, Quarter 2, 2012, PNG</a></li>
             <li><a href="images/timeseries/gwas-2011-12.png">GWAS diagram, Quarter 4, 2011, PNG</a></li>
@@ -527,15 +528,15 @@
         <h4>GWAS Catalog Ontologies</h4>
         <ul>
             <li><a href="ontology/gwas-diagram.owl">GWAS Catalog schema ontology, OWL</a> [ ~16 KB ]</li>
-            <li><a href="ontology/gwas-data-2012-12.owl">GWAS Catalog data knowledgebase, OWL</a> [ ~14MB ]</li>
+            <li><a href="ontology/gwas-data-latest.owl">GWAS Catalog data knowledgebase, OWL</a> [ ~14MB ]</li>
         </ul>
 
         <h4>GWAS to EFO mappings</h4>
         The following spreadsheet shows all GWAS to EFO mappings, including the study each trait relates to and the parent category <br>each trait is mapped to
-        on the diagram, up to the end of December 2012. Note that in some cases, more than one EFO term <br>has been mapped to a GWAS trait for a given study.
+        on the diagram, up to the end of February 2013. Note that in some cases, more than one EFO term <br>has been mapped to a GWAS trait for a given study.
         Mappings are not one-to-one, i.e. one EFO term may be mapped to <br>several different GWAS traits and vice versa.
         <ul>
-            <li><a href="ontology/GWAS-EFO-Mappings122012.xlsx">GWAS to EFO mappings, XLSX</a> [ ~164 KB]</li>
+            <li><a href="ontology/GWAS-EFO-Mappings201302.xlsx">GWAS to EFO mappings, XLSX</a> [ ~164 KB]</li>
         </ul>
     </div>
 </div>
@@ -551,9 +552,8 @@
                 scroll wheel on the mouse or touch pad on a laptop. Scrolling up zooms in and scrolling down zooms out.
                 This feature may not work with all touch pads. Alternatively, the left-hand side of the diagram features
                 a zoom bar which can be used to generate exactly the same effect, by dragging the little square up or
-                down the bar with the mouse pointer. The diagram currently zooms from the top left corner, so even if
-                you zoom using a mouse scroll wheel, you may have to move the diagram to get to the desired area. The zoom bar
-                occasionally appears in the wrong place. This is a known bug. Refreshing the browser window usually solves the problem.
+                down the bar with the mouse pointer. The zoom bar occasionally appears in the wrong place. This is a
+                known bug. Refreshing the browser window usually solves the problem.
             </li>
             <li><b>Move the diagram:</b> The diagram can be moved around the viewing area by clicking on any part of the
                 diagram with the left mouse button and, holding the mouse button down, dragging the diagram around the
@@ -570,7 +570,8 @@
             </li>
             <li><b>Display SNP information:</b> To view all the SNPs associated with any trait in a given location, simply
             click on the trait you are interested in. An interactive pop-up will display the SNPs for that trait, the p-value
-            for each SNP-trait association, the study in which the association was identified and the EFO term the
+            for each SNP-trait association, the study in which the association was identified, the trait assigned by the GWAS
+            catalog curators and the EFO term the
             SNP-trait association is mapped to. The SNP, EFO term and study fields are interactive, linking out to Ensembl,
             EFO and UKPMC, respectively. There is also a link to the entry for this SNP in the GWAS catalog.
             The pop-up can be moved around the screen. Clicking on another trait automatically
@@ -586,11 +587,12 @@
                         names, e.g. a search for "hair color" will highlight SNP-trait associations labelled hair color
                         as well as "black vs blond hair" and "red vs non-red hair".
                     </li>
-                    <li>The text box has auto-complete functionality based on EFO. The auto-complete may take a moment
-                        to start loading. Only a limited number of terms can be displayed at a time, so if your term
-                        does not appear immediately, carry on typing. Due to the structure of the ontology, <b>the
-                        presence of a term in the auto-complete does not guarantee that there are any corresponding
-                        traits in the diagram!</b>
+                    <li>The text box has auto-complete functionality based on EFO and is powered by <a href="http://wwwdev.ebi.ac.uk/fgpt/zooma/index.html">Zooma</a>.
+                        Zooma annotations are drawn from a number of resources other than the GWAS catalog and it is currently not possible to limit searching
+                        to only one domain. Therefore <b>the presence of a term in the auto-complete does not guarantee that there are any corresponding
+                        traits in the diagram!</b> Look out for the annotation "gwas trait" next to the terms returned by the search box - this indicates a GWAS catalog
+                        mapping. Please note that all SNP-trait associations in the GWAS catalog are mapped but only those with p-value &#8804; 5.0 &#215; 10<sup>-8</sup> are
+                        displayed in the diagram, so some GWAS mappings may not be on the diagram.
                     </li>
                     <li>More advanced filtering capabilities, such as p-value and time, are under development, so
                         check back regularly for updates.
@@ -627,7 +629,7 @@
             </li>
             <li><b>Downloads:</b> All time series and trait-specific images are available for download as png files in the "Downloads" tab.
                 Various ontology files are also available, including Experimental Factor Ontology and the GWAS schema
-                ontology and knowledge base.
+                ontology and knowledge base. The page also includes a spreadsheet of all GWAS trait to EFO mappings in the catalog.
             </li>
         </ul>
         <br>
@@ -703,7 +705,7 @@
             specify in which web browser, including which version, and which operating system the problem occurred. This
             application is tested in all the latest versions of Mozilla Firefox, Google Chrome, Safari and Internet
             Explorer. If you find an older browser version which does not work, please let us know. In this event, <b><a
-                    href="images/timeseries/gwas-2012-12.png">click here for a static version of the diagram in PNG
+                    href="images/timeseries/gwas-latest.png">click here for a static version of the diagram in PNG
                 format</a></b>.</p>
     </div>
 </div>
@@ -724,7 +726,7 @@
             100,000 <a href="http://en.wikipedia.org/wiki/Single-nucleotide_polymorphism">SNPs</a> and all SNP-trait
             associations with p-values < 1.0 &#215; 10<sup>-5</sup> <i>(Hindorff et al., 2009)</i>. The catalogue can be
             searched by a number of options including journal, first author, trait, chromosomal region, gene, SNP, odds
-            ratio and p-value threshold. As of 20/08/12, it includes 1355 publications and 7226 SNPs. In addition to the
+            ratio and p-value threshold. As of 12/07/13, it includes 1657 publications and 10983 SNPs. In addition to the
             SNP-trait association data, the catalogue also publishes the iconic GWAS diagram of all SNP-trait
             associations, with p-values &#8804; 5.0 &#215; 10<sup>-8</sup>, mapped to the SNPs&rsquo;
             chromosomal locations. The diagram is released quarterly and the latest version of the diagram is made
@@ -748,10 +750,9 @@
             The diagram produced in this fashion can be filtered and searched at different levels of granularity and by
             different criteria, currently including trait (main diagram tab) and publication date (time series tab,
             currently availabe for a fixed set of time points only). It is possible to zoom in over chromosomes in order
-            to see all SNP-trait associations for a given region. SNP-trait associations are shortly going to be fully
-            interactive. Trait name information is already available on mouse-over and traits being clickable to allow
-            proceeding from an association to the catalogue entry and to the publication is currently under
-            development.</p>
+            to see all SNP-trait associations for a given region. SNP-trait associations are fully
+            interactive, with trait name information is available on mouse-over and traits being clickable to allow
+            proceeding from an association to the catalogue entry, to the publication as well as to Ensembl for further information.</p>
 
         <p>The diagram is generated in SVG (Scalable Vector Graphics) as a web application with a Java back-end using an
             Apache Tomcat server. The catalogue data is presented as a knowledge base, based on the GWAS Catalog schema
