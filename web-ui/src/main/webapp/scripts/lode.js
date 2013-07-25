@@ -324,8 +324,8 @@ function _buildSparqlPage(element) {
 
 
     section1.append(
-        $("<p></p>").append("<input type='button' class='ui-button ui-widget ui-corner-all' style='display: inline;'  onclick='submitQuery()' value='Submit Query' class='submit' />")
-                    .append("<input type='button' class='ui-button ui-widget ui-corner-all' style='display: inline;' onclick='reloadPage()' value='Reset' class='submit' />")
+        $("<p></p>").append("<input type='button' class='submit ui-button ui-widget ui-corner-all' style='display: inline;'  onclick='submitQuery()' value='Submit Query'/>")
+                    .append("<input type='button' class='submit ui-button ui-widget ui-corner-all' style='display: inline;' onclick='reloadPage()' value='Reset' />")
 
     );
 

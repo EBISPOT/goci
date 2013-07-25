@@ -1,8 +1,10 @@
 package uk.ac.ebi.fgpt.lode.service;
 
+import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QuerySolutionMap;
+import uk.ac.ebi.fgpt.lode.exception.LodeException;
 
 /**
  * @author Simon Jupp
@@ -15,22 +17,27 @@ import com.hp.hpl.jena.query.QuerySolutionMap;
 public interface JenaQueryExecutionService {
 
     /**
-     * Gte a Jena QueryExecution object
-     * @param serviceUri The SPARQL endpoint URI
+     * Get graph
+     */
+
+    Graph getDefaultGraph();
+
+    /**
+     * Get a Jena QueryExecution object
      * @param query The SPARQL query
      * @param withInference Use inference (note, this may make no difference on certain implementations)
      * @return A Jena QueryExecution object
      */
-    QueryExecution getQueryExecution(String serviceUri, Query query, boolean withInference);
+    QueryExecution getQueryExecution(Graph g, Query query, boolean withInference) throws LodeException;
 
     /**
      *
-     * @param serviceUri The SPARQL endpoint URI
      * @param query The SPARQL query
      * @param binding A Jena QuerySolutionMap containing any binding information for the SPARQL query
      * @param withInference Use inference (note, this may make no difference on certain implementations)
      * @return A Jena QueryExecution object
      * @return
      */
-    QueryExecution getQueryExecution(String serviceUri, String query, QuerySolutionMap binding, boolean withInference);
+    QueryExecution getQueryExecution(Graph g, String query, QuerySolutionMap binding, boolean withInference) throws LodeException;
+
 }

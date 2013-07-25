@@ -1,8 +1,13 @@
 package uk.ac.ebi.fgpt.lode.impl;
 
+import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.service.JenaQueryExecutionService;
+import virtuoso.jdbc3.VirtuosoDataSource;
 import virtuoso.jena.driver.VirtGraph;
 import virtuoso.jena.driver.VirtuosoQueryExecution;
 import virtuoso.jena.driver.VirtuosoQueryExecutionFactory;
@@ -14,6 +19,7 @@ import virtuoso.jena.driver.VirtuosoQueryExecutionFactory;
  */
 public class JenaVirtuosoExecutorService implements JenaQueryExecutionService {
 
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Value("${lode.explorer.virtuoso.user}")
     private String virtuosoUser;
@@ -26,6 +32,21 @@ public class JenaVirtuosoExecutorService implements JenaQueryExecutionService {
 
     @Value("${lode.explorer.virtuoso.allgraphs}")
     private boolean virtuosoAllGraphs;
+
+    public String getEndpointURL() {
+        return endpointURL;
+    }
+
+    public void close() {
+
+    }
+
+    public void setEndpointURL(String endpointURL) {
+        this.endpointURL = endpointURL;
+    }
+
+    @Value("${lode.sparqlendpoint.url}")
+    private String endpointURL;
 
     public String getVirtuosoUser() {
         return virtuosoUser;
@@ -51,8 +72,12 @@ public class JenaVirtuosoExecutorService implements JenaQueryExecutionService {
         this.virtuosoAllGraphs = virtuosoAllGraphs;
     }
 
-    public QueryExecution getQueryExecution(String serviceUri, Query query, boolean withInference) {
-        VirtGraph set = new VirtGraph(serviceUri, getVirtuosoUser() , getVirtuosoPassword());
+    public QueryExecution getQueryExecution(Graph g, Query query, boolean withInference) throws LodeException {
+        if (isNullOrEmpty(getEndpointURL())) {
+            log.error("No sparql endpoint");
+            throw new LodeException("You must specify a SPARQL endpoint URL");
+        }
+        VirtGraph set = new VirtGraph(getEndpointURL(), getVirtuosoUser() , getVirtuosoPassword());
         set.setReadFromAllGraphs(isVirtuosoAllGraphs());
         if (withInference) {
             set.setRuleSet(getVirtuosoInferenceRule());
@@ -60,8 +85,13 @@ public class JenaVirtuosoExecutorService implements JenaQueryExecutionService {
         return VirtuosoQueryExecutionFactory.create(query, set);
     }
 
-    public QueryExecution getQueryExecution(String serviceUri, String query, QuerySolutionMap initialBinding, boolean withInference) {
-        VirtGraph set = new VirtGraph(serviceUri, getVirtuosoUser() , getVirtuosoPassword());
+    public QueryExecution getQueryExecution(Graph g, String query, QuerySolutionMap initialBinding, boolean withInference) throws LodeException {
+        if (isNullOrEmpty(getEndpointURL())) {
+            log.error("No sparql endpoint");
+            throw new LodeException("You must specify a SPARQL endpoint URL");
+        }
+        new VirtuosoDataSource();
+        VirtGraph set = new VirtGraph(getEndpointURL(), getVirtuosoUser() , getVirtuosoPassword());
         set.setReadFromAllGraphs(isVirtuosoAllGraphs());
         if (withInference) {
             set.setRuleSet(getVirtuosoInferenceRule());
@@ -70,4 +100,16 @@ public class JenaVirtuosoExecutorService implements JenaQueryExecutionService {
         execution.setInitialBinding(initialBinding);
         return execution;
     }
+
+    public static boolean isNullOrEmpty(Object o) {
+        if (o == null) {
+            return true;
+        }
+        return "".equals(o);
+    }
+
+    public Graph getDefaultGraph() {
+        return new VirtGraph();
+    }
+
 }

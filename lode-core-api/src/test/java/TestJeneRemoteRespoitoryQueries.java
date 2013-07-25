@@ -51,21 +51,13 @@ public class TestJeneRemoteRespoitoryQueries extends TestCase {
 
 
         JenaSparqlService service = new JenaSparqlService();
-        service.setQueryExecutionService(new JenaHttpExecutorService());
+        service.setQueryExecutionService(new JenaHttpExecutorService(endpointURL));
         try {
             service.query(describe1, "", 0, -1, false, System.out);
         } catch (LodeException e) {
             assertEquals(e.getMessage(), "You must specify a SPARQL endpoint URL");
         }
 
-        service.setEndpointURL(endpointURL);
-//        try {
-//            service.query(describe1, "", 0, -1, System.out);
-//        } catch (LodeException e) {
-//            assertEquals("java.net.UnknownHostException: www.iubwqxiuqwiuqwx.com", e.getMessage());
-//        }
-
-        service.setEndpointURL(endpointURL);
         try {
             service.query(selectQuery1, "XML", false, System.out);
             service.query(selectQuery1, "JSON", false, System.out);

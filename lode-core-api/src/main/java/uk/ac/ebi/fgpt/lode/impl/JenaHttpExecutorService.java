@@ -1,7 +1,13 @@
 package uk.ac.ebi.fgpt.lode.impl;
 
+import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.*;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.service.JenaQueryExecutionService;
 import uk.ac.ebi.fgpt.lode.utils.ParameterizedSparqlString;
 
@@ -12,14 +18,55 @@ import uk.ac.ebi.fgpt.lode.utils.ParameterizedSparqlString;
  */
 public class JenaHttpExecutorService implements JenaQueryExecutionService {
 
-    public QueryExecution getQueryExecution(String serviceUri, Query q1, boolean withInerence) {
-        return new QueryEngineHTTP(serviceUri, q1);
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    public JenaHttpExecutorService() {
     }
 
-    public QueryExecution getQueryExecution(String serviceUri, String query, QuerySolutionMap initialBinding, boolean withInerence) {
+    public String getEndpointURL() {
+        return endpointURL;
+    }
 
+    public void setEndpointURL(String endpointURL) {
+        this.endpointURL = endpointURL;
+    }
+
+    @Value("${lode.sparqlendpoint.url}")
+    private String endpointURL;
+
+    public JenaHttpExecutorService(String sparqlEndpoint) {
+        this.endpointURL = sparqlEndpoint;
+    }
+
+    public QueryExecution getQueryExecution(Graph g, Query q1, boolean withInference) throws LodeException{
+        if (isNullOrEmpty(getEndpointURL())) {
+            log.error("No sparql endpoint");
+            throw new LodeException("You must specify a SPARQL endpoint URL");
+        }
+        return new QueryEngineHTTP(getEndpointURL(), q1);
+    }
+
+    public QueryExecution getQueryExecution(Graph g, String query, QuerySolutionMap initialBinding, boolean withInference)  throws LodeException{
+        if (isNullOrEmpty(getEndpointURL())) {
+            log.error("No sparql endpoint");
+            throw new LodeException("You must specify a SPARQL endpoint URL");
+        }
         ParameterizedSparqlString sparql = new ParameterizedSparqlString(query, initialBinding);
         System.out.println(sparql.asQuery());
-        return new QueryEngineHTTP(serviceUri, sparql.asQuery());
+        return new QueryEngineHTTP(getEndpointURL(), sparql.asQuery());
     }
+
+
+    public static boolean isNullOrEmpty(Object o) {
+        if (o == null) {
+            return true;
+        }
+        return "".equals(o);
+    }
+
+    public Graph getDefaultGraph() {
+        return null;
+
+    }
+
 }

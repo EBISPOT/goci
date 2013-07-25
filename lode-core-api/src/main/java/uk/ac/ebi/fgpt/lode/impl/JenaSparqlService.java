@@ -12,10 +12,12 @@
 
 package uk.ac.ebi.fgpt.lode.impl;
 
+import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.service.JenaQueryExecutionService;
 import uk.ac.ebi.fgpt.lode.service.SparqlService;
@@ -35,8 +37,7 @@ public class JenaSparqlService implements SparqlService {
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private String endpointURL;
-
+    @Value("${lode.sparql.query.maxlimit}")
     private int maxQueryLimit = -1;
 
     private SparqlServiceDescription sparqlServiceDescription;
@@ -57,22 +58,6 @@ public class JenaSparqlService implements SparqlService {
         this.maxQueryLimit = maxQueryLimit;
     }
 
-    public String getEndpointURL() {
-        return endpointURL;
-    }
-
-    public void setEndpointURL(String endpointURL) {
-        this.endpointURL = endpointURL;
-    }
-
-    public SparqlServiceDescription getSparqlServiceDescription() {
-        return sparqlServiceDescription;
-    }
-
-    public void setSparqlServiceDescription(SparqlServiceDescription sparqlServiceDescription) {
-        this.sparqlServiceDescription = sparqlServiceDescription;
-    }
-
     private JenaQueryExecutionService queryExecutionService;
 
     public JenaQueryExecutionService getQueryExecutionService() {
@@ -85,10 +70,6 @@ public class JenaSparqlService implements SparqlService {
 
     public void query(String query, String format, Integer offset, Integer limit, boolean inference, OutputStream output) throws LodeException {
 
-        if (isNullOrEmpty(getEndpointURL())) {
-            log.error("No sparql endpoint");
-            throw new LodeException("You must specify a SPARQL endpoint URL");
-        }
         try {
 
             Query q1 = QueryFactory.create(query, Syntax.syntaxARQ);
@@ -151,17 +132,27 @@ public class JenaSparqlService implements SparqlService {
                 "?s ?p ?o \n" +
                 "}";
         Query q1 = QueryFactory.create(q);
-        QueryExecution endpoint = getQueryExecutionService().getQueryExecution(getEndpointURL(), q1, false);
-        Model m = endpoint.execConstruct();
+        QueryExecution endpoint = null;
+        Graph g = getQueryExecutionService().getDefaultGraph();
+        try {
+            endpoint = getQueryExecutionService().getQueryExecution(g, q1, false);
+            Model m = endpoint.execConstruct();
 
-        if (!m.listStatements().hasNext()) {
-//            Model model = ModelFactory.createDefaultModel();
+            if (!m.listStatements().hasNext()) {
+                //            Model model = ModelFactory.createDefaultModel();
 
+            }
+            else {
+                m.write(outputStream, format);
+            }
+            endpoint.close();
+            if (g!=null) {
+                g.close();
+            }
+        } catch (LodeException e) {
+            log.error(e.getMessage(), e);
         }
-        else {
-            m.write(outputStream, format);
-        }
-        endpoint.close();
+
     }
 
     public QueryType getQueryType(String query) {
@@ -183,9 +174,11 @@ public class JenaSparqlService implements SparqlService {
         long startTime = System.currentTimeMillis();
         log.info("preparing to execute describe query: " + startTime+ "\n" + q1.serialize());
 
-        QueryExecution endpoint = getQueryExecutionService().getQueryExecution(getEndpointURL(), q1, false);
+        QueryExecution endpoint = null;
+        Graph g = getQueryExecutionService().getDefaultGraph();
 
         try {
+            endpoint = getQueryExecutionService().getQueryExecution(g, q1, false);
             Model model = endpoint.execConstruct();
 
             long endTime = System.currentTimeMillis();
@@ -193,12 +186,18 @@ public class JenaSparqlService implements SparqlService {
             log.info("describe query" +  startTime+ " finished in :" + elapsedTime  + " milliseconds");
 
             model.write(output, format);
+            model.close();
 
         }  catch (Exception e) {
             log.error("Error retrieving results for " + q1, e);
         }
         finally {
-            endpoint.close();
+            if (endpoint !=  null)  {
+                endpoint.close();
+                if (g!=null) {
+                    g.close();
+                }
+            }
         }
 
     }
@@ -208,16 +207,23 @@ public class JenaSparqlService implements SparqlService {
 
         // check the limit is not greater that the max
         if (getMaxQueryLimit() > -1) {
-            if (q1.hasLimit()) {
-                log.trace("query has limit of: " + q1.getLimit());
-                if (q1.getLimit() > getMaxQueryLimit()) {
-                    q1.setLimit(getMaxQueryLimit());
-                }
-            }
-            else if (limit != null) {
-                if (limit < getMaxQueryLimit()) {
-                    q1.setLimit(limit);
-                }
+         if (limit != null) {
+             if (limit < getMaxQueryLimit()) {
+                 q1.setLimit(limit);
+             }
+             else {
+                 q1.setLimit(getMaxQueryLimit());
+             }
+         }
+         else if (q1.hasLimit()) {
+             if (q1.getLimit() > getMaxQueryLimit()) {
+                 q1.setLimit(getMaxQueryLimit());
+             }
+         }
+        }
+        else {
+            if (limit!= null) {
+                q1.setLimit(limit);
             }
         }
 
@@ -230,8 +236,11 @@ public class JenaSparqlService implements SparqlService {
         long startTime = System.currentTimeMillis();
         log.info("preparing to execute tuple query: " + startTime + "\n" + q1.serialize());
 
-        QueryExecution endpoint = getQueryExecutionService().getQueryExecution(getEndpointURL(), q1, inference);
+        QueryExecution endpoint = null;
+        Graph g = getQueryExecutionService().getDefaultGraph();
         try {
+
+            endpoint = getQueryExecutionService().getQueryExecution(g, q1, inference);
             ResultSet results = endpoint.execSelect();
             long endTime = System.currentTimeMillis();
             long elapsedTime = endTime - startTime;
@@ -247,7 +256,10 @@ public class JenaSparqlService implements SparqlService {
             log.error("Error retrieving results for " + q1, e);
         }
         finally {
-            endpoint.close();
+            if (endpoint !=  null)  {
+                endpoint.close();
+                g.close();
+            }
         }
 
     }
@@ -258,20 +270,29 @@ public class JenaSparqlService implements SparqlService {
         long startTime = System.currentTimeMillis();
         log.info("preparing to execute describe query: " + startTime+ "\n" + q1.serialize());
 
-        QueryExecution endpoint = getQueryExecutionService().getQueryExecution(getEndpointURL(), q1, false);
+        QueryExecution endpoint = null;
+        Graph g = getQueryExecutionService().getDefaultGraph();
+
         try {
+            endpoint = getQueryExecutionService().getQueryExecution(g, q1, false);
             Model model = endpoint.execDescribe();
 
             long endTime = System.currentTimeMillis();
             long elapsedTime = endTime - startTime;
-            log.info("describe query" +  startTime+ " finished in :" + elapsedTime  + " milliseconds");
+            log.info("describe query" + startTime + " finished in :" + elapsedTime + " milliseconds");
             model.write(output, format);
+            model.close();
 
         } catch (Exception e) {
             log.error("Error retrieving results for " + q1, e);
         }
         finally {
-            endpoint.close();
+            if (endpoint !=  null)  {
+                endpoint.close();
+                if (g!=null) {
+                    g.close();
+                }
+            }
         }
     }
 
@@ -281,12 +302,14 @@ public class JenaSparqlService implements SparqlService {
         long startTime = System.currentTimeMillis();
         log.info("preparing to execute ASK query: " + startTime+ "\n" + q1.serialize());
 
-        QueryExecution endpoint = getQueryExecutionService().getQueryExecution(getEndpointURL(), q1, false);
+        QueryExecution endpoint = null;
+        Graph g = getQueryExecutionService().getDefaultGraph();
 
         try {
+            endpoint = getQueryExecutionService().getQueryExecution(g, q1, false);
             boolean value = endpoint.execAsk();
 
-                long endTime = System.currentTimeMillis();
+            long endTime = System.currentTimeMillis();
             long elapsedTime = endTime - startTime;
             log.info("ASK query" +  startTime+ " finished in :" + elapsedTime  + " milliseconds");
             if (format.equals(TupleQueryFormats.JSON.toString())) {
@@ -299,7 +322,12 @@ public class JenaSparqlService implements SparqlService {
             log.error("Error retrieving results for " + q1, e);
         }
         finally {
-            endpoint.close();
+            if (endpoint !=  null)  {
+                endpoint.close();
+                if (g!=null) {
+                    g.close();
+                }
+            }
         }
     }
 

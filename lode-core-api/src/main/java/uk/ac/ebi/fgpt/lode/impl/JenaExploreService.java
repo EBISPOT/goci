@@ -1,5 +1,6 @@
 package uk.ac.ebi.fgpt.lode.impl;
 
+import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.rdf.model.impl.ResourceImpl;
@@ -31,9 +32,6 @@ public class JenaExploreService implements ExploreService {
     private static URI label = URI.create("http://www.w3.org/2000/01/rdf-schema#label");
     private static URI type = URI.create("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
     private static URI description = URI.create("http://purl.org/dc/elements/1.1/description");
-
-    @Value("${lode.sparqlendpoint.url}")
-    private String endpointURL;
 
     @Value("${lode.explorer.max.objects}")
     private int sampleLimit = -1;
@@ -67,20 +65,9 @@ public class JenaExploreService implements ExploreService {
         this.queryReader = queryReader;
     }
 
-    public String getEndpointURL() {
-        return endpointURL;
-    }
-
-    public void setEndpointURL(String endpointURL) {
-        this.endpointURL = endpointURL;
-    }
-
     public Collection<RelatedResourceDescription> getRelatedResourceByProperty(URI resourceUri, Set<URI> propertyUris, Set<URI> excludeTypes, boolean ignoreBnodes) throws LodeException {
 
-        if (isNullOrEmpty(getEndpointURL())) {
-            log.error("No sparql endpoint");
-            throw new LodeException("You must specify a SPARQL endpoint URL");
-        }
+
         String query = getQueryReader().getSparqlQuery("PREFIX") + "\n\n" + getQueryReader().getSparqlQuery("RELATEDTO.PROPERTIES.QUERY");
         return getRelatedResourceByProperty(resourceUri, query, propertyUris, excludeTypes, ignoreBnodes, false);
     }
@@ -88,11 +75,6 @@ public class JenaExploreService implements ExploreService {
 
 
     public Collection<RelatedResourceDescription> getRelatedToObjects(URI resourceUri, Set<URI> excludePropertyUris, Set<URI> excludeTypes, boolean ignoreBnodes) throws LodeException {
-
-        if (isNullOrEmpty(getEndpointURL())) {
-            log.error("No sparql endpoint");
-            throw new LodeException("You must specify a SPARQL endpoint URL");
-        }
 
         Set<URI> allRelatedProps = new HashSet<URI>();
         for (String uri : getRelatedProperties(resourceUri, "subject")) {
@@ -107,11 +89,6 @@ public class JenaExploreService implements ExploreService {
 
     public Collection<RelatedResourceDescription> getRelatedFromSubjects(URI resourceUri, Set<URI> excludePropertyUris, Set<URI> excludeTypes, boolean ignoreBnodes) throws LodeException {
 
-        if (isNullOrEmpty(getEndpointURL())) {
-            log.error("No sparql endpoint");
-            throw new LodeException("You must specify a SPARQL endpoint URL");
-        }
-
         Set<URI> allRelatedProps = new HashSet<URI>();
         for (String uri : getRelatedProperties(resourceUri, "object")) {
             if (!excludePropertyUris.contains(URI.create(uri))) {
@@ -123,10 +100,6 @@ public class JenaExploreService implements ExploreService {
     }
 
     public Collection<RelatedResourceDescription> getTypes(URI resourceUri, Set<URI> excludeTypes, boolean ignoreBnodes) throws LodeException {
-        if (isNullOrEmpty(getEndpointURL())) {
-            log.error("No sparql endpoint");
-            throw new LodeException("You must specify a SPARQL endpoint URL");
-        }
 
         String query = getQueryReader().getSparqlQuery("PREFIX") + "\n\n" + getQueryReader().getSparqlQuery("RELATEDTO.PROPERTIES.QUERY");
         Collection<RelatedResourceDescription> res = getRelatedResourceByProperty(resourceUri, query, Collections.singleton(type), excludeTypes, ignoreBnodes, false);
@@ -143,17 +116,15 @@ public class JenaExploreService implements ExploreService {
     }
 
     public Collection<RelatedResourceDescription> getAllTypes(URI resourceUri, Set<URI> excludeTypes, boolean ignoreBnodes) throws LodeException {
-        if (isNullOrEmpty(getEndpointURL())) {
-            log.error("No sparql endpoint");
-            throw new LodeException("You must specify a SPARQL endpoint URL");
-        }
 
         String query = getQueryReader().getSparqlQuery("PREFIX") + "\n\n" + getQueryReader().getSparqlQuery("ALLTYPES.QUERY");
 
         QuerySolutionMap initialBinding = new QuerySolutionMap();
 
         initialBinding.add("bound", new ResourceImpl(resourceUri.toString()));
-        QueryExecution endpoint = getQueryExecutionService().getQueryExecution(getEndpointURL(), query, initialBinding, true);
+        Graph g = getQueryExecutionService().getDefaultGraph();
+
+        QueryExecution endpoint = getQueryExecutionService().getQueryExecution(g, query, initialBinding, true);
 
         RelatedResourceDescription resources = new RelatedResourceDescription();
         try {
@@ -182,16 +153,14 @@ public class JenaExploreService implements ExploreService {
         }
         finally {
             endpoint.close();
+            if (g != null ) {
+                g.close();
+            }
         }
         return Collections.singleton(resources);
     }
 
     public ShortResourceDescription getShortResourceDescription(URI resourceUri, Set<URI> labelUris, Set<URI> descriptionUris) throws LodeException {
-        if (isNullOrEmpty(getEndpointURL())) {
-            log.error("No sparql endpoint");
-            throw new LodeException("You must specify a SPARQL endpoint URL");
-        }
-
         // try and get a label
         String label = null;
         String description = null;
@@ -217,14 +186,6 @@ public class JenaExploreService implements ExploreService {
             }
         }
 
-        for (String res : getDatasetResource(resourceUri)) {
-            if (dataset == null) {
-                if (!isNullOrEmpty(res)) {
-                    dataset = res;
-                }
-            }
-        }
-
         if (label == null) {
             label = getShortForm(resourceUri);
         }
@@ -241,10 +202,13 @@ public class JenaExploreService implements ExploreService {
 
         initialBinding.add("subject", new ResourceImpl(subject.toString()));
         initialBinding.add("depict", new ResourceImpl(depictRelation.toString()));
-        QueryExecution endpoint = getQueryExecutionService().getQueryExecution(getEndpointURL(), query, initialBinding, false);
+        QueryExecution endpoint = null;
         Set<String> uris = new HashSet<String>();
+        Graph g = getQueryExecutionService().getDefaultGraph();
 
         try {
+            endpoint = getQueryExecutionService().getQueryExecution(g, query, initialBinding, false);
+
             ResultSet results = endpoint.execSelect();
 
             while (results.hasNext()) {
@@ -259,38 +223,16 @@ public class JenaExploreService implements ExploreService {
             log.error("Error retrieving results for " + query, e);
         }
         finally {
-            endpoint.close();
-        }
-        return uris;
-    }
-
-    private Set<String> getDatasetResource (URI subject) {
-        String query = getQueryReader().getSparqlQuery("PREFIX") + "\n\n" + getQueryReader().getSparqlQuery("DATASET.QUERY");
-        QuerySolutionMap initialBinding = new QuerySolutionMap();
-
-        initialBinding.add("subject", new ResourceImpl(subject.toString()));
-        QueryExecution endpoint = getQueryExecutionService().getQueryExecution(getEndpointURL(), query, initialBinding, false);
-        Set<String> uris = new HashSet<String>();
-
-        try {
-            ResultSet results = endpoint.execSelect();
-
-            while (results.hasNext()) {
-                QuerySolution solution = (QuerySolution) results.next();
-
-                Resource propertyNode = solution.getResource("dataset");
-                if (propertyNode != null) {
-                    uris.add(propertyNode.getURI());
+            if (endpoint !=  null)  {
+                endpoint.close();
+                if (g != null ) {
+                    g.close();
                 }
             }
-        } catch (Exception e) {
-            log.error("Error retrieving results for " + query, e);
-        }
-        finally {
-            endpoint.close();
         }
         return uris;
     }
+
 
     private Set<String> getRelatedObjects (URI subject, URI property, boolean inference) {
 
@@ -300,10 +242,12 @@ public class JenaExploreService implements ExploreService {
 
         initialBinding.add("subject", new ResourceImpl(subject.toString()));
         initialBinding.add("property", new ResourceImpl(property.toString()));
-
-        QueryExecution endpoint = getQueryExecutionService().getQueryExecution(getEndpointURL(), query, initialBinding, inference);
+        QueryExecution endpoint = null;
         Set<String> uris = new HashSet<String>();
+        Graph g = getQueryExecutionService().getDefaultGraph();
+
         try {
+            endpoint = getQueryExecutionService().getQueryExecution(g, query, initialBinding, inference);
             ResultSet results = endpoint.execSelect();
             while (results.hasNext()) {
                 QuerySolution solution = (QuerySolution) results.next();
@@ -320,7 +264,13 @@ public class JenaExploreService implements ExploreService {
             log.error("Error retrieving results for " + query, e);
         }
         finally {
-            endpoint.close();
+            if (endpoint !=  null)  {
+                endpoint.close();
+                if (g != null ) {
+                    g.close();
+                }
+
+            }
         }
         return uris;
     }
@@ -332,11 +282,13 @@ public class JenaExploreService implements ExploreService {
         QuerySolutionMap initialBinding = new QuerySolutionMap();
 
         initialBinding.add(binding, new ResourceImpl(resource.toString()));
-
-        QueryExecution endpoint = getQueryExecutionService().getQueryExecution(getEndpointURL(), query, initialBinding, false);
+        QueryExecution endpoint = null;
         Set<String> uris = new HashSet<String>();
+        Graph g = getQueryExecutionService().getDefaultGraph();
 
         try {
+            endpoint =  getQueryExecutionService().getQueryExecution(g, query, initialBinding, false);
+
             ResultSet results = endpoint.execSelect();
 
             while (results.hasNext()) {
@@ -352,9 +304,13 @@ public class JenaExploreService implements ExploreService {
             log.error("Error retrieving results for " + query, e);
         }
         finally {
-            endpoint.close();
+            if (endpoint !=  null)  {
+                endpoint.close();
+                if (g != null ) {
+                    g.close();
+                }
+            }
         }
-        endpoint.close();
         return uris;
     }
 
@@ -367,11 +323,13 @@ public class JenaExploreService implements ExploreService {
 
         //        for (URI prop : propertyUris) {
         QuerySolutionMap initialBinding = new QuerySolutionMap();
+        QueryExecution endpoint = null;
+        Graph g = getQueryExecutionService().getDefaultGraph();
 
         initialBinding.add("bound", new ResourceImpl(resourceUri.toString()));
         //            initialBinding.add("property", new ResourceImpl(prop.toString()));
-        QueryExecution endpoint = getQueryExecutionService().getQueryExecution(getEndpointURL(), query, initialBinding, withInference);
         try {
+            endpoint = getQueryExecutionService().getQueryExecution(g, query, initialBinding, withInference);
 
             ResultSet results = endpoint.execSelect();
 
@@ -493,6 +451,9 @@ public class JenaExploreService implements ExploreService {
         }
         finally {
             endpoint.close();
+            if (g != null ) {
+                g.close();
+            }
         }
 
 //        }

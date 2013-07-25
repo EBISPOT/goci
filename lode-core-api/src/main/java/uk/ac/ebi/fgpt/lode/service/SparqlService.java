@@ -16,18 +16,6 @@ import java.io.OutputStream;
 public interface SparqlService {
 
     /**
-     * Set the underlying SPARQL endpoint URL
-     * @param endpointURL SPARQL endpoint URL
-     */
-    void setEndpointURL(String endpointURL);
-
-    /**
-     * Get the underlying SPARQL endpoint URL
-     * @return SPARQL endpoint URL
-     */
-    String getEndpointURL();
-
-    /**
      * Set the max number of results returned by the SPARQL service
      * @param limit max number of results returned
      */

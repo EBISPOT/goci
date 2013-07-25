@@ -207,6 +207,7 @@ public class SparqlServlet {
             return;
         }
 
+        log.info("Processing raw query:\n" + query + "\nEnd of query.");
         // if no format, try and work out the query type
         String outputFormat = format;
         if (outputFormat == null) {
