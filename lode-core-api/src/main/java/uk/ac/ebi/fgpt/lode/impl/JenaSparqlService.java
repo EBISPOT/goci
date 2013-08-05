@@ -222,7 +222,7 @@ public class JenaSparqlService implements SparqlService {
          }
         }
         else {
-            if (limit!= null) {
+            if (limit!= null &&limit >-1) {
                 q1.setLimit(limit);
             }
         }
@@ -258,7 +258,9 @@ public class JenaSparqlService implements SparqlService {
         finally {
             if (endpoint !=  null)  {
                 endpoint.close();
-                g.close();
+                if (g!=null) {
+                    g.close();
+                }
             }
         }
 
