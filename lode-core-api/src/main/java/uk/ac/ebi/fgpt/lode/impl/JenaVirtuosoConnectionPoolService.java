@@ -14,24 +14,13 @@ package uk.ac.ebi.fgpt.lode.impl;
 
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QuerySolutionMap;
 import org.springframework.beans.factory.annotation.Value;
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.service.JenaQueryExecutionService;
-import virtuoso.jdbc3.VirtuosoConnectionPoolDataSource;
-import virtuoso.jdbc3.VirtuosoDataSource;
 import virtuoso.jena.driver.VirtGraph;
-import virtuoso.jena.driver.VirtModel;
 import virtuoso.jena.driver.VirtuosoQueryExecution;
-import virtuoso.jena.driver.VirtuosoQueryExecutionFactory;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.sql.ConnectionPoolDataSource;
-import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 /**

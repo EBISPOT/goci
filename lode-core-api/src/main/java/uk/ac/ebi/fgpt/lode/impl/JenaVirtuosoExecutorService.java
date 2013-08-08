@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.service.JenaQueryExecutionService;
-import virtuoso.jdbc3.VirtuosoDataSource;
 import virtuoso.jena.driver.VirtGraph;
 import virtuoso.jena.driver.VirtuosoQueryExecution;
 import virtuoso.jena.driver.VirtuosoQueryExecutionFactory;
@@ -90,7 +89,6 @@ public class JenaVirtuosoExecutorService implements JenaQueryExecutionService {
             log.error("No sparql endpoint");
             throw new LodeException("You must specify a SPARQL endpoint URL");
         }
-        new VirtuosoDataSource();
         VirtGraph set = new VirtGraph(getEndpointURL(), getVirtuosoUser() , getVirtuosoPassword());
         set.setReadFromAllGraphs(isVirtuosoAllGraphs());
         if (withInference) {
@@ -109,7 +107,7 @@ public class JenaVirtuosoExecutorService implements JenaQueryExecutionService {
     }
 
     public Graph getDefaultGraph() {
-        return new VirtGraph();
+        return new VirtGraph(getEndpointURL(), getVirtuosoUser() , getVirtuosoPassword());
     }
 
 }

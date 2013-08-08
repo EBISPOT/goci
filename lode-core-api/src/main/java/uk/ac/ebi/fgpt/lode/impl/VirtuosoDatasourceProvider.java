@@ -14,19 +14,15 @@ package uk.ac.ebi.fgpt.lode.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import uk.ac.ebi.fgpt.lode.utils.DatasourceProvider;
-import virtuoso.jdbc3.VirtuosoConnectionPoolDataSource;
-import virtuoso.jdbc3.VirtuosoDataSource;
-import virtuoso.jdbc3.VirtuosoPooledConnection;
+import virtuoso.jdbc4.VirtuosoConnectionPoolDataSource;
+
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
 /**
