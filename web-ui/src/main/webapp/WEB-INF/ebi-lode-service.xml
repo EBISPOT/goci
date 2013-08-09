@@ -18,30 +18,30 @@
         <property name="service" ref="explorerServiceImpl"/>
     </bean>
 
-    <bean id="virtuosoDataSourceProvider" class="uk.ac.ebi.fgpt.lode.impl.VirtuosoDatasourceProvider">
-        <constructor-arg name="endpointUrl" value="${lode.sparqlendpoint.url}"/>
-        <constructor-arg name="port" value="${lode.sparqlendpoint.port}"/>
-    </bean>
+    <!--<bean id="virtuosoDataSourceProvider" class="uk.ac.ebi.fgpt.lode.impl.VirtuosoDatasourceProvider">-->
+        <!--<constructor-arg name="endpointUrl" value="${lode.sparqlendpoint.url}"/>-->
+        <!--<constructor-arg name="port" value="${lode.sparqlendpoint.port}"/>-->
+    <!--</bean>-->
 
-    <bean id="jenaVirtuosoConnectionPoolService" class="uk.ac.ebi.fgpt.lode.impl.JenaVirtuosoConnectionPoolService">
-        <constructor-arg ref="virtuosoDataSourceProvider"/>
-    </bean>
+    <!--<bean id="jenaVirtuosoConnectionPoolService" class="uk.ac.ebi.fgpt.lode.impl.JenaVirtuosoConnectionPoolService">-->
+        <!--<constructor-arg ref="virtuosoDataSourceProvider"/>-->
+    <!--</bean>-->
 
 
     <!--<bean id="jenaVirtuosoExecutorService" class="uk.ac.ebi.fgpt.lode.impl.JenaVirtuosoExecutorService">-->
     <!--</bean>-->
 
-    <!--<bean id="jenaHttpExecutorService" class="uk.ac.ebi.fgpt.lode.impl.JenaHttpExecutorService">-->
-    <!--</bean>-->
+    <bean id="jenaHttpExecutorService" class="uk.ac.ebi.fgpt.lode.impl.JenaHttpExecutorService">
+    </bean>
 
     <bean id="jenaSparqlService" class="uk.ac.ebi.fgpt.lode.impl.JenaSparqlService">
         <property name="maxQueryLimit" value="${lode.sparql.query.maxlimit}"/>
-        <property name="queryExecutionService" ref="jenaVirtuosoConnectionPoolService"/>
+        <property name="queryExecutionService" ref="jenaHttpExecutorService"/>
     </bean>
 
     <bean name="explorerServiceImpl" class="uk.ac.ebi.fgpt.lode.impl.JenaExploreService">
         <property name="queryReader" ref="queryReader"/>
-        <property name="queryExecutionService" ref="jenaVirtuosoConnectionPoolService"/>
+        <property name="queryExecutionService" ref="jenaHttpExecutorService"/>
     </bean>
 
     <bean id="sparqlServlet" class="uk.ac.ebi.fgpt.lode.servlet.SparqlServlet">
