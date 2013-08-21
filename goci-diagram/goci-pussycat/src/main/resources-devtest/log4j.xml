@@ -18,7 +18,7 @@
 
     <appender name="diagram-log" class="org.apache.log4j.DailyRollingFileAppender">
         <param name="DatePattern" value="'.'yyyy-MM-dd" />
-        <param name="File" value="${catalina.base}/logs/goci-diagram-content.log" />
+        <param name="File" value="${catalina.base}/logs/diagram-content.log" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%m%n" />
         </layout>
