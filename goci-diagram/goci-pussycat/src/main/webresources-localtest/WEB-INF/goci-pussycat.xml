@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:ehcache="http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring
-       http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.2.xsd
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd">
 
     <context:property-placeholder />
-
-    <ehcache:annotation-driven />
-
-    <ehcache:config cache-manager="cacheManager" />
-
-    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" />
 
     <!-- configuration: sets up ontology manager and data factory given mappings to the set resources -->
     <bean name="config" class="uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration" init-method="init">
