@@ -292,6 +292,8 @@ function _buildSparqlPage(element) {
                 .append('<option value="HTML">HTML</option>')
                 .append('<option value="XML">XML</option>')
                 .append('<option value="JSON">JSON</option>')
+                .append('<option value="CSV">CSV</option>')
+                .append('<option value="TSV">TSV</option>')
                 .append('<option value="RDF/XML">RDF/XML</option>')
                 .append('<option value="N3">RDF/N3</option>')
         )
@@ -473,8 +475,14 @@ function querySparql () {
             else if (rendering.match(/JSON/)) {
                 location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=JSON&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
             }
+            else if (rendering.match(/CSV/)) {
+                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=CSV&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
+            }
+            else if (rendering.match(/TSV/)) {
+                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=TSV&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
+            }
             else  {
-                displayError("You can only render SELECT queries in either HTML, XML or JSON format")
+                displayError("You can only render SELECT queries in either HTML, XML, CSV, TSV or JSON format")
                 return;
             }
         }

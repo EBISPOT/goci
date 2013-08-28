@@ -9,6 +9,8 @@ public enum TupleQueryFormats{
 
 
     XML ("XML"),
+    CSV ("CSV"),
+    TSV ("TSV"),
     JSON ("JSON");
 
 

@@ -207,19 +207,19 @@ public class JenaSparqlService implements SparqlService {
 
         // check the limit is not greater that the max
         if (getMaxQueryLimit() > -1) {
-         if (limit != null) {
-             if (limit < getMaxQueryLimit()) {
-                 q1.setLimit(limit);
-             }
-             else {
-                 q1.setLimit(getMaxQueryLimit());
-             }
-         }
-         else if (q1.hasLimit()) {
-             if (q1.getLimit() > getMaxQueryLimit()) {
-                 q1.setLimit(getMaxQueryLimit());
-             }
-         }
+            if (limit != null) {
+                if (limit < getMaxQueryLimit()) {
+                    q1.setLimit(limit);
+                }
+                else {
+                    q1.setLimit(getMaxQueryLimit());
+                }
+            }
+            else if (q1.hasLimit()) {
+                if (q1.getLimit() > getMaxQueryLimit()) {
+                    q1.setLimit(getMaxQueryLimit());
+                }
+            }
         }
         else {
             if (limit!= null &&limit >-1) {
@@ -248,6 +248,12 @@ public class JenaSparqlService implements SparqlService {
 
             if (format.equals(TupleQueryFormats.JSON.toString())) {
                 ResultSetFormatter.outputAsJSON(output, results);
+            }
+            else if (format.equals(TupleQueryFormats.CSV.toString())) {
+                ResultSetFormatter.outputAsCSV(output, results);
+            }
+            else if (format.equals(TupleQueryFormats.TSV.toString())) {
+                ResultSetFormatter.outputAsTSV(output, results);
             }
             else {
                 ResultSetFormatter.outputAsXML(output, results);

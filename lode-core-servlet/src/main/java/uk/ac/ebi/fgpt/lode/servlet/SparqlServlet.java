@@ -77,6 +77,34 @@ public class SparqlServlet {
         query(query, "JSON", offset, limit, inference, response);
     }
 
+    @RequestMapping (produces="text/csv")
+    public @ResponseBody
+    void getSparqlCsv(
+            @RequestParam(value = "query", required = false) String query,
+            @RequestParam(value = "offset", required = false) Integer offset,
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "inference", required = false) boolean inference,
+
+            HttpServletResponse response) throws QueryParseException, LodeException, IOException {
+        log.trace("querying for sparql csv");
+        response.setContentType("text/csv");
+        query(query, "CSV", offset, limit, inference, response);
+    }
+
+    @RequestMapping (produces="text/tab-separated-values")
+    public @ResponseBody
+    void getSparqlTsv(
+            @RequestParam(value = "query", required = false) String query,
+            @RequestParam(value = "offset", required = false) Integer offset,
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "inference", required = false) boolean inference,
+
+            HttpServletResponse response) throws QueryParseException, LodeException, IOException {
+        log.trace("querying for sparql tsv");
+        response.setContentType("text/tab-separated-values");
+        query(query, "TSV", offset, limit, inference, response);
+    }
+
     @RequestMapping (produces="application/rdf+xml")
     public @ResponseBody
     void getGraphXML(

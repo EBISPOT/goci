@@ -66,6 +66,12 @@
         <to>/servlet/query$1</to>
     </rule>
 
+    <rule>
+        <condition name="Accept" type="header">text/*</condition>
+        <from>/sparql(.*)$</from>
+        <to>/servlet/query$1</to>
+    </rule>
+
     <!-- explore service rewriting -->
     <rule>
         <condition name="Accept" type="header" operator="notequal">text/html</condition>
