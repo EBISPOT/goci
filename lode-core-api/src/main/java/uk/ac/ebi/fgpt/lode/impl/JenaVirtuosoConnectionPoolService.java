@@ -14,6 +14,7 @@ package uk.ac.ebi.fgpt.lode.impl;
 
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolutionMap;
 import org.springframework.beans.factory.annotation.Value;
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
@@ -66,7 +67,10 @@ public class JenaVirtuosoConnectionPoolService implements JenaQueryExecutionServ
         ConnectionPoolDataSource source = null;
         try {
             source = datasourceProvider.getVirtuosoDataSource();
-            return new virtuoso.jena.driver.VirtGraph(source);
+            VirtGraph g = new virtuoso.jena.driver.VirtGraph(source);
+            g.setReadFromAllGraphs(true);
+
+            return g;
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -79,9 +83,18 @@ public class JenaVirtuosoConnectionPoolService implements JenaQueryExecutionServ
         if (g instanceof VirtGraph) {
             virtuoso.jena.driver.VirtGraph set = (VirtGraph) g;
 
+
             set.setReadFromAllGraphs(isVirtuosoAllGraphs());
             if (withInference) {
                 set.setRuleSet(getVirtuosoInferenceRule());
+            }
+
+            if (query.isDescribeType()) {
+                /** todo this is a hack to get virtusoso describe queries
+                 *  for concise bound description of given subject (i.e., SPO + CBD of each blank node object found by SPO, recursively);
+                 **/
+                String squery = "DEFINE sql:describe-mode \"CBD\"\n" + query.serialize();
+                return virtuoso.jena.driver.VirtuosoQueryExecutionFactory.create(squery, set);
             }
             return virtuoso.jena.driver.VirtuosoQueryExecutionFactory.create(query, set);
         }

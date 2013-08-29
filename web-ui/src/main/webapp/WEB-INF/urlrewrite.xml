@@ -50,7 +50,7 @@
         <condition name="Accept" type="header" next="or">text/html</condition>
         <condition name="user-agent">MSIE</condition>
         <from>/describe$</from>
-        <to>/explorer.html</to>
+        <to>/explore.html</to>
     </rule>
 
     <!-- sparql service rewriting -->

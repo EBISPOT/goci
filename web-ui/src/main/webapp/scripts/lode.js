@@ -326,8 +326,8 @@ function _buildSparqlPage(element) {
 
 
     section1.append(
-        $("<p></p>").append("<input type='button' class='submit ui-button ui-widget ui-corner-all' style='display: inline;'  onclick='submitQuery()' value='Submit Query'/>")
-                    .append("<input type='button' class='submit ui-button ui-widget ui-corner-all' style='display: inline;' onclick='reloadPage()' value='Reset' />")
+        $("<p></p>").append("<input type='button' class='submit ui-button ui-widget ui-corner-all' style='display: inline;'  onclick='submitQuery()' value='Submit Query' />&nbsp;")
+                    .append("<input type='button' class='submit  ui-button ui-widget ui-corner-all' style='display: inline;' onclick='reloadPage()' value='Reset' />")
 
     );
 
@@ -368,6 +368,8 @@ function initSparql() {
 }
 
 function submitQuery() {
+    // reset any offset
+    $('#offset').val(0);
     $('#lodestar-sparql-form').submit();
 }
 
@@ -962,19 +964,24 @@ function renderAllResourceTypes(element, exclude) {
                 var div = element;
                 var p = $("<p></p>");
 
-                for (var x = 0; x < data.length; x ++) {
-                    for (var z = 0; z <data[x].relatedObjects.length; z++) {
-                        var description = data[x].relatedObjects[z].description;
-                        var uri = data[x].relatedObjects[z].uri;
-                        var label = data[x].relatedObjects[z].label;
+                if (data.length == 0) {
+                    p.append($("No more type information available for this resource"));
+                }
+                else {
+                    for (var x = 0; x < data.length; x ++) {
+                        for (var z = 0; z <data[x].relatedObjects.length; z++) {
+                            var description = data[x].relatedObjects[z].description;
+                            var uri = data[x].relatedObjects[z].uri;
+                            var label = data[x].relatedObjects[z].label;
 
-                        if (!exclude[uri]) {
-                            p.append(_hrefBuilder(uri, label, true));
-                            if (description) {
-                                p.append(" : ");
-                                p.append(description)
+                            if (!exclude[uri]) {
+                                p.append(_hrefBuilder(uri, label, true));
+                                if (description) {
+                                    p.append(" : ");
+                                    p.append(description)
+                                }
+                                p.append($("<br/>"));
                             }
-                            p.append($("<br/>"));
                         }
                     }
                 }
