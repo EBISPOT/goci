@@ -4,15 +4,15 @@ Lodestar
 Release Notes
 =============
 
-1.0.2 29th August 2013	
-      * Updated to Jena 2.10
-      * VirtJena JDBC 4 (includes support for SPARQL bind queries). Requires virtuoso 6.1.7.2
-      * Added CSV and TSV sparql results export
-      * Fixed sparql results offset caching from previous query
-      * Fixed virtuoso describe query not returning all triples from all graphs
+**1.0.2** 29th August 2013	
+* Updated to Jena 2.10
+* VirtJena JDBC 4 (includes support for SPARQL bind queries). Requires virtuoso 6.1.7.2
+* Added CSV and TSV sparql results export
+* Fixed sparql results offset caching from previous query
+* Fixed virtuoso describe query not returning all triples from all graphs
 
-1.0.1 5th August 2013
-      * First release
+**1.0.1** 5th August 2013
+* First release
 
 About
 =====
