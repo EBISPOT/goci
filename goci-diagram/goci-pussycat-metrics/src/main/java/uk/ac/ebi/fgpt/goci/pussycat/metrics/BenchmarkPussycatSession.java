@@ -9,9 +9,10 @@ import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
-import uk.ac.ebi.fgpt.goci.pussycat.session.AbstractPussycatSession;
+import uk.ac.ebi.fgpt.goci.pussycat.session.AbstractSVGIOPussycatSession;
 import uk.ac.ebi.fgpt.goci.pussycat.session.ReasonerSession;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.ServiceLoader;
@@ -23,7 +24,7 @@ import java.util.ServiceLoader;
  * Time: 13:51
  * To change this template use File | Settings | File Templates.
  */
-public class BenchmarkPussycatSession extends AbstractPussycatSession {
+public class BenchmarkPussycatSession extends AbstractSVGIOPussycatSession {
     private Collection<Renderlet> renderlets;
 
     private ReasonerSession reasonerSession;
@@ -80,6 +81,12 @@ public class BenchmarkPussycatSession extends AbstractPussycatSession {
             long start, end;
             start = System.currentTimeMillis();
             String svg = renderletNexus.getSVG(classExpression);
+            try {
+                writeSVG("gwas-diagram.svg", svg);
+            }
+            catch (IOException e) {
+                getLog().debug("Failed to write out generated SVG: " + e.getMessage());
+            }
             end = System.currentTimeMillis();
             double time = ((double) (end - start)) / 1000;
             bm_log.info("Rendering for class expression " + classExpression + " complete in  " + time + " s.  ");

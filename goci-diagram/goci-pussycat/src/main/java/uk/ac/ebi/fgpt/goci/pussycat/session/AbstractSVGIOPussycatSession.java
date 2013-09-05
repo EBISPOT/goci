@@ -16,7 +16,7 @@ import java.util.Map;
  * @author Tony Burdett
  * @date 02/08/12
  */
-abstract class AbstractSVGIOPussycatSession extends AbstractPussycatSession {
+public abstract class AbstractSVGIOPussycatSession extends AbstractPussycatSession {
     private static final String ENCODING = "SHA-1";
 
     private File cacheDirectory;
