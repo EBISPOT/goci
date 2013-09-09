@@ -6,8 +6,8 @@
 
     <!-- configuration: sets up ontology manager and data factory given mappings to the set resources -->
     <bean name="config" class="uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration" init-method="init">
-        <property name="efoResource" value="http://bar.ebi.ac.uk:8080/trac/export/head/branches/curator/ExperimentalFactorOntology/ExFactorInOWL/releasecandidate/efo_release_candidate.owl" />
-        <property name="gwasDiagramSchemaResource" value="classpath:gwas-diagram-relaxed.owl"/>
+        <property name="efoResource" value="efo.owl" />
+        <property name="gwasDiagramSchemaResource" value="gwas-diagram-relaxed.owl"/>
     </bean>
 
     <!-- publisher: this does all the work and is the main API point of access -->
@@ -37,7 +37,7 @@
           class="uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession"
           init-method="init">
         <property name="configuration" ref="config" />
-        <property name="ontologyResource" value="classpath:gwas-diagram-data-2012-06.owl" />
+        <property name="ontologyResource" value="gwas-data-latest.owl" />
         <property name="publisher" ref="publisher" />
     </bean>
 
