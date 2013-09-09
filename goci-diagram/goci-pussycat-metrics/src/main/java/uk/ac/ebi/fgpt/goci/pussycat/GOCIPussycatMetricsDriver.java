@@ -22,6 +22,7 @@ import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession;
 import uk.ac.ebi.fgpt.goci.pussycat.session.ReasonerSession;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -156,6 +157,7 @@ public class GOCIPussycatMetricsDriver
         config = ctx.getBean("config", OntologyConfiguration.class);
         reasonerSession = ctx.getBean("reasonerSession", OntologyLoadingCacheableReasonerSession.class);
         pussycatSession = new BenchmarkPussycatSession();
+        pussycatSession.setCacheDirectory(new File("svg_cache"));
     }
 
     public void runBenchmark() throws PussycatSessionNotReadyException {
