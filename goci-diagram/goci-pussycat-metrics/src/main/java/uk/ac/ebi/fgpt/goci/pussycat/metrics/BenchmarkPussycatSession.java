@@ -82,7 +82,8 @@ public class BenchmarkPussycatSession extends AbstractSVGIOPussycatSession {
             start = System.currentTimeMillis();
             String svg = renderletNexus.getSVG(classExpression);
             try {
-                writeSVG("gwas-diagram.svg", svg);
+                String filename = generateFilename(classExpression.toString());
+                writeSVG(filename, svg);
             }
             catch (Exception e) {
                 getLog().debug("Failed to write out generated SVG: " + e.getMessage());
