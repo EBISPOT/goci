@@ -140,7 +140,7 @@ public class JenaExploreService implements ExploreService {
                 if (solution.contains("resourceLabel")) {
                     label = solution.getLiteral("resourceLabel").getLexicalForm();
                 }
-                if (solution.contains("resourceLabel")) {
+                if (solution.contains("resourceDescription")) {
                     desc = solution.getLiteral("resourceDescription").getLexicalForm();
                 }
                 resources.setPropertyUri(type.toString());

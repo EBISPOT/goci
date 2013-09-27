@@ -621,29 +621,59 @@ function renderSparqlResultJsonAsTable (json, tableid) {
     var _json = json;
     try {
         var _variables = _json.head.vars;
-        var _results = _json.results.bindings;
 
-        var header = createTableHeader(_variables);
+        if (_json.results) {
+            if (_json.results.bindings) {
+                var _results = _json.results.bindings;
 
-        $("#" + tableid).append(header);
+                if (_results.length ==0) {
+                    alert("No results for query")
+                }
+                else {
+                    var header = createTableHeader(_variables);
 
-        displayPagination();
+                    $("#" + tableid).append(header);
 
-        for (var i = 0; i < _results.length; i++) {
-            var row =$('<tr />');
-            var binding = _results[i];
-            for (var j = 0 ; j < _variables.length; j++) {
-                var varName = _variables[j];
-                var formattedNode = _formatNode(binding[varName], varName);
-                var cell = $('<td />');
-                cell.append (formattedNode);
-                row.append(cell);
+                    displayPagination();
+
+                    for (var i = 0; i < _results.length; i++) {
+                        var row =$('<tr />');
+                        var binding = _results[i];
+                        for (var j = 0 ; j < _variables.length; j++) {
+                            var varName = _variables[j];
+                            var formattedNode = _formatNode(binding[varName], varName);
+                            var cell = $('<td />');
+                            cell.append (formattedNode);
+                            row.append(cell);
+                        }
+                        $("#" + tableid).append(row);
+                    }
+                }
             }
+            else {
+                displayError("No result bindings");
+            }
+        }
+        else if (_json.boolean)  {
+            var header = createTableHeader(["boolean"]);
+            $("#" + tableid).append(header);
+            var row =$('<tr />');
+            var cell = $('<td />');
+            if (_json.boolean) {
+                cell.append ("True");
+            }
+            else {
+                cell.append ("False");
+            }
+            row.append(cell);
             $("#" + tableid).append(row);
         }
+        else {
+            alert("no results!")
+        }
+
     }
     catch (err) {
-
         displayError("Problem rendering results: "+ err.message);
     }
 

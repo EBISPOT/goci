@@ -49,7 +49,7 @@ OPTIONAL { ?resource dc:description  ?resourceDescription}
 SELECT DISTINCT ?resource ?resourceLabel ?resourceDescription WHERE {
 ?bound a ?resource .
 ?resource rdfs:label  ?resourceLabel .
-?resource dc:description  ?resourceDescription .
+OPTIONAL {?resource dc:description  ?resourceDescription .  }
 
 }
 
