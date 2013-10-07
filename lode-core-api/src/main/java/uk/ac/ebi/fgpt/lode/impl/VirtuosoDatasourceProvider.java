@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.lode.utils.DatasourceProvider;
 import virtuoso.jdbc4.VirtuosoConnectionPoolDataSource;
+import virtuoso.jdbc4.VirtuosoDataSource;
 
 
 import javax.naming.Context;
@@ -35,7 +36,7 @@ public class VirtuosoDatasourceProvider implements DatasourceProvider {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private VirtuosoConnectionPoolDataSource virtuosoSource = null;
+    private VirtuosoDataSource virtuosoSource = null;
 
     public VirtuosoDatasourceProvider(){
 
@@ -43,7 +44,8 @@ public class VirtuosoDatasourceProvider implements DatasourceProvider {
         if (virtuosoSource == null) {
             try {
                 Context context = (Context) (new InitialContext()).lookup("java:comp/env");
-                virtuosoSource = (VirtuosoConnectionPoolDataSource) context.lookup("jdbc/virtuoso");
+                virtuosoSource = (VirtuosoDataSource) context.lookup("jdbc/virtuoso");
+
 
             } catch (NamingException e) {
                 throw new IllegalStateException("Virtuoso JNDI datasource not configured: " + e.getMessage());
@@ -57,13 +59,10 @@ public class VirtuosoDatasourceProvider implements DatasourceProvider {
         if (virtuosoSource == null) {
             try {
                 Context context = (Context) (new InitialContext()).lookup("java:comp/env");
-                virtuosoSource = (VirtuosoConnectionPoolDataSource) context.lookup("jdbc/virtuoso");
+                virtuosoSource = (VirtuosoDataSource) context.lookup("jdbc/virtuoso");
 
-                if (endpointUrl != null) {
-                    virtuosoSource.setServerName(endpointUrl);
-                    virtuosoSource.setPortNumber(port);
-                    System.out.println(endpointUrl);
-                }
+                virtuosoSource.setServerName(endpointUrl);
+                virtuosoSource.setPortNumber(port);
             } catch (NamingException e) {
                 throw new IllegalStateException("Virtuoso JNDI datasource not configured: " + e.getMessage());
             }
@@ -71,7 +70,7 @@ public class VirtuosoDatasourceProvider implements DatasourceProvider {
     }
 
 
-    public ConnectionPoolDataSource getVirtuosoDataSource() throws SQLException {
+    public DataSource getVirtuosoDataSource() throws SQLException {
 
         return virtuosoSource;
 

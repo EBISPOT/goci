@@ -82,7 +82,7 @@ public class JenaVirtuosoExecutorService implements JenaQueryExecutionService {
             set.setRuleSet(getVirtuosoInferenceRule());
         }
         if (query.isDescribeType()) {
-            /** todo this is a hack to get virtusoso describe queries
+            /** todo this is a hack to get virtuoso describe queries
              *  for concise bound description of given subject (i.e., SPO + CBD of each blank node object found by SPO, recursively);
              **/
             String squery = "DEFINE sql:describe-mode \"CBD\"\n" + query.serialize();

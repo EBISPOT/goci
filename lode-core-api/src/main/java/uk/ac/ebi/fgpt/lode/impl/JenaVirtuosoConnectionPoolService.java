@@ -22,6 +22,7 @@ import uk.ac.ebi.fgpt.lode.service.JenaQueryExecutionService;
 import virtuoso.jena.driver.VirtGraph;
 import virtuoso.jena.driver.VirtuosoQueryExecution;
 import javax.sql.ConnectionPoolDataSource;
+import javax.sql.DataSource;
 import java.sql.SQLException;
 
 /**
@@ -64,9 +65,10 @@ public class JenaVirtuosoConnectionPoolService implements JenaQueryExecutionServ
     public Graph getDefaultGraph() {
 
         virtuoso.jena.driver.VirtGraph set = null;
-        ConnectionPoolDataSource source = null;
+        DataSource source = null;
         try {
             source = datasourceProvider.getVirtuosoDataSource();
+
             VirtGraph g = new virtuoso.jena.driver.VirtGraph(source);
             g.setReadFromAllGraphs(true);
 
@@ -90,7 +92,7 @@ public class JenaVirtuosoConnectionPoolService implements JenaQueryExecutionServ
             }
 
             if (query.isDescribeType()) {
-                /** todo this is a hack to get virtusoso describe queries
+                /** todo this is a hack to get virtuoso describe queries
                  *  for concise bound description of given subject (i.e., SPO + CBD of each blank node object found by SPO, recursively);
                  **/
                 String squery = "DEFINE sql:describe-mode \"CBD\"\n" + query.serialize();
