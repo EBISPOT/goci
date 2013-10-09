@@ -20,6 +20,7 @@ import uk.ac.ebi.fgpt.goci.pussycat.metrics.RenderletNexusFactory;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession;
+import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSession;
 import uk.ac.ebi.fgpt.goci.pussycat.session.ReasonerSession;
 
 import java.io.File;
@@ -140,7 +141,8 @@ public class GOCIPussycatMetricsDriver
 
     private OntologyConfiguration config;
     private ReasonerSession reasonerSession;
-    private BenchmarkPussycatSession pussycatSession;
+//    private BenchmarkPussycatSession pussycatSession;
+    private PussycatSession pussycatSession;
     private RenderletNexus renderletNexus;
 
 
@@ -153,11 +155,13 @@ public class GOCIPussycatMetricsDriver
 
 
     public GOCIPussycatMetricsDriver(){
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("goci-pussycat-metrics.xml");
+//        ApplicationContext ctx = new ClassPathXmlApplicationContext("goci-pussycat-metrics.xml");
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("goci-pussycat.xml");
         config = ctx.getBean("config", OntologyConfiguration.class);
         reasonerSession = ctx.getBean("reasonerSession", OntologyLoadingCacheableReasonerSession.class);
-        pussycatSession = new BenchmarkPussycatSession();
-        pussycatSession.setCacheDirectory(new File("svg_cache"));
+        pussycatSession = ctx.getBean("pussycatSession", PussycatSession.class);
+//        pussycatSession = new BenchmarkPussycatSession();
+//        pussycatSession.setCacheDirectory(new File("svg_cache"));
     }
 
     public void runBenchmark() throws PussycatSessionNotReadyException {
@@ -175,12 +179,12 @@ public class GOCIPussycatMetricsDriver
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
         }
-        pussycatSession.setReasonerSession(reasonerSession);
+//        pussycatSession.setReasonerSession(reasonerSession);
         end = System.currentTimeMillis();
         double time = ((double) (end - start)) / 1000;
         bm_log.info("Reasoner session acquired after " + time + " s");
-        pussycatSession.setOntologyConfiguration(config);
-        getLog().info("Config acquired");
+//        pussycatSession.setOntologyConfiguration(config);
+//        getLog().info("Config acquired");
         setRenderletNexus();
         getLog().info("Renderlet nexus set");
 
