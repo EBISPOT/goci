@@ -10,30 +10,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.manager.PussycatManager;
-import uk.ac.ebi.fgpt.goci.pussycat.metrics.BenchmarkPussycatSession;
 import uk.ac.ebi.fgpt.goci.pussycat.metrics.DateTimeStamp;
-import uk.ac.ebi.fgpt.goci.pussycat.metrics.RenderletNexusFactory;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSession;
 import uk.ac.ebi.fgpt.goci.pussycat.session.ReasonerSession;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
 /**
  * Hello world!
- *
  */
-public class GOCIPussycatMetricsDriver
-{
+public class GOCIPussycatMetricsDriver {
 
     public static void main(String[] args) {
 //        try {
@@ -41,11 +35,14 @@ public class GOCIPussycatMetricsDriver
 //            int parseArgs = parseArguments(args);
 //            if (parseArgs == 0) {
 //                // execute publisher
-                GOCIPussycatMetricsDriver driver = new GOCIPussycatMetricsDriver();
+        GOCIPussycatMetricsDriver driver = new GOCIPussycatMetricsDriver();
         try {
             driver.runBenchmark();
-        } catch (PussycatSessionNotReadyException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        catch (Exception e) {
+            System.err.println("Benchmarking failed: " + e.getMessage());
+            e.printStackTrace();
+            System.exit(1);
         }
 //            }
 //            else {
@@ -131,10 +128,12 @@ public class GOCIPussycatMetricsDriver
 //        inferredOutputFileOption.setArgName("file");
 //        options.addOption(inferredOutputFileOption);
 //
-//        Option pvalueFilterOption = new Option("p", "pvalue", true, "The minimum p-value on which to filter the knowledge base, in format nE-x, e.g. 5E-8");
+//        Option pvalueFilterOption = new Option("p", "pvalue", true, "The minimum p-value on which to filter the
+// knowledge base, in format nE-x, e.g. 5E-8");
 //        options.addOption(pvalueFilterOption);
 //
-//        Option dateFilterOption = new Option("d", "date", true, "The date on which to filter the knowledge base, in format YYYY-MM-DD");
+//        Option dateFilterOption = new Option("d", "date", true, "The date on which to filter the knowledge base,
+// in format YYYY-MM-DD");
 //        options.addOption(dateFilterOption);
 //
 //        return options;
@@ -142,7 +141,7 @@ public class GOCIPussycatMetricsDriver
 
     private OntologyConfiguration config;
     private ReasonerSession reasonerSession;
-//    private BenchmarkPussycatSession pussycatSession;
+    //    private BenchmarkPussycatSession pussycatSession;
     private PussycatSession pussycatSession;
     private PussycatManager pussycatManager;
     private RenderletNexus renderletNexus;
@@ -156,98 +155,88 @@ public class GOCIPussycatMetricsDriver
     }
 
 
-    public GOCIPussycatMetricsDriver(){
-//        ApplicationContext ctx = new ClassPathXmlApplicationContext("goci-pussycat-metrics.xml");
+    public GOCIPussycatMetricsDriver() {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("goci-pussycat.xml");
         config = ctx.getBean("config", OntologyConfiguration.class);
         reasonerSession = ctx.getBean("reasonerSession", OntologyLoadingCacheableReasonerSession.class);
         pussycatSession = ctx.getBean("pussycatSession", PussycatSession.class);
         pussycatManager = ctx.getBean("pussycatManager", PussycatManager.class);
-//        pussycatSession = new BenchmarkPussycatSession();
-//        pussycatSession.setCacheDirectory(new File("svg_cache"));
+
     }
 
-    public void runBenchmark() throws PussycatSessionNotReadyException {
+    public void runBenchmark() throws IOException {
         getLog().info("Running benchmarking code");
-
 
         long start, end;
         start = System.currentTimeMillis();
-        while(!reasonerSession.isReasonerInitialized()){
+        while (!reasonerSession.isReasonerInitialized()) {
             try {
                 getLog().info("No reasoner session available, holding");
-                synchronized (this){
-                wait(30000);  }
-            } catch (InterruptedException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                synchronized (this) {
+                    wait(30000);
+                }
+            }
+            catch (InterruptedException e) {
+                // do nothing
             }
         }
-//        pussycatSession.setReasonerSession(reasonerSession);
+
         end = System.currentTimeMillis();
         double time = ((double) (end - start)) / 1000;
         bm_log.info("Reasoner session acquired after " + time + " s");
-//        pussycatSession.setOntologyConfiguration(config);
-//        getLog().info("Config acquired");
+
         setRenderletNexus();
         getLog().info("Renderlet nexus set");
 
         Map<OWLClassExpression, String> allSVG = new HashMap<OWLClassExpression, String>();
 
         Properties dates = new Properties();
-        try {
-            dates.load(GOCIPussycatMetricsDriver.class.getClassLoader().getResourceAsStream("filters.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+        dates.load(GOCIPussycatMetricsDriver.class.getClassLoader().getResourceAsStream("filters.properties"));
 
         Enumeration queryDates = dates.propertyNames();
         OWLClassExpression query = null;
 
-        while (queryDates.hasMoreElements()){
+        while (queryDates.hasMoreElements()) {
             query = createClassExpression((String) dates.get(queryDates.nextElement()));
             bm_log.info(DateTimeStamp.getCurrentTimeStamp() + " Acquiring SVG for OWL class expression " + query);
-            String svg = pussycatSession.performRendering(query,renderletNexus);
-            allSVG.put(query, svg);
-            bm_log.info(DateTimeStamp.getCurrentTimeStamp() + " Successfully acquired SVG");
+            try {
+                String svg = pussycatSession.performRendering(query, renderletNexus);
+                allSVG.put(query, svg);
+                bm_log.info(DateTimeStamp.getCurrentTimeStamp() + " Successfully acquired SVG");
+            }
+            catch (PussycatSessionNotReadyException e) {
+                getLog().error("Failed to generate SVG for query '" + query + " - " + e.getMessage(), e);
+            }
         }
 
-        bm_log.info(DateTimeStamp.getCurrentTimeStamp() + " "  + allSVG.size() + " sets of SVG acquired");
+        bm_log.info(DateTimeStamp.getCurrentTimeStamp() + " " + allSVG.size() + " sets of SVG acquired");
         bm_log.info("Benchmarking complete!");
-
-
     }
 
 
-    public void setRenderletNexus() throws PussycatSessionNotReadyException {
+    public void setRenderletNexus() {
         getLog().info("Acquiring renderlets");
         Collection<Renderlet> renderlets = pussycatSession.getAvailableRenderlets();
         getLog().info("There are " + renderlets.size() + " renderlets");
 
-        renderletNexus = pussycatManager.createRenderletNexus(config, pussycatSession);
-
-//        try {
-//            getLog().info("Trying to initialise the renderlet nexus");
-//            renderletNexus = RenderletNexusFactory.createBenchmarkRenderletNexus(
-//                    config.getOWLOntologyManager(),
-//                    pussycatSession.getReasoner(),
-//                    config.getEfoLabels());
-//
-//            getLog().info("Acquired the renderlet nexus");
-//        } catch (OWLConversionException e) {
-//            throw new RuntimeException("Unexpected exception occurred obtaining reasoner", e);
-//        }
+        try {
+            renderletNexus = pussycatManager.createRenderletNexus(config, pussycatSession);
+        }
+        catch (PussycatSessionNotReadyException e) {
+            getLog().error("Unable to set renderlet nexus", e);
+            throw new RuntimeException(e);
+        }
 
         for (Renderlet r : renderlets) {
             renderletNexus.register(r);
         }
     }
 
-    public OWLClassExpression createClassExpression(String yearMonth){
-        if(yearMonth.equals("all")){
-            OWLClass thingCls = config.getOWLDataFactory().getOWLThing();
-            return thingCls;
+    public OWLClassExpression createClassExpression(String yearMonth) {
+        if (yearMonth.equals("all")) {
+            return config.getOWLDataFactory().getOWLThing();
         }
-        else{
+        else {
             OWLOntologyManager manager = config.getOWLOntologyManager();
             OWLDataFactory df = config.getOWLDataFactory();
 

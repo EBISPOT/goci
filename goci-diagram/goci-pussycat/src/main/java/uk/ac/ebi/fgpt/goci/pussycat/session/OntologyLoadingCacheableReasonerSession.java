@@ -64,7 +64,7 @@ public class OntologyLoadingCacheableReasonerSession extends Initializable imple
     }
 
     @Override
-    @Cacheable(cacheName = "reasonerCache")
+//    @Cacheable(cacheName = "reasonerCache")
     public OWLReasoner getReasoner() throws OWLConversionException {
         try {
             if (reasoner == null) {
@@ -74,9 +74,9 @@ public class OntologyLoadingCacheableReasonerSession extends Initializable imple
                 getLog().debug("Publishing GWAS data (inferred view)");
                 reasoner = getPublisher().publishGWASDataInferredView(gwasData);
             }
-            else {
-                getLog().warn("Failed to retrieve reasoner from ehcache, returning reference");
-            }
+//            else {
+//                getLog().warn("Failed to retrieve reasoner from ehcache, returning reference");
+//            }
             return reasoner;
         }
         catch (IOException e) {
