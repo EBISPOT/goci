@@ -14,6 +14,7 @@ import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
+import uk.ac.ebi.fgpt.goci.pussycat.manager.PussycatManager;
 import uk.ac.ebi.fgpt.goci.pussycat.metrics.BenchmarkPussycatSession;
 import uk.ac.ebi.fgpt.goci.pussycat.metrics.DateTimeStamp;
 import uk.ac.ebi.fgpt.goci.pussycat.metrics.RenderletNexusFactory;
@@ -143,6 +144,7 @@ public class GOCIPussycatMetricsDriver
     private ReasonerSession reasonerSession;
 //    private BenchmarkPussycatSession pussycatSession;
     private PussycatSession pussycatSession;
+    private PussycatManager pussycatManager;
     private RenderletNexus renderletNexus;
 
 
@@ -160,6 +162,7 @@ public class GOCIPussycatMetricsDriver
         config = ctx.getBean("config", OntologyConfiguration.class);
         reasonerSession = ctx.getBean("reasonerSession", OntologyLoadingCacheableReasonerSession.class);
         pussycatSession = ctx.getBean("pussycatSession", PussycatSession.class);
+        pussycatManager = ctx.getBean("pussycatManager", PussycatManager.class);
 //        pussycatSession = new BenchmarkPussycatSession();
 //        pussycatSession.setCacheDirectory(new File("svg_cache"));
     }
@@ -220,18 +223,19 @@ public class GOCIPussycatMetricsDriver
         Collection<Renderlet> renderlets = pussycatSession.getAvailableRenderlets();
         getLog().info("There are " + renderlets.size() + " renderlets");
 
-        try {
-            getLog().info("Trying to initialise the renderlet nexus");
-            renderletNexus = RenderletNexusFactory.createBenchmarkRenderletNexus(
-                    config.getOWLOntologyManager(),
-                    pussycatSession.getReasoner(),
-                    config.getEfoLabels());
+        renderletNexus = pussycatManager.createRenderletNexus(config, pussycatSession);
 
-
-            getLog().info("Acquired the renderlet nexus");
-        } catch (OWLConversionException e) {
-            throw new RuntimeException("Unexpected exception occurred obtaining reasoner", e);
-        }
+//        try {
+//            getLog().info("Trying to initialise the renderlet nexus");
+//            renderletNexus = RenderletNexusFactory.createBenchmarkRenderletNexus(
+//                    config.getOWLOntologyManager(),
+//                    pussycatSession.getReasoner(),
+//                    config.getEfoLabels());
+//
+//            getLog().info("Acquired the renderlet nexus");
+//        } catch (OWLConversionException e) {
+//            throw new RuntimeException("Unexpected exception occurred obtaining reasoner", e);
+//        }
 
         for (Renderlet r : renderlets) {
             renderletNexus.register(r);
