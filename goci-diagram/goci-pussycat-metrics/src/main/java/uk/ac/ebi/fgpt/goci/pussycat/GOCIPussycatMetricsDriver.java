@@ -199,20 +199,34 @@ public class GOCIPussycatMetricsDriver {
         while (queryDates.hasMoreElements()) {
             query = createClassExpression((String) dates.get(queryDates.nextElement()));
             bm_log.info(DateTimeStamp.getCurrentTimeStamp() + " Acquiring SVG for OWL class expression " + query);
-            try {
-                String svg = pussycatSession.performRendering(query, renderletNexus);
-                allSVG.put(query, svg);
-                bm_log.info(DateTimeStamp.getCurrentTimeStamp() + " Successfully acquired SVG");
-            }
-            catch (PussycatSessionNotReadyException e) {
-                getLog().error("Failed to generate SVG for query '" + query + " - " + e.getMessage(), e);
-            }
+            String svg = "";
+            boolean nexusReady = true;
+            do {
+                try {
+                    getLog().info("Performing SVG rendering for '" + query + "'");
+                    svg = pussycatSession.performRendering(query, renderletNexus);
+                }
+                catch (PussycatSessionNotReadyException e) {
+                    getLog().error("Pussycat session not ready yet - waiting to generate SVG for '" + query + "'");
+                    nexusReady = false;
+                    synchronized (this) {
+                        try {
+                            wait(30000);
+                        }
+                        catch (InterruptedException e1) {
+                            // do nothing
+                        }
+                    }
+                    getLog().info("Retrying query for '" + query + "'");
+                }
+            } while (!nexusReady);
+            allSVG.put(query, svg);
+            bm_log.info(DateTimeStamp.getCurrentTimeStamp() + " Successfully acquired SVG");
         }
 
         bm_log.info(DateTimeStamp.getCurrentTimeStamp() + " " + allSVG.size() + " sets of SVG acquired");
         bm_log.info("Benchmarking complete!");
     }
-
 
     public void setRenderletNexus() {
         getLog().info("Acquiring renderlets");
