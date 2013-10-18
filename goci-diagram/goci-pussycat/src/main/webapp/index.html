@@ -184,6 +184,7 @@
     <li><a href="#downloadstab">Downloads</a></li>
     <!--<li><a href="#keytab">Key</a></li>-->
     <li><a href="#helptab">Help</a></li>
+    <li><a href="#curationtab">Curation process</a></li>
     <!--<li><a href="#contacttab">Contact</a></li>-->
     <li><a href="#abouttab">About</a></li>
     <li id="logitem" style="display: none"><a href="#logtab">Log</a></li>
@@ -466,12 +467,12 @@
 
         <h3>Images</h3>
 
-        <h4>Most Recent GWAS Diagram</h4>
+        <h4>Most Recent GWAS Diagram (all SNP-trait associations with p-value &#8804; 5&#215;10<sup>-8</sup>)</h4>
         <ul>
             <li><a href="images/timeseries/gwas-latest.png">Full GWAS diagram, PNG</a></li>
         </ul>
 
-        <h4>Older GWAS Diagrams</h4>
+        <h4>Older GWAS Diagrams (all SNP-trait associations with p-value &#8804; 5&#215;10<sup>-8</sup>)</h4>
         <ul>
             <li><a href="images/timeseries/gwas-2012-12.png">GWAS diagram, Quarter 4, 2012, PNG</a></li>
             <li><a href="images/timeseries/gwas-2012-09.png">GWAS diagram, Quarter 3, 2012, PNG</a></li>
@@ -492,7 +493,7 @@
         </ul>
 
         <h4>Filtered Views</h4>
-        <h5>Trait filtering</h5>
+        <h5>Trait filtering (all SNP-trait associations with p-value &#8804; 5&#215;10<sup>-8</sup>)</h5>
         <ul>
             <li><a href="images/filtering/breast-cancer.png">GWAS diagram, filtered for breast cancer, PNG</a></li>
             <li><a href="images/filtering/diabetes.png">GWAS diagram, filtered for diabetes, PNG</a></li>
@@ -545,6 +546,9 @@
     <div class="container" style="display: none;">
         <p> This section aims to provide some guidance on how to use the new dynamic GWAS diagram. For an introduction
             to the GWAS catalog, see the "About" tab.</p>
+
+        <!--new ordering of help: searching, filteringn downloading custom images (need section for this!) then all the others
+         with zooming and moving in last place-->
 
         <h3>How to ...</h3>
         <ul>
@@ -707,6 +711,32 @@
             Explorer. If you find an older browser version which does not work, please let us know. In this event, <b><a
                     href="images/timeseries/gwas-latest.png">click here for a static version of the diagram in PNG
                 format</a></b>.</p>
+    </div>
+</div>
+
+<div id="curationtab" class="tabcontent linespacewide">
+    <div class="container" style="display: none;">
+        <h3>Curation process</h3>
+
+        <p>The GWAS Catalog data is extracted from the literature. Extracted information includes publication information,
+            study cohort information such as cohort size, country of recruitment and subject ethnicity, and SNP-disease
+            association information including SNP identifier (i.e. RSID), p-value, gene and risk allele. Each study is
+            also assigned a trait that best represents the phenotype under investigation. When multiple traits are analysed
+            in the same study either multiple entries are created, or individual SNPs are annotated with their specific
+            traits. Traits are used both to query and visualise the data in the Catalog's web form and diagram-based query interfaces.
+            </p>
+        <p>Data extraction and curation for the GWAS Catalog is an expert activity; each step is performed by scientists
+            supported by a web-based tracking and data entry system which allows multiple curators to search, annotate,
+            verify and publish the Catalog data. Papers that qualify for inclusion in the Catalog are identified through
+            weekly PubMed searches. They then undergo two levels of curation. First all data, including association
+            information for SNPs, traits and general information about the study, are extracted by one curator.
+             second curator then performs an additional round of curation to double-check
+            the accuracy and consistency of all the information. Finally, an automated pipeline run at the NCBI performs
+            checks for missing information, such as SNP identifiers, resolution of the citation in PubMed, existence of
+            SNPs in dbSNP, confirmation of gene names vs. NCBI's Gene database, confirmation that the reported SNP and
+            gene are in the same chromosomal region, as well as adding additional information such as the SNP's base pair
+            and cytogenetic location in the current human genome reference assembly. This information is then used for
+            queries and in the production of the karyotype diagram.</p>
     </div>
 </div>
 
