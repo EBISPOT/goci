@@ -104,6 +104,7 @@ public class GOCIPussycatMetricsDriver {
                 try {
                     getLog().debug("Performing SVG rendering for '" + query + "'");
                     svg = pussycatSession.performRendering(query, renderletNexus);
+                    nexusReady = true;
                 }
                 catch (PussycatSessionNotReadyException e) {
                     getLog().debug("Pussycat session not ready yet - waiting to generate SVG for '" + query + "'");
