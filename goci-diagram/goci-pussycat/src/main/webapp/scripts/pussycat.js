@@ -340,6 +340,10 @@ function tabShow(event, ui) {
     }
     else {
         $(".navbar").hide();
+
+        if ($(".legend").css("display") == "block") {
+            hideLegend();
+        }
     }
 }
 
@@ -557,17 +561,25 @@ function hideAllTraits() {
 
 function toggleLegend() {
     if ($(".legend").css("display") == "none") {
-        // show legend
-        $(".legend").show('fold');
-        // update text
-        $("#legendbutton .ui-button-text").html("Hide Legend");
+        showLegend();
     }
     else {
-        // hide legend
-        $(".legend").hide('fold');
-        // update text
-        $("#legendbutton .ui-button-text").html("Show Legend");
+        hideLegend();
     }
+}
+
+function showLegend(){
+    // show legend
+    $(".legend").show('fold');
+    // update text
+    $("#legendbutton .ui-button-text").html("Hide Legend");
+}
+
+function hideLegend(){
+    // hide legend
+    $(".legend").hide('fold');
+    // update text
+    $("#legendbutton .ui-button-text").html("Show Legend");
 }
 
 function slideZoom(newScale) {
