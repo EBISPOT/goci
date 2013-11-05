@@ -17,9 +17,9 @@ var renderingComplete = false;
 function init() {
     $(document).ready(function() {
 
-        $("#trait-filter").zooma({'zIndex': '100', 'onSelect': function(json) {
-            doFilter();
-        }});
+//        $("#trait-filter").zooma({'zIndex': '100', 'onSelect': function(json) {
+//            doFilter();
+//        }});
 
         if (enableDebugging) {
             $("#logitem").show();
@@ -72,6 +72,12 @@ function init() {
             filterTraits($(this).attr("id"));
         });
 
+
+//       $(".helpItem").css('background-image', 'ui-icon ui-icon-circle-plus');
+
+//        $(".helpItem").click(function() {
+//            toggleHelp();
+//        })
 
         // show tabs, this is the point on load that display becomes visible
         $("#pussycattabs").show();
@@ -144,6 +150,7 @@ function init() {
             $('#tooltip').css({"left": ev.pageX + 20, "top": ev.pageY});
 
         });
+
 
         if (enableSVG) {
             // bind mousewheel event handler
@@ -220,11 +227,11 @@ function init() {
     }
     else {
         $("#trait-filter").change(function() {
-            log("Detected change() event on filtering widget");
+            log("Detected change() event on Bioportal widget");
             doFilter();
         });
         $("#trait-filter").blur(function() {
-            log("Focus lost on filtering widget");
+            log("Focus lost on Bioportal widget");
             doFilter();
         })
     }
@@ -464,6 +471,7 @@ function showSummary(associations, name) {
 
         var summaryTable = $("<table>");
         summaryTable.html("<th>SNP</th><th>p-Value</th><th>EFO mapping</th><th>GWAS trait</th><th>Study</th><th>GWAS catalog</th>");
+        summaryTable.html("<th>SNP</th><th>p-Value</th><th>EFO mapping</th><th>GWAS trait</th><th>Study</th><th>GWAS catalog</th>");
 
         try {
             var index = data.snpsummaries.length;
@@ -513,7 +521,7 @@ function showSummary(associations, name) {
 //}
 
 function doFilter() {
-    log("Doing filtering - " + $("#trait-filter").val());
+    log("Detected bioportal widget filtering event - " + $("#trait-filter").val());
     filterTraits($("#trait-filter").val());
 }
 
@@ -581,6 +589,19 @@ function hideLegend(){
     // update text
     $("#legendbutton .ui-button-text").html("Show Legend");
 }
+
+//function toggleHelp() {
+//    if ($(".helpText").css("display") == "none") {
+//
+//            $(this).toggleClass("display", "block");
+//    }
+//    else{
+//        $(this).toggleClass("display", "none");
+//    }
+//
+//}
+
+
 
 function slideZoom(newScale) {
     if (currentScale < 0) {

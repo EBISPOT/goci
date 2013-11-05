@@ -17,7 +17,7 @@
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.22/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="http://www.ebi.ac.uk/fgpt/zooma/scripts/zooma.min.js"></script>
+    <!--<script type="text/javascript" src="http://www.ebi.ac.uk/fgpt/zooma/scripts/zooma.min.js"></script>-->
     <script type="text/javascript" src="scripts/pussycat.js"></script>
     <script type="text/javascript" src="scripts/form_complete.js"></script>
     <script type="text/javascript" src="scripts/jquery.mousewheel.min.js"></script>
@@ -63,19 +63,19 @@
 
         <div id="filtering">
             <!--<label for="trait-filter">Filter:</label> -->
-            <!--<input type="text"-->
-                     <!--id="trait-filter"-->
-                     <!--class="bp_form_complete-1136-name"-->
-                     <!--name="trait-filter"-->
-                     <!--title="Filter Traits"-->
-                     <!--size="50"/>-->
-            <!--<a href="search/clear" id="clear">Clear results</a>-->
-
             <input type="text"
-                    id="trait-filter"
-                    name="trait-filter"
-                    title="Filter Traits"
-                    size="50" />
+                     id="trait-filter"
+                     class="bp_form_complete-1136-name"
+                     name="trait-filter"
+                     title="Filter Traits"
+                     size="50"/>
+            <a href="search/clear" id="clear">Clear results</a>
+
+            <!--<input type="text"-->
+                    <!--id="trait-filter"-->
+                    <!--name="trait-filter"-->
+                    <!--title="Filter Traits"-->
+                    <!--size="50" />-->
 
             <a id="submitbutton"
                href="#"
@@ -551,38 +551,21 @@
          with zooming and moving in last place-->
 
         <h3>How to ...</h3>
-        <ul>
-            <li><b>Zoom:</b> There are two ways in which the diagram can be zoomed. The easiest option is to use the
-                scroll wheel on the mouse or touch pad on a laptop. Scrolling up zooms in and scrolling down zooms out.
-                This feature may not work with all touch pads. Alternatively, the left-hand side of the diagram features
-                a zoom bar which can be used to generate exactly the same effect, by dragging the little square up or
-                down the bar with the mouse pointer. The zoom bar occasionally appears in the wrong place. This is a
-                known bug. Refreshing the browser window usually solves the problem.
-            </li>
-            <li><b>Move the diagram:</b> The diagram can be moved around the viewing area by clicking on any part of the
-                diagram with the left mouse button and, holding the mouse button down, dragging the diagram around the
-                screen until the desired part is visible. This feature is particularly useful for centering the diagram
-                on a specific location at higher zoom levels.
-            </li>
-            <li><b>Display the legend:</b> A legend of the colour scheme is available in the "Legend" box in the top
-                right corner of the diagram. Simply click on the box to expand ("Show legend") or hide ("Hide legend")
-                the legend. Click on any link in the legend to filter the diagram by that category. This does not work for
-                any of the "other"-type categories (other measurement, other disease and other trait).
-            </li>
-            <li><b>Display labels:</b> Chromosomes and traits (coloured circles) have labels that display when hovering
-                the mouse pointer over a given element. The displayed labels correspond to the EFO term mapped this SNP.
-            </li>
-            <li><b>Display SNP information:</b> To view all the SNPs associated with any trait in a given location, simply
-            click on the trait you are interested in. An interactive pop-up will display the SNPs for that trait, the p-value
-            for each SNP-trait association, the study in which the association was identified, the trait assigned by the GWAS
-            catalog curators and the EFO term the
-            SNP-trait association is mapped to. The SNP, EFO term and study fields are interactive, linking out to Ensembl,
-            EFO and UKPMC, respectively. There is also a link to the entry for this SNP in the GWAS catalog.
-            The pop-up can be moved around the screen. Clicking on another trait automatically
-            closes the current pop-up. Alternatively, close the pop-up by clicking on the cross in its top right corner. </li>
 
-            <li><b>Filter the diagram:</b> The full diagram can be filtered by typing a trait into the text box
-                above the diagram and hitting "Enter" or clicking the "Query" button.
+        <ul id="helpList">
+            <li class="helpItem"> <b>Display SNP information</b>
+                <p class="helpText">To view all the SNPs associated with any trait in a given location, simply
+                    click on the trait you are interested in. An interactive pop-up will display the SNPs for that trait, the p-value
+                    for each SNP-trait association, the study in which the association was identified, the trait assigned by the GWAS
+                    catalog curators and the EFO term the
+                    SNP-trait association is mapped to. The SNP, EFO term and study fields are interactive, linking out to Ensembl,
+                    EFO and UKPMC, respectively. There is also a link to the entry for this SNP in the GWAS catalog.
+                    The pop-up can be moved around the screen. Clicking on another trait automatically
+                    closes the current pop-up. Alternatively, close the pop-up by clicking on the cross in its top right corner. </p></li>
+
+            <li class="helpItem"> <b>Filter the diagram</b>
+                <p class="helpText">The full diagram can be filtered by typing a trait into the text box
+                    above the diagram and hitting "Enter" or clicking the "Query" button.
                 <ul>
                     <li>If the trait is available in the diagram, all other traits will be faded to a lower visibility
                         to highlight the desired trait.
@@ -591,19 +574,52 @@
                         names, e.g. a search for "hair color" will highlight SNP-trait associations labelled hair color
                         as well as "black vs blond hair" and "red vs non-red hair".
                     </li>
-                    <li>The text box has auto-complete functionality based on EFO and is powered by <a href="http://wwwdev.ebi.ac.uk/fgpt/zooma/index.html">Zooma</a>.
-                        Zooma annotations are drawn from a number of resources other than the GWAS catalog and it is currently not possible to limit searching
-                        to only one domain. Therefore <b>the presence of a term in the auto-complete does not guarantee that there are any corresponding
-                        traits in the diagram!</b> Look out for the annotation "gwas trait" next to the terms returned by the search box - this indicates a GWAS catalog
-                        mapping. Please note that all SNP-trait associations in the GWAS catalog are mapped but only those with p-value &#8804; 5.0 &#215; 10<sup>-8</sup> are
-                        displayed in the diagram, so some GWAS mappings may not be on the diagram.
+                    <li>The text box has auto-complete functionality based on EFO. <!--and is powered by <a href="http://wwwdev.ebi.ac.uk/fgpt/zooma/index.html">Zooma</a> .-->
+                        <!--Zooma annotations are drawn from a number of resources other than the GWAS catalog and it is currently not possible to limit searching-->
+                        <!--to only one domain. Therefore                                                                 -->
+                    The auto-complete may take a moment
+                    to start loading. Only a limited number of terms can be displayed at a time, so if your term
+                    does not appear immediately, carry on typing. Due to the structure of the ontology, <b>the presence of a term in the auto-complete does not guarantee that there are any corresponding
+                            traits in the diagram!</b> <!--Look out for the annotation "gwas trait" next to the terms returned by the search box - this indicates a GWAS catalog-->
+                        <!--mapping. Please note that all SNP-trait associations in the GWAS catalog are mapped but only those with p-value &#8804; 5.0 &#215; 10<sup>-8</sup> are-->
+                        <!--displayed in the diagram, so some GWAS mappings may not be on the diagram.-->
                     </li>
-                    <li>More advanced filtering capabilities, such as p-value and time, are under development, so
+                    <li>More advanced filtering capabilities, such as disease location, p-value and time, are under development, so
                         check back regularly for updates.
                     </li>
-                </ul>
+                </ul></p>
             </li>
+            <li class="helpItem"> <b>Download a custom diagram</b>
+                <p class="helpText">If the trait you are interested in is not available in the Downloads tab, you can
+                    create a custom diagram by filtering the main diagram according to you chosen trait, then taking a screen shot of the resulting image.</p>
+            </li>
+            <li class="helpItem"> <b>Display the legend</b>
+                <p class="helpText">A legend of the colour scheme is available in the "Legend" box in the top
+                    right corner of the diagram. Simply click on the box to expand ("Show legend") or hide ("Hide legend")
+                    the legend. Click on any link in the legend to filter the diagram by that category. This does not work for
+                    any of the "other"-type categories (other measurement, other disease and other trait).</p>
+            </li>
+            <li class="helpItem"> <b>Display labels</b>
+                <p class="helpText">Chromosomes and traits (coloured circles) have labels that display when hovering
+                    the mouse pointer over a given element. The displayed labels correspond to the EFO term mapped this SNP.</p>
+            </li>
+            <li class="helpItem"> <b>Zoom and move the diagram</b>
+                <p class="helpText">The diagram was designed to have a GoogleMaps-style interactivity.
+                    There are two ways to zoom in and out. The easiest option is to use the
+                    scroll wheel on the mouse or touch pad on a laptop. Scrolling up zooms in and scrolling down zooms out.
+                    This feature may not work with all touch pads. Alternatively, the left-hand side of the diagram features
+                    a zoom bar which can be used to generate exactly the same effect, by dragging the little square up or
+                    down the bar with the mouse pointer. The zoom bar occasionally appears in the wrong place. This is a
+                    known bug. Refreshing the browser window usually solves the problem.<br>The diagram can be moved around the viewing area by clicking on any part of the
+                    diagram with the left mouse button and, holding the mouse button down, dragging the diagram around the
+                    screen until the desired part is visible. This feature is particularly useful for centering the diagram
+                    on a specific location at higher zoom levels.</p>
+            </li>
+
         </ul>
+
+        <br>
+        <br>
 
 
         <h3>Diagram features</h3>
@@ -704,8 +720,8 @@
 
         <h3>Questions, requests and bug reports</h3>
 
-        <p>For questions, feature requests or bug reports, please contact <a href="mailto:dwelter@ebi.ac.uk">Dani
-            Welter</a> at EBI. In particular, please let us know if a given feature does not behave as described. Always
+        <p>For questions, feature requests or bug reports, please contact <a href="mailto:gwas-curator@ebi.ac.uk">the GWAS team</a>
+            at EBI. In particular, please let us know if a given feature does not behave as described. Always
             specify in which web browser, including which version, and which operating system the problem occurred. This
             application is tested in all the latest versions of Mozilla Firefox, Google Chrome, Safari and Internet
             Explorer. If you find an older browser version which does not work, please let us know. In this event, <b><a
@@ -824,7 +840,7 @@
 
         <h3>Contact</h3>
 
-        <p>For questions and to provide feedback, please contact <a href="mailto:dwelter@ebi.ac.uk">Dani Welter</a> at
+        <p>For questions and to provide feedback, please contact <a href="mailto:gwas-curator@ebi.ac.uk">the GWAS team</a> at
             EBI.
         </p>
 
