@@ -39,7 +39,7 @@
           class="uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession"
           init-method="init">
         <property name="configuration" ref="config" />
-        <property name="ontologyResource" value="ontology/gwas-data-2007-06-localtest.owl" />
+        <property name="ontologyResource" value="ontology/gwas-data-2006-12.owl" />
         <property name="publisher" ref="publisher" />
     </bean>
 
@@ -54,7 +54,7 @@
     </bean>
 
     <bean name="gwasDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init">
-        <property name="ontologyResource" value="ontology/gwas-data-2007-06-localtest.owl"/>
+        <property name="ontologyResource" value="ontology/gwas-data-2006-12.owl"/>
         <property name="ontologyConfiguration" ref="config"/>
     </bean>
 
