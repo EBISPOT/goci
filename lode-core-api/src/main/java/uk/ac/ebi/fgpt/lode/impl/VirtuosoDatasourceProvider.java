@@ -46,7 +46,6 @@ public class VirtuosoDatasourceProvider implements DatasourceProvider {
                 Context context = (Context) (new InitialContext()).lookup("java:comp/env");
                 virtuosoSource = (VirtuosoDataSource) context.lookup("jdbc/virtuoso");
 
-
             } catch (NamingException e) {
                 throw new IllegalStateException("Virtuoso JNDI datasource not configured: " + e.getMessage());
             }
@@ -69,15 +68,7 @@ public class VirtuosoDatasourceProvider implements DatasourceProvider {
         }
     }
 
-
-    public DataSource getVirtuosoDataSource() throws SQLException {
-
-        return virtuosoSource;
-
-    }
-
-
     public DataSource getDataSource() throws SQLException {
-        return null;
+        return virtuosoSource;
     }
 }

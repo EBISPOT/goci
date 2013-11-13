@@ -15,6 +15,7 @@ package uk.ac.ebi.fgpt.lode.impl;
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.Model;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -202,17 +203,29 @@ public class JenaSparqlService implements SparqlService {
 
     }
 
-
-    private void executeTupleQuery(Query q1, String format, Integer offset, Integer limit, boolean inference, OutputStream output)  {
-
-        // check the limit is not greater that the max
+    public Query setLimits (Query q1, Integer limit) {
         if (getMaxQueryLimit() > -1) {
+            // if a limit is submitted as a parameter, check if there is one in the query
             if (limit != null) {
-                if (limit < getMaxQueryLimit()) {
-                    q1.setLimit(limit);
+                if (q1.hasLimit()) {
+                    // if the limit in the query is less than the parameter and max, all is ok
+                    if (q1.getLimit() < limit && q1.getLimit() < getMaxQueryLimit()) {
+                        return q1;
+                    }
+                    else if (limit < getMaxQueryLimit()) {
+                        q1.setLimit(limit);
+                    }
+                    else  {
+                        q1.setLimit(getMaxQueryLimit());
+                    }
                 }
                 else {
-                    q1.setLimit(getMaxQueryLimit());
+                    if (limit < getMaxQueryLimit()) {
+                        q1.setLimit(limit);
+                    }
+                    else {
+                        q1.setLimit(getMaxQueryLimit());
+                    }
                 }
             }
             else if (q1.hasLimit()) {
@@ -220,14 +233,23 @@ public class JenaSparqlService implements SparqlService {
                     q1.setLimit(getMaxQueryLimit());
                 }
             }
+            else {
+                q1.setLimit(getMaxQueryLimit());
+            }
         }
         else {
             if (limit!= null &&limit >-1) {
                 q1.setLimit(limit);
             }
         }
+        return q1;
 
+    }
 
+    private void executeTupleQuery(Query q1, String format, Integer offset, Integer limit, boolean inference, OutputStream output)  {
+        // check the limit is not greater that the max
+
+        q1 = setLimits(q1, limit);
         // set any offset
         if (offset != null) {
             q1.setOffset(offset);

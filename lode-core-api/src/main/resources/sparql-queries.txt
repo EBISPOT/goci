@@ -11,12 +11,14 @@ PREFIX dc:<http://purl.org/dc/elements/1.1/>
 
 
 ^[ALL.EXPERIMENTS.QUERY]
+PREFIX lodestar_internal:<http://wwww.ebi.ac.uk/fgpt/lodestar>
 SELECT ?expUri
 WHERE {
 ?expUri rdf:type atlas:Experiment .
 }
 
 ^[RELATEDTO.PROPERTIES.QUERY]
+PREFIX lodestar_internal:<http://wwww.ebi.ac.uk/fgpt/lodestar>
 SELECT DISTINCT ?property ?propertyLabel ?resource ?resourceLabel ?resourceDescription ?resourceType ?resourceTypeLabel ?resourceTypeDesc WHERE {
 
 ?bound ?property ?resource .
@@ -32,6 +34,7 @@ OPTIONAL { ?resource dc:description  ?resourceDescription}
 
 
 ^[RELATEDFROM.PROPERTIES.QUERY]
+PREFIX lodestar_internal:<http://wwww.ebi.ac.uk/fgpt/lodestar>
 SELECT DISTINCT ?property ?propertyLabel ?resource ?resourceLabel ?resourceDescription ?resourceType ?resourceTypeLabel ?resourceTypeDesc WHERE {
 
 ?resource ?property ?bound .
@@ -46,6 +49,7 @@ OPTIONAL { ?resource dc:description  ?resourceDescription}
 }
 
 ^[ALLTYPES.QUERY]
+PREFIX lodestar_internal:<http://wwww.ebi.ac.uk/fgpt/lodestar>
 SELECT DISTINCT ?resource ?resourceLabel ?resourceDescription WHERE {
 ?bound a ?resource .
 ?resource rdfs:label  ?resourceLabel .
@@ -54,6 +58,7 @@ OPTIONAL {?resource dc:description  ?resourceDescription .  }
 }
 
 ^[DATASET.QUERY]
+PREFIX lodestar_internal:<http://wwww.ebi.ac.uk/fgpt/lodestar>
 SELECT DISTINCT ?dataset WHERE {
 GRAPH ?dataset {
     ?subject ?property ?object .
@@ -63,6 +68,7 @@ GRAPH ?dataset {
 
 
 ^[DEPICT.QUERY]
+PREFIX lodestar_internal:<http://wwww.ebi.ac.uk/fgpt/lodestar>
 SELECT DISTINCT ?img WHERE {
 {
  {?subject ?depict ?img}
@@ -72,11 +78,13 @@ SELECT DISTINCT ?img WHERE {
 }
 
 ^[PROPERTIES.QUERY]
+PREFIX lodestar_internal:<http://wwww.ebi.ac.uk/fgpt/lodestar>
 SELECT DISTINCT ?property WHERE {
 ?subject ?property ?object .
 }
 
 ^[OBJECTS.QUERY]
+PREFIX lodestar_internal:<http://wwww.ebi.ac.uk/fgpt/lodestar>
 SELECT DISTINCT ?object WHERE {
 ?subject ?property ?object .
 }

@@ -76,7 +76,7 @@ public class JenaVirtuosoExecutorService implements JenaQueryExecutionService {
             log.error("No sparql endpoint");
             throw new LodeException("You must specify a SPARQL endpoint URL");
         }
-        VirtGraph set = new VirtGraph(getEndpointURL(), getVirtuosoUser() , getVirtuosoPassword());
+        VirtGraph set =  (VirtGraph) g;
         set.setReadFromAllGraphs(isVirtuosoAllGraphs());
         if (withInference) {
             set.setRuleSet(getVirtuosoInferenceRule());
@@ -96,7 +96,7 @@ public class JenaVirtuosoExecutorService implements JenaQueryExecutionService {
             log.error("No sparql endpoint");
             throw new LodeException("You must specify a SPARQL endpoint URL");
         }
-        VirtGraph set = new VirtGraph(getEndpointURL(), getVirtuosoUser() , getVirtuosoPassword());
+        VirtGraph set =  (VirtGraph) g;
         set.setReadFromAllGraphs(isVirtuosoAllGraphs());
         if (withInference) {
             set.setRuleSet(getVirtuosoInferenceRule());

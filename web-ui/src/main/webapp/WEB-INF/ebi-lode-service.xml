@@ -18,24 +18,21 @@
         <property name="service" ref="explorerServiceImpl"/>
     </bean>
 
-    <!--
 
-    Uncomment these two beans for virtuoso connection pooling
-    <bean id="jenaVirtuosoConnectionPoolService" class="uk.ac.ebi.fgpt.lode.impl.JenaVirtuosoConnectionPoolService">
-        <constructor-arg ref="virtuosoDataSourceProvider"/>
-    </bean>
 
-    <bean id="virtuosoDataSourceProvider" class="uk.ac.ebi.fgpt.lode.impl.VirtuosoDatasourceProvider">
-        <constructor-arg name="endpointUrl" value="${lode.sparqlendpoint.url}"/>
-        <constructor-arg name="port" value="${lode.sparqlendpoint.port}"/>
-    </bean>
-    -->
+    <!--Uncomment these two beans for virtuoso connection pooling-->
+    <!--<bean id="jenaVirtuosoConnectionPoolService" class="uk.ac.ebi.fgpt.lode.impl.JenaVirtuosoConnectionPoolService">-->
+        <!--<constructor-arg ref="virtuosoDataSourceProvider"/>-->
+    <!--</bean>-->
 
-    <!--
-     For direct virtuoso JDBC connection, use this service
-    <bean id="jenaVirtuosoExecutorService" class="uk.ac.ebi.fgpt.lode.impl.JenaVirtuosoExecutorService">
-    </bean>
-    -->
+    <!--<bean id="virtuosoDataSourceProvider" class="uk.ac.ebi.fgpt.lode.impl.VirtuosoDatasourceProvider">-->
+        <!--<constructor-arg name="endpointUrl" value="${lode.sparqlendpoint.url}"/>-->
+        <!--<constructor-arg name="port" value="${lode.sparqlendpoint.port}"/>-->
+    <!--</bean>-->
+
+     <!--For direct virtuoso JDBC connection, use this service-->
+    <!--<bean id="jenaVirtuosoExecutorService" class="uk.ac.ebi.fgpt.lode.impl.JenaVirtuosoExecutorService">-->
+    <!--</bean>-->
 
     <!--
        A basic HTTP service bean for connecting to SPARQL endpoint

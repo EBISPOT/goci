@@ -24,6 +24,8 @@ var loadstarExploreService;
 var lodestarResultsPerPage;
 var lodestarIslogging;
 var lodestarDefaultQuery;
+var lodestarVoidQuery;
+var lodestarRdfsInference;
 var lodestarDefaultResourceImg;
 
 var loadstarNamespaces = {};
@@ -40,7 +42,7 @@ var sparqlQueryTextArea;
     var lodestarDiv = $("<div id='lodestar-main' class='ui-widget ui-corner-all'></div>");
     var contentsDiv = $("<div id='lodestar-contents' class='ui-widget ui-corner-all'></div>");
     var errorDiv = $("<div id='error-div' class='ui-state-error' style='display: none;'/>");
-    errorDiv.append($("<p class='alert'>Error</p>").append($("<span id='error-text'></span>")));
+    errorDiv.append($("<p class='alert'>Error: </p>").append($("<span id='error-text'></span>")));
 
     var appdetails = $("<div id='lodestar-description' class='ui-widget ui-corner-all'/>")
         .append($("<p></p>")
@@ -83,8 +85,10 @@ function _parseOptions(options) {
         'query_servlet_name': 'query',
         'explore_servlet_name': 'explore',
         'results_per_page' : 25,
+        'inference' : false,
         'logging' : false,
         'default_query' : "SELECT DISTINCT ?class \nwhere {[] a ?class}",
+        'void_query' : "SELECT DISTINCT ?s ?p ?o \nwhere {?s a <http://rdfs.org/ns/void#Dataset>\n OPTIONAL {?s ?p ?o} }",
         'namespaces' : {
             rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
             rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
@@ -97,7 +101,9 @@ function _parseOptions(options) {
     loadstarExploreService = _options.servlet_base + "/" + _options.explore_servlet_name;
     lodestarResultsPerPage = _options.results_per_page;
     lodestarIslogging = _options.logging;
+    lodestarRdfsInference = _options.inference;
     lodestarDefaultQuery = _options.default_query;
+    lodestarVoidQuery = _options.void_query;
     loadstarNamespaces = _options.namespaces;
     lodestarDefaultResourceImg =  _options.default_resource_image_url;
 
@@ -299,14 +305,15 @@ function _buildSparqlPage(element) {
         )
     );
 
-    // todo make with rdfs inference optional
-    section1.append(
-        $("<p></p>").append(
-            $("<label for='inference'>RDFS inference? </label>"))
-            .append(
-            $("<input type='checkbox' id='inference' name='inference' value='true'/>")
-        )
-    );
+    if (lodestarRdfsInference) {
+        section1.append(
+            $("<p></p>").append(
+                $("<label for='inference'>RDFS inference? </label>"))
+                .append(
+                $("<input type='checkbox' id='inference' name='inference' value='true'/>")
+            )
+        );
+    }
 
     section1.append(
         $("<p></p>").append(
@@ -410,12 +417,14 @@ function querySparql () {
         $('#offset').val(offset);
     }
 
-    if (queryString.match(/inference=/)) {
-        var iv = this._betterUnescape(queryString.match(/inference=([^&]*)/)[1]);
+    if (lodestarRdfsInference) {
+        if (queryString.match(/inference=/)) {
+            var iv = this._betterUnescape(queryString.match(/inference=([^&]*)/)[1]);
 
-        if (iv == 'true') {
-            rdfs = "true";
-            $('#inference').attr("checked", true);
+            if (iv == 'true') {
+                rdfs = "true";
+                $('#inference').attr("checked", true);
+            }
         }
     }
 
@@ -619,63 +628,72 @@ function renderSparqlResultJsonAsTable (json, tableid) {
     $("#" + tableid).html("");
 
     var _json = json;
-    try {
-        var _variables = _json.head.vars;
 
-        if (_json.results) {
-            if (_json.results.bindings) {
-                var _results = _json.results.bindings;
+    if (_json == undefined) {
+        displayError("There was a problem getting results for this query");
+    }
+    else {
+        try {
 
-                if (_results.length ==0) {
-                    alert("No results for query")
-                }
-                else {
-                    var header = createTableHeader(_variables);
+                if (_json.results) {
+                    if (_json.results.bindings) {
+                        var _results = _json.results.bindings;
 
-                    $("#" + tableid).append(header);
-
-                    displayPagination();
-
-                    for (var i = 0; i < _results.length; i++) {
-                        var row =$('<tr />');
-                        var binding = _results[i];
-                        for (var j = 0 ; j < _variables.length; j++) {
-                            var varName = _variables[j];
-                            var formattedNode = _formatNode(binding[varName], varName);
-                            var cell = $('<td />');
-                            cell.append (formattedNode);
-                            row.append(cell);
+                        if (_results.length ==0) {
+                            alert("No results for query")
                         }
-                        $("#" + tableid).append(row);
+                        else {
+                            var _variables = _json.head.vars;
+
+                            var header = createTableHeader(_variables);
+
+                            $("#" + tableid).append(header);
+
+                            displayPagination();
+
+                            for (var i = 0; i < _results.length; i++) {
+                                var row =$('<tr />');
+                                var binding = _results[i];
+                                for (var j = 0 ; j < _variables.length; j++) {
+                                    var varName = _variables[j];
+                                    var formattedNode = _formatNode(binding[varName], varName);
+                                    var cell = $('<td />');
+                                    cell.append (formattedNode);
+                                    row.append(cell);
+                                }
+                                $("#" + tableid).append(row);
+                            }
+                        }
+                    }
+                    else {
+                        displayError("No result bindings");
                     }
                 }
+                else if (_json.boolean != undefined)  {
+                    var header = createTableHeader(["boolean"]);
+                    $("#" + tableid).append(header);
+                    var row =$('<tr />');
+                    var cell = $('<td />');
+                    if (_json.boolean) {
+                        cell.append ("True");
+                    }
+                    else {
+                        cell.append ("False");
+                    }
+                    row.append(cell);
+                    $("#" + tableid).append(row);
+                }
+                else {
+                    alert("no results!")
+                }
+
             }
-            else {
-                displayError("No result bindings");
+            catch (err) {
+                displayError("Problem rendering results: "+ err.message);
             }
-        }
-        else if (_json.boolean)  {
-            var header = createTableHeader(["boolean"]);
-            $("#" + tableid).append(header);
-            var row =$('<tr />');
-            var cell = $('<td />');
-            if (_json.boolean) {
-                cell.append ("True");
-            }
-            else {
-                cell.append ("False");
-            }
-            row.append(cell);
-            $("#" + tableid).append(row);
-        }
-        else {
-            alert("no results!")
-        }
 
     }
-    catch (err) {
-        displayError("Problem rendering results: "+ err.message);
-    }
+
 
 }
 
@@ -995,7 +1013,7 @@ function renderAllResourceTypes(element, exclude) {
                 var p = $("<p></p>");
 
                 if (data.length == 0) {
-                    p.append($("No more type information available for this resource"));
+                    p.append("No more type information available for this resource");
                 }
                 else {
                     for (var x = 0; x < data.length; x ++) {
