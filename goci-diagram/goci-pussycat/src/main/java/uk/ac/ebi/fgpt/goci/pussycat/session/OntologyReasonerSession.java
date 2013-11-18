@@ -32,7 +32,7 @@ public class OntologyReasonerSession extends Initializable implements ReasonerSe
 
     @Override protected void doInitialization() throws Exception {
         IRI efoLocationIRI = IRI.create(getConfiguration().getEfoResource().getURI());
-        IRI efoLogicalIRI = IRI.create(OntologyConstants.EFO_ONTOLOGY_SCHEMA_IRI + "/");
+        IRI efoLogicalIRI = IRI.create(OntologyConstants.EFO_ONTOLOGY_SCHEMA_IRI);
 
         OWLOntology ontology;
         getLog().debug("Trying to create a reasoner over ontology from '" + efoLocationIRI + "'");
