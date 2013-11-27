@@ -160,8 +160,8 @@
 
     <!-- Version control (internal SVN) -->
     <scm>
-        <connection>scm:git:git://github.com/EBISPOT/lodestar</connection>
-        <developerConnection>scm:git:git://github.com/EBISPOT/lodestar</developerConnection>
+        <connection>scm:git:https://github.com/EBISPOT/lodestar</connection>
+        <developerConnection>scm:git:https://github.com/EBISPOT/lodestar</developerConnection>
         <url>http://github.com/EBISPOT/lodestar</url>
     </scm>
 
