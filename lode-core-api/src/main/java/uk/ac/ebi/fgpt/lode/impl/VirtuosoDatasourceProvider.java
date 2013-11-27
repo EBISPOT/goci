@@ -71,4 +71,5 @@ public class VirtuosoDatasourceProvider implements DatasourceProvider {
     public DataSource getDataSource() throws SQLException {
         return virtuosoSource;
     }
+
 }
