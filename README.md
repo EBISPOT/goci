@@ -4,6 +4,14 @@ Lodestar
 Release Notes
 =============
 
+**1.1** 27th Novemnber 2013	
+* Updated to Jena 2.11
+* Fixed query limit bug (RDF-10)
+* Added config for query timeouts (RDF-15)
+* Configurable hide RDFS button (RDF-7)
+* Added servlet status monitor
+* javascript cleanup
+
 **1.0.2** 29th August 2013	
 * Updated to Jena 2.10
 * VirtJena JDBC 4 (includes support for SPARQL bind queries). Requires virtuoso 6.1.7.2
