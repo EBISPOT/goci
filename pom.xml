@@ -91,9 +91,9 @@
             <url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo</url>
         </snapshotRepository>
         <site>
-            <id>coconut.ebi.ac.uk</id>
-            <name>coconut.ebi.ac.uk-snapshots</name>
-            <url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo</url>
+            <id>lodestar-site</id>
+            <name>lodestar site</name>
+            <url>scp://orange.ebi.ac.uk/ebi/microarray/home/fgpt/project-web/lodestar</url>
         </site>
     </distributionManagement>
 
