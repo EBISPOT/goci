@@ -158,4 +158,11 @@
         </dependencies>
     </dependencyManagement>
 
+    <!-- Version control (internal SVN) -->
+    <scm>
+        <connection>scm:git:git://github.com/EBISPOT/lodestar</connection>
+        <developerConnection>scm:git:git://github.com/EBISPOT/lodestar</developerConnection>
+        <url>http://github.com/EBISPOT/lodestar</url>
+    </scm>
+
 </project>
