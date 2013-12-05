@@ -13,7 +13,7 @@
     <bean name="config" class="uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration" init-method="init">
         <!-- TODO: use EFO release -->
         <property name="efoResource" value="file:/home/dwelter/EFO_SVN/ExFactorInOWL/currentrelease/eforelease/efo.owl" />
-        <property name="gwasDiagramSchemaResource" value="classpath:gwas-diagram-relaxed.owl"/>
+        <property name="gwasDiagramSchemaResource" value="classpath:gwas-diagram.owl"/>
     </bean>
 
     <bean id="pussycatSessionStrategy"
