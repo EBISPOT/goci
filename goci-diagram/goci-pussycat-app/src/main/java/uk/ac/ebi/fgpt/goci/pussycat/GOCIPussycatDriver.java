@@ -18,8 +18,12 @@ import uk.ac.ebi.fgpt.goci.pussycat.utils.DateTimeStamp;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Properties;
+import java.util.Date;
 
 //import uk.ac.ebi.fgpt.goci.pussycat.metrics.DateTimeStamp;
 
@@ -28,6 +32,7 @@ public class GOCIPussycatDriver {
 
     private static String ontologyInputFile;
     private static String svgOutputLocation;
+    private static String efoLocation;
 
     public static void main(String[] args) {
 
@@ -38,9 +43,42 @@ public class GOCIPussycatDriver {
 
                 File input = new File(ontologyInputFile);
                 File output = new File(svgOutputLocation);
+                File efo = new File(efoLocation);
 
                 System.setProperty("goci.ontology.inputPath", input.getAbsolutePath());
                 System.setProperty("goci.svg.outputPath", output.getAbsolutePath());
+                System.setProperty("efo.inputPath", efo.getAbsolutePath());
+
+    // backup old SVG directory
+                try{
+                    if(output.exists()){
+                        System.out.println("SVG output directory " + output.getAbsolutePath() + " already exists");
+                        String dateStr = new SimpleDateFormat("yyyyMMdd").format(new Date());
+                        String backupFileName = output.getName().concat(".backup.").concat(dateStr);
+                        File backupFile = new File(output.getAbsoluteFile().getParentFile(), backupFileName);
+
+                        Path oldoutput = input.toPath();
+                        Path newoutput = backupFile.toPath();
+                        if (!Files.exists(newoutput)) {
+                            System.out.print(
+                                    "Backing up " + oldoutput.toString() + " to " + newoutput.toString() + "...");
+
+                            Files.move(oldoutput,
+                                    newoutput,
+                                    StandardCopyOption.REPLACE_EXISTING,
+                                    StandardCopyOption.ATOMIC_MOVE);
+                            System.out.println("ok!");
+                        }
+                        else {
+                            System.out.println("Backup already exists");
+                        }    
+                    }
+                }
+                catch (IOException e) {
+                    System.err.println("Failed to backup Load failed: " + e.getMessage());
+                    e.printStackTrace();
+                    System.exit(1);
+                }
 
             }
             else {
@@ -86,19 +124,17 @@ public class GOCIPussycatDriver {
                 // find -o option (for asserted output file)
                 if (cl.hasOption("o")) {
                     svgOutputLocation = cl.getOptionValue("o");
-
-                    if (cl.hasOption("i")) {
-                        ontologyInputFile = cl.getOptionValue("i");
-                    }
-                    else{
-                        ontologyInputFile = "/ebi/microarray/home/fgpt/goci-home/ontology/gwas-data-latest.owl";
-                    }
                 }
                 else {
-                    System.err.println("-o (SVG output file location) argument is required");
-                    help.printHelp("publish", options, true);
-                    parseArgs += 2;
+                    svgOutputLocation =  "/ebi/microarray/home/fgpt/goci-home/diagram/cache/diagram-latest/";
                 }
+                if (cl.hasOption("i")) {
+                    ontologyInputFile = cl.getOptionValue("i");
+                }
+                else{
+                    ontologyInputFile = "/ebi/microarray/home/fgpt/goci-home/ontology/gwas-data-latest.owl";
+                }
+
             }
         }
         catch (ParseException e) {
@@ -123,10 +159,17 @@ public class GOCIPussycatDriver {
         outputFileOption.setRequired(true);
         options.addOption(outputFileOption);
 
+        //add input file arguments
         Option inputFileOption = new Option("i", "inferred", true,
                 "The input file to read the ontology from");
         inputFileOption.setArgName("file");
         options.addOption(inputFileOption);
+
+        //add input file arguments
+        Option efoFileOption = new Option("e", "efo", true,
+                "The location from which to read the Experimental Factor Ontology from");
+        efoFileOption.setArgName("file");
+        options.addOption(efoFileOption);
 
         return options;
     }
@@ -175,10 +218,6 @@ public class GOCIPussycatDriver {
 
         setRenderletNexus();
         getLog().info("Renderlet nexus set");
-
-
-        Properties dates = new Properties();
-        dates.load(GOCIPussycatDriver.class.getClassLoader().getResourceAsStream("filters.properties"));
 
         OWLClassExpression query = config.getOWLDataFactory().getOWLThing();
 
