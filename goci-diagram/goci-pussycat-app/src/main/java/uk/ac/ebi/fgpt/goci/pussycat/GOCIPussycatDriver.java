@@ -49,7 +49,7 @@ public class GOCIPussycatDriver {
                 System.setProperty("goci.svg.outputPath", output.getAbsolutePath());
                 System.setProperty("efo.inputPath", efo.getAbsolutePath());
 
-    // backup old SVG directory
+                     // backup old SVG directory
                 try{
                     if(output.exists()){
                         System.out.println("SVG output directory " + output.getAbsolutePath() + " already exists");
@@ -133,6 +133,12 @@ public class GOCIPussycatDriver {
                 }
                 else{
                     ontologyInputFile = "/ebi/microarray/home/fgpt/goci-home/ontology/gwas-data-latest.owl";
+                }
+                if(cl.hasOption("e")){
+                    efoLocation = cl.getOptionValue("e");
+                }
+                else{
+                    efoLocation = "www.ebi.ac.uk/efo";
                 }
 
             }
