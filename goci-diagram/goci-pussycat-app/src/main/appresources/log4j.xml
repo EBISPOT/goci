@@ -8,30 +8,23 @@
         </layout>
     </appender>
 
-    <appender name="goci-metrics-log" class="org.apache.log4j.DailyRollingFileAppender">
+    <appender name="goci-app-log" class="org.apache.log4j.DailyRollingFileAppender">
         <param name="DatePattern" value="'.'yyyy-MM-dd" />
-        <param name="File" value="goci-metrics.log" />
+        <param name="File" value="goci-app.log" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="[%d] %-5p (%F:%L) - %m%n" />
         </layout>
     </appender>
 
-    <appender name="benchmark-log" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="DatePattern" value="'.'yyyy-MM-dd" />
-        <param name="File" value="bench-marking.log" />
-        <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="[%d] %-5p (%F:%L) - %m%n" />
-        </layout>
-    </appender>
 
     <logger name="org.springframework" additivity="false">
         <level value="WARN" />
-        <appender-ref ref="goci-metrics-log" />
+        <appender-ref ref="goci-app-log" />
     </logger>
 
-    <logger name="uk.ac.ebi.fgpt.goci.pussycat.GOCIPussycatMetricsDriver" additivity="false">
+    <logger name="uk.ac.ebi.fgpt.goci.pussycat.GOCIPussycatDriver" additivity="false">
         <level value="DEBUG" />
-        <appender-ref ref="goci-metrics-log" />
+        <appender-ref ref="goci-app-log" />
     </logger>
 
     <logger name="benchmark.output.log" additivity="false">
@@ -40,8 +33,8 @@
     </logger>
 
     <root>
-        <priority value="INFO" />
-        <appender-ref ref="goci-metrics-log" />
+        <priority value="TRACE" />
+        <appender-ref ref="goci-app-log" />
     </root>
 
 </log4j:configuration>
