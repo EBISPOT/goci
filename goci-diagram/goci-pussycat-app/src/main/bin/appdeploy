@@ -3,4 +3,4 @@
 base=${0%/*};
 current=`pwd`;
 
-bsub -M 20000 -q research-rh6 -R "rusage[mem=20000]" $base/benchmark.sh $@
+bsub -M 20000 -q research-rh6 -R "rusage[mem=20000]" $base/appdeploy.sh $@

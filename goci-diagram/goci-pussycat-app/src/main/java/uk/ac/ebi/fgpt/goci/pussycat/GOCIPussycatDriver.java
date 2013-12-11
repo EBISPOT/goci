@@ -41,11 +41,11 @@ public class GOCIPussycatDriver {
             int parseArgs = parseArguments(args);
             if (parseArgs == 0) {
 
-                File input = new File(ontologyInputFile);
+                String input = ontologyInputFile;
                 File output = new File(svgOutputLocation);
                 String efo = efoLocation;
 
-                System.setProperty("goci.ontology.inputPath", input.getAbsolutePath());
+                System.setProperty("goci.ontology.inputPath", input);
                 System.setProperty("goci.svg.outputPath", output.getAbsolutePath());
                 System.setProperty("efo.inputPath", efo);
 
