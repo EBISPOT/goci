@@ -267,8 +267,8 @@ public class GOCIPussycatDriver {
             throw new RuntimeException(e);
         }
 
-        for (Renderlet r : renderlets) {
-            renderletNexus.register(r);
-        }
+//        for (Renderlet r : renderlets) {
+//            renderletNexus.register(r);
+//        }
     }
 }
