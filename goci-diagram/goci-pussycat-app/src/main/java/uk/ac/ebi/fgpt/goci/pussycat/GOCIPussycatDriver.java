@@ -43,11 +43,11 @@ public class GOCIPussycatDriver {
 
                 File input = new File(ontologyInputFile);
                 File output = new File(svgOutputLocation);
-                File efo = new File(efoLocation);
+                String efo = efoLocation;
 
                 System.setProperty("goci.ontology.inputPath", input.getAbsolutePath());
                 System.setProperty("goci.svg.outputPath", output.getAbsolutePath());
-                System.setProperty("efo.inputPath", efo.getAbsolutePath());
+                System.setProperty("efo.inputPath", efo);
 
                      // backup old SVG directory
                 try{
@@ -57,7 +57,7 @@ public class GOCIPussycatDriver {
                         String backupFileName = output.getName().concat(".backup.").concat(dateStr);
                         File backupFile = new File(output.getAbsoluteFile().getParentFile(), backupFileName);
 
-                        Path oldoutput = input.toPath();
+                        Path oldoutput = output.toPath();
                         Path newoutput = backupFile.toPath();
                         if (!Files.exists(newoutput)) {
                             System.out.print(
