@@ -96,6 +96,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
                 "(" + renderlet.getDescription() + ") " +
                 "[" + renderlet.getClass().getSimpleName() + "]");
         getLog().debug("Renderlets now: " + (renderlets.size() + 1));
+
         return renderlets.add(renderlet);
     }
 
@@ -326,6 +327,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
     }
 
     public void renderSVGFromScratch(SVGBuilder svgBuilder, OWLOntology ontology, Set<OWLNamedIndividual> individuals){
+
         renderChromosomes(svgBuilder);
 
         int assocCount=0;

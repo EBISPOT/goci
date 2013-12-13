@@ -26,6 +26,14 @@
     <script type="text/javascript" src="scripts/jquery.scrollTo-1.4.3-min.js"></script>
     <script type="text/javascript" src="scripts/jquery.localscroll-1.2.7-min.js"></script>
 
+    <!--<link rel="stylesheet" href="http://www.ebi.ac.uk/arrayexpress/assets/stylesheets/ae-common-1.0.131017.css" type="text/css">-->
+    <!--<script language="JavaScript" type="text/javascript" src="/home/dwelter/BioJS/danifork/biojs/src/main/resources/dependencies/jquery/jquery-1.8.2.min.js"></script>-->
+    <!--<script language="JavaScript" type="text/javascript" src="/home/dwelter/BioJS/danifork/biojs/src/main/resources/dependencies/olstreeview/jquery.caret.range-1.0.js"></script>-->
+    <!--<script language="JavaScript" type="text/javascript" src="/home/dwelter/BioJS/danifork/biojs/src/main/resources/dependencies/olstreeview/jquery-autocomplete-ols.js"></script>-->
+    <!--<script type="text/javascript" src="/home/dwelter/BioJS/danifork/biojs/src/main/javascript/Biojs.js"></script>-->
+    <!--<script type="text/javascript" src="/home/dwelter/BioJS/danifork/biojs/src/main/javascript/Biojs.AutocompleteOLS.js"></script>-->
+
+
 
     <!-- Google analytics -->
     <script type="text/javascript">
@@ -43,6 +51,11 @@
             var s = document.getElementsByTagName('script')[0];
             s.parentNode.insertBefore(ga, s);
         })();
+
+//        var instance = new Biojs.AutocompleteOLS({
+//            target: "trait-filter",
+//            ontology: "EFO"
+//        });
 
     </script>
 </head>
@@ -69,6 +82,14 @@
                      name="trait-filter"
                      title="Filter Traits"
                      size="50"/>
+
+            <!--<input type="text"-->
+                   <!--id="trait-filter"-->
+                   <!--class="ac_input"-->
+                   <!--name="trait-filter"-->
+                   <!--title="Filter Traits"-->
+                   <!--size="50"/>-->
+
             <a href="search/clear" id="clear">Clear results</a>
 
             <!--<input type="text"-->
