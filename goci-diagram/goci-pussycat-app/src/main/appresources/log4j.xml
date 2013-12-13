@@ -27,11 +27,6 @@
         <appender-ref ref="goci-app-log" />
     </logger>
 
-    <logger name="benchmark.output.log" additivity="false">
-        <level value="INFO" />
-        <appender-ref ref="benchmark-log" />
-    </logger>
-
     <root>
         <priority value="TRACE" />
         <appender-ref ref="goci-app-log" />
