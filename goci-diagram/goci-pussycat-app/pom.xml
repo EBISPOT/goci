@@ -12,7 +12,7 @@
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci-pussycat-app</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>goci-pussycat-farm</name>
+    <name>goci-pussycat-app</name>
     <url>http://maven.apache.org</url>
 
     <properties>
