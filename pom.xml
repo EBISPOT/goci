@@ -4,7 +4,7 @@
 
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci</artifactId>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.5</version>
     <packaging>pom</packaging>
 
     <name>GWAS Ontology and Curation Infrastructure</name>
@@ -174,7 +174,7 @@
                 <role>developer</role>
             </roles>
             <timezone>0</timezone>
-            <properties/>
+            <properties />
         </developer>
         <developer>
             <id>dwelter</id>
@@ -186,7 +186,7 @@
                 <role>developer</role>
             </roles>
             <timezone>0</timezone>
-            <properties/>
+            <properties />
         </developer>
     </developers>
 
@@ -278,7 +278,7 @@
 
             <properties>
                 <java.location>java</java.location>
-                <java.args/>
+                <java.args />
             </properties>
         </profile>
 

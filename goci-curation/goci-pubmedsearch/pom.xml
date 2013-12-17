@@ -4,11 +4,11 @@
   <parent>
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci-curation</artifactId>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.5</version>
   </parent>
   <groupId>uk.ac.ebi.fgpt.goci</groupId>
   <artifactId>goci-pubmedsearch</artifactId>
-  <version>0.7-SNAPSHOT</version>
+  <version>0.7</version>
   <name>goci-pubmedsearch</name>
   <url>http://maven.apache.org</url>
   <properties>
