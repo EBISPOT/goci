@@ -19,8 +19,8 @@ import java.util.Collection;
  */
 public class SingleNucleotidePolymorphismDAO {
     private static final String SNP_SELECT_MAIN =
-            "select distinct ID, SNP, REGION, CHROMOSOME, LOCATION from (" +
-                    "select s.ID, s.SNP, r.REGION, g.CHR_ID as CHROMOSOME, g.CHR_POS as LOCATION from GWASSNP s " +
+            "select ID, SNP, REGION, CHROMOSOME, LOCATION from (" +
+                    "select distinct s.ID, s.SNP, r.REGION, g.CHR_ID as CHROMOSOME, g.CHR_POS as LOCATION from GWASSNP s " +
                     "join GWASSNPXREF sx on s.ID=sx.SNPID " +
                     "join GWASSTUDIESSNP g on sx.GWASSTUDIESSNPID=g.ID " +
                     "join GWASREGIONXREF rx on rx.GWASSTUDIESSNPID=g.ID " +
