@@ -29,5 +29,6 @@
         <module>SNPbatchLoader</module>
     <module>goci-pubmedsearch</module>
     <module>goci-enexport</module>
+    <module>goci-pubmedimport</module>
   </modules>
 </project>

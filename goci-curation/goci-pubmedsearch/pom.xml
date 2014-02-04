@@ -30,7 +30,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>uk.ac.ebi.fgpt.goci.PubmedSearchDriver</mainClass>
+                            <mainClass>uk.ac.ebi.fgpt.goci.PubmedImportDriver</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

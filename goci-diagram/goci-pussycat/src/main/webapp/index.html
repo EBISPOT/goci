@@ -70,8 +70,7 @@
 
         <h2>Exploring Genome-wide Association Studies</h2>
 
-        <!--<div class="survey_link"><h3><a href="http://www.genome.gov/27554296"  target='_blank'>On Thursday, 18 July 2013 2pm GMT/09am EST, there will be a webinar to highlight current uses-->
-            <!--and explore priorities and future directions for the GWAS catalog.</a></h3></div>-->
+        <div class="survey_link"><h3><a href="http://nar.oxfordjournals.org/content/42/D1/D1001"  target='_blank'>New Nucleic Acids Research paper: The NHGRI GWAS Catalog, a curated resource of SNP-trait associations</a></h3></div>
 
 
         <div id="filtering">
@@ -206,8 +205,8 @@
     <!--<li><a href="#keytab">Key</a></li>-->
     <li><a href="#helptab">Help</a></li>
     <li><a href="#curationtab">Curation process</a></li>
-    <!--<li><a href="#contacttab">Contact</a></li>-->
     <li><a href="#abouttab">About</a></li>
+    <li><a href="#contacttab">Contact us</a></li>
     <li id="logitem" style="display: none"><a href="#logtab">Log</a></li>
 </ul>
 
@@ -646,6 +645,11 @@
                     screen until the desired part is visible. This feature is particularly useful for centering the diagram
                     on a specific location at higher zoom levels.</p>
             </li>
+            <li><b>Cite the GWAS diagram</b>
+                <p>Welter, D., MacArthur, J., Morales, J., Burdett, T., Hall, P., Junkins, H., Klemm, A.,
+                    Flicek, P., Manolio, T., Hindorff, L., and Parkinson, H. (2014) The NHGRI GWAS Catalog, a curated resource of SNP-trait associations
+                    Nucl. Acids Res. 42 (D1): D1001-D1006. doi: 10.1093/nar/gkt1229</p>
+            </li>
 
         </ul>
 
@@ -843,6 +847,13 @@
             dynamic GWAS diagram.
         </p>
 
+        <h3>How to cite the GWAS diagram</h3>
+        <a href="http://nar.oxfordjournals.org/content/42/D1/D1001">Welter, D., MacArthur, J., Morales, J., Burdett, T., Hall, P., Junkins, H., Klemm, A.,
+        Flicek, P., Manolio, T., Hindorff, L., and Parkinson, H. (2014) The NHGRI GWAS Catalog, a curated resource of SNP-trait associations
+        Nucl. Acids Res. 42 (D1): D1001-D1006</a>
+        <br>
+
+
         <!--<p>This is version 0.8 of the GWAS Diagram Browser, released on 23/08/2012.</p>-->
         <!-- Dynamically fetch status information from server -->
         <div id="status">
@@ -872,7 +883,7 @@
         <h3>Contact</h3>
 
         <p>For questions and to provide feedback, please contact <a href="mailto:gwas-curator@ebi.ac.uk">the GWAS team</a> at
-            EBI.
+            EBI, either by email or using the form in the <a href="#contacttab">Contact Us tab</a>.
         </p>
 
         <p>For bug reports and feature requests, please use our <a href="http://www.ebi.ac.uk/panda/jira/browse/GOCI">bug
@@ -887,9 +898,40 @@
     </div>
 </div>
 
-<!--<div id="contacttab" class="tabcontent">-->
-
-<!--</div>-->
+<div id="contacttab" class="tabcontent">
+        <h3>We'd love to hear from you!</h3>
+        <p> Whether you have a question, would like to provide feedback on your experience using the diagram
+            or want to make a suggestion for a new feature, please contact us using the form below.</p>
+        <form action="send_mail.php" method="post">
+            <table>
+                <tr>
+                    <td>Name:</td>
+                    <td>
+                        <input type="text" placeholder="Required" name="sendername" value="" maxlength="200" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Email Adress:</td>
+                    <td>
+                        <input type="text" placeholder="Required" name="email_address" value="" maxlength="200" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Comments:</td>
+                    <td>
+                        <textarea rows="10" cols="50" name="comments"></textarea>
+                    </td>
+                </tr>
+                <tr><td>&nbsp;</td>
+                    <td>
+                        <a id="sendmailbutton"
+                           href="#"
+                           style="font-weight: bold">Send</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+</div>
 
 <div id="logtab" class="tabcontent" style="display: none;">
     <div class="container" style="display: none;">

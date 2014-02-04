@@ -67,6 +67,9 @@ function init() {
         $("#retrybutton").button();
         $("#retrybutton").click(renderDiagram);
 
+        $("#sendmailbutton").button();
+        $("#sendmailbutton").click(sendMessage);
+
 
         $(".legenditem").click(function() {
             filterTraits($(this).attr("id"));
@@ -600,6 +603,20 @@ function hideLegend(){
 //    }
 //
 //}
+
+function sendMessage(){
+ //declare teh variables here
+    var message = "foobar";
+
+    $.ajax({
+        type: 'POST',
+        url: 'send_email.php',
+        data: message,
+        success: //define a function for success, probably an alert pop-up
+      //  error: serverCommunicationFail
+    });
+}
+}
 
 
 

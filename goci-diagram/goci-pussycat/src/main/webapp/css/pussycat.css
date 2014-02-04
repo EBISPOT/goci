@@ -48,7 +48,7 @@ h5{
 }
 
 #header {
-    height: 80px;/* 120px;*/
+    height: 110px;/* 80px;*/
     padding-top: 10px;
     padding-bottom: 15px;
     background: url('../images/dual-logo2.png') no-repeat;
@@ -82,10 +82,10 @@ h5{
     /*letter-spacing: 1px;*/
 }
 
-/*.survey_link {*/
-    /*text-align: center;*/
-    /*z-index: 100;*/
-/*}*/
+.survey_link {
+    text-align: center;
+    z-index: 100;
+}
 
 #filtering {
     margin-top: 0.5em;

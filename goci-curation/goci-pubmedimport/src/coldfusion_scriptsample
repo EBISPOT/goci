@@ -1,0 +1,17 @@
+    <cftry>
+    	<cfset hasError = 1>
+		<cfoutput> About to create a java object </cfoutput>
+        <cfset importer = createObject( "java", "uk.ac.ebi.fgpt.goci.PubmedImportDriver" )>
+        <cfoutput>
+        <cfset importer.init(javaCast("String", #filename#), javaCast("int", #ID#))>  //input parameters go here - presumably PMID
+   		Java object successfully created  </cfoutput>
+
+		<cfcatch type="java.lang.Exception">
+  	  	<cfoutput>Exception: #cfcatch.detail# </cfoutput>
+        CFCATCH
+	 	<cfdump var=#cfcatch#>
+        CFCATCH Message
+	 	<cfdump var=#cfcatch.message#>
+        <cfset msg = #cfcatch.message#>
+		</cfcatch>
+	</cftry>
