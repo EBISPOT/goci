@@ -6,10 +6,7 @@ import uk.ac.ebi.fgpt.goci.dao.GwasStudyDAO;
 import uk.ac.ebi.fgpt.goci.exception.DispatcherException;
 import uk.ac.ebi.fgpt.goci.model.GwasStudy;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -46,10 +43,9 @@ public class GwasPubmedImporter {
         this.studyDAO = studyDAO;
     }
 
-    public void dispatchSearch() throws DispatcherException{
-        getLog().debug("Dispatching PubMed queries...");
-        Collection<String> pubmedIDs = getDispatcherService().dispatchSearchQuery();
-        getLog().debug("Query returned " + pubmedIDs.size() + " studies...");
+    public void dispatchSearch(String input) throws DispatcherException{
+        getLog().debug("Checking input against database...");
+        Collection<String> pubmedIDs = processInput(input);
 
         // filter list of pubmed ids, only include those that aren't already entered
         List<String> newPubMedIDs = new ArrayList<String>();
@@ -63,7 +59,7 @@ public class GwasPubmedImporter {
         }
 
         // fetch titles and abstracts for the new pubmed ids
-        getLog().info("PubMed search ran, and identified " + pubmedIDs.size() + " publications.  " +
+        getLog().info(pubmedIDs.size() + " Pubmed IDs were provided.  " +
                 "Of these, " + newPubMedIDs.size() + " are new.");
 
         if(newPubMedIDs.size() > 0){
@@ -80,5 +76,22 @@ public class GwasPubmedImporter {
             getLog().info("No new studies to be added.");
         }
 
+    }
+
+    public Collection<String> processInput(String input){
+        Collection<String> pmids = new ArrayList<String>();
+
+        if(input.contains(",")){
+            StringTokenizer tk = new StringTokenizer(input,",");
+            while (tk.hasMoreTokens()){
+                pmids.add(tk.nextToken());
+            }
+
+        }
+        else {
+            pmids.add(input);
+        }
+
+        return pmids;
     }
 }

@@ -27,17 +27,17 @@ public class PubmedImportDriver {
 
     private GwasPubmedImporter importer;
 
-    public PubmedImportDriver(int PMID){
+    public PubmedImportDriver(String PMID){
         getLog().debug("PubmedImportDriver initialised");
         ApplicationContext ctx = new ClassPathXmlApplicationContext("classpath*:pubmedimport.xml");
         importer = ctx.getBean("searcher", GwasPubmedImporter.class);
         launchImporter(PMID);
     }
 
-    public void launchImporter(int PMID){
+    public void launchImporter(String PMID){
         try{
             getLog().debug("Dispatching the importer");
-            importer.dispatchSearch();
+            importer.dispatchSearch(PMID);
             getLog().info("Import finished");
         }
 
