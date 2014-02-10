@@ -1,6 +1,6 @@
 // FINAL VARIABLES - tweak these to adjust standard configuration
 var enableDebugging = false;
-var gwasLatest = "images/timeseries/gwas-2012-12.png";
+var gwasLatest = "images/timeseries/gwas-latest.png";
 
 var enableFiltering = true;
 var enableSVG = true;
@@ -608,14 +608,14 @@ function sendMessage(){
  //declare teh variables here
     var message = "foobar";
 
-    $.ajax({
-        type: 'POST',
-        url: 'send_email.php',
-        data: message,
-        success: //define a function for success, probably an alert pop-up
-      //  error: serverCommunicationFail
-    });
-}
+//    $.ajax({
+//        type: 'POST',
+//        url: 'send_email.php',
+//        data: message,
+//        success: //define a function for success, probably an alert pop-up
+//      //  error: serverCommunicationFail
+//    });
+//}
 }
 
 

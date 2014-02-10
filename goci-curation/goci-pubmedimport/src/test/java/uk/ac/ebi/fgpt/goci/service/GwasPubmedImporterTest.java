@@ -15,12 +15,12 @@ import java.util.Map;
 import static junit.framework.Assert.fail;
 import static org.mockito.Mockito.*;
 
-public class GwasPubmedSearcherTest
+public class GwasPubmedImporterTest
 {
 
     private GwasPubMedDispatcherService dispatcherService;
     private GwasStudyDAO studyDao;
-    private GwasPubmedImporter searcher;
+    private GwasPubmedImporter importer;
     private GwasStudy study, study2;
 
 
@@ -45,7 +45,7 @@ public class GwasPubmedSearcherTest
             dispatcherService = mock(GwasPubMedDispatcherService.class);
 
 
-            when(dispatcherService.dispatchSearchQuery()).thenReturn(samplePMIDs);
+      //      when(dispatcherService.dispatchSearchQuery()).thenReturn(samplePMIDs);
 
 
 
@@ -57,9 +57,9 @@ public class GwasPubmedSearcherTest
 
             when(dispatcherService.dispatchSummaryQuery(samplePMIDs)).thenReturn(sampleStudies);
 
-             searcher = new GwasPubmedImporter();
-             searcher.setDispatcherService(dispatcherService);
-             searcher.setStudyDAO(studyDao);
+             importer = new GwasPubmedImporter();
+             importer.setDispatcherService(dispatcherService);
+             importer.setStudyDAO(studyDao);
 
 
          }
@@ -77,13 +77,13 @@ public class GwasPubmedSearcherTest
     //    }
 
 //    does the actual test
-    @Test
-    public void testDispatchSearch() throws DispatcherException {
-        searcher.dispatchSearch();
-
-     //   verify(studyDao).saveStudy(study);
-
-    }
+//    @Test
+//    public void testDispatchSearch() throws DispatcherException {
+//        importer.dispatchSearch();
+//
+//     //   verify(studyDao).saveStudy(study);
+//
+//    }
 
 
 }
