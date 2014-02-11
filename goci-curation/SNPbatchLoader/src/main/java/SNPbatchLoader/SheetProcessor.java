@@ -91,10 +91,19 @@ public class SheetProcessor {
                     getLog().debug("RF is null in row " + row.getRowNum());
                 }
 
-                Integer pvalue_mantissa, pvalue_exponent;
+                Integer pvalue_mantissa = null;
+                Integer pvalue_exponent = null;
 
                 if(row.getCell(4, row.RETURN_BLANK_AS_NULL) != null){
-                    pvalue_mantissa	= (int)row.getCell(4).getNumericCellValue();
+                    XSSFCell mant = row.getCell(4);
+                    switch(mant.getCellType()){
+                        case Cell.CELL_TYPE_STRING:
+                            pvalue_mantissa = null;
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            pvalue_mantissa = (int)mant.getNumericCellValue();
+                            break;
+                    }
                 }
                 else{
                     pvalue_mantissa = null;
@@ -102,7 +111,15 @@ public class SheetProcessor {
                 }
 
                 if(row.getCell(5, row.RETURN_BLANK_AS_NULL) != null){
-                    pvalue_exponent	= (int)row.getCell(5).getNumericCellValue();
+                    XSSFCell expo = row.getCell(5);
+                    switch(expo.getCellType()){
+                        case Cell.CELL_TYPE_STRING:
+                            pvalue_exponent = null;
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            pvalue_exponent = (int)expo.getNumericCellValue();
+                            break;
+                    }
                 }
                 else{
                     pvalue_exponent = null;
@@ -131,30 +148,45 @@ public class SheetProcessor {
                     getLog().debug("pvalue text is null in row " + row.getRowNum());
                 }
 				
-				Double orpercopynum;
+				Double orpercopynum = null;
 				if(row.getCell(7, row.RETURN_BLANK_AS_NULL) != null){
-					orpercopynum = row.getCell(7).getNumericCellValue();
+                    XSSFCell or = row.getCell(7);
+                    switch(or.getCellType()){
+                        case Cell.CELL_TYPE_STRING:
+                            orpercopynum = null;
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            orpercopynum = or.getNumericCellValue();
+                            break;
+                    }
 				}
 				else{
 					orpercopynum = null;
                     getLog().debug("OR is null in row " + row.getRowNum());
                 }
 
-				Double orpercopyrecip;
+				Double orpercopyrecip = null;
 				if(row.getCell(8, row.RETURN_BLANK_AS_NULL) != null){
-					orpercopyrecip = row.getCell(8).getNumericCellValue();
-					
-					if(orpercopyrecip == 0){
-						orpercopyrecip = null;
-					}
+                    XSSFCell recip = row.getCell(8);
+                    switch(recip.getCellType()){
+                        case Cell.CELL_TYPE_STRING:
+                            orpercopyrecip = null;
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            orpercopyrecip = recip.getNumericCellValue();
+                            break;
+                    }
 				}
 				else{
 					orpercopyrecip = null;
                     getLog().debug("OR recip is null in row " + row.getRowNum());
                 }
-				
-				if(orpercopyrecip != null){
-					orpercopynum = ((100/orpercopyrecip)/100);			
+
+                boolean recipReverse = false;
+
+				if((orpercopyrecip != null) && (orpercopynum == null)){
+					orpercopynum = ((100/orpercopyrecip)/100);
+                    recipReverse = true;
 				}
 
                 char ortype;
@@ -184,23 +216,32 @@ public class SheetProcessor {
                     getLog().debug("OR direction is null in row " + row.getRowNum());
                 }
 				
-				Double orpercopystderror;
+				Double orpercopystderror = null;
 				
 				if(row.getCell(12, row.RETURN_BLANK_AS_NULL) != null){
-					orpercopystderror = row.getCell(12).getNumericCellValue();
+                    XSSFCell std = row.getCell(12);
+                    switch(std.getCellType()){
+                        case Cell.CELL_TYPE_STRING:
+                            orpercopystderror = null;
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            orpercopystderror = std.getNumericCellValue();
+                            break;
+                    }
 				}
 				else{
 					orpercopystderror = null;
                     getLog().debug("SE is null in row " + row.getRowNum());
                 }
+
 				
-				if((orpercopyrange == null) && (orpercopystderror !=  null)){
-					orpercopyrange = setRange(orpercopystderror, orpercopynum);
-				}
-				
-				if((orpercopyrecip != null) && (orpercopyrange != null) && (orpercopystderror == null)){
+				if((orpercopyrecip != null) && (orpercopyrange != null) && recipReverse){
 					orpercopyrange = reverseCI(orpercopyrange);
 				}
+
+                if((orpercopyrange == null) && (orpercopystderror !=  null)){
+                    orpercopyrange = setRange(orpercopystderror, orpercopynum);
+                }
 
                 String snptype;
                 if(row.getCell(13, row.RETURN_BLANK_AS_NULL) != null){
