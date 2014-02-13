@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.dao.GwasStudyDAO;
 import uk.ac.ebi.fgpt.goci.exception.DispatcherException;
+import uk.ac.ebi.fgpt.goci.lang.ImporterProperties;
 import uk.ac.ebi.fgpt.goci.model.GwasStudy;
 
 import java.util.*;
@@ -69,7 +70,7 @@ public class GwasPubmedImporter {
                 GwasStudy study = studiesMap.get(pubmedID);
                 getStudyDAO().saveStudy(study);
                 getLog().info("Added study '" + study.getPubMedID() + "' (\"" + study.getTitle() + "\") " +
-                        "into the tracking system.");
+                        "into the table " + ImporterProperties.getOutputTable());
             }
         }
         else {

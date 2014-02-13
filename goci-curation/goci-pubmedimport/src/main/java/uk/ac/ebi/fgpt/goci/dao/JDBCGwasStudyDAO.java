@@ -7,6 +7,7 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.util.Assert;
+import uk.ac.ebi.fgpt.goci.lang.ImporterProperties;
 import uk.ac.ebi.fgpt.goci.model.DefaultGwasStudy;
 import uk.ac.ebi.fgpt.goci.model.GwasStudy;
 
@@ -33,9 +34,16 @@ public class JDBCGwasStudyDAO implements GwasStudyDAO {
 
 
     public static final String STUDY_INSERT =
-            "insert into UNCLASSIFIEDSTUDIES (" +
-                    "PMID, AUTHOR, STUDYDATE, PUBLICATION, LINKTITLE) " +
+            "insert into ";
+
+    public static final String INSERT_FIELDS =
+                    "(PMID, AUTHOR, STUDYDATE, PUBLICATION, LINKTITLE) " +
                     "values (?, ?, ?, ?, ?)";
+
+
+    public static final String GWASSTUDY_INSERT_FIELDS =
+            "(PMID, AUTHOR, STUDYDATE, PUBLICATION, LINKTITLE, AUTHOR_ORIGINAL, AUTHORSEARCH, LINK, CURATORID, CURATORSTATUSID, LASTUPDATEDATE) " +
+                    "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 
     private JdbcTemplate jdbcTemplate;
@@ -112,27 +120,52 @@ public class JDBCGwasStudyDAO implements GwasStudyDAO {
         if (study.getPubMedID() != null) {
             getLog().debug("Saving study: " + study.getPubMedID());
 
-   //         int[] types = new int[] {Types.VARCHAR, Types.VARCHAR, Types.DATE, Types.VARCHAR, Types.VARCHAR};
+            if(ImporterProperties.getOutputTable().equals("gwasstudies")){
+                String insertStatement = STUDY_INSERT + ImporterProperties.getOutputTable() + GWASSTUDY_INSERT_FIELDS;
 
-            try{
-                int result = getJdbcTemplate().update(STUDY_INSERT,
-                                     new Object[] {study.getPubMedID(),
-                                     study.getAuthor(),
-                                     study.getPublicationDate(),
-                                     study.getPublication(),
-                                     study.getTitle()});
-     //                                types);
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
+                String link = "www.ncbi.nlm.nih.gov/pubmed/".concat(study.getPubMedID());
+                int status = 21;
+                int curator = 5;
 
-//            if(result < 1){
-//                getLog().debug("Failed to insert study");
-//            }
-//            else{
-//                getLog().debug("Insert complete: " + result + " rows were affected");
-//            }
+
+                Date current = new Date(System.currentTimeMillis());
+
+
+
+                try{
+                    int result = getJdbcTemplate().update(insertStatement,
+                            new Object[] {study.getPubMedID(),
+                                    study.getAuthor(),
+                                    study.getPublicationDate(),
+                                    study.getPublication(),
+                                    study.getTitle(),
+                                    study.getAuthor(),
+                                    study.getAuthor(),
+                                    link,
+                                    curator,
+                                    status,
+                                    current});
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            else{
+
+                String insertStatement = STUDY_INSERT + ImporterProperties.getOutputTable() + INSERT_FIELDS;
+
+                try{
+                    int result = getJdbcTemplate().update(insertStatement,
+                                         new Object[] {study.getPubMedID(),
+                                         study.getAuthor(),
+                                         study.getPublicationDate(),
+                                         study.getPublication(),
+                                         study.getTitle()});
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
 
         }
 
