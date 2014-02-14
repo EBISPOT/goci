@@ -174,7 +174,7 @@ public class SVGBuilder {
         svgRoot.appendChild(defs);
 
         Element translate = doc.createElement("g");
-        translate.setAttribute("transform", "translate(0,120)");
+        translate.setAttribute("transform", "translate(0,150)");
         svgRoot.appendChild(translate);
         baseTranslate = translate;
     }
