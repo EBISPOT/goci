@@ -4,11 +4,11 @@
     <parent>
         <artifactId>goci</artifactId>
         <groupId>uk.ac.ebi.fgpt</groupId>
-        <version>1.0.6.5</version>
+        <version>1.0.7-SNAPSHOT</version>
     </parent>
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci-curation</artifactId>
-    <version> 1.0.6.5 </version>
+    <version> 1.0.7-SNAPSHOT </version>
     <packaging>pom</packaging>
 
     <name>GOCI Curation Tools</name>
