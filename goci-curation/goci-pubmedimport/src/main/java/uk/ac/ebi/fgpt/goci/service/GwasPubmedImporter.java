@@ -45,7 +45,7 @@ public class GwasPubmedImporter {
     }
 
     public String dispatchSearch(String input) throws DispatcherException{
-        String log = null;
+        String log = "";
         getLog().debug("Checking input against database...");
         Collection<String> pubmedIDs = processInput(input);
 
