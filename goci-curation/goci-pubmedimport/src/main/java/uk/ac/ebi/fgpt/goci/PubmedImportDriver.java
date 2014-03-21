@@ -27,13 +27,27 @@ public class PubmedImportDriver {
         importer = ctx.getBean("searcher", GwasPubmedImporter.class);
         getLog().info("The study " + PMID + " is to be added to table " + table);
         ImporterProperties.setOutputTable(table);
-        launchImporter(PMID);
+ //       launchImporter(PMID);
     }
 
-    public void launchImporter(String PMID){
+//    public void launchImporter(String PMID){
+//        try{
+//            getLog().debug("Dispatching the importer");
+//            importer.dispatchSearch(PMID);
+//            getLog().info("Import finished");
+//        }
+//
+//        catch (DispatcherException e) {
+//            e.printStackTrace();
+//
+//        }
+//    }
+
+    public String launchImporter(String PMID){
+        String output = null;
         try{
             getLog().debug("Dispatching the importer");
-            importer.dispatchSearch(PMID);
+            output = importer.dispatchSearch(PMID);
             getLog().info("Import finished");
         }
 
@@ -41,5 +55,9 @@ public class PubmedImportDriver {
             e.printStackTrace();
 
         }
+        if(output == null){
+            output = "Oh dear, something went wrong. Please contact your system admin.";
+        }
+        return output;
     }
 }

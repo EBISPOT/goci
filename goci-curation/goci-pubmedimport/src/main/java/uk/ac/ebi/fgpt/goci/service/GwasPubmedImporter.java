@@ -44,7 +44,8 @@ public class GwasPubmedImporter {
         this.studyDAO = studyDAO;
     }
 
-    public void dispatchSearch(String input) throws DispatcherException{
+    public String dispatchSearch(String input) throws DispatcherException{
+        String log = null;
         getLog().debug("Checking input against database...");
         Collection<String> pubmedIDs = processInput(input);
 
@@ -55,13 +56,18 @@ public class GwasPubmedImporter {
                 newPubMedIDs.add(pubmedID);
             }
             else{
-                getLog().trace("Pubmed ID " + pubmedID + " already exists in the database");
+                String message = "Pubmed ID " + pubmedID + " already exists in the database";
+                log = log.concat(message).concat("\n");
+                getLog().trace(message);
             }
         }
 
         // fetch titles and abstracts for the new pubmed ids
-        getLog().info(pubmedIDs.size() + " Pubmed IDs were provided.  " +
-                "Of these, " + newPubMedIDs.size() + " are new.");
+        String msg = pubmedIDs.size() + " Pubmed IDs were provided.  " +
+                "Of these, " + newPubMedIDs.size() + " are new.";
+        getLog().info(msg);
+        log = log.concat(msg).concat("\n");
+
 
         if(newPubMedIDs.size() > 0){
             Map<String, GwasStudy> studiesMap = getDispatcherService().dispatchSummaryQuery(newPubMedIDs);
@@ -69,13 +75,18 @@ public class GwasPubmedImporter {
                 getLog().debug("Study ID '" + pubmedID + "' is new, will be entered into tracking system");
                 GwasStudy study = studiesMap.get(pubmedID);
                 getStudyDAO().saveStudy(study);
-                getLog().info("Added study '" + study.getPubMedID() + "' (\"" + study.getTitle() + "\") " +
-                        "into the table " + ImporterProperties.getOutputTable());
+                String message = "Added study '" + study.getPubMedID() + "' (\"" + study.getTitle() + "\") " +
+                        "into the table " + ImporterProperties.getOutputTable();
+                log = log.concat(message).concat("\n");
+                getLog().info(message);
             }
         }
         else {
-            getLog().info("No new studies to be added.");
+            String message = "No new studies to be added.";
+            log = log.concat(message).concat("\n");
+            getLog().info(message);
         }
+        return log;
 
     }
 
