@@ -177,56 +177,44 @@ public class PropertyFilePubMedDispatcherService implements GwasPubMedDispatcher
 
                 pmid = study.getAttribute("uid");
 
-                title = study.getElementsByTagName("Title").item(0).getTextContent();
-                publication = study.getElementsByTagName("Source").item(0).getTextContent();
-                author = study.getElementsByTagName("SortFirstAuthor").item(0).getTextContent();
+                if(study.getElementsByTagName("error").item(0) != null){
+                    getLog().info(pmid + " is not a valid PMID so no record was retrieved");
+                    author = null;
+                    title = null;
+                    publication = null;
+                    pubDate = null;
 
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                }
+                else {
 
-                String date = study.getElementsByTagName("SortPubDate").item(0).getTextContent();
+                    title = study.getElementsByTagName("Title").item(0).getTextContent();
+                    publication = study.getElementsByTagName("Source").item(0).getTextContent();
+                    author = study.getElementsByTagName("SortFirstAuthor").item(0).getTextContent();
 
-                if(date.contains("/")){
-                    date = date.replace("/","-");
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+                    String date = study.getElementsByTagName("SortPubDate").item(0).getTextContent();
+
+                    if (date.contains("/")) {
+                        date = date.replace("/", "-");
+                    }
+
+                    java.util.Date studyDate = format.parse(date);
+
+
+                    pubDate = new Date(studyDate.getTime());
                 }
 
-                java.util.Date studyDate = format.parse(date);
 
 
-                pubDate = new Date(studyDate.getTime());
-
-
-//                study.getElementsByTagName()
-
-//                Collection<Node> items = getChildNodes(docSumNode, "Item");
-//                for (Node item : items) {
-//                    NamedNodeMap attributes = item.getAttributes();
-//                    if (attributes.getNamedItem("Name").getNodeValue().equals("Title")) {
-//                        // should only be one <Item Name="Title">, this will overwrite if more
-//                        title = item.getTextContent();
-//                        getLog().trace("PubMed ID: " + id + "; Title: " + title);
-//                    }
-//                    else if(attributes.getNamedItem("Name").getNodeValue().equals("Source")) {
-//                        publication = item.getTextContent();
-//                    }
-//                    else if(attributes.getNamedItem("Name").getNodeValue().equals("Authors")) {
-//                        author = item.getFirstChild().getFirstChild().getTextContent();
-//                    }
-//                    else if(attributes.getNamedItem("Name").getNodeValue().equals("PubDate")) {
-//                        //         pubDate = Date.valueOf(item.getTextContent());
-//
-//
-//                        pubDate = DateFormat.getDateInstance().parse(item.getTextContent());
-//                    }
-//
-//                }
-
-//                        // add results
+    //                        // add results
                 if (pmid != null) {
                     GwasStudy newStudy = new DefaultGwasStudy(pmid, author, pubDate, publication, title);
 
-                    results.put(pmid, newStudy);
+                        results.put(pmid, newStudy);
+                    }
                 }
-            }
+
         }
         catch (IOException e) {
             throw new DispatcherException("Communication problem with PubMed", e);

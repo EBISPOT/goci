@@ -74,12 +74,21 @@ public class GwasPubmedImporter {
             for (String pubmedID : newPubMedIDs) {
                 getLog().debug("Study ID '" + pubmedID + "' is new, will be entered into tracking system");
                 GwasStudy study = studiesMap.get(pubmedID);
-                getStudyDAO().saveStudy(study);
-                String message = "Added study '" + study.getPubMedID() + "' (\"" + study.getTitle() + "\") " +
-                        "into the table " + ImporterProperties.getOutputTable();
-                log = log.concat(message).concat("\n");
-                getLog().info(message);
+
+                if(study.getAuthor()!=null && study.getPublication()!=null && study.getTitle() != null) {
+                    getStudyDAO().saveStudy(study);
+                    String message = "Added study '" + study.getPubMedID() + "' (\"" + study.getTitle() + "\") " +
+                            "into the table " + ImporterProperties.getOutputTable();
+                    log = log.concat(message).concat("\n");
+                    getLog().info(message);
+                }
+                else{
+                     String message = "PubmedID " + pubmedID + " is not a valid PubmedID and no study can be added";
+                     log = log.concat(message).concat("\n");
+                    getLog().info(message);
+                }
             }
+
         }
         else {
             String message = "No new studies to be added.";
