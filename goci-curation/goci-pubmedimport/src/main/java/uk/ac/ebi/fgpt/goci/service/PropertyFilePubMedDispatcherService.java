@@ -177,15 +177,14 @@ public class PropertyFilePubMedDispatcherService implements GwasPubMedDispatcher
 
                 pmid = study.getAttribute("uid");
 
-                if(study.getElementsByTagName("error").item(0) != null){
+                if (study.getElementsByTagName("error").item(0) != null) {
                     getLog().info(pmid + " is not a valid PMID so no record was retrieved");
                     author = null;
                     title = null;
                     publication = null;
                     pubDate = null;
 
-                }
-                else {
+                } else {
 
                     title = study.getElementsByTagName("Title").item(0).getTextContent();
                     publication = study.getElementsByTagName("Source").item(0).getTextContent();
@@ -206,14 +205,21 @@ public class PropertyFilePubMedDispatcherService implements GwasPubMedDispatcher
                 }
 
 
-
-    //                        // add results
+                //                        // add results
                 if (pmid != null) {
-                    GwasStudy newStudy = new DefaultGwasStudy(pmid, author, pubDate, publication, title);
+
+                    if (author != null && pubDate != null && publication != null && title != null) {
+
+                        GwasStudy newStudy = new DefaultGwasStudy(pmid, author, pubDate, publication, title);
 
                         results.put(pmid, newStudy);
                     }
+                    else{
+                        results.put(pmid, null);
+                    }
+
                 }
+            }
 
         }
         catch (IOException e) {

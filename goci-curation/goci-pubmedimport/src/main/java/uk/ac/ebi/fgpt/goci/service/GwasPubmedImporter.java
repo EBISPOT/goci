@@ -75,7 +75,7 @@ public class GwasPubmedImporter {
                 getLog().debug("Study ID '" + pubmedID + "' is new, will be entered into tracking system");
                 GwasStudy study = studiesMap.get(pubmedID);
 
-                if(study.getAuthor()!=null && study.getPublication()!=null && study.getTitle() != null) {
+                if(study != null) {
                     getStudyDAO().saveStudy(study);
                     String message = "Added study '" + study.getPubMedID() + "' (\"" + study.getTitle() + "\") " +
                             "into the table " + ImporterProperties.getOutputTable();
