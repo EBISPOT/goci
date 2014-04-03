@@ -44,6 +44,7 @@ public class PubmedImportDriver {
 //    }
 
     public String launchImporter(String PMID){
+        PMID = PMID.trim();
         String output = null;
         try{
             getLog().debug("Dispatching the importer");
