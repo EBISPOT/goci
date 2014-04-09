@@ -18,6 +18,7 @@ public class SNPUploader {
 	private Connection conn;
 	private Statement stmt;
 	private int paperid, snpcheck;
+    private String logMessage;
 
 	
 	public SNPUploader(int id, ArrayList<SNPentry> list) throws Exception{
@@ -25,24 +26,32 @@ public class SNPUploader {
 		paperid = id;
 		snpList = list;
 		snpcheck = 1;
-		
+
 		try{
 			conn = DBConnection.getConnection();
 			stmt = conn.createStatement();
-		}
-		
+
+        }
+
 		catch (SQLException ex) {
-				throw new Exception("Attempting database access has generated an SQL exception", ex);
+            logMessage = "Error during database upload";
+            throw new Exception("Attempting database access has generated an SQL exception", ex);
 		}
 		catch (IOException ex){
-			throw new Exception("Attempting database access has resulted in an IO exception", ex);
+            logMessage = "Error during database upload";
+            throw new Exception("Attempting database access has resulted in an IO exception", ex);
 		}
 		
 		uploadSnps();
+        logMessage = "Database upload successful";
 		
 		conn.close();
 		
 	}
+
+    public String getLogMessage(){
+        return logMessage;
+    }
 
 /**
  * This method uploads all the SNPs to the database using prepared statements
@@ -189,7 +198,8 @@ public class SNPUploader {
 			 }
 		 }
 		catch (SQLException ex) {
-				throw new Exception("Attempting to write to the database has generated an SQL exception", ex);
+            logMessage = "Error during database upload";
+            throw new Exception("Attempting to write to the database has generated an SQL exception", ex);
 		}
 
 	}

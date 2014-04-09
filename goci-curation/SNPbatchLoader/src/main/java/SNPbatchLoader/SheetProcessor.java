@@ -24,6 +24,7 @@ public class SheetProcessor {
 	private XSSFSheet sheet;
 	private ArrayList<SNPentry> allSNPs;
     private Logger log = LoggerFactory.getLogger(getClass());
+    private String logMessage;
 
     protected Logger getLog() {
         return log;
@@ -34,6 +35,7 @@ public class SheetProcessor {
 		this.sheet = sheet;
 			
 		allSNPs = new ArrayList<SNPentry>();
+        logMessage = "";
 		readSNPs();
 	}
 	
@@ -47,31 +49,42 @@ public class SheetProcessor {
 			if(row == null){
 				done = true;
                 getLog().debug("Last row read");
+                logMessage = "All spreadsheet data processed successfully";
 			}
 			else{
                 String gene, strongestallele, snp;
                 if(row.getCell(0, row.RETURN_BLANK_AS_NULL) != null){
 				    gene = row.getCell(0).getRichStringCellValue().getString();
+                    logMessage = "Error in field 'Gene' in row " + rownum+1 + "\n";
+
                 }
                 else {
                     gene = null;
                     getLog().debug("Gene is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'Gene' in row " + rownum+1 + "\n";
                 }
 
                 if(row.getCell(1, row.RETURN_BLANK_AS_NULL) != null){
                     strongestallele = row.getCell(1).getRichStringCellValue().getString();
+                    logMessage = "Error in field 'Risk allele' in row " + rownum+1 + "\n";
+
                 }
                 else {
                     strongestallele = null;
                     getLog().debug("Risk allele is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'Risk allele' in row " + rownum+1 + "\n";
                 }
 
                 if(row.getCell(2, row.RETURN_BLANK_AS_NULL) != null){
                     snp	= row.getCell(2).getRichStringCellValue().getString();
+                    logMessage = "Error in field 'SNP' in row " + rownum+1 + "\n";
+
                 }
                 else {
                     snp = null;
                     getLog().debug("SNP is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'SNP' in row " + rownum+1 + "\n";
+
                 }
 
 				String riskfrequency = null;
@@ -81,14 +94,18 @@ public class SheetProcessor {
 				    switch(risk.getCellType()){
 					case Cell.CELL_TYPE_STRING:
 						riskfrequency = risk.getRichStringCellValue().getString();
-						break;
+                        logMessage = "Error in field 'Risk Frequency' in row " + rownum+1 + "\n";
+                        break;
 					case Cell.CELL_TYPE_NUMERIC:
 						riskfrequency = Double.toString(risk.getNumericCellValue());
-						break;
+                        logMessage = "Error in field 'Risk Frequency' in row " + rownum+1 + "\n";
+
+                        break;
 				    }
                 }
                 else{
                     getLog().debug("RF is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'Risk Frequency' in row " + rownum+1 + "\n";
                 }
 
                 Integer pvalue_mantissa = null;
@@ -99,15 +116,21 @@ public class SheetProcessor {
                     switch(mant.getCellType()){
                         case Cell.CELL_TYPE_STRING:
                             pvalue_mantissa = null;
+                            logMessage = "Error in field 'pvalue mantissa' in row " + rownum+1 + "\n";
+
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             pvalue_mantissa = (int)mant.getNumericCellValue();
+                            logMessage = "Error in field 'pvalue mantissa' in row " + rownum+1 + "\n";
+
                             break;
                     }
                 }
                 else{
                     pvalue_mantissa = null;
                     getLog().debug("pvalue mantissa is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'pvalue mantissa' in row " + rownum+1 + "\n";
+
                 }
 
                 if(row.getCell(5, row.RETURN_BLANK_AS_NULL) != null){
@@ -115,15 +138,20 @@ public class SheetProcessor {
                     switch(expo.getCellType()){
                         case Cell.CELL_TYPE_STRING:
                             pvalue_exponent = null;
+                            logMessage = "Error in field 'pvalue exponent' in row " + rownum+1 + "\n";
+
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             pvalue_exponent = (int)expo.getNumericCellValue();
+                            logMessage = "Error in field 'pvalue exponent' in row " + rownum+1 + "\n";
+
                             break;
                     }
                 }
                 else{
                     pvalue_exponent = null;
                     getLog().debug("pvalue exponent is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'pvalue exponent' in row " + rownum+1 + "\n";
                 }
 
                 float pval_float;
@@ -142,10 +170,13 @@ public class SheetProcessor {
 				String pvaluetxt;
 				if(row.getCell(6, row.RETURN_BLANK_AS_NULL) != null){
 					pvaluetxt = row.getCell(6).getRichStringCellValue().getString();
-				}
+                    logMessage = "Error in field 'pvaluetxt' in row " + rownum+1 + "\n";
+
+                }
 				else{
 					pvaluetxt = null;
                     getLog().debug("pvalue text is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'pvaluetxt' in row " + rownum+1 + "\n";
                 }
 				
 				Double orpercopynum = null;
@@ -154,15 +185,18 @@ public class SheetProcessor {
                     switch(or.getCellType()){
                         case Cell.CELL_TYPE_STRING:
                             orpercopynum = null;
+                            logMessage = "Error in field 'OR' in row " + rownum+1 + "\n";
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             orpercopynum = or.getNumericCellValue();
+                            logMessage = "Error in field 'OR' in row " + rownum+1 + "\n";
                             break;
                     }
 				}
 				else{
 					orpercopynum = null;
                     getLog().debug("OR is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'OR' in row " + rownum+1 + "\n";
                 }
 
 				Double orpercopyrecip = null;
@@ -171,15 +205,19 @@ public class SheetProcessor {
                     switch(recip.getCellType()){
                         case Cell.CELL_TYPE_STRING:
                             orpercopyrecip = null;
+                            logMessage = "Error in field 'OR recip' in row " + rownum+1 + "\n";
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             orpercopyrecip = recip.getNumericCellValue();
+                            logMessage = "Error in field 'OR recip' in row " + rownum+1 + "\n";
                             break;
                     }
 				}
 				else{
 					orpercopyrecip = null;
                     getLog().debug("OR recip is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'OR recip' in row " + rownum+1 + "\n";
+
                 }
 
                 boolean recipReverse = false;
@@ -192,28 +230,34 @@ public class SheetProcessor {
                 char ortype;
                 if(row.getCell(9, row.RETURN_BLANK_AS_NULL) != null){
                     ortype	= row.getCell(9).getRichStringCellValue().getString().charAt(0);
+                    logMessage = "Error in field 'OR type' in row " + rownum+1 + "\n";
                 }
                 else{
                     ortype = Character.UNASSIGNED;
                     getLog().debug("OR type is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'OR type' in row " + rownum+1 + "\n";
                 }
 				
 				String orpercopyrange; 
 				if(row.getCell(10, row.RETURN_BLANK_AS_NULL) != null){
 					orpercopyrange = row.getCell(10).getRichStringCellValue().getString();
-				}
+                    logMessage = "Error in field 'CI' in row " + rownum+1 + "\n";
+                }
 				else{
 					orpercopyrange = null;
                     getLog().debug("CI is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'CI' in row " + rownum+1 + "\n";
                 }
 				
 				String orpercopyunitdescr; 
 				if(row.getCell(11) != null){
 					orpercopyunitdescr = row.getCell(11).getRichStringCellValue().getString();
-				}
+                    logMessage = "Error in field 'OR direction' in row " + rownum+1 + "\n";
+                }
 				else{
 					orpercopyunitdescr = null;
                     getLog().debug("OR direction is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'OR direction' in row " + rownum+1 + "\n";
                 }
 				
 				Double orpercopystderror = null;
@@ -223,15 +267,18 @@ public class SheetProcessor {
                     switch(std.getCellType()){
                         case Cell.CELL_TYPE_STRING:
                             orpercopystderror = null;
+                            logMessage = "Error in field 'Standard Error' in row " + rownum+1 + "\n";
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             orpercopystderror = std.getNumericCellValue();
+                            logMessage = "Error in field 'Standard Error' in row " + rownum+1 + "\n";
                             break;
                     }
 				}
 				else{
 					orpercopystderror = null;
                     getLog().debug("SE is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'Standard Error' in row " + rownum+1 + "\n";
                 }
 
 				
@@ -246,10 +293,12 @@ public class SheetProcessor {
                 String snptype;
                 if(row.getCell(13, row.RETURN_BLANK_AS_NULL) != null){
                     snptype = row.getCell(13).getRichStringCellValue().getString();
+                    logMessage = "Error in field 'SNP type' in row " + rownum+1 + "\n";
                 }
                 else{
                     snptype = null;
                     getLog().debug("SNP type is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'SNP type' in row " + rownum+1 + "\n";
                 }
 
 
@@ -383,4 +432,8 @@ public class SheetProcessor {
 	public ArrayList<SNPentry> getSNPlist(){
 		return allSNPs;
 	}
+
+    public String getLogMessage(){
+        return logMessage;
+    }
 }

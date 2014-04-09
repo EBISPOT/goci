@@ -1,13 +1,13 @@
 package SNPbatchLoader;
 
-import java.io.File;
-import java.util.ArrayList;
-
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.ArrayList;
 
 /*
 import java.sql.Connection;
@@ -40,49 +40,55 @@ public class BatchLoader
  * @param id Database ID of the paper that the SNPs are extracted from
  * @throws Exception
  */
-	public BatchLoader(String name, int id) throws Exception
+	public BatchLoader(String name, int id)
     {  
-     	try{
-    		
-     	   	getLog().info("Starting upload...");
-     	 	
-        	String filename = name;
-        	int paperID = id;
-        	XSSFSheet sheet = null;      	
-        	 
-        	OPCPackage pkg = OPCPackage.open(filename);
-    		XSSFWorkbook current = new XSSFWorkbook(pkg);
-    		getLog().debug("Acquiring 0-index sheet...");
 
-    		sheet = current.getSheetAt(0);
-    		getLog().debug("Got sheet 0 OK!");
-    		
-    	  	SheetProcessor processor = new SheetProcessor(sheet);
-
-    		ArrayList<SNPentry> SNPlist = processor.getSNPlist();
-    		new SNPUploader(paperID, SNPlist);   
-    		
-    		pkg.close();
-    		
-        	getLog().info("Upload successful");
-
-    	}
-     	catch (Exception e) {
-     		getLog().error("Encountered a " + e.getClass().getSimpleName() + " whilst trying to upload file '" + name + "'" +
-     				" (" + new File(name).getAbsolutePath() + ")", e);
-     		e.printStackTrace();
-     		throw e;
-     	}
-     	finally{
-     		File f = new File(name);
-     		if(f.delete()){
-     			getLog().info("File deleted");
-     		}
-     		else{
-     			getLog().error("Failure to delete file");
-     		}
-     		
-     	}
+     	getLog().info("SNPBatchLoader request received for file " + name + " for paper with id " + id);
 
     }
+
+    public String processData(String name, int id) throws Exception{
+        String output = "";
+        getLog().info("Starting upload...");
+        String filename = name;
+        int paperID = id;
+        XSSFSheet sheet = null;
+
+        OPCPackage pkg = OPCPackage.open(filename);
+        XSSFWorkbook current = new XSSFWorkbook(pkg);
+        getLog().debug("Acquiring 0-index sheet...");
+
+        sheet = current.getSheetAt(0);
+        getLog().debug("Got sheet 0 OK!");
+        SheetProcessor processor = null;
+        SNPUploader loader = null;
+        try{
+            processor = new SheetProcessor(sheet);
+            ArrayList<SNPentry> SNPlist = processor.getSNPlist();
+            loader = new SNPUploader(paperID, SNPlist);
+
+            pkg.close();
+
+            getLog().info("Upload successful");
+        }
+        catch (Exception e) {
+            getLog().error("Encountered a " + e.getClass().getSimpleName() + " whilst trying to upload file '" + name + "'" +
+                    " (" + new File(name).getAbsolutePath() + ")", e);
+            e.printStackTrace();
+            throw e;
+        }
+        finally{
+            File f = new File(name);
+            if(f.delete()){
+                getLog().info("File deleted");
+            }
+            else{
+                getLog().error("Failure to delete file");
+            }
+            output = output.concat(processor.getLogMessage()).concat("\n").concat(loader.getLogMessage());
+            return output;
+        }
+
+    }
+
 }
