@@ -53,7 +53,8 @@ public class TestDefaultGWASOWLConverter extends TestCase {
             // create test ontology
             testOntology = manager.createOntology();
             // create a single test owlclass to represent the chromosome class
-            testChromosomeClass = factory.getOWLClass(IRI.create("http://test.com/chromosome"));
+//            testChromosomeClass = factory.getOWLClass(IRI.create("http://test.com/chromosome"));
+            testChromosomeClass = factory.getOWLClass(IRI.create(OntologyConstants.CHROMOSOME_CLASS_IRI));
 
             // create converter
             converter = new DefaultGWASOWLConverter();

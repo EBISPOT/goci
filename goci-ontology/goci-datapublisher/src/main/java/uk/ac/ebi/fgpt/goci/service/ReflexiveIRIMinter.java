@@ -36,20 +36,11 @@ public class ReflexiveIRIMinter implements IRIMinter<Object> {
     }
 
     public IRI mint(String base, String prefix, Object o, boolean isStable) {
-        String fullPrefix;
-        if (prefix == null || prefix.equals("")) {
-            fullPrefix = getObjectType(o);
-        }
-        else {
-            if (isStable) {
-                fullPrefix = getObjectType(o).concat("/").concat(prefix);
-            }
-            else {
-                fullPrefix = getObjectType(o).concat("#").concat(prefix);
-            }
-        }
         String objectName = inspectObjectForID(o);
-        return mint(base, fullPrefix, objectName);
+        if (prefix == null || prefix.equals("")) {
+            prefix = getObjectType(o);
+        }
+        return mint(base, prefix, objectName, isStable);
     }
 
     public IRI mint(String base, String objectName) {
@@ -61,35 +52,35 @@ public class ReflexiveIRIMinter implements IRIMinter<Object> {
     }
 
     public IRI mint(String base, String prefix, String objectName, boolean isStable) {
-        // derive the full object name
-        String fullName;
-        if (prefix == null || prefix.equals("")) {
-            fullName = objectName;
-        }
-        else {
-            if (isStable) {
-                fullName = prefix.concat("/").concat(objectName);
+        try {
+            String fragment = encodeToURI(objectName);
+
+            // derive the full object name
+            String fullName;
+            if (prefix == null || prefix.equals("")) {
+                fullName = fragment;
             }
             else {
-                fullName = prefix.concat("#").concat(objectName);
+                if (isStable) {
+                    fullName = prefix.concat("/").concat(fragment);
+                }
+                else {
+                    fullName = prefix.concat("#").concat(fragment);
+                }
             }
-        }
 
-        // encode as URI and generate IRI
-        try {
-            String fragment = encodeToURI(fullName);
-
+            // encode as URI and generate IRI
             String iri;
             if (base.endsWith("/")) {
-                iri = base.concat(fragment);
+                iri = base.concat(fullName);
             }
             else {
-                iri = base.concat("/").concat(fragment);
+                iri = base.concat("/").concat(fullName);
             }
             return IRI.create(iri);
         }
         catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException("The unique id of the supplied object ('" + fullName +
+            throw new IllegalArgumentException("The unique id of the supplied object ('" + objectName +
                                                        "') cannot be encoded as an IRI");
         }
     }

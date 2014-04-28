@@ -27,13 +27,13 @@ public class TestReflexiveIRIMinter extends TestCase {
     public void testMint() {
         try {
             String id = "myId";
-            IRI expected = IRI.create(base.concat("/MockObject_").concat(minter.encodeToURI(id)));
+            IRI expected = IRI.create(base.concat("/MockObject/").concat(minter.encodeToURI(id)));
             IRI iri = minter.mint(base, new MockObject(id));
             assertEquals(expected, iri);
             iri.toURI();
 
             String id2 = "\\?/@\\$/#02uk jnfdlkaj7_--=\\=/::;;ad";
-            IRI expected2 = IRI.create(base.concat("/MockObject_").concat(minter.encodeToURI(id2)));
+            IRI expected2 = IRI.create(base.concat("/MockObject/").concat(minter.encodeToURI(id2)));
             IRI iri2 = minter.mint(base, new MockObject(id2));
             assertEquals(expected2, iri2);
             System.out.println(iri2);
@@ -49,14 +49,14 @@ public class TestReflexiveIRIMinter extends TestCase {
             }
 
             MockObjectWithoutStringID o = new MockObjectWithoutStringID();
-            IRI expected4 = IRI.create(base.concat("/MockObjectWithoutStringID_").concat(o.getID().toString()));
+            IRI expected4 = IRI.create(base.concat("/MockObjectWithoutStringID/").concat(o.getID().toString()));
             IRI iri4 = minter.mint(base, new MockObjectWithoutStringID());
             iri4.toURI();
             assertEquals(expected4, iri4);
 
             String id5 = "myId";
-            IRI expected5 = IRI.create(base.concat("/MockObject_prefix_").concat(minter.encodeToURI(id5)));
-            IRI iri5 = minter.mint(base, "prefix", new MockObject(id5));
+            IRI expected5 = IRI.create(base.concat("/OverriddenPrefix/").concat(minter.encodeToURI(id5)));
+            IRI iri5 = minter.mint(base, "OverriddenPrefix", new MockObject(id5));
             assertEquals(expected5, iri5);
             iri.toURI();
         }

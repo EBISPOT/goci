@@ -21,15 +21,15 @@ public class OntologyConstants {
     public static final String EXPERIMENTAL_FACTOR_CLASS_IRI = "http://www.ebi.ac.uk/efo/EFO_0000001";
 
     // Data Property IRIs
-    public static final String HAS_AUTHOR_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/EFO_GD00039";
-    public static final String HAS_BP_POSITION_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/EFO_GD00032";
-    public static final String HAS_LENGTH_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/EFO_GD00034";
-    public static final String HAS_NAME_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/EFO_GD00030";
-    public static final String HAS_P_VALUE_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/EFO_GD00036";
-    public static final String HAS_PUBLICATION_DATE_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/EFO_GD00040";
-    public static final String HAS_PUBMED_ID_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/EFO_GD00038";
-    public static final String HAS_SNP_REFERENCE_ID_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/EFO_GD00031";
-    public static final String HAS_GWAS_TRAIT_NAME_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/EFO_GD00041";
+    public static final String HAS_AUTHOR_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_author";
+    public static final String HAS_BP_POSITION_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_basepair_position";
+    public static final String HAS_LENGTH_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_length";
+    public static final String HAS_NAME_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_name";
+    public static final String HAS_P_VALUE_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_p_statistic";
+    public static final String HAS_PUBLICATION_DATE_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_publication_date";
+    public static final String HAS_PUBMED_ID_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_pubmed_id";
+    public static final String HAS_SNP_REFERENCE_ID_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_snp_reference_id";
+    public static final String HAS_GWAS_TRAIT_NAME_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_gwas_trait_name";
 
     // Object Property IRIs
     public static final String HAS_PART_PROPERTY_IRI = "http://www.obofoundry.org/ro/ro.owl#has_part";
