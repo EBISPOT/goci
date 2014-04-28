@@ -32,7 +32,9 @@ public interface GWASOWLConverter {
      * @return the newly created, empty, ontology
      * @throws uk.ac.ebi.fgpt.goci.exception.OWLConversionException
      *          if something went wrong whilst creating the ontology
+     * @deprecated
      */
+    @Deprecated
     OWLOntology createInferredConversionOntology() throws OWLConversionException;
 
     /**

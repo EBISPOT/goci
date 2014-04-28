@@ -114,10 +114,10 @@ public class GOCIDataPublisherDriver {
         outputFileOption.setRequired(true);
         options.addOption(outputFileOption);
 
-        Option inferredOutputFileOption = new Option("i", "inferred", true,
-                                                     "The output file to write the inferred version of the published ontology to");
-        inferredOutputFileOption.setArgName("file");
-        options.addOption(inferredOutputFileOption);
+//        Option inferredOutputFileOption = new Option("i", "inferred", true,
+//                                                     "The output file to write the inferred version of the published ontology to");
+//        inferredOutputFileOption.setArgName("file");
+//        options.addOption(inferredOutputFileOption);
 
         Option pvalueFilterOption = new Option("p", "pvalue", true, "The minimum p-value on which to filter the knowledge base, in format nE-x, e.g. 5E-8");
         options.addOption(pvalueFilterOption);

@@ -31,6 +31,8 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
 
     private ReflexiveIRIMinter minter;
 
+    private final String base_iri;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -39,6 +41,8 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
 
     public DefaultGWASOWLConverter() {
         this.minter = new ReflexiveIRIMinter();
+        base_iri = OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/" +
+                new SimpleDateFormat("yyyy/MM/dd").format(new Date());
     }
 
     public void setConfiguration(OntologyConfiguration configuration) {
@@ -67,25 +71,23 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
 
     public OWLOntology createConversionOntology() throws OWLConversionException {
         try {
-            // create a new ontology to represent our data dump
-            String iri = "http://www.ebi.ac.uk/efo/gwas-diagram/" +
-                         new SimpleDateFormat("yyyy/MM/dd").format(new Date()) +
-                         "/data";
-            OWLOntology conversion = getManager().createOntology(IRI.create(iri));
+            // create a new graph to represent our data dump
+            return getManager().createOntology(IRI.create(base_iri));
 
-            // import the gwas ontology schema
-            OWLImportsDeclaration importDecl = getDataFactory().getOWLImportsDeclaration(
-                    IRI.create(OntologyConstants.GWAS_ONTOLOGY_SCHEMA_IRI));
-            ImportChange change = new AddImport(conversion, importDecl);
-            getManager().applyChange(change);
-
-            return conversion;
+//            // import the gwas ontology schema
+//            OWLImportsDeclaration importDecl = getDataFactory().getOWLImportsDeclaration(
+//                    IRI.create(OntologyConstants.GWAS_ONTOLOGY_SCHEMA_IRI));
+//            ImportChange change = new AddImport(conversion, importDecl);
+//            getManager().applyChange(change);
+//
+//            return conversion;
         }
         catch (OWLOntologyCreationException e) {
             throw new OWLConversionException("Failed to create new ontology", e);
         }
     }
 
+    @Deprecated
     public OWLOntology createInferredConversionOntology() throws OWLConversionException {
         try {
             // create a new ontology to represent our data dump
@@ -255,7 +257,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
 
         // create a new band individual
         OWLNamedIndividual bandIndiv = getDataFactory().getOWLNamedIndividual(
-                getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "band", snp.getCytogeneticBandName()));
+                getMinter().mint(base_iri, "CytogeneticRegion", snp.getCytogeneticBandName()));
 
         // assert class membership
         OWLClassAssertionAxiom bandClassAssertion = getDataFactory().getOWLClassAssertionAxiom(bandClass, bandIndiv);
@@ -287,7 +289,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
 
         // create a new chromosome individual
         OWLNamedIndividual chrIndiv = getDataFactory().getOWLNamedIndividual(
-                getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "chromosome", snp.getChromosomeName()));
+                getMinter().mint(base_iri, "Chromosome", snp.getChromosomeName()));
 
         // assert class membership
         OWLClassAssertionAxiom chrClassAssertion = getDataFactory().getOWLClassAssertionAxiom(chrClass, chrIndiv);
@@ -365,7 +367,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
             }
             // create a new snp instance
             snpIndiv = getDataFactory().getOWLNamedIndividual(
-                    getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "snp", association));
+                    getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "SingleNucleotidePolymorphism", association, false));
 
             // assert class membership
             OWLClass snpClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.SNP_CLASS_IRI));
@@ -395,8 +397,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
 
 
         // create a new trait association instance
-
-        IRI traitIRI = getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "trait", association);
+        IRI traitIRI = getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, association);
 
         if(ontology.containsIndividualInSignature(traitIRI)){
             getLog().debug(traitIRI.toString() + " already exists");

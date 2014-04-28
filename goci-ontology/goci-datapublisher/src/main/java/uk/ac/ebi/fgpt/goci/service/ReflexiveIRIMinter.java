@@ -26,18 +26,27 @@ public class ReflexiveIRIMinter implements IRIMinter<Object> {
 
     public IRI mint(String base, Object o) {
         // derive the prefix (which is the object type)
-        String prefix = o.getClass().getSimpleName();
+        String prefix = getObjectType(o);
         String objectName = inspectObjectForID(o);
         return mint(base, prefix, objectName);
     }
 
     public IRI mint(String base, String prefix, Object o) {
+        return mint(base, prefix, o, true);
+    }
+
+    public IRI mint(String base, String prefix, Object o, boolean isStable) {
         String fullPrefix;
         if (prefix == null || prefix.equals("")) {
-            fullPrefix = o.getClass().getSimpleName();
+            fullPrefix = getObjectType(o);
         }
         else {
-            fullPrefix = o.getClass().getSimpleName().concat("_").concat(prefix);
+            if (isStable) {
+                fullPrefix = getObjectType(o).concat("/").concat(prefix);
+            }
+            else {
+                fullPrefix = getObjectType(o).concat("#").concat(prefix);
+            }
         }
         String objectName = inspectObjectForID(o);
         return mint(base, fullPrefix, objectName);
@@ -48,13 +57,22 @@ public class ReflexiveIRIMinter implements IRIMinter<Object> {
     }
 
     public IRI mint(String base, String prefix, String objectName) {
-        // derive the full object    name
+        return mint(base, prefix, objectName, true);
+    }
+
+    public IRI mint(String base, String prefix, String objectName, boolean isStable) {
+        // derive the full object name
         String fullName;
         if (prefix == null || prefix.equals("")) {
             fullName = objectName;
         }
         else {
-            fullName = prefix.concat("_").concat(objectName);
+            if (isStable) {
+                fullName = prefix.concat("/").concat(objectName);
+            }
+            else {
+                fullName = prefix.concat("#").concat(objectName);
+            }
         }
 
         // encode as URI and generate IRI
@@ -79,6 +97,17 @@ public class ReflexiveIRIMinter implements IRIMinter<Object> {
     public String encodeToURI(String stringToEncode) throws UnsupportedEncodingException {
         String encodedString = URLEncoder.encode(stringToEncode, "UTF-8");
         return encodedString.replaceAll("\\+", "%20");
+    }
+
+    private String getObjectType(Object o) {
+        // get interfaces o implements
+        Class<?>[] interfaces = o.getClass().getInterfaces();
+        if (interfaces.length == 1) {
+            return interfaces[0].getSimpleName();
+        }
+        else {
+            return o.getClass().getSimpleName();
+        }
     }
 
     private String inspectObjectForID(Object o) {
