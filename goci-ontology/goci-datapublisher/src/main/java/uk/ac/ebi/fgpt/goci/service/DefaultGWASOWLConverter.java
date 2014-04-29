@@ -215,10 +215,6 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         // get the snp class
         OWLClass snpClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.SNP_CLASS_IRI));
 
-        // get annotation relations
-        OWLAnnotationProperty rdfsLabel =
-                getDataFactory().getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
-
         // create a new snp instance
         OWLNamedIndividual snpIndiv = getDataFactory().getOWLNamedIndividual(
                 getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, snp));
@@ -234,6 +230,10 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                 IRI.create(OntologyConstants.HAS_SNP_REFERENCE_ID_PROPERTY_IRI));
         OWLDataProperty has_bp_pos = getDataFactory().getOWLDataProperty(
                 IRI.create(OntologyConstants.HAS_BP_POSITION_PROPERTY_IRI));
+
+        // get annotation relations
+        OWLAnnotationProperty rdfsLabel =
+                getDataFactory().getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
 
         // assert rsid relation
         OWLLiteral rsid = getDataFactory().getOWLLiteral(snp.getRSID());
@@ -291,11 +291,11 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         AddAxiom add_band_label = new AddAxiom(ontology, band_label_annotation);
         getManager().applyChange(add_band_label);
 
-        // get object properties
+        // get object relations
         OWLObjectProperty located_in = getDataFactory().getOWLObjectProperty(
                 IRI.create(OntologyConstants.LOCATED_IN_PROPERTY_IRI));
 
-        // assert relation
+        // assert located_in relation
         OWLObjectPropertyAssertionAxiom located_in_relation =
                 getDataFactory().getOWLObjectPropertyAssertionAxiom(located_in, snpIndiv, bandIndiv);
         AddAxiom add_located_in = new AddAxiom(ontology, located_in_relation);
@@ -303,7 +303,6 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
 
         // get the appropriate chromosome class given the chromosome name
         OWLClass chrClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.CHROMOSOME_CLASS_IRI));
-//        OWLClass chrClass = getChromosomeClass(snp.getChromosomeName());
 
         // create a new chromosome individual
         OWLNamedIndividual chrIndiv = getDataFactory().getOWLNamedIndividual(
@@ -342,25 +341,9 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         getManager().applyChange(add_has_part);
     }
 
-    private OWLClass getChromosomeClass(String chromosomeName) {
-        String classLabel = "chromosome " + chromosomeName;
-        Collection<OWLClass> labelledClasses = getOntologyDAO().getOWLClassesByLabel(classLabel);
-        if (labelledClasses.size() != 1) {
-            throw new OntologyTermException("Unexpected number of classes have label '" + classLabel + "'. " +
-                                                    "Expected 1, actual " + labelledClasses.size());
-        }
-        else {
-            return getDataFactory().getOWLClass(labelledClasses.iterator().next().getIRI());
-        }
-    }
-
     protected void convertAssociation(TraitAssociation association, OWLOntology ontology, Set<String> issuedWarnings) {
         // get the trait association class
         OWLClass taClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));
-
-        // get annotation relations
-        OWLAnnotationProperty rdfsLabel =
-                getDataFactory().getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
 
         IRI taIndIRI = getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, association);
 
@@ -374,6 +357,10 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         // get datatype relations
         OWLDataProperty has_p_value = getDataFactory().getOWLDataProperty(
                 IRI.create(OntologyConstants.HAS_P_VALUE_PROPERTY_IRI));
+
+        // get annotation relations
+        OWLAnnotationProperty rdfsLabel =
+                getDataFactory().getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
 
         // assert pValue relation
         OWLLiteral pValue = getDataFactory().getOWLLiteral(association.getPValue());
