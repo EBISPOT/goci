@@ -56,7 +56,7 @@ public class DataPublishingCacheableReasonerSession extends Initializable implem
             reasoner = getPublisher().publishGWASDataInferredView(gwasData);
         }
         else {
-            getLog().warn("Failed to retrieve reasoner from ehcache, returning reference");
+            getLog().trace("Failed to retrieve reasoner from ehcache, returning reference");
         }
         return reasoner;
     }

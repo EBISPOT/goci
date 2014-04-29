@@ -1,7 +1,9 @@
 package uk.ac.ebi.fgpt.goci.service;
 
 import org.semanticweb.owlapi.model.AddAxiom;
+import org.semanticweb.owlapi.model.AddImport;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.ImportChange;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -9,6 +11,7 @@ import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLImportsDeclaration;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
@@ -86,8 +89,21 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
     public OWLOntology createConversionOntology() throws OWLConversionException {
         try {
             // create a new graph to represent our data dump
-            return getManager().createOntology(IRI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/" +
+            OWLOntology conversion = getManager().createOntology(IRI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/" +
                                                                   new SimpleDateFormat("yyyy/MM/dd").format(new Date())));
+
+            // import the gwas ontology schema and efo
+            OWLImportsDeclaration gwasImportDecl = getDataFactory().getOWLImportsDeclaration(
+                    IRI.create(OntologyConstants.GWAS_ONTOLOGY_SCHEMA_IRI));
+            ImportChange gwasImport = new AddImport(conversion, gwasImportDecl);
+            getManager().applyChange(gwasImport);
+
+            OWLImportsDeclaration efoImportDecl = getDataFactory().getOWLImportsDeclaration(
+                    IRI.create(OntologyConstants.EFO_ONTOLOGY_SCHEMA_IRI));
+            ImportChange efoImport = new AddImport(conversion, efoImportDecl);
+            getManager().applyChange(efoImport);
+
+            return conversion;
         }
         catch (OWLOntologyCreationException e) {
             throw new OWLConversionException("Failed to create new ontology", e);
