@@ -2,6 +2,7 @@ package uk.ac.ebi.fgpt.goci.pussycat.renderlet.chromosome;
 
 import net.sourceforge.fluxion.spi.ServiceProvider;
 import org.semanticweb.owlapi.model.IRI;
+import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 
 import java.net.URL;
 
@@ -16,7 +17,7 @@ import java.net.URL;
 @ServiceProvider
 public class ChrNineteen extends ChromosomeRenderlet{
 
-    private IRI chromIRI = IRI.create("http://www.ebi.ac.uk/efo/gwas-diagram/EFO_GD00023");
+    private IRI chromIRI = IRI.create(OntologyConstants.CHROMOSOME_CLASS_IRI + "_19");
     private int position = 18;
 
     @Override
