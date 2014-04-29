@@ -231,7 +231,7 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
     public void saveGWASDataInferredView(OWLReasoner reasoner, File outputFile) throws OWLConversionException {
         try {
             // create new ontology to hold inferred axioms
-            OWLOntology inferredOntology = getConverter().createInferredConversionOntology();
+            OWLOntology inferredOntology = getConverter().createConversionOntology();
 
             getLog().info("Saving inferred view...");
             List<InferredAxiomGenerator<? extends OWLAxiom>> gens =

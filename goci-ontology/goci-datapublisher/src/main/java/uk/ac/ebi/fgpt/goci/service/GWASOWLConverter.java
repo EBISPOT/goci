@@ -26,18 +26,6 @@ public interface GWASOWLConverter {
     OWLOntology createConversionOntology() throws OWLConversionException;
 
     /**
-     * Creates a new empty ontology that can be used to store the inferred version of the data conversion.  This new
-     * ontology will import the GWAS diagram ontology that declares the schema.
-     *
-     * @return the newly created, empty, ontology
-     * @throws uk.ac.ebi.fgpt.goci.exception.OWLConversionException
-     *          if something went wrong whilst creating the ontology
-     * @deprecated
-     */
-    @Deprecated
-    OWLOntology createInferredConversionOntology() throws OWLConversionException;
-
-    /**
      * Converts the provided studies into ontology entities and adds them to the supplied ontology ontology
      *
      * @param studies  the studies retrieved from the GWAS catalog

@@ -67,7 +67,6 @@ public class TestDefaultGWASOWLPublisher extends TestCase {
 
             converter = mock(GWASOWLConverter.class);
             when(converter.createConversionOntology()).thenReturn(testOntology);
-            when(converter.createInferredConversionOntology()).thenReturn(testOntology);
             publisher.setConverter(converter);
 
             studyDAO = mock(StudyDAO.class);

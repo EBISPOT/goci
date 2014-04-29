@@ -91,36 +91,6 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
             // create a new graph to represent our data dump
             return getManager().createOntology(IRI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/" +
                                                                   new SimpleDateFormat("yyyy/MM/dd").format(new Date())));
-
-//            // import the gwas ontology schema
-//            OWLImportsDeclaration importDecl = getDataFactory().getOWLImportsDeclaration(
-//                    IRI.create(OntologyConstants.GWAS_ONTOLOGY_SCHEMA_IRI));
-//            ImportChange change = new AddImport(conversion, importDecl);
-//            getManager().applyChange(change);
-//
-//            return conversion;
-        }
-        catch (OWLOntologyCreationException e) {
-            throw new OWLConversionException("Failed to create new ontology", e);
-        }
-    }
-
-    @Deprecated
-    public OWLOntology createInferredConversionOntology() throws OWLConversionException {
-        try {
-            // create a new ontology to represent our data dump
-            String iri = "http://www.ebi.ac.uk/efo/gwas-diagram/" +
-                    new SimpleDateFormat("yyyy/MM/dd").format(new Date()) +
-                    "/inferred-data";
-            OWLOntology conversion = getManager().createOntology(IRI.create(iri));
-
-            // import the gwas ontology schema
-            OWLImportsDeclaration importDecl = getDataFactory().getOWLImportsDeclaration(
-                    IRI.create(OntologyConstants.GWAS_ONTOLOGY_SCHEMA_IRI));
-            ImportChange change = new AddImport(conversion, importDecl);
-            getManager().applyChange(change);
-
-            return conversion;
         }
         catch (OWLOntologyCreationException e) {
             throw new OWLConversionException("Failed to create new ontology", e);
