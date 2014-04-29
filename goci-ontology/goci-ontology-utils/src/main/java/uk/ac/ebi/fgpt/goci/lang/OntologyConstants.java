@@ -23,21 +23,21 @@ public class OntologyConstants {
     // Data Property IRIs
     public static final String HAS_AUTHOR_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_author";
     public static final String HAS_BP_POSITION_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_basepair_position";
+    public static final String HAS_GWAS_TRAIT_NAME_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_gwas_trait_name";
     public static final String HAS_LENGTH_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_length";
     public static final String HAS_NAME_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_name";
-    public static final String HAS_P_VALUE_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_p_statistic";
+    public static final String HAS_P_VALUE_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_p_value";
     public static final String HAS_PUBLICATION_DATE_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_publication_date";
     public static final String HAS_PUBMED_ID_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_pubmed_id";
     public static final String HAS_SNP_REFERENCE_ID_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_snp_reference_id";
-    public static final String HAS_GWAS_TRAIT_NAME_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_gwas_trait_name";
 
     // Object Property IRIs
+    public static final String ASSOCIATED_WITH_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/associated_with";
+    public static final String HAS_ABOUT_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_about";
     public static final String HAS_PART_PROPERTY_IRI = "http://www.obofoundry.org/ro/ro.owl#has_part";
+    public static final String IS_ABOUT_IRI = "http://purl.obolibrary.org/obo/IAO_0000136";
     public static final String LOCATED_IN_PROPERTY_IRI = "http://www.obofoundry.org/ro/ro.owl#located_in";
     public static final String LOCATION_OF_PROPERTY_IRI =  "http://www.obofoundry.org/ro/ro.owl#location_of";
-    public static final String ASSOCIATED_WITH_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/associated_with";
-    public static final String IS_ABOUT_IRI = "http://purl.obolibrary.org/obo/IAO_0000136";
-    public static final String HAS_ABOUT_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_about";
     public static final String PART_OF_PROPERTY_IRI = "http://www.obofoundry.org/ro/ro.owl#part_of";
 
     //Datatype IRIs
