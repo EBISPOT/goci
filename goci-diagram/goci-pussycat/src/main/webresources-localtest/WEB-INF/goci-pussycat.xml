@@ -12,7 +12,7 @@
     <!-- configuration: sets up ontology manager and data factory given mappings to the set resources -->
     <bean name="config" class="uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration" init-method="init">
         <!-- TODO: use EFO release -->
-        <property name="efoResource" value="file:/home/dwelter/EFO_SVN/ExFactorInOWL/currentrelease/eforelease/efo.owl" />
+        <property name="efoResource" value="http://www.ebi.ac.uk/efo/efo.owl" />
         <property name="gwasDiagramSchemaResource" value="classpath:gwas-diagram.owl"/>
     </bean>
 
@@ -36,10 +36,10 @@
     a) we are dynamically generating the knowledgebase (uk.ac.ebi.fgpt.goci.pussycat.session.DataPublishingCacheableReasonerSession) or
     b) statically loading a precanned version (uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession) -->
     <bean id="reasonerSession"
-          class="uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession"
+          class="uk.ac.ebi.fgpt.goci.pussycat.session.DataPublishingCacheableReasonerSession"
           init-method="init">
-        <property name="configuration" ref="config" />
-        <property name="ontologyResource" value="ontology/gwas-data-2006-12.owl" />
+        <!--<property name="configuration" ref="config" />-->
+        <!--<property name="ontologyResource" value="ontology/gwas-data-2006-12.owl" />-->
         <property name="publisher" ref="publisher" />
     </bean>
 
@@ -54,7 +54,7 @@
     </bean>
 
     <bean name="gwasDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init">
-        <property name="ontologyResource" value="ontology/gwas-data-2006-12.owl"/>
+        <property name="ontologyResource" value="http://www.ebi.ac.uk/efo/efo.owl"/>
         <property name="ontologyConfiguration" ref="config"/>
     </bean>
 

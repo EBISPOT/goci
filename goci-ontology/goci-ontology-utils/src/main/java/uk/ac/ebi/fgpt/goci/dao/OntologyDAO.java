@@ -82,7 +82,7 @@ public class OntologyDAO extends Initializable {
     protected void doInitialization() throws OWLOntologyCreationException {
         try {
             // set property to make sure we can parse all of the ontology
-            System.setProperty("entityExpansionLimit", "128000");
+            System.setProperty("entityExpansionLimit", "100000000");
             getLog().info("Loading Ontology from " + getOntologyResource().getURI().toString() + "...");
 
             OWLOntologyManager manager;
