@@ -1,7 +1,26 @@
 package uk.ac.ebi.fgpt.goci.service;
 
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.AddAxiom;
+import org.semanticweb.owlapi.model.AddImport;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.ImportChange;
+import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLImportsDeclaration;
+import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
+import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.dao.OntologyDAO;
@@ -15,14 +34,16 @@ import uk.ac.ebi.fgpt.goci.model.Study;
 import uk.ac.ebi.fgpt.goci.model.TraitAssociation;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A default implementation of {@link GWASOWLConverter} that fetches data from the GWAS catalog using a {@link
  * uk.ac.ebi.fgpt.goci.dao.StudyDAO} and converts all obtained {@link Study} objects to OWL.
  *
- * @author Tony Burdett
- *         Date 26/01/12
+ * @author Tony Burdett Date 26/01/12
  */
 public class DefaultGWASOWLConverter implements GWASOWLConverter {
     private OntologyConfiguration configuration;
@@ -89,8 +110,8 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         try {
             // create a new ontology to represent our data dump
             String iri = "http://www.ebi.ac.uk/efo/gwas-diagram/" +
-                         new SimpleDateFormat("yyyy/MM/dd").format(new Date()) +
-                         "/inferred-data";
+                    new SimpleDateFormat("yyyy/MM/dd").format(new Date()) +
+                    "/inferred-data";
             OWLOntology conversion = getManager().createOntology(IRI.create(iri));
 
             // import the gwas ontology schema
@@ -148,6 +169,10 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         OWLDataProperty has_pubmed_id = getDataFactory().getOWLDataProperty(
                 IRI.create(OntologyConstants.HAS_PUBMED_ID_PROPERTY_IRI));
 
+        // get annotation relations
+        OWLAnnotationProperty rdfsLabel =
+                getDataFactory().getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
+
         // assert author relation
         OWLLiteral author = getDataFactory().getOWLLiteral(study.getAuthorName());
         OWLDataPropertyAssertionAxiom author_relation =
@@ -178,6 +203,12 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                 getDataFactory().getOWLDataPropertyAssertionAxiom(has_pubmed_id, studyIndiv, pubmed_id);
         AddAxiom add_pubmed_id = new AddAxiom(ontology, pubmed_id_relation);
         getManager().applyChange(add_pubmed_id);
+
+        // assert label
+        OWLAnnotationAssertionAxiom label_annotation =
+                getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, studyIndiv.getIRI(), pubmed_id);
+        AddAxiom add_label = new AddAxiom(ontology, label_annotation);
+        getManager().applyChange(add_label);
 
         // add object properties...
 
@@ -214,6 +245,10 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         // get the snp class
         OWLClass snpClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.SNP_CLASS_IRI));
 
+        // get annotation relations
+        OWLAnnotationProperty rdfsLabel =
+                getDataFactory().getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
+
         // create a new snp instance
         OWLNamedIndividual snpIndiv = getDataFactory().getOWLNamedIndividual(
                 getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, snp));
@@ -238,23 +273,32 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         getManager().applyChange(add_rsid);
 
         // assert bp_pos relation
-        if(snp.getSNPLocation() != null){
+        if (snp.getSNPLocation() != null) {
             OWLLiteral bp_pos = getDataFactory().getOWLLiteral(snp.getSNPLocation(), OWL2Datatype.XSD_INT);
             OWLDataPropertyAssertionAxiom bp_pos_relation =
                     getDataFactory().getOWLDataPropertyAssertionAxiom(has_bp_pos, snpIndiv, bp_pos);
             AddAxiom add_bp_pos = new AddAxiom(ontology, bp_pos_relation);
             getManager().applyChange(add_bp_pos);
         }
-        else{
+        else {
             getLog().debug("No SNP location available for SNP " + rsid);
         }
+
+        // assert label
+        OWLAnnotationAssertionAxiom snp_label_annotation =
+                getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, snpIndiv.getIRI(), rsid);
+        AddAxiom add_snp_label = new AddAxiom(ontology, snp_label_annotation);
+        getManager().applyChange(add_snp_label);
 
         // get the band class
         OWLClass bandClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.CYTOGENIC_REGION_CLASS_IRI));
 
         // create a new band individual
         OWLNamedIndividual bandIndiv = getDataFactory().getOWLNamedIndividual(
-                getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "CytogeneticRegion", snp.getCytogeneticBandName()));
+                getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI,
+                                 "CytogeneticRegion",
+                                 snp.getCytogeneticBandName())
+        );
 
         // assert class membership
         OWLClassAssertionAxiom bandClassAssertion = getDataFactory().getOWLClassAssertionAxiom(bandClass, bandIndiv);
@@ -270,6 +314,12 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                 getDataFactory().getOWLDataPropertyAssertionAxiom(has_name, bandIndiv, name);
         AddAxiom add_name = new AddAxiom(ontology, name_relation);
         getManager().applyChange(add_name);
+
+        // assert label
+        OWLAnnotationAssertionAxiom band_label_annotation =
+                getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, bandIndiv.getIRI(), name);
+        AddAxiom add_band_label = new AddAxiom(ontology, band_label_annotation);
+        getManager().applyChange(add_band_label);
 
         // get object properties
         OWLObjectProperty located_in = getDataFactory().getOWLObjectProperty(
@@ -304,6 +354,13 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         AddAxiom add_chr_name = new AddAxiom(ontology, chr_name_relation);
         getManager().applyChange(add_chr_name);
 
+        // assert label
+        OWLLiteral chr_label = getDataFactory().getOWLLiteral("Chromosome " + snp.getChromosomeName());
+        OWLAnnotationAssertionAxiom chr_label_annotation =
+                getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, chrIndiv.getIRI(), chr_label);
+        AddAxiom add_chr_label = new AddAxiom(ontology, chr_label_annotation);
+        getManager().applyChange(add_chr_label);
+
         // get object properties
         OWLObjectProperty has_part = getDataFactory().getOWLObjectProperty(
                 IRI.create(OntologyConstants.HAS_PART_PROPERTY_IRI));
@@ -320,7 +377,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         Collection<OWLClass> labelledClasses = getOntologyDAO().getOWLClassesByLabel(classLabel);
         if (labelledClasses.size() != 1) {
             throw new OntologyTermException("Unexpected number of classes have label '" + classLabel + "'. " +
-                                            "Expected 1, actual " + labelledClasses.size());
+                                                    "Expected 1, actual " + labelledClasses.size());
         }
         else {
             return getDataFactory().getOWLClass(labelledClasses.iterator().next().getIRI());
@@ -330,6 +387,10 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
     protected void convertAssociation(TraitAssociation association, OWLOntology ontology, Set<String> issuedWarnings) {
         // get the trait association class
         OWLClass taClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));
+
+        // get annotation relations
+        OWLAnnotationProperty rdfsLabel =
+                getDataFactory().getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
 
         IRI taIndIRI = getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, association);
 
@@ -365,7 +426,11 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
             }
             // create a new snp instance
             snpIndiv = getDataFactory().getOWLNamedIndividual(
-                    getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "SingleNucleotidePolymorphism", association, false));
+                    getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI,
+                                     "SingleNucleotidePolymorphism",
+                                     association.getAssociatedSNPReferenceId(),
+                                     false)
+            );
 
             // assert class membership
             OWLClass snpClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.SNP_CLASS_IRI));
@@ -397,9 +462,9 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         // create a new trait instance
         IRI traitIRI = getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "Trait", association, false);
 
-        if(ontology.containsIndividualInSignature(traitIRI)){
+        if (ontology.containsIndividualInSignature(traitIRI)) {
             getLog().debug(traitIRI.toString() + " already exists");
-  //          traitIRI = incrementAssociationIRI(traitIRI, ontology);
+            //          traitIRI = incrementAssociationIRI(traitIRI, ontology);
         }
 
         OWLNamedIndividual traitIndiv = getDataFactory().getOWLNamedIndividual(traitIRI);
@@ -440,5 +505,13 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         AddAxiom add_is_about_trait = new AddAxiom(ontology, is_about_trait_relation);
         getManager().applyChange(add_is_about_trait);
 
+        // finally, assert label for this association
+        OWLLiteral label = getDataFactory().getOWLLiteral(
+                "Association between " + association.getAssociatedSNPReferenceId() + " and " +
+                        association.getGWASCuratorLabel());
+        OWLAnnotationAssertionAxiom label_annotation =
+                getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, taIndiv.getIRI(), label);
+        AddAxiom add_band_label = new AddAxiom(ontology, label_annotation);
+        getManager().applyChange(add_band_label);
     }
 }
