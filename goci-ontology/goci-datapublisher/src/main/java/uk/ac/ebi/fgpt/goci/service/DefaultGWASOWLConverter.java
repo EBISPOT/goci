@@ -415,8 +415,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                     getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI,
                                      "SingleNucleotidePolymorphism",
                                      association.getAssociatedSNPReferenceId(),
-                                     false)
-            );
+                                     true));
 
             // assert class membership
             OWLClass snpClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.SNP_CLASS_IRI));
@@ -431,6 +430,12 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                     getDataFactory().getOWLDataPropertyAssertionAxiom(has_snp_rsid, snpIndiv, rsid);
             AddAxiom add_rsid = new AddAxiom(ontology, rsid_relation);
             getManager().applyChange(add_rsid);
+
+            // assert label
+            OWLAnnotationAssertionAxiom snp_label_annotation =
+                    getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, snpIndiv.getIRI(), rsid);
+            AddAxiom add_snp_label = new AddAxiom(ontology, snp_label_annotation);
+            getManager().applyChange(add_snp_label);
         }
 
         // get object properties
