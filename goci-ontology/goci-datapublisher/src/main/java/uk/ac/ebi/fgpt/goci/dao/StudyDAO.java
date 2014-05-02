@@ -87,10 +87,10 @@ public class StudyDAO extends Initializable {
 
     private class StudyMapper implements RowMapper<Study> {
         public Study mapRow(ResultSet resultSet, int i) throws SQLException {
-            String id = resultSet.getString(1);
-            String author = resultSet.getString(2);
+            String id = resultSet.getString(1).trim();
+            String author = resultSet.getString(2).trim();
             Date publishDate = resultSet.getDate(3);
-            String pubmedID = resultSet.getString(4);
+            String pubmedID = resultSet.getString(4).trim();
             return new StudyFromDB(id, author, publishDate, pubmedID);
         }
     }

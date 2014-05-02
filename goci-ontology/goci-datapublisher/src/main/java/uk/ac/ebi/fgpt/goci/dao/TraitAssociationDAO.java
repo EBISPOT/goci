@@ -136,12 +136,12 @@ public class TraitAssociationDAO extends Initializable {
 
     private class TraitAssociationMapper implements RowMapper<TraitAssociation> {
         public TraitAssociation mapRow(ResultSet resultSet, int i) throws SQLException {
-            String rownum = resultSet.getString(1);
-            String associationID = resultSet.getString(2);
-            String studyID = resultSet.getString(3);
-            String pubMedID = resultSet.getString(4);
-            String rsID = resultSet.getString(5);
-            String traitName = resultSet.getString(6);
+            String rownum = resultSet.getString(1).trim();
+            String associationID = resultSet.getString(2).trim();
+            String studyID = resultSet.getString(3).trim();
+            String pubMedID = resultSet.getString(4).trim();
+            String rsID = resultSet.getString(5).trim();
+            String traitName = resultSet.getString(6).trim();
             float pValue = resultSet.getFloat(7);
             String efoURI = resultSet.getString(8);
             return new TraitAssocationFromDB(rownum, associationID, studyID, pubMedID, rsID, traitName, pValue, efoURI);

@@ -55,11 +55,11 @@ public class SingleNucleotidePolymorphismDAO {
 
     private class SNPMapper implements RowMapper<SingleNucleotidePolymorphism> {
         public SingleNucleotidePolymorphism mapRow(ResultSet resultSet, int i) throws SQLException {
-            String id = resultSet.getString(1);
-            String rsID = resultSet.getString(2);
-            String bandName = resultSet.getString(3);
-            String chromosomeName = resultSet.getString(4);
-            String location = resultSet.getString(5);
+            String id = resultSet.getString(1).trim();
+            String rsID = resultSet.getString(2).trim();
+            String bandName = resultSet.getString(3).trim();
+            String chromosomeName = resultSet.getString(4).trim();
+            String location = resultSet.getString(5).trim();
 
             return new SnpFromDB(id, rsID, chromosomeName, bandName, location);
         }

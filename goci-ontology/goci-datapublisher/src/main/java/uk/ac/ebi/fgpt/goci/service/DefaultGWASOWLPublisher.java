@@ -2,6 +2,7 @@ package uk.ac.ebi.fgpt.goci.service;
 
 import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.io.OWLXMLOntologyFormat;
+import org.semanticweb.owlapi.io.RDFXMLOntologyFormat;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.*;
 import org.semanticweb.owlapi.util.*;
@@ -215,9 +216,10 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
     public void saveGWASData(OWLOntology ontology, File outputFile) throws OWLConversionException {
         try {
             getLog().info("Saving GWAS catalog data...");
-            OWLXMLOntologyFormat owlxmlFormat = new OWLXMLOntologyFormat();
+//            OWLXMLOntologyFormat format = new OWLXMLOntologyFormat();
+            OWLOntologyFormat format = new RDFXMLOntologyFormat();
             getManager().saveOntology(ontology,
-                                      owlxmlFormat,
+                                      format,
                                       IRI.create(outputFile));
             getLog().info("GWAS catalog data saved ok");
             getLog().info("Resulting ontology contains " + ontology.getAxiomCount() + " axioms " +
