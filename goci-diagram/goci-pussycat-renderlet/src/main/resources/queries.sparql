@@ -1,0 +1,64 @@
+^[PREFIXES]
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX ro: <http://www.obofoundry.org/ro/ro.owl#>
+PREFIX gwas: <http://rdf.ebi.ac.uk/terms/gwas/>
+PREFIX efo: <http://www.ebi.ac.uk/efo/>
+
+
+
+^[CHROMOSOMES.read]
+
+SELECT ?c ?name
+WHERE {
+  ?c a gwas:Chromosome .
+  ?c rdfs:label ?name .
+}
+
+
+
+^[BANDS.read]
+
+SELECT DISTINCT ?c ?band
+WHERE {
+  ?c a gwas:Chromosome .
+  ?c ro:has_part ?bandIndiv .
+  ?bandIndiv a gwas:CytogeneticRegion .
+  ?bandIndiv ro:location_of ?snp .
+  ?bandIndiv rdfs:label ?band .
+  ?snp a gwas:SingleNucleotidePolymorphism .
+}
+
+
+^[BAND_SNP.read]
+
+SELECT DISTINCT ?band ?snp
+WHERE {
+  ?bandIndiv a gwas:CytogeneticRegion .
+  ?bandIndiv ro:location_of ?snp .
+  ?bandIndiv rdfs:label ?band .
+  ?snp a gwas:SingleNucleotidePolymorphism .
+}
+
+
+
+^[SNP_TRAIT.read]
+
+SELECT DISTINCT ?snp ?trait ?traitClass
+WHERE {
+  ?snpIndiv a gwas:SingleNucleotidePolymorphism .
+  ?snpIndiv gwas:has_about ?ta . 
+  ?snpIndiv rdfs:label ?snp .
+  ?ta a gwas:TraitAssociation .
+  ?ta obo:IAO_0000136 ?traitIndiv .
+  ?traitIndiv a ?traitClass .
+  ?traitClass rdfs:label ?trait
+  FILTER (?traitClass != gwas:SingleNucleotidePolymorphism) .
+  FILTER (?traitClass != owl:NamedIndividual) .
+}
