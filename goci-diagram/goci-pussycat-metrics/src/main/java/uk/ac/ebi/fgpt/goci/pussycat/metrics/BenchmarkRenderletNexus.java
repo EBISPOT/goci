@@ -15,7 +15,7 @@ import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderingEvent;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.chromosome.ChromosomeRenderlet;
-import uk.ac.ebi.fgpt.goci.utils.OntologyUtils;
+import uk.ac.ebi.fgpt.goci.pussycat.utils.OntologyUtils;
 
 import java.text.DateFormat;
 import java.text.ParseException;

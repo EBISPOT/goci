@@ -24,7 +24,7 @@ import uk.ac.ebi.fgpt.goci.pussycat.manager.PussycatManager;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSession;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSessionStrategy;
-import uk.ac.ebi.fgpt.goci.utils.OntologyUtils;
+import uk.ac.ebi.fgpt.goci.pussycat.utils.OntologyUtils;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;

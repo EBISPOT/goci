@@ -18,7 +18,7 @@
         <constructor-arg value="JOIN" />
     </bean>
 
-    <bean id="pussycatManager" class="uk.ac.ebi.fgpt.goci.pussycat.manager.DefaultPussycatManager">
+    <bean id="pussycatManager" class="uk.ac.ebi.fgpt.goci.pussycat.manager.OWLPussycatManager">
         <property name="reasonerSession" ref="reasonerSession" />
         <property name="pussycatSessions">
             <set>
@@ -26,6 +26,20 @@
             </set>
         </property>
     </bean>
+
+    <!--<bean id="queryManager" class="uk.ac.ebi.fgpt.goci.service.QueryManager" init-method="init">-->
+        <!--<property name="propertiesMapAdapter" ref="propertiesMapAdapter" />-->
+        <!--<property name="sparqlQueryResource" value="classpath:resources/queries.sparql" />-->
+    <!--</bean>-->
+
+
+    <!--<bean id="prefixProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">-->
+        <!--<property name="location" value="classpath:prefix.properties" />-->
+    <!--</bean>-->
+
+    <!--<bean id="propertiesMapAdapter" class="PropertiesMapAdapter" init-method="init">-->
+        <!--<property name="properties" ref="prefixProperties" />-->
+    <!--</bean>-->
 
     <!-- NB: which implementation to use depends on whether
              a) we are dynamically generating the knowledgebase (uk.ac.ebi.fgpt.goci.pussycat.session.DataPublishingCacheableReasonerSession) or

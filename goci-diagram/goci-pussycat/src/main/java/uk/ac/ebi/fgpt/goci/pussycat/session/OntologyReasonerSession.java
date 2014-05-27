@@ -9,7 +9,7 @@ import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.lang.Initializable;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
-import uk.ac.ebi.fgpt.goci.utils.OntologyUtils;
+import uk.ac.ebi.fgpt.goci.pussycat.utils.OntologyUtils;
 
 /**
  * A simple reasoner session that returns a reasoner over EFO.

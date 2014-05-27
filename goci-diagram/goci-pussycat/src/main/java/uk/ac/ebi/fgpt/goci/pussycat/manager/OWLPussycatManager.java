@@ -22,7 +22,7 @@ import java.util.*;
  * @author Tony Burdett
  *         Date 01/03/12
  */
-public class DefaultPussycatManager implements PussycatManager {
+public class OWLPussycatManager implements PussycatManager {
     private Set<PussycatSession> pussycatSessions;
     private Map<HttpSession, PussycatSession> sessionMap;
 
@@ -32,7 +32,7 @@ public class DefaultPussycatManager implements PussycatManager {
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    public DefaultPussycatManager() {
+    public OWLPussycatManager() {
         this.pussycatSessions = new HashSet<PussycatSession>();
         this.sessionMap = new HashMap<HttpSession, PussycatSession>();
         this.nexusMap = new HashMap<HttpSession, RenderletNexus>();
@@ -128,7 +128,7 @@ public class DefaultPussycatManager implements PussycatManager {
             throws PussycatSessionNotReadyException {
         try {
             Collection<Renderlet> renderlets = pussycatSession.getAvailableRenderlets();
-            RenderletNexus renderletNexus = RenderletNexusFactory.createDefaultRenderletNexus(
+            RenderletNexus renderletNexus = RenderletNexusFactory.createOWLRenderletNexus(
                     configuration.getOWLOntologyManager(),
                     pussycatSession.getReasoner(),
                     configuration.getEfoLabels());

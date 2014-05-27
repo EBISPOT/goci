@@ -1,10 +1,6 @@
 package uk.ac.ebi.fgpt.goci.pussycat.renderlet;
 
 import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
-import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 
 import java.util.Map;
@@ -21,7 +17,7 @@ import java.util.Set;
  * @author Rob Davey
  * Date 27/02/12
  */
-public interface RenderletNexus {
+public interface RenderletNexus<S> {
     /**
      * Register a renderlet to this nexus.
      *
@@ -30,14 +26,6 @@ public interface RenderletNexus {
      */
     boolean register(Renderlet renderlet);
 
-
-    void setOWLOntologyManager(OWLOntologyManager manager);
-
-    OWLOntologyManager getManager();
-
-    void setReasoner(OWLReasoner reasoner);
-
-    OWLReasoner getReasoner();
 
     void setEfoLabels(Map<IRI, String> efoLabels);
 
@@ -63,17 +51,14 @@ public interface RenderletNexus {
     /**
      * Gets a string of SVG to be rendered
      *
-     * @param classExpression the class expression to be rendered
+     * @param renderableSelection the expression to be rendered
      * @return the SVG in the form of a string
      */
-    String getSVG(OWLClassExpression classExpression);
+    String getSVG(S renderableSelection);
 
     Set<Renderlet> getRenderlets();
 
     <O> RenderingEvent getRenderingEvent(O renderedEntity);
 
-    void setBandLocation(String band, BandInformation information);
-
-    Map<String, BandInformation> getBandLocations();
 
 }

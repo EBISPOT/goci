@@ -23,7 +23,7 @@
         <constructor-arg value="JOIN" />
     </bean>
 
-    <bean id="pussycatManager" class="uk.ac.ebi.fgpt.goci.pussycat.manager.DefaultPussycatManager">
+    <bean id="pussycatManager" class="uk.ac.ebi.fgpt.goci.pussycat.manager.OWLPussycatManager">
         <property name="reasonerSession" ref="reasonerSession" />
         <property name="pussycatSessions">
             <set>

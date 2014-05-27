@@ -204,6 +204,15 @@
             <name>Sonatype's Maven repository</name>
             <url>https://oss.sonatype.org/content/repositories/releases/</url>
         </repository>
+
+        <repository>
+            <id>coconut.ebi.ac.uk</id>
+            <name>EBI Artifactory</name>
+            <url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
     </repositories>
 
 

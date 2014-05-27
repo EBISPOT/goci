@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.exception.UnexpectedOntologyStructureException;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
-import uk.ac.ebi.fgpt.goci.utils.OntologyUtils;
+import uk.ac.ebi.fgpt.goci.pussycat.utils.OntologyUtils;
 
 import java.net.URISyntaxException;
 import java.net.URL;

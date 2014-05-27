@@ -11,7 +11,7 @@ import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.ColourMapper;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGBuilder;
-import uk.ac.ebi.fgpt.goci.utils.OntologyUtils;
+import uk.ac.ebi.fgpt.goci.pussycat.utils.OntologyUtils;
 
 import java.util.Set;
 

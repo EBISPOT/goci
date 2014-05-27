@@ -12,7 +12,7 @@ import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGBuilder;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.chromosome.ChromosomeRenderlet;
-import uk.ac.ebi.fgpt.goci.utils.OntologyUtils;
+import uk.ac.ebi.fgpt.goci.pussycat.utils.OntologyUtils;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -26,7 +26,7 @@ import java.util.*;
  * Time: 16:18
  * To change this template use File | Settings | File Templates.
  */
-public class DefaultRenderletNexus implements RenderletNexus {
+public class OWLRenderletNexus implements RenderletNexus<OWLClassExpression> {
 
     private Logger log = LoggerFactory.getLogger(getClass());
     private Logger diagramLogger = LoggerFactory.getLogger("diagram.log");
@@ -41,11 +41,11 @@ public class DefaultRenderletNexus implements RenderletNexus {
     private Map<IRI, String> efoLabels;
     private Map<String, BandInformation> bandLocations;
     private Set<OWLNamedIndividual> allTraits;
-
     private OWLOntologyManager manager;
     private OWLReasoner reasoner;
 
-    public DefaultRenderletNexus() {
+
+    public OWLRenderletNexus() {
         this.renderlets = new HashSet<Renderlet>();
         this.entityLocations = new HashMap<Object, SVGArea>();
         this.renderedEntities = new HashMap<Object, RenderingEvent>();
@@ -60,25 +60,26 @@ public class DefaultRenderletNexus implements RenderletNexus {
         bandLocations.put(band, info);
     }
 
-    @Override
+
+
+
     public void setOWLOntologyManager(OWLOntologyManager manager) {
         this.manager = manager;
     }
 
-    @Override
     public OWLOntologyManager getManager() {
         return manager;
     }
 
-    @Override
     public void setReasoner(OWLReasoner reasoner) {
         this.reasoner = reasoner;
     }
 
-    @Override
     public OWLReasoner getReasoner() {
         return reasoner;
     }
+
+
 
     @Override
     public void setEfoLabels(Map<IRI, String> efoLabels) {
@@ -124,9 +125,12 @@ public class DefaultRenderletNexus implements RenderletNexus {
 //check if the chromosomes have already been rendered, otherwise render them
         SVGBuilder svgBuilder = new SVGBuilder();
 
+
+
         // get the ontology loaded into the reasoner
         OWLOntology ontology = reasoner.getRootOntology();
 
+/****        SPARQL CONVERSION ****/
         OWLClass ta = manager.getOWLDataFactory().getOWLClass(IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));
         diagramLogger.info("There are " + ta.getIndividuals(ontology).size() + " potential trait associations that could be rendered");
 
@@ -135,6 +139,8 @@ public class DefaultRenderletNexus implements RenderletNexus {
         long start, end;
         start = System.currentTimeMillis();
         getLog().debug("Obtaining OWL individuals from reasoner");
+
+/****        SPARQL CONVERSION ****/
         Set<OWLNamedIndividual> individuals = reasoner.getInstances(classExpression, false).getFlattened();
         end = System.currentTimeMillis();
         double time = ((double) (end - start)) / 1000;
@@ -147,6 +153,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
 //if the map is empty but OWLClassExpression isn't OWLThing, do a dummy rendering to rebuild the map
             if(!classExpression.isOWLThing()){
                 getLog().debug("Empty maps and a subset to rendered - rebuild maps via dummy OWLThing rendering");
+/****        SPARQL CONVERSION ****/
                 OWLClassExpression everything = manager.getOWLDataFactory().getOWLThing();
                 Set<OWLNamedIndividual> allIndividuals = reasoner.getInstances(everything,false).getFlattened();
                 renderSVGFromScratch(svgBuilder, ontology, allIndividuals);
@@ -169,10 +176,12 @@ public class DefaultRenderletNexus implements RenderletNexus {
     }
 
     public void renderChromosomes(SVGBuilder builder) {
+/****        SPARQL CONVERSION ****/
         OWLOntology ontology = reasoner.getRootOntology();
 
         for (Renderlet r : renderlets) {
             if (r instanceof ChromosomeRenderlet) {
+/****        SPARQL CONVERSION ****/
                 OWLClass chromosome = ontology.getOWLOntologyManager()
                         .getOWLDataFactory()
                         .getOWLClass(IRI.create(OntologyConstants.CHROMOSOME_CLASS_IRI));
@@ -446,6 +455,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
 
     public boolean checkType(OWLNamedIndividual individual, OWLOntology ontology, IRI typeIRI) {
         boolean type = false;
+/****        SPARQL CONVERSION ****/
         OWLClassExpression[] allTypes = individual.getTypes(ontology).toArray(new OWLClassExpression[0]);
 
         for (int i = 0; i < allTypes.length; i++) {
@@ -466,6 +476,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
                     checkType(individual, ontology, IRI.create(OntologyConstants.CYTOGENIC_REGION_CLASS_IRI));
 
             if (isBand) {
+/****        SPARQL CONVERSION ****/
                 OWLDataFactory df = manager.getOWLDataFactory();
                 OWLDataProperty has_name = df.getOWLDataProperty(IRI.create(OntologyConstants.HAS_NAME_PROPERTY_IRI));
                 String bandName = null;
@@ -649,6 +660,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
                     }
                 }
                 else{
+                    bandLocations.get(current).setNextBand(null);
                     bandLocations.get(current).setNextBand(null);
                     bandLocations.get(next).setPreviousBand(null);
                 }
