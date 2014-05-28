@@ -3,7 +3,7 @@ package uk.ac.ebi.fgpt.goci.pussycat.renderlet;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import uk.ac.ebi.fgpt.goci.service.QueryManager;
+import uk.ac.ebi.fgpt.goci.pussycat.service.QueryManager;
 
 import java.util.Map;
 
