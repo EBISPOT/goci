@@ -17,10 +17,15 @@ import uk.ac.ebi.fgpt.lode.exception.LodeException;
 public interface JenaQueryExecutionService {
 
     /**
-     * Get graph
+     * Get default graph
      */
-
     Graph getDefaultGraph();
+
+    /**
+     * Get named graph
+     */
+    Graph getNamedGraph(String graphName);
+
 
     /**
      * Get a Jena QueryExecution object

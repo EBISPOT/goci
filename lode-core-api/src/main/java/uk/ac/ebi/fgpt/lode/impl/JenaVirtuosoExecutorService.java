@@ -71,6 +71,7 @@ public class JenaVirtuosoExecutorService implements JenaQueryExecutionService {
         this.virtuosoAllGraphs = virtuosoAllGraphs;
     }
 
+
     public QueryExecution getQueryExecution(Graph g, Query query, boolean withInference) throws LodeException {
         if (isNullOrEmpty(getEndpointURL())) {
             log.error("No sparql endpoint");
@@ -115,6 +116,10 @@ public class JenaVirtuosoExecutorService implements JenaQueryExecutionService {
 
     public Graph getDefaultGraph() {
         return new VirtGraph(getEndpointURL(), getVirtuosoUser() , getVirtuosoPassword());
+    }
+
+    public Graph getNamedGraph(String graphName) {
+        return new VirtGraph(graphName, getEndpointURL(), getVirtuosoUser() , getVirtuosoPassword());
     }
 
 }

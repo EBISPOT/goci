@@ -67,4 +67,8 @@ public class JenaHttpExecutorService implements JenaQueryExecutionService {
 
     }
 
+    public Graph getNamedGraph(String graphName) {
+        return null;
+    }
+
 }

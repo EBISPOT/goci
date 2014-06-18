@@ -70,15 +70,19 @@ public class JenaVirtuosoConnectionPoolService implements JenaQueryExecutionServ
 
     }
 
-    public Graph getDefaultGraph() {
-
+    public Graph getNamedGraph(String graphName) {
         virtuoso.jena.driver.VirtGraph set = null;
         DataSource source = null;
         try {
 
             source = datasourceProvider.getDataSource();
-
-            VirtGraph g = new VirtGraph(source);
+            VirtGraph g;
+            if (graphName != null) {
+                g = new VirtGraph(graphName, source);
+            }
+            else {
+                g = new VirtGraph(source);
+            }
             g.setQueryTimeout(getVirtuosoQueryTimeout());
             g.setReadFromAllGraphs(isVirtuosoAllGraphs());
 
@@ -88,6 +92,10 @@ public class JenaVirtuosoConnectionPoolService implements JenaQueryExecutionServ
             e.printStackTrace();
         }
         throw new RuntimeException("Can't create Virtuoso graph from datasource");
+    }
+
+    public Graph getDefaultGraph() {
+        return getNamedGraph(null);
     }
 
     public VirtuosoQueryExecution getQueryExecution(Graph g, Query query, boolean withInference) throws LodeException {
