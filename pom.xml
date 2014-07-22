@@ -174,7 +174,7 @@
                 <role>developer</role>
             </roles>
             <timezone>0</timezone>
-            <properties />
+            <properties/>
         </developer>
         <developer>
             <id>dwelter</id>
@@ -186,7 +186,7 @@
                 <role>developer</role>
             </roles>
             <timezone>0</timezone>
-            <properties />
+            <properties/>
         </developer>
     </developers>
 
@@ -273,6 +273,7 @@
     </dependencyManagement>
 
     <modules>
+        <module>goci-model</module>
         <module>goci-curation</module>
         <module>goci-ontology</module>
         <module>goci-diagram</module>
@@ -287,7 +288,7 @@
 
             <properties>
                 <java.location>java</java.location>
-                <java.args />
+                <java.args/>
             </properties>
         </profile>
 

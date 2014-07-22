@@ -53,6 +53,13 @@
         <!-- goci ontology utils -->
         <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
+            <artifactId>goci-model</artifactId>
+            <version>1.0.7-SNAPSHOT</version>
+        </dependency>
+
+        <!-- goci ontology utils -->
+        <dependency>
+            <groupId>uk.ac.ebi.fgpt</groupId>
             <artifactId>goci-ontology-utils</artifactId>
             <version>1.0.7-SNAPSHOT</version>
         </dependency>
@@ -68,14 +75,10 @@
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>owlapi-apibinding</artifactId>
-            <version>3.4.3</version>
-            <!--<groupId>net.sourceforge.owlapi</groupId>-->
-            <!--<artifactId>owlapi-distribution</artifactId>-->
         </dependency>
         <dependency>
             <groupId>org.semanticweb</groupId>
             <artifactId>HermiT</artifactId>
-            <version>1.3.7</version>
         </dependency>
 
         <!-- oracle JDBC drivers for db comms -->

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>goci-diagram</artifactId>
+        <groupId>uk.ac.ebi.fgpt</groupId>
+        <version>1.0.7-SNAPSHOT</version>
+    </parent>
+
+    <groupId>uk.ac.ebi.fgpt</groupId>
+    <artifactId>goci-owl-renderlets</artifactId>
+    <version>1.0.7-SNAPSHOT</version>
+
+    <name>GOCI Pussycat Renderlet API (renders OWL entities as SVG)</name>
+    <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.sourceforge.owlapi</groupId>
+            <artifactId>owlapi-apibinding</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.semanticweb</groupId>
+            <artifactId>HermiT</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>2.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis-ext</artifactId>
+            <version>1.3.04</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-rasterizer</artifactId>
+            <version>1.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-swing</artifactId>
+            <version>1.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-transcoder</artifactId>
+            <version>1.7</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>fop</artifactId>
+                    <groupId>fop</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.ac.ebi.fgpt</groupId>
+            <artifactId>goci-datapublisher</artifactId>
+            <version>1.0.7-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.ac.ebi.fgpt</groupId>
+            <artifactId>goci-pussycat-api</artifactId>
+            <version>1.0.7-SNAPSHOT</version>
+        </dependency>
+
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>hasbanana-repo</id>
+            <url>http://www.hasbanana.com/maven/repo</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+</project>

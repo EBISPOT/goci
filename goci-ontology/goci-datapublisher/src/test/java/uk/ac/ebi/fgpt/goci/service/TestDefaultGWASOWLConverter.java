@@ -2,7 +2,13 @@ package uk.ac.ebi.fgpt.goci.service;
 
 import junit.framework.TestCase;
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.dao.OntologyDAO;
@@ -14,6 +20,7 @@ import uk.ac.ebi.fgpt.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.fgpt.goci.model.Study;
 import uk.ac.ebi.fgpt.goci.model.TraitAssociation;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,8 +33,7 @@ import static org.mockito.Mockito.when;
 /**
  * Javadocs go here.
  *
- * @author Junit Generation Plugin for Maven, written by Tony Burdett
- * Date 13-02-2012
+ * @author Junit Generation Plugin for Maven, written by Tony Burdett Date 13-02-2012
  */
 public class TestDefaultGWASOWLConverter extends TestCase {
     private DefaultGWASOWLConverter converter;
@@ -64,7 +70,7 @@ public class TestDefaultGWASOWLConverter extends TestCase {
             when(config.getOWLOntologyManager()).thenReturn(manager);
             when(config.getOWLDataFactory()).thenReturn(factory);
             converter.setConfiguration(config);
-            
+
             OntologyDAO ontologyDAO = mock(OntologyDAO.class);
             when(ontologyDAO.getOWLClassesByLabel(anyString())).thenReturn(Collections.singletonList(testChromosomeClass));
             converter.setOntologyDAO(ontologyDAO);
@@ -242,10 +248,6 @@ public class TestDefaultGWASOWLConverter extends TestCase {
             return "1234";
         }
 
-        public String getStudyID(){
-            return "1234";
-        }
-
         public String getPubMedID() {
             return "5678";
         }
@@ -258,9 +260,8 @@ public class TestDefaultGWASOWLConverter extends TestCase {
             return new MockSNP();
         }
 
-        public OWLClass getAssociatedTrait() {
-            return OWLManager.getOWLDataFactory()
-                    .getOWLClass(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI));
+        public URI getAssociatedTrait() {
+            return URI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI);
         }
 
         public float getPValue() {

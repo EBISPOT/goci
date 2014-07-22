@@ -14,16 +14,21 @@ import uk.ac.ebi.fgpt.goci.lang.UniqueID;
 import uk.ac.ebi.fgpt.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.fgpt.goci.model.TraitAssociation;
 
+import java.net.URI;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A data access object capable of retrieving {@link uk.ac.ebi.fgpt.goci.model.TraitAssociation} objects from the GWAS
  * database
  *
- * @author Tony Burdett
- * Date 24/01/12
+ * @author Tony Burdett Date 24/01/12
  */
 public class TraitAssociationDAO extends Initializable {
 //    private static final String TRAIT_SELECT_MAIN =
@@ -106,20 +111,24 @@ public class TraitAssociationDAO extends Initializable {
     public Collection<TraitAssociation> retrieveAllTraitAssociations() {
         try {
             waitUntilReady();
-            if(FilterProperties.getPvalueFilter() == null){
+            if (FilterProperties.getPvalueFilter() == null) {
                 String full_query = TRAIT_SELECT_MAIN.concat(TRAIT_SELECT_ORDER).concat(")");
                 return getJdbcTemplate().query(full_query, new TraitAssociationMapper());
             }
-            else{
+            else {
                 String pval_filter = "and g.PVALUEFLOAT <= " + FilterProperties.getPvalueFilter();
 
                 String filtered_query;
-                if(FilterProperties.getDateFilter() == null){
+                if (FilterProperties.getDateFilter() == null) {
                     filtered_query = TRAIT_SELECT_MAIN.concat(pval_filter).concat(TRAIT_SELECT_ORDER).concat(")");
                 }
                 else {
-                    String date_filter = " and st.STUDYDATE < to_date('" + FilterProperties.getDateFilter() + "','yyyy-mm-dd')";
-                    filtered_query = TRAIT_SELECT_MAIN.concat(pval_filter).concat(date_filter).concat(TRAIT_SELECT_ORDER).concat(")");
+                    String date_filter =
+                            " and st.STUDYDATE < to_date('" + FilterProperties.getDateFilter() + "','yyyy-mm-dd')";
+                    filtered_query = TRAIT_SELECT_MAIN.concat(pval_filter)
+                            .concat(date_filter)
+                            .concat(TRAIT_SELECT_ORDER)
+                            .concat(")");
                 }
                 return getJdbcTemplate().query(filtered_query, new TraitAssociationMapper());
             }
@@ -138,20 +147,18 @@ public class TraitAssociationDAO extends Initializable {
         public TraitAssociation mapRow(ResultSet resultSet, int i) throws SQLException {
             String rownum = resultSet.getString(1).trim();
             String associationID = resultSet.getString(2).trim();
-            String studyID = resultSet.getString(3).trim();
             String pubMedID = resultSet.getString(4).trim();
             String rsID = resultSet.getString(5).trim();
             String traitName = resultSet.getString(6).trim();
             float pValue = resultSet.getFloat(7);
             String efoURI = resultSet.getString(8);
-            return new TraitAssocationFromDB(rownum, associationID, studyID, pubMedID, rsID, traitName, pValue, efoURI);
+            return new TraitAssocationFromDB(rownum, associationID, pubMedID, rsID, traitName, pValue, efoURI);
         }
 
     }
 
     private class TraitAssocationFromDB implements TraitAssociation {
         private String id;
-        private String studyID;
         private String pubMedID;
         private String rsID;
         private String traitName;
@@ -159,11 +166,16 @@ public class TraitAssociationDAO extends Initializable {
         private String efoURI;
 
         private SingleNucleotidePolymorphism snp;
-        private OWLClass trait;
+        private URI trait;
 
-        private TraitAssocationFromDB(String rowNum, String id, String studyID, String pubMedID, String rsID, String traitName, float pValue, String efoURI) {
+        private TraitAssocationFromDB(String rowNum,
+                                      String id,
+                                      String pubMedID,
+                                      String rsID,
+                                      String traitName,
+                                      float pValue,
+                                      String efoURI) {
             this.id = rowNum.concat("_").concat(id);
-            this.studyID = studyID;
             this.pubMedID = pubMedID;
             this.rsID = rsID;
             this.traitName = traitName;
@@ -202,10 +214,10 @@ public class TraitAssociationDAO extends Initializable {
 
         private void mapTrait() throws ObjectMappingException {
             // if there is no mapped efoURI found the catalogue database
-            if(efoURI == null){
-                Collection<OWLClass>traitClasses = getOntologyDAO().getOWLClassesByLabel(traitName);
+            if (efoURI == null) {
+                Collection<OWLClass> traitClasses = getOntologyDAO().getOWLClassesByLabel(traitName);
 
-                 if (traitClasses.size() == 0) {
+                if (traitClasses.size() == 0) {
                     traitLogger.warn(traitName + "\t[not in EFO]");
                     throw new MissingOntologyTermException(
                             "Trait '" + traitName + "' was not found in EFO so could not be accurately mapped");
@@ -228,7 +240,7 @@ public class TraitAssociationDAO extends Initializable {
                                 }
                             }
                             if (isCarcinoma) {
-                                this.trait = cls;
+                                this.trait = cls.getIRI().toURI();
                                 break;
                             }
                         }
@@ -238,7 +250,7 @@ public class TraitAssociationDAO extends Initializable {
                     if (traitName.toLowerCase().contains("obesity")) {
                         for (OWLClass cls : traitClasses) {
                             if (cls.getIRI().toURI().toString().equals("http://www.ebi.ac.uk/efo/EFO_0001073")) {
-                                this.trait = cls;
+                                this.trait = cls.getIRI().toURI();
                                 break;
                             }
                         }
@@ -248,7 +260,7 @@ public class TraitAssociationDAO extends Initializable {
                     if (traitName.toLowerCase().contains("coronary heart disease")) {
                         for (OWLClass cls : traitClasses) {
                             if (cls.getIRI().toURI().toString().equals("http://www.ebi.ac.uk/efo/EFO_0001645")) {
-                                this.trait = cls;
+                                this.trait = cls.getIRI().toURI();
                                 break;
                             }
                         }
@@ -262,12 +274,12 @@ public class TraitAssociationDAO extends Initializable {
                 }
                 else {
                     // exactly one label <-> EFO mapping
-                    this.trait = traitClasses.iterator().next();
+                    this.trait = traitClasses.iterator().next().getIRI().toURI();
                 }
             }
             // if there is a specified URI, get it
-            else{
-                this.trait = getOntologyDAO().getOWLClassByURI(efoURI);
+            else {
+                this.trait = getOntologyDAO().getOWLClassByURI(efoURI).getIRI().toURI();
                 getLog().debug("Trait " + traitName + " has a mapping in the catalogue database");
             }
         }
@@ -275,10 +287,6 @@ public class TraitAssociationDAO extends Initializable {
         @UniqueID
         private String getID() {
             return id;
-        }
-
-        public String getStudyID(){
-            return studyID;
         }
 
         public String getPubMedID() {
@@ -296,7 +304,7 @@ public class TraitAssociationDAO extends Initializable {
             return snp;
         }
 
-        public OWLClass getAssociatedTrait() {
+        public URI getAssociatedTrait() {
             if (trait == null) {
                 mapTrait();
             }

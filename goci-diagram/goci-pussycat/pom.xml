@@ -94,13 +94,19 @@
         <!-- renderlet and querying dependencies -->
         <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
-            <artifactId>goci-pussycat-renderlet</artifactId>
+            <artifactId>goci-pussycat-api</artifactId>
             <version>1.0.7-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
-            <artifactId>goci-sparql-client</artifactId>
+            <artifactId>goci-owl-renderlets</artifactId>
+            <version>1.0.7-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.ac.ebi.fgpt</groupId>
+            <artifactId>goci-sparql-renderlets</artifactId>
             <version>1.0.7-SNAPSHOT</version>
         </dependency>
 

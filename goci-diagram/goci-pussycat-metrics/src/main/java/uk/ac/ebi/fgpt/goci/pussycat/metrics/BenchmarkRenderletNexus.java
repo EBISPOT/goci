@@ -107,7 +107,7 @@ public class BenchmarkRenderletNexus implements RenderletNexus {
     }
 
     public <O> void renderingEventOccurred(RenderingEvent<O> evt) {
-        entityLocations.put(evt.getRenderedEntity(), evt.getSvgArea());
+        entityLocations.put(evt.getRenderedEntity(), evt.getSVGArea());
         renderedEntities.put(evt.getRenderedEntity(), evt);
     }
 

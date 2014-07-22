@@ -61,14 +61,10 @@
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>owlapi-apibinding</artifactId>
-            <version>3.4.3</version>
-            <!--<groupId>net.sourceforge.owlapi</groupId>-->
-            <!--<artifactId>owlapi-distribution</artifactId>-->
         </dependency>
         <dependency>
             <groupId>org.semanticweb</groupId>
             <artifactId>HermiT</artifactId>
-            <version>1.3.7</version>
         </dependency>
 
         <!-- commons-cli for command line functionality -->

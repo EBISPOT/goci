@@ -282,7 +282,7 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
                         getLog().debug(
                                 "    Association: SNP '" + association.getAssociatedSNP().getRSID() +
                                         "' <-> Trait '" +
-                                        association.getAssociatedTrait().getIRI() + "'");
+                                        association.getAssociatedTrait().toString() + "'");
                     }
                     count++;
                 }

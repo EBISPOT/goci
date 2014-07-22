@@ -3,7 +3,20 @@ package uk.ac.ebi.fgpt.goci.pussycat.controller;
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxClassExpressionParser;
 import org.semanticweb.owlapi.expression.ParserException;
 import org.semanticweb.owlapi.expression.ShortFormEntityChecker;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLDataHasValue;
+import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLIndividual;
+import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.util.AnnotationValueShortFormProvider;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProviderAdapter;
 import org.semanticweb.owlapi.util.OWLOntologyWalker;
@@ -14,7 +27,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import uk.ac.ebi.fgpt.goci.dao.OntologyDAO;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
@@ -27,7 +44,13 @@ import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSessionStrategy;
 import uk.ac.ebi.fgpt.goci.pussycat.utils.OntologyUtils;
 
 import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A MVC controller for Pussycat.  This controller can be used to create a new session, load ontology data and create
@@ -108,7 +131,7 @@ public class PussycatGOCIController {
         // get the subset of studies published before the supplied date
         /*trait association'  and part_of some ('GWAS study' and has_publication_date some dateTime[< "  "^^dateTime])*/
         getLog().debug("Received a new rendering request - " +
-                       "putting together the query for year '" + year + "' and month '" + month + "'");
+                               "putting together the query for year '" + year + "' and month '" + month + "'");
         OWLOntologyManager manager = getOntologyConfiguration().getOWLOntologyManager();
         OWLDataFactory df = getOntologyConfiguration().getOWLDataFactory();
 
@@ -123,14 +146,14 @@ public class PussycatGOCIController {
         int yearVar = Integer.parseInt(year);
 
         //API call provides date for "up to and including the end of" - must increment month for query
-        if(monthVar == 12){
+        if (monthVar == 12) {
             month = "01";
             yearVar++;
             year = Integer.toString(yearVar);
         }
         else {
             monthVar++;
-            if(monthVar > 9){
+            if (monthVar > 9) {
                 month = Integer.toString(monthVar);
             }
             else {
@@ -160,9 +183,9 @@ public class PussycatGOCIController {
         }
         catch (ParserException e) {
             getLog().error("Bad date in URL /gwasdiagram/timeseries/" + year + "/" + month + " - " +
-                           "use /gwasdiagram/timeseries/YYYY/MM", e);
+                                   "use /gwasdiagram/timeseries/YYYY/MM", e);
             throw new RuntimeException("Bad date in URL /gwasdiagram/timeseries/" + year + "/" + month + " - " +
-                                       "use /gwasdiagram/timeseries/YYYY/MM", e);
+                                               "use /gwasdiagram/timeseries/YYYY/MM", e);
         }
     }
 
@@ -303,7 +326,7 @@ public class PussycatGOCIController {
         else {
             PussycatSession pussycatSession;
             if (getSessionStrategy() == PussycatSessionStrategy.JOIN &&
-                getPussycatManager().getPussycatSessions().size() > 0) {
+                    getPussycatManager().getPussycatSessions().size() > 0) {
                 pussycatSession = getPussycatManager().getPussycatSessions().iterator().next();
             }
             else {
@@ -311,8 +334,8 @@ public class PussycatGOCIController {
                 getLog().debug("Created new pussycat session, id '" + pussycatSession.getSessionID() + "'");
             }
             getLog().debug("Pussycat manager has no available session, but can join HttpSession " +
-                           "'" + session.getId() + "' to pussycat session " +
-                           "'" + pussycatSession.getSessionID() + "'");
+                                   "'" + session.getId() + "' to pussycat session " +
+                                   "'" + pussycatSession.getSessionID() + "'");
             return getPussycatManager().bindPussycatSession(session, pussycatSession);
         }
     }
@@ -327,7 +350,6 @@ public class PussycatGOCIController {
         }
         else {
             renderletNexus = getPussycatManager().createRenderletNexus(
-                    getOntologyConfiguration(),
                     getPussycatManager().getPussycatSession(session));
             getPussycatManager().bindRenderletNexus(session, renderletNexus);
         }

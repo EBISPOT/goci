@@ -468,7 +468,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         // create new instance of it's trait
         OWLClass traitClass;
         try {
-            traitClass = association.getAssociatedTrait();
+            traitClass = getDataFactory().getOWLClass(IRI.create(association.getAssociatedTrait()));
         }
         catch (OntologyTermException e) {
             // catch the exception for missing ontology terms, and map to experimental factor plus label
