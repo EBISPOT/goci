@@ -1,7 +1,5 @@
 package uk.ac.ebi.fgpt.goci.lang;
 
-import org.objenesis.Objenesis;
-import org.objenesis.ObjenesisStd;
 import uk.ac.ebi.fgpt.goci.model.GWASObject;
 
 import java.lang.reflect.InvocationHandler;
@@ -25,12 +23,7 @@ public class Filtering {
      * @return
      */
     public static <T extends GWASObject> T template(Class<T> filterType) {
-        InvocationHandler handler = new InvocationHandler() {
-            @Override public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                // todo - do something appropriate
-                return null;
-            }
-        };
+        InvocationHandler handler = new MethodLoggingInvocationHandler();
         return (T) Proxy.newProxyInstance(filterType.getClassLoader(), new Class[]{filterType}, handler);
     }
 
@@ -38,7 +31,7 @@ public class Filtering {
         return new CallChain<T>(template);
     }
 
-    public static <T extends GWASObject> Filter<T, ?, ?> filterByType(T template) {
-        return new Filter<T, Object, Object>();
+    public static <T extends GWASObject> Filter<T, ?> filter(T template) {
+        return new Filter<T, Object>(template);
     }
 }
