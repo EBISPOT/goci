@@ -46,8 +46,8 @@ public class TestFiltering {
                      "getPValue",
                      filter2.getFilteredMethod().getName());
 
-        assertEquals("Filtered value does not match expected",
-                     0.00000001f,
-                     (float)filter2.getFilteredValues().get(0));
+        assertEquals(Float.valueOf("10E-8"),
+                     filter2.getFilteredValues().get(0),
+                     0.0d);
     }
 }
