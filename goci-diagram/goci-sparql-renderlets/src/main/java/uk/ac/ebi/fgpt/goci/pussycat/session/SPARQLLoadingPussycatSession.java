@@ -1,8 +1,6 @@
 package uk.ac.ebi.fgpt.goci.pussycat.session;
 
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
+import uk.ac.ebi.fgpt.goci.lang.Filter;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
@@ -18,8 +16,8 @@ public class SPARQLLoadingPussycatSession extends AbstractPussycatSession {
         return null;
     }
 
-    @Override
-    public String performRendering(OWLClassExpression classExpression, RenderletNexus renderletNexus) throws PussycatSessionNotReadyException {
+    @Override public String performRendering(RenderletNexus renderletNexus, Filter... filters)
+            throws PussycatSessionNotReadyException {
         return null;
     }
 
@@ -27,11 +25,4 @@ public class SPARQLLoadingPussycatSession extends AbstractPussycatSession {
     public boolean clearRendering() {
         return false;
     }
-
-    @Override
-    public OWLReasoner getReasoner() throws OWLConversionException, PussycatSessionNotReadyException {
-        return null;
-    }
-
-
 }
