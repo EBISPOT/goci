@@ -1,5 +1,6 @@
 package uk.ac.ebi.fgpt.goci.pussycat.session;
 
+import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
@@ -78,12 +79,22 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
             // attempt to query the reasoner for data
             OWLReasoner reasoner = getReasoner();
             OWLOntology ontology = reasoner.getRootOntology();
+            Set<OWLClass> classes = reasoner.getSubClasses(classExpression, false).getFlattened();
             Set<OWLNamedIndividual> individuals = reasoner.getInstances(classExpression, false).getFlattened();
 
-            // sort them into the order we need them in for rendering
-            List<OWLIndividual> sortedIndividuals = sortIndividualsIntoRenderingOrder(individuals);
 
-            // and render
+            // render classes first
+            for (OWLClass cls : classes) {
+                for (Renderlet r : getAvailableRenderlets()) {
+                    if (r.canRender(renderletNexus, ontology, cls)) {
+                        getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
+                        r.render(renderletNexus, ontology, cls);
+                    }
+                }
+            }
+
+            // then render individuals, sorted into the order we need them in for rendering
+            List<OWLIndividual> sortedIndividuals = sortIndividualsIntoRenderingOrder(individuals);
             for (OWLIndividual individual : sortedIndividuals) {
                 for (Renderlet r : getAvailableRenderlets()) {
                     if (r.canRender(renderletNexus, ontology, individual)) {
