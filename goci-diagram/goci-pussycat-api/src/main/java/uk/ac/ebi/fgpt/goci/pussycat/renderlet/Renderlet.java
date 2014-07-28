@@ -53,7 +53,6 @@ public interface Renderlet<C, O> {
      * @param nexus            the renderlet nexus, allowing renderlets to query for dependencies on other renderings
      * @param renderingContext the context in which this entity should be rendered
      * @param renderingEntity  the entity to render
-     * @return a well formatted SVG element that can be used to display the supplied entity
      */
-    Element render(RenderletNexus nexus, C renderingContext, O renderingEntity);
+    void render(RenderletNexus nexus, C renderingContext, O renderingEntity);
 }

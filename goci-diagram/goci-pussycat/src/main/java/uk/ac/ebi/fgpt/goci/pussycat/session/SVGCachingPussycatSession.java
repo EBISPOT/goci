@@ -1,9 +1,8 @@
 package uk.ac.ebi.fgpt.goci.pussycat.session;
 
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
+import uk.ac.ebi.fgpt.goci.lang.Filter;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
+import uk.ac.ebi.fgpt.goci.pussycat.reasoning.ReasonerSessionBasedReasonerProxy;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 
@@ -15,10 +14,10 @@ import java.util.Collection;
  * rendered on demand.
  * <p/>
  * The caching strategy is to take the supplied home directory and create within this directory a uniquely named file
- * for each request to {@link #performRendering(org.semanticweb.owlapi.model.OWLClassExpression,
- * uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus)}.  This implementation does this by creating a hash of the
- * supplied arguments and saving the SVG output to this file.  It is possible to reacquire documents from this cache on
- * repeated requests, effectively creating a disk-based "lazy-load" strategy for SVG rendering.
+ * for each request to {@link #performRendering(uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus,
+ * uk.ac.ebi.fgpt.goci.lang.Filter[])}.  This implementation does this by creating a hash of the supplied arguments and
+ * saving the SVG output to this file.  It is possible to reacquire documents from this cache on repeated requests,
+ * effectively creating a disk-based "lazy-load" strategy for SVG rendering.
  *
  * @author Tony Burdett
  * @date 02/08/12
@@ -43,21 +42,21 @@ public class SVGCachingPussycatSession extends AbstractSVGIOPussycatSession impl
         return getProxiedSession().getAvailableRenderlets();
     }
 
-    @Override public String performRendering(OWLClassExpression classExpression, RenderletNexus renderletNexus)
+    @Override public String performRendering(RenderletNexus renderletNexus, Filter... filters)
             throws PussycatSessionNotReadyException {
-        String filename = generateFilename(classExpression.toString());
+        String filename = generateFilename(filters);
         String svg;
         try {
             if (isInCache(filename)) {
                 // this document already exists in cache, load document
-                getLog().debug("Reusing cached SVG file for '" + classExpression + "' (file " + filename + ")");
+                getLog().debug("Reusing cached SVG file for the supplied filters (file " + filename + ")");
                 svg = readSVG(filename);
             }
             else {
                 // need to perform rendering, delegate to proxy
-                getLog().debug("No cached SVG file for '" + classExpression + "' " +
+                getLog().debug("No cached SVG file for the supplied filters " +
                                        "(filename expected: " + filename + "), delegating request");
-                svg = getProxiedSession().performRendering(classExpression, renderletNexus);
+                svg = getProxiedSession().performRendering(renderletNexus, filters);
                 // and write the svg to disk
                 writeSVG(filename, svg);
             }
@@ -77,12 +76,5 @@ public class SVGCachingPussycatSession extends AbstractSVGIOPussycatSession impl
             getLog().error("Failed to empty cache: " + e.getMessage(), e);
             return false;
         }
-    }
-
-    @Override public OWLReasoner getReasoner() throws OWLConversionException, PussycatSessionNotReadyException {
-        if (reasonerProxy == null) {
-            reasonerProxy = new ReasonerSessionBasedReasonerProxy(getProxiedSession().getReasonerSession());
-        }
-        return reasonerProxy;
     }
 }

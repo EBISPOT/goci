@@ -10,9 +10,8 @@ import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.session.AbstractSVGIOPussycatSession;
-import uk.ac.ebi.fgpt.goci.pussycat.session.ReasonerSession;
+import uk.ac.ebi.fgpt.goci.pussycat.reasoning.ReasonerSession;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.ServiceLoader;

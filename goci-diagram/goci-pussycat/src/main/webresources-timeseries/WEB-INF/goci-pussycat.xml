@@ -30,7 +30,7 @@
     </bean>
 
     <bean id="reasonerSession"
-          class="uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession"
+          class="uk.ac.ebi.fgpt.goci.pussycat.reasoning.KnowledgeBaseLoadingReasonerSession"
           init-method="init">
         <property name="configuration" ref="config" />
         <property name="ontologyResource" value="ontology/gwas-data-latest.owl" />

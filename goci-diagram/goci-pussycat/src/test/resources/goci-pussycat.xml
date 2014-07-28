@@ -23,7 +23,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="reasonerSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.DataPublishingCacheableReasonerSession">
+    <bean id="reasonerSession" class="uk.ac.ebi.fgpt.goci.pussycat.reasoning.DataPublishingCacheableReasonerSession">
         <property name="publisher" ref="publisher" />
     </bean>
 

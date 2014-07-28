@@ -34,10 +34,10 @@
     </bean>
 
     <!-- NB: which implementation to use depends on whether
-             a) we are dynamically generating the knowledgebase (uk.ac.ebi.fgpt.goci.pussycat.session.DataPublishingCacheableReasonerSession) or
-             b) statically loading a precanned version (uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession) -->
+             a) we are dynamically generating the knowledgebase (uk.ac.ebi.fgpt.goci.pussycat.reasoning.DataPublishingCacheableReasonerSession) or
+             b) statically loading a precanned version (uk.ac.ebi.fgpt.goci.pussycat.reasoning.OntologyLoadingCacheableReasonerSession) -->
     <bean id="reasonerSession"
-          class="uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession"
+          class="uk.ac.ebi.fgpt.goci.pussycat.reasoning.KnowledgeBaseLoadingReasonerSession"
           init-method="init">
         <property name="configuration" ref="config" />
         <property name="ontologyResource" value="${goci.ontology.inputPath}" />

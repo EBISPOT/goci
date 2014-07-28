@@ -1,9 +1,8 @@
 package uk.ac.ebi.fgpt.goci.pussycat.session;
 
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
+import uk.ac.ebi.fgpt.goci.lang.Filter;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
+import uk.ac.ebi.fgpt.goci.pussycat.reasoning.ReasonerSession;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 
@@ -16,10 +15,10 @@ import java.util.Collections;
  * itself.
  * <p/>
  * The caching strategy is to take the supplied home directory and, within this directory, look for a uniquely named
- * file for each request to {@link #performRendering(org.semanticweb.owlapi.model.OWLClassExpression,
- * uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus)}.  This implementation does this by creating a hash of the
- * supplied arguments and loading an SVG file with the same name as the hash, if it exists.  If no file with this name
- * exists, and exception is raised.
+ * file for each request to {@link #performRendering(uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus,
+ * uk.ac.ebi.fgpt.goci.lang.Filter[])}.  This implementation does this by creating a hash of the supplied arguments and
+ * loading an SVG file with the same name as the hash, if it exists.  If no file with this name exists, and exception is
+ * raised.
  * <p/>
  * This implementation is a good one to use in live, production environments as it means it is possible to pre-calculate
  * SVG-based views somewhere else, caching them to disk and copying them to a production enviroment.  This massively
@@ -47,14 +46,14 @@ public class SVGLoadingPussycatSession extends AbstractSVGIOPussycatSession {
         return Collections.emptyList();
     }
 
-    @Override public String performRendering(OWLClassExpression classExpression, RenderletNexus renderletNexus)
+    @Override public String performRendering(RenderletNexus renderletNexus, Filter... filters)
             throws PussycatSessionNotReadyException {
-        String filename = generateFilename(classExpression.toString());
+        String filename = generateFilename(filters);
         String svg;
         try {
             if (isInCache(filename)) {
                 // this document already exists in cache, load document
-                getLog().debug("Reusing cached SVG file for '" + classExpression + "' (file " + filename + ")");
+                getLog().debug("Reusing cached SVG file for the supplied filters (file " + filename + ")");
                 svg = readSVG(filename);
             }
             else {
@@ -70,16 +69,5 @@ public class SVGLoadingPussycatSession extends AbstractSVGIOPussycatSession {
 
     @Override public boolean clearRendering() {
         throw new UnsupportedOperationException("This operation is not available in this implementation");
-    }
-
-    @Override public OWLReasoner getReasoner() throws OWLConversionException, PussycatSessionNotReadyException {
-        if (getReasonerSession().isReasonerInitialized()) {
-            getLog().debug("Pussycat Session '" + getSessionID() + "' is fully initialized and ready to serve data");
-            return getReasonerSession().getReasoner();
-        }
-        else {
-            getLog().debug("Pussycat Session '" + getSessionID() + "' is not yet initialized - waiting for reasoner");
-            throw new PussycatSessionNotReadyException("Reasoner is being initialized");
-        }
     }
 }

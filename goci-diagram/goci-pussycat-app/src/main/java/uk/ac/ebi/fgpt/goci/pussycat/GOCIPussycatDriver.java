@@ -9,11 +9,11 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.manager.PussycatManager;
+import uk.ac.ebi.fgpt.goci.pussycat.reasoning.KnowledgeBaseLoadingReasonerSession;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
-import uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSession;
-import uk.ac.ebi.fgpt.goci.pussycat.session.ReasonerSession;
+import uk.ac.ebi.fgpt.goci.pussycat.reasoning.ReasonerSession;
 import uk.ac.ebi.fgpt.goci.pussycat.utils.DateTimeStamp;
 
 import java.io.File;
@@ -196,7 +196,7 @@ public class GOCIPussycatDriver {
     public GOCIPussycatDriver() {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("goci-pussycat.xml");
         config = ctx.getBean("config", OntologyConfiguration.class);
-        reasonerSession = ctx.getBean("reasonerSession", OntologyLoadingCacheableReasonerSession.class);
+        reasonerSession = ctx.getBean("reasonerSession", KnowledgeBaseLoadingReasonerSession.class);
         pussycatSession = ctx.getBean("pussycatSession", PussycatSession.class);
         pussycatManager = ctx.getBean("pussycatManager", PussycatManager.class);
     }

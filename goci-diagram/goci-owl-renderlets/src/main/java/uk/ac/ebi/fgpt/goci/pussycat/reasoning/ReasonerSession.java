@@ -1,4 +1,4 @@
-package uk.ac.ebi.fgpt.goci.pussycat.session;
+package uk.ac.ebi.fgpt.goci.pussycat.reasoning;
 
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;

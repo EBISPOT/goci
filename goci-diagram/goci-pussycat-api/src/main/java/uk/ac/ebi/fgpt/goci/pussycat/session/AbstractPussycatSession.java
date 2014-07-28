@@ -2,11 +2,15 @@ package uk.ac.ebi.fgpt.goci.pussycat.session;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.utils.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.ServiceLoader;
 
 /**
  * An abstract pussycat session that simply provides session ID definitions
@@ -16,11 +20,13 @@ import java.security.NoSuchAlgorithmException;
  */
 public abstract class AbstractPussycatSession implements PussycatSession {
     private String sessionID;
+    private Collection<Renderlet> renderlets;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
     protected AbstractPussycatSession() {
         this.sessionID = generateSessionID();
+        this.renderlets = getAvailableRenderlets();
     }
 
     protected Logger getLog() {
@@ -29,6 +35,21 @@ public abstract class AbstractPussycatSession implements PussycatSession {
 
     @Override public String getSessionID() {
         return sessionID;
+    }
+
+    public Collection<Renderlet> getAvailableRenderlets() {
+        if (renderlets == null) {
+            ServiceLoader<Renderlet> renderletLoader = ServiceLoader.load(Renderlet.class);
+            Collection<Renderlet> loadedRenderlets = new HashSet<Renderlet>();
+            for (Renderlet renderlet : renderletLoader) {
+                loadedRenderlets.add(renderlet);
+            }
+            getLog().debug("Loaded " + loadedRenderlets.size() + " renderlets");
+            return loadedRenderlets;
+        }
+        else {
+            return renderlets;
+        }
     }
 
     private String generateSessionID() {

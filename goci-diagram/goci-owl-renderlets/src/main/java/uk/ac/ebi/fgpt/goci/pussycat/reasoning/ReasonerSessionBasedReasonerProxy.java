@@ -1,4 +1,4 @@
-package uk.ac.ebi.fgpt.goci.pussycat.session;
+package uk.ac.ebi.fgpt.goci.pussycat.reasoning;
 
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.*;
@@ -6,7 +6,6 @@ import org.semanticweb.owlapi.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
-import uk.ac.ebi.fgpt.goci.pussycat.session.ReasonerSession;
 
 import java.util.List;
 import java.util.Set;

@@ -42,11 +42,4 @@ public interface PussycatSession {
      *                                                                                 unable to perform any rendering
      */
     String performRendering(RenderletNexus renderletNexus, Filter... filters) throws PussycatSessionNotReadyException;
-
-    /**
-     * Clears any data that is currently rendered in this session
-     *
-     * @return true if this operation suceeded, otherwise false
-     */
-    boolean clearRendering();
 }

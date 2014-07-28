@@ -42,11 +42,11 @@
     <!--</bean>-->
 
     <!-- NB: which implementation to use depends on whether
-             a) we are dynamically generating the knowledgebase (uk.ac.ebi.fgpt.goci.pussycat.session.DataPublishingCacheableReasonerSession) or
-             b) statically loading a precanned version (uk.ac.ebi.fgpt.goci.pussycat.session.OntologyLoadingCacheableReasonerSession) or
-             c) never recalculating SVG and only loading from cache (uk.ac.ebi.fgpt.goci.pussycat.session.OntologyReasonerSession) -->
+             a) we are dynamically generating the knowledgebase (uk.ac.ebi.fgpt.goci.pussycat.reasoning.DataPublishingCacheableReasonerSession) or
+             b) statically loading a precanned version (uk.ac.ebi.fgpt.goci.pussycat.reasoning.OntologyLoadingCacheableReasonerSession) or
+             c) never recalculating SVG and only loading from cache (uk.ac.ebi.fgpt.goci.pussycat.reasoning.OntologyReasonerSession) -->
     <bean id="reasonerSession"
-          class="uk.ac.ebi.fgpt.goci.pussycat.session.OntologyReasonerSession"
+          class="uk.ac.ebi.fgpt.goci.pussycat.reasoning.OntologyReasonerSession"
           init-method="init">
         <property name="configuration" ref="config" />
     </bean>
