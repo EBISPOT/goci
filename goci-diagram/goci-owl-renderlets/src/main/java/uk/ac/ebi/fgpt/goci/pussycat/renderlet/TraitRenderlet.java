@@ -1,7 +1,16 @@
 package uk.ac.ebi.fgpt.goci.pussycat.renderlet;
 
 import net.sourceforge.fluxion.spi.ServiceProvider;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLIndividual;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,20 +19,19 @@ import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.ColourMapper;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
-import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGBuilder;
 import uk.ac.ebi.fgpt.goci.pussycat.utils.OntologyUtils;
 
 import java.util.Set;
 
 /**
- * A renderlet that is capable of rendering visualisations of "traits".  A trait is an OWL class from the
- * experimental factor ontology (EFO)
+ * A renderlet that is capable of rendering visualisations of "traits".  A trait is an OWL class from the experimental
+ * factor ontology (EFO)
  *
  * @author Dani Welter
  * @date 06/03/12
  */
 @ServiceProvider
-public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
+public class TraitRenderlet implements Renderlet<OWLReasoner, OWLIndividual> {
 
     /*
     * TraitRenderlet should retrieve the appropriate RGB colour for the trait being rendered from a hardcoded
@@ -64,8 +72,8 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
 
                 if (nexus.getLocationOfEntity(individual) == null) {
                     Set<OWLClass> allTypes = nexus.getReasoner()
-                                                  .getTypes(individual, false)
-                                                  .getFlattened();
+                            .getTypes(individual, false)
+                            .getFlattened();
 
                     for (OWLClass typeClass : allTypes) {
                         if (IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI).equals(typeClass.getIRI())) {
@@ -80,10 +88,7 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
     }
 
     @Override
-    public Element render(RenderletNexus nexus,
-                          OWLOntology renderingContext,
-                          OWLIndividual renderingEntity,
-                          SVGBuilder builder) {
+    public void render(RenderletNexus nexus, OWLReasoner reasoner, OWLIndividual individual) {
         OWLNamedIndividual gwasTrait = (OWLNamedIndividual) renderingEntity;
         OWLNamedIndividual association = getAssociation(nexus, gwasTrait);
 
@@ -225,8 +230,8 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
 //        }
 //        else{
 //            getLog().warn("Trait " + individual + " has no name");
-            IRI traitClass = getTraitClass(individual, ontology);
-            traitName = nexus.getEfoLabels().get(traitClass);
+        IRI traitClass = getTraitClass(individual, ontology);
+        traitName = nexus.getEfoLabels().get(traitClass);
 //        }
 
         return traitName;
@@ -300,11 +305,11 @@ public class TraitRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
         OWLClass leaf = null;
         int largest = 0;
 
-        if(allTypes.size() == 2){
+        if (allTypes.size() == 2) {
             colour = "#FFFFFF";
             getLog().debug("Trait " + trait + " is not mapped");
         }
-        else{
+        else {
             for (OWLClass t : allTypes) {
                 String iri = t.getIRI().toString();
                 int parents = reasoner.getSuperClasses(t, false).getFlattened().size();

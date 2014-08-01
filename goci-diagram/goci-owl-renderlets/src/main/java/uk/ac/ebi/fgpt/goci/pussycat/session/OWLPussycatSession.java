@@ -78,17 +78,15 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
         try {
             // attempt to query the reasoner for data
             OWLReasoner reasoner = getReasoner();
-            OWLOntology ontology = reasoner.getRootOntology();
             Set<OWLClass> classes = reasoner.getSubClasses(classExpression, false).getFlattened();
             Set<OWLNamedIndividual> individuals = reasoner.getInstances(classExpression, false).getFlattened();
-
 
             // render classes first
             for (OWLClass cls : classes) {
                 for (Renderlet r : getAvailableRenderlets()) {
-                    if (r.canRender(renderletNexus, ontology, cls)) {
+                    if (r.canRender(renderletNexus, reasoner, cls)) {
                         getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
-                        r.render(renderletNexus, ontology, cls);
+                        r.render(renderletNexus, reasoner, cls);
                     }
                 }
             }
@@ -97,9 +95,9 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
             List<OWLIndividual> sortedIndividuals = sortIndividualsIntoRenderingOrder(individuals);
             for (OWLIndividual individual : sortedIndividuals) {
                 for (Renderlet r : getAvailableRenderlets()) {
-                    if (r.canRender(renderletNexus, ontology, individual)) {
+                    if (r.canRender(renderletNexus, reasoner, individual)) {
                         getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
-                        r.render(renderletNexus, ontology, individual);
+                        r.render(renderletNexus, reasoner, individual);
                     }
                 }
             }

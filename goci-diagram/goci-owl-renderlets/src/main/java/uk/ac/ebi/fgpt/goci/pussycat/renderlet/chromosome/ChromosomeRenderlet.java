@@ -5,6 +5,7 @@ import org.apache.batik.util.XMLResourceDescriptor;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -27,7 +28,7 @@ import java.util.StringTokenizer;
  * @author Dani Welter
  * @date 29/02/12
  */
-public abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLClass> {
+public abstract class ChromosomeRenderlet implements Renderlet<OWLReasoner, OWLClass> {
     public String getDisplayName() {
         return getName();
     }
@@ -50,7 +51,7 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLC
         return renderable;
     }
 
-    public void render(RenderletNexus nexus, OWLOntology renderingContext, OWLClass owlEntity) {
+    public void render(RenderletNexus nexus, OWLReasoner reasoner, OWLClass owlEntity) {
         String parser = XMLResourceDescriptor.getXMLParserClassName();
         SAXSVGDocumentFactory f = new SAXSVGDocumentFactory(parser);
         InputStream svgstream = null;
