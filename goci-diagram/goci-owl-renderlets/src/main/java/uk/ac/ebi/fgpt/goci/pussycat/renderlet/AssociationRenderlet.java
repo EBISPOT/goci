@@ -29,7 +29,7 @@ import java.util.Set;
  * @date 18/04/12
  */
 @ServiceProvider
-public class AssociationRenderlet implements Renderlet<OWLOntology, OWLIndividual> {
+public class AssociationRenderlet implements Renderlet<OWLOntology, OWLNamedIndividual> {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -38,9 +38,7 @@ public class AssociationRenderlet implements Renderlet<OWLOntology, OWLIndividua
 
     @Override
     public String getName() {
-
-        //this should be name of the trait this is associated with
-        return "Association renderlet";  //To change body of implemented methods use File | Settings | File Templates.
+        return "Association renderlet";
     }
 
     @Override
@@ -50,7 +48,7 @@ public class AssociationRenderlet implements Renderlet<OWLOntology, OWLIndividua
 
     @Override
     public String getDescription() {
-        return ("This is a renderlet displaying " + getDisplayName());
+        return ("Renderlet capable of creating GWAS trait-SNP association visualisations");
     }
 
     @Override
@@ -73,155 +71,135 @@ public class AssociationRenderlet implements Renderlet<OWLOntology, OWLIndividua
     }
 
     @Override
-    public void render(RenderletNexus nexus, OWLOntology renderingContext, OWLIndividual renderingEntity) {
+    public void render(RenderletNexus nexus, OWLOntology renderingContext, OWLNamedIndividual renderingEntity) {
         getLog().trace("Association: " + renderingEntity);
 
-        String bandName = getSNPLocation(renderingEntity, renderingContext);
-        // SNP does not have any positional information
-        if (bandName == null) {
-            getLog().error("There is no location available for the SNP in association " + renderingEntity);
-            throw new IllegalArgumentException(
-                    "There is no location available for the SNP in association " + renderingEntity);
-        }
+        BandInformation band = getBandInformation(renderingEntity, renderingContext);
+        SVGArea location = nexus.getLocationOfRenderedEntity(band);
 
-        else {
-            BandInformation band = nexus.getBandLocations().get(bandName);
-            if (band == null) {
-                getLog().error("Band " + bandName + " is not a renderable cytogenetic band");
-            }
+        Element g;
+        //there is no other association in this chromosmal band yet - render
+        if (band.getRenderedAssociations().size() == 0) {
+            getLog().trace("First association for this band");
+            g = builder.createElement("g");
 
-            else {
-                Element g;
-                //there is no other association in this chromosmal band yet - render
-                if (band.getRenderedAssociations().size() == 0) {
-                    getLog().trace("First association for this band");
-                    g = builder.createElement("g");
+            g.setAttribute("id", renderingEntity.getIRI().toString());
+            g.setAttribute("transform", chromosomeTransform(band.getChromosome()));
+            g.setAttribute("class", "gwas-trait");
 
-                    g.setAttribute("id", renderingEntity.getIRI().toString());
-                    g.setAttribute("transform", chromosomeTransform(band.getChromosome()));
-                    g.setAttribute("class", "gwas-trait");
-
-                    SVGArea bandCoords = band.getCoordinates();
-                    //print statement to keep track of which band is being processed as I've had trouble with some bands
-                    //           System.out.println(bandName);
-                    if (bandCoords != null) {
-                        double x = bandCoords.getX();
-                        double y = bandCoords.getY();
-                        double width = bandCoords.getWidth();
-                        double height = bandCoords.getHeight();
-                        double newY = y + (height / 2);
-                        double endY = newY;
-                        double length = 1.75 * width;
-                        double newHeight = 0;
+            SVGArea bandCoords = band.getCoordinates();
+            //print statement to keep track of which band is being processed as I've had trouble with some bands
+            //           System.out.println(bandName);
+            if (bandCoords != null) {
+                double x = bandCoords.getX();
+                double y = bandCoords.getY();
+                double width = bandCoords.getWidth();
+                double height = bandCoords.getHeight();
+                double newY = y + (height / 2);
+                double endY = newY;
+                double length = 1.75 * width;
+                double newHeight = 0;
 
 
-                        // start of the new fanning algorithm
+                // start of the new fanning algorithm
 
-                        if (band.getPreviousBand() != null) {
-                            BandInformation previous = nexus.getBandLocations().get(band.getPreviousBand());
-                            double prevY = previous.getY();
-                            double radius = 0.35 * width;
+                if (band.getPreviousBand() != null) {
+                    BandInformation previous = nexus.getBandLocations().get(band.getPreviousBand());
+                    double prevY = previous.getY();
+                    double radius = 0.35 * width;
 
-                            if (bandName.contains("p")) {
-                                int drop = ((band.getTraitNames().size() - 1) / 6) + 2;
-                                double min = prevY - (drop * radius);
-                                if (min <= newY) {
-                                    endY = min;
-                                    newHeight = endY - newY;
-                                }
-                            }
-                            else {
-                                int drop = ((previous.getTraitNames().size() - 1) / 6) + 2;
-                                double min = prevY + (drop * radius);
-                                if (min >= newY) {
-                                    endY = min;
-                                    newHeight = endY - newY;
-                                }
-                            }
+                    if (bandName.contains("p")) {
+                        int drop = ((band.getTraitNames().size() - 1) / 6) + 2;
+                        double min = prevY - (drop * radius);
+                        if (min <= newY) {
+                            endY = min;
+                            newHeight = endY - newY;
                         }
-                        band.setY(endY);
-
-                        StringBuilder d = new StringBuilder();
-                        if (band.getPreviousBand() == null || newHeight == 0) {
-                            d.append("m ");
-                            d.append(Double.toString(x));
-                            d.append(",");
-                            d.append(Double.toString(newY));
-                            d.append(" ");
-                            d.append(Double.toString(length));
-                            d.append(",0.0");
-                        }
-
-                        else {
-                            double width2 = 0.75 * width;
-                            d.append("m ");
-                            d.append(Double.toString(x));
-                            d.append(",");
-                            d.append(Double.toString(newY));
-                            d.append(" ");
-                            d.append(Double.toString(width));
-                            d.append(",0.0, ");
-                            d.append(Double.toString(width2));
-                            d.append(",");
-                            d.append(Double.toString(newHeight));
-                        }
-
-                        Element path = builder.createElement("path");
-                        path.setAttribute("d", d.toString());
-                        path.setAttribute("style",
-                                          "fill:none;stroke:#211c1d;stroke-width:1.1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none");
-
-                        g.appendChild(path);
-                        SVGArea currentArea = new SVGArea(x, newY, length, newHeight, 0);
-                        RenderingEvent event = new RenderingEvent(renderingEntity, g, currentArea, this);
-                        nexus.renderingEventOccurred(event);
-                        band.setRenderedAssociation(renderingEntity);
                     }
-                    return g;
+                    else {
+                        int drop = ((previous.getTraitNames().size() - 1) / 6) + 2;
+                        double min = prevY + (drop * radius);
+                        if (min >= newY) {
+                            endY = min;
+                            newHeight = endY - newY;
+                        }
+                    }
+                }
+                band.setY(endY);
+
+                StringBuilder d = new StringBuilder();
+                if (band.getPreviousBand() == null || newHeight == 0) {
+                    d.append("m ");
+                    d.append(Double.toString(x));
+                    d.append(",");
+                    d.append(Double.toString(newY));
+                    d.append(" ");
+                    d.append(Double.toString(length));
+                    d.append(",0.0");
                 }
 
-
-                //there is already another association in this band - can't render the association but need to render the trait as well as add to various nexus lists
                 else {
-                    getLog().trace("Secondary association: " + renderingEntity + " for band " + bandName);
-                    //get the SVG for the first assocation rendered for this band and reuse it for this association, but without adding it to the SVG file
-                    OWLNamedIndividual previousEntity = band.getRenderedAssociations().get(0);
-                    g = nexus.getRenderingEvent(previousEntity).getRenderedSVG();
-                    g.setAttribute("id", renderingEntity.getIRI().toString());
-                    RenderingEvent event =
-                            new RenderingEvent(renderingEntity, g, nexus.getLocationOfEntity(previousEntity), this);
-                    nexus.renderingEventOccurred(event);
-                    band.setRenderedAssociation(renderingEntity);
-                    return null;
+                    double width2 = 0.75 * width;
+                    d.append("m ");
+                    d.append(Double.toString(x));
+                    d.append(",");
+                    d.append(Double.toString(newY));
+                    d.append(" ");
+                    d.append(Double.toString(width));
+                    d.append(",0.0, ");
+                    d.append(Double.toString(width2));
+                    d.append(",");
+                    d.append(Double.toString(newHeight));
                 }
+
+                Element path = builder.createElement("path");
+                path.setAttribute("d", d.toString());
+                path.setAttribute("style",
+                                  "fill:none;stroke:#211c1d;stroke-width:1.1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none");
+
+                g.appendChild(path);
+                SVGArea currentArea = new SVGArea(x, newY, length, newHeight, 0);
+                RenderingEvent event = new RenderingEvent(renderingEntity, g, currentArea, this);
+                nexus.renderingEventOccurred(event);
+                band.setRenderedAssociation(renderingEntity);
             }
+            return g;
+        }
+        else {
+            //there is already another association in this band - can't render the association but need to render the trait as well as add to various nexus lists
+            getLog().trace("Secondary association: " + renderingEntity + " for band " + bandName);
+            //get the SVG for the first assocation rendered for this band and reuse it for this association, but without adding it to the SVG file
+            OWLNamedIndividual previousEntity = band.getRenderedAssociations().get(0);
+            g = nexus.getRenderingEvent(previousEntity).getRenderedSVG();
+            g.setAttribute("id", renderingEntity.getIRI().toString());
+            RenderingEvent event =
+                    new RenderingEvent(renderingEntity, g, nexus.getLocationOfEntity(previousEntity), this);
+            nexus.renderingEventOccurred(event);
+            band.setRenderedAssociation(renderingEntity);
+            return null;
         }
     }
 
-    public String getSNPLocation(OWLIndividual individual, OWLOntology ontology) {
+    public BandInformation getBandInformation(OWLIndividual individual, OWLOntology ontology) {
         String bandName = null;
         OWLDataFactory dataFactory = OWLManager.createOWLOntologyManager().getOWLDataFactory();
 
         //get all the is_about individuals of this trait-assocation
         OWLObjectProperty is_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
         Set<OWLIndividual> related = individual.getObjectPropertyValues(is_about, ontology);
-        for (OWLIndividual aRelated : related) {
+        for (OWLIndividual snp : related) {
             //find the individual that is of type SNP
-            for (OWLClassExpression allType : aRelated.getTypes(ontology)) {
+            for (OWLClassExpression allType : snp.getTypes(ontology)) {
                 OWLClass typeClass = allType.asOWLClass();
-
                 if (typeClass.getIRI().equals(IRI.create(OntologyConstants.SNP_CLASS_IRI))) {
-                    OWLNamedIndividual SNP = (OWLNamedIndividual) aRelated;
-
-                    //get the SNP's cytogenetic band
+                    //get the snp cytogenetic band
                     OWLObjectProperty has_band =
                             dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.LOCATED_IN_PROPERTY_IRI));
 
-                    OWLIndividual[] bands =
-                            SNP.getObjectPropertyValues(has_band, ontology).toArray(new OWLIndividual[0]);
+                    Set<OWLIndividual> bands = snp.getObjectPropertyValues(has_band, ontology);
+                    if (bands.size() == 1) {
+                        OWLIndividual band = bands.iterator().next();
 
-                    if (bands.length > 0) {
-                        OWLIndividual band = bands[0];
                         //get the band's name
                         OWLDataProperty has_name =
                                 dataFactory.getOWLDataProperty(IRI.create(OntologyConstants.HAS_NAME_PROPERTY_IRI));
@@ -230,13 +208,21 @@ public class AssociationRenderlet implements Renderlet<OWLOntology, OWLIndividua
                             bandName = bandNames.iterator().next().getLiteral();
                         }
                         else {
-                            throw new RuntimeException("OWLIndividual '" + individual + "' has more than one band name");
+                            throw new RuntimeException(
+                                    "Band OWLIndividual '" + band + "' has more than one band name");
                         }
+                    }
+                    else {
+                        throw new RuntimeException("SNP OWLIndividual '" + individual + "' has more than one band");
                     }
                 }
             }
         }
-        return bandName;
+        if (bandName == null) {
+            throw new IllegalArgumentException(
+                    "Band has a null value set for it's name; this cannot be rendered");
+        }
+        return new BandInformation(bandName, "unknown");
     }
 
     public String chromosomeTransform(String chromosome) {

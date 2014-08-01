@@ -116,11 +116,8 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLOntology, OWLC
             String id = path.getAttribute("id");
             String d = path.getAttribute("d");
 
-            if (id.contains("centre") || id.contains("outline") || id.contains("satellite") || id.contains("-o") ||
-                    id.contains("centromere")) {
-                continue;
-            }
-            else {
+            if (!id.contains("centre") && !id.contains("outline") && !id.contains("satellite") && !id.contains("-o") &&
+                    !id.contains("centromere")) {
                 StringTokenizer tokenizer = new StringTokenizer(d);
                 ArrayList<String> pathElements = new ArrayList<String>();
 

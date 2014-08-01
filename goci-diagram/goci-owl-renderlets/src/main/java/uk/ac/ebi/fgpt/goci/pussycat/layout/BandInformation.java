@@ -34,16 +34,20 @@ public class BandInformation {
         renderedTraits = new HashMap<String, OWLNamedIndividual>();
     }
 
+    public String getBandName() {
+        return bandName;
+    }
+
+    public String getChromosome() {
+        return chromosome;
+    }
+
     public void setCoordinates(SVGArea area) {
         coordinates = area;
     }
 
     public SVGArea getCoordinates() {
         return coordinates;
-    }
-
-    public String getChromosome() {
-        return chromosome;
     }
 
     public void setAssociation(OWLNamedIndividual association, String traitName, float pvalue, Date date) {
@@ -144,17 +148,12 @@ public class BandInformation {
         if (bandName != null ? !bandName.equals(that.bandName) : that.bandName != null) {
             return false;
         }
-        if (chromosome != null ? !chromosome.equals(that.chromosome) : that.chromosome != null) {
-            return false;
-        }
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = bandName != null ? bandName.hashCode() : 0;
-        result = 31 * result + (chromosome != null ? chromosome.hashCode() : 0);
-        return result;
+        return bandName != null ? bandName.hashCode() : 0;
     }
 }
