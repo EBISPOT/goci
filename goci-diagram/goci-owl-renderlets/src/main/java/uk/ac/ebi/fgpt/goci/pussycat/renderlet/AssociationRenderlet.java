@@ -60,11 +60,11 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
     }
 
     @Override
-    public boolean canRender(RenderletNexus nexus, Object renderingContext, Object owlEntity) {
+    public boolean canRender(RenderletNexus nexus, Object renderingContext, Object renderingEntity) {
         if (renderingContext instanceof OWLOntology) {
-            if (owlEntity instanceof OWLNamedIndividual) {
+            if (renderingEntity instanceof OWLNamedIndividual) {
                 OWLOntology ontology = (OWLOntology) renderingContext;
-                OWLNamedIndividual individual = (OWLNamedIndividual) owlEntity;
+                OWLNamedIndividual individual = (OWLNamedIndividual) renderingEntity;
                 if (nexus.getLocationOfRenderedEntity(individual) == null) {
                     for (OWLClassExpression type : individual.getTypes(ontology)) {
                         OWLClass typeClass = type.asOWLClass();

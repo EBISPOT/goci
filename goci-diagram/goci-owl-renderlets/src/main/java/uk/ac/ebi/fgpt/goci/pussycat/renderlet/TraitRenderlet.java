@@ -65,26 +65,13 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLIndividual> {
 
     @Override
     public boolean canRender(RenderletNexus nexus, Object renderingContext, Object renderingEntity) {
-        boolean renderable = false;
         if (renderingContext instanceof OWLOntology) {
             if (renderingEntity instanceof OWLNamedIndividual) {
-                OWLNamedIndividual individual = (OWLNamedIndividual) renderingEntity;
-
-                if (nexus.getLocationOfEntity(individual) == null) {
-                    Set<OWLClass> allTypes = nexus.getReasoner()
-                            .getTypes(individual, false)
-                            .getFlattened();
-
-                    for (OWLClass typeClass : allTypes) {
-                        if (IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI).equals(typeClass.getIRI())) {
-                            renderable = true;
-                            break;
-                        }
-                    }
-                }
+                // done all the checks we can without inferring types, don't bother with this as it's tooooo slooooowww
+                return true;
             }
         }
-        return renderable;
+        return false;
     }
 
     @Override
