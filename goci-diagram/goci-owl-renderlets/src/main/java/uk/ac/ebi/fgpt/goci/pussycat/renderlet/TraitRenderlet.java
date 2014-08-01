@@ -65,7 +65,7 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLIndividual> {
 
     @Override
     public boolean canRender(RenderletNexus nexus, Object renderingContext, Object renderingEntity) {
-        if (renderingContext instanceof OWLOntology) {
+        if (renderingContext instanceof OWLReasoner) {
             if (renderingEntity instanceof OWLNamedIndividual) {
                 // done all the checks we can without inferring types, don't bother with this as it's tooooo slooooowww
                 return true;
