@@ -30,7 +30,7 @@ public class PropertiesMapAdapter {
     }
 
     public void init() {
-        Map<String, String> prefixMappings = new HashMap<>();
+        Map<String, String> prefixMappings = new HashMap<String, String>();
         getLog().debug("Initializing prefixMap using properties: " + properties);
         for (String prefix : getProperties().stringPropertyNames()) {
             String namespace = getProperties().getProperty(prefix);

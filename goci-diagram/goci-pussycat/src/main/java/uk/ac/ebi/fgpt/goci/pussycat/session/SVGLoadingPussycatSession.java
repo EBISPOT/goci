@@ -66,8 +66,4 @@ public class SVGLoadingPussycatSession extends AbstractSVGIOPussycatSession {
             throw new RuntimeException("Failed to read SVG from cache (" + e.getMessage() + ")", e);
         }
     }
-
-    @Override public boolean clearRendering() {
-        throw new UnsupportedOperationException("This operation is not available in this implementation");
-    }
 }

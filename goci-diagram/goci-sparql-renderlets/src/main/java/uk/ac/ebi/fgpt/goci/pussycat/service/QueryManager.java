@@ -90,7 +90,7 @@ public class QueryManager {
 
     private String[] collectQueries(InputStream in) throws IOException {
         getLog().debug("Loading SPARQL queries...");
-        List<String> queries = new ArrayList<>();
+        List<String> queries = new ArrayList<String>();
         BufferedReader inp = new BufferedReader(new InputStreamReader(in));
         String nextLine = null;
 

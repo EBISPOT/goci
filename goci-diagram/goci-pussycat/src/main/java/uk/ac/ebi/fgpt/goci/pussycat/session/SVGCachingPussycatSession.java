@@ -23,14 +23,14 @@ import java.util.Collection;
  * @date 02/08/12
  */
 public class SVGCachingPussycatSession extends AbstractSVGIOPussycatSession implements PussycatSession {
-    private GOCIDataPublisherPussycatSession proxiedSession;
+    private PussycatSession proxiedSession;
     private ReasonerSessionBasedReasonerProxy reasonerProxy;
 
-    public GOCIDataPublisherPussycatSession getProxiedSession() {
+    public PussycatSession getProxiedSession() {
         return proxiedSession;
     }
 
-    public void setProxiedSession(GOCIDataPublisherPussycatSession proxiedSession) {
+    public void setProxiedSession(PussycatSession proxiedSession) {
         this.proxiedSession = proxiedSession;
     }
 
@@ -64,17 +64,6 @@ public class SVGCachingPussycatSession extends AbstractSVGIOPussycatSession impl
         }
         catch (IOException e) {
             throw new RuntimeException("Failed to read SVG from cache (" + e.getMessage() + ")", e);
-        }
-    }
-
-    @Override public boolean clearRendering() {
-        try {
-            clearCache();
-            return true;
-        }
-        catch (Exception e) {
-            getLog().error("Failed to empty cache: " + e.getMessage(), e);
-            return false;
         }
     }
 }

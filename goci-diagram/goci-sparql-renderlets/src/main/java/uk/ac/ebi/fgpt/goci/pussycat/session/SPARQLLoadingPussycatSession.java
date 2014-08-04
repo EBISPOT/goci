@@ -11,18 +11,8 @@ import java.util.Collection;
  * Created by dwelter on 22/05/14.
  */
 public class SPARQLLoadingPussycatSession extends AbstractPussycatSession {
-    @Override
-    public Collection<Renderlet> getAvailableRenderlets() {
-        return null;
-    }
-
     @Override public String performRendering(RenderletNexus renderletNexus, Filter... filters)
             throws PussycatSessionNotReadyException {
         return null;
-    }
-
-    @Override
-    public boolean clearRendering() {
-        return false;
     }
 }

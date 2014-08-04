@@ -80,8 +80,15 @@ public class PussycatGOCIController {
     }
 
     @RequestMapping(params = "clear")
-    public @ResponseBody boolean clearRendering(HttpSession session) {
-        return getPussycatSession(session).clearRendering();
+    public @ResponseBody boolean clearRendering(HttpSession session) throws PussycatSessionNotReadyException {
+        try {
+            getRenderletNexus(session).reset();
+            return true;
+        }
+        catch (PussycatSessionNotReadyException e) {
+            getLog().error("Attempting to clear a renderlet nexus with no bound pussycat session, nothing happened");
+            return false;
+        }
     }
 
     @RequestMapping(value = "/gwasdiagram")
