@@ -276,6 +276,7 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
     }
 
     private void sortBandsWithData(OWLReasoner reasoner) {
+        // todo - build the map of bands, where the key is the current band and the value the "previous" band
 
     }
 }
