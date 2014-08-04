@@ -66,6 +66,11 @@ public class OWLPussycatSessionFactory implements PussycatSessionFactory {
         filterInterpreter = new OWLAPIFilterInterpreter(ontologyConfiguration);
     }
 
+    public OWLPussycatSessionFactory(OntologyConfiguration ontologyConfiguration) {
+        this.ontologyConfiguration = ontologyConfiguration;
+        this.filterInterpreter = new OWLAPIFilterInterpreter(ontologyConfiguration);
+    }
+
     @Override public synchronized PussycatSession createPussycatSession() {
         // create a new reasoner session to set on the pussycat session
         if (reasonerSession == null) {

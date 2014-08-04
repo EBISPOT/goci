@@ -26,7 +26,7 @@ public abstract class AbstractPussycatSession implements PussycatSession {
 
     protected AbstractPussycatSession() {
         this.sessionID = generateSessionID();
-        this.renderlets = getAvailableRenderlets();
+//        this.renderlets = getAvailableRenderlets();
     }
 
     protected Logger getLog() {
@@ -45,11 +45,9 @@ public abstract class AbstractPussycatSession implements PussycatSession {
                 loadedRenderlets.add(renderlet);
             }
             getLog().debug("Loaded " + loadedRenderlets.size() + " renderlets");
-            return loadedRenderlets;
+            this.renderlets = loadedRenderlets;
         }
-        else {
-            return renderlets;
-        }
+        return renderlets;
     }
 
     private String generateSessionID() {

@@ -1,7 +1,6 @@
 package uk.ac.ebi.fgpt.goci.pussycat.reasoning;
 
 import org.semanticweb.HermiT.Reasoner;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.UnloadableImportException;
@@ -15,10 +14,8 @@ import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.lang.Initializable;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.pussycat.utils.OntologyUtils;
-import uk.ac.ebi.fgpt.goci.service.GWASOWLPublisher;
 
 import java.io.IOException;
-import java.net.URI;
 
 /**
  * A reasoner session that uses loads an OWL ontology from the provided resource, and then uses the GOCI DataPublisher
@@ -53,12 +50,13 @@ public class KnowledgeBaseLoadingReasonerSession extends Initializable implement
     }
 
     @Override
-    public OWLReasoner getReasoner() throws OWLConversionException {
+    public synchronized OWLReasoner getReasoner() throws OWLConversionException {
         try {
             if (reasoner == null) {
-                URI gwasDataURI = getConfiguration().getGwasDiagramSchemaResource().getURI();
-                getLog().info("Loading GWAS data from " + gwasDataURI);
-                OWLOntology gwasData = getConfiguration().getOWLOntologyManager().loadOntology(IRI.create(gwasDataURI));
+                Resource gwasDataResource = getConfiguration().getGwasDiagramDataResource();
+                getLog().info("Loading GWAS data from " + gwasDataResource.toString());
+                OWLOntology gwasData = getConfiguration().getOWLOntologyManager()
+                        .loadOntologyFromOntologyDocument(gwasDataResource.getInputStream());
                 getLog().debug("Publishing GWAS data (inferred view)");
                 reasoner = reasonOver(gwasData);
             }
@@ -72,7 +70,7 @@ public class KnowledgeBaseLoadingReasonerSession extends Initializable implement
         }
     }
 
-    public OWLReasoner reasonOver(OWLOntology ontology) throws OWLConversionException {
+    private OWLReasoner reasonOver(OWLOntology ontology) throws OWLConversionException {
         try {
             getLog().debug("Loading any missing imports...");
             OntologyUtils.loadImports(ontology.getOWLOntologyManager(), ontology);

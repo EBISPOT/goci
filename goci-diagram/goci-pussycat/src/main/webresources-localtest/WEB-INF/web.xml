@@ -17,7 +17,7 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>
             WEB-INF/goci-pussycat.xml
-            WEB-INF/goci-datapublisher-dynamic.xml
+            <!--WEB-INF/goci-datapublisher-dynamic.xml-->
         </param-value>
     </context-param>
 
