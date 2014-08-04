@@ -11,9 +11,9 @@
 
     <!-- configuration: sets up ontology manager and data factory given mappings to the set resources -->
     <bean name="config" class="uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration" init-method="init">
-        <!-- TODO: use EFO release -->
         <property name="efoResource" value="http://www.ebi.ac.uk/efo/efo.owl" />
         <property name="gwasDiagramSchemaResource" value="classpath:gwas-diagram.owl"/>
+        <property name="gwasDiagramDataResource" value="classpath:gwas-data.owl" />
     </bean>
 
     <bean id="pussycatSessionStrategy"
@@ -22,31 +22,30 @@
         <constructor-arg value="JOIN" />
     </bean>
 
-    <bean id="pussycatManager" class="uk.ac.ebi.fgpt.goci.pussycat.manager.OWLPussycatManager">
-        <property name="reasonerSession" ref="reasonerSession" />
-        <property name="pussycatSessions">
-            <set>
-                <ref bean="cachingPussycatSession" />
-                <!--<ref bean="loadingPussycatSession" />-->
-            </set>
-        </property>
+    <bean id="renderletNexusFactory" class="uk.ac.ebi.fgpt.goci.pussycat.renderlet.DefaultRenderletNexusFactory" />
+
+    <bean id="pussycatManager" class="uk.ac.ebi.fgpt.goci.pussycat.manager.DefaultPussycatManager">
+        <property name="nexusFactory" ref="renderletNexusFactory" />
+        <property name="pussycatSession" ref="cachingPussycatSession" />
     </bean>
 
     <!-- NB: which implementation to use depends on whether
-    a) we are dynamically generating the knowledgebase (uk.ac.ebi.fgpt.goci.pussycat.reasoning.DataPublishingCacheableReasonerSession) or
-    b) statically loading a precanned version (uk.ac.ebi.fgpt.goci.pussycat.reasoning.OntologyLoadingCacheableReasonerSession) -->
+             a) we are dynamically generating the knowledgebase (uk.ac.ebi.fgpt.goci.pussycat.reasoning.DataPublishingCacheableReasonerSession) or
+             b) statically loading a precanned version (uk.ac.ebi.fgpt.goci.pussycat.reasoning.OntologyLoadingCacheableReasonerSession) -->
     <bean id="reasonerSession"
-          class="uk.ac.ebi.fgpt.goci.pussycat.reasoning.DataPublishingCacheableReasonerSession"
+          class="uk.ac.ebi.fgpt.goci.pussycat.reasoning.KnowledgeBaseLoadingReasonerSession"
           init-method="init">
-        <!--<property name="configuration" ref="config" />-->
-        <!--<property name="ontologyResource" value="ontology/gwas-data-2006-12.owl" />-->
-        <property name="publisher" ref="publisher" />
+        <property name="configuration" ref="config" />
     </bean>
 
-    <bean id="proxiedPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.GOCIDataPublisherPussycatSession">
-        <property name="reasonerSession" ref="reasonerSession" />
-        <property name="ontologyConfiguration" ref="config" />
-    </bean>
+    <bean id="pussycatSessionFactory" class="uk.ac.ebi.fgpt.goci.pussycat.session.OWLPussycatSessionFactory" />
+
+    <bean id="proxiedPussycatSession" factory-bean="pussycatSessionFactory" factory-method="createPussycatSession" />
+
+    <!--<bean id="proxiedPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.GOCIDataPublisherPussycatSession">-->
+        <!--<property name="reasonerSession" ref="reasonerSession" />-->
+        <!--<property name="ontologyConfiguration" ref="config" />-->
+    <!--</bean>-->
 
     <bean id="cachingPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.SVGCachingPussycatSession">
         <property name="cacheDirectory" value="${user.home}/.goci/svg_cache/" />

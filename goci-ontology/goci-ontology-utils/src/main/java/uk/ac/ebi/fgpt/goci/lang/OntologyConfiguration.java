@@ -1,34 +1,29 @@
 package uk.ac.ebi.fgpt.goci.lang;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.util.SimpleIRIMapper;
-import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * A container for ontology mapping configuration.  This simple bean can be used to acquire a data factory and owl
  * manager based on mapping ontology IRIs to physical locations in order to be used across several classes.
  *
- * @author Tony Burdett
- * Date 15/02/12
+ * @author Tony Burdett Date 15/02/12
  */
 public class OntologyConfiguration {
     private Resource efoResource;
     private Resource gwasDiagramSchemaResource;
+    private Resource gwasDiagramDataResource;
 
     private OWLOntologyManager manager;
     private OWLDataFactory factory;
-
-    private Map<IRI, String> efoLabels;
 
     private boolean initialized = false;
 
@@ -70,45 +65,12 @@ public class OntologyConfiguration {
         this.gwasDiagramSchemaResource = gwasDiagramSchemaResource;
     }
 
-    public HashMap<IRI, String> setEfoLabels(){
-        HashMap<IRI, String> labels = new HashMap<IRI, String>();
+    public Resource getGwasDiagramDataResource() {
+        return gwasDiagramDataResource;
+    }
 
-        System.setProperty("entityExpansionLimit", "100000000");
-
-        try {
-            getLog().debug("Trying to load EFO");
-            OWLOntology efo = manager.loadOntology(IRI.create(OntologyConstants.EFO_ONTOLOGY_SCHEMA_IRI));
-            getLog().debug(("Successfully loaded EFO"));
-            Set<OWLClass> allClasses =  efo.getClassesInSignature();
-
-            OWLAnnotationProperty label = factory.getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
-
-            for(OWLClass efoClass : allClasses){
-                IRI clsIri = efoClass.getIRI();
-                String className = null;
-
-                for (OWLAnnotation annotation : efoClass.getAnnotations(efo, label)) {
-                    if (annotation.getValue() instanceof OWLLiteral) {
-                        OWLLiteral val = (OWLLiteral) annotation.getValue();
-                        className = val.getLiteral();
-                    }
-                    if(efoClass.getAnnotations(efo, label).size() != 1){
-                        getLog().debug("More than one label for class " + className);
-                    }
-                }
-
-                if(className == null){
-                    getLog().debug("Class without label " + efoClass);
-                }
-                else{
-                    labels.put(clsIri, className);
-                }
-            }
-        }
-        catch (OWLOntologyCreationException e) {
-            getLog().error("Could not load EFO " + e);
-        }
-        return labels;
+    public void setGwasDiagramDataResource(Resource gwasDiagramDataResource) {
+        this.gwasDiagramDataResource = gwasDiagramDataResource;
     }
 
     public void init() throws IOException {
@@ -124,8 +86,6 @@ public class OntologyConfiguration {
                                                           IRI.create(getGwasDiagramSchemaResource().getURI())));
         }
         this.factory = manager.getOWLDataFactory();
-        this.efoLabels = setEfoLabels();
-
         initialized = true;
     }
 
@@ -141,15 +101,6 @@ public class OntologyConfiguration {
     public OWLDataFactory getOWLDataFactory() {
         if (initialized) {
             return factory;
-        }
-        else {
-            throw new IllegalStateException("OntologyConfiguration has not been initialized");
-        }
-    }
-
-    public Map<IRI, String> getEfoLabels(){
-        if (initialized){
-            return efoLabels;
         }
         else {
             throw new IllegalStateException("OntologyConfiguration has not been initialized");

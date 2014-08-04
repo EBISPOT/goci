@@ -6,25 +6,27 @@ import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexusFactory;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSession;
-import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSessionFactory;
 
 import javax.servlet.http.HttpSession;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * A default implementation of a {@link uk.ac.ebi.fgpt.goci.pussycat.manager.PussycatManager} that uses a prewired
- * {@link uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexusFactory} to construct any new, required instances of a
- * renderlet nexus.
+ * The default implementation of a {@link uk.ac.ebi.fgpt.goci.pussycat.manager.PussycatManager}.  This implementation
+ * uses a single, preconfigured {@link PussycatSession} that is used to ensure data is only loaded once, and all
+ * requests go through this single pussycat session.  This manager should also be prewired with a {@link
+ * uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexusFactory} to construct any new, required instances of a renderlet
+ * nexus.  The normal strategy is to generate one renderlet nexus per HTTP session, but to reuse one pussycat session
+ * across all sessions.  This way, the data only needs to be obtained once but multiple different renderings of that
+ * data can occur.
  *
  * @author Tony Burdett
  * @date 04/06/14
  */
 public class DefaultPussycatManager implements PussycatManager {
-    private PussycatSessionFactory sessionFactory;
     private RenderletNexusFactory nexusFactory;
 
     private Set<PussycatSession> sessions;
@@ -44,14 +46,6 @@ public class DefaultPussycatManager implements PussycatManager {
         return log;
     }
 
-    public PussycatSessionFactory getSessionFactory() {
-        return sessionFactory;
-    }
-
-    public void setSessionFactory(PussycatSessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-
     public RenderletNexusFactory getNexusFactory() {
         return nexusFactory;
     }
@@ -60,8 +54,12 @@ public class DefaultPussycatManager implements PussycatManager {
         this.nexusFactory = nexusFactory;
     }
 
-    public Collection<PussycatSession> getPussycatSessions() {
+    public Set<PussycatSession> getPussycatSessions() {
         return sessions;
+    }
+
+    public void setPussycatSession(PussycatSession session) {
+        this.sessions = Collections.singleton(session);
     }
 
     public boolean hasAvailablePussycatSession(HttpSession session) {
@@ -120,7 +118,8 @@ public class DefaultPussycatManager implements PussycatManager {
     }
 
     public PussycatSession createPussycatSession() {
-        return getSessionFactory().createPussycatSession();
+        throw new UnsupportedOperationException(
+                "This implementation reuses a single, prewired Pussycat Session - new ones cannot be created");
     }
 
     @Override public RenderletNexus createRenderletNexus(PussycatSession session)
