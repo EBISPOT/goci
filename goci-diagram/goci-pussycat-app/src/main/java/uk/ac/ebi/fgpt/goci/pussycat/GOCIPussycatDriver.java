@@ -1,7 +1,12 @@
 package uk.ac.ebi.fgpt.goci.pussycat;
 
-import org.apache.commons.cli.*;
-import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -10,10 +15,10 @@ import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.manager.PussycatManager;
 import uk.ac.ebi.fgpt.goci.pussycat.reasoning.KnowledgeBaseLoadingReasonerSession;
+import uk.ac.ebi.fgpt.goci.pussycat.reasoning.ReasonerSession;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSession;
-import uk.ac.ebi.fgpt.goci.pussycat.reasoning.ReasonerSession;
 import uk.ac.ebi.fgpt.goci.pussycat.utils.DateTimeStamp;
 
 import java.io.File;
@@ -49,9 +54,9 @@ public class GOCIPussycatDriver {
                 System.setProperty("goci.svg.outputPath", output.getAbsolutePath());
                 System.setProperty("efo.inputPath", efo);
 
-                     // backup old SVG directory
-                try{
-                    if(output.exists()){
+                // backup old SVG directory
+                try {
+                    if (output.exists()) {
                         System.out.println("SVG output directory " + output.getAbsolutePath() + " already exists");
                         String dateStr = new SimpleDateFormat("yyyyMMdd").format(new Date());
                         String backupFileName = output.getName().concat(".backup.").concat(dateStr);
@@ -64,14 +69,14 @@ public class GOCIPussycatDriver {
                                     "Backing up " + oldoutput.toString() + " to " + newoutput.toString() + "...");
 
                             Files.move(oldoutput,
-                                    newoutput,
-                                    StandardCopyOption.REPLACE_EXISTING,
-                                    StandardCopyOption.ATOMIC_MOVE);
+                                       newoutput,
+                                       StandardCopyOption.REPLACE_EXISTING,
+                                       StandardCopyOption.ATOMIC_MOVE);
                             System.out.println("ok!");
                         }
                         else {
                             System.out.println("Backup already exists");
-                        }    
+                        }
                     }
                 }
                 catch (IOException e) {
@@ -126,18 +131,18 @@ public class GOCIPussycatDriver {
                     svgOutputLocation = cl.getOptionValue("o");
                 }
                 else {
-                    svgOutputLocation =  "/ebi/microarray/home/fgpt/goci-home/diagram/cache/diagram-latest/";
+                    svgOutputLocation = "/ebi/microarray/home/fgpt/goci-home/diagram/cache/diagram-latest/";
                 }
                 if (cl.hasOption("i")) {
                     ontologyInputFile = cl.getOptionValue("i");
                 }
-                else{
+                else {
                     ontologyInputFile = "/ebi/microarray/home/fgpt/goci-home/ontology/gwas-data-latest.owl";
                 }
-                if(cl.hasOption("e")){
+                if (cl.hasOption("e")) {
                     efoLocation = cl.getOptionValue("e");
                 }
-                else{
+                else {
                     efoLocation = "www.ebi.ac.uk/efo";
                 }
 
@@ -160,20 +165,20 @@ public class GOCIPussycatDriver {
 
         // add output file arguments
         Option outputFileOption = new Option("o", "output", true,
-                "The output directory to write the SVG to");
+                                             "The output directory to write the SVG to");
         outputFileOption.setArgName("file");
         outputFileOption.setRequired(true);
         options.addOption(outputFileOption);
 
         //add input file arguments
         Option inputFileOption = new Option("i", "inferred", true,
-                "The input file to read the ontology from");
+                                            "The input file to read the ontology from");
         inputFileOption.setArgName("file");
         options.addOption(inputFileOption);
 
         //add input file arguments
         Option efoFileOption = new Option("e", "efo", true,
-                "The location from which to read the Experimental Factor Ontology from");
+                                          "The location from which to read the Experimental Factor Ontology from");
         efoFileOption.setArgName("file");
         options.addOption(efoFileOption);
 
@@ -225,18 +230,15 @@ public class GOCIPussycatDriver {
         setRenderletNexus();
         getLog().info("Renderlet nexus set");
 
-        OWLClassExpression query = config.getOWLDataFactory().getOWLThing();
-
-        boolean nexusReady = true;
-        do {
+        boolean nexusReady = false;
+        while (!nexusReady) {
             try {
-                getLog().debug("Performing SVG rendering for '" + query + "'");
-                pussycatSession.performRendering(query, renderletNexus);
+                getLog().debug("Performing full SVG rendering'");
+                pussycatSession.performRendering(renderletNexus);
                 nexusReady = true;
             }
             catch (PussycatSessionNotReadyException e) {
-                getLog().debug("Pussycat session not ready yet - waiting to generate SVG for '" + query + "'");
-                nexusReady = false;
+                getLog().debug("Pussycat session not ready yet - waiting to generate SVG");
                 synchronized (this) {
                     try {
                         wait(300000);
@@ -245,10 +247,8 @@ public class GOCIPussycatDriver {
                         // do nothing
                     }
                 }
-                getLog().debug("Retrying query for '" + query + "'");
             }
-        } while (!nexusReady);
-
+        }
         log.info(DateTimeStamp.getCurrentTimeStamp() + " Successfully acquired SVG");
 
         getLog().info("Diagram generation complete!");
@@ -260,7 +260,7 @@ public class GOCIPussycatDriver {
         getLog().info("There are " + renderlets.size() + " renderlets");
 
         try {
-            renderletNexus = pussycatManager.createRenderletNexus(config, pussycatSession);
+            renderletNexus = pussycatManager.createRenderletNexus(pussycatSession);
         }
         catch (PussycatSessionNotReadyException e) {
             getLog().error("Unable to set renderlet nexus", e);
