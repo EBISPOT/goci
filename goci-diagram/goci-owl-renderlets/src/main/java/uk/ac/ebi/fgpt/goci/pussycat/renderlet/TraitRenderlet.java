@@ -151,7 +151,8 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
 
                 String assocIRI = OntologyUtils.getShortForm(association);
                 getLog().trace("Setting gwasassociation attribute for trait '" + trait + "' to " + assocIRI);
-                svg.append("gwasassociation='").append(assocIRI).append("'");
+                svg.append("gwasassociation='").append(assocIRI).append("' ");
+                svg.append("/>");
 
                 SVGArea currentArea = new SVGArea(cx, cy, 2 * radius, 2 * radius, 0);
                 RenderingEvent<OWLIndividual> event =
