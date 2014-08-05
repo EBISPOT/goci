@@ -39,7 +39,7 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLReasoner, OWLC
 
     public boolean canRender(RenderletNexus nexus, Object renderingContext, Object owlEntity) {
         boolean renderable = false;
-        if (renderingContext instanceof OWLOntology) {
+        if (renderingContext instanceof OWLReasoner) {
             IRI chromIRI = getChromIRI();
             if (owlEntity instanceof OWLClass) {
                 OWLClass thisClass = (OWLClass) owlEntity;
@@ -101,7 +101,7 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLReasoner, OWLC
 
                 SVGArea currentArea = new SVGArea(xCoordinate, yCoordinate, chromWidth, chromHeight, 0);
                 RenderingEvent<OWLClass> event =
-                        new RenderingEvent<OWLClass>(owlEntity, g.toString(), currentArea, this);
+                        new RenderingEvent<OWLClass>(owlEntity, g.toString(), currentArea, this); // todo - g.toString() fails
                 nexus.renderingEventOccurred(event);
             }
         }

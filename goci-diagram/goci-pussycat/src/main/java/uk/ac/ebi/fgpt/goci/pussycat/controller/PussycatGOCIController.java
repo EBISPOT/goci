@@ -221,6 +221,15 @@ public class PussycatGOCIController {
         return responseMsg;
     }
 
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    @ExceptionHandler(RuntimeException.class)
+    public @ResponseBody String handleRuntimeException(RuntimeException e) {
+        String responseMsg = "There has been a problem generating the GWAS diagram.  " +
+                "We've been notified, and are working to fix this problem as soon as we can.<br/>" + e.getMessage();
+        getLog().error(responseMsg, e);
+        return responseMsg;
+    }
+
     protected PussycatSession getPussycatSession(HttpSession session) {
         getLog().debug("Attempting to obtain Pussycat session for HttpSession '" + session.getId() + "'");
         if (getPussycatManager().hasAvailablePussycatSession(session)) {

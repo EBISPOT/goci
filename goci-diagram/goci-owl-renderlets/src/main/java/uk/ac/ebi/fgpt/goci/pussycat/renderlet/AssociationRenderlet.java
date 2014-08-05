@@ -23,6 +23,8 @@ import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGCanvas;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Renderlet that can generate SVG for OWLIndividuals representing GWAS trait associations
@@ -61,9 +63,9 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
 
     @Override
     public boolean canRender(RenderletNexus nexus, Object renderingContext, Object renderingEntity) {
-        if (renderingContext instanceof OWLOntology) {
+        if (renderingContext instanceof OWLReasoner) {
             if (renderingEntity instanceof OWLNamedIndividual) {
-                OWLOntology ontology = (OWLOntology) renderingContext;
+                OWLOntology ontology = ((OWLReasoner) renderingContext).getRootOntology();
                 OWLNamedIndividual individual = (OWLNamedIndividual) renderingEntity;
                 if (nexus.getLocationOfRenderedEntity(individual) == null) {
                     for (OWLClassExpression type : individual.getTypes(ontology)) {
@@ -91,93 +93,94 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
         BandInformation band = getBandInformation(individual, ontology);
         BandInformation previousBand = previousBandMap.get(band);
 
-        StringBuilder svg = new StringBuilder();
-        SVGArea location = nexus.getLocationOfRenderedEntity(band);
-        SVGArea previousLocation = nexus.getLocationOfRenderedEntity(band);
+        if (band != null) {
+            StringBuilder svg = new StringBuilder();
+            SVGArea location = nexus.getLocationOfRenderedEntity(band);
+            SVGArea previousLocation = nexus.getLocationOfRenderedEntity(previousBand);
 
-        //there is no other association in this chromosmal band yet - render
-        if (band.getRenderedAssociations().size() == 0) {
-            getLog().trace("First association for this band");
+            //there is no other association in this chromosmal band yet - render
+            if (band.getRenderedAssociations().size() == 0) {
+                getLog().trace("First association for this band");
 
-            svg.append("<g ")
-                    .append("id='").append(individual.getIRI().toString()).append("' ")
-                    .append("transform='").append(chromosomeTransform(band.getChromosome())).append("' ")
-                    .append("class='gwas-trait'>");
+                svg.append("<g ")
+                        .append("id='").append(individual.getIRI().toString()).append("' ")
+                        .append("transform='").append(chromosomeTransform(band.getChromosome())).append("' ")
+                        .append("class='gwas-trait'>");
 
-            SVGArea bandCoords = band.getCoordinates();
-            if (bandCoords != null) {
-                double x = bandCoords.getX();
-                double y = bandCoords.getY();
-                double width = bandCoords.getWidth();
-                double height = bandCoords.getHeight();
-                double newY = y + (height / 2);
-                double endY = newY;
-                double length = 1.75 * width;
-                double newHeight = 0;
+                if (location != null) {
+                    double x = location.getX();
+                    double y = location.getY();
+                    double width = location.getWidth();
+                    double height = location.getHeight();
+                    double newY = y + (height / 2);
+                    double endY = newY;
+                    double length = 1.75 * width;
+                    double newHeight = 0;
 
 
-                // fanning algorithm
-                if (previousLocation != null) {
-                    double prevY = previousLocation.getY();
-                    double prevHeight = previousLocation.getHeight(); // todo - I think?
-                    double radius = 0.35 * width;
+                    // fanning algorithm
+                    if (previousLocation != null) {
+                        double prevY = previousLocation.getY();
+                        double prevHeight = previousLocation.getHeight(); // todo - I think?
+                        double radius = 0.35 * width;
 
-                    if (band.getBandName().contains("p")) {
-                        int drop = ((band.getTraitNames().size() - 1) / 6) + 2;
-                        double min = prevY - (drop * radius);
-                        if (min <= newY) {
-                            endY = min;
-                            newHeight = endY - newY;
+                        if (band.getBandName().contains("p")) {
+                            int drop = ((band.getTraitNames().size() - 1) / 6) + 2;
+                            double min = prevY - (drop * radius);
+                            if (min <= newY) {
+                                endY = min;
+                                newHeight = endY - newY;
+                            }
                         }
-                    }
-                    else {
+                        else {
 //                        int drop = ((previous.getTraitNames().size() - 1) / 6) + 2;
 //                        double min = prevY + (drop * radius);
-                        double min = prevY + prevHeight;
-                        if (min >= newY) {
-                            endY = min;
-                            newHeight = endY - newY;
+                            double min = prevY + prevHeight;
+                            if (min >= newY) {
+                                endY = min;
+                                newHeight = endY - newY;
+                            }
                         }
                     }
+                    band.setY(endY);
+
+                    StringBuilder d = new StringBuilder();
+                    if (band.getPreviousBand() == null || newHeight == 0) {
+                        d.append("m ");
+                        d.append(Double.toString(x));
+                        d.append(",");
+                        d.append(Double.toString(newY));
+                        d.append(" ");
+                        d.append(Double.toString(length));
+                        d.append(",0.0");
+                    }
+
+                    else {
+                        double width2 = 0.75 * width;
+                        d.append("m ");
+                        d.append(Double.toString(x));
+                        d.append(",");
+                        d.append(Double.toString(newY));
+                        d.append(" ");
+                        d.append(Double.toString(width));
+                        d.append(",0.0, ");
+                        d.append(Double.toString(width2));
+                        d.append(",");
+                        d.append(Double.toString(newHeight));
+                    }
+
+                    svg.append("<path ")
+                            .append("d='").append(d.toString()).append("' ")
+                            .append("style='fill:none;stroke:#211c1d;stroke-width:1.1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none'")
+                            .append(" />");
+
+                    svg.append("</g>");
+
+                    SVGArea currentArea = new SVGArea(x, newY, length, newHeight, 0);
+                    RenderingEvent event = new RenderingEvent(individual, svg.toString(), currentArea, this);
+                    nexus.renderingEventOccurred(event);
+                    band.setRenderedAssociation(individual);
                 }
-                band.setY(endY);
-
-                StringBuilder d = new StringBuilder();
-                if (band.getPreviousBand() == null || newHeight == 0) {
-                    d.append("m ");
-                    d.append(Double.toString(x));
-                    d.append(",");
-                    d.append(Double.toString(newY));
-                    d.append(" ");
-                    d.append(Double.toString(length));
-                    d.append(",0.0");
-                }
-
-                else {
-                    double width2 = 0.75 * width;
-                    d.append("m ");
-                    d.append(Double.toString(x));
-                    d.append(",");
-                    d.append(Double.toString(newY));
-                    d.append(" ");
-                    d.append(Double.toString(width));
-                    d.append(",0.0, ");
-                    d.append(Double.toString(width2));
-                    d.append(",");
-                    d.append(Double.toString(newHeight));
-                }
-
-                svg.append("<path ")
-                        .append("d='").append(d.toString()).append("' ")
-                        .append("style='fill:none;stroke:#211c1d;stroke-width:1.1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none'")
-                        .append(" />");
-
-                svg.append("</g>");
-
-                SVGArea currentArea = new SVGArea(x, newY, length, newHeight, 0);
-                RenderingEvent event = new RenderingEvent(individual, svg.toString(), currentArea, this);
-                nexus.renderingEventOccurred(event);
-                band.setRenderedAssociation(individual);
             }
         }
 //        else { // todo - do we actually need to do anything here?
@@ -227,16 +230,36 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
                         }
                     }
                     else {
-                        throw new RuntimeException("SNP OWLIndividual '" + individual + "' has more than one band");
+                        if (bands.size() > 1) {
+                            getLog().error("SNP '" + snp + "' is located in more than one band - this data is invalid");
+                        }
+                        else {
+//                            throw new RuntimeException("SNP OWLIndividual '" + snp + "' has more than one band"); // todo - should be an exception?
+                            getLog().error(
+                                    "Unable to identify band for SNP '" + snp + "' - this data may not be available");
+                        }
                     }
                 }
             }
         }
         if (bandName == null) {
-            throw new IllegalArgumentException(
-                    "Band has a null value set for it's name; this cannot be rendered");
+//            throw new IllegalArgumentException(
+//                    "Band has a null value set for it's name; this cannot be rendered"); // todo - should be an exception?
+            getLog().error("Association '" + individual + "' could not be located on the diagram " +
+                                   "(either due to a missing SNP, an unrecognised band name, " +
+                                   "more than one genome location or something else).  Source data is invalid.");
+            return null;
         }
-        return new BandInformation(bandName, "unknown");
+        else {
+            Matcher m = Pattern.compile("(^[0-9XxYy]+)").matcher(bandName);
+            if (m.find()) {
+                return new BandInformation(bandName, m.group(1));
+            }
+            else {
+                throw new RuntimeException(
+                        "Could not render an association - unrecognised chromosome name in band '" + bandName + "'");
+            }
+        }
     }
 
     public String chromosomeTransform(String chromosome) {

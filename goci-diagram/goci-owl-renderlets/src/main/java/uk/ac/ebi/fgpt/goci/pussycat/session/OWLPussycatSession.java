@@ -104,7 +104,7 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
             return renderletNexus.getSVG();
         }
         catch (OWLConversionException e) {
-            throw new RuntimeException("Failed to render SVG", e);
+            throw new RuntimeException("Failed to initialize reasoner - cannot render SVG", e);
         }
     }
 
