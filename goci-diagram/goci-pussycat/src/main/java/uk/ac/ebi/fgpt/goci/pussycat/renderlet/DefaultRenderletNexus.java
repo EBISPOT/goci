@@ -6,6 +6,7 @@ import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,7 +26,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
     public DefaultRenderletNexus() {
         this.renderlets = new HashSet<Renderlet>();
         this.entityLocations = new HashMap<Object, SVGArea>();
-        this.renderedEntities = new HashMap<Object, RenderingEvent>();
+        this.renderedEntities = new LinkedHashMap<Object, RenderingEvent>();
     }
 
     protected Logger getLog() {

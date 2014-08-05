@@ -16,8 +16,16 @@ import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderingEvent;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -100,12 +108,26 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLReasoner, OWLC
                 svgstream.close();
 
                 SVGArea currentArea = new SVGArea(xCoordinate, yCoordinate, chromWidth, chromHeight, 0);
+
+                TransformerFactory transFactory = TransformerFactory.newInstance();
+                Transformer transformer = transFactory.newTransformer();
+                StringWriter buffer = new StringWriter();
+                transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+                transformer.transform(new DOMSource(g), new StreamResult(buffer));
+                String str = buffer.toString();
+
                 RenderingEvent<OWLClass> event =
-                        new RenderingEvent<OWLClass>(owlEntity, g.toString(), currentArea, this); // todo - g.toString() fails
+                        new RenderingEvent<OWLClass>(owlEntity, str, currentArea, this); // todo - g.toString() fails
                 nexus.renderingEventOccurred(event);
             }
         }
         catch (IOException e) {
+            throw new RuntimeException("Failed to render chromosome SVG", e);
+        }
+        catch (TransformerConfigurationException e) {
+            throw new RuntimeException("Failed to render chromosome SVG", e);
+        }
+        catch (TransformerException e) {
             throw new RuntimeException("Failed to render chromosome SVG", e);
         }
     }
@@ -236,7 +258,7 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLReasoner, OWLC
                 String chromName = getName().split(" ")[1];
 
                 BandInformation info = new BandInformation(id, chromName);
-                info.setCoordinates(band);
+//                info.setCoordinates(band);
 
                 nexus.renderingEventOccurred(new RenderingEvent<BandInformation>(info, "", band, this));
             }

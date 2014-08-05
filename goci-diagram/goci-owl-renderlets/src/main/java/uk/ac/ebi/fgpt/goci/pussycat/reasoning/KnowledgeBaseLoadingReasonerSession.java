@@ -71,20 +71,20 @@ public class KnowledgeBaseLoadingReasonerSession extends Initializable implement
     }
 
     private OWLReasoner reasonOver(OWLOntology ontology) throws OWLConversionException {
-        try {
-            getLog().debug("Loading any missing imports...");
-            OntologyUtils.loadImports(ontology.getOWLOntologyManager(), ontology);
-            StringBuilder loadedOntologies = new StringBuilder();
-            int n = 1;
-            for (OWLOntology o : ontology.getOWLOntologyManager().getOntologies()) {
-                loadedOntologies.append("\t")
-                        .append(n++)
-                        .append(") ")
-                        .append(o.getOntologyID().getOntologyIRI())
-                        .append("\n");
-            }
-            getLog().debug("Imports collected: the following ontologies have been loaded in this session:\n" +
-                                   loadedOntologies.toString());
+//        try {
+//            getLog().debug("Loading any missing imports...");
+//            OntologyUtils.loadImports(ontology.getOWLOntologyManager(), ontology);
+//            StringBuilder loadedOntologies = new StringBuilder();
+//            int n = 1;
+//            for (OWLOntology o : ontology.getOWLOntologyManager().getOntologies()) {
+//                loadedOntologies.append("\t")
+//                        .append(n++)
+//                        .append(") ")
+//                        .append(o.getOntologyID().getOntologyIRI())
+//                        .append("\n");
+//            }
+//            getLog().debug("Imports collected: the following ontologies have been loaded in this session:\n" +
+//                                   loadedOntologies.toString());
             getLog().info("Classifying ontology from " + ontology.getOntologyID().getOntologyIRI());
 
             getLog().debug("Creating reasoner... ");
@@ -107,9 +107,9 @@ public class KnowledgeBaseLoadingReasonerSession extends Initializable implement
                 getLog().info("Reasoning complete! ");
                 return reasoner;
             }
-        }
-        catch (UnloadableImportException e) {
-            throw new OWLConversionException("Failed to load imports", e);
-        }
+//        }
+//        catch (UnloadableImportException e) {
+//            throw new OWLConversionException("Failed to load imports", e);
+//        }
     }
 }

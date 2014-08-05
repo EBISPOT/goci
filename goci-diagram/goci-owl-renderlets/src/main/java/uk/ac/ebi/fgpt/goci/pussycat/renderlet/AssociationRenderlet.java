@@ -21,6 +21,7 @@ import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGCanvas;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -35,11 +36,13 @@ import java.util.regex.Pattern;
 @ServiceProvider
 public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual> {
     private final Map<OWLReasoner, Map<BandInformation, BandInformation>> previousBandMapByReasoner;
+    private final Set<String> renderedBands;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
     public AssociationRenderlet() {
         this.previousBandMapByReasoner = new HashMap<OWLReasoner, Map<BandInformation, BandInformation>>();
+        this.renderedBands = new HashSet<String>();
     }
 
     protected Logger getLog() {
@@ -89,17 +92,24 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
             sortBandsWithData(reasoner);
         }
 
-        Map<BandInformation, BandInformation> previousBandMap = previousBandMapByReasoner.get(reasoner);
+
         BandInformation band = getBandInformation(individual, ontology);
-        BandInformation previousBand = previousBandMap.get(band);
+        SVGArea location = nexus.getLocationOfRenderedEntity(band);
+
+        BandInformation previousBand = null;
+        SVGArea previousLocation = null;
+        Map<BandInformation, BandInformation> previousBandMap = previousBandMapByReasoner.get(reasoner);
+        if (previousBandMap != null) {
+            previousBand = previousBandMap.get(band);
+            previousLocation = nexus.getLocationOfRenderedEntity(previousBand);
+        }
 
         if (band != null) {
             StringBuilder svg = new StringBuilder();
-            SVGArea location = nexus.getLocationOfRenderedEntity(band);
-            SVGArea previousLocation = nexus.getLocationOfRenderedEntity(previousBand);
 
             //there is no other association in this chromosmal band yet - render
-            if (band.getRenderedAssociations().size() == 0) {
+//            if (band.getRenderedAssociations().size() == 0) {
+            if (!renderedBands.contains(band.getBandName())) {
                 getLog().trace("First association for this band");
 
                 svg.append("<g ")
@@ -119,13 +129,14 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
 
 
                     // fanning algorithm
+                    Set<OWLNamedIndividual> traits = getAllTraitsForAssociation(reasoner, individual);
                     if (previousLocation != null) {
                         double prevY = previousLocation.getY();
                         double prevHeight = previousLocation.getHeight(); // todo - I think?
                         double radius = 0.35 * width;
 
                         if (band.getBandName().contains("p")) {
-                            int drop = ((band.getTraitNames().size() - 1) / 6) + 2;
+                            int drop = ((traits.size() - 1) / 6) + 2;
                             double min = prevY - (drop * radius);
                             if (min <= newY) {
                                 endY = min;
@@ -142,10 +153,11 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
                             }
                         }
                     }
-                    band.setY(endY);
+//                    band.setY(endY);
 
                     StringBuilder d = new StringBuilder();
-                    if (band.getPreviousBand() == null || newHeight == 0) {
+//                    if (band.getPreviousBand() == null || newHeight == 0) {
+                    if (previousLocation == null || newHeight == 0) {
                         d.append("m ");
                         d.append(Double.toString(x));
                         d.append(",");
@@ -179,7 +191,10 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
                     SVGArea currentArea = new SVGArea(x, newY, length, newHeight, 0);
                     RenderingEvent event = new RenderingEvent(individual, svg.toString(), currentArea, this);
                     nexus.renderingEventOccurred(event);
-                    band.setRenderedAssociation(individual);
+
+                    // add band to renderedBands set
+                    renderedBands.add(band.getBandName());
+//                    band.setRenderedAssociation(individual);
                 }
             }
         }
@@ -296,6 +311,12 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
         builder.append(")");
 
         return builder.toString();
+    }
+
+    private Set<OWLNamedIndividual> getAllTraitsForAssociation(OWLReasoner reasoner, OWLNamedIndividual association) {
+        OWLDataFactory dataFactory = reasoner.getRootOntology().getOWLOntologyManager().getOWLDataFactory();
+        OWLObjectProperty is_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
+        return reasoner.getObjectPropertyValues(association, is_about).getFlattened();
     }
 
     private void sortBandsWithData(OWLReasoner reasoner) {
