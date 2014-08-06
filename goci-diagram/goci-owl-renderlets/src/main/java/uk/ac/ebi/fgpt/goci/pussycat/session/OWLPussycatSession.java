@@ -4,7 +4,6 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,8 +108,8 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
     }
 
     /**
-     * Sorts a set of OWLIndividuals into an order suitable for rendering.  This essentially means chromosomes must be
-     * rendered first, followed by bands, then snp-trait associations
+     * Sorts a set of OWLIndividuals into an order suitable for rendering.  This essentially means associations should
+     * be rendered first, followed by traits.  SNP individuals do not get rendered so their order is not important.
      *
      * @param individuals the set of individuals to sort
      * @return a list of individuals, sorted into suitable rendering order

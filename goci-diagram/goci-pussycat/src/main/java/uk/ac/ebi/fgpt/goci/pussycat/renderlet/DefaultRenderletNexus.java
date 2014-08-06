@@ -3,6 +3,7 @@ package uk.ac.ebi.fgpt.goci.pussycat.renderlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
+import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGDocument;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,6 +21,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
     private Set<Renderlet> renderlets;
     private Map<Object, SVGArea> entityLocations;
     private Map<Object, RenderingEvent> renderedEntities;
+    private SVGDocument svgDocument;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -27,6 +29,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
         this.renderlets = new HashSet<Renderlet>();
         this.entityLocations = new HashMap<Object, SVGArea>();
         this.renderedEntities = new LinkedHashMap<Object, RenderingEvent>();
+        this.svgDocument = new SVGDocument(0, 150);
     }
 
     protected Logger getLog() {
@@ -54,9 +57,13 @@ public class DefaultRenderletNexus implements RenderletNexus {
 
     @Override public String getSVG() {
         StringBuilder svgBuilder = new StringBuilder();
+
+        svgBuilder.append(svgDocument.getHeader());
         for (Object entity : renderedEntities.keySet()) {
             svgBuilder.append(renderedEntities.get(entity).getRenderedSVG());
         }
+        svgBuilder.append(svgDocument.getFooter());
+
         return svgBuilder.toString();
     }
 

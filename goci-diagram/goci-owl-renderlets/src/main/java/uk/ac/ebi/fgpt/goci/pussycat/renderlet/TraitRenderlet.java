@@ -73,7 +73,7 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
                 OWLNamedIndividual individual = (OWLNamedIndividual) renderingEntity;
                 if (nexus.getLocationOfRenderedEntity(individual) == null) {
                     Set<OWLClass> allTypes = reasoner.getTypes(individual, false).getFlattened();
-                    IRI efIRI =IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI);
+                    IRI efIRI = IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI);
                     for (OWLClass typeClass : allTypes) {
                         if (typeClass.getIRI().equals(efIRI)) {
                             return true;
@@ -167,6 +167,10 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
                 RenderingEvent<OWLIndividual> event =
                         new RenderingEvent<OWLIndividual>(trait, svg.toString(), currentArea, this);
                 nexus.renderingEventOccurred(event);
+            }
+            else {
+                getLog().error("Cannot render trait '" + trait + "' - " +
+                                       "unable to identify the band for association '" + association + "'");
             }
         }
         else {
