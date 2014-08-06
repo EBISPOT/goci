@@ -1,7 +1,17 @@
 package uk.ac.ebi.fgpt.goci.dao;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAnnotation;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLAnnotationValue;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyAlreadyExistsException;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.springframework.core.io.Resource;
 import uk.ac.ebi.fgpt.goci.exception.OntologyIndexingException;
@@ -10,7 +20,14 @@ import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Retrieves classes from an ontology file in OWL or OBO formats.  This DAO uses the OWLAPI to load and handle the
@@ -55,7 +72,7 @@ public class OntologyDAO extends Initializable {
         return ontologySynonymAnnotationURI;
     }
 
-    public OWLOntology getOntology(){
+    public OWLOntology getOntology() {
         return ontology;
     }
 
@@ -83,26 +100,27 @@ public class OntologyDAO extends Initializable {
         try {
             // set property to make sure we can parse all of the ontology
             System.setProperty("entityExpansionLimit", "100000000");
-            getLog().info("Loading Ontology from " + getOntologyResource().getURI().toString() + "...");
 
             OWLOntologyManager manager;
-
-            if(getOntologyConfiguration() != null){
+            if (getOntologyConfiguration() != null) {
                 manager = getOntologyConfiguration().getOWLOntologyManager();
             }
-            else{
+            else {
                 manager = OWLManager.createOWLOntologyManager();
             }
-            IRI iri = IRI.create(getOntologyResource().getURI());
 
-
-            try{
-                ontology = manager.loadOntologyFromOntologyDocument(iri);
+            if (getOntologyResource() != null) {
+                getLog().info("Loading Ontology from " + getOntologyResource().getURI().toString() + "...");
+                ontology = manager.loadOntologyFromOntologyDocument(getOntologyResource().getInputStream());
             }
-            catch(OWLOntologyAlreadyExistsException e){
-                iri = e.getOntologyID().getOntologyIRI();
-                ontology = manager.getOntology(iri);
-
+            else {
+                getLog().info("Loading Ontology '" + getOntologyURI() + "'...");
+                try {
+                    ontology = manager.loadOntology(IRI.create(getOntologyURI()));
+                }
+                catch (OWLOntologyAlreadyExistsException e) {
+                    ontology = manager.getOntology(e.getOntologyID().getOntologyIRI());
+                }
             }
 
             getLog().info("Loaded " + ontology.getOntologyID().getOntologyIRI() + " ok, creating indexes...");

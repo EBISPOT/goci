@@ -89,9 +89,8 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
     public void render(RenderletNexus nexus, OWLReasoner reasoner, OWLNamedIndividual trait) {
         OWLOntology ontology = reasoner.getRootOntology();
         OWLNamedIndividual association = getAssociationForTrait(reasoner, trait);
-        Set<OWLNamedIndividual> allTraits = getAllTraitsForAssociation(reasoner, association);
-
         if (association != null) {
+            Set<OWLNamedIndividual> allTraits = getAllTraitsForAssociation(reasoner, association);
             SVGArea associationLocation = nexus.getLocationOfRenderedEntity(association);
 
             String bandName = getAssociationBandName(ontology, association);
@@ -109,11 +108,13 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
 
 //                trait.setAttribute("transform", location);
 
-                // retrieve location of last rendered trait in the same association
+                // retrieve locations of previously rendered traits in the same association
                 List<SVGArea> locations = getSortedLocationsForTraits(nexus, allTraits);
-                SVGArea lastLocation = locations.get(locations.size() - 1);
+//                SVGArea lastLocation = locations.get(locations.size() - 1);
 
-                svg.append("transform='").append(associationLocation.getTransform()).append("' ");
+                if (associationLocation.getTransform() != null) {
+                    svg.append("transform='").append(associationLocation.getTransform()).append("' ");
+                }
 
                 double alength = associationLocation.getWidth();
                 double radius = 0.2 * alength;
@@ -313,6 +314,9 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
                         String band = snpToBandNameMap.get(snp.getIRI());
                         if (band == null) {
                             getLog().warn("Failed to locate the band for SNP '" + snp + "'");
+                        }
+                        else {
+                            return band;
                         }
                     }
                     // if we got to here without returning, no related individuals are typed as SNPs

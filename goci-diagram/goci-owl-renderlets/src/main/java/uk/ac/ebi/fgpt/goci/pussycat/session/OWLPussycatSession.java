@@ -91,8 +91,8 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
             }
 
             // then render individuals, sorted into the order we need them in for rendering
-            List<OWLIndividual> sortedIndividuals = sortIndividualsIntoRenderingOrder(individuals);
-            for (OWLIndividual individual : sortedIndividuals) {
+            List<OWLNamedIndividual> sortedIndividuals = sortIndividualsIntoRenderingOrder(individuals);
+            for (OWLNamedIndividual individual : sortedIndividuals) {
                 for (Renderlet r : getAvailableRenderlets()) {
                     if (r.canRender(renderletNexus, reasoner, individual)) {
                         getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
@@ -114,8 +114,8 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
      * @param individuals the set of individuals to sort
      * @return a list of individuals, sorted into suitable rendering order
      */
-    private List<OWLIndividual> sortIndividualsIntoRenderingOrder(Set<OWLNamedIndividual> individuals) {
-        List<OWLIndividual> sorted = new ArrayList<OWLIndividual>();
+    private List<OWLNamedIndividual> sortIndividualsIntoRenderingOrder(Set<OWLNamedIndividual> individuals) {
+        List<OWLNamedIndividual> sorted = new ArrayList<OWLNamedIndividual>();
 
         // todo - do sort properly!
         sorted.addAll(individuals);

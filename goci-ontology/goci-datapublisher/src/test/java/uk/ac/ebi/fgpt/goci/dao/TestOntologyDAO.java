@@ -54,7 +54,7 @@ public class TestOntologyDAO extends TestCase {
 
             dao = new OntologyDAO();
             dao.setOntologyResource(new ClassPathResource("test.owl"));
-            dao.setOntologyURI("http://www.ebi.ac.uk/fgpt/ontologies/test");
+//            dao.setOntologyURI("http://www.ebi.ac.uk/fgpt/ontologies/test");
             dao.init();
         }
         catch (OWLOntologyCreationException e) {

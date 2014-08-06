@@ -4,6 +4,7 @@ import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.model.OWLImportsDeclaration;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
 import org.semanticweb.owlapi.model.UnloadableImportException;
 import org.semanticweb.owlapi.reasoner.ConsoleProgressMonitor;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
@@ -75,7 +76,12 @@ public class KnowledgeBaseLoadingReasonerSession extends Initializable implement
     private OWLReasoner reasonOver(OWLOntology ontology) throws OWLConversionException {
         try {
             getLog().debug("Loading any missing imports...");
-            OntologyUtils.loadImports(ontology.getOWLOntologyManager(), ontology);
+//            OntologyUtils.loadImports(ontology.getOWLOntologyManager(), ontology);
+            OWLOntologyLoaderConfiguration loaderConfiguration = new OWLOntologyLoaderConfiguration();
+            for (OWLImportsDeclaration declaration : ontology.getImportsDeclarations()) {
+                ontology.getOWLOntologyManager().makeLoadImportRequest(declaration, loaderConfiguration);
+            }
+
             StringBuilder loadedOntologies = new StringBuilder();
             int n = 1;
             for (OWLOntology o : ontology.getOWLOntologyManager().getOntologies()) {
