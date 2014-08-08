@@ -11,7 +11,7 @@
 
     <!-- configuration: sets up ontology manager and data factory given mappings to the set resources -->
     <bean name="config" class="uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration" init-method="init">
-        <property name="efoResource" value="http://www.ebi.ac.uk/efo/efo.owl" />
+        <property name="efoResource" value="file://${user.home}/.goci/data/efo.owl" />
         <property name="gwasDiagramSchemaResource" value="classpath:gwas-diagram.owl" />
         <property name="gwasDiagramDataResource" value="file://${user.home}/.goci/data/gwas-data.owl" />
     </bean>
