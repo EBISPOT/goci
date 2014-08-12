@@ -12,6 +12,7 @@ import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +21,11 @@ import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGCanvas;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -92,7 +96,6 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
             sortBandsWithData(reasoner);
         }
 
-
         BandInformation band = getBandInformation(individual, ontology);
         SVGArea location = nexus.getLocationOfRenderedEntity(band);
 
@@ -108,7 +111,6 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
             StringBuilder svg = new StringBuilder();
 
             //there is no other association in this chromosmal band yet - render
-//            if (band.getRenderedAssociations().size() == 0) {
             if (!renderedBands.contains(band.getBandName())) {
                 getLog().trace("First association for this band");
 
@@ -194,7 +196,6 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
 
                     // add band to renderedBands set
                     renderedBands.add(band.getBandName());
-//                    band.setRenderedAssociation(individual);
                 }
             }
         }
@@ -320,7 +321,53 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
     }
 
     private void sortBandsWithData(OWLReasoner reasoner) {
-        // todo - build the map of bands, where the key is the current band and the value the "previous" band
+        OWLOntology ontology = reasoner.getRootOntology();
+        OWLOntologyManager manager = reasoner.getRootOntology().getOWLOntologyManager();
+        OWLDataFactory factory = manager.getOWLDataFactory();
 
+        Set<BandInformation> bandSet = new HashSet<BandInformation>();
+        Map<BandInformation, BandInformation> bandMap = new HashMap<BandInformation, BandInformation>();
+
+        // use the reasoner to get all individuals of type "cytogenic region"
+        OWLClass bandCls = factory.getOWLClass(IRI.create(OntologyConstants.CYTOGENIC_REGION_CLASS_IRI));
+        getLog().trace("Retrieving all cytogenetic bands to sort into rendering order...");
+        Set<OWLNamedIndividual> bands = reasoner.getInstances(bandCls, false).getFlattened();
+        getLog().trace("Got " + bands.size() + " bands, starting sorting...");
+
+        for (OWLNamedIndividual band : bands) {
+            // get the band name
+            OWLDataProperty has_name = factory.getOWLDataProperty(IRI.create(OntologyConstants.HAS_NAME_PROPERTY_IRI));
+
+            if (band.getDataPropertyValues(has_name, ontology).size() != 0) {
+                Set<OWLLiteral> bandNames = reasoner.getDataPropertyValues(band, has_name);
+                if (bandNames.size() == 0) {
+                    getLog().warn("No band name data property value for band individual '" + band + "'");
+                }
+                else {
+                    if (bandNames.size() > 1) {
+                        getLog().warn("There are " + bandNames.size() + " band name data property values " +
+                                              "for band individual '" + band + "', only using the first observed name");
+                    }
+                    String bandName = bandNames.iterator().next().getLiteral();
+
+                    BandInformation bandInfo = new BandInformation(bandName);
+                    bandSet.add(bandInfo);
+                }
+            }
+        }
+
+        // now we've added all band info, sort the set of unique bands
+        List<BandInformation> bandList = new ArrayList<BandInformation>();
+        bandList.addAll(bandSet);
+        Collections.sort(bandList);
+
+        for (int i = 1; i < bandList.size(); i++) {
+            BandInformation band = bandList.get(i);
+            BandInformation previousBand = bandList.get(i - 1);
+            bandMap.put(band, previousBand);
+        }
+
+        getLog().trace("Mapped " + bandMap.keySet().size() + " bands to their 'previous' band");
+        previousBandMapByReasoner.put(reasoner, bandMap);
     }
 }

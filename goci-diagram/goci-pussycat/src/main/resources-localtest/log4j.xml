@@ -31,12 +31,17 @@
         <appender-ref ref="console" />
     </logger>
 
+    <logger name="uk.ac.ebi.fgpt.goci.pussycat.renderlet.AssociationRenderlet" additivity="false">
+        <level value="TRACE" />
+        <appender-ref ref="console" />
+    </logger>
+
     <logger name="uk.ac.ebi.fgpt.goci.pussycat.renderlet.TraitRenderlet" additivity="false">
         <level value="TRACE" />
         <appender-ref ref="console" />
     </logger>
 
-    <logger name="uk.ac.ebi.fgpt.goci.pussycat.renderlet.OWLRenderletNexus" additivity="false">
+    <logger name="uk.ac.ebi.fgpt.goci.pussycat.renderlet.DefaultRenderletNexus" additivity="false">
         <level value="TRACE" />
         <appender-ref ref="console" />
     </logger>
