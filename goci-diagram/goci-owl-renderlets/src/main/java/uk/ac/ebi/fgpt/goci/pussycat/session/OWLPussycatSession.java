@@ -1,22 +1,28 @@
 package uk.ac.ebi.fgpt.goci.pussycat.session;
 
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.reasoner.impl.OWLNamedIndividualNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.lang.Filter;
 import uk.ac.ebi.fgpt.goci.lang.OWLAPIFilterInterpreter;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
+import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.reasoning.ReasonerSession;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -91,7 +97,7 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
             }
 
             // then render individuals, sorted into the order we need them in for rendering
-            List<OWLNamedIndividual> sortedIndividuals = sortIndividualsIntoRenderingOrder(individuals);
+            List<OWLNamedIndividual> sortedIndividuals = sortIndividualsIntoRenderingOrder(reasoner, individuals);
             for (OWLNamedIndividual individual : sortedIndividuals) {
                 for (Renderlet r : getAvailableRenderlets()) {
                     if (r.canRender(renderletNexus, reasoner, individual)) {
@@ -114,12 +120,31 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
      * @param individuals the set of individuals to sort
      * @return a list of individuals, sorted into suitable rendering order
      */
-    private List<OWLNamedIndividual> sortIndividualsIntoRenderingOrder(Set<OWLNamedIndividual> individuals) {
+    private List<OWLNamedIndividual> sortIndividualsIntoRenderingOrder(OWLReasoner reasoner,
+                                                                       Set<OWLNamedIndividual> individuals) {
         List<OWLNamedIndividual> sorted = new ArrayList<OWLNamedIndividual>();
-
-        // todo - do sort properly!
         sorted.addAll(individuals);
 
+        // get all individuals of type association, then of type "trait"
+        OWLDataFactory factory = reasoner.getRootOntology().getOWLOntologyManager().getOWLDataFactory();
+        OWLClass associationCls = factory.getOWLClass(IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));
+        final Set<OWLNamedIndividual> associations = reasoner.getInstances(associationCls, false).getFlattened();
+
+        Collections.sort(sorted, new Comparator<OWLNamedIndividual>() {
+            @Override public int compare(OWLNamedIndividual o1, OWLNamedIndividual o2) {
+                if (associations.contains(o1) && !associations.contains(o2)) {
+                    return -1;
+                }
+                else {
+                    if (associations.contains(o2) && !associations.contains(o1)) {
+                        return 1;
+                    }
+                    else {
+                        return 0;
+                    }
+                }
+            }
+        });
         return sorted;
     }
 }

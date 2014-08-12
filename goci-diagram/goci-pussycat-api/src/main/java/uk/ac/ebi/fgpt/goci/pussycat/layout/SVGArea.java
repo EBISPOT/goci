@@ -11,7 +11,7 @@ package uk.ac.ebi.fgpt.goci.pussycat.layout;
 public class SVGArea {
     private double x, y;
     private double width, height;
-    private String transform, translate;
+    private String transform;
     private int zIndex;
 
     public SVGArea(double x, double y, double width, double height, int zIndex) {
@@ -22,13 +22,12 @@ public class SVGArea {
         this.zIndex = zIndex;
     }
 
-    public SVGArea(double x, double y, double width, double height, String transform, String translate, int zIndex) {
+    public SVGArea(double x, double y, double width, double height, String transform, int zIndex) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.transform = transform;
-        this.translate = translate;
         this.zIndex = zIndex;
     }
 
@@ -50,10 +49,6 @@ public class SVGArea {
 
     public String getTransform() {
         return transform;
-    }
-
-    public String getTranslate() {
-        return translate;
     }
 
     public int getZIndex() {
