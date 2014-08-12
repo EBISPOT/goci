@@ -104,26 +104,43 @@ public class OntologyDAO extends Initializable {
             OWLOntologyManager manager;
             if (getOntologyConfiguration() != null) {
                 manager = getOntologyConfiguration().getOWLOntologyManager();
+                ontology = manager.getOntology(IRI.create(getOntologyURI()));
+                if (ontology == null) {
+                    getLog().info("Loading Ontology '" + getOntologyURI() + "'...");
+                    ontology = manager.loadOntologyFromOntologyDocument(IRI.create(getOntologyURI()));
+                    getLog().info("Loaded " + ontology.getOntologyID().getOntologyIRI() + " ok");
+                }
+                else {
+                    getLog().info("Ontology '" + getOntologyURI() + "' is already loaded");
+                }
             }
             else {
                 manager = OWLManager.createOWLOntologyManager();
+                if (getOntologyResource() != null) {
+                    getLog().info("Loading Ontology from " + getOntologyResource().getURI().toString() + "...");
+                    try {
+                        ontology = manager.loadOntologyFromOntologyDocument(getOntologyResource().getInputStream());
+                    }
+                    catch (OWLOntologyAlreadyExistsException e) {
+                        getLog().info("Ontology '" + e.getOntologyID().getOntologyIRI()
+                                              + "' is already loaded");
+                        ontology = manager.getOntology(e.getOntologyID().getOntologyIRI());
+                    }
+                }
+                else {
+                    ontology = manager.getOntology(IRI.create(getOntologyURI()));
+                    if (ontology == null) {
+                        getLog().info("Loading Ontology '" + getOntologyURI() + "'...");
+                        ontology = manager.loadOntologyFromOntologyDocument(IRI.create(getOntologyURI()));
+                        getLog().info("Loaded " + ontology.getOntologyID().getOntologyIRI() + " ok");
+                    }
+                    else {
+                        getLog().info("Ontology '" + getOntologyURI() + "' is already loaded");
+                    }
+                }
             }
 
-            if (getOntologyResource() != null) {
-                getLog().info("Loading Ontology from " + getOntologyResource().getURI().toString() + "...");
-                ontology = manager.loadOntologyFromOntologyDocument(getOntologyResource().getInputStream());
-            }
-            else {
-                getLog().info("Loading Ontology '" + getOntologyURI() + "'...");
-                try {
-                    ontology = manager.loadOntology(IRI.create(getOntologyURI()));
-                }
-                catch (OWLOntologyAlreadyExistsException e) {
-                    ontology = manager.getOntology(e.getOntologyID().getOntologyIRI());
-                }
-            }
-
-            getLog().info("Loaded " + ontology.getOntologyID().getOntologyIRI() + " ok, creating indexes...");
+            getLog().info("Creating indexes for " + ontology.getOntologyID().getOntologyIRI() + "...");
             labelToClassMap = new HashMap<String, Set<OWLClass>>();
             classToLabelMap = new HashMap<OWLClass, List<String>>();
             iriToClassMap = new HashMap<IRI, OWLClass>();

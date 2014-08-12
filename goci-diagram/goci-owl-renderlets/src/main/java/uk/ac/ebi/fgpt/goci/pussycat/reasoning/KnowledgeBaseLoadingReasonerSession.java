@@ -3,6 +3,7 @@ package uk.ac.ebi.fgpt.goci.pussycat.reasoning;
 import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.model.OWLImportsDeclaration;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyAlreadyExistsException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
 import org.semanticweb.owlapi.model.UnloadableImportException;
@@ -15,7 +16,6 @@ import org.springframework.core.io.Resource;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.lang.Initializable;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
-import uk.ac.ebi.fgpt.goci.pussycat.utils.OntologyUtils;
 
 import java.io.IOException;
 
@@ -57,18 +57,26 @@ public class KnowledgeBaseLoadingReasonerSession extends Initializable implement
             if (reasoner == null) {
                 Resource gwasDataResource = getConfiguration().getGwasDiagramDataResource();
                 getLog().info("Loading GWAS data from " + gwasDataResource.toString());
-                OWLOntology gwasData = getConfiguration().getOWLOntologyManager()
-                        .loadOntologyFromOntologyDocument(gwasDataResource.getInputStream());
-
+                OWLOntology gwasData;
+                try {
+                    gwasData = getConfiguration().getOWLOntologyManager().loadOntologyFromOntologyDocument(
+                            gwasDataResource.getInputStream());
+                }
+                catch (OWLOntologyAlreadyExistsException e) {
+                    getLog().info("GWAS data was already loaded (" + e.getOntologyID().getOntologyIRI() + ")");
+                    gwasData = getConfiguration().getOWLOntology(e.getOntologyID().getOntologyIRI());
+                }
                 getLog().debug("Publishing GWAS data (inferred view)");
                 reasoner = reasonOver(gwasData);
             }
             return reasoner;
         }
         catch (IOException e) {
+            getLog().error("Failed to load ontology resource", e);
             throw new OWLConversionException("Failed to load ontology resource", e);
         }
         catch (OWLOntologyCreationException e) {
+            getLog().error("Failed to load ontology resource", e);
             throw new OWLConversionException("Failed to load ontology resource", e);
         }
     }

@@ -3,6 +3,10 @@ package uk.ac.ebi.fgpt.goci.lang;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLImportsDeclaration;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.util.SimpleIRIMapper;
 import org.slf4j.Logger;
@@ -86,6 +90,26 @@ public class OntologyConfiguration {
                                                           IRI.create(getGwasDiagramSchemaResource().getURI())));
         }
         this.factory = manager.getOWLDataFactory();
+
+        // load all ontologies
+        try {
+            OWLOntology ontology = manager.loadOntologyFromOntologyDocument(getGwasDiagramDataResource().getInputStream());
+            OWLOntologyLoaderConfiguration loaderConfiguration = new OWLOntologyLoaderConfiguration();
+            for (OWLImportsDeclaration declaration : ontology.getImportsDeclarations()) {
+                ontology.getOWLOntologyManager().makeLoadImportRequest(declaration, loaderConfiguration);
+            }
+
+            if (manager.getOntology(IRI.create(OntologyConstants.GWAS_ONTOLOGY_SCHEMA_IRI)) == null) {
+                manager.loadOntology(IRI.create(OntologyConstants.GWAS_ONTOLOGY_SCHEMA_IRI));
+            }
+            if (manager.getOntology(IRI.create(OntologyConstants.EFO_ONTOLOGY_SCHEMA_IRI)) == null) {
+                manager.loadOntology(IRI.create(OntologyConstants.EFO_ONTOLOGY_SCHEMA_IRI));
+            }
+        }
+        catch (OWLOntologyCreationException e) {
+            getLog().error("Failed to load ontology resource", e);
+        }
+
         initialized = true;
     }
 
@@ -105,5 +129,9 @@ public class OntologyConfiguration {
         else {
             throw new IllegalStateException("OntologyConfiguration has not been initialized");
         }
+    }
+
+    public OWLOntology getOWLOntology(IRI iri) {
+        return manager.getOntology(iri);
     }
 }
