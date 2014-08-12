@@ -94,24 +94,12 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
             SVGArea associationLocation = nexus.getLocationOfRenderedEntity(association);
 
             String bandName = getAssociationBandName(ontology, association);
-
-//            Element assocG = nexus.getRenderingEvent(association).getRenderedSVG();
-
-//            String location = assocG.getAttribute("transform");
-
             if (bandName != null) {
                 StringBuilder svg = new StringBuilder();
                 svg.append("<circle ");
 
-//                trait = builder.createElement("circle");
-//                BandInformation band = nexus.getBandLocations().get(bandName);
-
-//                trait.setAttribute("transform", location);
-
                 // retrieve locations of previously rendered traits in the same association
                 List<SVGArea> locations = getSortedLocationsForTraits(nexus, allTraits);
-//                SVGArea lastLocation = locations.get(locations.size() - 1);
-
                 if (associationLocation.getTransform() != null) {
                     svg.append("transform='").append(associationLocation.getTransform()).append("' ");
                 }
