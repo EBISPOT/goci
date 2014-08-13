@@ -92,74 +92,79 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
         if (association != null) {
             Set<OWLNamedIndividual> allTraits = getAllTraitsForAssociation(reasoner, association);
             SVGArea associationLocation = nexus.getLocationOfRenderedEntity(association);
+            if (associationLocation != null) {
+                String bandName = getAssociationBandName(ontology, association);
+                if (bandName != null) {
+                    StringBuilder svg = new StringBuilder();
+                    svg.append("<circle ");
 
-            String bandName = getAssociationBandName(ontology, association);
-            if (bandName != null) {
-                StringBuilder svg = new StringBuilder();
-                svg.append("<circle ");
+                    // retrieve locations of previously rendered traits in the same association
+                    List<SVGArea> locations = getSortedLocationsForTraits(nexus, allTraits);
+                    if (associationLocation.getTransform() != null) {
+                        svg.append("transform='").append(associationLocation.getTransform()).append("' ");
+                    }
 
-                // retrieve locations of previously rendered traits in the same association
-                List<SVGArea> locations = getSortedLocationsForTraits(nexus, allTraits);
-                if (associationLocation.getTransform() != null) {
-                    svg.append("transform='").append(associationLocation.getTransform()).append("' ");
-                }
+                    double alength = associationLocation.getWidth();
+                    double radius = 0.2 * alength;
+                    double ax = associationLocation.getX();
+                    double ay = associationLocation.getY();
+                    double displacement = associationLocation.getHeight();
+                    double cx, cy;
+                    int size = locations.size();
 
-                double alength = associationLocation.getWidth();
-                double radius = 0.2 * alength;
-                double ax = associationLocation.getX();
-                double ay = associationLocation.getY();
-                double displacement = associationLocation.getHeight();
-                double cx, cy;
-                int size = locations.size();
+                    int horizontal = size % 6;
+                    int vertical = size / 6;
 
-                int horizontal = size % 6;
-                int vertical = size / 6;
-
-                if (size == 0) {
-                    cx = ax + alength + radius;
-                }
-                else {
-                    if (vertical % 2 == 0) {
-                        cx = ax + alength + (((2 * horizontal) + 1) * radius);
+                    if (size == 0) {
+                        cx = ax + alength + radius;
                     }
                     else {
-                        cx = ax + alength + (((2 * horizontal) + 2) * radius);
+                        if (vertical % 2 == 0) {
+                            cx = ax + alength + (((2 * horizontal) + 1) * radius);
+                        }
+                        else {
+                            cx = ax + alength + (((2 * horizontal) + 2) * radius);
+                        }
                     }
+                    cy = ay + displacement + (vertical * radius);
+
+                    svg.append("cx='").append(Double.toString(cx)).append("' ");
+                    svg.append("cy='").append(Double.toString(cy)).append("' ");
+                    svg.append("r='").append(Double.toString(radius)).append("' ");
+
+                    String colour = getColour(reasoner, trait);
+
+                    svg.append("fill='").append(colour).append("' ");
+                    svg.append("stroke='black' ");
+                    svg.append("stroke-width='0.5' ");
+
+                    String traitName = getTraitLabel(reasoner, trait);
+                    svg.append("gwasname='").append(traitName).append("' ");
+
+                    IRI iri = getTraitClassIRI(ontology, trait);
+                    String traitClass = OntologyUtils.getShortForm(iri, ontology);
+                    getLog().trace("Setting CSS class for trait '" + trait + "' to " + traitClass);
+                    svg.append("class='gwas-trait ").append(traitClass).append("'");
+                    svg.append("fading='false' ");
+
+                    String assocIRI = OntologyUtils.getShortForm(association);
+                    getLog().trace("Setting gwasassociation attribute for trait '" + trait + "' to " + assocIRI);
+                    svg.append("gwasassociation='").append(assocIRI).append("' ");
+                    svg.append("/>");
+
+                    SVGArea currentArea = new SVGArea(cx, cy, 2 * radius, 2 * radius, 0);
+                    RenderingEvent<OWLIndividual> event =
+                            new RenderingEvent<OWLIndividual>(trait, svg.toString(), currentArea, this);
+                    nexus.renderingEventOccurred(event);
                 }
-                cy = ay + displacement + (vertical * radius);
-
-                svg.append("cx='").append(Double.toString(cx)).append("' ");
-                svg.append("cy='").append(Double.toString(cy)).append("' ");
-                svg.append("r='").append(Double.toString(radius)).append("' ");
-
-                String colour = getColour(reasoner, trait);
-
-                svg.append("fill='").append(colour).append("' ");
-                svg.append("stroke='black' ");
-                svg.append("stroke-width='0.5' ");
-
-                String traitName = getTraitLabel(reasoner, trait);
-                svg.append("gwasname='").append(traitName).append("' ");
-
-                IRI iri = getTraitClassIRI(ontology, trait);
-                String traitClass = OntologyUtils.getShortForm(iri, ontology);
-                getLog().trace("Setting CSS class for trait '" + trait + "' to " + traitClass);
-                svg.append("class='gwas-trait ").append(traitClass).append("'");
-                svg.append("fading='false' ");
-
-                String assocIRI = OntologyUtils.getShortForm(association);
-                getLog().trace("Setting gwasassociation attribute for trait '" + trait + "' to " + assocIRI);
-                svg.append("gwasassociation='").append(assocIRI).append("' ");
-                svg.append("/>");
-
-                SVGArea currentArea = new SVGArea(cx, cy, 2 * radius, 2 * radius, 0);
-                RenderingEvent<OWLIndividual> event =
-                        new RenderingEvent<OWLIndividual>(trait, svg.toString(), currentArea, this);
-                nexus.renderingEventOccurred(event);
+                else {
+                    getLog().error("Cannot render trait '" + trait + "' - " +
+                                   "unable to identify the band for association '" + association + "'");
+                }
             }
             else {
                 getLog().error("Cannot render trait '" + trait + "' - " +
-                                       "unable to identify the band for association '" + association + "'");
+                               "the association for this trait has not yet been rendered");
             }
         }
         else {

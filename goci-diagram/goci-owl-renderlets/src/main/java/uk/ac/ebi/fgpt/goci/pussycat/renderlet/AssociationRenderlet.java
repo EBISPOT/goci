@@ -114,9 +114,10 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
             if (!renderedBands.contains(band.getBandName())) {
                 getLog().trace("First association for this band");
 
+                String transform = chromosomeTransform(band.getChromosome());
                 svg.append("<g ")
                         .append("id='").append(individual.getIRI().toString()).append("' ")
-                        .append("transform='").append(chromosomeTransform(band.getChromosome())).append("' ")
+                        .append("transform='").append(transform).append("' ")
                         .append("class='gwas-trait'>");
 
                 if (location != null) {
@@ -190,7 +191,7 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
 
                     svg.append("</g>");
 
-                    SVGArea currentArea = new SVGArea(x, newY, length, newHeight, 0);
+                    SVGArea currentArea = new SVGArea(x, newY, length, newHeight, transform, 0);
                     RenderingEvent event = new RenderingEvent(individual, svg.toString(), currentArea, this);
                     nexus.renderingEventOccurred(event);
 
