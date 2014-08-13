@@ -28,8 +28,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Renderlet that can generate SVG for OWLIndividuals representing GWAS trait associations
@@ -40,13 +38,13 @@ import java.util.regex.Pattern;
 @ServiceProvider
 public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual> {
     private final Map<OWLReasoner, Map<BandInformation, BandInformation>> previousBandMapByReasoner;
-    private final Set<String> renderedBands;
+    private final Map<BandInformation, SVGArea> renderedBands;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
     public AssociationRenderlet() {
         this.previousBandMapByReasoner = new HashMap<OWLReasoner, Map<BandInformation, BandInformation>>();
-        this.renderedBands = new HashSet<String>();
+        this.renderedBands = new HashMap<BandInformation, SVGArea>();
     }
 
     protected Logger getLog() {
@@ -111,7 +109,7 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
             StringBuilder svg = new StringBuilder();
 
             //there is no other association in this chromosmal band yet - render
-            if (!renderedBands.contains(band.getBandName())) {
+            if (!renderedBands.containsKey(band)) {
                 getLog().trace("First association for this band");
 
                 String transform = chromosomeTransform(band.getChromosome());
@@ -129,7 +127,6 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
                     double endY = newY;
                     double length = 1.75 * width;
                     double newHeight = 0;
-
 
                     // fanning algorithm
                     Set<OWLNamedIndividual> traits = getAllTraitsForAssociation(reasoner, individual);
@@ -156,10 +153,8 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
                             }
                         }
                     }
-//                    band.setY(endY);
 
                     StringBuilder d = new StringBuilder();
-//                    if (band.getPreviousBand() == null || newHeight == 0) {
                     if (previousLocation == null || newHeight == 0) {
                         d.append("m ");
                         d.append(Double.toString(x));
@@ -192,26 +187,31 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
                     svg.append("</g>");
 
                     SVGArea currentArea = new SVGArea(x, newY, length, newHeight, transform, 0);
-                    RenderingEvent event = new RenderingEvent(individual, svg.toString(), currentArea, this);
+                    RenderingEvent<OWLNamedIndividual> event =
+                            new RenderingEvent<OWLNamedIndividual>(individual, svg.toString(), currentArea, this);
                     nexus.renderingEventOccurred(event);
 
                     // add band to renderedBands set
-                    renderedBands.add(band.getBandName());
+                    renderedBands.put(band, currentArea);
+                }
+                else {
+                    getLog().error("Unable to render association '" + individual + "' - " +
+                                           "no location for band '" + band.getBandName() + "'");
                 }
             }
+            else {
+                // we've already rendered the required association line, so we don't need to do it again
+                // but we do need to log the rendering event for this association individual
+                getLog().trace("Already rendered an association line to band '" + band.getBandName() + "', " +
+                                       "logging secondary event for association '" + individual + "'");
+                SVGArea area = renderedBands.get(band);
+                nexus.renderingEventOccurred(new RenderingEvent<OWLNamedIndividual>(individual, "", area, this));
+            }
         }
-//        else { // todo - do we actually need to do anything here?
-//            //there is already another association in this band - can't render the association but need to render the trait as well as add to various nexus lists
-//            getLog().trace("Secondary association: " + individual + " for band " + band.getBandName());
-//            //get the SVG for the first assocation rendered for this band and reuse it for this association, but without adding it to the SVG file
-//            OWLNamedIndividual previousEntity = band.getRenderedAssociations().get(0);
-//            g = nexus.getRenderingEvent(previousEntity).getRenderedSVG();
-//            g.setAttribute("id", renderingEntity.getIRI().toString());
-//            RenderingEvent event =
-//                    new RenderingEvent(individual, g.toString(), nexus.getLocationOfEntity(previousEntity), this);
-//            nexus.renderingEventOccurred(event);
-//            band.setRenderedAssociation(renderingEntity);
-//        }
+        else {
+            getLog().error("Cannot render association '" + individual + "' - " +
+                                   "unable to identify the band where this association is located");
+        }
     }
 
     public BandInformation getBandInformation(OWLIndividual individual, OWLOntology ontology) {
@@ -251,7 +251,6 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
                             getLog().error("SNP '" + snp + "' is located in more than one band - this data is invalid");
                         }
                         else {
-//                            throw new RuntimeException("SNP OWLIndividual '" + snp + "' has more than one band"); // todo - should be an exception?
                             getLog().error(
                                     "Unable to identify band for SNP '" + snp + "' - this data may not be available");
                         }
@@ -260,22 +259,13 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
             }
         }
         if (bandName == null) {
-//            throw new IllegalArgumentException(
-//                    "Band has a null value set for it's name; this cannot be rendered"); // todo - should be an exception?
             getLog().error("Association '" + individual + "' could not be located on the diagram " +
                                    "(either due to a missing SNP, an unrecognised band name, " +
                                    "more than one genome location or something else).  Source data is invalid.");
             return null;
         }
         else {
-            Matcher m = Pattern.compile("(^[0-9XxYy]+)").matcher(bandName);
-            if (m.find()) {
-                return new BandInformation(bandName, m.group(1));
-            }
-            else {
-                throw new RuntimeException(
-                        "Could not render an association - unrecognised chromosome name in band '" + bandName + "'");
-            }
+            return new BandInformation(bandName);
         }
     }
 

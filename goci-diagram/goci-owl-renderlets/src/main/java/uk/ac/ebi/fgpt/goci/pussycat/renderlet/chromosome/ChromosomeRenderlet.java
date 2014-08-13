@@ -1,14 +1,14 @@
 package uk.ac.ebi.fgpt.goci.pussycat.renderlet.chromosome;
 
-import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
-import org.apache.batik.util.XMLResourceDescriptor;
+//import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
+//import org.apache.batik.util.XMLResourceDescriptor;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGCanvas;
@@ -16,6 +16,9 @@ import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderingEvent;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -60,11 +63,8 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLReasoner, OWLC
     }
 
     public void render(RenderletNexus nexus, OWLReasoner reasoner, OWLClass owlEntity) {
-        String parser = XMLResourceDescriptor.getXMLParserClassName();
-        SAXSVGDocumentFactory f = new SAXSVGDocumentFactory(parser);
-        InputStream svgstream = null;
-        Document chromSVG;
-        Element g = null;
+//        String parser = XMLResourceDescriptor.getXMLParserClassName();
+//        SAXSVGDocumentFactory f = new SAXSVGDocumentFactory(parser);
 
         int position = getPosition();
         int height = SVGCanvas.canvasHeight;
@@ -83,43 +83,48 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLReasoner, OWLC
             yCoordinate = (double) height / 2;
         }
 
+        InputStream in = null;
         try {
-            svgstream = getSVGFile().openStream();
-            chromSVG = f.createDocument(getSVGFile().toString(), getSVGFile().openStream());
+            in = getSVGFile().openStream();
+//            Document chromSVG = f.createDocument(getSVGFile().toString(), in);
 
-            if (chromSVG != null) {
-                Element root = chromSVG.getDocumentElement();
-                g = (Element) root.getElementsByTagName("g").item(0).cloneNode(true);
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document chromSVG = db.parse(in);
+            Element root = chromSVG.getDocumentElement();
+            Element g = (Element) root.getElementsByTagName("g").item(0).cloneNode(true);
 
-                setChromBands(g, nexus);
+            setChromBands(g, nexus);
 
-                StringBuilder builder = new StringBuilder();
-                builder.append("translate(");
-                builder.append(Double.toString(xCoordinate));
-                builder.append(",");
-                builder.append(Double.toString(yCoordinate));
-                builder.append(")");
+            StringBuilder builder = new StringBuilder();
+            builder.append("translate(");
+            builder.append(Double.toString(xCoordinate));
+            builder.append(",");
+            builder.append(Double.toString(yCoordinate));
+            builder.append(")");
 
-                g.setAttribute("transform", builder.toString());
-                g.setAttribute("gwasname", getName());
-                g.removeAttribute("title");
-            }
-            if (svgstream != null) {
-                svgstream.close();
+            g.setAttribute("transform", builder.toString());
+            g.setAttribute("gwasname", getName());
+            g.removeAttribute("title");
 
-                SVGArea currentArea = new SVGArea(xCoordinate, yCoordinate, chromWidth, chromHeight, 0);
+            SVGArea currentArea = new SVGArea(xCoordinate, yCoordinate, chromWidth, chromHeight, 0);
 
-                TransformerFactory transFactory = TransformerFactory.newInstance();
-                Transformer transformer = transFactory.newTransformer();
-                StringWriter buffer = new StringWriter();
-                transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-                transformer.transform(new DOMSource(g), new StreamResult(buffer));
-                String str = buffer.toString();
+            TransformerFactory transFactory = TransformerFactory.newInstance();
+            Transformer transformer = transFactory.newTransformer();
+            StringWriter buffer = new StringWriter();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            transformer.transform(new DOMSource(g), new StreamResult(buffer));
+            String str = buffer.toString();
 
-                RenderingEvent<OWLClass> event =
-                        new RenderingEvent<OWLClass>(owlEntity, str, currentArea, this); // todo - g.toString() fails
-                nexus.renderingEventOccurred(event);
-            }
+            RenderingEvent<OWLClass> event =
+                    new RenderingEvent<OWLClass>(owlEntity, str, currentArea, this);
+            nexus.renderingEventOccurred(event);
+        }
+        catch (ParserConfigurationException e) {
+            throw new RuntimeException("Failed to read in template chromosome SVG from original resource", e);
+        }
+        catch (SAXException e) {
+            throw new RuntimeException("Failed to read in template chromosome SVG from original resource", e);
         }
         catch (IOException e) {
             throw new RuntimeException("Failed to render chromosome SVG", e);
@@ -129,6 +134,16 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLReasoner, OWLC
         }
         catch (TransformerException e) {
             throw new RuntimeException("Failed to render chromosome SVG", e);
+        }
+        finally {
+            if (in != null) {
+                try {
+                    in.close();
+                }
+                catch (IOException e) {
+                    // tried our best!
+                }
+            }
         }
     }
 
@@ -254,12 +269,9 @@ public abstract class ChromosomeRenderlet implements Renderlet<OWLReasoner, OWLC
 
                 // SVG area for the chromosomal bands gives the x&y coordinates for its top left corner, and its width and height
                 SVGArea band = new SVGArea(x, y, width, height, 0);
-
                 String chromName = getName().split(" ")[1];
 
                 BandInformation info = new BandInformation(id, chromName);
-//                info.setCoordinates(band);
-
                 nexus.renderingEventOccurred(new RenderingEvent<BandInformation>(info, "", band, this));
             }
         }

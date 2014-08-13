@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <!-- configuration: sets up ontology manager and data factory given mappings to the set resources -->
     <bean name="config" class="uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration" init-method="init">
-        <!-- TODO: use EFO release -->
         <property name="efoResource" value="http://www.ebi.ac.uk/efo/efo.owl" />
-        <!--<property name="efoResource" value="http://bar.ebi.ac.uk:8080/trac/export/head/branches/curator/ExperimentalFactorOntology/ExFactorInOWL/releasecandidate/efo_release_candidate.owl" />-->
         <property name="gwasDiagramSchemaResource" value="classpath:gwas-diagram.owl" />
     </bean>
 
@@ -49,15 +48,13 @@
 
     <!-- Ontology DAOs -->
     <bean name="efoDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init">
-        <property name="ontologyResource">
-            <util:property-path path="config.efoResource" />
-        </property>
-        <property name="ontologyConfiguration" ref="config"/>
+        <property name="ontologyConfiguration" ref="config" />
+        <property name="ontologyURI" value="http://www.ebi.ac.uk/efo" />
     </bean>
 
     <bean name="gwasSchemaDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init">
-        <property name="ontologyResource" value="classpath:gwas-diagram.owl" />
-        <property name="ontologyConfiguration" ref="config"/>
+        <property name="ontologyConfiguration" ref="config" />
+        <property name="ontologyURI" value="http://rdf.ebi.ac.uk/terms/gwas" />
     </bean>
 
     <!-- GWAS Database setup and access -->

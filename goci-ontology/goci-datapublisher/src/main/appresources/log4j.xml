@@ -43,7 +43,7 @@
     </logger>
 
     <logger name="uk.ac.ebi.fgpt.goci.service.DefaultGWASOWLConverter" additivity="false">
-        <level value="DEBUG" />
+        <level value="TRACE" />
         <appender-ref ref="goci-log" />
     </logger>
 

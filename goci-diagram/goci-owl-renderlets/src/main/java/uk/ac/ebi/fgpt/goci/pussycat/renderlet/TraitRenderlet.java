@@ -42,7 +42,6 @@ import java.util.Set;
 public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual> {
     private Map<IRI, String> snpToBandNameMap = new HashMap<IRI, String>();
     private Map<IRI, String> traitClassToLabelMap = new HashMap<IRI, String>();
-    private Map<IRI, String> traitClassToColorMap = new HashMap<IRI, String>();
 
     private Logger log = LoggerFactory.getLogger(getClass());
 

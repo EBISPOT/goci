@@ -93,24 +93,30 @@ public class OntologyConfiguration {
 
         // load all ontologies
         try {
-            OWLOntology ontology = manager.loadOntologyFromOntologyDocument(getGwasDiagramDataResource().getInputStream());
+            OWLOntology nextOntology;
             OWLOntologyLoaderConfiguration loaderConfiguration = new OWLOntologyLoaderConfiguration();
-            for (OWLImportsDeclaration declaration : ontology.getImportsDeclarations()) {
-                ontology.getOWLOntologyManager().makeLoadImportRequest(declaration, loaderConfiguration);
+            if (getGwasDiagramDataResource() != null) {
+                nextOntology = manager.loadOntologyFromOntologyDocument(getGwasDiagramDataResource().getInputStream());
+                for (OWLImportsDeclaration declaration : nextOntology.getImportsDeclarations()) {
+                    nextOntology.getOWLOntologyManager().makeLoadImportRequest(declaration, loaderConfiguration);
+                }
             }
 
             if (manager.getOntology(IRI.create(OntologyConstants.GWAS_ONTOLOGY_SCHEMA_IRI)) == null) {
-                manager.loadOntology(IRI.create(OntologyConstants.GWAS_ONTOLOGY_SCHEMA_IRI));
+                nextOntology = manager.loadOntology(IRI.create(OntologyConstants.GWAS_ONTOLOGY_SCHEMA_IRI));
+                for (OWLImportsDeclaration declaration : nextOntology.getImportsDeclarations()) {
+                    nextOntology.getOWLOntologyManager().makeLoadImportRequest(declaration, loaderConfiguration);
+                }
             }
             if (manager.getOntology(IRI.create(OntologyConstants.EFO_ONTOLOGY_SCHEMA_IRI)) == null) {
                 manager.loadOntology(IRI.create(OntologyConstants.EFO_ONTOLOGY_SCHEMA_IRI));
             }
+            initialized = true;
         }
         catch (OWLOntologyCreationException e) {
             getLog().error("Failed to load ontology resource", e);
+            throw new IOException("Failed to load ontology resource", e);
         }
-
-        initialized = true;
     }
 
     public OWLOntologyManager getOWLOntologyManager() {

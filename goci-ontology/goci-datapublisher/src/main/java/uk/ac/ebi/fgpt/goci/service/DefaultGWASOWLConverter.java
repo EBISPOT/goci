@@ -455,17 +455,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         AddAxiom add_has_about_snp = new AddAxiom(ontology, has_about_snp_relation);
         getManager().applyChange(add_has_about_snp);
 
-        // create a new trait instance
-        IRI traitIRI = getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "Trait", association, false);
-
-        if (ontology.containsIndividualInSignature(traitIRI)) {
-            getLog().debug(traitIRI.toString() + " already exists");
-            //          traitIRI = incrementAssociationIRI(traitIRI, ontology);
-        }
-
-        OWLNamedIndividual traitIndiv = getDataFactory().getOWLNamedIndividual(traitIRI);
-
-        // create new instance of it's trait
+        // get the EFO class for the trait
         OWLClass traitClass;
         try {
             traitClass = getDataFactory().getOWLClass(IRI.create(association.getAssociatedTrait()));
@@ -478,6 +468,17 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                 issuedWarnings.add(warning);
             }
             traitClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI));
+        }
+
+        // create a new trait instance
+        IRI traitIRI = getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "Trait", association, false);
+        OWLNamedIndividual traitIndiv = getDataFactory().getOWLNamedIndividual(traitIRI);
+
+        if (ontology.containsIndividualInSignature(traitIRI)) {
+            getLog().trace("Trait individual '" + traitIRI.toString() + "' (type: " + traitClass + ") already exists");
+        }
+        else {
+            getLog().trace("Creating trait individual '" + traitIRI.toString() + "' (type: " + traitClass + ")");
         }
 
         // and also add the gwas label to the individual so we don't lose curated data
