@@ -1,16 +1,13 @@
 package uk.ac.ebi.fgpt.goci.pussycat.renderlet;
 
 import net.sourceforge.fluxion.spi.ServiceProvider;
-import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
@@ -18,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
+import uk.ac.ebi.fgpt.goci.pussycat.layout.LayoutUtils;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGCanvas;
 
@@ -88,35 +86,33 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
     @Override
     public void render(RenderletNexus nexus, OWLReasoner reasoner, OWLNamedIndividual individual) {
         getLog().trace("Association: " + individual);
-
-        OWLOntology ontology = reasoner.getRootOntology();
         if (!previousBandMapByReasoner.containsKey(reasoner)) {
             sortBandsWithData(reasoner);
         }
 
-        BandInformation band = getBandInformation(individual, ontology);
-        SVGArea location = nexus.getLocationOfRenderedEntity(band);
+        OWLNamedIndividual bandIndividual =
+                LayoutUtils.getCachingInstance().getCytogeneticBandForAssociation(reasoner, individual);
+        if (bandIndividual != null) {
+            BandInformation band = LayoutUtils.getCachingInstance().getBandInformation(reasoner, bandIndividual);
 
-        BandInformation previousBand = null;
-        SVGArea previousLocation = null;
-        Map<BandInformation, BandInformation> previousBandMap = previousBandMapByReasoner.get(reasoner);
-        if (previousBandMap != null) {
-            previousBand = previousBandMap.get(band);
-            previousLocation = nexus.getLocationOfRenderedEntity(previousBand);
-        }
-
-        if (band != null) {
-            StringBuilder svg = new StringBuilder();
-
-            //there is no other association in this chromosmal band yet - render
+            // there is no other association in this chromosomal band yet - render
             if (!renderedBands.containsKey(band)) {
                 getLog().trace("First association for this band");
 
-                String transform = chromosomeTransform(band.getChromosome());
+                StringBuilder svg = new StringBuilder();
+                String transform = getTransformation(band.getChromosome());
                 svg.append("<g ")
                         .append("id='").append(individual.getIRI().toString()).append("' ")
                         .append("transform='").append(transform).append("' ")
                         .append("class='gwas-trait'>");
+
+                SVGArea location = nexus.getLocationOfRenderedEntity(band);
+                SVGArea previousLocation = null;
+                Map<BandInformation, BandInformation> previousBandMap = previousBandMapByReasoner.get(reasoner);
+                if (previousBandMap != null) {
+                    BandInformation previousBand = previousBandMap.get(band);
+                    previousLocation = nexus.getLocationOfRenderedEntity(previousBand);
+                }
 
                 if (location != null) {
                     double x = location.getX();
@@ -129,7 +125,8 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
                     double newHeight = 0;
 
                     // fanning algorithm
-                    Set<OWLNamedIndividual> traits = getAllTraitsForAssociation(reasoner, individual);
+                    Set<OWLNamedIndividual> traits = LayoutUtils.getCachingInstance()
+                            .getTraitsLocatedInCytogeneticBand(reasoner, bandIndividual);
                     if (previousLocation != null) {
                         double prevY = previousLocation.getY();
                         double prevHeight = previousLocation.getHeight(); // todo - I think?
@@ -214,71 +211,16 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
         }
     }
 
-    public BandInformation getBandInformation(OWLIndividual individual, OWLOntology ontology) {
-        String bandName = null;
-        OWLDataFactory dataFactory = OWLManager.createOWLOntologyManager().getOWLDataFactory();
-
-        //get all the is_about individuals of this trait-assocation
-        OWLObjectProperty is_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
-        Set<OWLIndividual> related = individual.getObjectPropertyValues(is_about, ontology);
-        for (OWLIndividual snp : related) {
-            //find the individual that is of type SNP
-            for (OWLClassExpression allType : snp.getTypes(ontology)) {
-                OWLClass typeClass = allType.asOWLClass();
-                if (typeClass.getIRI().equals(IRI.create(OntologyConstants.SNP_CLASS_IRI))) {
-                    //get the snp cytogenetic band
-                    OWLObjectProperty has_band =
-                            dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.LOCATED_IN_PROPERTY_IRI));
-
-                    Set<OWLIndividual> bands = snp.getObjectPropertyValues(has_band, ontology);
-                    if (bands.size() == 1) {
-                        OWLIndividual band = bands.iterator().next();
-
-                        //get the band's name
-                        OWLDataProperty has_name =
-                                dataFactory.getOWLDataProperty(IRI.create(OntologyConstants.HAS_NAME_PROPERTY_IRI));
-                        Set<OWLLiteral> bandNames = band.getDataPropertyValues(has_name, ontology);
-                        if (bandNames.size() == 1) {
-                            bandName = bandNames.iterator().next().getLiteral();
-                        }
-                        else {
-                            throw new RuntimeException(
-                                    "Band OWLIndividual '" + band + "' has more than one band name");
-                        }
-                    }
-                    else {
-                        if (bands.size() > 1) {
-                            getLog().error("SNP '" + snp + "' is located in more than one band - this data is invalid");
-                        }
-                        else {
-                            getLog().error(
-                                    "Unable to identify band for SNP '" + snp + "' - this data may not be available");
-                        }
-                    }
-                }
-            }
-        }
-        if (bandName == null) {
-            getLog().error("Association '" + individual + "' could not be located on the diagram " +
-                                   "(either due to a missing SNP, an unrecognised band name, " +
-                                   "more than one genome location or something else).  Source data is invalid.");
-            return null;
-        }
-        else {
-            return new BandInformation(bandName);
-        }
-    }
-
-    public String chromosomeTransform(String chromosome) {
+    private String getTransformation(String chromosomeName) {
         int position;
-        if (chromosome.equals("X")) {
+        if (chromosomeName.equals("X")) {
             position = 22;
         }
-        else if (chromosome.equals("Y")) {
+        else if (chromosomeName.equals("Y")) {
             position = 23;
         }
         else {
-            position = Integer.parseInt(chromosome) - 1;
+            position = Integer.parseInt(chromosomeName) - 1;
         }
         int height = SVGCanvas.canvasHeight;
         int width = SVGCanvas.canvasWidth;
@@ -303,12 +245,6 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
         builder.append(")");
 
         return builder.toString();
-    }
-
-    private Set<OWLNamedIndividual> getAllTraitsForAssociation(OWLReasoner reasoner, OWLNamedIndividual association) {
-        OWLDataFactory dataFactory = reasoner.getRootOntology().getOWLOntologyManager().getOWLDataFactory();
-        OWLObjectProperty is_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
-        return reasoner.getObjectPropertyValues(association, is_about).getFlattened();
     }
 
     private void sortBandsWithData(OWLReasoner reasoner) {
