@@ -102,7 +102,7 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
             double ay = associationLocation.getY();
             double displacement = associationLocation.getHeight();
             double cx, cy;
-            int size = locations.size();
+            int size = locations.size() - 1;
 
             int horizontal = size % 6;
             int vertical = size / 6;
@@ -205,7 +205,13 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
             throws DataIntegrityViolationException {
         OWLNamedIndividual association = LayoutUtils.getCachingInstance().getAssociationForTrait(reasoner, trait);
         if (association != null) {
-            return nexus.getLocationOfRenderedEntity(association);
+            SVGArea location = nexus.getLocationOfRenderedEntity(association);
+            if (location != null) {
+                return location;
+            }
+            else {
+                throw new DataIntegrityViolationException("Association '" + association + "' has not been rendered");
+            }
         }
         else {
             throw new DataIntegrityViolationException(

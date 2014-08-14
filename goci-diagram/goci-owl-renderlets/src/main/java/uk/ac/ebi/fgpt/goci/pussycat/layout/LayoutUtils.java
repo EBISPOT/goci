@@ -3,6 +3,7 @@ package uk.ac.ebi.fgpt.goci.pussycat.layout;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLDataHasValue;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
@@ -104,10 +105,10 @@ public class LayoutUtils {
         }
     }
 
-    public Set<OWLNamedIndividual> getTraitsLocatedInCytogeneticBand(OWLReasoner reasoner,
-                                                                     OWLNamedIndividual cytogeneticBand)
+    public Set<OWLNamedIndividual> getAssociationsLocatedInCytogeneticBand(OWLReasoner reasoner,
+                                                                           OWLNamedIndividual cytogeneticBand)
             throws DataIntegrityViolationException {
-        Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", reasoner, cytogeneticBand);
+        Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand", reasoner, cytogeneticBand);
         if (retrieved != null) {
             return (Set<OWLNamedIndividual>) retrieved;
         }
@@ -147,9 +148,67 @@ public class LayoutUtils {
                         "No associations could be found about SNPs located in band '" + cytogeneticBand + "'");
             }
             else {
-                return cache(results, "getTraitsLocatedInCytogeneticBand", reasoner, cytogeneticBand);
+                return cache(results, "getAssociationsLocatedInCytogeneticBand", reasoner, cytogeneticBand);
             }
         }
+    }
+
+    public Set<OWLNamedIndividual> getAssociationsLocatedInCytogeneticBand(OWLReasoner reasoner, String bandName)
+            throws DataIntegrityViolationException {
+        Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand", reasoner, bandName);
+        if (retrieved != null) {
+            return (Set<OWLNamedIndividual>) retrieved;
+        }
+
+        OWLOntology ontology = reasoner.getRootOntology();
+        OWLOntologyManager manager = ontology.getOWLOntologyManager();
+        OWLDataFactory factory = manager.getOWLDataFactory();
+
+        OWLClass bandCls = factory.getOWLClass(IRI.create(OntologyConstants.CYTOGENIC_REGION_CLASS_IRI));
+        OWLDataProperty has_name =
+                factory.getOWLDataProperty(IRI.create(OntologyConstants.HAS_NAME_PROPERTY_IRI));
+        OWLLiteral name = factory.getOWLLiteral(bandName);
+
+        OWLDataHasValue namedThings = factory.getOWLDataHasValue(has_name, name);
+        OWLObjectIntersectionOf bandsWithName = factory.getOWLObjectIntersectionOf(bandCls, namedThings);
+
+        Set<OWLNamedIndividual> bands = reasoner.getInstances(bandsWithName, false).getFlattened();
+
+        if (bands.size() == 1) {
+            return cache(getAssociationsLocatedInCytogeneticBand(reasoner, bands.iterator().next()),
+                         "getAssociationsLocatedInCytogeneticBand",
+                         reasoner,
+                         bandName);
+        }
+        else {
+            if (bands.size() == 0) {
+                throw new DataIntegrityViolationException(
+                        "Could not identify band individual with name '" + bandName + "'");
+            }
+            else {
+                throw new DataIntegrityViolationException(
+                        "More than one band individual with name '" + bandName + "'");
+            }
+        }
+    }
+
+    public Set<OWLNamedIndividual> getTraitsLocatedInCytogeneticBand(OWLReasoner reasoner,
+                                                                     OWLNamedIndividual cytogeneticBand)
+            throws DataIntegrityViolationException {
+        Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", reasoner, cytogeneticBand);
+        if (retrieved != null) {
+            return (Set<OWLNamedIndividual>) retrieved;
+        }
+
+        // first, get associations
+        Set<OWLNamedIndividual> associations = getAssociationsLocatedInCytogeneticBand(reasoner, cytogeneticBand);
+        Set<OWLNamedIndividual> traits = new HashSet<OWLNamedIndividual>();
+        for (OWLNamedIndividual association : associations) {
+            // now get traits
+            traits.add(getTraitForAssociation(reasoner, association));
+        }
+
+        return cache(traits, "getTraitsLocatedInCytogeneticBand", reasoner, cytogeneticBand);
     }
 
     /**
@@ -169,13 +228,46 @@ public class LayoutUtils {
 
         OWLDataFactory dataFactory = reasoner.getRootOntology().getOWLOntologyManager().getOWLDataFactory();
         OWLObjectProperty has_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.HAS_ABOUT_IRI));
-        if (reasoner.getObjectPropertyValues(trait, has_about).getFlattened().size() != 0) {
-            OWLNamedIndividual result =
-                    reasoner.getObjectPropertyValues(trait, has_about).getFlattened().iterator().next();
+        Set<OWLNamedIndividual> associations = reasoner.getObjectPropertyValues(trait, has_about).getFlattened();
+        if (associations.size() != 0) {
+            OWLNamedIndividual result = associations.iterator().next();
             return cache(result, "getAssociationForTrait", reasoner, trait);
         }
         else {
             throw new DataIntegrityViolationException("Trait " + trait + " has no association");
+        }
+    }
+
+    /**
+     * Returns the trait individual that the given trait association "is_about".  If there is no known association, this
+     * method returns null.
+     *
+     * @param reasoner    the reasoner
+     * @param association the trait association to find the corresponding trait for
+     * @return the trait association that is_about this trait
+     */
+    public OWLNamedIndividual getTraitForAssociation(OWLReasoner reasoner, OWLNamedIndividual association)
+            throws DataIntegrityViolationException {
+        Object retrieved = checkCache("getTraitForAssociation", reasoner, association);
+        if (retrieved != null) {
+            return (OWLNamedIndividual) retrieved;
+        }
+
+        OWLDataFactory dataFactory = reasoner.getRootOntology().getOWLOntologyManager().getOWLDataFactory();
+        OWLObjectProperty has_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.HAS_ABOUT_IRI));
+        OWLObjectHasValue hasAssociationAbout = dataFactory.getOWLObjectHasValue(has_about, association);
+        OWLClass efClass = dataFactory.getOWLClass(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI));
+        OWLObjectIntersectionOf traitForAssociation =
+                dataFactory.getOWLObjectIntersectionOf(hasAssociationAbout, efClass);
+
+        // get all instances of traitForAssociation
+        Set<OWLNamedIndividual> traits = reasoner.getInstances(traitForAssociation, false).getFlattened();
+        if (traits.size() != 0) {
+            OWLNamedIndividual result = traits.iterator().next();
+            return cache(result, "getTraitForAssociation", reasoner, association);
+        }
+        else {
+            throw new DataIntegrityViolationException("Association " + association + " has no trait");
         }
     }
 

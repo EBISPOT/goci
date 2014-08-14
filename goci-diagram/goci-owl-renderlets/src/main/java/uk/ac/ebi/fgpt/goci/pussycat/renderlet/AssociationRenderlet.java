@@ -104,73 +104,86 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
                         .append("transform='").append(transform).append("' ")
                         .append("class='gwas-trait'>");
 
+                // get rendered svg location of the cytogenetic band
                 SVGArea location = nexus.getLocationOfRenderedEntity(band);
                 if (location != null) {
-                    double x = location.getX();
-                    double y = location.getY();
-                    double width = location.getWidth();
-                    double height = location.getHeight();
-                    double newY = y + (height / 2);
-                    double endY = newY;
-                    double length = 1.75 * width;
-                    double newHeight = 0;
+                    // starting x and y co-ords derived from cytogenetic band
+                    double x1 = location.getX();
+                    double y1 = location.getY() + (location.getHeight() / 2);
 
-                    // fanning algorithm
-                    SVGArea previousLocation = null;
+                    double dotRadius = 0.35 * location.getWidth();
+
+                    // x2 and y2 mark the end of the horizontal line designating the snp location
+                    double x2 = location.getWidth();
+                    double y2 = 0;
+
+                    // x3 and y3 mark the end of the line - may be fanned to avoid overlaps
+                    double x3 = 0.75 * location.getWidth();
+                    double y3;
+
+                    // fanning algorithm - calculate diagonal part of the line, if necessary
                     Map<BandInformation, BandInformation> previousBandMap = previousBandMapByReasoner.get(reasoner);
-                    if (previousBandMap != null) {
-                        BandInformation previousBand = previousBandMap.get(band);
-                        previousLocation = nexus.getLocationOfRenderedEntity(previousBand);
-                    }
-                    if (previousLocation != null) {
-                        double prevY = previousLocation.getY();
-                        double prevHeight = previousLocation.getHeight(); // todo - I think?
-                        double radius = 0.35 * width;
+                    BandInformation previousBand = previousBandMap.get(band);
+                    if (previousBand != null) {
+                        SVGArea previousLocation = getLocationOfPreviousAssociation(nexus, reasoner, association);
+                        if (previousLocation != null) {
+                            if (band.getChromosome().equals(previousBand.getChromosome())) {
+                                double previousY = previousLocation.getY() + previousLocation.getHeight();
 
-                        if (band.getBandName().contains("p")) {
-                            int traitCount = getNumberOfTraitsInSameBand(reasoner, association);
-                            int drop = ((traitCount - 1) / 6) + 2;
-                            double min = prevY - (drop * radius);
-                            if (min <= newY) {
-                                endY = min;
-                                newHeight = endY - newY;
+                                // fan up or down?
+                                if (band.getBandName().contains("p")) {
+                                    // p arm - we need to know how many traits are in this band
+                                    int traitCount = getNumberOfTraitsInSameBand(reasoner, association);
+                                    int rowCount = ((traitCount - 1) / 6) + 2;
+                                    double blockSize = rowCount * dotRadius;
+
+                                    if (y1 + blockSize > previousY) {
+                                        // if blockSize takes us down so far it would overlap prevY, move up
+                                        y3 = previousY - (y1 + blockSize);
+                                    }
+                                    else {
+                                        // otherwise, line can be horizontal
+                                        y3 = 0;
+                                    }
+                                }
+                                else {
+                                    // q arm - we need to know how many traits were in the previous band (ie. the one above)
+                                    int traitCount = getNumberOfTraitsInPreviousBand(reasoner, association);
+                                    int rowCount = ((traitCount - 1) / 6) + 2;
+                                    double blockSize = rowCount * dotRadius;
+
+                                    if (previousY + blockSize > y1) {
+                                        // if the previous blockSize takes us down so far it would overlap y, move down
+                                        y3 = (previousY + blockSize) - y1;
+                                    }
+                                    else {
+                                        // otherwise, line can be horizontal
+                                        y3 = 0;
+                                    }
+                                }
+                            }
+                            else {
+                                // previous location is on the same chromosome, so overlap isn't an issue
+                                y3 = 0;
                             }
                         }
                         else {
-//                        int drop = ((previous.getTraitNames().size() - 1) / 6) + 2;
-//                        double min = prevY + (drop * radius);
-                            double min = prevY + prevHeight;
-                            if (min >= newY) {
-                                endY = min;
-                                newHeight = endY - newY;
-                            }
+                            // no previous location, so line can be horizontal
+                            y3 = 0;
                         }
+                    }
+                    else {
+                        // no previous band, so line can be horizontal
+                        y3 = 0;
                     }
 
                     StringBuilder d = new StringBuilder();
-                    if (previousLocation == null || newHeight == 0) {
-                        d.append("m ");
-                        d.append(Double.toString(x));
-                        d.append(",");
-                        d.append(Double.toString(newY));
-                        d.append(" ");
-                        d.append(Double.toString(length));
-                        d.append(",0.0");
-                    }
-
-                    else {
-                        double width2 = 0.75 * width;
-                        d.append("m ");
-                        d.append(Double.toString(x));
-                        d.append(",");
-                        d.append(Double.toString(newY));
-                        d.append(" ");
-                        d.append(Double.toString(width));
-                        d.append(",0.0, ");
-                        d.append(Double.toString(width2));
-                        d.append(",");
-                        d.append(Double.toString(newHeight));
-                    }
+                    d.append("m ");
+                    d.append(Double.toString(x1)).append(",").append(Double.toString(y1));
+                    d.append(" ");
+                    d.append(Double.toString(x2)).append(",").append(Double.toString(y2));
+                    d.append(" ");
+                    d.append(Double.toString(x3)).append(",").append(Double.toString(y3));
 
                     svg.append("<path ")
                             .append("d='").append(d.toString()).append("' ")
@@ -178,7 +191,7 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
                             .append(" />");
                     svg.append("</g>");
 
-                    SVGArea currentArea = new SVGArea(x, newY, length, newHeight, transform, 0);
+                    SVGArea currentArea = new SVGArea(x1, y1, x2 + x3, y2 + y3, transform, 0);
                     RenderingEvent<OWLNamedIndividual> event =
                             new RenderingEvent<OWLNamedIndividual>(association, svg.toString(), currentArea, this);
                     nexus.renderingEventOccurred(event);
@@ -240,9 +253,74 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
         OWLNamedIndividual bandIndividual =
                 LayoutUtils.getCachingInstance().getCytogeneticBandForAssociation(reasoner, association);
         if (bandIndividual != null) {
-            Set<OWLNamedIndividual> traits =
-                    LayoutUtils.getCachingInstance().getTraitsLocatedInCytogeneticBand(reasoner, bandIndividual);
-            return traits.size();
+            Set<OWLNamedIndividual> associations =
+                    LayoutUtils.getCachingInstance().getAssociationsLocatedInCytogeneticBand(reasoner, bandIndividual);
+            return associations.size();
+        }
+        else {
+            throw new DataIntegrityViolationException(
+                    "Unable to identify the cytogenetic region where association '" + association + "' is located");
+        }
+    }
+
+    /**
+     * For the given association, identifies the previous cytogenetic band to the one this association is located in,
+     * then identifies the total number of traits located in that cytogenetic band and returns the count
+     *
+     * @param reasoner    the reasoner
+     * @param association the association to identify co-located traits for
+     * @return the number of traits in the same cytogenetic region as this association
+     * @throws DataIntegrityViolationException
+     */
+    protected int getNumberOfTraitsInPreviousBand(OWLReasoner reasoner, OWLNamedIndividual association)
+            throws DataIntegrityViolationException {
+        BandInformation band = getBandInformation(reasoner, association);
+        if (band != null) {
+            BandInformation previousBand = previousBandMapByReasoner.get(reasoner).get(band);
+
+            // now find the traits in the previous band
+            Set<OWLNamedIndividual> previousBandAssociations =
+                    LayoutUtils.getCachingInstance().getAssociationsLocatedInCytogeneticBand(
+                            reasoner,
+                            previousBand.getBandName());
+            return previousBandAssociations.size();
+        }
+        else {
+            throw new DataIntegrityViolationException(
+                    "Unable to identify the cytogenetic region where association '" + association + "' is located");
+        }
+    }
+
+    protected SVGArea getLocationOfPreviousAssociation(RenderletNexus nexus,
+                                                       OWLReasoner reasoner,
+                                                       OWLNamedIndividual association)
+            throws DataIntegrityViolationException {
+        BandInformation band = getBandInformation(reasoner, association);
+        if (band != null) {
+            BandInformation previousBand = previousBandMapByReasoner.get(reasoner).get(band);
+
+            if (previousBand == null) {
+                return null;
+            }
+
+            // now find the traits in the previous band
+            Set<OWLNamedIndividual> previousBandAssociations =
+                    LayoutUtils.getCachingInstance().getAssociationsLocatedInCytogeneticBand(
+                            reasoner,
+                            previousBand.getBandName());
+
+            // get first not-null location for an association in the previous band
+            for (OWLNamedIndividual previousBandAssociation : previousBandAssociations) {
+                SVGArea prevLocation = nexus.getLocationOfRenderedEntity(previousBandAssociation);
+                if (prevLocation != null) {
+                    return prevLocation;
+                }
+            }
+            // if we get to here, no associations are located in the previous region so return null
+            getLog().trace(
+                    "Unable to identify any associations in the previous cytogenetic region '" +
+                            previousBand.getBandName() + "'");
+            return null;
         }
         else {
             throw new DataIntegrityViolationException(
