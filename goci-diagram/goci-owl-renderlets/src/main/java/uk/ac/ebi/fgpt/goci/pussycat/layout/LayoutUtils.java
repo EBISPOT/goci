@@ -15,6 +15,7 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
+import uk.ac.ebi.fgpt.goci.pussycat.exception.DataIntegrityViolationException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,7 +39,7 @@ public class LayoutUtils {
         return instance;
     }
 
-    private Map<List<Object>, Object> requestCache;
+    private final Map<List<Object>, Object> requestCache;
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -49,7 +50,8 @@ public class LayoutUtils {
         this.requestCache = new HashMap<List<Object>, Object>();
     }
 
-    public OWLNamedIndividual getCytogeneticBandForAssociation(OWLReasoner reasoner, OWLNamedIndividual association) {
+    public OWLNamedIndividual getCytogeneticBandForAssociation(OWLReasoner reasoner, OWLNamedIndividual association)
+            throws DataIntegrityViolationException {
         Object retrieved = checkCache("getCytogeneticBandForAssociation", reasoner, association);
         if (retrieved != null) {
             return (OWLNamedIndividual) retrieved;
@@ -73,31 +75,38 @@ public class LayoutUtils {
         OWLObjectIntersectionOf associatedSNP = factory.getOWLObjectIntersectionOf(hasAboutAssociation, snpCls);
         Set<OWLNamedIndividual> snps = reasoner.getInstances(associatedSNP, false).getFlattened();
 
-        // now, for each SNP, get the location
-        for (OWLNamedIndividual snp : snps) {
-            // get all the located_in bands of this snp
-            OWLObjectHasValue locationOfSNP = factory.getOWLObjectHasValue(location_of, snp);
-            OWLObjectIntersectionOf locationBand = factory.getOWLObjectIntersectionOf(locationOfSNP, bandCls);
-            Set<OWLNamedIndividual> locations = reasoner.getInstances(locationBand, false).getFlattened();
-            results.addAll(locations);
-        }
-
-        if (results.size() == 0) {
-            result = null;
+        if (snps.size() == 0) {
+            throw new DataIntegrityViolationException("No SNPs could be identified for '" + association + "'");
         }
         else {
-            if (results.size() > 1) {
-                getLog().error("More than one cytogenetic band for association '" + association +
-                                       "'; will only use the first");
+            // now, for each SNP, get the location
+            for (OWLNamedIndividual snp : snps) {
+                // get all the located_in bands of this snp
+                OWLObjectHasValue locationOfSNP = factory.getOWLObjectHasValue(location_of, snp);
+                OWLObjectIntersectionOf locationBand = factory.getOWLObjectIntersectionOf(locationOfSNP, bandCls);
+                Set<OWLNamedIndividual> locations = reasoner.getInstances(locationBand, false).getFlattened();
+                results.addAll(locations);
             }
-            result = results.iterator().next();
+            if (results.size() == 0) {
+                throw new DataIntegrityViolationException(
+                        "No cytogenetic band for association '" + association + "' could be found");
+            }
+            else {
+                if (results.size() > 1) {
+                    throw new DataIntegrityViolationException(
+                            "More than one cytogenetic band for association '" + association + "'");
+                }
+                else {
+                    result = results.iterator().next();
+                    return cache(result, "getCytogeneticBandForAssociation", reasoner, association);
+                }
+            }
         }
-
-        return cache(result, "getCytogeneticBandForAssociation", reasoner, association);
     }
 
     public Set<OWLNamedIndividual> getTraitsLocatedInCytogeneticBand(OWLReasoner reasoner,
-                                                                     OWLNamedIndividual cytogeneticBand) {
+                                                                     OWLNamedIndividual cytogeneticBand)
+            throws DataIntegrityViolationException {
         Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", reasoner, cytogeneticBand);
         if (retrieved != null) {
             return (Set<OWLNamedIndividual>) retrieved;
@@ -120,16 +129,27 @@ public class LayoutUtils {
         OWLObjectIntersectionOf associatedSNP = factory.getOWLObjectIntersectionOf(snpsLocated, snpCls);
         Set<OWLNamedIndividual> snps = reasoner.getInstances(associatedSNP, false).getFlattened();
 
-        // now, for each SNP, get the associations
-        for (OWLNamedIndividual snp : snps) {
-            // get all the located_in bands of this snp
-            OWLObjectHasValue snpAbouts = factory.getOWLObjectHasValue(is_about, snp);
-            OWLObjectIntersectionOf snpAssociations = factory.getOWLObjectIntersectionOf(snpAbouts, associationCls);
-            Set<OWLNamedIndividual> associations = reasoner.getInstances(snpAssociations, false).getFlattened();
-            results.addAll(associations);
+        if (snps.size() == 0) {
+            throw new DataIntegrityViolationException(
+                    "No SNP could be found located in band '" + cytogeneticBand + "'");
         }
-
-        return cache(results, "getTraitsLocatedInCytogeneticBand", reasoner, cytogeneticBand);
+        else {
+            // now, for each SNP, get the associations
+            for (OWLNamedIndividual snp : snps) {
+                // get all the located_in bands of this snp
+                OWLObjectHasValue snpAbouts = factory.getOWLObjectHasValue(is_about, snp);
+                OWLObjectIntersectionOf snpAssociations = factory.getOWLObjectIntersectionOf(snpAbouts, associationCls);
+                Set<OWLNamedIndividual> associations = reasoner.getInstances(snpAssociations, false).getFlattened();
+                results.addAll(associations);
+            }
+            if (results.size() == 0) {
+                throw new DataIntegrityViolationException(
+                        "No associations could be found about SNPs located in band '" + cytogeneticBand + "'");
+            }
+            else {
+                return cache(results, "getTraitsLocatedInCytogeneticBand", reasoner, cytogeneticBand);
+            }
+        }
     }
 
     /**
@@ -140,28 +160,27 @@ public class LayoutUtils {
      * @param trait    the trait individual to find the corresponding trait association for
      * @return the trait association that is_about this trait
      */
-    public OWLNamedIndividual getAssociationForTrait(OWLReasoner reasoner, OWLNamedIndividual trait) {
+    public OWLNamedIndividual getAssociationForTrait(OWLReasoner reasoner, OWLNamedIndividual trait)
+            throws DataIntegrityViolationException {
         Object retrieved = checkCache("getAssociationForTrait", reasoner, trait);
         if (retrieved != null) {
             return (OWLNamedIndividual) retrieved;
         }
 
-        OWLNamedIndividual result;
-
         OWLDataFactory dataFactory = reasoner.getRootOntology().getOWLOntologyManager().getOWLDataFactory();
         OWLObjectProperty has_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.HAS_ABOUT_IRI));
         if (reasoner.getObjectPropertyValues(trait, has_about).getFlattened().size() != 0) {
-            result = reasoner.getObjectPropertyValues(trait, has_about).getFlattened().iterator().next();
+            OWLNamedIndividual result =
+                    reasoner.getObjectPropertyValues(trait, has_about).getFlattened().iterator().next();
+            return cache(result, "getAssociationForTrait", reasoner, trait);
         }
         else {
-            getLog().warn("Trait " + trait + " has no association");
-            result = null;
+            throw new DataIntegrityViolationException("Trait " + trait + " has no association");
         }
-
-        return cache(result, "getAssociationForTrait", reasoner, trait);
     }
 
-    public BandInformation getBandInformation(OWLReasoner reasoner, OWLNamedIndividual bandIndividual) {
+    public BandInformation getBandInformation(OWLReasoner reasoner, OWLNamedIndividual bandIndividual)
+            throws DataIntegrityViolationException {
         Object retrieved = checkCache("getBandInformation", reasoner, bandIndividual);
         if (retrieved != null) {
             return (BandInformation) retrieved;
@@ -183,7 +202,7 @@ public class LayoutUtils {
             result = new BandInformation(bandName);
         }
         else {
-            throw new RuntimeException(
+            throw new DataIntegrityViolationException(
                     "Band OWLIndividual '" + bandIndividual + "' has more than one band name");
         }
 
@@ -191,22 +210,26 @@ public class LayoutUtils {
     }
 
     private Object checkCache(String methodName, Object... arguments) {
-        List<Object> key = new ArrayList<Object>();
-        key.add(methodName);
-        Collections.addAll(key, arguments);
-        if (requestCache.containsKey(key)) {
-            return requestCache.get(key);
-        }
-        else {
-            return null;
+        synchronized (requestCache) {
+            List<Object> key = new ArrayList<Object>();
+            key.add(methodName);
+            Collections.addAll(key, arguments);
+            if (requestCache.containsKey(key)) {
+                return requestCache.get(key);
+            }
+            else {
+                return null;
+            }
         }
     }
 
     private <O> O cache(O result, String methodName, Object... arguments) {
-        List<Object> key = new ArrayList<Object>();
-        key.add(methodName);
-        Collections.addAll(key, arguments);
-        requestCache.put(key, result);
-        return result;
+        synchronized (requestCache) {
+            List<Object> key = new ArrayList<Object>();
+            key.add(methodName);
+            Collections.addAll(key, arguments);
+            requestCache.put(key, result);
+            return result;
+        }
     }
 }

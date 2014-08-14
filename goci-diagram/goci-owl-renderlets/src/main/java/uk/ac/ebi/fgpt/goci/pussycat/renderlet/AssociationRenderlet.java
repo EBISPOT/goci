@@ -14,6 +14,7 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
+import uk.ac.ebi.fgpt.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.LayoutUtils;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
@@ -84,36 +85,26 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
     }
 
     @Override
-    public void render(RenderletNexus nexus, OWLReasoner reasoner, OWLNamedIndividual individual) {
-        getLog().trace("Association: " + individual);
+    public void render(RenderletNexus nexus, OWLReasoner reasoner, OWLNamedIndividual association) {
+        getLog().trace("Association: " + association);
         if (!previousBandMapByReasoner.containsKey(reasoner)) {
             sortBandsWithData(reasoner);
         }
 
-        OWLNamedIndividual bandIndividual =
-                LayoutUtils.getCachingInstance().getCytogeneticBandForAssociation(reasoner, individual);
-        if (bandIndividual != null) {
-            BandInformation band = LayoutUtils.getCachingInstance().getBandInformation(reasoner, bandIndividual);
-
-            // there is no other association in this chromosomal band yet - render
+        try {
+            BandInformation band = getBandInformation(reasoner, association);
             if (!renderedBands.containsKey(band)) {
+                // there is no other association in this chromosomal band yet - render
                 getLog().trace("First association for this band");
 
                 StringBuilder svg = new StringBuilder();
                 String transform = getTransformation(band.getChromosome());
                 svg.append("<g ")
-                        .append("id='").append(individual.getIRI().toString()).append("' ")
+                        .append("id='").append(association.getIRI().toString()).append("' ")
                         .append("transform='").append(transform).append("' ")
                         .append("class='gwas-trait'>");
 
                 SVGArea location = nexus.getLocationOfRenderedEntity(band);
-                SVGArea previousLocation = null;
-                Map<BandInformation, BandInformation> previousBandMap = previousBandMapByReasoner.get(reasoner);
-                if (previousBandMap != null) {
-                    BandInformation previousBand = previousBandMap.get(band);
-                    previousLocation = nexus.getLocationOfRenderedEntity(previousBand);
-                }
-
                 if (location != null) {
                     double x = location.getX();
                     double y = location.getY();
@@ -125,15 +116,20 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
                     double newHeight = 0;
 
                     // fanning algorithm
-                    Set<OWLNamedIndividual> traits = LayoutUtils.getCachingInstance()
-                            .getTraitsLocatedInCytogeneticBand(reasoner, bandIndividual);
+                    SVGArea previousLocation = null;
+                    Map<BandInformation, BandInformation> previousBandMap = previousBandMapByReasoner.get(reasoner);
+                    if (previousBandMap != null) {
+                        BandInformation previousBand = previousBandMap.get(band);
+                        previousLocation = nexus.getLocationOfRenderedEntity(previousBand);
+                    }
                     if (previousLocation != null) {
                         double prevY = previousLocation.getY();
                         double prevHeight = previousLocation.getHeight(); // todo - I think?
                         double radius = 0.35 * width;
 
                         if (band.getBandName().contains("p")) {
-                            int drop = ((traits.size() - 1) / 6) + 2;
+                            int traitCount = getNumberOfTraitsInSameBand(reasoner, association);
+                            int drop = ((traitCount - 1) / 6) + 2;
                             double min = prevY - (drop * radius);
                             if (min <= newY) {
                                 endY = min;
@@ -180,19 +176,18 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
                             .append("d='").append(d.toString()).append("' ")
                             .append("style='fill:none;stroke:#211c1d;stroke-width:1.1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none'")
                             .append(" />");
-
                     svg.append("</g>");
 
                     SVGArea currentArea = new SVGArea(x, newY, length, newHeight, transform, 0);
                     RenderingEvent<OWLNamedIndividual> event =
-                            new RenderingEvent<OWLNamedIndividual>(individual, svg.toString(), currentArea, this);
+                            new RenderingEvent<OWLNamedIndividual>(association, svg.toString(), currentArea, this);
                     nexus.renderingEventOccurred(event);
 
                     // add band to renderedBands set
                     renderedBands.put(band, currentArea);
                 }
                 else {
-                    getLog().error("Unable to render association '" + individual + "' - " +
+                    getLog().error("Unable to render association '" + association + "' - " +
                                            "no location for band '" + band.getBandName() + "'");
                 }
             }
@@ -200,14 +195,58 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
                 // we've already rendered the required association line, so we don't need to do it again
                 // but we do need to log the rendering event for this association individual
                 getLog().trace("Already rendered an association line to band '" + band.getBandName() + "', " +
-                                       "logging secondary event for association '" + individual + "'");
+                                       "logging secondary event for association '" + association + "'");
                 SVGArea area = renderedBands.get(band);
-                nexus.renderingEventOccurred(new RenderingEvent<OWLNamedIndividual>(individual, "", area, this));
+                nexus.renderingEventOccurred(new RenderingEvent<OWLNamedIndividual>(association, "", area, this));
             }
         }
+        catch (DataIntegrityViolationException e) {
+            getLog().error("Cannot render association '" + association + "'", e);
+        }
+    }
+
+    /**
+     * Fetches the band information about the cytogenetic region the current association is located in
+     *
+     * @param reasoner    the reasoner
+     * @param association the association to lookup band information for
+     * @return the band information for this association
+     * @throws DataIntegrityViolationException
+     */
+    protected BandInformation getBandInformation(OWLReasoner reasoner, OWLNamedIndividual association)
+            throws DataIntegrityViolationException {
+        OWLNamedIndividual bandIndividual =
+                LayoutUtils.getCachingInstance().getCytogeneticBandForAssociation(reasoner, association);
+        if (bandIndividual != null) {
+            return LayoutUtils.getCachingInstance().getBandInformation(reasoner, bandIndividual);
+        }
         else {
-            getLog().error("Cannot render association '" + individual + "' - " +
-                                   "unable to identify the band where this association is located");
+            throw new DataIntegrityViolationException(
+                    "Unable to identify the cytogenetic region where association '" + association + "' is located");
+        }
+    }
+
+    /**
+     * For the given association, identifies the cytogenetic band it is located in, then identifies the total number of
+     * traits located in the same cytogenetic band and returns the count
+     *
+     * @param reasoner    the reasoner
+     * @param association the association to identify co-located traits for
+     * @return the number of traits in the same cytogenetic region as this association
+     * @throws DataIntegrityViolationException
+     */
+    protected int getNumberOfTraitsInSameBand(OWLReasoner reasoner, OWLNamedIndividual association)
+            throws DataIntegrityViolationException {
+        OWLNamedIndividual bandIndividual =
+                LayoutUtils.getCachingInstance().getCytogeneticBandForAssociation(reasoner, association);
+        if (bandIndividual != null) {
+            Set<OWLNamedIndividual> traits =
+                    LayoutUtils.getCachingInstance().getTraitsLocatedInCytogeneticBand(reasoner, bandIndividual);
+            return traits.size();
+        }
+        else {
+            throw new DataIntegrityViolationException(
+                    "Unable to identify the cytogenetic region where association '" + association + "' is located");
         }
     }
 

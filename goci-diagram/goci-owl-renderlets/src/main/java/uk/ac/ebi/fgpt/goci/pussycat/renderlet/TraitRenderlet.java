@@ -15,7 +15,7 @@ import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
-import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
+import uk.ac.ebi.fgpt.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.ColourMapper;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.LayoutUtils;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
@@ -85,122 +85,161 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
     @Override
     public void render(RenderletNexus nexus, OWLReasoner reasoner, OWLNamedIndividual trait) {
         getLog().trace("Trait: " + trait);
-        OWLNamedIndividual association = LayoutUtils.getCachingInstance().getAssociationForTrait(reasoner, trait);
-        if (association != null) {
-            SVGArea associationLocation = nexus.getLocationOfRenderedEntity(association);
-            if (associationLocation != null) {
-                OWLNamedIndividual bandIndividual =
-                        LayoutUtils.getCachingInstance().getCytogeneticBandForAssociation(reasoner, association);
-                BandInformation band = LayoutUtils.getCachingInstance().getBandInformation(reasoner, bandIndividual);
-                if (band.getBandName() != null) {
-                    StringBuilder svg = new StringBuilder();
-                    svg.append("<circle ");
+        try {
+            StringBuilder svg = new StringBuilder();
+            svg.append("<circle ");
 
-                    // retrieve locations of previously rendered traits in the same association
-                    Set<OWLNamedIndividual> allTraits =
-                            LayoutUtils.getCachingInstance()
-                                    .getTraitsLocatedInCytogeneticBand(reasoner, bandIndividual);
-                    List<SVGArea> locations = getSortedLocationsForTraits(nexus, allTraits);
-                    if (associationLocation.getTransform() != null) {
-                        svg.append("transform='").append(associationLocation.getTransform()).append("' ");
-                    }
+            // retrieve svg locations of co-located traits that have been previously rendered
+            List<SVGArea> locations = getSortedLocationsForColocatedTraits(nexus, reasoner, trait);
+            SVGArea associationLocation = getAssociationLocationForTrait(nexus, reasoner, trait);
+            if (associationLocation.getTransform() != null) {
+                svg.append("transform='").append(associationLocation.getTransform()).append("' ");
+            }
 
-                    double alength = associationLocation.getWidth();
-                    double radius = 0.2 * alength;
-                    double ax = associationLocation.getX();
-                    double ay = associationLocation.getY();
-                    double displacement = associationLocation.getHeight();
-                    double cx, cy;
-                    int size = locations.size();
+            double alength = associationLocation.getWidth();
+            double radius = 0.2 * alength;
+            double ax = associationLocation.getX();
+            double ay = associationLocation.getY();
+            double displacement = associationLocation.getHeight();
+            double cx, cy;
+            int size = locations.size();
 
-                    int horizontal = size % 6;
-                    int vertical = size / 6;
+            int horizontal = size % 6;
+            int vertical = size / 6;
 
-                    if (size == 0) {
-                        cx = ax + alength + radius;
-                    }
-                    else {
-                        if (vertical % 2 == 0) {
-                            cx = ax + alength + (((2 * horizontal) + 1) * radius);
-                        }
-                        else {
-                            cx = ax + alength + (((2 * horizontal) + 2) * radius);
-                        }
-                    }
-                    cy = ay + displacement + (vertical * radius);
-
-                    svg.append("cx='").append(Double.toString(cx)).append("' ");
-                    svg.append("cy='").append(Double.toString(cy)).append("' ");
-                    svg.append("r='").append(Double.toString(radius)).append("' ");
-
-                    String colour = getTraitColour(reasoner, trait);
-
-                    svg.append("fill='").append(colour).append("' ");
-                    svg.append("stroke='black' ");
-                    svg.append("stroke-width='0.5' ");
-
-                    String traitName = getTraitLabel(reasoner, trait);
-                    svg.append("gwasname='").append(traitName).append("' ");
-
-                    IRI iri = getTraitClassIRI(reasoner, trait);
-                    String traitClass = OntologyUtils.getShortForm(iri, reasoner.getRootOntology());
-                    getLog().trace("Setting CSS class for trait '" + trait + "' to " + traitClass);
-                    svg.append("class='gwas-trait ").append(traitClass).append("'");
-                    svg.append("fading='false' ");
-
-                    String assocIRI = OntologyUtils.getShortForm(association);
-                    getLog().trace("Setting gwasassociation attribute for trait '" + trait + "' to " + assocIRI);
-                    svg.append("gwasassociation='").append(assocIRI).append("' ");
-                    svg.append("/>");
-
-                    SVGArea currentArea = new SVGArea(cx, cy, 2 * radius, 2 * radius, 0);
-                    RenderingEvent<OWLIndividual> event =
-                            new RenderingEvent<OWLIndividual>(trait, svg.toString(), currentArea, this);
-                    nexus.renderingEventOccurred(event);
-                }
-                else {
-                    getLog().error("Cannot render trait '" + trait + "' - " +
-                                           "unable to identify the band for association '" + association + "'");
-                }
+            if (size == 0) {
+                cx = ax + alength + radius;
             }
             else {
-                getLog().error("Cannot render trait '" + trait + "' - " +
-                                       "the association for this trait has not yet been rendered");
+                if (vertical % 2 == 0) {
+                    cx = ax + alength + (((2 * horizontal) + 1) * radius);
+                }
+                else {
+                    cx = ax + alength + (((2 * horizontal) + 2) * radius);
+                }
             }
+            cy = ay + displacement + (vertical * radius);
+
+            svg.append("cx='").append(Double.toString(cx)).append("' ");
+            svg.append("cy='").append(Double.toString(cy)).append("' ");
+            svg.append("r='").append(Double.toString(radius)).append("' ");
+
+            String colour = getTraitColour(reasoner, trait);
+
+            svg.append("fill='").append(colour).append("' ");
+            svg.append("stroke='black' ");
+            svg.append("stroke-width='0.5' ");
+
+            String traitName = getTraitLabel(reasoner, trait);
+            svg.append("gwasname='").append(traitName).append("' ");
+
+            String traitAttribute = getTraitAttribute(reasoner, trait);
+            getLog().trace("Setting CSS class for trait '" + trait + "' to " + traitAttribute);
+            svg.append("class='gwas-trait ").append(traitAttribute).append("'");
+            svg.append("fading='false' ");
+
+            String associationAttribute = getTraitAssociationAttribute(reasoner, trait);
+            getLog().trace("Setting gwasassociation attribute for trait '" + trait + "' to " + associationAttribute);
+            svg.append("gwasassociation='").append(associationAttribute).append("' ");
+            svg.append("/>");
+
+            SVGArea currentArea = new SVGArea(cx, cy, 2 * radius, 2 * radius, 0);
+            RenderingEvent<OWLIndividual> event =
+                    new RenderingEvent<OWLIndividual>(trait, svg.toString(), currentArea, this);
+            nexus.renderingEventOccurred(event);
         }
-        else {
-            getLog().error("Cannot render trait '" + trait + "' - unable to locate any trait association about it");
+        catch (DataIntegrityViolationException e) {
+            getLog().error("Cannot render trait '" + trait + "'", e);
         }
     }
 
-    private List<SVGArea> getSortedLocationsForTraits(RenderletNexus nexus, Set<OWLNamedIndividual> traits) {
-        List<SVGArea> locations = new ArrayList<SVGArea>();
+    protected List<SVGArea> getSortedLocationsForColocatedTraits(RenderletNexus nexus,
+                                                                 OWLReasoner reasoner,
+                                                                 OWLNamedIndividual trait)
+            throws DataIntegrityViolationException {
+        OWLNamedIndividual association = LayoutUtils.getCachingInstance().getAssociationForTrait(reasoner, trait);
+        if (association != null) {
+            OWLNamedIndividual bandIndividual =
+                    LayoutUtils.getCachingInstance().getCytogeneticBandForAssociation(reasoner, association);
+            Set<OWLNamedIndividual> allTraits =
+                    LayoutUtils.getCachingInstance()
+                            .getTraitsLocatedInCytogeneticBand(reasoner, bandIndividual);
 
-        // fetch the location of all traits that have been rendered so far
-        for (OWLNamedIndividual trait : traits) {
-            SVGArea location = nexus.getLocationOfRenderedEntity(trait);
-            if (location != null) {
-                locations.add(location);
+            List<SVGArea> locations = new ArrayList<SVGArea>();
+
+            // fetch the location of all traits that have been rendered so far
+            for (OWLNamedIndividual nextTrait : allTraits) {
+                SVGArea location = nexus.getLocationOfRenderedEntity(nextTrait);
+                if (location != null) {
+                    locations.add(location);
+                }
+            }
+
+            // now sort
+            Collections.sort(locations, new Comparator<SVGArea>() {
+                @Override public int compare(SVGArea a1, SVGArea a2) {
+                    Double comp;
+                    double dY = a2.getY() - a1.getY();
+                    if (dY == 0) {
+                        double dX = a2.getX() - a1.getX();
+                        comp = dX > 0 ? Math.ceil(dX) : Math.floor(dX);
+                    }
+                    else {
+                        comp = dY > 0 ? Math.ceil(dY) : Math.floor(dY);
+                    }
+                    return comp.intValue();
+                }
+            });
+
+            return locations;
+        }
+        else {
+            throw new DataIntegrityViolationException(
+                    "Unable to identify a trait association about trait '" + trait + "'");
+        }
+    }
+
+    protected SVGArea getAssociationLocationForTrait(RenderletNexus nexus,
+                                                     OWLReasoner reasoner,
+                                                     OWLNamedIndividual trait)
+            throws DataIntegrityViolationException {
+        OWLNamedIndividual association = LayoutUtils.getCachingInstance().getAssociationForTrait(reasoner, trait);
+        if (association != null) {
+            return nexus.getLocationOfRenderedEntity(association);
+        }
+        else {
+            throw new DataIntegrityViolationException(
+                    "Unable to identify a trait association about trait '" + trait + "'");
+        }
+    }
+
+    protected String getTraitAttribute(OWLReasoner reasoner, OWLNamedIndividual trait)
+            throws DataIntegrityViolationException {
+        // this gets the first, asserted, non-experimental factor class and then exits
+        Set<OWLClass> allTypes = reasoner.getTypes(trait, true).getFlattened();
+        if (allTypes.size() > 0) {
+            for (OWLClass typeClass : allTypes) {
+                if (!OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI.equals(typeClass.getIRI().toString())) {
+                    return OntologyUtils.getShortForm(typeClass);
+                }
             }
         }
+        // if we got to here, we found no trait type
+        throw new DataIntegrityViolationException("Could not identify any valid type (i.e. subclass of " +
+                                                          "<" + OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI +
+                                                          ">) for trait '" + trait + "'");
+    }
 
-        // now sort
-        Collections.sort(locations, new Comparator<SVGArea>() {
-            @Override public int compare(SVGArea a1, SVGArea a2) {
-                Double comp;
-                double dY = a2.getY() - a1.getY();
-                if (dY == 0) {
-                    double dX = a2.getX() - a1.getX();
-                    comp = dX > 0 ? Math.ceil(dX) : Math.floor(dX);
-                }
-                else {
-                    comp = dY > 0 ? Math.ceil(dY) : Math.floor(dY);
-                }
-                return comp.intValue();
-            }
-        });
-
-        return locations;
+    protected String getTraitAssociationAttribute(OWLReasoner reasoner, OWLNamedIndividual trait)
+            throws DataIntegrityViolationException {
+        OWLNamedIndividual association = LayoutUtils.getCachingInstance().getAssociationForTrait(reasoner, trait);
+        if (association != null) {
+            return OntologyUtils.getShortForm(association);
+        }
+        else {
+            throw new DataIntegrityViolationException(
+                    "Unable to identify a trait association about trait '" + trait + "'");
+        }
     }
 
     private String getTraitLabel(OWLReasoner reasoner, OWLNamedIndividual individual) {
@@ -257,8 +296,7 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
     private IRI getTraitClassIRI(OWLReasoner reasoner, OWLNamedIndividual individual) {
         IRI traitClass = null;
 
-        // this gets the first, asserted, non-experimental factor class and then exits
-        // todo - fix this so that we get the most specific known type
+        // this gets the first direct inferred non-experimental factor class and then exits
         Set<OWLClassExpression> allTypes = individual.getTypes(reasoner.getRootOntology());
         if (allTypes.size() > 0) {
             for (OWLClassExpression typeClassExpression : allTypes) {
