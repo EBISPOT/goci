@@ -155,19 +155,31 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
                         return 1;
                     }
                     else {
-                        // both associations, sort according to the cytogenetic band
-                        try {
-                            OWLNamedIndividual bi1 =
-                                    LayoutUtils.getCachingInstance().getCytogeneticBandForAssociation(reasoner, o1);
-                            OWLNamedIndividual bi2 =
-                                    LayoutUtils.getCachingInstance().getCytogeneticBandForAssociation(reasoner, o2);
-                            BandInformation band1 = LayoutUtils.getCachingInstance().getBandInformation(reasoner, bi1);
-                            BandInformation band2 = LayoutUtils.getCachingInstance().getBandInformation(reasoner, bi2);
+                        if (associations.contains(o1) && associations.contains(o2)) {
+                            // both associations, sort according to the cytogenetic band
+                            BandInformation band1, band2;
+                            try {
+                                OWLNamedIndividual bi1 =
+                                        LayoutUtils.getCachingInstance().getCytogeneticBandForAssociation(reasoner, o1);
+                                band1 = LayoutUtils.getCachingInstance().getBandInformation(reasoner, bi1);
+                            }
+                            catch(DataIntegrityViolationException e) {
+                                getLog().debug("Can't identify band for association " + o1 + " - this will go last");
+                                return 1;
+                            }
+                            try {
+                                OWLNamedIndividual bi2 =
+                                        LayoutUtils.getCachingInstance().getCytogeneticBandForAssociation(reasoner, o2);
+                                band2 = LayoutUtils.getCachingInstance().getBandInformation(reasoner, bi2);
+                            }
+                            catch (DataIntegrityViolationException e) {
+                                getLog().debug("Can't identify band for association " + o1 + " - this will go last");
+                                return -1;
+                            }
                             return band1.compareTo(band2);
                         }
-                        catch (DataIntegrityViolationException e) {
-                            getLog().debug("Can't compare associations " + o1 + " and " + o2 + " - can't identify band",
-                                           e);
+                        else {
+                            // other instance, not an association, so we don't care
                             return 0;
                         }
                     }

@@ -20,25 +20,11 @@ public class BandInformation implements Comparable<BandInformation> {
         return log;
     }
 
-//    private ArrayList<Association> associations;
-//    private ArrayList<String> traitNames;
-//    private String nextBand, previousBand;
-//    private double traitY;
-//    private SVGArea coordinates;
-//    private ArrayList<OWLNamedIndividual> renderedAssociations;
-//    private HashMap<String, OWLNamedIndividual> renderedTraits;
-
     public BandInformation(String bandName) {
         Matcher m = Pattern.compile("(^[0-9XxYy]+)").matcher(bandName);
         if (m.find()) {
             this.bandName = bandName;
             this.chromosome = m.group(1);
-
-//            associations = new ArrayList<Association>();
-//            traitNames = new ArrayList<String>();
-//            traitY = 0;
-//            renderedAssociations = new ArrayList<OWLNamedIndividual>();
-//            renderedTraits = new HashMap<String, OWLNamedIndividual>();
         }
         else {
             throw new RuntimeException(
@@ -49,12 +35,6 @@ public class BandInformation implements Comparable<BandInformation> {
     public BandInformation(String name, String chrom) {
         this.bandName = name;
         this.chromosome = chrom;
-
-//        associations = new ArrayList<Association>();
-//        traitNames = new ArrayList<String>();
-//        traitY = 0;
-//        renderedAssociations = new ArrayList<OWLNamedIndividual>();
-//        renderedTraits = new HashMap<String, OWLNamedIndividual>();
     }
 
     public String getBandName() {
