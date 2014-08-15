@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 public abstract class Initializable {
     private Thread initThread;
 
+    private boolean initializing;
     private boolean ready;
     private Throwable initializationException;
 
@@ -24,13 +25,22 @@ public abstract class Initializable {
         return log;
     }
 
-    protected synchronized void setReady(boolean ready) {
-        this.ready = ready;
+    protected synchronized void setInitializationException(Throwable t) {
+        this.initializationException = t;
         notifyAll();
     }
 
-    protected synchronized void setInitializationException(Throwable t) {
-        this.initializationException = t;
+    protected synchronized void setInitializing(boolean initializing) {
+        this.initializing = initializing;
+        notifyAll();
+    }
+
+    public boolean isInitializing() {
+        return initializing;
+    }
+
+    protected synchronized void setReady(boolean ready) {
+        this.ready = ready;
         notifyAll();
     }
 
@@ -66,22 +76,26 @@ public abstract class Initializable {
 
     public void init() {
         // create new thread to do initialization
-        initThread = new Thread((new Runnable() {
-            public void run() {
-                // call doInitialization() provided by subclasses
-                try {
-                    getLog().debug("Initializing " + Initializable.this.getClass().getSimpleName() + "...");
-                    doInitialization();
-                    setReady(true);
-                    getLog().debug("..." + Initializable.this.getClass().getSimpleName() + " initialized ok");
+        if (!isInitializing() && !isReady()) {
+            setInitializing(true);
+            initThread = new Thread((new Runnable() {
+                public void run() {
+                    // call doInitialization() provided by subclasses
+                    try {
+                        getLog().debug("Initializing " + Initializable.this.getClass().getSimpleName() + "...");
+                        doInitialization();
+                        setReady(true);
+                        setInitializing(false);
+                        getLog().debug("..." + Initializable.this.getClass().getSimpleName() + " initialized ok");
+                    }
+                    catch (Exception e) {
+                        getLog().error("Failed to initialize " + Initializable.this.getClass().getSimpleName(), e);
+                        setInitializationException(e);
+                    }
                 }
-                catch (Exception e) {
-                    getLog().error("Failed to initialize " + Initializable.this.getClass().getSimpleName(), e);
-                    setInitializationException(e);
-                }
-            }
-        }));
-        initThread.start();
+            }));
+            initThread.start();
+        }
     }
 
     protected abstract void doInitialization() throws Exception;

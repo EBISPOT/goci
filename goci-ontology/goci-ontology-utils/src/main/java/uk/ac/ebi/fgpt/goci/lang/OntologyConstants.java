@@ -36,6 +36,10 @@ public class OntologyConstants {
     public static final String HAS_ABOUT_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_about";
     public static final String HAS_PART_PROPERTY_IRI = "http://www.obofoundry.org/ro/ro.owl#has_part";
     public static final String IS_ABOUT_IRI = "http://purl.obolibrary.org/obo/IAO_0000136";
+    public static final String HAS_SUBJECT_IRI = "http://purl.org/oban/has_subject";
+    public static final String IS_SUBJECT_OF_IRI = "http://purl.org/oban/is_subject_of";
+    public static final String HAS_OBJECT_IRI = "http://purl.org/oban/has_object";
+    public static final String IS_OBJECT_OF_IRI = "http://purl.org/oban/is_object_of";
     public static final String LOCATED_IN_PROPERTY_IRI = "http://www.obofoundry.org/ro/ro.owl#located_in";
     public static final String LOCATION_OF_PROPERTY_IRI =  "http://www.obofoundry.org/ro/ro.owl#location_of";
     public static final String PART_OF_PROPERTY_IRI = "http://www.obofoundry.org/ro/ro.owl#part_of";

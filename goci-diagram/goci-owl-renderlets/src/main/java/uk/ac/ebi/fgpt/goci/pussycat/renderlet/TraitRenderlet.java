@@ -102,7 +102,7 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
             double ay = associationLocation.getY();
             double displacement = associationLocation.getHeight();
             double cx, cy;
-            int size = locations.size() - 1;
+            int size = locations.size();
 
             int horizontal = size % 6;
             int vertical = size / 6;
@@ -157,13 +157,17 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
                                                                  OWLReasoner reasoner,
                                                                  OWLNamedIndividual trait)
             throws DataIntegrityViolationException {
+        getLog().trace("Getting sorted locations for traits in the same band as " + trait + "...");
         OWLNamedIndividual association = LayoutUtils.getCachingInstance().getAssociationForTrait(reasoner, trait);
         if (association != null) {
+            getLog().trace("Association for trait '" + trait + "' is '" + association + "'");
             OWLNamedIndividual bandIndividual =
                     LayoutUtils.getCachingInstance().getCytogeneticBandForAssociation(reasoner, association);
+            getLog().trace("Band for association '" + association + "' is '" + bandIndividual + "'");
             Set<OWLNamedIndividual> allTraits =
                     LayoutUtils.getCachingInstance()
                             .getTraitsLocatedInCytogeneticBand(reasoner, bandIndividual);
+            getLog().trace("Identified " + allTraits.size() + " in band '" + bandIndividual + "'");
 
             List<SVGArea> locations = new ArrayList<SVGArea>();
 
@@ -190,6 +194,9 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
                     return comp.intValue();
                 }
             });
+
+            getLog().trace("Sorted locations for " + allTraits.size() + " traits - " +
+                                   locations.size() + " have been rendered");
 
             return locations;
         }

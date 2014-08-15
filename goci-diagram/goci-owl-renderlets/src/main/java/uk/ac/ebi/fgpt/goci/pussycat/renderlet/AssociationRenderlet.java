@@ -95,7 +95,8 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
             BandInformation band = getBandInformation(reasoner, association);
             if (!renderedBands.containsKey(band)) {
                 // there is no other association in this chromosomal band yet - render
-                getLog().trace("First association for this band");
+                getLog().trace("This is the first association for band '" + band.getBandName() + "', " +
+                                       "rendering new line");
 
                 StringBuilder svg = new StringBuilder();
                 String transform = getTransformation(band.getChromosome());
@@ -124,47 +125,41 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
                     // fanning algorithm - calculate diagonal part of the line, if necessary
                     Map<BandInformation, BandInformation> previousBandMap = previousBandMapByReasoner.get(reasoner);
                     BandInformation previousBand = previousBandMap.get(band);
-                    if (previousBand != null) {
+                    if (previousBand != null && band.getChromosome().equals(previousBand.getChromosome())) {
                         SVGArea previousLocation = getLocationOfPreviousAssociation(nexus, reasoner, association);
                         if (previousLocation != null) {
-                            if (band.getChromosome().equals(previousBand.getChromosome())) {
-                                double previousY = previousLocation.getY() + previousLocation.getHeight();
+                            double previousY = previousLocation.getY() + previousLocation.getHeight();
 
-                                // fan up or down?
-                                if (band.getBandName().contains("p")) {
-                                    // p arm - we need to know how many traits are in this band
-                                    int traitCount = getNumberOfTraitsInSameBand(reasoner, association);
-                                    int rowCount = ((traitCount - 1) / 6) + 2;
-                                    double blockSize = rowCount * dotRadius;
+                            // fan up or down?
+                            if (band.getBandName().contains("p")) {
+                                // p arm - we need to know how many traits are in this band
+                                int traitCount = getNumberOfTraitsInSameBand(reasoner, association);
+                                int rowCount = ((traitCount - 1) / 6) + 2;
+                                double blockSize = rowCount * dotRadius;
 
-                                    if (y1 + blockSize > previousY) {
-                                        // if blockSize takes us down so far it would overlap prevY, move up
-                                        y3 = previousY - (y1 + blockSize);
-                                    }
-                                    else {
-                                        // otherwise, line can be horizontal
-                                        y3 = 0;
-                                    }
+                                if (y1 + blockSize > previousY) {
+                                    // if blockSize takes us down so far it would overlap prevY, move up
+                                    y3 = previousY - (y1 + blockSize);
                                 }
                                 else {
-                                    // q arm - we need to know how many traits were in the previous band (ie. the one above)
-                                    int traitCount = getNumberOfTraitsInPreviousBand(reasoner, association);
-                                    int rowCount = ((traitCount - 1) / 6) + 2;
-                                    double blockSize = rowCount * dotRadius;
-
-                                    if (previousY + blockSize > y1) {
-                                        // if the previous blockSize takes us down so far it would overlap y, move down
-                                        y3 = (previousY + blockSize) - y1;
-                                    }
-                                    else {
-                                        // otherwise, line can be horizontal
-                                        y3 = 0;
-                                    }
+                                    // otherwise, line can be horizontal
+                                    y3 = 0;
                                 }
                             }
                             else {
-                                // previous location is on the same chromosome, so overlap isn't an issue
-                                y3 = 0;
+                                // q arm - we need to know how many traits were in the previous band (ie. the one above)
+                                int traitCount = getNumberOfTraitsInPreviousBand(reasoner, association);
+                                int rowCount = ((traitCount - 1) / 6) + 2;
+                                double blockSize = rowCount * dotRadius;
+
+                                if (previousY + blockSize > y1) {
+                                    // if the previous blockSize takes us down so far it would overlap y, move down
+                                    y3 = (previousY + blockSize) - y1;
+                                }
+                                else {
+                                    // otherwise, line can be horizontal
+                                    y3 = 0;
+                                }
                             }
                         }
                         else {
@@ -173,7 +168,7 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
                         }
                     }
                     else {
-                        // no previous band, so line can be horizontal
+                        // no previous band, or isn't in the same chromosome, so line can be horizontal
                         y3 = 0;
                     }
 
@@ -298,7 +293,6 @@ public class AssociationRenderlet implements Renderlet<OWLReasoner, OWLNamedIndi
         BandInformation band = getBandInformation(reasoner, association);
         if (band != null) {
             BandInformation previousBand = previousBandMapByReasoner.get(reasoner).get(band);
-
             if (previousBand == null) {
                 return null;
             }

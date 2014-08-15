@@ -7,10 +7,10 @@ import org.semanticweb.owlapi.model.OWLOntologyAlreadyExistsException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
 import org.semanticweb.owlapi.model.UnloadableImportException;
-import org.semanticweb.owlapi.reasoner.ConsoleProgressMonitor;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
+import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
 import org.semanticweb.owlapi.reasoner.SimpleConfiguration;
 import org.springframework.core.io.Resource;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
@@ -36,7 +36,7 @@ public class KnowledgeBaseLoadingReasonerSession extends Initializable implement
     @Override
     protected void doInitialization() throws Exception {
         getLog().debug("Initializing reasoner session, this may take some time...");
-        getReasoner();
+        createReasoner();
     }
 
     public OntologyConfiguration getConfiguration() {
@@ -52,24 +52,32 @@ public class KnowledgeBaseLoadingReasonerSession extends Initializable implement
     }
 
     @Override
-    public synchronized OWLReasoner getReasoner() throws OWLConversionException {
-        try {
-            if (reasoner == null) {
-                Resource gwasDataResource = getConfiguration().getGwasDiagramDataResource();
-                getLog().info("Loading GWAS data from " + gwasDataResource.toString());
-                OWLOntology gwasData;
-                try {
-                    gwasData = getConfiguration().getOWLOntologyManager().loadOntologyFromOntologyDocument(
-                            gwasDataResource.getInputStream());
-                }
-                catch (OWLOntologyAlreadyExistsException e) {
-                    getLog().info("GWAS data was already loaded (" + e.getOntologyID().getOntologyIRI() + ")");
-                    gwasData = getConfiguration().getOWLOntology(e.getOntologyID().getOntologyIRI());
-                }
-                getLog().debug("Publishing GWAS data (inferred view)");
-                reasoner = reasonOver(gwasData);
-            }
+    public OWLReasoner getReasoner() throws OWLConversionException {
+        if (isReady()) {
             return reasoner;
+        }
+        else {
+            throw new RuntimeException("Reasoner has not yet been initialized: check reasoner session is ready " +
+                                               "with 'isReasonerInitialized()' before requesting the reasoner");
+        }
+    }
+
+    private void createReasoner() throws OWLConversionException {
+        try {
+            Resource gwasDataResource = getConfiguration().getGwasDiagramDataResource();
+            getLog().info("Loading GWAS data from " + gwasDataResource.toString());
+            OWLOntology gwasData;
+            try {
+                gwasData = getConfiguration().getOWLOntologyManager().loadOntologyFromOntologyDocument(
+                        gwasDataResource.getInputStream());
+            }
+            catch (OWLOntologyAlreadyExistsException e) {
+                getLog().info("GWAS data was already loaded (" + e.getOntologyID().getOntologyIRI() + ")");
+                gwasData = getConfiguration().getOWLOntology(e.getOntologyID().getOntologyIRI());
+            }
+            getLog().debug("Publishing GWAS data (inferred view)");
+            reasoner = reasonOver(gwasData);
+
         }
         catch (IOException e) {
             getLog().error("Failed to load ontology resource", e);
@@ -105,7 +113,7 @@ public class KnowledgeBaseLoadingReasonerSession extends Initializable implement
 
             getLog().debug("Creating reasoner... ");
             OWLReasonerFactory factory = new Reasoner.ReasonerFactory();
-            ConsoleProgressMonitor progressMonitor = new ConsoleProgressMonitor();
+            ReasonerProgressMonitor progressMonitor = new LoggingProgressMonitor();
             OWLReasonerConfiguration config = new SimpleConfiguration(progressMonitor);
             OWLReasoner reasoner = factory.createReasoner(ontology, config);
 
@@ -126,6 +134,38 @@ public class KnowledgeBaseLoadingReasonerSession extends Initializable implement
         }
         catch (UnloadableImportException e) {
             throw new OWLConversionException("Failed to load imports", e);
+        }
+    }
+
+    private class LoggingProgressMonitor implements ReasonerProgressMonitor {
+        private String taskName;
+        private int lastPercent;
+
+        @Override public void reasonerTaskStarted(String taskName) {
+            this.taskName = taskName;
+            getLog().debug(taskName);
+        }
+
+        @Override public void reasonerTaskStopped() {
+            getLog().debug(taskName + "complete!");
+            this.taskName = null;
+            this.lastPercent = 0;
+        }
+
+        @Override public void reasonerTaskProgressChanged(int value, int max) {
+            if (taskName != null) {
+                int percent = value * 100 / max;
+                if (percent != lastPercent) {
+                    if (percent % 10 == 0) {
+                        getLog().trace("" + percent + "% done...");
+                    }
+                    lastPercent = percent;
+                }
+            }
+        }
+
+        @Override public void reasonerTaskBusy() {
+
         }
     }
 }

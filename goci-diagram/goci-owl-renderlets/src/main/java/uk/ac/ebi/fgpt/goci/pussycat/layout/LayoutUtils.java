@@ -5,6 +5,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataHasValue;
 import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectHasValue;
@@ -66,10 +67,7 @@ public class LayoutUtils {
         OWLDataFactory factory = manager.getOWLDataFactory();
 
         OWLObjectProperty has_about = factory.getOWLObjectProperty(IRI.create(OntologyConstants.HAS_ABOUT_IRI));
-        OWLObjectProperty location_of =
-                factory.getOWLObjectProperty(IRI.create(OntologyConstants.LOCATION_OF_PROPERTY_IRI));
         OWLClass snpCls = factory.getOWLClass(IRI.create(OntologyConstants.SNP_CLASS_IRI));
-        OWLClass bandCls = factory.getOWLClass(IRI.create(OntologyConstants.CYTOGENIC_REGION_CLASS_IRI));
 
         // get all the is_about SNPs of this trait-assocation
         OWLObjectHasValue hasAboutAssociation = factory.getOWLObjectHasValue(has_about, association);
@@ -80,13 +78,25 @@ public class LayoutUtils {
             throw new DataIntegrityViolationException("No SNPs could be identified for '" + association + "'");
         }
         else {
+//            OWLObjectProperty location_of =
+//                    factory.getOWLObjectProperty(IRI.create(OntologyConstants.LOCATION_OF_PROPERTY_IRI));
+//            OWLClass bandCls = factory.getOWLClass(IRI.create(OntologyConstants.CYTOGENIC_REGION_CLASS_IRI));
+            OWLObjectProperty located_in =
+                    factory.getOWLObjectProperty(IRI.create(OntologyConstants.LOCATED_IN_PROPERTY_IRI));
+
             // now, for each SNP, get the location
             for (OWLNamedIndividual snp : snps) {
-                // get all the located_in bands of this snp
-                OWLObjectHasValue locationOfSNP = factory.getOWLObjectHasValue(location_of, snp);
-                OWLObjectIntersectionOf locationBand = factory.getOWLObjectIntersectionOf(locationOfSNP, bandCls);
-                Set<OWLNamedIndividual> locations = reasoner.getInstances(locationBand, false).getFlattened();
-                results.addAll(locations);
+//                // get all the located_in bands of this snp
+//                OWLObjectHasValue locationOfSNP = factory.getOWLObjectHasValue(location_of, snp);
+//                OWLObjectIntersectionOf locationBand = factory.getOWLObjectIntersectionOf(locationOfSNP, bandCls);
+//                Set<OWLNamedIndividual> locations = reasoner.getInstances(locationBand, false).getFlattened();
+//                results.addAll(locations);
+
+                // get the asserted location_of individuals for this snp
+                Set<OWLIndividual> locations = snp.getObjectPropertyValues(located_in, reasoner.getRootOntology());
+                for (OWLIndividual location : locations) {
+                    results.add(location.asOWLNamedIndividual());
+                }
             }
             if (results.size() == 0) {
                 throw new DataIntegrityViolationException(
@@ -201,12 +211,15 @@ public class LayoutUtils {
         }
 
         // first, get associations
+        getLog().trace("Getting associations for band '" + cytogeneticBand + "'...");
         Set<OWLNamedIndividual> associations = getAssociationsLocatedInCytogeneticBand(reasoner, cytogeneticBand);
         Set<OWLNamedIndividual> traits = new HashSet<OWLNamedIndividual>();
         for (OWLNamedIndividual association : associations) {
             // now get traits
+            getLog().trace("Getting traits for association '" + association + "'...");
             traits.add(getTraitForAssociation(reasoner, association));
         }
+        getLog().trace("All traits located in band '" + cytogeneticBand + "' acquired");
 
         return cache(traits, "getTraitsLocatedInCytogeneticBand", reasoner, cytogeneticBand);
     }
@@ -253,18 +266,30 @@ public class LayoutUtils {
             return (OWLNamedIndividual) retrieved;
         }
 
-        OWLDataFactory dataFactory = reasoner.getRootOntology().getOWLOntologyManager().getOWLDataFactory();
-        OWLObjectProperty has_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.HAS_ABOUT_IRI));
-        OWLObjectHasValue hasAssociationAbout = dataFactory.getOWLObjectHasValue(has_about, association);
-        OWLClass efClass = dataFactory.getOWLClass(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI));
-        OWLObjectIntersectionOf traitForAssociation =
-                dataFactory.getOWLObjectIntersectionOf(hasAssociationAbout, efClass);
+        OWLOntology ontology = reasoner.getRootOntology();
+        OWLDataFactory dataFactory = ontology.getOWLOntologyManager().getOWLDataFactory();
+//        OWLObjectProperty has_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.HAS_ABOUT_IRI));
+//        OWLObjectHasValue hasAssociationAbout = dataFactory.getOWLObjectHasValue(has_about, association);
+//        OWLClass efClass = dataFactory.getOWLClass(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI));
+//        OWLObjectIntersectionOf traitForAssociation =
+//                dataFactory.getOWLObjectIntersectionOf(hasAssociationAbout, efClass);
+//
+//        // get all instances of traitForAssociation
+//        Set<OWLNamedIndividual> traits = reasoner.getInstances(traitForAssociation, false).getFlattened();
 
-        // get all instances of traitForAssociation
-        Set<OWLNamedIndividual> traits = reasoner.getInstances(traitForAssociation, false).getFlattened();
-        if (traits.size() != 0) {
-            OWLNamedIndividual result = traits.iterator().next();
-            return cache(result, "getTraitForAssociation", reasoner, association);
+        OWLObjectProperty is_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
+        OWLClass snpClass = dataFactory.getOWLClass(IRI.create(OntologyConstants.SNP_CLASS_IRI));
+        Set<OWLIndividual> possibleTraits = association.getObjectPropertyValues(is_about, ontology);
+
+        if (possibleTraits.size() != 0) {
+            for (OWLIndividual possibleTrait : possibleTraits) {
+                OWLNamedIndividual result = possibleTrait.asOWLNamedIndividual();
+                if (!possibleTrait.getTypes(ontology).contains(snpClass)) {
+                    return cache(result, "getTraitForAssociation", reasoner, association);
+                }
+            }
+            throw new DataIntegrityViolationException("Cannot find trait for association '" + association +
+                                                              "' - all is_about properties relate to SNP instances");
         }
         else {
             throw new DataIntegrityViolationException("Association " + association + " has no trait");

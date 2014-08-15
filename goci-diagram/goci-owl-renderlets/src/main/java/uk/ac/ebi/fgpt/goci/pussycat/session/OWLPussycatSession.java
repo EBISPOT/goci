@@ -41,11 +41,7 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
     private final OntologyConfiguration ontologyConfiguration;
     private final ReasonerSession reasonerSession;
 
-    private Logger diagramLogger = LoggerFactory.getLogger("diagram.log");
-
-    protected Logger getDiagramLogger() {
-        return diagramLogger;
-    }
+    private boolean rendering = false;
 
     public OWLPussycatSession(OWLAPIFilterInterpreter filterInterpreter,
                               OntologyConfiguration ontologyConfiguration,
@@ -54,6 +50,14 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
         this.filterInterpreter = filterInterpreter;
         this.ontologyConfiguration = ontologyConfiguration;
         this.reasonerSession = reasonerSession;
+    }
+
+    public synchronized boolean isRendering() {
+        return rendering;
+    }
+
+    public synchronized void setRendering(boolean rendering) {
+        this.rendering = rendering;
     }
 
     public OntologyConfiguration getOntologyConfiguration() {
@@ -80,33 +84,45 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
         // derive class expression
         OWLClassExpression classExpression = filterInterpreter.interpretFilters(filters);
 
+        getLog().debug("Rendering SVG for OWLClass '" + classExpression + "'...");
         try {
             // attempt to query the reasoner for data
+            getLog().trace("Attempting to obtain reasoner to use in rendering...");
             OWLReasoner reasoner = getReasoner();
-            Set<OWLClass> classes = reasoner.getSubClasses(classExpression, false).getFlattened();
-            Set<OWLNamedIndividual> individuals = reasoner.getInstances(classExpression, false).getFlattened();
+            getLog().trace("Acquired reasoner OK!");
 
-            // render classes first
-            for (OWLClass cls : classes) {
-                for (Renderlet r : getAvailableRenderlets()) {
-                    if (r.canRender(renderletNexus, reasoner, cls)) {
-                        getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
-                        r.render(renderletNexus, reasoner, cls);
+            // now render
+            if (!isRendering()) {
+                setRendering(true);
+                Set<OWLClass> classes = reasoner.getSubClasses(classExpression, false).getFlattened();
+                Set<OWLNamedIndividual> individuals = reasoner.getInstances(classExpression, false).getFlattened();
+
+                // render classes first
+                for (OWLClass cls : classes) {
+                    for (Renderlet r : getAvailableRenderlets()) {
+                        if (r.canRender(renderletNexus, reasoner, cls)) {
+                            getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
+                            r.render(renderletNexus, reasoner, cls);
+                        }
                     }
                 }
-            }
 
-            // then render individuals, sorted into the order we need them in for rendering
-            List<OWLNamedIndividual> sortedIndividuals = sortIndividualsIntoRenderingOrder(reasoner, individuals);
-            for (OWLNamedIndividual individual : sortedIndividuals) {
-                for (Renderlet r : getAvailableRenderlets()) {
-                    if (r.canRender(renderletNexus, reasoner, individual)) {
-                        getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
-                        r.render(renderletNexus, reasoner, individual);
+                // then render individuals, sorted into the order we need them in for rendering
+                List<OWLNamedIndividual> sortedIndividuals = sortIndividualsIntoRenderingOrder(reasoner, individuals);
+                for (OWLNamedIndividual individual : sortedIndividuals) {
+                    for (Renderlet r : getAvailableRenderlets()) {
+                        if (r.canRender(renderletNexus, reasoner, individual)) {
+                            getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
+                            r.render(renderletNexus, reasoner, individual);
+                        }
                     }
                 }
+                setRendering(false);
+                return renderletNexus.getSVG();
             }
-            return renderletNexus.getSVG();
+            else {
+                throw new PussycatSessionNotReadyException("The GWAS diagram is currently being rendered");
+            }
         }
         catch (OWLConversionException e) {
             throw new RuntimeException("Failed to initialize reasoner - cannot render SVG", e);
