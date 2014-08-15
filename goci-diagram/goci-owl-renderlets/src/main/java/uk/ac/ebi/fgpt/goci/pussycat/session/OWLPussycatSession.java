@@ -4,18 +4,17 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import org.semanticweb.owlapi.reasoner.impl.OWLNamedIndividualNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.lang.Filter;
 import uk.ac.ebi.fgpt.goci.lang.OWLAPIFilterInterpreter;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
+import uk.ac.ebi.fgpt.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
+import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
+import uk.ac.ebi.fgpt.goci.pussycat.layout.LayoutUtils;
 import uk.ac.ebi.fgpt.goci.pussycat.reasoning.ReasonerSession;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
@@ -136,8 +135,8 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
      * @param individuals the set of individuals to sort
      * @return a list of individuals, sorted into suitable rendering order
      */
-    private List<OWLNamedIndividual> sortIndividualsIntoRenderingOrder(OWLReasoner reasoner,
-                                                                       Set<OWLNamedIndividual> individuals) {
+    private List<OWLNamedIndividual> sortIndividualsIntoRenderingOrder(final OWLReasoner reasoner,
+                                                                       final Set<OWLNamedIndividual> individuals) {
         List<OWLNamedIndividual> sorted = new ArrayList<OWLNamedIndividual>();
         sorted.addAll(individuals);
 
@@ -156,7 +155,21 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
                         return 1;
                     }
                     else {
-                        return 0;
+                        // both associations, sort according to the cytogenetic band
+                        try {
+                            OWLNamedIndividual bi1 =
+                                    LayoutUtils.getCachingInstance().getCytogeneticBandForAssociation(reasoner, o1);
+                            OWLNamedIndividual bi2 =
+                                    LayoutUtils.getCachingInstance().getCytogeneticBandForAssociation(reasoner, o2);
+                            BandInformation band1 = LayoutUtils.getCachingInstance().getBandInformation(reasoner, bi1);
+                            BandInformation band2 = LayoutUtils.getCachingInstance().getBandInformation(reasoner, bi2);
+                            return band1.compareTo(band2);
+                        }
+                        catch (DataIntegrityViolationException e) {
+                            getLog().debug("Can't compare associations " + o1 + " and " + o2 + " - can't identify band",
+                                           e);
+                            return 0;
+                        }
                     }
                 }
             }

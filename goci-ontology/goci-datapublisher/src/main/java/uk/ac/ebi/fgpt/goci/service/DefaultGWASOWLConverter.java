@@ -470,8 +470,9 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
             traitClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI));
         }
 
-        // create a new trait instance
-        IRI traitIRI = getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "Trait", association, false);
+        // create a new trait instance (puns the class)
+//        IRI traitIRI = getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "Trait", association, false);
+        IRI traitIRI = traitClass.getIRI();
         OWLNamedIndividual traitIndiv = getDataFactory().getOWLNamedIndividual(traitIRI);
 
         if (ontology.containsIndividualInSignature(traitIRI)) {
