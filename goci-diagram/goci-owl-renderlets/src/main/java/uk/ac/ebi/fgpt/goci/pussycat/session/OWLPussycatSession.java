@@ -140,7 +140,7 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
         List<OWLNamedIndividual> sorted = new ArrayList<OWLNamedIndividual>();
         sorted.addAll(individuals);
 
-        // get all individuals of type association, then of type "trait"
+        // sort all individuals of type association first, then of type "trait" second
         OWLDataFactory factory = reasoner.getRootOntology().getOWLOntologyManager().getOWLDataFactory();
         OWLClass associationCls = factory.getOWLClass(IRI.create(OntologyConstants.TRAIT_ASSOCIATION_CLASS_IRI));
         final Set<OWLNamedIndividual> associations = reasoner.getInstances(associationCls, false).getFlattened();
@@ -173,7 +173,7 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
                                 band2 = LayoutUtils.getCachingInstance().getBandInformation(reasoner, bi2);
                             }
                             catch (DataIntegrityViolationException e) {
-                                getLog().debug("Can't identify band for association " + o1 + " - this will go last");
+                                getLog().debug("Can't properly sort association " + o1 + " - unable to identify band");
                                 return -1;
                             }
                             return band1.compareTo(band2);

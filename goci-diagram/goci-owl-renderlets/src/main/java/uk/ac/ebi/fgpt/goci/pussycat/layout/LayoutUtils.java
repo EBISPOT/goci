@@ -226,31 +226,24 @@ public class LayoutUtils {
     }
 
     /**
-     * Returns the trait association individual that the given trait "has_about".  If there is no known association,
-     * this method returns null.
+     * Returns the trait association individuals that the given trait "is_object_of".
      *
      * @param reasoner the reasoner
      * @param trait    the trait individual to find the corresponding trait association for
      * @return the trait association that is_about this trait
      */
-    public OWLNamedIndividual getAssociationForTrait(OWLReasoner reasoner, OWLNamedIndividual trait)
+    public Set<OWLNamedIndividual> getAssociationsForTrait(OWLReasoner reasoner, OWLNamedIndividual trait)
             throws DataIntegrityViolationException {
-        Object retrieved = checkCache("getAssociationForTrait", reasoner, trait);
+        Object retrieved = checkCache("getAssociationsForTrait", reasoner, trait);
         if (retrieved != null) {
-            return (OWLNamedIndividual) retrieved;
+            return (Set<OWLNamedIndividual>) retrieved;
         }
 
         OWLDataFactory dataFactory = reasoner.getRootOntology().getOWLOntologyManager().getOWLDataFactory();
         OWLObjectProperty is_object_of =
                 dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.IS_OBJECT_OF_IRI));
         Set<OWLNamedIndividual> associations = reasoner.getObjectPropertyValues(trait, is_object_of).getFlattened();
-        if (associations.size() != 0) {
-            OWLNamedIndividual result = associations.iterator().next();
-            return cache(result, "getAssociationForTrait", reasoner, trait);
-        }
-        else {
-            throw new DataIntegrityViolationException("Trait " + trait + " has no association");
-        }
+        return cache(associations, "getAssociationsForTrait", reasoner, trait);
     }
 
     /**

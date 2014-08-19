@@ -6,7 +6,6 @@ import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -86,144 +85,146 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
     public void render(RenderletNexus nexus, OWLReasoner reasoner, OWLNamedIndividual trait) {
         getLog().trace("Trait: " + trait);
         try {
-            StringBuilder svg = new StringBuilder();
-            svg.append("<circle ");
+            Set<OWLNamedIndividual> associations = getAssociationsForTrait(reasoner, trait);
+            for (OWLNamedIndividual association : associations) {
+                try {
+                    // get the band for this association
+                    OWLNamedIndividual band = getBandForAssociation(reasoner, association);
 
-            // retrieve svg locations of co-located traits that have been previously rendered
-            List<SVGArea> locations = getSortedLocationsForColocatedTraits(nexus, reasoner, trait);
-            SVGArea associationLocation = getAssociationLocationForTrait(nexus, reasoner, trait);
-            if (associationLocation.getTransform() != null) {
-                svg.append("transform='").append(associationLocation.getTransform()).append("' ");
-            }
+                    // get location of the association
+                    SVGArea associationLocation = nexus.getLocationOfRenderedEntity(association);
 
-            double alength = associationLocation.getWidth();
-            double radius = 0.2 * alength;
-            double ax = associationLocation.getX();
-            double ay = associationLocation.getY();
-            double displacement = associationLocation.getHeight();
-            double cx, cy;
-            int size = locations.size();
+                    // also get the location of any traits previously rendered in this band
+                    List<SVGArea> locations = getLocationsOfOtherTraitsinBand(nexus, reasoner, band);
 
-            int horizontal = size % 6;
-            int vertical = size / 6;
+                    StringBuilder svg = new StringBuilder();
+                    svg.append("<circle ");
 
-            if (size == 0) {
-                cx = ax + alength + radius;
-            }
-            else {
-                if (vertical % 2 == 0) {
-                    cx = ax + alength + (((2 * horizontal) + 1) * radius);
+                    if (associationLocation.getTransform() != null) {
+                        svg.append("transform='").append(associationLocation.getTransform()).append("' ");
+                    }
+
+                    double alength = associationLocation.getWidth();
+                    double radius = 0.2 * alength;
+                    double ax = associationLocation.getX();
+                    double ay = associationLocation.getY();
+                    double displacement = associationLocation.getHeight();
+                    double cx, cy;
+                    int size = locations.size();
+
+                    int horizontal = size % 6;
+                    int vertical = size / 6;
+
+                    if (size == 0) {
+                        cx = ax + alength + radius;
+                    }
+                    else {
+                        if (vertical % 2 == 0) {
+                            cx = ax + alength + (((2 * horizontal) + 1) * radius);
+                        }
+                        else {
+                            cx = ax + alength + (((2 * horizontal) + 2) * radius);
+                        }
+                    }
+                    cy = ay + displacement + (vertical * radius);
+
+                    svg.append("cx='").append(Double.toString(cx)).append("' ");
+                    svg.append("cy='").append(Double.toString(cy)).append("' ");
+                    svg.append("r='").append(Double.toString(radius)).append("' ");
+
+                    String colour = getTraitColour(reasoner, trait);
+
+                    svg.append("fill='").append(colour).append("' ");
+                    svg.append("stroke='black' ");
+                    svg.append("stroke-width='0.5' ");
+
+                    String traitName = getTraitLabel(reasoner, trait);
+                    svg.append("gwasname='").append(traitName).append("' ");
+
+                    String traitAttribute = getTraitAttribute(reasoner, trait);
+                    getLog().trace("Setting CSS class for trait '" + trait + "' to " + traitAttribute);
+                    svg.append("class='gwas-trait ").append(traitAttribute).append("'");
+                    svg.append("fading='false' ");
+
+                    String associationAttribute = getTraitAssociationAttribute(reasoner, association);
+                    getLog().trace(
+                            "Setting gwasassociation attribute for trait '" + trait + "' to " + associationAttribute);
+                    svg.append("gwasassociation='").append(associationAttribute).append("' ");
+                    svg.append("/>");
+
+                    SVGArea currentArea = new SVGArea(cx, cy, 2 * radius, 2 * radius, 0);
+
+                    // this area is a conjunction of trait + band, so store as a OWLNamedIndividual[] with 2 elements
+                    RenderingEvent<OWLNamedIndividual[]> event =
+                            new RenderingEvent<OWLNamedIndividual[]>(new OWLNamedIndividual[]{trait, band},
+                                                                     svg.toString(),
+                                                                     currentArea,
+                                                                     this);
+                    nexus.renderingEventOccurred(event);
                 }
-                else {
-                    cx = ax + alength + (((2 * horizontal) + 2) * radius);
+                catch (DataIntegrityViolationException e) {
+                    getLog().error("Unable to render trait '" + trait + "' for association '" + association + "'", e);
                 }
             }
-            cy = ay + displacement + (vertical * radius);
-
-            svg.append("cx='").append(Double.toString(cx)).append("' ");
-            svg.append("cy='").append(Double.toString(cy)).append("' ");
-            svg.append("r='").append(Double.toString(radius)).append("' ");
-
-            String colour = getTraitColour(reasoner, trait);
-
-            svg.append("fill='").append(colour).append("' ");
-            svg.append("stroke='black' ");
-            svg.append("stroke-width='0.5' ");
-
-            String traitName = getTraitLabel(reasoner, trait);
-            svg.append("gwasname='").append(traitName).append("' ");
-
-            String traitAttribute = getTraitAttribute(reasoner, trait);
-            getLog().trace("Setting CSS class for trait '" + trait + "' to " + traitAttribute);
-            svg.append("class='gwas-trait ").append(traitAttribute).append("'");
-            svg.append("fading='false' ");
-
-            String associationAttribute = getTraitAssociationAttribute(reasoner, trait);
-            getLog().trace("Setting gwasassociation attribute for trait '" + trait + "' to " + associationAttribute);
-            svg.append("gwasassociation='").append(associationAttribute).append("' ");
-            svg.append("/>");
-
-            SVGArea currentArea = new SVGArea(cx, cy, 2 * radius, 2 * radius, 0);
-            RenderingEvent<OWLIndividual> event =
-                    new RenderingEvent<OWLIndividual>(trait, svg.toString(), currentArea, this);
-            nexus.renderingEventOccurred(event);
         }
         catch (DataIntegrityViolationException e) {
             getLog().error("Cannot render trait '" + trait + "'", e);
         }
     }
 
-    protected List<SVGArea> getSortedLocationsForColocatedTraits(RenderletNexus nexus,
-                                                                 OWLReasoner reasoner,
-                                                                 OWLNamedIndividual trait)
+    protected Set<OWLNamedIndividual> getAssociationsForTrait(OWLReasoner reasoner, OWLNamedIndividual trait)
             throws DataIntegrityViolationException {
-        getLog().trace("Getting sorted locations for traits in the same band as " + trait + "...");
-        OWLNamedIndividual association = LayoutUtils.getCachingInstance().getAssociationForTrait(reasoner, trait);
-        if (association != null) {
-            getLog().trace("Association for trait '" + trait + "' is '" + association + "'");
-            OWLNamedIndividual bandIndividual =
-                    LayoutUtils.getCachingInstance().getCytogeneticBandForAssociation(reasoner, association);
-            getLog().trace("Band for association '" + association + "' is '" + bandIndividual + "'");
-            Set<OWLNamedIndividual> allTraits =
-                    LayoutUtils.getCachingInstance()
-                            .getTraitsLocatedInCytogeneticBand(reasoner, bandIndividual);
-            getLog().trace("Identified " + allTraits.size() + " in band '" + bandIndividual + "'");
-
-            List<SVGArea> locations = new ArrayList<SVGArea>();
-
-            // fetch the location of all traits that have been rendered so far
-            for (OWLNamedIndividual nextTrait : allTraits) {
-                SVGArea location = nexus.getLocationOfRenderedEntity(nextTrait);
-                if (location != null) {
-                    locations.add(location);
-                }
-            }
-
-            // now sort
-            Collections.sort(locations, new Comparator<SVGArea>() {
-                @Override public int compare(SVGArea a1, SVGArea a2) {
-                    Double comp;
-                    double dY = a2.getY() - a1.getY();
-                    if (dY == 0) {
-                        double dX = a2.getX() - a1.getX();
-                        comp = dX > 0 ? Math.ceil(dX) : Math.floor(dX);
-                    }
-                    else {
-                        comp = dY > 0 ? Math.ceil(dY) : Math.floor(dY);
-                    }
-                    return comp.intValue();
-                }
-            });
-
-            getLog().trace("Sorted locations for " + allTraits.size() + " traits - " +
-                                   locations.size() + " have been rendered");
-
-            return locations;
-        }
-        else {
-            throw new DataIntegrityViolationException(
-                    "Unable to identify a trait association about trait '" + trait + "'");
-        }
+        return LayoutUtils.getCachingInstance().getAssociationsForTrait(reasoner, trait);
     }
 
-    protected SVGArea getAssociationLocationForTrait(RenderletNexus nexus,
-                                                     OWLReasoner reasoner,
-                                                     OWLNamedIndividual trait)
+    protected OWLNamedIndividual getBandForAssociation(OWLReasoner reasoner, OWLNamedIndividual association)
             throws DataIntegrityViolationException {
-        OWLNamedIndividual association = LayoutUtils.getCachingInstance().getAssociationForTrait(reasoner, trait);
-        if (association != null) {
-            SVGArea location = nexus.getLocationOfRenderedEntity(association);
+        OWLNamedIndividual bandIndividual =
+                LayoutUtils.getCachingInstance().getCytogeneticBandForAssociation(reasoner, association);
+        getLog().trace("Band for association '" + association + "' is '" + bandIndividual + "'");
+        return bandIndividual;
+    }
+
+    protected List<SVGArea> getLocationsOfOtherTraitsinBand(RenderletNexus nexus,
+                                                            OWLReasoner reasoner,
+                                                            OWLNamedIndividual band)
+            throws DataIntegrityViolationException {
+        Set<OWLNamedIndividual> allTraits =
+                LayoutUtils.getCachingInstance()
+                        .getTraitsLocatedInCytogeneticBand(reasoner, band);
+        getLog().trace("Identified " + allTraits.size() + " traits in band '" + band + "'");
+
+        List<SVGArea> locations = new ArrayList<SVGArea>();
+
+        // fetch the location of all trait + band pairs that have been rendered so far
+        for (OWLNamedIndividual nextTrait : allTraits) {
+            OWLNamedIndividual[] pair = new OWLNamedIndividual[]{nextTrait, band};
+            SVGArea location = nexus.getLocationOfRenderedEntity(pair);
             if (location != null) {
-                return location;
-            }
-            else {
-                throw new DataIntegrityViolationException("Association '" + association + "' has not been rendered");
+                locations.add(location);
             }
         }
-        else {
-            throw new DataIntegrityViolationException(
-                    "Unable to identify a trait association about trait '" + trait + "'");
-        }
+
+        // now sort
+        Collections.sort(locations, new Comparator<SVGArea>() {
+            @Override public int compare(SVGArea a1, SVGArea a2) {
+                Double comp;
+                double dY = a2.getY() - a1.getY();
+                if (dY == 0) {
+                    double dX = a2.getX() - a1.getX();
+                    comp = dX > 0 ? Math.ceil(dX) : Math.floor(dX);
+                }
+                else {
+                    comp = dY > 0 ? Math.ceil(dY) : Math.floor(dY);
+                }
+                return comp.intValue();
+            }
+        });
+
+        getLog().trace("Sorted locations for " + allTraits.size() + " traits - " +
+                               locations.size() + " have been rendered");
+
+        return locations;
     }
 
     protected String getTraitAttribute(OWLReasoner reasoner, OWLNamedIndividual trait)
@@ -243,16 +244,9 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
                                                           ">) for trait '" + trait + "'");
     }
 
-    protected String getTraitAssociationAttribute(OWLReasoner reasoner, OWLNamedIndividual trait)
+    protected String getTraitAssociationAttribute(OWLReasoner reasoner, OWLNamedIndividual association)
             throws DataIntegrityViolationException {
-        OWLNamedIndividual association = LayoutUtils.getCachingInstance().getAssociationForTrait(reasoner, trait);
-        if (association != null) {
-            return OntologyUtils.getShortForm(association);
-        }
-        else {
-            throw new DataIntegrityViolationException(
-                    "Unable to identify a trait association about trait '" + trait + "'");
-        }
+        return OntologyUtils.getShortForm(association);
     }
 
     private String getTraitLabel(OWLReasoner reasoner, OWLNamedIndividual individual) {
