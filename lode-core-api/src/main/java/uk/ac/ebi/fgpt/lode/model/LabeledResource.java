@@ -13,9 +13,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class LabeledResource {
 
-    public String uri;
-    public String label;
-    public String description;
+    private String uri;
+    private String label;
+    private String description;
 
     public LabeledResource(String uri, String label, String description) {
         this.uri = uri;

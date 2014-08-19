@@ -1,4 +1,5 @@
 import junit.framework.TestCase;
+import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import uk.ac.ebi.fgpt.lode.impl.DefaultExplorerViewConfigImpl;
@@ -14,6 +15,7 @@ import java.util.Collections;
  * @date 02/05/2013
  * Functional Genomics Group EMBL-EBI
  */
+@Ignore
 public class TestExplorerConfig extends TestCase {
 
     ExplorerViewConfiguration viewConfiguration;

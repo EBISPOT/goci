@@ -2,6 +2,7 @@ import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 import junit.framework.TestCase;
+import org.junit.Ignore;
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.impl.JenaHttpExecutorService;
 import uk.ac.ebi.fgpt.lode.impl.JenaSparqlService;
@@ -47,6 +48,7 @@ public class TestJeneRemoteRespoitoryQueries extends TestCase {
         // todo test construct query
     }
 
+    @Ignore
     public void testSelectExecuteQuery() {
 
 

@@ -1,9 +1,13 @@
 package uk.ac.ebi.fgpt.lode.impl;
 
 import com.hp.hpl.jena.graph.Graph;
+import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.rdf.model.impl.ResourceImpl;
+import com.hp.hpl.jena.sparql.syntax.ElementTriplesBlock;
+import com.hp.hpl.jena.sparql.syntax.ElementUnion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +40,15 @@ public class JenaExploreService implements ExploreService {
     @Value("${lode.explorer.max.objects}")
     private int sampleLimit = -1;
 
+    @Value("${lode.explorer.useInference}")
+    private boolean useInference = false;
+
+    @Value("${lode.explorer.description}")
+    private String descriptionProperties;
+
+    @Value("${lode.explorer.label}")
+    private String labelProperties;
+
     private SparqlQueryReader queryReader;
 
     private JenaQueryExecutionService queryExecutionService;
@@ -59,6 +72,33 @@ public class JenaExploreService implements ExploreService {
     public SparqlQueryReader getQueryReader() {
         return queryReader;
     }
+
+    public Set<URI> getDescriptionsProperties () {
+        HashSet<URI> descriptionProps = new HashSet<URI>();
+        if (descriptionProperties != null) {
+            for (String s : descriptionProperties.split(",")) {
+                descriptionProps.add(URI.create(s));
+            }
+        }
+        else {
+            descriptionProps.add(description);
+        }
+        return descriptionProps;
+    }
+
+    public Set<URI> getLabelProperties () {
+        HashSet<URI> labelProps = new HashSet<URI>();
+        if (labelProperties != null) {
+            for (String s : labelProperties.split(",")) {
+                labelProps.add(URI.create(s));
+            }
+        }
+        else {
+            labelProps.add(label);
+        }
+        return labelProps;
+    }
+
 
     @Autowired
     public void setQueryReader(SparqlQueryReader queryReader) {
@@ -102,17 +142,7 @@ public class JenaExploreService implements ExploreService {
     public Collection<RelatedResourceDescription> getTypes(URI resourceUri, Set<URI> excludeTypes, boolean ignoreBnodes) throws LodeException {
 
         String query = getQueryReader().getSparqlQuery("PREFIX") + "\n\n" + getQueryReader().getSparqlQuery("RELATEDTO.PROPERTIES.QUERY");
-        Collection<RelatedResourceDescription> res = getRelatedResourceByProperty(resourceUri, query, Collections.singleton(type), excludeTypes, ignoreBnodes, false);
-        // try and find a description
-        for (RelatedResourceDescription r : res) {
-            for (LabeledResource lr : r.getRelatedObjects()) {
-                if ("".equals(lr.getDescription())) {
-                    ShortResourceDescription desc = getShortResourceDescription(URI.create(lr.getUri()), Collections.singleton(label), Collections.singleton(description));
-                    lr.setDescription(desc.getDescription());
-                }
-            }
-        }
-        return res;
+        return getRelatedResourceByProperty(resourceUri, query, Collections.singleton(type), excludeTypes, ignoreBnodes, false);
     }
 
     public Collection<RelatedResourceDescription> getAllTypes(URI resourceUri, Set<URI> excludeTypes, boolean ignoreBnodes) throws LodeException {
@@ -124,7 +154,7 @@ public class JenaExploreService implements ExploreService {
         initialBinding.add("bound", new ResourceImpl(resourceUri.toString()));
         Graph g = getQueryExecutionService().getDefaultGraph();
 
-        QueryExecution endpoint = getQueryExecutionService().getQueryExecution(g, query, initialBinding, true);
+        QueryExecution endpoint = getQueryExecutionService().getQueryExecution(g, query, initialBinding, useInference);
 
         RelatedResourceDescription resources = new RelatedResourceDescription();
         try {
@@ -132,22 +162,18 @@ public class JenaExploreService implements ExploreService {
             while (results.hasNext()) {
                 QuerySolution solution = (QuerySolution) results.next();
                 Resource res = solution.getResource("resource");
+                if (res.isAnon()) {
+                    continue;
+                }
                 if (excludeTypes.contains(URI.create(res.getURI()))) {
                     continue;
                 }
-                String label = getShortForm(URI.create(res.getURI()));
-                String desc = "";
-                if (solution.contains("resourceLabel")) {
-                    label = solution.getLiteral("resourceLabel").getLexicalForm();
-                }
-                if (solution.contains("resourceDescription")) {
-                    desc = solution.getLiteral("resourceDescription").getLexicalForm();
-                }
+                ShortResourceDescription description1 = getShortResourceDescription(URI.create(res.getURI()), getLabelProperties(), getDescriptionsProperties());
+
                 resources.setPropertyUri(type.toString());
                 resources.setPropertyUri("type");
-                resources.getRelatedObjects().add(new LabeledResource(res.getURI(), label, desc));
+                resources.getRelatedObjects().add(new LabeledResource(res.getURI(), description1.getDisplayLabel(), description1.getDescription()));
             }
-
         } catch (Exception e) {
             log.error("Error retrieving results for " + query, e);
         }
@@ -159,6 +185,9 @@ public class JenaExploreService implements ExploreService {
                 g.close();
             }
         }
+
+
+
         return Collections.singleton(resources);
     }
 
@@ -168,22 +197,59 @@ public class JenaExploreService implements ExploreService {
         String description = null;
         String dataset = null;
 
+        Query query = new Query();
+
+        //specify the type of Sparql query SELECT
+        query.setQuerySelectType();
+
+        //variable bindings that we want to return
+        query.addResultVar("label");
+        query.addResultVar("description");
+
+        Resource resourceNode = new ResourceImpl(resourceUri.toString());
+
+        ElementUnion union = new ElementUnion();
         for (URI l : labelUris) {
-            if (label == null) {
-                for (String res : getRelatedObjects(resourceUri, l, true)) {
-                    if (!isNullOrEmpty(res)) {
-                        label = res;
-                    }
-                }
-            }
+            ElementTriplesBlock labelPattern = new ElementTriplesBlock();
+            labelPattern.addTriple(new Triple(resourceNode.asNode(), new ResourceImpl(l.toString()).asNode(), Node.createVariable("label")));
+            union.addElement(labelPattern);
         }
 
-        for (URI l : descriptionUris) {
-            if (description == null) {
-                for (String res : getRelatedObjects(resourceUri, l, true)) {
-                    if (!isNullOrEmpty(res)) {
-                        description = res;
-                    }
+        for (URI d : descriptionUris) {
+            ElementTriplesBlock descriptionPattern = new ElementTriplesBlock();
+            descriptionPattern.addTriple(new Triple(resourceNode.asNode(), new ResourceImpl(d.toString()).asNode(), Node.createVariable("description")));
+            union.addElement(descriptionPattern);
+        }
+
+        query.setQueryPattern(union);
+        QueryExecution endpoint = null;
+        Graph g = getQueryExecutionService().getDefaultGraph();
+
+        try {
+            endpoint = getQueryExecutionService().getQueryExecution(g, query, false);
+
+            ResultSet results = endpoint.execSelect();
+
+            while (results.hasNext()) {
+                QuerySolution solution = (QuerySolution) results.next();
+
+                Literal labelNode = solution.getLiteral("label");
+                if (label == null && labelNode !=null) {
+                    label = labelNode.getLexicalForm();
+                }
+                Literal descriptionNode = solution.getLiteral("description");
+                if (description == null && descriptionNode !=null) {
+                    description = descriptionNode.getLexicalForm();
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error retrieving results for " + query, e);
+        }
+        finally {
+            if (endpoint !=  null)  {
+                endpoint.close();
+                if (g != null ) {
+                    g.close();
                 }
             }
         }
@@ -339,10 +405,9 @@ public class JenaExploreService implements ExploreService {
                 QuerySolution solution = (QuerySolution) results.next();
                 String resource = null;
                 String resourceLabel = null;
-                String resourceDescription = "";
+                String resourceDescription = null;
                 String resourceType = null;
                 String resourceTypeLabel = null;
-                String resourceTypeDesc = null;
 
                 Resource propertyResource = solution.getResource("property");
                 URI prop = URI.create(propertyResource.getURI());
@@ -357,17 +422,6 @@ public class JenaExploreService implements ExploreService {
                 }
                 else if (descCollection.get(prop).getRelatedObjects().size() >= getSampleLimit()) {
                     continue;
-                }
-
-                // see if the property has a label
-                String propertyLabel = "";
-                if (solution.get("propertyLabel") != null) {
-                    propertyLabel = solution.getLiteral("propertyLabel").getLexicalForm();
-                    descCollection.get(prop).setPropertyLabel(propertyLabel);
-                }
-                else if (descCollection.get(prop).getPropertyLabel() == null) {
-                    descCollection.get(prop).setPropertyLabel(getShortForm(prop));
-
                 }
 
                 // get the related resource
@@ -392,15 +446,20 @@ public class JenaExploreService implements ExploreService {
                         continue;
                     }
                     // check if resource has a label
-                    if (solution.getLiteral("resourceLabel") != null) {
-                        resourceLabel = solution.getLiteral("resourceLabel").getLexicalForm();
-                    }
-                    else {
+                    ShortResourceDescription relatedResourceDescription = getShortResourceDescription(
+                            URI.create(( (Resource) resourceNode).getURI()),
+                            getLabelProperties(),
+                            getDescriptionsProperties()
+                    );
+                    if (isNullOrEmpty(relatedResourceDescription.getDisplayLabel())) {
                         resourceLabel = getShortForm(URI.create(resource));
                     }
+                    else {
+                        resourceLabel = relatedResourceDescription.getDisplayLabel();
+                    }
                     // check if resource has a description
-                    if (solution.getLiteral("resourceDescription") != null) {
-                        resourceDescription = solution.getLiteral("resourceDescription").getLexicalForm();
+                    if (!isNullOrEmpty(relatedResourceDescription.getDescription())) {
+                        resourceDescription = relatedResourceDescription.getDescription();
                     }
 
                 }
@@ -417,20 +476,25 @@ public class JenaExploreService implements ExploreService {
                     if (!excludeTypes.contains(URI.create(resourceTypeNode.getURI()))) {
                         resourceType = solution.getResource("resourceType").getURI();
                         log.debug("got a resource type: " + resourceType);
+
+                        ShortResourceDescription resourceTypeDescription = getShortResourceDescription(
+                                URI.create(resourceTypeNode.getURI()),
+                                getLabelProperties(),
+                                Collections.<URI>emptySet()
+                        );
                         // check for resource type label
-                        if (solution.getLiteral("resourceTypeLabel") != null) {
-                            resourceTypeLabel = solution.getLiteral("resourceTypeLabel").getLexicalForm();
-                            log.debug("got a resource type label: " + resourceTypeLabel);
-                        }
-                        else {
+                        if (isNullOrEmpty(resourceTypeDescription.getDisplayLabel())) {
                             resourceTypeLabel = getShortForm(URI.create(resourceType));
                         }
-                        // check for resource type desc
-                        if (solution.getLiteral("resourceTypeDesc") != null) {
-                            resourceTypeDesc = solution.getLiteral("resourceTypeDesc").getLexicalForm();
-                            log.debug("got an resource type label: " + resourceTypeDesc);
-
+                        else {
+                            resourceTypeLabel =resourceTypeDescription.getDisplayLabel();
+                            log.debug("got a resource type label: " + resourceTypeLabel);
                         }
+//                        // check for resource type desc
+//                        if (!isNullOrEmpty(resourceTypeDescription.getDescription())) {
+//                            resourceTypeDesc = resourceTypeDescription.getDescription();
+//                            log.debug("got an resource type label: " + resourceTypeDesc);
+//                        }
                     }
                     else {
                         log.debug("ignoring type: " + resourceTypeNode);
@@ -444,8 +508,19 @@ public class JenaExploreService implements ExploreService {
                 descCollection.get(prop).getRelatedObjects().add(relatedResource);
 
                 if (resourceType != null) {
-                    LabeledResource relatedResourceType = new LabeledResource(resourceType, resourceTypeLabel, resourceTypeDesc);
+                    LabeledResource relatedResourceType = new LabeledResource(resourceType, resourceTypeLabel, "");
                     descCollection.get(prop).getRelatedObjectTypes().add(relatedResourceType);
+                }
+            }
+            // finally get the labels for the properties
+            for (URI prop : descCollection.keySet()) {
+                ShortResourceDescription propertyDescription = getShortResourceDescription(prop, getLabelProperties(), Collections.<URI>emptySet());
+                // see if the property has a label
+                if (isNullOrEmpty(propertyDescription.getDisplayLabel())) {
+                    descCollection.get(prop).setPropertyLabel(getShortForm(prop));
+                }
+                else {
+                    descCollection.get(prop).setPropertyLabel(propertyDescription.getDisplayLabel());
                 }
             }
         } catch (Exception e) {

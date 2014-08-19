@@ -19,42 +19,24 @@ WHERE {
 
 ^[RELATEDTO.PROPERTIES.QUERY]
 PREFIX lodestar_internal:<http://wwww.ebi.ac.uk/fgpt/lodestar>
-SELECT DISTINCT ?property ?propertyLabel ?resource ?resourceLabel ?resourceDescription ?resourceType ?resourceTypeLabel ?resourceTypeDesc WHERE {
-
+SELECT DISTINCT ?property ?resource ?resourceType WHERE {
 ?bound ?property ?resource .
-OPTIONAL {?property rdfs:label ?propertyLabel}
-OPTIONAL {
-    ?resource rdf:type ?resourceType
-        OPTIONAL {?resourceType rdfs:label ?resourceTypeLabel}
-        OPTIONAL {?resourceType dc:description ?resourceTypeDesc}
-}
-OPTIONAL { ?resource rdfs:label  ?resourceLabel}
-OPTIONAL { ?resource dc:description  ?resourceDescription}
+OPTIONAL {?resource a ?resourceType}
 }
 
 
 ^[RELATEDFROM.PROPERTIES.QUERY]
 PREFIX lodestar_internal:<http://wwww.ebi.ac.uk/fgpt/lodestar>
-SELECT DISTINCT ?property ?propertyLabel ?resource ?resourceLabel ?resourceDescription ?resourceType ?resourceTypeLabel ?resourceTypeDesc WHERE {
-
+SELECT DISTINCT ?property ?resource ?resourceType WHERE {
 ?resource ?property ?bound .
-OPTIONAL {?property rdfs:label ?propertyLabel}
-OPTIONAL {
-    ?resource rdf:type ?resourceType
-        OPTIONAL {?resourceType rdfs:label ?resourceTypeLabel}
-        OPTIONAL {?resourceType dc:description ?resourceTypeDesc}
-}
-OPTIONAL { ?resource rdfs:label  ?resourceLabel}
-OPTIONAL { ?resource dc:description  ?resourceDescription}
+OPTIONAL {?resource a ?resourceType}
 }
 
 ^[ALLTYPES.QUERY]
 PREFIX lodestar_internal:<http://wwww.ebi.ac.uk/fgpt/lodestar>
-SELECT DISTINCT ?resource ?resourceLabel ?resourceDescription WHERE {
-?bound a ?resource .
-?resource rdfs:label  ?resourceLabel .
-OPTIONAL {?resource dc:description  ?resourceDescription .  }
-
+SELECT DISTINCT ?resource WHERE {
+?bound a ?type .
+?type rdfs:subClassOf* ?resource .
 }
 
 ^[DATASET.QUERY]

@@ -149,6 +149,28 @@ public class SparqlServlet {
         }
     }
 
+    @RequestMapping (produces="application/rdf+json")
+    public @ResponseBody
+    void getGraphJson(
+            @RequestParam(value = "query", required = false) String query,
+            HttpServletResponse response) throws QueryParseException, LodeException, IOException {
+        log.trace("querying for graph rdf+json");
+        response.setContentType("application/rdf+json");
+        ServletOutputStream out = response.getOutputStream();
+        if (query == null) {
+            sparqlService.getServiceDescription(out, "JSON-LD");
+        }
+        else {
+            getSparqlService().query(
+                    query,
+                    "JSON-LD",
+                    false,
+                    out
+            );
+            out.close();
+        }
+    }
+
     @RequestMapping (produces="text/plain")
     public @ResponseBody
     void getGraphNTriples(
@@ -203,17 +225,16 @@ public class SparqlServlet {
             HttpServletResponse response) throws QueryParseException, IOException, LodeException {
 
         getSparqlXml (query, offset, limit, inference, response);
-//        String header = request.getHeader("Accept");
-//        if (header.contains("sparql-results+xml")) {
-//        }
-//        else if (header.contains("sparql-results+json")) {
-//            getSparqlJson(query, offset, limit, inference, response);
-//        }
-//        else if (header.contains("sparql-results+json")) {
-//            getSparqlJson(query, offset, limit, inference, response);
-//        }
+    }
 
 
+    @RequestMapping ( method = RequestMethod.POST, produces="application/sparql-results+xml", consumes = "application/sparql-query")
+    public void directPostRequest (
+            @RequestBody String query,
+            HttpServletRequest request,
+            HttpServletResponse response) throws QueryParseException, IOException, LodeException {
+
+        query (query, "XML", 0, null, false, response);
     }
 
     @RequestMapping
