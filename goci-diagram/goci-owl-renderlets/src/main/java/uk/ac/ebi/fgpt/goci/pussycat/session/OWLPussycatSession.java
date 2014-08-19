@@ -164,7 +164,7 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
                                 band1 = LayoutUtils.getCachingInstance().getBandInformation(reasoner, bi1);
                             }
                             catch(DataIntegrityViolationException e) {
-                                getLog().debug("Can't identify band for association " + o1 + " - this will go last");
+                                getLog().debug("Can't properly sort association " + o1 + " - unable to identify band");
                                 return 1;
                             }
                             try {
@@ -173,7 +173,7 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
                                 band2 = LayoutUtils.getCachingInstance().getBandInformation(reasoner, bi2);
                             }
                             catch (DataIntegrityViolationException e) {
-                                getLog().debug("Can't properly sort association " + o1 + " - unable to identify band");
+                                getLog().debug("Can't properly sort association " + o2 + " - unable to identify band");
                                 return -1;
                             }
                             return band1.compareTo(band2);

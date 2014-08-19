@@ -21,9 +21,12 @@ import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 import uk.ac.ebi.fgpt.goci.pussycat.utils.OntologyUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -85,21 +88,35 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
     public void render(RenderletNexus nexus, OWLReasoner reasoner, OWLNamedIndividual trait) {
         getLog().trace("Trait: " + trait);
         try {
-            Set<OWLNamedIndividual> associations = getAssociationsForTrait(reasoner, trait);
-            for (OWLNamedIndividual association : associations) {
+            // collect all the bands for which we need to render this trait, and list all associations in that band
+            Map<OWLNamedIndividual, Set<OWLNamedIndividual>> bandToAssociationMap =
+                    new HashMap<OWLNamedIndividual, Set<OWLNamedIndividual>>();
+
+            for (OWLNamedIndividual association : getAssociationsForTrait(reasoner, trait)) {
                 try {
                     // get the band for this association
                     OWLNamedIndividual band = getBandForAssociation(reasoner, association);
+                    if (!bandToAssociationMap.containsKey(band)) {
+                        bandToAssociationMap.put(band, new HashSet<OWLNamedIndividual>());
+                    }
+                    bandToAssociationMap.get(band).add(association);
+                }
+                catch (DataIntegrityViolationException e) {
+                    getLog().error("Unable to render trait '" + trait + "' for association '" + association + "'", e);
+                }
+            }
 
-                    // get location of the association
-                    SVGArea associationLocation = nexus.getLocationOfRenderedEntity(association);
-
-                    // also get the location of any traits previously rendered in this band
+            for (OWLNamedIndividual band : bandToAssociationMap.keySet()) {
+                try {
+                    // get the location of any traits previously rendered in this band
                     List<SVGArea> locations = getLocationsOfOtherTraitsinBand(nexus, reasoner, band);
 
                     StringBuilder svg = new StringBuilder();
                     svg.append("<circle ");
 
+                    // also grab the location of an association (should all be the same for the same band)
+                    OWLNamedIndividual association = bandToAssociationMap.get(band).iterator().next();
+                    SVGArea associationLocation = nexus.getLocationOfRenderedEntity(association);
                     if (associationLocation.getTransform() != null) {
                         svg.append("transform='").append(associationLocation.getTransform()).append("' ");
                     }
@@ -146,24 +163,32 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
                     svg.append("class='gwas-trait ").append(traitAttribute).append("'");
                     svg.append("fading='false' ");
 
-                    String associationAttribute = getTraitAssociationAttribute(reasoner, association);
+                    StringBuilder associationAttribute = new StringBuilder();
+                    Iterator<OWLNamedIndividual> associationIt = bandToAssociationMap.get(band).iterator();
+                    while (associationIt.hasNext()) {
+                        associationAttribute.append(getTraitAssociationAttribute(reasoner, associationIt.next()));
+                        if (associationIt.hasNext()) {
+                            associationAttribute.append(",");
+                        }
+                    }
                     getLog().trace(
-                            "Setting gwasassociation attribute for trait '" + trait + "' to " + associationAttribute);
-                    svg.append("gwasassociation='").append(associationAttribute).append("' ");
+                            "Setting gwasassociation attribute for trait '" + trait + "' to " +
+                            associationAttribute.toString());
+                    svg.append("gwasassociation='").append(associationAttribute.toString()).append("' ");
                     svg.append("/>");
 
                     SVGArea currentArea = new SVGArea(cx, cy, 2 * radius, 2 * radius, 0);
 
-                    // this area is a conjunction of trait + band, so store as a OWLNamedIndividual[] with 2 elements
-                    RenderingEvent<OWLNamedIndividual[]> event =
-                            new RenderingEvent<OWLNamedIndividual[]>(new OWLNamedIndividual[]{trait, band},
-                                                                     svg.toString(),
-                                                                     currentArea,
-                                                                     this);
+                    // this area is a conjunction of trait + band, so store as a List<OWLNamedIndividual> with 2 elements
+                    RenderingEvent<List<OWLNamedIndividual>> event =
+                            new RenderingEvent<List<OWLNamedIndividual>>(Arrays.asList(trait, band),
+                                                                         svg.toString(),
+                                                                         currentArea,
+                                                                         this);
                     nexus.renderingEventOccurred(event);
                 }
                 catch (DataIntegrityViolationException e) {
-                    getLog().error("Unable to render trait '" + trait + "' for association '" + association + "'", e);
+                    getLog().error("Cannot render trait '" + trait + "' in band '" + band + "'");
                 }
             }
         }
@@ -198,8 +223,7 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
 
         // fetch the location of all trait + band pairs that have been rendered so far
         for (OWLNamedIndividual nextTrait : allTraits) {
-            OWLNamedIndividual[] pair = new OWLNamedIndividual[]{nextTrait, band};
-            SVGArea location = nexus.getLocationOfRenderedEntity(pair);
+            SVGArea location = nexus.getLocationOfRenderedEntity(Arrays.asList(nextTrait, band));
             if (location != null) {
                 locations.add(location);
             }
@@ -222,7 +246,7 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
         });
 
         getLog().trace("Sorted locations for " + allTraits.size() + " traits - " +
-                               locations.size() + " have been rendered");
+                       locations.size() + " have been rendered");
 
         return locations;
     }
@@ -240,8 +264,8 @@ public class TraitRenderlet implements Renderlet<OWLReasoner, OWLNamedIndividual
         }
         // if we got to here, we found no trait type
         throw new DataIntegrityViolationException("Could not identify any valid type (i.e. subclass of " +
-                                                          "<" + OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI +
-                                                          ">) for trait '" + trait + "'");
+                                                  "<" + OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI +
+                                                  ">) for trait '" + trait + "'");
     }
 
     protected String getTraitAssociationAttribute(OWLReasoner reasoner, OWLNamedIndividual association)
