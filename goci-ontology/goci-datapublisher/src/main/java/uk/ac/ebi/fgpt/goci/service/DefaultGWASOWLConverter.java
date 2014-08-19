@@ -89,8 +89,9 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
     public OWLOntology createConversionOntology() throws OWLConversionException {
         try {
             // create a new graph to represent our data dump
-            OWLOntology conversion = getManager().createOntology(IRI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/" +
-                                                                  new SimpleDateFormat("yyyy/MM/dd").format(new Date())));
+            OWLOntology conversion =
+                    getManager().createOntology(IRI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/" +
+                                                                   new SimpleDateFormat("yyyy/MM/dd").format(new Date())));
 
             // import the gwas ontology schema and efo
             OWLImportsDeclaration gwasImportDecl = getDataFactory().getOWLImportsDeclaration(
@@ -439,21 +440,21 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         }
 
         // get object properties
-        OWLObjectProperty is_about = getDataFactory().getOWLObjectProperty(
-                IRI.create(OntologyConstants.IS_ABOUT_IRI));
-        OWLObjectProperty has_about = getDataFactory().getOWLObjectProperty(
-                IRI.create(OntologyConstants.HAS_ABOUT_IRI));
+        OWLObjectProperty has_subject =
+                getDataFactory().getOWLObjectProperty(IRI.create(OntologyConstants.HAS_SUBJECT_IRI));
+        OWLObjectProperty is_subject_of =
+                getDataFactory().getOWLObjectProperty(IRI.create(OntologyConstants.IS_SUBJECT_OF_IRI));
 
         // assert relations
-        OWLObjectPropertyAssertionAxiom is_about_snp_relation =
-                getDataFactory().getOWLObjectPropertyAssertionAxiom(is_about, taIndiv, snpIndiv);
-        AddAxiom add_is_about_snp = new AddAxiom(ontology, is_about_snp_relation);
-        getManager().applyChange(add_is_about_snp);
+        OWLObjectPropertyAssertionAxiom has_subject_snp_relation =
+                getDataFactory().getOWLObjectPropertyAssertionAxiom(has_subject, taIndiv, snpIndiv);
+        AddAxiom add_has_subject_snp = new AddAxiom(ontology, has_subject_snp_relation);
+        getManager().applyChange(add_has_subject_snp);
 
-        OWLObjectPropertyAssertionAxiom has_about_snp_relation =
-                getDataFactory().getOWLObjectPropertyAssertionAxiom(has_about, snpIndiv, taIndiv);
-        AddAxiom add_has_about_snp = new AddAxiom(ontology, has_about_snp_relation);
-        getManager().applyChange(add_has_about_snp);
+        OWLObjectPropertyAssertionAxiom is_subject_of_snp_relation =
+                getDataFactory().getOWLObjectPropertyAssertionAxiom(is_subject_of, snpIndiv, taIndiv);
+        AddAxiom add_is_subject_of_snp = new AddAxiom(ontology, is_subject_of_snp_relation);
+        getManager().applyChange(add_is_subject_of_snp);
 
         // get the EFO class for the trait
         OWLClass traitClass;
@@ -471,7 +472,6 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         }
 
         // create a new trait instance (puns the class)
-//        IRI traitIRI = getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "Trait", association, false);
         IRI traitIRI = traitClass.getIRI();
         OWLNamedIndividual traitIndiv = getDataFactory().getOWLNamedIndividual(traitIRI);
 
@@ -496,16 +496,22 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                 getDataFactory().getOWLClassAssertionAxiom(traitClass, traitIndiv);
         getManager().addAxiom(ontology, traitClassAssertion);
 
-        // assert relations
-        OWLObjectPropertyAssertionAxiom is_about_trait_relation =
-                getDataFactory().getOWLObjectPropertyAssertionAxiom(is_about, taIndiv, traitIndiv);
-        AddAxiom add_is_about_trait = new AddAxiom(ontology, is_about_trait_relation);
-        getManager().applyChange(add_is_about_trait);
+        // get object properties
+        OWLObjectProperty has_object =
+                getDataFactory().getOWLObjectProperty(IRI.create(OntologyConstants.HAS_OBJECT_IRI));
+        OWLObjectProperty is_object_of =
+                getDataFactory().getOWLObjectProperty(IRI.create(OntologyConstants.IS_OBJECT_OF_IRI));
 
-        OWLObjectPropertyAssertionAxiom has_about_trait_relation =
-                getDataFactory().getOWLObjectPropertyAssertionAxiom(has_about, traitIndiv, taIndiv);
-        AddAxiom add_has_about_trait = new AddAxiom(ontology, has_about_trait_relation);
-        getManager().applyChange(add_has_about_trait);
+        // assert relations
+        OWLObjectPropertyAssertionAxiom has_object_trait_relation =
+                getDataFactory().getOWLObjectPropertyAssertionAxiom(has_object, taIndiv, traitIndiv);
+        AddAxiom add_has_object_trait = new AddAxiom(ontology, has_object_trait_relation);
+        getManager().applyChange(add_has_object_trait);
+
+        OWLObjectPropertyAssertionAxiom is_object_of_trait_relation =
+                getDataFactory().getOWLObjectPropertyAssertionAxiom(is_object_of, traitIndiv, taIndiv);
+        AddAxiom add_is_object_of_trait = new AddAxiom(ontology, is_object_of_trait_relation);
+        getManager().applyChange(add_is_object_of_trait);
 
         // finally, assert label for this association
         OWLLiteral label = getDataFactory().getOWLLiteral(

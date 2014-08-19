@@ -181,8 +181,8 @@ public class PussycatSummariesController {
             getLog().debug("Got the OWL individual " + association);
 
             //get the SNP and the trait
-            OWLObjectProperty is_about = df.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
-            Set<OWLIndividual> related = association.getObjectPropertyValues(is_about, ontology);
+            OWLObjectProperty has_subject = df.getOWLObjectProperty(IRI.create(OntologyConstants.HAS_SUBJECT_IRI));
+            Set<OWLIndividual> related = association.getObjectPropertyValues(has_subject, ontology);
 
             IRI snp_class = IRI.create(OntologyConstants.SNP_CLASS_IRI);
             OWLNamedIndividual snp = null;

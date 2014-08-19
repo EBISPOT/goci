@@ -94,8 +94,8 @@ public class KBLoader {
         Set<IRI> results = new HashSet<IRI>();
 
         // get all individuals related to this one by "is_about"
-        OWLObjectProperty is_about = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.IS_ABOUT_IRI));
-        Set<OWLIndividual> relatedInds = individual.getObjectPropertyValues(is_about, ontology);
+        OWLObjectProperty has_object = dataFactory.getOWLObjectProperty(IRI.create(OntologyConstants.HAS_OBJECT_IRI));
+        Set<OWLIndividual> relatedInds = individual.getObjectPropertyValues(has_object, ontology);
 
         // for each related individual, get all types
         for (OWLIndividual related : relatedInds) {
