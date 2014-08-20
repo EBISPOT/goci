@@ -40,24 +40,6 @@
             <version>${org.springframework.version}</version>
         </dependency>
 
-
-        <!-- These are jars required to run Jena with the openlink virtuoso jdbc adaptor
-            cuurently loaded into internal artifactory, so will break build for external developers
-            -->
-        <dependency>
-            <groupId>openlinksw.com</groupId>
-            <artifactId>virt-jena</artifactId>
-            <version>1.8</version>
-        </dependency>
-        <dependency>
-            <groupId>openlinksw.com</groupId>
-            <artifactId>virt-jdbc</artifactId>
-            <version>4.0.1</version>
-        </dependency>
-
-
-        <!-- end internal jars -->
-
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
@@ -90,13 +72,6 @@
             <url>https://repository.apache.org/content/repositories/releases/</url>
 
         </repository>
-
-        <repository>
-            <id>coconut.ebi.ac.uk</id>
-            <name>coconut.ebi.ac.uk-releases</name>
-            <url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo</url>
-        </repository>
-
     </repositories>
 
 

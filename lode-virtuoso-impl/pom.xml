@@ -12,11 +12,37 @@
     <artifactId>lode-virtuoso-impl</artifactId>
 
     <dependencies>
+
         <dependency>
             <groupId>ebi-lode</groupId>
             <artifactId>lode-core-api</artifactId>
             <version>1.2-SNAPSHOT</version>
         </dependency>
+
+        <!-- These are jars required to run Jena with the openlink virtuoso jdbc adaptor
+            cuurently loaded into internal artifactory, so will break build for external developers
+            -->
+        <dependency>
+            <groupId>openlinksw.com</groupId>
+            <artifactId>virt-jena</artifactId>
+            <version>1.8</version>
+        </dependency>
+        <dependency>
+            <groupId>openlinksw.com</groupId>
+            <artifactId>virt-jdbc</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+
+
+        <!-- end internal jars -->
     </dependencies>
+
+    <repositories>
+        <repository>
+                <id>coconut.ebi.ac.uk</id>
+                <name>coconut.ebi.ac.uk-releases</name>
+                <url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo</url>
+            </repository>
+    </repositories>
 
 </project>
