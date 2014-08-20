@@ -43,6 +43,9 @@ public class JenaExploreService implements ExploreService {
     @Value("${lode.explorer.useInference}")
     private boolean useInference = false;
 
+    @Value("${lode.explorer.renderWithLabels}")
+    private boolean renderWithLabels = false;
+
     @Value("${lode.explorer.description}")
     private String descriptionProperties;
 
@@ -111,8 +114,6 @@ public class JenaExploreService implements ExploreService {
         String query = getQueryReader().getSparqlQuery("PREFIX") + "\n\n" + getQueryReader().getSparqlQuery("RELATEDTO.PROPERTIES.QUERY");
         return getRelatedResourceByProperty(resourceUri, query, propertyUris, excludeTypes, ignoreBnodes, false);
     }
-
-
 
     public Collection<RelatedResourceDescription> getRelatedToObjects(URI resourceUri, Set<URI> excludePropertyUris, Set<URI> excludeTypes, boolean ignoreBnodes) throws LodeException {
 
@@ -192,6 +193,10 @@ public class JenaExploreService implements ExploreService {
     }
 
     public ShortResourceDescription getShortResourceDescription(URI resourceUri, Set<URI> labelUris, Set<URI> descriptionUris) throws LodeException {
+
+        if (!renderWithLabels) {
+            return new ShortResourceDescription(resourceUri.toString(), getShortForm(resourceUri), "", "");
+        }
         // try and get a label
         String label = null;
         String description = null;
