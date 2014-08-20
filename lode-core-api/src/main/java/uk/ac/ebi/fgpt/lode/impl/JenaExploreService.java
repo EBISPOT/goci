@@ -43,9 +43,6 @@ public class JenaExploreService implements ExploreService {
     @Value("${lode.explorer.useInference}")
     private boolean useInference = false;
 
-    @Value("${lode.explorer.renderWithLabels}")
-    private boolean renderWithLabels = false;
-
     @Value("${lode.explorer.description}")
     private String descriptionProperties;
 
