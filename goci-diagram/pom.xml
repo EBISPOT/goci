@@ -23,10 +23,11 @@
 
     <modules>
         <module>goci-pussycat-api</module>
+        <module>goci-renderlets-core</module>
         <module>goci-owl-renderlets</module>
         <module>goci-sparql-renderlets</module>
         <module>goci-pussycat</module>
         <module>goci-pussycat-app</module>
         <!--<module>goci-pussycat-metrics</module>-->
-    </modules>
+  </modules>
 </project>
