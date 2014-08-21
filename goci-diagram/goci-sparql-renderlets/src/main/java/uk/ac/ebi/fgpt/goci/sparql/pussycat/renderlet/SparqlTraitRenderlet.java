@@ -1,5 +1,6 @@
 package uk.ac.ebi.fgpt.goci.sparql.pussycat.renderlet;
 
+import net.sourceforge.fluxion.spi.ServiceProvider;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.ColourMapper;
@@ -23,6 +24,7 @@ import java.util.Set;
  * @author Tony Burdett
  * @date 21/08/14
  */
+@ServiceProvider
 public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
     @Override public boolean canRender(RenderletNexus nexus, Object renderingContext, Object renderingEntity) {
         if (renderingContext instanceof SparqlTemplate && renderingEntity instanceof URI) {
