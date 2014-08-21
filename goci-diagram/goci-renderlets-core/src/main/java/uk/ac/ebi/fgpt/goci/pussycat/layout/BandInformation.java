@@ -113,13 +113,55 @@ public class BandInformation implements Comparable<BandInformation> {
         }
 
         // compare by chromosome first
-        int thisChromInt = Integer.parseInt(thisChrom);
-        int thatChromInt = Integer.parseInt(thatChrom);
+        int thisChromInt;
+        try {
+            thisChromInt = Integer.parseInt(thisChrom);
+        }
+        catch (NumberFormatException e) {
+            // should be x or y
+            if (thisChrom.equalsIgnoreCase("x")) {
+                thisChromInt = 23;
+            }
+            else if (thisChrom.equalsIgnoreCase("y")) {
+                thisChromInt = 24;
+            }
+            else {
+                thisChromInt = 30;
+            }
+        }
+        int thatChromInt;
+        try {
+            thatChromInt = Integer.parseInt(thatChrom);
+        }
+        catch (NumberFormatException e) {
+            // should be x or y
+            if (thatChrom.equalsIgnoreCase("x")) {
+                thatChromInt = 23;
+            }
+            else if (thatChrom.equalsIgnoreCase("y")) {
+                thatChromInt = 24;
+            }
+            else {
+                thatChromInt = 30;
+            }
+        }
         int chromDelta = thisChromInt - thatChromInt;
         if (chromDelta == 0) {
             if (thisArm.equals(thatArm)) {
-                float thisPositionFloat = Float.parseFloat(thisPosition);
-                float thatPositionFloat = Float.parseFloat(thatPosition);
+                float thisPositionFloat;
+                try {
+                    thisPositionFloat = Float.parseFloat(thisPosition);
+                }
+                catch (NumberFormatException e) {
+                    thisPositionFloat = Integer.MAX_VALUE;
+                }
+                float thatPositionFloat;
+                try {
+                    thatPositionFloat = Float.parseFloat(thatPosition);
+                }
+                catch (NumberFormatException e) {
+                    thatPositionFloat = Integer.MAX_VALUE;
+                }
                 float positionDelta = thisPositionFloat - thatPositionFloat;
                 return ((Double) (positionDelta > 0 ? Math.ceil(positionDelta) : Math.floor(positionDelta))).intValue();
             }
