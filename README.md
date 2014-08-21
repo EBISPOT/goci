@@ -4,6 +4,14 @@ Lodestar
 Release Notes
 =============
 
+**1.2**  21st August 2013
+* Updated to Jena 2.12
+* Exposed JSON-LD suport from Jena in UI 
+* Moved virtuoso to seperate module, only builds in "virtuoso" profile
+* Removed dependecise on virtuoso inferencing rules
+* SPARQL endpoint now support application/sparql-query POST requests 
+* Fixed some browser rendering bugs 
+
 **1.1** 27th Novemnber 2013	
 * Updated to Jena 2.11
 * Fixed query limit bug (RDF-10)

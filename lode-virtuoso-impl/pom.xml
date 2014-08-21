@@ -15,9 +15,16 @@
 
         <dependency>
             <groupId>ebi-lode</groupId>
+            <artifactId>lode-core-servlet</artifactId>
+            <version>1.2-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ebi-lode</groupId>
             <artifactId>lode-core-api</artifactId>
             <version>1.2-SNAPSHOT</version>
         </dependency>
+
 
         <!-- These are jars required to run Jena with the openlink virtuoso jdbc adaptor
             cuurently loaded into internal artifactory, so will break build for external developers
