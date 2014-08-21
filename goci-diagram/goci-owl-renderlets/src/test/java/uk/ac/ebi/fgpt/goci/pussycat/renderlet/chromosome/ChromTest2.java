@@ -18,9 +18,9 @@ public class ChromTest2 extends TestCase {
     @Test
     public void testChromosomes(){
 
-        uk.ac.ebi.fgpt.goci.owl.pussycat.renderlet.chromosome.ChromosomeRenderlet chrom;
+        OWLChromosomeRenderlet chrom;
 
-        ArrayList<uk.ac.ebi.fgpt.goci.owl.pussycat.renderlet.chromosome.ChromosomeRenderlet> all = new ArrayList<uk.ac.ebi.fgpt.goci.owl.pussycat.renderlet.chromosome.ChromosomeRenderlet>();
+        ArrayList<OWLChromosomeRenderlet> all = new ArrayList<OWLChromosomeRenderlet>();
 
         chrom = new OWLChromosomeOneRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());

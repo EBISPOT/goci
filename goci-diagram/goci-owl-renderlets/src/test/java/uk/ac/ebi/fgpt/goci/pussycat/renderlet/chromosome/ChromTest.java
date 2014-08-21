@@ -29,7 +29,7 @@ public class ChromTest extends TestCase{
     @Test
     public void testPath(){
 
-        uk.ac.ebi.fgpt.goci.owl.pussycat.renderlet.chromosome.ChromosomeRenderlet chrom = new OWLChromosomeOneRenderlet();
+        OWLChromosomeRenderlet chrom = new OWLChromosomeOneRenderlet();
 
         URL path = chrom.getSVGFile();
         

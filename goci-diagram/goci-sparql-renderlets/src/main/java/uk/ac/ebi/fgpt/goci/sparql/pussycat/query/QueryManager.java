@@ -1,10 +1,10 @@
-package uk.ac.ebi.fgpt.goci.pussycat.service;
+package uk.ac.ebi.fgpt.goci.sparql.pussycat.query;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import uk.ac.ebi.fgpt.goci.pussycat.exception.SPARQLQueryException;
-import uk.ac.ebi.fgpt.goci.pussycat.utils.PropertiesMapAdapter;
+import uk.ac.ebi.fgpt.goci.sparql.exception.SparqlQueryException;
+import uk.ac.ebi.fgpt.goci.sparql.utils.PropertiesMapAdapter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -71,7 +71,7 @@ public class QueryManager {
         }
 
         getLog().error("No query for " + queryId + " found");
-        throw new SPARQLQueryException("No SPARQL template query for " + queryId);
+        throw new SparqlQueryException("No SPARQL template query for " + queryId);
     }
 
     public String getSparqlQuery(String queryId) {

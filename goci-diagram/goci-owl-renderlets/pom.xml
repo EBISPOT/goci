@@ -14,7 +14,7 @@
     <artifactId>goci-owl-renderlets</artifactId>
     <version>1.0.7-SNAPSHOT</version>
 
-    <name>GOCI Pussycat Renderlet API (renders OWL entities as SVG)</name>
+    <name>GOCI Pussycat OWL+Hermit renderlets</name>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
 
     <properties>
@@ -42,17 +42,6 @@
             <artifactId>goci-renderlets-core</artifactId>
             <version>1.0.7-SNAPSHOT</version>
         </dependency>
-
     </dependencies>
-
-    <repositories>
-        <repository>
-            <id>hasbanana-repo</id>
-            <url>http://www.hasbanana.com/maven/repo</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
 </project>

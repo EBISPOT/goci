@@ -9,11 +9,10 @@
         <version>1.0.7-SNAPSHOT</version>
     </parent>
 
-    <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci-sparql-renderlets</artifactId>
     <version>1.0.7-SNAPSHOT</version>
 
-    <name>GOCI SPARQL client (utils for easily querying a sparql endpoint)</name>
+    <name>GOCI Pussycat SPARQL renderlets</name>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
 
     <properties>
@@ -23,13 +22,31 @@
     <dependencies>
         <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
-            <artifactId>goci-pussycat-api</artifactId>
+            <artifactId>goci-datapublisher</artifactId>
             <version>1.0.7-SNAPSHOT</version>
         </dependency>
+
+        <!-- Lode SPARQL endpoint -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>3.0.3.RELEASE</version>
+            <groupId>ebi-lode</groupId>
+            <artifactId>lode-core-api</artifactId>
+            <version>1.2-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>jcl-over-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.ac.ebi.fgpt</groupId>
+            <artifactId>goci-renderlets-core</artifactId>
+            <version>1.0.7-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
