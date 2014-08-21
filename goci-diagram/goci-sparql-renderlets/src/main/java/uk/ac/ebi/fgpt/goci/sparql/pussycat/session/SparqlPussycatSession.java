@@ -2,11 +2,14 @@ package uk.ac.ebi.fgpt.goci.sparql.pussycat.session;
 
 import uk.ac.ebi.fgpt.goci.lang.Filter;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
+import uk.ac.ebi.fgpt.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
+import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.session.AbstractPussycatSession;
 import uk.ac.ebi.fgpt.goci.sparql.exception.SparqlQueryException;
+import uk.ac.ebi.fgpt.goci.sparql.pussycat.query.QueryManager;
 import uk.ac.ebi.fgpt.goci.sparql.pussycat.query.SparqlTemplate;
 
 import java.net.URI;
@@ -110,7 +113,26 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                     else {
                         if (sparqlTemplate.ask(o1, associationType) && sparqlTemplate.ask(o2, associationType)) {
                             // both associations, sort according to the cytogenetic band
-                            return 0;
+                            BandInformation band1, band2;
+                            try {
+                                URI bi1 = QueryManager.getCachingInstance()
+                                        .getCytogeneticBandForAssociation(sparqlTemplate, o1);
+                                band1 = QueryManager.getCachingInstance().getBandInformation(sparqlTemplate, bi1);
+                            }
+                            catch (DataIntegrityViolationException e) {
+                                getLog().debug("Can't properly sort association " + o1 + " - unable to identify band");
+                                return 1;
+                            }
+                            try {
+                                URI bi2 = QueryManager.getCachingInstance()
+                                        .getCytogeneticBandForAssociation(sparqlTemplate, o2);
+                                band2 = QueryManager.getCachingInstance().getBandInformation(sparqlTemplate, bi2);
+                            }
+                            catch (DataIntegrityViolationException e) {
+                                getLog().debug("Can't properly sort association " + o2 + " - unable to identify band");
+                                return -1;
+                            }
+                            return band1.compareTo(band2);
                         }
                         else {
                             // other instance, not an association, so we don't care

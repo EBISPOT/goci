@@ -2,153 +2,90 @@ package uk.ac.ebi.fgpt.goci.sparql.pussycat.query;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import uk.ac.ebi.fgpt.goci.sparql.exception.SparqlQueryException;
-import uk.ac.ebi.fgpt.goci.sparql.utils.PropertiesMapAdapter;
+import uk.ac.ebi.fgpt.goci.pussycat.exception.DataIntegrityViolationException;
+import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
- * Created by dwelter on 19/05/14.
+ * Convenience singleton class to access common SPARQL queries required in rendering and to cache the results for
+ * subsequent lookup.
  */
 public class QueryManager {
+    private static final QueryManager instance = new QueryManager();
 
-    private Resource sparqlQueryResource;
-    private String[] queries;
-
-    public PropertiesMapAdapter getPropertiesMapAdapter() {
-        return propertiesMapAdapter;
+    public static QueryManager getCachingInstance() {
+        return instance;
     }
 
-    public void setPropertiesMapAdapter(PropertiesMapAdapter propertiesMapAdapter) {
-        this.propertiesMapAdapter = propertiesMapAdapter;
-    }
-
-    private PropertiesMapAdapter propertiesMapAdapter;
-
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private final Map<List<Object>, Object> requestCache;
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
         return log;
     }
 
-    public Resource getSparqlQueryResource() {
-        return sparqlQueryResource;
+    private QueryManager() {
+        this.requestCache = new HashMap<List<Object>, Object>();
     }
 
-    public void setSparqlQueryResource(Resource sparqlQueryResource) {
-        this.sparqlQueryResource = sparqlQueryResource;
+
+    // todo - querying code goes here!
+
+    public URI getCytogeneticBandForAssociation(SparqlTemplate sparqlTemplate, URI association) throws
+            DataIntegrityViolationException {
+        return null;
     }
 
-    public void init() {
-        try {
-            this.queries = collectQueries(getSparqlQueryResource().getInputStream());
-        }
-        catch (IOException e) {
-            throw new RuntimeException(
-                    "Unable to load SPARQL queries from resource " + getSparqlQueryResource().getDescription(), e);
-        }
+    public Set<URI> getAssociationsLocatedInCytogeneticBand(SparqlTemplate reasoner, URI bandIndividual) {
+        return null;
     }
 
-    public String getSparqlQuery(String queryId, boolean withDefaultPrefix) {
-        for (String query : queries) {
-            final String name = query.substring(0, query.indexOf(":"));
+    public Set<URI> getAssociationsLocatedInCytogeneticBand(SparqlTemplate reasoner, String bandName) {
+        return null;
+    }
 
+    public Set<URI> getTraitsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, URI band) {
+        return null;
+    }
 
-            if (name.equals(queryId)) {
-                String q = "";
-                if (withDefaultPrefix) {
-                    q = getPrefix() + "\n";
-                }
-                return q + query.substring(name.length() + 2).trim();
+    public Set<URI> getAssociationsForTrait(SparqlTemplate sparqlTemplate, URI trait) {
+        return null;
+    }
+
+    public BandInformation getBandInformation(SparqlTemplate sparqlTemplate, URI association)
+            throws DataIntegrityViolationException {
+        return null;
+    }
+
+    private Object checkCache(String methodName, Object... arguments) {
+        synchronized (requestCache) {
+            List<Object> key = new ArrayList<Object>();
+            key.add(methodName);
+            Collections.addAll(key, arguments);
+            if (requestCache.containsKey(key)) {
+                return requestCache.get(key);
+            }
+            else {
+                return null;
             }
         }
-
-        getLog().error("No query for " + queryId + " found");
-        throw new SparqlQueryException("No SPARQL template query for " + queryId);
     }
 
-    public String getSparqlQuery(String queryId) {
-        return getSparqlQuery(queryId, true);
-    }
-
-    public String getPrefix() {
-        // add prefixes for all loaded namespaces
-        StringBuilder sb = new StringBuilder();
-        Map<String, String> propMap = getPropertiesMapAdapter().getPropertyMap();
-        for (String prefix : propMap.keySet()) {
-            sb.append("PREFIX ").append(prefix).append(":<").append(propMap.get(prefix)).append(">\n");
+    private <O> O cache(O result, String methodName, Object... arguments) {
+        synchronized (requestCache) {
+            List<Object> key = new ArrayList<Object>();
+            key.add(methodName);
+            Collections.addAll(key, arguments);
+            requestCache.put(key, result);
+            return result;
         }
-        return sb.toString();
-    }
-
-    private String[] collectQueries(InputStream in) throws IOException {
-        getLog().debug("Loading SPARQL queries...");
-        List<String> queries = new ArrayList<String>();
-        BufferedReader inp = new BufferedReader(new InputStreamReader(in));
-        String nextLine = null;
-
-        while (true) {
-            String line = nextLine;
-            nextLine = null;
-            if (line == null) {
-                line = inp.readLine();
-            }
-            if (line == null) {
-                break;
-            }
-            line = line.trim();
-            if (line.length() == 0) {
-                continue;
-            }
-            if (line.startsWith("#")) {
-                continue;
-            }
-            if (line.startsWith("^[") && line.endsWith("]")) {
-                StringBuilder buff = new StringBuilder(line.substring(2, line.length() - 1));
-                buff.append(": ");
-
-                for (; ; ) {
-                    line = inp.readLine();
-                    if (line == null) {
-                        break;
-                    }
-                    line = line.trim();
-                    if (line.length() == 0) {
-                        continue;
-                    }
-                    if (line.startsWith("#")) {
-                        continue;
-                    }
-                    if (line.startsWith("^[")) {
-                        nextLine = line;
-                        break;
-                    }
-                    buff.append(line);
-                    buff.append(System.getProperty("line.separator"));
-                }
-
-                queries.add(buff.toString());
-            }
-        }
-
-        String[] result = new String[queries.size()];
-        for (int i = 0; i < queries.size(); i++) {
-            getLog().debug("Adding query '" + queries.get(i) + "'");
-            result[i] = queries.get(i);
-        }
-        return result;
-    }
-
-    public String getSparqlCountQuery(String queryId) {
-        String subQuery = getSparqlQuery(queryId, false);
-        return getPrefix() + "\nSELECT (count(*) as ?count) WHERE { { " + subQuery + " } }";
     }
 }
 
