@@ -52,7 +52,7 @@ public abstract class AssociationRenderlet<C, E> implements Renderlet<C, E> {
     public void render(RenderletNexus nexus, C context, E associationEntity) {
         getLog().trace("Association: " + associationEntity);
         if (!previousBandMapByContext.containsKey(context)) {
-            previousBandMapByContext = sortBandsWithData(context);
+            previousBandMapByContext.put(context, sortBandsWithData(context));
         }
 
         try {
@@ -180,6 +180,10 @@ public abstract class AssociationRenderlet<C, E> implements Renderlet<C, E> {
         }
     }
 
+    protected Map<BandInformation, BandInformation> getPreviousBandMap(C context) {
+        return previousBandMapByContext.get(context);
+    }
+
     /**
      * Fetches the known ID of the association that can be used to subsequently retrieve it based on user interactions
      *
@@ -227,7 +231,7 @@ public abstract class AssociationRenderlet<C, E> implements Renderlet<C, E> {
     protected abstract SVGArea getLocationOfPreviousAssociation(RenderletNexus nexus, C context, E association)
             throws DataIntegrityViolationException;
 
-    protected abstract Map<C, Map<BandInformation, BandInformation>> sortBandsWithData(C context);
+    protected abstract Map<BandInformation, BandInformation> sortBandsWithData(C context);
 
     private String getTransformation(String chromosomeName) {
         int position;

@@ -2,6 +2,7 @@ package uk.ac.ebi.fgpt.goci.pussycat.renderlet.chromosome;
 
 import junit.framework.TestCase;
 import org.junit.Test;
+import uk.ac.ebi.fgpt.goci.owl.pussycat.renderlet.chromosome.*;
 
 import java.util.ArrayList;
 
@@ -17,103 +18,103 @@ public class ChromTest2 extends TestCase {
     @Test
     public void testChromosomes(){
 
-        ChromosomeRenderlet chrom;
+        uk.ac.ebi.fgpt.goci.owl.pussycat.renderlet.chromosome.ChromosomeRenderlet chrom;
 
-        ArrayList<ChromosomeRenderlet> all = new ArrayList<ChromosomeRenderlet>();
+        ArrayList<uk.ac.ebi.fgpt.goci.owl.pussycat.renderlet.chromosome.ChromosomeRenderlet> all = new ArrayList<uk.ac.ebi.fgpt.goci.owl.pussycat.renderlet.chromosome.ChromosomeRenderlet>();
 
-        chrom = new ChrOne();
+        chrom = new OWLChromosomeOneRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrTwo();
+        chrom = new OWLChromosomeTwoRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrThree();
+        chrom = new OWLChromosomeThreeRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrFour();
+        chrom = new OWLChromosomeFourRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrFive();
+        chrom = new OWLChromosomeFiveRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrSix();
+        chrom = new OWLChromosomeSixRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrSeven();
+        chrom = new OWLChromosomeSevenRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrEight();
+        chrom = new OWLChromosomeEightRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrNine();
+        chrom = new OWLChromosomeNineRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrTen();
+        chrom = new OWLChromosomeTenRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrEleven();
+        chrom = new OWLChromosomeElevenRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrTwelve();
+        chrom = new OWLChromosomeTwelveRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrThirteen();
+        chrom = new OWLChromosomeThirteenRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrFourteen();
+        chrom = new OWLChromosomeFourteenRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrFifteen();
+        chrom = new OWLChromosomeFifteenRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrSixteen();
+        chrom = new OWLChromosomeSixteenRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrSeventeen();
+        chrom = new OWLChromosomeSeventeenRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrEighteen();
+        chrom = new OWLChromosomeEighteenRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrNineteen();
+        chrom = new OWLChromosomeNineteenRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrTwenty();
+        chrom = new OWLChromosomeTwentyRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrTwentyone();
+        chrom = new OWLChromosomeTwentyOneRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrTwentytwo();
+        chrom = new OWLChromosomeTwentyTwoRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrX();
+        chrom = new OWLChromosomeXRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 
-        chrom = new ChrY();
+        chrom = new OWLChromosomeYRenderlet();
         System.out.println(chrom.getDisplayName() + "\t" + chrom.getSVGFile());
         all.add(chrom);
 

@@ -38,7 +38,7 @@
         <!--<property name="configuration" ref="config" />-->
     <!--</bean>-->
 
-    <bean id="pussycatSessionFactory" class="uk.ac.ebi.fgpt.goci.pussycat.session.OWLPussycatSessionFactory">
+    <bean id="pussycatSessionFactory" class="uk.ac.ebi.fgpt.goci.owl.pussycat.session.OWLPussycatSessionFactory">
         <constructor-arg name="ontologyConfiguration" ref="config" />
     </bean>
 

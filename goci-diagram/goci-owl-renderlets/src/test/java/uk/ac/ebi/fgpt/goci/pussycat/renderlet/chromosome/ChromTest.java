@@ -6,6 +6,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import uk.ac.ebi.fgpt.goci.owl.pussycat.renderlet.chromosome.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -28,7 +29,7 @@ public class ChromTest extends TestCase{
     @Test
     public void testPath(){
 
-        ChromosomeRenderlet chrom = new ChrOne();
+        uk.ac.ebi.fgpt.goci.owl.pussycat.renderlet.chromosome.ChromosomeRenderlet chrom = new OWLChromosomeOneRenderlet();
 
         URL path = chrom.getSVGFile();
         

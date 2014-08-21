@@ -2,6 +2,7 @@ package uk.ac.ebi.fgpt.goci.pussycat.renderlet.chromosome;
 
 import junit.framework.TestCase;
 import org.junit.Test;
+import uk.ac.ebi.fgpt.goci.owl.pussycat.renderlet.chromosome.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,7 +20,7 @@ public class FileContentTest extends TestCase{
 
         String content;
 
-        ChromosomeRenderlet chrom = new ChrOne();
+        uk.ac.ebi.fgpt.goci.owl.pussycat.renderlet.chromosome.ChromosomeRenderlet chrom = new OWLChromosomeOneRenderlet();
 
 //        content = chrom.render(null, null, null);
 

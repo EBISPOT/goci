@@ -30,28 +30,28 @@
         <appender-ref ref="console" />
     </logger>
 
-    <logger name="uk.ac.ebi.fgpt.goci.pussycat.reasoning.KnowledgeBaseLoadingReasonerSession" additivity="false">
+    <logger name="uk.ac.ebi.fgpt.goci.owl.pussycat.reasoning.KnowledgeBaseLoadingReasonerSession" additivity="false">
         <level value="TRACE" />
         <appender-ref ref="console" />
     </logger>
 
-    <logger name="uk.ac.ebi.fgpt.goci.pussycat.reasoning.KnowledgeBaseLoadingReasonerSession$LoggingProgressMonitor"
+    <logger name="uk.ac.ebi.fgpt.goci.owl.pussycat.reasoning.KnowledgeBaseLoadingReasonerSession$LoggingProgressMonitor"
             additivity="false">
         <level value="TRACE" />
         <appender-ref ref="console" />
     </logger>
 
-    <logger name="uk.ac.ebi.fgpt.goci.pussycat.renderlet.AssociationRenderlet" additivity="false">
+    <logger name="uk.ac.ebi.fgpt.goci.owl.pussycat.renderlet.OWLAssociationRenderlet" additivity="false">
         <level value="TRACE" />
         <appender-ref ref="console" />
     </logger>
 
-    <logger name="uk.ac.ebi.fgpt.goci.pussycat.renderlet.TraitRenderlet" additivity="false">
+    <logger name="uk.ac.ebi.fgpt.goci.owl.pussycat.renderlet.OWLTraitRenderlet" additivity="false">
         <level value="TRACE" />
         <appender-ref ref="console" />
     </logger>
 
-    <logger name="uk.ac.ebi.fgpt.goci.pussycat.session.OWLPussycatSession" additivity="false">
+    <logger name="uk.ac.ebi.fgpt.goci.owl.pussycat.session.OWLPussycatSession" additivity="false">
         <level value="TRACE" />
         <appender-ref ref="console" />
     </logger>
