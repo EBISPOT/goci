@@ -17,7 +17,6 @@ import java.util.Map;
  * @author dwelter
  * @date 18/04/12
  */
-@ServiceProvider
 public abstract class AssociationRenderlet<C, E> implements Renderlet<C, E> {
     private final Map<BandInformation, SVGArea> renderedBands;
     private Map<C, Map<BandInformation, BandInformation>> previousBandMapByContext;

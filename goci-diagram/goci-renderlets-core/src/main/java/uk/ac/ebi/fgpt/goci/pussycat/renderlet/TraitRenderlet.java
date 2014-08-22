@@ -22,7 +22,6 @@ import java.util.Set;
  * @author Dani Welter
  * @date 06/03/12
  */
-@ServiceProvider
 public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
     private Logger log = LoggerFactory.getLogger(getClass());
 
