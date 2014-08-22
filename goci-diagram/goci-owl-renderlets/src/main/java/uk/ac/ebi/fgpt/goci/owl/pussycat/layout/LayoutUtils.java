@@ -67,13 +67,18 @@ public class LayoutUtils {
         OWLOntologyManager manager = ontology.getOWLOntologyManager();
         OWLDataFactory factory = manager.getOWLDataFactory();
 
-        OWLObjectProperty is_subject_of = factory.getOWLObjectProperty(IRI.create(OntologyConstants.IS_SUBJECT_OF_IRI));
-        OWLClass snpCls = factory.getOWLClass(IRI.create(OntologyConstants.SNP_CLASS_IRI));
+//        OWLObjectProperty is_subject_of = factory.getOWLObjectProperty(IRI.create(OntologyConstants.IS_SUBJECT_OF_IRI));
+//        OWLClass snpCls = factory.getOWLClass(IRI.create(OntologyConstants.SNP_CLASS_IRI));
+        OWLObjectProperty has_subject = factory.getOWLObjectProperty(IRI.create(OntologyConstants.HAS_SUBJECT_IRI));
 
         // get all the subject_of SNPs of this trait-assocation
-        OWLObjectHasValue isSubjectOfAssociation = factory.getOWLObjectHasValue(is_subject_of, association);
-        OWLObjectIntersectionOf associatedSNP = factory.getOWLObjectIntersectionOf(isSubjectOfAssociation, snpCls);
-        Set<OWLNamedIndividual> snps = reasoner.getInstances(associatedSNP, false).getFlattened();
+//        OWLObjectHasValue isSubjectOfAssociation = factory.getOWLObjectHasValue(is_subject_of, association);
+//        OWLObjectIntersectionOf associatedSNP = factory.getOWLObjectIntersectionOf(isSubjectOfAssociation, snpCls);
+//        Set<OWLNamedIndividual> snps = reasoner.getInstances(associatedSNP, false).getFlattened();
+        Set<OWLNamedIndividual> snps = new HashSet<OWLNamedIndividual>();
+        for (OWLIndividual i : association.getObjectPropertyValues(has_subject, ontology)) {
+            snps.add(i.asOWLNamedIndividual());
+        }
 
         if (snps.size() == 0) {
             throw new DataIntegrityViolationException("No SNPs could be identified for '" + association + "'");
