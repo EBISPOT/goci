@@ -93,9 +93,9 @@ public class OWLAssociationRenderlet extends AssociationRenderlet<OWLReasoner, O
         OWLNamedIndividual bandIndividual =
                 LayoutUtils.getCachingInstance().getCytogeneticBandForAssociation(reasoner, association);
         if (bandIndividual != null) {
-            Set<OWLNamedIndividual> associations =
-                    LayoutUtils.getCachingInstance().getAssociationsLocatedInCytogeneticBand(reasoner, bandIndividual);
-            return associations.size();
+            Set<OWLNamedIndividual> traits =
+                    LayoutUtils.getCachingInstance().getTraitsLocatedInCytogeneticBand(reasoner, bandIndividual);
+            return traits.size();
         }
         else {
             throw new DataIntegrityViolationException(
@@ -119,11 +119,11 @@ public class OWLAssociationRenderlet extends AssociationRenderlet<OWLReasoner, O
             BandInformation previousBand = getPreviousBandMap(reasoner).get(band);
 
             // now find the traits in the previous band
-            Set<OWLNamedIndividual> previousBandAssociations =
-                    LayoutUtils.getCachingInstance().getAssociationsLocatedInCytogeneticBand(
+            Set<OWLNamedIndividual> previousBandTraits =
+                    LayoutUtils.getCachingInstance().getTraitsLocatedInCytogeneticBand(
                             reasoner,
                             previousBand.getBandName());
-            return previousBandAssociations.size();
+            return previousBandTraits.size();
         }
         else {
             throw new DataIntegrityViolationException(

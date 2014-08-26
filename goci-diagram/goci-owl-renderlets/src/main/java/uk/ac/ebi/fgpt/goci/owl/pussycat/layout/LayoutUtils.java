@@ -231,6 +231,45 @@ public class LayoutUtils {
         return cache(traits, "getTraitsLocatedInCytogeneticBand", reasoner, cytogeneticBand);
     }
 
+    public Set<OWLNamedIndividual> getTraitsLocatedInCytogeneticBand(OWLReasoner reasoner, String bandName)
+            throws DataIntegrityViolationException {
+        Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", reasoner, bandName);
+        if (retrieved != null) {
+            return (Set<OWLNamedIndividual>) retrieved;
+        }
+
+        OWLOntology ontology = reasoner.getRootOntology();
+        OWLOntologyManager manager = ontology.getOWLOntologyManager();
+        OWLDataFactory factory = manager.getOWLDataFactory();
+
+        OWLClass bandCls = factory.getOWLClass(IRI.create(OntologyConstants.CYTOGENIC_REGION_CLASS_IRI));
+        OWLDataProperty has_name =
+                factory.getOWLDataProperty(IRI.create(OntologyConstants.HAS_NAME_PROPERTY_IRI));
+        OWLLiteral name = factory.getOWLLiteral(bandName);
+
+        OWLDataHasValue namedThings = factory.getOWLDataHasValue(has_name, name);
+        OWLObjectIntersectionOf bandsWithName = factory.getOWLObjectIntersectionOf(bandCls, namedThings);
+
+        Set<OWLNamedIndividual> bands = reasoner.getInstances(bandsWithName, false).getFlattened();
+
+        if (bands.size() == 1) {
+            return cache(getTraitsLocatedInCytogeneticBand(reasoner, bands.iterator().next()),
+                         "getTraitsLocatedInCytogeneticBand",
+                         reasoner,
+                         bandName);
+        }
+        else {
+            if (bands.size() == 0) {
+                throw new DataIntegrityViolationException(
+                        "Could not identify band individual with name '" + bandName + "'");
+            }
+            else {
+                throw new DataIntegrityViolationException(
+                        "More than one band individual with name '" + bandName + "'");
+            }
+        }
+    }
+
     /**
      * Returns the trait association individuals that the given trait "is_object_of".
      *
