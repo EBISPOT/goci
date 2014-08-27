@@ -11,5 +11,5 @@ import java.util.List;
  * @date 21/08/14
  */
 public interface ResultSetMapper<T> {
-    public List<T> mapResults(ResultSet resultSet);
+    public T mapResultSet(ResultSet resultSet);
 }

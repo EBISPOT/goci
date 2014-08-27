@@ -93,8 +93,7 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
 
     protected String getTraitAttribute(SparqlTemplate sparqlTemplate, URI trait)
             throws DataIntegrityViolationException {
-        // todo - query for rdfs:type and return
-        return null;
+        return sparqlTemplate.type(trait).toString();
     }
 
     protected String getTraitAssociationAttribute(SparqlTemplate sparqlTemplate, URI association)
@@ -103,14 +102,12 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
     }
 
     protected String getTraitLabel(SparqlTemplate sparqlTemplate, URI individual) {
-        // todo - get rdfs:label
-        return null;
+        return sparqlTemplate.label(individual);
     }
 
     protected String getTraitColour(SparqlTemplate sparqlTemplate, URI trait) {
         String colour;
-        URI type = null;
-        // todo - query for rdfs:type
+        URI type = sparqlTemplate.type(trait);
         if (ColourMapper.COLOUR_MAP.containsKey(type.toString())) {
             colour = ColourMapper.COLOUR_MAP.get(type.toString());
         }
