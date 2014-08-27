@@ -2,7 +2,6 @@ package uk.ac.ebi.fgpt.goci.pussycat.session;
 
 import uk.ac.ebi.fgpt.goci.lang.Filter;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
-import uk.ac.ebi.fgpt.goci.owl.pussycat.reasoning.ReasonerSession;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 
@@ -32,16 +31,6 @@ import java.util.Collections;
  * @date 02/08/12
  */
 public class SVGLoadingPussycatSession extends AbstractSVGIOPussycatSession {
-    private ReasonerSession reasonerSession;
-
-    public ReasonerSession getReasonerSession() {
-        return reasonerSession;
-    }
-
-    public void setReasonerSession(ReasonerSession reasonerSession) {
-        this.reasonerSession = reasonerSession;
-    }
-
     @Override public Collection<Renderlet> getAvailableRenderlets() {
         return Collections.emptyList();
     }

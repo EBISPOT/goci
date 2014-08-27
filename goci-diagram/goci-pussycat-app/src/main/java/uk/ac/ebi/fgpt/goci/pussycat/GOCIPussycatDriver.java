@@ -14,8 +14,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.manager.PussycatManager;
-import uk.ac.ebi.fgpt.goci.owl.pussycat.reasoning.KnowledgeBaseLoadingReasonerSession;
-import uk.ac.ebi.fgpt.goci.owl.pussycat.reasoning.ReasonerSession;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSession;
@@ -29,9 +27,6 @@ import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-
-//import uk.ac.ebi.fgpt.goci.pussycat.metrics.DateTimeStamp;
-
 
 public class GOCIPussycatDriver {
 
@@ -186,7 +181,6 @@ public class GOCIPussycatDriver {
     }
 
     private OntologyConfiguration config;
-    private ReasonerSession reasonerSession;
     private PussycatSession pussycatSession;
     private PussycatManager pussycatManager;
     private RenderletNexus renderletNexus;
@@ -201,32 +195,12 @@ public class GOCIPussycatDriver {
     public GOCIPussycatDriver() {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("goci-pussycat.xml");
         config = ctx.getBean("config", OntologyConfiguration.class);
-        reasonerSession = ctx.getBean("reasonerSession", KnowledgeBaseLoadingReasonerSession.class);
         pussycatSession = ctx.getBean("pussycatSession", PussycatSession.class);
         pussycatManager = ctx.getBean("pussycatManager", PussycatManager.class);
     }
 
     public void runPussycat() throws IOException {
         getLog().info("Starting session");
-
-        long start, end;
-        start = System.currentTimeMillis();
-        while (!reasonerSession.isReasonerInitialized()) {
-            try {
-                getLog().debug("No reasoner session available, holding");
-                synchronized (this) {
-                    wait(300000);
-                }
-            }
-            catch (InterruptedException e) {
-                // do nothing
-            }
-        }
-
-        end = System.currentTimeMillis();
-        double time = ((double) (end - start)) / 1000;
-        log.info("Reasoner session acquired after " + time + " s");
-
         setRenderletNexus();
         getLog().info("Renderlet nexus set");
 
@@ -266,9 +240,5 @@ public class GOCIPussycatDriver {
             getLog().error("Unable to set renderlet nexus", e);
             throw new RuntimeException(e);
         }
-
-//        for (Renderlet r : renderlets) {
-//            renderletNexus.register(r);
-//        }
     }
 }

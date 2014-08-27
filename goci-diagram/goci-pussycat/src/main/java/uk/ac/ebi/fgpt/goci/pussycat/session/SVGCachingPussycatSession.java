@@ -2,7 +2,6 @@ package uk.ac.ebi.fgpt.goci.pussycat.session;
 
 import uk.ac.ebi.fgpt.goci.lang.Filter;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
-import uk.ac.ebi.fgpt.goci.owl.pussycat.reasoning.ReasonerSessionBasedReasonerProxy;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 
@@ -24,7 +23,6 @@ import java.util.Collection;
  */
 public class SVGCachingPussycatSession extends AbstractSVGIOPussycatSession implements PussycatSession {
     private PussycatSession proxiedSession;
-    private ReasonerSessionBasedReasonerProxy reasonerProxy;
 
     public PussycatSession getProxiedSession() {
         return proxiedSession;
