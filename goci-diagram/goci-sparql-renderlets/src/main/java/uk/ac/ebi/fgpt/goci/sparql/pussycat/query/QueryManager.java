@@ -24,27 +24,27 @@ public class QueryManager {
             "SELECT ?band " +
                     "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp . " +
                     "?snp ro:located_in ?band . " +
-                    "FILTER (?association = <??>) }";
+                    "FILTER (?association = ??) }";
     private static final String ASSOCIATIONS_IN_BAND =
             "SELECT ?association " +
                     "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp . " +
                     "?snp ro:located_in ?band . " +
-                    "FILTER (?band = <??>) }";
+                    "FILTER (?band = ??) }";
     private static final String ASSOCIATIONS_IN_BAND_NAME =
             "SELECT ?association " +
                     "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp . " +
                     "?snp ro:located_in ?bandUri . " +
                     "?bandUri rdfs:label ?band . " +
-                    "FILTER ( ?band = \"??\"^^xsd:string ) }";
+                    "FILTER ( ?band = ?? ) }";
     private static final String TRAITS_IN_BAND =
             "SELECT ?trait ?band " +
                     "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait . " +
                     "?snp ro:located_in ?band ; " +
-                    "FILTER (?band = <??>) }";
+                    "FILTER (?band = ??) }";
     private static final String ASSOCIATIONS_FOR_TRAIT =
             "SELECT ?association " +
                     "WHERE { ?association a gt:TraitAssociation ; oban:has_object ?trait . " +
-                    "FILTER (?trait = <??>) }";
+                    "FILTER (?trait = ??) }";
 
     private static final QueryManager instance = new QueryManager();
 
@@ -65,7 +65,7 @@ public class QueryManager {
 
     public URI getCytogeneticBandForAssociation(SparqlTemplate sparqlTemplate, URI association) throws
             DataIntegrityViolationException {
-        List<URI> results = sparqlTemplate.query(BAND_FOR_ASSOCIATION, new URIMapper("?band"), association);
+        List<URI> results = sparqlTemplate.query(BAND_FOR_ASSOCIATION, new URIMapper("band"), association);
         if (results.size() == 1) {
             return results.get(0);
         }
@@ -81,25 +81,25 @@ public class QueryManager {
 
     public Set<URI> getAssociationsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, URI bandIndividual) {
         Set<URI> results = new HashSet<URI>();
-        results.addAll(sparqlTemplate.query(ASSOCIATIONS_IN_BAND, new URIMapper("?association"), bandIndividual));
+        results.addAll(sparqlTemplate.query(ASSOCIATIONS_IN_BAND, new URIMapper("association"), bandIndividual));
         return results;
     }
 
     public Set<URI> getAssociationsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, String bandName) {
         Set<URI> results = new HashSet<URI>();
-        results.addAll(sparqlTemplate.query(ASSOCIATIONS_IN_BAND_NAME, new URIMapper("?association"), bandName));
+        results.addAll(sparqlTemplate.query(ASSOCIATIONS_IN_BAND_NAME, new URIMapper("association"), bandName));
         return results;
     }
 
     public Set<URI> getTraitsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, URI band) {
         Set<URI> results = new HashSet<URI>();
-        results.addAll(sparqlTemplate.query(TRAITS_IN_BAND, new URIMapper("?trait"), band));
+        results.addAll(sparqlTemplate.query(TRAITS_IN_BAND, new URIMapper("trait"), band));
         return results;
     }
 
     public Set<URI> getAssociationsForTrait(SparqlTemplate sparqlTemplate, URI trait) {
         Set<URI> results = new HashSet<URI>();
-        results.addAll(sparqlTemplate.query(ASSOCIATIONS_FOR_TRAIT, new URIMapper("?association"), trait));
+        results.addAll(sparqlTemplate.query(ASSOCIATIONS_FOR_TRAIT, new URIMapper("association"), trait));
         return results;
     }
 
@@ -129,18 +129,6 @@ public class QueryManager {
             Collections.addAll(key, arguments);
             requestCache.put(key, result);
             return result;
-        }
-    }
-
-    private class URIMapper implements QuerySolutionMapper<URI> {
-        private final String fieldName;
-
-        private URIMapper(String fieldName) {
-            this.fieldName = fieldName;
-        }
-
-        @Override public URI mapQuerySolution(QuerySolution querySolution) {
-            return URI.create(querySolution.getResource(fieldName).getURI());
         }
     }
 }

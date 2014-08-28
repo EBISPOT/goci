@@ -1,5 +1,6 @@
 package uk.ac.ebi.fgpt.goci.sparql.pussycat.query;
 
+import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.ParameterizedSparqlString;
 import com.hp.hpl.jena.query.Query;
@@ -9,6 +10,10 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.QuerySolutionMap;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.Syntax;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.impl.LiteralImpl;
 import com.hp.hpl.jena.rdf.model.impl.ResourceImpl;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.fgpt.goci.sparql.exception.SparqlQueryException;
@@ -16,6 +21,7 @@ import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.service.JenaQueryExecutionService;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +63,7 @@ public class SparqlTemplate {
         this.prefixProperties = prefixProperties;
     }
 
-    public String getPrefix() {
+    public String getPrefixString() {
         if (getPrefixes() != null) {
             return getPrefixes();
         }
@@ -79,6 +85,11 @@ public class SparqlTemplate {
 
     public boolean ask(URI instance, URI type) {
         String sparql = "ASK {<" + instance.toString() + "> a <" + type.toString() + ">}";
+        return ask(sparql);
+    }
+
+    public boolean ask(String sparql) {
+        sparql = getPrefixString().concat(sparql);
         Graph g = getQueryService().getDefaultGraph();
         Query q1 = QueryFactory.create(sparql, Syntax.syntaxARQ);
         QueryExecution execute = null;
@@ -99,11 +110,16 @@ public class SparqlTemplate {
         }
     }
 
+    public List<URI> query(String sparql, String uriFieldName) {
+        return query(sparql, new URIMapper(uriFieldName));
+    }
+
     public <T> List<T> query(String sparql, QuerySolutionMapper<T> qsm) {
         return query(sparql, new QuerySolutionResultSetMapper<T>(qsm));
     }
 
     public <T> T query(String sparql, ResultSetMapper<T> rsm) {
+        sparql = getPrefixString().concat(sparql);
         Graph g = getQueryService().getDefaultGraph();
         Query q1 = QueryFactory.create(sparql, Syntax.syntaxARQ);
         QueryExecution execute = null;
@@ -125,25 +141,38 @@ public class SparqlTemplate {
         }
     }
 
+    public List<URI> query(String sparql, String uriFieldName, Object... args) {
+        return query(sparql, new URIMapper(uriFieldName), args);
+    }
+
     public <T> List<T> query(String sparql, QuerySolutionMapper<T> qsm, Object... args) {
         return query(sparql, new QuerySolutionResultSetMapper<T>(qsm), args);
     }
 
     public <T> T query(String sparql, ResultSetMapper<T> rsm, Object... args) {
+        sparql = getPrefixString().concat(sparql);
         Graph g = getQueryService().getDefaultGraph();
-        Query q1 = QueryFactory.create(sparql, Syntax.syntaxARQ);
 
-        Map<String, String> bindingMap = new HashMap<String, String>();
+        Map<String, Object> bindingMap = new HashMap<String, Object>();
         int i = 0;
         for (Object o : args) {
             String argName = "?_arg" + i++;
             sparql = sparql.replaceFirst("\\?\\?", argName);
-            bindingMap.put(argName, o.toString());
+            bindingMap.put(argName, o);
         }
+        Query q1 = QueryFactory.create(sparql, Syntax.syntaxARQ);
 
         QuerySolutionMap initialBinding = new QuerySolutionMap();
-        for (String variable : bindingMap.keySet()) {
-            initialBinding.add(variable, new ResourceImpl(bindingMap.get(variable)));
+        for (String argName : bindingMap.keySet()) {
+            Object argValue = bindingMap.get(argName);
+            RDFNode arg;
+            if (argValue instanceof URI) {
+                arg = new ResourceImpl(argValue.toString());
+            }
+            else {
+                arg = getLiteralNode(argValue);
+            }
+            initialBinding.add(argName, arg);
         }
         ParameterizedSparqlString queryString = new ParameterizedSparqlString(q1.toString(), initialBinding);
 
@@ -166,12 +195,19 @@ public class SparqlTemplate {
         }
     }
 
-    public List<URI> list(String s) {
-        return null;
+    public List<URI> list(URI type) {
+        return query("SELECT DISTINCT ?uri WHERE { ?uri a <" + type.toString() + "> . FILTER (!isBlank(?uri)) }",
+                     new QuerySolutionMapper<URI>() {
+                         @Override public URI mapQuerySolution(QuerySolution qs) {
+                             return URI.create(qs.getResource("uri").getURI());
+                         }
+                     });
     }
 
     public String label(final URI entity) {
-        return query("SELECT DISTINCT ?label WHERE { <" + entity.toString() + "> rdfs:label ?label . }",
+        String sparql = getPrefixString().concat(
+                "SELECT DISTINCT ?label WHERE { <" + entity.toString() + "> rdfs:label ?label . }");
+        return query(sparql,
                      new ResultSetMapper<String>() {
                          @Override public String mapResultSet(ResultSet rs) {
                              String result = null;
@@ -181,7 +217,7 @@ public class SparqlTemplate {
                                              "More than one rdfs:label for' " + entity.toString() + "'"));
                                  }
                                  QuerySolution qs = rs.next();
-                                 result = qs.getLiteral("?label").getLexicalForm();
+                                 result = qs.getLiteral("label").getLexicalForm();
                              }
                              return result;
                          }
@@ -189,9 +225,11 @@ public class SparqlTemplate {
     }
 
     public URI type(final URI entity) {
-        return query("SELECT DISTINCT ?type WHERE { " + entity.toString() + " rdf:type ?type . " +
-                             "FILTER ( ?type != owl:Class ) . " +
-                             "FILTER ( ?type != owl:NamedIndividual ) }",
+        String sparql =
+                getPrefixString().concat("SELECT DISTINCT ?type WHERE { <" + entity.toString() + "> rdf:type ?type . " +
+                                                 "FILTER ( ?type != owl:Class ) . " +
+                                                 "FILTER ( ?type != owl:NamedIndividual ) }");
+        return query(sparql,
                      new ResultSetMapper<URI>() {
                          @Override public URI mapResultSet(ResultSet rs) {
                              URI result = null;
@@ -201,10 +239,16 @@ public class SparqlTemplate {
                                              "More than one non-owl rdf:type for' " + entity.toString() + "'"));
                                  }
                                  QuerySolution qs = rs.next();
-                                 result = URI.create(qs.getResource("?label").getURI());
+                                 result = URI.create(qs.getResource("type").getURI());
                              }
                              return result;
                          }
                      });
+    }
+
+    protected RDFNode getLiteralNode(Object o) {
+        Model m = ModelFactory.createDefaultModel();
+        return m.createTypedLiteral(o);
+//        return m.createTypedLiteral(s, XSDDatatype.XSDstring); // todo - this and other typing handled automatically?
     }
 }

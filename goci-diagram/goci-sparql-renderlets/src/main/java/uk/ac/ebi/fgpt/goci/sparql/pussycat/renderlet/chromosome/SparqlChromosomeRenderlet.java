@@ -14,13 +14,8 @@ import java.net.URI;
  */
 public abstract class SparqlChromosomeRenderlet extends ChromosomeRenderlet<SparqlTemplate, URI> {
     @Override public boolean canRender(RenderletNexus nexus, Object renderingContext, Object renderingEntity) {
-        if (renderingContext instanceof SparqlTemplate && renderingEntity instanceof URI) {
-            SparqlTemplate template = (SparqlTemplate) renderingContext;
-            URI uri = (URI) renderingEntity;
-            return template.ask(uri, getChromosomeURI());
-        }
-        else {
-            return false;
-        }
+        return renderingContext instanceof SparqlTemplate &&
+                renderingEntity instanceof URI &&
+                getChromosomeURI().equals(renderingEntity);
     }
 }

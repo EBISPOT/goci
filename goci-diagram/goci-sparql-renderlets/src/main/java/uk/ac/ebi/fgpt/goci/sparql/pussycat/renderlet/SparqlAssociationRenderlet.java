@@ -1,5 +1,6 @@
 package uk.ac.ebi.fgpt.goci.sparql.pussycat.renderlet;
 
+import com.hp.hpl.jena.query.QuerySolution;
 import net.sourceforge.fluxion.spi.ServiceProvider;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.DataIntegrityViolationException;
@@ -8,10 +9,10 @@ import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.AssociationRenderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.sparql.pussycat.query.QueryManager;
+import uk.ac.ebi.fgpt.goci.sparql.pussycat.query.QuerySolutionMapper;
 import uk.ac.ebi.fgpt.goci.sparql.pussycat.query.SparqlTemplate;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -45,8 +46,8 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
     /**
      * Fetches the band information about the cytogenetic region the current association is located in
      *
-     * @param sparqlTemplate    the sparqlTemplate
-     * @param association the association to lookup band information for
+     * @param sparqlTemplate the sparqlTemplate
+     * @param association    the association to lookup band information for
      * @return the band information for this association
      * @throws DataIntegrityViolationException
      */
@@ -67,8 +68,8 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
      * For the given association, identifies the cytogenetic band it is located in, then identifies the total number of
      * traits located in the same cytogenetic band and returns the count
      *
-     * @param sparqlTemplate    the sparqlTemplate
-     * @param association the association to identify co-located traits for
+     * @param sparqlTemplate the sparqlTemplate
+     * @param association    the association to identify co-located traits for
      * @return the number of traits in the same cytogenetic region as this association
      * @throws DataIntegrityViolationException
      */
@@ -78,7 +79,8 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
                 QueryManager.getCachingInstance().getCytogeneticBandForAssociation(sparqlTemplate, association);
         if (bandIndividual != null) {
             Set<URI> associations =
-                    QueryManager.getCachingInstance().getAssociationsLocatedInCytogeneticBand(sparqlTemplate, bandIndividual);
+                    QueryManager.getCachingInstance()
+                            .getAssociationsLocatedInCytogeneticBand(sparqlTemplate, bandIndividual);
             return associations.size();
         }
         else {
@@ -91,8 +93,8 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
      * For the given association, identifies the previous cytogenetic band to the one this association is located in,
      * then identifies the total number of traits located in that cytogenetic band and returns the count
      *
-     * @param sparqlTemplate    the sparqlTemplate
-     * @param association the association to identify co-located traits for
+     * @param sparqlTemplate the sparqlTemplate
+     * @param association    the association to identify co-located traits for
      * @return the number of traits in the same cytogenetic region as this association
      * @throws DataIntegrityViolationException
      */
@@ -152,24 +154,25 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
     }
 
     protected Map<BandInformation, BandInformation> sortBandsWithData(SparqlTemplate sparqlTemplate) {
-        Set<BandInformation> bandSet = new HashSet<BandInformation>();
         Map<BandInformation, BandInformation> bandMap = new HashMap<BandInformation, BandInformation>();
 
         // use the sparqlTemplate to get all individuals of type "cytogenic region"
-        URI bandType = URI.create(OntologyConstants.CYTOGENIC_REGION_CLASS_IRI);
         getLog().trace("Retrieving all cytogenetic bands to sort into rendering order...");
-        Set<BandInformation> bands = null;
-        //todo  = sparqlTemplate.query(...);
+        List<BandInformation> bands = sparqlTemplate.query(
+                "SELECT DISTINCT ?band WHERE { ?bandUri a gt:CytogeneticRegion ; rdfs:label ?band . }",
+                new QuerySolutionMapper<BandInformation>() {
+                    @Override public BandInformation mapQuerySolution(QuerySolution qs) {
+                        return new BandInformation(qs.getLiteral("band").getLexicalForm());
+                    }
+                });
         getLog().trace("Got " + bands.size() + " bands, starting sorting...");
 
         // now we've added all band info, sort the set of unique bands
-        List<BandInformation> bandList = new ArrayList<BandInformation>();
-        bandList.addAll(bandSet);
-        Collections.sort(bandList);
+        Collections.sort(bands);
 
-        for (int i = 1; i < bandList.size(); i++) {
-            BandInformation band = bandList.get(i);
-            BandInformation previousBand = bandList.get(i - 1);
+        for (int i = 1; i < bands.size(); i++) {
+            BandInformation band = bands.get(i);
+            BandInformation previousBand = bands.get(i - 1);
             bandMap.put(band, previousBand);
         }
 

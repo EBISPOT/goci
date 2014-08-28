@@ -16,8 +16,13 @@
         <property name="gwasDiagramDataResource" value="file://${user.home}/.goci/data/gwas-data.owl" />
     </bean>
 
+    <bean id="prefixProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="classpath:prefix.properties" />
+    </bean>
+
     <bean name="sparqlTemplate" class="uk.ac.ebi.fgpt.goci.sparql.pussycat.query.SparqlTemplate">
         <property name="queryService" ref="queryService" />
+        <property name="prefixProperties" ref="prefixProperties" />
     </bean>
 
     <bean name="queryService" class="uk.ac.ebi.fgpt.lode.impl.JenaHttpExecutorService">

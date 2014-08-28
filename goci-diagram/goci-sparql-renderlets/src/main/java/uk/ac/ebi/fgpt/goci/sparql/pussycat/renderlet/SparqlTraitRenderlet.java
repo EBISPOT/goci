@@ -1,7 +1,6 @@
 package uk.ac.ebi.fgpt.goci.sparql.pussycat.renderlet;
 
 import net.sourceforge.fluxion.spi.ServiceProvider;
-import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.ColourMapper;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
@@ -28,9 +27,11 @@ import java.util.Set;
 public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
     @Override public boolean canRender(RenderletNexus nexus, Object renderingContext, Object renderingEntity) {
         if (renderingContext instanceof SparqlTemplate && renderingEntity instanceof URI) {
-            SparqlTemplate template = (SparqlTemplate) renderingContext;
+            SparqlTemplate sparqlTemplate = (SparqlTemplate) renderingContext;
             URI uri = (URI) renderingEntity;
-            return template.ask(uri, URI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI));
+            return sparqlTemplate.ask("ASK { <" + uri.toString() + "> oban:is_object_of ?association . " +
+                                              "?association a gt:TraitAssociation . " +
+                                              "}");
         }
         else {
             return false;
