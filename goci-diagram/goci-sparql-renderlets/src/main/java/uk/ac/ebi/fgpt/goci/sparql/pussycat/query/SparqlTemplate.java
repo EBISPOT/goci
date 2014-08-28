@@ -1,6 +1,5 @@
 package uk.ac.ebi.fgpt.goci.sparql.pussycat.query;
 
-import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.ParameterizedSparqlString;
 import com.hp.hpl.jena.query.Query;
@@ -13,7 +12,6 @@ import com.hp.hpl.jena.query.Syntax;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.impl.LiteralImpl;
 import com.hp.hpl.jena.rdf.model.impl.ResourceImpl;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.fgpt.goci.sparql.exception.SparqlQueryException;
@@ -21,7 +19,6 @@ import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.service.JenaQueryExecutionService;
 
 import java.net.URI;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -246,9 +243,25 @@ public class SparqlTemplate {
                      });
     }
 
+    public List<URI> types(final URI entity) {
+        String sparql =
+                getPrefixString().concat("SELECT DISTINCT ?type " +
+                                                 "WHERE { " +
+                                                 "<" + entity.toString() + "> rdf:type ?target . " +
+                                                 "?target rdfs:subClassOf* ?type . " +
+                                                 "FILTER ( !isBlank(?type) ) . " +
+                                                 "FILTER ( ?type != owl:Class ) . " +
+                                                 "FILTER ( ?type != owl:NamedIndividual ) . }");
+        return query(sparql,
+                     new QuerySolutionMapper<URI>() {
+                         @Override public URI mapQuerySolution(QuerySolution qs) {
+                             return URI.create(qs.getResource("type").getURI());
+                         }
+                     });
+    }
+
     protected RDFNode getLiteralNode(Object o) {
         Model m = ModelFactory.createDefaultModel();
         return m.createTypedLiteral(o);
-//        return m.createTypedLiteral(s, XSDDatatype.XSDstring); // todo - this and other typing handled automatically?
     }
 }

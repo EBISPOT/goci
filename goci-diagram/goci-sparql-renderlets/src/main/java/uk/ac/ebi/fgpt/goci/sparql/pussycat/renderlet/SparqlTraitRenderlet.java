@@ -108,13 +108,27 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
 
     protected String getTraitColour(SparqlTemplate sparqlTemplate, URI trait) {
         String colour;
-        URI type = sparqlTemplate.type(trait);
-        if (ColourMapper.COLOUR_MAP.containsKey(type.toString())) {
-            colour = ColourMapper.COLOUR_MAP.get(type.toString());
+        List<URI> allTypes = sparqlTemplate.types(trait);
+        Set<String> available = ColourMapper.COLOUR_MAP.keySet();
+
+        URI type = null;
+        if (allTypes.size() == 2) {
+            colour = "#FFFFFF";
+            getLog().debug("Trait " + trait + " is not mapped");
         }
         else {
-            colour = "magenta";
-            getLog().error("Could not identify a suitable colour category for trait " + trait);
+            for (URI t : allTypes) {
+                if (available.contains(t.toString())) {
+                    type = t;
+                }
+            }
+            if (type != null) {
+                colour = ColourMapper.COLOUR_MAP.get(type.toString());
+            }
+            else {
+                colour = "magenta";
+                getLog().error("Could not identify a suitable colour category for trait " + trait);
+            }
         }
         return colour;
     }
