@@ -108,7 +108,7 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
     }
 
     protected String getTraitColour(SparqlTemplate sparqlTemplate, URI trait) {
-        List<URI> allTypes = sparqlTemplate.query("SELECT DISTINCT ?type (count(?ancestor) as ?count) " +
+        List<URI> allTypes = sparqlTemplate.query("SELECT ?type (count(DISTINCT ?ancestor) as ?count) " +
                                                           "WHERE { " +
                                                           "<" + trait.toString() + "> rdf:type ?trait . " +
                                                           "?trait rdfs:subClassOf* ?type . " +
