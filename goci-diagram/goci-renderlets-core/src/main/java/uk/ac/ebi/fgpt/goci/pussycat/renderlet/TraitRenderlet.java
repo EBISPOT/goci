@@ -76,75 +76,82 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
                     // also grab the location of an association (should all be the same for the same band)
                     E association = bandToAssociationMap.get(band).iterator().next();
                     SVGArea associationLocation = nexus.getLocationOfRenderedEntity(association);
-                    if (associationLocation.getTransform() != null) {
-                        svg.append("transform='").append(associationLocation.getTransform()).append("' ");
-                    }
+                    if (associationLocation != null) {
+                        if (associationLocation.getTransform() != null) {
+                            svg.append("transform='").append(associationLocation.getTransform()).append("' ");
+                        }
 
-                    double alength = associationLocation.getWidth();
-                    double radius = 0.2 * alength;
-                    double ax = associationLocation.getX();
-                    double ay = associationLocation.getY();
-                    double displacement = associationLocation.getHeight();
-                    double cx, cy;
-                    int size = locations.size();
+                        double alength = associationLocation.getWidth();
+                        double radius = 0.2 * alength;
+                        double ax = associationLocation.getX();
+                        double ay = associationLocation.getY();
+                        double displacement = associationLocation.getHeight();
+                        double cx, cy;
+                        int size = locations.size();
 
-                    int horizontal = size % 6;
-                    int vertical = size / 6;
+                        int horizontal = size % 6;
+                        int vertical = size / 6;
 
-                    if (size == 0) {
-                        cx = ax + alength + radius;
-                    }
-                    else {
-                        if (vertical % 2 == 0) {
-                            cx = ax + alength + (((2 * horizontal) + 1) * radius);
+                        if (size == 0) {
+                            cx = ax + alength + radius;
                         }
                         else {
-                            cx = ax + alength + (((2 * horizontal) + 2) * radius);
+                            if (vertical % 2 == 0) {
+                                cx = ax + alength + (((2 * horizontal) + 1) * radius);
+                            }
+                            else {
+                                cx = ax + alength + (((2 * horizontal) + 2) * radius);
+                            }
                         }
-                    }
-                    cy = ay + displacement + (vertical * radius);
+                        cy = ay + displacement + (vertical * radius);
 
-                    svg.append("cx='").append(Double.toString(cx)).append("' ");
-                    svg.append("cy='").append(Double.toString(cy)).append("' ");
-                    svg.append("r='").append(Double.toString(radius)).append("' ");
+                        svg.append("cx='").append(Double.toString(cx)).append("' ");
+                        svg.append("cy='").append(Double.toString(cy)).append("' ");
+                        svg.append("r='").append(Double.toString(radius)).append("' ");
 
-                    String colour = getTraitColour(reasoner, trait);
+                        String colour = getTraitColour(reasoner, trait);
 
-                    svg.append("fill='").append(colour).append("' ");
-                    svg.append("stroke='black' ");
-                    svg.append("stroke-width='0.5' ");
+                        svg.append("fill='").append(colour).append("' ");
+                        svg.append("stroke='black' ");
+                        svg.append("stroke-width='0.5' ");
 
-                    String traitName = getTraitLabel(reasoner, trait);
-                    svg.append("gwasname='").append(traitName).append("' ");
+                        String traitName = getTraitLabel(reasoner, trait);
+                        svg.append("gwasname='").append(traitName).append("' ");
 
-                    String traitAttribute = getTraitAttribute(reasoner, trait);
-                    getLog().trace("Setting CSS class for trait '" + trait + "' to " + traitAttribute);
-                    svg.append("class='gwas-trait ").append(traitAttribute).append("'");
-                    svg.append("fading='false' ");
+                        String traitAttribute = getTraitAttribute(reasoner, trait);
+                        getLog().trace("Setting CSS class for trait '" + trait + "' to " + traitAttribute);
+                        svg.append("class='gwas-trait ").append(traitAttribute).append("'");
+                        svg.append("fading='false' ");
 
-                    StringBuilder associationAttribute = new StringBuilder();
-                    Iterator<E> associationIt = bandToAssociationMap.get(band).iterator();
-                    while (associationIt.hasNext()) {
-                        associationAttribute.append(getTraitAssociationAttribute(reasoner, associationIt.next()));
-                        if (associationIt.hasNext()) {
-                            associationAttribute.append(",");
+                        StringBuilder associationAttribute = new StringBuilder();
+                        Iterator<E> associationIt = bandToAssociationMap.get(band).iterator();
+                        while (associationIt.hasNext()) {
+                            associationAttribute.append(getTraitAssociationAttribute(reasoner, associationIt.next()));
+                            if (associationIt.hasNext()) {
+                                associationAttribute.append(",");
+                            }
                         }
+                        getLog().trace(
+                                "Setting gwasassociation attribute for trait '" + trait + "' to " +
+                                        associationAttribute.toString());
+                        svg.append("gwasassociation='").append(associationAttribute.toString()).append("' ");
+                        svg.append("/>");
+
+                        SVGArea currentArea = new SVGArea(cx, cy, 2 * radius, 2 * radius, 0);
+
+                        // this area is a conjunction of trait + band, so store as a List<OWLNamedIndividual> with 2 elements
+                        RenderingEvent<List<E>> event =
+                                new RenderingEvent<List<E>>(Arrays.asList(trait, band),
+                                                            svg.toString(),
+                                                            currentArea,
+                                                            this);
+                        nexus.renderingEventOccurred(event);
                     }
-                    getLog().trace(
-                            "Setting gwasassociation attribute for trait '" + trait + "' to " +
-                                    associationAttribute.toString());
-                    svg.append("gwasassociation='").append(associationAttribute.toString()).append("' ");
-                    svg.append("/>");
-
-                    SVGArea currentArea = new SVGArea(cx, cy, 2 * radius, 2 * radius, 0);
-
-                    // this area is a conjunction of trait + band, so store as a List<OWLNamedIndividual> with 2 elements
-                    RenderingEvent<List<E>> event =
-                            new RenderingEvent<List<E>>(Arrays.asList(trait, band),
-                                                        svg.toString(),
-                                                        currentArea,
-                                                        this);
-                    nexus.renderingEventOccurred(event);
+                    else {
+                        getLog().error("Cannot render trait '" + trait + "' for association '" + association + "' - " +
+                                               "failed to identify the location of this association. " +
+                                               "This could be due to an earlier error rendering the association.");
+                    }
                 }
                 catch (DataIntegrityViolationException e) {
                     getLog().error("Cannot render trait '" + trait + "' in band '" + band + "'");

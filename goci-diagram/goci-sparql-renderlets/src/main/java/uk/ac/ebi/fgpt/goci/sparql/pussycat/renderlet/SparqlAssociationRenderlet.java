@@ -15,7 +15,6 @@ import uk.ac.ebi.fgpt.goci.sparql.pussycat.query.SparqlTemplate;
 import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -78,10 +77,14 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
         URI bandIndividual =
                 QueryManager.getCachingInstance().getCytogeneticBandForAssociation(sparqlTemplate, association);
         if (bandIndividual != null) {
-            Set<URI> associations =
-                    QueryManager.getCachingInstance()
-                            .getAssociationsLocatedInCytogeneticBand(sparqlTemplate, bandIndividual);
-            return associations.size();
+//            Set<URI> associations =
+//                    QueryManager.getCachingInstance()
+//                            .getAssociationsLocatedInCytogeneticBand(sparqlTemplate, bandIndividual);
+//            return associations.size();
+            Set<URI> previousBandTraits =
+                    QueryManager.getCachingInstance().getTraitsLocatedInCytogeneticBand(sparqlTemplate,
+                                                                                        bandIndividual);
+            return previousBandTraits.size();
         }
         else {
             throw new DataIntegrityViolationException(
@@ -105,11 +108,15 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
             BandInformation previousBand = getPreviousBandMap(sparqlTemplate).get(band);
 
             // now find the traits in the previous band
-            Set<URI> previousBandAssociations =
-                    QueryManager.getCachingInstance().getAssociationsLocatedInCytogeneticBand(
-                            sparqlTemplate,
-                            previousBand.getBandName());
-            return previousBandAssociations.size();
+//            Set<URI> previousBandAssociations =
+//                    QueryManager.getCachingInstance().getAssociationsLocatedInCytogeneticBand(
+//                            sparqlTemplate,
+//                            previousBand.getBandName());
+//            return previousBandAssociations.size();
+            Set<URI> previousBandTraits =
+                    QueryManager.getCachingInstance().getTraitsLocatedInCytogeneticBand(sparqlTemplate,
+                                                                                        previousBand.getBandName());
+            return previousBandTraits.size();
         }
         else {
             throw new DataIntegrityViolationException(

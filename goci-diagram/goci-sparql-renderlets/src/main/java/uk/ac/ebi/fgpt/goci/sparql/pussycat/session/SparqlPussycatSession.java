@@ -3,6 +3,7 @@ package uk.ac.ebi.fgpt.goci.sparql.pussycat.session;
 import com.hp.hpl.jena.query.QuerySolution;
 import uk.ac.ebi.fgpt.goci.lang.Filter;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
+import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.session.AbstractPussycatSession;
@@ -126,23 +127,23 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
 
     private class AssociationLocation implements Comparable<AssociationLocation> {
         private final URI association;
-        private final String bandName;
+        private final BandInformation band;
 
         private AssociationLocation(URI association, String bandName) {
             this.association = association;
-            this.bandName = bandName;
+            this.band = new BandInformation(bandName);
         }
 
         public URI getAssociation() {
             return association;
         }
 
-        public String getBandName() {
-            return bandName;
+        public BandInformation getBand() {
+            return band;
         }
 
         @Override public int compareTo(AssociationLocation o) {
-            return 0;
+            return getBand().compareTo(o.getBand());
         }
     }
 }

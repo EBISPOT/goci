@@ -8,6 +8,7 @@ import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.TraitRenderlet;
 import uk.ac.ebi.fgpt.goci.sparql.pussycat.query.QueryManager;
 import uk.ac.ebi.fgpt.goci.sparql.pussycat.query.SparqlTemplate;
+import uk.ac.ebi.fgpt.goci.sparql.pussycat.query.URIMapper;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -107,29 +108,28 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
     }
 
     protected String getTraitColour(SparqlTemplate sparqlTemplate, URI trait) {
-        String colour;
-        List<URI> allTypes = sparqlTemplate.types(trait);
-        Set<String> available = ColourMapper.COLOUR_MAP.keySet();
+        List<URI> allTypes = sparqlTemplate.query("SELECT DISTINCT ?type (count(?ancestor) as ?count) " +
+                                                          "WHERE { " +
+                                                          "<" + trait.toString() + "> rdf:type ?trait . " +
+                                                          "?trait rdfs:subClassOf* ?type . " +
+                                                          "?type rdfs:subClassOf* ?ancestor . " +
+                                                          "FILTER ( ?trait != owl:Class ) .  " +
+                                                          "FILTER ( ?trait != owl:NamedIndividual ) . } " +
+                                                          "GROUP BY ?type " +
+                                                          "ORDER BY desc(?count) ", new URIMapper("type"));
 
-        URI type = null;
-        if (allTypes.size() == 2) {
-            colour = "#FFFFFF";
-            getLog().debug("Trait " + trait + " is not mapped");
-        }
-        else {
-            for (URI t : allTypes) {
-                if (available.contains(t.toString())) {
-                    type = t;
+        Set<String> available = ColourMapper.COLOUR_MAP.keySet();
+        for (URI type : allTypes) {
+            if (type != null) {
+                if (available.contains(type.toString())) {
+                    // can return first match - types are ordered as most specific type first
+                    return ColourMapper.COLOUR_MAP.get(type.toString());
                 }
             }
-            if (type != null) {
-                colour = ColourMapper.COLOUR_MAP.get(type.toString());
-            }
-            else {
-                colour = "magenta";
-                getLog().error("Could not identify a suitable colour category for trait " + trait);
-            }
         }
-        return colour;
+
+        // if we got to here, no color available
+        getLog().error("Could not identify a suitable colour category for trait " + trait);
+        return "magenta";
     }
 }

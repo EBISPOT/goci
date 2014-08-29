@@ -1,6 +1,5 @@
 package uk.ac.ebi.fgpt.goci.sparql.pussycat.query;
 
-import com.hp.hpl.jena.query.QuerySolution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.DataIntegrityViolationException;
@@ -40,6 +39,12 @@ public class QueryManager {
             "SELECT ?trait ?band " +
                     "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait . " +
                     "?snp ro:located_in ?band ; " +
+                    "FILTER (?band = ??) }";
+    private static final String TRAITS_IN_BAND_NAME =
+            "SELECT ?trait ?band " +
+                    "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait . " +
+                    "?snp ro:located_in ?bandUri . " +
+                    "?bandUri rdfs:label ?band . " +
                     "FILTER (?band = ??) }";
     private static final String ASSOCIATIONS_FOR_TRAIT =
             "SELECT ?association " +
@@ -91,9 +96,15 @@ public class QueryManager {
         return results;
     }
 
-    public Set<URI> getTraitsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, URI band) {
+    public Set<URI> getTraitsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, URI bandIndividual) {
         Set<URI> results = new HashSet<URI>();
-        results.addAll(sparqlTemplate.query(TRAITS_IN_BAND, new URIMapper("trait"), band));
+        results.addAll(sparqlTemplate.query(TRAITS_IN_BAND, new URIMapper("trait"), bandIndividual));
+        return results;
+    }
+
+    public Set<URI> getTraitsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, String bandName) {
+        Set<URI> results = new HashSet<URI>();
+        results.addAll(sparqlTemplate.query(TRAITS_IN_BAND_NAME, new URIMapper("trait"), bandName));
         return results;
     }
 

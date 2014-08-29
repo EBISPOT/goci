@@ -34,66 +34,66 @@
         <appender-ref ref="file" />
     </logger>
 
-    <logger name="uk.ac.ebi.fgpt.goci.pussycat" additivity="false">
+    <logger name="uk.ac.ebi.fgpt.goci" additivity="false">
         <level value="DEBUG" />
         <appender-ref ref="console" />
         <appender-ref ref="file" />
     </logger>
 
-    <logger name="uk.ac.ebi.fgpt.goci.owl.pussycat.reasoning.KnowledgeBaseLoadingReasonerSession" additivity="false">
-        <level value="TRACE" />
-        <appender-ref ref="console" />
-        <appender-ref ref="file" />
-    </logger>
+    <!--<logger name="uk.ac.ebi.fgpt.goci.owl.pussycat.reasoning.KnowledgeBaseLoadingReasonerSession" additivity="false">-->
+        <!--<level value="TRACE" />-->
+        <!--<appender-ref ref="console" />-->
+        <!--<appender-ref ref="file" />-->
+    <!--</logger>-->
 
-    <logger name="uk.ac.ebi.fgpt.goci.owl.pussycat.reasoning.KnowledgeBaseLoadingReasonerSession$LoggingProgressMonitor"
-            additivity="false">
-        <level value="TRACE" />
-        <appender-ref ref="console" />
-        <appender-ref ref="file" />
-    </logger>
+    <!--<logger name="uk.ac.ebi.fgpt.goci.owl.pussycat.reasoning.KnowledgeBaseLoadingReasonerSession$LoggingProgressMonitor"-->
+            <!--additivity="false">-->
+        <!--<level value="TRACE" />-->
+        <!--<appender-ref ref="console" />-->
+        <!--<appender-ref ref="file" />-->
+    <!--</logger>-->
 
-    <logger name="uk.ac.ebi.fgpt.goci.owl.pussycat.renderlet.OWLAssociationRenderlet" additivity="false">
-        <level value="TRACE" />
-        <appender-ref ref="console" />
-        <appender-ref ref="file" />
-    </logger>
+    <!--<logger name="uk.ac.ebi.fgpt.goci.owl.pussycat.renderlet.OWLAssociationRenderlet" additivity="false">-->
+        <!--<level value="TRACE" />-->
+        <!--<appender-ref ref="console" />-->
+        <!--<appender-ref ref="file" />-->
+    <!--</logger>-->
 
-    <logger name="uk.ac.ebi.fgpt.goci.owl.pussycat.renderlet.OWLTraitRenderlet" additivity="false">
-        <level value="TRACE" />
-        <appender-ref ref="console" />
-        <appender-ref ref="file" />
-    </logger>
+    <!--<logger name="uk.ac.ebi.fgpt.goci.owl.pussycat.renderlet.OWLTraitRenderlet" additivity="false">-->
+        <!--<level value="TRACE" />-->
+        <!--<appender-ref ref="console" />-->
+        <!--<appender-ref ref="file" />-->
+    <!--</logger>-->
 
-    <logger name="uk.ac.ebi.fgpt.goci.owl.pussycat.session.OWLPussycatSession" additivity="false">
-        <level value="TRACE" />
-        <appender-ref ref="console" />
-        <appender-ref ref="file" />
-    </logger>
+    <!--<logger name="uk.ac.ebi.fgpt.goci.owl.pussycat.session.OWLPussycatSession" additivity="false">-->
+        <!--<level value="TRACE" />-->
+        <!--<appender-ref ref="console" />-->
+        <!--<appender-ref ref="file" />-->
+    <!--</logger>-->
 
-    <logger name="uk.ac.ebi.fgpt.goci.sparql.pussycat.renderlet.SparqlAssociationRenderlet" additivity="false">
-        <level value="TRACE" />
-        <appender-ref ref="console" />
-        <appender-ref ref="file" />
-    </logger>
+    <!--<logger name="uk.ac.ebi.fgpt.goci.sparql.pussycat.renderlet.SparqlAssociationRenderlet" additivity="false">-->
+        <!--<level value="TRACE" />-->
+        <!--<appender-ref ref="console" />-->
+        <!--<appender-ref ref="file" />-->
+    <!--</logger>-->
 
-    <logger name="uk.ac.ebi.fgpt.goci.sparql.pussycat.renderlet.SparqlTraitRenderlet" additivity="false">
-        <level value="TRACE" />
-        <appender-ref ref="console" />
-        <appender-ref ref="file" />
-    </logger>
+    <!--<logger name="uk.ac.ebi.fgpt.goci.sparql.pussycat.renderlet.SparqlTraitRenderlet" additivity="false">-->
+        <!--<level value="TRACE" />-->
+        <!--<appender-ref ref="console" />-->
+        <!--<appender-ref ref="file" />-->
+    <!--</logger>-->
 
-    <logger name="uk.ac.ebi.fgpt.goci.sparql.pussycat.session.SparqlPussycatSession" additivity="false">
-        <level value="TRACE" />
-        <appender-ref ref="console" />
-        <appender-ref ref="file" />
-    </logger>
+    <!--<logger name="uk.ac.ebi.fgpt.goci.sparql.pussycat.session.SparqlPussycatSession" additivity="false">-->
+        <!--<level value="TRACE" />-->
+        <!--<appender-ref ref="console" />-->
+        <!--<appender-ref ref="file" />-->
+    <!--</logger>-->
 
-    <logger name="uk.ac.ebi.fgpt.goci.pussycat.renderlet.DefaultRenderletNexus" additivity="false">
-        <level value="TRACE" />
-        <appender-ref ref="console" />
-        <appender-ref ref="file" />
-    </logger>
+    <!--<logger name="uk.ac.ebi.fgpt.goci.pussycat.renderlet.DefaultRenderletNexus" additivity="false">-->
+        <!--<level value="TRACE" />-->
+        <!--<appender-ref ref="console" />-->
+        <!--<appender-ref ref="file" />-->
+    <!--</logger>-->
 
     <root>
         <priority value="INFO" />
