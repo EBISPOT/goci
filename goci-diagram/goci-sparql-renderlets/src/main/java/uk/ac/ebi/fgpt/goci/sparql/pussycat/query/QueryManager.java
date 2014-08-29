@@ -1,15 +1,21 @@
 package uk.ac.ebi.fgpt.goci.sparql.pussycat.query;
 
+import com.hp.hpl.jena.query.QuerySolution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
+import uk.ac.ebi.fgpt.goci.sparql.exception.SparqlQueryException;
 
 import java.net.URI;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -50,6 +56,15 @@ public class QueryManager {
             "SELECT ?association " +
                     "WHERE { ?association a gt:TraitAssociation ; oban:has_object ?trait . " +
                     "FILTER (?trait = ??) }";
+    private static final String DATE_OF_TRAIT_ID_FOR_BAND =
+            "SELECT DISTINCT ?trait (min(?date) as ?first) " +
+                    "WHERE { " +
+                    "?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait ; ro:part_of ?study . " +
+                    "?study gt:has_publication_date ?date . " +
+                    "?snp ro:located_in ?band . " +
+                    "FILTER ( ?band = ?? ) } " +
+                    "GROUP BY ?trait " +
+                    "ORDER BY ?first";
 
     private static final QueryManager instance = new QueryManager();
 
@@ -70,9 +85,14 @@ public class QueryManager {
 
     public URI getCytogeneticBandForAssociation(SparqlTemplate sparqlTemplate, URI association) throws
             DataIntegrityViolationException {
+        Object retrieved = checkCache("getCytogeneticBandForAssociation", sparqlTemplate, association);
+        if (retrieved != null) {
+            return (URI) retrieved;
+        }
+
         List<URI> results = sparqlTemplate.query(BAND_FOR_ASSOCIATION, new URIMapper("band"), association);
         if (results.size() == 1) {
-            return results.get(0);
+            return cache(results.get(0), "getCytogeneticBandForAssociation", sparqlTemplate, association);
         }
         else {
             if (results.size() > 1) {
@@ -85,38 +105,88 @@ public class QueryManager {
     }
 
     public Set<URI> getAssociationsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, URI bandIndividual) {
+        Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual);
+        if (retrieved != null) {
+            return (Set<URI>) retrieved;
+        }
+
         Set<URI> results = new HashSet<URI>();
         results.addAll(sparqlTemplate.query(ASSOCIATIONS_IN_BAND, new URIMapper("association"), bandIndividual));
-        return results;
+        return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual);
     }
 
     public Set<URI> getAssociationsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, String bandName) {
+        Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandName);
+        if (retrieved != null) {
+            return (Set<URI>) retrieved;
+        }
+
         Set<URI> results = new HashSet<URI>();
         results.addAll(sparqlTemplate.query(ASSOCIATIONS_IN_BAND_NAME, new URIMapper("association"), bandName));
-        return results;
+        return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandName);
     }
 
     public Set<URI> getTraitsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, URI bandIndividual) {
+        Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual);
+        if (retrieved != null) {
+            return (Set<URI>) retrieved;
+        }
+
         Set<URI> results = new HashSet<URI>();
         results.addAll(sparqlTemplate.query(TRAITS_IN_BAND, new URIMapper("trait"), bandIndividual));
-        return results;
+        return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual);
     }
 
     public Set<URI> getTraitsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, String bandName) {
+        Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandName);
+        if (retrieved != null) {
+            return (Set<URI>) retrieved;
+        }
+
         Set<URI> results = new HashSet<URI>();
         results.addAll(sparqlTemplate.query(TRAITS_IN_BAND_NAME, new URIMapper("trait"), bandName));
-        return results;
+        return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandName);
+    }
+
+    public List<URI> getTraitsOrderedByIdentificationDateForBand(SparqlTemplate sparqlTemplate, URI bandIndividual) {
+        Object retrieved = checkCache("getTraitsOrderedByIdentificationDateForBand", sparqlTemplate, bandIndividual);
+        if (retrieved != null) {
+            return (List<URI>) retrieved;
+        }
+
+        List<URI> queryResults = sparqlTemplate.query(DATE_OF_TRAIT_ID_FOR_BAND, new URIMapper("trait"), bandIndividual);
+        // de-duplicate results; should be handled by the query but just in case...
+        List<URI> results = new ArrayList<URI>();
+        for (URI queryResult : queryResults) {
+            if (!results.contains(queryResult)) {
+                results.add(queryResult);
+            }
+        }
+        return cache(results, "getTraitsOrderedByIdentificationDateForBand", sparqlTemplate, bandIndividual);
     }
 
     public Set<URI> getAssociationsForTrait(SparqlTemplate sparqlTemplate, URI trait) {
+        Object retrieved = checkCache("getAssociationsForTrait", sparqlTemplate, trait);
+        if (retrieved != null) {
+            return (Set<URI>) retrieved;
+        }
+
         Set<URI> results = new HashSet<URI>();
         results.addAll(sparqlTemplate.query(ASSOCIATIONS_FOR_TRAIT, new URIMapper("association"), trait));
-        return results;
+        return cache(results, "getAssociationsForTrait", sparqlTemplate, trait);
     }
 
     public BandInformation getBandInformation(SparqlTemplate sparqlTemplate, URI bandIndividual)
             throws DataIntegrityViolationException {
-        return new BandInformation(sparqlTemplate.label(bandIndividual));
+        Object retrieved = checkCache("getBandInformation", sparqlTemplate, bandIndividual);
+        if (retrieved != null) {
+            return (BandInformation) retrieved;
+        }
+
+        return cache(new BandInformation(sparqlTemplate.label(bandIndividual)),
+                     "getBandInformation",
+                     sparqlTemplate,
+                     bandIndividual);
     }
 
     private Object checkCache(String methodName, Object... arguments) {

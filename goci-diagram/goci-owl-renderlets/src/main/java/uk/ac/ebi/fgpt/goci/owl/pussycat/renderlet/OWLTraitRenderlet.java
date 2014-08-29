@@ -115,6 +115,14 @@ public class OWLTraitRenderlet extends TraitRenderlet<OWLReasoner, OWLNamedIndiv
         return locations;
     }
 
+    @Override protected int getTraitPosition(OWLReasoner reasoner,
+                                             OWLNamedIndividual trait,
+                                             OWLNamedIndividual band,
+                                             List<SVGArea> locations) {
+        // calculating the position by date requires yet another DL query, and is already too slow, so don't order
+        return locations.size();
+    }
+
     protected String getTraitAttribute(OWLReasoner reasoner, OWLNamedIndividual trait)
             throws DataIntegrityViolationException {
         // this gets the first, asserted, non-experimental factor class and then exits

@@ -93,6 +93,22 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
         return locations;
     }
 
+    @Override protected int getTraitPosition(SparqlTemplate sparqlTemplate,
+                                             URI trait,
+                                             URI band,
+                                             List<SVGArea> locations) {
+        List<URI> dateOrderedTraits =
+                QueryManager.getCachingInstance().getTraitsOrderedByIdentificationDateForBand(sparqlTemplate, band);
+        if (dateOrderedTraits.contains(trait)) {
+            return dateOrderedTraits.indexOf(trait);
+        }
+        else {
+            throw new RuntimeException(
+                    "Attempting to render trait '" + trait + "' in band '" + band + "' " +
+                            "but ordering by date reveals no matching trait identified for this band");
+        }
+    }
+
     protected String getTraitAttribute(SparqlTemplate sparqlTemplate, URI trait)
             throws DataIntegrityViolationException {
         return sparqlTemplate.type(trait).toString();

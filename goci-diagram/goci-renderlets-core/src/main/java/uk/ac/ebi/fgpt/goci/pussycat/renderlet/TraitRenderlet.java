@@ -1,6 +1,5 @@
 package uk.ac.ebi.fgpt.goci.pussycat.renderlet;
 
-import net.sourceforge.fluxion.spi.ServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.DataIntegrityViolationException;
@@ -45,16 +44,16 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
     }
 
     @Override
-    public void render(RenderletNexus nexus, C reasoner, E trait) {
+    public void render(RenderletNexus nexus, C context, E trait) {
         getLog().trace("Trait: " + trait);
         try {
             // collect all the bands for which we need to render this trait, and list all associations in that band
             Map<E, Set<E>> bandToAssociationMap = new HashMap<E, Set<E>>();
 
-            for (E association : getAssociationsForTrait(reasoner, trait)) {
+            for (E association : getAssociationsForTrait(context, trait)) {
                 try {
                     // get the band for this association
-                    E band = getBandForAssociation(reasoner, association);
+                    E band = getBandForAssociation(context, association);
                     if (!bandToAssociationMap.containsKey(band)) {
                         bandToAssociationMap.put(band, new HashSet<E>());
                     }
@@ -68,7 +67,7 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
             for (E band : bandToAssociationMap.keySet()) {
                 try {
                     // get the location of any traits previously rendered in this band
-                    List<SVGArea> locations = getLocationsOfOtherTraitsinBand(nexus, reasoner, band);
+                    List<SVGArea> locations = getLocationsOfOtherTraitsinBand(nexus, context, band);
 
                     StringBuilder svg = new StringBuilder();
                     svg.append("<circle ");
@@ -87,12 +86,12 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
                         double ay = associationLocation.getY();
                         double displacement = associationLocation.getHeight();
                         double cx, cy;
-                        int size = locations.size();
+                        int position = getTraitPosition(context, trait, band, locations);
 
-                        int horizontal = size % 6;
-                        int vertical = size / 6;
+                        int horizontal = position % 6;
+                        int vertical = position / 6;
 
-                        if (size == 0) {
+                        if (position == 0) {
                             cx = ax + alength + radius;
                         }
                         else {
@@ -109,16 +108,16 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
                         svg.append("cy='").append(Double.toString(cy)).append("' ");
                         svg.append("r='").append(Double.toString(radius)).append("' ");
 
-                        String colour = getTraitColour(reasoner, trait);
+                        String colour = getTraitColour(context, trait);
 
                         svg.append("fill='").append(colour).append("' ");
                         svg.append("stroke='black' ");
                         svg.append("stroke-width='0.5' ");
 
-                        String traitName = getTraitLabel(reasoner, trait);
+                        String traitName = getTraitLabel(context, trait);
                         svg.append("gwasname='").append(traitName).append("' ");
 
-                        String traitAttribute = getTraitAttribute(reasoner, trait);
+                        String traitAttribute = getTraitAttribute(context, trait);
                         getLog().trace("Setting CSS class for trait '" + trait + "' to " + traitAttribute);
                         svg.append("class='gwas-trait ").append(traitAttribute).append("'");
                         svg.append("fading='false' ");
@@ -126,7 +125,7 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
                         StringBuilder associationAttribute = new StringBuilder();
                         Iterator<E> associationIt = bandToAssociationMap.get(band).iterator();
                         while (associationIt.hasNext()) {
-                            associationAttribute.append(getTraitAssociationAttribute(reasoner, associationIt.next()));
+                            associationAttribute.append(getTraitAssociationAttribute(context, associationIt.next()));
                             if (associationIt.hasNext()) {
                                 associationAttribute.append(",");
                             }
@@ -135,6 +134,7 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
                                 "Setting gwasassociation attribute for trait '" + trait + "' to " +
                                         associationAttribute.toString());
                         svg.append("gwasassociation='").append(associationAttribute.toString()).append("' ");
+                        svg.append("priority='").append(vertical).append("' "); // todo - remove this, just for debugging
                         svg.append("/>");
 
                         SVGArea currentArea = new SVGArea(cx, cy, 2 * radius, 2 * radius, 0);
@@ -144,6 +144,7 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
                                 new RenderingEvent<List<E>>(Arrays.asList(trait, band),
                                                             svg.toString(),
                                                             currentArea,
+                                                            vertical,
                                                             this);
                         nexus.renderingEventOccurred(event);
                     }
@@ -163,21 +164,23 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
         }
     }
 
-    protected abstract Set<E> getAssociationsForTrait(C reasoner, E trait) throws DataIntegrityViolationException;
+    protected abstract Set<E> getAssociationsForTrait(C context, E trait) throws DataIntegrityViolationException;
 
-    protected abstract E getBandForAssociation(C reasoner, E association) throws DataIntegrityViolationException;
+    protected abstract E getBandForAssociation(C context, E association) throws DataIntegrityViolationException;
 
-    protected abstract List<SVGArea> getLocationsOfOtherTraitsinBand(RenderletNexus nexus, C reasoner, E band)
+    protected abstract List<SVGArea> getLocationsOfOtherTraitsinBand(RenderletNexus nexus, C context, E band)
             throws DataIntegrityViolationException;
 
-    protected abstract String getTraitAttribute(C reasoner, E trait) throws DataIntegrityViolationException;
+    protected abstract int getTraitPosition(C context, E trait, E band, List<SVGArea> locations);
 
-    protected abstract String getTraitAssociationAttribute(C reasoner, E association)
+    protected abstract String getTraitAttribute(C context, E trait) throws DataIntegrityViolationException;
+
+    protected abstract String getTraitAssociationAttribute(C context, E association)
             throws DataIntegrityViolationException;
 
-    protected abstract String getTraitLabel(C reasoner, E individual);
+    protected abstract String getTraitLabel(C context, E individual);
 
-    protected abstract String getTraitColour(C reasoner, E trait);
+    protected abstract String getTraitColour(C context, E trait);
 }
 
 

@@ -5,9 +5,12 @@ import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGDocument;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -57,10 +60,18 @@ public class DefaultRenderletNexus implements RenderletNexus {
 
     @Override public String getSVG() {
         StringBuilder svgBuilder = new StringBuilder();
-
         svgBuilder.append(svgDocument.getHeader());
+
+        // collect rendering events
+        List<RenderingEvent> events = new ArrayList<RenderingEvent>();
         for (Object entity : renderedEntities.keySet()) {
-            svgBuilder.append(renderedEntities.get(entity).getRenderedSVG());
+            events.add(renderedEntities.get(entity));
+        }
+        // sort (naturally ordered according to priority)
+        Collections.sort(events);
+        // and add all the SVG required
+        for (RenderingEvent re : events) {
+            svgBuilder.append(re.getRenderedSVG());
         }
         svgBuilder.append(svgDocument.getFooter());
 

@@ -1,6 +1,5 @@
 package uk.ac.ebi.fgpt.goci.pussycat.renderlet;
 
-import org.w3c.dom.Element;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 
 /**
@@ -10,11 +9,13 @@ import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
  * @author Tony Burdett
  * @date 27/02/12
  */
-public class RenderingEvent<O> {
+public class RenderingEvent<O> implements Comparable<RenderingEvent<O>> {
     private O renderedEntity;
     private String renderedSVG;
 
     private SVGArea svgArea;
+
+    private int priority;
 
     private Renderlet renderingRenderlet;
 
@@ -22,9 +23,18 @@ public class RenderingEvent<O> {
                           String renderedSVG,
                           SVGArea svgArea,
                           Renderlet renderingRenderlet) {
+        this(renderedEntity, renderedSVG, svgArea, 0, renderingRenderlet);
+    }
+
+    public RenderingEvent(O renderedEntity,
+                          String renderedSVG,
+                          SVGArea svgArea,
+                          int priority,
+                          Renderlet renderingRenderlet) {
         this.renderedEntity = renderedEntity;
         this.renderedSVG = renderedSVG;
         this.svgArea = svgArea;
+        this.priority = priority;
         this.renderingRenderlet = renderingRenderlet;
     }
 
@@ -36,11 +46,19 @@ public class RenderingEvent<O> {
         return renderedSVG;
     }
 
+    public int getPriority() {
+        return priority;
+    }
+
     public SVGArea getSVGArea() {
         return svgArea;
     }
 
     public Renderlet getRenderingRenderlet() {
         return renderingRenderlet;
+    }
+
+    @Override public int compareTo(RenderingEvent<O> o) {
+        return getPriority() - o.getPriority();
     }
 }
