@@ -116,7 +116,7 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
 
     protected String getTraitAssociationAttribute(SparqlTemplate sparqlTemplate, URI association)
             throws DataIntegrityViolationException {
-        return association.getFragment();
+        return association.toString();
     }
 
     protected String getTraitLabel(SparqlTemplate sparqlTemplate, URI individual) {
