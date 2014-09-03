@@ -465,45 +465,41 @@ function showSummary(associations, name) {
 
     $("#traitpopup").html("").dialog("close");
 
-    $.getJSON('api/summaries/associations/' + associations, function(data) {
-
-        var trait = "All SNPs associated with trait '".concat(name).concat("' in band ").concat(data.chromBand);
+    $.getJSON('api/associations/' + associations, function(data) {
+        var trait = "SNPs associated with trait '".concat(name).concat("'");
 
         var summaryTable = $("<table>");
         summaryTable.html("<th>SNP</th><th>p-Value</th><th>EFO mapping</th><th>GWAS trait</th><th>Study</th><th>GWAS catalog</th>");
         summaryTable.html("<th>SNP</th><th>p-Value</th><th>EFO mapping</th><th>GWAS trait</th><th>Study</th><th>GWAS catalog</th>");
 
         try {
-            var index = data.snpsummaries.length;
+            var index = data.length;
             for (var i = 0; i < index; i++) {
                 var row = $("<tr>");
-                var snpsummary = data.snpsummaries[i];
-                var snp = "http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(snpsummary.snp);
-                var snpurl = "<a href='".concat(snp).concat("' target='_blank'>").concat(snpsummary.snp).concat("</a>");
+                var summary = data[i];
+                var snp = "http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(summary.snp);
+                var snpurl = "<a href='".concat(snp).concat("' target='_blank'>").concat(summary.snp).concat("</a>");
                 row.append($("<td>").html(snpurl));
-                row.append($("<td class='center'>").html(snpsummary.pval));
-                var efoterm = snpsummary.efoTrait;
-                var efourl = "<a href='".concat(snpsummary.efoUri).concat("' target='_blank'>").concat(efoterm).concat("</a>");
+                row.append($("<td class='center'>").html(summary.pvalue));
+                var efoterm = summary.efotraitLabel;
+                var efourl = "<a href='".concat(summary.efotraitURI).concat("' target='_blank'>").concat(efoterm).concat("</a>");
                 row.append($("<td class='center'>").html(efourl));
-                row.append($("<td class='center'>").html(snpsummary.gwastrait));
-                var study = snpsummary.author.concat(" et al., ").concat(snpsummary.date);
-                var studyurl = "http://www.ukpmc.ac.uk/abstract/MED/".concat(snpsummary.study);
+                row.append($("<td class='center'>").html(summary.gwastraitName));
+                var study = summary.firstAuthor.concat(" et al., ").concat(summary.publicationDate);
+                var studyurl = "http://www.ukpmc.ac.uk/abstract/MED/".concat(summary.pubMedID);
                 var studyentry = "<a href='".concat(studyurl).concat("' target='_blank'>").concat(study).concat("</a>");
                 row.append($("<td>").html(studyentry));
-                var gwasurl = "http://www.genome.gov/gwastudies/index.cfm?snp=".concat(snpsummary.snp).concat("#result_table");
+                var gwasurl = "http://www.genome.gov/gwastudies/index.cfm?snp=".concat(summary.snp).concat("#result_table");
                 var gwaslink = "<a href='".concat(gwasurl).concat("' target='_blank'>More information</a>");
                 row.append($("<td>").html(gwaslink));
                 summaryTable.append(row);
-
             }
 
             $("#traitpopup").append(summaryTable).dialog({"title": trait, /*"draggable":false,*/ "width": 800});
-
         }
         catch (ex) {
             alert(ex);
         }
-
     });
 }
 

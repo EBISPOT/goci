@@ -1,21 +1,15 @@
 package uk.ac.ebi.fgpt.goci.sparql.pussycat.query;
 
-import com.hp.hpl.jena.query.QuerySolution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
-import uk.ac.ebi.fgpt.goci.sparql.exception.SparqlQueryException;
 
 import java.net.URI;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -52,10 +46,6 @@ public class QueryManager {
                     "?snp ro:located_in ?bandUri . " +
                     "?bandUri rdfs:label ?band . " +
                     "FILTER (?band = ??) }";
-    private static final String ASSOCIATIONS_FOR_TRAIT =
-            "SELECT ?association " +
-                    "WHERE { ?association a gt:TraitAssociation ; oban:has_object ?trait . " +
-                    "FILTER (?trait = ??) }";
     private static final String DATE_OF_TRAIT_ID_FOR_BAND =
             "SELECT DISTINCT ?trait (min(?date) as ?first) " +
                     "WHERE { " +
@@ -65,6 +55,30 @@ public class QueryManager {
                     "FILTER ( ?band = ?? ) } " +
                     "GROUP BY ?trait " +
                     "ORDER BY ?first";
+    private static final String ASSOCIATIONS_FOR_TRAIT =
+            "SELECT ?association " +
+                    "WHERE { ?association a gt:TraitAssociation ; oban:has_object ?trait . " +
+                    "FILTER (?trait = ??) }";
+    private static final String TRAITS_BY_NAME =
+            "SELECT DISTINCT ?trait " +
+                    "WHERE {{ " +
+                    "  ?trait rdfs:label ?label ." +
+                    "  FILTER (?label = ??) " +
+                    "} " +
+                    "UNION { " +
+                    "  ?trait efo:alternative_term ?synonym . " +
+                    "  FILTER (?synonym = ??) " +
+                    "}}";
+    private static final String PARENTS_AND_DISTANCE_BY_TRAIT =
+            "SELECT ?type (count(DISTINCT ?ancestor) as ?count) " +
+                    "WHERE { " +
+                    "?? rdf:type ?trait . " +
+                    "?trait rdfs:subClassOf* ?type . " +
+                    "?type rdfs:subClassOf* ?ancestor . " +
+                    "FILTER ( ?trait != owl:Class ) .  " +
+                    "FILTER ( ?trait != owl:NamedIndividual ) . } " +
+                    "GROUP BY ?type " +
+                    "ORDER BY desc(?count)";
 
     private static final QueryManager instance = new QueryManager();
 
@@ -84,7 +98,7 @@ public class QueryManager {
     }
 
     public URI getCytogeneticBandForAssociation(SparqlTemplate sparqlTemplate, URI association) throws
-            DataIntegrityViolationException {
+                                                                                                DataIntegrityViolationException {
         Object retrieved = checkCache("getCytogeneticBandForAssociation", sparqlTemplate, association);
         if (retrieved != null) {
             return (URI) retrieved;
@@ -154,7 +168,8 @@ public class QueryManager {
             return (List<URI>) retrieved;
         }
 
-        List<URI> queryResults = sparqlTemplate.query(DATE_OF_TRAIT_ID_FOR_BAND, new URIMapper("trait"), bandIndividual);
+        List<URI> queryResults =
+                sparqlTemplate.query(DATE_OF_TRAIT_ID_FOR_BAND, new URIMapper("trait"), bandIndividual);
         // de-duplicate results; should be handled by the query but just in case...
         List<URI> results = new ArrayList<URI>();
         for (URI queryResult : queryResults) {
@@ -174,6 +189,55 @@ public class QueryManager {
         Set<URI> results = new HashSet<URI>();
         results.addAll(sparqlTemplate.query(ASSOCIATIONS_FOR_TRAIT, new URIMapper("association"), trait));
         return cache(results, "getAssociationsForTrait", sparqlTemplate, trait);
+    }
+
+    public URI getTraitByName(SparqlTemplate sparqlTemplate, String name) throws DataIntegrityViolationException {
+        Object retrieved = checkCache("getTraitByName", sparqlTemplate, name);
+        if (retrieved != null) {
+            return (URI) retrieved;
+        }
+
+        // todo - lowercase here?
+        List<URI> results = sparqlTemplate.query(TRAITS_BY_NAME, new URIMapper("trait"), name, name);
+        if (results.size() == 1) {
+            return cache(results.get(0), "getTraitByName", sparqlTemplate, name);
+        }
+        else {
+            if (results.size() > 1) {
+                throw new DataIntegrityViolationException("More than one trait with label '" + name + "'");
+            }
+            else {
+                throw new DataIntegrityViolationException("No trait with label '" + name + "'");
+            }
+        }
+    }
+
+    /**
+     * Gets the list of all types of the supplied traits, ordered by specificity.  In other words,
+     * traits are ordered so that the most specific asserted types are first, followed by each of the traits ancestors
+     * from immediate parents to top level classes.
+     *
+     * @param sparqlTemplate the sparql template to use in the query
+     * @param trait          the trait to identify types of
+     * @return an ordered list of parents, most specific type first
+     */
+    public List<URI> getOrderedTraitTypes(SparqlTemplate sparqlTemplate, URI trait) {
+        Object retrieved = checkCache("getAllTraitTypes", sparqlTemplate, trait);
+        if (retrieved != null) {
+            return (List<URI>) retrieved;
+        }
+
+        List<URI> results = sparqlTemplate.query("SELECT ?type (count(DISTINCT ?ancestor) as ?count) " +
+                                                         "WHERE { " +
+                                                         "<" + trait.toString() + "> rdf:type ?trait . " +
+                                                         "?trait rdfs:subClassOf* ?type . " +
+                                                         "?type rdfs:subClassOf* ?ancestor . " +
+                                                         "FILTER ( ?trait != owl:Class ) .  " +
+                                                         "FILTER ( ?trait != owl:NamedIndividual ) . } " +
+                                                         "GROUP BY ?type " +
+                                                         "ORDER BY desc(?count) ", new URIMapper("type"));
+
+        return cache(results, "getAllTraitTypes", sparqlTemplate, trait);
     }
 
     public BandInformation getBandInformation(SparqlTemplate sparqlTemplate, URI bandIndividual)

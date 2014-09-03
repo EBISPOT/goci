@@ -2,19 +2,24 @@ package uk.ac.ebi.fgpt.goci.sparql.pussycat.session;
 
 import com.hp.hpl.jena.query.QuerySolution;
 import uk.ac.ebi.fgpt.goci.lang.Filter;
+import uk.ac.ebi.fgpt.goci.model.AssociationSummary;
+import uk.ac.ebi.fgpt.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.session.AbstractPussycatSession;
 import uk.ac.ebi.fgpt.goci.sparql.exception.SparqlQueryException;
+import uk.ac.ebi.fgpt.goci.sparql.pussycat.query.QueryManager;
 import uk.ac.ebi.fgpt.goci.sparql.pussycat.query.QuerySolutionMapper;
 import uk.ac.ebi.fgpt.goci.sparql.pussycat.query.SparqlTemplate;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Utilises an {@link uk.ac.ebi.fgpt.goci.sparql.pussycat.query.SparqlTemplate} to load RDF data into session and render
@@ -91,6 +96,62 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
         }
     }
 
+    @Override public List<AssociationSummary> getAssociationSummaries(List<URI> associationURIs) {
+        final String query = "SELECT ?pmid ?author ?date ?rsid ?pval ?gwastrait ?label ?trait WHERE { " +
+                "?association a gt:TraitAssociation ; " +
+                "             gt:has_p_value ?pval ; " +
+                "             gt:has_gwas_trait_name ?gwastrait ; " +
+                "             ro:part_of ?study ; " +
+                "             oban:has_subject ?snp ; " +
+                "             oban:has_object ?trait . " +
+                "?snp gt:has_snp_reference_id ?rsid . " +
+                "?study gt:has_author ?author ; " +
+                "       gt:has_publication_date ?date ; " +
+                "       gt:has_pubmed_id ?pmid . " +
+                "?trait rdfs:label ?label . " +
+                "FILTER (?association = ??)" +
+                "}";
+
+        List<AssociationSummary> results = new ArrayList<AssociationSummary>();
+        for (URI uri : associationURIs) {
+            List<AssociationSummary> summaries =
+                    sparqlTemplate.query(query, new QuerySolutionMapper<AssociationSummary>() {
+                        @Override public AssociationSummary mapQuerySolution(QuerySolution qs) {
+                            String pubmedID = qs.getLiteral("pmid").getLexicalForm();
+                            String firstAuthor = qs.getLiteral("author").getLexicalForm();
+                            String publicationDate = qs.getLiteral("date").getLexicalForm().substring(0, 4);
+                            String snp = qs.getLiteral("rsid").getLexicalForm();
+                            String pValue = qs.getLiteral("pval").getLexicalForm();
+                            String gwasTraitName = qs.getLiteral("gwastrait").getLexicalForm();
+                            String efoTraitLabel = qs.getLiteral("label").getLexicalForm();
+                            URI efoTraitURI = URI.create(qs.getResource("trait").getURI());
+                            return new SparqlAssociationSummary(pubmedID, firstAuthor, publicationDate, snp, pValue,
+                                                                gwasTraitName, efoTraitLabel, efoTraitURI);
+                        }
+                    }, uri);
+            if (summaries.size() == 0) {
+                results.add(null);
+            }
+            else {
+                results.add(summaries.iterator().next());
+            }
+        }
+        return results;
+    }
+
+    @Override public Set<URI> getRelatedTraits(String traitName) {
+        try {
+            URI trait = QueryManager.getCachingInstance().getTraitByName(sparqlTemplate, traitName);
+            List<URI> types = QueryManager.getCachingInstance().getOrderedTraitTypes(sparqlTemplate, trait);
+            Set<URI> results = new HashSet<URI>();
+            results.addAll(types);
+            return results;
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new RuntimeException("Unable to identify trait with name '" + traitName + "'", e);
+        }
+    }
+
     private List<URI> loadChromosomes(SparqlTemplate sparqlTemplate) {
         return sparqlTemplate.query("SELECT DISTINCT ?uri WHERE { ?uri rdfs:subClassOf gt:Chromosome }", "uri");
     }
@@ -144,6 +205,67 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
 
         @Override public int compareTo(AssociationLocation o) {
             return getBand().compareTo(o.getBand());
+        }
+    }
+
+    private class SparqlAssociationSummary implements AssociationSummary {
+        private final String pubmedID;
+        private final String firstAuthor;
+        private final String publicationDate;
+        private final String snp;
+        private final String pValue;
+        private final String gwasTraitName;
+        private final String efoTraitLabel;
+        private final URI efoTraitURI;
+
+        public SparqlAssociationSummary(String pubmedID,
+                                        String firstAuthor,
+                                        String publicationDate,
+                                        String snp,
+                                        String pValue,
+                                        String gwasTraitName,
+                                        String efoTraitLabel,
+                                        URI efoTraitURI) {
+            this.pubmedID = pubmedID;
+            this.firstAuthor = firstAuthor;
+            this.publicationDate = publicationDate;
+            this.snp = snp;
+            this.pValue = pValue;
+            this.gwasTraitName = gwasTraitName;
+            this.efoTraitLabel = efoTraitLabel;
+            this.efoTraitURI = efoTraitURI;
+        }
+
+        @Override public String getPubMedID() {
+            return pubmedID;
+        }
+
+        @Override public String getFirstAuthor() {
+            return firstAuthor;
+        }
+
+        @Override public String getPublicationDate() {
+            return publicationDate;
+        }
+
+        public String getSNP() {
+            return snp;
+        }
+
+        @Override public String getPvalue() {
+            return pValue;
+        }
+
+        @Override public String getGWASTraitName() {
+            return gwasTraitName;
+        }
+
+        @Override public String getEFOTraitLabel() {
+            return efoTraitLabel;
+        }
+
+        @Override public URI getEFOTraitURI() {
+            return efoTraitURI;
         }
     }
 }

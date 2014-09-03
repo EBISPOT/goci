@@ -1,13 +1,17 @@
 package uk.ac.ebi.fgpt.goci.pussycat.session;
 
 import uk.ac.ebi.fgpt.goci.lang.Filter;
+import uk.ac.ebi.fgpt.goci.model.AssociationSummary;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A pussycat session that acts as a proxy over a disk based cache of SVG documents, but performs no actual rendering
@@ -54,5 +58,17 @@ public class SVGLoadingPussycatSession extends AbstractSVGIOPussycatSession {
         catch (IOException e) {
             throw new RuntimeException("Failed to read SVG from cache (" + e.getMessage() + ")", e);
         }
+    }
+
+    @Override public List<AssociationSummary> getAssociationSummaries(List<URI> associationURIs) {
+        // todo - implement this!
+        throw new UnsupportedOperationException("This pussycat instance does not have access to association summary " +
+                                                        "data");
+    }
+
+    @Override public Set<URI> getRelatedTraits(String traitName) {
+        // todo - implement this!
+        throw new UnsupportedOperationException("This pussycat instance does not have access to related trait " +
+                                                        "information");
     }
 }

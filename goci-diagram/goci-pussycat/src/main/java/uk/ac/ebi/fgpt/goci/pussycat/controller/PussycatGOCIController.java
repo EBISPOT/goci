@@ -180,7 +180,12 @@ public class PussycatGOCIController {
         Set<URI> uris = getPussycatSession(session).getRelatedTraits(traitName);
         Set<String> results = new HashSet<String>();
         for (URI uri : uris) {
-            results.add(uri.toString());
+            // process URI to just keep term name
+            String typeStr = uri.toString();
+            typeStr = typeStr.substring(typeStr.lastIndexOf("/") + 1, typeStr.length());
+            typeStr = typeStr.contains("#") ? typeStr.substring(typeStr.lastIndexOf("#") + 1,
+                                                               typeStr.length()) : typeStr;
+            results.add(typeStr);
         }
         return results;
     }

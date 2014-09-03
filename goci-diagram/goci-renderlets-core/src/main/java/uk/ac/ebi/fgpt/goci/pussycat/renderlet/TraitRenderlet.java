@@ -60,7 +60,8 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
                     bandToAssociationMap.get(band).add(association);
                 }
                 catch (DataIntegrityViolationException e) {
-                    getLog().error("Unable to render trait '" + trait + "' for association '" + association + "'", e);
+                    getLog().error("Unable to render trait '" + trait + "' for association '" + association + ": " +
+                                           e.getMessage());
                 }
             }
 
@@ -115,7 +116,7 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
                         svg.append("stroke-width='0.5' ");
 
                         String traitName = getTraitLabel(context, trait);
-                        svg.append("gwasname='").append(traitName).append("' ");
+                        svg.append("gwasname=\"").append(traitName).append("\" ");
 
                         String traitAttribute = getTraitAttribute(context, trait);
                         getLog().trace("Setting CSS class for trait '" + trait + "' to " + traitAttribute);

@@ -1,12 +1,16 @@
 package uk.ac.ebi.fgpt.goci.pussycat.session;
 
 import uk.ac.ebi.fgpt.goci.lang.Filter;
+import uk.ac.ebi.fgpt.goci.model.AssociationSummary;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A pussycat session that acts as a proxy over a concrete implementation, but caches (to disk) SVG documents that are
@@ -63,5 +67,15 @@ public class SVGCachingPussycatSession extends AbstractSVGIOPussycatSession impl
         catch (IOException e) {
             throw new RuntimeException("Failed to read SVG from cache (" + e.getMessage() + ")", e);
         }
+    }
+
+    @Override public List<AssociationSummary> getAssociationSummaries(List<URI> associationURIs) {
+        // delegates to underlying session to retrieve actual data
+        return getProxiedSession().getAssociationSummaries(associationURIs);
+    }
+
+    @Override public Set<URI> getRelatedTraits(String traitName) {
+        // delegates to underlying session to retrieve actual data
+        return getProxiedSession().getRelatedTraits(traitName);
     }
 }

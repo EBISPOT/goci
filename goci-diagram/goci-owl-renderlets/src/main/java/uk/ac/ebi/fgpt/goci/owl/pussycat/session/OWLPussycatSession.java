@@ -318,7 +318,7 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
             }
 
             AssociationSummary summary =
-                    new MyAssociationSummary(pm_id, author, pub_date, rs_id, pval, gwastrait, efotrait, efouri);
+                    new OWLAssociationSummary(pm_id, author, pub_date, rs_id, pval, gwastrait, efotrait, efouri);
             summaries.add(summary);
         }
         return summaries;
@@ -435,7 +435,7 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
         return type;
     }
 
-    private class MyAssociationSummary implements AssociationSummary {
+    private class OWLAssociationSummary implements AssociationSummary {
         private final String pubmedID;
         private final String firstAuthor;
         private final String publicationDate;
@@ -445,14 +445,14 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
         private final String efoTraitLabel;
         private final URI efoTraitURI;
 
-        public MyAssociationSummary(String pubmedID,
-                                    String firstAuthor,
-                                    String publicationDate,
-                                    String snp,
-                                    String pValue,
-                                    String gwasTraitName,
-                                    String efoTraitLabel,
-                                    URI efoTraitURI) {
+        public OWLAssociationSummary(String pubmedID,
+                                     String firstAuthor,
+                                     String publicationDate,
+                                     String snp,
+                                     String pValue,
+                                     String gwasTraitName,
+                                     String efoTraitLabel,
+                                     URI efoTraitURI) {
             this.pubmedID = pubmedID;
             this.firstAuthor = firstAuthor;
             this.publicationDate = publicationDate;

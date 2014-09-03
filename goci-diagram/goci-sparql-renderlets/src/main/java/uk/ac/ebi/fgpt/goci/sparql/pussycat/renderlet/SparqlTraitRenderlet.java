@@ -58,7 +58,7 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
             throws DataIntegrityViolationException {
         Set<URI> allTraits =
                 QueryManager.getCachingInstance()
-                        .getTraitsLocatedInCytogeneticBand(sparqlTemplate, band);
+                            .getTraitsLocatedInCytogeneticBand(sparqlTemplate, band);
         getLog().trace("Identified " + allTraits.size() + " traits in band '" + band + "'");
 
         List<SVGArea> locations = new ArrayList<SVGArea>();
@@ -111,16 +111,24 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
 
     protected String getTraitAttribute(SparqlTemplate sparqlTemplate, URI trait)
             throws DataIntegrityViolationException {
-        return sparqlTemplate.type(trait).toString();
+        String typeStr = sparqlTemplate.type(trait).toString();
+        typeStr = typeStr.substring(typeStr.lastIndexOf("/") + 1, typeStr.length());
+        return typeStr.contains("#") ? typeStr.substring(typeStr.lastIndexOf("#") + 1, typeStr.length()) : typeStr;
     }
 
     protected String getTraitAssociationAttribute(SparqlTemplate sparqlTemplate, URI association)
             throws DataIntegrityViolationException {
-        return association.toString();
+        String assocStr = association.toString();
+        assocStr = assocStr.substring(assocStr.lastIndexOf("/") + 1, assocStr.length());
+        return assocStr.contains("#") ? assocStr.substring(assocStr.lastIndexOf("#") + 1, assocStr.length()) : assocStr;
     }
 
     protected String getTraitLabel(SparqlTemplate sparqlTemplate, URI individual) {
-        return sparqlTemplate.label(individual);
+        String traitName = sparqlTemplate.label(individual);
+//        if (traitName.contains("'")) {
+//            traitName = traitName.replace("'", "\\'");
+//        }
+        return traitName;
     }
 
     protected String getTraitColour(SparqlTemplate sparqlTemplate, URI trait) {
@@ -133,7 +141,6 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
                                                           "FILTER ( ?trait != owl:NamedIndividual ) . } " +
                                                           "GROUP BY ?type " +
                                                           "ORDER BY desc(?count) ", new URIMapper("type"));
-
         Set<String> available = ColourMapper.COLOUR_MAP.keySet();
         for (URI type : allTypes) {
             if (type != null) {
