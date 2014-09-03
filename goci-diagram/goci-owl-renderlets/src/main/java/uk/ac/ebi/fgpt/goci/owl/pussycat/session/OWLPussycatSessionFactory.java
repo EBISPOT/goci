@@ -4,6 +4,7 @@ import net.sourceforge.fluxion.spi.ServiceProvider;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import uk.ac.ebi.fgpt.goci.dao.OntologyDAO;
 import uk.ac.ebi.fgpt.goci.owl.lang.OWLAPIFilterInterpreter;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.owl.pussycat.reasoning.KnowledgeBaseLoadingReasonerSession;
@@ -24,9 +25,10 @@ import java.io.IOException;
  */
 @ServiceProvider
 public class OWLPussycatSessionFactory implements PussycatSessionFactory {
-    private static final String efoDefaultLoaction = "http://www.ebi.ac.uk/efo/efo.owl";
+    private static final String efoDefaultLocation = "http://www.ebi.ac.uk/efo/efo.owl";
 
     private final OntologyConfiguration ontologyConfiguration;
+    private final OntologyDAO ontologyDAO;
     private final OWLAPIFilterInterpreter filterInterpreter;
 
     private ReasonerSession reasonerSession;
@@ -38,7 +40,7 @@ public class OWLPussycatSessionFactory implements PussycatSessionFactory {
         String efoLocationProperty = System.getenv("EFO.LOCATION");
         Resource efoResource;
         if (efoLocationProperty == null) {
-            efoResource = loader.getResource(efoDefaultLoaction);
+            efoResource = loader.getResource(efoDefaultLocation);
         }
         else {
             efoResource = loader.getResource(efoLocationProperty);
@@ -64,12 +66,20 @@ public class OWLPussycatSessionFactory implements PussycatSessionFactory {
             throw new IllegalStateException("Failed to initialize ontology configuration", e);
         }
 
+
+        // create ontology DAO for GWAS KB
+        ontologyDAO = new OntologyDAO();
+        ontologyDAO.setOntologyResource(gwasKBResource);
+        ontologyDAO.setOntologyConfiguration(ontologyConfiguration);
+        ontologyDAO.init();
+
         // finally, set the filter interpreter
         filterInterpreter = new OWLAPIFilterInterpreter(ontologyConfiguration);
     }
 
-    public OWLPussycatSessionFactory(OntologyConfiguration ontologyConfiguration) {
+    public OWLPussycatSessionFactory(OntologyConfiguration ontologyConfiguration, OntologyDAO ontologyDAO) {
         this.ontologyConfiguration = ontologyConfiguration;
+        this.ontologyDAO = ontologyDAO;
         this.filterInterpreter = new OWLAPIFilterInterpreter(ontologyConfiguration);
     }
 
@@ -79,7 +89,7 @@ public class OWLPussycatSessionFactory implements PussycatSessionFactory {
             reasonerSession = createReasonerSession();
         }
 
-        return new OWLPussycatSession(filterInterpreter, ontologyConfiguration, reasonerSession);
+        return new OWLPussycatSession(filterInterpreter, ontologyConfiguration, ontologyDAO, reasonerSession);
     }
 
     private ReasonerSession createReasonerSession() {

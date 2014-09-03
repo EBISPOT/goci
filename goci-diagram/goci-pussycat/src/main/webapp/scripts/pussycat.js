@@ -359,10 +359,10 @@ function renderDiagram() {
         if (!renderingComplete) {
             log("Hiding navbar...");
             $(".navbar").hide();
-            // call to api/views/gwasdiagram to get required svg
-            log("Rendering GWAS diagram - calling api/views/gwasdiagram...");
+            // call to api/gwasdiagram to get required svg
+            log("Rendering GWAS diagram - calling api/gwasdiagram...");
             $.ajax({
-                       url: 'api/views/gwasdiagram',
+                       url: 'api/gwasdiagram',
                        dataType: 'html',
                        beforeSend: showSVGLoadWhirly,
                        success: insertSVG,
@@ -538,7 +538,7 @@ function filterTraits(traitName) {
     hideAllTraits();
 
     // expand query to get all filtered sets
-    $.getJSON('api/views/filter/' + traitName, function(data) {
+    $.getJSON('api/filter/' + traitName, function(data) {
         $.each(data, function(index, val) {
             try {
                 var trait = val.replace(":", "\\:");

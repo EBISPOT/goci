@@ -1,11 +1,15 @@
 package uk.ac.ebi.fgpt.goci.pussycat.session;
 
 import uk.ac.ebi.fgpt.goci.lang.Filter;
+import uk.ac.ebi.fgpt.goci.model.AssociationSummary;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 
+import java.net.URI;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A Pussycat session maintains the loaded data required by Pussycat in order to render an informative display to the
@@ -42,4 +46,27 @@ public interface PussycatSession {
      *                                                                                 unable to perform any rendering
      */
     String performRendering(RenderletNexus renderletNexus, Filter... filters) throws PussycatSessionNotReadyException;
+
+    /**
+     * Fetches a list of lightweight association summary objects that encapsulates an overview of the salient
+     * information for all associations with the supplied IDs in the request.  The returned list will implicitly have
+     * the same ordering as that of the supplied argument, and if any of the association URIs requested in the argument
+     * were missing, the list will contain null elements.
+     *
+     * @param associationURIs the URIs of the associations to retrieve
+     * @return a list of association summaries with the same ordering as the request
+     */
+    List<AssociationSummary> getAssociationSummaries(List<URI> associationURIs);
+
+    /**
+     * Returns a list of URI identifiers for traits that are related to the supplied trait name.  This will basically
+     * expand the set of traits based on rules defined by the implementation to return a set of identifiers.  So,
+     * for example, if a user supplies the trait name "diabetes mellitus" you would expect to recieve back a list of
+     * URIs containing all concepts "related to" diabetes meelitus.  For example, a minimal implementation would be
+     * to return the URI representing diabetes mellitus and URIs for all of it's subclasses.
+     *
+     * @param traitName the name of the the trait to filter on
+     * @return a set of URIs for all associated traits
+     */
+    Set<URI> getRelatedTraits(String traitName);
 }

@@ -1,11 +1,5 @@
 package uk.ac.ebi.fgpt.goci.pussycat.controller;
 
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLIndividual;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.util.OWLOntologyWalker;
-import org.semanticweb.owlapi.util.OWLOntologyWalkerVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.lang.Filter;
+import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
+import uk.ac.ebi.fgpt.goci.model.AssociationSummary;
 import uk.ac.ebi.fgpt.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.fgpt.goci.model.Study;
 import uk.ac.ebi.fgpt.goci.model.TraitAssociation;
@@ -26,18 +21,18 @@ import uk.ac.ebi.fgpt.goci.pussycat.manager.PussycatManager;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSession;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSessionStrategy;
-import uk.ac.ebi.fgpt.goci.pussycat.utils.OntologyUtils;
 
 import javax.servlet.http.HttpSession;
 import java.net.URI;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import static uk.ac.ebi.fgpt.goci.lang.Filtering.filter;
 import static uk.ac.ebi.fgpt.goci.lang.Filtering.refine;
@@ -50,7 +45,6 @@ import static uk.ac.ebi.fgpt.goci.lang.Filtering.template;
  * @author Tony Burdett Date 27/02/12
  */
 @Controller
-@RequestMapping("/views")
 public class PussycatGOCIController {
     private PussycatSessionStrategy sessionStrategy;
     private PussycatManager pussycatManager;
@@ -179,37 +173,41 @@ public class PussycatGOCIController {
      * @return a list of URIs, appropriately "shortformed", that describe the classes that are relevant for this trait
      * name
      * @throws PussycatSessionNotReadyException
-     * @throws OWLConversionException
      */
     @RequestMapping(value = "/filter/{traitName}")
-    public @ResponseBody Set<String> filterTrait(@PathVariable String traitName, HttpSession session)
-            throws PussycatSessionNotReadyException, OWLConversionException {
-        // todo - replace ontologyDAO and reasoner with something simpler here - maybe still need a single reasoner?
+    public @ResponseBody Set<String> getRelatedTraits(@PathVariable String traitName, HttpSession session)
+            throws PussycatSessionNotReadyException {
+        Set<URI> uris = getPussycatSession(session).getRelatedTraits(traitName);
+        Set<String> results = new HashSet<String>();
+        for (URI uri : uris) {
+            results.add(uri.toString());
+        }
+        return results;
+    }
 
-//        // lookup class from label
-//        getLog().debug("Filtering on classes with label '" + traitName + "'");
-//        Collection<OWLClass> labelledClasses = getOntologyDAO().getOWLClassesByLabel(traitName);
+    @RequestMapping(value = "/associations/{associationIds}")
+    public @ResponseBody List<AssociationSummary> getAssociationSummaries(
+            @PathVariable String associationIds, HttpSession session)
+            throws PussycatSessionNotReadyException {
+        getLog().debug("Received request to display information for associations " + associationIds);
 
-        // get the set of all classes and subclasses
-        Set<OWLClass> allClasses = new HashSet<OWLClass>();
-
-//        for (OWLClass labelledClass : labelledClasses) {
-//            allClasses.add(labelledClass);
-//            allClasses.addAll(getPussycatSession(session).getReasoner()
-//                                      .getSubClasses(labelledClass, false)
-//                                      .getFlattened());
-//        }
-
-        // now get the short forms for each class in allClasses
-        Set<String> classNames = new HashSet<String>();
-        for (OWLClass cls : allClasses) {
-            String shortform = OntologyUtils.getShortForm(cls);
-            getLog().trace("Next shortform in subclass set: '" + shortform + "'");
-            classNames.add(shortform);
+        List<URI> uris = new ArrayList<URI>();
+        if (associationIds.contains(",")) {
+            StringTokenizer tokenizer = new StringTokenizer(associationIds, ",");
+            while (tokenizer.hasMoreTokens()) {
+                String next = tokenizer.nextToken();
+                URI nextURI = URI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/TraitAssociation/" + next);
+                uris.add(nextURI);
+            }
+        }
+        else {
+            URI uri = URI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/TraitAssociation/" + associationIds);
+            uris.add(uri);
         }
 
-        // return the URIs of all classes that are children, asserted or inferred, of the provided parent class
-        return classNames;
+        getLog().debug("This trait represents " + uris.size() + " different associations");
+
+        return getPussycatSession(session).getAssociationSummaries(uris);
     }
 
 
@@ -268,24 +266,5 @@ public class PussycatGOCIController {
         }
 
         return renderletNexus;
-    }
-
-    protected Collection<OWLIndividual> fetchInstancesOf(final OWLOntology ontology, final OWLClass cls) {
-        final Collection<OWLIndividual> individuals = new HashSet<OWLIndividual>();
-
-        OWLOntologyWalker walker = new OWLOntologyWalker(Collections.singleton(ontology));
-        OWLOntologyWalkerVisitor<Object> visitor = new OWLOntologyWalkerVisitor<Object>(walker) {
-            @Override public Object visit(OWLClassAssertionAxiom axiom) {
-                if (!axiom.getClassExpression().isAnonymous()) {
-                    OWLClass assertedClass = axiom.getClassExpression().asOWLClass();
-                    if (assertedClass.equals(cls)) {
-                        individuals.add(axiom.getIndividual());
-                    }
-                }
-                return null;
-            }
-        };
-        walker.walkStructure(visitor);
-        return individuals;
     }
 }
