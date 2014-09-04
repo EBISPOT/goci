@@ -71,10 +71,9 @@
         <property name="proxiedSession" ref="proxiedPussycatSession" />
     </bean>
 
-    <bean name="gwasDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init">
-        <property name="ontologyURI" value="http://www.ebi.ac.uk/efo" />
-        <property name="ontologyConfiguration" ref="config" />
-        <!--<property name="ontologyResource" value="file://${user.home}/.goci/data/efo.owl" />-->
-    </bean>
+    <!--<bean name="gwasDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init">-->
+        <!--<property name="ontologyURI" value="http://www.ebi.ac.uk/efo" />-->
+        <!--<property name="ontologyConfiguration" ref="config" />-->
+    <!--</bean>-->
 
 </beans>
