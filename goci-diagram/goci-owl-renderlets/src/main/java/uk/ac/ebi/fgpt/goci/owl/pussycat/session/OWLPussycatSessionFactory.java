@@ -8,7 +8,7 @@ import uk.ac.ebi.fgpt.goci.dao.OntologyDAO;
 import uk.ac.ebi.fgpt.goci.owl.lang.OWLAPIFilterInterpreter;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.owl.pussycat.reasoning.KnowledgeBaseLoadingReasonerSession;
-import uk.ac.ebi.fgpt.goci.owl.pussycat.reasoning.ReasonerSession;
+import uk.ac.ebi.fgpt.goci.reasoning.ReasonerSession;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSession;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSessionFactory;
 

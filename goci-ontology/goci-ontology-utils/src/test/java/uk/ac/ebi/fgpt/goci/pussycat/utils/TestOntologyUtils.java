@@ -3,6 +3,7 @@ package uk.ac.ebi.fgpt.goci.pussycat.utils;
 import junit.framework.TestCase;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
+import uk.ac.ebi.fgpt.goci.utils.OntologyUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;

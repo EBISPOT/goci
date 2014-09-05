@@ -18,7 +18,7 @@ import uk.ac.ebi.fgpt.goci.pussycat.layout.ColourMapper;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.SVGArea;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.TraitRenderlet;
-import uk.ac.ebi.fgpt.goci.pussycat.utils.OntologyUtils;
+import uk.ac.ebi.fgpt.goci.utils.OntologyUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

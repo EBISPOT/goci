@@ -1,4 +1,4 @@
-package uk.ac.ebi.fgpt.goci.pussycat.utils;
+package uk.ac.ebi.fgpt.goci.utils;
 
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.QNameShortFormProvider;

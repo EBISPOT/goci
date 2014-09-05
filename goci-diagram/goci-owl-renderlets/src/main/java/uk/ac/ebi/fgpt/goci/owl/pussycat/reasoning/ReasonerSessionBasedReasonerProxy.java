@@ -6,6 +6,7 @@ import org.semanticweb.owlapi.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
+import uk.ac.ebi.fgpt.goci.reasoning.ReasonerSession;
 
 import java.util.List;
 import java.util.Set;
@@ -51,12 +52,7 @@ public class ReasonerSessionBasedReasonerProxy implements OWLReasoner {
             }
         }
 
-        try {
-            return getReasonerSession().getReasoner();
-        }
-        catch (OWLConversionException e) {
-            throw new RuntimeException("Could not load reasoner (" + e.getMessage() + ")", e);
-        }
+        return getReasonerSession().getReasoner();
     }
 
     @Override public String getReasonerName() {

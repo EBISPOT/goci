@@ -18,7 +18,7 @@ import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.fgpt.goci.model.Study;
 import uk.ac.ebi.fgpt.goci.model.TraitAssociation;
-import uk.ac.ebi.fgpt.goci.pussycat.utils.OntologyUtils;
+import uk.ac.ebi.fgpt.goci.utils.OntologyUtils;
 
 import java.io.File;
 import java.util.ArrayList;

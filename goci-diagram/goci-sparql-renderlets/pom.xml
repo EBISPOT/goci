@@ -20,9 +20,16 @@
     </properties>
 
     <dependencies>
+        <!--<dependency>-->
+            <!--<groupId>uk.ac.ebi.fgpt</groupId>-->
+            <!--<artifactId>goci-datapublisher</artifactId>-->
+            <!--<version>1.0.7-SNAPSHOT</version>-->
+        <!--</dependency>-->
+
+        <!-- depends on ontology utils to lookup labels using OntologyDAO -->
         <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
-            <artifactId>goci-datapublisher</artifactId>
+            <artifactId>goci-ontology-utils</artifactId>
             <version>1.0.7-SNAPSHOT</version>
         </dependency>
 

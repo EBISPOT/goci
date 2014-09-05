@@ -1,21 +1,25 @@
 package uk.ac.ebi.fgpt.goci.sparql.pussycat.session;
 
 import com.hp.hpl.jena.query.QuerySolution;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import uk.ac.ebi.fgpt.goci.dao.OntologyDAO;
 import uk.ac.ebi.fgpt.goci.lang.Filter;
 import uk.ac.ebi.fgpt.goci.model.AssociationSummary;
-import uk.ac.ebi.fgpt.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.fgpt.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.fgpt.goci.pussycat.session.AbstractPussycatSession;
+import uk.ac.ebi.fgpt.goci.reasoning.ReasonerSession;
 import uk.ac.ebi.fgpt.goci.sparql.exception.SparqlQueryException;
-import uk.ac.ebi.fgpt.goci.sparql.pussycat.query.QueryManager;
 import uk.ac.ebi.fgpt.goci.sparql.pussycat.query.QuerySolutionMapper;
 import uk.ac.ebi.fgpt.goci.sparql.pussycat.query.SparqlTemplate;
+import uk.ac.ebi.fgpt.goci.sparql.pussycat.reasoning.DAOBasedReasonerSession;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -29,12 +33,30 @@ import java.util.Set;
  * @date 21/08/14
  */
 public class SparqlPussycatSession extends AbstractPussycatSession {
+    private OntologyDAO ontologyDAO;
     private SparqlTemplate sparqlTemplate;
+
+    private ReasonerSession reasonerSession;
 
     private boolean rendering = false;
 
-    public SparqlPussycatSession(SparqlTemplate sparqlTemplate) {
+    public SparqlPussycatSession(OntologyDAO ontologyDAO, SparqlTemplate sparqlTemplate) {
+        this.ontologyDAO = ontologyDAO;
         this.sparqlTemplate = sparqlTemplate;
+
+        reasonerSession = new DAOBasedReasonerSession(getOntologyDAO());
+    }
+
+    public OntologyDAO getOntologyDAO() {
+        return ontologyDAO;
+    }
+
+    public SparqlTemplate getSparqlTemplate() {
+        return sparqlTemplate;
+    }
+
+    public ReasonerSession getReasonerSession() {
+        return reasonerSession;
     }
 
     public synchronized boolean isRendering() {
@@ -55,18 +77,18 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
 
                 try {
                     getLog().debug("Querying SPARQL endpoint for GWAS data...");
-                    List<URI> chromosomes = loadChromosomes(sparqlTemplate);
+                    List<URI> chromosomes = loadChromosomes(getSparqlTemplate());
                     List<URI> individuals = new ArrayList<URI>();
-                    individuals.addAll(loadAssociations(sparqlTemplate));
-                    individuals.addAll(loadTraits(sparqlTemplate));
+                    individuals.addAll(loadAssociations(getSparqlTemplate()));
+                    individuals.addAll(loadTraits(getSparqlTemplate()));
                     getLog().debug("GWAS data acquired, starting rendering...");
 
                     // render chromosomes first
                     for (URI chromosome : chromosomes) {
                         for (Renderlet r : getAvailableRenderlets()) {
-                            if (r.canRender(renderletNexus, sparqlTemplate, chromosome)) {
+                            if (r.canRender(renderletNexus, getSparqlTemplate(), chromosome)) {
                                 getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
-                                r.render(renderletNexus, sparqlTemplate, chromosome);
+                                r.render(renderletNexus, getSparqlTemplate(), chromosome);
                             }
                         }
                     }
@@ -74,9 +96,9 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                     // then render individuals
                     for (URI individual : individuals) {
                         for (Renderlet r : getAvailableRenderlets()) {
-                            if (r.canRender(renderletNexus, sparqlTemplate, individual)) {
+                            if (r.canRender(renderletNexus, getSparqlTemplate(), individual)) {
                                 getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
-                                r.render(renderletNexus, sparqlTemplate, individual);
+                                r.render(renderletNexus, getSparqlTemplate(), individual);
                             }
                         }
                     }
@@ -115,7 +137,7 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
         List<AssociationSummary> results = new ArrayList<AssociationSummary>();
         for (URI uri : associationURIs) {
             List<AssociationSummary> summaries =
-                    sparqlTemplate.query(query, new QuerySolutionMapper<AssociationSummary>() {
+                    getSparqlTemplate().query(query, new QuerySolutionMapper<AssociationSummary>() {
                         @Override public AssociationSummary mapQuerySolution(QuerySolution qs) {
                             String pubmedID = qs.getLiteral("pmid").getLexicalForm();
                             String firstAuthor = qs.getLiteral("author").getLexicalForm();
@@ -140,16 +162,20 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
     }
 
     @Override public Set<URI> getRelatedTraits(String traitName) {
-        try {
-            URI trait = QueryManager.getCachingInstance().getTraitByName(sparqlTemplate, traitName);
-            List<URI> types = QueryManager.getCachingInstance().getOrderedTraitTypes(sparqlTemplate, trait);
-            Set<URI> results = new HashSet<URI>();
-            results.addAll(types);
-            return results;
+        // get OWLClasses by name
+        Collection<OWLClass> traitClasses = getOntologyDAO().getOWLClassesByLabel(traitName);
+
+        Set<URI> results = new HashSet<URI>();
+        // check reasoner
+        OWLReasoner reasoner = getReasonerSession().getReasoner();
+        for (OWLClass traitClass : traitClasses) {
+            results.add(traitClass.getIRI().toURI());
+            Set<OWLClass> subclasses = reasoner.getSubClasses(traitClass, false).getFlattened();
+            for (OWLClass subclass : subclasses) {
+                results.add(subclass.getIRI().toURI());
+            }
         }
-        catch (DataIntegrityViolationException e) {
-            throw new RuntimeException("Unable to identify trait with name '" + traitName + "'", e);
-        }
+        return results;
     }
 
     private List<URI> loadChromosomes(SparqlTemplate sparqlTemplate) {

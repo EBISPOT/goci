@@ -56,6 +56,7 @@
     <!--</bean>-->
 
     <bean id="pussycatSessionFactory" class="uk.ac.ebi.fgpt.goci.sparql.pussycat.session.SparqlPussycatSessionFactory">
+        <constructor-arg name="ontologyDAO" ref="efoDAO" />
         <constructor-arg name="sparqlTemplate" ref="sparqlTemplate" />
     </bean>
 
@@ -75,5 +76,10 @@
         <!--<property name="ontologyURI" value="http://www.ebi.ac.uk/efo" />-->
         <!--<property name="ontologyConfiguration" ref="config" />-->
     <!--</bean>-->
+
+    <bean name="efoDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init">
+        <property name="ontologyURI" value="http://www.ebi.ac.uk/efo"/>
+        <property name="ontologyConfiguration" ref="config"/>
+    </bean>
 
 </beans>

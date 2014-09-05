@@ -19,7 +19,7 @@ import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
 import uk.ac.ebi.fgpt.goci.model.AssociationSummary;
 import uk.ac.ebi.fgpt.goci.owl.lang.OWLAPIFilterInterpreter;
 import uk.ac.ebi.fgpt.goci.owl.pussycat.layout.LayoutUtils;
-import uk.ac.ebi.fgpt.goci.owl.pussycat.reasoning.ReasonerSession;
+import uk.ac.ebi.fgpt.goci.reasoning.ReasonerSession;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.fgpt.goci.pussycat.layout.BandInformation;
