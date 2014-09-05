@@ -103,9 +103,15 @@ public class OntologyConfiguration {
             }
 
             if (manager.getOntology(IRI.create(OntologyConstants.GWAS_ONTOLOGY_SCHEMA_IRI)) == null) {
-                nextOntology = manager.loadOntology(IRI.create(OntologyConstants.GWAS_ONTOLOGY_SCHEMA_IRI));
-                for (OWLImportsDeclaration declaration : nextOntology.getImportsDeclarations()) {
-                    nextOntology.getOWLOntologyManager().makeLoadImportRequest(declaration, loaderConfiguration);
+                try {
+                    nextOntology = manager.loadOntology(IRI.create(OntologyConstants.GWAS_ONTOLOGY_SCHEMA_IRI));
+                    for (OWLImportsDeclaration declaration : nextOntology.getImportsDeclarations()) {
+                        nextOntology.getOWLOntologyManager().makeLoadImportRequest(declaration, loaderConfiguration);
+                    }
+                }
+                catch (OWLOntologyCreationException e) {
+                    getLog().warn("Failed to load ontology resource (" + e.getMessage() + "). " +
+                                          "GWAS schema will not be available.");
                 }
             }
             if (manager.getOntology(IRI.create(OntologyConstants.EFO_ONTOLOGY_SCHEMA_IRI)) == null) {
