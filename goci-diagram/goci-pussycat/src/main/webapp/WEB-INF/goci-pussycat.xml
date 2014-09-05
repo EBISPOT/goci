@@ -66,7 +66,7 @@
     <!--</bean>-->
 
     <bean id="cachingPussycatSession" class="uk.ac.ebi.fgpt.goci.pussycat.session.SVGCachingPussycatSession">
-        <property name="cacheDirectory" value="${user.home}/.goci/svg_cache/" />
+        <property name="cacheDirectory" value="${GOCI_HOME}/diagram/cache/" />
         <property name="proxiedSession" ref="proxiedPussycatSession" />
     </bean>
 

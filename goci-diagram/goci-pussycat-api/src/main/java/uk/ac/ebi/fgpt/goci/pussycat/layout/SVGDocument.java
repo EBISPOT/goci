@@ -12,11 +12,11 @@ public class SVGDocument {
             "<?xml version='1.0' encoding='UTF-8'?> " +
                     "<svg xmlns='http://www.w3.org/2000/svg' " +
                     "contentScriptType='text/ecmascript' " +
-                    "width='1200' " +
+                    "width='" + SVGCanvas.canvasWidth + "' " +
                     "zoomAndPan='magnify' " +
                     "contentStyleType='text/css' " +
-                    "viewBox='0 0 1200 900' " +
-                    "height='900' " +
+                    "viewBox='0 0 " + SVGCanvas.canvasWidth + " " + SVGCanvas.canvasHeight +"' " +
+                    "height='" + SVGCanvas.canvasHeight + "' " +
                     "id='goci-svg' " +
                     "preserveAspectRatio='xMinYMin slice' " +
                     "version='1.0'>" +
@@ -29,8 +29,14 @@ public class SVGDocument {
                     "<stop style='stop-color:#fffaea;stop-opacity:1' offset='0%' />" +
                     "<stop style='stop-color:black;stop-opacity:1' offset='100%' />" +
                     "</linearGradient>" +
-                    "<mask width='1200' maskUnits='userSpaceOnUse' x='0' height='800' y='-100' id='traitMask'>" +
-                    "<rect fill='grey' x='0' width='1200' height='900' y='-100' opacity='.25' />" +
+                    "<mask width='" + SVGCanvas.canvasWidth + "' maskUnits='userSpaceOnUse' " +
+                    "x='0' height='" + SVGCanvas.canvasHeight + "' y='-100' " +
+                    "id='traitMask'>" +
+                    "<rect fill='grey' x='0' width='" + SVGCanvas.canvasWidth + "' " +
+                    "height='" + SVGCanvas.canvasHeight+ "' " +
+                    "y='-100' " +
+                    "opacity='" +
+                    ".25' />" +
                     "</mask>" +
                     "</defs>";
 
