@@ -25,12 +25,6 @@ PREFIX dc:<http://purl.org/dc/elements/1.1/>
 PREFIX CL:<http://purl.org/obo/owl/CL#>
 
 
-^[ALL.EXPERIMENTS.QUERY]
-SELECT ?expUri
-WHERE {
-?expUri rdf:type atlas:Experiment .
-}
-
 ^[RELATEDTO.PROPERTIES.QUERY]
 SELECT DISTINCT ?property ?propertyLabel ?resource ?resourceLabel ?resourceDescription ?resourceType ?resourceTypeLabel ?resourceTypeDesc WHERE {
 

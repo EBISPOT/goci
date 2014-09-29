@@ -121,7 +121,7 @@ function _buildVoid(element) {
         "PREFIX void: <http://rdfs.org/ns/void#> " +
         "PREFIX pav: <http://purl.org/pav/2.0/> " +
         "PREFIX prov: <http://www.w3.org/ns/prov#> " +
-        "SELECT ?dataset ?title ?description ?version ?triples ?created ?previous " +
+        "SELECT ?dataset ?title ?description ?version ?triples ?created " +
         "where { " +
         "?dataset a void:Dataset ; " +
         "dcterms:title ?title; " +
@@ -129,11 +129,7 @@ function _buildVoid(element) {
         "pav:version ?version;      " +
         "dcterms:issued ?created;   " +
         "void:triples ?triples ;   " +
-        "prov:specializationOf ?data . " +
-        "?data pav:previousVersion ?previous .  " +
-        "}                   " +
-        "ORDER BY DESC(?previous)";
-
+        "}";
 
     $.ajax ( {
         type: 'GET',
@@ -263,9 +259,20 @@ function _buildExplorerPage(element) {
         renderN3();
     });
 
+    var jsonimg = $('<img />');
+    jsonimg.attr('src', 'images/file_RDF_JSONLD_small.jpg');
+    jsonimg.attr('alt', 'RDF/JSON');
+    jsonimg.attr('title', 'Show RDF/JSON for this resource');
+    jsonimg.attr('style','cursor:pointer')
+    jsonimg.click(function () {
+        renderJson();
+    });
+
     downloadsSpan.append(xmlimg);
     downloadsSpan.append("&nbsp;&nbsp;");
     downloadsSpan.append(n3img);
+    downloadsSpan.append("&nbsp;&nbsp;");
+    downloadsSpan.append(jsonimg);
     $("#" + id).append(downloadsSpan);
 }
 
@@ -302,6 +309,7 @@ function _buildSparqlPage(element) {
                 .append('<option value="TSV">TSV</option>')
                 .append('<option value="RDF/XML">RDF/XML</option>')
                 .append('<option value="N3">RDF/N3</option>')
+                .append('<option value="JSON-LD">RDF/JSON</option>')
         )
     );
 
@@ -460,11 +468,14 @@ function querySparql () {
             else if (rendering.match(/RDF/)) {
                 location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=RDF/XML";
             }
+            else if (rendering.match(/JSON-LD/)) {
+                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=JSON-LD";
+            }
             else if (rendering.match(/N3/)) {
                 location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=N3";
             }
             else  {
-                displayError("You can only render graph queries in either HTML, RDF/XML, or RDF/N3 format")
+                displayError("You can only render graph queries in either HTML, RDF/XML, RDF/JSON or RDF/N3 format")
                 return;
             }
         }
@@ -483,7 +494,7 @@ function querySparql () {
             else if (rendering.match(/^XML/)) {
                 location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=XML&limit=" + limit + "&offset=" + offset + "&inference=" + rdfs;
             }
-            else if (rendering.match(/JSON/)) {
+            else if (rendering.match(/JSON$/)) {
                 location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=JSON&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
             }
             else if (rendering.match(/CSV/)) {
@@ -1426,6 +1437,18 @@ function renderN3(uri) {
     }
 }
 
+function renderJson(uri) {
+    var match = document.location.href.match(/\?(.*)/);
+    var queryString = match ? match[1] : '';
+
+    if (queryString.match(/uri=/)) {
+        var param = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
+        location.href = loadestarQueryService + "?query=" + encodeURIComponent("describe<" + param + ">") + "&format=JSON-LD";
+    }
+    else if (uri != undefined) {
+        location.href = loadestarQueryService + "?query=" + encodeURIComponent("describe<" + uri + ">") + "&format=JSON-LD";
+    }
+}
 
 function _getPrefixes () {
     var prefixes = '';

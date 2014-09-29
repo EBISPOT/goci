@@ -117,6 +117,26 @@ public class ExplorerServlet {
         }
     }
 
+    @RequestMapping (produces="application/rdf+json")
+    public @ResponseBody
+    void describeResourceAsJson (
+            @RequestParam(value = "uri", required = true ) String uri,
+            HttpServletResponse response) throws IOException, LodeException {
+        if (uri != null && uri.length() > 0) {
+            String query = "DESCRIBE <" + URI.create(uri) + ">";
+            log.trace("querying for graph rdf+n3");
+            response.setContentType("application/rdf+json");
+            ServletOutputStream out = response.getOutputStream();
+            out.println();
+            out.println();
+            getSparqlService().query(query, "JSON-LD", false, out);
+            out.close();
+        }
+        else {
+            handleBadUriException(new Exception("Malformed or empty URI request: " + uri));
+        }
+    }
+
     public @ResponseBody
     void describeResource (
             @RequestParam(value = "uri", required = true ) String uri,
@@ -125,6 +145,9 @@ public class ExplorerServlet {
         if (uri != null && uri.length() > 0) {
             if (format.toLowerCase().equals("n3")) {
                 describeResourceAsN3(uri, response);
+            }
+            else if (format.toLowerCase().equals("json-ld")) {
+                describeResourceAsJson(uri, response);
             }
             else {
                 describeResourceAsXml(uri, response);

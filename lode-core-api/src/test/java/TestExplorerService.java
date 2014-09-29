@@ -1,4 +1,5 @@
 import junit.framework.TestCase;
+import org.junit.Ignore;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.model.ExplorerViewConfiguration;
@@ -13,6 +14,7 @@ import java.util.LinkedHashSet;
  * @date 03/05/2013
  * Functional Genomics Group EMBL-EBI
  */
+@Ignore
 public class TestExplorerService extends TestCase {
 
 
