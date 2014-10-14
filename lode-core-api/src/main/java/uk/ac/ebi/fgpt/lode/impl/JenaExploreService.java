@@ -158,7 +158,7 @@ public class JenaExploreService implements ExploreService {
                 if (excludeTypes.contains(URI.create(res.getURI()))) {
                     continue;
                 }
-                ShortResourceDescription description1 = getShortResourceDescription(URI.create(res.getURI()), getLabelProperties(), getDescriptionsProperties());
+                ShortResourceDescription description1 = getShortResourceDescription(g, URI.create(res.getURI()), getLabelProperties(), getDescriptionsProperties());
 
                 resources.setPropertyUri(type.toString());
                 resources.setPropertyUri("type");
@@ -201,7 +201,7 @@ public class JenaExploreService implements ExploreService {
                 if (excludeTypes.contains(URI.create(res.getURI()))) {
                     continue;
                 }
-                ShortResourceDescription description1 = getShortResourceDescription(URI.create(res.getURI()), getLabelProperties(), getDescriptionsProperties());
+                ShortResourceDescription description1 = getShortResourceDescription(g, URI.create(res.getURI()), getLabelProperties(), getDescriptionsProperties());
 
                 resources.setPropertyUri(type.toString());
                 resources.setPropertyUri("type");
@@ -222,6 +222,13 @@ public class JenaExploreService implements ExploreService {
     }
 
     public ShortResourceDescription getShortResourceDescription(URI resourceUri, Set<URI> labelUris, Set<URI> descriptionUris) throws LodeException {
+        Graph g = getQueryExecutionService().getDefaultGraph();
+        ShortResourceDescription description1 = getShortResourceDescription(g, resourceUri, labelUris, descriptionUris);
+        g.close();
+        return description1;
+    }
+
+    private ShortResourceDescription getShortResourceDescription(Graph g, URI resourceUri, Set<URI> labelUris, Set<URI> descriptionUris) throws LodeException {
 
         // try and get a label
         String label = null;
@@ -254,7 +261,6 @@ public class JenaExploreService implements ExploreService {
 
         query.setQueryPattern(union);
         QueryExecution endpoint = null;
-        Graph g = getQueryExecutionService().getDefaultGraph();
 
         try {
             endpoint = getQueryExecutionService().getQueryExecution(g, query, false);
@@ -279,9 +285,6 @@ public class JenaExploreService implements ExploreService {
         finally {
             if (endpoint !=  null)  {
                 endpoint.close();
-                if (g != null ) {
-                    g.close();
-                }
             }
         }
         if (label == null) {
@@ -473,17 +476,7 @@ public class JenaExploreService implements ExploreService {
                     descCollection.get(prop).getRelatedObjectTypes().add(relatedResourceType);
                 }
             }
-            // finally get the labels for the properties
-            for (URI prop : descCollection.keySet()) {
-                ShortResourceDescription propertyDescription = getShortResourceDescription(prop, getLabelProperties(), Collections.<URI>emptySet());
-                // see if the property has a label
-                if (isNullOrEmpty(propertyDescription.getDisplayLabel())) {
-                    descCollection.get(prop).setPropertyLabel(getShortForm(prop));
-                }
-                else {
-                    descCollection.get(prop).setPropertyLabel(propertyDescription.getDisplayLabel());
-                }
-            }
+
         } catch (Exception e) {
             log.error("Error retrieving results for " + query, e);
         }
@@ -496,7 +489,24 @@ public class JenaExploreService implements ExploreService {
             }
         }
 
-//        }
+        try {
+
+            // finally get the labels for the properties
+            for (URI prop : descCollection.keySet()) {
+                ShortResourceDescription propertyDescription = getShortResourceDescription(prop, getLabelProperties(), Collections.<URI>emptySet());
+                // see if the property has a label
+                if (isNullOrEmpty(propertyDescription.getDisplayLabel())) {
+                    descCollection.get(prop).setPropertyLabel(getShortForm(prop));
+                }
+                else {
+                    descCollection.get(prop).setPropertyLabel(propertyDescription.getDisplayLabel());
+                }
+            }
+        } catch (LodeException e) {
+            log.error("Error retrieving results for " + query, e);
+
+        }
+
         return descCollection.values();
 
     }
