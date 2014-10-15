@@ -38,6 +38,47 @@ public class VirtuosoConnectionPoolDataSourceFactory implements DatasourceProvid
         virtuosoSource.setPortNumber(port);
     }
 
+    public VirtuosoConnectionPoolDataSourceFactory setInitialPoolSize(int poolSize) {
+        try {
+            virtuosoSource.setInitialPoolSize(poolSize);
+            return this;
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to set initial pool size " + getClass().getSimpleName() + ": " + e.getMessage());
+        }
+    }
+
+    public VirtuosoConnectionPoolDataSourceFactory setMinPoolSize (int minPoolSize) {
+        try {
+            virtuosoSource.setMinPoolSize(minPoolSize);
+            return this;
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to set minimum pool size " + getClass().getSimpleName() + ": " + e.getMessage());
+        }
+    }
+
+    public VirtuosoConnectionPoolDataSourceFactory setMaxPoolSize (int maxPoolSize) {
+        try {
+            virtuosoSource.setMaxPoolSize(maxPoolSize);
+            return this;
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to set max pool size " + getClass().getSimpleName() + ": " + e.getMessage());
+        }
+    }
+
+    public VirtuosoConnectionPoolDataSourceFactory setCharset (String charset) {
+        virtuosoSource.setCharset(charset);
+        return this;
+    }
+
+    public VirtuosoConnectionPoolDataSourceFactory setUser (String user) {
+        virtuosoSource.setUser(user);
+        return this;
+    }
+
+    public VirtuosoConnectionPoolDataSourceFactory setPassword (String password) {
+        virtuosoSource.setPassword(password);
+        return this;
+    }
 
     public DataSource getDataSource() throws SQLException {
         return virtuosoSource;
