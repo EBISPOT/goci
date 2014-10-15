@@ -224,7 +224,9 @@ public class JenaExploreService implements ExploreService {
     public ShortResourceDescription getShortResourceDescription(URI resourceUri, Set<URI> labelUris, Set<URI> descriptionUris) throws LodeException {
         Graph g = getQueryExecutionService().getDefaultGraph();
         ShortResourceDescription description1 = getShortResourceDescription(g, resourceUri, labelUris, descriptionUris);
-        g.close();
+        if (g!= null) {
+            g.close();
+        }
         return description1;
     }
 
