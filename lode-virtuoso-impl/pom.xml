@@ -1,29 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>ebi-lode</artifactId>
         <groupId>ebi-lode</groupId>
-        <version>1.3-SNAPSHOT</version>
+        <version>1.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>lode-virtuoso-impl</artifactId>
-    <version>1.3nj-SNAPSHOT</version>
+    <version>1.3</version>
 
     <dependencies>
 
         <dependency>
             <groupId>ebi-lode</groupId>
             <artifactId>lode-core-servlet</artifactId>
-            <version>1.3-SNAPSHOT</version>
+            <version>1.3</version>
         </dependency>
 
         <dependency>
             <groupId>ebi-lode</groupId>
             <artifactId>lode-core-api</artifactId>
-            <version>1.3-SNAPSHOT</version>
+            <version>1.3</version>
         </dependency>
 
 
