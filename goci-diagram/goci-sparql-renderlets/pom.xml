@@ -36,8 +36,8 @@
         <!-- Lode SPARQL endpoint -->
         <dependency>
             <groupId>ebi-lode</groupId>
-            <artifactId>lode-core-api</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <artifactId>lode-virtuoso-impl</artifactId>
+            <version>1.3</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
