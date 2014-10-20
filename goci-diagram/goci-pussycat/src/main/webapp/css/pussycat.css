@@ -48,7 +48,8 @@ h5{
 }
 
 #header {
-    height: 90px;
+    /*height: 90px;*/
+    height: 120px;
     padding-top: 10px;
     padding-bottom: 15px;
     background: url('../images/dual-logo2.png') no-repeat;
