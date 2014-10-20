@@ -1,0 +1,106 @@
+Templating -
+"Prepared statement" style - replace ?? with arguments, in order
+
+Prefixes -
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX oban: <http://purl.org/oban/>
+PREFIX ro: <http://www.obofoundry.org/ro/ro.owl#>
+PREFIX efo: <http://www.ebi.ac.uk/efo/>
+PREFIX gt: <http://rdf.ebi.ac.uk/terms/gwas/>
+PREFIX gd: <http://rdf.ebi.ac.uk/dataset/gwas/>
+
+Queries -
+
+getCytogeneticBandForAssociation()
+
+SELECT ?band
+WHERE {
+  ?association a gt:TraitAssociation ;
+               oban:has_subject ?snp .
+  ?snp ro:located_in ?band .
+  FILTER (?association = <??>)
+}
+
+getAssociationsLocatedInCytogeneticBand(SparqlTemplate reasoner, URI bandIndividual)
+
+SELECT ?association
+WHERE {
+  ?association a gt:TraitAssociation ;
+               oban:has_subject ?snp .
+  ?snp ro:located_in ?band .
+  FILTER (?band = <??>)
+}
+
+getAssociationsLocatedInCytogeneticBand(SparqlTemplate reasoner, String bandName)
+
+SELECT ?association
+WHERE {
+  ?association a gt:TraitAssociation ;
+               oban:has_subject ?snp .
+  ?snp ro:located_in ?bandUri .
+  ?bandUri rdfs:label ?band .
+  FILTER ( ?band = "??"^^xsd:string )
+}
+
+getTraitsLocatedInCytogeneticBand()
+
+SELECT ?trait ?band
+WHERE {
+  ?association a gt:TraitAssociation ;
+               oban:has_subject ?snp ;
+               oban:has_object ?trait .
+  ?snp ro:located_in ?band ;
+  FILTER (?band = <??>)
+}
+
+getAssociationsForTrait()
+
+SELECT ?association
+WHERE {
+  ?association a gt:TraitAssociation ;
+               oban:has_object ?trait .
+  FILTER (?trait = <??>)
+}
+
+getDatesOfAssociationsByBandAndTrait()
+
+SELECT ?association ?date
+WHERE {
+  ?association a gt:TraitAssociation ;
+               oban:has_subject ?snp ;
+               oban:has_object ?trait ;
+               ro:part_of ?study .
+  ?study gt:has_publication_date ?date .
+  ?snp ro:located_in ?band .
+  FILTER ( ?band = ?? )
+  FILTER ( ?trait = ?? )
+}
+
+label
+
+SELECT DISTINCT ?label
+WHERE {
+  <??> rdfs:label ?label .
+}
+
+type
+
+SELECT DISTINCT ?type
+WHERE {
+  <??> rdf:type ?type
+}
+
+
+get traits
+
+SELECT DISTINCT ?trait
+WHERE {
+  ?association a gt:TraitAssociation ;
+               oban:has_object ?trait .
+}
