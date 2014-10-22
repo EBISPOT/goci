@@ -4,7 +4,7 @@
 
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci</artifactId>
-    <version>1.0.7-SNAPSHOT</version>
+    <version>1.0.8-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>GWAS Ontology and Curation Infrastructure</name>
@@ -125,7 +125,8 @@
         <connection>scm:git:git@github.com:tburdett/goci.git</connection>
         <developerConnection>scm:git:git@github.com:tburdett/goci.git</developerConnection>
         <url>git@github.com:tburdett/goci.git</url>
-    </scm>
+      <tag>HEAD</tag>
+  </scm>
 
     <!-- Alternative version control (SVN over git) -->
     <!-- NOTE: This allows buildnumbers to be extracted when doing automated builds (better SVN support in tools) -->
@@ -174,7 +175,7 @@
                 <role>developer</role>
             </roles>
             <timezone>0</timezone>
-            <properties/>
+            <properties />
         </developer>
         <developer>
             <id>dwelter</id>
@@ -186,7 +187,7 @@
                 <role>developer</role>
             </roles>
             <timezone>0</timezone>
-            <properties/>
+            <properties />
         </developer>
     </developers>
 
@@ -288,7 +289,7 @@
 
             <properties>
                 <java.location>java</java.location>
-                <java.args/>
+                <java.args />
             </properties>
         </profile>
 
