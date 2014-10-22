@@ -4,12 +4,12 @@
     <parent>
         <groupId>uk.ac.ebi.fgpt</groupId>
         <artifactId>goci</artifactId>
-        <version>1.0.8-SNAPSHOT</version>
+        <version>2.0-SNAPSHOT</version>
     </parent>
 
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci-model</artifactId>
-    <version>1.0.8-SNAPSHOT</version>
+    <version>2.0-SNAPSHOT</version>
 
     <name>goci-model</name>
     <url>http://maven.apache.org</url>
