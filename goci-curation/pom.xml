@@ -24,11 +24,8 @@
     </properties>
 
     <modules>
-        <module>goci-tracker-web</module>
-        <module>goci-tracker-app</module>
         <module>SNPbatchLoader</module>
-    <module>goci-pubmedsearch</module>
-    <module>goci-enexport</module>
-    <module>goci-pubmedimport</module>
+        <module>goci-pubmedsearch</module>
+        <module>goci-pubmedimport</module>
   </modules>
 </project>

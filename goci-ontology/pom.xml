@@ -24,7 +24,6 @@
     </properties>
 
     <modules>
-        <module>goci-ontology-widgets</module>
         <module>goci-datapublisher</module>
         <module>goci-ontology-utils</module>
         <module>goci-kb-metrics</module>
