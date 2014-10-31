@@ -70,8 +70,14 @@ public class Checker {
     public void validateEntry(DBEntry entry){
         String uri = entry.getEfouri();
         String efoTrait = entry.getEfotrait();
+        OWLClass cls = null;
 
-        OWLClass cls = getOntologyDAO().getOWLClassByURI(uri);
+        try{
+            cls = getOntologyDAO().getOWLClassByURI(uri);
+        }
+        catch (Exception e){
+            getLog().debug("IRI " + uri + " is not a valid IRI");
+        }
 
         if(cls != null){
             Set<String> labels = getOntologyDAO().getClassRDFSLabels(cls);
