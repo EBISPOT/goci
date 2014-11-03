@@ -279,11 +279,10 @@
     </dependencyManagement>
 
     <modules>
-        <module>goci-model</module>
-        <module>goci-curation</module>
-        <module>goci-ontology</module>
-        <module>goci-diagram</module>
-  </modules>
+        <module>goci-core</module>
+        <module>goci-interfaces</module>
+        <module>goci-tools</module>
+    </modules>
 
     <profiles>
         <profile>
