@@ -3,27 +3,17 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>goci</artifactId>
+        <artifactId>goci-interfaces</artifactId>
         <groupId>uk.ac.ebi.fgpt</groupId>
         <version>2.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>goci-core</artifactId>
+    <artifactId>goci-search</artifactId>
+    <groupId>uk.ac.ebi.fgpt</groupId>
     <version>2.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
 
-    <name>GOCI Core</name>
-
-    <modules>
-        <module>goci-pussycat-api</module>
-        <module>goci-renderlets-core</module>
-        <module>goci-owl-renderlets</module>
-        <module>goci-sparql-renderlets</module>
-        <module>goci-model</module>
-        <module>goci-ontology</module>
-        <module>goci-dao</module>
-    </modules>
+    <name>GOCI Search Server</name>
 
 
 </project>

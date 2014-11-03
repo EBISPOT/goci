@@ -80,16 +80,22 @@
         <!-- ontology utils -->
         <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
-            <artifactId>goci-ontology-utils</artifactId>
+            <artifactId>goci-ontology</artifactId>
+            <version>2.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.ac.ebi.fgpt</groupId>
+            <artifactId>goci-dao</artifactId>
             <version>2.0-SNAPSHOT</version>
         </dependency>
 
         <!-- goci datapublisher for obtaining catalog data -->
-        <dependency>
-            <groupId>uk.ac.ebi.fgpt</groupId>
-            <artifactId>goci-datapublisher</artifactId>
-            <version>2.0-SNAPSHOT</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>uk.ac.ebi.fgpt</groupId>-->
+            <!--<artifactId>goci-datapublisher</artifactId>-->
+            <!--<version>2.0-SNAPSHOT</version>-->
+        <!--</dependency>-->
 
         <!-- renderlet and querying dependencies -->
         <dependency>
@@ -114,7 +120,13 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>3.0.3.RELEASE</version>
+            <version>3.2.2.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>3.2.2.RELEASE</version>
         </dependency>
 
         <!-- jackson json mapping library, describes mappings from java to json for model objects -->
@@ -157,7 +169,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>3.0.3.RELEASE</version>
+            <version>3.2.2.RELEASE</version>
             <scope>test</scope>
         </dependency>
 

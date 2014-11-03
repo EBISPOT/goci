@@ -2,14 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>goci</artifactId>
+        <artifactId>goci-core</artifactId>
         <groupId>uk.ac.ebi.fgpt</groupId>
         <version>2.0-SNAPSHOT</version>
     </parent>
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci-ontology</artifactId>
     <version>2.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <!--<packaging>pom</packaging>-->
 
     <name>GOCI Ontology Tools</name>
     <description>
@@ -23,12 +23,48 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <modules>
-        <module>goci-datapublisher</module>
-        <module>goci-ontology-utils</module>
-        <module>goci-kb-metrics</module>
-        <module>goci-mappingsextractor</module>
-        <module>goci-urilabelchecker</module>
-  </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>uk.ac.ebi.fgpt</groupId>
+            <artifactId>goci-model</artifactId>
+            <version>2.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- OWL API and HermiT reasoner, for converting GWAS concepts -->
+        <dependency>
+            <groupId>net.sourceforge.owlapi</groupId>
+            <artifactId>owlapi-apibinding</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.semanticweb</groupId>
+            <artifactId>HermiT</artifactId>
+        </dependency>
+
+        <!-- spring core, for using classpath resources -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>3.2.2.RELEASE</version>
+        </dependency>
+
+        <!-- logging dependencies for testing -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <!--<version>1.9.5</version>-->
+        </dependency>
+
+    </dependencies>
 
 </project>

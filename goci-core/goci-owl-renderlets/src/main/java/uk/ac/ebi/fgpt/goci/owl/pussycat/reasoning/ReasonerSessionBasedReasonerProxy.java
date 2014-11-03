@@ -5,7 +5,6 @@ import org.semanticweb.owlapi.reasoner.*;
 import org.semanticweb.owlapi.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.reasoning.ReasonerSession;
 
 import java.util.List;

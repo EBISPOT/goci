@@ -27,7 +27,7 @@
         <!-- depends on ontology utils to lookup labels using OntologyDAO -->
         <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
-            <artifactId>goci-ontology-utils</artifactId>
+            <artifactId>goci-dao</artifactId>
             <version>2.0-SNAPSHOT</version>
         </dependency>
 
@@ -52,6 +52,15 @@
             <groupId>uk.ac.ebi.fgpt</groupId>
             <artifactId>goci-renderlets-core</artifactId>
             <version>2.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sourceforge.owlapi</groupId>
+            <artifactId>owlapi-apibinding</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.semanticweb</groupId>
+            <artifactId>HermiT</artifactId>
         </dependency>
     </dependencies>
 

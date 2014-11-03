@@ -23,6 +23,9 @@
 
     <modules>
          <module>goci-pussycat</module>
+        <module>goci-curation</module>
+        <module>goci-search</module>
+        <module>goci-ui</module>
         <!--<module>goci-pussycat-metrics</module>-->
   </modules>
 </project>

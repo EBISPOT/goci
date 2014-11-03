@@ -8,7 +8,7 @@
   <groupId>uk.ac.ebi.fgpt.goci</groupId>
   <artifactId>goci-pubmedsearch</artifactId>
   <version>2.0-SNAPSHOT</version>
-  <name>goci-pubmedsearch</name>
+    <name>GOCI Pubmed Search Plugin</name>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -51,7 +51,7 @@
       <dependency>
           <groupId>org.apache.httpcomponents</groupId>
           <artifactId>httpclient</artifactId>
-          <version>4.0.2</version>
+          <version>4.2.6</version>
       </dependency>
 
       <!-- jackson json mapping library, describes mappings from java to json for model objects -->
@@ -65,21 +65,21 @@
       <dependency>
           <groupId>org.springframework</groupId>
           <artifactId>spring-context-support</artifactId>
-          <version>3.0.3.RELEASE</version>
+          <version>3.2.2.RELEASE</version>
       </dependency>
 
       <!-- spring jdbc for database access -->
       <dependency>
           <groupId>org.springframework</groupId>
           <artifactId>spring-jdbc</artifactId>
-          <version>3.0.3.RELEASE</version>
+          <version>3.2.2.RELEASE</version>
       </dependency>
 
       <!-- spring webmvc framework -->
       <dependency>
           <groupId>org.springframework</groupId>
           <artifactId>spring-webmvc</artifactId>
-          <version>3.0.3.RELEASE</version>
+          <version>3.2.2.RELEASE</version>
       </dependency>
 
       <!-- logging dependencies, versions/scope managed by super-pom -->
@@ -106,7 +106,7 @@
       <dependency>
           <groupId>commons-dbcp</groupId>
           <artifactId>commons-dbcp</artifactId>
-          <version>1.2.2</version>
+          <version>1.4</version>
       </dependency>
       <dependency>
           <groupId>commons-pool</groupId>
