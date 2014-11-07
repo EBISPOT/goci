@@ -4,7 +4,7 @@ import net.sourceforge.fluxion.spi.ServiceProvider;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import uk.ac.ebi.fgpt.goci.dao.OntologyDAO;
+import uk.ac.ebi.fgpt.goci.dao.DefaultOntologyDAO;
 import uk.ac.ebi.fgpt.goci.owl.lang.OWLAPIFilterInterpreter;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.owl.pussycat.reasoning.KnowledgeBaseLoadingReasonerSession;
@@ -28,7 +28,7 @@ public class OWLPussycatSessionFactory implements PussycatSessionFactory {
     private static final String efoDefaultLocation = "http://www.ebi.ac.uk/efo/efo.owl";
 
     private final OntologyConfiguration ontologyConfiguration;
-    private final OntologyDAO ontologyDAO;
+    private final DefaultOntologyDAO ontologyDAO;
     private final OWLAPIFilterInterpreter filterInterpreter;
 
     private ReasonerSession reasonerSession;
@@ -68,7 +68,7 @@ public class OWLPussycatSessionFactory implements PussycatSessionFactory {
 
 
         // create ontology DAO for GWAS KB
-        ontologyDAO = new OntologyDAO();
+        ontologyDAO = new DefaultOntologyDAO();
         ontologyDAO.setOntologyResource(gwasKBResource);
         ontologyDAO.setOntologyConfiguration(ontologyConfiguration);
         ontologyDAO.init();
@@ -77,7 +77,7 @@ public class OWLPussycatSessionFactory implements PussycatSessionFactory {
         filterInterpreter = new OWLAPIFilterInterpreter(ontologyConfiguration);
     }
 
-    public OWLPussycatSessionFactory(OntologyConfiguration ontologyConfiguration, OntologyDAO ontologyDAO) {
+    public OWLPussycatSessionFactory(OntologyConfiguration ontologyConfiguration, DefaultOntologyDAO ontologyDAO) {
         this.ontologyConfiguration = ontologyConfiguration;
         this.ontologyDAO = ontologyDAO;
         this.filterInterpreter = new OWLAPIFilterInterpreter(ontologyConfiguration);

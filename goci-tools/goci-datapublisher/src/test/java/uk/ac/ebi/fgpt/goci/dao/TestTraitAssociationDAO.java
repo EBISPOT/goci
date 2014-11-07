@@ -19,7 +19,7 @@ import java.util.Collections;
  */
 public class TestTraitAssociationDAO extends TestCase {
     private TraitAssociation traitAssociation;
-    private TraitAssociationDAO dao;
+    private JDBCTraitAssociationDAO dao;
 
     public void setUp() {
         traitAssociation = Mockito.mock(TraitAssociation.class);
@@ -27,11 +27,11 @@ public class TestTraitAssociationDAO extends TestCase {
         JdbcTemplate mockTemplate = Mockito.mock(JdbcTemplate.class);
         Mockito.when(mockTemplate.query(Matchers.anyString(), Matchers.isA(RowMapper.class))).thenReturn(Collections.singletonList(traitAssociation));
 
-        SingleNucleotidePolymorphismDAO snpDAO = Mockito.mock(SingleNucleotidePolymorphismDAO.class);
-        OntologyDAO ontologyDAO = Mockito.mock(OntologyDAO.class);
+        JDBCSingleNucleotidePolymorphismDAO snpDAO = Mockito.mock(JDBCSingleNucleotidePolymorphismDAO.class);
+        DefaultOntologyDAO ontologyDAO = Mockito.mock(DefaultOntologyDAO.class);
 
         // create trait association dao
-        dao = new TraitAssociationDAO();
+        dao = new JDBCTraitAssociationDAO();
         // inject dependencies
         dao.setJdbcTemplate(mockTemplate);
         dao.setSNPDAO(snpDAO);

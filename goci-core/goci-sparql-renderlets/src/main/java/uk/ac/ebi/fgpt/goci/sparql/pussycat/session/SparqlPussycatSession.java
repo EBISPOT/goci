@@ -3,7 +3,7 @@ package uk.ac.ebi.fgpt.goci.sparql.pussycat.session;
 import com.hp.hpl.jena.query.QuerySolution;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import uk.ac.ebi.fgpt.goci.dao.OntologyDAO;
+import uk.ac.ebi.fgpt.goci.dao.DefaultOntologyDAO;
 import uk.ac.ebi.fgpt.goci.lang.Filter;
 import uk.ac.ebi.fgpt.goci.model.AssociationSummary;
 import uk.ac.ebi.fgpt.goci.pussycat.exception.PussycatSessionNotReadyException;
@@ -33,21 +33,21 @@ import java.util.Set;
  * @date 21/08/14
  */
 public class SparqlPussycatSession extends AbstractPussycatSession {
-    private OntologyDAO ontologyDAO;
+    private DefaultOntologyDAO ontologyDAO;
     private SparqlTemplate sparqlTemplate;
 
     private ReasonerSession reasonerSession;
 
     private boolean rendering = false;
 
-    public SparqlPussycatSession(OntologyDAO ontologyDAO, SparqlTemplate sparqlTemplate) {
+    public SparqlPussycatSession(DefaultOntologyDAO ontologyDAO, SparqlTemplate sparqlTemplate) {
         this.ontologyDAO = ontologyDAO;
         this.sparqlTemplate = sparqlTemplate;
 
         reasonerSession = new DAOBasedReasonerSession(getOntologyDAO());
     }
 
-    public OntologyDAO getOntologyDAO() {
+    public DefaultOntologyDAO getOntologyDAO() {
         return ontologyDAO;
     }
 

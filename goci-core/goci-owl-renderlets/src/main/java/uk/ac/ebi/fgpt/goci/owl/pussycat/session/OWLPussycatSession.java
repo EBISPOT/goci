@@ -11,7 +11,7 @@ import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import uk.ac.ebi.fgpt.goci.dao.OntologyDAO;
+import uk.ac.ebi.fgpt.goci.dao.DefaultOntologyDAO;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.lang.Filter;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
@@ -49,14 +49,14 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
     private final OWLAPIFilterInterpreter filterInterpreter;
 
     private final OntologyConfiguration ontologyConfiguration;
-    private final OntologyDAO ontologyDAO;
+    private final DefaultOntologyDAO ontologyDAO;
     private final ReasonerSession reasonerSession;
 
     private boolean rendering = false;
 
     public OWLPussycatSession(OWLAPIFilterInterpreter filterInterpreter,
                               OntologyConfiguration ontologyConfiguration,
-                              OntologyDAO ontologyDAO,
+                              DefaultOntologyDAO ontologyDAO,
                               ReasonerSession reasonerSession) {
         super();
         this.filterInterpreter = filterInterpreter;
@@ -77,7 +77,7 @@ public class OWLPussycatSession extends AbstractSVGIOPussycatSession {
         return ontologyConfiguration;
     }
 
-    public OntologyDAO getOntologyDAO() {
+    public DefaultOntologyDAO getOntologyDAO() {
         return ontologyDAO;
     }
 

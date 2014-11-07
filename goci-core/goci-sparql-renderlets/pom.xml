@@ -24,7 +24,7 @@
             <!--<version>1.0.7-SNAPSHOT</version>-->
         <!--</dependency>-->
 
-        <!-- depends on ontology utils to lookup labels using OntologyDAO -->
+        <!-- depends on ontology utils to lookup labels using DefaultOntologyDAO -->
         <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
             <artifactId>goci-dao</artifactId>

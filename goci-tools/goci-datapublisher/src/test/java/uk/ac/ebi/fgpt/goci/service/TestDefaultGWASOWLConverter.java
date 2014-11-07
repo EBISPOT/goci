@@ -11,7 +11,7 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.ebi.fgpt.goci.dao.OntologyDAO;
+import uk.ac.ebi.fgpt.goci.dao.DefaultOntologyDAO;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConstants;
@@ -71,7 +71,7 @@ public class TestDefaultGWASOWLConverter extends TestCase {
             when(config.getOWLDataFactory()).thenReturn(factory);
             converter.setConfiguration(config);
 
-            OntologyDAO ontologyDAO = mock(OntologyDAO.class);
+            DefaultOntologyDAO ontologyDAO = mock(DefaultOntologyDAO.class);
             when(ontologyDAO.getOWLClassesByLabel(anyString())).thenReturn(Collections.singletonList(testChromosomeClass));
             converter.setOntologyDAO(ontologyDAO);
 

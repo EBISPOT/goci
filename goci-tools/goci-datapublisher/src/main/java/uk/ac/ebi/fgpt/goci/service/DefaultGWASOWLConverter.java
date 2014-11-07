@@ -5,7 +5,7 @@ import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.ebi.fgpt.goci.dao.OntologyDAO;
+import uk.ac.ebi.fgpt.goci.dao.DefaultOntologyDAO;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.exception.ObjectMappingException;
 import uk.ac.ebi.fgpt.goci.exception.OntologyTermException;
@@ -24,14 +24,14 @@ import java.util.Set;
 
 /**
  * A default implementation of {@link GWASOWLConverter} that fetches data from the GWAS catalog using a {@link
- * uk.ac.ebi.fgpt.goci.dao.StudyDAO} and converts all obtained {@link Study} objects to OWL.
+ * uk.ac.ebi.fgpt.goci.dao.JDBCStudyDAO} and converts all obtained {@link Study} objects to OWL.
  *
  * @author Tony Burdett Date 26/01/12
  */
 public class DefaultGWASOWLConverter implements GWASOWLConverter {
     private OntologyConfiguration configuration;
 
-    private OntologyDAO ontologyDAO;
+    private DefaultOntologyDAO ontologyDAO;
 
     private ReflexiveIRIMinter minter;
 
@@ -49,11 +49,11 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         this.configuration = configuration;
     }
 
-    public OntologyDAO getOntologyDAO() {
+    public DefaultOntologyDAO getOntologyDAO() {
         return ontologyDAO;
     }
 
-    public void setOntologyDAO(OntologyDAO ontologyDAO) {
+    public void setOntologyDAO(DefaultOntologyDAO ontologyDAO) {
         this.ontologyDAO = ontologyDAO;
     }
 

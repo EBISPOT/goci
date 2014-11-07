@@ -3,7 +3,7 @@ package uk.ac.ebi.fgpt.goci.checker;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.ebi.fgpt.goci.dao.OntologyDAO;
+import uk.ac.ebi.fgpt.goci.dao.DefaultOntologyDAO;
 import uk.ac.ebi.fgpt.goci.dataloader.DBEntry;
 import uk.ac.ebi.fgpt.goci.dataloader.DBLoader;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
@@ -21,7 +21,7 @@ import java.util.Set;
 public class Checker {
     private DBLoader dbLoader;
     private OntologyConfiguration config;
-    private OntologyDAO ontologyDAO;
+    private DefaultOntologyDAO ontologyDAO;
 
     public void setDbLoader(DBLoader dbLoader) {
         this.dbLoader = dbLoader;
@@ -39,11 +39,11 @@ public class Checker {
         return config;
     }
 
-    public void setOntologyDAO(OntologyDAO ontologyDAO) {
+    public void setOntologyDAO(DefaultOntologyDAO ontologyDAO) {
         this.ontologyDAO = ontologyDAO;
     }
 
-    public OntologyDAO getOntologyDAO() {
+    public DefaultOntologyDAO getOntologyDAO() {
         return ontologyDAO;
     }
 

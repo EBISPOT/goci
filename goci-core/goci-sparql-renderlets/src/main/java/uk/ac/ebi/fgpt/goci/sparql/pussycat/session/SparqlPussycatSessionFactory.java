@@ -4,7 +4,7 @@ import net.sourceforge.fluxion.spi.ServiceProvider;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import uk.ac.ebi.fgpt.goci.dao.OntologyDAO;
+import uk.ac.ebi.fgpt.goci.dao.DefaultOntologyDAO;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSession;
 import uk.ac.ebi.fgpt.goci.pussycat.session.PussycatSessionFactory;
@@ -23,7 +23,7 @@ import java.io.IOException;
 public class SparqlPussycatSessionFactory implements PussycatSessionFactory {
     private static final String efoDefaultLocation = "http://www.ebi.ac.uk/efo/efo.owl";
 
-    private OntologyDAO ontologyDAO;
+    private DefaultOntologyDAO ontologyDAO;
     private SparqlTemplate sparqlTemplate;
 
     public SparqlPussycatSessionFactory() {
@@ -48,7 +48,7 @@ public class SparqlPussycatSessionFactory implements PussycatSessionFactory {
         }
 
         // create ontology DAO for EFO
-        ontologyDAO = new OntologyDAO();
+        ontologyDAO = new DefaultOntologyDAO();
         ontologyDAO.setOntologyResource(efoResource);
         ontologyDAO.setOntologyConfiguration(ontologyConfiguration);
         ontologyDAO.init();
@@ -68,7 +68,7 @@ public class SparqlPussycatSessionFactory implements PussycatSessionFactory {
         }
     }
 
-    public SparqlPussycatSessionFactory(OntologyDAO ontologyDAO, SparqlTemplate sparqlTemplate) {
+    public SparqlPussycatSessionFactory(DefaultOntologyDAO ontologyDAO, SparqlTemplate sparqlTemplate) {
         this.ontologyDAO = ontologyDAO;
         this.sparqlTemplate = sparqlTemplate;
     }

@@ -23,6 +23,8 @@
         <module>goci-model</module>
         <module>goci-ontology</module>
         <module>goci-dao</module>
+        <module>goci-rdf</module>
+        <module>goci-sparql</module>
     </modules>
 
 

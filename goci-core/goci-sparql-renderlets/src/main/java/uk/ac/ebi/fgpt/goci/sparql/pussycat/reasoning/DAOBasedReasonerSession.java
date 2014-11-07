@@ -10,7 +10,7 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
 import org.semanticweb.owlapi.reasoner.SimpleConfiguration;
-import uk.ac.ebi.fgpt.goci.dao.OntologyDAO;
+import uk.ac.ebi.fgpt.goci.dao.DefaultOntologyDAO;
 import uk.ac.ebi.fgpt.goci.lang.Initializable;
 import uk.ac.ebi.fgpt.goci.reasoning.ReasonerSession;
 
@@ -24,15 +24,15 @@ import uk.ac.ebi.fgpt.goci.reasoning.ReasonerSession;
  * @date 13/04/12
  */
 public class DAOBasedReasonerSession extends Initializable implements ReasonerSession {
-    private final OntologyDAO ontologyDAO;
+    private final DefaultOntologyDAO ontologyDAO;
 
     private OWLReasoner reasoner;
 
-    public DAOBasedReasonerSession(OntologyDAO ontologyDAO) {
+    public DAOBasedReasonerSession(DefaultOntologyDAO ontologyDAO) {
         this.ontologyDAO = ontologyDAO;
     }
 
-    public OntologyDAO getOntologyDAO() {
+    public DefaultOntologyDAO getOntologyDAO() {
         return ontologyDAO;
     }
 

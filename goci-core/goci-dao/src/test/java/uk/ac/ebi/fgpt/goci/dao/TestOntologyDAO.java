@@ -30,7 +30,7 @@ public class TestOntologyDAO extends TestCase {
     private OWLClass testClass;
     private OWLClass obsoleteClass;
 
-    private OntologyDAO dao;
+    private DefaultOntologyDAO dao;
 
     public void setUp() {
         try {
@@ -53,7 +53,7 @@ public class TestOntologyDAO extends TestCase {
                 }
             }
 
-            dao = new OntologyDAO();
+            dao = new DefaultOntologyDAO();
             dao.setOntologyResource(new ClassPathResource("test.owl"));
 //            dao.setOntologyURI("http://www.ebi.ac.uk/fgpt/ontologies/test");
             dao.init();

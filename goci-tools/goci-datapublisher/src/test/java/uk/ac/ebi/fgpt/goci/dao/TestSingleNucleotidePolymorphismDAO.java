@@ -18,7 +18,7 @@ import java.util.Collections;
  * Date 26-01-2012
  */
 public class TestSingleNucleotidePolymorphismDAO extends TestCase {
-    private SingleNucleotidePolymorphismDAO dao;
+    private JDBCSingleNucleotidePolymorphismDAO dao;
     private SingleNucleotidePolymorphism snp;
 
     public void setUp() {
@@ -27,7 +27,7 @@ public class TestSingleNucleotidePolymorphismDAO extends TestCase {
         JdbcTemplate mockTemplate = Mockito.mock(JdbcTemplate.class);
         Mockito.when(mockTemplate.query(Matchers.anyString(), Matchers.isA(RowMapper.class))).thenReturn(Collections.singletonList(snp));
 
-        dao = new SingleNucleotidePolymorphismDAO();
+        dao = new JDBCSingleNucleotidePolymorphismDAO();
         dao.setJdbcTemplate(mockTemplate);
     }
 

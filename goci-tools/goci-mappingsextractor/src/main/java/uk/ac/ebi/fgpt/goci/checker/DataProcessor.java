@@ -3,7 +3,7 @@ package uk.ac.ebi.fgpt.goci.checker;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.*;
 import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
-import uk.ac.ebi.fgpt.goci.dao.OntologyDAO;
+import uk.ac.ebi.fgpt.goci.dao.DefaultOntologyDAO;
 import uk.ac.ebi.fgpt.goci.dataloader.DataLoader;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.fgpt.goci.lang.ParentList;
@@ -22,7 +22,7 @@ import java.util.Set;
  public class DataProcessor {
     private DataLoader dataLoader;
     private OntologyConfiguration config;
-    private OntologyDAO ontologyDAO;
+    private DefaultOntologyDAO ontologyDAO;
     private OWLReasoner reasoner;
 
     public void setDataLoader(DataLoader dataLoader) {
@@ -41,11 +41,11 @@ import java.util.Set;
         return config;
     }
 
-    public void setOntologyDAO(OntologyDAO ontologyDAO) {
+    public void setOntologyDAO(DefaultOntologyDAO ontologyDAO) {
              this.ontologyDAO = ontologyDAO;
          }
 
-    public OntologyDAO getOntologyDAO() {
+    public DefaultOntologyDAO getOntologyDAO() {
              return ontologyDAO;
          }
 

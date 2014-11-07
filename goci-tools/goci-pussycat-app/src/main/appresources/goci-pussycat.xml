@@ -55,7 +55,7 @@
     </bean>
 
 
-    <bean name="gwasDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init">
+    <bean name="gwasDAO" class="uk.ac.ebi.fgpt.goci.dao.DefaultOntologyDAO" init-method="init">
         <property name="ontologyResource" value="${goci.ontology.inputPath}"/>
         <property name="ontologyConfiguration" ref="config"/>
     </bean>

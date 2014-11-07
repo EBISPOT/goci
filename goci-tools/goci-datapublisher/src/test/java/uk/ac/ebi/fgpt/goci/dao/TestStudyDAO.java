@@ -19,7 +19,7 @@ import java.util.Collections;
  */
 public class TestStudyDAO extends TestCase {
     private Study study;
-    private StudyDAO dao;
+    private JDBCStudyDAO dao;
     
     public void setUp() {
         study = Mockito.mock(Study.class);
@@ -27,10 +27,10 @@ public class TestStudyDAO extends TestCase {
         JdbcTemplate mockTemplate = Mockito.mock(JdbcTemplate.class);
         Mockito.when(mockTemplate.query(Matchers.anyString(), Matchers.isA(RowMapper.class))).thenReturn(Collections.singletonList(study));
 
-        TraitAssociationDAO traitAssociationDAO = Mockito.mock(TraitAssociationDAO.class);
+        JDBCTraitAssociationDAO traitAssociationDAO = Mockito.mock(JDBCTraitAssociationDAO.class);
 
         // create study dao
-        dao = new StudyDAO();
+        dao = new JDBCStudyDAO();
         // inject dependencies
         dao.setJdbcTemplate(mockTemplate);
         dao.setTraitAssociationDAO(traitAssociationDAO);

@@ -7,9 +7,9 @@ import org.semanticweb.owlapi.reasoner.*;
 import org.semanticweb.owlapi.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.ebi.fgpt.goci.dao.SingleNucleotidePolymorphismDAO;
-import uk.ac.ebi.fgpt.goci.dao.StudyDAO;
-import uk.ac.ebi.fgpt.goci.dao.TraitAssociationDAO;
+import uk.ac.ebi.fgpt.goci.dao.JDBCSingleNucleotidePolymorphismDAO;
+import uk.ac.ebi.fgpt.goci.dao.JDBCStudyDAO;
+import uk.ac.ebi.fgpt.goci.dao.JDBCTraitAssociationDAO;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.exception.ObjectMappingException;
 import uk.ac.ebi.fgpt.goci.exception.OntologyTermException;
@@ -35,9 +35,9 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
     private OntologyConfiguration configuration;
     private int studiesLimit = -1;
 
-    private StudyDAO studyDAO;
-    private TraitAssociationDAO traitAssociationDAO;
-    private SingleNucleotidePolymorphismDAO singleNucleotidePolymorphismDAO;
+    private JDBCStudyDAO studyDAO;
+    private JDBCTraitAssociationDAO traitAssociationDAO;
+    private JDBCSingleNucleotidePolymorphismDAO singleNucleotidePolymorphismDAO;
     private GWASOWLConverter converter;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -58,27 +58,27 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
         this.studiesLimit = studiesLimit;
     }
 
-    public StudyDAO getStudyDAO() {
+    public JDBCStudyDAO getStudyDAO() {
         return studyDAO;
     }
 
-    public void setStudyDAO(StudyDAO studyDAO) {
+    public void setStudyDAO(JDBCStudyDAO studyDAO) {
         this.studyDAO = studyDAO;
     }
 
-    public TraitAssociationDAO getTraitAssociationDAO() {
+    public JDBCTraitAssociationDAO getTraitAssociationDAO() {
         return traitAssociationDAO;
     }
 
-    public void setTraitAssociationDAO(TraitAssociationDAO traitAssociationDAO) {
+    public void setTraitAssociationDAO(JDBCTraitAssociationDAO traitAssociationDAO) {
         this.traitAssociationDAO = traitAssociationDAO;
     }
 
-    public SingleNucleotidePolymorphismDAO getSingleNucleotidePolymorphismDAO() {
+    public JDBCSingleNucleotidePolymorphismDAO getSingleNucleotidePolymorphismDAO() {
         return singleNucleotidePolymorphismDAO;
     }
 
-    public void setSingleNucleotidePolymorphismDAO(SingleNucleotidePolymorphismDAO singleNucleotidePolymorphismDAO) {
+    public void setSingleNucleotidePolymorphismDAO(JDBCSingleNucleotidePolymorphismDAO singleNucleotidePolymorphismDAO) {
         this.singleNucleotidePolymorphismDAO = singleNucleotidePolymorphismDAO;
     }
 
@@ -99,7 +99,7 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
         OWLOntology conversion = getConverter().createConversionOntology();
 
         // grab all studies from the DAO
-        getLog().debug("Fetching studies that require conversion to OWL using StudyDAO...");
+        getLog().debug("Fetching studies that require conversion to OWL using JDBCStudyDAO...");
         Collection<Study> studies = getStudyDAO().retrieveAllStudies();
         getLog().debug("Query complete, got " + studies.size() + " studies");
 //            validateGWASData(studies);
@@ -109,9 +109,9 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
                 FilterProperties.getDateFilter() == null &&
                 FilterProperties.getPvalueFilter() == null) {
             // grab all other data from the DAO
-            getLog().debug("Fetching traits that require conversion to OWL using TraitAssociationDAO...");
+            getLog().debug("Fetching traits that require conversion to OWL using JDBCTraitAssociationDAO...");
             Collection<TraitAssociation> traitAssociations = getTraitAssociationDAO().retrieveAllTraitAssociations();
-            getLog().debug("Fetching SNPs that require conversion to OWL using SingleNucleotidePolymorphismDAO...");
+            getLog().debug("Fetching SNPs that require conversion to OWL using JDBCSingleNucleotidePolymorphismDAO...");
             Collection<SingleNucleotidePolymorphism> snps = getSingleNucleotidePolymorphismDAO().retrieveAllSNPs();
             getLog().debug("All data fetched");
 

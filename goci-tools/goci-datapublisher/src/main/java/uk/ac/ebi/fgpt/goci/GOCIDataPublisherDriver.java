@@ -156,7 +156,7 @@ public class GOCIDataPublisherDriver {
 
             if (inferredOntologyFile != null) {
                 // now get the inferred view
-                System.out.println("Evaluating inferred view...");
+               System.out.println("Evaluating inferred view...");
                 OWLReasoner reasoner = publisher.publishGWASDataInferredView(ontology);
 
                 // now save inferred view

@@ -29,30 +29,30 @@
     </bean>
 
     <!-- SNP DAO -->
-    <bean name="snpDAO" class="uk.ac.ebi.fgpt.goci.dao.SingleNucleotidePolymorphismDAO">
+    <bean name="snpDAO" class="uk.ac.ebi.fgpt.goci.dao.JDBCSingleNucleotidePolymorphismDAO">
         <property name="jdbcTemplate" ref="jdbcTemplate" />
     </bean>
 
     <!-- Trait Association DAO -->
-    <bean name="traitAssociationDAO" class="uk.ac.ebi.fgpt.goci.dao.TraitAssociationDAO" init-method="init">
+    <bean name="traitAssociationDAO" class="uk.ac.ebi.fgpt.goci.dao.JDBCTraitAssociationDAO" init-method="init">
         <property name="jdbcTemplate" ref="jdbcTemplate" />
         <property name="SNPDAO" ref="snpDAO" />
         <property name="ontologyDAO" ref="efoDAO" />
     </bean>
 
     <!-- Study DAO -->
-    <bean name="studyDAO" class="uk.ac.ebi.fgpt.goci.dao.StudyDAO" init-method="init">
+    <bean name="studyDAO" class="uk.ac.ebi.fgpt.goci.dao.JDBCStudyDAO" init-method="init">
         <property name="jdbcTemplate" ref="jdbcTemplate" />
         <property name="traitAssociationDAO" ref="traitAssociationDAO" />
     </bean>
 
     <!-- Ontology DAOs -->
-    <bean name="efoDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init">
+    <bean name="efoDAO" class="uk.ac.ebi.fgpt.goci.dao.DefaultOntologyDAO" init-method="init">
         <property name="ontologyConfiguration" ref="config" />
         <property name="ontologyURI" value="http://www.ebi.ac.uk/efo" />
     </bean>
 
-    <bean name="gwasSchemaDAO" class="uk.ac.ebi.fgpt.goci.dao.OntologyDAO" init-method="init">
+    <bean name="gwasSchemaDAO" class="uk.ac.ebi.fgpt.goci.dao.DefaultOntologyDAO" init-method="init">
         <property name="ontologyConfiguration" ref="config" />
         <property name="ontologyURI" value="http://rdf.ebi.ac.uk/terms/gwas" />
     </bean>

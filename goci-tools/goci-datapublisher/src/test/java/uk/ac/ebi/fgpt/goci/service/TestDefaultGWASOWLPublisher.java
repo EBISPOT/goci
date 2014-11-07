@@ -10,9 +10,9 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.ebi.fgpt.goci.dao.SingleNucleotidePolymorphismDAO;
-import uk.ac.ebi.fgpt.goci.dao.StudyDAO;
-import uk.ac.ebi.fgpt.goci.dao.TraitAssociationDAO;
+import uk.ac.ebi.fgpt.goci.dao.JDBCSingleNucleotidePolymorphismDAO;
+import uk.ac.ebi.fgpt.goci.dao.JDBCStudyDAO;
+import uk.ac.ebi.fgpt.goci.dao.JDBCTraitAssociationDAO;
 import uk.ac.ebi.fgpt.goci.exception.OWLConversionException;
 import uk.ac.ebi.fgpt.goci.lang.OntologyConfiguration;
 
@@ -36,9 +36,9 @@ public class TestDefaultGWASOWLPublisher extends TestCase {
     private IRI testOntologyIRI;
     private OWLOntology testOntology;
 
-    private StudyDAO studyDAO;
-    private TraitAssociationDAO traitAssociationDAO;
-    private SingleNucleotidePolymorphismDAO snpDAO;
+    private JDBCStudyDAO studyDAO;
+    private JDBCTraitAssociationDAO traitAssociationDAO;
+    private JDBCSingleNucleotidePolymorphismDAO snpDAO;
 
     private GWASOWLConverter converter;
 
@@ -69,13 +69,13 @@ public class TestDefaultGWASOWLPublisher extends TestCase {
             when(converter.createConversionOntology()).thenReturn(testOntology);
             publisher.setConverter(converter);
 
-            studyDAO = mock(StudyDAO.class);
+            studyDAO = mock(JDBCStudyDAO.class);
             publisher.setStudyDAO(studyDAO);
 
-            traitAssociationDAO = mock(TraitAssociationDAO.class);
+            traitAssociationDAO = mock(JDBCTraitAssociationDAO.class);
             publisher.setTraitAssociationDAO(traitAssociationDAO);
 
-            snpDAO = mock(SingleNucleotidePolymorphismDAO.class);
+            snpDAO = mock(JDBCSingleNucleotidePolymorphismDAO.class);
             publisher.setSingleNucleotidePolymorphismDAO(snpDAO);
         }
         catch (OWLOntologyCreationException e) {
