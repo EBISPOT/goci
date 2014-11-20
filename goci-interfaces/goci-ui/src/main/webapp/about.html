@@ -7,8 +7,8 @@
 <!--[if IE 8]>
 <html class="no-js ie8 oldie" lang="en"> <![endif]-->
 <!-- Consider adding an manifest.appcache: h5bp.com/d/Offline -->
-<!--[if gt IE 8]>
-<html class="no-js" lang="en">           <!--<![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en"> <!--<![endif]-->
 
 <head>
     <meta charset="utf-8">
@@ -17,10 +17,10 @@
     More info: h5bp.com/b/378 --><!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
     <!-- Not yet implemented -->
 
-    <title>ZOOMA &lt; FGPT &lt; EMBL-EBI</title>
-    <meta name="description" content="ZOOMA | Ontology Mapping and Annotation"/>
-    <meta name="author" content="Tony Burdett"/>
-    <meta name="keywords" content="ZOOMA, ZOOMA2, ZOOMA 2, ontology mapping, ontology annotation"/>
+    <title>GWAS Catalogue &lt; FGPT &lt; EMBL-EBI</title>
+    <meta name="description" content="GWAS Catalogue"/>
+    <meta name="author" content="Dani Welter"/>
+    <meta name="keywords" content="GWAS Catalogue, gwas, snps, ontology annotation"/>
 
     <!-- Mobile viewport optimized: j.mp/bplateviewport -->
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -29,25 +29,37 @@
     <link rel="shortcut icon" href="images/favicon.ico"/>
 
     <!-- CSS: implied media=all --><!-- CSS concatenated and minified via ant build script-->
-    <link rel="stylesheet" href="http://www.ebi.ac.uk/web_guidelines/css/compliance/develop/boilerplate-style.css">
+    <link rel="stylesheet" href="css/gwas.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="css/jquery.jscrollpane.css" type="text/css" media="screen"/>
     <link rel="stylesheet"
-          href="http://www.ebi.ac.uk/web_guidelines/css/compliance/develop/ebi-global.css"
+          href="https://www.gstatic.com/freebase/suggest/3_1/suggest.min.css"
+          type="text/css"
+          media="screen"/>
+    <link rel="stylesheet"
+          href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css"
+          type="text/css"
+          media="screen"/>
+    <link rel="stylesheet"
+          href="//www.ebi.ac.uk/web_guidelines/css/compliance/develop/boilerplate-style.css"
           type="text/css"
           media="screen">
     <link rel="stylesheet"
-          href="http://www.ebi.ac.uk/web_guidelines/css/compliance/develop/ebi-visual.css"
+          href="//www.ebi.ac.uk/web_guidelines/css/compliance/develop/ebi-global.css"
           type="text/css"
           media="screen">
     <link rel="stylesheet"
-          href="http://www.ebi.ac.uk/web_guidelines/css/compliance/develop/984-24-col-fluid.css"
+          href="//www.ebi.ac.uk/web_guidelines/css/compliance/develop/ebi-visual.css"
           type="text/css"
           media="screen">
-    <link rel="stylesheet" href="css/zooma.css" type="text/css" media="screen">
+    <link rel="stylesheet"
+          href="//www.ebi.ac.uk/web_guidelines/css/compliance/develop/984-24-col-fluid.css"
+          type="text/css"
+          media="screen">
 
     <!-- you can replace this with [projectname]-colours.css. See http://frontier.ebi.ac.uk/web/style/colour for details of how to do this -->
     <!-- also inform ES so we can host your colour palette file -->
     <link rel="stylesheet"
-          href="http://www.ebi.ac.uk/web_guidelines/css/compliance/develop/embl-petrol-colours.css"
+          href="//www.ebi.ac.uk/web_guidelines/css/compliance/develop/embl-petrol-colours.css"
           type="text/css"
           media="screen">
 
@@ -56,7 +68,7 @@
     -->
 
     <style type=text/css>
-            /* You have the option of setting a maximum width for your page, and making sure everything is centered */
+        /* You have the option of setting a maximum width for your page, and making sure everything is centered */
         body {
             max-width: 1366px;
             margin: 0 auto;
@@ -73,11 +85,18 @@
     <!-- Full build --><!-- <script src="../js/libs/modernizr.minified.2.1.6.js"></script> -->
 
     <!-- custom build (lacks most of the "advanced" HTML5 support -->
-    <script src="http://www.ebi.ac.uk/web_guidelines/js/libs/modernizr.custom.49274.js"></script>
+    <script src="//www.ebi.ac.uk/web_guidelines/js/libs/modernizr.custom.49274.js"></script>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 
+    <script>
+        $(function() {
+            $( "#tabs" ).tabs();
+        });
+    </script>
 </head>
 
-<body class="level2" onload="init();">
+<body class="level2">
 
 <div id="skip-to">
     <ul>
@@ -94,7 +113,7 @@
         <div id="global-masthead" class="masthead grid_24">
             <!--This has to be one line and no newline characters-->
             <a href="http://www.ebi.ac.uk/"
-               title="Go to the EMBL-EBI homepage"><img src="http://www.ebi.ac.uk/web_guidelines/images/logos/EMBL-EBI/EMBL_EBI_Logo_white.png"
+               title="Go to the EMBL-EBI homepage"><img src="//www.ebi.ac.uk/web_guidelines/images/logos/EMBL-EBI/EMBL_EBI_Logo_white.png"
                                                         alt="EMBL European Bioinformatics Institute"></a>
 
             <nav>
@@ -116,31 +135,69 @@
             <!-- NB: for additional title style patterns, see http://frontier.ebi.ac.uk/web/style/patterns -->
 
             <div class="grid_12 alpha" id="local-title">
-                <h1><a href="./" title="">ZOOMA</a></h1>
+                <h1><a href="../../../../goci-pussycat/src/main/webapp" title="">GWAS Catalogue</a></h1>
             </div>
             <!-- /local-title -->
+
+            <!-- local-search -->
+            <!-- NB: if you do not have a local-search, delete the following div, and drop the class="grid_12 alpha" class from local-title above -->
+
+            <div class="grid_12 omega">
+                <form id="local-search" name="browsegwas" action="search">
+
+                    <fieldset>
+
+                        <div class="left form">
+                            <label> <input id="local-searchbox"
+                                           type="text"
+                                           name="query"
+                                           class="bp_form_complete-1136-name"
+                                           size="50"
+                                           onfocus="hideSearchGWAS(this);"
+                                           onblur="displaySearchGWAS(this);">
+                            </label>
+                            <!-- Include some example searchterms - keep them short and few! -->
+                        <span class="examples">Examples:
+                            <a href="./search?query=cancer">cancer</a>,
+                            <a href="./search?query=diabetes">diabetes</a>,
+                            <a href="./search?query=asthma">asthma</a>
+                        </span>
+                        </div>
+
+                        <div class="right">
+                            <input type="submit"
+                                   name="submitSearch"
+                                   value="Search"
+                                   class="submit"
+                                   onclick="handleGWASTermSearchEvent();">
+                        </div>
+
+                        <!-- end of pop up-->
+                    </fieldset>
+
+                </form>
+            </div>
+
+            <!-- /local-search -->
+
 
             <!-- local-nav -->
             <nav>
                 <ul class="grid_24" id="local-nav">
-                    <li class="first">
-                        <a href="index.html">Home</a>
+                    <li>
+                        <a href="./">Home</a>
                     </li>
                     <li>
-                        <a href="./sparql">SPARQL</a>
+                        <a href="http://www.ebi.ac.uk/fgpt/gwas/#">GWAS Diagram</a>
                     </li>
                     <li>
-                        <a href="./docs">Documentation</a>
+                        <a href="./documentation.html">Documentation</a>
                     </li>
-                    <li>
-                        <a href="/efo">EFO</a>
+
+                    <li class="first active">
+                        <a href="./about.html">About the GWAS Catalogue</a>
                     </li>
-                    <li>
-                        <a href="/fgpt">FGPT</a>
-                    </li>
-                    <li class="active last">
-                        <a href="./about.html">About ZOOMA</a>
-                    </li>
+                </ul>
                 </ul>
             </nav>
             <!-- /local-nav -->
@@ -148,19 +205,71 @@
         </div>
     </header>
 
+
     <div id="content" role="main" class="grid_24 clearfix">
-        <!-- ZOOMA contents -->
+        <h3>Background</h3>
 
-        <h3>About ZOOMA</h3>
+        <p>The National Human Genome Research Institute (NHGRI) <a href="http://www.genome.gov/gwastudies">Catalog of
+            Published Genome-Wide Association Studies</a> or GWAS catalogue provides a quality controlled, manually
+            curated, literature-derived collection of all published
+            <a href="http://en.wikipedia.org/wiki/Genome-wide_association_study">GWA studies</a> assaying at least
+            100,000 <a href="http://en.wikipedia.org/wiki/Single-nucleotide_polymorphism">SNPs</a> and all SNP-trait
+            associations with p-values < 1.0 &#215; 10<sup>-5</sup> <i>(Hindorff et al., 2009)</i>. The catalogue can be
+            searched by a number of options including journal, first author, trait, chromosomal region, gene, SNP, odds
+            ratio and p-value threshold. As of 16/12/13, it includes 1778 publications and 12123 SNPs. In addition to the
+            SNP-trait association data, the catalogue also publishes the iconic GWAS diagram of all SNP-trait
+            associations, with p-values &#8804; 5.0 &#215; 10<sup>-8</sup>, mapped to the SNPs&rsquo;
+            chromosomal locations. The diagram is released quarterly and the latest version of the diagram is made
+            available on the GWAS catalogue website in PDF format and as a PowerPoint slide.</p>
 
-        <p>
-            An automatic curation tool, designed for discovering optimal ontology mappings.<br/> Developed by the <a
-                href="http://www.ebi.ac.uk/fgpt">Functional Genomics Production Team</a> at EBI.
+
+        <!--<h3>Status update</h3>-->
+
+        <!--<p>--><!--This is a list of features currently (or soon to be) available in the diagram:--><!--<ul>-->
+        <!--<li><b>Colours:</b> A new colour scheme for the diagram is under development in collaboration-->
+        <!--with the NHGRI GWAS catalog curation team.--><!--</li>-->
+        <!--<li><b>Mouse-over:</b> Hovering over a chromosome or coloured circle displays the name of the-->
+        <!--corresponding chromosome or trait.--><!--</li>-->
+        <!--<li><b>Filtering options:</b> Filtering capabilities will be rolled out for testing as soon as-->
+        <!--they are implemented. Basic filtering options should be available in the next few weeks.--><!--</li>-->
+        <!--</ul>--><!--Please select the "Help" tab for a guide on how to use the GWAS diagram.--><!--<br>-->
+
+        <h3>The GWAS diagram browser</h3>
+
+        <p>This page hosts a novel system that generates the GWAS diagram dynamically using semantic web technologies.
+            The diagram produced in this fashion can be filtered and searched at different levels of granularity and by
+            different criteria, currently including trait (main diagram tab) and publication date (time series tab,
+            currently availabe for a fixed set of time points only). It is possible to zoom in over chromosomes in order
+            to see all SNP-trait associations for a given region. SNP-trait associations are fully
+            interactive, with trait name information is available on mouse-over and traits being clickable to allow
+            proceeding from an association to the catalogue entry, to the publication as well as to Ensembl for further information.</p>
+
+        <p>The diagram is generated in SVG (Scalable Vector Graphics) as a web application with a Java back-end using an
+            Apache Tomcat server. The catalogue data is presented as a knowledge base, based on the GWAS Catalog schema
+            ontology, which formalises the relationship between various concepts such as SNP, trait and study. Both the
+            knowledge base and the schema ontology can be found in the "Downloads" tab. The traits in the GWAS catalog
+            are formalised by mapping each trait to one or more terms in the <a href="http://www.ebi.ac.uk/efo/">Experimental
+                Factor Ontology</a> (EFO). Mapping traits to an ontology provides querying capabilities across multiple
+            traits and trait categories. In the case of cancer for example, a single query can identify all traits
+            related to cancer whereas in the GWAS catalog, such a query would require each cancer-related trait to be
+            selected manually. The EFO-driven SNP-trait associations also form the basis of the new colour scheme of the
+            dynamic GWAS diagram.
         </p>
 
+        <h3>How to cite the GWAS diagram</h3>
+        <a href="http://nar.oxfordjournals.org/content/42/D1/D1001">Welter, D., MacArthur, J., Morales, J., Burdett, T., Hall, P., Junkins, H., Klemm, A.,
+            Flicek, P., Manolio, T., Hindorff, L., and Parkinson, H. (2014) The NHGRI GWAS Catalog, a curated resource of SNP-trait associations
+            Nucl. Acids Res. 42 (D1): D1001-D1006</a>
+        <br>
+
+
+        <!--<p>This is version 0.8 of the GWAS Diagram Browser, released on 23/08/2012.</p>-->
         <!-- Dynamically fetch status information from server -->
         <div id="status">
-            <table class="version">
+            <h3>
+                Information
+            </h3>
+            <table style="margin-left: 25px;">
                 <tr>
                     <td style="font-style: italic;">Version:</td>
                     <td id="version"></td>
@@ -180,107 +289,46 @@
             </table>
         </div>
 
-        <h3>Related Links</h3>
-        <!-- links to ZOOMA resources go here -->
-        <ul>
-            <li>
-                <div class="pubtitle">Zooma2 - A repository of annotation knowledge and curation API</div>
-                <div class="pubauthors">Tony Burdett</div>
-                <div class="pubjournal">ISMB Long Beach Technology Track, June 2012</div>
-                <a href="http://prezi.com/xiaiubhw-jjl/zooma-2/" class="pubpdf">Online Prezi Presentation</a>
-            </li>
-        </ul>
-
         <h3>Contact</h3>
 
-        <p>For questions and to provide feedback, please contact <a href="mailto:tburdett@ebi.ac.uk">Tony Burdett</a> at
-            EBI.
+        <p>For questions and to provide feedback, please contact <a href="mailto:gwas-info@ebi.ac.uk">the GWAS team</a> at
+            EBI. <!--, either by email or using the form in the <a href="#contacttab">Contact Us tab</a>.-->
         </p>
 
-        <p>For bug reports and feature requests, please use our
-            <a href="http://www.ebi.ac.uk/panda/jira/browse/FGPTO/component/10874"
-               target="_blank"><span class="external">JIRA bug tracker</span></a>.
+        <p>For bug reports and feature requests, please use our <a href="http://www.ebi.ac.uk/panda/jira/browse/GOCI">bug
+            tracker</a>. </p>
+
+        <br> <br>
+
+        <a href="http://www.ncbi.nlm.nih.gov/pubmed/19474294"><p style="font-size:80%">Hindorff, L.A., Sethupathy, P.,
+            Junkins, H.A., Ramos, E.M., Mehta, J.P., Collins, F.S. and Manolio, T.A. (2009) Potential Etiologic and
+            Functional Implications of Genome-Wide Association Loci of Human Diseases and Traits. <i>Proc. Natl. Acad.
+                Sci. USA.</i> 106, 9362&ndash;9367.</p></a>
+
+
+        <h3>Curation process</h3>
+
+        <p>The GWAS Catalog data is extracted from the literature. Extracted information includes publication information,
+            study cohort information such as cohort size, country of recruitment and subject ethnicity, and SNP-disease
+            association information including SNP identifier (i.e. RSID), p-value, gene and risk allele. Each study is
+            also assigned a trait that best represents the phenotype under investigation. When multiple traits are analysed
+            in the same study either multiple entries are created, or individual SNPs are annotated with their specific
+            traits. Traits are used both to query and visualise the data in the Catalog's web form and diagram-based query interfaces.
         </p>
-
-        <h3>Thanks</h3>
-
-        <p>
-            <a href="http://atlassian.com/software/bamboo/overview">Bamboo</a>: Continuous integration, continuous
-            deployment and release management.
-        </p>
-
-        <p>
-            <a href="http://atlassian.com/software/fisheye/overview">Fisheye</a>: Browse, search and track your source code
-            repositories.
-        </p>
-
-        <p>
-            <a href="http://www.jetbrains.com/idea/index.html">IntelliJ IDEA</a> is the full-featured commercial IDE — with
-            a complete set of tools and integrations with the most important modern technologies and frameworks, such as
-            Spring and Hibernate — a must-have for effective Web and Java EE development.
-        </p>
-
-        <p>
-            YourKit is kindly supporting open source projects with its full-featured Java Profiler. YourKit, LLC is the
-            creator of innovative and intelligent tools for profiling Java and .NET applications. Take a look at YourKit's
-            leading software products: <a href="http://www.yourkit.com/java/profiler/index.jsp">YourKit Java Profiler</a>
-            and <a href="http://www.yourkit.com/.net/profiler/index.jsp">YourKit .NET Profiler</a>.
-        </p>
-
-        <div id="bamboo" class="grid_6 alpha">
-            <a href="http://atlassian.com/software/bamboo/overview"
-               style="
-               display:block;
-               background:url(http://www.atlassian.com/dms/wac/images/press/Atlassian-logos/logoBambooPNG.png) no-repeat 7px 7px;
-               background-size:55%;
-               border:solid 1px #1B3664;
-               height:58px;
-               margin-left: 5px;"
-               alt="Bamboo: Continuous integration, continuous deployment and release management"
-               title="Bamboo: Continuous integration, continuous deployment and release management"></a>
-        </div>
-
-        <div id="fisheye" class="grid_6">
-            <a href="http://atlassian.com/software/fisheye/overview"
-               style="
-               display:block;
-               background:url(http://www.atlassian.com/dms/wac/images/press/Atlassian-logos/logoFishEyePNG.png) no-repeat 7px 7px;
-               background-size:50%;
-               border:solid 1px #1B3664;
-               height:58px"
-               alt="Fisheye: Browse, search and track your source code repositories"
-               title="Fisheye: Browse, search and track your source code repositories"></a>
-        </div>
-
-        <div id="idea" class="grid_6">
-            <a href="http://www.jetbrains.com/idea/index.html"
-               style="
-               display:block;
-               background:url(http://www.jetbrains.com/img/logos/logo_intellij_idea.gif) no-repeat 0 7px;
-               background-size:80%;
-               border:solid 1px #26409f;
-               height:58px"
-               alt="IntelliJ IDEA: Smart Java IDE. Web development ready. Neat HTML and CSS refactorings and more"
-               title="IntelliJ IDEA: Smart Java IDE. Web development ready. Neat HTML and CSS refactorings and more"></a>
-        </div>
-
-        <div id="yourkit" class="grid_6 omega">
-            <a href="http://www.yourkit.com/java/profiler/index.jsp"
-               style="
-               display:block;
-               background: url('http://www.yourkit.com/images/index_logo.gif') no-repeat -125px -10px #457EE4;
-               background-size:100%;
-               border:solid 1px #457EE4;
-               height:58px;
-               margin-right: 5px;"
-               alt="YourKit: full-featured Java Profiler"
-               title="YourKit: full-featured Java Profiler"></a>
-        </div>
-
-        <!-- end of ZOOMA contents -->
+        <p>Data extraction and curation for the GWAS Catalog is an expert activity; each step is performed by scientists
+            supported by a web-based tracking and data entry system which allows multiple curators to search, annotate,
+            verify and publish the Catalog data. Papers that qualify for inclusion in the Catalog are identified through
+            weekly PubMed searches. They then undergo two levels of curation. First all data, including association
+            information for SNPs, traits and general information about the study, are extracted by one curator.
+            second curator then performs an additional round of curation to double-check
+            the accuracy and consistency of all the information. Finally, an automated pipeline run at the NCBI performs
+            checks for missing information, such as SNP identifiers, resolution of the citation in PubMed, existence of
+            SNPs in dbSNP, confirmation of gene names vs. NCBI's Gene database, confirmation that the reported SNP and
+            gene are in the same chromosomal region, as well as adding additional information such as the SNP's base pair
+            and cytogenetic location in the current human genome reference assembly. This information is then used for
+            queries and in the production of the karyotype diagram.</p>
 
     </div>
-
 
     <footer>
         <!-- Optional local footer (insert citation / project-specific copyright / etc here --><!--
@@ -318,7 +366,7 @@
                 </div>
 
             </nav>
-            <script src="http://www.ebi.ac.uk/web_guidelines/js/foot.js"></script>
+            <script src="//www.ebi.ac.uk/web_guidelines/js/foot.js"></script>
 
             <div class="grid_24">
                 <section id="ebi-footer-meta">
@@ -331,44 +379,86 @@
         </div>
 
     </footer>
+
 </div>
+
 <!--! end of #wrapper -->
 
 
-<!-- ZOOMA required JavaScript libraries, at the bottom for fast page loading -->
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script type="text/javascript" src="https://www.gstatic.com/freebase/suggest/3_1/suggest.min.js"></script>
-<script type="text/javascript" src="scripts/zooma.min.js"></script>
+<!-- JavaScript at the bottom for fast page loading -->
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+<!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline --><!--
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../js/libs/jquery-1.6.2.min.js"><\/script>')</script>
+-->
 
-<script type="text/javascript" src="scripts/zooma-about.js"></script>
 
-<!-- Google analytics -->
+<!-- Your custom JavaScript file scan go here... change names accordingly -->
+
+
+<!-- EFO SCRIPTS START -->
+<script src="../../../../goci-pussycat/src/main/webapp/scripts/form_complete.js" type="text/javascript"></script>
+<script src="scripts/main.js" type="text/javascript"></script>
+
 <script type="text/javascript">
+    var SEARCH_EFO = "Search EFO...";
 
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-38623609-1']);
-    _gaq.push(['_trackPageview']);
+    function displaySearchEFO(queryEl) {
+        if (queryEl == null) {
+            return;
+        }
+        if (queryEl.value == null || queryEl.value.trim() == "") {
+            queryEl.value = SEARCH_EFO;
+        }
+    }
 
-    (function() {
-        var ga = document.createElement('script');
-        ga.type = 'text/javascript';
-        ga.async = true;
-        ga.src =
-                ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(ga, s);
-    })();
+    function hideSearchEFO(queryEl) {
+        if (queryEl == null || queryEl.value == null) {
+            return;
+        }
+        if (queryEl.value.trim() == SEARCH_EFO) {
+            queryEl.value = "";
+        }
+    }
 
+    function loaded() {
+        displaySearchEFO(document.getElementById('local-searchbox'));
+        if (navigator.userAgent.indexOf('MSIE') != -1) {
+            document.getElementById('head').allowTransparency = true;
+        }
+    }
 </script>
+<!-- EFO SCRIPTS END -->
 
+<!-- GOOGLEANALYTICS START -->
+<script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl."
+            : "http://www.");
+    document
+            .write(unescape("%3Cscript src='"
+            + gaJsHost
+            + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+    try {
+        var pageTracker = _gat._getTracker("UA-8897191-1");
+        pageTracker._trackPageview();
+    }
+    catch (err) {
+    }
+</script>
+<!-- GOOGLEANALYTICS END -->
+
+
+<script defer="defer" src="//www.ebi.ac.uk/web_guidelines/js/cookiebanner.js"></script>
+<script defer="defer" src="//www.ebi.ac.uk/web_guidelines/js/foot.js"></script>
+<!-- end scripts-->
 
 <!-- Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
 chromium.org/developers/how-tos/chrome-frame-getting-started --><!--[if lt IE 7 ]>
-<script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
 <script>window.attachEvent('onload', function() {
-    CFInstall.check({mode: 'overlay'})
+    CFInstall.check({mode:'overlay'})
 })</script><![endif]-->
 
 </body>

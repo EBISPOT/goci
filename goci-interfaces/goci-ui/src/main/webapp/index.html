@@ -36,7 +36,7 @@
           type="text/css"
           media="screen"/>
     <link rel="stylesheet"
-          href="//code.jquery.com/ui/1.8.18/themes/smoothness/jquery-ui.css"
+          href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css"
           type="text/css"
           media="screen"/>
     <link rel="stylesheet"
@@ -86,7 +86,14 @@
 
     <!-- custom build (lacks most of the "advanced" HTML5 support -->
     <script src="//www.ebi.ac.uk/web_guidelines/js/libs/modernizr.custom.49274.js"></script>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 
+    <script>
+        $(function() {
+            $( "#tabs" ).tabs();
+        });
+    </script>
 </head>
 
 <body class="level2">
@@ -132,18 +139,59 @@
             </div>
             <!-- /local-title -->
 
+            <!-- local-search -->
+            <!-- NB: if you do not have a local-search, delete the following div, and drop the class="grid_12 alpha" class from local-title above -->
+
+            <div class="grid_12 omega">
+                <form id="local-search" name="browsegwas" action="search">
+
+                    <fieldset>
+
+                        <div class="left form">
+                            <label> <input id="local-searchbox"
+                                           type="text"
+                                           name="query"
+                                           class="bp_form_complete-1136-name"
+                                           size="50"
+                                           onfocus="hideSearchGWAS(this);"
+                                           onblur="displaySearchGWAS(this);">
+                            </label>
+                            <!-- Include some example searchterms - keep them short and few! -->
+                        <span class="examples">Examples:
+                            <a href="./search?query=cancer">cancer</a>,
+                            <a href="./search?query=diabetes">diabetes</a>,
+                            <a href="./search?query=asthma">asthma</a>
+                        </span>
+                        </div>
+
+                        <div class="right">
+                            <input type="submit"
+                                   name="submitSearch"
+                                   value="Search"
+                                   class="submit"
+                                   onclick="handleGWASTermSearchEvent();">
+                        </div>
+
+                        <!-- end of pop up-->
+                    </fieldset>
+
+                </form>
+            </div>
+
+            <!-- /local-search -->
+
+
             <!-- local-nav -->
             <nav>
                 <ul class="grid_24" id="local-nav">
                     <li class="first active">
                         <a href="./">Home</a>
                     </li>
-
                     <li>
-                        <a href="">Documentation</a>
+                        <a href="http://www.ebi.ac.uk/fgpt/gwas/#">GWAS Diagram</a>
                     </li>
                     <li>
-                        <a href="">GWAS Diagram</a>
+                        <a href="./documentation.html">Documentation</a>
                     </li>
 
                     <li class="last">
@@ -159,10 +207,94 @@
 
     <div id="content" role="main" class="grid_24 clearfix">
 
-    <!--search interface content goes here-->
-   <!--<div></div>-->
+        <!--<div class="grid_24 clearfix">-->
+
+            <!--<h2>Results</h2>-->
+            <!--</div>-->
+
+        <div class="grid_4 alpha">
+            <h3>Filter by</h3>
+            <p style="padding: 0.5em 0 0 1em; margin: 0">Filter goes here</p>
+
 
         </div>
+
+        <div class="grid_20">
+            <div>
+            <h3>Search results for <span class="searchTerm"><i>multiple myeloma</i></span></h3>
+                <p><span class="studyCount">2</span> studies fit your search<br>
+                    <span class="snpCount">2</span> SNPs fit your search</p>
+
+            </div>
+            <div id="tabs">
+                <ul>
+                    <li><a href="#study-tab">Studies</a></li>
+                    <li><a href="#snp-tab">SNPs</a></li>
+                </ul>
+                <div id="study-tab">
+                    <table>
+                      <tr>
+                          <th>Author</th>
+                          <th>Title</th>
+                          <th>Journal</th>
+                          <th>Publication date</th>
+                          <th>Platform [SNPs passing QC]</th>
+                          <th>Initial sample description</th>
+                          <th>Replication sample description</th>
+                      </tr>
+                        <tr>
+                        <td>Broderick P</td>
+                        <td>Common variation at 3p22.1 and 7p15.3 influences multiple myeloma risk.</td>
+                        <td>Nat Genet</td>
+                        <td>2011-11-27 </td>
+                        <td>Illumina [422,839]</td>
+                        <td>1,675 European ancestry cases, 5,903 European ancestry controls</td>
+                        <td>169 European ancestry cases, 927 European ancestry controls</td>
+                        </tr>
+                        <tr>
+                            <td>Chubb D	</td>
+                            <td>Common variation at 3q26.2, 6p21.33, 17p11.2 and 22q13.1 influences multiple myeloma risk. </td>
+                            <td>Nat Genet</td>
+                            <td>2013-08-18</td>
+                            <td>Illumina [414,804]</td>
+                            <td>2,335 European ancestry cases, 7,306 European ancestry controls</td>
+                            <td>2,357 European ancestry cases, 3,684 European ancestry controls</td>
+                        </tr>
+
+                    </table>
+                </div>
+                <div id="snp-tab">
+                    <table>
+                        <tr>
+                            <th>Strongest SNP-Risk Allele</th>
+                            <th>Reported Gene(s)</th>
+                            <th>Mapped Gene(s)</th>
+                            <th>Cytogenetic Region</th>
+                            <th>Context</th>
+                            <th>Risk Allele Frequency in Controls</th>
+                            <th>P-value</th>
+                            <th>OR or beta-coefficient and [95% CI]</th>
+                        </tr>
+                        <tr><td>rs6746082-A</td>	<td>DTNB</td>	<td>DTNB</td>	<td>2p23.3</td>	<td>intron</td>	<td>0.79</td>	<td>4 x 10-7</td>	<td>1.29 [1.17-1.42]</td></tr>
+                        <tr><td>rs4487645-C</td>	<td>DNAH11</td>	<td>DNAH11</td>	<td>7p15.3</td>	<td>intron</td>	<td>0.65</td>	<td>3 x 10-14</td>	<td>1.38 [1.28-1.50]</td></tr>
+                        <tr><td>rs1052501-G</td>	<td>ULK4</td>	<td>ULK4</td>	<td>3p22.1</td>	<td>missense</td>	<td>0.16</td>	<td>2 x 10-8</td>	<td>1.32 [1.20-1.45]</td></tr>
+                        <tr><td>rs10936599-G</td>	<td>MYNN, TERC</td>	<td>MYNN</td>	<td>3q26.2</td>	<td>cds-synon</td>	<td>0.8</td>	<td>9 x 10-14</td>	<td>1.256 [1.18-1.33]</td></tr>
+                        <tr><td>rs2285803-A</td>	<td>PSORS1C1, CCHCR1, CDSN, TCF19, POU5F1</td>	<td>PSORS1C1;PSORS1C2</td>	<td>6p21.33</td>	<td>intron;nearGene-5</td>	<td>0.32</td>	<td>1 x 10-10</td>	<td>1.192 [1.13-1.26]</td></tr>
+                        <tr><td>rs11195062-A</td>	<td>NR</td>	<td>MXI1</td>	<td>10q25.2</td>	<td>intron</td>	<td></td>	<td>3 x 10-6</td>	<td>1.132 [NR]</td></tr>
+                        <tr><td>rs4273077-G</td>	<td>TNFRSF13B</td>	<td>TNFRSF13B</td>	<td>17p11.2</td>	<td>intron</td>	<td>0.12</td>	<td>8 x 10-9</td>	<td>1.255 [1.16-1.36]</td></tr>
+                        <tr><td>rs877529-A</td>	<td>CBX7</td>	<td>CBX7</td>	<td>22q13.1</td>	<td>intron</td>	<td>0.51</td>	<td>8 x 10-16</td>	<td>1.228 [1.17-1.29]</td></tr>
+                        <tr><td>rs7580717-G</td>	<td>NR</td>	<td>ARMC9</td>	<td>2q37.1</td>	<td>intron</td>	<td></td>	<td>5 x 10-6</td>	<td>1.131 [NR]</td></tr>
+
+                    </table>
+                </div>
+              
+            </div>
+        </div>
+
+        <!--search interface content goes here-->
+   <!--<div></div>-->
+
+    </div>
 
     <footer>
         <!-- Optional local footer (insert citation / project-specific copyright / etc here --><!--
