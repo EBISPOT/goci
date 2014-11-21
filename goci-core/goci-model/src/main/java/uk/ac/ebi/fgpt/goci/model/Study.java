@@ -35,7 +35,31 @@ public interface Study extends GWASObject {
     /**
      * The collection of trait associations identified by this study
      *
-     * @return the assocations identified in the publication
+     * @return the associations identified in the publication
      */
     Collection<TraitAssociation> getIdentifiedAssociations();
+
+    /**
+     * The link title of this study, taken from publication title
+     *
+     * @return the link title of this study
+     */
+
+    String getTitle();
+
+    /**
+     * The platform used in this study
+     *
+     * @return the platform of this study
+     */
+
+    String getPlatform();
+
+    /**
+     * The journal in which the publication that describes this study was published.
+     *
+     * @return the publication journal
+     */
+    String getPublication();
+
 }

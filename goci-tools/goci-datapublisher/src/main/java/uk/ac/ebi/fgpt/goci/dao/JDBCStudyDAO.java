@@ -21,7 +21,7 @@ import java.util.*;
  */
 public class JDBCStudyDAO extends Initializable implements StudyDAO {
     private static final String STUDY_SELECT =
-            "select distinct ID, AUTHOR, STUDYDATE, PMID from GWASSTUDIES where PMID is not null and PUBLISH = 1";
+            "select distinct ID, AUTHOR, STUDYDATE, PMID , LINKTITLE, PLATFORM, PUBLICATION from GWASSTUDIES where PMID is not null and PUBLISH = 1";
 
     private TraitAssociationDAO traitAssociationDAO;
     private JdbcTemplate jdbcTemplate;
@@ -91,7 +91,11 @@ public class JDBCStudyDAO extends Initializable implements StudyDAO {
             String author = resultSet.getString(2).trim();
             Date publishDate = resultSet.getDate(3);
             String pubmedID = resultSet.getString(4).trim();
-            return new StudyFromDB(id, author, publishDate, pubmedID);
+            String title = resultSet.getString(5).trim();
+            String platform = resultSet.getString(6).trim();
+            String publication = resultSet.getString(7).trim();
+
+            return new StudyFromDB(id, author, publishDate, pubmedID, title, platform, publication);
         }
     }
 
@@ -100,14 +104,21 @@ public class JDBCStudyDAO extends Initializable implements StudyDAO {
         private String author;
         private Date publishDate;
         private String pubmedID;
+        private String title;
+        private String platform;
+        private String publication;
+
 
         private Set<TraitAssociation> associations;
 
-        private StudyFromDB(String id, String author, Date publishDate, String pubmedID) {
+        private StudyFromDB(String id, String author, Date publishDate, String pubmedID, String title, String platform, String publication ) {
             this.id = id;
             this.author = author;
             this.publishDate = publishDate;
             this.pubmedID = pubmedID;
+            this.title = title;
+            this.platform = platform;
+            this.publication = publication;
         }
 
         private void mapTraitAssociation() {
@@ -119,7 +130,7 @@ public class JDBCStudyDAO extends Initializable implements StudyDAO {
             }
         }
 
-//        @UniqueID
+//      @UniqueID
         private String getID() {
             return id;
         }
@@ -142,6 +153,21 @@ public class JDBCStudyDAO extends Initializable implements StudyDAO {
                 mapTraitAssociation();
             }
             return associations;
+        }
+
+        @Override
+        public String getTitle() {
+            return title;
+        }
+
+        @Override
+        public String getPlatform() {
+            return platform;
+        }
+
+        @Override
+        public String getPublication() {
+            return publication;
         }
 
         @Override

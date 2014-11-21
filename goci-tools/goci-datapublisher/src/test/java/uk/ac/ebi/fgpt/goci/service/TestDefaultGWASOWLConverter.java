@@ -240,6 +240,21 @@ public class TestDefaultGWASOWLConverter extends TestCase {
         public Collection<TraitAssociation> getIdentifiedAssociations() {
             return Collections.emptySet();
         }
+
+        @Override
+        public String getTitle() {
+            return "A genome-wide approach to testing";
+        }
+
+        @Override
+        public String getPlatform() {
+            return "Illumina [NR] (imputed)";
+        }
+
+        @Override
+        public String getPublication() {
+            return "Journal of Testing";
+        }
     }
 
     private class MockAssociation implements TraitAssociation {
