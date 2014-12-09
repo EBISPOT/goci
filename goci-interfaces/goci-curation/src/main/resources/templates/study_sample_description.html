@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Curation Demo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<nav role="navigation" class="navbar navbar-default">
+    <div class="navbar-header">
+        <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a href="#" class="navbar-brand">GWAS</a>
+    </div>
+
+    <div id="navbarCollapse" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li><a th:href="@{/studies}">Home</a></li>
+            <li><a th:href="@{/studies/new}">Add Study</a></li>
+            <li><a href="#">Count Data</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" value="Sign Out"/>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container-fluid" th:object="${study}">
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li><a th:href="@{/studies/{studyId}(studyId=*{id})}">Study Details</a></li>
+            <li><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}">Association</a></li>
+            <li class="active"><a href="#">Sample Information</a></li>
+            <li><a th:href="@{/studies/{studyId}/housekeeping(studyId=*{id})}">Housekeeping</a></li>
+        </ul>
+    </div>
+</div>
+
+
+<div class="container" th:object="${study}">
+    <table id="mainTable" class="table table-hover table-bordered">
+        <caption>Existing SNP information</caption>
+        <thead>
+        <tr>
+            <th>Type</th>
+            <th>Sample Size</th>
+            <th>Number</th>
+            <th>Ethnic Group</th>
+            <th>Country of Origin</th>
+            <th>Country of Recruitment</th>
+            <th>Previously Reported</th>
+            <th>Sample Sizes Match</th>
+            <th>Additional Description</th>
+            <th>Notes</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="studyEthnicityDescription: ${studyEthnicityDescriptions}">
+            <td th:text="${studyEthnicityDescription.type}"></td>
+            <td th:switch="${studyEthnicityDescription.type}">
+                <p th:case="'initial'" th:text ="*{initialSampleSize}"></p>
+                <p th:case="'replication'" th:text = "*{replicateSampleSize}"></p>
+            </td>
+            <td th:text="${studyEthnicityDescription.numberOfIndividuals}"></td>
+            <td th:text="${studyEthnicityDescription.ethnicGroup}"></td>
+            <td th:text="${studyEthnicityDescription.countryOfOrigin}"></td>
+            <td th:text="${studyEthnicityDescription.countryOfRecruitment}"></td>
+            <td th:text="${studyEthnicityDescription.previouslyReported}"></td>
+            <td th:text="${studyEthnicityDescription.sampleSizesMatch}"></td>
+            <td th:text="${studyEthnicityDescription.description}"></td>
+            <td th:text="${studyEthnicityDescription.notes}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+</body>
+</html>
