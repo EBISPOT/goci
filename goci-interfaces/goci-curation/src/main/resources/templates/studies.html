@@ -97,37 +97,27 @@
                 <tbody>
                 <tr th:each="study : ${studies}">
                     <td><a th:href="@{/studies/{studyId}(studyId=${study.id})}">Edit</a></td>
-                    <td th:text="${study.author}"></td>
-                    <td th:text="${study.title}"></td>
-                    <td th:text="${study.studyDate}"></td>
-                    <td th:text="${study.pubmedID}"></td>
-                    <td th:text="${study.publication}"></td>
+                    <!-- Use an conditional here as a study can have a null attributes-->
+                    <!-- Using thymeleaf elvis operator for string, date attributes-->
+                    <td th:text="${study.author} ?: 'null' "></td>
+                    <td th:text="${study.title} ?: 'null'"></td>
+                    <td th:text="${study.studyDate} ?: 'null'"></td>
+                    <td th:text="${study.pubmedID} ?: 'null'"></td>
+                    <td th:text="${study.publication} ?: 'null'"></td>
 
-                    <!-- Use an conditional here as a study can have a null disease trait-->
+                    <!--If study has associated disease trait return traits name-->
                     <td th:text="${study.diseaseTrait != null} ? ${study.diseaseTrait.trait} : 'null'"></td>
-
-                    <!-- Use switch here to return a text value rather then numeric in database-->
-                    <td th:text="${study.platform}"></td>
-                    <td th:switch="${study.housekeeping.pending}">
-                        <p th:case="'0'">No</p>
-
-                        <p th:case="'1'">Yes</p>
-                    </td>
-                    <td th:switch="${study.housekeeping.publish}">
-                        <p th:case="'0'">No</p>
-
-                        <p th:case="'1'">Yes</p>
-                    </td>
-                    <td th:text="${study.housekeeping.curator.lastName}"></td>
-
-                    <td th:text="${study.housekeeping.curationStatus != null} ? ${study.housekeeping.curationStatus.status} : 'null'"></td>
-                    <td th:text="${study.housekeeping.notes}"></td>
+                    <td th:text="${study.platform} ?: 'null'"></td>
+                    <td th:text="${study.housekeeping != null } ? ${study.housekeeping.pending} : 'null'"></td>
+                    <td th:text="${study.housekeeping != null } ? ${study.housekeeping.publish} : 'null'"></td>
+                    <!--If study has associated housekeeping object then get the following attributes -->
+                    <td th:text="${study.housekeeping != null and study.housekeeping.curator !=null } ? ${study.housekeeping.curator.lastName} : 'null'"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : 'null'"></td>
+                    <td th:text="${study.housekeeping !=null} ? ${study.housekeeping.notes} : 'null'"></td>
                 </tr>
                 </tbody>
             </table>
         </div>
-
-
     </div>
 </div>
 

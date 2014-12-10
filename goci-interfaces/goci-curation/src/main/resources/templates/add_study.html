@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+        >
 <head>
     <title>GWAS Curation Demo</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -10,6 +10,18 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+
+    <script>
+        function validateForm() {
+            var x = document.forms["addStudyForm"]["author"].value;
+            if (x == null || x == "") {
+                alert("First name must be filled out");
+                return false;
+            }
+        }
+    </script>
+
 
 </head>
 <body>
@@ -34,7 +46,11 @@
             <li><a href="#">Count Data</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Login</a></li>
+            <li>
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" value="Sign Out"/>
+                </form>
+            </li>
         </ul>
     </div>
 </nav>
@@ -70,54 +86,57 @@
 
 <div class="container-fluid">
     <div class="row">
-
-
         <div class="col-md-8">
-            <form class="form-horizontal" method="post" th:action="@{/studies/new}" th:object="${study}">
+            <form class="form-horizontal" method="post" onsubmit="return validateForm()" th:action="@{/studies/new}"
+                  th:object="${study}" name="addStudyForm">
                 <div class="form-group">
-                    <label for="inputAuthor" class="control-label col-md-2">Author</label>
+                    <label for="author" class="control-label col-md-2">Author</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="inputAuthor"
+                        <input type="text" class="form-control" id="author"
                                placeholder="last name of first author" th:field="*{author}"></input>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputTitle" class="control-label col-md-2">Title</label>
+                    <label for="title" class="control-label col-md-2">Title</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="inputTitle" placeholder="Title of paper" th:field="*{title}"></input>
+                        <input type="text" class="form-control" id="title" placeholder="Title of paper"
+                               th:field="*{title}"></input>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputPublication" class="control-label col-md-2">Publication</label>
+                    <label for="publication" class="control-label col-md-2">Publication</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="inputPublication"
+                        <input type="text" class="form-control" id="publication"
                                placeholder="Publishing journal name" th:field="*{publication}"></input>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputPubmed" class="control-label col-md-2">Pubmed</label>
+                    <label for="pubmedID" class="control-label col-md-2">Pubmed</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="inputPubmed" placeholder="Pubmed ID" th:field="*{pubmedID}"></input>
+                        <input type="text" class="form-control" id="pubmedID" placeholder="Pubmed ID"
+                               th:field="*{pubmedID}"></input>
                     </div>
                 </div>
 
+                <!--        <div class="form-group">
+                            <label for="studyDate" class="control-label col-md-2">Study Date</label>
+
+                            <div class="col-md-10">
+                                <input type="date" class="form-control" id="studyDate" placeholder="Study date"
+                                       th:field="*{studyDate}"></input>
+                            </div>
+                        </div>-->
+
                 <div class="form-group">
-                    <label for="inputStudyDate" class="control-label col-md-2">Study Date</label>
+                    <label for="platform" class="control-label col-md-2">Platform</label>
 
                     <div class="col-md-10">
-                        <input type="date" class="form-control" id="inputStudyDate" placeholder="Study date" th:field="*{studyDate}"></input>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="inputPlatform" class="control-label col-md-2">Platform</label>
-
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="inputPlatform" placeholder="Platform" th:field="*{platform}"></input>
+                        <input type="text" class="form-control" id="platform" placeholder="Platform"
+                               th:field="*{platform}"></input>
                     </div>
                 </div>
 
