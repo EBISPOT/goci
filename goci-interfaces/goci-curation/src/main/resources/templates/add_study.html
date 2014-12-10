@@ -67,7 +67,8 @@
     </div>
 </div>
 
-<div class="container-fluid">
+<!--Pubmed import button-->
+<!--<div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
             <form class="form-inline" role="form">
@@ -80,7 +81,7 @@
             </form>
         </div>
     </div>
-</div>
+</div>-->
 
 <br></br>
 
@@ -122,14 +123,14 @@
                     </div>
                 </div>
 
-                <!--        <div class="form-group">
-                            <label for="studyDate" class="control-label col-md-2">Study Date</label>
+                <div class="form-group">
+                    <label for="studyDate" class="control-label col-md-2">Study Date</label>
 
-                            <div class="col-md-10">
-                                <input type="date" class="form-control" id="studyDate" placeholder="Study date"
-                                       th:field="*{studyDate}"></input>
-                            </div>
-                        </div>-->
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="studyDate" placeholder="Study date"
+                               th:field="*{studyDate}"></input>
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <label for="platform" class="control-label col-md-2">Platform</label>
@@ -138,6 +139,21 @@
                         <input type="text" class="form-control" id="platform" placeholder="Platform"
                                th:field="*{platform}"></input>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="cnv" class="control-label col-md-2">CNV</label>
+                    <input id="cnv" type="checkbox" th:field="*{cnv}" th:value="'1'"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="gxe" class="control-label col-md-2">GxE</label>
+                    <input id="gxe" type="checkbox" th:field="*{gxe}" th:value="'1'"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="gxg" class="control-label col-md-2">GxG</label>
+                    <input id="gxg" type="checkbox" th:field="*{gxg}" th:value="'1'"/>
                 </div>
 
                 <div class="form-group">

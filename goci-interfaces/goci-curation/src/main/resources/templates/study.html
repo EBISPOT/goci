@@ -51,6 +51,7 @@
     </div>
 </div>
 
+<br></br>
 
 <div class="container-fluid">
     <div class="row">
@@ -106,22 +107,58 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="inputEFOTrait" class="control-label col-md-2">EFO Trait</label>
-
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="inputEFOTrait"
-                               th:field="*{efoTraits}"></input>
-                    </div>
-                </div>
-
-
-                <div class="form-group">
                     <label for="inputPlatform" class="control-label col-md-2">Platform</label>
 
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="inputPlatform" th:field="*{platform}"></input>
                     </div>
                 </div>
+
+
+                <div class="form-group">
+                    <label for="inputEFOTrait" class="control-label col-md-2">EFO Trait</label>
+
+
+                    <div class="col-md-10">
+                        <!--<input type="text" class="form-control" id="inputEFOTrait  " th:field="*{efoTraits}"></input>-->
+
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Trait Name</th>
+                                <th>URI</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="efoTrait : *{efoTraits}">
+                                <td th:text="${efoTrait.trait}"></td>
+                                <td th:text="${efoTrait.uri}"></td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+                    <label for="cnv" class="control-label col-md-2">CNV</label>
+                    <input id="cnv" type="checkbox" th:field="*{cnv}" th:value="'1'"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="gxe" class="control-label col-md-2">GxE</label>
+                    <input id="gxe" type="checkbox" th:field="*{gxe}" th:value="'1'"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="gxg" class="control-label col-md-2">GxG</label>
+                    <input id="gxg" type="checkbox" th:field="*{gxg}" th:value="'1'"/>
+                </div>
+
+
             </form>
         </div>
     </div>
