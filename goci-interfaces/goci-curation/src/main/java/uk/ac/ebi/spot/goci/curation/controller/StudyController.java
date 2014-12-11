@@ -6,21 +6,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import uk.ac.ebi.spot.goci.curation.model.Association;
+import uk.ac.ebi.spot.goci.curation.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.curation.model.Ethnicity;
 import uk.ac.ebi.spot.goci.curation.model.Study;
-import uk.ac.ebi.spot.goci.curation.repository.AssociationRepository;
-import uk.ac.ebi.spot.goci.curation.repository.EthnicityRepository;
-import uk.ac.ebi.spot.goci.curation.repository.HousekeepingRepository;
-import uk.ac.ebi.spot.goci.curation.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.curation.repository.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by emma on 20/11/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Study Controllers interpret user input and transform it into a study
  *         model that is represented to the user by the associated HTML page
  */
@@ -34,14 +33,15 @@ public class StudyController {
     private AssociationRepository associationRepository;
     private EthnicityRepository ethnicityRepository;
     private HousekeepingRepository housekeepingRepository;
+    private DiseaseTraitRepository diseaseTraitRepository;
 
     @Autowired
-    public StudyController(StudyRepository studyRepository, AssociationRepository associationRepository,
-                           EthnicityRepository ethnicityRepository, HousekeepingRepository housekeepingRepository) {
+    public StudyController(StudyRepository studyRepository, AssociationRepository associationRepository, EthnicityRepository ethnicityRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository) {
         this.studyRepository = studyRepository;
         this.associationRepository = associationRepository;
         this.ethnicityRepository = ethnicityRepository;
         this.housekeepingRepository = housekeepingRepository;
+        this.diseaseTraitRepository = diseaseTraitRepository;
     }
 
 
@@ -129,15 +129,12 @@ public class StudyController {
         return "study_housekeeping";
     }
 
-/*
 
-    // Counts
-    @ModelAttribute("totalStudies")
-    public Long countStudies(Model model) {
-        return studyRepository.count();
+    // Disease Traits
+    @ModelAttribute("diseaseTraits")
+    public List<DiseaseTrait> populateDiseaseTraits(Model model) {
+        return diseaseTraitRepository.findAll();
     }
 
-
-*/
 
 }

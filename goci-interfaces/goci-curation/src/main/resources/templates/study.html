@@ -98,6 +98,13 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="inputPlatform" class="control-label col-md-2">Platform</label>
+
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="inputPlatform" th:field="*{platform}"></input>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="inputDiseaseTrait" class="control-label col-md-2">Disease Trait</label>
 
                     <div class="col-md-10">
@@ -107,27 +114,14 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="inputPlatform" class="control-label col-md-2">Platform</label>
-
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="inputPlatform" th:field="*{platform}"></input>
-                    </div>
-                </div>
-
-
-                <div class="form-group">
                     <label for="inputEFOTrait" class="control-label col-md-2">EFO Trait</label>
 
-
                     <div class="col-md-10">
-                        <!--<input type="text" class="form-control" id="inputEFOTrait  " th:field="*{efoTraits}"></input>-->
-
-                        <table class="table table-bordered">
+                        <table class="table table-bordered" id="inputEFOTrait">
                             <thead>
                             <tr>
                                 <th>Trait Name</th>
                                 <th>URI</th>
-
                             </tr>
                             </thead>
                             <tbody>
@@ -135,7 +129,6 @@
                                 <td th:text="${efoTrait.trait}"></td>
                                 <td th:text="${efoTrait.uri}"></td>
                             </tr>
-
                             </tbody>
                         </table>
                     </div>

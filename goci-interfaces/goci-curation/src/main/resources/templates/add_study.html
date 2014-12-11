@@ -10,19 +10,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-
-
-    <script>
-        function validateForm() {
-            var x = document.forms["addStudyForm"]["author"].value;
-            if (x == null || x == "") {
-                alert("First name must be filled out");
-                return false;
-            }
-        }
-    </script>
-
-
 </head>
 <body>
 
@@ -123,14 +110,14 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="studyDate" class="control-label col-md-2">Study Date</label>
+                <!--      <div class="form-group">
+                            <label for="studyDate" class="control-label col-md-2">Study Date</label>
 
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="studyDate" placeholder="Study date"
-                               th:field="*{studyDate}"></input>
-                    </div>
-                </div>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="studyDate" placeholder="Study date"
+                                       th:field="*{studyDate}"></input>
+                            </div>
+                        </div>-->
 
                 <div class="form-group">
                     <label for="platform" class="control-label col-md-2">Platform</label>
@@ -140,6 +127,16 @@
                                th:field="*{platform}"></input>
                     </div>
                 </div>
+
+                <!--   <div class="form-group">
+                       <label for="inputDiseaseTrait" class="control-label col-md-2">Disease Trait</label>
+
+                       <select th:field="*{diseaseTrait}" id="inputDiseaseTrait">
+                           <option th:each="diseaseTrait : ${diseaseTraits}"
+                                   th:value="${diseaseTrait}"
+                                   th:text="${diseaseTrait.trait}"></option>
+                       </select>
+                   </div>-->
 
                 <div class="form-group">
                     <label for="cnv" class="control-label col-md-2">CNV</label>
