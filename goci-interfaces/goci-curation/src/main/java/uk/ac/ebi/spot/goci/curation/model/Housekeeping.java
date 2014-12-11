@@ -38,6 +38,7 @@ public class Housekeeping {
     @Column(name = "PENDING")
     private String pending;
 
+    @Temporal(TemporalType.DATE)
     @Column(name = "PUBLISHDATE")
     private Date publishDate;
 
@@ -53,6 +54,7 @@ public class Housekeeping {
     @Column(name = "SENDTONCBI")
     private String sendToNCBI;
 
+    @Temporal(TemporalType.DATE)
     @Column(name = "SENDTONCBIDATE")
     private Date sendToNCBIDate;
 

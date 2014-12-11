@@ -6,6 +6,7 @@ package uk.ac.ebi.spot.goci.curation;
  *  Security configuration that ensures that only authenticated users can studies page
  */
 
+/*
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
@@ -45,3 +46,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 }
+*/

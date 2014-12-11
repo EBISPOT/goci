@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
+import oracle.sql.DATE;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
@@ -24,6 +25,7 @@ public class Study {
     @Column(name = "AUTHOR")
     private String author;
 
+    @Temporal(TemporalType.DATE)
     @Column(name = "STUDYDATE")
     private Date studyDate;
 

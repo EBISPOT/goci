@@ -34,6 +34,7 @@ public class SingleNucleotidePolymorphism {
     @Column(name = "CHROMOSOME_POS")
     private String chromosomePosition;
 
+
     @Column(name = "LASTUPDATEDATE")
     private Timestamp lastUpdateDate;
 
