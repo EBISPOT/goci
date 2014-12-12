@@ -56,7 +56,16 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-8">
-            <form class="form-horizontal" th:object="${study}">
+            <form id="add-study" class="form-horizontal" method="post" th:object="${study}" name="editStudyForm"
+                  th:action="@{/studies/{studyId}(studyId=*{id})}">
+
+                <div class="form-group">
+                    <label for="id" class="control-label col-md-2"></label>
+
+                    <div class="col-md-10">
+                        <input type="hidden" th:field="*{id}" class="form-control" id="id"></input>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label for="inputAuthor" class="control-label col-md-2">Author</label>
 
@@ -65,55 +74,55 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+               <div class="form-group">
                     <label for="inputTitle" class="control-label col-md-2">Title</label>
 
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="inputTitle" th:field="*{title}"></input>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="inputPublication" class="control-label col-md-2">Publication</label>
+                 <div class="form-group">
+                     <label for="inputPublication" class="control-label col-md-2">Publication</label>
 
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="inputPublication"
-                               th:field="*{publication}"></input>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="inputPubmed" class="control-label col-md-2">Pubmed</label>
+                     <div class="col-md-10">
+                         <input type="text" class="form-control" id="inputPublication"
+                                th:field="*{publication}"></input>
+                     </div>
+                 </div>
+                 <div class="form-group">
+                     <label for="inputPubmed" class="control-label col-md-2">Pubmed</label>
 
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="inputPubmed" th:field="*{pubmedID}"></input>
-                    </div>
-                </div>
+                     <div class="col-md-10">
+                         <input type="text" class="form-control" id="inputPubmed" th:field="*{pubmedID}"></input>
+                     </div>
+                 </div>
 
+<!--
+                  <div class="form-group">
+                     <label for="inputStudyDate" class="control-label col-md-2">Study Date</label>
 
-                <div class="form-group">
-                    <label for="inputStudyDate" class="control-label col-md-2">Study Date</label>
+                     <div class="col-md-10">
+                         <input type="date" class="form-control" id="inputStudyDate" th:field="*{studyDate}"></input>
+                     </div>
+                 </div>-->
 
-                    <div class="col-md-10">
-                        <input type="date" class="form-control" id="inputStudyDate" th:field="*{studyDate}"></input>
-                    </div>
-                </div>
+                 <div class="form-group">
+                     <label for="inputPlatform" class="control-label col-md-2">Platform</label>
 
-                <div class="form-group">
-                    <label for="inputPlatform" class="control-label col-md-2">Platform</label>
-
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="inputPlatform" th:field="*{platform}"></input>
-                    </div>
-                </div>
-                <div class="form-group">
+                     <div class="col-md-10">
+                         <input type="text" class="form-control" id="inputPlatform" th:field="*{platform}"></input>
+                     </div>
+                 </div>
+<!--                <div class="form-group">
                     <label for="inputDiseaseTrait" class="control-label col-md-2">Disease Trait</label>
 
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="inputDiseaseTrait"
                                th:field="*{diseaseTrait.Trait}"></input>
                     </div>
-                </div>
+                </div>-->
 
-                <div class="form-group">
+    <!--            <div class="form-group">
                     <label for="inputEFOTrait" class="control-label col-md-2">EFO Trait</label>
 
                     <div class="col-md-10">
@@ -132,8 +141,7 @@
                             </tbody>
                         </table>
                     </div>
-
-                </div>
+                </div>-->
 
 
                 <div class="form-group">
@@ -151,6 +159,11 @@
                     <input id="gxg" type="checkbox" th:field="*{gxg}" th:value="'1'"/>
                 </div>
 
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="Save" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
 
             </form>
         </div>

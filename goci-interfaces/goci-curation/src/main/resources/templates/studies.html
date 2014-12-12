@@ -108,12 +108,15 @@
                     <!--If study has associated disease trait return traits name-->
                     <td th:text="${study.diseaseTrait != null} ? ${study.diseaseTrait.trait} : 'null'"></td>
                     <td th:text="${study.platform} ?: 'null'"></td>
+<!--
+
+
                     <td th:text="${study.housekeeping != null } ? ${study.housekeeping.pending} : 'null'"></td>
-                    <td th:text="${study.housekeeping != null } ? ${study.housekeeping.publish} : 'null'"></td>
+                    <td th:text="${study.housekeeping != null } ? ${study.housekeeping.publish} : 'null'"></td>-->
                     <!--If study has associated housekeeping object then get the following attributes -->
-                    <td th:text="${study.housekeeping != null and study.housekeeping.curator !=null } ? ${study.housekeeping.curator.lastName} : 'null'"></td>
+                <!--    <td th:text="${study.housekeeping != null and study.housekeeping.curator !=null } ? ${study.housekeeping.curator.lastName} : 'null'"></td>
                     <td th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : 'null'"></td>
-                    <td th:text="${study.housekeeping !=null} ? ${study.housekeeping.notes} : 'null'"></td>
+                    <td th:text="${study.housekeeping !=null} ? ${study.housekeeping.notes} : 'null'"></td>-->
                 </tr>
                 </tbody>
             </table>

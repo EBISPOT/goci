@@ -53,7 +53,7 @@
 </div>
 
 
-<div class="container" th:object="${study}">
+<div class="container" th:object="${studyHousekeeping}">
     <table id="mainTable" class="table table-hover table-bordered">
         <caption>House Keeping Information</caption>
         <thead>
@@ -68,17 +68,66 @@
         </thead>
         <tbody>
         <tr>
-            <td th:text="*{housekeeping.studyAddedDate}"></td>
-            <td th:text="*{housekeeping.lastUpdateDate}"></td>
-            <td th:text="*{housekeeping.sendToNCBIDate}"></td>
-            <td th:text="*{housekeeping.publishDate}"></td>
-            <td th:text="*{housekeeping.notes}"></td>
-            <td th:text="*{housekeeping.fileName}"></td>
+       <!--     <td th:text="*{studyAddedDate}"></td>
+            <td th:text="*{lastUpdateDate}"></td>
+            <td th:text="*{sendToNCBIDate}"></td>
+            <td th:text="*{publishDate}"></td>-->
+         <!--<td th:text="*{notes != null} ? *{notes} : 'null'"></td>-->
+        <!--   <td th:text="*{fileName} ?: 'null'"></td>-->
         </tr>
         </tbody>
     </table>
 </div>
 
+<br></br>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <form class="form-horizontal" method="post" th:action="@{/studies/{studyId}/housekeeping(studyId=*{id})}"
+                  th:object="${studyHousekeeping}" name="addCuratorInformation">
+
+                <div class="form-group">
+                    <label for="id" class="control-label col-md-2"></label>
+
+                    <div class="col-md-10">
+                        <input type="text" th:field="*{id}" class="form-control" id="id"></input>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="studyid" class="control-label col-md-2"></label>
+
+                    <div class="col-md-10">
+                        <input type="text" th:field="*{studyID}" class="form-control" id="studyid"></input>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes" class="control-label col-md-2">Notes</label>
+
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="notes"
+                               placeholder="notes" th:field="*{notes}"></input>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="studySnpCheckedLevelOne" class="control-label col-md-2">Study SNP checked level
+                        1</label>
+                    <input id="studySnpCheckedLevelOne" type="checkbox"
+                           th:field="*{studySnpCheckedLevelOne}" th:value="'1'"/>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="Save" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

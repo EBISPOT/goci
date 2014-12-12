@@ -16,5 +16,5 @@ import uk.ac.ebi.spot.goci.curation.model.Study;
 @RepositoryRestResource
 public interface HousekeepingRepository extends JpaRepository<Housekeeping, Long> {
 
-    Housekeeping findByStudyId(String studyID);
+    Housekeeping findByStudyID(String studyID);
 }

@@ -69,10 +69,6 @@ public class Study {
     )
     private Collection<EFOTrait> efoTraits;
 
-
-    // Housekeeping table is owning side of this relationship as it holds
-    // reference to study table
-    @OneToOne(mappedBy="study", fetch = FetchType.LAZY)
     private Housekeeping housekeeping;
 
     // JPA no-args constructor

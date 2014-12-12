@@ -5,10 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import uk.ac.ebi.spot.goci.curation.model.Association;
-import uk.ac.ebi.spot.goci.curation.model.DiseaseTrait;
-import uk.ac.ebi.spot.goci.curation.model.Ethnicity;
-import uk.ac.ebi.spot.goci.curation.model.Study;
+import uk.ac.ebi.spot.goci.curation.model.*;
 import uk.ac.ebi.spot.goci.curation.repository.*;
 
 import java.util.ArrayList;
@@ -82,15 +79,16 @@ public class StudyController {
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE)
     public String searchStudies(Model model, @RequestParam(required = false) String pending,
                                 @RequestParam(required = false) String publish) {
-        if (pending != null) {
-            model.addAttribute("studies", studyRepository.findByPending(pending));
 
-        } else if (publish != null) {
-            model.addAttribute("studies", studyRepository.findByPublish(publish));
-
-        } else {
+//        if (pending != null) {
+//            model.addAttribute("studies", studyRepository.findByPending(pending));
+//
+//        } else if (publish != null) {
+//            model.addAttribute("studies", studyRepository.findByPublish(publish));
+//
+//        } else {
             model.addAttribute("studies", studyRepository.findAll());
-        }
+      //  }
         return "studies";
     }
 
@@ -121,15 +119,23 @@ public class StudyController {
     }
 
 
-    // Generate page with sample description linked to a study
+    // Generate page with housekeeping/curator information linked to a study
     @RequestMapping(value = "/{studyId}/housekeeping", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewStudyHousekeeping(Model model, @PathVariable String studyId) {
-
+        model.addAttribute("studyHousekeeping", housekeepingRepository.findByStudyID(studyId));
         model.addAttribute("study", studyRepository.findOne(Long.valueOf(studyId).longValue()));
         return "study_housekeeping";
     }
 
 
+    // Update page with housekeeping/curator information linked to a study
+    @RequestMapping(value = "/{studyId}/housekeeping", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping, Model model) {
+        Housekeeping updatedHousekeeping = housekeepingRepository.save(housekeeping);
+        return "redirect:/studies/" + updatedHousekeeping.getStudyID() + "/housekeeping";
+    }
+
+    /* Model Attributes */
     // Disease Traits
     @ModelAttribute("diseaseTraits")
     public List<DiseaseTrait> populateDiseaseTraits(Model model) {
