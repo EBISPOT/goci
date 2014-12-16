@@ -11,5 +11,12 @@
 
     <artifactId>goci-solr-indexer</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-solrj</artifactId>
+            <version>4.7.2</version>
+        </dependency>
+    </dependencies>
 
 </project>
