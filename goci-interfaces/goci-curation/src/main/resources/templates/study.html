@@ -13,6 +13,11 @@
 
 </head>
 <body>
+
+<!--TODO
+- REIMPLEMENTED LOGIN
+- COUNT -->
+
 <nav role="navigation" class="navbar navbar-default">
     <div class="navbar-header">
         <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
@@ -28,15 +33,15 @@
         <ul class="nav navbar-nav">
             <li><a th:href="@{/studies}">Home</a></li>
             <li><a th:href="@{/studies/new}">Add Study</a></li>
-            <li><a href="#">Count Data</a></li>
+            <!--<li><a href="#">Count Data</a></li>-->
         </ul>
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <form th:action="@{/logout}" method="post">
-                    <input type="submit" value="Sign Out"/>
-                </form>
-            </li>
-        </ul>
+        <!-- <ul class="nav navbar-nav navbar-right">
+             <li>
+                 <form th:action="@{/logout}" method="post">
+                     <input type="submit" value="Sign Out"/>
+                 </form>
+             </li>
+         </ul>-->
     </div>
 </nav>
 
@@ -51,7 +56,7 @@
     </div>
 </div>
 
-<br></br>
+<br/>
 
 <div class="container-fluid">
     <div class="row">
@@ -63,66 +68,65 @@
                     <label for="id" class="control-label col-md-2"></label>
 
                     <div class="col-md-10">
-                        <input type="hidden" th:field="*{id}" class="form-control" id="id"></input>
+                        <input type="hidden" th:field="*{id}" class="form-control" id="id"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputAuthor" class="control-label col-md-2">Author</label>
 
                     <div class="col-md-10">
-                        <input type="text" th:field="*{author}" class="form-control" id="inputAuthor"></input>
+                        <input type="text" th:field="*{author}" class="form-control" id="inputAuthor"/>
                     </div>
                 </div>
 
-               <div class="form-group">
+                <div class="form-group">
                     <label for="inputTitle" class="control-label col-md-2">Title</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="inputTitle" th:field="*{title}"></input>
+                        <input type="text" class="form-control" id="inputTitle" th:field="*{title}"/>
                     </div>
                 </div>
-                 <div class="form-group">
-                     <label for="inputPublication" class="control-label col-md-2">Publication</label>
+                <div class="form-group">
+                    <label for="inputPublication" class="control-label col-md-2">Publication</label>
 
-                     <div class="col-md-10">
-                         <input type="text" class="form-control" id="inputPublication"
-                                th:field="*{publication}"></input>
-                     </div>
-                 </div>
-                 <div class="form-group">
-                     <label for="inputPubmed" class="control-label col-md-2">Pubmed</label>
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="inputPublication"
+                               th:field="*{publication}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPubmed" class="control-label col-md-2">Pubmed</label>
 
-                     <div class="col-md-10">
-                         <input type="text" class="form-control" id="inputPubmed" th:field="*{pubmedID}"></input>
-                     </div>
-                 </div>
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="inputPubmed" th:field="*{pubmedID}"/>
+                    </div>
+                </div>
 
-<!--
-                  <div class="form-group">
-                     <label for="inputStudyDate" class="control-label col-md-2">Study Date</label>
+                <div class="form-group">
+                    <label for="inputStudyDate" class="control-label col-md-2">Study Date</label>
 
-                     <div class="col-md-10">
-                         <input type="date" class="form-control" id="inputStudyDate" th:field="*{studyDate}"></input>
-                     </div>
-                 </div>-->
+                    <div class="col-md-10">
+                        <input type="date" class="form-control" id="inputStudyDate" th:field="*{studyDate}"/>
+                    </div>
+                </div>
 
-                 <div class="form-group">
-                     <label for="inputPlatform" class="control-label col-md-2">Platform</label>
+                <div class="form-group">
+                    <label for="inputPlatform" class="control-label col-md-2">Platform</label>
 
-                     <div class="col-md-10">
-                         <input type="text" class="form-control" id="inputPlatform" th:field="*{platform}"></input>
-                     </div>
-                 </div>
-<!--                <div class="form-group">
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="inputPlatform" th:field="*{platform}"/>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="inputDiseaseTrait" class="control-label col-md-2">Disease Trait</label>
 
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="inputDiseaseTrait"
-                               th:field="*{diseaseTrait.Trait}"></input>
+                               th:field="*{diseaseTrait.Trait}"/>
                     </div>
-                </div>-->
+                </div>
 
-    <!--            <div class="form-group">
+                <div class="form-group">
                     <label for="inputEFOTrait" class="control-label col-md-2">EFO Trait</label>
 
                     <div class="col-md-10">
@@ -141,7 +145,7 @@
                             </tbody>
                         </table>
                     </div>
-                </div>-->
+                </div>
 
 
                 <div class="form-group">

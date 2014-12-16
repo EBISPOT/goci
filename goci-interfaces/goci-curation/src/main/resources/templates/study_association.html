@@ -13,6 +13,9 @@
 </head>
 <body>
 
+<!--TODO
+- REIMPLEMENTED LOGIN
+- COUNT -->
 
 <nav role="navigation" class="navbar navbar-default">
     <div class="navbar-header">
@@ -29,15 +32,15 @@
         <ul class="nav navbar-nav">
             <li><a th:href="@{/studies}">Home</a></li>
             <li><a th:href="@{/studies/new}">Add Study</a></li>
-            <li><a href="#">Count Data</a></li>
+            <!--<li><a href="#">Count Data</a></li>-->
         </ul>
-        <ul class="nav navbar-nav navbar-right">
+       <!-- <ul class="nav navbar-nav navbar-right">
             <li>
                 <form th:action="@{/logout}" method="post">
                     <input type="submit" value="Sign Out"/>
                 </form>
             </li>
-        </ul>
+        </ul>-->
     </div>
 </nav>
 
@@ -52,7 +55,7 @@
     </div>
 </div>
 
-<br></br>
+<br/>
 
 <div class="container">
     <table id="mainTable" class="table table-hover table-bordered">
@@ -86,7 +89,6 @@
             <td th:text="${studyAssociation.ORPerCopyRecip}"></td>
             <td th:switch="${studyAssociation.ORType}">
                 <p th:case="'0'">No</p>
-
                 <p th:case="'1'">Yes</p>
             </td>
             <td th:text="${studyAssociation.ORPerCopyRange}"></td>
@@ -107,7 +109,7 @@
                 <!--<input type="submit" class="btn btn-default" value="Download SNPs as Spreadsheet"></input>-->
 
                 <input type="button" class="btn btn-primary" value="Add new SNP" data-toggle="collapse"
-                       data-target="#add_snp_form"></input>
+                       data-target="#add_snp_form"/>
 
                 <div id="add_snp_form" class="collapse">
                     <form class="form-horizontal" method="post" name="addSNPForm">
@@ -116,7 +118,7 @@
                             <label for="snps" class="control-label col-md-2">SNP(s)</label>
 
                             <div class="col-md-10">
-                                <input type="text" class="form-control" id="snps"></input>
+                                <input type="text" class="form-control" id="snps"/>
                             </div>
                         </div>
 
@@ -124,7 +126,7 @@
                             <label for="authorgenes" class="control-label col-md-2">Gene(s)</label>
 
                             <div class="col-md-10">
-                                <input type="text" class="form-control" id="authorgenes"></input>
+                                <input type="text" class="form-control" id="authorgenes"/>
                             </div>
                         </div>
 
@@ -133,7 +135,7 @@
                                 Allele</label>
 
                             <div class="col-md-10">
-                                <input type="text" class="form-control" id="strongestAllele"></input>
+                                <input type="text" class="form-control" id="strongestAllele"/>
                             </div>
                         </div>
 
@@ -142,7 +144,7 @@
                                 Controls</label>
 
                             <div class="col-md-10">
-                                <input type="text" class="form-control" id="riskFrequency"></input>
+                                <input type="text" class="form-control" id="riskFrequency"/>
                             </div>
                         </div>
 
@@ -151,7 +153,7 @@
                             <label for="allele" class="control-label col-md-2">Allele</label>
 
                             <div class="col-md-10">
-                                <input type="text" class="form-control" id="allele"></input>
+                                <input type="text" class="form-control" id="allele"/>
                             </div>
                         </div>
 
@@ -159,7 +161,7 @@
                             <label for="pvalueFloat" class="control-label col-md-2">P-value (float)</label>
 
                             <div class="col-md-10">
-                                <input type="number" class="form-control" id="pvalueFloat"></input>
+                                <input type="number" class="form-control" id="pvalueFloat"/>
                             </div>
                         </div>
 
@@ -167,7 +169,7 @@
                             <label for="pvalueMantissa" class="control-label col-md-2">P-value (mantissa)</label>
 
                             <div class="col-md-10">
-                                <input type="number" class="form-control" id="pvalueMantissa"></input>
+                                <input type="number" class="form-control" id="pvalueMantissa"/>
                             </div>
                         </div>
 
@@ -175,7 +177,7 @@
                             <label for="pvalueExponent" class="control-label col-md-2">P-value (exponent)</label>
 
                             <div class="col-md-10">
-                                <input type="number" class="form-control" id="pvalueExponent"></input>
+                                <input type="number" class="form-control" id="pvalueExponent"/>
                             </div>
                         </div>
 
@@ -184,7 +186,7 @@
                             <label for="pvalueText" class="control-label col-md-2">P-value (Text)</label>
 
                             <div class="col-md-10">
-                                <input type="text" class="form-control" id="pvalueText"></input>
+                                <input type="text" class="form-control" id="pvalueText"/>
                             </div>
                         </div>
 
@@ -217,7 +219,7 @@
                             <label for="ORPerCopyNum" class="control-label col-md-2">OR/HR/RR per copy (Num)</label>
 
                             <div class="col-md-10">
-                                <input type="number" class="form-control" id="ORPerCopyNum"></input>
+                                <input type="number" class="form-control" id="ORPerCopyNum"/>
                             </div>
                         </div>
 
@@ -226,7 +228,7 @@
                                 reciprocal</label>
 
                             <div class="col-md-10">
-                                <input type="number" class="form-control" id="ORPerCopyRecip"></input>
+                                <input type="number" class="form-control" id="ORPerCopyRecip"/>
                             </div>
                         </div>
 
@@ -234,7 +236,7 @@
                             <label for="ORPerCopyRange" class="control-label col-md-2">OR/HR/RR per copy (Range)</label>
 
                             <div class="col-md-10">
-                                <input type="number" class="form-control" id="ORPerCopyRange"></input>
+                                <input type="number" class="form-control" id="ORPerCopyRange"/>
                             </div>
                         </div>
 
@@ -243,7 +245,7 @@
                                 Description)</label>
 
                             <div class="col-md-10">
-                                <input type="text" class="form-control" id="ORPerCopyUnitDescr"></input>
+                                <input type="text" class="form-control" id="ORPerCopyUnitDescr"/>
                             </div>
                         </div>
 
@@ -251,7 +253,7 @@
                             <label for="ORPerCopyStdError" class="control-label col-md-2">Standard Error</label>
 
                             <div class="col-md-10">
-                                <input type="number" class="form-control" id="ORPerCopyStdError"></input>
+                                <input type="number" class="form-control" id="ORPerCopyStdError"/>
                             </div>
                         </div>
 
@@ -274,7 +276,7 @@
         </div>
     </div>
 </div>
-<br></br>
+<br/>
 
 </body>
 </html>

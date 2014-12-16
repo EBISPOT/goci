@@ -13,6 +13,11 @@
 
 </head>
 <body>
+
+<!--TODO
+- REIMPLEMENTED LOGIN
+- COUNT -->
+
 <nav role="navigation" class="navbar navbar-default">
     <div class="navbar-header">
         <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
@@ -28,15 +33,18 @@
         <ul class="nav navbar-nav">
             <li><a th:href="@{/studies}">Home</a></li>
             <li><a th:href="@{/studies/new}">Add Study</a></li>
-            <li><a href="#">Count Data</a></li>
+            <!--<li><a href="#">Count Data</a></li>-->
         </ul>
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <form th:action="@{/logout}" method="post">
-                    <input type="submit" value="Sign Out"/>
-                </form>
-            </li>
-        </ul>
+        <!--
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <form th:action="@{/logout}" method="post">
+                            <input type="submit" value="Sign Out"/>
+                        </form>
+                    </li>
+
+                </ul>
+                -->
     </div>
 </nav>
 
@@ -57,7 +65,6 @@
         <caption>Existing SNP information</caption>
         <thead>
         <tr>
-            <th>ID</th>
             <th>Type</th>
             <th>Sample Size</th>
             <th>Number</th>
@@ -72,11 +79,12 @@
         </thead>
         <tbody>
         <tr th:each="studyEthnicityDescription: ${studyEthnicityDescriptions}">
-            <td th:text="${studyEthnicityDescription.id}"></td>
+
             <td th:text="${studyEthnicityDescription.type}"></td>
             <td th:switch="${studyEthnicityDescription.type}">
-                <p th:case="'initial'" th:text ="*{initialSampleSize}"></p>
-                <p th:case="'replication'" th:text = "*{replicateSampleSize}"></p>
+                <p th:case="'initial'" th:text="*{initialSampleSize}"></p>
+
+                <p th:case="'replication'" th:text="*{replicateSampleSize}"></p>
             </td>
             <td th:text="${studyEthnicityDescription.numberOfIndividuals}"></td>
             <td th:text="${studyEthnicityDescription.ethnicGroup}"></td>
@@ -90,7 +98,5 @@
         </tbody>
     </table>
 </div>
-
-
 </body>
 </html>

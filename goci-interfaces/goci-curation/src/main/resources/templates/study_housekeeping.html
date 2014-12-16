@@ -13,6 +13,11 @@
 
 </head>
 <body>
+
+<!--TODO
+- REIMPLEMENTED LOGIN
+- COUNT -->
+
 <nav role="navigation" class="navbar navbar-default">
     <div class="navbar-header">
         <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
@@ -28,15 +33,15 @@
         <ul class="nav navbar-nav">
             <li><a th:href="@{/studies}">Home</a></li>
             <li><a th:href="@{/studies/new}">Add Study</a></li>
-            <li><a href="#">Count Data</a></li>
+            <!--<li><a href="#">Count Data</a></li>-->
         </ul>
-        <ul class="nav navbar-nav navbar-right">
+        <!--<ul class="nav navbar-nav navbar-right">
             <li>
                 <form th:action="@{/logout}" method="post">
                     <input type="submit" value="Sign Out"/>
                 </form>
             </li>
-        </ul>
+        </ul>-->
     </div>
 </nav>
 
@@ -68,20 +73,20 @@
         </thead>
         <tbody>
         <tr>
-       <!--     <td th:text="*{studyAddedDate}"></td>
-            <td th:text="*{lastUpdateDate}"></td>
-            <td th:text="*{sendToNCBIDate}"></td>
-            <td th:text="*{publishDate}"></td>-->
-         <!--<td th:text="*{notes != null} ? *{notes} : 'null'"></td>-->
-        <!--   <td th:text="*{fileName} ?: 'null'"></td>-->
+            <td th:text="*{studyAddedDate != null } ? *{studyAddedDate} : 'null'"></td>
+            <td th:text="*{lastUpdateDate != null} ? *{lastUpdateDate} : 'null'"></td>
+            <td th:text="*{sendToNCBIDate != null} ? *{sendToNCBIDate} : 'null'"></td>
+            <td th:text="*{publishDate != null} ? *{publishDate}: 'null'"></td>
+            <td th:text="*{notes != null} ? *{notes} : 'null'"></td>
+            <td th:text="*{fileName != null } ? *{fileName}: 'null'"></td>
         </tr>
         </tbody>
     </table>
 </div>
 
-<br></br>
+<br/>
 
-<div class="container-fluid">
+<!--<div class="container-fluid">
     <div class="row">
         <div class="col-md-8">
             <form class="form-horizontal" method="post" th:action="@{/studies/{studyId}/housekeeping(studyId=*{id})}"
@@ -127,7 +132,7 @@
             </form>
         </div>
     </div>
-</div>
+</div>-->
 
 </body>
 </html>

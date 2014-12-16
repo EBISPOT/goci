@@ -44,10 +44,6 @@ public class StudyController {
         this.efoTraitRepository = efoTraitRepository;
     }
 
-
-
-
-
     // View a study
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewStudy(Model model, @PathVariable long studyId) {
@@ -60,6 +56,10 @@ public class StudyController {
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String updateStudy(@ModelAttribute Study study, Model model) {
+
+        // TODO
+        // DOES THE MODEL NOT ALREADY HAVE THE STUDY IN IT
+       // try model.mergeAttributes()
         Study updatedStudy = studyRepository.save(study);
         return "redirect:/studies/" + updatedStudy.getId();
     }

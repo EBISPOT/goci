@@ -15,7 +15,12 @@
 
 
 </head>
-<body class="fuelux">
+<body>
+<!--TODO
+- REIMPLEMENTED LOGIN
+- COUNT
+- disease trait
+-->
 
 <nav role="navigation" class="navbar navbar-default">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -34,19 +39,19 @@
 
             <li><a th:href="@{/studies}">Home</a></li>
             <li class="active"><a th:href="@{/studies/new}">Add Study</a></li>
-            <li><a href="#">Count Data</a></li>
+            <!--<li><a href="#">Count Data</a></li>-->
         </ul>
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <form th:action="@{/logout}" method="post">
-                    <input type="submit" value="Sign Out"/>
-                </form>
-            </li>
-        </ul>
+        <!--    <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <form th:action="@{/logout}" method="post">
+                        <input type="submit" value="Sign Out"/>
+                    </form>
+                </li>
+            </ul>-->
     </div>
 </nav>
 
-<div class="container-fluid">
+<!--<div class="container-fluid">
     <div class="row">
         <ul class="nav nav-tabs">
             <li class="active"><a href="#">Study Details</a></li>
@@ -54,9 +59,9 @@
             <li><a href="#">Sample Information</a></li>
             <li><a href="#">Housekeeping</a></li>
         </ul>
-        <br></br>
+        <br/>
     </div>
-</div>
+</div>-->
 
 <!--Pubmed import button-->
 <!--<div class="container-fluid">
@@ -74,7 +79,7 @@
     </div>
 </div>-->
 
-<br></br>
+<br/>
 
 <div class="container-fluid">
     <div class="row">
@@ -86,7 +91,7 @@
 
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="author"
-                               placeholder="last name of first author" th:field="*{author}"></input>
+                               placeholder="last name of first author" th:field="*{author}"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -94,7 +99,7 @@
 
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="title" placeholder="Title of paper"
-                               th:field="*{title}"></input>
+                               th:field="*{title}"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -102,7 +107,7 @@
 
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="publication"
-                               placeholder="Publishing journal name" th:field="*{publication}"></input>
+                               placeholder="Publishing journal name" th:field="*{publication}"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -110,7 +115,7 @@
 
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="pubmedID" placeholder="Pubmed ID"
-                               th:field="*{pubmedID}"></input>
+                               th:field="*{pubmedID}"/>
                     </div>
                 </div>
 
@@ -119,7 +124,7 @@
 
                     <div class="col-md-10">
                         <input type="date" class="form-control" id="studyDate" placeholder="YYYY-MM-DD"
-                               th:field="*{studyDate}"></input>
+                               th:field="*{studyDate}"/>
                     </div>
 
                 </div>
@@ -129,15 +134,14 @@
 
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="platform" placeholder="Platform"
-                               th:field="*{platform}"></input>
+                               th:field="*{platform}"/>
                     </div>
                 </div>
-
-<!--                <div class="form-group">
+               <!-- <div class="form-group">
                     <label for="inputDiseaseTrait" class="control-label col-md-2">Disease Trait</label>
+
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="inputDiseaseTrait" placeholder="Disease Trait"
-                                 th:field="*{diseaseTrait}" ></input>
+
 
                         <select th:field="*{diseaseTrait}" id="inputDiseaseTrait">
                             <option th:each="diseaseTrait : ${diseaseTraits}"
