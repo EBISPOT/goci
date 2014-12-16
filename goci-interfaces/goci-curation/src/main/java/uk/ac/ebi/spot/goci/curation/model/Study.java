@@ -69,6 +69,9 @@ public class Study {
     )
     private Collection<EFOTrait> efoTraits;
 
+
+    // Associated Housekeeping attribute
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "study")
     private Housekeeping housekeeping;
 
     // JPA no-args constructor
@@ -96,116 +99,116 @@ public class Study {
         return id;
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
-    public Date getStudyDate() {
-        return studyDate;
-    }
-
-    public String getPublication() {
-        return publication;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getInitialSampleSize() {
-        return initialSampleSize;
-    }
-
-    public String getReplicateSampleSize() {
-        return replicateSampleSize;
-    }
-
-    public String getPlatform() {
-        return platform;
-    }
-
-    public String getPubmedID() {
-        return pubmedID;
-    }
-
-    public String getCnv() {
-        return cnv;
-    }
-
-    public String getGxe() {
-        return gxe;
-    }
-
-    public String getGxg() {
-        return gxg;
-    }
-
-    public DiseaseTrait getDiseaseTrait() {
-        return diseaseTrait;
-    }
-
-    public Collection<EFOTrait> getEfoTraits() {
-        return efoTraits;
-    }
-
-    public Housekeeping getHousekeeping() {
-        return housekeeping;
-    }
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getAuthor() {
+        return author;
     }
 
     public void setAuthor(String author) {
         this.author = author;
     }
 
+    public Date getStudyDate() {
+        return studyDate;
+    }
+
     public void setStudyDate(Date studyDate) {
         this.studyDate = studyDate;
+    }
+
+    public String getPublication() {
+        return publication;
     }
 
     public void setPublication(String publication) {
         this.publication = publication;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getInitialSampleSize() {
+        return initialSampleSize;
     }
 
     public void setInitialSampleSize(String initialSampleSize) {
         this.initialSampleSize = initialSampleSize;
     }
 
+    public String getReplicateSampleSize() {
+        return replicateSampleSize;
+    }
+
     public void setReplicateSampleSize(String replicateSampleSize) {
         this.replicateSampleSize = replicateSampleSize;
+    }
+
+    public String getPlatform() {
+        return platform;
     }
 
     public void setPlatform(String platform) {
         this.platform = platform;
     }
 
+    public String getPubmedID() {
+        return pubmedID;
+    }
+
     public void setPubmedID(String pubmedID) {
         this.pubmedID = pubmedID;
+    }
+
+    public String getCnv() {
+        return cnv;
     }
 
     public void setCnv(String cnv) {
         this.cnv = cnv;
     }
 
+    public String getGxe() {
+        return gxe;
+    }
+
     public void setGxe(String gxe) {
         this.gxe = gxe;
+    }
+
+    public String getGxg() {
+        return gxg;
     }
 
     public void setGxg(String gxg) {
         this.gxg = gxg;
     }
 
+    public DiseaseTrait getDiseaseTrait() {
+        return diseaseTrait;
+    }
+
     public void setDiseaseTrait(DiseaseTrait diseaseTrait) {
         this.diseaseTrait = diseaseTrait;
     }
 
+    public Collection<EFOTrait> getEfoTraits() {
+        return efoTraits;
+    }
+
     public void setEfoTraits(Collection<EFOTrait> efoTraits) {
         this.efoTraits = efoTraits;
+    }
+
+    public Housekeeping getHousekeeping() {
+        return housekeeping;
     }
 
     public void setHousekeeping(Housekeeping housekeeping) {

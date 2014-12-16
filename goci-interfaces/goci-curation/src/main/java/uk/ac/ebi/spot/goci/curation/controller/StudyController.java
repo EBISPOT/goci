@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.curation.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import uk.ac.ebi.spot.goci.curation.model.*;
@@ -31,15 +32,20 @@ public class StudyController {
     private EthnicityRepository ethnicityRepository;
     private HousekeepingRepository housekeepingRepository;
     private DiseaseTraitRepository diseaseTraitRepository;
+    private EFOTraitRepository efoTraitRepository;
 
     @Autowired
-    public StudyController(StudyRepository studyRepository, AssociationRepository associationRepository, EthnicityRepository ethnicityRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository) {
+    public StudyController(StudyRepository studyRepository, AssociationRepository associationRepository, EthnicityRepository ethnicityRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EFOTraitRepository efoTraitRepository) {
         this.studyRepository = studyRepository;
         this.associationRepository = associationRepository;
         this.ethnicityRepository = ethnicityRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
+        this.efoTraitRepository = efoTraitRepository;
     }
+
+
+
 
 
     // View a study
@@ -68,9 +74,12 @@ public class StudyController {
 
     // Save newly added study details
     // @ModelAttribute is a reference to the object holding the data entered in the form
+    @Transactional
     @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String addStudy(@ModelAttribute Study study, Model model) {
-        Study newStudy = studyRepository.save(study);
+
+        Study newStudy = studyRepository.saveAndFlush(study);
+
         return "redirect:/studies/" + newStudy.getId();
     }
 
@@ -80,15 +89,15 @@ public class StudyController {
     public String searchStudies(Model model, @RequestParam(required = false) String pending,
                                 @RequestParam(required = false) String publish) {
 
-//        if (pending != null) {
-//            model.addAttribute("studies", studyRepository.findByPending(pending));
-//
-//        } else if (publish != null) {
-//            model.addAttribute("studies", studyRepository.findByPublish(publish));
-//
-//        } else {
+        if (pending != null) {
+            model.addAttribute("studies", studyRepository.findByPending(pending));
+
+        } else if (publish != null) {
+            model.addAttribute("studies", studyRepository.findByPublish(publish));
+
+        } else {
             model.addAttribute("studies", studyRepository.findAll());
-      //  }
+        }
         return "studies";
     }
 
@@ -122,8 +131,10 @@ public class StudyController {
     // Generate page with housekeeping/curator information linked to a study
     @RequestMapping(value = "/{studyId}/housekeeping", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewStudyHousekeeping(Model model, @PathVariable String studyId) {
-        model.addAttribute("studyHousekeeping", housekeepingRepository.findByStudyID(studyId));
-        model.addAttribute("study", studyRepository.findOne(Long.valueOf(studyId).longValue()));
+        Housekeeping housekeeping = housekeepingRepository.findByStudy(Long.valueOf(studyId));
+        Study study = studyRepository.findOne(Long.valueOf(studyId).longValue());
+        model.addAttribute("studyHousekeeping", housekeeping);
+        model.addAttribute("study", study);
         return "study_housekeeping";
     }
 
@@ -132,7 +143,7 @@ public class StudyController {
     @RequestMapping(value = "/{studyId}/housekeeping", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping, Model model) {
         Housekeeping updatedHousekeeping = housekeepingRepository.save(housekeeping);
-        return "redirect:/studies/" + updatedHousekeeping.getStudyID() + "/housekeeping";
+        return "redirect:/studies/" + updatedHousekeeping.getStudy().getId() + "/housekeeping";
     }
 
     /* Model Attributes */
@@ -142,5 +153,9 @@ public class StudyController {
         return diseaseTraitRepository.findAll();
     }
 
+    // EFO traits
+    @ModelAttribute("efoTraits")
+    public List<EFOTrait> populateEFOTraits(Model model) {return efoTraitRepository.findAll();
+    }
 
 }

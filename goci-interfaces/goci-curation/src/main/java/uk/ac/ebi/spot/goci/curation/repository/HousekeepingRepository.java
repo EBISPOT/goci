@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import uk.ac.ebi.spot.goci.curation.model.Housekeeping;
 import uk.ac.ebi.spot.goci.curation.model.Study;
@@ -16,5 +17,6 @@ import uk.ac.ebi.spot.goci.curation.model.Study;
 @RepositoryRestResource
 public interface HousekeepingRepository extends JpaRepository<Housekeeping, Long> {
 
-    Housekeeping findByStudyID(String studyID);
+    @Query("select h from Housekeeping h where h.study.id = ?1")
+    Housekeeping findByStudy(Long studyID);
 }

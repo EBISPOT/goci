@@ -57,6 +57,7 @@
         <caption>Existing SNP information</caption>
         <thead>
         <tr>
+            <th>ID</th>
             <th>Type</th>
             <th>Sample Size</th>
             <th>Number</th>
@@ -71,6 +72,7 @@
         </thead>
         <tbody>
         <tr th:each="studyEthnicityDescription: ${studyEthnicityDescriptions}">
+            <td th:text="${studyEthnicityDescription.id}"></td>
             <td th:text="${studyEthnicityDescription.type}"></td>
             <td th:switch="${studyEthnicityDescription.type}">
                 <p th:case="'initial'" th:text ="*{initialSampleSize}"></p>

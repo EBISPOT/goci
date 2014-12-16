@@ -21,8 +21,9 @@ public class Housekeeping {
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "STUDYID")
-    private String studyID;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "STUDYID")
+    private Study study;
 
     @Column(name = "STUDYSNPCHECKEDL1")
     private String studySnpCheckedLevelOne;
@@ -85,10 +86,11 @@ public class Housekeeping {
 
     // JPA no-args constructor
     public Housekeeping() {
+
     }
 
-    public Housekeeping(String studyID, String studySnpCheckedLevelOne, String studySnpCheckedLevelTwo, String publish, String pending, Date publishDate, String notes, String ethnicityCheckedLevelOne, String ethnicityCheckedLevelTwo, String sendToNCBI, Date sendToNCBIDate, String checkedNCBIError, String fileName, Curator curator, CurationStatus curationStatus, String ethnicityBackFilled, String recheckSNPs, Timestamp studyAddedDate, Timestamp lastUpdateDate) {
-        this.studyID = studyID;
+    public Housekeeping(Study study, String studySnpCheckedLevelOne, String studySnpCheckedLevelTwo, String publish, String pending, Date publishDate, String notes, String ethnicityCheckedLevelOne, String ethnicityCheckedLevelTwo, String sendToNCBI, Date sendToNCBIDate, String checkedNCBIError, String fileName, Curator curator, CurationStatus curationStatus, String ethnicityBackFilled, String recheckSNPs, Timestamp studyAddedDate, Timestamp lastUpdateDate) {
+        this.study = study;
         this.studySnpCheckedLevelOne = studySnpCheckedLevelOne;
         this.studySnpCheckedLevelTwo = studySnpCheckedLevelTwo;
         this.publish = publish;
@@ -109,6 +111,7 @@ public class Housekeeping {
         this.lastUpdateDate = lastUpdateDate;
     }
 
+
     public Long getId() {
         return id;
     }
@@ -117,12 +120,12 @@ public class Housekeeping {
         this.id = id;
     }
 
-    public String getStudyID() {
-        return studyID;
+    public Study getStudy() {
+        return study;
     }
 
-    public void setStudyID(String studyID) {
-        this.studyID = studyID;
+    public void setStudy(Study study) {
+        this.study = study;
     }
 
     public String getStudySnpCheckedLevelOne() {
@@ -273,7 +276,7 @@ public class Housekeeping {
     public String toString() {
         return "Housekeeping{" +
                 "id=" + id +
-                ", studyID='" + studyID + '\'' +
+                ", study=" + study +
                 ", studySnpCheckedLevelOne='" + studySnpCheckedLevelOne + '\'' +
                 ", studySnpCheckedLevelTwo='" + studySnpCheckedLevelTwo + '\'' +
                 ", publish='" + publish + '\'' +
