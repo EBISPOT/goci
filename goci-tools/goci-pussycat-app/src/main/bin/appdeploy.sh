@@ -12,5 +12,5 @@ done
 
 classpath="$base/config:$jars";
 
-$java $args -classpath $classpath uk.ac.ebi.fgpt.goci.pussycat.GOCIPussycatDriver $@ 2>&1;
+$java $args -classpath $classpath uk.ac.ebi.spot.goci.pussycat.GOCIPussycatDriver $@ 2>&1;
 exit $?;

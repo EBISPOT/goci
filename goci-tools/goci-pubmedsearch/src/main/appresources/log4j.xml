@@ -28,22 +28,22 @@
         <appender-ref ref="console" />
     </logger>
 
-    <logger name="uk.ac.ebi.fgpt.goci.service.GwasPubmedImporter" additivity="false">
+    <logger name="GwasPubmedImporter" additivity="false">
         <level value="DEBUG" />
         <appender-ref ref="console" />
     </logger>
 
-    <logger name="uk.ac.ebi.fgpt.goci.service.PropertyFilePubMedDispatcherService" additivity="false">
+    <logger name="PropertyFilePubMedDispatcherService" additivity="false">
         <level value="DEBUG" />
         <appender-ref ref="console" />
     </logger>
 
-    <logger name="uk.ac.ebi.fgpt.goci.model.DefaultGwasStudy" additivity="false">
+    <logger name="DefaultGwasStudy" additivity="false">
         <level value="DEBUG" />
         <appender-ref ref="console" />
     </logger>
 
-    <logger name="uk.ac.ebi.fgpt.goci.dao.JDBCGwasStudyDAO" additivity="false">
+    <logger name="JDBCGwasStudyDAO" additivity="false">
         <level value="DEBUG" />
         <appender-ref ref="console" />
     </logger>

@@ -12,5 +12,5 @@
 
   classpath="$jars:$base/config";
 
-  $java $args -classpath $classpath uk.ac.ebi.fgpt.goci.GOCIMappingsExtractorDriver $@ 2>&1;
+  $java $args -classpath $classpath uk.ac.ebi.spot.goci.GOCIMappingsExtractorDriver $@ 2>&1;
   exit $?;

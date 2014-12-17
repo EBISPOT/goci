@@ -8,7 +8,7 @@
     <context:property-placeholder location="classpath:dbcon.properties" />
 
     <!-- Study DAO -->
-    <bean name="studyDAO" class="uk.ac.ebi.fgpt.goci.dao.JDBCGwasStudyDAO">
+    <bean name="studyDAO" class="JDBCGwasStudyDAO">
         <property name="jdbcTemplate" ref="jdbcTemplate" />
     </bean>
 
@@ -18,7 +18,7 @@
     </bean>
 
     <!-- Study service -->
-    <bean name="searcher" class="uk.ac.ebi.fgpt.goci.service.GwasPubmedImporter">
+    <bean name="searcher" class="uk.ac.ebi.spot.goci.service.GwasPubmedImporter">
         <property name="studyDAO" ref="studyDAO" />
         <property name="dispatcherService" ref="dispatcherService" />
     </bean>
@@ -26,7 +26,7 @@
 
     <!-- Dispatcher service, should start on application startup -->
     <bean name="dispatcherService"
-          class="uk.ac.ebi.fgpt.goci.service.PropertyFilePubMedDispatcherService">
+          class="PropertyFilePubMedDispatcherService">
     </bean>
 
 

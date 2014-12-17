@@ -27,7 +27,7 @@ and their various default setups are documented below.
   instance and the cached files deployed with the web application
 
   SVG cache (only accessible from staging, olivers yard or power gate machines) located in:
-   /nfs/public/rw/fg/fgpt/goci-home/diagram/cache/
+   /nfs/public/rw/fg/spot/goci-home/diagram/cache/
 
  2. Test
  =======
@@ -58,7 +58,7 @@ and their various default setups are documented below.
             /gwas-diagram-data-2012-08.owl
 
    SVG cache (only accessible from staging machine) located in:
-    /nfs/public/rw/fg/fgpt/goci-home/diagram/cache/
+    /nfs/public/rw/fg/spot/goci-home/diagram/cache/
 
 
  3. Devtest

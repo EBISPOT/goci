@@ -15,8 +15,8 @@
     <!-- autowire this context only (just controllers, not services) based on annotations -->
     <context:annotation-config />
 
-    <!-- scan for controllers in uk.ac.ebi.fgpt.conan.web.controllers and autowires them -->
-    <context:component-scan base-package="uk.ac.ebi.fgpt.goci.pussycat.controller, uk.ac.ebi.fgpt.goci.status" />
+    <!-- scan for controllers in uk.ac.ebi.spot.conan.web.controllers and autowires them -->
+    <context:component-scan base-package="uk.ac.ebi.spot.goci.pussycat.controller, uk.ac.ebi.spot.goci.status" />
 
     <!-- drive MVC setup based on @Controller, @RequestMapping annotations etc -->
     <mvc:annotation-driven />

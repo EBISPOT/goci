@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>goci-interfaces</artifactId>
-        <groupId>uk.ac.ebi.fgpt</groupId>
+        <groupId>uk.ac.ebi.spot</groupId>
         <version>2.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>uk.ac.ebi.fgpt</groupId>
+    <groupId>uk.ac.ebi.spot</groupId>
     <artifactId>goci-pussycat</artifactId>
     <version>2.0-SNAPSHOT</version>
     <packaging>war</packaging>
@@ -79,39 +79,39 @@
     <dependencies>
         <!-- ontology utils -->
         <dependency>
-            <groupId>uk.ac.ebi.fgpt</groupId>
+            <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-ontology</artifactId>
             <version>2.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>uk.ac.ebi.fgpt</groupId>
+            <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-dao</artifactId>
             <version>2.0-SNAPSHOT</version>
         </dependency>
 
         <!-- goci datapublisher for obtaining catalog data -->
         <!--<dependency>-->
-            <!--<groupId>uk.ac.ebi.fgpt</groupId>-->
+            <!--<groupId>uk.ac.ebi.spot</groupId>-->
             <!--<artifactId>goci-datapublisher</artifactId>-->
             <!--<version>2.0-SNAPSHOT</version>-->
         <!--</dependency>-->
 
         <!-- renderlet and querying dependencies -->
         <dependency>
-            <groupId>uk.ac.ebi.fgpt</groupId>
+            <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-pussycat-api</artifactId>
             <version>2.0-SNAPSHOT</version>
         </dependency>
 
         <!--<dependency>-->
-            <!--<groupId>uk.ac.ebi.fgpt</groupId>-->
+            <!--<groupId>uk.ac.ebi.spot</groupId>-->
             <!--<artifactId>goci-owl-renderlets</artifactId>-->
             <!--<version>1.0.7-SNAPSHOT</version>-->
         <!--</dependency>-->
 
         <dependency>
-            <groupId>uk.ac.ebi.fgpt</groupId>
+            <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-sparql-renderlets</artifactId>
             <version>2.0-SNAPSHOT</version>
         </dependency>

@@ -12,5 +12,5 @@
 
     classpath="$jars:$base/config";
 
-    $java $args -classpath $classpath uk.ac.ebi.fgpt.goci.GOCIUriLabelCheckerDriver $@ 2>&1;
+    $java $args -classpath $classpath uk.ac.ebi.spot.goci.GOCIUriLabelCheckerDriver $@ 2>&1;
     exit $?;
