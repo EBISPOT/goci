@@ -59,7 +59,7 @@ public class StudyController {
 
         // TODO
         // DOES THE MODEL NOT ALREADY HAVE THE STUDY IN IT
-       // try model.mergeAttributes()
+        // try model.mergeAttributes()
         Study updatedStudy = studyRepository.save(study);
         return "redirect:/studies/" + updatedStudy.getId();
     }
@@ -77,9 +77,7 @@ public class StudyController {
     @Transactional
     @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String addStudy(@ModelAttribute Study study, Model model) {
-
-        Study newStudy = studyRepository.saveAndFlush(study);
-
+        Study newStudy = studyRepository.save(study);
         return "redirect:/studies/" + newStudy.getId();
     }
 
@@ -131,19 +129,36 @@ public class StudyController {
     // Generate page with housekeeping/curator information linked to a study
     @RequestMapping(value = "/{studyId}/housekeeping", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewStudyHousekeeping(Model model, @PathVariable String studyId) {
-        Housekeeping housekeeping = housekeepingRepository.findByStudy(Long.valueOf(studyId));
+
+        // Find study
         Study study = studyRepository.findOne(Long.valueOf(studyId).longValue());
-        model.addAttribute("studyHousekeeping", housekeeping);
+
+        // Determine if it has a housekeeping object
+        if (study.getHousekeeping() == null) {
+            study.setHousekeeping(new Housekeeping());
+        }
+
+        // Return the housekeeping object attached to study and return the study
+        model.addAttribute("studyHousekeeping", study.getHousekeeping());
         model.addAttribute("study", study);
         return "study_housekeeping";
+
+
     }
 
 
     // Update page with housekeeping/curator information linked to a study
     @RequestMapping(value = "/{studyId}/housekeeping", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping, Model model) {
-        Housekeeping updatedHousekeeping = housekeepingRepository.save(housekeeping);
-        return "redirect:/studies/" + updatedHousekeeping.getStudy().getId() + "/housekeeping";
+    public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping, @PathVariable String studyId) {
+        // Find study
+        Study study = studyRepository.findOne(Long.valueOf(studyId));
+
+        // Set study housekeeping
+        study.setHousekeeping(housekeeping);
+
+        // Save our study
+        Study updatedStudy = studyRepository.save(study);
+        return "redirect:/studies/" + updatedStudy.getId() + "/housekeeping";
     }
 
     /* Model Attributes */
@@ -155,7 +170,8 @@ public class StudyController {
 
     // EFO traits
     @ModelAttribute("efoTraits")
-    public List<EFOTrait> populateEFOTraits(Model model) {return efoTraitRepository.findAll();
+    public List<EFOTrait> populateEFOTraits(Model model) {
+        return efoTraitRepository.findAll();
     }
 
 }
