@@ -1,6 +1,8 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import oracle.sql.DATE;
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
@@ -69,9 +71,9 @@ public class Study {
     )
     private Collection<EFOTrait> efoTraits;
 
-
     // Associated Housekeeping attribute
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "study")
+    @JoinColumn(name = "HOUSEKEEPINGID")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Housekeeping housekeeping;
 
     // JPA no-args constructor

@@ -1,7 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -9,7 +8,7 @@ import java.util.Date;
  * Created by emma on 03/12/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Model representing housekeeping information stored about a study that is used during curation
  */
 @Entity
@@ -20,10 +19,6 @@ public class Housekeeping {
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "STUDYID")
-    private Study study;
 
     @Column(name = "STUDYSNPCHECKEDL1")
     private String studySnpCheckedLevelOne;
@@ -89,8 +84,8 @@ public class Housekeeping {
 
     }
 
-    public Housekeeping(Study study, String studySnpCheckedLevelOne, String studySnpCheckedLevelTwo, String publish, String pending, Date publishDate, String notes, String ethnicityCheckedLevelOne, String ethnicityCheckedLevelTwo, String sendToNCBI, Date sendToNCBIDate, String checkedNCBIError, String fileName, Curator curator, CurationStatus curationStatus, String ethnicityBackFilled, String recheckSNPs, Timestamp studyAddedDate, Timestamp lastUpdateDate) {
-        this.study = study;
+    public Housekeeping(String studySnpCheckedLevelOne, String studySnpCheckedLevelTwo, String publish, String pending, Date publishDate, String notes, String ethnicityCheckedLevelOne, String ethnicityCheckedLevelTwo, String sendToNCBI, Date sendToNCBIDate, String checkedNCBIError, String fileName, Curator curator, CurationStatus curationStatus, String ethnicityBackFilled, String recheckSNPs, Timestamp studyAddedDate, Timestamp lastUpdateDate) {
+
         this.studySnpCheckedLevelOne = studySnpCheckedLevelOne;
         this.studySnpCheckedLevelTwo = studySnpCheckedLevelTwo;
         this.publish = publish;
@@ -120,13 +115,6 @@ public class Housekeeping {
         this.id = id;
     }
 
-    public Study getStudy() {
-        return study;
-    }
-
-    public void setStudy(Study study) {
-        this.study = study;
-    }
 
     public String getStudySnpCheckedLevelOne() {
         return studySnpCheckedLevelOne;
@@ -276,7 +264,6 @@ public class Housekeeping {
     public String toString() {
         return "Housekeeping{" +
                 "id=" + id +
-                ", study=" + study +
                 ", studySnpCheckedLevelOne='" + studySnpCheckedLevelOne + '\'' +
                 ", studySnpCheckedLevelTwo='" + studySnpCheckedLevelTwo + '\'' +
                 ", publish='" + publish + '\'' +
