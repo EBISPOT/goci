@@ -19,7 +19,6 @@
 <!--TODO
 - REIMPLEMENTED LOGIN
 - COUNT
-- disease trait
 -->
 
 <nav role="navigation" class="navbar navbar-default">
@@ -51,18 +50,6 @@
     </div>
 </nav>
 
-<!--<div class="container-fluid">
-    <div class="row">
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="#">Study Details</a></li>
-            <li><a href="#">Association</a></li>
-            <li><a href="#">Sample Information</a></li>
-            <li><a href="#">Housekeeping</a></li>
-        </ul>
-        <br/>
-    </div>
-</div>-->
-
 <!--Pubmed import button-->
 <!--<div class="container-fluid">
     <div class="row">
@@ -86,6 +73,16 @@
         <div class="col-md-8">
             <form id="add-study" class="form-horizontal" method="post" th:action="@{/studies/new}"
                   th:object="${study}" name="addStudyForm">
+
+                <div class="form-group">
+                    <label for="pubmedID" class="control-label col-md-2">Pubmed</label>
+
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="pubmedID" placeholder="Pubmed ID"
+                               th:field="*{pubmedID}"/>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label for="author" class="control-label col-md-2">Author</label>
 
@@ -102,6 +99,7 @@
                                th:field="*{title}"/>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label for="publication" class="control-label col-md-2">Publication</label>
 
@@ -110,62 +108,18 @@
                                placeholder="Publishing journal name" th:field="*{publication}"/>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="pubmedID" class="control-label col-md-2">Pubmed</label>
 
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="pubmedID" placeholder="Pubmed ID"
-                               th:field="*{pubmedID}"/>
-                    </div>
-                </div>
 
                 <div class="form-group">
                     <label for="studyDate" class="control-label col-md-2">Study Date</label>
 
                     <div class="col-md-10">
-                        <input type="date" class="form-control" id="studyDate" placeholder="YYYY-MM-DD"
+                        <input type="text" class="form-control" id="studyDate" placeholder="YYYY-MM-DD"
                                th:field="*{studyDate}"/>
                     </div>
 
                 </div>
 
-                <div class="form-group">
-                    <label for="platform" class="control-label col-md-2">Platform</label>
-
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="platform" placeholder="Platform"
-                               th:field="*{platform}"/>
-                    </div>
-                </div>
-               <!-- <div class="form-group">
-                    <label for="inputDiseaseTrait" class="control-label col-md-2">Disease Trait</label>
-
-                    <div class="col-md-10">
-
-
-                        <select th:field="*{diseaseTrait}" id="inputDiseaseTrait">
-                            <option th:each="diseaseTrait : ${diseaseTraits}"
-                                    th:value="${diseaseTrait}"
-                                    th:text="${diseaseTrait.trait}"></option>
-                        </select>
-
-                    </div>
-                </div>-->
-
-                <div class="form-group">
-                    <label for="cnv" class="control-label col-md-2">CNV</label>
-                    <input id="cnv" type="checkbox" th:field="*{cnv}" th:value="'1'"/>
-                </div>
-
-                <div class="form-group">
-                    <label for="gxe" class="control-label col-md-2">GxE</label>
-                    <input id="gxe" type="checkbox" th:field="*{gxe}" th:value="'1'"/>
-                </div>
-
-                <div class="form-group">
-                    <label for="gxg" class="control-label col-md-2">GxG</label>
-                    <input id="gxg" type="checkbox" th:field="*{gxg}" th:value="'1'"/>
-                </div>
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">

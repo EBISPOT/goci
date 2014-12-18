@@ -49,9 +49,9 @@
     <div class="row">
         <ul class="nav nav-tabs">
             <li><a th:href="@{/studies/{studyId}(studyId=*{id})}">Study Details</a></li>
-            <li><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}">Association</a></li>
             <li><a th:href="@{/studies/{studyId}/sampledescription(studyId=*{id})}">Sample Information</a></li>
-            <li class="active"><a href="#">Housekeeping</a></li>
+            <li><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}">SNP Associations</a></li>
+            <li class="active"><a href="#">Curator Information</a></li>
 
         </ul>
     </div>
@@ -78,11 +78,11 @@
                     <input id="publishDate" type="text" th:field="*{publishDate}"/>
                 </div>
 
-                <div class="form-group">
+    <!--         <div class="form-group">
                     <label for="sendToNCBIDate" class="control-label col-md-2">Send to NCBI Date</label>
                     <input id="sendToNCBIDate" type="text" th:field="*{sendToNCBIDate}"/>
                 </div>
-
+-->
                 <div class="form-group">
                     <label for="studyAddedDate" class="control-label col-md-2">Study Added Date</label>
                     <input id="studyAddedDate" type="text" th:field="*{studyAddedDate}"/>

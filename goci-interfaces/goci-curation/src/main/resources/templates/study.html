@@ -49,14 +49,15 @@
     <div class="row">
         <ul class="nav nav-tabs">
             <li class="active"><a href="#">Study Details</a></li>
-            <li><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}">Association</a></li>
             <li><a th:href="@{/studies/{studyId}/sampledescription(studyId=*{id})}">Sample Information</a></li>
-            <li><a th:href="@{/studies/{studyId}/housekeeping(studyId=*{id})}">Housekeeping</a></li>
+            <li><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}">SNP Associations</a></li>
+            <li><a th:href="@{/studies/{studyId}/housekeeping(studyId=*{id})}">Curator Information</a></li>
         </ul>
     </div>
 </div>
 
 <br/>
+
 
 <div class="container-fluid">
     <div class="row">
@@ -64,6 +65,8 @@
             <form id="add-study" class="form-horizontal" method="post" th:object="${study}" name="editStudyForm"
                   th:action="@{/studies/{studyId}(studyId=*{id})}">
 
+
+                <!--Hidden fields-->
                 <div class="form-group">
                     <label for="id" class="control-label col-md-2"></label>
 
@@ -71,81 +74,101 @@
                         <input type="hidden" th:field="*{id}" class="form-control" id="id"/>
                     </div>
                 </div>
+
+
                 <div class="form-group">
-                    <label for="inputAuthor" class="control-label col-md-2">Author</label>
+                    <label for="initialSampleSize" class="control-label col-md-2"></label>
 
                     <div class="col-md-10">
-                        <input type="text" th:field="*{author}" class="form-control" id="inputAuthor"/>
+                        <input type="hidden" th:field="*{initialSampleSize}" class="form-control"
+                               id="initialSampleSize"/>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="replicateSampleSize" class="control-label col-md-2"></label>
+
+                    <div class="col-md-10">
+                        <input type="hidden" th:field="*{replicateSampleSize}" class="form-control"
+                               id="replicateSampleSize"/>
+                    </div>
+                </div>
+
+
+                <!--Visible fields-->
+
+                <div class="form-group">
+                    <label for="author" class="control-label col-md-2">Author</label>
+
+                    <div class="col-md-10">
+                        <input type="text" th:field="*{author}" class="form-control" id="author"/>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="inputTitle" class="control-label col-md-2">Title</label>
+                    <label for="title" class="control-label col-md-2">Title</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="inputTitle" th:field="*{title}"/>
+                        <input type="text" class="form-control" id="title" th:field="*{title}"/>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputPublication" class="control-label col-md-2">Publication</label>
+                    <label for="publication" class="control-label col-md-2">Publication</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="inputPublication"
+                        <input type="text" class="form-control" id="publication"
                                th:field="*{publication}"/>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputPubmed" class="control-label col-md-2">Pubmed</label>
+                    <label for="pubmed" class="control-label col-md-2">Pubmed</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="inputPubmed" th:field="*{pubmedID}"/>
+                        <input type="text" class="form-control" id="pubmed" th:field="*{pubmedID}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="studyDate" class="control-label col-md-2">Study Date</label>
+
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="studyDate" th:field="*{studyDate}"  />
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="inputStudyDate" class="control-label col-md-2">Study Date</label>
+                    <label for="platform" class="control-label col-md-2">Platform</label>
 
                     <div class="col-md-10">
-                        <input type="date" class="form-control" id="inputStudyDate" th:field="*{studyDate}"/>
+                        <input type="text" class="form-control" id="platform" th:field="*{platform}"/>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="inputPlatform" class="control-label col-md-2">Platform</label>
+                    <label for="diseaseTrait" class="control-label col-md-2">Disease Trait:</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="inputPlatform" th:field="*{platform}"/>
+                        <select th:field="*{diseaseTrait}" id="diseaseTrait">
+                            <option th:each="diseaseTrait : ${diseaseTraits}"
+                                    th:value="${diseaseTrait.id}"
+                                    th:text="${diseaseTrait.trait}"></option>
+                        </select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="inputDiseaseTrait" class="control-label col-md-2">Disease Trait</label>
 
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="inputDiseaseTrait"
-                               th:field="*{diseaseTrait.Trait}"/>
-                    </div>
-                </div>
 
                 <div class="form-group">
-                    <label for="inputEFOTrait" class="control-label col-md-2">EFO Trait</label>
+                    <label for="EFOTrait" class="control-label col-md-2">EFO Trait:</label>
 
                     <div class="col-md-10">
-                        <table class="table table-bordered" id="inputEFOTrait">
-                            <thead>
-                            <tr>
-                                <th>Trait Name</th>
-                                <th>URI</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="efoTrait : *{efoTraits}">
-                                <td th:text="${efoTrait.trait}"></td>
-                                <td th:text="${efoTrait.uri}"></td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <select th:field="*{efoTraits}" id="efoTrait">
+                            <option th:each="efoTrait : ${efoTraits}"
+                                    th:value="${efoTrait.id}"
+                                    th:text="${efoTrait.trait}"></option>
+                        </select>
                     </div>
                 </div>
+
 
 
                 <div class="form-group">
