@@ -1,18 +1,17 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import oracle.sql.DATE;
-import org.hibernate.annotations.Cascade;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.sql.Date;
 import java.util.Collection;
-import java.util.Date;
+
+
 
 /**
  * Created by emma on 20/11/14.
- * @author emma
  *
- * Model of a GWAS study
+ * @author emma
+ *         <p>
+ *         Model of a GWAS study
  */
 
 @Entity
@@ -27,7 +26,6 @@ public class Study {
     @Column(name = "AUTHOR")
     private String author;
 
-    @Temporal(TemporalType.DATE)
     @Column(name = "STUDYDATE")
     private Date studyDate;
 
@@ -63,7 +61,7 @@ public class Study {
     private DiseaseTrait diseaseTrait;
 
     // Associated EFO trait
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "GWASEFOSTUDYXREF",
             joinColumns = {@JoinColumn(name = "STUDYID", referencedColumnName = "ID")},
