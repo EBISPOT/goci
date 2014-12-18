@@ -1,10 +1,32 @@
 <!DOCTYPE html>
-<html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="content-type" content="text/html"/>
+    <title>GWAS Trait Associations</title>
 </head>
+
 <body>
+
+<h1>GWAS Trait Associations</h1>
+
+<!--<div th:each="gta : ${traits}">-->
+    <!--<div>-->
+        <!--<b th:text="${gta.id}">ID</b>-->
+        <!--&lt;!&ndash;<a href="/studies.html" th:href="@{/studies/{pubmedid}.html(pubmedid=${gta.study.pubmedId})}"><span th:text="'View Study '+${gta.study.pubmedId}">View Study</span></a>&ndash;&gt;-->
+        <!--&lt;!&ndash;<a href="/snps.html" th:href="@{/snps/{rsId}.html(rsId=${gta.snp.rsId})}"><span th:text="'View SNP '+${gta.snp.rsId}">View SNP</span></a>&ndash;&gt;-->
+    <!--</div>-->
+<!--</div>-->
+
+<div th:each="gt : ${traits}">
+    <div>
+        <b th:text="${gt.id}">ID</b>
+        <span th:text="${gt.trait}">Trait</span>
+    </div>
+</div>
+
 
 </body>
 </html>

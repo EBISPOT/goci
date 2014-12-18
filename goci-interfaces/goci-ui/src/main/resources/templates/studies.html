@@ -1,10 +1,33 @@
 <!DOCTYPE html>
-<html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="content-type" content="text/html"/>
+    <title>GWAS Studies</title>
 </head>
+
+
 <body>
+
+<h1>GWAS Studies Foobar Test</h1>
+
+<!--<div th:each="gs : ${studies}">-->
+    <!--<div>-->
+        <!--<b th:text="${gs.id}">ID</b>-->
+        <!--<span th:text="${gs.pubmedId}">PubMed ID</span>-->
+    <!--</div>-->
+<!--</div>-->
+
+<div th:each="gs : ${studies}">
+    <div>
+        <b th:text="${gs.id}">ID</b>
+        <span th:text="${gs.pubmedId}">PubMed ID</span>
+        <span th:text="${gs.trait}">Trait</span>
+    </div>
+</div>
+
 
 </body>
 </html>
