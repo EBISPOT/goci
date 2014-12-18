@@ -90,7 +90,15 @@ public class StudyController {
     // Edit an existing study
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateStudy(@ModelAttribute Study study, Model model) {
+    public String updateStudy(@ModelAttribute Study study, Model model,  @PathVariable String studyId) {
+
+       // Use id in URL to get study and then its associated housekeeping
+        Study existingStudy = studyRepository.findOne(Long.valueOf(studyId));
+        Housekeeping existingHousekeeping = existingStudy.getHousekeeping();
+
+        // Set the housekeeping of the study returned to one already linked to it in database
+        // Need to do this as we dont return housekeeping in form
+        study.setHousekeeping(existingHousekeeping);
 
         // Saves the new information returned from form
         Study updatedStudy = studyRepository.save(study);
@@ -148,7 +156,7 @@ public class StudyController {
 
     // Update page with housekeeping/curator information linked to a study
     @RequestMapping(value = "/{studyId}/housekeeping", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping, @PathVariable String studyId, SessionStatus status) {
+    public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping, @PathVariable String studyId) {
 
         // Find study
         Study study = studyRepository.findOne(Long.valueOf(studyId));

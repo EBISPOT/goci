@@ -1,8 +1,9 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.Date;
+
 
 /**
  * Created by emma on 03/12/14.
@@ -35,21 +36,19 @@ public class Housekeeping {
     @Column(name = "ETHNICITYBACKFILLED")
     private String ethnicityBackFilled;
 
-    @Column(name = "CHECKEDNCBIERROR")
+    @Column(name = "CHECKEDNCBIERROR", nullable = true)
     private String checkedNCBIError;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "PUBLISHDATE")
+    @Column(name = "PUBLISHDATE", nullable = true)
     private Date publishDate;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "SENDTONCBIDATE")
+    @Column(name = "SENDTONCBIDATE", nullable = true)
     private Date sendToNCBIDate;
 
-    @Column(name = "STUDYADDEDDATE")
+    @Column(name = "STUDYADDEDDATE", nullable = true)
     private Timestamp studyAddedDate;
 
-    @Column(name = "LASTUPDATEDATE")
+    @Column(name = "LASTUPDATEDATE", nullable = true)
     private Timestamp lastUpdateDate;
 
     @Column(name = "FILENAM")
