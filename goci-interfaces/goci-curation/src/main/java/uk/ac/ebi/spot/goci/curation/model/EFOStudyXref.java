@@ -16,7 +16,6 @@ public class EFOStudyXref {
 
     @Id
     @GeneratedValue
-    @NotNull
     @Column(name = "ID")
     private Long id;
 
