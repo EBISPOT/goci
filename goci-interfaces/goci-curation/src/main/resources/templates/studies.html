@@ -70,8 +70,8 @@
                     class="caret"></span></button>
             <ul class="dropdown-menu">
                 <li><a th:href="@{/studies}">Show All Studies</a></li>
-             <!--   <li><a th:href="@{/studies(pending=1)}">Show Pending studies</a></li>
-                <li><a th:href="@{/studies(publish=0)}">Show Unpublished Only</a></li>-->
+                <!--   <li><a th:href="@{/studies(pending=1)}">Show Pending studies</a></li>
+                   <li><a th:href="@{/studies(publish=0)}">Show Unpublished Only</a></li>-->
             </ul>
         </div>
 
@@ -84,6 +84,7 @@
     <div class="row">
 
         <div class="col-md-12">
+            <div id="filter-bar"></div>
             <table id="mainTable" class="table table-hover table-bordered" data-toggle="table"
                    data-show-columns="true"
                    data-search="true"
@@ -149,6 +150,7 @@
 
 <script src="/js/bootstrap-table.js"></script>
 <script src="/js/bootstrap-table-export.js"></script>
+
 
 <!-- plugins -->
 <script src="/js/tableExport.js"></script>
