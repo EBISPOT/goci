@@ -57,33 +57,6 @@
     </div>
 </div>
 
-
-<div class="container" th:object="${studyHousekeeping}">
-    <table id="mainTable" class="table table-hover table-bordered">
-        <caption>House Keeping Information</caption>
-        <thead>
-        <tr>
-            <th>Study Added Date</th>
-            <th>Last Update Date</th>
-            <th>Send To NCBI Date</th>
-            <th>Publish Date</th>
-            <th>Notes</th>
-            <th>File</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td th:text="*{studyAddedDate != null } ? *{studyAddedDate} : 'null'"></td>
-            <td th:text="*{lastUpdateDate != null} ? *{lastUpdateDate} : 'null'"></td>
-            <td th:text="*{sendToNCBIDate != null} ? *{sendToNCBIDate} : 'null'"></td>
-            <td th:text="*{publishDate != null} ? *{publishDate}: 'null'"></td>
-            <td th:text="*{notes != null} ? *{notes} : 'null'"></td>
-            <td th:text="*{fileName != null } ? *{fileName}: 'null'"></td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-
 <br/>
 
 <div class="container-fluid">
@@ -92,10 +65,43 @@
             <form id="add-study" class="form-horizontal" method="post" th:object="${studyHousekeeping}"
                   name="studyHousekeeping">
 
+                <!--Form has to send all entity attributes back, even if we do not want users to edit
+                Thus some fields are hidden -->
+
+                <div class="form-group">
+                    <label for="id" class="control-label col-md-2"></label>
+                    <input id="id" type="hidden" th:field="*{id}"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="publishDate" class="control-label col-md-2">Publish Date</label>
+                    <input id="publishDate" type="text" th:field="*{publishDate}"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="sendToNCBIDate" class="control-label col-md-2">Send to NCBI Date</label>
+                    <input id="sendToNCBIDate" type="text" th:field="*{sendToNCBIDate}"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="studyAddedDate" class="control-label col-md-2">Study Added Date</label>
+                    <input id="studyAddedDate" type="text" th:field="*{studyAddedDate}"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="lastUpdateDate" class="control-label col-md-2">Last Update Date</label>
+                    <input id="lastUpdateDate" type="text" th:field="*{lastUpdateDate}"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="fileName" class="control-label col-md-2">File name</label>
+                    <input id="fileName" class="col-md-8" type="text" th:field="*{fileName}"/>
+                </div>
+
 
                 <div class="form-group">
                     <label for="notes" class="control-label col-md-2">Notes</label>
-                    <input id="notes" type="text" th:field="*{notes}"/>
+                    <input class="col-md-10" id="notes" type="text" th:field="*{notes}"/>
                 </div>
 
 
@@ -135,45 +141,40 @@
                            th:value="'1'"/>
                 </div>
 
-                <div class="form-group">
-                    <label for="sendToNCBI" class="control-label col-md-2">Ready to Send to NCBI?:</label>
-                    <input id="sendToNCBI" type="checkbox" th:field="*{sendToNCBI}" th:value="'1'"/>
-                </div>
-
-                <div class="form-group">
-                    <label for="publish" class="control-label col-md-2">Ready to Publish?:</label>
-                    <input id="publish" type="checkbox" th:field="*{publish}" th:value="'1'"/>
-                </div>
-
-                <div class="form-group">
-                    <label for="pending" class="control-label col-md-2">Pending?:</label>
-                    <input id="pending" type="checkbox" th:field="*{pending}" th:value="'1'"/>
-                </div>
 
                 <div class="form-group">
                     <label for="checkedNCBIError" class="control-label col-md-2">Checked NCBI Error:</label>
                     <input id="checkedNCBIError" type="checkbox" th:field="*{checkedNCBIError}" th:value="'1'"/>
                 </div>
 
-                <div class="form-group">
-                    <label for="recheckSNPs" class="control-label col-md-2">Recheck SNPs?:</label>
-                    <input id="recheckSNPs" type="checkbox" th:field="*{recheckSNPs}" th:value="'1'"/>
-                </div>
 
-        <!--        <div class="form-group">
+                <!--Dropdowns-->
+
+                <div class="form-group">
                     <label for="curator" class="control-label col-md-2">Curator:</label>
-                    <input id="curator" type="text" th:field="*{curator.lastName}"/>
+
+                    <select th:field="*{curator}" id="curator">
+                        <option th:each="curator : ${curators}"
+                                th:value="${curator.id}"
+                                th:text="${curator.lastName}"></option>
+                    </select>
                 </div>
 
                 <div class="form-group">
                     <label for="curationStatus" class="control-label col-md-2">Curator:</label>
-                    <input id="curationStatus" type="text" th:field="*{curationStatus.status}"/>
-                </div>-->
 
+                    <select th:field="*{curationStatus}" id="curationStatus">
+                        <option th:each="curationStatus : ${curationstatuses}"
+                                th:value="${curationStatus.id}"
+                                th:text="${curationStatus.status}"></option>
+                    </select>
 
+                </div>
+
+                <!--Button -->
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <button type="Save" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </div>
 

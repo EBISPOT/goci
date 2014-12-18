@@ -1,9 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -19,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "GWASCURATORS")
 public class Curator {
     @Id
-    @NotNull
+    @GeneratedValue
     @Column(name = "ID")
     private Long id;
 

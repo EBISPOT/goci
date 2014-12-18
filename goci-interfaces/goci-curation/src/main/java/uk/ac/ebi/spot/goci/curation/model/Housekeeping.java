@@ -26,34 +26,31 @@ public class Housekeeping {
     @Column(name = "STUDYSNPCHECKEDL2")
     private String studySnpCheckedLevelTwo;
 
-    @Column(name = "PUBLISH")
-    private String publish;
-
-    @Column(name = "PENDING")
-    private String pending;
-
-    @Temporal(TemporalType.DATE)
-    @Column(name = "PUBLISHDATE")
-    private Date publishDate;
-
-    @Column(name = "NOTES")
-    private String notes;
-
     @Column(name = "ETHNICITYCHECKEDL1")
     private String ethnicityCheckedLevelOne;
 
     @Column(name = "ETHNICITYCHECKEDL2")
     private String ethnicityCheckedLevelTwo;
 
-    @Column(name = "SENDTONCBI")
-    private String sendToNCBI;
+    @Column(name = "ETHNICITYBACKFILLED")
+    private String ethnicityBackFilled;
+
+    @Column(name = "CHECKEDNCBIERROR")
+    private String checkedNCBIError;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "PUBLISHDATE")
+    private Date publishDate;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "SENDTONCBIDATE")
     private Date sendToNCBIDate;
 
-    @Column(name = "CHECKEDNCBIERROR")
-    private String checkedNCBIError;
+    @Column(name = "STUDYADDEDDATE")
+    private Timestamp studyAddedDate;
+
+    @Column(name = "LASTUPDATEDATE")
+    private Timestamp lastUpdateDate;
 
     @Column(name = "FILENAM")
     private String fileName;
@@ -66,46 +63,30 @@ public class Housekeeping {
     @JoinColumn(name = "CURATORSTATUSID")
     private CurationStatus curationStatus;
 
-    @Column(name = "ETHNICITYBACKFILLED")
-    private String ethnicityBackFilled;
-
-    @Column(name = "RECHECKSNPS")
-    private String recheckSNPs;
-
-    @Column(name = "STUDYADDEDDATE")
-    private Timestamp studyAddedDate;
-
-    @Column(name = "LASTUPDATEDATE")
-    private Timestamp lastUpdateDate;
+    @Column(name = "NOTES")
+    private String notes;
 
 
     // JPA no-args constructor
     public Housekeeping() {
-
     }
 
-    public Housekeeping(String studySnpCheckedLevelOne, String studySnpCheckedLevelTwo, String publish, String pending, Date publishDate, String notes, String ethnicityCheckedLevelOne, String ethnicityCheckedLevelTwo, String sendToNCBI, Date sendToNCBIDate, String checkedNCBIError, String fileName, Curator curator, CurationStatus curationStatus, String ethnicityBackFilled, String recheckSNPs, Timestamp studyAddedDate, Timestamp lastUpdateDate) {
-
+    public Housekeeping(String studySnpCheckedLevelOne, String studySnpCheckedLevelTwo, String ethnicityCheckedLevelOne, String ethnicityCheckedLevelTwo, String ethnicityBackFilled, String checkedNCBIError, Date publishDate, Date sendToNCBIDate, Timestamp studyAddedDate, Timestamp lastUpdateDate, String fileName, Curator curator, CurationStatus curationStatus, String notes) {
         this.studySnpCheckedLevelOne = studySnpCheckedLevelOne;
         this.studySnpCheckedLevelTwo = studySnpCheckedLevelTwo;
-        this.publish = publish;
-        this.pending = pending;
-        this.publishDate = publishDate;
-        this.notes = notes;
         this.ethnicityCheckedLevelOne = ethnicityCheckedLevelOne;
         this.ethnicityCheckedLevelTwo = ethnicityCheckedLevelTwo;
-        this.sendToNCBI = sendToNCBI;
-        this.sendToNCBIDate = sendToNCBIDate;
+        this.ethnicityBackFilled = ethnicityBackFilled;
         this.checkedNCBIError = checkedNCBIError;
+        this.publishDate = publishDate;
+        this.sendToNCBIDate = sendToNCBIDate;
+        this.studyAddedDate = studyAddedDate;
+        this.lastUpdateDate = lastUpdateDate;
         this.fileName = fileName;
         this.curator = curator;
         this.curationStatus = curationStatus;
-        this.ethnicityBackFilled = ethnicityBackFilled;
-        this.recheckSNPs = recheckSNPs;
-        this.studyAddedDate = studyAddedDate;
-        this.lastUpdateDate = lastUpdateDate;
+        this.notes = notes;
     }
-
 
     public Long getId() {
         return id;
@@ -114,7 +95,6 @@ public class Housekeeping {
     public void setId(Long id) {
         this.id = id;
     }
-
 
     public String getStudySnpCheckedLevelOne() {
         return studySnpCheckedLevelOne;
@@ -130,38 +110,6 @@ public class Housekeeping {
 
     public void setStudySnpCheckedLevelTwo(String studySnpCheckedLevelTwo) {
         this.studySnpCheckedLevelTwo = studySnpCheckedLevelTwo;
-    }
-
-    public String getPublish() {
-        return publish;
-    }
-
-    public void setPublish(String publish) {
-        this.publish = publish;
-    }
-
-    public String getPending() {
-        return pending;
-    }
-
-    public void setPending(String pending) {
-        this.pending = pending;
-    }
-
-    public Date getPublishDate() {
-        return publishDate;
-    }
-
-    public void setPublishDate(Date publishDate) {
-        this.publishDate = publishDate;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
     }
 
     public String getEthnicityCheckedLevelOne() {
@@ -180,12 +128,28 @@ public class Housekeeping {
         this.ethnicityCheckedLevelTwo = ethnicityCheckedLevelTwo;
     }
 
-    public String getSendToNCBI() {
-        return sendToNCBI;
+    public String getEthnicityBackFilled() {
+        return ethnicityBackFilled;
     }
 
-    public void setSendToNCBI(String sendToNCBI) {
-        this.sendToNCBI = sendToNCBI;
+    public void setEthnicityBackFilled(String ethnicityBackFilled) {
+        this.ethnicityBackFilled = ethnicityBackFilled;
+    }
+
+    public String getCheckedNCBIError() {
+        return checkedNCBIError;
+    }
+
+    public void setCheckedNCBIError(String checkedNCBIError) {
+        this.checkedNCBIError = checkedNCBIError;
+    }
+
+    public Date getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(Date publishDate) {
+        this.publishDate = publishDate;
     }
 
     public Date getSendToNCBIDate() {
@@ -196,12 +160,20 @@ public class Housekeeping {
         this.sendToNCBIDate = sendToNCBIDate;
     }
 
-    public String getCheckedNCBIError() {
-        return checkedNCBIError;
+    public Timestamp getStudyAddedDate() {
+        return studyAddedDate;
     }
 
-    public void setCheckedNCBIError(String checkedNCBIError) {
-        this.checkedNCBIError = checkedNCBIError;
+    public void setStudyAddedDate(Timestamp studyAddedDate) {
+        this.studyAddedDate = studyAddedDate;
+    }
+
+    public Timestamp getLastUpdateDate() {
+        return lastUpdateDate;
+    }
+
+    public void setLastUpdateDate(Timestamp lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
     }
 
     public String getFileName() {
@@ -228,36 +200,12 @@ public class Housekeeping {
         this.curationStatus = curationStatus;
     }
 
-    public String getEthnicityBackFilled() {
-        return ethnicityBackFilled;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setEthnicityBackFilled(String ethnicityBackFilled) {
-        this.ethnicityBackFilled = ethnicityBackFilled;
-    }
-
-    public String getRecheckSNPs() {
-        return recheckSNPs;
-    }
-
-    public void setRecheckSNPs(String recheckSNPs) {
-        this.recheckSNPs = recheckSNPs;
-    }
-
-    public Timestamp getStudyAddedDate() {
-        return studyAddedDate;
-    }
-
-    public void setStudyAddedDate(Timestamp studyAddedDate) {
-        this.studyAddedDate = studyAddedDate;
-    }
-
-    public Timestamp getLastUpdateDate() {
-        return lastUpdateDate;
-    }
-
-    public void setLastUpdateDate(Timestamp lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     @Override
@@ -266,22 +214,18 @@ public class Housekeeping {
                 "id=" + id +
                 ", studySnpCheckedLevelOne='" + studySnpCheckedLevelOne + '\'' +
                 ", studySnpCheckedLevelTwo='" + studySnpCheckedLevelTwo + '\'' +
-                ", publish='" + publish + '\'' +
-                ", pending='" + pending + '\'' +
-                ", publishDate=" + publishDate +
-                ", notes='" + notes + '\'' +
                 ", ethnicityCheckedLevelOne='" + ethnicityCheckedLevelOne + '\'' +
                 ", ethnicityCheckedLevelTwo='" + ethnicityCheckedLevelTwo + '\'' +
-                ", sendToNCBI='" + sendToNCBI + '\'' +
-                ", sendToNCBIDate=" + sendToNCBIDate +
+                ", ethnicityBackFilled='" + ethnicityBackFilled + '\'' +
                 ", checkedNCBIError='" + checkedNCBIError + '\'' +
+                ", publishDate=" + publishDate +
+                ", sendToNCBIDate=" + sendToNCBIDate +
+                ", studyAddedDate=" + studyAddedDate +
+                ", lastUpdateDate=" + lastUpdateDate +
                 ", fileName='" + fileName + '\'' +
                 ", curator=" + curator +
                 ", curationStatus=" + curationStatus +
-                ", ethnicityBackFilled='" + ethnicityBackFilled + '\'' +
-                ", recheckSNPs='" + recheckSNPs + '\'' +
-                ", studyAddedDate=" + studyAddedDate +
-                ", lastUpdateDate=" + lastUpdateDate +
+                ", notes='" + notes + '\'' +
                 '}';
     }
 }

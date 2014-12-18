@@ -70,8 +70,8 @@
                     class="caret"></span></button>
             <ul class="dropdown-menu">
                 <li><a th:href="@{/studies}">Show All Studies</a></li>
-                <li><a th:href="@{/studies(pending=1)}">Show Pending studies</a></li>
-                <li><a th:href="@{/studies(publish=0)}">Show Unpublished Only</a></li>
+             <!--   <li><a th:href="@{/studies(pending=1)}">Show Pending studies</a></li>
+                <li><a th:href="@{/studies(publish=0)}">Show Unpublished Only</a></li>-->
             </ul>
         </div>
 
@@ -101,9 +101,6 @@
                     <th data-field="pubmedid">Pubmed ID</th>
                     <th data-field="publication">Publication</th>
                     <th data-field="diseasetrait">Disease/Trait</th>
-                    <th data-field="platform">Platform</th>
-                    <th data-field="pending">Pending</th>
-                    <th data-field="published">Published</th>
                     <th data-field="curator">Curator</th>
                     <th data-field="curationstatus">Curator Status</th>
                     <th data-field="notes">Notes</th>
@@ -124,10 +121,6 @@
 
                     <!--If study has associated disease trait return traits name-->
                     <td th:text="${study.diseaseTrait != null} ? ${study.diseaseTrait.trait} : 'null'"></td>
-                    <td th:text="${study.platform} ?: 'null'"></td>
-
-                    <td th:text="${study.housekeeping != null } ? ${study.housekeeping.pending} : 'null'"></td>
-                    <td th:text="${study.housekeeping != null } ? ${study.housekeeping.publish} : 'null'"></td>
 
                     <!--If study has associated housekeeping object then get the following attributes -->
 

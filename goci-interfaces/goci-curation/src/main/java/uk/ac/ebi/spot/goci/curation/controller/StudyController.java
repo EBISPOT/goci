@@ -3,9 +3,12 @@ package uk.ac.ebi.spot.goci.curation.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.support.SessionStatus;
 import uk.ac.ebi.spot.goci.curation.model.*;
 import uk.ac.ebi.spot.goci.curation.repository.*;
 
@@ -33,15 +36,47 @@ public class StudyController {
     private HousekeepingRepository housekeepingRepository;
     private DiseaseTraitRepository diseaseTraitRepository;
     private EFOTraitRepository efoTraitRepository;
+    private CuratorRepository curatorRepository;
+    private CurationStatusRepository curationStatusRepository;
 
     @Autowired
-    public StudyController(StudyRepository studyRepository, AssociationRepository associationRepository, EthnicityRepository ethnicityRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EFOTraitRepository efoTraitRepository) {
+    public StudyController(StudyRepository studyRepository, AssociationRepository associationRepository, EthnicityRepository ethnicityRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EFOTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository) {
         this.studyRepository = studyRepository;
         this.associationRepository = associationRepository;
         this.ethnicityRepository = ethnicityRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
         this.efoTraitRepository = efoTraitRepository;
+        this.curatorRepository = curatorRepository;
+        this.curationStatusRepository = curationStatusRepository;
+    }
+
+
+
+
+
+    // Return all studies and filter
+    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE)
+    public String searchStudies(Model model) {
+        model.addAttribute("studies", studyRepository.findAll());
+        return "studies";
+    }
+
+
+    // Add a new study
+    // Directs user to an empty form to which they can create a new study
+    @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String newStudyForm(Model model) {
+        model.addAttribute("study", new Study());
+        return "add_study";
+    }
+
+    // Save newly added study details
+    // @ModelAttribute is a reference to the object holding the data entered in the form
+    @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String addStudy(@ModelAttribute Study study, Model model) {
+        Study newStudy = studyRepository.save(study);
+        return "redirect:/studies/" + newStudy.getId();
     }
 
     // View a study
@@ -57,49 +92,13 @@ public class StudyController {
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String updateStudy(@ModelAttribute Study study, Model model) {
 
-        // TODO
-        // DOES THE MODEL NOT ALREADY HAVE THE STUDY IN IT
-        // try model.mergeAttributes()
+        // Saves the new information returned from form
         Study updatedStudy = studyRepository.save(study);
         return "redirect:/studies/" + updatedStudy.getId();
     }
 
-    // Add a new study
-    // Directs user to an empty form to which they can create a new study
-    @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String newStudyForm(Model model) {
-        model.addAttribute("study", new Study());
-        return "add_study";
-    }
 
-    // Save newly added study details
-    // @ModelAttribute is a reference to the object holding the data entered in the form
-    @Transactional
-    @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String addStudy(@ModelAttribute Study study, Model model) {
-        Study newStudy = studyRepository.save(study);
-        return "redirect:/studies/" + newStudy.getId();
-    }
-
-
-    // Return all studies and filter
-    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE)
-    public String searchStudies(Model model, @RequestParam(required = false) String pending,
-                                @RequestParam(required = false) String publish) {
-
-        if (pending != null) {
-            model.addAttribute("studies", studyRepository.findByPending(pending));
-
-        } else if (publish != null) {
-            model.addAttribute("studies", studyRepository.findByPublish(publish));
-
-        } else {
-            model.addAttribute("studies", studyRepository.findAll());
-        }
-        return "studies";
-    }
-
-    // Generate list of SNPs linked to a study
+    // Generate list of SNP associations linked to a study
     @RequestMapping(value = "/{studyId}/associations", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewStudySnps(Model model, @PathVariable String studyId) {
 
@@ -149,7 +148,8 @@ public class StudyController {
 
     // Update page with housekeeping/curator information linked to a study
     @RequestMapping(value = "/{studyId}/housekeeping", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping, @PathVariable String studyId) {
+    public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping, @PathVariable String studyId, SessionStatus status) {
+
         // Find study
         Study study = studyRepository.findOne(Long.valueOf(studyId));
 
@@ -172,6 +172,18 @@ public class StudyController {
     @ModelAttribute("efoTraits")
     public List<EFOTrait> populateEFOTraits(Model model) {
         return efoTraitRepository.findAll();
+    }
+
+    // Curators
+    @ModelAttribute("curators")
+    public List<Curator> populateCurators(Model model) {
+        return curatorRepository.findAll();
+    }
+
+    // Curation statuses
+    @ModelAttribute("curationstatuses")
+    public List<CurationStatus> populateCurationStatuses(Model model) {
+        return curationStatusRepository.findAll();
     }
 
 }
