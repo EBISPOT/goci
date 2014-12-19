@@ -75,27 +75,6 @@
                     </div>
                 </div>
 
-
-                <div class="form-group">
-                    <label for="initialSampleSize" class="control-label col-md-2"></label>
-
-                    <div class="col-md-10">
-                        <input type="hidden" th:field="*{initialSampleSize}" class="form-control"
-                               id="initialSampleSize"/>
-                    </div>
-                </div>
-
-
-                <div class="form-group">
-                    <label for="replicateSampleSize" class="control-label col-md-2"></label>
-
-                    <div class="col-md-10">
-                        <input type="hidden" th:field="*{replicateSampleSize}" class="form-control"
-                               id="replicateSampleSize"/>
-                    </div>
-                </div>
-
-
                 <!--Visible fields-->
 
                 <div class="form-group">
@@ -141,6 +120,25 @@
 
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="platform" th:field="*{platform}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="initialSampleSize" class="control-label col-md-2">Initial Sample Description:</label>
+
+                    <div class="col-md-10">
+                        <input type="text" th:field="*{initialSampleSize}" class="form-control"
+                               id="initialSampleSize"/>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="replicateSampleSize" class="control-label col-md-2">Replication Sample Description:</label>
+
+                    <div class="col-md-10">
+                        <input type="text" th:field="*{replicateSampleSize}" class="form-control"
+                               id="replicateSampleSize"/>
                     </div>
                 </div>
 
