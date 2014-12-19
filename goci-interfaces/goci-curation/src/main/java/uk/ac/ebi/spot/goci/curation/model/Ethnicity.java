@@ -16,7 +16,6 @@ import javax.validation.constraints.NotNull;
 public class Ethnicity {
     @Id
     @GeneratedValue
-    @NotNull
     private Long id;
 
     @Column(name = "GWASID")

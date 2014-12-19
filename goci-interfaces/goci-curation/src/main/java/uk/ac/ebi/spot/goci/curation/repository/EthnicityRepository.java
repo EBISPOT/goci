@@ -16,4 +16,8 @@ import java.util.Collection;
 public interface EthnicityRepository extends JpaRepository<Ethnicity, Long> {
 
     Collection<Ethnicity> findByStudyID(String studyID);
+
+    Collection<Ethnicity> findByStudyIDAndType(String studyID, String Type);
+
+
 }

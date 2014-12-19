@@ -60,14 +60,23 @@
 </div>
 
 
-<div class="container" th:object="${study}">
-    <table id="mainTable" class="table table-hover table-bordered">
-        <caption>Existing SNP information</caption>
+<div class="container">
+
+    <form id="add-initialSampleSize" class="form-horizontal" method="post" th:object="${study}"
+          name="initialSampleSize">
+
+        <div class="form-group">
+            <label for="initialSampleSize" class="control-label col-md-2">Initial Sample Description:</label>
+            <input id="initialSampleSize"  class="col-md-8" type="text" th:field="*{initialSampleSize}"/>
+        </div>
+    </form>
+
+
+    <table id="initialTable" class="table table-hover table-bordered">
         <thead>
         <tr>
             <th>Type</th>
-            <th>Sample Size</th>
-            <th>Number</th>
+            <th>Number of Individuals</th>
             <th>Ethnic Group</th>
             <th>Country of Origin</th>
             <th>Country of Recruitment</th>
@@ -78,25 +87,61 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="studyEthnicityDescription: ${studyEthnicityDescriptions}">
-
-            <td th:text="${studyEthnicityDescription.type}"></td>
-            <td th:switch="${studyEthnicityDescription.type}">
-                <p th:case="'initial'" th:text="*{initialSampleSize}"></p>
-
-                <p th:case="'replication'" th:text="*{replicateSampleSize}"></p>
-            </td>
-            <td th:text="${studyEthnicityDescription.numberOfIndividuals}"></td>
-            <td th:text="${studyEthnicityDescription.ethnicGroup}"></td>
-            <td th:text="${studyEthnicityDescription.countryOfOrigin}"></td>
-            <td th:text="${studyEthnicityDescription.countryOfRecruitment}"></td>
-            <td th:text="${studyEthnicityDescription.previouslyReported}"></td>
-            <td th:text="${studyEthnicityDescription.sampleSizesMatch}"></td>
-            <td th:text="${studyEthnicityDescription.description}"></td>
-            <td th:text="${studyEthnicityDescription.notes}"></td>
+        <tr th:each="initialStudyEthnicityDescription: ${initialStudyEthnicityDescriptions}">
+            <td th:text="${initialStudyEthnicityDescription.type}"></td>
+            <td th:text="${initialStudyEthnicityDescription.numberOfIndividuals}"></td>
+            <td th:text="${initialStudyEthnicityDescription.ethnicGroup}"></td>
+            <td th:text="${initialStudyEthnicityDescription.countryOfOrigin}"></td>
+            <td th:text="${initialStudyEthnicityDescription.countryOfRecruitment}"></td>
+            <td th:text="${initialStudyEthnicityDescription.previouslyReported}"></td>
+            <td th:text="${initialStudyEthnicityDescription.sampleSizesMatch}"></td>
+            <td th:text="${initialStudyEthnicityDescription.description}"></td>
+            <td th:text="${initialStudyEthnicityDescription.notes}"></td>
         </tr>
         </tbody>
     </table>
+
+
+    <form id="add-replicateSampleSize" class="form-horizontal" method="post" th:object="${study}"
+          name="replicateSampleSize">
+
+        <div class="form-group">
+            <label for="replicateSampleSize" class="control-label col-md-2">Replication Sample Description:</label>
+            <input id="replicateSampleSize"  class="col-md-8" type="text" th:field="*{replicateSampleSize}"/>
+        </div>
+    </form>
+
+    <table id="replicationTable" class="table table-hover table-bordered">
+
+        <thead>
+        <tr>
+            <th>Type</th>
+            <th>Number of Individuals</th>
+            <th>Ethnic Group</th>
+            <th>Country of Origin</th>
+            <th>Country of Recruitment</th>
+            <th>Previously Reported</th>
+            <th>Sample Sizes Match</th>
+            <th>Additional Description</th>
+            <th>Notes</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="replicationStudyEthnicityDescription: ${replicationStudyEthnicityDescriptions}">
+            <td th:text="${replicationStudyEthnicityDescription.type}"></td>
+            <td th:text="${replicationStudyEthnicityDescription.numberOfIndividuals}"></td>
+            <td th:text="${replicationStudyEthnicityDescription.ethnicGroup}"></td>
+            <td th:text="${replicationStudyEthnicityDescription.countryOfOrigin}"></td>
+            <td th:text="${replicationStudyEthnicityDescription.countryOfRecruitment}"></td>
+            <td th:text="${replicationStudyEthnicityDescription.previouslyReported}"></td>
+            <td th:text="${replicationStudyEthnicityDescription.sampleSizesMatch}"></td>
+            <td th:text="${replicationStudyEthnicityDescription.description}"></td>
+            <td th:text="${replicationStudyEthnicityDescription.notes}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+
 </div>
 </body>
 </html>

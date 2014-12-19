@@ -123,9 +123,20 @@ public class StudyController {
     @RequestMapping(value = "/{studyId}/sampledescription", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewStudySampleDescription(Model model, @PathVariable String studyId) {
 
-        Collection<Ethnicity> studyEthnicityDescriptions = new ArrayList<>();
-        studyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyID(studyId));
-        model.addAttribute("studyEthnicityDescriptions", studyEthnicityDescriptions);
+
+        // Two types of ethnicity information which in the view needs to form two different tables
+        Collection<Ethnicity> initialStudyEthnicityDescriptions = new ArrayList<>();
+        Collection<Ethnicity> replicationStudyEthnicityDescriptions = new ArrayList<>();
+
+        String initialType= "initial";
+        String replicationType= "replication";
+
+        initialStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIDAndType(studyId, initialType));
+        replicationStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIDAndType(studyId, replicationType));
+
+        model.addAttribute("initialStudyEthnicityDescriptions", initialStudyEthnicityDescriptions);
+        model.addAttribute("replicationStudyEthnicityDescriptions", replicationStudyEthnicityDescriptions);
+
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(Long.valueOf(studyId).longValue()));
