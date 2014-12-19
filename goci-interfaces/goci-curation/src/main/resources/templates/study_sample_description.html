@@ -186,6 +186,20 @@
                     </div>
 
 
+                    <div class="form-group">
+                        <label for="countryOrigin" class="control-label col-md-2">Country of Origin:</label>
+
+                        <div class="col-md-10">
+                            <select name="countryOrigin" class="form-control select2-select"
+                                    multiple="multiple" data-placeholder="Country of Origin" th:field="*{countryOfOrigin}"
+                                    id="countryOrigin">
+                                <option th:each="country : ${countries}"
+                                        th:value="${country.id}"
+                                        th:text="${country.country}"></option>
+                            </select>
+                        </div>
+                    </div>
+
                     <!--Dropdowns-->
 
                     <!-- <div class="form-group">
@@ -228,5 +242,13 @@
         $('#ethnicGroup').select2();
     });
 </script>
+
+<script>
+    $(function () {
+        // turn the element to select2 select style
+        $('#countryOrigin').select2();
+    });
+</script>
+
 </body>
 </html>

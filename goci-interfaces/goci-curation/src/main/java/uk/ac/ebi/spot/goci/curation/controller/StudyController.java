@@ -37,9 +37,10 @@ public class StudyController {
     private EFOTraitRepository efoTraitRepository;
     private CuratorRepository curatorRepository;
     private CurationStatusRepository curationStatusRepository;
+    private CountryRepository countryRepository;
 
     @Autowired
-    public StudyController(StudyRepository studyRepository, AssociationRepository associationRepository, EthnicityRepository ethnicityRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EFOTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository) {
+    public StudyController(StudyRepository studyRepository, AssociationRepository associationRepository, EthnicityRepository ethnicityRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EFOTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, CountryRepository countryRepository) {
         this.studyRepository = studyRepository;
         this.associationRepository = associationRepository;
         this.ethnicityRepository = ethnicityRepository;
@@ -48,7 +49,10 @@ public class StudyController {
         this.efoTraitRepository = efoTraitRepository;
         this.curatorRepository = curatorRepository;
         this.curationStatusRepository = curationStatusRepository;
+        this.countryRepository = countryRepository;
     }
+
+
 
 
     // Return all studies and filter
@@ -234,5 +238,11 @@ public class StudyController {
         types.add("Other");
         types.add("NR");
         return types;
+    }
+
+    // Countries
+    @ModelAttribute("countries")
+    public List<Country> populateCountries(Model model) {
+        return countryRepository.findAll();
     }
 }
