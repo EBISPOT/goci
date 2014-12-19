@@ -11,9 +11,9 @@ import uk.ac.ebi.spot.goci.exception.ObjectMappingException;
 import uk.ac.ebi.spot.goci.exception.OntologyTermException;
 import uk.ac.ebi.spot.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.spot.goci.lang.OntologyConstants;
-import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
-import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.model.TraitAssociation;
+import uk.ac.ebi.spot.goci.ui.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.ui.model.Study;
+import uk.ac.ebi.spot.goci.ui.model.TraitAssociation;
 import uk.ac.ebi.spot.goci.utils.ReflexiveIRIMinter;
 
 import java.text.SimpleDateFormat;

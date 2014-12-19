@@ -3,7 +3,7 @@ package uk.ac.ebi.spot.goci.service;
 
 import org.junit.Before;
 import uk.ac.ebi.spot.goci.dao.GwasStudyDAO;
-import uk.ac.ebi.spot.goci.model.GwasStudy;
+import uk.ac.ebi.spot.goci.ui.model.GwasStudy;
 
 import java.util.Collection;
 import java.util.Collections;

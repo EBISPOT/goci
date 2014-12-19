@@ -16,7 +16,7 @@ import uk.ac.ebi.spot.goci.exception.OWLConversionException;
 import uk.ac.ebi.spot.goci.lang.Filter;
 import uk.ac.ebi.spot.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.spot.goci.lang.OntologyConstants;
-import uk.ac.ebi.spot.goci.model.AssociationSummary;
+import uk.ac.ebi.spot.goci.ui.model.AssociationSummary;
 import uk.ac.ebi.spot.goci.owl.lang.OWLAPIFilterInterpreter;
 import uk.ac.ebi.spot.goci.owl.pussycat.layout.LayoutUtils;
 import uk.ac.ebi.spot.goci.reasoning.ReasonerSession;

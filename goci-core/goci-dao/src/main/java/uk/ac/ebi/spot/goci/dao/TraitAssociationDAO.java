@@ -1,6 +1,6 @@
 package uk.ac.ebi.spot.goci.dao;
 
-import uk.ac.ebi.spot.goci.model.TraitAssociation;
+import uk.ac.ebi.spot.goci.ui.model.TraitAssociation;
 
 import java.util.Collection;
 

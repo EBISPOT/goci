@@ -1,6 +1,6 @@
 package uk.ac.ebi.spot.goci.dao;
 
-import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.ui.model.Study;
 
 import java.util.Collection;
 

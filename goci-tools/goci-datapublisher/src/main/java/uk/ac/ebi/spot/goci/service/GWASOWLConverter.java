@@ -2,9 +2,9 @@ package uk.ac.ebi.spot.goci.service;
 
 import org.semanticweb.owlapi.model.OWLOntology;
 import uk.ac.ebi.spot.goci.exception.OWLConversionException;
-import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
-import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.model.TraitAssociation;
+import uk.ac.ebi.spot.goci.ui.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.ui.model.Study;
+import uk.ac.ebi.spot.goci.ui.model.TraitAssociation;
 
 import java.util.Collection;
 

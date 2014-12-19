@@ -5,7 +5,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import uk.ac.ebi.spot.goci.dao.DefaultOntologyDAO;
 import uk.ac.ebi.spot.goci.lang.Filter;
-import uk.ac.ebi.spot.goci.model.AssociationSummary;
+import uk.ac.ebi.spot.goci.ui.model.AssociationSummary;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.Renderlet;

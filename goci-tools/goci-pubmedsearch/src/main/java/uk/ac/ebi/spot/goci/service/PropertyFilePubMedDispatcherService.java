@@ -15,8 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 import uk.ac.ebi.spot.goci.exception.DispatcherException;
-import uk.ac.ebi.spot.goci.model.DefaultGwasStudy;
-import uk.ac.ebi.spot.goci.model.GwasStudy;
+import uk.ac.ebi.spot.goci.ui.model.DefaultGwasStudy;
+import uk.ac.ebi.spot.goci.ui.model.GwasStudy;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;

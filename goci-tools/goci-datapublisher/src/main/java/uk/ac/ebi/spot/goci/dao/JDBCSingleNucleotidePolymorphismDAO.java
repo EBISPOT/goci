@@ -4,14 +4,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import uk.ac.ebi.spot.goci.lang.FilterProperties;
 import uk.ac.ebi.spot.goci.lang.UniqueID;
-import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.ui.model.SingleNucleotidePolymorphism;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
 /**
- * A data access object capable of retrieving {@link uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism} objects
+ * A data access object capable of retrieving {@link uk.ac.ebi.spot.goci.ui.model.SingleNucleotidePolymorphism} objects
  * from the GWAS database
  *
  * @author Tony Burdett

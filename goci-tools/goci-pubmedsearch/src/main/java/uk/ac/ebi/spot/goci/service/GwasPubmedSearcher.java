@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.spot.goci.dao.GwasStudyDAO;
 import uk.ac.ebi.spot.goci.exception.DispatcherException;
-import uk.ac.ebi.spot.goci.model.GwasStudy;
+import uk.ac.ebi.spot.goci.ui.model.GwasStudy;
 
 import java.util.ArrayList;
 import java.util.Collection;

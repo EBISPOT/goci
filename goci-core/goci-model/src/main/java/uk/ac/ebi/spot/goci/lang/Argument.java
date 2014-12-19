@@ -1,6 +1,6 @@
 package uk.ac.ebi.spot.goci.lang;
 
-import uk.ac.ebi.spot.goci.model.GWASObject;
+import uk.ac.ebi.spot.goci.ui.model.GWASObject;
 
 import java.lang.reflect.Method;
 

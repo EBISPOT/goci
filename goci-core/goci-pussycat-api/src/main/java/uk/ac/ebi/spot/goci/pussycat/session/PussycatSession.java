@@ -1,7 +1,7 @@
 package uk.ac.ebi.spot.goci.pussycat.session;
 
 import uk.ac.ebi.spot.goci.lang.Filter;
-import uk.ac.ebi.spot.goci.model.AssociationSummary;
+import uk.ac.ebi.spot.goci.ui.model.AssociationSummary;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;

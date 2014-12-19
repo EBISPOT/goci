@@ -1,7 +1,7 @@
 package uk.ac.ebi.spot.goci.service;
 
 import uk.ac.ebi.spot.goci.exception.DispatcherException;
-import uk.ac.ebi.spot.goci.model.GwasStudy;
+import uk.ac.ebi.spot.goci.ui.model.GwasStudy;
 
 import java.util.Collection;
 import java.util.Map;
