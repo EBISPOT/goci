@@ -8,8 +8,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <!-- Include Select2 CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css"/>
+
+    <!-- CSS to make Select2 fit in with Bootstrap 3.x -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2-bootstrap.min.css"/>
+
+    <!-- Include Select2 JS -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
+
 
 </head>
 <body>
@@ -62,15 +73,10 @@
 
 <div class="container">
 
-    <form id="add-initialSampleSize" class="form-horizontal" method="post" th:object="${study}"
-          name="initialSampleSize">
 
-        <div class="form-group">
-            <label for="initialSampleSize" class="control-label col-md-2">Initial Sample Description:</label>
-            <input id="initialSampleSize"  class="col-md-8" type="text" th:field="*{initialSampleSize}"/>
-        </div>
-    </form>
+    <h4>Initial Sample Description:</h4>
 
+    <p th:text="${study.initialSampleSize}"></p>
 
     <table id="initialTable" class="table table-hover table-bordered">
         <thead>
@@ -102,14 +108,9 @@
     </table>
 
 
-    <form id="add-replicateSampleSize" class="form-horizontal" method="post" th:object="${study}"
-          name="replicateSampleSize">
+    <h4>Replication Sample Description:</h4>
 
-        <div class="form-group">
-            <label for="replicateSampleSize" class="control-label col-md-2">Replication Sample Description:</label>
-            <input id="replicateSampleSize"  class="col-md-8" type="text" th:field="*{replicateSampleSize}"/>
-        </div>
-    </form>
+    <p th:text="${study.replicateSampleSize}"></p>
 
     <table id="replicationTable" class="table table-hover table-bordered">
 
@@ -140,8 +141,92 @@
         </tr>
         </tbody>
     </table>
-
+    <!--Button-->
+    <input type="button" class="btn btn-primary" value="Add ethnicity" data-toggle="collapse"
+           data-target="#add_ethnicity_form"/>
 
 </div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-10">
+            <div id="add_ethnicity_form" class="collapse">
+                <form class="form-horizontal" method="post" th:object="${ethnicity}"
+                      name="Ethnicity">
+
+                    <div class="form-group">
+                        <label for="type" class="control-label col-md-2">Type</label>
+
+                        <select th:field="*{type}" id="type">
+                            <option th:each="ethnicityType : ${ethnicityTypes}"
+                                    th:value="${ethnicityType}"
+                                    th:text="${ethnicityType}"></option>
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="numberOfIndividuals" class="control-label col-md-2">Number of Individuals:</label>
+                        <input id="numberOfIndividuals" type="text" th:field="*{numberOfIndividuals}"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ethnicGroup" class="control-label col-md-2">Inferred Ethnic/Ancestral Group:</label>
+
+                        <div class="col-md-10">
+                            <select name="ethnicGroup" class="form-control select2-select"
+                                    multiple="multiple" data-placeholder="Choose ethnic group" th:field="*{ethnicGroup}"
+                                    id="ethnicGroup">
+                                <option th:each="ethnicGroup : ${ethnicGroups}"
+                                        th:value="${ethnicGroup}"
+                                        th:text="${ethnicGroup}"></option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <!--Dropdowns-->
+
+                    <!-- <div class="form-group">
+                         <label for="curator" class="control-label col-md-2">Curator:</label>
+
+                         <select th:field="*{curator}" id="curator">
+                             <option th:each="curator : ${curators}"
+                                     th:value="${curator.id}"
+                                     th:text="${curator.lastName}"></option>
+                         </select>
+                     </div>
+
+                     <div class="form-group">
+                         <label for="curationStatus" class="control-label col-md-2">Curator:</label>
+
+                         <select th:field="*{curationStatus}" id="curationStatus">
+                             <option th:each="curationStatus : ${curationstatuses}"
+                                     th:value="${curationStatus.id}"
+                                     th:text="${curationStatus.status}"></option>
+                         </select>
+
+                     </div>-->
+
+                    <!--Button -->
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        // turn the element to select2 select style
+        $('#ethnicGroup').select2();
+    });
+</script>
 </body>
 </html>

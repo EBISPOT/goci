@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.support.SessionStatus;
 import uk.ac.ebi.spot.goci.curation.model.*;
 import uk.ac.ebi.spot.goci.curation.repository.*;
 
@@ -52,9 +51,6 @@ public class StudyController {
     }
 
 
-
-
-
     // Return all studies and filter
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE)
     public String searchStudies(Model model) {
@@ -90,9 +86,9 @@ public class StudyController {
     // Edit an existing study
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateStudy(@ModelAttribute Study study, Model model,  @PathVariable String studyId) {
+    public String updateStudy(@ModelAttribute Study study, Model model, @PathVariable String studyId) {
 
-       // Use id in URL to get study and then its associated housekeeping
+        // Use id in URL to get study and then its associated housekeeping
         Study existingStudy = studyRepository.findOne(Long.valueOf(studyId));
         Housekeeping existingHousekeeping = existingStudy.getHousekeeping();
 
@@ -128,8 +124,8 @@ public class StudyController {
         Collection<Ethnicity> initialStudyEthnicityDescriptions = new ArrayList<>();
         Collection<Ethnicity> replicationStudyEthnicityDescriptions = new ArrayList<>();
 
-        String initialType= "initial";
-        String replicationType= "replication";
+        String initialType = "initial";
+        String replicationType = "replication";
 
         initialStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIDAndType(studyId, initialType));
         replicationStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIDAndType(studyId, replicationType));
@@ -137,6 +133,8 @@ public class StudyController {
         model.addAttribute("initialStudyEthnicityDescriptions", initialStudyEthnicityDescriptions);
         model.addAttribute("replicationStudyEthnicityDescriptions", replicationStudyEthnicityDescriptions);
 
+        // Return an ethnicty object so curators can add new information
+        model.addAttribute("ethnicity", new Ethnicity());
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(Long.valueOf(studyId).longValue()));
@@ -205,4 +203,36 @@ public class StudyController {
         return curationStatusRepository.findAll();
     }
 
+    // Ethnicity Types
+    @ModelAttribute("ethnicityTypes")
+    public List<String> populateEthnicityTypes(Model model) {
+        List<String> types = new ArrayList<>();
+        types.add("initial");
+        types.add("replication");
+        return types;
+    }
+
+
+    // Ethnicity Types
+    @ModelAttribute("ethnicGroups")
+    public List<String> populateEthnicGroups(Model model) {
+        List<String> types = new ArrayList<>();
+        types.add("European");
+        types.add("Sub-Saharan African");
+        types.add("African unspecified");
+        types.add("African unspecified");
+        types.add("South Asian");
+        types.add("South East Asian");
+        types.add("Central Asian");
+        types.add("East Asian");
+        types.add("Asian unspecified");
+        types.add("African American/Afro-Caribbean");
+        types.add("Middle East/North African");
+        types.add("Oceania");
+        types.add("American Indian");
+        types.add("Hispanic/Latin American");
+        types.add("Other");
+        types.add("NR");
+        return types;
+    }
 }
