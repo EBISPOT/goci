@@ -21,7 +21,7 @@
         <!--<dependency>-->
             <!--<groupId>uk.ac.ebi.fgpt</groupId>-->
             <!--<artifactId>goci-datapublisher</artifactId>-->
-            <!--<version>1.0.7-SNAPSHOT</version>-->
+            <!--<version>1.0.8-SNAPSHOT</version>-->
         <!--</dependency>-->
 
         <!-- depends on ontology utils to lookup labels using OntologyDAO -->

@@ -4,7 +4,7 @@
   <parent>
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci-curation</artifactId>
-    <version> 1.0.10-SNAPSHOT </version>
+    <version>1.0.8-SNAPSHOT</version>
   </parent>
   <groupId>uk.ac.ebi.fgpt.goci</groupId>
   <artifactId>goci-enexport</artifactId>

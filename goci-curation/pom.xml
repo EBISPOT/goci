@@ -8,7 +8,7 @@
     </parent>
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci-curation</artifactId>
-    <version> 1.0.10-SNAPSHOT </version>
+    <version> 1.0.8-SNAPSHOT </version>
     <packaging>pom</packaging>
 
     <name>GOCI Curation Tools</name>
