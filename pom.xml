@@ -4,7 +4,7 @@
 
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci</artifactId>
-    <version>1.0.8-SNAPSHOT</version>
+    <version>1.0.8</version>
     <packaging>pom</packaging>
 
     <name>GWAS Ontology and Curation Infrastructure</name>
@@ -130,7 +130,7 @@
         <connection>scm:git:git@github.com:tburdett/goci.git</connection>
         <developerConnection>scm:git:git@github.com:tburdett/goci.git</developerConnection>
         <url>git@github.com:tburdett/goci.git</url>
-      <tag>HEAD</tag>
+      <tag>goci-1.0.8</tag>
   </scm>
 
     <!-- Alternative version control (SVN over git) -->
