@@ -8,7 +8,7 @@
     </parent>
     <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>goci-tracker-web</artifactId>
-    <version>1.0.8</version>
+    <version>1.0.8-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>GOCI Tracker web application</name>

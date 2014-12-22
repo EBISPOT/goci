@@ -4,11 +4,11 @@
     <parent>
         <artifactId>goci-diagram</artifactId>
         <groupId>uk.ac.ebi.fgpt</groupId>
-        <version>1.0.8</version>
+        <version>1.0.8-SNAPSHOT</version>
     </parent>
 
     <artifactId>goci-sparql-renderlets</artifactId>
-    <version>1.0.8</version>
+    <version>1.0.8-SNAPSHOT</version>
 
     <name>GOCI Pussycat SPARQL renderlets</name>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
@@ -28,7 +28,7 @@
         <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
             <artifactId>goci-ontology-utils</artifactId>
-            <version>1.0.8</version>
+            <version>1.0.8-SNAPSHOT</version>
         </dependency>
 
         <!-- Lode SPARQL endpoint -->
@@ -51,7 +51,7 @@
         <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
             <artifactId>goci-renderlets-core</artifactId>
-            <version>1.0.8</version>
+            <version>1.0.8-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
