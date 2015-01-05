@@ -28,7 +28,7 @@ public class DiseaseTraitDocument {
         this.id = "disease_trait".concat(diseaseTrait.getId().toString());
         this.trait = diseaseTrait.getTrait();
         this.title = diseaseTrait.getStudy().getTitle();
-        this.rsId = diseaseTrait.getSnp().getRsId();
+//        this.rsId = diseaseTrait.getSnp().getRsId();
         this.resourcename = diseaseTrait.getClass().getSimpleName();
     }
 
@@ -44,9 +44,9 @@ public class DiseaseTraitDocument {
         return title;
     }
 
-    public String getRsId() {
-        return rsId;
-    }
+//    public String getRsId() {
+//        return rsId;
+//    }
 
     public String getResourcename() {
         return resourcename;

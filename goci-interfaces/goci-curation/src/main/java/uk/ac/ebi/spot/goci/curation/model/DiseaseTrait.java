@@ -2,6 +2,8 @@ package uk.ac.ebi.spot.goci.curation.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -20,6 +22,9 @@ public class DiseaseTrait extends Trait {
     @Column(name = "DISEASETRAIT")
     private String trait;
 
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "disease")
+    private Study study;
+
     // JPA no-args constructor
     public DiseaseTrait() {
     }
@@ -32,6 +37,10 @@ public class DiseaseTrait extends Trait {
 
     public String getTrait() {
         return trait;
+    }
+
+    public Study getStudy() {
+        return study;
     }
 
     @Override
