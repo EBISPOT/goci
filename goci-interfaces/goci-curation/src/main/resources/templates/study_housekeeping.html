@@ -62,7 +62,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10">
-            <form id="add-study" class="form-horizontal" method="post" th:object="${studyHousekeeping}"
+            <form id="studyHousekeeping" class="form-horizontal" method="post" th:object="${studyHousekeeping}"
                   name="studyHousekeeping">
 
                 <!--Form has to send all entity attributes back, even if we do not want users to edit
@@ -78,11 +78,11 @@
                     <input id="publishDate" type="text" th:field="*{publishDate}"/>
                 </div>
 
-    <!--         <div class="form-group">
-                    <label for="sendToNCBIDate" class="control-label col-md-2">Send to NCBI Date</label>
-                    <input id="sendToNCBIDate" type="text" th:field="*{sendToNCBIDate}"/>
+                <div class="form-group">
+                <label for="sendToNCBIDate" class="control-label col-md-2">Send to NCBI Date</label>
+                <input id="sendToNCBIDate" type="text" th:field="*{sendToNCBIDate}"/>
                 </div>
--->
+
                 <div class="form-group">
                     <label for="studyAddedDate" class="control-label col-md-2">Study Added Date</label>
                     <input id="studyAddedDate" type="text" th:field="*{studyAddedDate}"/>
@@ -101,41 +101,46 @@
 
                 <div class="form-group">
                     <label for="notes" class="control-label col-md-2">Notes</label>
-                    <textarea id="notes" type="text" th:field="*{notes}"/>
+                    <textarea  id="notes" type="text" th:field="*{notes}"/>
                 </div>
 
+                <!--Checkboxes-->
 
                 <div class="form-group">
-                    <label for="ethnicityCheckedLevelOne" class="control-label col-md-2">Ethnicity checked, first
+                    <label for="ethnicityCheckedLevelOne" th:for="${#ids.next('ethnicityCheckedLevelOne')}"
+                           class="control-label col-md-2">Ethnicity checked, first
                         level:</label>
                     <input id="ethnicityCheckedLevelOne" type="checkbox" th:field="*{ethnicityCheckedLevelOne}"
                            th:value="'1'"/>
                 </div>
 
                 <div class="form-group">
-                    <label for="ethnicityCheckedLevelTwo" class="control-label col-md-2">Ethnicity checked, second
+                    <label for="ethnicityCheckedLevelTwo" th:for="${#ids.next('ethnicityCheckedLevelTwo')}"
+                           class="control-label col-md-2">Ethnicity checked, second
                         level:</label>
                     <input id="ethnicityCheckedLevelTwo" type="checkbox" th:field="*{ethnicityCheckedLevelTwo}"
                            th:value="'1'"/>
                 </div>
 
                 <div class="form-group">
-                    <label for="ethnicityBackFilled" class="control-label col-md-2">Ethnicity checked, second
-                        level:</label>
+                    <label for="ethnicityBackFilled" th:for="${#ids.next('ethnicityBackFilled')}"
+                           class="control-label col-md-2">Ethnicity backfilled:</label>
                     <input id="ethnicityBackFilled" type="checkbox" th:field="*{ethnicityBackFilled}"
                            th:value="'1'"/>
                 </div>
 
 
                 <div class="form-group">
-                    <label for="studySnpCheckedLevelOne" class="control-label col-md-2">Study/SNP checked, first
+                    <label for="studySnpCheckedLevelOne" th:for="${#ids.next('studySnpCheckedLevelOne')}"
+                           class="control-label col-md-2">Study/SNP checked, first
                         level:</label>
                     <input id="studySnpCheckedLevelOne" type="checkbox" th:field="*{studySnpCheckedLevelOne}"
                            th:value="'1'"/>
                 </div>
 
                 <div class="form-group">
-                    <label for="studySnpCheckedLevelTwo" class="control-label col-md-2">Study/SNP checked, second
+                    <label for="studySnpCheckedLevelTwo" th:for="${#ids.next('studySnpCheckedLevelTwo')}"
+                           class="control-label col-md-2">Study/SNP checked, second
                         level:</label>
                     <input id="studySnpCheckedLevelTwo" type="checkbox" th:field="*{studySnpCheckedLevelTwo}"
                            th:value="'1'"/>
@@ -143,7 +148,8 @@
 
 
                 <div class="form-group">
-                    <label for="checkedNCBIError" class="control-label col-md-2">Checked NCBI Error:</label>
+                    <label for="checkedNCBIError" th:for="${#ids.next('checkedNCBIError')}"
+                           class="control-label col-md-2">Checked NCBI Error:</label>
                     <input id="checkedNCBIError" type="checkbox" th:field="*{checkedNCBIError}" th:value="'1'"/>
                 </div>
 

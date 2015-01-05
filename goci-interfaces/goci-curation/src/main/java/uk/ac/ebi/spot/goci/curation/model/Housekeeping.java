@@ -36,19 +36,19 @@ public class Housekeeping {
     @Column(name = "ETHNICITYBACKFILLED")
     private String ethnicityBackFilled;
 
-    @Column(name = "CHECKEDNCBIERROR", nullable = true)
+    @Column(name = "CHECKEDNCBIERROR")
     private String checkedNCBIError;
 
-    @Column(name = "PUBLISHDATE", nullable = true)
+    @Column(name = "PUBLISHDATE")
     private Date publishDate;
 
-    @Column(name = "SENDTONCBIDATE", nullable = true)
+    @Column(name = "SENDTONCBIDATE")
     private Date sendToNCBIDate;
 
-    @Column(name = "STUDYADDEDDATE", nullable = true)
+    @Column(name = "STUDYADDEDDATE")
     private Timestamp studyAddedDate;
 
-    @Column(name = "LASTUPDATEDATE", nullable = true)
+    @Column(name = "LASTUPDATEDATE")
     private Timestamp lastUpdateDate;
 
     @Column(name = "FILENAM")
