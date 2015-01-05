@@ -22,7 +22,7 @@ public class DiseaseTrait extends Trait {
     @Column(name = "DISEASETRAIT")
     private String trait;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "disease")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "diseaseTrait")
     private Study study;
 
     // JPA no-args constructor
