@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>GWAS Curation Demo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"/>
+    <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
+
+
+</head>
+<body>
+<!--TODO
+- REIMPLEMENTED LOGIN
+- COUNT
+-->
+
+<nav role="navigation" class="navbar navbar-default">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+        <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a href="http://www.genome.gov/gwastudies/" class="navbar-brand">GWAS</a>
+    </div>
+    <!-- Collection of nav links and other content for toggling -->
+    <div id="navbarCollapse" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+
+            <li><a th:href="@{/studies}">Home</a></li>
+            <li class="active"><a th:href="@{/studies/new}">Add Study</a></li>
+            <!--<li><a href="#">Count Data</a></li>-->
+        </ul>
+        <!--    <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <form th:action="@{/logout}" method="post">
+                        <input type="submit" value="Sign Out"/>
+                    </form>
+                </li>
+            </ul>-->
+    </div>
+</nav>
+
+<!--Pubmed import button-->
+<!--<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <form class="form-inline" role="form">
+                <div class="form-group">
+                    <label class="sr-only" for="inputPubmedAdd">Add using Pubmed ID</label>
+                    <input type="text" class="form-control" id="inputPubmedAdd"
+                           placeholder="Add using Pubmed ID"></input>
+                </div>
+                <button type="submit" class="btn btn-primary">Add using Pubmed ID</button>
+            </form>
+        </div>
+    </div>
+</div>-->
+
+<br/>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <form id="add-study" class="form-horizontal" method="post" th:action="@{/studies/new}"
+                  th:object="${study}" name="addStudyForm">
+
+                <div class="form-group">
+                    <label for="pubmedID" class="control-label col-md-2">Pubmed</label>
+
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="pubmedID" placeholder="Pubmed ID"
+                               th:field="*{pubmedID}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="author" class="control-label col-md-2">Author</label>
+
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="author"
+                               placeholder="last name of first author" th:field="*{author}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="title" class="control-label col-md-2">Title</label>
+
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="title" placeholder="Title of paper"
+                               th:field="*{title}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="publication" class="control-label col-md-2">Publication</label>
+
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="publication"
+                               placeholder="Publishing journal name" th:field="*{publication}"/>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="studyDate" class="control-label col-md-2">Study Date</label>
+
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="studyDate" placeholder="YYYY-MM-DD"
+                               th:field="*{studyDate}"/>
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="Save" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+
+<script src="/js/study.js"></script>
+
+
+</html>
