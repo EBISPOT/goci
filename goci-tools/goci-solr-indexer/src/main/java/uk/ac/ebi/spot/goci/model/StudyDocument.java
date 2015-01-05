@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.model;
 import org.apache.solr.client.solrj.beans.Field;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.solr.core.mapping.SolrDocument;
+import uk.ac.ebi.spot.goci.curation.model.Study;
 
 /**
  * Javadocs go here!
@@ -27,7 +28,7 @@ public class StudyDocument {
 
     public StudyDocument(Study study) {
         this.id = "study_".concat(study.getId().toString());
-        this.pubmedId = study.getPubmedId();
+        this.pubmedId = study.getPubmedID();
         this.title = study.getTitle();
         this.author = study.getAuthor();
         this.publication = study.getPublication();

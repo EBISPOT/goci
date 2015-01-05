@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.model;
 import org.apache.solr.client.solrj.beans.Field;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.solr.core.mapping.SolrDocument;
+import uk.ac.ebi.spot.goci.curation.model.DiseaseTrait;
 
 /**
  * Javadocs go here!
@@ -11,7 +12,7 @@ import org.springframework.data.solr.core.mapping.SolrDocument;
  * @date 23/12/14
  */
 @SolrDocument(solrCoreName = "gwas")
-public class TraitAssociationDocument {
+public class DiseaseTraitDocument {
     @Id @Field
     private String id;
     @Field
@@ -23,12 +24,12 @@ public class TraitAssociationDocument {
     @Field
     private String resourcename;
 
-    public TraitAssociationDocument(TraitAssociation traitAssociation) {
-        this.id = "trait_association_".concat(traitAssociation.getId().toString());
-        this.trait = traitAssociation.getTrait();
-        this.title = traitAssociation.getStudy().getTitle();
-        this.rsId = traitAssociation.getSnp().getRsId();
-        this.resourcename = traitAssociation.getClass().getSimpleName();
+    public DiseaseTraitDocument(DiseaseTrait diseaseTrait) {
+        this.id = "disease_trait".concat(diseaseTrait.getId().toString());
+        this.trait = diseaseTrait.getTrait();
+        this.title = diseaseTrait.getStudy().getTitle();
+        this.rsId = diseaseTrait.getSnp().getRsId();
+        this.resourcename = diseaseTrait.getClass().getSimpleName();
     }
 
     public String getId() {

@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.model;
 import org.apache.solr.client.solrj.beans.Field;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.solr.core.mapping.SolrDocument;
+import uk.ac.ebi.spot.goci.curation.model.SingleNucleotidePolymorphism;
 
 /**
  * Javadocs go here!
@@ -19,9 +20,9 @@ public class SnpDocument {
     @Field
     private String resourcename;
 
-    public SnpDocument(Snp snp) {
+    public SnpDocument(SingleNucleotidePolymorphism snp) {
         this.id = "snp_".concat(snp.getId().toString());
-        this.rsId = snp.getRsId();
+        this.rsId = snp.getRsID();
         this.resourcename = snp.getClass().getSimpleName();
     }
 
