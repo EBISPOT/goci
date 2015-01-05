@@ -5,6 +5,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 import uk.ac.ebi.spot.goci.curation.model.SingleNucleotidePolymorphism;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TimeZone;
+
 /**
  * Javadocs go here!
  *
@@ -13,16 +19,26 @@ import uk.ac.ebi.spot.goci.curation.model.SingleNucleotidePolymorphism;
  */
 @SolrDocument(solrCoreName = "gwas")
 public class SnpDocument {
-    @Id
-    private String id;
-    @Field
-    private String rsId;
-    @Field
-    private String resourcename;
+    @Id @Field private String id;
+    @Field private String rsId;
+    @Field private String chromosomeName;
+    @Field private String chromosomePosition;
+    @Field private String region;
+    @Field("gene") private Set<String> genes;
+    @Field private String last_modified;
+    @Field private String resourcename;
 
     public SnpDocument(SingleNucleotidePolymorphism snp) {
         this.id = "snp_".concat(snp.getId().toString());
         this.rsId = snp.getRsID();
+        this.chromosomeName = snp.getChromosomeName();
+        this.chromosomePosition = snp.getChromosomePosition();
+        this.region = snp.getRegion().getRegion();
+        this.genes = new HashSet<>();
+        snp.getGenes().forEach(gene -> genes.add(gene.getGeneName()));
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+        this.last_modified = df.format(snp.getLastUpdateDate());
         this.resourcename = snp.getClass().getSimpleName();
     }
 
@@ -32,6 +48,26 @@ public class SnpDocument {
 
     public String getRsId() {
         return rsId;
+    }
+
+    public String getChromosomeName() {
+        return chromosomeName;
+    }
+
+    public String getChromosomePosition() {
+        return chromosomePosition;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public Set<String> getGenes() {
+        return genes;
+    }
+
+    public String getLast_modified() {
+        return last_modified;
     }
 
     public String getResourcename() {

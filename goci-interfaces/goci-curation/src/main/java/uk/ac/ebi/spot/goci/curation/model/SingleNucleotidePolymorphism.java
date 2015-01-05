@@ -40,7 +40,7 @@ public class SingleNucleotidePolymorphism {
 
     // TODO HOW DO WE DEFINE RELATIONSHIP WITH GENE AND REGION
     // Associated region
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinTable(
             name = "GWASREGIONXREF",
             joinColumns = {@JoinColumn(name = "GWASSNPID", referencedColumnName = "ID")},
@@ -49,7 +49,7 @@ public class SingleNucleotidePolymorphism {
     private Region region;
 
     // Associated genes
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "GWASGENEXREF",
             joinColumns = {@JoinColumn(name = "GWASSNPID", referencedColumnName = "ID")},

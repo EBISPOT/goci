@@ -13,18 +13,12 @@ import uk.ac.ebi.spot.goci.curation.model.Study;
  */
 @SolrDocument(solrCoreName = "gwas")
 public class StudyDocument {
-    @Id @Field
-    private String id;
-    @Field
-    private String pubmedId;
-    @Field
-    private String title;
-    @Field
-    private String author;
-    @Field
-    private String publication;
-    @Field
-    private String resourcename;
+    @Id @Field private String id;
+    @Field private String pubmedId;
+    @Field private String title;
+    @Field private String author;
+    @Field private String publication;
+    @Field private String resourcename;
 
     public StudyDocument(Study study) {
         this.id = "study_".concat(study.getId().toString());
