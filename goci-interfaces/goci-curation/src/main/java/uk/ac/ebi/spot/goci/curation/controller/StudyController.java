@@ -53,15 +53,15 @@ public class StudyController {
     }
 
 
-
-
-    // Return all studies and filter
+    // Return all studies
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE)
     public String searchStudies(Model model) {
         model.addAttribute("studies", studyRepository.findAll());
         return "studies";
     }
 
+
+   /* New Study*/
 
     // Add a new study
     // Directs user to an empty form to which they can create a new study
@@ -78,6 +78,8 @@ public class StudyController {
         Study newStudy = studyRepository.save(study);
         return "redirect:/studies/" + newStudy.getId();
     }
+
+   /* Exitsing study*/
 
     // View a study
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
@@ -97,7 +99,7 @@ public class StudyController {
         Housekeeping existingHousekeeping = existingStudy.getHousekeeping();
 
         // Set the housekeeping of the study returned to one already linked to it in database
-        // Need to do this as we dont return housekeeping in form
+        // Need to do this as we don't return housekeeping in form
         study.setHousekeeping(existingHousekeeping);
 
         // Saves the new information returned from form
@@ -105,6 +107,8 @@ public class StudyController {
         return "redirect:/studies/" + updatedStudy.getId();
     }
 
+
+    /* Study SNP/Associations */
 
     // Generate list of SNP associations linked to a study
     @RequestMapping(value = "/{studyId}/associations", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
@@ -118,6 +122,8 @@ public class StudyController {
         model.addAttribute("study", studyRepository.findOne(Long.valueOf(studyId).longValue()));
         return "study_association";
     }
+
+    /* Ethnicity/Sample information */
 
     // Generate page with sample description linked to a study
     @RequestMapping(value = "/{studyId}/sampledescription", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
@@ -144,6 +150,9 @@ public class StudyController {
         model.addAttribute("study", studyRepository.findOne(Long.valueOf(studyId).longValue()));
         return "study_sample_description";
     }
+
+
+    /* Study curator information */
 
 
     // Generate page with housekeeping/curator information linked to a study
@@ -183,6 +192,7 @@ public class StudyController {
     }
 
     /* Model Attributes */
+
     // Disease Traits
     @ModelAttribute("diseaseTraits")
     public List<DiseaseTrait> populateDiseaseTraits(Model model) {

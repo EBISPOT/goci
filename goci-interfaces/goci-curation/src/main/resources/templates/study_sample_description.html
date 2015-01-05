@@ -12,6 +12,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
+
+    <!--Select2: http://ivaynberg.github.io/select2/-->
     <!-- Include Select2 CSS -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css"/>
 
@@ -72,7 +74,6 @@
 
 
 <div class="container">
-
 
     <h4>Initial Sample Description:</h4>
 
@@ -171,6 +172,8 @@
                         <input id="numberOfIndividuals" type="text" th:field="*{numberOfIndividuals}"/>
                     </div>
 
+
+                    <!--Dropdowns-->
                     <div class="form-group">
                         <label for="ethnicGroup" class="control-label col-md-2">Inferred Ethnic/Ancestral Group:</label>
 
@@ -191,7 +194,8 @@
 
                         <div class="col-md-10">
                             <select name="countryOrigin" class="form-control select2-select"
-                                    multiple="multiple" data-placeholder="Country of Origin" th:field="*{countryOfOrigin}"
+                                    multiple="multiple" data-placeholder="Country of Origin"
+                                    th:field="*{countryOfOrigin}"
                                     id="countryOrigin">
                                 <option th:each="country : ${countries}"
                                         th:value="${country.id}"
@@ -199,29 +203,6 @@
                             </select>
                         </div>
                     </div>
-
-                    <!--Dropdowns-->
-
-                    <!-- <div class="form-group">
-                         <label for="curator" class="control-label col-md-2">Curator:</label>
-
-                         <select th:field="*{curator}" id="curator">
-                             <option th:each="curator : ${curators}"
-                                     th:value="${curator.id}"
-                                     th:text="${curator.lastName}"></option>
-                         </select>
-                     </div>
-
-                     <div class="form-group">
-                         <label for="curationStatus" class="control-label col-md-2">Curator:</label>
-
-                         <select th:field="*{curationStatus}" id="curationStatus">
-                             <option th:each="curationStatus : ${curationstatuses}"
-                                     th:value="${curationStatus.id}"
-                                     th:text="${curationStatus.status}"></option>
-                         </select>
-
-                     </div>-->
 
                     <!--Button -->
                     <div class="form-group">

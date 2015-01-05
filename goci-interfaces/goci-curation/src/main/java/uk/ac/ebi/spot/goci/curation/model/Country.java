@@ -18,13 +18,13 @@ public class Country {
     @Column(name = "ID")
     private Long id;
 
-    @Column(name ="MAJORAREA")
+    @Column(name = "MAJORAREA")
     private String majorArea;
 
-    @Column(name ="REGION")
+    @Column(name = "REGION")
     private String region;
 
-    @Column(name="COUNTRY")
+    @Column(name= "COUNTRY")
     private String country;
 
     // JPA no-args constructor
