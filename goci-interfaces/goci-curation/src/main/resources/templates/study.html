@@ -11,6 +11,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
+    <!--Select2: http://ivaynberg.github.io/select2/-->
+    <!-- Include Select2 CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css"/>
+
+    <!-- CSS to make Select2 fit in with Bootstrap 3.x -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2-bootstrap.min.css"/>
+
+    <!-- Include Select2 JS -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
+
 </head>
 <body>
 
@@ -62,7 +72,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-8">
-            <form id="add-study" class="form-horizontal" method="post" th:object="${study}" name="editStudyForm"
+            <form id="studyForm" class="form-horizontal" method="post" th:object="${study}" name="studyForm"
                   th:action="@{/studies/{studyId}(studyId=*{id})}">
 
 
@@ -111,7 +121,7 @@
                     <label for="studyDate" class="control-label col-md-2">Study Date</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="studyDate" th:field="*{studyDate}"  />
+                        <input type="text" class="form-control" id="studyDate" th:field="*{studyDate}"/>
                     </div>
                 </div>
 
@@ -134,7 +144,8 @@
 
 
                 <div class="form-group">
-                    <label for="replicateSampleSize" class="control-label col-md-2">Replication Sample Description:</label>
+                    <label for="replicateSampleSize" class="control-label col-md-2">Replication Sample
+                        Description:</label>
 
                     <div class="col-md-10">
                         <input type="text" th:field="*{replicateSampleSize}" class="form-control"
@@ -159,15 +170,14 @@
                     <label for="EFOTrait" class="control-label col-md-2">EFO Trait:</label>
 
                     <div class="col-md-10">
-                        <select th:field="*{efoTraits}" id="efoTrait">
+                        <select name="EFOTrait" th:field="*{efoTraits}" class="form-control select2-select"
+                                multiple="multiple" id="EFOTrait">
                             <option th:each="efoTrait : ${efoTraits}"
                                     th:value="${efoTrait.id}"
                                     th:text="${efoTrait.trait}"></option>
                         </select>
                     </div>
                 </div>
-
-
 
                 <div class="form-group">
                     <label for="cnv" class="control-label col-md-2">CNV</label>
@@ -195,6 +205,12 @@
     </div>
 </div>
 
+<script>
+    $(function () {
+        // turn the element to select2 select style
+        $('#EFOTrait').select2();
+    });
+</script>
 
 </body>
 </html>

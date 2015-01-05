@@ -69,44 +69,88 @@ public class Ethnicity {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getStudyID() {
         return studyID;
+    }
+
+    public void setStudyID(String studyID) {
+        this.studyID = studyID;
     }
 
     public String getType() {
         return type;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public Integer getNumberOfIndividuals() {
         return numberOfIndividuals;
+    }
+
+    public void setNumberOfIndividuals(Integer numberOfIndividuals) {
+        this.numberOfIndividuals = numberOfIndividuals;
     }
 
     public String getEthnicGroup() {
         return ethnicGroup;
     }
 
+    public void setEthnicGroup(String ethnicGroup) {
+        this.ethnicGroup = ethnicGroup;
+    }
+
     public String getCountryOfOrigin() {
         return countryOfOrigin;
+    }
+
+    public void setCountryOfOrigin(String countryOfOrigin) {
+        this.countryOfOrigin = countryOfOrigin;
     }
 
     public String getCountryOfRecruitment() {
         return countryOfRecruitment;
     }
 
+    public void setCountryOfRecruitment(String countryOfRecruitment) {
+        this.countryOfRecruitment = countryOfRecruitment;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getPreviouslyReported() {
         return previouslyReported;
     }
 
+    public void setPreviouslyReported(String previouslyReported) {
+        this.previouslyReported = previouslyReported;
+    }
+
     public String getSampleSizesMatch() {
         return sampleSizesMatch;
     }
 
+    public void setSampleSizesMatch(String sampleSizesMatch) {
+        this.sampleSizesMatch = sampleSizesMatch;
+    }
+
     public String getNotes() {
         return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     @Override

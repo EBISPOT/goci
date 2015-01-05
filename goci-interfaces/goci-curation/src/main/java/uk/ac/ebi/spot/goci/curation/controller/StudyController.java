@@ -74,7 +74,7 @@ public class StudyController {
     // Save newly added study details
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String addStudy(@ModelAttribute Study study, Model model) {
+    public String addStudy(@ModelAttribute Study study) {
         Study newStudy = studyRepository.save(study);
         return "redirect:/studies/" + newStudy.getId();
     }
@@ -151,6 +151,18 @@ public class StudyController {
         return "study_sample_description";
     }
 
+
+    // Update page with ethnicity/sample information linked to a study
+    @RequestMapping(value = "/{studyId}/sampledescription", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String updateStudySampleDescription(@ModelAttribute Ethnicity ethnicity, @PathVariable String studyId) {
+
+       // Set the study ID for our ethnicity
+        ethnicity.setStudyID(studyId);
+
+        // Save our ethnicity/sample information
+        Ethnicity updatedEthnicity = ethnicityRepository.save(ethnicity);
+        return "redirect:/studies/" + studyId + "/sampledescription";
+    }
 
     /* Study curator information */
 
@@ -255,4 +267,15 @@ public class StudyController {
     public List<Country> populateCountries(Model model) {
         return countryRepository.findAll();
     }
+
+    // Sample size match
+    @ModelAttribute("sampleSizesMatchOptions")
+    public List<String> populateSampleSizesMatchOptions(Model model) {
+
+        List<String> sampleSizesMatchOptions= new ArrayList<String>();
+        sampleSizesMatchOptions.add("Y");
+        sampleSizesMatchOptions.add("N");
+        return sampleSizesMatchOptions;
+    }
+
 }

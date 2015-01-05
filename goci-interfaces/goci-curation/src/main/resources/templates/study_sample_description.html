@@ -56,8 +56,7 @@
                         </form>
                     </li>
 
-                </ul>
-                -->
+                </ul>  -->
     </div>
 </nav>
 
@@ -74,78 +73,155 @@
 
 
 <div class="container">
+    <div class="row">
+        <h4>Initial Sample Description:</h4>
 
-    <h4>Initial Sample Description:</h4>
+        <p th:text="${study.initialSampleSize}"></p>
 
-    <p th:text="${study.initialSampleSize}"></p>
+        <table id="initialTable" class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Type</th>
+                <th>Number of Individuals</th>
+                <th>Ethnic Group</th>
+                <th>Country of Origin</th>
+                <th>Country of Recruitment</th>
+                <th>Previously Reported</th>
+                <th>Sample Sizes Match</th>
+                <th>Additional Description</th>
+                <th>Notes</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="initialStudyEthnicityDescription: ${initialStudyEthnicityDescriptions}">
+                <td><a th:href="@{/studies/{studyId}(studyId=${study.id})}">Edit</a></td>
+                <td th:text="${initialStudyEthnicityDescription.type}"></td>
+                <td th:text="${initialStudyEthnicityDescription.numberOfIndividuals}"></td>
+                <td th:text="${initialStudyEthnicityDescription.ethnicGroup}"></td>
+                <td th:text="${initialStudyEthnicityDescription.countryOfOrigin}"></td>
+                <td th:text="${initialStudyEthnicityDescription.countryOfRecruitment}"></td>
+                <td th:text="${initialStudyEthnicityDescription.previouslyReported}"></td>
+                <td th:text="${initialStudyEthnicityDescription.sampleSizesMatch}"></td>
+                <td th:text="${initialStudyEthnicityDescription.description}"></td>
+                <td th:text="${initialStudyEthnicityDescription.notes}"></td>
 
-    <table id="initialTable" class="table table-hover table-bordered">
-        <thead>
-        <tr>
-            <th>Type</th>
-            <th>Number of Individuals</th>
-            <th>Ethnic Group</th>
-            <th>Country of Origin</th>
-            <th>Country of Recruitment</th>
-            <th>Previously Reported</th>
-            <th>Sample Sizes Match</th>
-            <th>Additional Description</th>
-            <th>Notes</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="initialStudyEthnicityDescription: ${initialStudyEthnicityDescriptions}">
-            <td th:text="${initialStudyEthnicityDescription.type}"></td>
-            <td th:text="${initialStudyEthnicityDescription.numberOfIndividuals}"></td>
-            <td th:text="${initialStudyEthnicityDescription.ethnicGroup}"></td>
-            <td th:text="${initialStudyEthnicityDescription.countryOfOrigin}"></td>
-            <td th:text="${initialStudyEthnicityDescription.countryOfRecruitment}"></td>
-            <td th:text="${initialStudyEthnicityDescription.previouslyReported}"></td>
-            <td th:text="${initialStudyEthnicityDescription.sampleSizesMatch}"></td>
-            <td th:text="${initialStudyEthnicityDescription.description}"></td>
-            <td th:text="${initialStudyEthnicityDescription.notes}"></td>
-        </tr>
-        </tbody>
-    </table>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <h4>Replication Sample Description:</h4>
+
+        <p th:text="${study.replicateSampleSize}"></p>
+
+        <table id="replicationTable" class="table table-hover table-bordered">
+
+            <thead>
+            <tr>
+                <th></th>
+                <th>Type</th>
+                <th>Number of Individuals</th>
+                <th>Ethnic Group</th>
+                <th>Country of Origin</th>
+                <th>Country of Recruitment</th>
+                <th>Previously Reported</th>
+                <th>Sample Sizes Match</th>
+                <th>Additional Description</th>
+                <th>Notes</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="replicationStudyEthnicityDescription: ${replicationStudyEthnicityDescriptions}">
+                <td><a th:href="@{/studies/{studyId}(studyId=${study.id})}">Edit</a></td>
+                <td th:text="${replicationStudyEthnicityDescription.type}"></td>
+                <td th:text="${replicationStudyEthnicityDescription.numberOfIndividuals}"></td>
+                <td th:text="${replicationStudyEthnicityDescription.ethnicGroup}"></td>
+                <td th:text="${replicationStudyEthnicityDescription.countryOfOrigin}"></td>
+                <td th:text="${replicationStudyEthnicityDescription.countryOfRecruitment}"></td>
+                <td th:text="${replicationStudyEthnicityDescription.previouslyReported}"></td>
+                <td th:text="${replicationStudyEthnicityDescription.sampleSizesMatch}"></td>
+                <td th:text="${replicationStudyEthnicityDescription.description}"></td>
+                <td th:text="${replicationStudyEthnicityDescription.notes}"></td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
 
-    <h4>Replication Sample Description:</h4>
+<div class="container">
+    <div class="row">
+        <div class="col-md-10">
+            <div id="edit_ethnicity_form" class="collapse">
+                <form class="form-horizontal" method="post" th:object="${ethnicity}"
+                      name="editEthnicityForm">
 
-    <p th:text="${study.replicateSampleSize}"></p>
+                    <!--Type dropdown-->
+                    <div class="form-group">
+                        <label for="type" class="control-label col-md-2">Type</label>
 
-    <table id="replicationTable" class="table table-hover table-bordered">
+                        <select th:field="*{type}" id="type">
+                            <option th:each="ethnicityType : ${ethnicityTypes}"
+                                    th:value="${ethnicityType}"
+                                    th:text="${ethnicityType}"></option>
+                        </select>
 
-        <thead>
-        <tr>
-            <th>Type</th>
-            <th>Number of Individuals</th>
-            <th>Ethnic Group</th>
-            <th>Country of Origin</th>
-            <th>Country of Recruitment</th>
-            <th>Previously Reported</th>
-            <th>Sample Sizes Match</th>
-            <th>Additional Description</th>
-            <th>Notes</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="replicationStudyEthnicityDescription: ${replicationStudyEthnicityDescriptions}">
-            <td th:text="${replicationStudyEthnicityDescription.type}"></td>
-            <td th:text="${replicationStudyEthnicityDescription.numberOfIndividuals}"></td>
-            <td th:text="${replicationStudyEthnicityDescription.ethnicGroup}"></td>
-            <td th:text="${replicationStudyEthnicityDescription.countryOfOrigin}"></td>
-            <td th:text="${replicationStudyEthnicityDescription.countryOfRecruitment}"></td>
-            <td th:text="${replicationStudyEthnicityDescription.previouslyReported}"></td>
-            <td th:text="${replicationStudyEthnicityDescription.sampleSizesMatch}"></td>
-            <td th:text="${replicationStudyEthnicityDescription.description}"></td>
-            <td th:text="${replicationStudyEthnicityDescription.notes}"></td>
-        </tr>
-        </tbody>
-    </table>
-    <!--Button-->
-    <input type="button" class="btn btn-primary" value="Add ethnicity" data-toggle="collapse"
-           data-target="#add_ethnicity_form"/>
+                    </div>
 
+                    <div class="form-group">
+                        <label for="numberOfIndividuals" class="control-label col-md-2">Number of Individuals:</label>
+                        <input id="numberOfIndividuals" type="text" th:field="*{numberOfIndividuals}"/>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="description" class="control-label col-md-2">Additional Description:</label>
+                        <textarea id="description" type="text" th:field="*{description}"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes" class="control-label col-md-2">Notes</label>
+                        <textarea id="notes" type="text" th:field="*{notes}"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sampleSizesMatch" class="control-label col-md-2">Sample Sizes Match in Catalog at
+                            Study Level?</label>
+
+                        <select th:field="*{sampleSizesMatch}" id="sampleSizesMatch">
+                            <option th:each="match : ${sampleSizesMatchOptions}"
+                                    th:value="${match}"
+                                    th:text="${match}"></option>
+                        </select>
+                    </div>
+
+                    <!--Button -->
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row">
+
+        <!--Button-->
+        <input type="button" class="btn btn-primary" value="Add ethnicity" data-toggle="collapse"
+               data-target="#add_ethnicity_form"/>
+    </div>
 </div>
 
 
@@ -154,8 +230,9 @@
         <div class="col-md-10">
             <div id="add_ethnicity_form" class="collapse">
                 <form class="form-horizontal" method="post" th:object="${ethnicity}"
-                      name="Ethnicity">
+                      name="addEthnicityForm">
 
+                    <!--Type dropdown-->
                     <div class="form-group">
                         <label for="type" class="control-label col-md-2">Type</label>
 
@@ -190,18 +267,54 @@
 
 
                     <div class="form-group">
-                        <label for="countryOrigin" class="control-label col-md-2">Country of Origin:</label>
+                        <label for="countryOfOrigin" class="control-label col-md-2">Country of Origin:</label>
 
                         <div class="col-md-10">
-                            <select name="countryOrigin" class="form-control select2-select"
+                            <select name="countryOfOrigin" class="form-control select2-select"
                                     multiple="multiple" data-placeholder="Country of Origin"
                                     th:field="*{countryOfOrigin}"
-                                    id="countryOrigin">
+                                    id="countryOfOrigin">
                                 <option th:each="country : ${countries}"
-                                        th:value="${country.id}"
+                                        th:value="${country.country}"
                                         th:text="${country.country}"></option>
                             </select>
                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="countryOfRecruitment" class="control-label col-md-2">Country of Recruitment:</label>
+
+                        <div class="col-md-10">
+                            <select name="countryOfRecruitment" class="form-control select2-select"
+                                    multiple="multiple" data-placeholder="Country of Recruitment"
+                                    th:field="*{countryOfRecruitment}"
+                                    id="countryOfRecruitment">
+                                <option th:each="country : ${countries}"
+                                        th:value="${country.country}"
+                                        th:text="${country.country}"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description" class="control-label col-md-2">Additional Description:</label>
+                        <textarea id="description" type="text" th:field="*{description}"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes" class="control-label col-md-2">Notes</label>
+                        <textarea id="notes" type="text" th:field="*{notes}"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sampleSizesMatch" class="control-label col-md-2">Sample Sizes Match in Catalog at
+                            Study Level?</label>
+
+                        <select th:field="*{sampleSizesMatch}" id="sampleSizesMatch">
+                            <option th:each="match : ${sampleSizesMatchOptions}"
+                                    th:value="${match}"
+                                    th:text="${match}"></option>
+                        </select>
                     </div>
 
                     <!--Button -->
@@ -217,6 +330,7 @@
     </div>
 </div>
 
+
 <script>
     $(function () {
         // turn the element to select2 select style
@@ -227,7 +341,14 @@
 <script>
     $(function () {
         // turn the element to select2 select style
-        $('#countryOrigin').select2();
+        $('#countryOfOrigin').select2();
+    });
+</script>
+
+<script>
+    $(function () {
+        // turn the element to select2 select style
+        $('#countryOfRecruitment').select2();
     });
 </script>
 
