@@ -10,6 +10,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
+    <!--Select2: http://ivaynberg.github.io/select2/-->
+    <!-- Include Select2 CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css"/>
+
+    <!-- CSS to make Select2 fit in with Bootstrap 3.x -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2-bootstrap.min.css"/>
+
+    <!-- Include Select2 JS -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
+
 </head>
 <body>
 
@@ -57,13 +67,14 @@
 
 <br/>
 
-<div class="container">
+<div class="container-fluid">
     <table id="mainTable" class="table table-hover table-bordered">
         <caption>Existing SNP information</caption>
         <thead>
         <tr>
             <th></th>
             <th>SNP</th>
+            <th>Genes (author reported)</th>
             <th>Strongest Allele</th>
             <th>Risk Frequency</th>
             <th>p-Value Float</th>
@@ -79,8 +90,13 @@
         </thead>
         <tbody>
         <tr th:each="studyAssociation : ${studyAssociations}">
-            <td><a th:href="@{/snps/{rsID}(rsID=${studyAssociation.snps.rsID})}">View SNP details</a></td>
-            <td th:text="${studyAssociation.snps.rsID}"></td>
+            <td>Edit</td>
+
+            <!--Study association can have multiple SNPs linked to it-->
+            <td>
+                <span th:each="snp : ${studyAssociation.snps}" th:text="${snp.rsID}"></span>
+            </td>
+            <td th:text="${studyAssociation.authorReportedGene}"></td>
             <td th:text="${studyAssociation.strongestAllele}"></td>
             <td th:text="${studyAssociation.riskFrequency}"></td>
             <td th:text="${studyAssociation.pvalueFloat}"></td>
@@ -102,7 +118,7 @@
 
     <!--Button-->
     <input type="button" class="btn btn-primary" value="Add new SNP" data-toggle="collapse"
-           data-target="#add_snp_form"/>
+           data-target="#addSNPForm"/>
 </div>
 
 <br/>
@@ -116,22 +132,23 @@
                 <!--<input type="submit" class="btn btn-default" value="Download SNPs as Spreadsheet"></input>-->
 
 
-                <div id="add_snp_form" class="collapse">
-                    <form class="form-horizontal" method="post" name="addSNPForm">
+                <div id="addSNPForm" class="collapse">
+                    <form class="form-horizontal" method="post" name="addSNPForm" th:object="${studyAssociation}">
 
-                        <div class="form-group">
-                            <label for="snps" class="control-label col-md-2">SNP(s)</label>
+                        <!--       <div class="form-group">
+                                   <label for="snps" class="control-label col-md-2">SNP(s)</label>
 
-                            <div class="col-md-10">
-                                <input type="text" class="form-control" id="snps"/>
-                            </div>
-                        </div>
+                                   <div class="col-md-10">
+                                       <input type="text" class="form-control" id="snps" th:field="*{snps}"/>
+                                   </div>
+                               </div>-->
 
                         <div class="form-group">
                             <label for="authorgenes" class="control-label col-md-2">Gene(s)</label>
 
                             <div class="col-md-10">
-                                <input type="text" class="form-control" id="authorgenes"/>
+                                <input type="text" class="form-control" id="authorgenes"
+                                       th:field="*{authorReportedGene}"/>
                             </div>
                         </div>
 
@@ -140,16 +157,18 @@
                                 Allele</label>
 
                             <div class="col-md-10">
-                                <input type="text" class="form-control" id="strongestAllele"/>
+                                <input type="text" class="form-control" id="strongestAllele"
+                                       th:field="*{strongestAllele}"/>
                             </div>
                         </div>
+
 
                         <div class="form-group">
                             <label for="riskFrequency" class="control-label col-md-2">Risk Allele Frequency in
                                 Controls</label>
 
                             <div class="col-md-10">
-                                <input type="text" class="form-control" id="riskFrequency"/>
+                                <input type="text" class="form-control" id="riskFrequency" th:field="*{riskFrequency}"/>
                             </div>
                         </div>
 
@@ -158,23 +177,24 @@
                             <label for="allele" class="control-label col-md-2">Allele</label>
 
                             <div class="col-md-10">
-                                <input type="text" class="form-control" id="allele"/>
+                                <input type="text" class="form-control" id="allele" th:field="*{allele}"/>
                             </div>
                         </div>
 
-                        <div class="form-group">
+          <!--              <div class="form-group">
                             <label for="pvalueFloat" class="control-label col-md-2">P-value (float)</label>
 
                             <div class="col-md-10">
-                                <input type="number" class="form-control" id="pvalueFloat"/>
+                                <input type="text" class="form-control" id="pvalueFloat" th:field="*{pvalueFloat}"/>
                             </div>
-                        </div>
+                        </div>-->
 
                         <div class="form-group">
                             <label for="pvalueMantissa" class="control-label col-md-2">P-value (mantissa)</label>
 
                             <div class="col-md-10">
-                                <input type="number" class="form-control" id="pvalueMantissa"/>
+                                <input type="textr" class="form-control" id="pvalueMantissa"
+                                       th:field="*{pvalueMantissa}"/>
                             </div>
                         </div>
 
@@ -182,7 +202,8 @@
                             <label for="pvalueExponent" class="control-label col-md-2">P-value (exponent)</label>
 
                             <div class="col-md-10">
-                                <input type="number" class="form-control" id="pvalueExponent"/>
+                                <input type="text" class="form-control" id="pvalueExponent"
+                                       th:field="*{pvalueExponent}"/>
                             </div>
                         </div>
 
@@ -191,17 +212,18 @@
                             <label for="pvalueText" class="control-label col-md-2">P-value (Text)</label>
 
                             <div class="col-md-10">
-                                <input type="text" class="form-control" id="pvalueText"/>
+                                <input type="text" class="form-control" id="pvalueText" th:field="*{pvalueText}"/>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="efoTraits" class="control-label col-md-2">EFO Trait</label>
+                            <label for="EFOTrait" class="control-label col-md-2">EFO Trait:</label>
 
                             <div class="col-md-10">
-                                <select id="efoTraits">
+                                <select name="EFOTrait" th:field="*{efoTraits}" class="form-control select2-select"
+                                        multiple="multiple" id="EFOTrait">
                                     <option th:each="efoTrait : ${efoTraits}"
-                                            th:value="${efoTrait}"
+                                            th:value="${efoTrait.id}"
                                             th:text="${efoTrait.trait}"></option>
                                 </select>
                             </div>
@@ -212,10 +234,12 @@
 
                             <div class="col-md-10" id="snpType">
                                 <label class="radio-inline">
-                                    <input type="radio" name="novel">Novel</input>
+                                    <input type="radio" name="novel" th:field="*{snpType}"
+                                           th:value="Novel">Novel</input>
                                 </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="known">Known</input>
+                                    <input type="radio" name="known" th:field="*{snpType}"
+                                           th:value="Known">Known</input>
                                 </label>
                             </div>
                         </div>
@@ -224,7 +248,7 @@
                             <label for="ORPerCopyNum" class="control-label col-md-2">OR/HR/RR per copy (Num)</label>
 
                             <div class="col-md-10">
-                                <input type="number" class="form-control" id="ORPerCopyNum"/>
+                                <input type="text" class="form-control" id="ORPerCopyNum" th:field="*{ORPerCopyNum}"/>
                             </div>
                         </div>
 
@@ -233,7 +257,8 @@
                                 reciprocal</label>
 
                             <div class="col-md-10">
-                                <input type="number" class="form-control" id="ORPerCopyRecip"/>
+                                <input type="text" class="form-control" id="ORPerCopyRecip"
+                                       th:field="*{ORPerCopyRecip}"/>
                             </div>
                         </div>
 
@@ -241,7 +266,8 @@
                             <label for="ORPerCopyRange" class="control-label col-md-2">OR/HR/RR per copy (Range)</label>
 
                             <div class="col-md-10">
-                                <input type="number" class="form-control" id="ORPerCopyRange"/>
+                                <input type="text" class="form-control" id="ORPerCopyRange"
+                                       th:field="*{ORPerCopyRange}"/>
                             </div>
                         </div>
 
@@ -250,7 +276,8 @@
                                 Description)</label>
 
                             <div class="col-md-10">
-                                <input type="text" class="form-control" id="ORPerCopyUnitDescr"/>
+                                <input type="text" class="form-control" id="ORPerCopyUnitDescr"
+                                       th:field="*{ORPerCopyUnitDescr}"/>
                             </div>
                         </div>
 
@@ -258,13 +285,14 @@
                             <label for="ORPerCopyStdError" class="control-label col-md-2">Standard Error</label>
 
                             <div class="col-md-10">
-                                <input type="number" class="form-control" id="ORPerCopyStdError"/>
+                                <input type="text" class="form-control" id="ORPerCopyStdError"
+                                       th:field="*{ORPerCopyStdError}"/>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="ORType" class="control-label col-md-2">ORType</label>
-                            <input id="ORType" type="checkbox" th:value="'1'"/>
+                            <input id="ORType" type="checkbox" th:value="'1'" th:field="*{ORType}"/>
                         </div>
 
 
@@ -281,6 +309,13 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(function () {
+        // turn the element to select2 select style
+        $('#EFOTrait').select2();
+    });
+</script>
 
 </body>
 </html>
