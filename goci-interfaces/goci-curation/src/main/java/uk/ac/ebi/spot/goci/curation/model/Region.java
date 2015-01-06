@@ -1,18 +1,19 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 /**
  * Created by emma on 01/12/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Model of name information associated with a SNP
  */
 @Entity
 public class Region {
-
     @Id
     @GeneratedValue
     @NotNull

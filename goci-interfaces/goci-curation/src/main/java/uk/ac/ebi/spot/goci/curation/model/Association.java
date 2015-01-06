@@ -1,6 +1,10 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
@@ -8,14 +12,13 @@ import java.util.Collection;
  * Created by emma on 27/11/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Model object representing an association
  */
 
 
 @Entity
 public class Association {
-
     @Id
     @GeneratedValue
     @NotNull
@@ -52,25 +55,12 @@ public class Association {
     @OneToOne
     private Study study;
 
-    //TODO: DOES AN ASSOCIATION EVER HAVE MORE THAN ONE SNP
-    // Associated SNPs
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinTable(
-//            name = "GWASSNPXREF",
-//            joinColumns = {@JoinColumn(name = "GWASSTUDIESSNPID", referencedColumnName = "ID")},
-//            inverseJoinColumns = {@JoinColumn(name = "SNPID", referencedColumnName = "ID")}
-//    )
     @OneToOne
     private SingleNucleotidePolymorphism snp;
 
+    @OneToMany
+    private Collection<Gene> reportedGenes;
 
-    // Associated EFO trait
-//    @OneToMany(fetch = FetchType.LAZY)
-//    @JoinTable(
-//            name = "GWASEFOSNPXREF",
-//            joinColumns = {@JoinColumn(name = "GWASSTUDIESSNPID", referencedColumnName = "ID")},
-//            inverseJoinColumns = {@JoinColumn(name = "TRAITID", referencedColumnName = "ID")}
-//    )
     @OneToMany
     private Collection<EFOTrait> efoTraits;
 
@@ -78,7 +68,24 @@ public class Association {
     public Association() {
     }
 
-    public Association(String strongestAllele, String riskFrequency, String allele, float pvalueFloat, String pvalueText, Double ORPerCopyNum, String ORType, String snpType, Integer pvalueMantissa, Integer pvalueExponent, Double ORPerCopyRecip, Double ORPerCopyStdError, String ORPerCopyRange, String ORPerCopyUnitDescr, Study study, SingleNucleotidePolymorphism snp, Collection<EFOTrait> efoTraits) {
+    public Association(String strongestAllele,
+                       String riskFrequency,
+                       String allele,
+                       float pvalueFloat,
+                       String pvalueText,
+                       Double ORPerCopyNum,
+                       String ORType,
+                       String snpType,
+                       Integer pvalueMantissa,
+                       Integer pvalueExponent,
+                       Double ORPerCopyRecip,
+                       Double ORPerCopyStdError,
+                       String ORPerCopyRange,
+                       String ORPerCopyUnitDescr,
+                       Study study,
+                       SingleNucleotidePolymorphism snp,
+                       Collection<Gene> reportedGenes,
+                       Collection<EFOTrait> efoTraits) {
         this.strongestAllele = strongestAllele;
         this.riskFrequency = riskFrequency;
         this.allele = allele;
@@ -95,6 +102,7 @@ public class Association {
         this.orPerCopyUnitDescr = ORPerCopyUnitDescr;
         this.study = study;
         this.snp = snp;
+        this.reportedGenes = reportedGenes;
         this.efoTraits = efoTraits;
     }
 
@@ -164,6 +172,10 @@ public class Association {
 
     public SingleNucleotidePolymorphism getSnp() {
         return snp;
+    }
+
+    public Collection<Gene> getReportedGenes() {
+        return reportedGenes;
     }
 
     public Collection<EFOTrait> getEfoTraits() {

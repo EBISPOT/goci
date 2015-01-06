@@ -22,7 +22,6 @@ import java.util.Collection;
 
 @Entity
 public class SingleNucleotidePolymorphism {
-
     @Id
     @GeneratedValue
     @NotNull
@@ -36,24 +35,9 @@ public class SingleNucleotidePolymorphism {
 
     private Timestamp lastUpdateDate;
 
-    // TODO HOW DO WE DEFINE RELATIONSHIP WITH GENE AND REGION
-    // Associated region
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinTable(
-//            name = "GWASREGIONXREF",
-//            joinColumns = {@JoinColumn(name = "GWASSNPID", referencedColumnName = "ID")},
-//            inverseJoinColumns = {@JoinColumn(name = "REGIONID", referencedColumnName = "ID")}
-//    )
     @OneToOne
     private Region region;
 
-    // Associated genes
-//    @ManyToMany
-//    @JoinTable(
-//            name = "GWASGENEXREF",
-//            joinColumns = {@JoinColumn(name = "GWASSNPID", referencedColumnName = "ID")},
-//            inverseJoinColumns = {@JoinColumn(name = "GENEID", referencedColumnName = "ID")}
-//    )
     @ManyToMany
     private Collection<Gene> genes;
 

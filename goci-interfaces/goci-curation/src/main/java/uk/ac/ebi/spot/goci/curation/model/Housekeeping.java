@@ -1,6 +1,9 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import java.sql.Date;
 import java.sql.Timestamp;
 
@@ -14,7 +17,6 @@ import java.sql.Timestamp;
  */
 @Entity
 public class Housekeeping {
-
     @Id
     @GeneratedValue
     private Long id;
@@ -43,22 +45,30 @@ public class Housekeeping {
 
     private String notes;
 
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "CURATORID")
     @OneToOne
     private Curator curator;
 
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "CURATORSTATUSID")
     @OneToOne
     private CurationStatus curationStatus;
-
 
     // JPA no-args constructor
     public Housekeeping() {
     }
 
-    public Housekeeping(String studySnpCheckedLevelOne, String studySnpCheckedLevelTwo, String ethnicityCheckedLevelOne, String ethnicityCheckedLevelTwo, String ethnicityBackFilled, String checkedNCBIError, Date publishDate, Date sendToNCBIDate, Timestamp studyAddedDate, Timestamp lastUpdateDate, String fileName, Curator curator, CurationStatus curationStatus, String notes) {
+    public Housekeeping(String studySnpCheckedLevelOne,
+                        String studySnpCheckedLevelTwo,
+                        String ethnicityCheckedLevelOne,
+                        String ethnicityCheckedLevelTwo,
+                        String ethnicityBackFilled,
+                        String checkedNCBIError,
+                        Date publishDate,
+                        Date sendToNCBIDate,
+                        Timestamp studyAddedDate,
+                        Timestamp lastUpdateDate,
+                        String fileName,
+                        Curator curator,
+                        CurationStatus curationStatus,
+                        String notes) {
         this.studySnpCheckedLevelOne = studySnpCheckedLevelOne;
         this.studySnpCheckedLevelTwo = studySnpCheckedLevelTwo;
         this.ethnicityCheckedLevelOne = ethnicityCheckedLevelOne;

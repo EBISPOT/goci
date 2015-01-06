@@ -1,6 +1,9 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
@@ -8,13 +11,12 @@ import java.util.Collection;
  * Created by emma on 01/12/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         A model object representing a gene and its attributes including associated single nucleotide polymorphisms
  */
 
 @Entity
 public class Gene {
-
     @Id
     @GeneratedValue
     @NotNull
@@ -22,9 +24,6 @@ public class Gene {
 
     private String geneName;
 
-    // TODO EACH GENE WILL BE LINKED TO NUMBER OF SNPS, OVERENGINEERING????
-    //Association with SNPs
-//    @ManyToMany(mappedBy="genes",fetch=FetchType.LAZY)
     @ManyToMany
     private Collection<SingleNucleotidePolymorphism> snps;
 

@@ -1,20 +1,17 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
 /**
  * Created by emma on 04/12/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Model object representing an EFO trait which is normally assigned at the SNP level
  */
 
 @Entity
 public class EFOTrait extends Trait {
-
     private String trait;
 
     private String uri;

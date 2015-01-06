@@ -1,17 +1,18 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  * Created by emma on 19/12/14.
- * @author emma
  *
- * Model object representing a country
+ * @author emma
+ *         <p>
+ *         Model object representing a country
  */
 @Entity
 public class Country {
-
-
     @Id
     @GeneratedValue
     private Long id;

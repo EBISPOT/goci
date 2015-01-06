@@ -16,7 +16,6 @@ import java.util.Collection;
 
 @Entity
 public class Study {
-
     @Id
     @GeneratedValue
     private Long id;
@@ -43,24 +42,12 @@ public class Study {
 
     private String gxg;
 
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "DISEASEID")
     @OneToOne
     private DiseaseTrait diseaseTrait;
 
-    // Associated EFO trait
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(
-//            name = "GWASEFOSTUDYXREF",
-//            joinColumns = {@JoinColumn(name = "STUDYID", referencedColumnName = "ID")},
-//            inverseJoinColumns = {@JoinColumn(name = "TRAITID", referencedColumnName = "ID")}
-//    )
     @ManyToMany
     private Collection<EFOTrait> efoTraits;
 
-    // Associated Housekeeping attribute
-//    @JoinColumn(name = "HOUSEKEEPINGID")
-//    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OneToOne
     private Housekeeping housekeeping;
 
