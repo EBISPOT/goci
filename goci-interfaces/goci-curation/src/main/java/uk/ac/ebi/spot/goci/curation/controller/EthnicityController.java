@@ -44,7 +44,7 @@ public class EthnicityController {
 
     /* Ethnicity/Sample information associated with a study */
 
-    // Generate page with sample description linked to a study
+    // Generate view of ethnicity/sample information linked to a study
     @RequestMapping(value = "/studies/{studyId}/sampledescription", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewStudySampleDescription(Model model, @PathVariable String studyId) {
 
@@ -59,10 +59,11 @@ public class EthnicityController {
         initialStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIDAndType(studyId, initialType));
         replicationStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIDAndType(studyId, replicationType));
 
+        // Add all ethnicity/sample information for the study to our model
         model.addAttribute("initialStudyEthnicityDescriptions", initialStudyEthnicityDescriptions);
         model.addAttribute("replicationStudyEthnicityDescriptions", replicationStudyEthnicityDescriptions);
 
-        // Return an ethnicty object so curators can add new information
+        // Return an empty ethnicity object so curators can add new ethnicity/sample information to study
         model.addAttribute("ethnicity", new Ethnicity());
 
         // Also passes back study object to view so we can create links back to main study page
@@ -71,9 +72,9 @@ public class EthnicityController {
     }
 
 
-    // Update page with ethnicity/sample information linked to a study
+    // Add new ethnicity/sample information to a study
     @RequestMapping(value = "/studies/{studyId}/sampledescription", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateStudySampleDescription(@ModelAttribute Ethnicity ethnicity, @PathVariable String studyId) {
+    public String addStudySampleDescription(@ModelAttribute Ethnicity ethnicity, @PathVariable String studyId) {
 
         // Set the study ID for our ethnicity
         ethnicity.setStudyID(studyId);
@@ -88,7 +89,7 @@ public class EthnicityController {
 
     // View ethnicity/sample information
     @RequestMapping(value = "/sampledescriptions/{ethnicityId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String viewStudy(Model model, @PathVariable Long ethnicityId) {
+    public String viewSampleDescription(Model model, @PathVariable Long ethnicityId) {
         Ethnicity ethnicityToView = ethnicityRepository.findOne(ethnicityId);
         model.addAttribute("ethnicity", ethnicityToView);
         return "edit_sample_description";
@@ -97,7 +98,7 @@ public class EthnicityController {
     // Edit existing ethnicity/sample information
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/sampledescriptions/{ethnicityId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateStudy(@ModelAttribute Ethnicity ethnicity) {
+    public String updateSampleDescription(@ModelAttribute Ethnicity ethnicity) {
 
         // Saves the new information returned from form
         Ethnicity updatedEthnicity = ethnicityRepository.save(ethnicity);
