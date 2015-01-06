@@ -1,16 +1,13 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.Date;
 
 /**
  * Created by emma on 21/11/14.
  *
  * @author emma
- *         <p/>
  *         Model object representing a single nucleotide polymorphisms and its attributes
  */
 
@@ -20,7 +17,6 @@ public class SingleNucleotidePolymorphism {
 
     @Id
     @GeneratedValue
-    @NotNull
     @Column(name = "ID")
     private Long id;
 
@@ -29,27 +25,26 @@ public class SingleNucleotidePolymorphism {
 
     // TODO ADD THESE ONCE TABLE IS ACTIVE
     @Column(name = "CHROMOSOME_NAME")
-   private String chromosomeName;
+    private String chromosomeName;
 
     @Column(name = "CHROMOSOME_POS")
     private String chromosomePosition;
-
 
     @Column(name = "LASTUPDATEDATE")
     private Timestamp lastUpdateDate;
 
     // TODO HOW DO WE DEFINE RELATIONSHIP WITH GENE AND REGION
     // Associated region
-    @OneToOne(fetch = FetchType.LAZY)
+  /*  @OneToOne(fetch = FetchType.LAZY)
     @JoinTable(
             name = "GWASREGIONXREF",
             joinColumns = {@JoinColumn(name = "GWASSNPID", referencedColumnName = "ID")},
             inverseJoinColumns = {@JoinColumn(name = "REGIONID", referencedColumnName = "ID")}
     )
-    private Region region;
+    private Region region;*/
 
     // Associated genes
-    @ManyToMany
+ @ManyToMany
     @JoinTable(
             name = "GWASGENEXREF",
             joinColumns = {@JoinColumn(name = "GWASSNPID", referencedColumnName = "ID")},
@@ -61,43 +56,52 @@ public class SingleNucleotidePolymorphism {
     public SingleNucleotidePolymorphism() {
     }
 
-    public SingleNucleotidePolymorphism(String rsID, String chromosomeName, String chromosomePosition, Timestamp lastUpdateDate, Region region, Collection<Gene> genes) {
+    public SingleNucleotidePolymorphism(String rsID, String chromosomeName, String chromosomePosition, Timestamp lastUpdateDate) {
         this.rsID = rsID;
         this.chromosomeName = chromosomeName;
         this.chromosomePosition = chromosomePosition;
         this.lastUpdateDate = lastUpdateDate;
-        this.region = region;
-        this.genes = genes;
     }
 
     public Long getId() {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getRsID() {
         return rsID;
+    }
+
+    public void setRsID(String rsID) {
+        this.rsID = rsID;
     }
 
     public String getChromosomeName() {
         return chromosomeName;
     }
 
+    public void setChromosomeName(String chromosomeName) {
+        this.chromosomeName = chromosomeName;
+    }
+
     public String getChromosomePosition() {
         return chromosomePosition;
+    }
+
+    public void setChromosomePosition(String chromosomePosition) {
+        this.chromosomePosition = chromosomePosition;
     }
 
     public Timestamp getLastUpdateDate() {
         return lastUpdateDate;
     }
 
-    public Region getRegion() {
-        return region;
+    public void setLastUpdateDate(Timestamp lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
     }
-
-    public Collection<Gene> getGenes() {
-        return genes;
-    }
-
 
     @Override
     public String toString() {
@@ -107,11 +111,6 @@ public class SingleNucleotidePolymorphism {
                 ", chromosomeName='" + chromosomeName + '\'' +
                 ", chromosomePosition='" + chromosomePosition + '\'' +
                 ", lastUpdateDate=" + lastUpdateDate +
-                ", region=" + region +
-                ", genes=" + genes +
                 '}';
     }
-
-
-
 }

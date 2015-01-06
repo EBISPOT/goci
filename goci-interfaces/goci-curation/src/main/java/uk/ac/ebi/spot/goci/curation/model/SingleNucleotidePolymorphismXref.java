@@ -1,13 +1,12 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 /**
  * Created by emma on 04/12/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Model of snp cross reference table
  */
 @Entity
@@ -16,7 +15,6 @@ public class SingleNucleotidePolymorphismXref {
 
     @Id
     @GeneratedValue
-    @NotNull
     @Column(name = "ID")
     private Long id;
 
@@ -35,16 +33,29 @@ public class SingleNucleotidePolymorphismXref {
         this.associationID = associationID;
     }
 
+
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getSnpID() {
         return snpID;
     }
 
+    public void setSnpID(Long snpID) {
+        this.snpID = snpID;
+    }
+
     public Long getAssociationID() {
         return associationID;
+    }
+
+    public void setAssociationID(Long associationID) {
+        this.associationID = associationID;
     }
 
     @Override

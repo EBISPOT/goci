@@ -1,13 +1,12 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 /**
  * Created by emma on 04/12/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Model of gene cross reference table
  */
 
@@ -17,7 +16,6 @@ public class GeneXref {
 
     @Id
     @GeneratedValue
-    @NotNull
     @Column(name = "ID")
     private Long id;
 
@@ -33,6 +31,18 @@ public class GeneXref {
 
     public GeneXref(Long geneID, Long associationID) {
         this.geneID = geneID;
+        this.associationID = associationID;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setGeneID(Long geneID) {
+        this.geneID = geneID;
+    }
+
+    public void setAssociationID(Long associationID) {
         this.associationID = associationID;
     }
 
