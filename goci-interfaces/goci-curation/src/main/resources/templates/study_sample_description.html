@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns="http://www.w3.org/1999/xhtml">
+             xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>GWAS Curation Demo</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -95,7 +95,7 @@
             </thead>
             <tbody>
             <tr th:each="initialStudyEthnicityDescription: ${initialStudyEthnicityDescriptions}">
-                <td><a th:href="@{/studies/{studyId}(studyId=${study.id})}">Edit</a></td>
+                <td><a th:href="@{/sampledescriptions/{ethnicityId}(ethnicityId=${initialStudyEthnicityDescription.id})}">Edit</a></td>
                 <td th:text="${initialStudyEthnicityDescription.type}"></td>
                 <td th:text="${initialStudyEthnicityDescription.numberOfIndividuals}"></td>
                 <td th:text="${initialStudyEthnicityDescription.ethnicGroup}"></td>
@@ -137,7 +137,7 @@
             </thead>
             <tbody>
             <tr th:each="replicationStudyEthnicityDescription: ${replicationStudyEthnicityDescriptions}">
-                <td><a th:href="@{/studies/{studyId}(studyId=${study.id})}">Edit</a></td>
+                <td><a th:href="@{/sampledescriptions/{ethnicityId}(ethnicityId=${replicationStudyEthnicityDescription.id})}">Edit</a></td>
                 <td th:text="${replicationStudyEthnicityDescription.type}"></td>
                 <td th:text="${replicationStudyEthnicityDescription.numberOfIndividuals}"></td>
                 <td th:text="${replicationStudyEthnicityDescription.ethnicGroup}"></td>
@@ -154,65 +154,6 @@
     </div>
 </div>
 
-
-<div class="container">
-    <div class="row">
-        <div class="col-md-10">
-            <div id="edit_ethnicity_form" class="collapse">
-                <form class="form-horizontal" method="post" th:object="${ethnicity}"
-                      name="editEthnicityForm">
-
-                    <!--Type dropdown-->
-                    <div class="form-group">
-                        <label for="type" class="control-label col-md-2">Type</label>
-
-                        <select th:field="*{type}" id="type">
-                            <option th:each="ethnicityType : ${ethnicityTypes}"
-                                    th:value="${ethnicityType}"
-                                    th:text="${ethnicityType}"></option>
-                        </select>
-
-                    </div>
-
-                    <div class="form-group">
-                        <label for="numberOfIndividuals" class="control-label col-md-2">Number of Individuals:</label>
-                        <input id="numberOfIndividuals" type="text" th:field="*{numberOfIndividuals}"/>
-                    </div>
-
-
-                    <div class="form-group">
-                        <label for="description" class="control-label col-md-2">Additional Description:</label>
-                        <textarea id="description" type="text" th:field="*{description}"/>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="notes" class="control-label col-md-2">Notes</label>
-                        <textarea id="notes" type="text" th:field="*{notes}"/>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="sampleSizesMatch" class="control-label col-md-2">Sample Sizes Match in Catalog at
-                            Study Level?</label>
-
-                        <select th:field="*{sampleSizesMatch}" id="sampleSizesMatch">
-                            <option th:each="match : ${sampleSizesMatchOptions}"
-                                    th:value="${match}"
-                                    th:text="${match}"></option>
-                        </select>
-                    </div>
-
-                    <!--Button -->
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 <div class="container">
