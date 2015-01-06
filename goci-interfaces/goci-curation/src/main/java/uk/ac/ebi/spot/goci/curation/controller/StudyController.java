@@ -29,7 +29,6 @@ public class StudyController {
 
     // Repositories allowing access to database objects associated with a study
     private StudyRepository studyRepository;
-    private AssociationRepository associationRepository;
     private HousekeepingRepository housekeepingRepository;
     private DiseaseTraitRepository diseaseTraitRepository;
     private EFOTraitRepository efoTraitRepository;
@@ -37,9 +36,8 @@ public class StudyController {
     private CurationStatusRepository curationStatusRepository;
 
     @Autowired
-    public StudyController(StudyRepository studyRepository, AssociationRepository associationRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EFOTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository) {
+    public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EFOTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository) {
         this.studyRepository = studyRepository;
-        this.associationRepository = associationRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -101,22 +99,6 @@ public class StudyController {
         // Saves the new information returned from form
         Study updatedStudy = studyRepository.save(study);
         return "redirect:/studies/" + updatedStudy.getId();
-    }
-
-
-    /* Study SNP/Associations */
-
-    // Generate list of SNP associations linked to a study
-    @RequestMapping(value = "/{studyId}/associations", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String viewStudySnps(Model model, @PathVariable String studyId) {
-
-        Collection<Association> associations = new ArrayList<>();
-        associations.addAll(associationRepository.findByStudyID(studyId));
-        model.addAttribute("studyAssociations", associations);
-
-        // Also passes back study object to view so we can create links back to main study page
-        model.addAttribute("study", studyRepository.findOne(Long.valueOf(studyId).longValue()));
-        return "study_association";
     }
 
 
