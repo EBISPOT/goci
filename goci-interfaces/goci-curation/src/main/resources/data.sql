@@ -52,8 +52,8 @@ INSERT INTO HOUSEKEEPING (ID, STUDY_SNP_CHECKED_LEVEL_ONE, STUDY_SNP_CHECKED_LEV
 INSERT INTO HOUSEKEEPING (ID, STUDY_SNP_CHECKED_LEVEL_ONE, STUDY_SNP_CHECKED_LEVEL_TWO, PUBLISH_DATE, NOTES, ETHNICITY_CHECKED_LEVEL_ONE, ETHNICITY_CHECKED_LEVEL_TWO, SEND_TONCBIDATE, CHECKEDNCBIERROR, FILE_NAME, CURATOR_ID, CURATION_STATUS_ID, ETHNICITY_BACK_FILLED, STUDY_ADDED_DATE, LAST_UPDATE_DATE) VALUES (102, '1', '1', TO_DATE('2012-01-03 15:19:20', 'yyyy-mm-dd HH24:MI:SS'), 'No combine or meta-analysis result to report no significant Pvalue from any study, PH', '1', '1', NULL,'0','Christie.Acute lung injury.PLoS One.2012.pdf', 62, 83 ,'1' , TO_DATE('2011-01-03 00:00:00', 'yyyy-mm-dd HH24:MI:SS'), TO_DATE('2014-06-09 08:17:40', 'yyyy-mm-dd HH24:MI:SS'));
 
 -- STUDY
-INSERT INTO STUDY (ID, AUTHOR, STUDY_DATE, PUBLICATION, TITLE, INITIAL_SAMPLE_SIZE, REPLICATE_SAMPLE_SIZE, PLATFORM, PUBMED_ID, CNV, GXE, GXG, DISEASE_TRAIT_ID, HOUSEKEEPING_ID) VALUES (111, 'Yang J', TO_DATE('2010-11-02 00:00:00', 'yyyy-mm-dd HH24:MI:SS'), 'Hum Mol Genet','ELF1 is associated with systemic lupus erythematosus in Asian populations','612 Chinese ancestry cases, 1,160 Chinese ancestry controls','2,090 Chinese ancestry cases, 1,981 Chinese ancestry controls, 462 Thai ancestry cases, 951 Thai ancestry controls','Illumina [513,108]', '21044949', '1', '0', '1', 91,101);
-INSERT INTO STUDY (ID, AUTHOR, STUDY_DATE, PUBLICATION, TITLE, INITIAL_SAMPLE_SIZE, REPLICATE_SAMPLE_SIZE, PLATFORM, PUBMED_ID, CNV, GXE, GXG, DISEASE_TRAIT_ID, HOUSEKEEPING_ID) VALUES (112, 'Christie JD', TO_DATE('2012-01-25 00:00:00', 'yyyy-mm-dd HH24:MI:SS'), 'PLoS Onet','Genome wide association identifies PPFIA1 as a candidate gene for acute lung injury risk following major trauma','600 European ancestry cases, 2,266 European ancestry controls','212 European ancestry cases, 283 European ancestry controls','Illumina [2,487,415] (imputed)', '22295056', '0', '0', '0', 92,102);
+INSERT INTO STUDY (ID, AUTHOR, STUDY_DATE, PUBLICATION, TITLE, INITIAL_SAMPLE_SIZE, REPLICATE_SAMPLE_SIZE, PLATFORM, PUBMED_ID, CNV, GXE, GXG, HOUSEKEEPING_ID) VALUES (111, 'Yang J', TO_DATE('2010-11-02 00:00:00', 'yyyy-mm-dd HH24:MI:SS'), 'Hum Mol Genet','ELF1 is associated with systemic lupus erythematosus in Asian populations','612 Chinese ancestry cases, 1,160 Chinese ancestry controls','2,090 Chinese ancestry cases, 1,981 Chinese ancestry controls, 462 Thai ancestry cases, 951 Thai ancestry controls','Illumina [513,108]', '21044949', '1', '0', '1', 101);
+INSERT INTO STUDY (ID, AUTHOR, STUDY_DATE, PUBLICATION, TITLE, INITIAL_SAMPLE_SIZE, REPLICATE_SAMPLE_SIZE, PLATFORM, PUBMED_ID, CNV, GXE, GXG, HOUSEKEEPING_ID) VALUES (112, 'Christie JD', TO_DATE('2012-01-25 00:00:00', 'yyyy-mm-dd HH24:MI:SS'), 'PLoS Onet','Genome wide association identifies PPFIA1 as a candidate gene for acute lung injury risk following major trauma','600 European ancestry cases, 2,266 European ancestry controls','212 European ancestry cases, 283 European ancestry controls','Illumina [2,487,415] (imputed)', '22295056', '0', '0', '0', 102);
 
 -- ETHNICITY
 INSERT INTO ETHNICITY (ID, STUDY_ID, TYPE, NUMBER_OF_INDIVIDUALS, ETHNIC_GROUP, COUNTRY_OF_ORIGIN, COUNTRY_OF_RECRUITMENT, DESCRIPTION, PREVIOUSLY_REPORTED, SAMPLE_SIZES_MATCH, NOTES) VALUES (21, 111, 'replication', 1413, 'South East Asian', 'NULL', 'Thailand', 'Bangkok, Thailand', 'NULL', 'Y', 'NULL');
@@ -74,3 +74,7 @@ INSERT INTO SNP_GENE (GENE_ID, SNP_ID) VALUES (13,41);
 -- STUDY_SNP
 INSERT INTO STUDY_SNP (STUDY_ID, SNP_ID) VALUES (111,41);
 INSERT INTO STUDY_SNP (STUDY_ID, SNP_ID) VALUES (112,41);
+
+-- STUDY_DISEASE_TRAIT
+INSERT INTO STUDY_DISEASE_TRAIT (STUDY_ID, DISEASE_TRAIT_ID) VALUES(111, 91);
+INSERT INTO STUDY_DISEASE_TRAIT (STUDY_ID, DISEASE_TRAIT_ID) VALUES(112, 92);

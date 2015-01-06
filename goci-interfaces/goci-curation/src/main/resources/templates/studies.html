@@ -121,7 +121,12 @@
                     <td th:text="${study.publication} ?: 'null'"></td>
 
                     <!--If study has associated disease trait return traits name-->
-                    <td th:text="${study.diseaseTrait != null} ? ${study.diseaseTrait.trait} : 'null'"></td>
+                    <td>
+                        <div th:each="diseaseTrait : ${study.diseaseTraits}">
+                            <span th:text="${diseaseTrait.trait}">Trait</span>
+                        </div>
+                    </td>
+                    <!--<td th:text="${study.diseaseTrait != null} ? ${study.diseaseTrait.trait} : 'null'"></td>-->
 
                     <!--If study has associated housekeeping object then get the following attributes -->
 

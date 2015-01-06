@@ -47,13 +47,10 @@ public class Study {
 
     private String gxg;
 
-    @OneToOne
-    private DiseaseTrait diseaseTrait;
-
     @ManyToMany
-    @JoinTable(name = "STUDY_EFO_TRAIT",
+    @JoinTable(name = "STUDY_DISEASE_TRAIT",
                joinColumns = @JoinColumn(name = "STUDY_ID"),
-               inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
+               inverseJoinColumns = @JoinColumn(name = "DISEASE_TRAIT_ID"))
     private Collection<DiseaseTrait> diseaseTraits;
 
     @ManyToMany
@@ -80,7 +77,7 @@ public class Study {
                  String cnv,
                  String gxe,
                  String gxg,
-                 DiseaseTrait diseaseTrait,
+                 Collection<DiseaseTrait> diseaseTraits,
                  Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms,
                  Housekeeping housekeeping) {
         this.author = author;
@@ -94,7 +91,7 @@ public class Study {
         this.cnv = cnv;
         this.gxe = gxe;
         this.gxg = gxg;
-        this.diseaseTrait = diseaseTrait;
+        this.diseaseTraits = diseaseTraits;
         this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
         this.housekeeping = housekeeping;
     }
@@ -195,12 +192,12 @@ public class Study {
         this.gxg = gxg;
     }
 
-    public DiseaseTrait getDiseaseTrait() {
-        return diseaseTrait;
+    public Collection<DiseaseTrait> getDiseaseTraits() {
+        return diseaseTraits;
     }
 
-    public void setDiseaseTrait(DiseaseTrait diseaseTrait) {
-        this.diseaseTrait = diseaseTrait;
+    public void setDiseaseTraits(Collection<DiseaseTrait> diseaseTraits) {
+        this.diseaseTraits = diseaseTraits;
     }
 
     public Collection<SingleNucleotidePolymorphism> getSingleNucleotidePolymorphisms() {
@@ -234,7 +231,6 @@ public class Study {
                 ", cnv='" + cnv + '\'' +
                 ", gxe='" + gxe + '\'' +
                 ", gxg='" + gxg + '\'' +
-                ", diseaseTrait=" + diseaseTrait +
                 ", diseaseTraits=" + diseaseTraits +
                 ", housekeeping=" + housekeeping +
                 '}';
