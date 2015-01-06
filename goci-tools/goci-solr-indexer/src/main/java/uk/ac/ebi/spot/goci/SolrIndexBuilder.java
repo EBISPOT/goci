@@ -46,7 +46,6 @@ public class SolrIndexBuilder {
         };
     }
 
-    @Transactional
     void convertDocuments() {
         studyRepository.findAll().forEach(
                 study -> studyIndex.save(new StudyDocument(study)));
