@@ -3,6 +3,8 @@ package uk.ac.ebi.spot.goci.curation.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
@@ -59,9 +61,15 @@ public class Association {
     private SingleNucleotidePolymorphism snp;
 
     @OneToMany
+    @JoinTable(name = "ASSOCIATION_REPORTED_GENE",
+               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+               inverseJoinColumns = @JoinColumn(name = "REPORTED_GENE_ID"))
     private Collection<Gene> reportedGenes;
 
     @OneToMany
+    @JoinTable(name = "ASSOCIATION_EFO_TRAITS",
+               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+               inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EFOTrait> efoTraits;
 
     // JPA no-args constructor

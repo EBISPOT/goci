@@ -1,7 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -39,6 +38,9 @@ public class SingleNucleotidePolymorphism {
     private Region region;
 
     @ManyToMany
+    @JoinTable(name = "SNP_GENE",
+               joinColumns = @JoinColumn(name = "SNP_ID"),
+               inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
     private Collection<Gene> genes;
 
     // JPA no-args constructor

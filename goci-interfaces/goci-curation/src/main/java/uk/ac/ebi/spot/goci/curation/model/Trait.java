@@ -16,7 +16,6 @@ import javax.validation.constraints.NotNull;
  */
 @MappedSuperclass
 public abstract class Trait {
-
     @Id
     @GeneratedValue
     private Long id;

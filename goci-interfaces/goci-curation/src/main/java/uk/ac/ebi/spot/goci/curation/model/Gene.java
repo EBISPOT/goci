@@ -3,9 +3,7 @@ package uk.ac.ebi.spot.goci.curation.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
 
 /**
  * Created by emma on 01/12/14.
@@ -24,16 +22,12 @@ public class Gene {
 
     private String geneName;
 
-    @ManyToMany
-    private Collection<SingleNucleotidePolymorphism> snps;
-
     // JPA no-args constructor
     public Gene() {
     }
 
-    public Gene(String geneName, Collection<SingleNucleotidePolymorphism> snps) {
+    public Gene(String geneName) {
         this.geneName = geneName;
-        this.snps = snps;
     }
 
     public Long getId() {
@@ -44,16 +38,11 @@ public class Gene {
         return geneName;
     }
 
-    public Collection<SingleNucleotidePolymorphism> getSnps() {
-        return snps;
-    }
-
     @Override
     public String toString() {
         return "Gene{" +
                 "id=" + id +
                 ", geneName='" + geneName + '\'' +
-                ", snps=" + snps +
                 '}';
     }
 }

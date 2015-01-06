@@ -196,11 +196,11 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="efoTraits" class="control-label col-md-2">EFO Trait</label>
+                            <label for="diseaseTraits" class="control-label col-md-2">EFO Trait</label>
 
                             <div class="col-md-10">
-                                <select id="efoTraits">
-                                    <option th:each="efoTrait : ${efoTraits}"
+                                <select id="diseaseTraits">
+                                    <option th:each="efoTrait : ${diseaseTraits}"
                                             th:value="${efoTrait}"
                                             th:text="${efoTrait.trait}"></option>
                                 </select>

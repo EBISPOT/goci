@@ -1,9 +1,14 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import java.sql.Date;
 import java.util.Collection;
-
 
 
 /**
@@ -46,7 +51,16 @@ public class Study {
     private DiseaseTrait diseaseTrait;
 
     @ManyToMany
-    private Collection<EFOTrait> efoTraits;
+    @JoinTable(name = "STUDY_EFO_TRAIT",
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
+    private Collection<DiseaseTrait> diseaseTraits;
+
+    @ManyToMany
+    @JoinTable(name = "STUDY_SNP",
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
+    private Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms;
 
     @OneToOne
     private Housekeeping housekeeping;
@@ -55,7 +69,20 @@ public class Study {
     public Study() {
     }
 
-    public Study(String author, Date studyDate, String publication, String title, String initialSampleSize, String replicateSampleSize, String platform, String pubmedId, String cnv, String gxe, String gxg, DiseaseTrait diseaseTrait, Collection<EFOTrait> efoTraits, Housekeeping housekeeping) {
+    public Study(String author,
+                 Date studyDate,
+                 String publication,
+                 String title,
+                 String initialSampleSize,
+                 String replicateSampleSize,
+                 String platform,
+                 String pubmedId,
+                 String cnv,
+                 String gxe,
+                 String gxg,
+                 DiseaseTrait diseaseTrait,
+                 Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms,
+                 Housekeeping housekeeping) {
         this.author = author;
         this.studyDate = studyDate;
         this.publication = publication;
@@ -68,7 +95,7 @@ public class Study {
         this.gxe = gxe;
         this.gxg = gxg;
         this.diseaseTrait = diseaseTrait;
-        this.efoTraits = efoTraits;
+        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
         this.housekeeping = housekeeping;
     }
 
@@ -176,12 +203,12 @@ public class Study {
         this.diseaseTrait = diseaseTrait;
     }
 
-    public Collection<EFOTrait> getEfoTraits() {
-        return efoTraits;
+    public Collection<SingleNucleotidePolymorphism> getSingleNucleotidePolymorphisms() {
+        return singleNucleotidePolymorphisms;
     }
 
-    public void setEfoTraits(Collection<EFOTrait> efoTraits) {
-        this.efoTraits = efoTraits;
+    public void setSingleNucleotidePolymorphisms(Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms) {
+        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
     }
 
     public Housekeeping getHousekeeping() {
@@ -208,7 +235,7 @@ public class Study {
                 ", gxe='" + gxe + '\'' +
                 ", gxg='" + gxg + '\'' +
                 ", diseaseTrait=" + diseaseTrait +
-                ", efoTraits=" + efoTraits +
+                ", diseaseTraits=" + diseaseTraits +
                 ", housekeeping=" + housekeeping +
                 '}';
     }

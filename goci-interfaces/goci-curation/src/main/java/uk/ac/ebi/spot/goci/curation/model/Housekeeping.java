@@ -37,9 +37,9 @@ public class Housekeeping {
 
     private Date sendToNCBIDate;
 
-    private Timestamp studyAddedDate;
+    private Date studyAddedDate;
 
-    private Timestamp lastUpdateDate;
+    private Date lastUpdateDate;
 
     private String fileName;
 
@@ -63,8 +63,8 @@ public class Housekeeping {
                         String checkedNCBIError,
                         Date publishDate,
                         Date sendToNCBIDate,
-                        Timestamp studyAddedDate,
-                        Timestamp lastUpdateDate,
+                        Date studyAddedDate,
+                        Date lastUpdateDate,
                         String fileName,
                         Curator curator,
                         CurationStatus curationStatus,
@@ -157,19 +157,19 @@ public class Housekeeping {
         this.sendToNCBIDate = sendToNCBIDate;
     }
 
-    public Timestamp getStudyAddedDate() {
+    public Date getStudyAddedDate() {
         return studyAddedDate;
     }
 
-    public void setStudyAddedDate(Timestamp studyAddedDate) {
+    public void setStudyAddedDate(Date studyAddedDate) {
         this.studyAddedDate = studyAddedDate;
     }
 
-    public Timestamp getLastUpdateDate() {
+    public Date getLastUpdateDate() {
         return lastUpdateDate;
     }
 
-    public void setLastUpdateDate(Timestamp lastUpdateDate) {
+    public void setLastUpdateDate(Date lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
     }
 
