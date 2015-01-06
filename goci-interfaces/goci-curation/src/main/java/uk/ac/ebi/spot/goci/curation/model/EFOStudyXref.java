@@ -1,7 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 /**
  * Created by emma on 08/12/14.
@@ -11,48 +10,44 @@ import javax.validation.constraints.NotNull;
  *         Model of EFO study cross reference table
  */
 @Entity
-@Table(name = "GWASEFOSTUDYXREF")
 public class EFOStudyXref {
 
     @Id
     @GeneratedValue
-    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "TRAITID")
-    private Long traitID;
+    private Long traitId;
 
-    @Column(name = "STUDYID")
-    private Long studyID;
+    private Long studyId;
 
     // JPA no-args constructor
     public EFOStudyXref() {
 
     }
 
-    public EFOStudyXref(Long traitID, Long studyID) {
-        this.traitID = traitID;
-        this.studyID = studyID;
+    public EFOStudyXref(Long traitId, Long studyId) {
+        this.traitId = traitId;
+        this.studyId = studyId;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getTraitID() {
-        return traitID;
+    public Long getTraitId() {
+        return traitId;
     }
 
-    public Long getStudyID() {
-        return studyID;
+    public Long getStudyId() {
+        return studyId;
     }
 
     @Override
     public String toString() {
         return "EFOStudyXref{" +
                 "id=" + id +
-                ", traitID=" + traitID +
-                ", studyID=" + studyID +
+                ", traitID=" + traitId +
+                ", studyId=" + studyId +
                 '}';
     }
 }

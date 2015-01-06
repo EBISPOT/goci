@@ -14,10 +14,8 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "GWASDISEASETRAITS")
 public class DiseaseTrait extends Trait {
 
-    @Column(name = "DISEASETRAIT")
     private String trait;
 
     // JPA no-args constructor

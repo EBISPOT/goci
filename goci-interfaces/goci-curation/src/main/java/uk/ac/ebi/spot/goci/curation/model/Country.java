@@ -9,22 +9,17 @@ import javax.persistence.*;
  * Model object representing a country
  */
 @Entity
-@Table(name = "GWASCOUNTRIES")
 public class Country {
 
 
     @Id
     @GeneratedValue
-    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "MAJORAREA")
     private String majorArea;
 
-    @Column(name = "REGION")
     private String region;
 
-    @Column(name= "COUNTRY")
     private String country;
 
     // JPA no-args constructor

@@ -8,42 +8,39 @@ import javax.validation.constraints.NotNull;
  *
  * @author emma
  *         <p/>
- *         Model of region information associated with a SNP
+ *         Model of name information associated with a SNP
  */
 @Entity
-@Table(name = "GWASREGION")
 public class Region {
 
     @Id
     @GeneratedValue
     @NotNull
-    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "REGION")
-    private String region;
+    private String name;
 
     // JPA no-args constructor
     public Region() {
     }
 
-    public Region(String region) {
-        this.region = region;
+    public Region(String name) {
+        this.name = name;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getRegion() {
-        return region;
+    public String getName() {
+        return name;
     }
 
     @Override
     public String toString() {
         return "Region{" +
                 "id=" + id +
-                ", region='" + region + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

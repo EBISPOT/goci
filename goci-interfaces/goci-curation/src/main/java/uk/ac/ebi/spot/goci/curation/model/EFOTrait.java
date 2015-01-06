@@ -13,13 +13,10 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name = "GWASEFOTRAITS")
 public class EFOTrait extends Trait {
 
-    @Column(name = "EFOTRAIT")
     private String trait;
 
-    @Column(name = "EFOURI")
     private String uri;
 
     // JPA no-args constructor

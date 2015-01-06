@@ -13,57 +13,45 @@ import java.sql.Timestamp;
  *         Model representing housekeeping information stored about a study that is used during curation
  */
 @Entity
-@Table(name = "HOUSEKEEPING")
 public class Housekeeping {
 
     @Id
     @GeneratedValue
-    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "STUDYSNPCHECKEDL1")
     private String studySnpCheckedLevelOne;
 
-    @Column(name = "STUDYSNPCHECKEDL2")
     private String studySnpCheckedLevelTwo;
 
-    @Column(name = "ETHNICITYCHECKEDL1")
     private String ethnicityCheckedLevelOne;
 
-    @Column(name = "ETHNICITYCHECKEDL2")
     private String ethnicityCheckedLevelTwo;
 
-    @Column(name = "ETHNICITYBACKFILLED")
     private String ethnicityBackFilled;
 
-    @Column(name = "CHECKEDNCBIERROR")
     private String checkedNCBIError;
 
-    @Column(name = "PUBLISHDATE")
     private Date publishDate;
 
-    @Column(name = "SENDTONCBIDATE")
     private Date sendToNCBIDate;
 
-    @Column(name = "STUDYADDEDDATE")
     private Timestamp studyAddedDate;
 
-    @Column(name = "LASTUPDATEDATE")
     private Timestamp lastUpdateDate;
 
-    @Column(name = "FILENAM")
     private String fileName;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CURATORID")
+    private String notes;
+
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "CURATORID")
+    @OneToOne
     private Curator curator;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CURATORSTATUSID")
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "CURATORSTATUSID")
+    @OneToOne
     private CurationStatus curationStatus;
-
-    @Column(name = "NOTES")
-    private String notes;
 
 
     // JPA no-args constructor

@@ -111,11 +111,11 @@ public class StudyController {
     public String viewStudySnps(Model model, @PathVariable String studyId) {
 
         Collection<Association> associations = new ArrayList<>();
-        associations.addAll(associationRepository.findByStudyID(studyId));
+        associations.addAll(associationRepository.findByStudyId(studyId));
         model.addAttribute("studyAssociations", associations);
 
         // Also passes back study object to view so we can create links back to main study page
-        model.addAttribute("study", studyRepository.findOne(Long.valueOf(studyId).longValue()));
+        model.addAttribute("study", studyRepository.findOne(Long.valueOf(studyId)));
         return "study_association";
     }
 

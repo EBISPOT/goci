@@ -11,48 +11,44 @@ import javax.validation.constraints.NotNull;
  *         Model of EFO assocaition cross reference table
  */
 @Entity
-@Table(name = "GWASEFOSNPXREF")
 public class EFOSingleNucleotidePolymorphismXref {
 
     @Id
     @GeneratedValue
     @NotNull
-    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "TRAITID")
-    private Long traitID;
+    private Long traitId;
 
-    @Column(name = "GWASSTUDIESSNPID")
-    private Long associationID;
+    private Long associationId;
 
     // JPA no-args constructor
     public EFOSingleNucleotidePolymorphismXref() {
     }
 
-    public EFOSingleNucleotidePolymorphismXref(Long traitID, Long associationID) {
-        this.traitID = traitID;
-        this.associationID = associationID;
+    public EFOSingleNucleotidePolymorphismXref(Long traitId, Long associationId) {
+        this.traitId = traitId;
+        this.associationId = associationId;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getTraitID() {
-        return traitID;
+    public Long getTraitId() {
+        return traitId;
     }
 
-    public Long getAssociationID() {
-        return associationID;
+    public Long getAssociationId() {
+        return associationId;
     }
 
     @Override
     public String toString() {
         return "EFOSingleNucleotidePolymorphismXref{" +
                 "id=" + id +
-                ", traitID=" + traitID +
-                ", associationID=" + associationID +
+                ", traitId=" + traitId +
+                ", associationId=" + associationId +
                 '}';
     }
 }

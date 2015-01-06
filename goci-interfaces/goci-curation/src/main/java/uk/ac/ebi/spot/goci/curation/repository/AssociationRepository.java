@@ -15,5 +15,5 @@ import java.util.Collection;
 @RepositoryRestResource
 public interface AssociationRepository extends JpaRepository<Association, Long> {
 
-    Collection<Association> findByStudyID(String studyID);
+    Collection<Association> findByStudyId(String studyId);
 }

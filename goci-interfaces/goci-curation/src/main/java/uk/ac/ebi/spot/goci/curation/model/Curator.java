@@ -13,23 +13,17 @@ import javax.validation.constraints.NotNull;
 
 
 @Entity
-@Table(name = "GWASCURATORS")
 public class Curator {
     @Id
     @GeneratedValue
-    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "FIRSTNAME")
     private String firstName;
 
-    @Column(name = "LASTNAME")
     private String lastName;
 
-    @Column(name = "EMAIL")
     private String email;
 
-    @Column(name = "USERNAME")
     private String userName;
 
     // JPA no-args constructor

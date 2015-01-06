@@ -7,12 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import uk.ac.ebi.spot.goci.curation.model.Ethnicity;
-import uk.ac.ebi.spot.goci.curation.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.curation.repository.SingleNucleotidePolymorphismRepository;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Created by emma on 21/11/14.
@@ -42,9 +37,9 @@ public class SingleNucleotidePolymorphismController {
     }
 
     // Return snp by rsID
-    @RequestMapping(value = "/{rsID}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    String snp(Model model, @PathVariable String rsID) {
-        model.addAttribute("snps", singleNucleotidePolymorphismRepository.findByRsID(rsID));
+    @RequestMapping(value = "/{rsId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    String snp(Model model, @PathVariable String rsId) {
+        model.addAttribute("snps", singleNucleotidePolymorphismRepository.findByRsId(rsId));
         return "snps";
     }
 

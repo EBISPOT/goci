@@ -1,68 +1,73 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.Date;
 
 /**
  * Created by emma on 21/11/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Model object representing a single nucleotide polymorphisms and its attributes
  */
 
 @Entity
-@Table(name = "GWASSNP")
 public class SingleNucleotidePolymorphism {
 
     @Id
     @GeneratedValue
     @NotNull
-    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "SNP")
-    private String rsID;
+    private String rsId;
 
-    // TODO ADD THESE ONCE TABLE IS ACTIVE
-    @Column(name = "CHROMOSOME_NAME")
-   private String chromosomeName;
+    private String chromosomeName;
 
-    @Column(name = "CHROMOSOME_POS")
     private String chromosomePosition;
 
-
-    @Column(name = "LASTUPDATEDATE")
     private Timestamp lastUpdateDate;
 
     // TODO HOW DO WE DEFINE RELATIONSHIP WITH GENE AND REGION
     // Associated region
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "GWASREGIONXREF",
-            joinColumns = {@JoinColumn(name = "GWASSNPID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "REGIONID", referencedColumnName = "ID")}
-    )
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinTable(
+//            name = "GWASREGIONXREF",
+//            joinColumns = {@JoinColumn(name = "GWASSNPID", referencedColumnName = "ID")},
+//            inverseJoinColumns = {@JoinColumn(name = "REGIONID", referencedColumnName = "ID")}
+//    )
+    @OneToOne
     private Region region;
 
     // Associated genes
+//    @ManyToMany
+//    @JoinTable(
+//            name = "GWASGENEXREF",
+//            joinColumns = {@JoinColumn(name = "GWASSNPID", referencedColumnName = "ID")},
+//            inverseJoinColumns = {@JoinColumn(name = "GENEID", referencedColumnName = "ID")}
+//    )
     @ManyToMany
-    @JoinTable(
-            name = "GWASGENEXREF",
-            joinColumns = {@JoinColumn(name = "GWASSNPID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "GENEID", referencedColumnName = "ID")}
-    )
     private Collection<Gene> genes;
 
     // JPA no-args constructor
     public SingleNucleotidePolymorphism() {
     }
 
-    public SingleNucleotidePolymorphism(String rsID, String chromosomeName, String chromosomePosition, Timestamp lastUpdateDate, Region region, Collection<Gene> genes) {
-        this.rsID = rsID;
+    public SingleNucleotidePolymorphism(String rsId,
+                                        String chromosomeName,
+                                        String chromosomePosition,
+                                        Timestamp lastUpdateDate,
+                                        Region region,
+                                        Collection<Gene> genes) {
+        this.rsId = rsId;
         this.chromosomeName = chromosomeName;
         this.chromosomePosition = chromosomePosition;
         this.lastUpdateDate = lastUpdateDate;
@@ -74,8 +79,8 @@ public class SingleNucleotidePolymorphism {
         return id;
     }
 
-    public String getRsID() {
-        return rsID;
+    public String getRsId() {
+        return rsId;
     }
 
     public String getChromosomeName() {
@@ -103,7 +108,7 @@ public class SingleNucleotidePolymorphism {
     public String toString() {
         return "SingleNucleotidePolymorphism{" +
                 "id=" + id +
-                ", rsID='" + rsID + '\'' +
+                ", rsId='" + rsId + '\'' +
                 ", chromosomeName='" + chromosomeName + '\'' +
                 ", chromosomePosition='" + chromosomePosition + '\'' +
                 ", lastUpdateDate=" + lastUpdateDate +
@@ -111,7 +116,6 @@ public class SingleNucleotidePolymorphism {
                 ", genes=" + genes +
                 '}';
     }
-
 
 
 }

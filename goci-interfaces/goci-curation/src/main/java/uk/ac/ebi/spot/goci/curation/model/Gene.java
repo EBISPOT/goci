@@ -13,21 +13,19 @@ import java.util.Collection;
  */
 
 @Entity
-@Table(name = "GWASGENE")
 public class Gene {
 
     @Id
     @GeneratedValue
     @NotNull
-    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "GENE")
     private String geneName;
 
     // TODO EACH GENE WILL BE LINKED TO NUMBER OF SNPS, OVERENGINEERING????
     //Association with SNPs
-    @ManyToMany(mappedBy="genes",fetch=FetchType.LAZY)
+//    @ManyToMany(mappedBy="genes",fetch=FetchType.LAZY)
+    @ManyToMany
     private Collection<SingleNucleotidePolymorphism> snps;
 
     // JPA no-args constructor

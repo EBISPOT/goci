@@ -11,48 +11,44 @@ import javax.validation.constraints.NotNull;
  *         Model of snp cross reference table
  */
 @Entity
-@Table(name = "GWASSNPXREF")
 public class SingleNucleotidePolymorphismXref {
 
     @Id
     @GeneratedValue
     @NotNull
-    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "SNPID")
-    private Long snpID;
+    private Long snpId;
 
-    @Column(name = "GWASSTUDIESSNPID")
-    private Long associationID;
+    private Long associationId;
 
     // JPA no-args constructor
     public SingleNucleotidePolymorphismXref() {
     }
 
-    public SingleNucleotidePolymorphismXref(Long snpID, Long associationID) {
-        this.snpID = snpID;
-        this.associationID = associationID;
+    public SingleNucleotidePolymorphismXref(Long snpId, Long associationId) {
+        this.snpId = snpId;
+        this.associationId = associationId;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getSnpID() {
-        return snpID;
+    public Long getSnpId() {
+        return snpId;
     }
 
-    public Long getAssociationID() {
-        return associationID;
+    public Long getAssociationId() {
+        return associationId;
     }
 
     @Override
     public String toString() {
         return "SingleNucleotidePolymorphismXref{" +
                 "id=" + id +
-                ", snpID='" + snpID + '\'' +
-                ", associationID='" + associationID + '\'' +
+                ", snpId='" + snpId + '\'' +
+                ", associationId='" + associationId + '\'' +
                 '}';
     }
 }

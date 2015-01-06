@@ -1,7 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 /**
  * Created by emma on 28/11/14.
@@ -12,48 +11,37 @@ import javax.validation.constraints.NotNull;
  */
 
 @Entity
-@Table(name = "GWASETHNICITY")
 public class Ethnicity {
     @Id
     @GeneratedValue
     private Long id;
 
-    @Column(name = "GWASID")
-    private String studyID;
-
-    @Column(name = "TYPE")
     private String type;
 
-    @Column(name = "NUMINDIVIDUALS")
     private Integer numberOfIndividuals;
 
-    @Column(name = "ETHNICGROUP")
     private String ethnicGroup;
 
-    @Column(name = "COUNTRYORIGIN")
     private String countryOfOrigin;
 
-    @Column(name = "COUNTRYRECRUITMENT")
     private String countryOfRecruitment;
 
-    @Column(name = "ADDLDESCRIPTION")
     private String description;
 
-    @Column(name = "PREVIOUSLYREPORTED")
     private String previouslyReported;
 
-    @Column(name = "SAMPLESIZESMATCH")
     private String sampleSizesMatch;
 
-    @Column(name = "NOTES")
     private String notes;
+
+    @OneToOne
+    private Study study;
 
     // JPA no-args constructor
     public Ethnicity() {
     }
 
-    public Ethnicity(String studyID, String type, Integer numberOfIndividuals, String ethnicGroup, String countryOfOrigin, String countryOfRecruitment, String description, String previouslyReported, String sampleSizesMatch, String notes) {
-        this.studyID = studyID;
+    public Ethnicity(String type, Integer numberOfIndividuals, String ethnicGroup, String countryOfOrigin, String countryOfRecruitment, String description, String previouslyReported, String sampleSizesMatch, String notes) {
         this.type = type;
         this.numberOfIndividuals = numberOfIndividuals;
         this.ethnicGroup = ethnicGroup;
@@ -71,14 +59,6 @@ public class Ethnicity {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getStudyID() {
-        return studyID;
-    }
-
-    public void setStudyID(String studyID) {
-        this.studyID = studyID;
     }
 
     public String getType() {
@@ -153,11 +133,19 @@ public class Ethnicity {
         this.notes = notes;
     }
 
+    public Study getStudy() {
+        return study;
+    }
+
+    public void setStudy(Study study) {
+        this.study = study;
+    }
+
     @Override
     public String toString() {
         return "Ethnicity{" +
                 "id=" + id +
-                ", studyID='" + studyID + '\'' +
+                ", study='" + study + '\'' +
                 ", type='" + type + '\'' +
                 ", numberOfIndividuals=" + numberOfIndividuals +
                 ", ethnicGroup='" + ethnicGroup + '\'' +

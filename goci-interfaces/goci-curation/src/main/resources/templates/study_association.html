@@ -79,8 +79,8 @@
         </thead>
         <tbody>
         <tr th:each="studyAssociation : ${studyAssociations}">
-            <td><a th:href="@{/snps/{rsID}(rsID=${studyAssociation.snps.rsID})}">View SNP details</a></td>
-            <td th:text="${studyAssociation.snps.rsID}"></td>
+            <td><a th:href="@{/snps/{rsId}(rsId=${studyAssociation.snps.rsId})}">View SNP details</a></td>
+            <td th:text="${studyAssociation.snps.rsId}"></td>
             <td th:text="${studyAssociation.strongestAllele}"></td>
             <td th:text="${studyAssociation.riskFrequency}"></td>
             <td th:text="${studyAssociation.pvalueFloat}"></td>

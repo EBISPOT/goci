@@ -13,17 +13,13 @@ import javax.validation.constraints.NotNull;
 
 
 @Entity
-@Table(name = "GWASSTATUS")
 public class CurationStatus {
     @Id
     @GeneratedValue
-    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "STATUS")
     private String status;
 
-    @Column(name = "SEQNBR")
     private String seqnbr;
 
     // JPA no-args constructor

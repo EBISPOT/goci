@@ -12,48 +12,44 @@ import javax.validation.constraints.NotNull;
  */
 
 @Entity
-@Table(name = "GWASGENEXREF")
 public class GeneXref {
 
     @Id
     @GeneratedValue
     @NotNull
-    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "GENEID")
-    private Long geneID;
+    private Long geneId;
 
-    @Column(name = "GWASSSNPID")
-    private Long associationID;
+    private Long associationId;
 
     // JPA no-args constructor
     public GeneXref() {
     }
 
-    public GeneXref(Long geneID, Long associationID) {
-        this.geneID = geneID;
-        this.associationID = associationID;
+    public GeneXref(Long geneId, Long associationId) {
+        this.geneId = geneId;
+        this.associationId = associationId;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getGeneID() {
-        return geneID;
+    public Long getGeneId() {
+        return geneId;
     }
 
-    public Long getAssociationID() {
-        return associationID;
+    public Long getAssociationId() {
+        return associationId;
     }
 
     @Override
     public String toString() {
         return "GeneXref{" +
                 "id=" + id +
-                ", geneID='" + geneID + '\'' +
-                ", associationID='" + associationID + '\'' +
+                ", geneId='" + geneId + '\'' +
+                ", associationId='" + associationId + '\'' +
                 '}';
     }
 }

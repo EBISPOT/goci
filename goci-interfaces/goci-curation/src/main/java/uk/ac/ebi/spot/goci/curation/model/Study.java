@@ -15,70 +15,60 @@ import java.util.Collection;
  */
 
 @Entity
-@Table(name = "GWASSTUDIES")
 public class Study {
 
     @Id
     @GeneratedValue
-    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "AUTHOR")
     private String author;
 
-    @Column(name = "STUDYDATE")
     private Date studyDate;
 
-    @Column(name = "PUBLICATION")
     private String publication;
 
-    @Column(name = "TITLE")
     private String title;
 
-    @Column(name = "INITSAMPLESIZE")
     private String initialSampleSize;
 
-    @Column(name = "REPLICSAMPLESIZE")
     private String replicateSampleSize;
 
-    @Column(name = "PLATFORM")
     private String platform;
 
-    @Column(name = "PMID")
-    private String pubmedID;
+    private String pubmedId;
 
-    @Column(name = "CNV")
     private String cnv;
 
-    @Column(name = "GXE")
     private String gxe;
 
-    @Column(name = "GXG")
     private String gxg;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DISEASEID")
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "DISEASEID")
+    @OneToOne
     private DiseaseTrait diseaseTrait;
 
     // Associated EFO trait
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "GWASEFOSTUDYXREF",
-            joinColumns = {@JoinColumn(name = "STUDYID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "TRAITID", referencedColumnName = "ID")}
-    )
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(
+//            name = "GWASEFOSTUDYXREF",
+//            joinColumns = {@JoinColumn(name = "STUDYID", referencedColumnName = "ID")},
+//            inverseJoinColumns = {@JoinColumn(name = "TRAITID", referencedColumnName = "ID")}
+//    )
+    @ManyToMany
     private Collection<EFOTrait> efoTraits;
 
     // Associated Housekeeping attribute
-    @JoinColumn(name = "HOUSEKEEPINGID")
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "HOUSEKEEPINGID")
+//    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne
     private Housekeeping housekeeping;
 
     // JPA no-args constructor
     public Study() {
     }
 
-    public Study(String author, Date studyDate, String publication, String title, String initialSampleSize, String replicateSampleSize, String platform, String pubmedID, String cnv, String gxe, String gxg, DiseaseTrait diseaseTrait, Collection<EFOTrait> efoTraits, Housekeeping housekeeping) {
+    public Study(String author, Date studyDate, String publication, String title, String initialSampleSize, String replicateSampleSize, String platform, String pubmedId, String cnv, String gxe, String gxg, DiseaseTrait diseaseTrait, Collection<EFOTrait> efoTraits, Housekeeping housekeeping) {
         this.author = author;
         this.studyDate = studyDate;
         this.publication = publication;
@@ -86,7 +76,7 @@ public class Study {
         this.initialSampleSize = initialSampleSize;
         this.replicateSampleSize = replicateSampleSize;
         this.platform = platform;
-        this.pubmedID = pubmedID;
+        this.pubmedId = pubmedId;
         this.cnv = cnv;
         this.gxe = gxe;
         this.gxg = gxg;
@@ -159,12 +149,12 @@ public class Study {
         this.platform = platform;
     }
 
-    public String getPubmedID() {
-        return pubmedID;
+    public String getPubmedId() {
+        return pubmedId;
     }
 
-    public void setPubmedID(String pubmedID) {
-        this.pubmedID = pubmedID;
+    public void setPubmedId(String pubmedId) {
+        this.pubmedId = pubmedId;
     }
 
     public String getCnv() {
@@ -226,7 +216,7 @@ public class Study {
                 ", initialSampleSize='" + initialSampleSize + '\'' +
                 ", replicateSampleSize='" + replicateSampleSize + '\'' +
                 ", platform='" + platform + '\'' +
-                ", pubmedID='" + pubmedID + '\'' +
+                ", pubmedId='" + pubmedId + '\'' +
                 ", cnv='" + cnv + '\'' +
                 ", gxe='" + gxe + '\'' +
                 ", gxg='" + gxg + '\'' +
