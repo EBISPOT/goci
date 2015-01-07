@@ -421,7 +421,7 @@
                 <someValuesFrom rdf:resource="&gwas;Chromosome"/>
             </Restriction>
         </rdfs:subClassOf>
-        <efo:definition_editor xml:lang="en">A region of a chromosome, typically identified by karyotyping.</efo:definition_editor>
+        <efo:definition_editor xml:lang="en">A name of a chromosome, typically identified by karyotyping.</efo:definition_editor>
         <efo:definition_editor xml:lang="en">Tony Burdett</efo:definition_editor>
     </Class>
     

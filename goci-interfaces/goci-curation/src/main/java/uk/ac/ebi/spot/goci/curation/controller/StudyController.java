@@ -31,12 +31,12 @@ public class StudyController {
     private StudyRepository studyRepository;
     private HousekeepingRepository housekeepingRepository;
     private DiseaseTraitRepository diseaseTraitRepository;
-    private EFOTraitRepository efoTraitRepository;
+    private EfoTraitRepository efoTraitRepository;
     private CuratorRepository curatorRepository;
     private CurationStatusRepository curationStatusRepository;
 
     @Autowired
-    public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EFOTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository) {
+    public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
@@ -153,7 +153,7 @@ public class StudyController {
 
     // EFO traits
     @ModelAttribute("efoTraits")
-    public List<EFOTrait> populateEFOTraits(Model model) {
+    public List<EfoTrait> populateEFOTraits(Model model) {
         return efoTraitRepository.findAll();
     }
 
@@ -168,6 +168,4 @@ public class StudyController {
     public List<CurationStatus> populateCurationStatuses(Model model) {
         return curationStatusRepository.findAll();
     }
-
-
 }

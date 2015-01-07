@@ -1,40 +1,36 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  * Created by emma on 19/12/14.
- * @author emma
  *
- * Model object representing a country
+ * @author emma
+ *         <p>
+ *         Model object representing a country
  */
 @Entity
-@Table(name = "GWASCOUNTRIES")
 public class Country {
-
-
     @Id
     @GeneratedValue
-    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "MAJORAREA")
     private String majorArea;
 
-    @Column(name = "REGION")
     private String region;
 
-    @Column(name= "COUNTRY")
-    private String country;
+    private String name;
 
     // JPA no-args constructor
     public Country() {
     }
 
-    public Country(String majorArea, String region, String country) {
+    public Country(String majorArea, String region, String name) {
         this.majorArea = majorArea;
         this.region = region;
-        this.country = country;
+        this.name = name;
     }
 
     public Long getId() {
@@ -61,12 +57,12 @@ public class Country {
         this.region = region;
     }
 
-    public String getCountry() {
-        return country;
+    public String getName() {
+        return name;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -75,7 +71,7 @@ public class Country {
                 "id=" + id +
                 ", majorArea='" + majorArea + '\'' +
                 ", region='" + region + '\'' +
-                ", country='" + country + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

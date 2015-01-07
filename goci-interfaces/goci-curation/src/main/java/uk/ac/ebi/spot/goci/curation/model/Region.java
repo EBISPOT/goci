@@ -1,55 +1,47 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by emma on 01/12/14.
  *
  * @author emma
  *         <p>
- *         Model of region information associated with a SNP
+ *         Model of name information associated with a SNP
  */
 @Entity
-@Table(name = "GWASREGION")
 public class Region {
-
     @Id
     @GeneratedValue
-    @Column(name = "ID")
+    @NotNull
     private Long id;
 
-    @Column(name = "REGION")
-    private String region;
+    private String name;
 
     // JPA no-args constructor
     public Region() {
     }
 
-    public Region(String region) {
-        this.region = region;
+    public Region(String name) {
+        this.name = name;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getRegion() {
-        return region;
-    }
-
-    public void setRegion(String region) {
-        this.region = region;
+    public String getName() {
+        return name;
     }
 
     @Override
     public String toString() {
         return "Region{" +
                 "id=" + id +
-                ", region='" + region + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

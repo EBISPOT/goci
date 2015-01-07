@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import uk.ac.ebi.spot.goci.curation.model.Country;
 import uk.ac.ebi.spot.goci.curation.model.Ethnicity;
+import uk.ac.ebi.spot.goci.curation.model.Study;
 import uk.ac.ebi.spot.goci.curation.repository.CountryRepository;
 import uk.ac.ebi.spot.goci.curation.repository.EthnicityRepository;
 import uk.ac.ebi.spot.goci.curation.repository.StudyRepository;
@@ -56,8 +57,8 @@ public class EthnicityController {
         String initialType = "initial";
         String replicationType = "replication";
 
-        initialStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIDAndType(studyId, initialType));
-        replicationStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIDAndType(studyId, replicationType));
+        initialStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIdAndType(Long.parseLong(studyId), initialType));
+        replicationStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIdAndType(Long.parseLong(studyId), replicationType));
 
         // Add all ethnicity/sample information for the study to our model
         model.addAttribute("initialStudyEthnicityDescriptions", initialStudyEthnicityDescriptions);
@@ -75,9 +76,10 @@ public class EthnicityController {
     // Add new ethnicity/sample information to a study
     @RequestMapping(value = "/studies/{studyId}/sampledescription", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String addStudySampleDescription(@ModelAttribute Ethnicity ethnicity, @PathVariable String studyId) {
+        Study study = studyRepository.findOne(Long.parseLong(studyId));
 
-        // Set the study ID for our ethnicity
-        ethnicity.setStudyID(studyId);
+        // Set the study for our ethnicity
+        ethnicity.setStudy(study);
 
         // Save our ethnicity/sample information
         Ethnicity updatedEthnicity = ethnicityRepository.save(ethnicity);
@@ -102,7 +104,7 @@ public class EthnicityController {
 
         // Saves the new information returned from form
         Ethnicity updatedEthnicity = ethnicityRepository.save(ethnicity);
-        return "redirect:/studies/" + ethnicity.getStudyID() + "/sampledescription";
+        return "redirect:/studies/" + ethnicity.getStudy().getId() + "/sampledescription";
     }
 
 

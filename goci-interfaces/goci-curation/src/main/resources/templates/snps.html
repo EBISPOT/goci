@@ -60,8 +60,8 @@
                 </thead>
                 <tbody>
                 <tr th:each="snp : ${snps}">
-                    <td th:text="${snp.rsID}"></td>
-                    <td th:text="${snp.region != null} ? ${snp.region.region} : 'null'"></td>
+                    <td th:text="${snp.rsId}"></td>
+                    <td th:text="${snp.name != null} ? ${snp.name.name} : 'null'"></td>
                     <td>
                         <span
                                 th:each="gene : ${snp.genes}" th:text="${gene.geneName}">

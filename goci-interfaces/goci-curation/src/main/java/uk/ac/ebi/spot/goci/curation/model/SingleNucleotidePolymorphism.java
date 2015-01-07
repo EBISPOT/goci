@@ -1,6 +1,13 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.Collection;
 
@@ -8,59 +15,50 @@ import java.util.Collection;
  * Created by emma on 21/11/14.
  *
  * @author emma
+ *         <p>
  *         Model object representing a single nucleotide polymorphisms and its attributes
  */
 
 @Entity
-@Table(name = "GWASSNP")
 public class SingleNucleotidePolymorphism {
-
     @Id
     @GeneratedValue
-    @Column(name = "ID")
+    @NotNull
     private Long id;
 
-    @Column(name = "SNP")
-    private String rsID;
+    private String rsId;
 
-    // TODO ADD THESE ONCE TABLE IS ACTIVE
-    @Column(name = "CHROMOSOME_NAME")
     private String chromosomeName;
 
-    @Column(name = "CHROMOSOME_POS")
     private String chromosomePosition;
 
-    @Column(name = "LASTUPDATEDATE")
     private Timestamp lastUpdateDate;
 
-    // TODO HOW DO WE DEFINE RELATIONSHIP WITH GENE AND REGION
-    // Associated region
-  /*  @OneToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "GWASREGIONXREF",
-            joinColumns = {@JoinColumn(name = "GWASSNPID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "REGIONID", referencedColumnName = "ID")}
-    )
-    private Region region;*/
+    @OneToOne
+    private Region region;
 
-    // Associated genes
- @ManyToMany
-    @JoinTable(
-            name = "GWASGENEXREF",
-            joinColumns = {@JoinColumn(name = "GWASSNPID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "GENEID", referencedColumnName = "ID")}
-    )
+    @ManyToMany
+    @JoinTable(name = "SNP_GENE",
+               joinColumns = @JoinColumn(name = "SNP_ID"),
+               inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
     private Collection<Gene> genes;
 
     // JPA no-args constructor
     public SingleNucleotidePolymorphism() {
     }
 
-    public SingleNucleotidePolymorphism(String rsID, String chromosomeName, String chromosomePosition, Timestamp lastUpdateDate) {
-        this.rsID = rsID;
+    public SingleNucleotidePolymorphism(String rsId,
+                                        String chromosomeName,
+                                        String chromosomePosition,
+                                        Timestamp lastUpdateDate,
+                                        Region region,
+                                        Collection<Gene> genes) {
+        this.rsId = rsId;
         this.chromosomeName = chromosomeName;
         this.chromosomePosition = chromosomePosition;
         this.lastUpdateDate = lastUpdateDate;
+        this.region = region;
+        this.genes = genes;
     }
 
     public Long getId() {
@@ -71,12 +69,12 @@ public class SingleNucleotidePolymorphism {
         this.id = id;
     }
 
-    public String getRsID() {
-        return rsID;
+    public String getRsId() {
+        return rsId;
     }
 
-    public void setRsID(String rsID) {
-        this.rsID = rsID;
+    public void setRsId(String rsId) {
+        this.rsId = rsId;
     }
 
     public String getChromosomeName() {
@@ -103,14 +101,32 @@ public class SingleNucleotidePolymorphism {
         this.lastUpdateDate = lastUpdateDate;
     }
 
+    public Region getRegion() {
+        return region;
+    }
+
+    public void setRegion(Region region) {
+        this.region = region;
+    }
+
+    public Collection<Gene> getGenes() {
+        return genes;
+    }
+
+    public void setGenes(Collection<Gene> genes) {
+        this.genes = genes;
+    }
+
     @Override
     public String toString() {
         return "SingleNucleotidePolymorphism{" +
                 "id=" + id +
-                ", rsID='" + rsID + '\'' +
+                ", rsId='" + rsId + '\'' +
                 ", chromosomeName='" + chromosomeName + '\'' +
                 ", chromosomePosition='" + chromosomePosition + '\'' +
                 ", lastUpdateDate=" + lastUpdateDate +
+                ", region=" + region +
+                ", genes=" + genes +
                 '}';
     }
 }

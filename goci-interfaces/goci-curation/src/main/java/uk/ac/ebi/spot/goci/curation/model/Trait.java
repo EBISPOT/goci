@@ -16,10 +16,8 @@ import javax.validation.constraints.NotNull;
  */
 @MappedSuperclass
 public abstract class Trait {
-
     @Id
     @GeneratedValue
-    @Column(name = "ID")
     private Long id;
 
     // JPA no-args constructor

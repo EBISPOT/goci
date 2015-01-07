@@ -1,6 +1,9 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import java.sql.Date;
 import java.sql.Timestamp;
 
@@ -13,64 +16,59 @@ import java.sql.Timestamp;
  *         Model representing housekeeping information stored about a study that is used during curation
  */
 @Entity
-@Table(name = "HOUSEKEEPING")
 public class Housekeeping {
-
     @Id
     @GeneratedValue
-    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "STUDYSNPCHECKEDL1")
     private String studySnpCheckedLevelOne;
 
-    @Column(name = "STUDYSNPCHECKEDL2")
     private String studySnpCheckedLevelTwo;
 
-    @Column(name = "ETHNICITYCHECKEDL1")
     private String ethnicityCheckedLevelOne;
 
-    @Column(name = "ETHNICITYCHECKEDL2")
     private String ethnicityCheckedLevelTwo;
 
-    @Column(name = "ETHNICITYBACKFILLED")
     private String ethnicityBackFilled;
 
-    @Column(name = "CHECKEDNCBIERROR")
     private String checkedNCBIError;
 
-    @Column(name = "PUBLISHDATE")
     private Date publishDate;
 
-    @Column(name = "SENDTONCBIDATE")
     private Date sendToNCBIDate;
 
-    @Column(name = "STUDYADDEDDATE")
-    private Timestamp studyAddedDate;
+    private Date studyAddedDate;
 
-    @Column(name = "LASTUPDATEDATE")
-    private Timestamp lastUpdateDate;
+    private Date lastUpdateDate;
 
-    @Column(name = "FILENAM")
     private String fileName;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CURATORID")
-    private Curator curator;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CURATORSTATUSID")
-    private CurationStatus curationStatus;
-
-    @Column(name = "NOTES")
     private String notes;
 
+    @OneToOne
+    private Curator curator;
+
+    @OneToOne
+    private CurationStatus curationStatus;
 
     // JPA no-args constructor
     public Housekeeping() {
     }
 
-    public Housekeeping(String studySnpCheckedLevelOne, String studySnpCheckedLevelTwo, String ethnicityCheckedLevelOne, String ethnicityCheckedLevelTwo, String ethnicityBackFilled, String checkedNCBIError, Date publishDate, Date sendToNCBIDate, Timestamp studyAddedDate, Timestamp lastUpdateDate, String fileName, Curator curator, CurationStatus curationStatus, String notes) {
+    public Housekeeping(String studySnpCheckedLevelOne,
+                        String studySnpCheckedLevelTwo,
+                        String ethnicityCheckedLevelOne,
+                        String ethnicityCheckedLevelTwo,
+                        String ethnicityBackFilled,
+                        String checkedNCBIError,
+                        Date publishDate,
+                        Date sendToNCBIDate,
+                        Date studyAddedDate,
+                        Date lastUpdateDate,
+                        String fileName,
+                        Curator curator,
+                        CurationStatus curationStatus,
+                        String notes) {
         this.studySnpCheckedLevelOne = studySnpCheckedLevelOne;
         this.studySnpCheckedLevelTwo = studySnpCheckedLevelTwo;
         this.ethnicityCheckedLevelOne = ethnicityCheckedLevelOne;
@@ -159,19 +157,19 @@ public class Housekeeping {
         this.sendToNCBIDate = sendToNCBIDate;
     }
 
-    public Timestamp getStudyAddedDate() {
+    public Date getStudyAddedDate() {
         return studyAddedDate;
     }
 
-    public void setStudyAddedDate(Timestamp studyAddedDate) {
+    public void setStudyAddedDate(Date studyAddedDate) {
         this.studyAddedDate = studyAddedDate;
     }
 
-    public Timestamp getLastUpdateDate() {
+    public Date getLastUpdateDate() {
         return lastUpdateDate;
     }
 
-    public void setLastUpdateDate(Timestamp lastUpdateDate) {
+    public void setLastUpdateDate(Date lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
     }
 

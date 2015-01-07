@@ -1,9 +1,15 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import java.sql.Date;
 import java.util.Collection;
-
 
 
 /**
@@ -15,70 +21,73 @@ import java.util.Collection;
  */
 
 @Entity
-@Table(name = "GWASSTUDIES")
 public class Study {
-
     @Id
     @GeneratedValue
-    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "AUTHOR")
     private String author;
 
-    @Column(name = "STUDYDATE")
     private Date studyDate;
 
-    @Column(name = "PUBLICATION")
     private String publication;
 
-    @Column(name = "TITLE")
     private String title;
 
-    @Column(name = "INITSAMPLESIZE")
     private String initialSampleSize;
 
-    @Column(name = "REPLICSAMPLESIZE")
     private String replicateSampleSize;
 
-    @Column(name = "PLATFORM")
     private String platform;
 
-    @Column(name = "PMID")
-    private String pubmedID;
+    private String pubmedId;
 
-    @Column(name = "CNV")
     private String cnv;
 
-    @Column(name = "GXE")
     private String gxe;
 
-    @Column(name = "GXG")
     private String gxg;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DISEASEID")
+    @ManyToOne
+    @JoinTable(name = "STUDY_DISEASE_TRAIT",
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "DISEASE_TRAIT_ID"))
     private DiseaseTrait diseaseTrait;
 
-    // Associated EFO trait
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "GWASEFOSTUDYXREF",
-            joinColumns = {@JoinColumn(name = "STUDYID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "TRAITID", referencedColumnName = "ID")}
-    )
-    private Collection<EFOTrait> efoTraits;
+    @ManyToMany
+    @JoinTable(name = "STUDY_EFO_TRAIT",
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
+    private Collection<EfoTrait> efoTraits;
 
-    // Associated Housekeeping attribute
-    @JoinColumn(name = "HOUSEKEEPINGID")
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany
+    @JoinTable(name = "STUDY_SNP",
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
+    private Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms;
+
+    @OneToOne
     private Housekeeping housekeeping;
 
     // JPA no-args constructor
     public Study() {
     }
 
-    public Study(String author, Date studyDate, String publication, String title, String initialSampleSize, String replicateSampleSize, String platform, String pubmedID, String cnv, String gxe, String gxg, DiseaseTrait diseaseTrait, Collection<EFOTrait> efoTraits, Housekeeping housekeeping) {
+    public Study(String author,
+                 Date studyDate,
+                 String publication,
+                 String title,
+                 String initialSampleSize,
+                 String replicateSampleSize,
+                 String platform,
+                 String pubmedId,
+                 String cnv,
+                 String gxe,
+                 String gxg,
+                 DiseaseTrait diseaseTrait,
+                 Collection<EfoTrait> efoTraits,
+                 Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms,
+                 Housekeeping housekeeping) {
         this.author = author;
         this.studyDate = studyDate;
         this.publication = publication;
@@ -86,12 +95,13 @@ public class Study {
         this.initialSampleSize = initialSampleSize;
         this.replicateSampleSize = replicateSampleSize;
         this.platform = platform;
-        this.pubmedID = pubmedID;
+        this.pubmedId = pubmedId;
         this.cnv = cnv;
         this.gxe = gxe;
         this.gxg = gxg;
         this.diseaseTrait = diseaseTrait;
         this.efoTraits = efoTraits;
+        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
         this.housekeeping = housekeeping;
     }
 
@@ -159,12 +169,12 @@ public class Study {
         this.platform = platform;
     }
 
-    public String getPubmedID() {
-        return pubmedID;
+    public String getPubmedId() {
+        return pubmedId;
     }
 
-    public void setPubmedID(String pubmedID) {
-        this.pubmedID = pubmedID;
+    public void setPubmedId(String pubmedId) {
+        this.pubmedId = pubmedId;
     }
 
     public String getCnv() {
@@ -199,12 +209,20 @@ public class Study {
         this.diseaseTrait = diseaseTrait;
     }
 
-    public Collection<EFOTrait> getEfoTraits() {
+    public Collection<EfoTrait> getEfoTraits() {
         return efoTraits;
     }
 
-    public void setEfoTraits(Collection<EFOTrait> efoTraits) {
+    public void setEfoTraits(Collection<EfoTrait> efoTraits) {
         this.efoTraits = efoTraits;
+    }
+
+    public Collection<SingleNucleotidePolymorphism> getSingleNucleotidePolymorphisms() {
+        return singleNucleotidePolymorphisms;
+    }
+
+    public void setSingleNucleotidePolymorphisms(Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms) {
+        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
     }
 
     public Housekeeping getHousekeeping() {
@@ -226,11 +244,10 @@ public class Study {
                 ", initialSampleSize='" + initialSampleSize + '\'' +
                 ", replicateSampleSize='" + replicateSampleSize + '\'' +
                 ", platform='" + platform + '\'' +
-                ", pubmedID='" + pubmedID + '\'' +
+                ", pubmedId='" + pubmedId + '\'' +
                 ", cnv='" + cnv + '\'' +
                 ", gxe='" + gxe + '\'' +
                 ", gxg='" + gxg + '\'' +
-                ", diseaseTrait=" + diseaseTrait +
                 ", efoTraits=" + efoTraits +
                 ", housekeeping=" + housekeeping +
                 '}';

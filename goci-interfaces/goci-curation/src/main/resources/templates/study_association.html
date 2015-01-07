@@ -101,24 +101,24 @@
 
             <!--Study association can have multiple SNPs linked to it-->
             <td>
-                <span th:each="snp : ${studyAssociation.snps}" th:text="${snp.rsID}"></span>
+                <span th:each="snp : ${studyAssociation.snps}" th:text="${snp.rsId}"></span>
             </td>
             <td th:text="${studyAssociation.authorReportedGene}"></td>
             <td th:text="${studyAssociation.strongestAllele}"></td>
             <td th:text="${studyAssociation.riskFrequency}"></td>
             <td th:text="${studyAssociation.pvalueFloat}"></td>
             <td th:text="${studyAssociation.pvalueText}"></td>
-            <td th:text="${studyAssociation.ORPerCopyNum}"></td>
-            <td th:text="${studyAssociation.ORPerCopyRecip}"></td>
-            <td th:text="${studyAssociation.ORPerCopyRange}"></td>
-            <td th:text="${studyAssociation.ORPerCopyUnitDescr}"></td>
-            <td th:text="${studyAssociation.ORPerCopyStdError}"></td>
-            <td th:switch="${studyAssociation.ORType}">
+            <td th:text="${studyAssociation.orPerCopyNum}"></td>
+            <td th:text="${studyAssociation.orPerCopyRecip}"></td>
+            <td th:text="${studyAssociation.orPerCopyRange}"></td>
+            <td th:text="${studyAssociation.orPerCopyUnitDescr}"></td>
+            <td th:text="${studyAssociation.orPerCopyStdError}"></td>
+            <td th:switch="${studyAssociation.orType}">
                 <p th:case="'0'">No</p>
 
                 <p th:case="'1'">Yes</p>
             </td>
-            <td th:switch="${studyAssociation.multiSNPHaplotype}">
+            <td th:switch="${studyAssociation.multiSnpHaplotype}">
                 <p th:case="'0'">No</p>
 
                 <p th:case="'1'">Yes</p>
@@ -128,7 +128,7 @@
 
                 <p th:case="'1'">Yes</p>
             </td>
-            <td th:text="${studyAssociation.SnpType}"></td>
+            <td th:text="${studyAssociation.snpType}"></td>
         </tr>
         </tbody>
     </table>
@@ -298,49 +298,49 @@
         </div>
 
         <div class="form-group">
-            <label for="ORPerCopyNum" class="control-label col-md-2">OR/HR/RR per copy (Num)</label>
+            <label for="orPerCopyNum" class="control-label col-md-2">OR/HR/RR per copy (Num)</label>
 
             <div class="col-md-10">
-                <input type="text" class="form-control" name="ORPerCopyNum" id="ORPerCopyNum"
-                       th:value="${studyAssociation.ORPerCopyNum}"/>
+                <input type="text" class="form-control" name="orPerCopyNum" id="orPerCopyNum"
+                       th:value="${studyAssociation.orPerCopyNum}"/>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="ORPerCopyRecip" class="control-label col-md-2">OR/HR/RR per copy
+            <label for="orPerCopyRecip" class="control-label col-md-2">OR/HR/RR per copy
                 reciprocal</label>
 
             <div class="col-md-10">
-                <input type="text" class="form-control" id="ORPerCopyRecip"
-                       th:value="${studyAssociation.ORPerCopyRecip}" name="ORPerCopyRecip"/>
+                <input type="text" class="form-control" id="orPerCopyRecip"
+                       th:value="${studyAssociation.orPerCopyRecip}" name="orPerCopyRecip"/>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="ORPerCopyRange" class="control-label col-md-2">OR/HR/RR per copy (Range)</label>
+            <label for="orPerCopyRange" class="control-label col-md-2">OR/HR/RR per copy (Range)</label>
 
             <div class="col-md-10">
-                <input type="text" class="form-control" id="ORPerCopyRange"
-                       th:value="${studyAssociation.ORPerCopyRange}" name="ORPerCopyRange"/>
+                <input type="text" class="form-control" id="orPerCopyRange"
+                       th:value="${studyAssociation.orPerCopyRange}" name="orPerCopyRange"/>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="ORPerCopyUnitDescr" class="control-label col-md-2">OR/HR/RR per copy (Unit
+            <label for="orPerCopyUnitDescr" class="control-label col-md-2">OR/HR/RR per copy (Unit
                 Description)</label>
 
             <div class="col-md-10">
-                <input type="text" class="form-control" id="ORPerCopyUnitDescr"
-                       th:value="${studyAssociation.ORPerCopyUnitDescr}" name="ORPerCopyUnitDescr"/>
+                <input type="text" class="form-control" id="orPerCopyUnitDescr"
+                       th:value="${studyAssociation.orPerCopyUnitDescr}" name="orPerCopyUnitDescr"/>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="ORPerCopyStdError" class="control-label col-md-2">Standard Error</label>
+            <label for="orPerCopyStdError" class="control-label col-md-2">Standard Error</label>
 
             <div class="col-md-10">
-                <input type="text" class="form-control" id="ORPerCopyStdError"
-                       th:value="${studyAssociation.ORPerCopyStdError}" name="ORPerCopyStdError"/>
+                <input type="text" class="form-control" id="orPerCopyStdError"
+                       th:value="${studyAssociation.orPerCopyStdError}" name="orPerCopyStdError"/>
             </div>
         </div>
 
@@ -366,7 +366,7 @@
         <div class="form-group">
             <label for="multiSNPHaplotype" class="control-label col-md-2">Multi-SNP Haplotype</label>
             <input id="multiSNPHaplotype" type="checkbox" th:value="'1'"
-                   th:field="${studyAssociation.multiSNPHaplotype}"/>
+                   th:field="${studyAssociation.multiSnpHaplotype}"/>
         </div>
 
         <div class="form-group">
@@ -376,8 +376,8 @@
 
 
         <div class="form-group">
-            <label for="ORType" class="control-label col-md-2">ORType</label>
-            <input id="ORType" type="checkbox" th:value="'1'" th:field="${studyAssociation.ORType}"/>
+            <label for="orType" class="control-label col-md-2">ORType</label>
+            <input id="orType" type="checkbox" th:value="'1'" th:field="${studyAssociation.orType}"/>
         </div>
 
         <div class="form-group">

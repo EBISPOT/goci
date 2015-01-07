@@ -1,7 +1,9 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.*;
-import java.util.Collection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by emma on 01/12/14.
@@ -12,29 +14,20 @@ import java.util.Collection;
  */
 
 @Entity
-@Table(name = "GWASGENE")
 public class Gene {
-
     @Id
     @GeneratedValue
-    @Column(name = "ID")
+    @NotNull
     private Long id;
 
-    @Column(name = "GENE")
     private String geneName;
-
-    // TODO EACH GENE WILL BE LINKED TO NUMBER OF SNPS, OVERENGINEERING????
-    //Association with SNPs
-    @ManyToMany(mappedBy = "genes", fetch = FetchType.LAZY)
-    private Collection<SingleNucleotidePolymorphism> snps;
 
     // JPA no-args constructor
     public Gene() {
     }
 
-    public Gene(String geneName, Collection<SingleNucleotidePolymorphism> snps) {
+    public Gene(String geneName) {
         this.geneName = geneName;
-        this.snps = snps;
     }
 
     public Long getId() {
@@ -53,20 +46,11 @@ public class Gene {
         this.geneName = geneName;
     }
 
-    public Collection<SingleNucleotidePolymorphism> getSnps() {
-        return snps;
-    }
-
-    public void setSnps(Collection<SingleNucleotidePolymorphism> snps) {
-        this.snps = snps;
-    }
-
     @Override
     public String toString() {
         return "Gene{" +
                 "id=" + id +
                 ", geneName='" + geneName + '\'' +
-                ", snps=" + snps +
                 '}';
     }
 }

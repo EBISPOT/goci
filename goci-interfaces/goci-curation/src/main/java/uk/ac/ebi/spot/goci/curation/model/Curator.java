@@ -1,35 +1,30 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  * Created by emma on 27/11/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Model object representing a curator and its attributes
  */
 
 
 @Entity
-@Table(name = "GWASCURATORS")
 public class Curator {
     @Id
     @GeneratedValue
-    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "FIRSTNAME")
     private String firstName;
 
-    @Column(name = "LASTNAME")
     private String lastName;
 
-    @Column(name = "EMAIL")
     private String email;
 
-    @Column(name = "USERNAME")
     private String userName;
 
     // JPA no-args constructor

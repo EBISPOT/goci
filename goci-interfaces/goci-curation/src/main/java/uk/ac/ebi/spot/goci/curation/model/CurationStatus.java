@@ -1,29 +1,26 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  * Created by emma on 27/11/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Model object representing status assigned to studies
  */
 
 
 @Entity
-@Table(name = "GWASSTATUS")
 public class CurationStatus {
     @Id
     @GeneratedValue
-    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "STATUS")
     private String status;
 
-    @Column(name = "SEQNBR")
     private String seqnbr;
 
     // JPA no-args constructor

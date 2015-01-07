@@ -114,7 +114,7 @@
                     <label for="pubmed" class="control-label col-md-2">Pubmed</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="pubmed" th:field="*{pubmedID}"/>
+                        <input type="text" class="form-control" id="pubmed" th:field="*{pubmedId}"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -157,11 +157,8 @@
                     <label for="diseaseTrait" class="control-label col-md-2">Disease Trait:</label>
 
                     <div class="col-md-10">
-                        <select th:field="*{diseaseTrait}" id="diseaseTrait">
-                            <option th:each="diseaseTrait : ${diseaseTraits}"
-                                    th:value="${diseaseTrait.id}"
-                                    th:text="${diseaseTrait.trait}"></option>
-                        </select>
+                        <input type="text" th:field="*{diseaseTrait.trait}" class="form-control"
+                               id="diseaseTrait"/>
                     </div>
                 </div>
 

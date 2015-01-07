@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import uk.ac.ebi.spot.goci.curation.model.Association;
-import uk.ac.ebi.spot.goci.curation.model.EFOTrait;
+import uk.ac.ebi.spot.goci.curation.model.EfoTrait;
+import uk.ac.ebi.spot.goci.curation.model.Study;
 import uk.ac.ebi.spot.goci.curation.repository.AssociationRepository;
-import uk.ac.ebi.spot.goci.curation.repository.EFOTraitRepository;
+import uk.ac.ebi.spot.goci.curation.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.curation.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.curation.service.CuratorReportedSNP;
 
@@ -33,10 +34,10 @@ public class AssociationController {
 
     private AssociationRepository associationRepository;
     private StudyRepository studyRepository;
-    private EFOTraitRepository efoTraitRepository;
+    private EfoTraitRepository efoTraitRepository;
 
     @Autowired
-    public AssociationController(AssociationRepository associationRepository, StudyRepository studyRepository, EFOTraitRepository efoTraitRepository) {
+    public AssociationController(AssociationRepository associationRepository, StudyRepository studyRepository, EfoTraitRepository efoTraitRepository) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -49,7 +50,7 @@ public class AssociationController {
     public String viewStudySnps(Model model, @PathVariable String studyId) {
 
         Collection<Association> associations = new ArrayList<>();
-        associations.addAll(associationRepository.findByStudyID(studyId));
+        associations.addAll(associationRepository.findByStudyId(Long.parseLong(studyId)));
         model.addAttribute("studyAssociations", associations);
 
         // Return an empty association object so curators can add new association/snp information to study
@@ -66,10 +67,10 @@ public class AssociationController {
     public String addStudySnps(@ModelAttribute CuratorReportedSNP reportedSNPs, @ModelAttribute Association studyAssociation, @PathVariable String studyId) {
 
         // ReportedSNPs object holds a collection of SNPs entered by curator
-
+        Study study = studyRepository.findOne(Long.parseLong(studyId));
 
         // Set the study ID for our association
-        studyAssociation.setStudyID(studyId);
+        studyAssociation.setStudy(study);
 
         // Save our association information
         Association updatedAssociation = associationRepository.save(studyAssociation);
@@ -98,7 +99,7 @@ public class AssociationController {
 
     // EFO traits
     @ModelAttribute("efoTraits")
-    public List<EFOTrait> populateEFOTraits(Model model) {
+    public List<EfoTrait> populateEFOTraits(Model model) {
         return efoTraitRepository.findAll();
     }
 

@@ -1,6 +1,14 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
 /**
@@ -13,111 +21,112 @@ import java.util.Collection;
 
 
 @Entity
-@Table(name = "GWASASSOCIATIONS")
 public class Association {
-
     @Id
     @GeneratedValue
-    @Column(name = "ID")
+    @NotNull
     private Long id;
 
-    @Column(name = "STUDYID")
-    private String studyID;
-
-    @Column(name = "GENE")
     private String authorReportedGene;
 
-    @Column(name = "STRONGESTALLELE")
     private String strongestAllele;
 
-    @Column(name = "RISKFREQUENCY")
     private String riskFrequency;
 
-    @Column(name = "ALLELE")
     private String allele;
 
-    @Column(name = "PVALUEFLOAT")
     private float pvalueFloat;
 
-    @Column(name = "PVALUETXT")
     private String pvalueText;
 
-    @Column(name = "ORPERCOPYNUM")
-    private Double ORPerCopyNum;
+    private Double orPerCopyNum;
 
-    @Column(name = "ORTYPE")
-    private String ORType;
+    private String orType;
 
-    @Column(name = "SNPTYPE")
     private String snpType;
 
-    @Column(name = "SNPHAPLOTYPE")
-    private String multiSNPHaplotype;
+    private String multiSnpHaplotype;
 
-    @Column(name = "SNPINTERACTION")
     private String snpInteraction;
 
-    @Column(name = "PVALUE_MANTISSA")
     private Integer pvalueMantissa;
 
-    @Column(name = "PVALUE_EXPONENT")
     private Integer pvalueExponent;
 
-    @Column(name = "ORPERCOPYRECIP")
-    private Double ORPerCopyRecip;
+    private Double orPerCopyRecip;
 
-    @Column(name = "ORPERCOPYSTDERROR")
-    private Double ORPerCopyStdError;
+    private Double orPerCopyStdError;
 
-    @Column(name = "ORPERCOPYRANGE")
-    private String ORPerCopyRange;
+    private String orPerCopyRange;
 
-    @Column(name = "ORPERCOPYUNITDESCR")
-    private String ORPerCopyUnitDescr;
+    private String orPerCopyUnitDescr;
 
-    // Associated SNP(s)
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "GWASSNPXREF",
-            joinColumns = {@JoinColumn(name = "GWASSTUDIESSNPID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "SNPID", referencedColumnName = "ID")}
-    )
+    @OneToOne
+    private Study study;
+
+    @ManyToMany
+    @JoinTable(name = "ASSOCIATION_SNP",
+               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
     private Collection<SingleNucleotidePolymorphism> snps;
 
+    @OneToMany
+    @JoinTable(name = "ASSOCIATION_REPORTED_GENE",
+               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+               inverseJoinColumns = @JoinColumn(name = "REPORTED_GENE_ID"))
+    private Collection<Gene> reportedGenes;
 
-    // Associated EFO trait
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "GWASEFOSNPXREF",
-            joinColumns = {@JoinColumn(name = "GWASSTUDIESSNPID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "TRAITID", referencedColumnName = "ID")}
-    )
-    private Collection<EFOTrait> efoTraits;
+    @OneToMany
+    @JoinTable(name = "ASSOCIATION_EFO_TRAITS",
+               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+               inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
+    private Collection<EfoTrait> efoTraits;
 
     // JPA no-args constructor
     public Association() {
     }
 
-    public Association(String studyID, String authorReportedGene, String strongestAllele, String riskFrequency, String allele, float pvalueFloat, String pvalueText, Double ORPerCopyNum, String ORType, String snpType, String multiSNPHaplotype, String snpInteraction, Integer pvalueMantissa, Integer pvalueExponent, Double ORPerCopyRecip, Double ORPerCopyStdError, String ORPerCopyRange, String ORPerCopyUnitDescr, Collection<SingleNucleotidePolymorphism> snps, Collection<EFOTrait> efoTraits) {
-        this.studyID = studyID;
+    public Association(String strongestAllele,
+                       String riskFrequency,
+                       String allele,
+                       String authorReportedGene,
+                       float pvalueFloat,
+                       String pvalueText,
+                       Double ORPerCopyNum,
+                       String ORType,
+                       String snpType,
+                       String multiSnpHaplotype,
+                       String snpInteraction,
+                       Integer pvalueMantissa,
+                       Integer pvalueExponent,
+                       Double ORPerCopyRecip,
+                       Double ORPerCopyStdError,
+                       String ORPerCopyRange,
+                       String ORPerCopyUnitDescr,
+                       Study study,
+                       Collection<SingleNucleotidePolymorphism> snps,
+                       Collection<Gene> reportedGenes,
+                       Collection<EfoTrait> efoTraits) {
         this.authorReportedGene = authorReportedGene;
         this.strongestAllele = strongestAllele;
         this.riskFrequency = riskFrequency;
         this.allele = allele;
         this.pvalueFloat = pvalueFloat;
         this.pvalueText = pvalueText;
-        this.ORPerCopyNum = ORPerCopyNum;
-        this.ORType = ORType;
+        this.orPerCopyNum = ORPerCopyNum;
+        this.orType = ORType;
         this.snpType = snpType;
-        this.multiSNPHaplotype = multiSNPHaplotype;
+        this.multiSnpHaplotype = multiSnpHaplotype;
         this.snpInteraction = snpInteraction;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
-        this.ORPerCopyRecip = ORPerCopyRecip;
-        this.ORPerCopyStdError = ORPerCopyStdError;
-        this.ORPerCopyRange = ORPerCopyRange;
-        this.ORPerCopyUnitDescr = ORPerCopyUnitDescr;
+        this.orPerCopyRecip = ORPerCopyRecip;
+        this.orPerCopyStdError = ORPerCopyStdError;
+        this.orPerCopyRange = ORPerCopyRange;
+        this.orPerCopyUnitDescr = ORPerCopyUnitDescr;
+        this.study = study;
         this.snps = snps;
+        this.reportedGenes = reportedGenes;
         this.efoTraits = efoTraits;
     }
 
@@ -127,14 +136,6 @@ public class Association {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getStudyID() {
-        return studyID;
-    }
-
-    public void setStudyID(String studyID) {
-        this.studyID = studyID;
     }
 
     public String getAuthorReportedGene() {
@@ -185,20 +186,20 @@ public class Association {
         this.pvalueText = pvalueText;
     }
 
-    public Double getORPerCopyNum() {
-        return ORPerCopyNum;
+    public Double getOrPerCopyNum() {
+        return orPerCopyNum;
     }
 
-    public void setORPerCopyNum(Double ORPerCopyNum) {
-        this.ORPerCopyNum = ORPerCopyNum;
+    public void setOrPerCopyNum(Double orPerCopyNum) {
+        this.orPerCopyNum = orPerCopyNum;
     }
 
-    public String getORType() {
-        return ORType;
+    public String getOrType() {
+        return orType;
     }
 
-    public void setORType(String ORType) {
-        this.ORType = ORType;
+    public void setOrType(String orType) {
+        this.orType = orType;
     }
 
     public String getSnpType() {
@@ -209,12 +210,12 @@ public class Association {
         this.snpType = snpType;
     }
 
-    public String getMultiSNPHaplotype() {
-        return multiSNPHaplotype;
+    public String getMultiSnpHaplotype() {
+        return multiSnpHaplotype;
     }
 
-    public void setMultiSNPHaplotype(String multiSNPHaplotype) {
-        this.multiSNPHaplotype = multiSNPHaplotype;
+    public void setMultiSnpHaplotype(String multiSnpHaplotype) {
+        this.multiSnpHaplotype = multiSnpHaplotype;
     }
 
     public String getSnpInteraction() {
@@ -241,36 +242,44 @@ public class Association {
         this.pvalueExponent = pvalueExponent;
     }
 
-    public Double getORPerCopyRecip() {
-        return ORPerCopyRecip;
+    public Double getOrPerCopyRecip() {
+        return orPerCopyRecip;
     }
 
-    public void setORPerCopyRecip(Double ORPerCopyRecip) {
-        this.ORPerCopyRecip = ORPerCopyRecip;
+    public void setOrPerCopyRecip(Double orPerCopyRecip) {
+        this.orPerCopyRecip = orPerCopyRecip;
     }
 
-    public Double getORPerCopyStdError() {
-        return ORPerCopyStdError;
+    public Double getOrPerCopyStdError() {
+        return orPerCopyStdError;
     }
 
-    public void setORPerCopyStdError(Double ORPerCopyStdError) {
-        this.ORPerCopyStdError = ORPerCopyStdError;
+    public void setOrPerCopyStdError(Double orPerCopyStdError) {
+        this.orPerCopyStdError = orPerCopyStdError;
     }
 
-    public String getORPerCopyRange() {
-        return ORPerCopyRange;
+    public String getOrPerCopyRange() {
+        return orPerCopyRange;
     }
 
-    public void setORPerCopyRange(String ORPerCopyRange) {
-        this.ORPerCopyRange = ORPerCopyRange;
+    public void setOrPerCopyRange(String orPerCopyRange) {
+        this.orPerCopyRange = orPerCopyRange;
     }
 
-    public String getORPerCopyUnitDescr() {
-        return ORPerCopyUnitDescr;
+    public String getOrPerCopyUnitDescr() {
+        return orPerCopyUnitDescr;
     }
 
-    public void setORPerCopyUnitDescr(String ORPerCopyUnitDescr) {
-        this.ORPerCopyUnitDescr = ORPerCopyUnitDescr;
+    public void setOrPerCopyUnitDescr(String orPerCopyUnitDescr) {
+        this.orPerCopyUnitDescr = orPerCopyUnitDescr;
+    }
+
+    public Study getStudy() {
+        return study;
+    }
+
+    public void setStudy(Study study) {
+        this.study = study;
     }
 
     public Collection<SingleNucleotidePolymorphism> getSnps() {
@@ -281,11 +290,19 @@ public class Association {
         this.snps = snps;
     }
 
-    public Collection<EFOTrait> getEfoTraits() {
+    public Collection<Gene> getReportedGenes() {
+        return reportedGenes;
+    }
+
+    public void setReportedGenes(Collection<Gene> reportedGenes) {
+        this.reportedGenes = reportedGenes;
+    }
+
+    public Collection<EfoTrait> getEfoTraits() {
         return efoTraits;
     }
 
-    public void setEfoTraits(Collection<EFOTrait> efoTraits) {
+    public void setEfoTraits(Collection<EfoTrait> efoTraits) {
         this.efoTraits = efoTraits;
     }
 
@@ -293,24 +310,23 @@ public class Association {
     public String toString() {
         return "Association{" +
                 "id=" + id +
-                ", studyID='" + studyID + '\'' +
-                ", authorReportedGene='" + authorReportedGene + '\'' +
+                ", study='" + study + '\'' +
                 ", strongestAllele='" + strongestAllele + '\'' +
                 ", riskFrequency='" + riskFrequency + '\'' +
                 ", allele='" + allele + '\'' +
                 ", pvalueFloat=" + pvalueFloat +
                 ", pvalueText='" + pvalueText + '\'' +
-                ", ORPerCopyNum=" + ORPerCopyNum +
-                ", ORType='" + ORType + '\'' +
+                ", orPerCopyNum=" + orPerCopyNum +
+                ", orType='" + orType + '\'' +
                 ", snpType='" + snpType + '\'' +
-                ", multiSNPHaplotype='" + multiSNPHaplotype + '\'' +
+                ", multiSnpHaplotype='" + multiSnpHaplotype + '\'' +
                 ", snpInteraction='" + snpInteraction + '\'' +
                 ", pvalueMantissa=" + pvalueMantissa +
                 ", pvalueExponent=" + pvalueExponent +
-                ", ORPerCopyRecip=" + ORPerCopyRecip +
-                ", ORPerCopyStdError=" + ORPerCopyStdError +
-                ", ORPerCopyRange='" + ORPerCopyRange + '\'' +
-                ", ORPerCopyUnitDescr='" + ORPerCopyUnitDescr + '\'' +
+                ", orPerCopyRecip=" + orPerCopyRecip +
+                ", orPerCopyStdError=" + orPerCopyStdError +
+                ", orPerCopyRange='" + orPerCopyRange + '\'' +
+                ", orPerCopyUnitDescr='" + orPerCopyUnitDescr + '\'' +
                 ", snps=" + snps +
                 ", efoTraits=" + efoTraits +
                 '}';
