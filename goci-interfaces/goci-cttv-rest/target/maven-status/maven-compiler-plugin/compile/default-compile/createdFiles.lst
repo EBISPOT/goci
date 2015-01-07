@@ -1,0 +1,4 @@
+uk/ac/ebi/spot/cttv/gwas/rest/Application.class
+uk/ac/ebi/spot/cttv/gwas/rest/model/GwasJson.class
+uk/ac/ebi/spot/cttv/gwas/rest/utils/Constants.class
+uk/ac/ebi/spot/cttv/gwas/rest/controller/GwasJsonController.class
