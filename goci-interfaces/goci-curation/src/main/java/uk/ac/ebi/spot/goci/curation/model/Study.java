@@ -56,7 +56,7 @@ public class Study {
     @Column(name = "GXG")
     private String gxg;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DISEASEID")
     private DiseaseTrait diseaseTrait;
 
