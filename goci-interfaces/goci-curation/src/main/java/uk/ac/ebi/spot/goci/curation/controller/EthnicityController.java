@@ -57,8 +57,8 @@ public class EthnicityController {
         String initialType = "initial";
         String replicationType = "replication";
 
-        initialStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIdAndType(studyId, initialType));
-        replicationStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIdAndType(studyId, replicationType));
+        initialStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIdAndType(Long.parseLong(studyId), initialType));
+        replicationStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIdAndType(Long.parseLong(studyId), replicationType));
 
         // Add all ethnicity/sample information for the study to our model
         model.addAttribute("initialStudyEthnicityDescriptions", initialStudyEthnicityDescriptions);

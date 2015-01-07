@@ -32,12 +32,12 @@ public class StudyController {
     private AssociationRepository associationRepository;
     private HousekeepingRepository housekeepingRepository;
     private DiseaseTraitRepository diseaseTraitRepository;
-    private EFOTraitRepository efoTraitRepository;
+    private EfoTraitRepository efoTraitRepository;
     private CuratorRepository curatorRepository;
     private CurationStatusRepository curationStatusRepository;
 
     @Autowired
-    public StudyController(StudyRepository studyRepository, AssociationRepository associationRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EFOTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository) {
+    public StudyController(StudyRepository studyRepository, AssociationRepository associationRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository) {
         this.studyRepository = studyRepository;
         this.associationRepository = associationRepository;
         this.housekeepingRepository = housekeepingRepository;
@@ -111,7 +111,7 @@ public class StudyController {
     public String viewStudySnps(Model model, @PathVariable String studyId) {
 
         Collection<Association> associations = new ArrayList<>();
-        associations.addAll(associationRepository.findByStudyId(studyId));
+        associations.addAll(associationRepository.findByStudyId(Long.parseLong(studyId)));
         model.addAttribute("studyAssociations", associations);
 
         // Also passes back study object to view so we can create links back to main study page
@@ -171,7 +171,7 @@ public class StudyController {
 
     // EFO traits
     @ModelAttribute("efoTraits")
-    public List<EFOTrait> populateEFOTraits(Model model) {
+    public List<EfoTrait> populateEFOTraits(Model model) {
         return efoTraitRepository.findAll();
     }
 

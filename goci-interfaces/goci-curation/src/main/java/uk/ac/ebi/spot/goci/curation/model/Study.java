@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import java.sql.Date;
 import java.util.Collection;
@@ -47,11 +48,17 @@ public class Study {
 
     private String gxg;
 
-    @ManyToMany
+    @ManyToOne
     @JoinTable(name = "STUDY_DISEASE_TRAIT",
                joinColumns = @JoinColumn(name = "STUDY_ID"),
                inverseJoinColumns = @JoinColumn(name = "DISEASE_TRAIT_ID"))
-    private Collection<DiseaseTrait> diseaseTraits;
+    private DiseaseTrait diseaseTrait;
+
+    @ManyToMany
+    @JoinTable(name = "STUDY_EFO_TRAIT",
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
+    private Collection<EfoTrait> efoTraits;
 
     @ManyToMany
     @JoinTable(name = "STUDY_SNP",
@@ -77,7 +84,8 @@ public class Study {
                  String cnv,
                  String gxe,
                  String gxg,
-                 Collection<DiseaseTrait> diseaseTraits,
+                 DiseaseTrait diseaseTrait,
+                 Collection<EfoTrait> efoTraits,
                  Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms,
                  Housekeeping housekeeping) {
         this.author = author;
@@ -91,7 +99,8 @@ public class Study {
         this.cnv = cnv;
         this.gxe = gxe;
         this.gxg = gxg;
-        this.diseaseTraits = diseaseTraits;
+        this.diseaseTrait = diseaseTrait;
+        this.efoTraits = efoTraits;
         this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
         this.housekeeping = housekeeping;
     }
@@ -192,12 +201,20 @@ public class Study {
         this.gxg = gxg;
     }
 
-    public Collection<DiseaseTrait> getDiseaseTraits() {
-        return diseaseTraits;
+    public DiseaseTrait getDiseaseTrait() {
+        return diseaseTrait;
     }
 
-    public void setDiseaseTraits(Collection<DiseaseTrait> diseaseTraits) {
-        this.diseaseTraits = diseaseTraits;
+    public void setDiseaseTrait(DiseaseTrait diseaseTrait) {
+        this.diseaseTrait = diseaseTrait;
+    }
+
+    public Collection<EfoTrait> getEfoTraits() {
+        return efoTraits;
+    }
+
+    public void setEfoTraits(Collection<EfoTrait> efoTraits) {
+        this.efoTraits = efoTraits;
     }
 
     public Collection<SingleNucleotidePolymorphism> getSingleNucleotidePolymorphisms() {
@@ -231,7 +248,7 @@ public class Study {
                 ", cnv='" + cnv + '\'' +
                 ", gxe='" + gxe + '\'' +
                 ", gxg='" + gxg + '\'' +
-                ", diseaseTraits=" + diseaseTraits +
+                ", efoTraits=" + efoTraits +
                 ", housekeeping=" + housekeeping +
                 '}';
     }

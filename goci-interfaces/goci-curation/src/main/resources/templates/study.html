@@ -157,11 +157,8 @@
                     <label for="diseaseTrait" class="control-label col-md-2">Disease Trait:</label>
 
                     <div class="col-md-10">
-                        <select th:field="*{diseaseTrait}" id="diseaseTrait">
-                            <option th:each="diseaseTrait : ${diseaseTraits}"
-                                    th:value="${diseaseTrait.id}"
-                                    th:text="${diseaseTrait.trait}"></option>
-                        </select>
+                        <input type="text" th:field="*{diseaseTrait.trait}" class="form-control"
+                               id="diseaseTrait"/>
                     </div>
                 </div>
 
@@ -170,9 +167,9 @@
                     <label for="EFOTrait" class="control-label col-md-2">EFO Trait:</label>
 
                     <div class="col-md-10">
-                        <select name="EFOTrait" th:field="*{diseaseTraits}" class="form-control select2-select"
+                        <select name="EFOTrait" th:field="*{efoTraits}" class="form-control select2-select"
                                 multiple="multiple" id="EFOTrait">
-                            <option th:each="efoTrait : ${diseaseTraits}"
+                            <option th:each="efoTrait : ${efoTraits}"
                                     th:value="${efoTrait.id}"
                                     th:text="${efoTrait.trait}"></option>
                         </select>

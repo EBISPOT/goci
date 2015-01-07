@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -70,7 +71,7 @@ public class Association {
     @JoinTable(name = "ASSOCIATION_EFO_TRAITS",
                joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
                inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
-    private Collection<EFOTrait> efoTraits;
+    private Collection<EfoTrait> efoTraits;
 
     // JPA no-args constructor
     public Association() {
@@ -93,7 +94,7 @@ public class Association {
                        Study study,
                        SingleNucleotidePolymorphism snp,
                        Collection<Gene> reportedGenes,
-                       Collection<EFOTrait> efoTraits) {
+                       Collection<EfoTrait> efoTraits) {
         this.strongestAllele = strongestAllele;
         this.riskFrequency = riskFrequency;
         this.allele = allele;
@@ -186,7 +187,7 @@ public class Association {
         return reportedGenes;
     }
 
-    public Collection<EFOTrait> getEfoTraits() {
+    public Collection<EfoTrait> getEfoTraits() {
         return efoTraits;
     }
 

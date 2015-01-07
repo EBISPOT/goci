@@ -11,16 +11,16 @@ import javax.persistence.Entity;
  */
 
 @Entity
-public class EFOTrait extends Trait {
+public class EfoTrait extends Trait {
     private String trait;
 
     private String uri;
 
     // JPA no-args constructor
-    public EFOTrait() {
+    public EfoTrait() {
     }
 
-    public EFOTrait(Long id, String trait, String uri) {
+    public EfoTrait(Long id, String trait, String uri) {
         super(id);
         this.trait = trait;
         this.uri = uri;

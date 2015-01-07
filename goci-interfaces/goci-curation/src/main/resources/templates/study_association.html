@@ -79,23 +79,23 @@
         </thead>
         <tbody>
         <tr th:each="studyAssociation : ${studyAssociations}">
-            <td><a th:href="@{/snps/{rsId}(rsId=${studyAssociation.snps.rsId})}">View SNP details</a></td>
-            <td th:text="${studyAssociation.snps.rsId}"></td>
+            <td><a th:href="@{/snp/{rsId}(rsId=${studyAssociation.snp.rsId})}">View SNP details</a></td>
+            <td th:text="${studyAssociation.snp.rsId}"></td>
             <td th:text="${studyAssociation.strongestAllele}"></td>
             <td th:text="${studyAssociation.riskFrequency}"></td>
             <td th:text="${studyAssociation.pvalueFloat}"></td>
             <td th:text="${studyAssociation.pvalueText}"></td>
-            <td th:text="${studyAssociation.ORPerCopyNum}"></td>
-            <td th:text="${studyAssociation.ORPerCopyRecip}"></td>
-            <td th:switch="${studyAssociation.ORType}">
+            <td th:text="${studyAssociation.orPerCopyNum}"></td>
+            <td th:text="${studyAssociation.orPerCopyRecip}"></td>
+            <td th:switch="${studyAssociation.orType}">
                 <p th:case="'0'">No</p>
 
                 <p th:case="'1'">Yes</p>
             </td>
-            <td th:text="${studyAssociation.ORPerCopyRange}"></td>
-            <td th:text="${studyAssociation.ORPerCopyUnitDescr}"></td>
-            <td th:text="${studyAssociation.ORPerCopyStdError}"></td>
-            <td th:text="${studyAssociation.SnpType}"></td>
+            <td th:text="${studyAssociation.orPerCopyRange}"></td>
+            <td th:text="${studyAssociation.orPerCopyUnitDescr}"></td>
+            <td th:text="${studyAssociation.orPerCopyStdError}"></td>
+            <td th:text="${studyAssociation.snpType}"></td>
         </tr>
         </tbody>
     </table>
@@ -196,11 +196,11 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="diseaseTraits" class="control-label col-md-2">EFO Trait</label>
+                            <label for="efoTraits" class="control-label col-md-2">EFO Trait</label>
 
                             <div class="col-md-10">
-                                <select id="diseaseTraits">
-                                    <option th:each="efoTrait : ${diseaseTraits}"
+                                <select id="efoTraits">
+                                    <option th:each="efoTrait : ${efoTraits}"
                                             th:value="${efoTrait}"
                                             th:text="${efoTrait.trait}"></option>
                                 </select>
