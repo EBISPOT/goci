@@ -34,8 +34,16 @@ public class Gene {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getGeneName() {
         return geneName;
+    }
+
+    public void setGeneName(String geneName) {
+        this.geneName = geneName;
     }
 
     @Override

@@ -8,8 +8,20 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import uk.ac.ebi.spot.goci.curation.model.*;
-import uk.ac.ebi.spot.goci.curation.repository.*;
+import uk.ac.ebi.spot.goci.curation.model.Association;
+import uk.ac.ebi.spot.goci.curation.model.CurationStatus;
+import uk.ac.ebi.spot.goci.curation.model.Curator;
+import uk.ac.ebi.spot.goci.curation.model.DiseaseTrait;
+import uk.ac.ebi.spot.goci.curation.model.EfoTrait;
+import uk.ac.ebi.spot.goci.curation.model.Housekeeping;
+import uk.ac.ebi.spot.goci.curation.model.Study;
+import uk.ac.ebi.spot.goci.curation.repository.AssociationRepository;
+import uk.ac.ebi.spot.goci.curation.repository.CurationStatusRepository;
+import uk.ac.ebi.spot.goci.curation.repository.CuratorRepository;
+import uk.ac.ebi.spot.goci.curation.repository.DiseaseTraitRepository;
+import uk.ac.ebi.spot.goci.curation.repository.EfoTraitRepository;
+import uk.ac.ebi.spot.goci.curation.repository.HousekeepingRepository;
+import uk.ac.ebi.spot.goci.curation.repository.StudyRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,9 +30,8 @@ import java.util.List;
 /**
  * Created by emma on 20/11/14.
  *
- * @author emma
- *         Study Controllers interpret user input and transform it into a study
- *         model that is represented to the user by the associated HTML page
+ * @author emma Study Controllers interpret user input and transform it into a study model that is represented to the
+ *         user by the associated HTML page
  */
 
 @Controller
@@ -37,9 +48,13 @@ public class StudyController {
     private CurationStatusRepository curationStatusRepository;
 
     @Autowired
-    public StudyController(StudyRepository studyRepository, AssociationRepository associationRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository) {
+    public StudyController(StudyRepository studyRepository,
+                           HousekeepingRepository housekeepingRepository,
+                           DiseaseTraitRepository diseaseTraitRepository,
+                           EfoTraitRepository efoTraitRepository,
+                           CuratorRepository curatorRepository,
+                           CurationStatusRepository curationStatusRepository) {
         this.studyRepository = studyRepository;
-        this.associationRepository = associationRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
         this.efoTraitRepository = efoTraitRepository;

@@ -65,30 +65,57 @@ public class SingleNucleotidePolymorphism {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getRsId() {
         return rsId;
+    }
+
+    public void setRsId(String rsId) {
+        this.rsId = rsId;
     }
 
     public String getChromosomeName() {
         return chromosomeName;
     }
 
+    public void setChromosomeName(String chromosomeName) {
+        this.chromosomeName = chromosomeName;
+    }
+
     public String getChromosomePosition() {
         return chromosomePosition;
+    }
+
+    public void setChromosomePosition(String chromosomePosition) {
+        this.chromosomePosition = chromosomePosition;
     }
 
     public Timestamp getLastUpdateDate() {
         return lastUpdateDate;
     }
 
+    public void setLastUpdateDate(Timestamp lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
+    }
+
     public Region getRegion() {
         return region;
+    }
+
+    public void setRegion(Region region) {
+        this.region = region;
     }
 
     public Collection<Gene> getGenes() {
         return genes;
     }
 
+    public void setGenes(Collection<Gene> genes) {
+        this.genes = genes;
+    }
 
     @Override
     public String toString() {
@@ -102,6 +129,4 @@ public class SingleNucleotidePolymorphism {
                 ", genes=" + genes +
                 '}';
     }
-
-
 }
