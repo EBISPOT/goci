@@ -51,6 +51,12 @@ public class Association {
     @Column(name = "SNPTYPE")
     private String snpType;
 
+    @Column(name = "SNPHAPLOTYPE")
+    private String multiSNPHaplotype;
+
+    @Column(name = "SNPINTERACTION")
+    private String snpInteraction;
+
     @Column(name = "PVALUE_MANTISSA")
     private Integer pvalueMantissa;
 
@@ -92,7 +98,7 @@ public class Association {
     public Association() {
     }
 
-    public Association(String studyID, String authorReportedGene, String strongestAllele, String riskFrequency, String allele, float pvalueFloat, String pvalueText, Double ORPerCopyNum, String ORType, String snpType, Integer pvalueMantissa, Integer pvalueExponent, Double ORPerCopyRecip, Double ORPerCopyStdError, String ORPerCopyRange, String ORPerCopyUnitDescr, Collection<SingleNucleotidePolymorphism> snps, Collection<EFOTrait> efoTraits) {
+    public Association(String studyID, String authorReportedGene, String strongestAllele, String riskFrequency, String allele, float pvalueFloat, String pvalueText, Double ORPerCopyNum, String ORType, String snpType, String multiSNPHaplotype, String snpInteraction, Integer pvalueMantissa, Integer pvalueExponent, Double ORPerCopyRecip, Double ORPerCopyStdError, String ORPerCopyRange, String ORPerCopyUnitDescr, Collection<SingleNucleotidePolymorphism> snps, Collection<EFOTrait> efoTraits) {
         this.studyID = studyID;
         this.authorReportedGene = authorReportedGene;
         this.strongestAllele = strongestAllele;
@@ -103,6 +109,8 @@ public class Association {
         this.ORPerCopyNum = ORPerCopyNum;
         this.ORType = ORType;
         this.snpType = snpType;
+        this.multiSNPHaplotype = multiSNPHaplotype;
+        this.snpInteraction = snpInteraction;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
         this.ORPerCopyRecip = ORPerCopyRecip;
@@ -201,6 +209,22 @@ public class Association {
         this.snpType = snpType;
     }
 
+    public String getMultiSNPHaplotype() {
+        return multiSNPHaplotype;
+    }
+
+    public void setMultiSNPHaplotype(String multiSNPHaplotype) {
+        this.multiSNPHaplotype = multiSNPHaplotype;
+    }
+
+    public String getSnpInteraction() {
+        return snpInteraction;
+    }
+
+    public void setSnpInteraction(String snpInteraction) {
+        this.snpInteraction = snpInteraction;
+    }
+
     public Integer getPvalueMantissa() {
         return pvalueMantissa;
     }
@@ -279,6 +303,8 @@ public class Association {
                 ", ORPerCopyNum=" + ORPerCopyNum +
                 ", ORType='" + ORType + '\'' +
                 ", snpType='" + snpType + '\'' +
+                ", multiSNPHaplotype='" + multiSNPHaplotype + '\'' +
+                ", snpInteraction='" + snpInteraction + '\'' +
                 ", pvalueMantissa=" + pvalueMantissa +
                 ", pvalueExponent=" + pvalueExponent +
                 ", ORPerCopyRecip=" + ORPerCopyRecip +

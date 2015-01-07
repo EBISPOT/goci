@@ -13,6 +13,7 @@ import uk.ac.ebi.spot.goci.curation.model.EFOTrait;
 import uk.ac.ebi.spot.goci.curation.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.curation.repository.EFOTraitRepository;
 import uk.ac.ebi.spot.goci.curation.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.curation.service.CuratorReportedSNP;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,6 +54,7 @@ public class AssociationController {
 
         // Return an empty association object so curators can add new association/snp information to study
         model.addAttribute("studyAssociation", new Association());
+        model.addAttribute("reportedSNPs", new CuratorReportedSNP());
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(Long.valueOf(studyId).longValue()));
@@ -61,7 +63,10 @@ public class AssociationController {
 
     // Add new association/snp information to a study
     @RequestMapping(value = "/studies/{studyId}/associations", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String addStudySnps(@ModelAttribute Association studyAssociation, @PathVariable String studyId) {
+    public String addStudySnps(@ModelAttribute CuratorReportedSNP reportedSNPs, @ModelAttribute Association studyAssociation, @PathVariable String studyId) {
+
+        // ReportedSNPs object holds a collection of SNPs entered by curator
+
 
         // Set the study ID for our association
         studyAssociation.setStudyID(studyId);
@@ -70,6 +75,22 @@ public class AssociationController {
         Association updatedAssociation = associationRepository.save(studyAssociation);
         return "redirect:/studies/" + studyId + "/associations";
     }
+
+     /* Existing association information */
+
+    // View association information
+    @RequestMapping(value = "/associations/{associationId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String viewAssociation(Model model, @PathVariable Long associationId) {
+
+        Association associationToView = associationRepository.findOne(associationId);
+        model.addAttribute("studyAssociation", associationToView);
+        return "edit_association";
+    }
+
+
+
+
+
 
     /* Model Attributes :
     *  Used for dropdowns in HTML forms
