@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.curation.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 /**
  * Created by emma on 19/12/14.
