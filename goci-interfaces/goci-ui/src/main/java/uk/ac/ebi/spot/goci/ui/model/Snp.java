@@ -21,7 +21,7 @@ public class Snp {
     @Column(name = "SNP")
     private String rsId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "STUDYID")
     public Study study;
 

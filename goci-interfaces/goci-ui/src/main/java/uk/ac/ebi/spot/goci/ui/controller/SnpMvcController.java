@@ -36,4 +36,10 @@ public class SnpMvcController {
         model.addAttribute("snps", snpRepository.findByRsId(rsId));
         return "snps";
     }
+
+    @RequestMapping(value = "/results", produces = MediaType.TEXT_HTML_VALUE)
+    String results(Model model) {
+        model.addAttribute("results", snpRepository.findAll());
+        return "results";
+    }
 }

@@ -19,16 +19,16 @@ public class Study {
     @Column(name = "PMID")
     private String pubmedId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "DISEASEID")
-    public Trait trait;
+    public DiseaseTrait diseaseTrait;
 
     Study() {
     }
 
-    Study(String pubmedId, Trait trait) {
+    Study(String pubmedId, DiseaseTrait diseaseTrait) {
         this.pubmedId = pubmedId;
-        this.trait = trait;
+        this.diseaseTrait = diseaseTrait;
     }
 
     public Long getId() {
@@ -43,7 +43,7 @@ public class Study {
         return "Study{" +
                 "id=" + id +
                 ", pubmedId='" + pubmedId + '\'' +
-                ", Trait='" + trait + '\'' +
+                ", diseaseTrait='" + diseaseTrait + '\'' +
                 '}';
     }
 }

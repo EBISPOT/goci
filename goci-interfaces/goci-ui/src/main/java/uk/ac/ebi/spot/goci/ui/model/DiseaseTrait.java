@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 */
 @Entity
 @Table(name = "GWASDISEASETRAITS")
-public class Trait {
+public class DiseaseTrait {
 
     @Id
     @GeneratedValue
@@ -17,26 +17,26 @@ public class Trait {
     public Long id;
 
     @Column(name = "DISEASETRAIT")
-    public String trait;
+    public String diseaseTrait;
 
     // JPA no-args constructor
-    public Trait() {
+    public DiseaseTrait() {
     }
 
-    public Trait(Long id, String trait) {
+    public DiseaseTrait(Long id, String diseaseTrait) {
         this.id = id;
-        this.trait = trait;
+        this.diseaseTrait = diseaseTrait;
     }
 
-    public String getTrait() {
-        return trait;
+    public String getDiseaseTrait() {
+        return diseaseTrait;
     }
 
     @Override
     public String toString() {
         return "DiseaseTrait{" +
                 "id=" + id +
-                "trait='" + trait + '\'' +
+                "diseaseTrait='" + diseaseTrait + '\'' +
                 '}';
     }
 }

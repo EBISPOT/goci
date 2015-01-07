@@ -34,26 +34,14 @@
         <div id="navbarCollapse" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
 
-                <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
+
+                <li class="active"><a href="home">Home <span class="sr-only">(current)</span></a></li>
                 <li><a href="http://www.ebi.ac.uk/fgpt/gwas">GWAS Diagram</a></li>
                 <li><a href="about">About us</a></li>
                 <li><a href="publications">Publications</a></li>
                 <li><a href="downloads">Downloads</a></li>
             </ul>
 
-            <!--<ul class="nav navbar-nav navbar-right">-->
-                <!--<li><a href="#">Link</a></li>-->
-                <!--<li class="dropdown">-->
-                    <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>-->
-                    <!--<ul class="dropdown-menu" role="menu">-->
-                        <!--<li><a href="#">Action</a></li>-->
-                        <!--<li><a href="#">Another action</a></li>-->
-                        <!--<li><a href="#">Something else here</a></li>-->
-                        <!--<li class="divider"></li>-->
-                        <!--<li><a href="#">Separated link</a></li>-->
-                    <!--</ul>-->
-                <!--</li>-->
-            <!--</ul>-->
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
@@ -71,13 +59,12 @@
             <div id="imaginary_container">
                 <div class="input-group stylish-input-group">
                     <input type="text" class="form-control" placeholder="Search the catalog">
-                        <span class="input-group-addon">
-                        <button type="submit">
-                            <span class="glyphicon glyphicon-search"></span>
-                        </button>
-                        </span>
+                <span class="input-group-addon">
+                    <button type="submit">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </span>
                     </input>
-
                 </div>
                 <div class="examples">
                     Examples:
@@ -90,6 +77,67 @@
     </div>
 </div>
 
+<!--<div class="results-container">-->
+<div class="container-fluid" id="lower_container">
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Refine search results</h3>
+                </div>
+                <div class="panel-body">
+                    <div id="facets">
+                    <b>Show results for</b>
+                        <div class="list-group">
+                            <a href="#" class="list-group-item">    <span class="badge">3</span>
+                                Studies</a>
+                            <a href="#" class="list-group-item">    <span class="badge">14</span>
+                                SNPs</a>
+                            <a href="#" class="list-group-item">    <span class="badge">2</span>
+                                Traits</a>
+                            <a href="#" class="list-group-item disabled">    <span class="badge">0</span>
+                                Some other facet with no results</a>
+                        </div>
+
+                    </div>
+
+                    <div id="filters">
+                    <b>Filter results by</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h2>Search results for <em>search term</em></h2>
+            <table class="table">
+                <thead>
+                <tr>
+
+                    <th data-field="pubmedId">Pubmed ID</th>
+                    <th data-field="diseaseTrait">Disease/Trait</th>
+                    <th data-field="rsId">RS ID</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="gs : ${results}">
+
+
+                    <td th:text="${gs.study.pubmedId} ?: 'null'"></td>
+
+                    <td th:text="${gs.study.diseaseTrait.diseaseTrait} ?: 'null'"></td>
+
+                    <td th:text="${gs.rsId} ?: 'null'"></td>
+
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+<!--</div>-->
+</div>
 
 </body>
 </html>
