@@ -8,20 +8,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import uk.ac.ebi.spot.goci.curation.model.Association;
-import uk.ac.ebi.spot.goci.curation.model.CurationStatus;
-import uk.ac.ebi.spot.goci.curation.model.Curator;
-import uk.ac.ebi.spot.goci.curation.model.DiseaseTrait;
-import uk.ac.ebi.spot.goci.curation.model.EfoTrait;
-import uk.ac.ebi.spot.goci.curation.model.Housekeeping;
-import uk.ac.ebi.spot.goci.curation.model.Study;
-import uk.ac.ebi.spot.goci.curation.repository.AssociationRepository;
-import uk.ac.ebi.spot.goci.curation.repository.CurationStatusRepository;
-import uk.ac.ebi.spot.goci.curation.repository.CuratorRepository;
-import uk.ac.ebi.spot.goci.curation.repository.DiseaseTraitRepository;
-import uk.ac.ebi.spot.goci.curation.repository.EfoTraitRepository;
-import uk.ac.ebi.spot.goci.curation.repository.HousekeepingRepository;
-import uk.ac.ebi.spot.goci.curation.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.curation.model.*;
+import uk.ac.ebi.spot.goci.curation.repository.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,8 +18,9 @@ import java.util.List;
 /**
  * Created by emma on 20/11/14.
  *
- * @author emma Study Controllers interpret user input and transform it into a study model that is represented to the
- *         user by the associated HTML page
+ * @author emma
+ *         Study Controllers interpret user input and transform it into a study
+ *         model that is represented to the user by the associated HTML page
  */
 
 @Controller
@@ -40,7 +29,6 @@ public class StudyController {
 
     // Repositories allowing access to database objects associated with a study
     private StudyRepository studyRepository;
-    private AssociationRepository associationRepository;
     private HousekeepingRepository housekeepingRepository;
     private DiseaseTraitRepository diseaseTraitRepository;
     private EfoTraitRepository efoTraitRepository;
@@ -48,12 +36,7 @@ public class StudyController {
     private CurationStatusRepository curationStatusRepository;
 
     @Autowired
-    public StudyController(StudyRepository studyRepository,
-                           HousekeepingRepository housekeepingRepository,
-                           DiseaseTraitRepository diseaseTraitRepository,
-                           EfoTraitRepository efoTraitRepository,
-                           CuratorRepository curatorRepository,
-                           CurationStatusRepository curationStatusRepository) {
+    public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
@@ -116,22 +99,6 @@ public class StudyController {
         // Saves the new information returned from form
         Study updatedStudy = studyRepository.save(study);
         return "redirect:/studies/" + updatedStudy.getId();
-    }
-
-
-    /* Study SNP/Associations */
-
-    // Generate list of SNP associations linked to a study
-    @RequestMapping(value = "/{studyId}/associations", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String viewStudySnps(Model model, @PathVariable String studyId) {
-
-        Collection<Association> associations = new ArrayList<>();
-        associations.addAll(associationRepository.findByStudyId(Long.parseLong(studyId)));
-        model.addAttribute("studyAssociations", associations);
-
-        // Also passes back study object to view so we can create links back to main study page
-        model.addAttribute("study", studyRepository.findOne(Long.valueOf(studyId)));
-        return "study_association";
     }
 
 
@@ -201,6 +168,4 @@ public class StudyController {
     public List<CurationStatus> populateCurationStatuses(Model model) {
         return curationStatusRepository.findAll();
     }
-
-
 }
