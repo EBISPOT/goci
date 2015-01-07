@@ -32,5 +32,6 @@
         <module>goci-kb-metrics</module>
         <module>goci-datapublisher</module>
         <module>goci-pussycat-app</module>
+	<module>goci-cttv-json-generator</module>
   </modules>
 </project>
