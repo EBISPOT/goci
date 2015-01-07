@@ -1,6 +1,13 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
@@ -21,7 +28,7 @@ public class Association {
     private Long id;
 
     private String authorReportedGene;
-    
+
     private String strongestAllele;
 
     private String riskFrequency;
@@ -57,8 +64,11 @@ public class Association {
     @OneToOne
     private Study study;
 
-    @OneToOne
-    private SingleNucleotidePolymorphism snp;
+    @ManyToMany
+    @JoinTable(name = "ASSOCIATION_SNP",
+               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
+    private Collection<SingleNucleotidePolymorphism> snps;
 
     @OneToMany
     @JoinTable(name = "ASSOCIATION_REPORTED_GENE",
@@ -86,7 +96,7 @@ public class Association {
                        String ORType,
                        String snpType,
                        String multiSnpHaplotype,
-                       String snpInteraction, 
+                       String snpInteraction,
                        Integer pvalueMantissa,
                        Integer pvalueExponent,
                        Double ORPerCopyRecip,
@@ -94,7 +104,7 @@ public class Association {
                        String ORPerCopyRange,
                        String ORPerCopyUnitDescr,
                        Study study,
-                       SingleNucleotidePolymorphism snp,
+                       Collection<SingleNucleotidePolymorphism> snps,
                        Collection<Gene> reportedGenes,
                        Collection<EfoTrait> efoTraits) {
         this.authorReportedGene = authorReportedGene;
@@ -115,7 +125,7 @@ public class Association {
         this.orPerCopyRange = ORPerCopyRange;
         this.orPerCopyUnitDescr = ORPerCopyUnitDescr;
         this.study = study;
-        this.snp = snp;
+        this.snps = snps;
         this.reportedGenes = reportedGenes;
         this.efoTraits = efoTraits;
     }
@@ -272,12 +282,12 @@ public class Association {
         this.study = study;
     }
 
-    public SingleNucleotidePolymorphism getSnp() {
-        return snp;
+    public Collection<SingleNucleotidePolymorphism> getSnps() {
+        return snps;
     }
 
-    public void setSnp(SingleNucleotidePolymorphism snp) {
-        this.snp = snp;
+    public void setSnps(Collection<SingleNucleotidePolymorphism> snps) {
+        this.snps = snps;
     }
 
     public Collection<Gene> getReportedGenes() {
@@ -317,7 +327,7 @@ public class Association {
                 ", orPerCopyStdError=" + orPerCopyStdError +
                 ", orPerCopyRange='" + orPerCopyRange + '\'' +
                 ", orPerCopyUnitDescr='" + orPerCopyUnitDescr + '\'' +
-                ", snp=" + snp +
+                ", snps=" + snps +
                 ", efoTraits=" + efoTraits +
                 '}';
     }

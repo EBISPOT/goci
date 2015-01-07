@@ -101,7 +101,7 @@
 
             <!--Study association can have multiple SNPs linked to it-->
             <td>
-                <span th:each="snp : ${studyAssociation.snps}" th:text="${snp.rsID}"></span>
+                <span th:each="snp : ${studyAssociation.snps}" th:text="${snp.rsId}"></span>
             </td>
             <td th:text="${studyAssociation.authorReportedGene}"></td>
             <td th:text="${studyAssociation.strongestAllele}"></td>
@@ -262,7 +262,7 @@
 
                             <div class="col-md-10">
                                 <input type="text" class="form-control" name="ORPerCopyNum" id="ORPerCopyNum"
-                                       th:value="${studyAssociation.ORPerCopyNum}"/>
+                                       th:value="${studyAssociation.orPerCopyNum}"/>
                             </div>
                         </div>
 
@@ -272,7 +272,7 @@
 
                             <div class="col-md-10">
                                 <input type="text" class="form-control" id="ORPerCopyRecip"
-                                       th:value="${studyAssociation.ORPerCopyRecip}" name="ORPerCopyRecip"/>
+                                       th:value="${studyAssociation.orPerCopyRecip}" name="ORPerCopyRecip"/>
                             </div>
                         </div>
 
@@ -281,7 +281,7 @@
 
                             <div class="col-md-10">
                                 <input type="text" class="form-control" id="ORPerCopyRange"
-                                       th:value="${studyAssociation.ORPerCopyRange}" name="ORPerCopyRange"/>
+                                       th:value="${studyAssociation.orPerCopyRange}" name="ORPerCopyRange"/>
                             </div>
                         </div>
 
@@ -291,7 +291,7 @@
 
                             <div class="col-md-10">
                                 <input type="text" class="form-control" id="ORPerCopyUnitDescr"
-                                       th:value="${studyAssociation.ORPerCopyUnitDescr}" name="ORPerCopyUnitDescr"/>
+                                       th:value="${studyAssociation.orPerCopyUnitDescr}" name="ORPerCopyUnitDescr"/>
                             </div>
                         </div>
 
@@ -300,7 +300,7 @@
 
                             <div class="col-md-10">
                                 <input type="text" class="form-control" id="ORPerCopyStdError"
-                                       th:value="${studyAssociation.ORPerCopyStdError}" name="ORPerCopyStdError"/>
+                                       th:value="${studyAssociation.orPerCopyStdError}" name="ORPerCopyStdError"/>
                             </div>
                         </div>
 
@@ -336,7 +336,7 @@
 
                         <div class="form-group">
                             <label for="ORType" class="control-label col-md-2">ORType</label>
-                            <input id="ORType" type="checkbox" th:value="'1'" th:field="${studyAssociation.ORType}"/>
+                            <input id="ORType" type="checkbox" th:value="'1'" th:field="${studyAssociation.orType}"/>
                         </div>
 
                         <div class="form-group">
