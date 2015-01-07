@@ -1,0 +1,16 @@
+git clone https://github.com/tburdett/goci
+cd goci/goci-tools/goci-datapublisher
+mvn clean package
+unzip goci-datapublisher.zip
+unzip goci-datapublisher.zip
+cd bin
+./publish.sh -p 1E-5 -o ./gwas.rdf
+cp ./gwas.rdf /Users/catherineleroy/Documents/virtuoso_accessible/
+cd /Users/catherineleroy/Applications/virtuoso/var/lib/virtuoso/db
+echo "wtmbahand8" | sudo -S virtuoso-t -f &
+/Users/catherineleroy/Documents/CTTV_0009_pipeline/load_gwas_rdf.sh
+
+
+
+
+/Users/catherineleroy/Documents/CTTV_0009_pipeline/shutdown_virtuoso.sh 

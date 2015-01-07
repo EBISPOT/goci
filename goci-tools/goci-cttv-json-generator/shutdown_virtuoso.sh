@@ -1,0 +1,4 @@
+isql << EOF
+SHUTDOWN;
+EXIT;
+EOF
