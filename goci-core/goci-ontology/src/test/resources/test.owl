@@ -8,15 +8,15 @@
 ]>
 
 
-<rdf:RDF xmlns="http://www.ebi.ac.uk/fgpt/ontologies/test#"
-     xml:base="http://www.ebi.ac.uk/fgpt/ontologies/test"
+<rdf:RDF xmlns="http://www.ebi.ac.uk/spot/ontologies/test#"
+     xml:base="http://www.ebi.ac.uk/spot/ontologies/test"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
      xmlns:owl="http://www.w3.org/2002/07/owl#"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-    <owl:Ontology rdf:about="http://www.ebi.ac.uk/fgpt/ontologies/test"/>
+    <owl:Ontology rdf:about="http://www.ebi.ac.uk/spot/ontologies/test"/>
 
-    <owl:Class rdf:about="http://www.ebi.ac.uk/fgpt/ontologies/test/TEST_00001">
+    <owl:Class rdf:about="http://www.ebi.ac.uk/spot/ontologies/test/TEST_00001">
         <rdfs:label xml:lang="en">test class</rdfs:label>
     </owl:Class>
 

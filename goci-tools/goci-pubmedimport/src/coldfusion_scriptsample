@@ -1,7 +1,7 @@
     <cftry>
     	<cfset hasError = 1>
 		<cfoutput> About to create a java object </cfoutput>
-        <cfset importer = createObject( "java", "uk.ac.ebi.fgpt.goci.PubmedImportDriver" )>
+        <cfset importer = createObject( "java", "PubmedImportDriver" )>
         <cfoutput>
         <cfset importer.init(javaCast("String", #PMID#), javaCast("String", #tableName#))>  //input parameters are PMID as a string and the table to save to
    		Java object successfully created  </cfoutput>

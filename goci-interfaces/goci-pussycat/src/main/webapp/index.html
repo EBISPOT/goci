@@ -8,8 +8,8 @@
     <title>GOCI | GWAS Diagram Browser</title>
 
     <meta name="Description" content="NHGRI GWAS Diagram Browser, produced by EBI Functional Genomics Production Team"/>
-    <meta name="keywords" content="GWAS Diagram Browser, GWAS Catalog, GWAS, NHGRI, EBI, FGPT"/>
-    <meta name="author" content="Dani Welter, Tony Burdett, FGPT, EBI"/>
+    <meta name="keywords" content="GWAS Diagram Browser, GWAS Catalog, GWAS, NHGRI, EBI, spot"/>
+    <meta name="author" content="Dani Welter, Tony Burdett, spot, EBI"/>
     <meta http-equiv="Content-Type" CONTENT="text/html; charset=iso-8859-1">
 
     <link href="css/pussycat.css" type="text/css" rel="stylesheet"/>
@@ -17,7 +17,7 @@
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.22/jquery-ui.min.js"></script>
-    <!--<script type="text/javascript" src="http://www.ebi.ac.uk/fgpt/zooma/scripts/zooma.min.js"></script>-->
+    <!--<script type="text/javascript" src="http://www.ebi.ac.uk/spot/zooma/scripts/zooma.min.js"></script>-->
     <script type="text/javascript" src="scripts/pussycat.js"></script>
     <script type="text/javascript" src="scripts/form_complete.js"></script>
     <script type="text/javascript" src="scripts/jquery.mousewheel.min.js"></script>
@@ -70,8 +70,8 @@
 
         <h2>Exploring Genome-wide Association Studies</h2>
 
-        <div class="survey_link"><h3>Please take our <a href="https://www.surveymonkey.com/r/?sm=SJjiivadngzAigK9TATbGZT3RMjg3M52q%2fIflL1LVkQ%3d"  target='_blank'>short survey</a> on the addition of detailed ancestry information to the GWAS Catalog</h3></div>
-
+        <!--<div class="survey_link"><h3>Please take our <a href="https://www.surveymonkey.com/r/?sm=SJjiivadngzAigK9TATbGZT3RMjg3M52q%2fIflL1LVkQ%3d"  target='_blank'>short survey</a> on the addition of detailed ancestry information to the GWAS Catalog</h3></div>-->
+                <br>
 
         <div id="filtering">
             <!--<label for="trait-filter">Filter:</label> -->
@@ -216,7 +216,7 @@
         <div>This diagram shows all SNP-trait associations with p-value &#8804; 5.0 &#215; 10<sup>-8</sup>,
             published in the GWAS catalogue
             (<a href="http://www.genome.gov/gwastudies"  target='_blank'>http://www.genome.gov/gwastudies</a>) up to
-            the end of December 2013. For information on how to navigate the diagram, see the help tab.
+            the end of May 2014. For information on how to navigate the diagram, see the help tab.
         </div>
 
         <div id="diagramarea" class="ui-widget-content">
@@ -401,6 +401,15 @@
                  alt="GWAS Catalog, December 2013"
                  title="GWAS Catalog, December 2013"/>
         </div>
+
+        <div>
+            <h3>
+                GWAS Catalog<br/> <span class="y2014">2014/span><br/> <span class="december">May</span>
+            </h3>
+            <img src="images/timeseries/gwas-2014-05.png"
+                 alt="GWAS Catalog, May 2014"
+                 title="GWAS Catalog, May 2014"/>
+        </div>
     </div>
     </div>
     </div>
@@ -520,6 +529,7 @@
 
         <h4>Older GWAS Diagrams (all SNP-trait associations with p-value &#8804; 5&#215;10<sup>-8</sup>)</h4>
         <ul>
+            <li><a href="images/timeseries/gwas-2013-12.png">GWAS diagram, Quarter 4, 2013, PNG</a></li>
             <li><a href="images/timeseries/gwas-2013-06.png">GWAS diagram, Quarter 2, 2013, PNG</a></li>
             <li><a href="images/timeseries/gwas-2013-03.png">GWAS diagram, Quarter 1, 2013, PNG</a></li>
             <li><a href="images/timeseries/gwas-2012-12.png">GWAS diagram, Quarter 4, 2012, PNG</a></li>
@@ -585,7 +595,7 @@
         on the diagram, up to the end of June 2013. Note that in some cases, more than one EFO term <br>has been mapped to a GWAS trait for a given study.
         Mappings are not one-to-one, i.e. one EFO term may be mapped to <br>several different GWAS traits and vice versa.
         <ul>
-            <li><a href="ontology/GWAS-EFO-Mappings201312.xlsx">GWAS to EFO mappings, XLSX</a> [ ~164 KB]</li>
+            <li><a href="ontology/GWAS-EFO-Mappings201405.xlsx">GWAS to EFO mappings, XLSX</a> [ ~164 KB]</li>
         </ul>
     </div>
 </div>
@@ -622,7 +632,7 @@
                         names, e.g. a search for "hair color" will highlight SNP-trait associations labelled hair color
                         as well as "black vs blond hair" and "red vs non-red hair".
                     </li>
-                    <li>The text box has auto-complete functionality based on EFO. <!--and is powered by <a href="http://wwwdev.ebi.ac.uk/fgpt/zooma/index.html">Zooma</a> .-->
+                    <li>The text box has auto-complete functionality based on EFO. <!--and is powered by <a href="http://wwwdev.ebi.ac.uk/spot/zooma/index.html">Zooma</a> .-->
                         <!--Zooma annotations are drawn from a number of resources other than the GWAS catalog and it is currently not possible to limit searching-->
                         <!--to only one domain. Therefore                                                                 -->
                     The auto-complete may take a moment

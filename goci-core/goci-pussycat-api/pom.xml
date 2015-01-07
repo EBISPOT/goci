@@ -4,11 +4,11 @@
 
     <parent>
         <artifactId>goci-core</artifactId>
-        <groupId>uk.ac.ebi.fgpt</groupId>
+        <groupId>uk.ac.ebi.spot</groupId>
         <version>2.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>uk.ac.ebi.fgpt</groupId>
+    <groupId>uk.ac.ebi.spot</groupId>
     <artifactId>goci-pussycat-api</artifactId>
     <version>2.0-SNAPSHOT</version>
 
@@ -47,7 +47,7 @@
 
         <!-- goci model api -->
         <dependency>
-            <groupId>uk.ac.ebi.fgpt</groupId>
+            <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-model</artifactId>
             <version>2.0-SNAPSHOT</version>
         </dependency>
@@ -103,7 +103,7 @@
         <!--</dependency>-->
 
         <!--<dependency>-->
-            <!--<groupId>uk.ac.ebi.fgpt</groupId>-->
+            <!--<groupId>uk.ac.ebi.spot</groupId>-->
             <!--<artifactId>goci-datapublisher</artifactId>-->
             <!--<version>1.0.7-SNAPSHOT</version>-->
         <!--</dependency>-->

@@ -12,5 +12,5 @@ done
 
 classpath="$jars:$base/config";
 
-$java $args -classpath $classpath uk.ac.ebi.fgpt.goci.KBMetricsDriver $@ 2>&1;
+$java $args -classpath $classpath uk.ac.ebi.spot.goci.KBMetricsDriver $@ 2>&1;
 exit $?;
