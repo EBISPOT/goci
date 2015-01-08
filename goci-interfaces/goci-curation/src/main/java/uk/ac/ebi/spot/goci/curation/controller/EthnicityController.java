@@ -101,7 +101,7 @@ public class EthnicityController {
     public String updateSampleDescription(@ModelAttribute Ethnicity ethnicity) {
 
         // Saves the new information returned from form
-        Ethnicity updatedEthnicity = ethnicityRepository.save(ethnicity);
+        ethnicityRepository.save(ethnicity);
         return "redirect:/studies/" + ethnicity.getStudyID() + "/sampledescription";
     }
 
