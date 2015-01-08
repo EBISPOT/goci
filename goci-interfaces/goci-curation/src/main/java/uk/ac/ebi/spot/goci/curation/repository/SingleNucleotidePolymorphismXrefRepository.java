@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import uk.ac.ebi.spot.goci.curation.model.SingleNucleotidePolymorphismXref;
 
+import java.util.Collection;
+
 /**
  * Created by emma on 08/01/15.
  *
@@ -13,4 +15,5 @@ import uk.ac.ebi.spot.goci.curation.model.SingleNucleotidePolymorphismXref;
  */
 @RepositoryRestResource
 public interface SingleNucleotidePolymorphismXrefRepository extends JpaRepository<SingleNucleotidePolymorphismXref, Long> {
+    Collection<SingleNucleotidePolymorphismXref> findByAssociationID(Long associationID);
 }
