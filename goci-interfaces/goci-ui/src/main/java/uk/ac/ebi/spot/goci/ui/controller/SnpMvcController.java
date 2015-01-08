@@ -37,9 +37,9 @@ public class SnpMvcController {
         return "snps";
     }
 
-    @RequestMapping(value = "/results", produces = MediaType.TEXT_HTML_VALUE)
-    String results(Model model) {
-        model.addAttribute("results", snpRepository.findAll());
-        return "results";
+    @RequestMapping(value = "/search", produces = MediaType.TEXT_HTML_VALUE)
+    String search(Model model) {
+        model.addAttribute("search", snpRepository.findAll());
+        return "search";
     }
 }

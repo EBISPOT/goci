@@ -19,6 +19,11 @@
     margin-top:5%;
 }
 
+#center_container{
+    margin-left: 10%;
+    margin-right: auto;
+}
+
 /*.navbar-mine {*/
     /*background-image: -webkit-linear-gradient(top, #3c3c3c 0%, #222 100%);*/
     /*background-image:      -o-linear-gradient(top, #3c3c3c 0%, #222 100%);*/

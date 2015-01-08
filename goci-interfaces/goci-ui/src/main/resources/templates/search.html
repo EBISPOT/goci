@@ -90,6 +90,7 @@
                     <div id="facets">
                     <b>Show results for</b>
                         <div class="list-group">
+                            <!--add an "active" class annotation to each a tag when it's selected-->
                             <a href="#" class="list-group-item">    <span class="badge">3</span>
                                 Studies</a>
                             <a href="#" class="list-group-item">    <span class="badge">14</span>
@@ -104,7 +105,43 @@
 
                     <div id="filters">
                     <b>Filter results by</b>
+
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <b>P-value</b> from <input type="text" size="5" id="pval-min"/> to <input type="text" size="5" id="pval-max"/>
+                                <i>e.g. 5E-8</i>
+                            </li>
+
+                            <li class="list-group-item">
+                                <b>Odds ratio</b> from <input type="text" size="5" id="or-min"/> to <input type="text" size="5" id="or-max"/>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Date</b> from <input type="text" id="date-min" size="10"/> to <input type="text" id="date-max" size="10"/>
+                            </li>
+                            <li class="list-group-item">
+
+                                <b>Disease trait</b>
+                            <div class="btn-group">
+
+                                    <button type="button" class="btn btn-default">Child of search term</button>
+                                    <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">Diabetes</a></li>
+                                        <li><a href="#">Cancer</a></li>
+                                        <li><a href="#">Lupus</a></li>
+                                        <li><a href="#">Body weight</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+
                     </div>
+
+                    <div>
+                        <button type="button" class="btn btn-default">Apply filters</button>
+                        <button type="button" class="btn btn-default pull-right">Clear all filters</button>
+                                </div>
+
                 </div>
             </div>
         </div>
@@ -121,7 +158,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="gs : ${results}">
+                <tr th:each="gs : ${search}">
 
 
                     <td th:text="${gs.study.pubmedId} ?: 'null'"></td>
