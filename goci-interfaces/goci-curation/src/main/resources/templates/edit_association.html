@@ -23,6 +23,10 @@
     <!-- Include Select2 JS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
 
+    <!--Tags input http://timschlechter.github.io/bootstrap-tagsinput/examples/-->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"/>
+    <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
+
 
 </head>
 <body>
@@ -59,6 +63,34 @@
                 </ul>  -->
     </div>
 </nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-10">
+            <div id="editAssociationSNPs">
+                <form class="form-horizontal" method="post" name="editAssociationSNPs" th:object="${reportedSNPs}">
+
+                    <div class="form-group">
+                        <label for="reportedSNPs" class="control-label col-md-2">Edit SNPs:</label>
+
+                        <div class="col-md-10">
+                            <input type="text" th:field="*{reportedSNPValue}"
+                                   class="form-control" id="reportedSNPs" data-role="tagsinput"/>
+                        </div>
+                    </div>
+
+                    <!--Button -->
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <div class="container">

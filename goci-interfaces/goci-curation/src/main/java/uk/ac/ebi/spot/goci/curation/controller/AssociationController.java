@@ -79,6 +79,8 @@ public class AssociationController {
         // ReportedSNPs object holds a collection of SNPs entered by curator
         // For each SNP entered we need need to create an entry in the SNP table
 
+        // TODO NEED TO ONLY CREATE ENTRY IN SNP TABLE IF IT DOESNT ALREADY EXITS
+
         for (String snp : reportedSNPs.getReportedSNPValue()) {
 
             // Create new SNP
@@ -104,11 +106,47 @@ public class AssociationController {
     @RequestMapping(value = "/associations/{associationId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewAssociation(Model model, @PathVariable Long associationId) {
 
+        // Return association with that ID
         Association associationToView = associationRepository.findOne(associationId);
         model.addAttribute("studyAssociation", associationToView);
+
+        // Find all cross-references to associated SNPs
+        Collection<SingleNucleotidePolymorphismXref> xrefs = new ArrayList<>();
+        xrefs.addAll(singleNucleotidePolymorphismXrefRepository.findByAssociationID(associationId));
+
+        // For each XREF get the SNP ID
+        Collection<Long> snpIDs = new ArrayList<>();
+        for (SingleNucleotidePolymorphismXref xref: xrefs){
+            snpIDs.add(xref.getSnpID());
+        }
+
+        // Get rsID of SNPs associated with those IDs and return to HTML form
+        Collection<String> associationSNPs= new ArrayList<>();
+        for(Long snpID: snpIDs){
+          SingleNucleotidePolymorphism associationSNP = singleNucleotidePolymorphismRepository.findOne(snpID);
+          associationSNPs.add(associationSNP.getRsID());
+        }
+
+        // Return list of SNPs entered
+        CuratorReportedSNP curatorReportedSNP= new CuratorReportedSNP();
+        curatorReportedSNP.setReportedSNPValue(associationSNPs);
+
+        // Return curator added snps for editing
+        model.addAttribute("reportedSNPs", curatorReportedSNP);
+
         return "edit_association";
     }
 
+    // Edit existing assoication information
+    @RequestMapping(value = "/associations/{associationId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String editAssociation(@ModelAttribute Association association) {
+
+        // TODO ALSO DEAL WITH RETURNED SNPS
+
+        // Saves the new information returned from form
+        associationRepository.save(association);
+        return "redirect:/studies/" + association.getStudyID() + "/associations";
+    }
 
     /* Model Attributes :
     *  Used for dropdowns in HTML forms
