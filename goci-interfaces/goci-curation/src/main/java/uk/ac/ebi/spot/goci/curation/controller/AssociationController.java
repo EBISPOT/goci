@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import uk.ac.ebi.spot.goci.curation.model.Association;
 import uk.ac.ebi.spot.goci.curation.model.EFOTrait;
-import uk.ac.ebi.spot.goci.curation.repository.AssociationRepository;
-import uk.ac.ebi.spot.goci.curation.repository.EFOTraitRepository;
-import uk.ac.ebi.spot.goci.curation.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.curation.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.curation.model.SingleNucleotidePolymorphismXref;
+import uk.ac.ebi.spot.goci.curation.repository.*;
 import uk.ac.ebi.spot.goci.curation.service.CuratorReportedSNP;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import java.util.List;
  * @author emma
  *         Association controller, interpret user input and transform it into a snp/association
  *         model that is represented to the user by the associated HTML page. Used to view, add and edit
- *         existing snp/assocaition information
+ *         existing snp/assocaition information. Also creates entry in SNP table for any new SNPS entered in html form
  */
 
 @Controller
@@ -34,13 +34,18 @@ public class AssociationController {
     private AssociationRepository associationRepository;
     private StudyRepository studyRepository;
     private EFOTraitRepository efoTraitRepository;
+    private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
+    private SingleNucleotidePolymorphismXrefRepository singleNucleotidePolymorphismXrefRepository;
 
     @Autowired
-    public AssociationController(AssociationRepository associationRepository, StudyRepository studyRepository, EFOTraitRepository efoTraitRepository) {
+    public AssociationController(AssociationRepository associationRepository, StudyRepository studyRepository, EFOTraitRepository efoTraitRepository, SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository, SingleNucleotidePolymorphismXrefRepository singleNucleotidePolymorphismXrefRepository) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
+        this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
+        this.singleNucleotidePolymorphismXrefRepository = singleNucleotidePolymorphismXrefRepository;
     }
+
 
     /*  SNP/Associations associated with a study */
 
@@ -65,14 +70,31 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String addStudySnps(@ModelAttribute CuratorReportedSNP reportedSNPs, @ModelAttribute Association studyAssociation, @PathVariable String studyId) {
 
-        // ReportedSNPs object holds a collection of SNPs entered by curator
-
-
         // Set the study ID for our association
         studyAssociation.setStudyID(studyId);
 
         // Save our association information
-        Association updatedAssociation = associationRepository.save(studyAssociation);
+        associationRepository.save(studyAssociation);
+
+        // ReportedSNPs object holds a collection of SNPs entered by curator
+        // For each SNP entered we need need to create an entry in the SNP table
+
+        for (String snp : reportedSNPs.getReportedSNPValue()) {
+
+            // Create new SNP
+            SingleNucleotidePolymorphism newSNP = new SingleNucleotidePolymorphism();
+            newSNP.setRsID(snp);
+
+            // Save SNP
+            singleNucleotidePolymorphismRepository.save(newSNP);
+
+            // Create link in XREF table and save
+            SingleNucleotidePolymorphismXref newSNPXref = new SingleNucleotidePolymorphismXref();
+            newSNPXref.setAssociationID(studyAssociation.getId());
+            newSNPXref.setSnpID(newSNP.getId());
+            singleNucleotidePolymorphismXrefRepository.save(newSNPXref);
+
+        }
         return "redirect:/studies/" + studyId + "/associations";
     }
 
@@ -86,10 +108,6 @@ public class AssociationController {
         model.addAttribute("studyAssociation", associationToView);
         return "edit_association";
     }
-
-
-
-
 
 
     /* Model Attributes :
