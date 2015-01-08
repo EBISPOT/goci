@@ -1,4 +1,4 @@
-/Users/catherineleroy/Documents/CTTV_0009_pipeline/gwas-cttv-rest/src/main/java/uk/ac/ebi/spot/cttv/gwas/rest/controller/GwasJsonController.java
-/Users/catherineleroy/Documents/CTTV_0009_pipeline/gwas-cttv-rest/src/main/java/uk/ac/ebi/spot/cttv/gwas/rest/Application.java
-/Users/catherineleroy/Documents/CTTV_0009_pipeline/gwas-cttv-rest/src/main/java/uk/ac/ebi/spot/cttv/gwas/rest/utils/Constants.java
-/Users/catherineleroy/Documents/CTTV_0009_pipeline/gwas-cttv-rest/src/main/java/uk/ac/ebi/spot/cttv/gwas/rest/model/GwasJson.java
+/Users/catherineleroy/Documents/github_project/goci/goci-interfaces/goci-cttv-rest/src/main/java/uk/ac/ebi/spot/cttv/gwas/rest/model/GwasJson.java
+/Users/catherineleroy/Documents/github_project/goci/goci-interfaces/goci-cttv-rest/src/main/java/uk/ac/ebi/spot/cttv/gwas/rest/utils/Constants.java
+/Users/catherineleroy/Documents/github_project/goci/goci-interfaces/goci-cttv-rest/src/main/java/uk/ac/ebi/spot/cttv/gwas/rest/controller/GwasJsonController.java
+/Users/catherineleroy/Documents/github_project/goci/goci-interfaces/goci-cttv-rest/src/main/java/uk/ac/ebi/spot/cttv/gwas/rest/Application.java

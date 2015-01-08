@@ -1,5 +1,10 @@
 use strict;
 use warnings;
+use File::Basename;
+use Cwd 'abs_path';
+
+my $path_to_this_script = abs_path($0);
+my $dirname  = dirname($path_to_this_script);
 
 
 my $snp_2_gene_mapping_file = $ARGV[0];
@@ -10,6 +15,7 @@ my $url = 'http://localhost:8890/sparql?default-graph-uri=&query=PREFIX+rdf%3A+%
 
 my $page = `wget -O - "$url"`;
 
+
 my @lines = split /\n/, $page;
 foreach my $snp_url (@lines) {
     
@@ -17,8 +23,10 @@ foreach my $snp_url (@lines) {
     #    perl ./nearest_gene_to_snp.pl rs636864 1
     
     $snp_url =~ s/http:\/\/rdf.ebi.ac.uk\/dataset\/gwas\/SingleNucleotidePolymorphism\///;
-    
-    my @args = ("perl","nearest_gene_to_snp.pl",$snp_url, 0, $snp_2_gene_mapping_file, $failed_snp_file);
+   
+ 
+    my @args = ("perl","$dirname/nearest_gene_to_snp.pl",$snp_url, 0, $snp_2_gene_mapping_file, $failed_snp_file);
     system(@args);
-
 }
+
+print "end";

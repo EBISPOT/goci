@@ -6,9 +6,9 @@ LOCAL_DIR=`pwd`
 # The  path to the github input_data_format/scripts/cttv0009_gwas_catalog directory
 # If you don't have it : git clone https://github.com/CTTV/input_data_format
 # However you should really have this project as it is where this script is stored :-)
-THIS_SCRPIT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-echo $THIS_SCRPIT_DIR
-INPUT_DATA_FORMAT_CTTV=$THIS_SCRPIT_DIR/..
+THIS_SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+echo $THIS_SCRIPT_DIR
+INPUT_DATA_FORMAT_CTTV=$THIS_SCRIPT_DIR/..
 
 
 # Create a release working directory with the date
@@ -27,7 +27,7 @@ mkdir $RELEASE_DIR
 #    cd bin
 #    chmod gou+x publish.sh
 #
-PUBLISH_SCRIPT_DIR=THIS_SCRPIT_DIR/../goci-datapublisher/target/bin
+PUBLISH_SCRIPT_DIR=$THIS_SCRIPT_DIR/../goci-datapublisher/target/bin
 
 # For this script to work you need to install virtuoso 6.1.8 first
 # And the virtuoso-t executable need to be added to your path
@@ -102,6 +102,7 @@ echo "..."
 cd $LOCAL_DIR
 LOG_FILE=$RELEASE_DIR/delete_all_triples.log
 COMMAND="$THIS_SCRIPT_DIR/delete_all_triples.sh  >> $LOG_FILE 2>&1"
+echo "COMMAND = $COMMAND"
 eval $COMMAND
 if [ $? -ne 0 ]
 then
@@ -139,7 +140,6 @@ echo "Use the newly loaded virtuoso to generate the gwas.json for cttv"
 echo "..."
 LOG_FILE=$RELEASE_DIR/snp_2_gene_mapping_generator.log
 COMMAND="perl $THIS_SCRIPT_DIR/snp_2_gene_mapping_generator.pl $MAPPING_FILE $FAILED_FILE >> $LOG_FILE 2>&1" 
-echo "bla $COMMAND"
 eval $COMMAND
 wait $!
 echo ""
