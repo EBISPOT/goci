@@ -52,32 +52,35 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="form-group">
-            <div id="editDiseaseTraitForm">
-                <form class="form-horizontal" name="editDiseaseTraitForm" method="post" th:object="${diseaseTrait}">
+        <div class="col-md-10">
+            <div class="form-group">
+                <div id="editDiseaseTraitForm">
+                    <form class="form-horizontal" name="editDiseaseTraitForm" method="post" th:object="${diseaseTrait}">
 
-                    <div class="form-group">
-                        <label for="id" class="control-label col-md-2"></label>
-                        <div>
-                            <input type="hidden"  id="id" th:field="*{id}"/>
-                        </div>
-                    </div>
+                        <div class="form-group">
+                            <label for="id" class="control-label col-md-2"></label>
 
-                    <div class="form-group col-md-8">
-                        <label for="trait" class="control-label">Edit Disease / Trait:</label>
-                        <div>
-                            <input type="text" class="form-control" id="trait" th:field="*{trait}"/>
+                            <div>
+                                <input type="hidden" id="id" th:field="*{id}"/>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <div class="col-md-offset-8 col-md-2">
-                            <button type="Save" class="btn btn-primary">Save</button>
+                        <div class="form-group col-md-8">
+                            <label for="trait" class="control-label">Edit Disease / Trait:</label>
+
+                            <div>
+                                <input type="text" class="form-control" id="trait" th:field="*{trait}"/>
+                            </div>
                         </div>
-                    </div>
-                </form>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-8 col-md-2">
+                                <button type="Save" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-
         </div>
     </div>
 </div>
