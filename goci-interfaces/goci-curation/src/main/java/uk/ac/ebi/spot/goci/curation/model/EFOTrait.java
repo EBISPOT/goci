@@ -1,8 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by emma on 04/12/14.
@@ -14,7 +12,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "GWASEFOTRAITS")
-public class EFOTrait extends Trait {
+public class EFOTrait {
+
+    @Id
+    @GeneratedValue
+    @Column(name = "ID")
+    private Long id;
 
     @Column(name = "EFOTRAIT")
     private String trait;
@@ -26,24 +29,40 @@ public class EFOTrait extends Trait {
     public EFOTrait() {
     }
 
-    public EFOTrait(Long id, String trait, String uri) {
-        super(id);
+    public EFOTrait(String trait, String uri) {
         this.trait = trait;
         this.uri = uri;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTrait() {
         return trait;
     }
 
+    public void setTrait(String trait) {
+        this.trait = trait;
+    }
+
     public String getUri() {
         return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
     @Override
     public String toString() {
         return "EFOTrait{" +
-                "trait='" + trait + '\'' +
+                "id=" + id +
+                ", trait='" + trait + '\'' +
                 ", uri='" + uri + '\'' +
                 '}';
     }

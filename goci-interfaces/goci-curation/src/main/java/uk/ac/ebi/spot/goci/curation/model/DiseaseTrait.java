@@ -1,8 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by emma on 01/12/14.
@@ -15,7 +13,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "GWASDISEASETRAITS")
-public class DiseaseTrait extends Trait {
+public class DiseaseTrait  {
+
+    @Id
+    @GeneratedValue
+    @Column(name = "ID")
+    private Long id;
 
     @Column(name = "DISEASETRAIT")
     private String trait;
@@ -24,10 +27,17 @@ public class DiseaseTrait extends Trait {
     public DiseaseTrait() {
     }
 
-    public DiseaseTrait(Long id, String trait) {
 
-        super(id);
+    public DiseaseTrait(String trait) {
         this.trait = trait;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTrait() {
@@ -41,7 +51,8 @@ public class DiseaseTrait extends Trait {
     @Override
     public String toString() {
         return "DiseaseTrait{" +
-                "trait='" + trait + '\'' +
+                "id=" + id +
+                ", trait='" + trait + '\'' +
                 '}';
     }
 }
