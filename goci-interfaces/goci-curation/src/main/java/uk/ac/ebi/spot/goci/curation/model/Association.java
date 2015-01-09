@@ -77,7 +77,7 @@ public class Association {
     private Collection<Gene> reportedGenes;
 
     @OneToMany
-    @JoinTable(name = "ASSOCIATION_EFO_TRAITS",
+    @JoinTable(name = "ASSOCIATION_EFO_TRAIT",
                joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
                inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits;
