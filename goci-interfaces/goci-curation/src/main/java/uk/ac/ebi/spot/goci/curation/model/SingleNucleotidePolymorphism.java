@@ -6,7 +6,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -34,8 +33,11 @@ public class SingleNucleotidePolymorphism {
 
     private Timestamp lastUpdateDate;
 
-    @OneToOne
-    private Region region;
+    @ManyToMany
+    @JoinTable(name = "SNP_REGION",
+               joinColumns = @JoinColumn(name = "SNP_ID"),
+               inverseJoinColumns = @JoinColumn(name = "REGION_ID"))
+    private Collection<Region> regions;
 
     @ManyToMany
     @JoinTable(name = "SNP_GENE",
@@ -51,13 +53,13 @@ public class SingleNucleotidePolymorphism {
                                         String chromosomeName,
                                         String chromosomePosition,
                                         Timestamp lastUpdateDate,
-                                        Region region,
+                                        Collection<Region> regions,
                                         Collection<Gene> genes) {
         this.rsId = rsId;
         this.chromosomeName = chromosomeName;
         this.chromosomePosition = chromosomePosition;
         this.lastUpdateDate = lastUpdateDate;
-        this.region = region;
+        this.regions = regions;
         this.genes = genes;
     }
 
@@ -101,12 +103,12 @@ public class SingleNucleotidePolymorphism {
         this.lastUpdateDate = lastUpdateDate;
     }
 
-    public Region getRegion() {
-        return region;
+    public Collection<Region> getRegions() {
+        return regions;
     }
 
-    public void setRegion(Region region) {
-        this.region = region;
+    public void setRegions(Collection<Region> regions) {
+        this.regions = regions;
     }
 
     public Collection<Gene> getGenes() {
@@ -125,7 +127,7 @@ public class SingleNucleotidePolymorphism {
                 ", chromosomeName='" + chromosomeName + '\'' +
                 ", chromosomePosition='" + chromosomePosition + '\'' +
                 ", lastUpdateDate=" + lastUpdateDate +
-                ", region=" + region +
+                ", regions=" + regions +
                 ", genes=" + genes +
                 '}';
     }
