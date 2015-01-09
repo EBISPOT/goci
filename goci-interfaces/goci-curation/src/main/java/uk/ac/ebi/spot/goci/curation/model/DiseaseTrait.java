@@ -34,6 +34,10 @@ public class DiseaseTrait extends Trait {
         return trait;
     }
 
+    public void setTrait(String trait) {
+        this.trait = trait;
+    }
+
     @Override
     public String toString() {
         return "DiseaseTrait{" +
