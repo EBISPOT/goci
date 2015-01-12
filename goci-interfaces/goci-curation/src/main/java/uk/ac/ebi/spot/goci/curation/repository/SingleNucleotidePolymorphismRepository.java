@@ -10,7 +10,7 @@ import uk.ac.ebi.spot.goci.curation.model.SingleNucleotidePolymorphism;
  *
  * @author emma
  *         <p/>
- *         Repository accessing Single Nucloetide Polymorphism entity object
+ *         Repository accessing Single Nucloetide Polymorphism entity objectls
  */
 
 @RepositoryRestResource

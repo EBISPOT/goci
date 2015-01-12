@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import uk.ac.ebi.spot.goci.ui.repository.SnpRepository;
+import uk.ac.ebi.spot.goci.curation.repository.SingleNucleotidePolymorphismRepository;
 
 /**
  * Javadocs go here!
@@ -16,10 +16,10 @@ import uk.ac.ebi.spot.goci.ui.repository.SnpRepository;
  */
 @Controller
 public class SnpMvcController {
-    private SnpRepository snpRepository;
+    private SingleNucleotidePolymorphismRepository snpRepository;
 
     @Autowired
-    SnpMvcController(SnpRepository snpRepository) {
+    SnpMvcController(SingleNucleotidePolymorphismRepository snpRepository) {
         this.snpRepository = snpRepository;
     }
 
@@ -33,7 +33,7 @@ public class SnpMvcController {
     String snps(Model model,
                 @PathVariable
                 String rsId) {
-        model.addAttribute("snps", snpRepository.findByRsId(rsId));
+        model.addAttribute("snps", snpRepository.findByRsID(rsId));
         return "snps";
     }
 
