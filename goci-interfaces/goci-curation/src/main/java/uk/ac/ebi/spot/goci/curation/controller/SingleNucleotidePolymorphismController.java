@@ -44,7 +44,7 @@ public class SingleNucleotidePolymorphismController {
     // Return snp by rsID
     @RequestMapping(value = "/{rsID}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     String snp(Model model, @PathVariable String rsID) {
-        model.addAttribute("snps", singleNucleotidePolymorphismRepository.findByRsID(rsID));
+        model.addAttribute("snps", singleNucleotidePolymorphismRepository.findByRsIDIgnoreCase(rsID));
         return "snps";
     }
 
