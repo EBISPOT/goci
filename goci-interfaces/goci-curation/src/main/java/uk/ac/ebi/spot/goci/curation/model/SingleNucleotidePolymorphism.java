@@ -44,7 +44,7 @@ public class SingleNucleotidePolymorphism {
     private Region region;*/
 
     // Associated genes
- @ManyToMany
+    @ManyToMany
     @JoinTable(
             name = "GWASGENEXREF",
             joinColumns = {@JoinColumn(name = "GWASSNPID", referencedColumnName = "ID")},
