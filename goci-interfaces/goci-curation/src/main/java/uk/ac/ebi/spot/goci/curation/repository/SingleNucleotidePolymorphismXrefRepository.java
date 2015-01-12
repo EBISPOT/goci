@@ -15,5 +15,11 @@ import java.util.Collection;
  */
 @RepositoryRestResource
 public interface SingleNucleotidePolymorphismXrefRepository extends JpaRepository<SingleNucleotidePolymorphismXref, Long> {
+
     Collection<SingleNucleotidePolymorphismXref> findByAssociationID(Long associationID);
+
+    Collection<SingleNucleotidePolymorphismXref> findBySnpID(Long snpID);
+
+    SingleNucleotidePolymorphismXref findByAssociationIDAndSnpID(Long associationID, Long snpID);
+
 }
