@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import uk.ac.ebi.spot.goci.curation.repository.SingleNucleotidePolymorphismRepository;
+import uk.ac.ebi.spot.goci.ui.repository.SingleNucleotidePolymorphismRepository;
 
 /**
  * Javadocs go here!
@@ -37,9 +37,9 @@ public class SnpMvcController {
         return "snps";
     }
 
-    @RequestMapping(value = "/search", produces = MediaType.TEXT_HTML_VALUE)
-    String search(Model model) {
-        model.addAttribute("search", snpRepository.findAll());
-        return "search";
-    }
+//    @RequestMapping(value = "/search", produces = MediaType.TEXT_HTML_VALUE)
+//    String search(Model model) {
+//        model.addAttribute("search", snpRepository.findAll());
+//        return "search";
+//    }
 }

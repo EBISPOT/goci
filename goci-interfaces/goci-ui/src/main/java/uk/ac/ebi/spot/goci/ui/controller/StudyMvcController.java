@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import uk.ac.ebi.spot.goci.curation.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.ui.repository.StudyRepository;
 
 /**
  * Javadocs go here!

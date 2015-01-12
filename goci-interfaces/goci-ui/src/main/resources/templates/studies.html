@@ -30,8 +30,11 @@
 <div th:each="gs : ${studies}">
     <div>
         <b th:text="${gs.id}">ID</b>
-        <span th:text="${gs.pubmedId}">PubMed ID</span>
-        <span th:text="${gs.diseaseTrait}">Trait</span>
+        <span th:text="${gs.pubmedID}">PubMed ID</span>
+        <span th:text="${gs.diseaseTrait.trait}">Trait</span>
+        <span th:text="${gs.author}">Author</span>
+        <span th:text="${gs.studyDate}">Date</span>
+        <span th:text="${gs.title}">Title</span>
     </div>
 </div>
 

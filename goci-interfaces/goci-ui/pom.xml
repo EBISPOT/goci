@@ -75,11 +75,11 @@
             <version>2.0-SNAPSHOT</version>
         </dependency>
 
-		<dependency>
-			<groupId>uk.ac.ebi.spot.goci</groupId>
-			<artifactId>goci-curation</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>uk.ac.ebi.spot.goci</groupId>-->
+			<!--<artifactId>goci-curation</artifactId>-->
+			<!--<version>0.0.1-SNAPSHOT</version>-->
+		<!--</dependency>-->
 
 		<!-- oracle JDBC drivers for db comms -->
 		<!--<dependency>-->

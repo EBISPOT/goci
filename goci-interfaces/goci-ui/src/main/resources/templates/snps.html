@@ -25,11 +25,10 @@
 <div th:each="gs : ${snps}">
     <div>
         <b th:text="${gs.id}">ID</b>
-        <span th:text="${gs.rsId}">rsID</span>
-        <span th:text="${gs.study.id}">Study</span>
-        <span th:text="${gs.study.pubmedId}">PMID</span>
-        <span th:text="${gs.study}">Trait</span>
-        <span th:text="${gs.study.diseaseTrait}">Trait</span>
+        <span th:text="${gs.rsID}">rsID</span>
+        <span th:text="${gs.chromosomeName}">Chromosome</span>
+        <span th:text="${gs.chromosomePosition}">Position</span>
+
     </div>
 </div>
 

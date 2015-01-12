@@ -151,27 +151,33 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-9">
             <h2>Search results for <em>search term</em></h2>
             <table class="table">
                 <thead>
                 <tr>
 
-                    <th data-field="pubmedId">Pubmed ID</th>
+                    <th data-field="author">Author</th>
+                    <th data-field="publication">Publication</th>
                     <th data-field="diseaseTrait">Disease/Trait</th>
-                    <th data-field="rsId">RS ID</th>
+                    <th data-field="title">Title</th>
+                    <th data-field="studydate">Date</th>
+                    <th data-field="pubmedId">Pubmed ID</th>
+
+                    <!--<th data-field="rsId">SNP count</th>-->
 
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="gs : ${search}">
 
+                    <td th:text="${gs.author} ?: 'null'">Author</td>
+                    <td th:text="${gs.publication} ?: 'null'">Publication</td>
+                    <td th:text="${gs.title} ?: 'null'">Title</td>
+                    <td th:text="${gs.diseaseTrait.trait} ?: 'null'">Trait</td>
+                    <td th:text="${gs.studyDate} ?: 'null'">Date</td>
+                    <td th:text="${gs.pubmedID} ?: 'null'">PubMed ID</td>
 
-                    <td th:text="${gs.study.pubmedId} ?: 'null'"></td>
-
-                    <td th:text="${gs.study.diseaseTrait.diseaseTrait} ?: 'null'"></td>
-
-                    <td th:text="${gs.rsId} ?: 'null'"></td>
 
 
                 </tr>
