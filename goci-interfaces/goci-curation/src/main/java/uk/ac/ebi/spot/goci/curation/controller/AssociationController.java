@@ -25,7 +25,7 @@ import java.util.List;
  * @author emma
  *         Association controller, interpret user input and transform it into a snp/association
  *         model that is represented to the user by the associated HTML page. Used to view, add and edit
- *         existing snp/assocaition information. Also creates entry in SNP table for any new SNPS entered in html form
+ *         existing snp/assocaition information. Also creates entry in SNP table for any new SNPs entered in html form
  */
 
 @Controller
@@ -47,7 +47,7 @@ public class AssociationController {
     }
 
 
-    /*  SNP/Associations associated with a study */
+    /*  Study SNP/Associations */
 
     // Generate list of SNP associations linked to a study
     @RequestMapping(value = "/studies/{studyId}/associations", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
@@ -59,6 +59,8 @@ public class AssociationController {
 
         // Return an empty association object so curators can add new association/snp information to study
         model.addAttribute("studyAssociation", new Association());
+
+        // Return an empty object to hold SNPs curators enter
         model.addAttribute("reportedSNPs", new CuratorReportedSNP());
 
         // Also passes back study object to view so we can create links back to main study page
@@ -79,23 +81,34 @@ public class AssociationController {
         // ReportedSNPs object holds a collection of SNPs entered by curator
         // For each SNP entered we need need to create an entry in the SNP table
 
-        // TODO NEED TO ONLY CREATE ENTRY IN SNP TABLE IF IT DOESNT ALREADY EXITS
-
         for (String snp : reportedSNPs.getReportedSNPValue()) {
 
-            // Create new SNP
-            SingleNucleotidePolymorphism newSNP = new SingleNucleotidePolymorphism();
-            newSNP.setRsID(snp);
+            // Check if SNP already exists database
+            SingleNucleotidePolymorphism existingSNP = singleNucleotidePolymorphismRepository.findByRsIDIgnoreCase(snp);
 
-            // Save SNP
-            singleNucleotidePolymorphismRepository.save(newSNP);
+            // If SNP already exists just create link in XREF table
+            if (existingSNP != null) {
+                // Create link in XREF table and save
+                SingleNucleotidePolymorphismXref newSNPXref = new SingleNucleotidePolymorphismXref();
+                newSNPXref.setAssociationID(studyAssociation.getId());
+                newSNPXref.setSnpID(existingSNP.getId());
+                singleNucleotidePolymorphismXrefRepository.save(newSNPXref);
 
-            // Create link in XREF table and save
-            SingleNucleotidePolymorphismXref newSNPXref = new SingleNucleotidePolymorphismXref();
-            newSNPXref.setAssociationID(studyAssociation.getId());
-            newSNPXref.setSnpID(newSNP.getId());
-            singleNucleotidePolymorphismXrefRepository.save(newSNPXref);
 
+            } else {
+                // Create new SNP
+                SingleNucleotidePolymorphism newSNP = new SingleNucleotidePolymorphism();
+                newSNP.setRsID(snp);
+
+                // Save SNP
+                singleNucleotidePolymorphismRepository.save(newSNP);
+
+                // Create link in XREF table and save
+                SingleNucleotidePolymorphismXref newSNPXref = new SingleNucleotidePolymorphismXref();
+                newSNPXref.setAssociationID(studyAssociation.getId());
+                newSNPXref.setSnpID(newSNP.getId());
+                singleNucleotidePolymorphismXrefRepository.save(newSNPXref);
+            }
         }
         return "redirect:/studies/" + studyId + "/associations";
     }
@@ -108,7 +121,23 @@ public class AssociationController {
 
         // Return association with that ID
         Association associationToView = associationRepository.findOne(associationId);
-        model.addAttribute("studyAssociation", associationToView);
+        model.addAttribute("association", associationToView);
+        return "edit_association";
+    }
+
+    //Edit existing association
+    @RequestMapping(value = "/associations/{associationId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String editAssociation(@ModelAttribute Association association, @PathVariable Long associationId) {
+
+        // Save the association information returned from form
+        associationRepository.save(association);
+        return "redirect:/associations/" + associationId;
+    }
+
+
+    // View existing snp(s) linked to association
+    @RequestMapping(value = "/associations/{associationId}/snps", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String viewAssociationSNPs(Model model, @PathVariable Long associationId) {
 
         // Find all cross-references to associated SNPs
         Collection<SingleNucleotidePolymorphismXref> xrefs = new ArrayList<>();
@@ -116,37 +145,90 @@ public class AssociationController {
 
         // For each XREF get the SNP ID
         Collection<Long> snpIDs = new ArrayList<>();
-        for (SingleNucleotidePolymorphismXref xref: xrefs){
+        for (SingleNucleotidePolymorphismXref xref : xrefs) {
             snpIDs.add(xref.getSnpID());
         }
 
         // Get rsID of SNPs associated with those IDs and return to HTML form
-        Collection<String> associationSNPs= new ArrayList<>();
-        for(Long snpID: snpIDs){
-          SingleNucleotidePolymorphism associationSNP = singleNucleotidePolymorphismRepository.findOne(snpID);
-          associationSNPs.add(associationSNP.getRsID());
+        Collection<String> associationSNPs = new ArrayList<>();
+        for (Long snpID : snpIDs) {
+            SingleNucleotidePolymorphism associationSNP = singleNucleotidePolymorphismRepository.findOne(snpID);
+            associationSNPs.add(associationSNP.getRsID());
         }
 
         // Return list of SNPs entered
-        CuratorReportedSNP curatorReportedSNP= new CuratorReportedSNP();
+        CuratorReportedSNP curatorReportedSNP = new CuratorReportedSNP();
         curatorReportedSNP.setReportedSNPValue(associationSNPs);
 
         // Return curator added snps for editing
         model.addAttribute("reportedSNPs", curatorReportedSNP);
+        return "edit_snp";
 
-        return "edit_association";
+
     }
 
-    // Edit existing assoication information
-    @RequestMapping(value = "/associations/{associationId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String editAssociation(@ModelAttribute Association association) {
 
-        // TODO ALSO DEAL WITH RETURNED SNPS
+    // Edit existing snp(s) linked to association
+    @RequestMapping(value = "/associations/{associationId}/snps", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String editAssociationSNPs(@ModelAttribute CuratorReportedSNP reportedSNPs, @PathVariable Long associationId) {
 
-        // Saves the new information returned from form
-        associationRepository.save(association);
-        return "redirect:/studies/" + association.getStudyID() + "/associations";
+
+        // Array to hold checked snp ids
+        Collection<Long> checkedSNPs = new ArrayList<>();
+
+        // For each SNP entered curator
+        for (String reportedSNP : reportedSNPs.getReportedSNPValue()) {
+
+            // Get snp ID based on rsID entered by curator
+            SingleNucleotidePolymorphism snp = singleNucleotidePolymorphismRepository.findByRsIDIgnoreCase(reportedSNP);
+
+            // This is the case where we have a newly entered snp that is not yet present in database
+            // Thus we create snp and xref link
+            if (snp == null) {
+                // Create new SNP
+                SingleNucleotidePolymorphism newSNP = new SingleNucleotidePolymorphism();
+                newSNP.setRsID(reportedSNP);
+
+                // Save SNP
+                singleNucleotidePolymorphismRepository.save(newSNP);
+
+                // Create link in XREF table and save
+                SingleNucleotidePolymorphismXref newSNPXref = new SingleNucleotidePolymorphismXref();
+                newSNPXref.setAssociationID(associationId);
+                newSNPXref.setSnpID(newSNP.getId());
+                singleNucleotidePolymorphismXrefRepository.save(newSNPXref);
+                checkedSNPs.add(newSNP.getId());
+
+            } else {
+                // Does association already have a link to that snp?
+                SingleNucleotidePolymorphismXref associationSNPlink = singleNucleotidePolymorphismXrefRepository.findByAssociationIDAndSnpID(associationId, snp.getId());
+
+                if (associationSNPlink == null) {
+                    // Create link in XREF table and save
+                    SingleNucleotidePolymorphismXref newSNPXref = new SingleNucleotidePolymorphismXref();
+                    newSNPXref.setAssociationID(associationId);
+                    newSNPXref.setSnpID(snp.getId());
+                    singleNucleotidePolymorphismXrefRepository.save(newSNPXref);
+
+                }
+
+                checkedSNPs.add(snp.getId());
+            }
+        }
+
+        // Compare to snps originally linked to our association
+        Collection<SingleNucleotidePolymorphismXref> snpsLinkedToAssociation = singleNucleotidePolymorphismXrefRepository.findByAssociationID(associationId);
+        for (SingleNucleotidePolymorphismXref snpLinkedToAssociation : snpsLinkedToAssociation) {
+
+            //Check if the snp ID is in array of already checked snps, if mot delete association
+            if (!checkedSNPs.contains(snpLinkedToAssociation.getSnpID())) {
+                singleNucleotidePolymorphismXrefRepository.delete(snpLinkedToAssociation);
+            }
+
+        }
+        return "redirect:/associations/" + associationId + "/snps";
     }
+
 
     /* Model Attributes :
     *  Used for dropdowns in HTML forms
