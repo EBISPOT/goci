@@ -39,7 +39,7 @@ public class Association {
 
     private String pvalueText;
 
-    private Double orPerCopyNum;
+    private float orPerCopyNum;
 
     private String orType;
 
@@ -49,13 +49,13 @@ public class Association {
 
     private String snpInteraction;
 
-    private Integer pvalueMantissa;
+    private int pvalueMantissa;
 
-    private Integer pvalueExponent;
+    private int pvalueExponent;
 
-    private Double orPerCopyRecip;
+    private float orPerCopyRecip;
 
-    private Double orPerCopyStdError;
+    private float orPerCopyStdError;
 
     private String orPerCopyRange;
 
@@ -92,17 +92,17 @@ public class Association {
                        String authorReportedGene,
                        float pvalueFloat,
                        String pvalueText,
-                       Double ORPerCopyNum,
+                       float orPerCopyNum,
                        String ORType,
                        String snpType,
                        String multiSnpHaplotype,
                        String snpInteraction,
-                       Integer pvalueMantissa,
-                       Integer pvalueExponent,
-                       Double ORPerCopyRecip,
-                       Double ORPerCopyStdError,
-                       String ORPerCopyRange,
-                       String ORPerCopyUnitDescr,
+                       int pvalueMantissa,
+                       int pvalueExponent,
+                       float orPerCopyRecip,
+                       float orPerCopyStdError,
+                       String orPerCopyRange,
+                       String orPerCopyUnitDescr,
                        Study study,
                        Collection<SingleNucleotidePolymorphism> snps,
                        Collection<Gene> reportedGenes,
@@ -113,17 +113,17 @@ public class Association {
         this.allele = allele;
         this.pvalueFloat = pvalueFloat;
         this.pvalueText = pvalueText;
-        this.orPerCopyNum = ORPerCopyNum;
+        this.orPerCopyNum = orPerCopyNum;
         this.orType = ORType;
         this.snpType = snpType;
         this.multiSnpHaplotype = multiSnpHaplotype;
         this.snpInteraction = snpInteraction;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
-        this.orPerCopyRecip = ORPerCopyRecip;
-        this.orPerCopyStdError = ORPerCopyStdError;
-        this.orPerCopyRange = ORPerCopyRange;
-        this.orPerCopyUnitDescr = ORPerCopyUnitDescr;
+        this.orPerCopyRecip = orPerCopyRecip;
+        this.orPerCopyStdError = orPerCopyStdError;
+        this.orPerCopyRange = orPerCopyRange;
+        this.orPerCopyUnitDescr = orPerCopyUnitDescr;
         this.study = study;
         this.snps = snps;
         this.reportedGenes = reportedGenes;
@@ -186,11 +186,11 @@ public class Association {
         this.pvalueText = pvalueText;
     }
 
-    public Double getOrPerCopyNum() {
+    public float getOrPerCopyNum() {
         return orPerCopyNum;
     }
 
-    public void setOrPerCopyNum(Double orPerCopyNum) {
+    public void setOrPerCopyNum(float orPerCopyNum) {
         this.orPerCopyNum = orPerCopyNum;
     }
 
@@ -226,35 +226,35 @@ public class Association {
         this.snpInteraction = snpInteraction;
     }
 
-    public Integer getPvalueMantissa() {
+    public int getPvalueMantissa() {
         return pvalueMantissa;
     }
 
-    public void setPvalueMantissa(Integer pvalueMantissa) {
+    public void setPvalueMantissa(int pvalueMantissa) {
         this.pvalueMantissa = pvalueMantissa;
     }
 
-    public Integer getPvalueExponent() {
+    public int getPvalueExponent() {
         return pvalueExponent;
     }
 
-    public void setPvalueExponent(Integer pvalueExponent) {
+    public void setPvalueExponent(int pvalueExponent) {
         this.pvalueExponent = pvalueExponent;
     }
 
-    public Double getOrPerCopyRecip() {
+    public float getOrPerCopyRecip() {
         return orPerCopyRecip;
     }
 
-    public void setOrPerCopyRecip(Double orPerCopyRecip) {
+    public void setOrPerCopyRecip(float orPerCopyRecip) {
         this.orPerCopyRecip = orPerCopyRecip;
     }
 
-    public Double getOrPerCopyStdError() {
+    public float getOrPerCopyStdError() {
         return orPerCopyStdError;
     }
 
-    public void setOrPerCopyStdError(Double orPerCopyStdError) {
+    public void setOrPerCopyStdError(float orPerCopyStdError) {
         this.orPerCopyStdError = orPerCopyStdError;
     }
 

@@ -10,7 +10,7 @@ https://github.com/tburdett/goci/tree/2.x-dev/goci-core/goci-model for more).
 
 author:  Tony Burdett
 date:    January 9th 2015
-version: 0.1
+version: 1.9.9.002 (pre 2.0)
 ################################################################################
 
 */
@@ -535,11 +535,6 @@ INSERT INTO REGION (ID, NAME) SELECT ID, REGION FROM GWASREGION;
 --------------------------------------------------------
 -- Migrate data into SNP
 --------------------------------------------------------
--- Clean chromosome position data in association table
-UPDATE GWASSTUDIESSNP SET (CHR_ID, CHR_POS) = (SELECT CHR_ID, CHR_POS FROM GWASSTUDIESSNP WHERE ID = 16249) WHERE ID = 15489;
-UPDATE GWASSTUDIESSNP SET (CHR_ID, CHR_POS) = (SELECT CHR_ID, CHR_POS FROM GWASSTUDIESSNP WHERE ID = 24628) WHERE ID = 15504;
-UPDATE GWASSTUDIESSNP SET (CHR_ID, CHR_POS) = (SELECT CHR_ID, CHR_POS FROM GWASSTUDIESSNP WHERE ID = 15506) WHERE ID = 14622;
-UPDATE GWASSTUDIESSNP SET (CHR_ID, CHR_POS) = (SELECT CHR_ID, CHR_POS FROM GWASSTUDIESSNP WHERE ID = 42708) WHERE ID = 15499;
 -- Insert (clean) migrated data
 INSERT INTO SINGLE_NUCLEOTIDE_POLYMORPHISM (ID, CHROMOSOME_NAME, CHROMOSOME_POSITION, RS_ID)
   SELECT ID, CHR_ID, CHR_POS, RS_ID FROM (
