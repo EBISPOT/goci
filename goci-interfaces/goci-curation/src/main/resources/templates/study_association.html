@@ -47,6 +47,7 @@
         <ul class="nav navbar-nav">
             <li><a th:href="@{/studies}">Home</a></li>
             <li><a th:href="@{/studies/new}">Add Study</a></li>
+            <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
             <!--<li><a href="#">Count Data</a></li>-->
         </ul>
         <!-- <ul class="nav navbar-nav navbar-right">
@@ -118,7 +119,7 @@
 
                 <p th:case="'1'">Yes</p>
             </td>
-            <td th:switch="${studyAssociation.multiSnpHaplotype}">
+            <td th:switch="${studyAssociation.multiSNPHaplotype}">
                 <p th:case="'0'">No</p>
 
                 <p th:case="'1'">Yes</p>
@@ -128,7 +129,7 @@
 
                 <p th:case="'1'">Yes</p>
             </td>
-            <td th:text="${studyAssociation.snpType}"></td>
+            <td th:text="${studyAssociation.SnpType}"></td>
         </tr>
         </tbody>
     </table>
@@ -143,8 +144,6 @@
                data-target="#uploadSNPsForn"/>
     </div>
 </div>
-
-<br/>
 
 <div class="container">
     <div class="row">
@@ -169,9 +168,6 @@
         </div>
     </div>
 </div>
-
-
-<br/>
 
 <div class="container">
     <div class="row">
@@ -366,7 +362,7 @@
         <div class="form-group">
             <label for="multiSNPHaplotype" class="control-label col-md-2">Multi-SNP Haplotype</label>
             <input id="multiSNPHaplotype" type="checkbox" th:value="'1'"
-                   th:field="${studyAssociation.multiSnpHaplotype}"/>
+                   th:field="${studyAssociation.multiSNPHaplotype}"/>
         </div>
 
         <div class="form-group">

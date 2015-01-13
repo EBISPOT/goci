@@ -38,6 +38,7 @@
 
             <li><a th:href="@{/studies}">Home</a></li>
             <li class="active"><a th:href="@{/studies/new}">Add Study</a></li>
+            <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
             <!--<li><a href="#">Count Data</a></li>-->
         </ul>
         <!--    <ul class="nav navbar-nav navbar-right">
@@ -78,7 +79,7 @@
                     <label for="pubmedId" class="control-label col-md-2">Pubmed</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="pubmedId" placeholder="Pubmed ID"
+                        <input type="text" class="form-control" id="pubmedID" placeholder="Pubmed ID"
                                th:field="*{pubmedId}"/>
                     </div>
                 </div>

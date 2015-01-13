@@ -46,6 +46,7 @@
         <ul class="nav navbar-nav">
             <li><a th:href="@{/studies}">Home</a></li>
             <li><a th:href="@{/studies/new}">Add Study</a></li>
+            <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
             <!--<li><a href="#">Count Data</a></li>-->
         </ul>
         <!--
@@ -82,7 +83,7 @@
                         <label for="studyId" class="control-label col-md-2"></label>
 
                         <div class="col-md-10">
-                            <input type="hidden" th:field="*{study.id}" class="form-control" id="studyId"/>
+                            <input type="hidden" th:field="*{studyId}" class="form-control" id="studyID"/>
                         </div>
                     </div>
 
