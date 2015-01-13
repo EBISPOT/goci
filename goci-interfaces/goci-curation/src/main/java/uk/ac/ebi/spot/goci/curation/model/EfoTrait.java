@@ -1,6 +1,8 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  * Created by emma on 04/12/14.
@@ -11,7 +13,11 @@ import javax.persistence.Entity;
  */
 
 @Entity
-public class EfoTrait extends Trait {
+public class EfoTrait {
+    @Id
+    @GeneratedValue
+    private Long id;
+
     private String trait;
 
     private String uri;
@@ -20,24 +26,40 @@ public class EfoTrait extends Trait {
     public EfoTrait() {
     }
 
-    public EfoTrait(Long id, String trait, String uri) {
-        super(id);
+    public EfoTrait(String trait, String uri) {
         this.trait = trait;
         this.uri = uri;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTrait() {
         return trait;
     }
 
+    public void setTrait(String trait) {
+        this.trait = trait;
+    }
+
     public String getUri() {
         return uri;
     }
 
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
     @Override
     public String toString() {
-        return "EFOTrait{" +
-                "trait='" + trait + '\'' +
+        return "EfoTrait{" +
+                "id=" + id +
+                ", trait='" + trait + '\'' +
                 ", uri='" + uri + '\'' +
                 '}';
     }

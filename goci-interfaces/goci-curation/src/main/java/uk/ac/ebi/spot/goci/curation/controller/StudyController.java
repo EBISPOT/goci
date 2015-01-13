@@ -97,8 +97,8 @@ public class StudyController {
         study.setHousekeeping(existingHousekeeping);
 
         // Saves the new information returned from form
-        Study updatedStudy = studyRepository.save(study);
-        return "redirect:/studies/" + updatedStudy.getId();
+        studyRepository.save(study);
+        return "redirect:/studies/" + study.getId();
     }
 
 
@@ -136,8 +136,8 @@ public class StudyController {
         study.setHousekeeping(housekeeping);
 
         // Save our study
-        Study updatedStudy = studyRepository.save(study);
-        return "redirect:/studies/" + updatedStudy.getId() + "/housekeeping";
+        studyRepository.save(study);
+        return "redirect:/studies/" + study.getId() + "/housekeeping";
     }
 
     /* Model Attributes :

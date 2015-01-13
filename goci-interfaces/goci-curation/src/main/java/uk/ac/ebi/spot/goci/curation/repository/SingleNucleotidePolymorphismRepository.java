@@ -16,5 +16,7 @@ import uk.ac.ebi.spot.goci.curation.model.SingleNucleotidePolymorphism;
 @RepositoryRestResource
 public interface SingleNucleotidePolymorphismRepository extends JpaRepository<SingleNucleotidePolymorphism, Long> {
     SingleNucleotidePolymorphism findByRsId(String rsId);
+
+    SingleNucleotidePolymorphism findByRsIdIgnoreCase(String rsId);
 }
 

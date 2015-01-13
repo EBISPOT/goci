@@ -13,4 +13,6 @@ import uk.ac.ebi.spot.goci.curation.model.DiseaseTrait;
 
 @RepositoryRestResource
 public interface DiseaseTraitRepository extends JpaRepository<DiseaseTrait, Long>{
+
+    String findByTraitIgnoreCase(String trait);
 }

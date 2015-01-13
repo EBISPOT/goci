@@ -104,7 +104,7 @@ public class EthnicityController {
 
         // Saves the new information returned from form
         Ethnicity updatedEthnicity = ethnicityRepository.save(ethnicity);
-        return "redirect:/studies/" + ethnicity.getStudy().getId() + "/sampledescription";
+        return "redirect:/studies/" + updatedEthnicity.getStudy().getId() + "/sampledescription";
     }
 
 

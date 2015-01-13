@@ -1,22 +1,25 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>GWAS Curation Demo</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"/>
+    <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
+
+
 </head>
 <body>
-
 <!--TODO
 - REIMPLEMENTED LOGIN
-- COUNT -->
+- COUNT
+-->
 
 <nav role="navigation" class="navbar navbar-default">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -32,8 +35,9 @@
     <!-- Collection of nav links and other content for toggling -->
     <div id="navbarCollapse" class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
-            <li class="active"><a th:href="@{/studies}">Home</a></li>
-            <li><a th:href="@{/studies/new}">Add a Study</a></li>
+
+            <li><a th:href="@{/studies}">Home</a></li>
+            <li class="active"><a th:href="@{/studies/new}">Add Study</a></li>
             <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
             <!--<li><a href="#">Count Data</a></li>-->
         </ul>
@@ -47,33 +51,42 @@
     </div>
 </nav>
 
-
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10">
-            <table id="mainTable" class="table table-hover table-bordered">
-                <thead>
-                <tr>
-                    <th>RSID</th>
-                    <th>REGION</th>
-                    <th>GENE</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="snp : ${snps}">
-                    <td th:text="${snp.rsId}"></td>
-                    <td th:text="${snp.name != null} ? ${snp.name.name} : 'null'"></td>
-                    <td>
-                        <span
-                                th:each="gene : ${snp.genes}" th:text="${gene.geneName}">
-                        </span>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="form-group">
+                <div id="editDiseaseTraitForm">
+                    <form class="form-horizontal" name="editDiseaseTraitForm" method="post" th:object="${diseaseTrait}">
+
+                        <div class="form-group">
+                            <label for="id" class="control-label col-md-2"></label>
+
+                            <div>
+                                <input type="hidden" id="id" th:field="*{id}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-8">
+                            <label for="trait" class="control-label">Edit Disease / Trait:</label>
+
+                            <div>
+                                <input type="text" class="form-control" id="trait" th:field="*{trait}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-8 col-md-2">
+                                <button type="Save" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+
 </body>
+
 </html>
