@@ -1,7 +1,5 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import org.hibernate.annotations.Fetch;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -36,13 +34,13 @@ public class SingleNucleotidePolymorphism {
 
     private Timestamp lastUpdateDate;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "SNP_REGION",
                joinColumns = @JoinColumn(name = "SNP_ID"),
                inverseJoinColumns = @JoinColumn(name = "REGION_ID"))
     private Collection<Region> regions;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "SNP_GENE",
                joinColumns = @JoinColumn(name = "SNP_ID"),
                inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
