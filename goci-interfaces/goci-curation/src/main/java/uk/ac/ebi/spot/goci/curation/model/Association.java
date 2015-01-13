@@ -35,11 +35,11 @@ public class Association {
 
     private String allele;
 
-    private float pvalueFloat;
+    private Float pvalueFloat;
 
     private String pvalueText;
 
-    private float orPerCopyNum;
+    private Float orPerCopyNum;
 
     private String orType;
 
@@ -49,13 +49,13 @@ public class Association {
 
     private String snpInteraction;
 
-    private int pvalueMantissa;
+    private Integer pvalueMantissa;
 
-    private int pvalueExponent;
+    private Integer pvalueExponent;
 
-    private float orPerCopyRecip;
+    private Float orPerCopyRecip;
 
-    private float orPerCopyStdError;
+    private Float orPerCopyStdError;
 
     private String orPerCopyRange;
 
