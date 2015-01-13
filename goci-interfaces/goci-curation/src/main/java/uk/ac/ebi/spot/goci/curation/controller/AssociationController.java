@@ -129,6 +129,22 @@ public class AssociationController {
     @RequestMapping(value = "/associations/{associationId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String editAssociation(@ModelAttribute Association association, @PathVariable Long associationId) {
 
+        // Find the existing snps for association and ensure they get linked to edited information
+        Collection<SingleNucleotidePolymorphismXref> xrefs = singleNucleotidePolymorphismXrefRepository.findByAssociationID(associationId);
+
+        // Get snp IDs
+        Collection<Long> snpIDs = new ArrayList<>();
+        for (SingleNucleotidePolymorphismXref xref: xrefs){
+            snpIDs.add(xref.getSnpID());
+        }
+
+        // Create collection of snps and add to association
+        Collection<SingleNucleotidePolymorphism> associationSNPs = new ArrayList<>();
+        for (Long snpID: snpIDs){
+            associationSNPs.add(singleNucleotidePolymorphismRepository.findOne(snpID));
+        }
+        association.setSnps(associationSNPs);
+
         // Save the association information returned from form
         associationRepository.save(association);
         return "redirect:/associations/" + associationId;
@@ -162,6 +178,11 @@ public class AssociationController {
 
         // Return curator added snps for editing
         model.addAttribute("reportedSNPs", curatorReportedSNP);
+
+        // Also return association so we can use ID in links
+        Association association = associationRepository.findOne(associationId);
+        model.addAttribute("association",association);
+
         return "edit_snp";
 
 
@@ -176,10 +197,10 @@ public class AssociationController {
         // Array to hold checked snp ids
         Collection<Long> checkedSNPs = new ArrayList<>();
 
-        // For each SNP entered curator
+        // For each SNP entered by user
         for (String reportedSNP : reportedSNPs.getReportedSNPValue()) {
 
-            // Get snp ID based on rsID entered by curator
+            // Get snp ID based on rsID entered
             SingleNucleotidePolymorphism snp = singleNucleotidePolymorphismRepository.findByRsIDIgnoreCase(reportedSNP);
 
             // This is the case where we have a newly entered snp that is not yet present in database
@@ -197,10 +218,12 @@ public class AssociationController {
                 newSNPXref.setAssociationID(associationId);
                 newSNPXref.setSnpID(newSNP.getId());
                 singleNucleotidePolymorphismXrefRepository.save(newSNPXref);
+
+                // Add ID to cache
                 checkedSNPs.add(newSNP.getId());
 
             } else {
-                // Does association already have a link to that snp?
+                // Does current association already have a link to that snp?
                 SingleNucleotidePolymorphismXref associationSNPlink = singleNucleotidePolymorphismXrefRepository.findByAssociationIDAndSnpID(associationId, snp.getId());
 
                 if (associationSNPlink == null) {
@@ -216,7 +239,7 @@ public class AssociationController {
             }
         }
 
-        // Compare to snps originally linked to our association
+        // Compare to snps originally linked to our association to values in cache
         Collection<SingleNucleotidePolymorphismXref> snpsLinkedToAssociation = singleNucleotidePolymorphismXrefRepository.findByAssociationID(associationId);
         for (SingleNucleotidePolymorphismXref snpLinkedToAssociation : snpsLinkedToAssociation) {
 
