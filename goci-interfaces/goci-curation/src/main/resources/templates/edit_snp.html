@@ -52,12 +52,35 @@
 </nav>
 
 
+<div class="container-fluid" th:object="${association}">
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li><a th:href="@{/associations/{associationId}(associationId=${association.id})}">Association
+                Information</a></li>
+            <li class="active"><a href="#">Associated SNPs</a></li>
+
+        </ul>
+    </div>
+</div>
+<br/>
+
+<!--Link back to study page -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10">
+            <a class="btn btn-link btn-lg" th:href="@{/studies/{studyId}/associations(studyId=${association.studyID})}">Back
+                to Study</a>
+        </div>
+    </div>
+</div>
+
+<br/>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10">
             <div class="form-group">
                 <div id="editAssociationSNPs">
-                    <form class="form-horizontal" method="post" name="editAssociationSNPs" th:object="${reportedSNPs}">
+                    <form class="form-inline" method="post" name="editAssociationSNPs" th:object="${reportedSNPs}">
 
                         <div class="form-group col-md-8">
                             <label for="reportedSNPs" class="control-label">Edit SNPs:</label>
@@ -73,7 +96,6 @@
                                 <button type="submit" class="btn btn-primary">Save</button>
                             </div>
                         </div>
-
                     </form>
                 </div>
             </div>
