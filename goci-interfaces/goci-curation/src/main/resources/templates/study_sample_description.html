@@ -217,8 +217,8 @@
                                     th:field="*{countryOfOrigin}"
                                     id="countryOfOrigin">
                                 <option th:each="country : ${countries}"
-                                        th:value="${country.country}"
-                                        th:text="${country.country}"></option>
+                                        th:value="${country.name}"
+                                        th:text="${country.name}"></option>
                             </select>
                         </div>
                     </div>
