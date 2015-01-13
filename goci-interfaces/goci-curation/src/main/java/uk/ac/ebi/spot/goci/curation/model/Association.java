@@ -86,27 +86,7 @@ public class Association {
     public Association() {
     }
 
-    public Association(String strongestAllele,
-                       String riskFrequency,
-                       String allele,
-                       String authorReportedGene,
-                       float pvalueFloat,
-                       String pvalueText,
-                       float orPerCopyNum,
-                       String ORType,
-                       String snpType,
-                       String multiSnpHaplotype,
-                       String snpInteraction,
-                       int pvalueMantissa,
-                       int pvalueExponent,
-                       float orPerCopyRecip,
-                       float orPerCopyStdError,
-                       String orPerCopyRange,
-                       String orPerCopyUnitDescr,
-                       Study study,
-                       Collection<SingleNucleotidePolymorphism> snps,
-                       Collection<Gene> reportedGenes,
-                       Collection<EfoTrait> efoTraits) {
+    public Association(String authorReportedGene, String strongestAllele, String riskFrequency, String allele, Float pvalueFloat, String pvalueText, Float orPerCopyNum, String orType, String snpType, String multiSnpHaplotype, String snpInteraction, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, Study study, Collection<SingleNucleotidePolymorphism> snps, Collection<Gene> reportedGenes, Collection<EfoTrait> efoTraits) {
         this.authorReportedGene = authorReportedGene;
         this.strongestAllele = strongestAllele;
         this.riskFrequency = riskFrequency;
@@ -114,7 +94,7 @@ public class Association {
         this.pvalueFloat = pvalueFloat;
         this.pvalueText = pvalueText;
         this.orPerCopyNum = orPerCopyNum;
-        this.orType = ORType;
+        this.orType = orType;
         this.snpType = snpType;
         this.multiSnpHaplotype = multiSnpHaplotype;
         this.snpInteraction = snpInteraction;
@@ -170,11 +150,11 @@ public class Association {
         this.allele = allele;
     }
 
-    public float getPvalueFloat() {
+    public Float getPvalueFloat() {
         return pvalueFloat;
     }
 
-    public void setPvalueFloat(float pvalueFloat) {
+    public void setPvalueFloat(Float pvalueFloat) {
         this.pvalueFloat = pvalueFloat;
     }
 
@@ -186,11 +166,11 @@ public class Association {
         this.pvalueText = pvalueText;
     }
 
-    public float getOrPerCopyNum() {
+    public Float getOrPerCopyNum() {
         return orPerCopyNum;
     }
 
-    public void setOrPerCopyNum(float orPerCopyNum) {
+    public void setOrPerCopyNum(Float orPerCopyNum) {
         this.orPerCopyNum = orPerCopyNum;
     }
 
@@ -226,35 +206,35 @@ public class Association {
         this.snpInteraction = snpInteraction;
     }
 
-    public int getPvalueMantissa() {
+    public Integer getPvalueMantissa() {
         return pvalueMantissa;
     }
 
-    public void setPvalueMantissa(int pvalueMantissa) {
+    public void setPvalueMantissa(Integer pvalueMantissa) {
         this.pvalueMantissa = pvalueMantissa;
     }
 
-    public int getPvalueExponent() {
+    public Integer getPvalueExponent() {
         return pvalueExponent;
     }
 
-    public void setPvalueExponent(int pvalueExponent) {
+    public void setPvalueExponent(Integer pvalueExponent) {
         this.pvalueExponent = pvalueExponent;
     }
 
-    public float getOrPerCopyRecip() {
+    public Float getOrPerCopyRecip() {
         return orPerCopyRecip;
     }
 
-    public void setOrPerCopyRecip(float orPerCopyRecip) {
+    public void setOrPerCopyRecip(Float orPerCopyRecip) {
         this.orPerCopyRecip = orPerCopyRecip;
     }
 
-    public float getOrPerCopyStdError() {
+    public Float getOrPerCopyStdError() {
         return orPerCopyStdError;
     }
 
-    public void setOrPerCopyStdError(float orPerCopyStdError) {
+    public void setOrPerCopyStdError(Float orPerCopyStdError) {
         this.orPerCopyStdError = orPerCopyStdError;
     }
 
@@ -310,7 +290,7 @@ public class Association {
     public String toString() {
         return "Association{" +
                 "id=" + id +
-                ", study='" + study + '\'' +
+                ", authorReportedGene='" + authorReportedGene + '\'' +
                 ", strongestAllele='" + strongestAllele + '\'' +
                 ", riskFrequency='" + riskFrequency + '\'' +
                 ", allele='" + allele + '\'' +
@@ -327,7 +307,9 @@ public class Association {
                 ", orPerCopyStdError=" + orPerCopyStdError +
                 ", orPerCopyRange='" + orPerCopyRange + '\'' +
                 ", orPerCopyUnitDescr='" + orPerCopyUnitDescr + '\'' +
+                ", study=" + study +
                 ", snps=" + snps +
+                ", reportedGenes=" + reportedGenes +
                 ", efoTraits=" + efoTraits +
                 '}';
     }
