@@ -160,8 +160,8 @@
     <!-- GWAS catalog specific fields-->
     <!-- snp -->
     <field name="rsId" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="chromosomeName" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="chromosomePosition" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="chromosomeName" type="int" indexed="true" stored="true" multiValued="false" />
+    <field name="chromosomePosition" type="int" indexed="true" stored="true" multiValued="false" />
     <field name="region" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="gene" type="text_general" indexed="true" stored="true" multiValued="true" />
 

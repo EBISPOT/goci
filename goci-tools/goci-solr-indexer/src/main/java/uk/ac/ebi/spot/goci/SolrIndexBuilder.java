@@ -52,11 +52,11 @@ public class SolrIndexBuilder {
     }
 
     void convertDocuments() {
-        System.out.print("Converting studies");
-        DocumentConverter<StudyDocument, Study> studyConverter =
-                new DocumentConverter<>(StudyDocument.class, studyIndex, true);
-        studyRepository.findAll().forEach(studyConverter::convert);
-        System.out.println("done!");
+//        System.out.print("Converting studies");
+//        DocumentConverter<StudyDocument, Study> studyConverter =
+//                new DocumentConverter<>(StudyDocument.class, studyIndex, true);
+//        studyRepository.findAll().forEach(studyConverter::convert);
+//        System.out.println("done!");
 
         System.out.print("Converting SNPs");
         DocumentConverter<SnpDocument, SingleNucleotidePolymorphism> snpConverter =

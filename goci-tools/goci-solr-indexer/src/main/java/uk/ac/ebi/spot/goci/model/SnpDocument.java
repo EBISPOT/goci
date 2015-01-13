@@ -30,16 +30,24 @@ public class SnpDocument {
 
     public SnpDocument(SingleNucleotidePolymorphism snp) {
         this.id = "snp_".concat(snp.getId().toString());
-        this.rsId = snp.getRsId();
-        this.chromosomeName = snp.getChromosomeName();
-        this.chromosomePosition = snp.getChromosomePosition();
+        if (snp.getRsId() != null) {
+            this.rsId = snp.getRsId();
+        }
+        if (snp.getChromosomeName() != null) {
+            this.chromosomeName = snp.getChromosomeName();
+        }
+        if (snp.getChromosomePosition() != null) {
+            this.chromosomePosition = snp.getChromosomePosition();
+        }
         this.regions = new HashSet<>();
         snp.getRegions().forEach(region -> regions.add(region.getName()));
         this.genes = new HashSet<>();
         snp.getGenes().forEach(gene -> genes.add(gene.getGeneName()));
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
-        this.last_modified = df.format(snp.getLastUpdateDate());
+        if (snp.getLastUpdateDate() != null) {
+            this.last_modified = df.format(snp.getLastUpdateDate());
+        }
         this.resourcename = snp.getClass().getSimpleName();
     }
 
