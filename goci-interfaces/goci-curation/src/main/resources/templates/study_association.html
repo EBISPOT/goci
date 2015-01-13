@@ -102,7 +102,7 @@
 
             <!--Study association can have multiple SNPs linked to it-->
             <td>
-                <span th:each="snp : ${studyAssociation.snps}" th:text="${snp.rsID}"></span>
+                <span th:each="snp : ${studyAssociation.snps}" th:text="${snp.rsId}"></span>
             </td>
             <td th:text="${studyAssociation.authorReportedGene}"></td>
             <td th:text="${studyAssociation.strongestAllele}"></td>
