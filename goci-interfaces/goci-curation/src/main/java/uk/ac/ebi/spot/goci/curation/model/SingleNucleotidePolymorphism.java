@@ -1,6 +1,9 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
+import org.hibernate.annotations.Fetch;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
