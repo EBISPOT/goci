@@ -49,19 +49,19 @@ public class Study {
 
     private String gxg;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinTable(name = "STUDY_DISEASE_TRAIT",
                joinColumns = @JoinColumn(name = "STUDY_ID"),
                inverseJoinColumns = @JoinColumn(name = "DISEASE_TRAIT_ID"))
     private DiseaseTrait diseaseTrait;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "STUDY_EFO_TRAIT",
                joinColumns = @JoinColumn(name = "STUDY_ID"),
                inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "STUDY_SNP",
                joinColumns = @JoinColumn(name = "STUDY_ID"),
                inverseJoinColumns = @JoinColumn(name = "SNP_ID"))

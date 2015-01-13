@@ -34,13 +34,13 @@ public class SingleNucleotidePolymorphism {
 
     private Timestamp lastUpdateDate;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "SNP_REGION",
                joinColumns = @JoinColumn(name = "SNP_ID"),
                inverseJoinColumns = @JoinColumn(name = "REGION_ID"))
     private Collection<Region> regions;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "SNP_GENE",
                joinColumns = @JoinColumn(name = "SNP_ID"),
                inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
