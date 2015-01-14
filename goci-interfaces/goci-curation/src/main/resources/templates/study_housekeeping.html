@@ -60,6 +60,31 @@
 
 <br/>
 
+<div class="container">
+    <div class="row">
+        <h4>Dates:</h4>
+        <table id="dateTable" class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th>Publish Date</th>
+                <th>Send to NCBI Date</th>
+                <th>Study Added Date</th>
+                <th>Last Update Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${studyHousekeeping.publishDate} ?: 'null'"></td>
+                <td th:text="${studyHousekeeping.sendToNCBIDate} ?: 'null'"></td>
+                <td th:text="${studyHousekeeping.studyAddedDate} ?: 'null'"></td>
+                <td th:text="${studyHousekeeping.lastUpdateDate} ?: 'null'"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10">
@@ -73,28 +98,6 @@
                     <label for="id" class="control-label col-md-2"></label>
                     <input id="id" type="hidden" th:field="*{id}"/>
                 </div>
-
-
-           <!--TODO FIX DATES -->
-           <!--     <div class="form-group">
-                    <label for="publishDate" class="control-label col-md-2">Publish Date</label>
-                    <input id="publishDate" type="text" th:field="*{publishDate}"/>
-                </div>
-
-                <div class="form-group">
-                    <label for="sendToNCBIDate" class="control-label col-md-2">Send to NCBI Date</label>
-                    <input id="sendToNCBIDate" type="text" th:field="*{sendToNCBIDate}"/>
-                </div>
-
-                <div class="form-group">
-                    <label for="studyAddedDate" class="control-label col-md-2">Study Added Date</label>
-                    <input id="studyAddedDate" type="text" th:field="*{studyAddedDate}"/>
-                </div>
-
-                <div class="form-group">
-                    <label for="lastUpdateDate" class="control-label col-md-2">Last Update Date</label>
-                    <input id="lastUpdateDate" type="text" th:field="*{lastUpdateDate}"/>
-                </div>-->
 
                 <div class="form-group">
                     <label for="fileName" class="control-label col-md-2">File name</label>
