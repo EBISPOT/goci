@@ -17,7 +17,7 @@
         <!-- lookup parent from repository -->
     </parent>
 
-    <name>GOCI Dependencies</name>
+    <name>GWAS Catalog Dependencies</name>
     <description>
         Dependency management for the GWAS Ontology and Curation Infrastructure
     </description>

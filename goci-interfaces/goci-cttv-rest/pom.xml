@@ -8,6 +8,9 @@
     <artifactId>goci-cttv-rest</artifactId>
     <version>0.1.0</version>
 
+    <name>GOCI CTTV Rest API</name>
+    <description>A REST API for the CTTV project to obtain GWAS Catalog data</description>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>

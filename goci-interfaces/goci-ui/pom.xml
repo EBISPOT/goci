@@ -8,7 +8,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>GOCI search interface</name>
+	<name>GOCI Search Interface</name>
 	<description>The public portal for the GWAS Catalog</description>
 
 	<parent>

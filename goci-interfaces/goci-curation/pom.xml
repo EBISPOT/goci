@@ -8,8 +8,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>goci-curation</name>
-	<description>Demo project for goci curation interface</description>
+	<name>GOCI Curation Interface</name>
+	<description>The curator's interface for the GWAS Catalog</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
