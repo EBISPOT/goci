@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import uk.ac.ebi.spot.goci.curation.model.DiseaseTrait;
-import uk.ac.ebi.spot.goci.curation.repository.DiseaseTraitRepository;
+import uk.ac.ebi.spot.goci.model.DiseaseTrait;
+import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
 
 import javax.validation.Valid;
 

@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import uk.ac.ebi.spot.goci.curation.model.Country;
-import uk.ac.ebi.spot.goci.curation.model.Ethnicity;
-import uk.ac.ebi.spot.goci.curation.model.Study;
-import uk.ac.ebi.spot.goci.curation.repository.CountryRepository;
-import uk.ac.ebi.spot.goci.curation.repository.EthnicityRepository;
-import uk.ac.ebi.spot.goci.curation.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.model.Country;
+import uk.ac.ebi.spot.goci.model.Ethnicity;
+import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.repository.CountryRepository;
+import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
+import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
