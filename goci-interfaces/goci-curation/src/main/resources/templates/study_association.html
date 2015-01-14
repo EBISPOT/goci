@@ -104,27 +104,33 @@
             <td>
                 <span th:each="snp : ${studyAssociation.snps}" th:text="${snp.rsId}"></span>
             </td>
-            <td th:text="${studyAssociation.authorReportedGene}"></td>
-            <td th:text="${studyAssociation.strongestAllele}"></td>
-            <td th:text="${studyAssociation.riskFrequency}"></td>
-            <td th:text="${studyAssociation.pvalueFloat}"></td>
-            <td th:text="${studyAssociation.pvalueText}"></td>
-            <td th:text="${studyAssociation.orPerCopyNum}"></td>
-            <td th:text="${studyAssociation.orPerCopyRecip}"></td>
-            <td th:text="${studyAssociation.orPerCopyRange}"></td>
-            <td th:text="${studyAssociation.orPerCopyUnitDescr}"></td>
-            <td th:text="${studyAssociation.orPerCopyStdError}"></td>
+            <td th:text="${studyAssociation.authorReportedGene} ?: 'null'"></td>
+            <td th:text="${studyAssociation.strongestAllele} ?: 'null'"></td>
+            <td th:text="${studyAssociation.riskFrequency}?: 'null' "></td>
+            <td th:text="${studyAssociation.pvalueFloat} ?: 'null'"></td>
+            <td th:text="${studyAssociation.pvalueText} ?: 'null'"></td>
+            <td th:text="${studyAssociation.orPerCopyNum} ?: 'null'"></td>
+            <td th:text="${studyAssociation.orPerCopyRecip} ?: 'null'"></td>
+            <td th:text="${studyAssociation.orPerCopyRange} ?: 'null'"></td>
+            <td th:text="${studyAssociation.orPerCopyUnitDescr} ?: 'null'"></td>
+            <td th:text="${studyAssociation.orPerCopyStdError} ?: 'null'"></td>
             <td th:switch="${studyAssociation.orType}">
+                <p th:case="'null'">null</p>
+
                 <p th:case="'0'">No</p>
 
                 <p th:case="'1'">Yes</p>
             </td>
-            <td th:switch="${studyAssociation.multiSNPHaplotype}">
+            <td th:switch="${studyAssociation.multiSnpHaplotype}">
+                <p th:case="'null'">null</p>
+
                 <p th:case="'0'">No</p>
 
                 <p th:case="'1'">Yes</p>
             </td>
             <td th:switch="${studyAssociation.snpInteraction}">
+                <p th:case="'null'">null</p>
+
                 <p th:case="'0'">No</p>
 
                 <p th:case="'1'">Yes</p>
@@ -241,14 +247,14 @@
             </div>
         </div>
 
-        <!--
-              <div class="form-group">
-                  <label for="pvalueFloat" class="control-label col-md-2">P-value (float)</label>
 
-                  <div class="col-md-10">
-                  <input type="text" class="form-control" id="pvalueFloat" th:field="*{pvalueFloat}"/>
-                   </div>
-                                </div>-->
+     <!--   <div class="form-group">
+            <label for="pvalueFloat" class="control-label col-md-2">P-value (float)</label>
+
+            <div class="col-md-10">
+                <input type="text" class="form-control" id="pvalueFloat" th:field="*{pvalueFloat}"/>
+            </div>
+        </div>-->
 
         <div class="form-group">
             <label for="pvalueMantissa" class="control-label col-md-2">P-value (mantissa)</label>
@@ -341,8 +347,7 @@
         </div>
 
         <!--Checkboxes: th:value is the value that will be assigned if the box is checked
-                        th:field is the value it will be assigned to.
-        -->
+                        th:field is the value it will be assigned to.  -->
 
         <div class="form-group">
             <label for="snpType" class="control-label col-md-2">SNP type</label>
@@ -362,7 +367,7 @@
         <div class="form-group">
             <label for="multiSNPHaplotype" class="control-label col-md-2">Multi-SNP Haplotype</label>
             <input id="multiSNPHaplotype" type="checkbox" th:value="'1'"
-                   th:field="${studyAssociation.multiSNPHaplotype}"/>
+                   th:field="${studyAssociation.multiSnpHaplotype}"/>
         </div>
 
         <div class="form-group">
