@@ -11,6 +11,7 @@
     <modules>
         <module>goci-dependencies</module>
         <module>goci-parent</module>
+
         <module>goci-model</module>
   </modules>
 

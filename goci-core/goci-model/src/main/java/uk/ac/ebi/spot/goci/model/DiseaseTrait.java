@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.curation.model;
+package uk.ac.ebi.spot.goci.model;
 
 import org.hibernate.validator.constraints.NotBlank;
 
