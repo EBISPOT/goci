@@ -53,10 +53,10 @@ public class AssociationController {
 
     // Generate list of SNP associations linked to a study
     @RequestMapping(value = "/studies/{studyId}/associations", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String viewStudySnps(Model model, @PathVariable String studyId) {
+    public String viewStudySnps(Model model, @PathVariable Long studyId) {
 
         Collection<Association> associations = new ArrayList<>();
-        associations.addAll(associationRepository.findByStudyId(Long.parseLong(studyId)));
+        associations.addAll(associationRepository.findByStudyId(studyId));
         model.addAttribute("studyAssociations", associations);
 
         // Return an empty association object so curators can add new association/snp information to study
@@ -66,26 +66,27 @@ public class AssociationController {
         model.addAttribute("reportedSNPs", new CuratorReportedSNP());
 
         // Also passes back study object to view so we can create links back to main study page
-        model.addAttribute("study", studyRepository.findOne(Long.valueOf(studyId).longValue()));
+        model.addAttribute("study", studyRepository.findOne(studyId));
         return "study_association";
     }
 
     // Add new association/snp information to a study
     @RequestMapping(value = "/studies/{studyId}/associations", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String addStudySnps(@ModelAttribute CuratorReportedSNP reportedSNPs, @ModelAttribute Association studyAssociation, @PathVariable String studyId) {
+    public String addStudySnps(@ModelAttribute CuratorReportedSNP reportedSNPs, @ModelAttribute Association studyAssociation, @PathVariable Long studyId) {
 
         // ReportedSNPs object holds a collection of SNPs entered by curator
-        Study study = studyRepository.findOne(Long.parseLong(studyId));
+        Study study = studyRepository.findOne(studyId);
 
         // Set the study ID for our association
         studyAssociation.setStudy(study);
 
-        // Save our association information
-        associationRepository.save(studyAssociation);
-
         // ReportedSNPs object holds a collection of SNPs entered by curator
         // For each SNP entered we need need to create an entry in the SNP table
         addSnps(studyAssociation, reportedSNPs.getReportedSNPValue());
+
+        // Save our association information
+        associationRepository.save(studyAssociation);
+
         return "redirect:/studies/" + studyId + "/associations";
     }
 
@@ -140,8 +141,6 @@ public class AssociationController {
         model.addAttribute("association", association);
 
         return "edit_snp";
-
-
     }
 
 
@@ -156,6 +155,8 @@ public class AssociationController {
         // remove any SNPs that are not in the checkedSNPs cache
         removeSnps(association, checkedSNPs);
 
+        // Save our association
+        associationRepository.save(association);
         return "redirect:/associations/" + associationId + "/snps";
     }
 
@@ -174,6 +175,7 @@ public class AssociationController {
     private Collection<Long> addSnps(Association association, Collection<String> rsIds) {
         Collection<Long> checkedSNPs = new ArrayList<>();
         for (String rsId : rsIds) {
+
             // Check if SNP already exists database
             SingleNucleotidePolymorphism snp = singleNucleotidePolymorphismRepository.findByRsIdIgnoreCase(rsId);
 
@@ -196,13 +198,18 @@ public class AssociationController {
             // and add snp id to cache
             checkedSNPs.add(snp.getId());
         }
+
         return checkedSNPs;
     }
 
+    // Remove any snps that should no longer be linked to association
     private void removeSnps(Association association, Collection<Long> checkedSnps) {
+        // Get all snps linked to association
         Iterator<SingleNucleotidePolymorphism> linkedSnpIt = association.getSnps().iterator();
         while (linkedSnpIt.hasNext()) {
             SingleNucleotidePolymorphism linkedSnp = linkedSnpIt.next();
+
+            // If checkedSnps does not contain this snp then the user has removed it thus delete link to association
             if (!checkedSnps.contains(linkedSnp.getId())) {
                 linkedSnpIt.remove();
             }
