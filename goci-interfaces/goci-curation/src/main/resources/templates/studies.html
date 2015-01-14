@@ -9,11 +9,19 @@
     <!-- CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}"/>
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css" th:href="@{css/bootstrap-theme.min.css}"/>
-    <link rel="stylesheet" href="/css/bootstrap-table.css" th:href="@{css/bootstrap-table.css}"/>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
+    <!--Bootstrap table: http://bootstrap-table.wenzhixin.net.cn/-->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.5.0/bootstrap-table.min.css"/>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.5.0/bootstrap-table.min.js"></script>
+
+    <!-- Latest compiled and minified Locales -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.5.0/locale/bootstrap-table-zh-CN.min.js"></script>
 
 </head>
 <body>
@@ -90,21 +98,22 @@
                    data-show-columns="true"
                    data-search="true"
                    data-show-export="true"
-                   data-export-types="['json', 'csv', 'txt']">
+                   data-export-types="['json', 'csv', 'txt']"
+                   data-sort-order="desc">
                 <caption id="total"></caption>
 
                 <thead>
                 <tr>
                     <th data-field="state" data-checkbox="true"></th>
                     <th data-field="edit" data-switchable="false"></th>
-                    <th data-field="author">Author</th>
-                    <th data-field="title">Title</th>
-                    <th data-field="studydate">Study Date</th>
-                    <th data-field="pubmedid">Pubmed ID</th>
-                    <th data-field="publication">Publication</th>
-                    <th data-field="diseasetrait">Disease/Trait</th>
-                    <th data-field="curator">Curator</th>
-                    <th data-field="curationstatus">Curator Status</th>
+                    <th data-field="author" data-sortable="true">Author</th>
+                    <th data-field="title" data-sortable="true">Title</th>
+                    <th data-field="studydate" data-sortable="true">Study Date</th>
+                    <th data-field="pubmedid" data-sortable="true">Pubmed ID</th>
+                    <th data-field="publication" data-sortable="true">Publication</th>
+                    <th data-field="diseasetrait" data-sortable="true">Disease/Trait</th>
+                    <th data-field="curator" data-sortable="true">Curator</th>
+                    <th data-field="curationstatus" data-sortable="true">Curator Status</th>
                     <th data-field="notes">Notes</th>
 
                 </tr>
