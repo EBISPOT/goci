@@ -1,14 +1,8 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -64,23 +58,24 @@ public class Association {
     @OneToOne
     private Study study;
 
+    // To avoid null values collections are by default initialized to an empty array list
     @ManyToMany
     @JoinTable(name = "ASSOCIATION_SNP",
-               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
-               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
-    private Collection<SingleNucleotidePolymorphism> snps;
+            joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+            inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
+    private Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
 
     @OneToMany
     @JoinTable(name = "ASSOCIATION_REPORTED_GENE",
-               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
-               inverseJoinColumns = @JoinColumn(name = "REPORTED_GENE_ID"))
-    private Collection<Gene> reportedGenes;
+            joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+            inverseJoinColumns = @JoinColumn(name = "REPORTED_GENE_ID"))
+    private Collection<Gene> reportedGenes = new ArrayList<>();
 
     @OneToMany
     @JoinTable(name = "ASSOCIATION_EFO_TRAIT",
-               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
-               inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
-    private Collection<EfoTrait> efoTraits;
+            joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+            inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
+    private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
     // JPA no-args constructor
     public Association() {
