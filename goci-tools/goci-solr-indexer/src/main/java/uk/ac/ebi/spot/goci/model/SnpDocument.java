@@ -22,7 +22,7 @@ public class SnpDocument {
     @Id @Field private String id;
     @Field private String rsId;
     @Field private String chromosomeName;
-    @Field private String chromosomePosition;
+    @Field private int chromosomePosition;
     @Field("region") private Set<String> regions;
     @Field("gene") private Set<String> genes;
     @Field private String last_modified;
@@ -37,7 +37,7 @@ public class SnpDocument {
             this.chromosomeName = snp.getChromosomeName();
         }
         if (snp.getChromosomePosition() != null) {
-            this.chromosomePosition = snp.getChromosomePosition();
+            this.chromosomePosition = Integer.parseInt(snp.getChromosomePosition());
         }
         this.regions = new HashSet<>();
         snp.getRegions().forEach(region -> regions.add(region.getName()));
@@ -63,7 +63,7 @@ public class SnpDocument {
         return chromosomeName;
     }
 
-    public String getChromosomePosition() {
+    public int getChromosomePosition() {
         return chromosomePosition;
     }
 
