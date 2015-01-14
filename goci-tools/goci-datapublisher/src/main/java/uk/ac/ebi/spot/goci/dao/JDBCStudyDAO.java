@@ -6,15 +6,15 @@ import uk.ac.ebi.spot.goci.exception.ObjectMappingException;
 import uk.ac.ebi.spot.goci.lang.FilterProperties;
 import uk.ac.ebi.spot.goci.lang.Initializable;
 import uk.ac.ebi.spot.goci.lang.UniqueID;
-import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.model.TraitAssociation;
+import uk.ac.ebi.spot.goci.ui.model.Study;
+import uk.ac.ebi.spot.goci.ui.model.TraitAssociation;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
 /**
- * A data access object capable of retrieving {@link uk.ac.ebi.spot.goci.model.Study} objects from the GWAS database
+ * A data access object capable of retrieving {@link uk.ac.ebi.spot.goci.ui.model.Study} objects from the GWAS database
  *
  * @author Tony Burdett
  * Date 24/01/12

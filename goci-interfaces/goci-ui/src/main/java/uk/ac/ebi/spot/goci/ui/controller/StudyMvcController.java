@@ -1,10 +1,9 @@
-package uk.ac.ebi.spot.goci.controller;
+package uk.ac.ebi.spot.goci.ui.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
@@ -24,17 +23,19 @@ public class StudyMvcController {
         this.studyRepository = studyRepository;
     }
 
+//    @RequestMapping(value = "/studies.html", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     @RequestMapping(value = "/studies", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     String studies(Model model) {
         model.addAttribute("studies", this.studyRepository.findAll());
         return "studies";
     }
 
-    @RequestMapping(value = "/studies/{id}", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    String study(Model model, @PathVariable String id) {
-        model.addAttribute("study", this.studyRepository.findOne(Long.parseLong(id)));
-        return "study_edit";
-    }
+//    @RequestMapping(value = "/studies/{pubmedid}.html", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+//    @RequestMapping(value = "/studies/{pubmedid}", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+//    String study(Model model, @PathVariable String pubmedid) {
+//        model.addAttribute("studies", this.studyRepository.findByPubmedId(pubmedid));
+//        return "studies";
+//    }
 
 //    @RequestMapping(value = "/studies/{id}", method = RequestMethod.POST)
 //    public String studyUpdate(@ModelAttribute Study study, @PathVariable String id) {
@@ -42,11 +43,11 @@ public class StudyMvcController {
 //        return "redirect:/studies/" + saved.getId();
 //    }
 
-    @RequestMapping(value = "/studies/new", method = RequestMethod.GET)
-    public String studyForm(Model model) {
-//        model.addAttribute("study", new Study());
-        return "study_edit";
-    }
+//    @RequestMapping(value = "/studies/new", method = RequestMethod.GET)
+//    public String studyForm(Model model) {
+////        model.addAttribute("study", new Study());
+//        return "study_edit";
+//    }
 
 //    @RequestMapping(value = "/studies/new", method = RequestMethod.POST)
 //    public String studySubmit(@ModelAttribute Study study, Model model) {

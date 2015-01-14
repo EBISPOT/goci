@@ -6,7 +6,7 @@ import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import uk.ac.ebi.spot.goci.model.TraitAssociation;
+import uk.ac.ebi.spot.goci.ui.model.TraitAssociation;
 
 import java.util.Collection;
 import java.util.Collections;

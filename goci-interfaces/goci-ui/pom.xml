@@ -18,6 +18,12 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc6</artifactId>
+			<version>11.2.0.3</version>
+		</dependency>
+
+		<dependency>
 			<groupId>uk.ac.ebi.spot</groupId>
 			<artifactId>goci-repository</artifactId>
 		</dependency>

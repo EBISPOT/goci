@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import uk.ac.ebi.spot.goci.dao.GwasStudyDAO;
 import uk.ac.ebi.spot.goci.exception.DispatcherException;
 import uk.ac.ebi.spot.goci.lang.ImporterProperties;
-import uk.ac.ebi.spot.goci.model.GwasStudy;
+import uk.ac.ebi.spot.goci.ui.model.GwasStudy;
 
 import java.util.*;
 

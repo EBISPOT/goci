@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Search Demo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>-->
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>-->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}"/>
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css" th:href="@{css/bootstrap-theme.min.css}"/>
+    <link rel="stylesheet" href="/css/bootstrap-table.css" th:href="@{css/bootstrap-table.css}"/>
+    <link rel="stylesheet" href="/css/goci-ui.css"/>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/goci-ui.js"></script>
+
+
+</head>
+<body>
+<nav class="navbar navbar-inverse" role="navigation">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://www.genome.gov/gwastudies/" class="navbar-brand">GWAS Logo</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="navbarCollapse" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+
+                <li><a href="home">Home </a></li>
+                <li class="active"><a href="search">Search the catalog <span class="sr-only">(current)</span></a></li>
+                <li><a href="about">About us</a></li>
+                <li><a href="publications">Publications</a></li>
+                <li><a href="downloads">Downloads</a></li>
+                <li><a href="http://www.ebi.ac.uk/fgpt/gwas">GWAS Diagram</a></li>
+            </ul>
+
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+
+<div class="container-fluid">
+    <ol class="breadcrumb">
+        <li><a href="home">GWAS</a></li>
+        <li class="active">Search</li>
+    </ol>
+
+    <div class="row">
+        <div class="col-md-7 col-md-offset-3">
+            <h1>A Catalog of Published Genome-Wide Association Studies</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div id="imaginary_container">
+                <div class="input-group stylish-input-group">
+                    <input type="text" class="form-control" placeholder="Search the catalog" id="search-box">
+                       <span class="input-group-addon">
+                            <button type="submit" id="search-button" >
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
+                    </input>
+                </div>
+                <div class="examples">
+                    Examples:
+                    <a href="">breast cancer</a>,
+                    <a href="">rs7329174</a>,
+                    <a href="">Yang</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="results-container">-->
+<div class="container-fluid" id="lower_container" style="display: none">
+    <!--<div class="container-fluid" id="lower_container" style="display: block">-->
+
+
+<div class="row">
+        <div class="col-md-3" id="filter-bar">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Refine search results</h3>
+                    <span class="pull-right clickable" onclick="toggleSidebar('.panel-heading span.clickable')"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                </div>
+                <div class="panel-body">
+                    <div id="facets">
+                    <b>Show results for</b>
+                        <div class="list-group">
+                            <!--add an "active" class annotation to each a tag when it's selected-->
+                            <a href="#" class="list-group-item">    <span class="badge">3</span>
+                                Studies</a>
+                            <a href="#" class="list-group-item">    <span class="badge">14</span>
+                                SNPs</a>
+                            <a href="#" class="list-group-item">    <span class="badge">2</span>
+                                Traits</a>
+                            <a href="#" class="list-group-item disabled">    <span class="badge">0</span>
+                                Some other facet with no results</a>
+                        </div>
+
+                    </div>
+
+                    <div id="filters">
+                    <b>Filter results by</b>
+
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <b>P-value</b> from <input type="text" size="5" id="pval-min"/> to <input type="text" size="5" id="pval-max"/>
+                                <i>e.g. 5E-8</i>
+                            </li>
+
+                            <li class="list-group-item">
+                                <b>Odds ratio</b> from <input type="text" size="5" id="or-min"/> to <input type="text" size="5" id="or-max"/>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Date</b> from <input type="text" id="date-min" size="10"/> to <input type="text" id="date-max" size="10"/>
+                            </li>
+                            <li class="list-group-item">
+
+                                <b>Disease trait</b>
+                            <div class="btn-group">
+
+                                    <button type="button" class="btn btn-default">Child of search term</button>
+                                    <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">Diabetes</a></li>
+                                        <li><a href="#">Cancer</a></li>
+                                        <li><a href="#">Lupus</a></li>
+                                        <li><a href="#">Body weight</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+
+                    </div>
+
+                    <div>
+                        <button type="button" class="btn btn-default">Apply filters</button>
+                        <button type="button" class="btn btn-default pull-right">Clear all filters</button>
+                                </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9" id="results-area">
+            <h2>Search results for <span id="search-term"><em></em></span></h2>
+            <table class="table">
+                <thead>
+                <tr>
+
+                    <th data-field="author">Author</th>
+                    <th data-field="publication">Publication</th>
+                    <th data-field="title">Title</th>
+                    <th data-field="diseaseTrait">Disease/Trait</th>
+                    <th data-field="studydate">Date</th>
+                    <th data-field="pubmedId">Pubmed ID</th>
+
+                    <!--<th data-field="rsId">SNP count</th>-->
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="gs : ${search}">
+
+                    <td th:text="${gs.author} ?: 'null'">Author</td>
+                    <td th:text="${gs.publication} ?: 'null'">Publication</td>
+                    <td th:text="${gs.title} ?: 'null'">Title</td>
+                    <td th:text="${gs.diseaseTrait.trait} ?: 'null'">Trait</td>
+                    <td th:text="${gs.studyDate} ?: 'null'">Date</td>
+                    <td th:text="${gs.pubmedID} ?: 'null'">PubMed ID</td>
+
+
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+<!--</div>-->
+</div>
+
+</body>
+</html>
+

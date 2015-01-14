@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.model;
+package uk.ac.ebi.spot.goci.ui.model;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 

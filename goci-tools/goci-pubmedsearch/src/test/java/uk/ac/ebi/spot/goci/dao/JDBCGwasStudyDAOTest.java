@@ -3,7 +3,7 @@ package uk.ac.ebi.spot.goci.dao;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
-import uk.ac.ebi.spot.goci.model.GwasStudy;
+import uk.ac.ebi.spot.goci.ui.model.GwasStudy;
 
 import static org.mockito.Mockito.mock;
 

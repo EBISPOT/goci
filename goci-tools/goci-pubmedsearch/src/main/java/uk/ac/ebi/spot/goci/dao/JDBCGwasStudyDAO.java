@@ -7,8 +7,8 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.util.Assert;
-import uk.ac.ebi.spot.goci.model.DefaultGwasStudy;
-import uk.ac.ebi.spot.goci.model.GwasStudy;
+import uk.ac.ebi.spot.goci.ui.model.DefaultGwasStudy;
+import uk.ac.ebi.spot.goci.ui.model.GwasStudy;
 
 import java.sql.Date;
 import java.sql.ResultSet;

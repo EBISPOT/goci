@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.controller;
+package uk.ac.ebi.spot.goci.ui.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import uk.ac.ebi.spot.goci.repository.SnpRepository;
+import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
 /**
  * Javadocs go here!
@@ -16,10 +16,10 @@ import uk.ac.ebi.spot.goci.repository.SnpRepository;
  */
 @Controller
 public class SnpMvcController {
-    private SnpRepository snpRepository;
+    private SingleNucleotidePolymorphismRepository snpRepository;
 
     @Autowired
-    SnpMvcController(SnpRepository snpRepository) {
+    SnpMvcController(SingleNucleotidePolymorphismRepository snpRepository) {
         this.snpRepository = snpRepository;
     }
 
@@ -30,10 +30,14 @@ public class SnpMvcController {
     }
 
     @RequestMapping(value = "/snps/{rsId}", produces = MediaType.TEXT_HTML_VALUE)
-    String snps(Model model,
-                @PathVariable
-                String rsId) {
+    String snps(Model model, @PathVariable String rsId) {
         model.addAttribute("snps", snpRepository.findByRsId(rsId));
         return "snps";
     }
+
+//    @RequestMapping(value = "/search", produces = MediaType.TEXT_HTML_VALUE)
+//    String search(Model model) {
+//        model.addAttribute("search", snpRepository.findAll());
+//        return "search";
+//    }
 }

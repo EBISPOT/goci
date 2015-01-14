@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Search Demo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>-->
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>-->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}"/>
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css" th:href="@{css/bootstrap-theme.min.css}"/>
+    <link rel="stylesheet" href="/css/bootstrap-table.css" th:href="@{css/bootstrap-table.css}"/>
+    <link rel="stylesheet" href="/css/goci-ui.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<nav class="navbar navbar-inverse" role="navigation">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://www.genome.gov/gwastudies/" class="navbar-brand">GWAS Logo</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="navbarCollapse" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+
+                <li><a href="home">Home</a></li>
+                <li><a href="search">Search the catalog</a></li>
+                <li class="active"><a href="about">About us <span class="sr-only">(current)</span></a></li>
+                <li><a href="publications">Publications</a></li>
+                <li><a href="downloads">Downloads</a></li>
+                <li><a href="http://www.ebi.ac.uk/fgpt/gwas">GWAS Diagram</a></li>
+            </ul>
+
+
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+<div class="container-fluid">
+    <ol class="breadcrumb">
+        <li><a href="home">GWAS</a></li>
+        <li class="active">About</li>
+    </ol>
+
+
+    <div class="row">
+        <div class="col-md-7 col-md-offset-3">
+            <h1>A Catalog of Published Genome-Wide Association Studies</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div id="imaginary_container">
+                <div class="input-group stylish-input-group">
+                    <input type="text" class="form-control" placeholder="Search the catalog">
+                <span class="input-group-addon">
+                    <button type="submit">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </span>
+                    </input>
+                </div>
+                <div class="examples">
+                    Examples:
+                    <a href="">breast cancer</a>,
+                    <a href="">rs7329174</a>,
+                    <a href="">Yang</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid" id="lower_container">
+    <div class="row">
+
+        <div class="col-md-6 col-md-offset-3">
+
+            <h3>Background</h3>
+
+            <p>The National Human Genome Research Institute (NHGRI) <a href="http://www.genome.gov/gwastudies">Catalog of
+                Published Genome-Wide Association Studies</a> or GWAS catalogue provides a quality controlled, manually
+                curated, literature-derived collection of all published  [...]
+                <!--<a href="http://en.wikipedia.org/wiki/Genome-wide_association_study">GWA studies</a> assaying at least-->
+                <!--100,000 <a href="http://en.wikipedia.org/wiki/Single-nucleotide_polymorphism">SNPs</a> and all SNP-trait-->
+                <!--associations with p-values < 1.0 E-5 <i>(Hindorff et al., 2009)</i>. The catalogue can be-->
+                <!--searched by a number of options including journal, first author, trait, chromosomal region, gene, SNP, odds-->
+                <!--ratio and p-value threshold. As of 16/12/13, it includes 1778 publications and 12123 SNPs. In addition to the-->
+                <!--SNP-trait association data, the catalogue also publishes the iconic GWAS diagram of all SNP-trait-->
+                <!--associations, with p-values < 5.0 E-8, mapped to the SNPs-->
+                <!--chromosomal locations. The diagram is released quarterly and the latest version of the diagram is made-->
+                available on the GWAS catalogue website in PDF format and as a PowerPoint slide.</p>
+
+
+            <h3>Curation process</h3>
+
+            <p>The GWAS Catalog data is extracted from the literature. Extracted information includes publication information,
+                study cohort information such as cohort size, country of recruitment and subject ethnicity, and SNP-disease
+                association information including SNP identifier (i.e. RSID), p-value, gene and risk allele. Each study is
+                also assigned a trait that best represents the phenotype under investigation. When multiple traits are analysed
+                in the same study either multiple entries are created, or individual SNPs are annotated with their specific
+                traits. Traits are used both to query and visualise the data in the Catalog's web form and diagram-based query interfaces.
+            </p>
+            <p>Data extraction and curation for the GWAS Catalog is an expert activity; each step is performed by scientists
+                supported by a web-based tracking and data entry system which allows multiple curators to search, annotate,
+                verify and publish the Catalog data. Papers that qualify for inclusion in the Catalog are identified through
+                weekly PubMed searches. They then undergo two levels of curation. First all data, including association
+                information for SNPs, traits and general information about the study, are extracted by one curator.
+                second curator then performs an additional round of curation to double-check
+                the accuracy and consistency of all the information. Finally, an automated pipeline run at the NCBI performs
+                checks for missing information, such as SNP identifiers, resolution of the citation in PubMed, existence of
+                SNPs in dbSNP, confirmation of gene names vs. NCBI's Gene database, confirmation that the reported SNP and
+                gene are in the same chromosomal region, as well as adding additional information such as the SNP's base pair
+                and cytogenetic location in the current human genome reference assembly. This information is then used for
+                queries and in the production of the karyotype diagram.</p>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>

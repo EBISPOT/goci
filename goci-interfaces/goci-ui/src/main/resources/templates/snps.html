@@ -1,10 +1,36 @@
 <!DOCTYPE html>
-<html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="content-type" content="text/html"/>
+    <title>GWAS SNPs</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+
 </head>
+
+
+
 <body>
+
+<h1>GWAS SNPs</h1>
+
+<div th:each="gs : ${snps}">
+    <div>
+        <b th:text="${gs.id}">ID</b>
+        <span th:text="${gs.rsID}">rsID</span>
+        <span th:text="${gs.chromosomeName}">Chromosome</span>
+        <span th:text="${gs.chromosomePosition}">Position</span>
+
+    </div>
+</div>
 
 </body>
 </html>

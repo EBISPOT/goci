@@ -1,8 +1,8 @@
 package uk.ac.ebi.spot.goci.lang;
 
 import org.junit.Test;
-import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
-import uk.ac.ebi.spot.goci.model.TraitAssociation;
+import uk.ac.ebi.spot.goci.ui.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.ui.model.TraitAssociation;
 
 import static org.junit.Assert.assertEquals;
 import static uk.ac.ebi.spot.goci.lang.Filtering.*;

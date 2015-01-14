@@ -1,6 +1,6 @@
 package uk.ac.ebi.spot.goci.dao;
 
-import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.ui.model.SingleNucleotidePolymorphism;
 
 import java.util.Collection;
 
