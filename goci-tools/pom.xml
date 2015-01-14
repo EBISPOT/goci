@@ -1,37 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <artifactId>goci</artifactId>
-        <groupId>uk.ac.ebi.spot</groupId>
-        <version>2.0-SNAPSHOT</version>
-    </parent>
+
     <groupId>uk.ac.ebi.spot</groupId>
     <artifactId>goci-tools</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>GOCI Curation Tools</name>
-    <description>
-        A series of modules designed to assist in curation activities relating to getting papers into the GWAS catalog.
-        This includes a tracking system, for labelling papers and assigning them to curators for review, a loader for
-        batch loading SNP information into the GWAS system, and any other curation-type tools.
-    </description>
-    <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <modules>
-        <module>SNPbatchLoader</module>
-        <module>goci-pubmedsearch</module>
-        <module>goci-pubmedimport</module>
-        <module>goci-mappingsextractor</module>
-        <module>goci-urilabelchecker</module>
-        <module>goci-kb-metrics</module>
-        <module>goci-datapublisher</module>
-        <module>goci-pussycat-app</module>
         <module>goci-solr-indexer</module>
     </modules>
 </project>

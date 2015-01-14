@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>uk.ac.ebi.spot.cttv</groupId>
-    <artifactId>gwas</artifactId>
+    <artifactId>goci-cttv-rest</artifactId>
     <version>0.1.0</version>
 
     <parent>
