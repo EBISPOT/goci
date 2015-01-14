@@ -1,306 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>uk.ac.ebi.spot</groupId>
     <artifactId>goci</artifactId>
     <version>2.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-
-    <name>GWAS Ontology and Curation Infrastructure</name>
-    <description>
-        An infrastructure for activities relating to the curation of publications that may be eligible to the NHGRI GWAS
-        catalog.
-
-        Tools are included for tracking publications in PubMed, loading information from those publications into the
-        GWAS catalog database, annotating publications with ontology terms and generating the GWAS catalog diagram.
-    </description>
-    <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.2</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.4</version>
-                <executions>
-                    <execution>
-                        <id>attach-source</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.4</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.1</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.2</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.1</version>
-            </plugin>
-        </plugins>
-        <extensions>
-            <!-- Enabling the use of SCP -->
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ssh</artifactId>
-                <version>2.7</version>
-            </extension>
-        </extensions>
-    </build>
-
-    <!-- Reporting/Documentation output -->
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.5.1</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.8.1</version>
-                <reportSets>
-                    <reportSet>
-                        <id>aggregate</id>
-                        <reports>
-                            <report>aggregate</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-        </plugins>
-    </reporting>
-
-    <!-- Licensing -->
-    <licenses>
-        <license>
-            <name>GNU Lesser General Public License</name>
-            <url>http://www.gnu.org/copyleft/lesser.html</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <!-- Mailing Lists -->
-    <mailingLists>
-        <mailingList>
-            <name>EBI GWAS Ontology/Curation List</name>
-            <subscribe>ebi-gwas-oc@ebi.ac.uk</subscribe>
-            <unsubscribe>ebi-gwas-oc@ebi.ac.uk</unsubscribe>
-            <post>ebi-gwas-oc@ebi.ac.uk</post>
-        </mailingList>
-    </mailingLists>
-
-    <!-- Bug Tracker -->
-    <issueManagement>
-        <system>jira</system>
-        <url>http://www.ebi.ac.uk/panda/jira/browse/GOCI</url>
-    </issueManagement>
-
-    <!-- Version control (project hosted on GitHub) -->
-    <scm>
-        <connection>scm:git:git@github.com:tburdett/goci.git</connection>
-        <developerConnection>scm:git:git@github.com:tburdett/goci.git</developerConnection>
-        <url>git@github.com:tburdett/goci.git</url>
-      <tag>HEAD</tag>
-  </scm>
-
-    <!-- Alternative version control (SVN over git) -->
-    <!-- NOTE: This allows buildnumbers to be extracted when doing automated builds (better SVN support in tools) -->
-    <!--<scm>-->
-        <!--<connection>scm:svn:https://github.com/tburdett/goci</connection>-->
-        <!--<developerConnection>scm:svn:https://github.com/tburdett/goci</developerConnection>-->
-        <!--<url>http://github.com/tburdett/goci</url>-->
-    <!--</scm>-->
-
-    <!-- Maven repository and site deployment -->
-    <distributionManagement>
-        <downloadUrl>http://www.ebi.ac.uk/~tburdett/goci/maven/repo</downloadUrl>
-        <repository>
-            <id>goci-repo</id>
-            <name>GOCI Maven Repository</name>
-            <url>
-                scp://orange.ebi.ac.uk/homes/tburdett/public_html/goci/maven/repo
-            </url>
-        </repository>
-        <snapshotRepository>
-            <id>goci-repo</id>
-            <name>GOCI Maven Repository</name>
-            <url>
-                scp://orange.ebi.ac.uk/homes/tburdett/public_html/goci/maven/repo
-            </url>
-        </snapshotRepository>
-        <site>
-            <id>goci-repo</id>
-            <name>GOCI Site</name>
-            <url>
-                scp://orange.ebi.ac.uk/homes/tburdett/public_html/goci/
-            </url>
-        </site>
-    </distributionManagement>
-
-    <!-- Developer Listing -->
-    <developers>
-        <developer>
-            <id>tburdett</id>
-            <name>Tony Burdett</name>
-            <email>tburdett@ebi.ac.uk</email>
-            <organization>EBI</organization>
-            <organizationUrl>http://www.ebi.ac.uk</organizationUrl>
-            <roles>
-                <role>administrator</role>
-                <role>developer</role>
-            </roles>
-            <timezone>0</timezone>
-            <properties />
-        </developer>
-        <developer>
-            <id>dwelter</id>
-            <name>Dani Welter</name>
-            <email>dwelter@ebi.ac.uk</email>
-            <organization>EBI</organization>
-            <organizationUrl>http://www.ebi.ac.uk</organizationUrl>
-            <roles>
-                <role>developer</role>
-            </roles>
-            <timezone>0</timezone>
-            <properties />
-        </developer>
-    </developers>
-
-    <!-- To keep things minimal, we only fetch from the GOCI maven repo -->
-    <repositories>
-        <repository>
-            <id>goci-repo</id>
-            <url>http://www.ebi.ac.uk/~tburdett/goci/maven/repo</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>Sonatype repository</id>
-            <name>Sonatype's Maven repository</name>
-            <url>https://oss.sonatype.org/content/repositories/releases/</url>
-        </repository>
-
-        <repository>
-            <id>coconut.ebi.ac.uk</id>
-            <name>EBI Artifactory</name>
-            <url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
-
-    <!-- Dependencies that are required in all submodules of GOCI -->
-    <dependencies>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.6.3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.2</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-    <!-- Dependencies that can be used as required, declared here for -->
-    <dependencyManagement>
-        <dependencies>
-            <!-- TODO - HermiT 1.3.6 doesn't appear to like owlapi 3.3+ -->
-            <dependency>
-                <groupId>net.sourceforge.owlapi</groupId>
-                <artifactId>owlapi-apibinding</artifactId>
-                <version>3.4.3</version>
-            </dependency>
-            <dependency>
-                <groupId>org.semanticweb.owlapi</groupId>
-                <artifactId>owlapi</artifactId>
-                <version>3.2.4</version>
-            </dependency>
-            <dependency>
-                <groupId>org.semanticweb</groupId>
-                <artifactId>HermiT</artifactId>
-                <version>1.3.7</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
-                <version>1.6.3</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-                <version>1.2.17</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
-                <version>1.9.5</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.8.2</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-aop</artifactId>
-                <version>3.2.2.RELEASE</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-core</artifactId>
-                <version>3.2.2.RELEASE</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <modules>
-        <module>goci-core</module>
-        <module>goci-interfaces</module>
-        <module>goci-tools</module>
-    </modules>
+    <name>GOCI (root)</name>
 
     <profiles>
         <profile>
@@ -309,22 +17,22 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
 
-            <properties>
-                <java.location>java</java.location>
-                <java.args />
-            </properties>
+            <modules>
+                <module>goci-core</module>
+                <module>goci-interfaces</module>
+                <module>goci-tools</module>
+            </modules>
         </profile>
 
         <profile>
-            <id>fgservers</id>
+            <id>pomtree</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
 
-            <properties>
-                <java.location>/ebi/research/software/Linux_x86_64/opt/java/jdk1.7/bin/java</java.location>
-                <java.args>-Dhttp.proxyHost=wwwcache.ebi.ac.uk -Dhttp.proxyPort=3128 -Dhttp.nonProxyHosts=*.ebi.ac.uk -DproxyHost=wwwcache.ebi.ac.uk -DproxyPort=3128 -DproxySet=true</java.args>
-            </properties>
+            <modules>
+                <module>goci-pom-tree</module>
+            </modules>
         </profile>
     </profiles>
 

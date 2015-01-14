@@ -3,22 +3,25 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>uk.ac.ebi.spot.goci</groupId>
 	<artifactId>goci-curation</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<version>2.0.0-SNAPSHOT</version>
 
-	<name>goci-curation</name>
-	<description>Demo project for goci curation interface</description>
+	<name>GOCI Curation Interface</name>
+	<description>The curator's interface for the GWAS Catalog</description>
 
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.2.0.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<groupId>uk.ac.ebi.spot</groupId>
+		<artifactId>goci-parent</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+		<relativePath />
 	</parent>
 
 	<dependencies>
+		<dependency>
+			<groupId>uk.ac.ebi.spot</groupId>
+			<artifactId>goci-repository</artifactId>
+		</dependency>
+
         <!--<dependency>-->
             <!--<groupId>org.eclipse.birt.runtime.3_7_1</groupId>-->
             <!--<artifactId>derby</artifactId>-->
@@ -33,15 +36,7 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-rest</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -66,7 +61,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<start-class>uk.ac.ebi.spot.goci.curation.Application</start-class>
+		<!--<start-class>uk.ac.ebi.spot.goci.curation.Application</start-class>-->
 		<java.version>1.8</java.version>
 	</properties>
 
