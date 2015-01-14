@@ -1,39 +1,135 @@
 package uk.ac.ebi.spot.goci.model;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
+import java.util.Collection;
+
 /**
- * A simple object modelling a SNP, as represented by the data in the GWAS catalog database.  THis simply wraps up the
- * RS ID (SNP representative ID from dbSNP), the name of the chromosome on which this SNP is found, the cytogenetic band
- * in which the SNP is located, and the absolute position (in base pairs) of the SNP in the genome.
+ * Created by emma on 21/11/14.
  *
- * @author Tony Burdett
- * Date 24/01/12
+ * @author emma
+ *         <p>
+ *         Model object representing a single nucleotide polymorphisms and its attributes
  */
-public interface SingleNucleotidePolymorphism extends GWASObject {
-    /**
-     * The rsID of this SNP, as assigned by dbSNP
-     *
-     * @return a snp identifier (should be unique)
-     */
-    String getRSID();
 
-    /**
-     * The name of the chromosome on which this SNP is located
-     *
-     * @return the chromosome name
-     */
-    String getChromosomeName();
+@Entity
+public class SingleNucleotidePolymorphism {
+    @Id
+    @GeneratedValue
+    @NotNull
+    private Long id;
 
-    /**
-     * The cytogenetic band in which this SNP is located
-     *
-     * @return the band name
-     */
-    String getCytogeneticBandName();
+    private String rsId;
 
-    /**
-     * The location, in base pairs, of this SNP in the genome
-     *
-     * @return the SNP location
-     */
-    String getSNPLocation();
+    private String chromosomeName;
+
+    private String chromosomePosition;
+
+    private Timestamp lastUpdateDate;
+
+    @ManyToMany
+    @JoinTable(name = "SNP_REGION",
+               joinColumns = @JoinColumn(name = "SNP_ID"),
+               inverseJoinColumns = @JoinColumn(name = "REGION_ID"))
+    private Collection<Region> regions;
+
+    @ManyToMany
+    @JoinTable(name = "SNP_GENE",
+               joinColumns = @JoinColumn(name = "SNP_ID"),
+               inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
+    private Collection<Gene> genes;
+
+    // JPA no-args constructor
+    public SingleNucleotidePolymorphism() {
+    }
+
+    public SingleNucleotidePolymorphism(String rsId,
+                                        String chromosomeName,
+                                        String chromosomePosition,
+                                        Timestamp lastUpdateDate,
+                                        Collection<Region> regions,
+                                        Collection<Gene> genes) {
+        this.rsId = rsId;
+        this.chromosomeName = chromosomeName;
+        this.chromosomePosition = chromosomePosition;
+        this.lastUpdateDate = lastUpdateDate;
+        this.regions = regions;
+        this.genes = genes;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getRsId() {
+        return rsId;
+    }
+
+    public void setRsId(String rsId) {
+        this.rsId = rsId;
+    }
+
+    public String getChromosomeName() {
+        return chromosomeName;
+    }
+
+    public void setChromosomeName(String chromosomeName) {
+        this.chromosomeName = chromosomeName;
+    }
+
+    public String getChromosomePosition() {
+        return chromosomePosition;
+    }
+
+    public void setChromosomePosition(String chromosomePosition) {
+        this.chromosomePosition = chromosomePosition;
+    }
+
+    public Timestamp getLastUpdateDate() {
+        return lastUpdateDate;
+    }
+
+    public void setLastUpdateDate(Timestamp lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
+    }
+
+    public Collection<Region> getRegions() {
+        return regions;
+    }
+
+    public void setRegions(Collection<Region> regions) {
+        this.regions = regions;
+    }
+
+    public Collection<Gene> getGenes() {
+        return genes;
+    }
+
+    public void setGenes(Collection<Gene> genes) {
+        this.genes = genes;
+    }
+
+    @Override
+    public String toString() {
+        return "SingleNucleotidePolymorphism{" +
+                "id=" + id +
+                ", rsId='" + rsId + '\'' +
+                ", chromosomeName='" + chromosomeName + '\'' +
+                ", chromosomePosition='" + chromosomePosition + '\'' +
+                ", lastUpdateDate=" + lastUpdateDate +
+                ", regions=" + regions +
+                ", genes=" + genes +
+                '}';
+    }
 }
