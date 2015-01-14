@@ -120,14 +120,15 @@ public class StudyController {
         model.addAttribute("studyHousekeeping", study.getHousekeeping());
         model.addAttribute("study", study);
         return "study_housekeeping";
-
-
     }
 
 
     // Update page with housekeeping/curator information linked to a study
     @RequestMapping(value = "/{studyId}/housekeeping", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping, @PathVariable Long studyId) {
+
+        // Save housekeeping returned from form
+        housekeepingRepository.save(housekeeping);
 
         // Find study
         Study study = studyRepository.findOne(studyId);
