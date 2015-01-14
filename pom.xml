@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>uk.ac.ebi.spot</groupId>
@@ -8,10 +10,30 @@
     <packaging>pom</packaging>
     <name>GOCI (root)</name>
 
-    <modules>
-        <module>goci-core</module>
-        <module>goci-interfaces</module>
-        <module>goci-tools</module>
-    </modules>
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+            <modules>
+                <module>goci-core</module>
+                <module>goci-interfaces</module>
+                <module>goci-tools</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>pomtree</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+
+            <modules>
+                <module>goci-pom-tree</module>
+            </modules>
+        </profile>
+    </profiles>
 
 </project>

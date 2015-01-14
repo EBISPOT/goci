@@ -25,6 +25,7 @@
     <url>http://www.ebi.ac.uk/gwas</url>
 
     <properties>
+        <goci.version>2.0.0-SNAPSHOT</goci.version>
         <hibernate.jpa.2.1.version>1.0.0.Final</hibernate.jpa.2.1.version>
         <owlapi.version>4.0.1</owlapi.version>
         <HermiT.version>1.3.8.1</HermiT.version>
@@ -32,6 +33,39 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- version management for project internal dependencies -->
+            <dependency>
+                <groupId>uk.ac.ebi.spot</groupId>
+                <artifactId>goci-model</artifactId>
+                <version>${goci.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>uk.ac.ebi.spot</groupId>
+                <artifactId>goci-repository</artifactId>
+                <version>${goci.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>uk.ac.ebi.spot</groupId>
+                <artifactId>goci-curation</artifactId>
+                <version>${goci.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>uk.ac.ebi.spot</groupId>
+                <artifactId>goci-ui</artifactId>
+                <version>${goci.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>uk.ac.ebi.spot</groupId>
+                <artifactId>goci-cttv-rest</artifactId>
+                <version>${goci.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>uk.ac.ebi.spot</groupId>
+                <artifactId>goci-solr-indexer</artifactId>
+                <version>${goci.version}</version>
+            </dependency>
+
+            <!--  additional external dependencies -->
             <dependency>
                 <groupId>org.hibernate.javax.persistence</groupId>
                 <artifactId>hibernate-jpa-2.1-api</artifactId>

@@ -1,8 +1,8 @@
-package uk.ac.ebi.spot.goci.curation.repository;
+package uk.ac.ebi.spot.goci.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import uk.ac.ebi.spot.goci.curation.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
 
 /**

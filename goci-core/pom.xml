@@ -9,10 +9,8 @@
     <name>GOCI Core</name>
 
     <modules>
-        <module>goci-dependencies</module>
-        <module>goci-parent</module>
-
         <module>goci-model</module>
+        <module>goci-repository</module>
   </modules>
 
 </project>
