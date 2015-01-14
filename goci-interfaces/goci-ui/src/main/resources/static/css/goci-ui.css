@@ -48,3 +48,15 @@
 /*.navbar-mine .navbar-nav > li > a {*/
     /*text-shadow: 0 -1px 0 rgba(0, 0, 0, .25);*/
 /*}*/
+
+.panel-heading span {
+    margin-top: -20px;
+    font-size: 15px;
+}
+.row {
+    margin-top: 40px;
+    padding: 0 10px;
+}
+.clickable {
+    cursor: pointer;
+}

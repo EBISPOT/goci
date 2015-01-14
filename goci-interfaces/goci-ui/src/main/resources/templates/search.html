@@ -12,8 +12,11 @@
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css" th:href="@{css/bootstrap-theme.min.css}"/>
     <link rel="stylesheet" href="/css/bootstrap-table.css" th:href="@{css/bootstrap-table.css}"/>
     <link rel="stylesheet" href="/css/goci-ui.css"/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/goci-ui.js"></script>
+
 
 </head>
 <body>
@@ -63,12 +66,12 @@
         <div class="col-md-6 col-md-offset-3">
             <div id="imaginary_container">
                 <div class="input-group stylish-input-group">
-                    <input type="text" class="form-control" placeholder="Search the catalog">
-                <span class="input-group-addon">
-                    <button type="submit">
-                        <span class="glyphicon glyphicon-search"></span>
-                    </button>
-                </span>
+                    <input type="text" class="form-control" placeholder="Search the catalog" id="search-box">
+                       <span class="input-group-addon">
+                            <button type="submit" id="search-button" >
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
                     </input>
                 </div>
                 <div class="examples">
@@ -83,14 +86,16 @@
 </div>
 
 <!--<div class="results-container">-->
-<div class="container-fluid" id="lower_container">
+<div class="container-fluid" id="lower_container" style="display: none">
+    <!--<div class="container-fluid" id="lower_container" style="display: block">-->
 
 
-    <div class="row">
-        <div class="col-md-3">
+<div class="row">
+        <div class="col-md-3" id="filter-bar">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Refine search results</h3>
+                    <span class="pull-right clickable" onclick="toggleSidebar('.panel-heading span.clickable')"><i class="glyphicon glyphicon-chevron-up"></i></span>
                 </div>
                 <div class="panel-body">
                     <div id="facets">
@@ -151,16 +156,16 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-9">
-            <h2>Search results for <em>search term</em></h2>
+        <div class="col-md-9" id="results-area">
+            <h2>Search results for <span id="search-term"><em></em></span></h2>
             <table class="table">
                 <thead>
                 <tr>
 
                     <th data-field="author">Author</th>
                     <th data-field="publication">Publication</th>
-                    <th data-field="diseaseTrait">Disease/Trait</th>
                     <th data-field="title">Title</th>
+                    <th data-field="diseaseTrait">Disease/Trait</th>
                     <th data-field="studydate">Date</th>
                     <th data-field="pubmedId">Pubmed ID</th>
 
@@ -190,3 +195,4 @@
 
 </body>
 </html>
+
