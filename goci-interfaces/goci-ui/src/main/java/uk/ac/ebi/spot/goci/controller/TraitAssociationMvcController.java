@@ -6,12 +6,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.SnpRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.repository.TraitAssociationRepository;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.model.TraitAssociation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,7 +50,7 @@ public class TraitAssociationMvcController {
         else {
             if (pubmedId != null) {
                 Study study = studyRepository.findByPubmedId(pubmedId);
-                Collection<TraitAssociation> traitAssociations = new ArrayList<>();
+                Collection<Association> traitAssociations = new ArrayList<>();
                 traitAssociations.addAll(traitAssociationRepository.findByStudy(study));
                 model.addAttribute("traits", traitAssociations);
             }
