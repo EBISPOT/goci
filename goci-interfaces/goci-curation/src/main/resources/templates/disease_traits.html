@@ -14,6 +14,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
+    <!--Bootstrap table: http://bootstrap-table.wenzhixin.net.cn/-->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.5.0/bootstrap-table.min.css"/>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.5.0/bootstrap-table.min.js"></script>
+
 
 </head>
 <body>
@@ -55,30 +62,28 @@
 
 
 <div class="container-fluid">
-    <div class="form-group">
-        <div class="col-md-12">
-
-            <div id="addDiseaseTraitForm">
-                <form class="form-inline" name="addDiseaseTraitForm" method="post" th:object="${diseaseTrait}">
-
-                    <div class="form-group">
-                        <label for="addDiseaseTrait" class="control-label col-md-2"></label>
-
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" id="addDiseaseTrait" th:field="*{trait}"/>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <div id="addDiseaseTraitForm">
+                    <form class="form-horizontal" name="addDiseaseTraitForm" method="post" th:object="${diseaseTrait}">
+                        <div class="form-group">
+                            <label for="addDiseaseTrait" class="control-label"></label>
+                            <input type="text" class="form-control col-md-offset-2" id="addDiseaseTrait"
+                                   th:field="*{trait}"/>
 
                             <!--Catch an empty value being added-->
-                            <p th:if="${#fields.hasErrors('trait')}" class="label label-danger"
+                            <p th:if="${#fields.hasErrors('trait')}" class="label label-danger col-md-offset-2"
                                th:errors="*{trait}"></p>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <button type="Save" class="btn btn-primary">Add Disease / Trait</button>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button type="Save" class="btn btn-primary">Add Disease / Trait</button>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -89,27 +94,43 @@
     <div class="row">
         <div class="col-md-12">
 
-            <table id="diseaseTraitTable" class="table table-hover table-bordered">
+            <table id="diseaseTraitTable" class="table table-hover table-bordered"
+                   data-toggle="table"
+                   data-search="true"
+                   data-sort-order="desc">
                 <caption id="total"></caption>
                 <thead>
                 <tr>
-                    <th></th>
-                    <th>Disease / Trait</th>
+                    <th data-field="edit" data-switchable="false"></th>
+                    <th data-field="diseasetrait" data-sortable="true">Disease / Trait</th>
+                    <th data-field="delete" data-switchable="false"></th>
                 </tr>
                 </thead>
                 <tbody>
                 <!--Loop through all disease traits-->
                 <tr th:each="diseaseTrait : ${diseaseTraits}">
-                    <td><a th:href="@{/diseasetraits/{diseaseTraitId}(diseaseTraitId=${diseaseTrait.id})}">Edit</a>
-                    </td>
+                    <td><a th:href="@{/diseasetraits/{diseaseTraitId}(diseaseTraitId=${diseaseTrait.id})}"
+                           class="btn btn-link">Edit</a></td>
                     <td th:text="${diseaseTrait.trait}"></td>
+                    <td><a th:href="@{/diseasetraits/{diseaseTraitId}/delete(diseaseTraitId=${diseaseTrait.id})}"
+                           class="btn btn-danger">Delete</a></td>
                 </tr>
                 </tbody>
             </table>
-
         </div>
     </div>
 </div>
+
+<script>
+    //    Count our table rows
+    function myFunction() {
+        // Minus 1 to account for heading
+        var x = document.getElementById("diseaseTraitTable").rows.length - 1;
+        return "Total: " + x;
+    }
+    document.getElementById("total").innerHTML = myFunction();
+</script>
+
 
 </body>
 </html>
