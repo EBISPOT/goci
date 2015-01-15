@@ -11,6 +11,7 @@
     <modules>
         <module>goci-model</module>
         <module>goci-repository</module>
+        <module>goci-service</module>
   </modules>
 
 </project>
