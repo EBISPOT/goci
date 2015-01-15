@@ -10,22 +10,25 @@ import org.springframework.data.solr.core.mapping.SolrDocument;
  * @author Tony Burdett
  * @date 23/12/14
  */
-@SolrDocument(solrCoreName = "gwas")
-public class TraitDocument {
-    @Id @Field private String id;
+public class TraitDocument extends Document<EfoTrait> {
     @Field private String trait;
     @Field private String uri;
-    @Field private String title;
     @Field private String resourcename;
 
     public TraitDocument(EfoTrait efoTrait) {
-        this.id = "disease_trait".concat(efoTrait.getId().toString());
+        super(efoTrait);
         this.trait = efoTrait.getTrait();
         this.uri = efoTrait.getUri();
-
         this.resourcename = efoTrait.getClass().getSimpleName();
     }
 
+    public String getTrait() {
+        return trait;
+    }
+
+    public String getUri() {
+        return uri;
+    }
 
     public String getResourcename() {
         return resourcename;

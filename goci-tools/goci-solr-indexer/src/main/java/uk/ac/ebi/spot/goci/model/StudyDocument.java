@@ -1,9 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
 import org.apache.solr.client.solrj.beans.Field;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.solr.core.mapping.SolrDocument;
-import uk.ac.ebi.spot.goci.model.Study;
 
 /**
  * Javadocs go here!
@@ -11,9 +8,7 @@ import uk.ac.ebi.spot.goci.model.Study;
  * @author Tony Burdett
  * @date 23/12/14
  */
-@SolrDocument(solrCoreName = "gwas")
-public class StudyDocument {
-    @Id @Field private String id;
+public class StudyDocument extends Document<Study> {
     @Field private String pubmedId;
     @Field private String title;
     @Field private String author;
@@ -21,16 +16,12 @@ public class StudyDocument {
     @Field private String resourcename;
 
     public StudyDocument(Study study) {
-        this.id = "study_".concat(study.getId().toString());
+        super(study);
         this.pubmedId = study.getPubmedId();
         this.title = study.getTitle();
         this.author = study.getAuthor();
         this.publication = study.getPublication();
         this.resourcename = study.getClass().getSimpleName();
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getPubmedId() {

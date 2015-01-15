@@ -1,9 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
 import org.apache.solr.client.solrj.beans.Field;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.solr.core.mapping.SolrDocument;
-import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -17,9 +14,7 @@ import java.util.TimeZone;
  * @author Tony Burdett
  * @date 23/12/14
  */
-@SolrDocument(solrCoreName = "gwas")
-public class SnpDocument {
-    @Id @Field private String id;
+public class SnpDocument extends Document<SingleNucleotidePolymorphism> {
     @Field private String rsId;
     @Field private String chromosomeName;
     @Field private int chromosomePosition;
@@ -29,7 +24,7 @@ public class SnpDocument {
     @Field private String resourcename;
 
     public SnpDocument(SingleNucleotidePolymorphism snp) {
-        this.id = "snp_".concat(snp.getId().toString());
+        super(snp);
         if (snp.getRsId() != null) {
             this.rsId = snp.getRsId();
         }
@@ -49,10 +44,6 @@ public class SnpDocument {
             this.last_modified = df.format(snp.getLastUpdateDate());
         }
         this.resourcename = snp.getClass().getSimpleName();
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getRsId() {
@@ -86,7 +77,7 @@ public class SnpDocument {
     @Override
     public String toString() {
         return "SnpDocument{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", rsId='" + rsId + '\'' +
                 '}';
     }

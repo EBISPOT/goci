@@ -3,6 +3,9 @@ package uk.ac.ebi.spot.goci.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
@@ -41,6 +44,24 @@ public class SingleNucleotidePolymorphismService {
         List<SingleNucleotidePolymorphism> allSnps = snpRepository.findAll();
         // iterate over all Snps and grab region info
         getLog().info("Obtained " + allSnps.size() + " SNPs, starting deep load...");
+        allSnps.forEach(this::loadAssociatedData);
+        return allSnps;
+    }
+
+    @Transactional(readOnly = true)
+    public List<SingleNucleotidePolymorphism> deepFindAll(Sort sort) {
+        List<SingleNucleotidePolymorphism> allSnps = snpRepository.findAll(sort);
+        // iterate over all Snps and grab region info
+        getLog().info("Obtained " + allSnps.size() + " SNPs, starting deep load...");
+        allSnps.forEach(this::loadAssociatedData);
+        return allSnps;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<SingleNucleotidePolymorphism> deepFindAll(Pageable pageable) {
+        Page<SingleNucleotidePolymorphism> allSnps = snpRepository.findAll(pageable);
+        // iterate over all Snps and grab region info
+        getLog().info("Obtained " + allSnps.getSize() + " SNPs, starting deep load...");
         allSnps.forEach(this::loadAssociatedData);
         return allSnps;
     }
