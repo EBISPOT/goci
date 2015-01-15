@@ -104,7 +104,7 @@
 
                 <thead>
                 <tr>
-                    <th data-field="state" data-checkbox="true"></th>
+
                     <th data-field="edit" data-switchable="false"></th>
                     <th data-field="author" data-sortable="true">Author</th>
                     <th data-field="title" data-sortable="true">Title</th>
@@ -115,15 +115,18 @@
                     <th data-field="curator" data-sortable="true">Curator</th>
                     <th data-field="curationstatus" data-sortable="true">Curator Status</th>
                     <th data-field="notes">Notes</th>
+                    <th data-field="delete" data-checkbox="false"></th>
 
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="study : ${studies}">
-                    <td></td>
-                    <td><a th:href="@{/studies/{studyId}(studyId=${study.id})}">Edit</a></td>
+
+                    <td><a th:href="@{/studies/{studyId}(studyId=${study.id})}" class="btn btn-link">Edit</a></td>
+
                     <!-- Use an conditional here as a study can have a null attributes-->
                     <!-- Using thymeleaf elvis operator for string, date attributes-->
+
                     <td th:text="${study.author} ?: 'null' "></td>
                     <td th:text="${study.title} ?: 'null'"></td>
                     <td th:text="${study.studyDate} ?: 'null'"></td>
@@ -138,6 +141,9 @@
                     <td th:text="${study.housekeeping != null and study.housekeeping.curator !=null } ? ${study.housekeeping.curator.lastName} : 'null'"></td>
                     <td th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : 'null'"></td>
                     <td th:text="${study.housekeeping !=null} ? ${study.housekeeping.notes} : 'null'"></td>
+
+                    <td><a th:href="@{/studies/{studyId}/delete(studyId=${study.id})}" class="btn btn-danger">Delete</a>
+                    </td>
                 </tr>
                 </tbody>
             </table>
