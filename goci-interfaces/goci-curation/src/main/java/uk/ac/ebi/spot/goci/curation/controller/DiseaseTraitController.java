@@ -57,23 +57,11 @@ public class DiseaseTraitController {
             return "disease_traits";
         }
 
-        // Check trait does not already exist
-
-     /*   String enteredTrait = diseaseTrait.getTrait().toLowerCase();
-        String existingTrait = diseaseTraitRepository.findByTraitIgnoreCase(enteredTrait);
-
-        if (existingTrait != null && !existingTrait.isEmpty()){
-            // warn curator
-        }*/
-
         // Save disease trait
         else {
             diseaseTraitRepository.save(diseaseTrait);
-
+            return "redirect:/diseasetraits";
         }
-
-
-        return "redirect:/diseasetraits";
     }
 
     // Edit disease trait
@@ -87,10 +75,43 @@ public class DiseaseTraitController {
     }
 
     @RequestMapping(value = "/{diseaseTraitId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String editDiseaseTrait(@ModelAttribute DiseaseTrait diseaseTrait) {
+    public String editDiseaseTrait(@Valid @ModelAttribute DiseaseTrait diseaseTrait, BindingResult bindingResult, Model model) {
+
+        // Catch a null or empty value being entered
+        if (bindingResult.hasErrors()) {
+            return "edit_disease_trait";
+        }
 
         // Save edited disease trait
-        diseaseTraitRepository.save(diseaseTrait);
+        else {
+            diseaseTraitRepository.save(diseaseTrait);
+            return "redirect:/diseasetraits";
+        }
+    }
+
+    // Delete a disease trait
+
+    @RequestMapping(value = "/{diseaseTraitId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String viewDiseaseTraitToDelete(Model model, @PathVariable Long diseaseTraitId) {
+
+        DiseaseTrait diseaseTraitToView = diseaseTraitRepository.findOne(diseaseTraitId);
+        model.addAttribute("diseaseTrait", diseaseTraitToView);
+        return "delete_disease_trait";
+    }
+
+
+    @RequestMapping(value = "/{diseaseTraitId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String deleteDiseaseTrait(@PathVariable Long diseaseTraitId) {
+
+        // Get disease/trait to delete
+        DiseaseTrait diseaseTraitToDelete = diseaseTraitRepository.findOne(diseaseTraitId);
+
+
+        // TODO HOW DO I GET ASSOCIATIONS
+        // Get any associations
+
+
+        //diseaseTraitRepository.delete(diseaseTraitId);
         return "redirect:/diseasetraits";
     }
 
