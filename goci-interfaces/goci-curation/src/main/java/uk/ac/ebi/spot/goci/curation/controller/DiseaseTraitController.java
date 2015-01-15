@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
+import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
+import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import javax.validation.Valid;
+import java.util.Collection;
 
 /**
  * Created by emma on 09/01/15.
@@ -29,10 +32,12 @@ public class DiseaseTraitController {
 
     // Repositories allowing access to disease traits in database
     private DiseaseTraitRepository diseaseTraitRepository;
+    private StudyRepository studyRepository;
 
     @Autowired
-    public DiseaseTraitController(DiseaseTraitRepository diseaseTraitRepository) {
+    public DiseaseTraitController(DiseaseTraitRepository diseaseTraitRepository, StudyRepository studyRepository) {
         this.diseaseTraitRepository = diseaseTraitRepository;
+        this.studyRepository = studyRepository;
     }
 
     //Return all disease traits
@@ -103,15 +108,20 @@ public class DiseaseTraitController {
     @RequestMapping(value = "/{diseaseTraitId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String deleteDiseaseTrait(@PathVariable Long diseaseTraitId) {
 
-        // Get disease/trait to delete
-        DiseaseTrait diseaseTraitToDelete = diseaseTraitRepository.findOne(diseaseTraitId);
+        // Need to find any studies linked to this diseaseTrait
+        Collection<Study> studiesWithDiseaseTrait = studyRepository.findByDiseaseTraitId(diseaseTraitId);
 
+        // For each study remove this disease trait and save
+        if (!studiesWithDiseaseTrait.isEmpty()) {
+            for (Study study : studiesWithDiseaseTrait) {
+                study.setDiseaseTrait(null);
+                studyRepository.save(study);
+            }
+        }
 
-        // TODO HOW DO I GET ASSOCIATIONS
-        // Get any associations
+        // Delete disease trait
+        diseaseTraitRepository.delete(diseaseTraitId);
 
-
-        //diseaseTraitRepository.delete(diseaseTraitId);
         return "redirect:/diseasetraits";
     }
 
