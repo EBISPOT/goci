@@ -1,7 +1,7 @@
 package uk.ac.ebi.spot.goci.index;
 
 import org.springframework.data.solr.repository.SolrCrudRepository;
-import uk.ac.ebi.spot.goci.model.DiseaseTraitDocument;
+import uk.ac.ebi.spot.goci.model.TraitDocument;
 
 /**
  * Javadocs go here!
@@ -9,5 +9,5 @@ import uk.ac.ebi.spot.goci.model.DiseaseTraitDocument;
  * @author Tony Burdett
  * @date 22/12/14
  */
-public interface DiseaseTraitIndex extends SolrCrudRepository<DiseaseTraitDocument, String> {
+public interface TraitIndex extends SolrCrudRepository<TraitDocument, String> {
 }

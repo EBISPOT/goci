@@ -7,11 +7,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import uk.ac.ebi.spot.goci.index.DiseaseTraitIndex;
+import uk.ac.ebi.spot.goci.index.TraitIndex;
 import uk.ac.ebi.spot.goci.index.SnpIndex;
 import uk.ac.ebi.spot.goci.index.StudyIndex;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
-import uk.ac.ebi.spot.goci.model.DiseaseTraitDocument;
+import uk.ac.ebi.spot.goci.model.TraitDocument;
 import uk.ac.ebi.spot.goci.model.ObjectDocumentMapper;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.SnpDocument;
@@ -32,7 +32,7 @@ public class SolrIndexBuilder {
 
     @Autowired SnpIndex snpIndex;
     @Autowired StudyIndex studyIndex;
-    @Autowired DiseaseTraitIndex diseaseTraitIndex;
+    @Autowired TraitIndex diseaseTraitIndex;
 
     public static void main(String[] args) {
         System.out.println("Starting Solr indexing application...");
@@ -63,8 +63,8 @@ public class SolrIndexBuilder {
         System.out.println("done!");
 
         System.out.print("Converting disease traits");
-        ObjectDocumentMapper<DiseaseTrait, DiseaseTraitDocument> traitMapper =
-                new ObjectDocumentMapper<>(DiseaseTraitDocument.class, diseaseTraitIndex, true);
+        ObjectDocumentMapper<DiseaseTrait, TraitDocument> traitMapper =
+                new ObjectDocumentMapper<>(TraitDocument.class, diseaseTraitIndex, true);
         diseaseTraitRepository.findAll().forEach(traitMapper::map);
         System.out.println("done!");
     }
