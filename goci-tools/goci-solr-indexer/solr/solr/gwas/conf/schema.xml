@@ -171,7 +171,7 @@
 
     <!-- diseasetrait -->
     <field name="trait" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="uri" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="traitUri" type="text_general" indexed="true" stored="true" multiValued="true" />
 
    <!-- Main body of document extracted by SolrCell.
         NOTE: This field is not indexed by default, since it is also copied to "text"

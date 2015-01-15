@@ -2,6 +2,9 @@ package uk.ac.ebi.spot.goci.model;
 
 import org.apache.solr.client.solrj.beans.Field;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 /**
  * Javadocs go here!
  *
@@ -15,6 +18,9 @@ public class StudyDocument extends Document<Study> {
     @Field private String publication;
     @Field private String resourcename;
 
+    @Field private String trait;
+    @Field("traitUri") private Collection<String> traitUris;
+
     public StudyDocument(Study study) {
         super(study);
         this.pubmedId = study.getPubmedId();
@@ -22,6 +28,10 @@ public class StudyDocument extends Document<Study> {
         this.author = study.getAuthor();
         this.publication = study.getPublication();
         this.resourcename = study.getClass().getSimpleName();
+
+        this.trait = study.getDiseaseTrait().getTrait();
+        this.traitUris = new ArrayList<>();
+        study.getEfoTraits().forEach(efoTrait -> traitUris.add(efoTrait.getUri()));
     }
 
     public String getPubmedId() {
@@ -42,5 +52,13 @@ public class StudyDocument extends Document<Study> {
 
     public String getResourcename() {
         return resourcename;
+    }
+
+    public String getTrait() {
+        return trait;
+    }
+
+    public Collection<String> getTraitUris() {
+        return traitUris;
     }
 }

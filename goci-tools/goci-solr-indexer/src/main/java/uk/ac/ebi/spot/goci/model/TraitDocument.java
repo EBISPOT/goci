@@ -1,8 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
 import org.apache.solr.client.solrj.beans.Field;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.solr.core.mapping.SolrDocument;
 
 /**
  * Javadocs go here!
@@ -12,13 +10,13 @@ import org.springframework.data.solr.core.mapping.SolrDocument;
  */
 public class TraitDocument extends Document<EfoTrait> {
     @Field private String trait;
-    @Field private String uri;
+    @Field private String traitUri;
     @Field private String resourcename;
 
     public TraitDocument(EfoTrait efoTrait) {
         super(efoTrait);
         this.trait = efoTrait.getTrait();
-        this.uri = efoTrait.getUri();
+        this.traitUri = efoTrait.getUri();
         this.resourcename = efoTrait.getClass().getSimpleName();
     }
 
@@ -26,8 +24,8 @@ public class TraitDocument extends Document<EfoTrait> {
         return trait;
     }
 
-    public String getUri() {
-        return uri;
+    public String getTraitUri() {
+        return traitUri;
     }
 
     public String getResourcename() {
