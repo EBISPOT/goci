@@ -27,6 +27,8 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     Collection<Study> findByPublish(@Param("publish") String publish);
 */
 
+    Collection<Study> findByDiseaseTraitId(Long diseaseTraitId);
+
 
 }
 
