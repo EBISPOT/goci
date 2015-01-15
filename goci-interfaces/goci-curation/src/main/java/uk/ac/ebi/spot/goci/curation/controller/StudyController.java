@@ -105,6 +105,29 @@ public class StudyController {
     }
 
 
+    // Delete an existing study
+    @RequestMapping(value = "/{studyId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String viewStudyToDelete(Model model, @PathVariable Long studyId) {
+        Study studyToDelete = studyRepository.findOne(studyId);
+        model.addAttribute("studyToDelete", studyToDelete);
+        return "delete_study";
+    }
+
+    @RequestMapping(value = "/{studyId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String deleteStudy(@PathVariable Long studyId) {
+
+        // Find our study based in the ID
+        Study studyToDelete = studyRepository.findOne(studyId);
+
+        // What do we need to delete ?
+
+
+        //studyRepository.delete(studyToDelete);
+        return "redirect:/studies/";
+    }
+
+
+
     /* Study housekeeping/curator information */
 
     // Generate page with housekeeping/curator information linked to a study
