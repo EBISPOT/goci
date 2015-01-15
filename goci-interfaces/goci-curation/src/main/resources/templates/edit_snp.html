@@ -58,7 +58,6 @@
             <li><a th:href="@{/associations/{associationId}(associationId=${association.id})}">Association
                 Information</a></li>
             <li class="active"><a href="#">Associated SNPs</a></li>
-
         </ul>
     </div>
 </div>
@@ -74,25 +73,23 @@
     </div>
 </div>
 
-<br/>
-<div class="container-fluid">
+<div class="container">
     <div class="row">
         <div class="col-md-10">
             <div class="form-group">
                 <div id="editAssociationSNPs">
-                    <form class="form-inline" method="post" name="editAssociationSNPs" th:object="${reportedSNPs}">
-
-                        <div class="form-group col-md-8">
-                            <label for="reportedSNPs" class="control-label">Edit SNPs:</label>
-
-                            <input type="text" th:field="*{reportedSNPValue}"
-                                   class="form-control" id="reportedSNPs" data-role="tagsinput"/>
-
+                    <form class="form-horizontal" method="post" name="editAssociationSNPs" th:object="${reportedSNPs}">
+                        <div class="form-group">
+                            <label for="reportedSNPs" class="control-label col-md-2">Edit SNPs:</label>
+                            <div class="col-md-10">
+                                <input type="text" th:field="*{reportedSNPValue}"
+                                       class="form-control" id="reportedSNPs" data-role="tagsinput"/>
+                            </div>
                         </div>
 
                         <!--Button -->
                         <div class="form-group">
-                            <div class="col-md-offset-8 col-md-2">
+                            <div class="col-md-offset-2">
                                 <button type="submit" class="btn btn-primary">Save</button>
                             </div>
                         </div>
