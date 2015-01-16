@@ -29,7 +29,9 @@ public class StudyDocument extends Document<Study> {
         this.publication = study.getPublication();
         this.resourcename = study.getClass().getSimpleName();
 
-        this.trait = study.getDiseaseTrait().getTrait();
+        if (study.getDiseaseTrait() != null && study.getDiseaseTrait().getTrait() != null) {
+            this.trait = study.getDiseaseTrait().getTrait();
+        }
         this.traitUris = new ArrayList<>();
         study.getEfoTraits().forEach(efoTrait -> traitUris.add(efoTrait.getUri()));
     }
