@@ -173,10 +173,21 @@
     <field name="trait" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="traitUri" type="text_general" indexed="true" stored="true" multiValued="true" />
 
-   <!-- Main body of document extracted by SolrCell.
-        NOTE: This field is not indexed by default, since it is also copied to "text"
-        using copyField below. This is to save space. Use this field for returning and
-        highlighting document content. Use the "text" field to search the content. -->
+    <!-- association -->
+    <!--
+    @Field private float pValue;
+    -->
+    <field name="strongestAllele" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="riskFrequency" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="qualifier" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="orPerCopyUnitDescr" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="pValue" type="float" indexed="true" stored="true" multiValued="true" />
+
+
+    <!-- Main body of document extracted by SolrCell.
+         NOTE: This field is not indexed by default, since it is also copied to "text"
+         using copyField below. This is to save space. Use this field for returning and
+         highlighting document content. Use the "text" field to search the content. -->
    <field name="content" type="text_general" indexed="false" stored="true" multiValued="true"/>
    
 

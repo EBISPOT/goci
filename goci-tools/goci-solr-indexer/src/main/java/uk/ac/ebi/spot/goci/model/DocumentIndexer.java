@@ -18,4 +18,8 @@ public class DocumentIndexer<D> {
     public void index(D document) {
         index.save(document);
     }
+
+    public void index(Iterable<D> documents) {
+        index.save(documents);
+    }
 }

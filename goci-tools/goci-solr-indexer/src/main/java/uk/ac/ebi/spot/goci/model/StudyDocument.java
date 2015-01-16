@@ -16,7 +16,6 @@ public class StudyDocument extends Document<Study> {
     @Field private String title;
     @Field private String author;
     @Field private String publication;
-    @Field private String resourcename;
 
     @Field private String trait;
     @Field("traitUri") private Collection<String> traitUris;
@@ -27,9 +26,7 @@ public class StudyDocument extends Document<Study> {
         this.title = study.getTitle();
         this.author = study.getAuthor();
         this.publication = study.getPublication();
-        this.resourcename = study.getClass().getSimpleName();
-
-        if (study.getDiseaseTrait() != null && study.getDiseaseTrait().getTrait() != null) {
+        if (study.getDiseaseTrait() != null) {
             this.trait = study.getDiseaseTrait().getTrait();
         }
         this.traitUris = new ArrayList<>();
@@ -50,10 +47,6 @@ public class StudyDocument extends Document<Study> {
 
     public String getPublication() {
         return publication;
-    }
-
-    public String getResourcename() {
-        return resourcename;
     }
 
     public String getTrait() {

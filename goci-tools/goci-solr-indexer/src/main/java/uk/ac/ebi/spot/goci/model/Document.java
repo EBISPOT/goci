@@ -17,6 +17,7 @@ import java.lang.reflect.Field;
 @SolrDocument(solrCoreName = "gwas")
 public abstract class Document<O> {
     @Id @org.apache.solr.client.solrj.beans.Field private String id;
+    @org.apache.solr.client.solrj.beans.Field private String resourcename;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -42,10 +43,9 @@ public abstract class Document<O> {
                 }
             }
             // if sb contains text, set it
+            this.resourcename = Introspector.decapitalize(object.getClass().getSimpleName());
             if (sb.length() > 0) {
-                this.id = Introspector.decapitalize(object.getClass().getSimpleName())
-                        .concat(":")
-                        .concat(sb.toString());
+                this.id = resourcename.concat(":").concat(sb.toString());
             }
             else {
                 getLog().warn("Trying to generate a solr document from an object with no @Id field " +
@@ -62,9 +62,14 @@ public abstract class Document<O> {
         return id;
     }
 
+    public String getResourcename() {
+        return resourcename;
+    }
+
     @Override public String toString() {
         return "Document{" +
                 "id='" + id + '\'' +
+                ", resourcename='" + resourcename + '\'' +
                 '}';
     }
 }

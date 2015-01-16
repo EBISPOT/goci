@@ -21,16 +21,11 @@ public class SnpDocument extends Document<SingleNucleotidePolymorphism> {
     @Field("region") private Set<String> regions;
     @Field("gene") private Set<String> genes;
     @Field private String last_modified;
-    @Field private String resourcename;
 
     public SnpDocument(SingleNucleotidePolymorphism snp) {
         super(snp);
-        if (snp.getRsId() != null) {
-            this.rsId = snp.getRsId();
-        }
-        if (snp.getChromosomeName() != null) {
-            this.chromosomeName = snp.getChromosomeName();
-        }
+        this.rsId = snp.getRsId();
+        this.chromosomeName = snp.getChromosomeName();
         if (snp.getChromosomePosition() != null) {
             this.chromosomePosition = Integer.parseInt(snp.getChromosomePosition());
         }
@@ -43,7 +38,6 @@ public class SnpDocument extends Document<SingleNucleotidePolymorphism> {
         if (snp.getLastUpdateDate() != null) {
             this.last_modified = df.format(snp.getLastUpdateDate());
         }
-        this.resourcename = snp.getClass().getSimpleName();
     }
 
     public String getRsId() {
@@ -68,10 +62,6 @@ public class SnpDocument extends Document<SingleNucleotidePolymorphism> {
 
     public String getLast_modified() {
         return last_modified;
-    }
-
-    public String getResourcename() {
-        return resourcename;
     }
 
     @Override

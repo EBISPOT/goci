@@ -6,7 +6,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.ac.ebi.spot.goci.service.GwasSolrIndexer;
 
 import java.util.Arrays;
@@ -36,5 +35,4 @@ public class SolrIndexBuilder {
             System.out.println("Indexing building complete in " + time + " s. - application will now exit");
         };
     }
-
 }

@@ -2,6 +2,9 @@ package uk.ac.ebi.spot.goci.model;
 
 import org.springframework.data.solr.repository.SolrCrudRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Javadocs go here!
  *
@@ -21,5 +24,12 @@ public class ObjectDocumentMapper<O, D> {
         D document = objectConverter.convert(object);
         documentIndexer.index(document);
         return document;
+    }
+
+    public List<D> map(List<O> objects) {
+        List<D> documents = new ArrayList<>();
+        objects.stream().map(objectConverter::convert).forEach(documents::add);
+        documentIndexer.index(documents);
+        return documents;
     }
 }

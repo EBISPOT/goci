@@ -11,13 +11,11 @@ import org.apache.solr.client.solrj.beans.Field;
 public class TraitDocument extends Document<EfoTrait> {
     @Field private String trait;
     @Field private String traitUri;
-    @Field private String resourcename;
 
     public TraitDocument(EfoTrait efoTrait) {
         super(efoTrait);
         this.trait = efoTrait.getTrait();
         this.traitUri = efoTrait.getUri();
-        this.resourcename = efoTrait.getClass().getSimpleName();
     }
 
     public String getTrait() {
@@ -26,9 +24,5 @@ public class TraitDocument extends Document<EfoTrait> {
 
     public String getTraitUri() {
         return traitUri;
-    }
-
-    public String getResourcename() {
-        return resourcename;
     }
 }
