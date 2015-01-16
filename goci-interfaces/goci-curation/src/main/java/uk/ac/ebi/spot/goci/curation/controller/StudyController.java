@@ -216,8 +216,8 @@ public class StudyController {
     /* Exception handling */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(PubmedLookupException.class)
-    @ResponseBody
     public String handlePubmedLookupException(PubmedLookupException pubmedLookupException) {
-        return pubmedLookupException.getMessage();
+      //  return pubmedLookupException.getMessage();
+        return "pubmed_lookup_warning";
     }
 }
