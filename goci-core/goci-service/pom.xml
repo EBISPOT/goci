@@ -23,6 +23,13 @@
             <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-repository</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.2.6</version>
+        </dependency>
+
     </dependencies>
 
 </project>
