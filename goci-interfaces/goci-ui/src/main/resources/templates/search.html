@@ -35,15 +35,18 @@
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div id="navbarCollapse" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav navbar-right">
 
-                <li><a href="home">Home </a></li>
+                <li><a href="home">Home</a></li>
                 <li class="active"><a href="search">Search the catalog <span class="sr-only">(current)</span></a></li>
-                <li><a href="about">About us</a></li>
-                <li><a href="publications">Publications</a></li>
+                <li><a href="about">About</a></li>
                 <li><a href="downloads">Downloads</a></li>
+                <li><a href="ontology">Ontology</a></li>
+                <li><a href="methods">Methods</a></li>
+                <li><a href="faq">FAQ</a></li>
                 <li><a href="http://www.ebi.ac.uk/fgpt/gwas">GWAS Diagram</a></li>
             </ul>
+
 
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
@@ -57,23 +60,25 @@
     </ol>
 
     <div class="row">
-        <div class="col-md-7 col-md-offset-3">
-            <h1>A Catalog of Published Genome-Wide Association Studies</h1>
+        <div class="col-md-6 col-md-offset-3">
+            <h1 class="global_title">GWAS Catalog</h1>
+            <h3 class="global_title">A Catalog of Published Genome-Wide Association Studies</h3>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <div id="imaginary_container">
-                <div class="input-group stylish-input-group">
+
+                <div class="input-group">
                     <input type="text" class="form-control" placeholder="Search the catalog" id="search-box">
-                       <span class="input-group-addon">
-                            <button type="submit" id="search-button" >
-                                <span class="glyphicon glyphicon-search"></span>
-                            </button>
+                         <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit" id="search-button">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
                         </span>
                     </input>
-                </div>
+                </div><!-- /input-group -->
                 <div class="examples">
                     Examples:
                     <a href="">breast cancer</a>,
@@ -86,8 +91,8 @@
 </div>
 
 <!--<div class="results-container">-->
-<div class="container-fluid" id="lower_container" style="display: none">
-    <!--<div class="container-fluid" id="lower_container" style="display: block">-->
+<!--<div class="container-fluid" id="lower_container" style="display: none">-->
+    <div class="container-fluid" id="lower_container" >
 
 
 <div class="row">
@@ -104,10 +109,12 @@
                             <!--add an "active" class annotation to each a tag when it's selected-->
                             <a href="#" class="list-group-item">    <span class="badge">3</span>
                                 Studies</a>
-                            <a href="#" class="list-group-item">    <span class="badge">14</span>
+                            <a href="#" class="list-group-item">    <span class="badge">12</span>
                                 SNPs</a>
+                            <a href="#" class="list-group-item">    <span class="badge">14</span>
+                                Associations</a>
                             <a href="#" class="list-group-item">    <span class="badge">2</span>
-                                Traits</a>
+                                Ontology terms</a>
                             <a href="#" class="list-group-item disabled">    <span class="badge">0</span>
                                 Some other facet with no results</a>
                         </div>
@@ -119,29 +126,66 @@
 
                         <ul class="list-group">
                             <li class="list-group-item">
-                                <b>P-value</b> from <input type="text" size="5" id="pval-min"/> to <input type="text" size="5" id="pval-max"/>
-                                <i>e.g. 5E-8</i>
+                                <div class="filter-element">
+                               <div class="filter-label" ><b>p-value</b></div>
+                                <div class="filter-values">
+                                   <div class="from-element" > from <input type="text" size="5" id="pval-min"/>     </div>
+                                    <div class="to-element" >to <input type="text" size="5" id="pval-max"/>   </div>
+                                </div>
+                                </div>
                             </li>
 
                             <li class="list-group-item">
-                                <b>Odds ratio</b> from <input type="text" size="5" id="or-min"/> to <input type="text" size="5" id="or-max"/>
+                                <div class="filter-element">
+
+                                <div class="filter-label"><b>Odds ratio</b>  </div>
+                                    <div class="filter-values">
+
+                                    <div class="from-element">from <input type="text" size="5" id="or-min"/> </div>
+                                    <div class="to-element">to <input type="text" size="5" id="or-max"/></div> </div>
+                                    </div>
+                            </li>
+
+                            <li class="list-group-item">
+                                <div class="filter-element">
+
+                                <div class="filter-label"><b>beta coefficient</b>                 </div>
+                                    <div class="filter-values">
+
+                                    <div class="from-element">from <input type="text" size="5" id="beta-min"/>   </div>
+                                        <div class="to-element">to <input type="text" size="5" id="beta-max"/>     </div>
+                                        </div>
+                                    </div>
                             </li>
                             <li class="list-group-item">
-                                <b>Date</b> from <input type="text" id="date-min" size="10"/> to <input type="text" id="date-max" size="10"/>
+                                <div class="filter-element">
+
+                                <div class="date-label"><b>Date</b> </div>
+                                    <div class="date-values">
+
+                                    <div class="from-date">from <input type="text" id="date-min" size="10"/>  </div>
+                                        <div class="to-date">to <input type="text" id="date-max" size="10"/>  </div>
+                                        </div>
+                                    </div>
                             </li>
                             <li class="list-group-item">
+                                <div class="filter-element">
 
-                                <b>Disease trait</b>
-                            <div class="btn-group">
+                                    <div class="filter-label"><b>Disease trait</b>      </div>
+                                    <div class="filter-values">
 
-                                    <button type="button" class="btn btn-default">Child of search term</button>
-                                    <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><span class="caret"></span></button>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="#">Diabetes</a></li>
-                                        <li><a href="#">Cancer</a></li>
-                                        <li><a href="#">Lupus</a></li>
-                                        <li><a href="#">Body weight</a></li>
-                                    </ul>
+                                        <div class="btn-group">
+
+                                            <button type="button" class="btn btn-default">Child of search term</button>
+                                            <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><span class="caret"></span></button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">Diabetes</a></li>
+                                                <li><a href="#">Cancer</a></li>
+                                                <li><a href="#">Lupus</a></li>
+                                                <li><a href="#">Body weight</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
                             </li>
                         </ul>
@@ -179,9 +223,9 @@
                     <td th:text="${gs.author} ?: 'null'">Author</td>
                     <td th:text="${gs.publication} ?: 'null'">Publication</td>
                     <td th:text="${gs.title} ?: 'null'">Title</td>
-                    <td th:text="${gs.diseaseTrait.trait} ?: 'null'">Trait</td>
+                    <td th:text="${gs.diseaseTrait != null} ? ${gs.diseaseTrait.trait} : 'null'">Trait</td>
                     <td th:text="${gs.studyDate} ?: 'null'">Date</td>
-                    <td th:text="${gs.pubmedID} ?: 'null'">PubMed ID</td>
+                    <td th:text="${gs.pubmedId} ?: 'null'">PubMed ID</td>
 
 
 

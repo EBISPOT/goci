@@ -1,11 +1,16 @@
 
 $(document).ready(function(){
-    $('#search-button').click(function(){
-        $('#lower_container').show();
-        $('#search-term').text($('#search-box').val());
-    })
+  //  $('#search-button').click(search());
+
+    //$('#search-box').submit(search());
 
 });
+
+function search(){
+    alert("Your term is " + $('#search-box').val());
+    $('#lower_container').show();
+    $('#search-term').text($('#search-box').val());
+}
 
 function toggleSidebar(ts){
    

@@ -12,8 +12,11 @@
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css" th:href="@{css/bootstrap-theme.min.css}"/>
     <link rel="stylesheet" href="/css/bootstrap-table.css" th:href="@{css/bootstrap-table.css}"/>
     <link rel="stylesheet" href="/css/goci-ui.css"/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/goci-ui.js"></script>
+
 
 </head>
 <body>
@@ -32,17 +35,17 @@
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div id="navbarCollapse" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav navbar-right">
 
                 <li><a href="home">Home</a></li>
                 <li><a href="search">Search the catalog</a></li>
-                <li><a href="about">About us</a></li>
-                <li class="active"><a href="publications">Publications<span class="sr-only">(current)</span></a></li>
+                <li><a href="about">About</a></li>
                 <li><a href="downloads">Downloads</a></li>
+                <li class="active"><a href="ontology">Ontology<span class="sr-only">(current)</span></a></li>
+                <li><a href="methods">Methods</a></li>
+                <li><a href="faq">FAQ</a></li>
                 <li><a href="http://www.ebi.ac.uk/fgpt/gwas">GWAS Diagram</a></li>
             </ul>
-
-
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
@@ -51,27 +54,29 @@
 <div class="container-fluid">
     <ol class="breadcrumb">
         <li><a href="home">GWAS</a></li>
-        <li class="active">Publications</li>
+        <li class="active">Ontology</li>
     </ol>
 
     <div class="row">
-        <div class="col-md-7 col-md-offset-3">
-            <h1>A Catalog of Published Genome-Wide Association Studies</h1>
+        <div class="col-md-6 col-md-offset-3">
+            <h1 class="global_title">GWAS Catalog</h1>
+            <h3 class="global_title">A Catalog of Published Genome-Wide Association Studies</h3>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <div id="imaginary_container">
-                <div class="input-group stylish-input-group">
-                    <input type="text" class="form-control" placeholder="Search the catalog">
-                <span class="input-group-addon">
-                    <button type="submit">
-                        <span class="glyphicon glyphicon-search"></span>
-                    </button>
-                </span>
+
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search the catalog" id="search-box">
+                         <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit" id="search-button">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                        </span>
                     </input>
-                </div>
+                </div><!-- /input-group -->
                 <div class="examples">
                     Examples:
                     <a href="">breast cancer</a>,
@@ -87,12 +92,9 @@
     <div class="row">
 
         <div class="col-md-6 col-md-offset-3">
-         <i>   How to cite the NHGRI GWAS Catalog:</i>
-          <p>  Hindorff LA, MacArthur J (European Bioinformatics Institute), Morales J (European Bioinformatics Institute), Junkins HA, Hall PN, Klemm AK, and Manolio TA. A Catalog of Published Genome-Wide Association Studies. Available at: www.genome.gov/gwastudies. Accessed [date of access].
-          </p>
-            <i>How to cite the NHGRI GWAS Catalog paper:</i>
-            <p>Welter D, MacArthur J, Morales J, Burdett T, Hall P, Junkins H, Klemm A, Flicek P, Manolio T, Hindorff L, and Parkinson H. The NHGRI GWAS Catalog, a curated resource of SNP-trait associations. Nucleic Acids Research, 2014, Vol. 42 (Database issue): D1001-D1006.</p>
-        </div>
+            <h3>Ontology</h3>
+            <p>Some blurb about the ontology goes here</p>
+         </div>
     </div>
 </div>
 </body>
