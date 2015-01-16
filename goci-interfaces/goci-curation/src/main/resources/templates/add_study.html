@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>GWAS Curation Demo</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -51,32 +51,50 @@
     </div>
 </nav>
 
-<!--Pubmed import button-->
-<!--<div class="container-fluid">
+
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-12">
-            <form class="form-inline" role="form">
+        <div class="col-md-offset-2 col-md-4">
+            <div class="alert alert-info">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong>Enter pubmed ID to import study details or add details manually</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Pubmed import button-->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <form id="addStudyWithPubmed" class="form-horizontal" role="form" method="post" th:object="${pubmedIdForImport}" th:action="@{/studies/new/import}">
                 <div class="form-group">
-                    <label class="sr-only" for="inputPubmedAdd">Add using Pubmed ID</label>
-                    <input type="text" class="form-control" id="inputPubmedAdd"
-                           placeholder="Add using Pubmed ID"></input>
+                    <label class="control-label col-md-2" for="inputPubmedAdd">Add using Pubmed ID</label>
+
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="inputPubmedAdd"
+                               th:field="*{pubmedId}"  placeholder="Add using Pubmed ID"/>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Add using Pubmed ID</button>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="submit" class="btn btn-primary">Import</button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
-</div>-->
+</div>
 
-<br/>
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-8">
-            <form id="add-study" class="form-horizontal" method="post" th:action="@{/studies/new}"
-                  th:object="${study}" name="addStudyForm">
-
+            <form id="addStudyForm" class="form-horizontal" method="post" th:object="${study}" name="addStudyForm" th:action="@{/studies/new}">
                 <div class="form-group">
-                    <label for="pubmedId" class="control-label col-md-2">Pubmed</label>
+                    <label for="pubmedId" class="control-label col-md-2">Pubmed ID</label>
 
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="pubmedId" placeholder="Pubmed ID"
@@ -124,7 +142,7 @@
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <button type="Save" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </div>
             </form>

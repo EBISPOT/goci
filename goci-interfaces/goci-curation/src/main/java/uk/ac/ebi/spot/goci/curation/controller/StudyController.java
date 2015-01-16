@@ -1,20 +1,16 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import uk.ac.ebi.spot.goci.curation.service.PubmedIdForImport;
 import uk.ac.ebi.spot.goci.model.*;
-import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
-import uk.ac.ebi.spot.goci.repository.CuratorRepository;
-import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
-import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
-import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
-import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.repository.*;
+import uk.ac.ebi.spot.goci.service.PropertyFilePubMedDispatcherService;
+import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
 import java.util.List;
 
@@ -37,18 +33,21 @@ public class StudyController {
     private EfoTraitRepository efoTraitRepository;
     private CuratorRepository curatorRepository;
     private CurationStatusRepository curationStatusRepository;
+    private PropertyFilePubMedDispatcherService propertyFilePubMedDispatcherService;
 
     @Autowired
-    public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository) {
+    public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, PropertyFilePubMedDispatcherService propertyFilePubMedDispatcherService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
         this.efoTraitRepository = efoTraitRepository;
         this.curatorRepository = curatorRepository;
         this.curationStatusRepository = curationStatusRepository;
+        this.propertyFilePubMedDispatcherService = propertyFilePubMedDispatcherService;
     }
 
-   /* All studies */
+
+    /* All studies */
 
     // Return all studies
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE)
@@ -65,8 +64,28 @@ public class StudyController {
     @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String newStudyForm(Model model) {
         model.addAttribute("study", new Study());
+
+        // Return an empty String object so we can use this to store user entered pubmed id in future import
+        model.addAttribute("pubmedIdForImport", new PubmedIdForImport());
         return "add_study";
     }
+
+
+    // Save study found by Pubmed Id
+    // @ModelAttribute is a reference to the object holding the data entered in the form
+    @RequestMapping(value = "/new/import", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String importStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport) {
+
+        // Tidy our string
+        String pubmedId = pubmedIdForImport.getPubmedId().trim();
+
+        // Pass to importer
+        Study importedStudy = propertyFilePubMedDispatcherService.dispatchSummaryQuery(pubmedId);
+        studyRepository.save(importedStudy);
+
+        return "redirect:/studies/" + importedStudy.getId();
+    }
+
 
     // Save newly added study details
     // @ModelAttribute is a reference to the object holding the data entered in the form
@@ -125,8 +144,6 @@ public class StudyController {
         //studyRepository.delete(studyToDelete);
         return "redirect:/studies/";
     }
-
-
 
     /* Study housekeeping/curator information */
 
@@ -194,5 +211,13 @@ public class StudyController {
     @ModelAttribute("curationstatuses")
     public List<CurationStatus> populateCurationStatuses(Model model) {
         return curationStatusRepository.findAll();
+    }
+
+    /* Exception handling */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(PubmedLookupException.class)
+    @ResponseBody
+    public String handlePubmedLookupException(PubmedLookupException pubmedLookupException) {
+        return pubmedLookupException.getMessage();
     }
 }
