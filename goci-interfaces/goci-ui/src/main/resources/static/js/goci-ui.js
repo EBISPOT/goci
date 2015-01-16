@@ -1,15 +1,38 @@
 
-$(document).ready(function(){
-  //  $('#search-button').click(search());
+//function init() {
 
-    //$('#search-box').submit(search());
+    $(document).ready(function () {
 
-});
+         ////if(window.location == )
+         // alert(window.location.pathname);
 
-function search(){
-    alert("Your term is " + $('#search-box').val());
-    $('#lower_container').show();
-    $('#search-term').text($('#search-box').val());
+        $('#search-box').change(function(){
+            doSearch()
+        });
+
+          $('#search-button').click(function(){
+                  doSearch()
+
+          });
+    });
+
+//};
+
+function doSearch(){
+
+    if(window.location.pathname != "/search"){
+        window.location.replace("/search");
+        $('#lower_container').show();
+        $('#search-term').text($('#search-box').val());
+
+    }
+    else {
+        //alert("Your term is " + $('#search-box').val());
+        $('#lower_container').show();
+        $('#search-term').text($('#search-box').val());
+
+    }
+//trigger the actual search of the solar index here
 }
 
 function toggleSidebar(ts){
@@ -33,14 +56,3 @@ function toggleSidebar(ts){
         }
 } ;
 
-
-//$(document).ready(function(){
-//    $('#search-button').click(function(){
-//        alert($('#search-box').val());
-//    })
-//
-//    //
-//    //$('#lower_container').show();
-//    $('#search-term').text($('#search-box').val())
-//
-//});
