@@ -53,9 +53,10 @@
 
             <div class="alert alert-danger col-md-6">
                 <a href="#" class="close" data-dismiss="alert">&times;</a>
-                <strong>Warning!</strong> Are you sure you want to delete the following disease/trait?
-                <!--Return to study page-->
-                <a th:href="@{/diseasetraits}" class="btn btn-default">Cancel</a>
+                <strong>Warning!</strong> Are you sure you want to delete the following disease/trait? If not,
+                <!--Return to disease traits page-->
+                <a th:href="@{/diseasetraits}" class="alert-link">Cancel</a>
+
             </div>
 
             <div class="form-group">
