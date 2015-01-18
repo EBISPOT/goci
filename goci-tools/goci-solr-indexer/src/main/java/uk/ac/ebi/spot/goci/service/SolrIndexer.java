@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
  * @date 16/01/15
  */
 @Service
-public class GwasSolrIndexer {
+public class SolrIndexer {
     @Autowired StudyService studyService;
     @Autowired SingleNucleotidePolymorphismService snpService;
     @Autowired EfoTraitRepository efoTraitRepository;
@@ -107,10 +107,11 @@ public class GwasSolrIndexer {
         Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "studyDate"));
         Pageable pager = new PageRequest(1, pageSize, sort);
         Page<Study> studyPage = studyService.deepFindAll(pager);
+        studyMapper.map(studyPage.getContent());
         while (studyPage.hasNext()) {
-            studyMapper.map(studyPage.getContent());
             pager = pager.next();
             studyPage = studyService.deepFindAll(pager);
+            studyMapper.map(studyPage.getContent());
             if (sysOutLogging) {
                 System.out.print(".");
             }
@@ -124,10 +125,11 @@ public class GwasSolrIndexer {
         Sort sort = new Sort(new Sort.Order("rsId"));
         Pageable pager = new PageRequest(1, pageSize, sort);
         Page<SingleNucleotidePolymorphism> snpPage = snpService.deepFindAll(pager);
+        snpMapper.map(snpPage.getContent());
         while (snpPage.hasNext()) {
-            snpMapper.map(snpPage.getContent());
             pager = pager.next();
             snpPage = snpService.deepFindAll(pager);
+            snpMapper.map(snpPage.getContent());
             if (sysOutLogging) {
                 System.out.print(".");
             }
@@ -141,10 +143,11 @@ public class GwasSolrIndexer {
         Sort sort = new Sort(new Sort.Order("trait"));
         Pageable pager = new PageRequest(1, pageSize, sort);
         Page<EfoTrait> efoTraitPage = efoTraitRepository.findAll(pager);
+        traitMapper.map(efoTraitPage.getContent());
         while (efoTraitPage.hasNext()) {
-            traitMapper.map(efoTraitPage.getContent());
             pager = pager.next();
             efoTraitPage = efoTraitRepository.findAll(pager);
+            traitMapper.map(efoTraitPage.getContent());
             if (sysOutLogging) {
                 System.out.print(".");
             }
@@ -158,10 +161,11 @@ public class GwasSolrIndexer {
         Sort sort = new Sort(new Sort.Order("id"));
         Pageable pager = new PageRequest(1, pageSize, sort);
         Page<Association> associationPage = associationService.deepFindAll(pager);
+        associationMapper.map(associationPage.getContent());
         while (associationPage.hasNext()) {
-            associationMapper.map(associationPage.getContent());
             pager = pager.next();
             associationPage = associationService.deepFindAll(pager);
+            associationMapper.map(associationPage.getContent());
             if (sysOutLogging) {
                 System.out.print(".");
             }

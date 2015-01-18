@@ -6,17 +6,17 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import uk.ac.ebi.spot.goci.service.GwasSolrIndexer;
+import uk.ac.ebi.spot.goci.service.SolrIndexer;
 
 import java.util.Arrays;
 
 @SpringBootApplication
-public class SolrIndexBuilder {
-    @Autowired GwasSolrIndexer gwasSolrIndexer;
+public class SolrIndexerApplication {
+    @Autowired SolrIndexer solrIndexer;
 
     public static void main(String[] args) {
         System.out.println("Starting Solr indexing application...");
-        ApplicationContext ctx = SpringApplication.run(SolrIndexBuilder.class, args);
+        ApplicationContext ctx = SpringApplication.run(SolrIndexerApplication.class, args);
         System.out.println("Application executed successfully!");
         SpringApplication.exit(ctx);
     }
@@ -25,9 +25,9 @@ public class SolrIndexBuilder {
         return strings -> {
             long start_time = System.currentTimeMillis();
             System.out.println("Building indexes with supplied params: " + Arrays.toString(strings));
-            gwasSolrIndexer.enableSysOutLogging();
+            solrIndexer.enableSysOutLogging();
             System.out.print("Converting all GWAS database objects...");
-            int docCount = gwasSolrIndexer.fetchAndIndex();
+            int docCount = solrIndexer.fetchAndIndex();
             System.out.println("done!\n");
             long end_time = System.currentTimeMillis();
             String time = String.format("%.1f", ((double) (end_time - start_time)) / 1000);
