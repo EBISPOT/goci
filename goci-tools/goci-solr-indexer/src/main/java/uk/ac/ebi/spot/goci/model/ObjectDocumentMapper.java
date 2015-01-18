@@ -28,7 +28,7 @@ public class ObjectDocumentMapper<O, D> {
 
     public List<D> map(List<O> objects) {
         List<D> documents = new ArrayList<>();
-        objects.stream().map(objectConverter::convert).forEach(documents::add);
+        objects.stream().map(objectConverter::convert).filter(doc -> doc != null).forEach(documents::add);
         documentIndexer.index(documents);
         return documents;
     }
