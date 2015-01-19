@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
 import uk.ac.ebi.spot.goci.curation.service.PubmedIdForImport;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
@@ -75,10 +76,17 @@ public class StudyController {
     // Save study found by Pubmed Id
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/new/import", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String importStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport) {
+    public String importStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport) throws PubmedImportException {
 
         // Remove whitespace
         String pubmedId = pubmedIdForImport.getPubmedId().trim();
+
+        Study existingStudy = studyRepository.findByPubmedId(pubmedId);
+
+        // There is an existing study with the same pubmed id
+        if (existingStudy != null) {
+            throw new PubmedImportException();
+        }
 
         // Pass to importer
         Study importedStudy = propertyFilePubMedLookupService.dispatchSummaryQuery(pubmedId);
@@ -140,7 +148,6 @@ public class StudyController {
 
         // What do we need to delete ?
 
-
         //studyRepository.delete(studyToDelete);
         return "redirect:/studies/";
     }
@@ -186,8 +193,7 @@ public class StudyController {
 
     /* Model Attributes :
     *  Used for dropdowns in HTML forms
-    *
-    * */
+    */
 
     // Disease Traits
     @ModelAttribute("diseaseTraits")
@@ -214,10 +220,16 @@ public class StudyController {
     }
 
     /* Exception handling */
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(PubmedLookupException.class)
     public String handlePubmedLookupException(PubmedLookupException pubmedLookupException) {
         //  return pubmedLookupException.getMessage();
         return "pubmed_lookup_warning";
+    }
+
+    @ExceptionHandler({PubmedImportException.class})
+    public String handlePubmedImportException(PubmedImportException pubmedImportException) {
+        return "pubmed_import_warning";
     }
 }
