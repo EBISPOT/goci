@@ -2,7 +2,9 @@ package uk.ac.ebi.spot.goci.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.solr.repository.SolrCrudRepository;
+import uk.ac.ebi.spot.goci.model.Document;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,9 +16,11 @@ import java.util.List;
  * @author Tony Burdett
  * @date 14/01/15
  */
-public class ObjectDocumentMapper<O, D> {
-    private ObjectConverter<O, D> objectConverter;
-    private DocumentIndexer<D> documentIndexer;
+public abstract class ObjectDocumentMapper<O, D extends Document<O>> {
+    @Autowired ObjectConverter objectConverter;
+
+    private Class<D> documentType;
+    private SolrCrudRepository<D, String> index;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -25,21 +29,24 @@ public class ObjectDocumentMapper<O, D> {
     }
 
     public ObjectDocumentMapper(Class<D> documentType, SolrCrudRepository<D, String> index) {
-        this.objectConverter = new ObjectConverter<>(documentType);
-        this.documentIndexer = new DocumentIndexer<>(index);
+        this.documentType = documentType;
+        this.index = index;
     }
 
     public D map(O object) {
-        D document = objectConverter.convert(object);
-        documentIndexer.index(document);
+        D document = objectConverter.convert(object, documentType);
+        index.save(document);
         return document;
     }
 
     public List<D> map(List<O> objects) {
         if (objects.size() > 0) {
             List<D> documents = new ArrayList<>();
-            objects.stream().map(objectConverter::convert).filter(doc -> doc != null).forEach(documents::add);
-            documentIndexer.index(documents);
+            objects.stream()
+                    .map(object -> objectConverter.convert(object, documentType))
+                    .filter(doc -> doc != null)
+                    .forEach(documents::add);
+            index.save(documents);
             return documents;
         }
         else {

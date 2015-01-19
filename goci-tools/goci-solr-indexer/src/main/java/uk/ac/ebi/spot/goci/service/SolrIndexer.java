@@ -14,13 +14,9 @@ import uk.ac.ebi.spot.goci.index.SnpIndex;
 import uk.ac.ebi.spot.goci.index.StudyIndex;
 import uk.ac.ebi.spot.goci.index.TraitIndex;
 import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.AssociationDocument;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
-import uk.ac.ebi.spot.goci.model.SnpDocument;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.model.StudyDocument;
-import uk.ac.ebi.spot.goci.model.TraitDocument;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 
 import java.util.concurrent.ExecutionException;
@@ -46,6 +42,11 @@ public class SolrIndexer {
     @Autowired StudyIndex studyIndex;
     @Autowired TraitIndex traitIndex;
     @Autowired AssociationIndex associationIndex;
+
+    @Autowired StudyMapper studyMapper;
+    @Autowired SingleNucleotidePolymorphismMapper snpMapper;
+    @Autowired TraitMapper traitMapper;
+    @Autowired AssociationMapper associationMapper;
 
     private int pageSize = 1000;
     private boolean sysOutLogging = false;
@@ -102,8 +103,6 @@ public class SolrIndexer {
     }
 
     Integer mapStudies() {
-        ObjectDocumentMapper<Study, StudyDocument> studyMapper =
-                new ObjectDocumentMapper<>(StudyDocument.class, studyIndex);
         Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "studyDate"));
         Pageable pager = new PageRequest(0, pageSize, sort);
         Page<Study> studyPage = studyService.deepFindAll(pager);
@@ -120,8 +119,6 @@ public class SolrIndexer {
     }
 
     Integer mapSnps() {
-        ObjectDocumentMapper<SingleNucleotidePolymorphism, SnpDocument> snpMapper =
-                new ObjectDocumentMapper<>(SnpDocument.class, snpIndex);
         Sort sort = new Sort(new Sort.Order("rsId"));
         Pageable pager = new PageRequest(0, pageSize, sort);
         Page<SingleNucleotidePolymorphism> snpPage = snpService.deepFindAll(pager);
@@ -138,8 +135,6 @@ public class SolrIndexer {
     }
 
     Integer mapTraits() {
-        ObjectDocumentMapper<EfoTrait, TraitDocument> traitMapper =
-                new ObjectDocumentMapper<>(TraitDocument.class, traitIndex);
         Sort sort = new Sort(new Sort.Order("trait"));
         Pageable pager = new PageRequest(0, pageSize, sort);
         Page<EfoTrait> efoTraitPage = efoTraitRepository.findAll(pager);
@@ -156,8 +151,6 @@ public class SolrIndexer {
     }
 
     Integer mapAssociations() {
-        ObjectDocumentMapper<Association, AssociationDocument> associationMapper =
-                new ObjectDocumentMapper<>(AssociationDocument.class, associationIndex);
         Sort sort = new Sort(new Sort.Order("id"));
         Pageable pager = new PageRequest(0, pageSize, sort);
         Page<Association> associationPage = associationService.deepFindAll(pager);
