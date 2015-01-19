@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.exception.SolrIndexingException;
 import uk.ac.ebi.spot.goci.index.AssociationIndex;
 import uk.ac.ebi.spot.goci.index.SnpIndex;
 import uk.ac.ebi.spot.goci.index.StudyIndex;
