@@ -10,30 +10,12 @@
     <packaging>pom</packaging>
     <name>GOCI (root)</name>
 
-    <profiles>
-        <profile>
-            <id>default</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-
-            <modules>
-                <module>goci-core</module>
-                <module>goci-interfaces</module>
-                <module>goci-tools</module>
-            </modules>
-        </profile>
-
-        <profile>
-            <id>pomtree</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-
-            <modules>
-                <module>goci-pom-tree</module>
-            </modules>
-        </profile>
-    </profiles>
+    <modules>
+        <module>goci-dependencies</module>
+        <module>goci-parent</module>
+        <module>goci-core</module>
+        <module>goci-interfaces</module>
+        <module>goci-tools</module>
+    </modules>
 
 </project>
