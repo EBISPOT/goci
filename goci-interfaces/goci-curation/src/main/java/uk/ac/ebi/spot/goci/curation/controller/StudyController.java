@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import uk.ac.ebi.spot.goci.curation.service.PubmedIdForImport;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
-import uk.ac.ebi.spot.goci.service.PropertyFilePubMedDispatcherService;
+import uk.ac.ebi.spot.goci.service.PropertyFilePubMedLookupService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
 import java.util.List;
@@ -18,8 +18,8 @@ import java.util.List;
  * Created by emma on 20/11/14.
  *
  * @author emma
- *         Study Controllers interpret user input and transform it into a study
- *         model that is represented to the user by the associated HTML page
+ *         Study Controller interprets user input and transform it into a study
+ *         model that is represented to the user by the associated HTML page.
  */
 
 @Controller
@@ -33,19 +33,20 @@ public class StudyController {
     private EfoTraitRepository efoTraitRepository;
     private CuratorRepository curatorRepository;
     private CurationStatusRepository curationStatusRepository;
-    private PropertyFilePubMedDispatcherService propertyFilePubMedDispatcherService;
+
+    // Pubmed ID lookup service
+    private PropertyFilePubMedLookupService propertyFilePubMedLookupService;
 
     @Autowired
-    public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, PropertyFilePubMedDispatcherService propertyFilePubMedDispatcherService) {
+    public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, PropertyFilePubMedLookupService propertyFilePubMedLookupService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
         this.efoTraitRepository = efoTraitRepository;
         this.curatorRepository = curatorRepository;
         this.curationStatusRepository = curationStatusRepository;
-        this.propertyFilePubMedDispatcherService = propertyFilePubMedDispatcherService;
+        this.propertyFilePubMedLookupService = propertyFilePubMedLookupService;
     }
-
 
     /* All studies */
 
@@ -65,7 +66,7 @@ public class StudyController {
     public String newStudyForm(Model model) {
         model.addAttribute("study", new Study());
 
-        // Return an empty String object so we can use this to store user entered pubmed id in future import
+        // Return an empty pubmedIdForImport object to store user entered pubmed id
         model.addAttribute("pubmedIdForImport", new PubmedIdForImport());
         return "add_study";
     }
@@ -76,13 +77,12 @@ public class StudyController {
     @RequestMapping(value = "/new/import", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String importStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport) {
 
-        // Tidy our string
+        // Remove whitespace
         String pubmedId = pubmedIdForImport.getPubmedId().trim();
 
         // Pass to importer
-        Study importedStudy = propertyFilePubMedDispatcherService.dispatchSummaryQuery(pubmedId);
+        Study importedStudy = propertyFilePubMedLookupService.dispatchSummaryQuery(pubmedId);
         studyRepository.save(importedStudy);
-
         return "redirect:/studies/" + importedStudy.getId();
     }
 
@@ -217,7 +217,7 @@ public class StudyController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(PubmedLookupException.class)
     public String handlePubmedLookupException(PubmedLookupException pubmedLookupException) {
-      //  return pubmedLookupException.getMessage();
+        //  return pubmedLookupException.getMessage();
         return "pubmed_lookup_warning";
     }
 }

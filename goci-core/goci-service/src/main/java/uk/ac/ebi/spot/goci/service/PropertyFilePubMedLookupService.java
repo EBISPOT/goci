@@ -34,17 +34,17 @@ import java.util.Properties;
 
 
 /**
- * A GociPubMedDispatcher service that loads PubMed query strings from a properties file, application.properties.  Upon
- * construction, this dispatcher is ready to dispatch requests manually, but will only do so periodically once the
- * startDispatcher() method is called.  The startDispatcher() method does a limited amount of initialisation, only
- * ensuring that queries are dispatched regularly.  If you are using this service to dispatch queries manually, you do
- * not need to call startDispatcher().
+ * A GociPubMedDispatcher service that loads PubMed query strings from a properties file, application.properties. Upon
+ * construction, this dispatcher is ready to dispatch requests manually,
  *
  * @author Tony Burdett
  *         Date 26/10/11
+ *         <p>
+ *         Adapted by Emma (2015-01-16) based on code written by Tony.
  */
+
 @Service
-public class PropertyFilePubMedDispatcherService implements GwasPubMedDispatcherService {
+public class PropertyFilePubMedLookupService implements GwasPubMedLookupService {
     public static final int PUBMED_MAXRECORDS = 1000;
 
     private HttpContext httpContext;
@@ -54,10 +54,7 @@ public class PropertyFilePubMedDispatcherService implements GwasPubMedDispatcher
     // xml version is very important here , it must be "&version=2.0"
     private String xmlVersion;
 
-
-    private Logger log = LoggerFactory.getLogger(getClass());
-
-    public PropertyFilePubMedDispatcherService() {
+    public PropertyFilePubMedLookupService() {
         this.httpContext = new BasicHttpContext();
         this.httpContext.setAttribute(ClientContext.COOKIE_STORE, new BasicCookieStore());
         this.httpClient = new DefaultHttpClient();
@@ -101,7 +98,7 @@ public class PropertyFilePubMedDispatcherService implements GwasPubMedDispatcher
                 String publication = "";
 
 
-                // get the ID element (should only be one, take first regardless)
+                // Get the ID element (should only be one, take first regardless)
                 Element study = (Element) docSumNode;
 
                 pmid = study.getAttribute("uid");
@@ -159,6 +156,7 @@ public class PropertyFilePubMedDispatcherService implements GwasPubMedDispatcher
 
     }
 
+    // Uses Entrez Programming Utilities (E-utilities) service to query Pubmed with supplied id
     private Document doPubmedQuery(URI queryUri) throws IOException {
         HttpGet httpGet = new HttpGet(queryUri);
         HttpResponse response = httpClient.execute(httpGet, httpContext);
