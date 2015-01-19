@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import uk.ac.ebi.spot.goci.curation.service.CountryOfOrigin;
+import uk.ac.ebi.spot.goci.curation.service.CountryOfRecruitment;
 import uk.ac.ebi.spot.goci.model.Country;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -16,6 +18,7 @@ import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -94,13 +97,67 @@ public class EthnicityController {
     public String viewSampleDescription(Model model, @PathVariable Long ethnicityId) {
         Ethnicity ethnicityToView = ethnicityRepository.findOne(ethnicityId);
         model.addAttribute("ethnicity", ethnicityToView);
+
+    /*  Country of origin and country of recruitment are stored as a string in database
+        In order to work with these in view we need to wrap them in an object
+        that returns the values to the view as an array */
+
+        // Country of origin
+        String ethnicityCountryOfOrigin = ethnicityToView.getCountryOfOrigin();
+        CountryOfOrigin countryOfOrigin = new CountryOfOrigin();
+
+        if (ethnicityCountryOfOrigin != null) {
+            // multiple values separated by comma
+            if (ethnicityCountryOfOrigin.contains(",")) {
+                String[] countries = ethnicityCountryOfOrigin.split(",");
+                countryOfOrigin.setCountryValues(countries);
+            }
+            // single value
+            else {
+                String[] countries = new String[1];
+                countries[0] = ethnicityCountryOfOrigin;
+                countryOfOrigin.setCountryValues(countries);
+            }
+        }
+
+        model.addAttribute("countryOfOrigin", countryOfOrigin);
+
+        //Country of recruitment
+        String ethnicityCountryOfRecruitment = ethnicityToView.getCountryOfRecruitment();
+        CountryOfRecruitment countryOfRecruitment = new CountryOfRecruitment();
+
+        if (ethnicityCountryOfRecruitment != null) {
+            // multiple values separated by comma
+            if (ethnicityCountryOfRecruitment.contains(",")) {
+                String[] countries = ethnicityCountryOfRecruitment.split(",");
+                countryOfRecruitment.setCountryValues(countries);
+            }
+            // single value
+            else {
+                String[] countries = new String[1];
+                countries[0] = ethnicityCountryOfRecruitment;
+                countryOfRecruitment.setCountryValues(countries);
+            }
+        }
+
+        model.addAttribute("countryOfRecruitment", countryOfRecruitment);
         return "edit_sample_description";
     }
 
     // Edit existing ethnicity/sample information
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/sampledescriptions/{ethnicityId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateSampleDescription(@ModelAttribute Ethnicity ethnicity) {
+    public String updateSampleDescription(@ModelAttribute Ethnicity ethnicity, @ModelAttribute CountryOfOrigin countryOfOrigin, @ModelAttribute CountryOfRecruitment countryOfRecruitment) {
+
+        // Set country of origin based on values returned
+        List<String> listOfOriginCountries = Arrays.asList(countryOfOrigin.getCountryValues());
+        String countryOfOriginJoined = String.join(",", listOfOriginCountries);
+        ethnicity.setCountryOfOrigin(countryOfOriginJoined);
+
+        // Set country of recruitment based on values returned
+        List<String> listOfRecruitmentCountries = Arrays.asList(countryOfRecruitment.getCountryValues());
+        String countryOfRecruitmentJoined = String.join(",", listOfRecruitmentCountries);
+        ethnicity.setCountryOfRecruitment(countryOfRecruitmentJoined);
 
         // Saves the new information returned from form
         Ethnicity updatedEthnicity = ethnicityRepository.save(ethnicity);
@@ -129,7 +186,6 @@ public class EthnicityController {
         List<String> types = new ArrayList<>();
         types.add("European");
         types.add("Sub-Saharan African");
-        types.add("African unspecified");
         types.add("African unspecified");
         types.add("South Asian");
         types.add("South East Asian");

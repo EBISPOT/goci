@@ -62,20 +62,18 @@
 </nav>
 
 
-
 <div class="container">
     <div class="row">
         <div class="col-md-10">
             <div id="editEthnicityForm">
-                <form class="form-horizontal" method="post" th:object="${ethnicity}"
-                      name="editEthnicityForm">
+                <form class="form-horizontal" method="post" name="editEthnicityForm">
 
                     <!--Hidden fields-->
                     <div class="form-group">
                         <label for="id" class="control-label col-md-2"></label>
 
                         <div class="col-md-10">
-                            <input type="hidden" th:field="*{id}" class="form-control" id="id"/>
+                            <input type="hidden" th:field="${ethnicity.id}" class="form-control" id="id"/>
                         </div>
                     </div>
 
@@ -83,7 +81,7 @@
                         <label for="studyId" class="control-label col-md-2"></label>
 
                         <div class="col-md-10">
-                            <input type="hidden" th:field="*{study.id}" class="form-control" id="studyID"/>
+                            <input type="hidden" th:field="${ethnicity.study.id}" class="form-control" id="studyID"/>
                         </div>
                     </div>
 
@@ -92,7 +90,7 @@
                     <div class="form-group">
                         <label for="type" class="control-label col-md-2">Type</label>
 
-                        <select th:field="*{type}" id="type">
+                        <select th:field="${ethnicity.type}" id="type">
                             <option th:each="ethnicityType : ${ethnicityTypes}"
                                     th:value="${ethnicityType}"
                                     th:text="${ethnicityType}"></option>
@@ -102,7 +100,7 @@
 
                     <div class="form-group">
                         <label for="numberOfIndividuals" class="control-label col-md-2">Number of Individuals:</label>
-                        <input id="numberOfIndividuals" type="text" th:field="*{numberOfIndividuals}"/>
+                        <input id="numberOfIndividuals" type="text" th:field="${ethnicity.numberOfIndividuals}"/>
                     </div>
 
 
@@ -112,7 +110,8 @@
 
                         <div class="col-md-10">
                             <select name="ethnicGroup" class="form-control select2-select"
-                                    multiple="multiple" data-placeholder="Choose ethnic group" th:field="*{ethnicGroup}"
+                                    multiple="multiple" data-placeholder="Choose ethnic group"
+                                    th:field="${ethnicity.ethnicGroup}"
                                     id="ethnicGroup">
                                 <option th:each="ethnicGroup : ${ethnicGroups}"
                                         th:value="${ethnicGroup}"
@@ -127,7 +126,8 @@
 
                         <div class="col-md-10">
                             <select name="countryOfOrigin" class="form-control select2-select"
-                                    multiple="multiple"  th:field="*{countryOfOrigin}"  id="countryOfOrigin">
+                                    multiple="multiple" th:field="${countryOfOrigin.countryValues}"
+                                    id="countryOfOrigin">
                                 <option th:each="country : ${countries}"
                                         th:value="${country.name}"
                                         th:text="${country.name}"></option>
@@ -141,7 +141,7 @@
                         <div class="col-md-10">
                             <select name="countryOfRecruitment" class="form-control select2-select"
                                     multiple="multiple"
-                                    th:field="*{countryOfRecruitment}"
+                                    th:field="${countryOfRecruitment.countryValues}"
                                     id="countryOfRecruitment">
                                 <option th:each="country : ${countries}"
                                         th:value="${country.name}"
@@ -151,22 +151,21 @@
                     </div>
 
 
-
                     <div class="form-group">
                         <label for="description" class="control-label col-md-2">Additional Description:</label>
-                        <textarea id="description" type="text" th:field="*{description}"/>
+                        <textarea id="description" type="text" th:field="${ethnicity.description}"/>
                     </div>
 
                     <div class="form-group">
                         <label for="notes" class="control-label col-md-2">Notes</label>
-                        <textarea id="notes" type="text" th:field="*{notes}"/>
+                        <textarea id="notes" type="text" th:field="${ethnicity.notes}"/>
                     </div>
 
                     <div class="form-group">
                         <label for="sampleSizesMatch" class="control-label col-md-2">Sample Sizes Match in Catalog at
                             Study Level?</label>
 
-                        <select th:field="*{sampleSizesMatch}" id="sampleSizesMatch">
+                        <select th:field="${ethnicity.sampleSizesMatch}" id="sampleSizesMatch">
                             <option th:each="match : ${sampleSizesMatchOptions}"
                                     th:value="${match}"
                                     th:text="${match}"></option>
@@ -191,6 +190,8 @@
     $(function () {
         // turn the element to select2 select style
         $('#ethnicGroup').select2();
+
+
     });
 </script>
 
@@ -198,6 +199,7 @@
     $(function () {
         // turn the element to select2 select style
         $('#countryOfOrigin').select2();
+
     });
 </script>
 
@@ -205,6 +207,7 @@
     $(function () {
         // turn the element to select2 select style
         $('#countryOfRecruitment').select2();
+
     });
 </script>
 
