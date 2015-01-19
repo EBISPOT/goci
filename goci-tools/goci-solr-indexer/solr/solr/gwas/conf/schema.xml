@@ -172,11 +172,26 @@
     <!-- diseasetrait -->
     <field name="trait" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="traitUri" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="shortForm" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="label" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="synonym" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="parent" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="child" type="text_general" indexed="true" stored="true" multiValued="true" />
+
+    <!--
+    @Field private String shortForm;
+    @Field("label") private Set<String> labels;
+    @Field("synonym") private Set<String> synonyms;
+    @Field("description") private Set<String> description;
+
+    @Field("parent") private Set<String> superclassLabels;
+    @Field("child") private Set<String> subclassLabels;
+
+    @Field("*_rel") private Map<String, Set<String>> relations = new HashMap<>();
+
+    -->
 
     <!-- association -->
-    <!--
-    @Field private float pValue;
-    -->
     <field name="strongestAllele" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="riskFrequency" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="qualifier" type="text_general" indexed="true" stored="true" multiValued="true" />

@@ -17,8 +17,8 @@ public class TraitDocument extends Document<EfoTrait> {
     @Field private String traitUri;
 
     @Field private String shortForm;
-    @Field("label") private Set<String> label;
-    @Field("synonym") private Set<String> synonym;
+    @Field("label") private Set<String> labels;
+    @Field("synonym") private Set<String> synonyms;
     @Field("description") private Set<String> description;
 
     @Field("parent") private Set<String> superclassLabels;
@@ -48,20 +48,20 @@ public class TraitDocument extends Document<EfoTrait> {
         this.shortForm = shortForm;
     }
 
-    public Set<String> getLabel() {
-        return label;
+    public Set<String> getLabels() {
+        return labels;
     }
 
-    public void setLabel(Set<String> label) {
-        this.label = label;
+    public void setLabels(Set<String> labels) {
+        this.labels = labels;
     }
 
-    public Set<String> getSynonym() {
-        return synonym;
+    public Set<String> getSynonyms() {
+        return synonyms;
     }
 
-    public void setSynonym(Set<String> synonym) {
-        this.synonym = synonym;
+    public void setSynonyms(Set<String> synonyms) {
+        this.synonyms = synonyms;
     }
 
     public Set<String> getDescription() {

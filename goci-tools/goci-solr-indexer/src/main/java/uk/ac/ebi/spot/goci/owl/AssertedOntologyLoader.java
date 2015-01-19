@@ -16,8 +16,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.semanticweb.owlapi.search.Searcher.annotations;
-
 /**
  * Loads an ontology using the OWLAPI, and considers only axioms that are asserted in the loaded ontology when
  * generating class labels and types
@@ -46,8 +44,7 @@ public class AssertedOntologyLoader extends AbstractOntologyLoader {
             Iterator<OWLClass> allClassesIt = allClasses.iterator();
             while (allClassesIt.hasNext()) {
                 OWLClass owlClass = allClassesIt.next();
-                Collection<OWLAnnotation> annotations =
-                        annotations(ontology.getAnnotationAssertionAxioms(owlClass.getIRI()), excludeAnnotation);
+                Collection<OWLAnnotation> annotations = owlClass.getAnnotations(ontology, excludeAnnotation);
                 if (!annotations.isEmpty()) {
                     allClassesIt.remove();
                 }

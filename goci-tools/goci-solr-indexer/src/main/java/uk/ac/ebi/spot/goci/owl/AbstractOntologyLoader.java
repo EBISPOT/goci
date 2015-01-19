@@ -11,7 +11,9 @@ import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
 import org.semanticweb.owlapi.util.SimpleIRIMapper;
+import org.slf4j.Logger;
 import org.springframework.core.io.Resource;
 import uk.ac.ebi.spot.goci.Initializable;
 
@@ -21,8 +23,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import static org.semanticweb.owlapi.search.Searcher.annotations;
 
 /**
  * An abstract implementation of an ontology loader.  Implementations should extend this class with the {@link
@@ -306,8 +306,7 @@ public abstract class AbstractOntologyLoader extends Initializable implements On
                                                            OWLClass ontologyClass,
                                                            OWLAnnotationProperty annotationProperty) {
         Set<String> vals = new HashSet<>();
-        Collection<OWLAnnotation> annotations =
-                annotations(ontology.getAnnotationAssertionAxioms(ontologyClass.getIRI()), annotationProperty);
+        Collection<OWLAnnotation> annotations = ontologyClass.getAnnotations(ontology, annotationProperty);
         annotations
                 .stream()
                 .filter(annotation -> annotation.getValue() instanceof OWLLiteral)
@@ -350,13 +349,12 @@ public abstract class AbstractOntologyLoader extends Initializable implements On
         try {
             getLog().debug("Loading ontology...");
             OWLOntology ontology = getManager().loadOntology(IRI.create(getOntologyURI()));
-            Optional<IRI> ontologyIRIOpt = ontology.getOntologyID().getOntologyIRI();
-            if (!ontologyIRIOpt.isPresent()) {
+            IRI ontologyIRI = ontology.getOntologyID().getOntologyIRI();
+            if (ontologyIRI == null) {
                 throw new OWLOntologyCreationException("Failed to load ontology from " + getOntologyURI() + ": " +
                                                                "no IRI present for this ontology");
             }
             else {
-                IRI ontologyIRI = ontology.getOntologyID().getOntologyIRI().get();
                 setOntologyIRI(ontologyIRI);
                 if (getOntologyName() == null) {
                     URI ontologyURI = ontologyIRI.toURI();
@@ -378,4 +376,42 @@ public abstract class AbstractOntologyLoader extends Initializable implements On
     }
 
     protected abstract OWLOntology indexOntology(OWLOntology ontology) throws OWLOntologyCreationException;
+
+    protected class LoggingReasonerProgressMonitor implements ReasonerProgressMonitor {
+        private final Logger log;
+        private int lastPercent = 0;
+
+        public LoggingReasonerProgressMonitor(Logger log) {
+            this.log = log;
+        }
+
+        protected Logger getLog() {
+            return log;
+        }
+
+        @Override public void reasonerTaskStarted(String s) {
+            getLog().debug(s);
+        }
+
+        @Override public void reasonerTaskStopped() {
+            getLog().debug("100% done!");
+            lastPercent = 0;
+        }
+
+        @Override public void reasonerTaskProgressChanged(int value, int max) {
+            if (max > 0) {
+                int percent = value * 100 / max;
+                if (lastPercent != percent) {
+                    if (percent % 25 == 0) {
+                        getLog().debug("" + percent + "% done...");
+                    }
+                    lastPercent = percent;
+                }
+            }
+        }
+
+        @Override public void reasonerTaskBusy() {
+
+        }
+    }
 }

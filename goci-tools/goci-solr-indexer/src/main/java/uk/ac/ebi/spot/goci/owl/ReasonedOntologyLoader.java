@@ -11,6 +11,7 @@ import org.semanticweb.owlapi.reasoner.ConsoleProgressMonitor;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
+import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
 import org.semanticweb.owlapi.reasoner.SimpleConfiguration;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
@@ -19,8 +20,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static org.semanticweb.owlapi.search.Searcher.annotations;
 
 /**
  * Loads an ontology using the OWLAPI and a HermiT reasoner to classify the ontology.  This allows for richer typing
@@ -33,7 +32,7 @@ public class ReasonedOntologyLoader extends AbstractOntologyLoader {
     protected OWLOntology indexOntology(OWLOntology ontology) throws OWLOntologyCreationException {
         getLog().debug("Trying to create a reasoner over ontology '" + getOntologyURI() + "'");
         OWLReasonerFactory factory = new Reasoner.ReasonerFactory();
-        ConsoleProgressMonitor progressMonitor = new ConsoleProgressMonitor();
+        ReasonerProgressMonitor progressMonitor = new LoggingReasonerProgressMonitor(getLog());
         OWLReasonerConfiguration config = new SimpleConfiguration(progressMonitor);
         OWLReasoner reasoner = factory.createReasoner(ontology, config);
 
@@ -68,8 +67,7 @@ public class ReasonedOntologyLoader extends AbstractOntologyLoader {
             Iterator<OWLClass> allClassesIt = allClasses.iterator();
             while (allClassesIt.hasNext()) {
                 OWLClass owlClass = allClassesIt.next();
-                Collection<OWLAnnotation> annotations =
-                        annotations(ontology.getAnnotationAssertionAxioms(owlClass.getIRI()), excludeAnnotation);
+                Collection<OWLAnnotation> annotations = owlClass.getAnnotations(ontology, excludeAnnotation);
                 if (!annotations.isEmpty()) {
                     allClassesIt.remove();
                 }
