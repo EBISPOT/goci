@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.model;
 
 import org.apache.solr.client.solrj.beans.Field;
+import uk.ac.ebi.spot.goci.service.OntologyExpansionService;
 
 /**
  * Javadocs go here!
@@ -24,5 +25,9 @@ public class TraitDocument extends Document<EfoTrait> {
 
     public String getTraitUri() {
         return traitUri;
+    }
+
+    public void expandWithOntology(OntologyExpansionService ontologyExpansionService) {
+
     }
 }
