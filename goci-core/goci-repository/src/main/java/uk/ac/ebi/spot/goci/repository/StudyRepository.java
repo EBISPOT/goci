@@ -29,6 +29,8 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Collection<Study> findByDiseaseTraitId(Long diseaseTraitId);
 
+    Study findByPubmedId(String pubmedId);
+
 
 }
 
