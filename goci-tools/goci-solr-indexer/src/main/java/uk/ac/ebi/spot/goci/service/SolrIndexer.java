@@ -105,7 +105,7 @@ public class SolrIndexer {
         ObjectDocumentMapper<Study, StudyDocument> studyMapper =
                 new ObjectDocumentMapper<>(StudyDocument.class, studyIndex);
         Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "studyDate"));
-        Pageable pager = new PageRequest(1, pageSize, sort);
+        Pageable pager = new PageRequest(0, pageSize, sort);
         Page<Study> studyPage = studyService.deepFindAll(pager);
         studyMapper.map(studyPage.getContent());
         while (studyPage.hasNext()) {
@@ -123,7 +123,7 @@ public class SolrIndexer {
         ObjectDocumentMapper<SingleNucleotidePolymorphism, SnpDocument> snpMapper =
                 new ObjectDocumentMapper<>(SnpDocument.class, snpIndex);
         Sort sort = new Sort(new Sort.Order("rsId"));
-        Pageable pager = new PageRequest(1, pageSize, sort);
+        Pageable pager = new PageRequest(0, pageSize, sort);
         Page<SingleNucleotidePolymorphism> snpPage = snpService.deepFindAll(pager);
         snpMapper.map(snpPage.getContent());
         while (snpPage.hasNext()) {
@@ -141,7 +141,7 @@ public class SolrIndexer {
         ObjectDocumentMapper<EfoTrait, TraitDocument> traitMapper =
                 new ObjectDocumentMapper<>(TraitDocument.class, traitIndex);
         Sort sort = new Sort(new Sort.Order("trait"));
-        Pageable pager = new PageRequest(1, pageSize, sort);
+        Pageable pager = new PageRequest(0, pageSize, sort);
         Page<EfoTrait> efoTraitPage = efoTraitRepository.findAll(pager);
         traitMapper.map(efoTraitPage.getContent());
         while (efoTraitPage.hasNext()) {
@@ -159,7 +159,7 @@ public class SolrIndexer {
         ObjectDocumentMapper<Association, AssociationDocument> associationMapper =
                 new ObjectDocumentMapper<>(AssociationDocument.class, associationIndex);
         Sort sort = new Sort(new Sort.Order("id"));
-        Pageable pager = new PageRequest(1, pageSize, sort);
+        Pageable pager = new PageRequest(0, pageSize, sort);
         Page<Association> associationPage = associationService.deepFindAll(pager);
         associationMapper.map(associationPage.getContent());
         while (associationPage.hasNext()) {

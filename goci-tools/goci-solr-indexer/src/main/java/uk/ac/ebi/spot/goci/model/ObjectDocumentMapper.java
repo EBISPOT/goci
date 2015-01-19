@@ -1,8 +1,11 @@
 package uk.ac.ebi.spot.goci.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.solr.repository.SolrCrudRepository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,6 +17,12 @@ import java.util.List;
 public class ObjectDocumentMapper<O, D> {
     private ObjectConverter<O, D> objectConverter;
     private DocumentIndexer<D> documentIndexer;
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
 
     public ObjectDocumentMapper(Class<D> documentType, SolrCrudRepository<D, String> index) {
         this.objectConverter = new ObjectConverter<>(documentType);
@@ -27,9 +36,15 @@ public class ObjectDocumentMapper<O, D> {
     }
 
     public List<D> map(List<O> objects) {
-        List<D> documents = new ArrayList<>();
-        objects.stream().map(objectConverter::convert).filter(doc -> doc != null).forEach(documents::add);
-        documentIndexer.index(documents);
-        return documents;
+        if (objects.size() > 0) {
+            List<D> documents = new ArrayList<>();
+            objects.stream().map(objectConverter::convert).filter(doc -> doc != null).forEach(documents::add);
+            documentIndexer.index(documents);
+            return documents;
+        }
+        else {
+            getLog().warn("Attempting to map empty collection [" + objects.toString() + "]");
+            return Collections.emptyList();
+        }
     }
 }
