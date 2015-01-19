@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-             xmlns="http://www.w3.org/1999/xhtml">
+      xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>GWAS Curation Demo</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -96,7 +96,9 @@
             </thead>
             <tbody>
             <tr th:each="initialStudyEthnicityDescription: ${initialStudyEthnicityDescriptions}">
-                <td><a th:href="@{/sampledescriptions/{ethnicityId}(ethnicityId=${initialStudyEthnicityDescription.id})}">Edit</a></td>
+                <td>
+                    <a th:href="@{/sampledescriptions/{ethnicityId}(ethnicityId=${initialStudyEthnicityDescription.id})}"
+                       class="btn btn-link">Edit</a></td>
                 <td th:text="${initialStudyEthnicityDescription.type}"></td>
                 <td th:text="${initialStudyEthnicityDescription.numberOfIndividuals}"></td>
                 <td th:text="${initialStudyEthnicityDescription.ethnicGroup}"></td>
@@ -138,7 +140,9 @@
             </thead>
             <tbody>
             <tr th:each="replicationStudyEthnicityDescription: ${replicationStudyEthnicityDescriptions}">
-                <td><a th:href="@{/sampledescriptions/{ethnicityId}(ethnicityId=${replicationStudyEthnicityDescription.id})}">Edit</a></td>
+                <td>
+                    <a th:href="@{/sampledescriptions/{ethnicityId}(ethnicityId=${replicationStudyEthnicityDescription.id})}"
+                       class="btn btn-link">Edit</a></td>
                 <td th:text="${replicationStudyEthnicityDescription.type}"></td>
                 <td th:text="${replicationStudyEthnicityDescription.numberOfIndividuals}"></td>
                 <td th:text="${replicationStudyEthnicityDescription.ethnicGroup}"></td>
@@ -154,7 +158,6 @@
         </table>
     </div>
 </div>
-
 
 
 <div class="container">
