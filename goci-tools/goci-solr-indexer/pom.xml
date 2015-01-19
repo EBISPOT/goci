@@ -20,7 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-repository</artifactId>
+            <artifactId>goci-service</artifactId>
         </dependency>
 
         <dependency>
