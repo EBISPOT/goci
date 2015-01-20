@@ -39,7 +39,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a href="http://www.genome.gov/gwastudies/" class="navbar-brand">GWAS</a>
+        <a href="http://www.ebi.ac.uk/gwas" class="navbar-brand">GWAS</a>
     </div>
 
     <div id="navbarCollapse" class="collapse navbar-collapse">
@@ -113,7 +113,7 @@
                     <th data-field="curator" data-sortable="true">Curator</th>
                     <th data-field="curationstatus" data-sortable="true">Curator Status</th>
                     <th data-field="notes">Notes</th>
-                    <th data-field="delete" data-switchable="false"></th>
+                    <!--<th data-field="delete" data-switchable="false"></th>-->
 
                 </tr>
                 </thead>
@@ -140,8 +140,7 @@
                     <td th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : 'null'"></td>
                     <td th:text="${study.housekeeping !=null} ? ${study.housekeeping.notes} : 'null'"></td>
 
-                    <td><a th:href="@{/studies/{studyId}/delete(studyId=${study.id})}" class="btn btn-danger">Delete</a>
-                    </td>
+                    <!--<td><a th:href="@{/studies/{studyId}/delete(studyId=${study.id})}" class="btn btn-danger">Delete</a> </td>-->
                 </tr>
                 </tbody>
             </table>
