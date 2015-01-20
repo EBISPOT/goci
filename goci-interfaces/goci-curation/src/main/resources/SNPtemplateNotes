@@ -1,0 +1,21 @@
+Gene	-	must not be empty!
+Strongest SNP-Risk Allele	-	must not be empty!
+SNP	-	must not be empty!
+Risk Allele -	must not be empty!
+Frequency in Controls	-	must not be empty! enter NR is not reported
+P-value mantissa	- enter p-value mantissa only
+P-value exponent	- enter p-value exponent only
+P-value (Text)		- same as in web form
+OR per copy or beta (Num)	- must be either numeric or empty. If reciprocal is given, program will calculate OR from that.
+OR entered (reciprocal)	- must be numeric or empty
+OR-type? (Y/N)	 -	must not be empty!
+Confidence Interval - if no CI given but there is a std error, leave blank and programm will calculate CI.
+Beta unit and direction	 -	must not be empty!
+Standard Error	- must be numeric or empty
+SNP type (novel/known) -	must not be empty!
+
+NOTE!
+- "must not be empty" refers to a literally empty cell. "NR" (or similar) is a perfectly valid entry
+
+- Reciprocal confidence intervals: If OR < 1 and a CI is given, the program will automatically calculate the reciprocal CI, provided that *both ends of the CI are greater than 0*! 
+	Program can't handle negative CIs, enter that SNP manually. 
