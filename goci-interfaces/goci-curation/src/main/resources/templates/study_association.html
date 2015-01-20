@@ -143,49 +143,62 @@
 
 <br/>
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <!--Button-->
-        <input type="button" class="btn btn-primary" value="Add SNPs from spreadsheet" data-toggle="collapse"
-               data-target="#uploadSNPsForn"/>
+        <div class="col-md-10">
+            <!--Button-->
+            <input type="button" class="btn btn-primary" value="Add SNPs from spreadsheet" data-toggle="collapse"
+                   data-target="#uploadSNPsForn"/>
+        </div>
     </div>
 </div>
+<br/>
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="form-group">
             <div class="col-md-10">
-
                 <div id="uploadSNPsForn" class="collapse">
-                    <form class="form-horizontal" name="uploadSNPsForn">
 
+                    <!--Form object is a study, this is so we can pass back ID which can be used-->
+                    <!--in URLs created by controller-->
+                    <form class="form-inline" name="uploadSNPsForn" role="form" method="post"
+                          th:action="@{/studies/{studyId}/associations/upload(studyId=${study.id})}"
+                          enctype="multipart/form-data" th:object="${study} ">
 
                         <div class="form-group">
                             <label for="uploadSNPs" class="control-label col-md-2"></label>
 
                             <div class="col-md-10">
-                                <input type="file" class="form-control" id="uploadSNPs"/>
+                                <input type="file" name="file" class="form-control" id="uploadSNPs"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button type="submit" class="btn btn-primary">Upload File</button>
                             </div>
                         </div>
                     </form>
                 </div>
-
             </div>
         </div>
     </div>
 </div>
+<br/>
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <!--Button-->
-        <input type="button" class="btn btn-primary" value="Add new SNP" data-toggle="collapse"
-               data-target="#addSNPForm"/>
-
+        <div class="col-md-10">
+            <!--Button-->
+            <input type="button" class="btn btn-primary" value="Add new SNP" data-toggle="collapse"
+                   data-target="#addSNPForm"/>
+        </div>
     </div>
 </div>
 
 
-<div class="container">
+<div class="container-fluid">
 <div class="row">
 <div class="form-group">
 <div class="col-md-10">
@@ -248,13 +261,13 @@
         </div>
 
 
-     <!--   <div class="form-group">
-            <label for="pvalueFloat" class="control-label col-md-2">P-value (float)</label>
+        <!--   <div class="form-group">
+               <label for="pvalueFloat" class="control-label col-md-2">P-value (float)</label>
 
-            <div class="col-md-10">
-                <input type="text" class="form-control" id="pvalueFloat" th:field="*{pvalueFloat}"/>
-            </div>
-        </div>-->
+               <div class="col-md-10">
+                   <input type="text" class="form-control" id="pvalueFloat" th:field="*{pvalueFloat}"/>
+               </div>
+           </div>-->
 
         <div class="form-group">
             <label for="pvalueMantissa" class="control-label col-md-2">P-value (mantissa)</label>
@@ -383,7 +396,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <button type="Save" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary">Save</button>
             </div>
         </div>
 
