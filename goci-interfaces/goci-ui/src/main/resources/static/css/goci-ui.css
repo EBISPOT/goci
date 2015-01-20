@@ -8,6 +8,13 @@
 
 /*.nhgriLogo{*/
     /*transform: scale(0.3, 0.3);*/
+    /*margin: 0;*/
+    /*padding: 0;*/
+/*}*/
+
+/*.nav > li > a > .icon{*/
+    /*padding-bottom: 0;*/
+    /*padding-top: 0;*/
 /*}*/
 
 /*.gwasthumb{*/
