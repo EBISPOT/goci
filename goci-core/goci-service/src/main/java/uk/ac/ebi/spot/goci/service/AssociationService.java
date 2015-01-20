@@ -9,8 +9,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -21,9 +24,21 @@ import java.util.List;
  */
 @Service
 public class AssociationService {
-    @Autowired AssociationRepository associationRepository;
+    private AssociationRepository associationRepository;
+
+    private StudyService studyService;
+    private SingleNucleotidePolymorphismService snpService;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    public AssociationService(AssociationRepository associationRepository,
+                              StudyService studyService,
+                              SingleNucleotidePolymorphismService snpService) {
+        this.associationRepository = associationRepository;
+        this.studyService = studyService;
+        this.snpService = snpService;
+    }
 
     protected Logger getLog() {
         return log;
@@ -68,8 +83,12 @@ public class AssociationService {
 
     public void loadAssociatedData(Association association) {
         int traitCount = association.getEfoTraits().size();
+        Study study = studyService.deepFetchOne(association.getStudy());
+        Collection<SingleNucleotidePolymorphism> snps = snpService.deepFetchAll(association.getSnps());
+
         int reportedGeneCount = association.getReportedGenes().size();
         getLog().info("Association '" + association.getId() + "' is mapped to " +
-                              "" + traitCount + " EFO traits and " + reportedGeneCount + " genes");
+                              "" + traitCount + " EFO traits, " + reportedGeneCount + " genes, " +
+                              "study id = " + study.getId() + " and " + snps.size() + " SNPs");
     }
 }

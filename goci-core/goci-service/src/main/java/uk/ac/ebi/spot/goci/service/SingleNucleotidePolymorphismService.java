@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -21,9 +22,14 @@ import java.util.List;
  */
 @Service
 public class SingleNucleotidePolymorphismService {
-    @Autowired SingleNucleotidePolymorphismRepository snpRepository;
+    private SingleNucleotidePolymorphismRepository snpRepository;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    public SingleNucleotidePolymorphismService(SingleNucleotidePolymorphismRepository snpRepository) {
+        this.snpRepository = snpRepository;
+    }
 
     protected Logger getLog() {
         return log;
@@ -64,6 +70,18 @@ public class SingleNucleotidePolymorphismService {
         getLog().info("Obtained " + allSnps.getSize() + " SNPs, starting deep load...");
         allSnps.forEach(this::loadAssociatedData);
         return allSnps;
+    }
+
+    @Transactional(readOnly = true)
+    public SingleNucleotidePolymorphism deepFetchOne(SingleNucleotidePolymorphism snp) {
+        loadAssociatedData(snp);
+        return snp;
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<SingleNucleotidePolymorphism> deepFetchAll(Collection<SingleNucleotidePolymorphism> snps) {
+        snps.forEach(this::loadAssociatedData);
+        return snps;
     }
 
     public void loadAssociatedData(SingleNucleotidePolymorphism snp) {

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -21,9 +22,14 @@ import java.util.List;
  */
 @Service
 public class StudyService {
-    @Autowired StudyRepository studyRepository;
+    private StudyRepository studyRepository;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    public StudyService(StudyRepository studyRepository) {
+        this.studyRepository = studyRepository;
+    }
 
     protected Logger getLog() {
         return log;
@@ -64,6 +70,18 @@ public class StudyService {
         getLog().info("Obtained " + allSnps.getSize() + " SNPs, starting deep load...");
         allSnps.forEach(this::loadAssociatedData);
         return allSnps;
+    }
+
+    @Transactional(readOnly = true)
+    public Study deepFetchOne(Study study) {
+        loadAssociatedData(study);
+        return study;
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<Study> deepFetchAll(Collection<Study> studies) {
+        studies.forEach(this::loadAssociatedData);
+        return studies;
     }
 
     public void loadAssociatedData(Study study) {
