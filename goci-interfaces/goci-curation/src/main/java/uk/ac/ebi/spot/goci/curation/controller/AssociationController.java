@@ -4,24 +4,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import uk.ac.ebi.spot.goci.curation.service.CuratorReportedSNP;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
-import uk.ac.ebi.spot.goci.curation.service.CuratorReportedSNP;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.service.SnpBatchLoaderService;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Created by emma on 06/01/15.
@@ -39,15 +37,16 @@ public class AssociationController {
     private StudyRepository studyRepository;
     private EfoTraitRepository efoTraitRepository;
     private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
+    private SnpBatchLoaderService snpBatchLoaderService;
 
     @Autowired
-    public AssociationController(AssociationRepository associationRepository, StudyRepository studyRepository, EfoTraitRepository efoTraitRepository, SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository) {
+    public AssociationController(AssociationRepository associationRepository, StudyRepository studyRepository, EfoTraitRepository efoTraitRepository, SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository, SnpBatchLoaderService snpBatchLoaderService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
+        this.snpBatchLoaderService = snpBatchLoaderService;
     }
-
 
     /*  Study SNP/Associations */
 
@@ -89,6 +88,50 @@ public class AssociationController {
 
         return "redirect:/studies/" + studyId + "/associations";
     }
+
+
+    // Upload a spreadsheet of snp association information
+    @RequestMapping(value = "/studies/{studyId}/associations/upload", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String uploadStudySnps(@RequestParam("file") MultipartFile file, @PathVariable Long studyId, Model model) {
+
+        if (!file.isEmpty()) {
+            // Save the uploaded file received in a multipart request as a file in the upload directory
+            // The path for the upload directory comes from the application properties file
+            String uploadDir;
+            Properties properties = new Properties();
+            try {
+                properties.load(getClass().getClassLoader().getResource("application.properties").openStream());
+                uploadDir = properties.getProperty("multipart.location");
+            } catch (IOException e) {
+                throw new RuntimeException(
+                        "Unable to locate upload directory in which to store the uploaded file ", e);
+            }
+
+            // Create file
+            File uploadedFile = new File(uploadDir + file.getOriginalFilename());
+
+            // Copy contents of multipart request to newly created file
+            try {
+                file.transferTo(uploadedFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            String uploadedFilePath = uploadedFile.getAbsolutePath();
+            try {
+                ArrayList<Association> associationsFromFile = snpBatchLoaderService.processData(uploadedFilePath);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return "redirect:/studies/" + studyId + "/associations";
+
+        } else {
+            // File is empty so let user know
+            model.addAttribute("study", studyRepository.findOne(studyId));
+            return "empty_snpfile_upload_warning";
+        }
+    }
+
 
      /* Existing association information */
 
