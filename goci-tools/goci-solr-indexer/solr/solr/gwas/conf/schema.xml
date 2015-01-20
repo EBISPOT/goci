@@ -166,7 +166,7 @@
     <field name="gene" type="text_general" indexed="true" stored="true" multiValued="true" />
 
     <!-- study -->
-    <field name="pubmedId" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="pubmedId" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="publication" type="text_general" indexed="true" stored="true" multiValued="true" />
 
     <!-- diseasetrait -->
