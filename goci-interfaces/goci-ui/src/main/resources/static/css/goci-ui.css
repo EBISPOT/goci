@@ -1,3 +1,20 @@
+/*.navbar-brand{*/
+    /*transform: scale(0.8, 0.8);*/
+/*}*/
+
+/*.ebiLogo{*/
+    /*transform: scale(0.8, 0.8);*/
+/*}*/
+
+/*.nhgriLogo{*/
+    /*transform: scale(0.3, 0.3);*/
+/*}*/
+
+/*.gwasthumb{*/
+    /*display: inline-block;*/
+    /*transform: scale(0.2, 0.2);*/
+/*}*/
+
 #imaginary_container{
     margin-top:5%;
 }

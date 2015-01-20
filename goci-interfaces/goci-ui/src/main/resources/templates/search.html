@@ -19,7 +19,7 @@
 
 
 </head>
-<body>
+<body onload="solrSearch()">
 <nav class="navbar navbar-inverse" role="navigation">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -30,7 +30,8 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="http://www.genome.gov/gwastudies/" class="navbar-brand">GWAS Logo</a>
+            <a href="#" class="navbar-brand"> <img alt="GWAS logo" src="/icons/GWASBrowser_logo_whitebackground-scaled.png" /></a>
+            <!--<a href="http://www.genome.gov/gwastudies/" class="navbar-brand">GWAS Logo</a>-->
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -45,6 +46,8 @@
                 <li><a href="methods">Methods</a></li>
                 <li><a href="faq">FAQ</a></li>
                 <li><a href="http://www.ebi.ac.uk/fgpt/gwas">GWAS Diagram</a></li>
+                <li><a class="ebiLogo" href="http://www.ebi.ac.uk"><img alt="EBI logo" src="/icons/EMBL_EBI_Logo_white.png" /></a></li>
+                <li><a class="nhgriLogo" href="http://www.genome.gov"><img alt="GWAS logo" src="/icons/NHGRI_NIH logo all verions-02-scaled.png" /></a></li>
             </ul>
 
 
@@ -54,6 +57,11 @@
 
 
 <div class="container-fluid">
+    <div style="display: none">
+        <ul th:object="${result}">
+            <li id="query" th:text="*{query}">User query</li>
+        </ul>
+    </div>
     <ol class="breadcrumb">
         <li><a href="home">GWAS</a></li>
         <li class="active">Search</li>
@@ -70,8 +78,8 @@
         <div class="col-md-6 col-md-offset-3">
             <div id="imaginary_container">
 
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search the catalog" id="search-box">
+                <div class="input-group" th:object="${result}">
+                    <input type="text" class="form-control" placeholder="Search the catalog" id="search-box" th:field="*{query}">
                          <span class="input-group-btn">
                                 <button class="btn btn-default" type="button" id="search-button">
                                     <span class="glyphicon glyphicon-search"></span>
@@ -81,9 +89,9 @@
                 </div><!-- /input-group -->
                 <div class="examples">
                     Examples:
-                    <a href="">breast cancer</a>,
-                    <a href="">rs7329174</a>,
-                    <a href="">Yang</a>
+                    <a href="/search?query=breast%20cancer">breast cancer</a>,
+                    <a href="/search?query=rs7329174">rs7329174</a>,
+                    <a href="/search?query=Yang">Yang</a>
                 </div>
             </div>
         </div>
@@ -237,5 +245,6 @@
 </div>
 
 </body>
+
 </html>
 

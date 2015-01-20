@@ -19,20 +19,21 @@
 //};
 
 function doSearch(){
+    var searchTerm = $("#search-box").val();
+    window.location = "search?query=" + searchTerm;
+}
 
-    if(window.location.pathname != "/search"){
-        window.location.replace("/search");
-        $('#lower_container').show();
-        $('#search-term').text($('#search-box').val());
+function loadResults(){
+    $('#lower_container').show();
+    $('#search-term').text(searchTerm);
+
+    $('#search-box').text(searchTerm);
+}
+
+function solrSearch(){
+    if ($('#query').text() != ''){
 
     }
-    else {
-        //alert("Your term is " + $('#search-box').val());
-        $('#lower_container').show();
-        $('#search-term').text($('#search-box').val());
-
-    }
-//trigger the actual search of the solar index here
 }
 
 function toggleSidebar(ts){
