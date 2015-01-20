@@ -126,7 +126,7 @@
 
                         <div class="col-md-10">
                             <select name="countryOfOrigin" class="form-control select2-select"
-                                    multiple="multiple" th:field="${countryOfOrigin.countryValues}"
+                                    multiple="multiple" th:field="${countryOfOrigin.originCountryValues}"
                                     id="countryOfOrigin">
                                 <option th:each="country : ${countries}"
                                         th:value="${country.name}"
@@ -141,7 +141,7 @@
                         <div class="col-md-10">
                             <select name="countryOfRecruitment" class="form-control select2-select"
                                     multiple="multiple"
-                                    th:field="${countryOfRecruitment.countryValues}"
+                                    th:field="${countryOfRecruitment.recruitmentCountryValues}"
                                     id="countryOfRecruitment">
                                 <option th:each="country : ${countries}"
                                         th:value="${country.name}"

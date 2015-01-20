@@ -10,20 +10,20 @@ package uk.ac.ebi.spot.goci.curation.service;
  */
 public class CountryOfRecruitment {
 
-    private String[] countryValues;
+    private String[] recruitmentCountryValues;
 
     public CountryOfRecruitment() {
     }
 
-    public CountryOfRecruitment(String[] countryValues) {
-        this.countryValues = countryValues;
+    public CountryOfRecruitment(String[] recruitmentCountryValues) {
+        this.recruitmentCountryValues = recruitmentCountryValues;
     }
 
-    public String[] getCountryValues() {
-        return countryValues;
+    public String[] getRecruitmentCountryValues() {
+        return recruitmentCountryValues;
     }
 
-    public void setCountryValues(String[] countryValues) {
-        this.countryValues = countryValues;
+    public void setRecruitmentCountryValues(String[] recruitmentCountryValues) {
+        this.recruitmentCountryValues = recruitmentCountryValues;
     }
 }

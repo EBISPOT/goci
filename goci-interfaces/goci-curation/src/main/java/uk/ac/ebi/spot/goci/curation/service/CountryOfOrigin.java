@@ -10,21 +10,21 @@ package uk.ac.ebi.spot.goci.curation.service;
  */
 public class CountryOfOrigin {
 
-    private String[] countryValues;
+    private String[] originCountryValues;
 
     public CountryOfOrigin() {
 
     }
 
-    public CountryOfOrigin(String[] countryValues) {
-        this.countryValues = countryValues;
+    public CountryOfOrigin(String[] originCountryValues) {
+        this.originCountryValues = originCountryValues;
     }
 
-    public String[] getCountryValues() {
-        return countryValues;
+    public String[] getOriginCountryValues() {
+        return originCountryValues;
     }
 
-    public void setCountryValues(String[] countryValues) {
-        this.countryValues = countryValues;
+    public void setOriginCountryValues(String[] originCountryValues) {
+        this.originCountryValues = originCountryValues;
     }
 }
