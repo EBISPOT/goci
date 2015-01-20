@@ -16,7 +16,7 @@ import uk.ac.ebi.spot.goci.model.SnpDocument;
 public class SingleNucleotidePolymorphismMapper
         extends ObjectDocumentMapper<SingleNucleotidePolymorphism, SnpDocument> {
     @Autowired
-    public SingleNucleotidePolymorphismMapper(SnpIndex snpIndex) {
-        super(SnpDocument.class, snpIndex);
+    public SingleNucleotidePolymorphismMapper(ObjectConverter objectConverter, SnpIndex snpIndex) {
+        super(SnpDocument.class, objectConverter, snpIndex);
     }
 }

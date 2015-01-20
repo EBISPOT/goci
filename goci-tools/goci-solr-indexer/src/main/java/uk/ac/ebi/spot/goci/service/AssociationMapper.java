@@ -15,7 +15,7 @@ import uk.ac.ebi.spot.goci.model.AssociationDocument;
 @Service
 public class AssociationMapper extends ObjectDocumentMapper<Association, AssociationDocument> {
     @Autowired
-    public AssociationMapper(AssociationIndex associationIndex) {
-        super(AssociationDocument.class, associationIndex);
+    public AssociationMapper(ObjectConverter objectConverter, AssociationIndex associationIndex) {
+        super(AssociationDocument.class, objectConverter, associationIndex);
     }
 }

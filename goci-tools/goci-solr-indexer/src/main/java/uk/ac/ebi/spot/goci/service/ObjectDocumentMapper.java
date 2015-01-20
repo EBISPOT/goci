@@ -2,7 +2,6 @@ package uk.ac.ebi.spot.goci.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.solr.repository.SolrCrudRepository;
 import uk.ac.ebi.spot.goci.model.Document;
 
@@ -17,7 +16,7 @@ import java.util.List;
  * @date 14/01/15
  */
 public abstract class ObjectDocumentMapper<O, D extends Document<O>> {
-    @Autowired ObjectConverter objectConverter;
+    private ObjectConverter objectConverter;
 
     private Class<D> documentType;
     private SolrCrudRepository<D, String> index;
@@ -28,7 +27,10 @@ public abstract class ObjectDocumentMapper<O, D extends Document<O>> {
         return log;
     }
 
-    public ObjectDocumentMapper(Class<D> documentType, SolrCrudRepository<D, String> index) {
+    public ObjectDocumentMapper(Class<D> documentType,
+                                ObjectConverter objectConverter,
+                                SolrCrudRepository<D, String> index) {
+        this.objectConverter = objectConverter;
         this.documentType = documentType;
         this.index = index;
     }

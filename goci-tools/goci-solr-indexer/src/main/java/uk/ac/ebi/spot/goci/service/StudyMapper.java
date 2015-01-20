@@ -15,7 +15,7 @@ import uk.ac.ebi.spot.goci.model.StudyDocument;
 @Service
 public class StudyMapper extends ObjectDocumentMapper<Study, StudyDocument> {
     @Autowired
-    public StudyMapper(StudyIndex studyIndex) {
-        super(StudyDocument.class, studyIndex);
+    public StudyMapper(ObjectConverter objectConverter, StudyIndex studyIndex) {
+        super(StudyDocument.class, objectConverter, studyIndex);
     }
 }

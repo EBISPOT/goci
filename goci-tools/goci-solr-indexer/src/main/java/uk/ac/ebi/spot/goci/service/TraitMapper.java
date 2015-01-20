@@ -15,7 +15,7 @@ import uk.ac.ebi.spot.goci.model.TraitDocument;
 @Service
 public class TraitMapper extends ObjectDocumentMapper<EfoTrait, TraitDocument> {
     @Autowired
-    public TraitMapper(TraitIndex traitIndex) {
-        super(TraitDocument.class, traitIndex);
+    public TraitMapper(ObjectConverter objectConverter, TraitIndex traitIndex) {
+        super(TraitDocument.class, objectConverter, traitIndex);
     }
 }

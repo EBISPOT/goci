@@ -1,6 +1,8 @@
 package uk.ac.ebi.spot.goci.owl;
 
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
 
 import java.util.Map;
@@ -41,6 +43,15 @@ public interface OntologyLoader {
 
     /**
      * Returns a mapping between the IRIs that identify classes in the loaded ontology and the corresponding class
+     * "accession" - or a user friendly 'short name' or identifier.  This will normally be the URI fragment or path part
+     * of a full URI.
+     *
+     * @return a user friendly representation of the class IRI
+     */
+    Map<IRI, String> getOntologyClassAccessions();
+
+    /**
+     * Returns a mapping between the IRIs that identify classes in the loaded ontology and the corresponding class
      * rdfs:label.
      *
      * @return the class labels in this ontology, indexed by class IRI
@@ -49,11 +60,19 @@ public interface OntologyLoader {
 
     /**
      * Returns a mapping between the IRIs that identify classes in the loaded ontology and the rdfs:label of each of
-     * their asserted parent classes.
+     * their known parent classes.
      *
-     * @return the class type labels in this ontology, indexed by class IRI
+     * @return the parent class labels in this ontology, indexed by class IRI
      */
-    Map<IRI, Set<String>> getOntologyClassTypeLabels();
+    Map<IRI, Set<String>> getOntologyClassParentLabels();
+
+    /**
+     * Returns a mapping between the IRIs that identify classes in the loaded ontology and the rdfs:label of each of
+     * their known child classes.
+     *
+     * @return the child class labels in this ontology, indexed by class IRI
+     */
+    Map<IRI, Set<String>> getOntologyClassChildLabels();
 
     /**
      * Returns a mapping between the IRIs that identify classes in the loaded ontology and the corresponding class
@@ -62,6 +81,23 @@ public interface OntologyLoader {
      * @return the class labels in this ontology, indexed by class IRI
      */
     Map<IRI, Set<String>> getOntologyClassSynonyms();
+
+    /**
+     * Returns a mapping between the IRIs that identify classes in the loaded ontology and a set of {@link
+     * Relationship}s that describes how this class relates to other classes in the ontology.  Only direct relations are
+     * included (i.e. no nested class expressions)
+     *
+     * @return the relationships in this ontology, indexed by class IRI
+     */
+    Map<IRI, Set<Relationship<OWLClass, OWLObjectProperty, OWLClass>>> getOntologyClassRelationships();
+
+    /**
+     * Returns the class "accession" - or a user friendly 'short name' or identifier.  This will normally be the URI
+     * fragment or path part of a full URI.
+     *
+     * @return a user friendly representation of the class IRI
+     */
+    String getAccession(IRI ontologyClassIRI);
 
     /**
      * Returns the rdfs:label of the given ontology class
@@ -78,7 +114,15 @@ public interface OntologyLoader {
      * @param ontologyClassIRI the IRI of the class to get the parent labels of
      * @return a set of strings representing the labels of the parents of this class
      */
-    Set<String> getTypeLabels(IRI ontologyClassIRI);
+    Set<String> getParentLabels(IRI ontologyClassIRI);
+
+    /**
+     * Returns the rdfs:label of each of the known child classes for the given class.
+     *
+     * @param ontologyClassIRI the IRI of the class to get the child labels of
+     * @return a set of strings representing the labels of the children of this class
+     */
+    Set<String> getChildLabels(IRI ontologyClassIRI);
 
     /**
      * Returns the synonyms of the class specified.  Synonyms are described by the synonymURI property
@@ -87,4 +131,13 @@ public interface OntologyLoader {
      * @return a set of strings representing the synonyms of this class
      */
     Set<String> getSynonyms(IRI ontologyClassIRI);
+
+    /**
+     * Returns a set of {@link Relationship}s that describes how this class relates to other classes in the ontology.
+     * Only direct relations are included (i.e. no nested class expressions)
+     *
+     * @param ontologyClassIRI the IRI of the class to get relationships for
+     * @return the relationships for this class
+     */
+    Set<Relationship<OWLClass, OWLObjectProperty, OWLClass>> getRelationships(IRI ontologyClassIRI);
 }

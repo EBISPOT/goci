@@ -1,6 +1,5 @@
 package uk.ac.ebi.spot.goci.owl;
 
-import com.google.common.base.Optional;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
@@ -8,21 +7,26 @@ import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
-import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
 import org.semanticweb.owlapi.util.SimpleIRIMapper;
-import org.slf4j.Logger;
+import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.springframework.core.io.Resource;
 import uk.ac.ebi.spot.goci.Initializable;
 
 import java.net.URI;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 /**
  * An abstract implementation of an ontology loader.  Implementations should extend this class with the {@link
@@ -32,6 +36,7 @@ import java.util.Set;
  * @author Tony Burdett
  * @date 03/06/13
  */
+@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 public abstract class AbstractOntologyLoader extends Initializable implements OntologyLoader {
     private URI ontologyURI;
     private String ontologyName;
@@ -47,9 +52,15 @@ public abstract class AbstractOntologyLoader extends Initializable implements On
     private IRI ontologyIRI;
     private OWLOntology ontology;
 
+    private Map<IRI, String> ontologyAccessions;
     private Map<IRI, String> ontologyLabels;
-    private Map<IRI, Set<String>> ontologyTypeLabels;
+    private Map<IRI, Set<String>> ontologyParentLabels;
+    private Map<IRI, Set<String>> ontologyChildLabels;
     private Map<IRI, Set<String>> ontologySynonyms;
+    private Map<IRI, Set<Relationship<OWLClass, OWLObjectProperty, OWLClass>>> ontologyRelationships;
+
+    private OWLAnnotationProperty rdfsLabelAnnotationProperty;
+    private Collection<OWLAnnotationProperty> synonymAnnotationProperties;
 
     /**
      * Returns the URI of the ontology to load
@@ -211,65 +222,93 @@ public abstract class AbstractOntologyLoader extends Initializable implements On
     }
 
     @Override public IRI getOntologyIRI() {
-        try {
-            initOrWait();
-            return ontologyIRI;
-        }
-        catch (InterruptedException e) {
-            throw new IllegalStateException(getClass().getSimpleName() + " failed to initialize", e);
-        }
+        return lazyGet(() -> ontologyIRI);
     }
 
     @Override public OWLOntology getOntology() {
-        try {
-            initOrWait();
-            return ontology;
-        }
-        catch (InterruptedException e) {
-            throw new IllegalStateException(getClass().getSimpleName() + " failed to initialize", e);
-        }
+        return lazyGet(() -> ontology);
+    }
+
+    @Override public Map<IRI, String> getOntologyClassAccessions() {
+        return lazyGet(() -> ontologyAccessions);
     }
 
     @Override public Map<IRI, String> getOntologyClassLabels() {
-        try {
-            initOrWait();
-            return ontologyLabels;
-        }
-        catch (InterruptedException e) {
-            throw new IllegalStateException(getClass().getSimpleName() + " failed to initialize", e);
-        }
+        return lazyGet(() -> ontologyLabels);
     }
 
-    @Override public Map<IRI, Set<String>> getOntologyClassTypeLabels() {
-        try {
-            initOrWait();
-            return ontologyTypeLabels;
-        }
-        catch (InterruptedException e) {
-            throw new IllegalStateException(getClass().getSimpleName() + " failed to initialize", e);
-        }
+    @Override public Map<IRI, Set<String>> getOntologyClassParentLabels() {
+        return lazyGet(() -> ontologyParentLabels);
+    }
+
+    @Override public Map<IRI, Set<String>> getOntologyClassChildLabels() {
+        return lazyGet(() -> ontologyChildLabels);
     }
 
     @Override public Map<IRI, Set<String>> getOntologyClassSynonyms() {
-        try {
-            initOrWait();
-            return ontologySynonyms;
-        }
-        catch (InterruptedException e) {
-            throw new IllegalStateException(getClass().getSimpleName() + " failed to initialize", e);
-        }
+        return lazyGet(() -> ontologySynonyms);
+    }
+
+    @Override
+    public Map<IRI, Set<Relationship<OWLClass, OWLObjectProperty, OWLClass>>> getOntologyClassRelationships() {
+        return lazyGet(() -> ontologyRelationships);
+    }
+
+    @Override public String getAccession(IRI ontologyClassIRI) {
+        return getOntologyClassAccessions().get(ontologyClassIRI);
     }
 
     @Override public String getLabel(IRI ontologyClassIRI) {
         return getOntologyClassLabels().get(ontologyClassIRI);
     }
 
-    @Override public Set<String> getTypeLabels(IRI ontologyClassIRI) {
-        return getOntologyClassTypeLabels().get(ontologyClassIRI);
+    @Override public Set<String> getParentLabels(IRI ontologyClassIRI) {
+        if (getOntologyClassParentLabels().containsKey(ontologyClassIRI)) {
+            return getOntologyClassParentLabels().get(ontologyClassIRI);
+        }
+        else {
+            return Collections.emptySet();
+        }
     }
 
     @Override public Set<String> getSynonyms(IRI ontologyClassIRI) {
-        return getOntologyClassSynonyms().get(ontologyClassIRI);
+        if (getOntologyClassSynonyms().containsKey(ontologyClassIRI)) {
+            return getOntologyClassSynonyms().get(ontologyClassIRI);
+        }
+        else {
+            return Collections.emptySet();
+        }
+    }
+
+    @Override public Set<String> getChildLabels(IRI ontologyClassIRI) {
+        if (getOntologyClassChildLabels().containsKey(ontologyClassIRI)) {
+            return getOntologyClassChildLabels().get(ontologyClassIRI);
+        }
+        else {
+            return Collections.emptySet();
+        }
+    }
+
+    @Override public Set<Relationship<OWLClass, OWLObjectProperty, OWLClass>> getRelationships(IRI ontologyClassIRI) {
+        if (getOntologyClassRelationships().containsKey(ontologyClassIRI)) {
+            return getOntologyClassRelationships().get(ontologyClassIRI);
+        }
+        else {
+            return Collections.emptySet();
+        }
+    }
+
+    private <G> G lazyGet(Callable<G> callable) {
+        try {
+            initOrWait();
+            return callable.call();
+        }
+        catch (InterruptedException e) {
+            throw new IllegalStateException(getClass().getSimpleName() + " failed to initialize", e);
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Failed to lazily instantiate collection for query", e);
+        }
     }
 
     @Override protected void doInitialization() throws Exception {
@@ -290,9 +329,18 @@ public abstract class AbstractOntologyLoader extends Initializable implements On
         this.factory = manager.getOWLDataFactory();
 
         // init cache fields
+        this.ontologyAccessions = new HashMap<>();
         this.ontologyLabels = new HashMap<>();
-        this.ontologyTypeLabels = new HashMap<>();
+        this.ontologyParentLabels = new HashMap<>();
+        this.ontologyChildLabels = new HashMap<>();
         this.ontologySynonyms = new HashMap<>();
+        this.ontologyRelationships = new HashMap<>();
+
+        // init other fields (label, synonym annotation properties)
+        this.rdfsLabelAnnotationProperty = getFactory().getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
+        this.synonymAnnotationProperties = getSynonymURIs().stream()
+                .map(ap -> getFactory().getOWLAnnotationProperty(IRI.create(ap)))
+                .collect(Collectors.toSet());
 
         // load the ontology
         this.ontology = loadOntology();
@@ -321,16 +369,28 @@ public abstract class AbstractOntologyLoader extends Initializable implements On
         this.ontologyIRI = ontologyIRI;
     }
 
+    protected void addClassAccession(IRI clsIri, String accession) {
+        this.ontologyAccessions.put(clsIri, accession);
+    }
+
     protected void addClassLabel(IRI clsIri, String label) {
         this.ontologyLabels.put(clsIri, label);
     }
 
-    protected void addClassTypes(IRI clsIri, Set<String> classTypeLabels) {
-        this.ontologyTypeLabels.put(clsIri, classTypeLabels);
+    protected void addClassParentLabels(IRI clsIri, Set<String> classParentLabels) {
+        this.ontologyParentLabels.put(clsIri, classParentLabels);
+    }
+
+    protected void addClassChildLabels(IRI clsIri, Set<String> classChildLabels) {
+        this.ontologyChildLabels.put(clsIri, classChildLabels);
     }
 
     protected void addSynonyms(IRI clsIri, Set<String> synonyms) {
         this.ontologySynonyms.put(clsIri, synonyms);
+    }
+
+    protected void addRelationship(IRI clsIri, Set<Relationship<OWLClass, OWLObjectProperty, OWLClass>> relationships) {
+        this.ontologyRelationships.put(clsIri, relationships);
     }
 
     /**
@@ -375,43 +435,110 @@ public abstract class AbstractOntologyLoader extends Initializable implements On
         }
     }
 
-    protected abstract OWLOntology indexOntology(OWLOntology ontology) throws OWLOntologyCreationException;
-
-    protected class LoggingReasonerProgressMonitor implements ReasonerProgressMonitor {
-        private final Logger log;
-        private int lastPercent = 0;
-
-        public LoggingReasonerProgressMonitor(Logger log) {
-            this.log = log;
+    protected Set<OWLClass> removeExcludedClasses(OWLOntology ontology,
+                                                  Set<OWLClass> allClasses,
+                                                  SubclassCollector subclassCollector) {
+        // remove excluded classes from allClasses by subclass
+        if (getExclusionClassURI() != null) {
+            OWLClass excludeClass = getFactory().getOWLClass(IRI.create(getExclusionClassURI()));
+            subclassCollector.collect(excludeClass).forEach(allClasses::remove);
         }
 
-        protected Logger getLog() {
-            return log;
-        }
-
-        @Override public void reasonerTaskStarted(String s) {
-            getLog().debug(s);
-        }
-
-        @Override public void reasonerTaskStopped() {
-            getLog().debug("100% done!");
-            lastPercent = 0;
-        }
-
-        @Override public void reasonerTaskProgressChanged(int value, int max) {
-            if (max > 0) {
-                int percent = value * 100 / max;
-                if (lastPercent != percent) {
-                    if (percent % 25 == 0) {
-                        getLog().debug("" + percent + "% done...");
-                    }
-                    lastPercent = percent;
+        // remove excluded classes from allClasses by annotation property
+        if (getExclusionAnnotationURI() != null) {
+            OWLAnnotationProperty excludeAnnotation =
+                    getFactory().getOWLAnnotationProperty(IRI.create(getExclusionAnnotationURI()));
+            Iterator<OWLClass> allClassesIt = allClasses.iterator();
+            while (allClassesIt.hasNext()) {
+                OWLClass owlClass = allClassesIt.next();
+                Collection<OWLAnnotation> annotations = owlClass.getAnnotations(ontology, excludeAnnotation);
+                if (!annotations.isEmpty()) {
+                    allClassesIt.remove();
                 }
             }
         }
 
-        @Override public void reasonerTaskBusy() {
+        // and return
+        return allClasses;
+    }
 
+    protected Optional<String> evaluateAccessionValue(OWLOntology ontology, OWLClass ontologyClass) {
+        URI uri = ontologyClass.getIRI().toURI();
+        getLog().trace("Attempting to extract fragment name of URI '" + uri + "'");
+        String termURI = uri.toString();
+
+        // we want the "final part" of the URI...
+        String fragmentName;
+        if (uri.getFragment() != null) {
+            // a uri with a non-null fragment, so use this...
+            getLog().trace("Extracting fragment name using URI fragment (" + uri.getFragment() + ")");
+            return Optional.of(uri.getFragment());
         }
+        else if (uri.getPath() != null) {
+            // no fragment, but there is a path so try and extract the final part...
+            if (uri.getPath().contains("/")) {
+                getLog().trace("Extracting fragment name using final part of the path of the URI");
+                return Optional.of(uri.getPath().substring(uri.getPath().lastIndexOf('/') + 1));
+            }
+            else {
+                // no final path part, so just return whole path
+                getLog().trace("Extracting fragment name using the path of the URI");
+                return Optional.of(uri.getPath());
+            }
+        }
+        else {
+            // no fragment, path is null, we've run out of rules so don't shorten
+            getLog().trace("No rules to shorten this URI could be found (" + termURI + ")");
+            return Optional.empty();
+        }
+    }
+
+    protected Optional<String> evaluateLabelAnnotationValue(OWLOntology ontology, OWLClass ontologyClass) {
+        // get label annotations
+        Set<String> labels = getStringLiteralAnnotationValues(ontology, ontologyClass, rdfsLabelAnnotationProperty);
+        if (labels.isEmpty()) {
+            getLog().warn("OWLClass " + ontologyClass + " contains no label. " +
+                                  "No labels for this class will be loaded.");
+        }
+        else {
+            if (labels.size() > 1) {
+                getLog().warn("OWLClass " + ontologyClass + " contains more than one label " +
+                                      "(including '" + labels.iterator().next() + "'). " +
+                                      "No labels for this class will be loaded.");
+            }
+            else {
+                return Optional.of(labels.iterator().next());
+            }
+        }
+        return Optional.empty();
+    }
+
+    protected Set<String> evaluateSynonymAnnotationValues(OWLOntology ontology, OWLClass ontologyClass) {
+        // get all synonym annotations
+        Set<String> synonyms = new HashSet<>();
+        getLog().debug("Loading synonyms...");
+        for (OWLAnnotationProperty synonymAnnotationProperty : synonymAnnotationProperties) {
+            Set<String> synonymVals =
+                    getStringLiteralAnnotationValues(ontology, ontologyClass, synonymAnnotationProperty);
+            if (synonymVals.isEmpty()) {
+                getLog().trace("OWLClass " + ontologyClass + " contains no synonyms. " +
+                                       "No synonyms for this class will be loaded.");
+            }
+            else {
+                synonyms.addAll(synonymVals);
+            }
+        }
+        return synonyms;
+    }
+
+    protected abstract OWLOntology indexOntology(OWLOntology ontology) throws OWLOntologyCreationException;
+
+    /**
+     * A functional interface that represents how to collect a set of OWLClasses that are the subclasses of the supplied
+     * class
+     */
+    @FunctionalInterface
+    protected interface SubclassCollector {
+        Set<OWLClass> collect(OWLClass superclass);
     }
 }

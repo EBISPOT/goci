@@ -23,9 +23,15 @@ import java.util.Optional;
  */
 @Service
 public class ObjectConverter {
-    @Autowired Collection<DocumentEnrichmentService> documentEnrichmentServices;
+    private Collection<DocumentEnrichmentService> documentEnrichmentServices;
+    private Map<Class, Collection<DocumentEnrichmentService>> documentToEnricherMap;
 
-    private Map<Class, Collection<DocumentEnrichmentService>> documentToEnricherMap = new HashMap<>();
+    @Autowired
+
+    public ObjectConverter(Collection<DocumentEnrichmentService> documentEnrichmentServices) {
+        this.documentEnrichmentServices = documentEnrichmentServices;
+        this.documentToEnricherMap = new HashMap<>();
+    }
 
     @PostConstruct
     public void inspectDocumentEnrichmentServices() {
