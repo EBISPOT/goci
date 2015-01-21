@@ -71,7 +71,7 @@ public class Association {
             inverseJoinColumns = @JoinColumn(name = "REPORTED_GENE_ID"))
     private Collection<Gene> reportedGenes = new ArrayList<>();
 
-    @OneToMany
+    @ManyToMany
     @JoinTable(name = "ASSOCIATION_EFO_TRAIT",
             joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
             inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
