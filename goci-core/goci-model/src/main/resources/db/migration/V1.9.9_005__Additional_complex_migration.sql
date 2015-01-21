@@ -12,7 +12,7 @@ https://github.com/tburdett/goci/tree/2.x-dev/goci-core/goci-model for more).
 
 author:  Tony Burdett
 date:    January 21st 2015
-version: 1.9.9.004 (pre 2.0)
+version: 1.9.9.005 (pre 2.0)
 ################################################################################
 
 */
@@ -33,11 +33,15 @@ SELECT a.ID AS ASSOCIATION_ID, g.ID AS GENE_ID FROM (
   SELECT * FROM (
     SELECT DISTINCT ID, TRIM(REGEXP_SUBSTR(GENE, '[^,]+', 1, LEVEL)) GENE FROM (
       SELECT * FROM (
-        SELECT DISTINCT ID, TRIM(GENE) AS GENE
-        FROM GWASSTUDIESSNP
+        SELECT * FROM (
+          SELECT DISTINCT ID, TRIM(GENE) AS GENE
+          FROM GWASSTUDIESSNP
+          WHERE GENE LIKE '%,%'
+        )
       )
       WHERE LOWER(GENE) != 'intergenic'
       AND LOWER(GENE) != 'nr'
+      AND ID < 6000
     )
     CONNECT BY INSTR(GENE, ',', 1, LEVEL - 1 ) > 0
   )
@@ -48,5 +52,12 @@ JOIN GWASGENE g ON TRIM(g.GENE) = a.GENE;
 --  Links for Table SNP_REGION
 --------------------------------------------------------
 
+INSERT INTO SNP_REGION (SNP_ID, REGION_ID)
+SELECT DISTINCT s.ID AS SNPID, r.ID AS REGIONID, s.SNP AS RS_ID, r.REGION
+FROM GWASSTUDIESSNP gs
+JOIN GWASSNPXREF sx ON sx.GWASSTUDIESSNPID = gs.ID
+JOIN GWASSNP s ON sx.SNPID = s.ID
+JOIN GWASREGIONXREF rx ON rx.GWASSTUDIESSNPID = gs.ID
+JOIN GWASREGION r ON r.ID = rx.REGIONID;
 
 
