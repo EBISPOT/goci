@@ -21,11 +21,10 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
 /*
     @Query("select s from Study s where s.housekeeping.pending = :pending")
-    Collection<Study> findByPending(@Param("pending") String pending);
+    Collection<Study> findByPending(@Param("pending") String pending); */
 
-    @Query("select s from Study s where s.housekeeping.publish = :publish")
-    Collection<Study> findByPublish(@Param("publish") String publish);
-*/
+    @Query("select s from Study s where s.housekeeping.curator != :curator")
+    Collection<Study> findByUnpublished(@Param("curator") String curator);
 
     Collection<Study> findByDiseaseTraitId(Long diseaseTraitId);
 

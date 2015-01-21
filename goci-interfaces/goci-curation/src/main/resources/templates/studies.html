@@ -67,18 +67,12 @@
 
         <!--Default buttons with dropdown menu-->
         <div class="btn-group pull-right">
-
-            <!--  <button class="btn btn-warning" id="remove-data" data-method="remove">
-                  Remove Selected Study
-              </button>-->
-
             <button type="button" class="btn btn-info">Filter Table</button>
             <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle"><span
                     class="caret"></span></button>
             <ul class="dropdown-menu">
                 <li><a th:href="@{/studies}">Show All Studies</a></li>
-                <!--   <li><a th:href="@{/studies(pending=1)}">Show Pending studies</a></li>
-                   <li><a th:href="@{/studies(publish=0)}">Show Unpublished Only</a></li>-->
+                <li><a th:href="@{/studies/unpublished}">Show Unpublished Only</a></li>
             </ul>
         </div>
 
@@ -102,7 +96,6 @@
 
                 <thead>
                 <tr>
-
                     <th data-field="edit" data-switchable="false"></th>
                     <th data-field="author" data-sortable="true">Author</th>
                     <th data-field="title" data-sortable="true">Title</th>
