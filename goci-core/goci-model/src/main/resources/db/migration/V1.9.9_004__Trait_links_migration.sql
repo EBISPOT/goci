@@ -11,7 +11,7 @@ https://github.com/tburdett/goci/tree/2.x-dev/goci-core/goci-model for more).
 
 author:  Tony Burdett
 date:    January 21st 2015
-version: 1.9.9.003 (pre 2.0)
+version: 1.9.9.004 (pre 2.0)
 ################################################################################
 
 */
