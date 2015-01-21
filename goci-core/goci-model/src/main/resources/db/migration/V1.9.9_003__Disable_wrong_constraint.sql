@@ -25,4 +25,4 @@ version: 1.9.9.003 (pre 2.0)
 --  Drop constraint on Table ASSOCIATION_EFO_TRAIT
 --------------------------------------------------------
 ALTER TABLE "ASSOCIATION_EFO_TRAIT" DROP CONSTRAINT "ASSOC_TRAIT_ID_UK";
-
+DROP INDEX "ASSOC_TRAIT_ID_UK";
