@@ -59,10 +59,13 @@ public class StudyController {
     }
 
     // Studies without status "GWAS cataolog" i.e. unpublished
-    @RequestMapping(value = "/unpublished", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String searchUnpublishedStudies(Model model) {
-        model.addAttribute("unpublished_studies", studyRepository.findByUnpublished("GWAS Catalog"));
-        return "unpublished_studies";
+    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, params="status=unpublished")
+    public String searchUnpublishedStudies(Model model, @RequestParam("status") String status) {
+        if (status.equalsIgnoreCase("unpublished")){
+            model.addAttribute("studies", studyRepository.findByUnpublished("GWAS Catalog"));
+        }
+
+        return "studies";
     }
 
    /* New Study*/
