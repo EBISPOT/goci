@@ -6,17 +6,18 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>-->
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>-->
-    <link rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}"/>
-    <link rel="stylesheet" href="/css/bootstrap-theme.min.css" th:href="@{css/bootstrap-theme.min.css}"/>
-    <link rel="stylesheet" href="/css/bootstrap-table.css" th:href="@{css/bootstrap-table.css}"/>
-    <link rel="stylesheet" href="/css/goci-ui.css"/>
-    <link rel="stylesheet" href="/css/icons/flaticon.css"/>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}"/>
+    <link rel="stylesheet" href="../static/css/bootstrap-theme.min.css" th:href="@{css/bootstrap-theme.min.css}"/>
+    <link rel="stylesheet" href="../static/css/bootstrap-table.css" th:href="@{css/bootstrap-table.min.css}"/>
+    <!--<link rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}"/>-->
+    <!--<link rel="stylesheet" href="/css/bootstrap-theme.min.css" th:href="@{css/bootstrap-theme.min.css}"/>-->
+    <!--<link rel="stylesheet" href="/css/bootstrap-table.css" th:href="@{css/bootstrap-table.css}"/>-->
+    <link rel="stylesheet" th:href="@{css/goci-ui.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/js/goci-ui.js"></script>
+    <script type="text/javascript" src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
+    <script type="text/javascript" src="../static/js/goci-ui.js" th:src="@{js/goci-ui.js}"></script>
 
 
 </head>
@@ -31,7 +32,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="#" class="navbar-brand"> <img alt="GWAS logo" src="/icons/GWASBrowser_logo_whitebackground-scaled.png" /></a>
+            <a href="#" class="navbar-brand"> <img alt="GWAS logo" src="../static/icons/GWASBrowser_logo_whitebackground-scaled.png" th:src="@{icons/GWASBrowser_logo_whitebackground-scaled.png}" /></a>
             <!--<a href="#" class="navbar-brand">GWAS logo</a>-->
         </div>
 
@@ -46,8 +47,8 @@
                 <li><a href="methods">Methods</a></li>
                 <li><a href="faq">FAQ</a></li>
                 <li><a href="http://www.ebi.ac.uk/fgpt/gwas">GWAS Diagram</a></li>
-                <li><a class="icon" href="http://www.ebi.ac.uk"><img alt="EBI logo" src="/icons/EMBL_EBI_Logo_white_scaled.png" /></a></li>
-                <li><a class="icon" href="http://www.genome.gov"><img alt="GWAS logo" src="/icons/NHGRI_NIH logo all verions-02-scaled.png" /></a></li>
+                <li><a class="icon" href="http://www.ebi.ac.uk"><img alt="EBI logo" src="../static/icons/EMBL_EBI_Logo_white_scaled.png" /></a></li>
+                <li><a class="icon" href="http://www.genome.gov"><img alt="GWAS logo" src="../static/icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png" /></a></li>
             </ul>
 
         </div><!-- /.navbar-collapse -->
