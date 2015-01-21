@@ -27,7 +27,9 @@ version: 1.9.9.003 (pre 2.0)
 --------------------------------------------------------
 
 INSERT INTO ASSOCIATION_EFO_TRAIT (ASSOCIATION_ID, EFO_TRAIT_ID)
-SELECT GWASSTUDIESSNPID, TRAITID FROM GWASEFOSNPXREF;
+SELECT g.GWASSTUDIESSNPID, g.TRAITID FROM GWASEFOSNPXREF g
+LEFT JOIN GWASSTUDIESSNP gs ON g.GWASSTUDIESSNPID = gs.ID
+WHERE gs.ID IS NOT NULL;
 
 --------------------------------------------------------
 --  Links for Table STUDY_EFO_TRAIT
