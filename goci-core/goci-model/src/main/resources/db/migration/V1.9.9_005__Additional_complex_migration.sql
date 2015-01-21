@@ -23,6 +23,11 @@ version: 1.9.9.005 (pre 2.0)
 #############################################
 */
 
+--------------------------------------------------------
+--  Drop constraint on Table ASSOCIATION_EFO_TRAIT
+--------------------------------------------------------
+ALTER TABLE "ASSOCIATION_REPORTED_GENE" DROP CONSTRAINT "ASSOC_REP_GENE_ID_UK";
+DROP INDEX "ASSOC_REP_GENE_ID_UK";
 
 --------------------------------------------------------
 --  Links for Table ASSOCIATION_REPORTED_GENE
