@@ -15,11 +15,14 @@ import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
-import uk.ac.ebi.spot.goci.service.SnpBatchLoaderService;
+import uk.ac.ebi.spot.goci.service.AssociationBatchLoaderService;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by emma on 06/01/15.
@@ -37,15 +40,15 @@ public class AssociationController {
     private StudyRepository studyRepository;
     private EfoTraitRepository efoTraitRepository;
     private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
-    private SnpBatchLoaderService snpBatchLoaderService;
+    private AssociationBatchLoaderService associationBatchLoaderService;
 
     @Autowired
-    public AssociationController(AssociationRepository associationRepository, StudyRepository studyRepository, EfoTraitRepository efoTraitRepository, SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository, SnpBatchLoaderService snpBatchLoaderService) {
+    public AssociationController(AssociationRepository associationRepository, StudyRepository studyRepository, EfoTraitRepository efoTraitRepository, SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository, AssociationBatchLoaderService associationBatchLoaderService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
-        this.snpBatchLoaderService = snpBatchLoaderService;
+        this.associationBatchLoaderService = associationBatchLoaderService;
     }
 
     /*  Study SNP/Associations */
@@ -96,16 +99,9 @@ public class AssociationController {
 
         if (!file.isEmpty()) {
             // Save the uploaded file received in a multipart request as a file in the upload directory
-            // The path for the upload directory comes from the application properties file
-            String uploadDir;
-            Properties properties = new Properties();
-            try {
-                properties.load(getClass().getClassLoader().getResource("application.properties").openStream());
-                uploadDir = properties.getProperty("multipart.location");
-            } catch (IOException e) {
-                throw new RuntimeException(
-                        "Unable to locate upload directory in which to store the uploaded file ", e);
-            }
+            // The default temporary-file directory is specified by the system property java.io.tmpdir.
+
+            String uploadDir = System.getProperty("java.io.tmpdir");
 
             // Create file
             File uploadedFile = new File(uploadDir + file.getOriginalFilename());
@@ -114,15 +110,24 @@ public class AssociationController {
             try {
                 file.transferTo(uploadedFile);
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException(
+                        "Unable to to upload file ", e);
             }
 
             String uploadedFilePath = uploadedFile.getAbsolutePath();
+
+            // Set permissions
+            uploadedFile.setExecutable(true, false);
+            uploadedFile.setReadable(true, false);
+            uploadedFile.setWritable(true, false);
+
+            // Send file, including path, to SNP batch loader process
             try {
-                ArrayList<Association> associationsFromFile = snpBatchLoaderService.processData(uploadedFilePath);
+                ArrayList<Association> associationsFromFile = associationBatchLoaderService.processData(uploadedFilePath);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
             return "redirect:/studies/" + studyId + "/associations";
 
         } else {

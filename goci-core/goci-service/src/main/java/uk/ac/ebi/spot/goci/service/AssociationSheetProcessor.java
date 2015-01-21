@@ -7,6 +7,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
 import java.text.DecimalFormat;
@@ -15,16 +16,18 @@ import java.util.Collection;
 
 
 /**
- * @author dwelter
+ * @author emma
  *         <p>
- *         This classes takes an Excel spreadsheet sheet and extracts all the SNP records
- *         For each SNP, a SNPentry object is created
+ *         This class takes an Excel spreadsheet sheet and extracts all the association records
+ *         For each SNP, an Association object is created
+ *         <p>
+ *         Created from code originally written by Dani. Adapted to fit with new curation system.
  */
 
-public class SNPSheetProcessor {
+public class AssociationSheetProcessor {
 
     private XSSFSheet sheet;
-    private ArrayList<Association> allSNPs;
+    private ArrayList<Association> allSnpAssociations = new ArrayList<Association>();
     private Logger log = LoggerFactory.getLogger(getClass());
     private String logMessage;
 
@@ -32,75 +35,92 @@ public class SNPSheetProcessor {
         return log;
     }
 
-    public SNPSheetProcessor(XSSFSheet sheet) {
-
+    public AssociationSheetProcessor(XSSFSheet sheet) {
         this.sheet = sheet;
-
-        allSNPs = new ArrayList<Association>();
         logMessage = "";
-        readSNPs();
+
+        // Read through sheet and extract values
+        readSnpAssociations();
     }
 
-    public void readSNPs() {
+    public void readSnpAssociations() {
         boolean done = false;
-        int rownum = 1;
+        int rowNum = 1;
+
 
         while (!done) {
-            XSSFRow row = sheet.getRow(rownum);
+            XSSFRow row = sheet.getRow(rowNum);
 
             if (row == null) {
                 done = true;
                 getLog().debug("Last row read");
                 logMessage = "All spreadsheet data processed successfully";
             } else {
-                String authorReportedGene, strongestAllele, snp;
+
+                String authorReportedGene;
+                String strongestAllele;
+                String snp;
+
+                // Create a collection to hold newly identified SNPs
                 Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
+                Collection<Gene> reportedGenes = new ArrayList<>();
+
 
                 if (row.getCell(0, row.RETURN_BLANK_AS_NULL) != null) {
                     authorReportedGene = row.getCell(0).getRichStringCellValue().getString();
-                    logMessage = "Error in field 'Gene' in row " + rownum + 1 + "\n";
+
+                    Gene reportedGene = new Gene();
+                    reportedGenes.add(reportedGene);
+                    logMessage = "Error in field 'Gene' in row " + rowNum + 1 + "\n";
 
                 } else {
                     authorReportedGene = null;
                     getLog().debug("Gene is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'Gene' in row " + rownum + 1 + "\n";
+                    logMessage = "Error in field 'Gene' in row " + rowNum + 1 + "\n";
                 }
 
                 if (row.getCell(1, row.RETURN_BLANK_AS_NULL) != null) {
                     strongestAllele = row.getCell(1).getRichStringCellValue().getString();
-                    logMessage = "Error in field 'Risk allele' in row " + rownum + 1 + "\n";
+                    logMessage = "Error in field 'Risk allele' in row " + rowNum + 1 + "\n";
 
                 } else {
                     strongestAllele = null;
                     getLog().debug("Risk allele is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'Risk allele' in row " + rownum + 1 + "\n";
+                    logMessage = "Error in field 'Risk allele' in row " + rowNum + 1 + "\n";
                 }
 
                 if (row.getCell(2, row.RETURN_BLANK_AS_NULL) != null) {
                     snp = row.getCell(2).getRichStringCellValue().getString();
 
-                    // More than one SNP entered in row, user should separate these with comma
+                /* TODO COMMENTING OUT UNTIL WE KNOW MORE ABOUT HANDLING HOW TO HANDLE MULTIPLE SNPS
+
+                // More than one SNP entered in row, user should separate these with comma
                     if (snp.contains(",")) {
                         String[] splitSnpStrings = snp.split(",");
                         for (String splitSnpString : splitSnpStrings) {
+                            // Create a new SNP object
                             SingleNucleotidePolymorphism newSnp = new SingleNucleotidePolymorphism();
                             newSnp.setRsId(splitSnpString);
+
+                            // Add to collection
                             snps.add(newSnp);
                         }
-                    }
+                    }*/
 
-                    // Single snp entered
-                    else {
-                        SingleNucleotidePolymorphism newSnp = new SingleNucleotidePolymorphism();
-                        newSnp.setRsId(snp);
-                        snps.add(newSnp);
-                    }
-                    logMessage = "Error in field 'SNP' in row " + rownum + 1 + "\n";
+                    // Single snp entered, assuming string with no comma is a single entry
+
+                    SingleNucleotidePolymorphism newSnp = new SingleNucleotidePolymorphism();
+                    newSnp.setRsId(snp);
+
+                    // Add to collection
+                    snps.add(newSnp);
+
+                    logMessage = "Error in field 'SNP' in row " + rowNum + 1 + "\n";
 
                 } else {
                     snp = null;
                     getLog().debug("SNP is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'SNP' in row " + rownum + 1 + "\n";
+                    logMessage = "Error in field 'SNP' in row " + rowNum + 1 + "\n";
 
                 }
 
@@ -111,17 +131,17 @@ public class SNPSheetProcessor {
                     switch (risk.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
                             riskFrequency = risk.getRichStringCellValue().getString();
-                            logMessage = "Error in field 'Risk Frequency' in row " + rownum + 1 + "\n";
+                            logMessage = "Error in field 'Risk Frequency' in row " + rowNum + 1 + "\n";
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             riskFrequency = Double.toString(risk.getNumericCellValue());
-                            logMessage = "Error in field 'Risk Frequency' in row " + rownum + 1 + "\n";
+                            logMessage = "Error in field 'Risk Frequency' in row " + rowNum + 1 + "\n";
 
                             break;
                     }
                 } else {
                     getLog().debug("RF is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'Risk Frequency' in row " + rownum + 1 + "\n";
+                    logMessage = "Error in field 'Risk Frequency' in row " + rowNum + 1 + "\n";
                 }
 
                 Integer pvalueMantissa = null;
@@ -132,19 +152,19 @@ public class SNPSheetProcessor {
                     switch (mant.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
                             pvalueMantissa = null;
-                            logMessage = "Error in field 'pvalue mantissa' in row " + rownum + 1 + "\n";
+                            logMessage = "Error in field 'pvalue mantissa' in row " + rowNum + 1 + "\n";
 
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             pvalueMantissa = (int) mant.getNumericCellValue();
-                            logMessage = "Error in field 'pvalue mantissa' in row " + rownum + 1 + "\n";
+                            logMessage = "Error in field 'pvalue mantissa' in row " + rowNum + 1 + "\n";
 
                             break;
                     }
                 } else {
                     pvalueMantissa = null;
                     getLog().debug("pvalue mantissa is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'pvalue mantissa' in row " + rownum + 1 + "\n";
+                    logMessage = "Error in field 'pvalue mantissa' in row " + rowNum + 1 + "\n";
 
                 }
 
@@ -153,21 +173,22 @@ public class SNPSheetProcessor {
                     switch (expo.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
                             pvalueExponent = null;
-                            logMessage = "Error in field 'pvalue exponent' in row " + rownum + 1 + "\n";
+                            logMessage = "Error in field 'pvalue exponent' in row " + rowNum + 1 + "\n";
 
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             pvalueExponent = (int) expo.getNumericCellValue();
-                            logMessage = "Error in field 'pvalue exponent' in row " + rownum + 1 + "\n";
+                            logMessage = "Error in field 'pvalue exponent' in row " + rowNum + 1 + "\n";
 
                             break;
                     }
                 } else {
                     pvalueExponent = null;
                     getLog().debug("pvalue exponent is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'pvalue exponent' in row " + rownum + 1 + "\n";
+                    logMessage = "Error in field 'pvalue exponent' in row " + rowNum + 1 + "\n";
                 }
 
+                // This is calculated from mantissa and exponent
                 Float pvalueFloat;
 
                 if (pvalueExponent != null && pvalueMantissa != null) {
@@ -181,12 +202,12 @@ public class SNPSheetProcessor {
                 String pvalueText;
                 if (row.getCell(6, row.RETURN_BLANK_AS_NULL) != null) {
                     pvalueText = row.getCell(6).getRichStringCellValue().getString();
-                    logMessage = "Error in field 'pvaluetxt' in row " + rownum + 1 + "\n";
+                    logMessage = "Error in field 'pvaluetxt' in row " + rowNum + 1 + "\n";
 
                 } else {
                     pvalueText = null;
                     getLog().debug("pvalue text is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'pvaluetxt' in row " + rownum + 1 + "\n";
+                    logMessage = "Error in field 'pvaluetxt' in row " + rowNum + 1 + "\n";
                 }
 
                 Float orPerCopyNum = null;
@@ -195,17 +216,17 @@ public class SNPSheetProcessor {
                     switch (or.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
                             orPerCopyNum = null;
-                            logMessage = "Error in field 'OR' in row " + rownum + 1 + "\n";
+                            logMessage = "Error in field 'OR' in row " + rowNum + 1 + "\n";
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             orPerCopyNum = Float.valueOf((float) or.getNumericCellValue());
-                            logMessage = "Error in field 'OR' in row " + rownum + 1 + "\n";
+                            logMessage = "Error in field 'OR' in row " + rowNum + 1 + "\n";
                             break;
                     }
                 } else {
                     orPerCopyNum = null;
                     getLog().debug("OR is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'OR' in row " + rownum + 1 + "\n";
+                    logMessage = "Error in field 'OR' in row " + rowNum + 1 + "\n";
                 }
 
                 Float orPerCopyRecip = null;
@@ -214,57 +235,56 @@ public class SNPSheetProcessor {
                     switch (recip.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
                             orPerCopyRecip = null;
-                            logMessage = "Error in field 'OR recip' in row " + rownum + 1 + "\n";
+                            logMessage = "Error in field 'OR recip' in row " + rowNum + 1 + "\n";
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             orPerCopyRecip = Float.valueOf((float) recip.getNumericCellValue());
-                            logMessage = "Error in field 'OR recip' in row " + rownum + 1 + "\n";
+                            logMessage = "Error in field 'OR recip' in row " + rowNum + 1 + "\n";
                             break;
                     }
                 } else {
                     orPerCopyRecip = null;
                     getLog().debug("OR recip is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'OR recip' in row " + rownum + 1 + "\n";
+                    logMessage = "Error in field 'OR recip' in row " + rowNum + 1 + "\n";
 
                 }
 
-           /*     TODO WHAT IS THIS
-
+                // If reciprocal is given, program will calculate OR from that
+                // This logic is retained from Dani's original code
                 boolean recipReverse = false;
-
-                if ((orpercopyrecip != null) && (orpercopynum == null)) {
-                    orpercopynum = ((100 / orpercopyrecip) / 100);
+                if ((orPerCopyRecip != null) && (orPerCopyNum == null)) {
+                    orPerCopyNum = ((100 / orPerCopyRecip) / 100);
                     recipReverse = true;
-                }*/
+                }
 
                 String orType;
                 if (row.getCell(9, row.RETURN_BLANK_AS_NULL) != null) {
                     orType = row.getCell(9).getRichStringCellValue().getString();
-                    logMessage = "Error in field 'OR type' in row " + rownum + 1 + "\n";
+                    logMessage = "Error in field 'OR type' in row " + rowNum + 1 + "\n";
                 } else {
                     orType = null;
                     getLog().debug("OR type is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'OR type' in row " + rownum + 1 + "\n";
+                    logMessage = "Error in field 'OR type' in row " + rowNum + 1 + "\n";
                 }
 
                 String orPerCopyRange;
                 if (row.getCell(10, row.RETURN_BLANK_AS_NULL) != null) {
                     orPerCopyRange = row.getCell(10).getRichStringCellValue().getString();
-                    logMessage = "Error in field 'CI' in row " + rownum + 1 + "\n";
+                    logMessage = "Error in field 'CI' in row " + rowNum + 1 + "\n";
                 } else {
                     orPerCopyRange = null;
                     getLog().debug("CI is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'CI' in row " + rownum + 1 + "\n";
+                    logMessage = "Error in field 'CI' in row " + rowNum + 1 + "\n";
                 }
 
                 String orPerCopyUnitDescr;
                 if (row.getCell(11) != null) {
                     orPerCopyUnitDescr = row.getCell(11).getRichStringCellValue().getString();
-                    logMessage = "Error in field 'OR direction' in row " + rownum + 1 + "\n";
+                    logMessage = "Error in field 'OR direction' in row " + rowNum + 1 + "\n";
                 } else {
                     orPerCopyUnitDescr = null;
                     getLog().debug("OR direction is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'OR direction' in row " + rownum + 1 + "\n";
+                    logMessage = "Error in field 'OR direction' in row " + rowNum + 1 + "\n";
                 }
 
                 Float orPerCopyStdError = null;
@@ -274,36 +294,59 @@ public class SNPSheetProcessor {
                     switch (std.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
                             orPerCopyStdError = null;
-                            logMessage = "Error in field 'Standard Error' in row " + rownum + 1 + "\n";
+                            logMessage = "Error in field 'Standard Error' in row " + rowNum + 1 + "\n";
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             orPerCopyStdError = Float.valueOf((float) std.getNumericCellValue());
-                            logMessage = "Error in field 'Standard Error' in row " + rownum + 1 + "\n";
+                            logMessage = "Error in field 'Standard Error' in row " + rowNum + 1 + "\n";
                             break;
                     }
                 } else {
                     orPerCopyStdError = null;
                     getLog().debug("SE is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'Standard Error' in row " + rownum + 1 + "\n";
+                    logMessage = "Error in field 'Standard Error' in row " + rowNum + 1 + "\n";
                 }
 
-                /* TODO WHATS THIS DOING
-                if ((orpercopyrecip != null) && (orpercopyrange != null) && recipReverse) {
-                    orpercopyrange = reverseCI(orpercopyrange);
+
+                // This logic is retained from Dani's original code
+                if ((orPerCopyRecip != null) && (orPerCopyRange != null) && recipReverse) {
+                    orPerCopyRange = reverseCI(orPerCopyRange);
                 }
 
-                if ((orpercopyrange == null) && (orpercopystderror != null)) {
-                    orpercopyrange = setRange(orpercopystderror, orpercopynum);
-                }*/
+
+                if ((orPerCopyRange == null) && (orPerCopyStdError != null)) {
+                    orPerCopyRange = setRange(orPerCopyStdError, orPerCopyNum);
+                }
+
 
                 String snpType;
                 if (row.getCell(13, row.RETURN_BLANK_AS_NULL) != null) {
                     snpType = row.getCell(13).getRichStringCellValue().getString();
-                    logMessage = "Error in field 'SNP type' in row " + rownum + 1 + "\n";
+                    logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
                 } else {
                     snpType = null;
                     getLog().debug("SNP type is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'SNP type' in row " + rownum + 1 + "\n";
+                    logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
+                }
+
+                String multiSnpHaplotype;
+                if (row.getCell(13, row.RETURN_BLANK_AS_NULL) != null) {
+                    multiSnpHaplotype = row.getCell(13).getRichStringCellValue().getString();
+                    logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
+                } else {
+                    multiSnpHaplotype = null;
+                    getLog().debug("SNP type is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
+                }
+
+                String snpInteraction;
+                if (row.getCell(13, row.RETURN_BLANK_AS_NULL) != null) {
+                    snpInteraction = row.getCell(13).getRichStringCellValue().getString();
+                    logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
+                } else {
+                    snpInteraction = null;
+                    getLog().debug("SNP type is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
                 }
 
 
@@ -311,32 +354,44 @@ public class SNPSheetProcessor {
                     done = true;
                     getLog().debug("Empty row that wasn't caught via 'row = null'");
                 } else {
-                    Association thisSNP;
-                    thisSNP = new Association();
-                    thisSNP.setAuthorReportedGene(authorReportedGene);
-                    thisSNP.setStrongestAllele(strongestAllele);
-                    thisSNP.setRiskFrequency(riskFrequency);
-                    thisSNP.setPvalueFloat(pvalueFloat);
-                    thisSNP.setPvalueText(pvalueText);
-                    thisSNP.setOrPerCopyNum(orPerCopyNum);
-                    thisSNP.setOrType(orType);
-                    thisSNP.setSnpType(snpType);
-                    thisSNP.setPvalueMantissa(pvalueMantissa);
-                    thisSNP.setPvalueExponent(pvalueExponent);
-                    thisSNP.setOrPerCopyRecip(orPerCopyRecip);
-                    thisSNP.setOrPerCopyStdError(orPerCopyStdError);
-                    thisSNP.setOrPerCopyRange(orPerCopyRange);
-                    thisSNP.setOrPerCopyUnitDescr(orPerCopyUnitDescr);
+                    // Create a new association
+                    Association thisAssociation = new Association();
+                    thisAssociation.setAuthorReportedGene(authorReportedGene);
+                    thisAssociation.setStrongestAllele(strongestAllele);
+                    thisAssociation.setRiskFrequency(riskFrequency);
+                    thisAssociation.setPvalueFloat(pvalueFloat);
+                    thisAssociation.setPvalueText(pvalueText);
+                    thisAssociation.setOrPerCopyNum(orPerCopyNum);
+                    thisAssociation.setOrType(orType);
+                    thisAssociation.setSnpType(snpType);
+                    thisAssociation.setMultiSnpHaplotype(multiSnpHaplotype);
+                    thisAssociation.setSnpInteraction(snpInteraction);
+                    thisAssociation.setPvalueMantissa(pvalueMantissa);
+                    thisAssociation.setPvalueExponent(pvalueExponent);
+                    thisAssociation.setOrPerCopyRecip(orPerCopyRecip);
+                    thisAssociation.setOrPerCopyStdError(orPerCopyStdError);
+                    thisAssociation.setOrPerCopyRange(orPerCopyRange);
+                    thisAssociation.setOrPerCopyUnitDescr(orPerCopyUnitDescr);
+                    thisAssociation.setReportedGenes(reportedGenes);
 
                     // Add all newly created associations to collection
-                    allSNPs.add(thisSNP);
+                    allSnpAssociations.add(thisAssociation);
                 }
 
             }
-            rownum++;
+            rowNum++;
         }
     }
 
+    public ArrayList<Association> getAllSnpAssociations() {
+        return allSnpAssociations;
+    }
+
+    public String getLogMessage() {
+        return logMessage;
+    }
+
+// These methods remain from Dani's code
 
     /**
      * This method calculates the confidence interval based on the standard error - formatting code taken from Kent's Coldfusion code.
@@ -345,6 +400,7 @@ public class SNPSheetProcessor {
      * @param orpc_num    The odds-ratio or beta value for the SNP
      * @return String The confidence interval for the odds-ratio or beta value
      */
+
     public String setRange(double orpc_stderr, double orpc_num) {
         double delta = (100000 * orpc_stderr * 1.96) / 100000;
         double low = orpc_num - delta;
@@ -424,11 +480,5 @@ public class SNPSheetProcessor {
         return newInterval;
     }
 
-    public ArrayList<Association> getSNPlist() {
-        return allSNPs;
-    }
 
-    public String getLogMessage() {
-        return logMessage;
-    }
 }

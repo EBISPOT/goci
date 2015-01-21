@@ -3,9 +3,12 @@ package uk.ac.ebi.spot.goci.service;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Association;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -18,26 +21,25 @@ import java.util.ArrayList;
  *         Created from code originally written by Dani. Adapted to fit with new curation system.
  *         <p>
  */
+
 @Service
-public class SnpBatchLoaderService {
+public class AssociationBatchLoaderService {
 
-
-    public SnpBatchLoaderService() {
-
+    public AssociationBatchLoaderService() {
     }
 
-    public ArrayList<Association> processData(String name) throws Exception {
-        String filename = name;
+    // Returns an array list of new associations
+    public ArrayList<Association> processData(String fileName) throws Exception {
 
+        // Open and parse our spreadsheet file
         XSSFSheet sheet = null;
-        OPCPackage pkg = OPCPackage.open(filename);
+        OPCPackage pkg = OPCPackage.open(fileName);
         XSSFWorkbook current = new XSSFWorkbook(pkg);
         sheet = current.getSheetAt(0);
-        SNPSheetProcessor processor = null;
-
+        AssociationSheetProcessor processor = null;
         try {
-            processor = new SNPSheetProcessor(sheet);
-            ArrayList<Association> associations = processor.getSNPlist();
+            processor = new AssociationSheetProcessor(sheet);
+            ArrayList<Association> associations = processor.getAllSnpAssociations();
             pkg.close();
             return associations;
         } catch (Exception e) {
@@ -45,6 +47,11 @@ public class SnpBatchLoaderService {
             // TODO CREATE EXCEPTION IF THIS GOES WRONG
             e.printStackTrace();
             throw e;
-        }
+   }
+/* finally { // Delete our file
+           File fileToDelete = new File(fileName);
+           fileToDelete.deleteOnExit();
+       }*/
     }
+
 }
