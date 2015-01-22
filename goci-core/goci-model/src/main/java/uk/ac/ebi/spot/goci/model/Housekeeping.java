@@ -4,8 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.util.Date;
 
 
 /**

@@ -1,15 +1,10 @@
 package uk.ac.ebi.spot.goci.model;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * Created by emma on 21/11/14.
@@ -32,18 +27,18 @@ public class SingleNucleotidePolymorphism {
 
     private String chromosomePosition;
 
-    private Timestamp lastUpdateDate;
+    private Date lastUpdateDate;
 
     @ManyToMany
     @JoinTable(name = "SNP_REGION",
-               joinColumns = @JoinColumn(name = "SNP_ID"),
-               inverseJoinColumns = @JoinColumn(name = "REGION_ID"))
+            joinColumns = @JoinColumn(name = "SNP_ID"),
+            inverseJoinColumns = @JoinColumn(name = "REGION_ID"))
     private Collection<Region> regions;
 
     @ManyToMany
     @JoinTable(name = "SNP_GENE",
-               joinColumns = @JoinColumn(name = "SNP_ID"),
-               inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
+            joinColumns = @JoinColumn(name = "SNP_ID"),
+            inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
     private Collection<Gene> genes;
 
     // JPA no-args constructor
@@ -96,7 +91,7 @@ public class SingleNucleotidePolymorphism {
         this.chromosomePosition = chromosomePosition;
     }
 
-    public Timestamp getLastUpdateDate() {
+    public Date getLastUpdateDate() {
         return lastUpdateDate;
     }
 
