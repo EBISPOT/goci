@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
 import uk.ac.ebi.spot.goci.curation.service.PubmedIdForImport;
+import uk.ac.ebi.spot.goci.curation.service.StudySearchFilter;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.PropertyFilePubMedLookupService;
@@ -49,20 +50,46 @@ public class StudyController {
         this.propertyFilePubMedLookupService = propertyFilePubMedLookupService;
     }
 
-    /* All studies */
+    /* All studies and various filtered lists */
 
     // Return all studies
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE)
     public String searchStudies(Model model) {
+
+        // Find all studies
         model.addAttribute("studies", studyRepository.findAll());
+
+        // Add a studySearchFilter to model in case user want to filter table
+        model.addAttribute("studySearchFilter", new StudySearchFilter());
+
         return "studies";
     }
 
-    // Studies without status "GWAS cataolog" i.e. unpublished
-    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, params="status=unpublished")
-    public String searchUnpublishedStudies(Model model, @RequestParam("status") String status) {
-        if (status.equalsIgnoreCase("unpublished")){
-            model.addAttribute("studies", studyRepository.findByUnpublished("GWAS Catalog"));
+    // Studies by curator and/or status
+    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, params = "filters=true", method = RequestMethod.POST)
+    public String searchForStudyByFilter(@ModelAttribute StudySearchFilter studySearchFilter, Model model) {
+
+        // Get ids of objects searched for
+        Long status = studySearchFilter.getStatusSearchFilterId();
+        Long curator = studySearchFilter.getCuratorSearchFilterId();
+
+        // If user entered a status
+        if (status != null) {
+            // If we have curator and status find by both
+            if (curator != null) {
+                model.addAttribute("studies", studyRepository.findByCurationStatusAndCuratorAllIgnoreCase(status, curator));
+            } else {
+                model.addAttribute("studies", studyRepository.findByCurationStatusIgnoreCase(status));
+            }
+        }
+        // If user entered curator
+        else if (curator != null) {
+            model.addAttribute("studies", studyRepository.findByCuratorIgnoreCase(curator));
+        }
+
+        // If all else fails return all studies
+        else {
+            model.addAttribute("studies", studyRepository.findAll());
         }
 
         return "studies";
