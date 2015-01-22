@@ -109,3 +109,14 @@
 .clickable {
     cursor: pointer;
 }
+
+.navbar-brand {
+    background: url(../images/gwas-logo-32x32.png) no-repeat !important;
+    background-position: left center;
+    padding-left: 40px;
+}
+
+.gwas-circle {
+    position: absolute;
+    left:160px;
+}
