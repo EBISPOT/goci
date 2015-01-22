@@ -117,15 +117,17 @@ public class StudyController {
         // Remove whitespace
         String pubmedId = pubmedIdForImport.getPubmedId().trim();
 
+        // Check if there is an existing study with the same pubmed id
         Study existingStudy = studyRepository.findByPubmedId(pubmedId);
-
-        // There is an existing study with the same pubmed id
         if (existingStudy != null) {
             throw new PubmedImportException();
         }
 
         // Pass to importer
         Study importedStudy = propertyFilePubMedLookupService.dispatchSummaryQuery(pubmedId);
+
+
+        // Save new study
         studyRepository.save(importedStudy);
         return "redirect:/studies/" + importedStudy.getId();
     }
@@ -135,7 +137,19 @@ public class StudyController {
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String addStudy(@ModelAttribute Study study) {
+
+        // Create housekeeping object and create the study added date
+        Housekeeping studyHousekeeping = new Housekeeping();
+        java.util.Date studyAddedDate = new java.util.Date();
+        studyHousekeeping.setStudyAddedDate(studyAddedDate);
+
+        // Save housekeeping
+        housekeepingRepository.save(studyHousekeeping);
+
+        // Update and save study
+        study.setHousekeeping(studyHousekeeping);
         Study newStudy = studyRepository.save(study);
+
         return "redirect:/studies/" + newStudy.getId();
     }
 
@@ -197,11 +211,6 @@ public class StudyController {
         // Find study
         Study study = studyRepository.findOne(studyId);
 
-        // Determine if it has a housekeeping object
-        if (study.getHousekeeping() == null) {
-            study.setHousekeeping(new Housekeeping());
-        }
-
         // Return the housekeeping object attached to study and return the study
         model.addAttribute("studyHousekeeping", study.getHousekeeping());
         model.addAttribute("study", study);
@@ -254,6 +263,10 @@ public class StudyController {
     public List<CurationStatus> populateCurationStatuses(Model model) {
         return curationStatusRepository.findAll();
     }
+
+
+     /* General purpose methods */
+    // TODO CREATE HOUSEKEEPING OBJECT
 
     /* Exception handling */
 
