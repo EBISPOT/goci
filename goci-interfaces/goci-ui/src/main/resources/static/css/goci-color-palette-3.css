@@ -1,0 +1,71 @@
+.color-primary {
+    color: #669CFF;
+}
+
+.color-primary-accent {
+    color: #ABC9FF;
+}
+
+.color-primary-bold {
+    color: #2150A6;
+}
+
+.background-color-primary {
+    background-color: #669CFF;
+}
+
+.background-color-primary-accent {
+    background-color: #ABC9FF;
+}
+
+.background-color-primary-bold {
+    background-color: #2150A6;
+}
+
+.color-secondary {
+    color: #876AFF;
+}
+
+.color-secondary-accent {
+    color: #BDADFF;
+}
+
+.color-secondary-bold {
+    color: #3C22A6;
+}
+
+.background-color-secondary {
+    background-color: #876AFF;
+}
+
+.background-color-secondary-accent {
+    background-color: #BDADFF;
+}
+
+.background-color-secondary-bold {
+    background-color: #3C22A6;
+}
+
+.color-complementary {
+    color: #FFC456;
+}
+
+.color-complementary-accent {
+    color: #FFDEA2;
+}
+
+.color-complementary-bold {
+    color: #A6751C;
+}
+
+.background-color-complementary {
+    background-color: #FFC456;
+}
+
+.background-color-complementary-accent {
+    background-color: #FFDEA2;
+}
+
+.background-color-complementary-bold {
+    background-color: #A6751C;
+}
