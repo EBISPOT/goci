@@ -13,6 +13,18 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
+
+    <!--Select2: http://ivaynberg.github.io/select2/-->
+    <!-- Include Select2 CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css"/>
+
+    <!-- CSS to make Select2 fit in with Bootstrap 3.x -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2-bootstrap.min.css"/>
+
+    <!-- Include Select2 JS -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
+
+
     <!--Bootstrap table: http://bootstrap-table.wenzhixin.net.cn/-->
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.5.0/bootstrap-table.min.css"/>
@@ -27,8 +39,7 @@
 <!--TODO
 - REIMPLEMENTED LOGIN
 - COUNT
-- DELETE STUDY
-- MORE FILTERS-->
+- DELETE STUDY-->
 
 
 <nav role="navigation" class="navbar navbar-default">
@@ -50,7 +61,6 @@
             <!--<li><a href="#">Count Data</a></li>-->
         </ul>
 
-
         <!--<ul class="nav navbar-nav navbar-right">
             <li>
                 <form th:action="@{/logout}" method="post">
@@ -62,20 +72,59 @@
 </nav>
 
 <div class="container-fluid">
-    <div class="btn-toolbar">
-
-
-        <!--Default buttons with dropdown menu-->
-        <div class="btn-group pull-right">
-            <button type="button" class="btn btn-info">Filter Table</button>
-            <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle"><span
-                    class="caret"></span></button>
-            <ul class="dropdown-menu">
-                <li><a th:href="@{/studies}">Show All Studies</a></li>
-                <li><a th:href="@{/studies(status=unpublished)}">Show Unpublished Only</a></li>
-            </ul>
+    <div class="row">
+        <div class="btn-toolbar">
+            <div class="btn-group pull-right">
+                <button type="button" class="btn btn-info" data-toggle="collapse"
+                        data-target="#filterParametersForm">Filter Table
+                </button>
+            </div>
         </div>
+    </div>
+</div>
+<br/>
 
+<div class="container-fluid">
+    <div class="row">
+        <div class="pull-right">
+            <div id="filterParametersForm" class="collapse">
+
+                <form class="form-inline" name="filterParametersForm" role="form" method="post"
+                      th:action="@{/studies(filters=true)}"
+                      th:object="${studySearchFilter} ">
+
+                    <div class="form-group">
+                        <label for="curationStatus" class="control-label">Curator Status:</label>
+                        <select name="curationStatus" class="form-control select2-select"
+                                th:field="*{statusSearchFilterId}" id="curationStatus">
+                            <!-- Empty value for first entry-->
+                            <option value=""></option>
+                            <option th:each="curationStatus : ${curationstatuses}"
+                                    th:value="${curationStatus.id}"
+                                    th:text="${curationStatus.status}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="curator" class="control-label">Curator:</label>
+                        <select name="curator" th:field="*{curatorSearchFilterId}"
+                                class="form-control select2-select" id="curator">
+                            <!-- Empty value for first entry-->
+                            <option value=""></option>
+                            <option th:each="curator : ${curators}"
+                                    th:value="${curator.id}"
+                                    th:text="${curator.lastName}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -140,6 +189,23 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(function () {
+        // turn the element to select2 select style
+        $('#curationStatus').select2({ placeholder: "Select a status",
+            allowClear: true});
+    });
+</script>
+
+<script>
+    $(function () {
+        // turn the element to select2 select style
+        $('#curator').select2({ placeholder: "Select a curator",
+            allowClear: true});
+    });
+</script>
+
 
 <script>
     //    Count our table rows
