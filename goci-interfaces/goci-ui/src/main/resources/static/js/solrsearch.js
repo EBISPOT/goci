@@ -2,7 +2,7 @@
  * Created by dwelter on 20/01/15.
  */
 
-var solrBaseURL = 'http://megatron.windows.ebi.ac.uk:8983/solr/gwas/select'
+var solrBaseURL = 'http://ramesesii.windows.ebi.ac.uk:8983/solr/gwas/select'
 
 function solrSearch(queryTerm){
 
@@ -13,11 +13,12 @@ function solrSearch(queryTerm){
         url: solrBaseURL,
         data: {'q': searchTerm,
                 'indent': 'true',
+                'rows' : 1000000,
                 'facet':'true',
                 'facet.field':'resourcename',
-                'group' : 'true',
-                'group.field' : 'resourcename',
-                'group.limit' : '-1',
+                //'group' : 'true',
+                //'group.field' : 'resourcename',
+                //'group.limit' : '-1',
                 'wt':'json'},
         dataType: 'jsonp',
         jsonp: 'json.wrf',
@@ -35,21 +36,45 @@ function processData(data){
 
     setCountBadges(data.facet_counts.facet_fields.resourcename);
 
-    var documents = data.grouped.resourcename.groups;
+    //var documents = data.grouped.resourcename.groups;
+    //
+    //for(var i=0; i<documents.length; i++){
+    //    var group = documents[i];
+    //
+    //    if(group.groupValue == "study"){
+    //        processStudies(group.doclist.docs);
+    //    }
+    //    else if (group.groupValue == "association"){
+    //        processAssociations(group.doclist.docs);
+    //    }
+    //    if(group.groupValue == "efotrait"){
+    //        processTraits(group.doclist.docs);
+    //    }
+    //}
+
+    var documents = data.response.docs;
+    var studyTable = $("<tbody>");
+    var associationTable = $("<tbody>");
+    var traitTable = $("<tbody>");
+
 
     for(var i=0; i<documents.length; i++){
-        var group = documents[i];
+        console.log("Due to process " + documents.length + " documents");
+        var doc = documents[i];
 
-        if(group.groupValue == "study"){
-            processStudies(group.doclist.docs);
+        if(doc.resourcename == "study"){
+            processStudy(doc, studyTable);
         }
-        else if (group.groupValue == "association"){
-            processAssociations(group.doclist.docs);
+        else if (doc.resourcename == "association"){
+            processAssociation(doc, associationTable);
         }
-        if(group.groupValue == "efotrait"){
-            processTraits(group.doclist.docs);
+        else if(doc.resourcename == "efoTrait"){
+            processTrait(doc, traitTable);
         }
     }
+    $('#studySummaries').append(studyTable);
+    $('#associationSummaries').append(associationTable);
+    $('#efotraitSummaries').append(traitTable);
 
     console.log("Data display complete");
 }
@@ -78,56 +103,69 @@ function processStudies(studies){
     for(var i=0; i<studies.length; i++){
         var study = studies[i];
 
-        var row = $("<tr>");
-        row.append($("<td>").html(study.author));
-        row.append($("<td>").html(study.publication));
-        row.append($("<td>").html(study.title));
-        row.append($("<td>").html(study.trait));
-        row.append($("<td>").html(''));
-        row.append($("<td>").html(study.pubmedId));
-        table.append(row);
+         proccessStudy(study,table);
     }
     $('#studySummaries').append(table);
-}  ;
+};
+
+
+function processStudy(study, table){
+    var row = $("<tr>");
+    row.append($("<td>").html(study.author));
+    row.append($("<td>").html(study.publication));
+    row.append($("<td>").html(study.title));
+    row.append($("<td>").html(study.trait));
+    row.append($("<td>").html(''));
+    row.append($("<td>").html(study.pubmedId));
+    table.append(row);
+}
 
 
 function processAssociations(associations){
     var table = $("<tbody>");
     for(var i=0; i<associations.length; i++){
         var association = associations[i];
+         proccessAssociation(association,table);
 
-        var row = $("<tr>");
-        row.append($("<td>").html(''));
-        row.append($("<td>").html(''));
-        row.append($("<td>").html(association.strongestAllele));
-        row.append($("<td>").html(association.pValue));
-        row.append($("<td>").html(''));
-        row.append($("<td>").html(''));
-        table.append(row);
     }
     $('#associationSummaries').append(table);
 
+}
+
+function processAssociation(association, table){
+    var row = $("<tr>");
+    row.append($("<td>").html(''));
+    row.append($("<td>").html(''));
+    row.append($("<td>").html(association.strongestAllele));
+    row.append($("<td>").html(association.pValue));
+    row.append($("<td>").html(''));
+    row.append($("<td>").html(''));
+    table.append(row);
 }
 
 function processTraits(efoTraits){
     var table = $("<tbody>");
     for(var i=0; i<efoTraits.length; i++){
         var efotrait = efoTraits[i];
-
-        var row = $("<tr>");
-        row.append($("<td>").html(efotrait.trait));
-        row.append($("<td>").html(efotrait.shortForm));
-
-        var syns = '';
-        if(efotrait.synonym.length > 0){
-            for(var j=0; j < efotrait.synonym.length ; j++){
-                syns.concat(efotrait.synonym[j]);
-            }
-        }
-
-        row.append($("<td>").html(syns));
-        row.append($("<td>").html(efotrait.child.length));
-        table.append(row);
+        processStudies(efotrait,table);
     }
     $('#efotraitSummaries').append(table);
+}
+
+function processTrait(efotrait, table){
+
+    var row = $("<tr>");
+    row.append($("<td>").html(efotrait.trait));
+    row.append($("<td>").html(efotrait.shortForm));
+
+    var syns = '';
+    if(efotrait.synonym.length > 0){
+        for(var j=0; j < efotrait.synonym.length ; j++){
+            syns.concat(efotrait.synonym[j]);
+        }
+    }
+
+    row.append($("<td>").html(syns));
+    row.append($("<td>").html(efotrait.child.length));
+    table.append(row);
 }
