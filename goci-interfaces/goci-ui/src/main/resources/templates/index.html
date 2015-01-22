@@ -67,32 +67,37 @@
             </ul>
         </div><!--/.navbar-collapse -->
     </div>
+    <div class="navbar-bottom-banner">
+    </div>
 </nav>
 
 <!-- Main jumbotron for a primary marketing message or call to action -->
 <div class="jumbotron background-color-primary-accent">
     <div class="container">
-        <h1><img src="../static/images/gwas-circle.png" class="gwas-circle">GWAS Catalog</h1>
-
-        <h3>A Catalog of Published Genome-Wide Association Studies</h3>
-
-        <!-- search box goes here -->
-        <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search the catalog" id="search-box">
-            <span class="input-group-btn">
-                <button class="btn btn-default" type="button" id="search-button">
-                    <span class="glyphicon glyphicon-search"></span>
-                </button>
-            </span>
+        <div class="gwas-circle">
+            <img src="../static/images/gwas-circle.png">
         </div>
-        <div class="examples">
-            Examples:
-            <a href="/search?query=breast%20cancer">breast cancer</a>,
-            <a href="/search?query=rs7329174">rs7329174</a>,
-            <a href="/search?query=Yang">Yang</a>
-        </div>
+        <div>
+            <h1>GWAS Catalog</h1>
 
-        <!--<p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>-->
+            <h3>A Catalog of Published Genome-Wide Association Studies</h3>
+
+            <!-- search box goes here -->
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search the catalog" id="search-box">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="search-button">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </span>
+            </div>
+            <div class="examples">
+                Examples:
+                <a href="/search?query=breast%20cancer">breast cancer</a>,
+                <a href="/search?query=rs7329174">rs7329174</a>,
+                <a href="/search?query=Yang">Yang</a>
+            </div>
+        </div>
     </div>
 </div>
 

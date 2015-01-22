@@ -117,6 +117,19 @@
 }
 
 .gwas-circle {
-    position: absolute;
-    left:160px;
+    float: left;
+    width: 200px;
+    height: 100%;
+    padding-top: 20px;
+    /*position: absolute;*/
+    /*left:160px;*/
+}
+
+.navbar-fixed-top {
+    border-bottom: 0px;
+}
+
+.navbar-bottom-banner {
+    background-image: url(../images/gwas-banner.png);
+    height: 20px;
 }
