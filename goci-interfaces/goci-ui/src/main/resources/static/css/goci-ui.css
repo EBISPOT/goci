@@ -22,6 +22,14 @@
     /*transform: scale(0.2, 0.2);*/
 /*}*/
 
+h2 {
+    color: #B0DFE6 !important;
+}
+
+/*.col-md-4 {*/
+    /*background-color: #B0DFE6;*/
+/*}*/
+
 #imaginary_container{
     margin-top:5%;
 }
