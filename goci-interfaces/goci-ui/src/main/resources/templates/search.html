@@ -16,10 +16,11 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/js/goci-ui.js"></script>
+    <script type="text/javascript" src="/js/solrsearch.js"></script>
 
 
 </head>
-<body onload="solrSearch()">
+<body onload="loadResults()">
 <nav class="navbar navbar-inverse" role="navigation">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -114,16 +115,16 @@
                     <b>Show results for</b>
                         <div class="list-group">
                             <!--add an "active" class annotation to each a tag when it's selected-->
-                            <a href="#" class="list-group-item">    <span class="badge">3</span>
+                            <a href="#" class="list-group-item" id="studyFacet"><span class="badge">0</span>
                                 Studies</a>
-                            <a href="#" class="list-group-item">    <span class="badge">12</span>
-                                SNPs</a>
-                            <a href="#" class="list-group-item">    <span class="badge">14</span>
+                            <a href="#" class="list-group-item" id="associationFacet"><span class="badge">0</span>
                                 Associations</a>
-                            <a href="#" class="list-group-item">    <span class="badge">2</span>
+                            <a href="#" class="list-group-item" id="efotraitFacet"><span class="badge">0</span>
                                 Ontology terms</a>
-                            <a href="#" class="list-group-item disabled">    <span class="badge">0</span>
-                                Some other facet with no results</a>
+                            <a href="#" class="list-group-item disabled" id="singlenucleotidepolymorphismFacet"><span class="badge">0</span>
+                                SNPs</a>
+                            <!--<a href="#" class="list-group-item disabled">    <span class="badge">0</span>-->
+                                <!--Some other facet with no results</a>-->
                         </div>
 
                     </div>
@@ -209,36 +210,68 @@
         </div>
         <div class="col-md-9" id="results-area">
             <h2>Search results for <em><span id="search-term"></span></em></h2>
-            <table class="table">
+            <table class="table" id="studySummaries">
                 <thead>
                 <tr>
+                    <th>Author</th>
+                    <th>Publication</th>
+                    <th>Title</th>
+                    <th>Disease/Trait</th>
+                    <th>Date</th>
+                    <th>Pubmed ID</th>
 
-                    <th data-field="author">Author</th>
-                    <th data-field="publication">Publication</th>
-                    <th data-field="title">Title</th>
-                    <th data-field="diseaseTrait">Disease/Trait</th>
-                    <th data-field="studydate">Date</th>
-                    <th data-field="pubmedId">Pubmed ID</th>
-
+                    <!--<th data-field="author">Author</th>-->
+                    <!--<th data-field="publication">Publication</th>-->
+                    <!--<th data-field="title">Title</th>-->
+                    <!--<th data-field="diseaseTrait">Disease/Trait</th>-->
+                    <!--<th data-field="studydate">Date</th>-->
+                    <!--<th data-field="pubmedId">Pubmed ID</th>-->
                     <!--<th data-field="rsId">SNP count</th>-->
 
                 </tr>
                 </thead>
-                <tbody>
-                <tr th:each="gs : ${search}">
 
-                    <td th:text="${gs.author} ?: 'null'">Author</td>
-                    <td th:text="${gs.publication} ?: 'null'">Publication</td>
-                    <td th:text="${gs.title} ?: 'null'">Title</td>
-                    <td th:text="${gs.diseaseTrait != null} ? ${gs.diseaseTrait.trait} : 'null'">Trait</td>
-                    <td th:text="${gs.studyDate} ?: 'null'">Date</td>
-                    <td th:text="${gs.pubmedId} ?: 'null'">PubMed ID</td>
+                <!--<tbody>-->
+                <!--<tr th:each="gs : ${search}">-->
+                    <!--<td th:text="${gs.author} ?: 'null'">Author</td>-->
+                    <!--<td th:text="${gs.publication} ?: 'null'">Publication</td>-->
+                    <!--<td th:text="${gs.title} ?: 'null'">Title</td>-->
+                    <!--<td th:text="${gs.diseaseTrait != null} ? ${gs.diseaseTrait.trait} : 'null'">Trait</td>-->
+                    <!--<td th:text="${gs.studyDate} ?: 'null'">Date</td>-->
+                    <!--<td th:text="${gs.pubmedId} ?: 'null'">PubMed ID</td>-->
+                <!--</tr>-->
+                <!--</tbody>-->
+            </table>
 
+            <table class="table" id="associationSummaries">
+                <thead>
+                <tr>
+                    <th>RS ID</th>
+                    <th>Chromosome location</th>
+                    <th>Strongest allele</th>
+                    <th>p-value</th>
+                    <th>OR or beta-cofficient</th>
+                    <th>Unit description</th>
 
 
                 </tr>
-                </tbody>
+                </thead>
+
             </table>
+
+            <table class="table" id="efotraitSummaries">
+                <thead>
+                <tr>
+                    <th>Trait name</th>
+                    <th>EFO URI</th>
+                    <th>Synonyms</th>
+                    <th>Child count</th>
+
+                </tr>
+                </thead>
+
+            </table>
+
         </div>
     </div>
 <!--</div>-->

@@ -24,17 +24,26 @@ function doSearch(){
 }
 
 function loadResults(){
-    $('#lower_container').show();
-    $('#search-term').text(searchTerm);
-
-    $('#search-box').text(searchTerm);
-}
-
-function solrSearch(){
     if ($('#query').text() != ''){
+        solrSearch($('#query').text());
+        $('#lower_container').show();
+        $('#search-term').text($('#query').text());
+
+        if($('.breadcrumb').children().length == 2){
+            var gwas = $('ol.breadcrumb li:last-child');
+            gwas.removeClass('active');
+            gwas.empty();
+            gwas.append("<a href='search'>Search</a>");
+
+            $('.breadcrumb').append($("<li></li>").attr("class", "active").text($('#query').text())) ;
+        }
+
+
+
+
 
     }
-}
+};
 
 function toggleSidebar(ts){
    
@@ -55,5 +64,5 @@ function toggleSidebar(ts){
             $(ts).parents('#filter-bar').removeClass('col-md-3').addClass('col-md-1');
             $(ts).parents('#filter-bar').siblings('#results-area').removeClass('col-md-9').addClass('col-md-11');
         }
-} ;
+};
 
