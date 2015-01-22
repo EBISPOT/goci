@@ -47,29 +47,29 @@ public class StudyService {
      */
     @Transactional(readOnly = true)
     public List<Study> deepFindAll() {
-        List<Study> allSnps = studyRepository.findAll();
-        // iterate over all Snps and grab region info
-        getLog().info("Obtained " + allSnps.size() + " SNPs, starting deep load...");
-        allSnps.forEach(this::loadAssociatedData);
-        return allSnps;
+        List<Study> allStudies = studyRepository.findAll();
+        // iterate over all studies and grab trait info
+        getLog().info("Obtained " + allStudies.size() + " studies, starting deep load...");
+        allStudies.forEach(this::loadAssociatedData);
+        return allStudies;
     }
 
     @Transactional(readOnly = true)
     public List<Study> deepFindAll(Sort sort) {
-        List<Study> allSnps = studyRepository.findAll(sort);
-        // iterate over all Snps and grab region info
-        getLog().info("Obtained " + allSnps.size() + " SNPs, starting deep load...");
-        allSnps.forEach(this::loadAssociatedData);
-        return allSnps;
+        List<Study> studies = studyRepository.findAll(sort);
+        // iterate over all studies and grab region info
+        getLog().info("Obtained " + studies.size() + " studies, starting deep load...");
+        studies.forEach(this::loadAssociatedData);
+        return studies;
     }
 
     @Transactional(readOnly = true)
     public Page<Study> deepFindAll(Pageable pageable) {
-        Page<Study> allSnps = studyRepository.findAll(pageable);
-        // iterate over all Snps and grab region info
-        getLog().info("Obtained " + allSnps.getSize() + " SNPs, starting deep load...");
-        allSnps.forEach(this::loadAssociatedData);
-        return allSnps;
+        Page<Study> studies = studyRepository.findAll(pageable);
+        // iterate over all studies and grab region info
+        getLog().info("Obtained " + studies.getSize() + " studies, starting deep load...");
+        studies.forEach(this::loadAssociatedData);
+        return studies;
     }
 
     @Transactional(readOnly = true)
