@@ -77,7 +77,7 @@
     <div class="row">
         <h4>Initial Sample Description:</h4>
 
-        <p th:text="${study.initialSampleSize}"></p>
+        <p th:text="${study.initialSampleSize} ?: 'NA'"></p>
 
         <table id="initialTable" class="table table-hover table-bordered">
             <thead>
@@ -96,19 +96,20 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="initialStudyEthnicityDescription: ${initialStudyEthnicityDescriptions}">
+            <tr th:each="initialStudyEthnicityDescription: ${initialStudyEthnicityDescriptions}"
+                th:if="${initialStudyEthnicityDescriptions}">
                 <td>
                     <a th:href="@{/sampledescriptions/{ethnicityId}(ethnicityId=${initialStudyEthnicityDescription.id})}"
                        class="btn btn-link">Edit</a></td>
-                <td th:text="${initialStudyEthnicityDescription.type}"></td>
-                <td th:text="${initialStudyEthnicityDescription.numberOfIndividuals}"></td>
-                <td th:text="${initialStudyEthnicityDescription.ethnicGroup}"></td>
-                <td th:text="${initialStudyEthnicityDescription.countryOfOrigin}"></td>
-                <td th:text="${initialStudyEthnicityDescription.countryOfRecruitment}"></td>
-                <td th:text="${initialStudyEthnicityDescription.previouslyReported}"></td>
-                <td th:text="${initialStudyEthnicityDescription.sampleSizesMatch}"></td>
-                <td th:text="${initialStudyEthnicityDescription.description}"></td>
-                <td th:text="${initialStudyEthnicityDescription.notes}"></td>
+                <td th:text="${initialStudyEthnicityDescription.type} ?: 'null'"></td>
+                <td th:text="${initialStudyEthnicityDescription.numberOfIndividuals} ?: 'null'"></td>
+                <td th:text="${initialStudyEthnicityDescription.ethnicGroup} ?: 'null'"></td>
+                <td th:text="${initialStudyEthnicityDescription.countryOfOrigin} ?: 'null'"></td>
+                <td th:text="${initialStudyEthnicityDescription.countryOfRecruitment} ?: 'null'"></td>
+                <td th:text="${initialStudyEthnicityDescription.previouslyReported} ?: 'null'"></td>
+                <td th:text="${initialStudyEthnicityDescription.sampleSizesMatch} ?: 'null'"></td>
+                <td th:text="${initialStudyEthnicityDescription.description} ?: 'null'"></td>
+                <td th:text="${initialStudyEthnicityDescription.notes} ?: 'null'"></td>
                 <td>
                     <a th:href="@{/sampledescriptions/{ethnicityId}/delete(ethnicityId=${initialStudyEthnicityDescription.id})}"
                        class="btn btn-danger">Delete</a></td>
@@ -123,7 +124,7 @@
     <div class="row">
         <h4>Replication Sample Description:</h4>
 
-        <p th:text="${study.replicateSampleSize}"></p>
+        <p th:text="${study.replicateSampleSize} ?: 'NA'"></p>
         <table id="replicationTable" class="table table-hover table-bordered">
             <thead>
             <tr>
