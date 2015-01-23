@@ -235,6 +235,23 @@ public class StudyController {
     @RequestMapping(value = "/{studyId}/housekeeping", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping, @PathVariable Long studyId) {
 
+        // Establish whether user has set status to "Publish study" and "Send to NCBI"
+        // as corresponding dates will be set in housekeeping table
+        CurationStatus currentStatus = housekeeping.getCurationStatus();
+
+        // TODO POSSIBLY CHANGE LOGIC SO THIS DATE IS SET BY NIGHTLY RELEASE PROCESS
+        // OTHERWISE ANY TIME USER SAVES FROM WHEN STATUS IS SET TO "publish study"
+        // THE DATE GETS UPDATED
+    /*    if (currentStatus != null && currentStatus.getStatus().equals("Publish study")){
+            java.util.Date publishDate = new java.util.Date();
+            housekeeping.setPublishDate(publishDate);
+        }*/
+
+        if (currentStatus != null && currentStatus.getStatus().equals("Send to NCBI")){
+            java.util.Date sendToNCBIDate = new java.util.Date();
+            housekeeping.setSendToNCBIDate(sendToNCBIDate);
+        }
+
         // Save housekeeping returned from form
         housekeepingRepository.save(housekeeping);
 
