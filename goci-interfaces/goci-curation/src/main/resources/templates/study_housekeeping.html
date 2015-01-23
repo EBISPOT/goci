@@ -74,10 +74,10 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td th:text="${studyHousekeeping.publishDate} ?: 'null'"></td>
-                    <td th:text="${studyHousekeeping.sendToNCBIDate} ?: 'null'"></td>
-                    <td th:text="${studyHousekeeping.studyAddedDate} ?: 'null'"></td>
-                    <td th:text="${studyHousekeeping.lastUpdateDate} ?: 'null'"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.publishDate !=null } ? ${study.housekeeping.publishDate} : 'null'"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.sendToNCBIDate !=null } ? ${study.housekeeping.sendToNCBIDate} : 'null'"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.studyAddedDate !=null } ? ${study.housekeeping.studyAddedDate} : 'null'"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.lastUpdateDate !=null } ? ${study.housekeeping.lastUpdateDate} : 'null'"></td>
                 </tr>
                 </tbody>
             </table>
@@ -121,7 +121,7 @@
 
                 <div class="form-group">
                     <label for="notes" class="control-label col-md-2">Notes</label>
-                    <textarea id="notes" type="text" th:field="*{notes}"/>
+                    <textarea id="notes" type="text" th:field="*{notes}" cols="180" rows="5"/>
                 </div>
 
                 <!--Checkboxes-->
