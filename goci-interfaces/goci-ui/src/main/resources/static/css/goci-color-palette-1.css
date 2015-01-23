@@ -1,71 +1,87 @@
 .color-primary {
-    color: #B0DFE6;
+    color: #B0DFE6 !important;
 }
 
 .color-primary-accent {
-    color: #D3EFF3;
+    color: #D3EFF3 !important;
 }
 
 .color-primary-bold {
-    color: #398A96;
+    color: #398A96 !important;
 }
 
 .background-color-primary {
-    background-color: #B0DFE6;
+    background-color: #B0DFE6 !important;
 }
 
 .background-color-primary-accent {
-    background-color: #E7F7F9;
+    background-color: #E7F7F9 !important;
 }
 
 .background-color-primary-bold {
-    background-color: #398A96;
+    background-color: #398A96 !important;
 }
 
 .color-secondary {
-    color: #B8C5EA;
+    color: #B8C5EA !important;
 }
 
 .color-secondary-accent {
-    color: #D8DFF5;
+    color: #D8DFF5 !important;
 }
 
 .color-secondary-bold {
-    color: #3C5398;
+    color: #3C5398 !important;
 }
 
 .background-color-secondary {
-    background-color: #B8C5EA;
+    background-color: #B8C5EA !important;
 }
 
 .background-color-secondary-accent {
-    background-color: #D8DFF5;
+    background-color: #D8DFF5 !important;
 }
 
 .background-color-secondary-bold {
-    background-color: #3C5398;
+    background-color: #3C5398 !important;
 }
 
 .color-complementary {
-    color: #FFDFC2;
+    color: #FFDFC2 !important;
 }
 
 .color-complementary-accent {
-    color: #FFEEDD;
+    color: #FFEEDD !important;
 }
 
 .color-complementary-bold {
-    color: #A6703F;
+    color: #A6703F !important;
 }
 
 .background-color-complementary {
-    background-color: #FFDFC2;
+    background-color: #FFDFC2 !important;
 }
 
 .background-color-complementary-accent {
-    background-color: #FFF6EC;
+    background-color: #FFF6EC !important;
 }
 
 .background-color-complementary-bold {
-    background-color: #A6703F;
+    background-color: #A6703F !important;
+}
+
+a {
+    color: #3C5398;
+}
+
+a:hover {
+    color: #398A96;
+}
+
+.list-group-item:hover {
+    background-color: #E7F7F9 !important;
+}
+
+.btn:hover {
+    background-color: #B0DFE6 !important;
 }
