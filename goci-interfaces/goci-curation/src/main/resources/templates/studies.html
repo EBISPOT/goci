@@ -133,16 +133,36 @@
 <div class="container-fluid">
     <div class="row">
 
+        <!--http://aqvatarius.com/themes/atlant_v1_3/html/table-export.html#-->
+<!--        <div class="btn-group pull-right">
+            <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown"> Export Data
+            </button>
+            <ul class="dropdown-menu">
+
+                <li><a href="#"
+                       onClick="$('#mainTable').tableExport({type:'csv',escape:'true', ignoreColumn:'[0]'});">
+                    CSV</a>
+                </li>
+                <li><a href="#"
+                       onClick="$('#mainTable').tableExport({type:'txt',escape:'true', ignoreColumn:'[0]'});">
+                    TXT</a>
+                </li>
+                <li><a href="#"
+                       onClick="$('#mainTable').tableExport({type:'excel',escape:'true', ignoreColumn:'[0]'});">
+                    XLS</a>
+                </li>
+            </ul>
+        </div>-->
+
+
         <div class="col-md-12">
             <div id="filter-bar"></div>
             <table id="mainTable" class="table table-hover table-bordered" data-toggle="table"
                    data-show-columns="true"
                    data-search="true"
                    data-show-export="true"
-                   data-export-types="['json', 'csv', 'txt']"
                    data-sort-order="desc">
                 <caption id="total"></caption>
-
                 <thead>
                 <tr>
                     <th data-field="edit" data-switchable="false"></th>
@@ -225,6 +245,7 @@
 <script src="/js/tableExport.js"></script>
 <script src="/js/jquery.base64.js"></script>
 <script src="/js/html2canvas.js"></script>
+
 
 </body>
 </html>
