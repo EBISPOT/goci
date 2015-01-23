@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
 import uk.ac.ebi.spot.goci.curation.service.PubmedIdForImport;
@@ -14,6 +15,7 @@ import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.PropertyFilePubMedLookupService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -126,6 +128,12 @@ public class StudyController {
         // Pass to importer
         Study importedStudy = propertyFilePubMedLookupService.dispatchSummaryQuery(pubmedId);
 
+        // Create housekeeping object
+        Housekeeping studyHousekeeping = createHousekeeping();
+
+        // Update and save study
+        importedStudy.setHousekeeping(studyHousekeeping);
+        Study newStudy = studyRepository.save(importedStudy);
 
         // Save new study
         studyRepository.save(importedStudy);
@@ -136,15 +144,20 @@ public class StudyController {
     // Save newly added study details
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String addStudy(@ModelAttribute Study study) {
+    public String addStudy(@Valid @ModelAttribute Study study, BindingResult bindingResult, Model model) {
 
-        // Create housekeeping object and create the study added date
-        Housekeeping studyHousekeeping = new Housekeeping();
-        java.util.Date studyAddedDate = new java.util.Date();
-        studyHousekeeping.setStudyAddedDate(studyAddedDate);
+        // If we have errors in the fields entered, i.e they are blank, then return these to form so user can fix
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("study", study);
 
-        // Save housekeeping
-        housekeepingRepository.save(studyHousekeeping);
+            // Return an empty pubmedIdForImport object to store user entered pubmed id
+            model.addAttribute("pubmedIdForImport", new PubmedIdForImport());
+
+            return "add_study";
+        }
+
+        // Create housekeeping object
+        Housekeeping studyHousekeeping = createHousekeeping();
 
         // Update and save study
         study.setHousekeeping(studyHousekeeping);
@@ -182,7 +195,7 @@ public class StudyController {
     }
 
 
-    // Delete an existing study
+/*    // Delete an existing study
     @RequestMapping(value = "/{studyId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewStudyToDelete(Model model, @PathVariable Long studyId) {
         Study studyToDelete = studyRepository.findOne(studyId);
@@ -200,7 +213,7 @@ public class StudyController {
 
         //studyRepository.delete(studyToDelete);
         return "redirect:/studies/";
-    }
+    }*/
 
     /* Study housekeeping/curator information */
 
@@ -265,8 +278,20 @@ public class StudyController {
     }
 
 
-     /* General purpose methods */
-    // TODO CREATE HOUSEKEEPING OBJECT
+    /* General purpose methods */
+
+    private Housekeeping createHousekeeping() {
+        // Create housekeeping object and create the study added date
+        Housekeeping housekeeping = new Housekeeping();
+        java.util.Date studyAddedDate = new java.util.Date();
+        housekeeping.setStudyAddedDate(studyAddedDate);
+
+        // Save housekeeping
+        housekeepingRepository.save(housekeeping);
+
+        // Save housekeeping
+        return housekeeping;
+    }
 
     /* Exception handling */
 
