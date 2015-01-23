@@ -37,33 +37,49 @@ function processData(data){
     setCountBadges(data.facet_counts.facet_fields.resourcename);
 
     //var documents = data.response.docs;
-    var groups = data.grouped.pubmedId.groups
-    var studyTable = $("<tbody>");
-    var associationTable = $("<tbody>");
-    var traitTable = $("<tbody>");
+    var groups = data.grouped.pubmedId.groups;
+    var queryTerm = data.responseHeader.params.q.substring(5);
+    $('#search-term').text(queryTerm);
+
+
 
     console.log("Due to process " + groups.length + " groups");
 
-    for(var i=0; i<groups.length; i++){
-        var documents = groups[i].doclist.docs;
+    if(groups.length != 0){var studyTable = $("<tbody>");
+        var associationTable = $("<tbody>");
+        var traitTable = $("<tbody>");
+        var snpTable = $("<tbody>");
 
-        for(var j=0; j< documents.length; j++) {
-           var doc = documents[j];
+        for(var i=0; i<groups.length; i++){
+            var documents = groups[i].doclist.docs;
 
-            if (doc.resourcename == "study") {
-                processStudy(doc, studyTable);
-            }
-            else if (doc.resourcename == "association") {
-                processAssociation(doc, associationTable);
-            }
-            else if (doc.resourcename == "efoTrait") {
-                processTrait(doc, traitTable);
+            for(var j=0; j< documents.length; j++) {
+               var doc = documents[j];
+
+                if (doc.resourcename == "study") {
+                    processStudy(doc, studyTable);
+                }
+                else if (doc.resourcename == "association") {
+                    processAssociation(doc, associationTable);
+                }
+                else if (doc.resourcename == "efoTrait") {
+                    processTrait(doc, traitTable);
+                }
+                else if (doc.resourcename == "singleNucleotidePolymorphism") {
+                    processSnp(doc, snpTable);
+                }
             }
         }
+        $('#studySummaries').append(studyTable);
+        $('#associationSummaries').append(associationTable);
+        $('#efotraitSummaries').append(traitTable);
+        $('#snpSummaries').append(snpTable);
     }
-    $('#studySummaries').append(studyTable);
-    $('#associationSummaries').append(associationTable);
-    $('#efotraitSummaries').append(traitTable);
+    else{
+        $('#noResults').show();
+        $('#search-term-noResult').text(queryTerm);
+        $('#results').hide();
+    }
 
     console.log("Data display complete");
 }
@@ -83,6 +99,10 @@ function setCountBadges(countArray){
             var facet = $('#' +resource + 'Facet span');
             facet.empty();
             facet.append(count);
+        }
+        else{
+            $('#' +resource+ 'Facet').addClass("disabled");
+            $('#' +resource+ 'Table').hide();
         }
     }
 }
@@ -123,12 +143,12 @@ function processAssociations(associations){
 
 function processAssociation(association, table){
     var row = $("<tr>");
-    row.append($("<td>").html(''));
-    row.append($("<td>").html(''));
+    row.append($("<td>").html(association.rsId));
+    row.append($("<td>").html(association.chromosomePosition));
     row.append($("<td>").html(association.strongestAllele));
     row.append($("<td>").html(association.pValue));
-    row.append($("<td>").html(''));
-    row.append($("<td>").html(''));
+    row.append($("<td>").html(association.orPerCopyNum));
+    row.append($("<td>").html(association.orPerCopyUnitDescr));
     table.append(row);
 }
 
@@ -149,9 +169,6 @@ function processTrait(efotrait, table){
 
     var syns = '';
     if(efotrait.synonym != null){
-        console.log(efotrait.synonym);
-        console.log(efotrait.synonym.length)
-
         for(var j=0; j < efotrait.synonym.length; j++){
             if(syns == ''){
                 syns = efotrait.synonym[j];
@@ -163,7 +180,6 @@ function processTrait(efotrait, table){
             else{
                 syns = syns.concat(", ").concat(efotrait.synonym[j]);
             }
-            console.log(syns);
         }
     }
 
@@ -171,5 +187,35 @@ function processTrait(efotrait, table){
 
     //subtract one from child count as each term is a child of itself in the Solr index
     row.append($("<td>").html(efotrait.child.length-1));
+    table.append(row);
+}
+
+//<th>RS ID</th>
+//<th>Base pair location</th>
+//<th>Chromosome region</th>
+//<th>Genes</th>
+
+function processSnp(snp, table){
+    var row = $("<tr>");
+    row.append($("<td>").html(snp.rsId));
+    row.append($("<td>").html(snp.chromosomePosition));
+    row.append($("<td>").html(snp.region));
+
+    var gene = '';
+    if(snp.gene != null){
+        for(var j=0; j < snp.gene.length; j++){
+            if(gene == ''){
+                gene = snp.gene[j];
+            }
+            //else if(j > 4){
+            //    gene = gene.concat(", [...]");
+            //    break;
+            //}
+            else{
+                gene = gene.concat(", ").concat(snp.gene[j]);
+            }
+        }
+    }
+    row.append($("<td>").html(gene));
     table.append(row);
 }

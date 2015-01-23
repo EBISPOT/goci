@@ -88,11 +88,16 @@
                         </span>
                     </input>
                 </div><!-- /input-group -->
+                <div id="clear-search" style="display: inline-block">
+                </div>
                 <div class="examples">
                     Examples:
                     <a href="/search?query=breast%20cancer">breast cancer</a>,
                     <a href="/search?query=rs7329174">rs7329174</a>,
-                    <a href="/search?query=Yang">Yang</a>
+                    <a href="/search?query=Yang">Yang</a>,
+                    <a href="/search?query=44892362">44892362</a>,
+                    <a href="/search?query=2q37.1">2q37.1</a>,
+                    <a href="/search?query=HBS1L">HBS1L</a>
                 </div>
             </div>
         </div>
@@ -103,7 +108,7 @@
     <!--<div class="container-fluid" id="lower_container" >-->
 
 
-<div class="row">
+    <div class="row">
         <div class="col-md-3" id="filter-bar">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -121,7 +126,7 @@
                                 Associations</a>
                             <a href="#" class="list-group-item" id="efotraitFacet"><span class="badge">0</span>
                                 Ontology terms</a>
-                            <a href="#" class="list-group-item disabled" id="singlenucleotidepolymorphismFacet"><span class="badge">0</span>
+                            <a href="#" class="list-group-item" id="singlenucleotidepolymorphismFacet"><span class="badge">0</span>
                                 SNPs</a>
                             <!--<a href="#" class="list-group-item disabled">    <span class="badge">0</span>-->
                                 <!--Some other facet with no results</a>-->
@@ -209,61 +214,84 @@
             </div>
         </div>
         <div class="col-md-9" id="results-area">
-            <h2>Search results for <em><span id="search-term"></span></em></h2>
 
-            <div id="studies">
-                <h3><i>Studies</i></h3>
-                <table class="table" id="studySummaries">
-                    <thead>
-                    <tr>
-                        <th>Author</th>
-                        <th>Publication</th>
-                        <th>Title</th>
-                        <th>Disease/Trait</th>
-                        <th>Date</th>
-                        <th>Pubmed ID</th>
-
-
-
-                    </tr>
-                    </thead>
-
-
-                </table>
+            <div id="noResults" style="display: none">
+                <h2>No results found for search term <em><span id="search-term-noResult"></span></em></h2>
             </div>
-            <div id="associations">
-                <h3><i>Associations</i></h3>
 
-                <table class="table" id="associationSummaries">
-                    <thead>
-                    <tr>
-                        <th>RS ID</th>
-                        <th>Chromosome location</th>
-                        <th>Strongest allele</th>
-                        <th>p-value</th>
-                        <th>OR or beta-cofficient</th>
-                        <th>Unit description</th>
+            <div id="results">
+                <h2>Search results for <em><span id="search-term"></span></em></h2>
+
+                <div id="studyTable">
+                    <h3><i>Studies</i></h3>
+                    <table class="table" id="studySummaries">
+                        <thead>
+                        <tr>
+                            <th>Author</th>
+                            <th>Publication</th>
+                            <th>Title</th>
+                            <th>Disease/Trait</th>
+                            <th>Date</th>
+                            <th>Pubmed ID</th>
 
 
-                    </tr>
-                    </thead>
 
-                </table>
-            </div>
-            <div id="efotraits">
-                <h3><i>EFO traits</i></h3>
-                <table class="table" id="efotraitSummaries">
-                    <thead>
-                    <tr>
-                        <th>Trait name</th>
-                        <th>EFO URI</th>
-                        <th>Synonyms</th>
-                        <th>Child count</th>
+                        </tr>
+                        </thead>
 
-                    </tr>
-                    </thead>
 
-                </table>
+                    </table>
+                </div>
+                <div id="associationTable">
+                    <h3><i>Associations</i></h3>
+
+                    <table class="table" id="associationSummaries">
+                        <thead>
+                        <tr>
+                            <th>RS ID</th>
+                            <th>Chromosome location</th>
+                            <th>Strongest allele</th>
+                            <th>p-value</th>
+                            <th>OR or beta-cofficient</th>
+                            <th>Unit description</th>
+
+
+                        </tr>
+                        </thead>
+
+                    </table>
+                </div>
+
+                <div id="efotraitTable">
+                    <h3><i>EFO traits</i></h3>
+                    <table class="table" id="efotraitSummaries">
+                        <thead>
+                        <tr>
+                            <th>Trait name</th>
+                            <th>EFO URI</th>
+                            <th>Synonyms</th>
+                            <th>Child count</th>
+
+                        </tr>
+                        </thead>
+
+                    </table>
+                </div>
+                <div id="singlenucleotidepolymorphismTable">
+                    <h3><i>SNPs</i></h3>
+
+                    <table class="table" id="snpSummaries">
+                        <thead>
+                        <tr>
+                            <th>RS ID</th>
+                            <th>Base pair location</th>
+                            <th>Chromosome region</th>
+                            <th>Genes</th>
+                        </tr>
+                        </thead>
+
+                    </table>
+                </div>
             </div>
         </div>
     </div>
