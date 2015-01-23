@@ -16,9 +16,9 @@ function solrSearch(queryTerm){
                 'rows' : 1000000,
                 'facet':'true',
                 'facet.field':'resourcename',
-                //'group' : 'true',
-                //'group.field' : 'resourcename',
-                //'group.limit' : '-1',
+                'group' : 'true',
+                'group.field' : 'pubmedId',
+                'group.limit' : '-1',
                 'wt':'json'},
         dataType: 'jsonp',
         jsonp: 'json.wrf',
@@ -36,40 +36,29 @@ function processData(data){
 
     setCountBadges(data.facet_counts.facet_fields.resourcename);
 
-    //var documents = data.grouped.resourcename.groups;
-    //
-    //for(var i=0; i<documents.length; i++){
-    //    var group = documents[i];
-    //
-    //    if(group.groupValue == "study"){
-    //        processStudies(group.doclist.docs);
-    //    }
-    //    else if (group.groupValue == "association"){
-    //        processAssociations(group.doclist.docs);
-    //    }
-    //    if(group.groupValue == "efotrait"){
-    //        processTraits(group.doclist.docs);
-    //    }
-    //}
-
-    var documents = data.response.docs;
+    //var documents = data.response.docs;
+    var groups = data.grouped.pubmedId.groups
     var studyTable = $("<tbody>");
     var associationTable = $("<tbody>");
     var traitTable = $("<tbody>");
 
+    console.log("Due to process " + groups.length + " groups");
 
-    for(var i=0; i<documents.length; i++){
-        console.log("Due to process " + documents.length + " documents");
-        var doc = documents[i];
+    for(var i=0; i<groups.length; i++){
+        var documents = groups[i].doclist.docs;
 
-        if(doc.resourcename == "study"){
-            processStudy(doc, studyTable);
-        }
-        else if (doc.resourcename == "association"){
-            processAssociation(doc, associationTable);
-        }
-        else if(doc.resourcename == "efoTrait"){
-            processTrait(doc, traitTable);
+        for(var j=0; j< documents.length; j++) {
+           var doc = documents[j];
+
+            if (doc.resourcename == "study") {
+                processStudy(doc, studyTable);
+            }
+            else if (doc.resourcename == "association") {
+                processAssociation(doc, associationTable);
+            }
+            else if (doc.resourcename == "efoTrait") {
+                processTrait(doc, traitTable);
+            }
         }
     }
     $('#studySummaries').append(studyTable);
@@ -115,7 +104,7 @@ function processStudy(study, table){
     row.append($("<td>").html(study.publication));
     row.append($("<td>").html(study.title));
     row.append($("<td>").html(study.trait));
-    row.append($("<td>").html(''));
+    row.append($("<td>").html(study.publicationDate.substring(0,10)));
     row.append($("<td>").html(study.pubmedId));
     table.append(row);
 }
@@ -159,13 +148,28 @@ function processTrait(efotrait, table){
     row.append($("<td>").html(efotrait.shortForm));
 
     var syns = '';
-    if(efotrait.synonym.length > 0){
-        for(var j=0; j < efotrait.synonym.length ; j++){
-            syns.concat(efotrait.synonym[j]);
+    if(efotrait.synonym != null){
+        console.log(efotrait.synonym);
+        console.log(efotrait.synonym.length)
+
+        for(var j=0; j < efotrait.synonym.length; j++){
+            if(syns == ''){
+                syns = efotrait.synonym[j];
+            }
+            else if(j > 4){
+                syns = syns.concat(", [...]");
+                break;
+            }
+            else{
+                syns = syns.concat(", ").concat(efotrait.synonym[j]);
+            }
+            console.log(syns);
         }
     }
 
     row.append($("<td>").html(syns));
-    row.append($("<td>").html(efotrait.child.length));
+
+    //subtract one from child count as each term is a child of itself in the Solr index
+    row.append($("<td>").html(efotrait.child.length-1));
     table.append(row);
 }
