@@ -165,6 +165,20 @@ public class EthnicityController {
     }
 
 
+    // Delete existing ethnicity/sample information
+    @RequestMapping(value = "/sampledescriptions/{ethnicityId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String deleteSampleDescription(@PathVariable Long ethnicityId) {
+
+        // Find the associated study
+        Ethnicity ethnicityToDelete = ethnicityRepository.findOne(ethnicityId);
+        Long studyId = ethnicityToDelete.getStudy().getId();
+
+        // Delete ethnicity
+        ethnicityRepository.delete(ethnicityToDelete);
+        return "redirect:/studies/" + studyId + "/sampledescription";
+    }
+
+
     /* Model Attributes :
     *  Used for drop-downs in HTML forms
     */
