@@ -1,106 +1,163 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-    <title>GWAS Search Demo</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
 
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>-->
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>-->
-    <link rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}"/>
-    <link rel="stylesheet" href="/css/bootstrap-theme.min.css" th:href="@{css/bootstrap-theme.min.css}"/>
-    <link rel="stylesheet" href="/css/bootstrap-table.css" th:href="@{css/bootstrap-table.css}"/>
-    <link rel="stylesheet" href="/css/goci-ui.css"/>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/js/goci-ui.js"></script>
+    <title>GWAS Catalog</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../static/css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}" rel="stylesheet">
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"
+          rel="stylesheet"/>
 
 
+    <!-- Custom styles for this template -->
+    <link href="../static/css/jumbotron.css" th:href="@{css/jumbotron.css}" rel="stylesheet">
+    <link href="../static/css/sticky-footer-navbar.css" th:href="@{css/sticky-footer-navbar.css}" rel="stylesheet">
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{css/goci-ui.css}"/>
+    <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{css/icons/flaticon.css}"/>
+    <link rel="stylesheet" href="../static/css/goci-color-palette-1.css" th:href="@{css/goci-color-palette-1.css}"/>
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
+
 <body>
-<nav class="navbar navbar-inverse" role="navigation">
-    <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
         <div class="navbar-header">
-            <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+            <button type="button"
+                    class="navbar-toggle collapsed"
+                    data-toggle="collapse"
+                    data-target="#navbar"
+                    aria-expanded="false"
+                    aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="#" class="navbar-brand"> <img alt="GWAS logo" src="/icons/GWASBrowser_logo_whitebackground-scaled.png" /></a>
-            <!--<a href="http://www.genome.gov/gwastudies/" class="navbar-brand">GWAS Logo</a>-->
+            <a class="navbar-brand" href="#">GWAS Catalog</a>
         </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div id="navbarCollapse" class="collapse navbar-collapse">
+        <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-
-                <li><a href="home">Home</a></li>
-                <li><a href="search">Search the catalog</a></li>
-                <li><a href="about">About</a></li>
-                <li><a href="downloads">Downloads</a></li>
-                <li><a href="ontology">Ontology</a></li>
-                <li><a href="methods">Methods</a></li>
-                <li class="active"><a href="faq">FAQ<span class="sr-only">(current)</span></a></li>
+                <li class="active"><a href="index.html" th:href="@{/.}">Home <span class="sr-only">(current)</span></a></li>
+                <li><a href="search.html" th:href="@{search}">Search the catalog</a></li>
+                <li><a href="about.html" th:href="@{about}">About</a></li>
+                <li><a href="downloads.html" th:href="@{downloads}">Downloads</a></li>
+                <li><a href="ontology.html" th:href="@{ontology}">Ontology</a></li>
+                <li><a href="methods.html" th:href="@{methods}">Methods</a></li>
+                <li><a href="faq.html" th:href="@{search}">FAQ</a></li>
                 <li><a href="http://www.ebi.ac.uk/fgpt/gwas">GWAS Diagram</a></li>
-                <li><a class="ebiLogo" href="http://www.ebi.ac.uk"><img alt="EBI logo" src="/icons/EMBL_EBI_Logo_white_scaled.png" /></a></li>
-                <li><a class="nhgriLogo" href="http://www.genome.gov"><img alt="GWAS logo" src="/icons/NHGRI_NIH logo all verions-02-scaled.png" /></a></li>
+                <li><a class="icon" href="http://www.ebi.ac.uk"><img alt="EBI logo"
+                                                                     src="../static/icons/EMBL_EBI_Logo_white_scaled.png"
+                                                                     th:src="@{icons/EMBL_EBI_Logo_white_scaled.png}"/></a>
+                </li>
+                <li><a class="icon" href="http://www.genome.gov"><img alt="GWAS logo"
+                                                                      src="../static/icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png"
+                                                                      th:src="@{icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png}"/></a>
+                </li>
             </ul>
-
-
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
+        </div>
+        <!--/.navbar-collapse -->
+    </div>
+    <div class="navbar-bottom-banner-1 background-color-complementary">
+    </div>
+    <div class="navbar-bottom-banner-2 background-color-primary-bold">
+    </div>
+    <div class="navbar-bottom-banner-3 background-color-primary">
+    </div>
 </nav>
 
-
-<div class="container-fluid">
-    <ol class="breadcrumb">
-        <li><a href="home">GWAS</a></li>
-        <li class="active">FAQ</li>
-    </ol>
-
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <h1 class="global_title">GWAS Catalog</h1>
-            <h3 class="global_title">A Catalog of Published Genome-Wide Association Studies</h3>
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron background-color-primary-accent">
+    <div class="container">
+        <div class="gwas-circle">
+            <img src="../static/images/gwas-circle.png">
         </div>
-    </div>
+        <div>
+            <h1>GWAS Catalog</h1>
 
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <div id="imaginary_container">
+            <h3>A Catalog of Published Genome-Wide Association Studies</h3>
 
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search the catalog" id="search-box">
-                         <span class="input-group-btn">
-                                <button class="btn btn-default" type="button" id="search-button">
-                                    <span class="glyphicon glyphicon-search"></span>
-                                </button>
-                        </span>
-                    </input>
-                </div><!-- /input-group -->
-                <div class="examples">
-                    Examples:
-                    <a href="/search?query=breast%20cancer">breast cancer</a>,
-                    <a href="/search?query=rs7329174">rs7329174</a>,
-                    <a href="/search?query=Yang">Yang</a>
-                </div>
+            <!-- search box goes here -->
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search the catalog" id="search-box">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="search-button">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </span>
+            </div>
+            <div class="examples">
+                Examples:
+                <a href="/search?query=breast%20cancer">breast cancer</a>,
+                <a href="/search?query=rs7329174">rs7329174</a>,
+                <a href="/search?query=Yang">Yang</a>
             </div>
         </div>
     </div>
 </div>
 
-<div class="container-fluid" id="lower_container">
-    <div class="row">
+<div class="container tight-to-top">
+    <ol class="breadcrumb background-color-complementary-accent">
+        <li><a href="home">GWAS</a></li>
+        <li class="active">FAQs</li>
+    </ol>
 
-        <div class="col-md-6 col-md-offset-3">
-            <h3>Frequently asked questions</h3>
-            <p>Errrrr? Where's the light switch? What's my name? Why am I here? How do I make it stop?</p>
-        </div>
+    <div>
+        <h3>Frequently asked questions</h3>
+        <p>Errrrr? Where's the light switch? What's my name? Why am I here? How do I make it stop?</p>
     </div>
+
+    <hr>
+
 </div>
+<!-- /container -->
+<!-- /container -->
+
+<footer class="footer background-color-primary-accent">
+    <!--<div class="footer-banner background-color-primary"></div>-->
+    <div class="container">
+        <p class="text-muted">Copyright &copy; EMBL-EBI 2015 | EBI is an Outstation of the
+            <a href="http://www.embl.org">European Molecular
+                                          Biology
+                                          Laboratory</a> |
+            <a href="//www.ebi.ac.uk/about/privacy">Privacy</a> |
+            <a href="//www.ebi.ac.uk/about/cookies">Cookies</a> |
+            <a href="//www.ebi.ac.uk/about/terms-of-use">Terms of use</a></p>
+    </div>
+</footer>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+<script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../static/js/ie10-viewport-bug-workaround.js" th:src="@{js/ie10-viewport-bug-workaround.js}"></script>
+
+<!-- GOCI JavaScript
+================================================== -->
+<script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
+<script src="../static/js/goci-ui.js" th:src="@{js/goci-ui.js}"></script>
+
 </body>
 </html>

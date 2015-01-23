@@ -139,6 +139,14 @@
     padding-top: 20px;
 }
 
+.tight-to-top {
+    padding-top: 0 !important;
+}
+
+.tight-to-side {
+    padding-left: 0 !important;
+}
+
 .toplevel-view {
     height: 12em;
     border-radius: 1em;
