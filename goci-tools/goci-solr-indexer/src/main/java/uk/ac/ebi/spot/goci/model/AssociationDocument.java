@@ -22,6 +22,7 @@ public class AssociationDocument extends Document<Association> {
     @Field private String qualifier;
     @Field private String orPerCopyUnitDescr;
 
+    @Field private float orPerCopyNum;
     @Field private float pValue;
 
     @Field("gene") private Collection<String> genes;
@@ -49,6 +50,9 @@ public class AssociationDocument extends Document<Association> {
         this.riskFrequency = association.getRiskFrequency();
         this.qualifier = association.getPvalueText();
         this.orPerCopyUnitDescr = association.getOrPerCopyUnitDescr();
+        if(association.getOrPerCopyNum() != null) {
+            this.orPerCopyNum = association.getOrPerCopyNum();
+        }
         if (association.getPvalueFloat() != null) {
             this.pValue = association.getPvalueFloat();
         }
@@ -160,5 +164,9 @@ public class AssociationDocument extends Document<Association> {
 
     public Set<String> getLastModifiedDates() {
         return lastModifiedDates;
+    }
+
+    public float getOrPerCopyNum() {
+        return orPerCopyNum;
     }
 }
