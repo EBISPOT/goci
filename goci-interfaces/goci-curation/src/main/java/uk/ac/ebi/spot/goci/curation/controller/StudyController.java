@@ -224,8 +224,14 @@ public class StudyController {
         // Find study
         Study study = studyRepository.findOne(studyId);
 
+        // If we don't have a housekeeping object create one, this should not occur though as they are created when study is created
+        if (study.getHousekeeping() == null) {
+            model.addAttribute("studyHousekeeping", new Housekeeping());
+        } else {
+            model.addAttribute("studyHousekeeping", study.getHousekeeping());
+        }
+
         // Return the housekeeping object attached to study and return the study
-        model.addAttribute("studyHousekeeping", study.getHousekeeping());
         model.addAttribute("study", study);
         return "study_housekeeping";
     }
@@ -247,7 +253,7 @@ public class StudyController {
             housekeeping.setPublishDate(publishDate);
         }*/
 
-        if (currentStatus != null && currentStatus.getStatus().equals("Send to NCBI")){
+        if (currentStatus != null && currentStatus.getStatus().equals("Send to NCBI")) {
             java.util.Date sendToNCBIDate = new java.util.Date();
             housekeeping.setSendToNCBIDate(sendToNCBIDate);
         }
