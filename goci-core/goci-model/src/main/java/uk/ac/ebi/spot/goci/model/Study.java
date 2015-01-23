@@ -1,5 +1,8 @@
 package uk.ac.ebi.spot.goci.model;
 
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
@@ -21,6 +24,7 @@ public class Study {
 
     private String author;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date studyDate;
 
     private String publication;
