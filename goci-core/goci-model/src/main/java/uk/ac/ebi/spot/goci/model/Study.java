@@ -26,7 +26,6 @@ public class Study {
     @NotBlank(message = "Please enter an author")
     private String author;
 
-    @NotBlank(message = "Please enter a date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date studyDate;
 
