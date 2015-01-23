@@ -15,6 +15,9 @@
 
     <!-- Bootstrap core CSS -->
     <link href="../static/css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}" rel="stylesheet">
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"
+          rel="stylesheet"/>
+
 
     <!-- Custom styles for this template -->
     <link href="../static/css/jumbotron.css" th:href="@{css/jumbotron.css}" rel="stylesheet">
@@ -38,7 +41,12 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <button type="button"
+                    class="navbar-toggle collapsed"
+                    data-toggle="collapse"
+                    data-target="#navbar"
+                    aria-expanded="false"
+                    aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -65,9 +73,14 @@
                                                                       th:src="@{icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png}"/></a>
                 </li>
             </ul>
-        </div><!--/.navbar-collapse -->
+        </div>
+        <!--/.navbar-collapse -->
     </div>
-    <div class="navbar-bottom-banner">
+    <div class="navbar-bottom-banner-1 background-color-complementary">
+    </div>
+    <div class="navbar-bottom-banner-2 background-color-primary-bold">
+    </div>
+    <div class="navbar-bottom-banner-3 background-color-primary">
     </div>
 </nav>
 
@@ -103,41 +116,55 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-4 background-color-complementary-accent">
-            <h2 class="flaticon-information9 color-primary-bold">About</h2>
+        <a href="about.html" th:href="@{about}">
+            <div class="col-md-4 toplevel-view">
+                <h2 class="flaticon-information9 color-primary-bold">About</h2>
 
-            <p>The GWAS Catalog provides a manually curated, literature-derived collection of all published genome wide
-               associations studies.</p>
-        </div>
-        <div class="col-md-4">
-            <h2 class="flaticon-search11 color-primary-bold">Search the catalog</h2>
+                <p>The GWAS Catalog provides a manually curated, literature-derived collection of all published genome
+                   wide
+                   associations studies.</p>
+            </div>
+        </a>
+        <a href="search.html" th:href="@{search}">
+            <div class="col-md-4 toplevel-view">
+                <h2 class="flaticon-search11 color-primary-bold">Search the catalog</h2>
 
-            <p>You can search the catalog in a number of ways, including by trait, SNP identifier, study and gene. </p>
-        </div>
-        <div class="col-md-4">
-            <h2 class="color-primary-bold">GWAS diagram</h2>
+                <p>You can search the catalog in a number of ways, including by trait, SNP identifier, study and
+                   gene. </p>
+            </div>
+        </a>
+        <a href="http://www.ebi.ac.uk/fgpt/gwas">
+            <div class="col-md-4 toplevel-view">
+                <h2 class="color-primary-bold">GWAS diagram</h2>
 
-            <p>An interactive visualisation of all SNP-trait associations with genome-wide significance
-               (p&lt;5E-8). </p>
-        </div>
+                <p>An interactive visualisation of all SNP-trait associations with genome-wide significance
+                   (p&lt;5E-8). </p>
+            </div>
+        </a>
     </div>
 
     <div class="row">
-        <div class="col-md-4">
-            <h2 class="flaticon-mailbox2 color-primary-bold">Downloads</h2>
+        <a href="downloads.html" th:href="@{downloads}">
+            <div class="col-md-4 toplevel-view">
+                <h2 class="flaticon-mailbox2 color-primary-bold">Downloads</h2>
 
-            <p>Including a full copy of the GWAS Catalog in spreadsheet format.</p>
-        </div>
-        <div class="col-md-4">
-            <h2 class="flaticon-owl3 color-primary-bold">Ontology</h2>
+                <p>Including a full copy of the GWAS Catalog in spreadsheet format.</p>
+            </div>
+        </a>
+        <a href="ontology.html" th:href="@{ontology}">
+            <div class="col-md-4 toplevel-view">
+                <h2 class="flaticon-owl3 color-primary-bold">Ontology</h2>
 
-            <p>Details of the ontology representation of GWAS Catalog traits.</p>
-        </div>
-        <div class="col-md-4">
-            <h2 class="flaticon-statistics color-primary-bold">Methods</h2>
+                <p>Details of the ontology representation of GWAS Catalog traits.</p>
+            </div>
+        </a>
+        <a href="methods.html" th:href="@{methods}">
+            <div class="col-md-4 toplevel-view">
+                <h2 class="flaticon-statistics color-primary-bold">Methods</h2>
 
-            <p>A full description of the Catalog eligibility criteria and methods.</p>
-        </div>
+                <p>A full description of the Catalog eligibility criteria and methods.</p>
+            </div>
+        </a>
     </div>
 
     <hr>
@@ -146,6 +173,7 @@
 <!-- /container -->
 
 <footer class="footer background-color-primary-accent">
+    <!--<div class="footer-banner background-color-primary"></div>-->
     <div class="container">
         <p class="text-muted">Copyright &copy; EMBL-EBI 2015 | EBI is an Outstation of the
             <a href="http://www.embl.org">European Molecular
@@ -162,6 +190,7 @@
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 <script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="../static/js/ie10-viewport-bug-workaround.js" th:src="@{js/ie10-viewport-bug-workaround.js}"></script>

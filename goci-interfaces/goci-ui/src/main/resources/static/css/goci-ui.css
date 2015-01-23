@@ -116,20 +116,35 @@
     padding-left: 40px;
 }
 
+.navbar-fixed-top {
+    border-bottom: 0px;
+}
+
+.navbar-bottom-banner-1 {
+    height: 4px;
+}
+
+.navbar-bottom-banner-2 {
+    height: 8px;
+}
+
+.navbar-bottom-banner-3 {
+    height: 8px;
+}
+
 .gwas-circle {
     float: left;
     width: 200px;
     height: 100%;
     padding-top: 20px;
-    /*position: absolute;*/
-    /*left:160px;*/
 }
 
-.navbar-fixed-top {
-    border-bottom: 0px;
+.toplevel-view {
+    height: 12em;
+    border-radius: 1em;
 }
 
-.navbar-bottom-banner {
-    background-image: url(../images/gwas-banner.png);
-    height: 20px;
+a > .toplevel-view {
+    color: #333;
 }
+
