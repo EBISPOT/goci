@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.model;
 
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -22,13 +23,17 @@ public class Study {
     @GeneratedValue
     private Long id;
 
+    @NotBlank(message = "Please enter an author")
     private String author;
 
+    @NotBlank(message = "Please enter a date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date studyDate;
 
+    @NotBlank(message = "Please enter a publication")
     private String publication;
 
+    @NotBlank(message = "Please enter a title")
     private String title;
 
     private String initialSampleSize;
@@ -37,6 +42,7 @@ public class Study {
 
     private String platform;
 
+    @NotBlank(message = "Please enter a pubmed id")
     private String pubmedId;
 
     private String cnv;
