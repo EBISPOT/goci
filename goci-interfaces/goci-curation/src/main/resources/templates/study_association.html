@@ -215,17 +215,7 @@
 <div id="addSNPForm" class="collapse">
     <form class="form-horizontal" method="post" name="addSNPForm">
 
-        <!-- Curator will enter a list of SNPs and these are stored in a collection,
-           which is passed back to controller to create SNPs in SNP table -->
-        <div class="form-group">
-            <label for="snps" class="control-label col-md-2">SNP(s)</label>
 
-            <div class="col-md-10">
-                <input type="text" class="form-control" id="snps"
-                       th:value="${reportedSNPs.reportedSNPValue}" name="reportedSNPValue"
-                       data-role="tagsinput"/>
-            </div>
-        </div>
 
 
         <div class="form-group">
@@ -244,6 +234,18 @@
             <div class="col-md-10">
                 <input type="text" class="form-control" id="strongestAllele"
                        th:value="${studyAssociation.strongestAllele}" name="strongestAllele"/>
+            </div>
+        </div>
+
+        <!-- Curator will enter a list of SNPs and these are stored in a collection,
+       which is passed back to controller to create SNPs in SNP table -->
+        <div class="form-group">
+            <label for="snps" class="control-label col-md-2">SNP(s)</label>
+
+            <div class="col-md-10">
+                <input type="text" class="form-control" id="snps"
+                       th:value="${reportedSNPs.reportedSNPValue}" name="reportedSNPValue"
+                       data-role="tagsinput"/>
             </div>
         </div>
 
