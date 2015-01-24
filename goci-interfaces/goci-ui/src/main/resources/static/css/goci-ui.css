@@ -33,13 +33,22 @@
 }
 
 .filter-element {
-    display: inline-block;
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
+    padding: 5px 2px;
+    /*display: inline-block;*/
+    /*width: 100%;*/
+    /*margin-left: 0;*/
+    /*margin-right: 0;*/
 }
 
 .filter-label {
+    font-weight: bold;
+    display: inline-block;
+    width: 30%;
+    margin-left: 1em;
+    margin-right: 0;
+}
+
+.filter-value {
     display: inline-block;
     width: 30%;
     margin-left: 0;

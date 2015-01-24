@@ -37,7 +37,8 @@
     <![endif]-->
 </head>
 
-<body onload="loadResults();">
+<!--<body onload="loadResults();">-->
+<body>
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
@@ -171,75 +172,48 @@
                     <div id="filters">
                         <b>Filter results by</b>
 
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <div class="filter-element">
-                                    <div class="filter-label"><b>p-value</b></div>
-                                    <div class="filter-values">
-                                        <div class="from-element"> from <input type="text" size="5" id="pval-min"/>
-                                        </div>
-                                        <div class="to-element">to <input type="text" size="5" id="pval-max"/></div>
-                                    </div>
-                                </div>
-                            </li>
+                        <div class="list-group">
+                            <div class="list-group-item filter-element">
+                                <span class="filter-label">p-value</span>
+                                <input class="filter-value" type="text" id="pval-min" placeholder="from">
+                                <input class="filter-value" type="text" id="pval-max" placeholder="to">
+                            </div>
 
-                            <li class="list-group-item">
-                                <div class="filter-element">
-                                    <div class="filter-label"><b>Odds ratio</b></div>
-                                    <div class="filter-values">
-                                        <div class="from-element">from <input type="text" size="5" id="or-min"/>
-                                        </div>
-                                        <div class="to-element">to <input type="text" size="5" id="or-max"/></div>
-                                    </div>
-                                </div>
-                            </li>
+                            <div class="list-group-item filter-element">
+                                <span class="filter-label">Odds ratio</span>
+                                <input class="filter-value" type="text" id="or-min" placeholder="from">
+                                <input class="filter-value" type="text" id="or-max" placeholder="to">
+                            </div>
 
-                            <li class="list-group-item">
-                                <div class="filter-element">
+                            <div class="list-group-item filter-element">
+                                <span class="filter-label">beta coefficient</span>
+                                <input class="filter-value" type="text" id="beta-min" placeholder="from">
+                                <input class="filter-value" type="text" id="beta-max" placeholder="to">
+                            </div>
 
-                                    <div class="filter-label"><b>beta coefficient</b></div>
-                                    <div class="filter-values">
+                            <div class="list-group-item filter-element">
+                                <span class="filter-label">Study date</span>
+                                <input class="filter-value" data-provide="datepicker" id="date-min" placeholder="from">
+                                <input class="filter-value" type="text" id="date-max" placeholder="to">
+                            </div>
 
-                                        <div class="from-element">from <input type="text" size="5" id="beta-min"/>
-                                        </div>
-                                        <div class="to-element">to <input type="text" size="5" id="beta-max"/></div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="filter-element">
-
-                                    <div class="date-label"><b>Date</b></div>
-                                    <div class="date-values">
-
-                                        <div class="from-date">from <input type="text" id="date-min" size="10"/>
-                                        </div>
-                                        <div class="to-date">to <input type="text" id="date-max" size="10"/></div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="filter-element">
-                                    <div class="filter-label"><b>Disease trait</b></div>
-                                    <div class="filter-values">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-default">Child of search term
-                                            </button>
-                                            <button type="button"
-                                                    data-toggle="dropdown"
-                                                    class="btn btn-default dropdown-toggle"
-                                                    aria-expanded="false"><span class="caret"></span></button>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#">Diabetes</a></li>
-                                                <li><a href="#">Cancer</a></li>
-                                                <li><a href="#">Lupus</a></li>
-                                                <li><a href="#">Body weight</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
+                            <div class="list-group-item filter-element">
+                                <span class="filter-label">Trait</span>
+                                <button type="button" class="btn btn-default">Child trait</button>
+                                <button type="button"
+                                        data-toggle="dropdown"
+                                        class="btn btn-default dropdown-toggle"
+                                        aria-expanded="false">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Diabetes</a></li>
+                                    <li><a href="#">Cancer</a></li>
+                                    <li><a href="#">Lupus</a></li>
+                                    <li><a href="#">Body weight</a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
 
                     <div>
