@@ -2,7 +2,7 @@
  * Created by dwelter on 20/01/15.
  */
 
-var solrBaseURL = 'http://localhost:8983/solr/gwas/select'
+var solrBaseURL = 'http://megatron.windows.ebi.ac.uk:8983/solr/gwas/select'
 
 function solrSearch(queryTerm){
 
