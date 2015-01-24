@@ -4,11 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>goci-model</artifactId>
+    <artifactId>goci-service</artifactId>
     <version>2.0.0-SNAPSHOT</version>
 
-    <name>GOCI Object Model</name>
-    <description>Classes representing the core, modelled objects in the GWAS Catalog</description>
+    <name>GOCI Service Classes</name>
+    <description>Classes that perform higher level service functions on top of the basic repositories</description>
 
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
@@ -19,16 +19,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.1-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-repository</artifactId>
         </dependency>
     </dependencies>
 
