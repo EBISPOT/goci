@@ -1,9 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
 import org.apache.solr.client.solrj.beans.Field;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.solr.core.mapping.SolrDocument;
-import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -17,27 +14,20 @@ import java.util.TimeZone;
  * @author Tony Burdett
  * @date 23/12/14
  */
-@SolrDocument(solrCoreName = "gwas")
-public class SnpDocument {
-    @Id @Field private String id;
+public class SnpDocument extends Document<SingleNucleotidePolymorphism> {
     @Field private String rsId;
     @Field private String chromosomeName;
-    @Field private String chromosomePosition;
+    @Field private int chromosomePosition;
     @Field("region") private Set<String> regions;
     @Field("gene") private Set<String> genes;
     @Field private String last_modified;
-    @Field private String resourcename;
 
     public SnpDocument(SingleNucleotidePolymorphism snp) {
-        this.id = "snp_".concat(snp.getId().toString());
-        if (snp.getRsId() != null) {
-            this.rsId = snp.getRsId();
-        }
-        if (snp.getChromosomeName() != null) {
-            this.chromosomeName = snp.getChromosomeName();
-        }
+        super(snp);
+        this.rsId = snp.getRsId();
+        this.chromosomeName = snp.getChromosomeName();
         if (snp.getChromosomePosition() != null) {
-            this.chromosomePosition = snp.getChromosomePosition();
+            this.chromosomePosition = Integer.parseInt(snp.getChromosomePosition());
         }
         this.regions = new HashSet<>();
         snp.getRegions().forEach(region -> regions.add(region.getName()));
@@ -48,11 +38,6 @@ public class SnpDocument {
         if (snp.getLastUpdateDate() != null) {
             this.last_modified = df.format(snp.getLastUpdateDate());
         }
-        this.resourcename = snp.getClass().getSimpleName();
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getRsId() {
@@ -63,7 +48,7 @@ public class SnpDocument {
         return chromosomeName;
     }
 
-    public String getChromosomePosition() {
+    public int getChromosomePosition() {
         return chromosomePosition;
     }
 
@@ -79,14 +64,10 @@ public class SnpDocument {
         return last_modified;
     }
 
-    public String getResourcename() {
-        return resourcename;
-    }
-
     @Override
     public String toString() {
         return "SnpDocument{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", rsId='" + rsId + '\'' +
                 '}';
     }

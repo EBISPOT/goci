@@ -160,22 +160,49 @@
     <!-- GWAS catalog specific fields-->
     <!-- snp -->
     <field name="rsId" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="chromosomeName" type="int" indexed="true" stored="true" multiValued="false" />
-    <field name="chromosomePosition" type="int" indexed="true" stored="true" multiValued="false" />
+    <field name="chromosomeName" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="chromosomePosition" type="int" indexed="true" stored="true" multiValued="true" />
     <field name="region" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="gene" type="text_general" indexed="true" stored="true" multiValued="true" />
 
     <!-- study -->
-    <field name="pubmedId" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="pubmedId" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="publication" type="text_general" indexed="true" stored="true" multiValued="true" />
 
     <!-- diseasetrait -->
     <field name="trait" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="traitUri" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="shortForm" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="label" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="synonym" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="parent" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="child" type="text_general" indexed="true" stored="true" multiValued="true" />
 
-   <!-- Main body of document extracted by SolrCell.
-        NOTE: This field is not indexed by default, since it is also copied to "text"
-        using copyField below. This is to save space. Use this field for returning and
-        highlighting document content. Use the "text" field to search the content. -->
+    <!--
+    @Field private String shortForm;
+    @Field("label") private Set<String> labels;
+    @Field("synonym") private Set<String> synonyms;
+    @Field("description") private Set<String> description;
+
+    @Field("parent") private Set<String> superclassLabels;
+    @Field("child") private Set<String> subclassLabels;
+
+    @Field("*_rel") private Map<String, Set<String>> relations = new HashMap<>();
+
+    -->
+
+    <!-- association -->
+    <field name="strongestAllele" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="riskFrequency" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="qualifier" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="orPerCopyUnitDescr" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="pValue" type="float" indexed="true" stored="true" multiValued="true" />
+
+
+    <!-- Main body of document extracted by SolrCell.
+         NOTE: This field is not indexed by default, since it is also copied to "text"
+         using copyField below. This is to save space. Use this field for returning and
+         highlighting document content. Use the "text" field to search the content. -->
    <field name="content" type="text_general" indexed="false" stored="true" multiValued="true"/>
    
 
