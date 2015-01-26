@@ -39,7 +39,7 @@ function processData(data){
     //var documents = data.response.docs;
     var groups = data.grouped.pubmedId.groups;
     var queryTerm = data.responseHeader.params.q.substring(5);
-    $('#search-term').text(queryTerm);
+    //$('#search-term').text(queryTerm);
 
 
 
@@ -77,7 +77,7 @@ function processData(data){
     }
     else{
         $('#noResults').show();
-        $('#search-term-noResult').text(queryTerm);
+        //$('#search-term-noResult').text(queryTerm);
         $('#results').hide();
     }
 
