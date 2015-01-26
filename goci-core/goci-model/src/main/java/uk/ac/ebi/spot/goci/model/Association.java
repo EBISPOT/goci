@@ -21,12 +21,9 @@ public class Association {
     @NotNull
     private Long id;
 
-    private String authorReportedGene;
-
-    private String strongestAllele;
-
     private String riskFrequency;
 
+    // This is no longer used in form but exists in database for some older studies
     private String allele;
 
     private Float pvalueFloat;
@@ -58,19 +55,13 @@ public class Association {
     @OneToOne
     private Study study;
 
+    @OneToMany
+    @JoinTable(name = "ASSOCIATION_LOCUS",
+            joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+            inverseJoinColumns = @JoinColumn(name = "LOCUS_ID"))
+    private Collection<Locus> loci = new ArrayList<>();
+
     // To avoid null values collections are by default initialized to an empty array list
-    @ManyToMany
-    @JoinTable(name = "ASSOCIATION_SNP",
-            joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
-            inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
-    private Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
-
-    @ManyToMany
-    @JoinTable(name = "ASSOCIATION_REPORTED_GENE",
-            joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
-            inverseJoinColumns = @JoinColumn(name = "REPORTED_GENE_ID"))
-    private Collection<Gene> reportedGenes = new ArrayList<>();
-
     @ManyToMany
     @JoinTable(name = "ASSOCIATION_EFO_TRAIT",
             joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
@@ -81,9 +72,8 @@ public class Association {
     public Association() {
     }
 
-    public Association(String authorReportedGene, String strongestAllele, String riskFrequency, String allele, Float pvalueFloat, String pvalueText, Float orPerCopyNum, String orType, String snpType, String multiSnpHaplotype, String snpInteraction, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, Study study, Collection<SingleNucleotidePolymorphism> snps, Collection<Gene> reportedGenes, Collection<EfoTrait> efoTraits) {
-        this.authorReportedGene = authorReportedGene;
-        this.strongestAllele = strongestAllele;
+    public Association(String riskFrequency, String allele, Float pvalueFloat, String pvalueText, Float orPerCopyNum, String orType, String snpType, String multiSnpHaplotype, String snpInteraction, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, Study study, Collection<Locus> loci, Collection<EfoTrait> efoTraits) {
+
         this.riskFrequency = riskFrequency;
         this.allele = allele;
         this.pvalueFloat = pvalueFloat;
@@ -100,8 +90,7 @@ public class Association {
         this.orPerCopyRange = orPerCopyRange;
         this.orPerCopyUnitDescr = orPerCopyUnitDescr;
         this.study = study;
-        this.snps = snps;
-        this.reportedGenes = reportedGenes;
+        this.loci = loci;
         this.efoTraits = efoTraits;
     }
 
@@ -113,21 +102,6 @@ public class Association {
         this.id = id;
     }
 
-    public String getAuthorReportedGene() {
-        return authorReportedGene;
-    }
-
-    public void setAuthorReportedGene(String authorReportedGene) {
-        this.authorReportedGene = authorReportedGene;
-    }
-
-    public String getStrongestAllele() {
-        return strongestAllele;
-    }
-
-    public void setStrongestAllele(String strongestAllele) {
-        this.strongestAllele = strongestAllele;
-    }
 
     public String getRiskFrequency() {
         return riskFrequency;
@@ -257,20 +231,12 @@ public class Association {
         this.study = study;
     }
 
-    public Collection<SingleNucleotidePolymorphism> getSnps() {
-        return snps;
+    public Collection<Locus> getLoci() {
+        return loci;
     }
 
-    public void setSnps(Collection<SingleNucleotidePolymorphism> snps) {
-        this.snps = snps;
-    }
-
-    public Collection<Gene> getReportedGenes() {
-        return reportedGenes;
-    }
-
-    public void setReportedGenes(Collection<Gene> reportedGenes) {
-        this.reportedGenes = reportedGenes;
+    public void setLoci(Collection<Locus> loci) {
+        this.loci = loci;
     }
 
     public Collection<EfoTrait> getEfoTraits() {
@@ -285,8 +251,6 @@ public class Association {
     public String toString() {
         return "Association{" +
                 "id=" + id +
-                ", authorReportedGene='" + authorReportedGene + '\'' +
-                ", strongestAllele='" + strongestAllele + '\'' +
                 ", riskFrequency='" + riskFrequency + '\'' +
                 ", allele='" + allele + '\'' +
                 ", pvalueFloat=" + pvalueFloat +
@@ -303,8 +267,7 @@ public class Association {
                 ", orPerCopyRange='" + orPerCopyRange + '\'' +
                 ", orPerCopyUnitDescr='" + orPerCopyUnitDescr + '\'' +
                 ", study=" + study +
-                ", snps=" + snps +
-                ", reportedGenes=" + reportedGenes +
+                ", loci=" + loci +
                 ", efoTraits=" + efoTraits +
                 '}';
     }
