@@ -11,6 +11,7 @@
     <name>GOCI Interfaces</name>
 
     <modules>
+        <module>goci-solr</module>
         <module>goci-curation</module>
         <module>goci-ui</module>
         <module>goci-cttv-rest</module>
