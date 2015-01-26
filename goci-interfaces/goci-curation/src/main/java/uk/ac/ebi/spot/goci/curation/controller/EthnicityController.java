@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import uk.ac.ebi.spot.goci.curation.service.CountryOfOrigin;
+import uk.ac.ebi.spot.goci.curation.service.CountryOfRecruitment;
 import uk.ac.ebi.spot.goci.model.Country;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -16,6 +18,7 @@ import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -47,18 +50,18 @@ public class EthnicityController {
 
     // Generate view of ethnicity/sample information linked to a study
     @RequestMapping(value = "/studies/{studyId}/sampledescription", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String viewStudySampleDescription(Model model, @PathVariable String studyId) {
+    public String viewStudySampleDescription(Model model, @PathVariable Long studyId) {
 
 
-        // Two types of ethnicity information which in the view needs to form two different tables
+        // Two types of ethnicity information which the view needs to form two different tables
         Collection<Ethnicity> initialStudyEthnicityDescriptions = new ArrayList<>();
         Collection<Ethnicity> replicationStudyEthnicityDescriptions = new ArrayList<>();
 
         String initialType = "initial";
         String replicationType = "replication";
 
-        initialStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIdAndType(Long.parseLong(studyId), initialType));
-        replicationStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIdAndType(Long.parseLong(studyId), replicationType));
+        initialStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIdAndType(studyId, initialType));
+        replicationStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIdAndType(studyId, replicationType));
 
         // Add all ethnicity/sample information for the study to our model
         model.addAttribute("initialStudyEthnicityDescriptions", initialStudyEthnicityDescriptions);
@@ -68,15 +71,15 @@ public class EthnicityController {
         model.addAttribute("ethnicity", new Ethnicity());
 
         // Also passes back study object to view so we can create links back to main study page
-        model.addAttribute("study", studyRepository.findOne(Long.valueOf(studyId).longValue()));
+        model.addAttribute("study", studyRepository.findOne(studyId));
         return "study_sample_description";
     }
 
 
     // Add new ethnicity/sample information to a study
     @RequestMapping(value = "/studies/{studyId}/sampledescription", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String addStudySampleDescription(@ModelAttribute Ethnicity ethnicity, @PathVariable String studyId) {
-        Study study = studyRepository.findOne(Long.parseLong(studyId));
+    public String addStudySampleDescription(@ModelAttribute Ethnicity ethnicity, @PathVariable Long studyId) {
+        Study study = studyRepository.findOne(studyId);
 
         // Set the study for our ethnicity
         ethnicity.setStudy(study);
@@ -94,13 +97,67 @@ public class EthnicityController {
     public String viewSampleDescription(Model model, @PathVariable Long ethnicityId) {
         Ethnicity ethnicityToView = ethnicityRepository.findOne(ethnicityId);
         model.addAttribute("ethnicity", ethnicityToView);
+
+    /*  Country of origin and country of recruitment are stored as a string in database
+        In order to work with these in view we need to wrap them in a service object
+        that returns the values to the view as an array */
+
+        // Country of origin
+        String ethnicityCountryOfOrigin = ethnicityToView.getCountryOfOrigin();
+        CountryOfOrigin countryOfOrigin = new CountryOfOrigin(); // service object
+
+        if (ethnicityCountryOfOrigin != null) {
+            // multiple values separated by comma
+            if (ethnicityCountryOfOrigin.contains(",")) {
+                String[] countries = ethnicityCountryOfOrigin.split(",");
+                countryOfOrigin.setOriginCountryValues(countries);
+            }
+            // single value
+            else {
+                String[] countries = new String[1];
+                countries[0] = ethnicityCountryOfOrigin;
+                countryOfOrigin.setOriginCountryValues(countries);
+            }
+        }
+
+        model.addAttribute("countryOfOrigin", countryOfOrigin);
+
+        //Country of recruitment
+        String ethnicityCountryOfRecruitment = ethnicityToView.getCountryOfRecruitment();
+        CountryOfRecruitment countryOfRecruitment = new CountryOfRecruitment(); // service object
+
+        if (ethnicityCountryOfRecruitment != null) {
+            // multiple values separated by comma
+            if (ethnicityCountryOfRecruitment.contains(",")) {
+                String[] countries = ethnicityCountryOfRecruitment.split(",");
+                countryOfRecruitment.setRecruitmentCountryValues(countries);
+            }
+            // single value
+            else {
+                String[] countries = new String[1];
+                countries[0] = ethnicityCountryOfRecruitment;
+                countryOfRecruitment.setRecruitmentCountryValues(countries);
+            }
+        }
+
+        model.addAttribute("countryOfRecruitment", countryOfRecruitment);
         return "edit_sample_description";
     }
 
     // Edit existing ethnicity/sample information
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/sampledescriptions/{ethnicityId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateSampleDescription(@ModelAttribute Ethnicity ethnicity) {
+    public String updateSampleDescription(@ModelAttribute Ethnicity ethnicity, @ModelAttribute CountryOfOrigin countryOfOrigin, @ModelAttribute CountryOfRecruitment countryOfRecruitment) {
+
+        // Set country of origin based on values returned
+        List<String> listOfOriginCountries = Arrays.asList(countryOfOrigin.getOriginCountryValues());
+        String countryOfOriginJoined = String.join(",", listOfOriginCountries);
+        ethnicity.setCountryOfOrigin(countryOfOriginJoined);
+
+        // Set country of recruitment based on values returned
+        List<String> listOfRecruitmentCountries = Arrays.asList(countryOfRecruitment.getRecruitmentCountryValues());
+        String countryOfRecruitmentJoined = String.join(",", listOfRecruitmentCountries);
+        ethnicity.setCountryOfRecruitment(countryOfRecruitmentJoined);
 
         // Saves the new information returned from form
         Ethnicity updatedEthnicity = ethnicityRepository.save(ethnicity);
@@ -108,9 +165,22 @@ public class EthnicityController {
     }
 
 
+    // Delete existing ethnicity/sample information
+    @RequestMapping(value = "/sampledescriptions/{ethnicityId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String deleteSampleDescription(@PathVariable Long ethnicityId) {
+
+        // Find the associated study
+        Ethnicity ethnicityToDelete = ethnicityRepository.findOne(ethnicityId);
+        Long studyId = ethnicityToDelete.getStudy().getId();
+
+        // Delete ethnicity
+        ethnicityRepository.delete(ethnicityToDelete);
+        return "redirect:/studies/" + studyId + "/sampledescription";
+    }
+
+
     /* Model Attributes :
-    *  Used for dropdowns in HTML forms
-    *
+    *  Used for drop-downs in HTML forms
     */
 
     // Ethnicity Types
@@ -129,7 +199,6 @@ public class EthnicityController {
         List<String> types = new ArrayList<>();
         types.add("European");
         types.add("Sub-Saharan African");
-        types.add("African unspecified");
         types.add("African unspecified");
         types.add("South Asian");
         types.add("South East Asian");

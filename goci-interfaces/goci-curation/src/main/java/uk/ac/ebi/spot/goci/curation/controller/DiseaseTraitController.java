@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
+import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
+import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import javax.validation.Valid;
+import java.util.Collection;
 
 /**
  * Created by emma on 09/01/15.
@@ -29,10 +32,12 @@ public class DiseaseTraitController {
 
     // Repositories allowing access to disease traits in database
     private DiseaseTraitRepository diseaseTraitRepository;
+    private StudyRepository studyRepository;
 
     @Autowired
-    public DiseaseTraitController(DiseaseTraitRepository diseaseTraitRepository) {
+    public DiseaseTraitController(DiseaseTraitRepository diseaseTraitRepository, StudyRepository studyRepository) {
         this.diseaseTraitRepository = diseaseTraitRepository;
+        this.studyRepository = studyRepository;
     }
 
     //Return all disease traits
@@ -57,23 +62,11 @@ public class DiseaseTraitController {
             return "disease_traits";
         }
 
-        // Check trait does not already exist
-
-     /*   String enteredTrait = diseaseTrait.getTrait().toLowerCase();
-        String existingTrait = diseaseTraitRepository.findByTraitIgnoreCase(enteredTrait);
-
-        if (existingTrait != null && !existingTrait.isEmpty()){
-            // warn curator
-        }*/
-
         // Save disease trait
         else {
             diseaseTraitRepository.save(diseaseTrait);
-
+            return "redirect:/diseasetraits";
         }
-
-
-        return "redirect:/diseasetraits";
     }
 
     // Edit disease trait
@@ -87,10 +80,48 @@ public class DiseaseTraitController {
     }
 
     @RequestMapping(value = "/{diseaseTraitId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String editDiseaseTrait(@ModelAttribute DiseaseTrait diseaseTrait) {
+    public String editDiseaseTrait(@Valid @ModelAttribute DiseaseTrait diseaseTrait, BindingResult bindingResult, Model model) {
+
+        // Catch a null or empty value being entered
+        if (bindingResult.hasErrors()) {
+            return "edit_disease_trait";
+        }
 
         // Save edited disease trait
-        diseaseTraitRepository.save(diseaseTrait);
+        else {
+            diseaseTraitRepository.save(diseaseTrait);
+            return "redirect:/diseasetraits";
+        }
+    }
+
+    // Delete a disease trait
+
+    @RequestMapping(value = "/{diseaseTraitId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String viewDiseaseTraitToDelete(Model model, @PathVariable Long diseaseTraitId) {
+
+        DiseaseTrait diseaseTraitToView = diseaseTraitRepository.findOne(diseaseTraitId);
+        model.addAttribute("diseaseTrait", diseaseTraitToView);
+        return "delete_disease_trait";
+    }
+
+
+    @RequestMapping(value = "/{diseaseTraitId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String deleteDiseaseTrait(@PathVariable Long diseaseTraitId) {
+
+        // Need to find any studies linked to this diseaseTrait
+        Collection<Study> studiesWithDiseaseTrait = studyRepository.findByDiseaseTraitId(diseaseTraitId);
+
+        // For each study remove this disease trait and save
+        if (!studiesWithDiseaseTrait.isEmpty()) {
+            for (Study study : studiesWithDiseaseTrait) {
+                study.setDiseaseTrait(null);
+                studyRepository.save(study);
+            }
+        }
+
+        // Delete disease trait
+        diseaseTraitRepository.delete(diseaseTraitId);
+
         return "redirect:/diseasetraits";
     }
 

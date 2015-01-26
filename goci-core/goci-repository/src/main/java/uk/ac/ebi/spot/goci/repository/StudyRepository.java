@@ -10,22 +10,29 @@ import java.util.Collection;
 
 /**
  * Created by emma on 20/11/14.
- * @author emma
  *
- * Repository accessing Study entity object
+ * @author emma
+ *         <p>
+ *         Repository accessing Study entity object
  */
 
 
 @RepositoryRestResource
 public interface StudyRepository extends JpaRepository<Study, Long> {
 
-/*
-    @Query("select s from Study s where s.housekeeping.pending = :pending")
-    Collection<Study> findByPending(@Param("pending") String pending);
+    Collection<Study> findByDiseaseTraitId(Long diseaseTraitId);
 
-    @Query("select s from Study s where s.housekeeping.publish = :publish")
-    Collection<Study> findByPublish(@Param("publish") String publish);
-*/
+    Study findByPubmedId(String pubmedId);
+
+    // Custom queries
+    @Query("select s from Study s where s.housekeeping.curationStatus.id = :status")
+    Collection<Study> findByCurationStatusIgnoreCase(@Param("status") Long status);
+
+    @Query("select s from Study s where s.housekeeping.curator.id = :curator")
+    Collection<Study> findByCuratorIgnoreCase(@Param("curator") Long curator);
+
+    @Query("select s from Study s where s.housekeeping.curationStatus.id = :status and s.housekeeping.curator.id = :curator")
+    Collection<Study> findByCurationStatusAndCuratorAllIgnoreCase(@Param("status") Long status, @Param("curator") Long curator);
 
 
 }

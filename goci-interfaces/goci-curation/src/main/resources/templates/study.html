@@ -36,7 +36,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a href="http://www.genome.gov/gwastudies/" class="navbar-brand">GWAS</a>
+        <a href="http://www.ebi.ac.uk/gwas" class="navbar-brand">GWAS</a>
     </div>
 
     <div id="navbarCollapse" class="collapse navbar-collapse">
@@ -158,7 +158,10 @@
                     <label for="diseaseTrait" class="control-label col-md-2">Disease Trait:</label>
 
                     <div class="col-md-10">
-                        <select th:field="*{diseaseTrait}" id="diseaseTrait">
+                        <select name="diseaseTrait" th:field="*{diseaseTrait}" id="diseaseTrait"
+                                class="form-control select2-select">
+                            <!-- Empty value for first entry-->
+                            <option value=""></option>
                             <option th:each="diseaseTrait : ${diseaseTraits}"
                                     th:value="${diseaseTrait.id}"
                                     th:text="${diseaseTrait.trait}"></option>
@@ -209,7 +212,17 @@
 <script>
     $(function () {
         // turn the element to select2 select style
-        $('#EFOTrait').select2();
+        $('#EFOTrait').select2({ placeholder: "Select an EFO trait",
+            allowClear: true});
+    });
+</script>
+
+
+<script>
+    $(function () {
+        // turn the element to select2 select style
+        $('#diseaseTrait').select2({ placeholder: "Select a disease/trait",
+            allowClear: true});
     });
 </script>
 

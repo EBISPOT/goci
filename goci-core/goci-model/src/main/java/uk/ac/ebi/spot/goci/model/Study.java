@@ -1,16 +1,12 @@
 package uk.ac.ebi.spot.goci.model;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import java.sql.Date;
+
+import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
 import java.util.Collection;
+import java.util.Date;
 
 
 /**
@@ -27,12 +23,16 @@ public class Study {
     @GeneratedValue
     private Long id;
 
+    @NotBlank(message = "Please enter an author")
     private String author;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date studyDate;
 
+    @NotBlank(message = "Please enter a publication")
     private String publication;
 
+    @NotBlank(message = "Please enter a title")
     private String title;
 
     private String initialSampleSize;
@@ -41,6 +41,7 @@ public class Study {
 
     private String platform;
 
+    @NotBlank(message = "Please enter a pubmed id")
     private String pubmedId;
 
     private String cnv;
@@ -51,20 +52,20 @@ public class Study {
 
     @ManyToOne
     @JoinTable(name = "STUDY_DISEASE_TRAIT",
-               joinColumns = @JoinColumn(name = "STUDY_ID"),
-               inverseJoinColumns = @JoinColumn(name = "DISEASE_TRAIT_ID"))
+            joinColumns = @JoinColumn(name = "STUDY_ID"),
+            inverseJoinColumns = @JoinColumn(name = "DISEASE_TRAIT_ID"))
     private DiseaseTrait diseaseTrait;
 
     @ManyToMany
     @JoinTable(name = "STUDY_EFO_TRAIT",
-               joinColumns = @JoinColumn(name = "STUDY_ID"),
-               inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
+            joinColumns = @JoinColumn(name = "STUDY_ID"),
+            inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits;
 
     @ManyToMany
     @JoinTable(name = "STUDY_SNP",
-               joinColumns = @JoinColumn(name = "STUDY_ID"),
-               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
+            joinColumns = @JoinColumn(name = "STUDY_ID"),
+            inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
     private Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms;
 
     @OneToOne

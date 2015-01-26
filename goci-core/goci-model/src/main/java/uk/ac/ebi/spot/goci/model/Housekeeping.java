@@ -1,11 +1,12 @@
 package uk.ac.ebi.spot.goci.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.util.Date;
 
 
 /**
@@ -33,12 +34,16 @@ public class Housekeeping {
 
     private String checkedNCBIError;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date publishDate;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date sendToNCBIDate;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date studyAddedDate;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastUpdateDate;
 
     private String fileName;

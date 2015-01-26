@@ -14,5 +14,5 @@ import java.util.Collection;
  */
 @RepositoryRestResource
 public interface EthnicityRepository extends JpaRepository<Ethnicity, Long> {
-    Collection<Ethnicity> findByStudyIdAndType(long studyId, String Type);
+    Collection<Ethnicity> findByStudyIdAndType(Long studyId, String Type);
 }
