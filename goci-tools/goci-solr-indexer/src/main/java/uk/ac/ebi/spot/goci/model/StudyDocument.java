@@ -2,8 +2,11 @@ package uk.ac.ebi.spot.goci.model;
 
 import org.apache.solr.client.solrj.beans.Field;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.TimeZone;
 
 /**
  * Javadocs go here!
@@ -16,6 +19,7 @@ public class StudyDocument extends Document<Study> {
     @Field private String title;
     @Field private String author;
     @Field private String publication;
+    @Field private String publicationDate;
 
     @Field private String trait;
     @Field("traitUri") private Collection<String> traitUris;
@@ -29,6 +33,14 @@ public class StudyDocument extends Document<Study> {
         if (study.getDiseaseTrait() != null) {
             this.trait = study.getDiseaseTrait().getTrait();
         }
+
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+        if (study.getStudyDate() != null) {
+            this.publicationDate = df.format(study.getStudyDate());
+        }
+
+
         this.traitUris = new ArrayList<>();
         study.getEfoTraits().forEach(efoTrait -> traitUris.add(efoTrait.getUri()));
     }
@@ -56,4 +68,9 @@ public class StudyDocument extends Document<Study> {
     public Collection<String> getTraitUris() {
         return traitUris;
     }
+
+    public String getPublicationDate() {
+        return publicationDate;
+    }
+
 }
