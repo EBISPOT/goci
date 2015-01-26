@@ -23,6 +23,8 @@
     <link href="../static/css/jumbotron.css" th:href="@{css/jumbotron.css}" rel="stylesheet"/>
     <link href="../static/css/sticky-footer-navbar.css" th:href="@{css/sticky-footer-navbar.css}" rel="stylesheet"/>
     <link href="../static/css/bootstrap-table.css" th:href="@{css/bootstrap-table.css}" rel="stylesheet"/>
+    <link rel="stylesheet" href="../static/css/bootstrap-theme.min.css" th:href="@{css/bootstrap-theme.min.css}"/>
+
 
     <!-- Additional styling on top of bootstrap -->
     <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{css/goci-ui.css}"/>
@@ -152,17 +154,17 @@
 
                             <div class="list-group">
                                 <!--add an "active" class annotation to each a tag when it's selected-->
-                                <a href="#" class="list-group-item" id="studyFacet"> <span class="badge background-color-primary-bold">3
+                                <a href="#" class="list-group-item" id="studyFacet"> <span class="badge background-color-primary-bold">0
                                 </span>
                                     Studies</a>
                                 <a href="#" class="list-group-item" id="associationFacet"> <span class="badge background-color-primary-bold">
-                                    14</span>
+                                    0</span>
                                     Associations</a>
-                                <a href="#" class="list-group-item" id="efotraitFacet"> <span class="badge background-color-primary-bold">2
+                                <a href="#" class="list-group-item" id="efotraitFacet"> <span class="badge background-color-primary-bold">0
                                 </span>
                                     Ontology terms</a>
                                 <a href="#" class="list-group-item" id="singlenucleotidepolymorphismFacet"> <span class="badge background-color-primary-bold">
-                                    12</span>
+                                    0</span>
                                     SNPs</a>
                             </div>
 
@@ -197,20 +199,22 @@
                                 </div>
 
                                 <div class="list-group-item filter-element">
-                                    <span class="filter-label">Trait</span>
-                                    <button type="button" class="btn btn-default">Child trait</button>
-                                    <button type="button"
-                                            data-toggle="dropdown"
-                                            class="btn btn-default dropdown-toggle"
-                                            aria-expanded="false">
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="#">Diabetes</a></li>
-                                        <li><a href="#">Cancer</a></li>
-                                        <li><a href="#">Lupus</a></li>
-                                        <li><a href="#">Body weight</a></li>
-                                    </ul>
+                                    <div class="filter-label">Trait</div>
+                                    <div class="filter-values">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-default">Child trait</button>
+                                            <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false">
+                                                <span class="caret"></span>
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li><a href="#">Diabetes</a></li>
+                                                <li><a href="#">Cancer</a></li>
+                                                <li><a href="#">Lupus</a></li>
+                                                <li><a href="#">Body weight</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -224,12 +228,12 @@
             </div>
             <div class="col-md-9" id="results-area">
 
-                <div id="noResults" style="display: none">
-                    <h2>No results found for search term <em><span id="search-term-noResult"></span></em></h2>
+                <div id="noResults" style="display: none" th:object="${result}">
+                    <h2>No results found for search term <em><span id="search-term-noResult" th:text="*{query}">Query term</span></em></h2>
                 </div>
 
-                <div id="results">
-                    <h2>Search results for <em><span id="search-term"></span></em></h2>
+                <div id="results" th:object="${result}">
+                    <h2>Search results for <em><span id="search-term" th:text="*{query}">Quer term</span></em></h2>
 
                     <div id="studyTable">
                         <h3><i>Studies</i></h3>
@@ -337,7 +341,7 @@
 
 <!-- GOCI JavaScript
 ================================================== -->
-<script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
+<!--<script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>-->
 <script src="../static/js/goci-ui.js" th:src="@{js/goci-ui.js}"></script>
 <script src="../static/js/solrsearch.js" th:src="@{js/solrsearch.js}"></script>
 
