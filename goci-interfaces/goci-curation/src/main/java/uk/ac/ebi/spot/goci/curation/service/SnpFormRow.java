@@ -2,6 +2,10 @@ package uk.ac.ebi.spot.goci.curation.service;
 
 /**
  * Created by emma on 26/01/15.
+ *
+ * @author emma
+ *         <p/>
+ *         Service class that deals with rows on SNP association form
  */
 public class SnpFormRow {
 
