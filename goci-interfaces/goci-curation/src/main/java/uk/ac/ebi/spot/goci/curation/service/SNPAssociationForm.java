@@ -1,3 +1,4 @@
+
 package uk.ac.ebi.spot.goci.curation.service;
 
 import uk.ac.ebi.spot.goci.model.EfoTrait;
@@ -5,14 +6,15 @@ import uk.ac.ebi.spot.goci.model.EfoTrait;
 import java.util.ArrayList;
 import java.util.Collection;
 
+
 /**
  * Created by emma on 26/01/15.
+ * @author emma
  */
-public class SNPAssociationForm {
+
+public class SnpAssociationForm {
 
     private String riskFrequency;
-
-    private Float pvalueFloat;
 
     private String pvalueText;
 
@@ -40,16 +42,15 @@ public class SNPAssociationForm {
 
     private Collection<SnpFormRow> snpFormRows = new ArrayList<>();
 
-    private Collection authorReportedGenes;
+    private Collection<String> authorReportedGenes;
 
-    private Collection<EfoTrait> efoTraits;
+    private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
-    public SNPAssociationForm() {
+    public SnpAssociationForm() {
     }
 
-    public SNPAssociationForm(String riskFrequency, Float pvalueFloat, String pvalueText, Float orPerCopyNum, String orType, String snpType, String multiSnpHaplotype, String snpInteraction, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, Collection<SnpFormRow> snpFormRows, Collection authorReportedGenes, Collection<EfoTrait> efoTraits) {
+    public SnpAssociationForm(String riskFrequency, String pvalueText, Float orPerCopyNum, String orType, String snpType, String multiSnpHaplotype, String snpInteraction, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, Collection<SnpFormRow> snpFormRows, Collection<String> authorReportedGenes, Collection<EfoTrait> efoTraits) {
         this.riskFrequency = riskFrequency;
-        this.pvalueFloat = pvalueFloat;
         this.pvalueText = pvalueText;
         this.orPerCopyNum = orPerCopyNum;
         this.orType = orType;
@@ -73,14 +74,6 @@ public class SNPAssociationForm {
 
     public void setRiskFrequency(String riskFrequency) {
         this.riskFrequency = riskFrequency;
-    }
-
-    public Float getPvalueFloat() {
-        return pvalueFloat;
-    }
-
-    public void setPvalueFloat(Float pvalueFloat) {
-        this.pvalueFloat = pvalueFloat;
     }
 
     public String getPvalueText() {
@@ -203,3 +196,4 @@ public class SNPAssociationForm {
         this.efoTraits = efoTraits;
     }
 }
+
