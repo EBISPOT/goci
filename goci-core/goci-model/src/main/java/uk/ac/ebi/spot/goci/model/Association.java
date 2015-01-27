@@ -55,6 +55,8 @@ public class Association {
     @OneToOne
     private Study study;
 
+    // Association can have a number of loci attached depending on whether its a multi-snp haplotype
+    // or SNP:SNP interaction
     @OneToMany
     @JoinTable(name = "ASSOCIATION_LOCUS",
             joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
@@ -101,7 +103,6 @@ public class Association {
     public void setId(Long id) {
         this.id = id;
     }
-
 
     public String getRiskFrequency() {
         return riskFrequency;
