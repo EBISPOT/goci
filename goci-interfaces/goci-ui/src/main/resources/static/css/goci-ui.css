@@ -165,10 +165,18 @@ a > .toplevel-view {
     color: #333;
 }
 
+.btn-default {
+    background-image: linear-gradient(to bottom, #E7F7F9 50%, #D3EFF3 100%);
+}
+
 .btn-default:hover {
     background-image: linear-gradient(to bottom, #D3EFF3 0%, #B0DFE6 100%);
 }
 
 .navbar {
     background-image: linear-gradient(to bottom, #222 0%, #222 100%);
+}
+
+.panel-default > .panel-heading {
+    background-image: linear-gradient(to bottom, #E7F7F9 50%, #D3EFF3 100%);
 }

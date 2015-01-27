@@ -15,9 +15,9 @@
 
     <!-- Bootstrap core CSS -->
     <link href="../static/css/bootstrap.css" th:href="@{css/bootstrap.min.css}" rel="stylesheet"/>
-    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"
-          rel="stylesheet"/>
-
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" rel="stylesheet"/>
+    <link href="../static/css/bootstrap-table.css" th:href="@{css/bootstrap-table.css}" rel="stylesheet"/>
+    <link href="../static/css/bootstrap-theme.css" th:href="@{css/bootstrap-theme.min.css}" rel="stylesheet" />
 
     <!-- Custom styles for this template -->
     <link href="../static/css/jumbotron.css" th:href="@{css/jumbotron.css}" rel="stylesheet"/>
@@ -57,13 +57,12 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a href="index.html" th:href="@{/.}">Home <span class="sr-only">(current)</span></a></li>
-                <li><a href="search.html" th:href="@{search}">Search the catalog</a></li>
-                <li><a href="about.html" th:href="@{about}">About</a></li>
-                <li><a href="downloads.html" th:href="@{downloads}">Downloads</a></li>
-                <li><a href="ontology.html" th:href="@{ontology}">Ontology</a></li>
-                <li><a href="methods.html" th:href="@{methods}">Methods</a></li>
-                <li><a href="faq.html" th:href="@{search}">FAQ</a></li>
-                <li><a href="http://www.ebi.ac.uk/fgpt/gwas">GWAS Diagram</a></li>
+                <li><a href="search.html" th:href="@{search}">Search</a></li>
+                <li><a href="http://www.ebi.ac.uk/fgpt/gwas">View</a></li>
+                <li class="hidden-sm"><a href="downloads.html" th:href="@{downloads}">Download</a></li>
+                <li><a href="help.html" th:href="@{help}">Help</a></li>
+                <li class="hidden-sm"><a href="about.html" th:href="@{about}">About</a></li>
+
                 <li><a class="icon" href="http://www.ebi.ac.uk"><img alt="EBI logo"
                                                                      src="../static/icons/EMBL_EBI_Logo_white_scaled.png"
                                                                      th:src="@{icons/EMBL_EBI_Logo_white_scaled.png}"/></a>
@@ -128,30 +127,11 @@
                    associations studies.</p>
             </div>
         </a>
-        <a href="search.html" th:href="@{search}">
+        <a href="methods.html" th:href="@{methods}">
             <div class="col-md-4 toplevel-view">
-                <h2 class="flaticon-search11 color-primary-bold">Search the catalog</h2>
+                <h2 class="flaticon-statistics color-primary-bold">Methods</h2>
 
-                <p>You can search the catalog in a number of ways, including by trait, SNP identifier, study and
-                   gene. </p>
-            </div>
-        </a>
-        <a href="http://www.ebi.ac.uk/fgpt/gwas">
-            <div class="col-md-4 toplevel-view">
-                <h2 class="color-primary-bold">GWAS diagram</h2>
-
-                <p>An interactive visualisation of all SNP-trait associations with genome-wide significance
-                   (p&lt;5E-8). </p>
-            </div>
-        </a>
-    </div>
-
-    <div class="row">
-        <a href="downloads.html" th:href="@{downloads}">
-            <div class="col-md-4 toplevel-view">
-                <h2 class="flaticon-mailbox2 color-primary-bold">Downloads</h2>
-
-                <p>Including a full copy of the GWAS Catalog in spreadsheet format.</p>
+                <p>A full description of the Catalog eligibility criteria and methods.</p>
             </div>
         </a>
         <a href="ontology.html" th:href="@{ontology}">
@@ -161,11 +141,30 @@
                 <p>Details of the ontology representation of GWAS Catalog traits.</p>
             </div>
         </a>
-        <a href="methods.html" th:href="@{methods}">
-            <div class="col-md-4 toplevel-view">
-                <h2 class="flaticon-statistics color-primary-bold">Methods</h2>
+    </div>
 
-                <p>A full description of the Catalog eligibility criteria and methods.</p>
+    <div class="row">
+        <a href="search.html" th:href="@{search}">
+            <div class="col-md-4 toplevel-view">
+                <h2 class="flaticon-search11 color-primary-bold">Search</h2>
+
+                <p>You can search the catalog in a number of ways, including by trait, SNP identifier, study and
+                   gene. </p>
+            </div>
+        </a>
+        <a href="http://www.ebi.ac.uk/fgpt/gwas">
+            <div class="col-md-4 toplevel-view">
+                <h2 class="flaticon-image11 color-primary-bold">View</h2>
+
+                <p>An interactive visualisation of all SNP-trait associations with genome-wide significance
+                   (p&lt;5E-8). </p>
+            </div>
+        </a>
+        <a href="downloads.html" th:href="@{downloads}">
+            <div class="col-md-4 toplevel-view">
+                <h2 class="flaticon-mailbox2 color-primary-bold">Download</h2>
+
+                <p>Including a full copy of the GWAS Catalog in spreadsheet format.</p>
             </div>
         </a>
     </div>
@@ -200,7 +199,6 @@
 
 <!-- GOCI JavaScript
 ================================================== -->
-<script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
 <script src="../static/js/goci-ui.js" th:src="@{js/goci-ui.js}"></script>
 
 </body>
