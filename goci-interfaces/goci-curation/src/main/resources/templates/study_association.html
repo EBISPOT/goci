@@ -108,7 +108,7 @@
             <!--Gene-->
             <td>
                 <span th:each="locus : ${studyAssociation.loci}"
-                      th:text="${locus.authorReportedGenes} ?: 'null'"></span>
+                      th:text="${locus.authorReportedGenes.geneName} ?: 'null'"></span>
             </td>
 
             <!--Strongest risk allele-->
@@ -118,10 +118,10 @@
             </td>
 
             <!--SNPs-->
-            <td>
+       <!--     <td>
                 <span th:each="locus : ${studyAssociation.loci}"
                       th:text="${locus.strongestRiskAlleles.snp} ?: 'null'"></span>
-            </td>
+            </td>-->
 
             <td th:text="${studyAssociation.riskFrequency}?: 'null' "></td>
             <td th:text="${studyAssociation.pvalueFloat} ?: 'null'"></td>

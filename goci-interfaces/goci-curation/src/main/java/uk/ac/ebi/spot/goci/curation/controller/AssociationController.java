@@ -39,9 +39,10 @@ public class AssociationController {
     private AssociationBatchLoaderService associationBatchLoaderService;
     private GeneRepository geneRepository;
     private RiskAlleleRepository riskAlleleRepository;
+    private LocusRepository locusRepository;
 
     @Autowired
-    public AssociationController(AssociationRepository associationRepository, StudyRepository studyRepository, EfoTraitRepository efoTraitRepository, SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository, AssociationBatchLoaderService associationBatchLoaderService, GeneRepository geneRepository, RiskAlleleRepository riskAlleleRepository) {
+    public AssociationController(AssociationRepository associationRepository, StudyRepository studyRepository, EfoTraitRepository efoTraitRepository, SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository, AssociationBatchLoaderService associationBatchLoaderService, GeneRepository geneRepository, RiskAlleleRepository riskAlleleRepository, LocusRepository locusRepository) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -49,7 +50,11 @@ public class AssociationController {
         this.associationBatchLoaderService = associationBatchLoaderService;
         this.geneRepository = geneRepository;
         this.riskAlleleRepository = riskAlleleRepository;
+        this.locusRepository = locusRepository;
     }
+
+
+
 
     /*  Study SNP/Associations */
 
@@ -82,7 +87,6 @@ public class AssociationController {
         model.addAttribute("study", studyRepository.findOne(studyId));
         return "add_standard_or_multi_snp_association";
     }
-
 
 
     @RequestMapping(value = "/studies/{studyId}/associations/add", params = {"addRow"})
@@ -122,7 +126,7 @@ public class AssociationController {
         Study study = studyRepository.findOne(studyId);
 
         // Create an association object from details in returned form
-        Association newAssociation = createAssociation(snpAssociationForm);
+        Association newAssociation = createStandardAssociation(snpAssociationForm);
 
         // Set the study ID for our association
         newAssociation.setStudy(study);
@@ -267,7 +271,7 @@ public class AssociationController {
    /* General purpose methods */
 
     // Takes information in addSNPForm and creates association
-    private Association createAssociation(SnpAssociationForm snpAssociationForm) {
+    private Association createStandardAssociation(SnpAssociationForm snpAssociationForm) {
 
         Association association = new Association();
 
@@ -291,48 +295,44 @@ public class AssociationController {
 
         // Add loci to association
         Collection<Locus> loci = new ArrayList<>();
+        Locus locus = new Locus();
 
-        // If its a multi-snp haplotype create only one locus or standard case
-        if (!snpAssociationForm.getSnpInteraction().equals("1")) {
+        // Create gene from each string entered, may sure to check pre-existence
+        Collection<String> authorReportedGenes = snpAssociationForm.getAuthorReportedGenes();
+        Collection<Gene> locusGenes = addGenes(authorReportedGenes);
 
-            Locus locus = new Locus();
+        // Set locus attribute
+        locus.setAuthorReportedGenes(locusGenes);
 
-            // Create gene from each string entered, may sure to check pre-existence
-            Collection<String> authorReportedGenes = snpAssociationForm.getAuthorReportedGenes();
-            Collection<Gene> locusGenes = addGenes(authorReportedGenes);
+        // Handle rows entered for haplotype by curator
+        Collection<SnpFormRow> rows = snpAssociationForm.getSnpFormRows();
+        Collection<RiskAllele> locusRiskAlleles = new ArrayList<>();
 
-            // Set locus attribute
-            locus.setAuthorReportedGenes(locusGenes);
+        for (SnpFormRow row : rows) {
 
-            // Handle rows entered for haplotype by curator
-            Collection<SnpFormRow> rows = snpAssociationForm.getSnpFormRows();
-            Collection<RiskAllele> locusRiskAlleles = new ArrayList<>();
+            // Get the curator entered risk allele
+            String curatorEnteredRiskAllele = row.getStrongestRiskAllele();
+            RiskAllele riskAllele = createRiskAllele(curatorEnteredRiskAllele);
 
-            for (SnpFormRow row : rows) {
+            // For allele assign a SNP
+            String curatorEnteredSNP = row.getSnp();
+            SingleNucleotidePolymorphism snp = createSnp(curatorEnteredSNP);
+            riskAllele.setSnp(snp);
 
-                // Get the curator entered risk allele
-                String curatorEnteredRiskAllele = row.getStrongestRiskAllele();
-                RiskAllele riskAllele = createRiskAllele(curatorEnteredRiskAllele);
-
-                // For allele assign a SNP
-                String curatorEnteredSNP = row.getSnp();
-                SingleNucleotidePolymorphism snp = createSnp(curatorEnteredSNP);
-                riskAllele.setSnp(snp);
-
-                // Save risk allele
-                riskAlleleRepository.save(riskAllele);
-                locusRiskAlleles.add(riskAllele);
-            }
-
-            loci.add(locus);
-        }// end multi-snp haplotype
-
-
-        else if (snpAssociationForm.getSnpInteraction().equals("1")) {
-            // TODO THINK OF LOGIC
+            // Save risk allele
+            riskAlleleRepository.save(riskAllele);
+            locusRiskAlleles.add(riskAllele);
         }
+        // Assign all created risk alleles to locus
+        locus.setStrongestRiskAlleles(locusRiskAlleles);
 
+        // Save our newly created locus
+        locusRepository.save(locus);
+
+        // Add locus to collection and link to our repository
+        loci.add(locus);
         association.setLoci(loci);
+
         return association;
 
     }
