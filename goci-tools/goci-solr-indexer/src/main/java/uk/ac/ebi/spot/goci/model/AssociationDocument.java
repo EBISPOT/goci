@@ -21,6 +21,7 @@ public class AssociationDocument extends Document<Association> {
     @Field private String riskFrequency;
     @Field private String qualifier;
     @Field private String orPerCopyUnitDescr;
+    @Field private String orType;
 
     @Field private float orPerCopyNum;
     @Field private float pValue;
@@ -50,6 +51,8 @@ public class AssociationDocument extends Document<Association> {
         this.riskFrequency = association.getRiskFrequency();
         this.qualifier = association.getPvalueText();
         this.orPerCopyUnitDescr = association.getOrPerCopyUnitDescr();
+        this.orType = association.getOrType();
+
         if(association.getOrPerCopyNum() != null) {
             this.orPerCopyNum = association.getOrPerCopyNum();
         }
@@ -168,5 +171,9 @@ public class AssociationDocument extends Document<Association> {
 
     public float getOrPerCopyNum() {
         return orPerCopyNum;
+    }
+
+    public String getOrType() {
+        return orType;
     }
 }
