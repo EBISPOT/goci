@@ -147,8 +147,23 @@ function processAssociation(association, table){
     row.append($("<td>").html(association.chromosomePosition));
     row.append($("<td>").html(association.strongestAllele));
     row.append($("<td>").html(association.pValue));
-    row.append($("<td>").html(association.orPerCopyNum));
-    row.append($("<td>").html(association.orPerCopyUnitDescr));
+
+    if(association.orType == '1'){
+        row.append($("<td>").html(association.orPerCopyNum));
+        row.append($("<td>").html(''));
+    }
+    else {
+        row.append($("<td>").html(''));
+        if (association.orPerCopyUnitDescr != null) {
+            var beta = (association.orPerCopyNum).concat(' ').concat(association.orPerCopyUnitDescr);
+            console.log(beta);
+            row.append($("<td>").html(beta));
+        }
+        else{
+            row.append($("<td>").html(association.orPerCopyNum));
+        }
+    }
+
     table.append(row);
 }
 
