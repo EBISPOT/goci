@@ -18,7 +18,6 @@ import java.util.Date;
 public class SingleNucleotidePolymorphism {
     @Id
     @GeneratedValue
-    @NotNull
     private Long id;
 
     private String rsId;

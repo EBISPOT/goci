@@ -16,7 +16,6 @@ import java.util.Collection;
 public class Locus {
     @Id
     @GeneratedValue
-    @NotNull
     private Long id;
 
     @ManyToMany

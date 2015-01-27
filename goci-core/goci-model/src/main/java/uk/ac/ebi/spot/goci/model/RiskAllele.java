@@ -13,7 +13,6 @@ public class RiskAllele {
 
     @Id
     @GeneratedValue
-    @NotNull
     private Long id;
 
     private String riskAlleleName;

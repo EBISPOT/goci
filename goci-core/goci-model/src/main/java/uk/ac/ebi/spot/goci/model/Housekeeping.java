@@ -13,7 +13,7 @@ import java.util.Date;
  * Created by emma on 03/12/14.
  *
  * @author emma
- *         <p>
+ *         <p/>
  *         Model representing housekeeping information stored about a study that is used during curation
  */
 @Entity
@@ -22,17 +22,17 @@ public class Housekeeping {
     @GeneratedValue
     private Long id;
 
-    private String studySnpCheckedLevelOne;
+    private String studySnpCheckedLevelOne = "0";
 
-    private String studySnpCheckedLevelTwo;
+    private String studySnpCheckedLevelTwo = "0";
 
-    private String ethnicityCheckedLevelOne;
+    private String ethnicityCheckedLevelOne = "0";
 
-    private String ethnicityCheckedLevelTwo;
+    private String ethnicityCheckedLevelTwo = "0";
 
-    private String ethnicityBackFilled;
+    private String ethnicityBackFilled = "0";
 
-    private String checkedNCBIError;
+    private String checkedNCBIError = "0";
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date publishDate;

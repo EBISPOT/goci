@@ -18,7 +18,6 @@ import java.util.Collection;
 public class Association {
     @Id
     @GeneratedValue
-    @NotNull
     private Long id;
 
     private String riskFrequency;
@@ -32,13 +31,13 @@ public class Association {
 
     private Float orPerCopyNum;
 
-    private String orType;
+    private String orType="0";
 
     private String snpType;
 
-    private String multiSnpHaplotype;
+    private String multiSnpHaplotype="0";
 
-    private String snpInteraction;
+    private String snpInteraction="0";
 
     private Integer pvalueMantissa;
 
