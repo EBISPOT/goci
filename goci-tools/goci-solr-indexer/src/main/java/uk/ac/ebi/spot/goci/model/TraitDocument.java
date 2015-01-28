@@ -23,6 +23,8 @@ public class TraitDocument extends Document<DiseaseTrait> {
     @Field("synonym") private Set<String> synonyms;
     @Field("description") private Set<String> descriptions;
 
+    @Field("efoLink") private Set<String> efoLinks;
+
     @Field("parent") private Set<String> superclassLabels;
     @Field("child") private Set<String> subclassLabels;
 
@@ -39,6 +41,7 @@ public class TraitDocument extends Document<DiseaseTrait> {
         this.superclassLabels = new HashSet<>();
         this.subclassLabels = new HashSet<>();
         this.relations = new HashMap<>();
+        this.efoLinks = new HashSet<>();
     }
 
     public String getTrait() {
@@ -142,5 +145,17 @@ public class TraitDocument extends Document<DiseaseTrait> {
             relations.put(relationship, new HashSet<>());
         }
         relations.get(relationship).addAll(relatedClassLabels);
+    }
+
+    public Set<String> getEfoLinks() {
+        return efoLinks;
+    }
+
+    public void setEfoLinks(Set<String> efoLinks) {
+        this.efoLinks = efoLinks;
+    }
+
+    public void addEfoLink(String efoLink){
+        efoLinks.add(efoLink);
     }
 }

@@ -40,6 +40,10 @@ public class OntologyExpansionService implements DocumentEnrichmentService<Trait
             // get additional fields for trait documents
             IRI traitIRI = IRI.create(traitURI);
             traitDocument.addShortForm(ontologyLoader.getAccession(traitIRI));
+            traitDocument.addLabel(ontologyLoader.getLabel(traitIRI));
+
+            String efolink = ontologyLoader.getLabel(traitIRI).concat("|").concat(ontologyLoader.getAccession(traitIRI)).concat("|").concat(traitIRI.toString());
+            traitDocument.addEfoLink(efolink);
             ontologyLoader.getParentLabels(traitIRI).forEach(traitDocument::addSuperclassLabel);
             ontologyLoader.getChildLabels(traitIRI).forEach(traitDocument::addSubclassLabel);
             ontologyLoader.getSynonyms(traitIRI).forEach(traitDocument::addSynonym);
