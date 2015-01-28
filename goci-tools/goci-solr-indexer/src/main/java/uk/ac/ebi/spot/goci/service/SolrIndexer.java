@@ -14,10 +14,10 @@ import uk.ac.ebi.spot.goci.index.SnpIndex;
 import uk.ac.ebi.spot.goci.index.StudyIndex;
 import uk.ac.ebi.spot.goci.index.TraitIndex;
 import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
+import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 public class SolrIndexer {
     @Autowired StudyService studyService;
     @Autowired SingleNucleotidePolymorphismService snpService;
-    @Autowired EfoTraitRepository efoTraitRepository;
+    @Autowired DiseaseTraitRepository diseaseTraitRepository;
     @Autowired AssociationService associationService;
 
     @Autowired SnpIndex snpIndex;
@@ -137,17 +137,17 @@ public class SolrIndexer {
     Integer mapTraits() {
         Sort sort = new Sort(new Sort.Order("trait"));
         Pageable pager = new PageRequest(0, pageSize, sort);
-        Page<EfoTrait> efoTraitPage = efoTraitRepository.findAll(pager);
-        traitMapper.map(efoTraitPage.getContent());
-        while (efoTraitPage.hasNext()) {
+        Page<DiseaseTrait> diseaseTraitPage = diseaseTraitRepository.findAll(pager);
+        traitMapper.map(diseaseTraitPage.getContent());
+        while (diseaseTraitPage.hasNext()) {
             pager = pager.next();
-            efoTraitPage = efoTraitRepository.findAll(pager);
-            traitMapper.map(efoTraitPage.getContent());
+            diseaseTraitPage = diseaseTraitRepository.findAll(pager);
+            traitMapper.map(diseaseTraitPage.getContent());
             if (sysOutLogging) {
                 System.out.print(".");
             }
         }
-        return (int) efoTraitPage.getTotalElements();
+        return (int) diseaseTraitPage.getTotalElements();
     }
 
     Integer mapAssociations() {

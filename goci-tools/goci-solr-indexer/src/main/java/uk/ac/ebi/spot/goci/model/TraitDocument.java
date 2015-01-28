@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.model;
 import org.apache.solr.client.solrj.beans.Field;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,40 +13,60 @@ import java.util.Set;
  * @author Tony Burdett
  * @date 23/12/14
  */
-public class TraitDocument extends Document<EfoTrait> {
+public class TraitDocument extends Document<DiseaseTrait> {
     @Field private String trait;
-    @Field private String traitUri;
 
-    @Field private String shortForm;
+    @Field("traitUri") private Set<String> traitUris;
+
+    @Field("shortForm") private Set<String> shortForms;
     @Field("label") private Set<String> labels;
     @Field("synonym") private Set<String> synonyms;
-    @Field("description") private Set<String> description;
+    @Field("description") private Set<String> descriptions;
 
     @Field("parent") private Set<String> superclassLabels;
     @Field("child") private Set<String> subclassLabels;
 
-    @Field("*_rel") private Map<String, Set<String>> relations = new HashMap<>();
+    @Field("*_rel") private Map<String, Set<String>> relations;
 
-    public TraitDocument(EfoTrait efoTrait) {
-        super(efoTrait);
-        this.trait = efoTrait.getTrait();
-        this.traitUri = efoTrait.getUri();
+    public TraitDocument(DiseaseTrait diseaseTrait) {
+        super(diseaseTrait);
+        this.trait = diseaseTrait.getTrait();
+        this.traitUris = new HashSet<>();
+        this.shortForms = new HashSet<>();
+        this.labels = new HashSet<>();
+        this.synonyms = new HashSet<>();
+        this.descriptions = new HashSet<>();
+        this.superclassLabels = new HashSet<>();
+        this.subclassLabels = new HashSet<>();
+        this.relations = new HashMap<>();
     }
 
     public String getTrait() {
         return trait;
     }
 
-    public String getTraitUri() {
-        return traitUri;
+    public Set<String> getTraitUris() {
+        return traitUris;
     }
 
-    public String getShortForm() {
-        return shortForm;
+    public void setTraitUris(Set<String> traitUris) {
+        this.traitUris = traitUris;
     }
 
-    public void setShortForm(String shortForm) {
-        this.shortForm = shortForm;
+    public void addTraitUri(String traitUri) {
+        traitUris.add(traitUri);
+    }
+
+    public Set<String> getShortForms() {
+        return shortForms;
+    }
+
+    public void setShortForms(Set<String> shortForms) {
+        this.shortForms = shortForms;
+    }
+
+    public void addShortForm(String shortForm) {
+        shortForms.add(shortForm);
     }
 
     public Set<String> getLabels() {
@@ -56,6 +77,10 @@ public class TraitDocument extends Document<EfoTrait> {
         this.labels = labels;
     }
 
+    public void addLabel(String label) {
+        labels.add(label);
+    }
+
     public Set<String> getSynonyms() {
         return synonyms;
     }
@@ -64,12 +89,20 @@ public class TraitDocument extends Document<EfoTrait> {
         this.synonyms = synonyms;
     }
 
-    public Set<String> getDescription() {
-        return description;
+    public void addSynonym(String synonym) {
+        synonyms.add(synonym);
     }
 
-    public void setDescription(Set<String> description) {
-        this.description = description;
+    public Set<String> getDescriptions() {
+        return descriptions;
+    }
+
+    public void setDescriptions(Set<String> descriptions) {
+        this.descriptions = descriptions;
+    }
+
+    public void addDescription(String description) {
+        descriptions.add(description);
     }
 
     public Set<String> getSuperclassLabels() {
@@ -80,6 +113,10 @@ public class TraitDocument extends Document<EfoTrait> {
         this.superclassLabels = superclassLabels;
     }
 
+    public void addSuperclassLabel(String superclassLabel) {
+        superclassLabels.add(superclassLabel);
+    }
+
     public Set<String> getSubclassLabels() {
         return subclassLabels;
     }
@@ -88,11 +125,22 @@ public class TraitDocument extends Document<EfoTrait> {
         this.subclassLabels = subclassLabels;
     }
 
+    public void addSubclassLabel(String subclassLabel) {
+        subclassLabels.add(subclassLabel);
+    }
+
     public Map<String, Set<String>> getRelations() {
         return relations;
     }
 
     public void setRelations(Map<String, Set<String>> relations) {
         this.relations = relations;
+    }
+
+    public void addRelation(String relationship, Set<String> relatedClassLabels) {
+        if (!relations.containsKey(relationship)) {
+            relations.put(relationship, new HashSet<>());
+        }
+        relations.get(relationship).addAll(relatedClassLabels);
     }
 }

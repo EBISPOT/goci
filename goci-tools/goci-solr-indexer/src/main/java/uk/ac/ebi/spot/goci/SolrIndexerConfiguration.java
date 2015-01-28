@@ -21,9 +21,9 @@ import java.util.Collections;
  */
 @Component
 public class SolrIndexerConfiguration {
-    @Bean SolrServer solrServer() {
-        return new HttpSolrServer("http://orange.ebi.ac.uk:8983/solr");
-    }
+//    @Bean SolrServer solrServer() {
+//        return new HttpSolrServer("http://orange.ebi.ac.uk:8983/solr");
+//    }
 
     @Bean OntologyLoader ontologyLoader() {
         try {

@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -58,6 +59,11 @@ public class ObjectConverter {
                     .filter(enricherType -> matches(enricherType, documentType))
                     .map(documentToEnricherMap::get)
                     .flatMap(Collection::stream)
+                    .sorted(new Comparator<DocumentEnrichmentService>() {
+                        @Override public int compare(DocumentEnrichmentService des1, DocumentEnrichmentService des2) {
+                            return des1.getPriority() - des2.getPriority();
+                        }
+                    })
                     .forEach(documentEnrichmentService -> documentEnrichmentService.doEnrichment(document));
 
             // and return
