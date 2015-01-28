@@ -360,10 +360,10 @@ public class AssociationSheetProcessor {
                     thisAssociation.setPvalueFloat(pvalueFloat);
                     thisAssociation.setPvalueText(pvalueText);
                     thisAssociation.setOrPerCopyNum(orPerCopyNum);
-                    thisAssociation.setOrType(orType);
+               //     thisAssociation.setOrType(orType);
                     thisAssociation.setSnpType(snpType);
-                    thisAssociation.setMultiSnpHaplotype(multiSnpHaplotype);
-                    thisAssociation.setSnpInteraction(snpInteraction);
+                 //   thisAssociation.setMultiSnpHaplotype(multiSnpHaplotype);
+                //    thisAssociation.setSnpInteraction(snpInteraction);
                     thisAssociation.setPvalueMantissa(pvalueMantissa);
                     thisAssociation.setPvalueExponent(pvalueExponent);
                     thisAssociation.setOrPerCopyRecip(orPerCopyRecip);
