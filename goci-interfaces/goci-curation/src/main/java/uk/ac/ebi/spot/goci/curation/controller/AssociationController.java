@@ -463,10 +463,6 @@ public class AssociationController {
         return snpAssociationForm;
     }
 
-
-
-
-
     /* Model Attributes :
     *  Used for dropdowns in HTML forms
     */
