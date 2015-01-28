@@ -18,6 +18,10 @@ public class Locus {
     @GeneratedValue
     private Long id;
 
+    private Integer haplotypeSnpCount;
+
+    private String description;
+
     @ManyToMany
     @JoinTable(name = "LOCUS_RISK_ALLELE",
             joinColumns = @JoinColumn(name = "LOCUS_ID"),
@@ -34,7 +38,9 @@ public class Locus {
     public Locus() {
     }
 
-    public Locus(Collection<RiskAllele> strongestRiskAlleles, Collection<Gene> authorReportedGenes) {
+    public Locus(Integer haplotypeSnpCount, String description, Collection<RiskAllele> strongestRiskAlleles, Collection<Gene> authorReportedGenes) {
+        this.haplotypeSnpCount = haplotypeSnpCount;
+        this.description = description;
         this.strongestRiskAlleles = strongestRiskAlleles;
         this.authorReportedGenes = authorReportedGenes;
     }
@@ -45,6 +51,22 @@ public class Locus {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getHaplotypeSnpCount() {
+        return haplotypeSnpCount;
+    }
+
+    public void setHaplotypeSnpCount(Integer haplotypeSnpCount) {
+        this.haplotypeSnpCount = haplotypeSnpCount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Collection<RiskAllele> getStrongestRiskAlleles() {
@@ -63,10 +85,13 @@ public class Locus {
         this.authorReportedGenes = authorReportedGenes;
     }
 
+
     @Override
     public String toString() {
         return "Locus{" +
                 "id=" + id +
+                ", haplotypeSnpCount=" + haplotypeSnpCount +
+                ", description='" + description + '\'' +
                 ", strongestRiskAlleles=" + strongestRiskAlleles +
                 ", authorReportedGenes=" + authorReportedGenes +
                 '}';
