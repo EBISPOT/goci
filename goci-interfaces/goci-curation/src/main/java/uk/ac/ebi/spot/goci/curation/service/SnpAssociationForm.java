@@ -7,8 +7,10 @@ import java.util.Collection;
 
 
 /**
- * Created by emma on 26/01/15.
+ * Created by emma on 28/01/15.
  * @author emma
+ *
+ * New service class to deal with form used by curators to enter snp/association details
  */
 
 public class SnpAssociationForm {
@@ -24,6 +26,8 @@ public class SnpAssociationForm {
     private String snpType;
 
     private Boolean multiSnpHaplotype = false;
+
+    private Integer multiSnpHaplotypeNum;
 
     private Boolean snpInteraction = false;
 
@@ -48,13 +52,14 @@ public class SnpAssociationForm {
     public SnpAssociationForm() {
     }
 
-    public SnpAssociationForm(String riskFrequency, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, Collection<SnpFormRow> snpFormRows, Collection<String> authorReportedGenes, Collection<EfoTrait> efoTraits) {
+    public SnpAssociationForm(String riskFrequency, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Integer multiSnpHaplotypeNum, Boolean snpInteraction, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, Collection<SnpFormRow> snpFormRows, Collection<String> authorReportedGenes, Collection<EfoTrait> efoTraits) {
         this.riskFrequency = riskFrequency;
         this.pvalueText = pvalueText;
         this.orPerCopyNum = orPerCopyNum;
         this.orType = orType;
         this.snpType = snpType;
         this.multiSnpHaplotype = multiSnpHaplotype;
+        this.multiSnpHaplotypeNum = multiSnpHaplotypeNum;
         this.snpInteraction = snpInteraction;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
@@ -113,6 +118,14 @@ public class SnpAssociationForm {
 
     public void setMultiSnpHaplotype(Boolean multiSnpHaplotype) {
         this.multiSnpHaplotype = multiSnpHaplotype;
+    }
+
+    public Integer getMultiSnpHaplotypeNum() {
+        return multiSnpHaplotypeNum;
+    }
+
+    public void setMultiSnpHaplotypeNum(Integer multiSnpHaplotypeNum) {
+        this.multiSnpHaplotypeNum = multiSnpHaplotypeNum;
     }
 
     public Boolean getSnpInteraction() {
