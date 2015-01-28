@@ -50,6 +50,9 @@ public class Association {
 
     private String orPerCopyUnitDescr;
 
+    // This will hold number of multi-snp haplotypes
+    private Integer multiSnpHaplotypeNum;
+
     @OneToOne
     private Study study;
 
@@ -72,7 +75,8 @@ public class Association {
     public Association() {
     }
 
-    public Association(String riskFrequency, String allele, Float pvalueFloat, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, Study study, Collection<Locus> loci, Collection<EfoTrait> efoTraits) {
+
+    public Association(String riskFrequency, String allele, Float pvalueFloat, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, Integer multiSnpHaplotypeNum, Study study, Collection<Locus> loci, Collection<EfoTrait> efoTraits) {
         this.riskFrequency = riskFrequency;
         this.allele = allele;
         this.pvalueFloat = pvalueFloat;
@@ -88,10 +92,12 @@ public class Association {
         this.orPerCopyStdError = orPerCopyStdError;
         this.orPerCopyRange = orPerCopyRange;
         this.orPerCopyUnitDescr = orPerCopyUnitDescr;
+        this.multiSnpHaplotypeNum = multiSnpHaplotypeNum;
         this.study = study;
         this.loci = loci;
         this.efoTraits = efoTraits;
     }
+
 
     public Long getId() {
         return id;
@@ -221,6 +227,14 @@ public class Association {
         this.orPerCopyUnitDescr = orPerCopyUnitDescr;
     }
 
+    public Integer getMultiSnpHaplotypeNum() {
+        return multiSnpHaplotypeNum;
+    }
+
+    public void setMultiSnpHaplotypeNum(Integer multiSnpHaplotypeNum) {
+        this.multiSnpHaplotypeNum = multiSnpHaplotypeNum;
+    }
+
     public Study getStudy() {
         return study;
     }
@@ -254,16 +268,17 @@ public class Association {
                 ", pvalueFloat=" + pvalueFloat +
                 ", pvalueText='" + pvalueText + '\'' +
                 ", orPerCopyNum=" + orPerCopyNum +
-                ", orType='" + orType + '\'' +
+                ", orType=" + orType +
                 ", snpType='" + snpType + '\'' +
-                ", multiSnpHaplotype='" + multiSnpHaplotype + '\'' +
-                ", snpInteraction='" + snpInteraction + '\'' +
+                ", multiSnpHaplotype=" + multiSnpHaplotype +
+                ", snpInteraction=" + snpInteraction +
                 ", pvalueMantissa=" + pvalueMantissa +
                 ", pvalueExponent=" + pvalueExponent +
                 ", orPerCopyRecip=" + orPerCopyRecip +
                 ", orPerCopyStdError=" + orPerCopyStdError +
                 ", orPerCopyRange='" + orPerCopyRange + '\'' +
                 ", orPerCopyUnitDescr='" + orPerCopyUnitDescr + '\'' +
+                ", multiSnpHaplotypeNum=" + multiSnpHaplotypeNum +
                 ", study=" + study +
                 ", loci=" + loci +
                 ", efoTraits=" + efoTraits +
