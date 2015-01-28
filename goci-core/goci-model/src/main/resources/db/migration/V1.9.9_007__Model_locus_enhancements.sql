@@ -136,3 +136,37 @@ ALTER TABLE "RISK_ALLELE_SNP" ADD CONSTRAINT "RISK_ALLELE_SNP_RA_ID_FK" FOREIGN 
 REFERENCES "LOCUS" ("ID") ENABLE;
 ALTER TABLE "RISK_ALLELE_SNP" ADD CONSTRAINT "RISK_ALLELE_SNP_SNP_ID_FK" FOREIGN KEY ("SNP_ID")
 REFERENCES "SINGLE_NUCLEOTIDE_POLYMORPHISM" ("ID") ENABLE;
+
+/*
+###################################
+#  CREATE SEQUENCES and TRIGGERS  #
+###################################
+*/
+
+--------------------------------------------------------
+-- Create trigger on LOCUS
+--------------------------------------------------------
+CREATE OR REPLACE TRIGGER LOCUS_TRG
+BEFORE INSERT ON LOCUS
+FOR EACH ROW
+    BEGIN
+        IF :NEW.ID IS NULL THEN
+            SELECT HIBERNATE_SEQUENCE.NEXTVAL INTO :NEW.ID FROM DUAL;
+        END IF;
+    END;
+/
+ALTER TRIGGER LOCUS_TRG ENABLE;
+
+--------------------------------------------------------
+-- Create trigger on RISK_ALLELE
+--------------------------------------------------------
+CREATE OR REPLACE TRIGGER RISK_ALLELE_TRG
+BEFORE INSERT ON RISK_ALLELE
+FOR EACH ROW
+    BEGIN
+        IF :NEW.ID IS NULL THEN
+            SELECT HIBERNATE_SEQUENCE.NEXTVAL INTO :NEW.ID FROM DUAL;
+        END IF;
+    END;
+/
+ALTER TRIGGER RISK_ALLELE_TRG ENABLE;
