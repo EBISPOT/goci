@@ -99,7 +99,9 @@
         </thead>
         <tbody>
         <tr th:each="snpAssociationForm: ${snpAssociationForms}">
-            <td><a th:href="@{/associations/{associationId}(associationId=${snpAssociationForm.associationId})}">Edit</a></td>
+            <td>
+                <a th:href="@{/associations/{associationId}(associationId=${snpAssociationForm.associationId})}">Edit</a>
+            </td>
 
             <!--Region-->
             <td>N/A</td>
@@ -142,16 +144,16 @@
             <td th:switch="${snpAssociationForm.multiSnpHaplotype}">
                 <p th:case="'null'">null</p>
 
-                <p th:case="'0'">No</p>
+                <p th:case="false">No</p>
 
-                <p th:case="'1'">Yes</p>
+                <p th:case="true">Yes</p>
             </td>
             <td th:switch="${snpAssociationForm.snpInteraction}">
                 <p th:case="'null'">null</p>
 
-                <p th:case="'0'">No</p>
+                <p th:case="false">No</p>
 
-                <p th:case="'1'">Yes</p>
+                <p th:case="true">Yes</p>
             </td>
 
         </tr>
