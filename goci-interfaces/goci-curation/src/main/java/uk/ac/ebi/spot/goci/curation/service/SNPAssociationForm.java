@@ -2,7 +2,6 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
 import uk.ac.ebi.spot.goci.model.EfoTrait;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -20,13 +19,13 @@ public class SnpAssociationForm {
 
     private Float orPerCopyNum;
 
-    private String orType;
+    private Boolean orType = false;
 
     private String snpType;
 
-    private String multiSnpHaplotype;
+    private Boolean multiSnpHaplotype = false;
 
-    private String snpInteraction;
+    private Boolean snpInteraction = false;
 
     private Integer pvalueMantissa;
 
@@ -49,7 +48,7 @@ public class SnpAssociationForm {
     public SnpAssociationForm() {
     }
 
-    public SnpAssociationForm(String riskFrequency, String pvalueText, Float orPerCopyNum, String orType, String snpType, String multiSnpHaplotype, String snpInteraction, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, Collection<SnpFormRow> snpFormRows, Collection<String> authorReportedGenes, Collection<EfoTrait> efoTraits) {
+    public SnpAssociationForm(String riskFrequency, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, Collection<SnpFormRow> snpFormRows, Collection<String> authorReportedGenes, Collection<EfoTrait> efoTraits) {
         this.riskFrequency = riskFrequency;
         this.pvalueText = pvalueText;
         this.orPerCopyNum = orPerCopyNum;
@@ -92,11 +91,11 @@ public class SnpAssociationForm {
         this.orPerCopyNum = orPerCopyNum;
     }
 
-    public String getOrType() {
+    public Boolean getOrType() {
         return orType;
     }
 
-    public void setOrType(String orType) {
+    public void setOrType(Boolean orType) {
         this.orType = orType;
     }
 
@@ -108,19 +107,19 @@ public class SnpAssociationForm {
         this.snpType = snpType;
     }
 
-    public String getMultiSnpHaplotype() {
+    public Boolean getMultiSnpHaplotype() {
         return multiSnpHaplotype;
     }
 
-    public void setMultiSnpHaplotype(String multiSnpHaplotype) {
+    public void setMultiSnpHaplotype(Boolean multiSnpHaplotype) {
         this.multiSnpHaplotype = multiSnpHaplotype;
     }
 
-    public String getSnpInteraction() {
+    public Boolean getSnpInteraction() {
         return snpInteraction;
     }
 
-    public void setSnpInteraction(String snpInteraction) {
+    public void setSnpInteraction(Boolean snpInteraction) {
         this.snpInteraction = snpInteraction;
     }
 
@@ -180,11 +179,11 @@ public class SnpAssociationForm {
         this.snpFormRows = snpFormRows;
     }
 
-    public Collection getAuthorReportedGenes() {
+    public Collection<String> getAuthorReportedGenes() {
         return authorReportedGenes;
     }
 
-    public void setAuthorReportedGenes(Collection authorReportedGenes) {
+    public void setAuthorReportedGenes(Collection<String> authorReportedGenes) {
         this.authorReportedGenes = authorReportedGenes;
     }
 
