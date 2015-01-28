@@ -22,17 +22,17 @@ public class Housekeeping {
     @GeneratedValue
     private Long id;
 
-    private String studySnpCheckedLevelOne = "0";
+    private Boolean studySnpCheckedLevelOne = false;
 
-    private String studySnpCheckedLevelTwo = "0";
+    private Boolean studySnpCheckedLevelTwo = false;
 
-    private String ethnicityCheckedLevelOne = "0";
+    private Boolean ethnicityCheckedLevelOne = false;
 
-    private String ethnicityCheckedLevelTwo = "0";
+    private Boolean ethnicityCheckedLevelTwo  = false;
 
-    private String ethnicityBackFilled = "0";
+    private Boolean ethnicityBackFilled  = false;
 
-    private String checkedNCBIError = "0";
+    private Boolean checkedNCBIError = false;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date publishDate;
@@ -60,20 +60,8 @@ public class Housekeeping {
     public Housekeeping() {
     }
 
-    public Housekeeping(String studySnpCheckedLevelOne,
-                        String studySnpCheckedLevelTwo,
-                        String ethnicityCheckedLevelOne,
-                        String ethnicityCheckedLevelTwo,
-                        String ethnicityBackFilled,
-                        String checkedNCBIError,
-                        Date publishDate,
-                        Date sendToNCBIDate,
-                        Date studyAddedDate,
-                        Date lastUpdateDate,
-                        String fileName,
-                        Curator curator,
-                        CurationStatus curationStatus,
-                        String notes) {
+
+    public Housekeeping(Boolean studySnpCheckedLevelOne, Boolean studySnpCheckedLevelTwo, Boolean ethnicityCheckedLevelOne, Boolean ethnicityCheckedLevelTwo, Boolean ethnicityBackFilled, Boolean checkedNCBIError, Date publishDate, Date sendToNCBIDate, Date studyAddedDate, Date lastUpdateDate, String fileName, String notes, Curator curator, CurationStatus curationStatus) {
         this.studySnpCheckedLevelOne = studySnpCheckedLevelOne;
         this.studySnpCheckedLevelTwo = studySnpCheckedLevelTwo;
         this.ethnicityCheckedLevelOne = ethnicityCheckedLevelOne;
@@ -85,9 +73,9 @@ public class Housekeeping {
         this.studyAddedDate = studyAddedDate;
         this.lastUpdateDate = lastUpdateDate;
         this.fileName = fileName;
+        this.notes = notes;
         this.curator = curator;
         this.curationStatus = curationStatus;
-        this.notes = notes;
     }
 
     public Long getId() {
@@ -98,51 +86,51 @@ public class Housekeeping {
         this.id = id;
     }
 
-    public String getStudySnpCheckedLevelOne() {
+    public Boolean getStudySnpCheckedLevelOne() {
         return studySnpCheckedLevelOne;
     }
 
-    public void setStudySnpCheckedLevelOne(String studySnpCheckedLevelOne) {
+    public void setStudySnpCheckedLevelOne(Boolean studySnpCheckedLevelOne) {
         this.studySnpCheckedLevelOne = studySnpCheckedLevelOne;
     }
 
-    public String getStudySnpCheckedLevelTwo() {
+    public Boolean getStudySnpCheckedLevelTwo() {
         return studySnpCheckedLevelTwo;
     }
 
-    public void setStudySnpCheckedLevelTwo(String studySnpCheckedLevelTwo) {
+    public void setStudySnpCheckedLevelTwo(Boolean studySnpCheckedLevelTwo) {
         this.studySnpCheckedLevelTwo = studySnpCheckedLevelTwo;
     }
 
-    public String getEthnicityCheckedLevelOne() {
+    public Boolean getEthnicityCheckedLevelOne() {
         return ethnicityCheckedLevelOne;
     }
 
-    public void setEthnicityCheckedLevelOne(String ethnicityCheckedLevelOne) {
+    public void setEthnicityCheckedLevelOne(Boolean ethnicityCheckedLevelOne) {
         this.ethnicityCheckedLevelOne = ethnicityCheckedLevelOne;
     }
 
-    public String getEthnicityCheckedLevelTwo() {
+    public Boolean getEthnicityCheckedLevelTwo() {
         return ethnicityCheckedLevelTwo;
     }
 
-    public void setEthnicityCheckedLevelTwo(String ethnicityCheckedLevelTwo) {
+    public void setEthnicityCheckedLevelTwo(Boolean ethnicityCheckedLevelTwo) {
         this.ethnicityCheckedLevelTwo = ethnicityCheckedLevelTwo;
     }
 
-    public String getEthnicityBackFilled() {
+    public Boolean getEthnicityBackFilled() {
         return ethnicityBackFilled;
     }
 
-    public void setEthnicityBackFilled(String ethnicityBackFilled) {
+    public void setEthnicityBackFilled(Boolean ethnicityBackFilled) {
         this.ethnicityBackFilled = ethnicityBackFilled;
     }
 
-    public String getCheckedNCBIError() {
+    public Boolean getCheckedNCBIError() {
         return checkedNCBIError;
     }
 
-    public void setCheckedNCBIError(String checkedNCBIError) {
+    public void setCheckedNCBIError(Boolean checkedNCBIError) {
         this.checkedNCBIError = checkedNCBIError;
     }
 
@@ -186,6 +174,14 @@ public class Housekeeping {
         this.fileName = fileName;
     }
 
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
     public Curator getCurator() {
         return curator;
     }
@@ -200,14 +196,6 @@ public class Housekeeping {
 
     public void setCurationStatus(CurationStatus curationStatus) {
         this.curationStatus = curationStatus;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
     }
 
     @Override

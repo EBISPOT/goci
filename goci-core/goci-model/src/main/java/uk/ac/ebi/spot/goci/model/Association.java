@@ -1,7 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -9,7 +8,7 @@ import java.util.Collection;
  * Created by emma on 27/11/14.
  *
  * @author emma
- *         <p>
+ *         <p/>
  *         Model object representing an association
  */
 
@@ -31,13 +30,13 @@ public class Association {
 
     private Float orPerCopyNum;
 
-    private String orType="0";
+    private Boolean orType = false;
 
     private String snpType;
 
-    private String multiSnpHaplotype="0";
+    private Boolean multiSnpHaplotype = false;
 
-    private String snpInteraction="0";
+    private Boolean snpInteraction = false;
 
     private Integer pvalueMantissa;
 
@@ -73,8 +72,7 @@ public class Association {
     public Association() {
     }
 
-    public Association(String riskFrequency, String allele, Float pvalueFloat, String pvalueText, Float orPerCopyNum, String orType, String snpType, String multiSnpHaplotype, String snpInteraction, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, Study study, Collection<Locus> loci, Collection<EfoTrait> efoTraits) {
-
+    public Association(String riskFrequency, String allele, Float pvalueFloat, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, Study study, Collection<Locus> loci, Collection<EfoTrait> efoTraits) {
         this.riskFrequency = riskFrequency;
         this.allele = allele;
         this.pvalueFloat = pvalueFloat;
@@ -143,11 +141,11 @@ public class Association {
         this.orPerCopyNum = orPerCopyNum;
     }
 
-    public String getOrType() {
+    public Boolean getOrType() {
         return orType;
     }
 
-    public void setOrType(String orType) {
+    public void setOrType(Boolean orType) {
         this.orType = orType;
     }
 
@@ -159,19 +157,19 @@ public class Association {
         this.snpType = snpType;
     }
 
-    public String getMultiSnpHaplotype() {
+    public Boolean getMultiSnpHaplotype() {
         return multiSnpHaplotype;
     }
 
-    public void setMultiSnpHaplotype(String multiSnpHaplotype) {
+    public void setMultiSnpHaplotype(Boolean multiSnpHaplotype) {
         this.multiSnpHaplotype = multiSnpHaplotype;
     }
 
-    public String getSnpInteraction() {
+    public Boolean getSnpInteraction() {
         return snpInteraction;
     }
 
-    public void setSnpInteraction(String snpInteraction) {
+    public void setSnpInteraction(Boolean snpInteraction) {
         this.snpInteraction = snpInteraction;
     }
 

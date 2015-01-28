@@ -44,7 +44,7 @@ public class Study {
     @NotBlank(message = "Please enter a pubmed id")
     private String pubmedId;
 
-    // Defaults set as zero
+    // Defaults set as false
     private Boolean cnv=false;
 
     private Boolean gxe=false;
