@@ -17,10 +17,6 @@
     background: transparent;
 }
 
-/*#lower_container{*/
-/*margin-top:5%;*/
-/*}*/
-
 #center_container {
     margin-left: 10%;
     margin-right: auto;
@@ -34,10 +30,6 @@
 
 .filter-element {
     padding: 5px 2px;
-    /*display: inline-block;*/
-    /*width: 100%;*/
-    /*margin-left: 0;*/
-    /*margin-right: 0;*/
 }
 
 .filter-label {
@@ -160,8 +152,3 @@
     height: 12em;
     border-radius: 1em;
 }
-
-a > .toplevel-view {
-    color: #333;
-}
-
