@@ -229,8 +229,7 @@
                             </div>
                         </div>
 
-                        <!--Checkboxes: th:value is the value that will be assigned if the box is checked
-                                        th:field is the value it will be assigned to.  -->
+
 
                         <div class="form-group">
                             <label for="snpType" class="control-label col-md-2">SNP type</label>
@@ -249,13 +248,13 @@
 
                         <div class="form-group">
                             <label for="multiSNPHaplotype" class="control-label col-md-2">Multi-SNP Haplotype</label>
-                            <input id="multiSNPHaplotype" type="checkbox" th:value="'1'"
+                            <input id="multiSNPHaplotype" type="checkbox"
                                    th:field="*{multiSnpHaplotype}"/>
                         </div>
 
                         <div class="form-group">
                             <label for="orType" class="control-label col-md-2">ORType</label>
-                            <input id="orType" type="checkbox" th:value="'1'" th:field="*{orType}"/>
+                            <input id="orType" type="checkbox" th:field="*{orType}"/>
                         </div>
 
                         <div class="form-group">
