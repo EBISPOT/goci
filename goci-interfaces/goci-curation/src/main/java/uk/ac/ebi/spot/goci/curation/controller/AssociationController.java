@@ -11,6 +11,7 @@ import uk.ac.ebi.spot.goci.curation.service.SnpFormRow;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.AssociationBatchLoaderService;
+import uk.ac.ebi.spot.goci.service.AssociationCalculationService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -32,29 +33,31 @@ import java.util.List;
 @Controller
 public class AssociationController {
 
+    // Repositories
     private AssociationRepository associationRepository;
     private StudyRepository studyRepository;
     private EfoTraitRepository efoTraitRepository;
     private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
-    private AssociationBatchLoaderService associationBatchLoaderService;
     private GeneRepository geneRepository;
     private RiskAlleleRepository riskAlleleRepository;
     private LocusRepository locusRepository;
 
+    // Services
+    private AssociationBatchLoaderService associationBatchLoaderService;
+    private AssociationCalculationService associationCalculationService;
+
     @Autowired
-    public AssociationController(AssociationRepository associationRepository, StudyRepository studyRepository, EfoTraitRepository efoTraitRepository, SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository, AssociationBatchLoaderService associationBatchLoaderService, GeneRepository geneRepository, RiskAlleleRepository riskAlleleRepository, LocusRepository locusRepository) {
+    public AssociationController(AssociationRepository associationRepository, StudyRepository studyRepository, EfoTraitRepository efoTraitRepository, SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository, GeneRepository geneRepository, RiskAlleleRepository riskAlleleRepository, LocusRepository locusRepository, AssociationBatchLoaderService associationBatchLoaderService, AssociationCalculationService associationCalculationService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
-        this.associationBatchLoaderService = associationBatchLoaderService;
         this.geneRepository = geneRepository;
         this.riskAlleleRepository = riskAlleleRepository;
         this.locusRepository = locusRepository;
+        this.associationBatchLoaderService = associationBatchLoaderService;
+        this.associationCalculationService = associationCalculationService;
     }
-
-
-
 
     /*  Study SNP/Associations */
 
@@ -64,22 +67,25 @@ public class AssociationController {
 
         Collection<Association> associations = new ArrayList<>();
         associations.addAll(associationRepository.findByStudyId(studyId));
-        model.addAttribute("studyAssociations", associations);
 
-        // Return form object and by default add one row
-        SnpAssociationForm emptyForm = new SnpAssociationForm();
-        model.addAttribute("snpAssociationForm", new SnpAssociationForm());
+        // For our associations create a form object and return
+        Collection<SnpAssociationForm> snpAssociationForms = new ArrayList<>();
+        for (Association association : associations) {
+            SnpAssociationForm snpAssociationForm = createSnpAssociationForm(association);
+            snpAssociationForms.add(snpAssociationForm);
+        }
+        model.addAttribute("snpAssociationForms", snpAssociationForms);
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
         return "study_association";
     }
 
-    // Generate a empty form page
+    // Generate a empty form page to add standard or multi-snp haplotype
     @RequestMapping(value = "/studies/{studyId}/associations/add", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String addStandardSnps(Model model, @PathVariable Long studyId) {
 
-        // Return form object and by default add one row
+        // Return form object
         SnpAssociationForm emptyForm = new SnpAssociationForm();
         model.addAttribute("snpAssociationForm", new SnpAssociationForm());
 
@@ -88,7 +94,27 @@ public class AssociationController {
         return "add_standard_or_multi_snp_association";
     }
 
+    // Add multiple rows to table
+    @RequestMapping(value = "/studies/{studyId}/associations/add", params = {"addRows"})
+    public String addRows(SnpAssociationForm snpAssociationForm, Model model, @PathVariable Long studyId) {
+        Integer numberOfRows = snpAssociationForm.getMultiSnpHaplotypeNum();
 
+        // Add number of rows curator selected
+        while (numberOfRows != 0) {
+            snpAssociationForm.getSnpFormRows().add(new SnpFormRow());
+            numberOfRows--;
+        }
+
+        // Pass back updated form
+        model.addAttribute("snpAssociationForm", snpAssociationForm);
+
+        // Also passes back study object to view so we can create links back to main study page
+        model.addAttribute("study", studyRepository.findOne(studyId));
+
+        return "add_standard_or_multi_snp_association";
+    }
+
+    // Add single row to table
     @RequestMapping(value = "/studies/{studyId}/associations/add", params = {"addRow"})
     public String addRow(SnpAssociationForm snpAssociationForm, Model model, @PathVariable Long studyId) {
         snpAssociationForm.getSnpFormRows().add(new SnpFormRow());
@@ -102,11 +128,14 @@ public class AssociationController {
         return "add_standard_or_multi_snp_association";
     }
 
+    // Remove row from table
     @RequestMapping(value = "/studies/{studyId}/associations/add", params = {"removeRow"})
     public String removeRow(SnpAssociationForm snpAssociationForm, HttpServletRequest req, Model model, @PathVariable Long studyId) {
+
+        //Index of value to remove
         final Integer rowId = Integer.valueOf(req.getParameter("removeRow"));
 
-        //TODO DOESNT WORK
+        // Remove row
         snpAssociationForm.getSnpFormRows().remove(rowId.intValue());
 
         // Pass back updated form
@@ -116,25 +145,6 @@ public class AssociationController {
         model.addAttribute("study", studyRepository.findOne(studyId));
 
         return "add_standard_or_multi_snp_association";
-    }
-
-    // Add new association/snp information to a study
-    @RequestMapping(value = "/studies/{studyId}/associations/add", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String addStudySnps(@ModelAttribute SnpAssociationForm snpAssociationForm, @PathVariable Long studyId) {
-
-        // Get our study object
-        Study study = studyRepository.findOne(studyId);
-
-        // Create an association object from details in returned form
-        Association newAssociation = createStandardAssociation(snpAssociationForm);
-
-        // Set the study ID for our association
-        newAssociation.setStudy(study);
-
-        // Save our association information
-        associationRepository.save(newAssociation);
-
-        return "redirect:/studies/" + studyId + "/associations";
     }
 
 
@@ -183,6 +193,26 @@ public class AssociationController {
     }
 
 
+    // Add new standard or multi-snp haplotype association/snp information to a study
+    @RequestMapping(value = "/studies/{studyId}/associations/add", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String addStudySnps(@ModelAttribute SnpAssociationForm snpAssociationForm, @PathVariable Long studyId) {
+
+        // Get our study object
+        Study study = studyRepository.findOne(studyId);
+
+        // Create an association object from details in returned form
+        Association newAssociation = createStandardAssociation(snpAssociationForm);
+
+        // Set the study ID for our association
+        newAssociation.setStudy(study);
+
+        // Save our association information
+        associationRepository.save(newAssociation);
+
+        return "redirect:/studies/" + studyId + "/associations";
+    }
+
+
      /* Existing association information */
 
     // View association information
@@ -191,81 +221,38 @@ public class AssociationController {
 
         // Return association with that ID
         Association associationToView = associationRepository.findOne(associationId);
-        model.addAttribute("association", associationToView);
-        return "edit_association";
+
+        // Create form and return to user
+        SnpAssociationForm snpAssociationForm = createSnpAssociationForm(associationToView);
+        model.addAttribute("snpAssociationForm", snpAssociationForm);
+
+        // Also passes back study object to view so we can create links back to main study page
+        Long studyId = associationToView.getStudy().getId();
+        model.addAttribute("study", studyRepository.findOne(studyId));
+
+        return "edit_standard_or_multi_snp_association";
     }
 
-/*
+
     //Edit existing association
     @RequestMapping(value = "/associations/{associationId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String editAssociation(@ModelAttribute Association association, @PathVariable Long associationId) {
-        // Find the existing snps for association and ensure they get linked to edited information
-        Association oldAssociation = associationRepository.findOne(associationId);
-        Collection<SingleNucleotidePolymorphism> oldSnps = oldAssociation.getSnps();
-        association.setSnps(oldSnps);
+    public String editAssociation(@ModelAttribute SnpAssociationForm snpAssociationForm, @PathVariable Long associationId) {
 
-        // Save the association information returned from form
-        associationRepository.save(association);
-        return "redirect:/associations/" + associationId;
-    }
-*/
+        //Create association
+        Association editedAssociation = createStandardAssociation(snpAssociationForm);
 
-/*
-    // View existing snp(s) linked to association
-    @RequestMapping(value = "/associations/{associationId}/snps", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String viewAssociationSNPs(Model model, @PathVariable Long associationId) {
+        // Set ID of new  association to the ID of the association we're currently editing
+        editedAssociation.setId(associationId);
 
-        // Find all cross-references to associated SNPs
-        Association association = associationRepository.findOne(associationId);
-        Collection<SingleNucleotidePolymorphism> snps = association.getSnps();
+        // Set study to one currently linked to association
+        Association currentAssociation = associationRepository.findOne(associationId);
+        Study associationStudy = currentAssociation.getStudy();
+        editedAssociation.setStudy(associationStudy);
 
-        // Get rsID of SNPs associated with those IDs and return to HTML form
-        Collection<String> associationSNPs = new ArrayList<>();
-        for (SingleNucleotidePolymorphism snp : snps) {
-            associationSNPs.add(snp.getRsId());
-        }
+        // Save our association information
+        associationRepository.save(editedAssociation);
 
-        // Return list of SNPs entered
-        CuratorReportedSNP curatorReportedSNP = new CuratorReportedSNP();
-        curatorReportedSNP.setReportedSNPValue(associationSNPs);
-
-        // Return curator added snps for editing
-        model.addAttribute("reportedSNPs", curatorReportedSNP);
-
-        // Also passes back association object to view so we can create links back to main study association page
-        model.addAttribute("association", association);
-
-        return "edit_snp";
-    }*/
-
-
-/*
-    // Edit existing snp(s) linked to association
-    @RequestMapping(value = "/associations/{associationId}/snps", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String editAssociationSNPs(@ModelAttribute CuratorReportedSNP reportedSNPs, @PathVariable Long associationId) {
-        Association association = associationRepository.findOne(associationId);
-
-        // Array to hold checked snp ids
-        Collection<Long> checkedSNPs = addSnps(association, reportedSNPs.getReportedSNPValue());
-
-        // remove any SNPs that are not in the checkedSNPs cache
-        removeSnps(association, checkedSNPs);
-
-        // Save our association
-        associationRepository.save(association);
-        return "redirect:/associations/" + associationId + "/snps";
-    }
-*/
-
-
-    /* Model Attributes :
-    *  Used for dropdowns in HTML forms
-    */
-
-    // EFO traits
-    @ModelAttribute("efoTraits")
-    public List<EfoTrait> populateEfoTraits() {
-        return efoTraitRepository.findAll();
+        return "redirect:/studies/" + editedAssociation.getStudy().getId() + "/associations";
     }
 
    /* General purpose methods */
@@ -290,12 +277,31 @@ public class AssociationController {
         association.setOrPerCopyRange(snpAssociationForm.getOrPerCopyRange());
         association.setOrPerCopyUnitDescr(snpAssociationForm.getOrPerCopyUnitDescr());
 
-        // Add collection of Efo traits
+        // Add collection of EFO traits
         association.setEfoTraits(snpAssociationForm.getEfoTraits());
 
+        // Calculate float
+        Integer pvalueMantissa = snpAssociationForm.getPvalueMantissa();
+        Integer pvalueExponent = snpAssociationForm.getPvalueExponent();
+
+        if (pvalueMantissa != null && pvalueExponent != null) {
+            association.setPvalueFloat(associationCalculationService.calculatePvalueFloat(pvalueMantissa, pvalueExponent));
+        }
+
+
         // Add loci to association
+        // For multi-snp and standard snps we assume their is only one locus
         Collection<Locus> loci = new ArrayList<>();
         Locus locus = new Locus();
+
+        // Set locus description and haplotype count
+
+        // Set this number to the number of rows entered by curator
+        Integer numberOfRows = snpAssociationForm.getSnpFormRows().size();
+        if (numberOfRows > 1) {
+            locus.setHaplotypeSnpCount(numberOfRows);
+            locus.setDescription(numberOfRows + "-SNP Haplotype");
+        }
 
         // Create gene from each string entered, may sure to check pre-existence
         Collection<String> authorReportedGenes = snpAssociationForm.getAuthorReportedGenes();
@@ -395,47 +401,79 @@ public class AssociationController {
 
     }
 
-/*    private Collection<Long> addSnps(Association association, Collection<String> rsIds) {
-        Collection<Long> checkedSNPs = new ArrayList<>();
-        for (String rsId : rsIds) {
+    // Creates form which we can then return to view for editing etc.
+    private SnpAssociationForm createSnpAssociationForm(Association association) {
 
-            // Check if SNP already exists database
-            SingleNucleotidePolymorphism snp = singleNucleotidePolymorphismRepository.findByRsIdIgnoreCase(rsId);
+        SnpAssociationForm snpAssociationForm = new SnpAssociationForm();
 
-            // If SNP doesn't already exist, create and save
-            if (snp == null) {
-                // Create new SNP
-                SingleNucleotidePolymorphism newSNP = new SingleNucleotidePolymorphism();
-                newSNP.setRsId(rsId);
+        // Set association ID
+        snpAssociationForm.setAssociationId(association.getId());
 
-                // Save SNP
-                snp = singleNucleotidePolymorphismRepository.save(newSNP);
-            }
+        // Set simple string and float association attributes
+        snpAssociationForm.setRiskFrequency(association.getRiskFrequency());
+        snpAssociationForm.setPvalueText(association.getPvalueText());
+        snpAssociationForm.setOrPerCopyNum(association.getOrPerCopyNum());
+        snpAssociationForm.setOrType(association.getOrType());
+        snpAssociationForm.setSnpType(association.getSnpType());
+        snpAssociationForm.setMultiSnpHaplotype(association.getMultiSnpHaplotype());
+        snpAssociationForm.setSnpInteraction(association.getSnpInteraction());
+        snpAssociationForm.setPvalueMantissa(association.getPvalueMantissa());
+        snpAssociationForm.setPvalueExponent(association.getPvalueExponent());
+        snpAssociationForm.setOrPerCopyRecip(association.getOrPerCopyRecip());
+        snpAssociationForm.setOrPerCopyStdError(association.getOrPerCopyStdError());
+        snpAssociationForm.setOrPerCopyRange(association.getOrPerCopyRange());
+        snpAssociationForm.setOrPerCopyUnitDescr(association.getOrPerCopyUnitDescr());
+        snpAssociationForm.setPvalueFloat(association.getPvalueFloat());
 
-            // Does current association already have a link to that snp?
-            if (!association.getSnps().contains(snp)) {
-                // if not, add link from association
-                association.getSnps().add(snp);
-            }
+        // Add collection of Efo traits
+        snpAssociationForm.setEfoTraits(association.getEfoTraits());
 
-            // and add snp id to cache
-            checkedSNPs.add(snp.getId());
+        // For each locus get genes and risk alleles
+        // For multi-snp and standard snps we assume their is only one locus
+        Collection<Locus> loci = association.getLoci();
+
+        Collection<Gene> locusGenes = new ArrayList<>();
+        Collection<RiskAllele> locusRiskAlleles = new ArrayList<>();
+        for (Locus locus : loci) {
+            locusGenes.addAll(locus.getAuthorReportedGenes());
+            locusRiskAlleles.addAll(locus.getStrongestRiskAlleles());
+
+            // There should only be one locus thus should be safe to set these here
+            snpAssociationForm.setMultiSnpHaplotypeNum(locus.getHaplotypeSnpCount());
+            snpAssociationForm.setMultiSnpHaplotypeDescr(locus.getDescription());
         }
 
-        return checkedSNPs;
-    }*/
-
-    // Remove any snps that should no longer be linked to association
-/*    private void removeSnps(Association association, Collection<Long> checkedSnps) {
-        // Get all snps linked to association
-        Iterator<SingleNucleotidePolymorphism> linkedSnpIt = association.getSnps().iterator();
-        while (linkedSnpIt.hasNext()) {
-            SingleNucleotidePolymorphism linkedSnp = linkedSnpIt.next();
-
-            // If checkedSnps does not contain this snp then the user has removed it thus delete link to association
-            if (!checkedSnps.contains(linkedSnp.getId())) {
-                linkedSnpIt.remove();
-            }
+        // Get name of gene and add to form
+        Collection<String> authorReportedGenes = new ArrayList<>();
+        for (Gene locusGene : locusGenes) {
+            authorReportedGenes.add(locusGene.getGeneName());
         }
-    }*/
+        snpAssociationForm.setAuthorReportedGenes(authorReportedGenes);
+
+        // Handle snp rows
+        List<SnpFormRow> snpFormRows = new ArrayList<>();
+        for (RiskAllele riskAllele : locusRiskAlleles) {
+            SnpFormRow snpFormRow = new SnpFormRow();
+            snpFormRow.setStrongestRiskAllele(riskAllele.getRiskAlleleName());
+            snpFormRow.setSnp(riskAllele.getSnp().getRsId());
+            snpFormRows.add(snpFormRow);
+        }
+
+        snpAssociationForm.setSnpFormRows(snpFormRows);
+        return snpAssociationForm;
+    }
+
+
+
+
+
+    /* Model Attributes :
+    *  Used for dropdowns in HTML forms
+    */
+
+    // EFO traits
+    @ModelAttribute("efoTraits")
+    public List<EfoTrait> populateEfoTraits() {
+        return efoTraitRepository.findAll();
+    }
 }
