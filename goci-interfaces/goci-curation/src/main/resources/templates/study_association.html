@@ -20,7 +20,6 @@
     <!-- Include Select2 JS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
 
-
     <!--Tags input http://timschlechter.github.io/bootstrap-tagsinput/examples/-->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"/>
     <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
@@ -99,36 +98,36 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="studyAssociation : ${studyAssociations}">
-            <td><a th:href="@{/associations/{associationId}(associationId=${studyAssociation.id})}">Edit</a></td>
+        <tr th:each="snpAssociationForm: ${snpAssociationForms}">
+            <td><a th:href="@{/associations/{associationId}(associationId=${snpAssociationForm.associationId})}">Edit</a></td>
 
             <!--Region-->
-            <td></td>
+            <td>N/A</td>
 
             <!--Gene-->
             <td>
-                <span th:each="locus : ${studyAssociation.loci}"
-                      th:text="${locus.authorReportedGenes.geneName} ?: 'null'"></span>
+                <span th:each="gene : ${snpAssociationForm.authorReportedGenes}"
+                      th:text="${gene} ?: 'null'"></span>
             </td>
 
             <!--Strongest risk allele-->
             <td>
-                <span th:each="locus : ${studyAssociation.loci}"
-                      th:text="${locus.strongestRiskAlleles} ?: 'null'"></span>
+                <span th:each="row : ${snpAssociationForm.snpFormRows}"
+                      th:text="${row.strongestRiskAllele} ?: 'null'"></span>
             </td>
 
             <!--SNPs-->
-       <!--     <td>
-                <span th:each="locus : ${studyAssociation.loci}"
-                      th:text="${locus.strongestRiskAlleles.snp} ?: 'null'"></span>
-            </td>-->
+            <td>
+                     <span th:each="row : ${snpAssociationForm.snpFormRows}"
+                           th:text="${row.snp} ?: 'null'"></span>
+            </td>
 
-            <td th:text="${studyAssociation.riskFrequency}?: 'null' "></td>
-            <td th:text="${studyAssociation.pvalueFloat} ?: 'null'"></td>
-            <td th:text="${studyAssociation.pvalueText} ?: 'null'"></td>
-            <td th:text="${studyAssociation.orPerCopyNum} ?: 'null'"></td>
-            <td th:text="${studyAssociation.orPerCopyRecip} ?: 'null'"></td>
-            <td th:switch="${studyAssociation.orType}">
+            <td th:text="${snpAssociationForm.riskFrequency}?: 'null' "></td>
+            <td th:text="${snpAssociationForm.pvalueFloat} ?: 'null'"></td>
+            <td th:text="${snpAssociationForm.pvalueText} ?: 'null'"></td>
+            <td th:text="${snpAssociationForm.orPerCopyNum} ?: 'null'"></td>
+            <td th:text="${snpAssociationForm.orPerCopyRecip} ?: 'null'"></td>
+            <td th:switch="${snpAssociationForm.orType}">
                 <p th:case="'null'">null</p>
 
                 <p th:case="'0'">No</p>
@@ -136,18 +135,18 @@
                 <p th:case="'1'">Yes</p>
             </td>
 
-            <td th:text="${studyAssociation.orPerCopyRange} ?: 'null'"></td>
-            <td th:text="${studyAssociation.orPerCopyUnitDescr} ?: 'null'"></td>
-            <td th:text="${studyAssociation.orPerCopyStdError} ?: 'null'"></td>
-            <td th:text="${studyAssociation.SnpType}"></td>
-            <td th:switch="${studyAssociation.multiSnpHaplotype}">
+            <td th:text="${snpAssociationForm.orPerCopyRange} ?: 'null'"></td>
+            <td th:text="${snpAssociationForm.orPerCopyUnitDescr} ?: 'null'"></td>
+            <td th:text="${snpAssociationForm.orPerCopyStdError} ?: 'null'"></td>
+            <td th:text="${snpAssociationForm.SnpType}"></td>
+            <td th:switch="${snpAssociationForm.multiSnpHaplotype}">
                 <p th:case="'null'">null</p>
 
                 <p th:case="'0'">No</p>
 
                 <p th:case="'1'">Yes</p>
             </td>
-            <td th:switch="${studyAssociation.snpInteraction}">
+            <td th:switch="${snpAssociationForm.snpInteraction}">
                 <p th:case="'null'">null</p>
 
                 <p th:case="'0'">No</p>
@@ -162,12 +161,18 @@
 
 <br/>
 
-<div class="container-fluid">
+
+<div class="container-fluid" th:object="${study}">
     <div class="row">
         <div class="col-md-10">
             <!--Button-->
             <input type="button" class="btn btn-primary" value="Add SNPs from spreadsheet" data-toggle="collapse"
                    data-target="#uploadSNPsForn"/>
+            <a th:href="@{/studies/{studyId}/associations/add(studyId=*{id})}" class="btn btn-primary">Add
+                standard SNP or multi-SNP haplotype</a>
+            <a th:href="@{/studies/{studyId}/associations/add(studyId=*{id})}"
+               class="btn btn-primary">Add SNP:SNP interaction</a>
+
         </div>
     </div>
 </div>
@@ -203,41 +208,6 @@
                             <div class="col-md-offset-2 col-md-10">
                                 <button type="submit" class="btn btn-primary">Upload File</button>
                             </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<br/>
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-10">
-            <!--Button-->
-            <input type="button" class="btn btn-primary" value="Add new SNP" data-toggle="collapse"
-                   data-target="#addSNPOptions"/>
-        </div>
-    </div>
-</div>
-
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="form-group">
-            <div class="col-md-10 col-md-offset-2">
-                <div id="addSNPOptions" class="collapse">
-                    <form class="form-horizontal" th:object="${study}"
-                          name="addSNPOptions">
-                        <div class="form-group">
-                            <a th:href="@{/studies/{studyId}/associations/add(studyId=*{id})}" class="btn btn-link">Add
-                                standard SNP or multi-SNP haplotype</a>
-                        </div>
-
-                        <div class="form-group">
-                            <a th:href="@{/studies/{studyId}/associations/add(studyId=*{id})}"
-                               class="btn btn-link">Add SNP:SNP interaction</a>
                         </div>
                     </form>
                 </div>
