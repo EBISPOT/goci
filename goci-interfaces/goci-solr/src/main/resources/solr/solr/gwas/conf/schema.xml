@@ -197,7 +197,7 @@
     <field name="riskFrequency" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="qualifier" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="orPerCopyUnitDescr" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="orType" type="text_general" indexed="fase" stored="true" multiValued="true" />
+    <field name="orType" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="orPerCopyNum" type="float" indexed="true" stored="true" multiValued="true" />
     <field name="pValue" type="float" indexed="true" stored="true" multiValued="true" />
 
