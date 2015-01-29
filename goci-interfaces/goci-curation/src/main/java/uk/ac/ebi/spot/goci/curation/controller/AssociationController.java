@@ -304,7 +304,7 @@ public class AssociationController {
 
         // Create gene from each string entered, may sure to check pre-existence
         Collection<String> authorReportedGenes = snpAssociationForm.getAuthorReportedGenes();
-        Collection<Gene> locusGenes = addGenes(authorReportedGenes);
+        Collection<Gene> locusGenes = createGenes(authorReportedGenes);
 
         // Set locus attribute
         locus.setAuthorReportedGenes(locusGenes);
@@ -323,8 +323,11 @@ public class AssociationController {
             String curatorEnteredRiskAllele = row.getStrongestRiskAllele();
             RiskAllele riskAllele = createRiskAllele(curatorEnteredRiskAllele);
 
-            // For allele assign a SNP
-            riskAllele.setSnp(snp);
+            // For allele assign SNP if one isn't already present
+            if (riskAllele.getSnp() == null) {
+                riskAllele.setSnp(snp);
+            }
+
 
             // Save changes to risk allele
             riskAlleleRepository.save(riskAllele);
@@ -345,7 +348,7 @@ public class AssociationController {
     }
 
 
-    private Collection<Gene> addGenes(Collection<String> authorReportedGenes) {
+    private Collection<Gene> createGenes(Collection<String> authorReportedGenes) {
         Collection<Gene> locusGenes = new ArrayList<>();
         for (String authorReportedGene : authorReportedGenes) {
 
