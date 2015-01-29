@@ -19,6 +19,7 @@ version: 1.9.9.007 (pre 2.0)
 --------------------------------------------------------
 --  Ref Constraints for Table RISK_ALLELE_SNP
 --------------------------------------------------------
+ALTER TABLE "RISK_ALLELE_SNP" DROP CONSTRAINT "RISK_ALLELE_SNP_RA_ID_FK";
 ALTER TABLE "RISK_ALLELE_SNP" ADD CONSTRAINT "RISK_ALLELE_SNP_RA_ID_FK" FOREIGN KEY ("RISK_ALLELE_ID")
 REFERENCES "RISK_ALLELE" ("ID") ENABLE;
 
