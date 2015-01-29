@@ -317,7 +317,6 @@ public class StudyController {
         Curator curator = curatorRepository.findByLastName("Level 1 Curator");
         housekeeping.setCurator(curator);
 
-
         // Save housekeeping
         housekeepingRepository.save(housekeeping);
 
@@ -330,11 +329,10 @@ public class StudyController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(PubmedLookupException.class)
     public String handlePubmedLookupException(PubmedLookupException pubmedLookupException) {
-        //  return pubmedLookupException.getMessage();
         return "pubmed_lookup_warning";
     }
 
-    @ExceptionHandler({PubmedImportException.class})
+    @ExceptionHandler(PubmedImportException.class)
     public String handlePubmedImportException(PubmedImportException pubmedImportException) {
         return "pubmed_import_warning";
     }
