@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,7 +42,14 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSep
             long associationID = resultSet.getLong(1);
 
             Set<String> snps = split(resultSet.getString(3).trim());
-            Set<String> riskAlleles = split(resultSet.getString(2).trim());
+            String riskAlleleStr = resultSet.getString(2);
+            Set<String> riskAlleles;
+            if (riskAlleleStr != null) {
+                riskAlleles = split(resultSet.getString(2).trim());
+            }
+            else {
+                riskAlleles = new HashSet<>();
+            }
             snps.forEach(snp -> {
                 for (Long snpID : snpIdToRsIdMap.keySet()) {
                     if (snpIdToRsIdMap.get(snpID).equals(snp)) {
