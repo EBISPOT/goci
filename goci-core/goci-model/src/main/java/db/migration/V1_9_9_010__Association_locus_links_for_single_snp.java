@@ -23,7 +23,7 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSep
             "SELECT ID, SNP FROM GWASSNP";
 
     private static final String SELECT_ASSOCIATIONS_AND_SNPS =
-            "SELECT DISTINCT ID, STRONGEST_ALLELE, SNP " +
+            "SELECT DISTINCT ID, STRONGESTALLELE, SNP " +
                     "FROM GWASSTUDIESSNP " +
                     "WHERE SNP NOT LIKE '%,%' " +
                     "AND SNP NOT LIKE '%:%'";
