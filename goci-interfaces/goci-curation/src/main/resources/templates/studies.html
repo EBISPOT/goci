@@ -71,23 +71,12 @@
     </div>
 </nav>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="btn-toolbar">
-            <div class="btn-group pull-right">
-                <button type="button" class="btn btn-info" data-toggle="collapse"
-                        data-target="#filterParametersForm">Filter Table
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
 <br/>
 
 <div class="container-fluid">
     <div class="row">
         <div class="pull-right">
-            <div id="filterParametersForm" class="collapse">
+            <div id="filterParametersForm">
 
                 <form class="form-inline" name="filterParametersForm" role="form" method="post"
                       th:action="@{/studies(filters=true)}"
@@ -119,7 +108,7 @@
 
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
-                            <button type="submit" class="btn btn-primary">Search</button>
+                            <button type="submit" class="btn btn-primary">Filter</button>
                         </div>
                     </div>
                 </form>

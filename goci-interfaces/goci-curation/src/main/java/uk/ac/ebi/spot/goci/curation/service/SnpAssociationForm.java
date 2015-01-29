@@ -1,30 +1,24 @@
-package uk.ac.ebi.spot.goci.model;
 
-import javax.persistence.*;
+package uk.ac.ebi.spot.goci.curation.service;
+
+import uk.ac.ebi.spot.goci.model.EfoTrait;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
 
 /**
- * Created by emma on 27/11/14.
- *
+ * Created by emma on 28/01/15.
  * @author emma
- *         <p/>
- *         Model object representing an association
+ *
+ * New service class to deal with form used by curators to enter snp/association details
  */
 
+public class SnpAssociationForm {
 
-@Entity
-public class Association {
-    @Id
-    @GeneratedValue
-    private Long id;
+    private Long associationId;
 
     private String riskFrequency;
-
-    // This is no longer used in form but exists in database for some older studies
-    private String allele;
-
-    private Float pvalueFloat;
 
     private String pvalueText;
 
@@ -36,11 +30,17 @@ public class Association {
 
     private Boolean multiSnpHaplotype = false;
 
+    private String multiSnpHaplotypeDescr;
+
+    private Integer multiSnpHaplotypeNum;
+
     private Boolean snpInteraction = false;
 
     private Integer pvalueMantissa;
 
     private Integer pvalueExponent;
+
+    private Float pvalueFloat;
 
     private Float orPerCopyRecip;
 
@@ -50,56 +50,46 @@ public class Association {
 
     private String orPerCopyUnitDescr;
 
-    @OneToOne
-    private Study study;
+    private List<SnpFormRow> snpFormRows = new ArrayList<>();
 
-    // Association can have a number of loci attached depending on whether its a multi-snp haplotype
-    // or SNP:SNP interaction
-    @OneToMany
-    @JoinTable(name = "ASSOCIATION_LOCUS",
-            joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
-            inverseJoinColumns = @JoinColumn(name = "LOCUS_ID"))
-    private Collection<Locus> loci = new ArrayList<>();
+    private Collection<String> authorReportedGenes;
 
-    // To avoid null values collections are by default initialized to an empty array list
-    @ManyToMany
-    @JoinTable(name = "ASSOCIATION_EFO_TRAIT",
-            joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
-            inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
-    // JPA no-args constructor
-    public Association() {
+    public SnpAssociationForm() {
     }
 
 
-    public Association(String riskFrequency, String allele, Float pvalueFloat, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, Study study, Collection<Locus> loci, Collection<EfoTrait> efoTraits) {
+    public SnpAssociationForm(Long associationId, String riskFrequency, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, String multiSnpHaplotypeDescr, Integer multiSnpHaplotypeNum, Boolean snpInteraction, Integer pvalueMantissa, Integer pvalueExponent, Float pvalueFloat, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, List<SnpFormRow> snpFormRows, Collection<String> authorReportedGenes, Collection<EfoTrait> efoTraits) {
+        this.associationId = associationId;
         this.riskFrequency = riskFrequency;
-        this.allele = allele;
-        this.pvalueFloat = pvalueFloat;
         this.pvalueText = pvalueText;
         this.orPerCopyNum = orPerCopyNum;
         this.orType = orType;
         this.snpType = snpType;
         this.multiSnpHaplotype = multiSnpHaplotype;
+        this.multiSnpHaplotypeDescr = multiSnpHaplotypeDescr;
+        this.multiSnpHaplotypeNum = multiSnpHaplotypeNum;
         this.snpInteraction = snpInteraction;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
+        this.pvalueFloat = pvalueFloat;
         this.orPerCopyRecip = orPerCopyRecip;
         this.orPerCopyStdError = orPerCopyStdError;
         this.orPerCopyRange = orPerCopyRange;
         this.orPerCopyUnitDescr = orPerCopyUnitDescr;
-        this.study = study;
-        this.loci = loci;
+        this.snpFormRows = snpFormRows;
+        this.authorReportedGenes = authorReportedGenes;
         this.efoTraits = efoTraits;
     }
 
-    public Long getId() {
-        return id;
+
+    public Long getAssociationId() {
+        return associationId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setAssociationId(Long associationId) {
+        this.associationId = associationId;
     }
 
     public String getRiskFrequency() {
@@ -108,22 +98,6 @@ public class Association {
 
     public void setRiskFrequency(String riskFrequency) {
         this.riskFrequency = riskFrequency;
-    }
-
-    public String getAllele() {
-        return allele;
-    }
-
-    public void setAllele(String allele) {
-        this.allele = allele;
-    }
-
-    public Float getPvalueFloat() {
-        return pvalueFloat;
-    }
-
-    public void setPvalueFloat(Float pvalueFloat) {
-        this.pvalueFloat = pvalueFloat;
     }
 
     public String getPvalueText() {
@@ -166,6 +140,22 @@ public class Association {
         this.multiSnpHaplotype = multiSnpHaplotype;
     }
 
+    public String getMultiSnpHaplotypeDescr() {
+        return multiSnpHaplotypeDescr;
+    }
+
+    public void setMultiSnpHaplotypeDescr(String multiSnpHaplotypeDescr) {
+        this.multiSnpHaplotypeDescr = multiSnpHaplotypeDescr;
+    }
+
+    public Integer getMultiSnpHaplotypeNum() {
+        return multiSnpHaplotypeNum;
+    }
+
+    public void setMultiSnpHaplotypeNum(Integer multiSnpHaplotypeNum) {
+        this.multiSnpHaplotypeNum = multiSnpHaplotypeNum;
+    }
+
     public Boolean getSnpInteraction() {
         return snpInteraction;
     }
@@ -188,6 +178,14 @@ public class Association {
 
     public void setPvalueExponent(Integer pvalueExponent) {
         this.pvalueExponent = pvalueExponent;
+    }
+
+    public Float getPvalueFloat() {
+        return pvalueFloat;
+    }
+
+    public void setPvalueFloat(Float pvalueFloat) {
+        this.pvalueFloat = pvalueFloat;
     }
 
     public Float getOrPerCopyRecip() {
@@ -222,20 +220,20 @@ public class Association {
         this.orPerCopyUnitDescr = orPerCopyUnitDescr;
     }
 
-    public Study getStudy() {
-        return study;
+    public List<SnpFormRow> getSnpFormRows() {
+        return snpFormRows;
     }
 
-    public void setStudy(Study study) {
-        this.study = study;
+    public void setSnpFormRows(List<SnpFormRow> snpFormRows) {
+        this.snpFormRows = snpFormRows;
     }
 
-    public Collection<Locus> getLoci() {
-        return loci;
+    public Collection<String> getAuthorReportedGenes() {
+        return authorReportedGenes;
     }
 
-    public void setLoci(Collection<Locus> loci) {
-        this.loci = loci;
+    public void setAuthorReportedGenes(Collection<String> authorReportedGenes) {
+        this.authorReportedGenes = authorReportedGenes;
     }
 
     public Collection<EfoTrait> getEfoTraits() {
@@ -245,29 +243,5 @@ public class Association {
     public void setEfoTraits(Collection<EfoTrait> efoTraits) {
         this.efoTraits = efoTraits;
     }
-
-    @Override
-    public String toString() {
-        return "Association{" +
-                "id=" + id +
-                ", riskFrequency='" + riskFrequency + '\'' +
-                ", allele='" + allele + '\'' +
-                ", pvalueFloat=" + pvalueFloat +
-                ", pvalueText='" + pvalueText + '\'' +
-                ", orPerCopyNum=" + orPerCopyNum +
-                ", orType=" + orType +
-                ", snpType='" + snpType + '\'' +
-                ", multiSnpHaplotype=" + multiSnpHaplotype +
-                ", snpInteraction=" + snpInteraction +
-                ", pvalueMantissa=" + pvalueMantissa +
-                ", pvalueExponent=" + pvalueExponent +
-                ", orPerCopyRecip=" + orPerCopyRecip +
-                ", orPerCopyStdError=" + orPerCopyStdError +
-                ", orPerCopyRange='" + orPerCopyRange + '\'' +
-                ", orPerCopyUnitDescr='" + orPerCopyUnitDescr + '\'' +
-                ", study=" + study +
-                ", loci=" + loci +
-                ", efoTraits=" + efoTraits +
-                '}';
-    }
 }
+

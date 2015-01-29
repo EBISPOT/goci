@@ -44,11 +44,12 @@ public class Study {
     @NotBlank(message = "Please enter a pubmed id")
     private String pubmedId;
 
-    private String cnv;
+    // Defaults set as false
+    private Boolean cnv=false;
 
-    private String gxe;
+    private Boolean gxe=false;
 
-    private String gxg;
+    private Boolean gxg= false;
 
     @ManyToOne
     @JoinTable(name = "STUDY_DISEASE_TRAIT",
@@ -75,21 +76,8 @@ public class Study {
     public Study() {
     }
 
-    public Study(String author,
-                 Date studyDate,
-                 String publication,
-                 String title,
-                 String initialSampleSize,
-                 String replicateSampleSize,
-                 String platform,
-                 String pubmedId,
-                 String cnv,
-                 String gxe,
-                 String gxg,
-                 DiseaseTrait diseaseTrait,
-                 Collection<EfoTrait> efoTraits,
-                 Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms,
-                 Housekeeping housekeeping) {
+
+    public Study(String author, Date studyDate, String publication, String title, String initialSampleSize, String replicateSampleSize, String platform, String pubmedId, Boolean cnv, Boolean gxe, Boolean gxg, DiseaseTrait diseaseTrait, Collection<EfoTrait> efoTraits, Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms, Housekeeping housekeeping) {
         this.author = author;
         this.studyDate = studyDate;
         this.publication = publication;
@@ -179,27 +167,27 @@ public class Study {
         this.pubmedId = pubmedId;
     }
 
-    public String getCnv() {
+    public Boolean getCnv() {
         return cnv;
     }
 
-    public void setCnv(String cnv) {
+    public void setCnv(Boolean cnv) {
         this.cnv = cnv;
     }
 
-    public String getGxe() {
+    public Boolean getGxe() {
         return gxe;
     }
 
-    public void setGxe(String gxe) {
+    public void setGxe(Boolean gxe) {
         this.gxe = gxe;
     }
 
-    public String getGxg() {
+    public Boolean getGxg() {
         return gxg;
     }
 
-    public void setGxg(String gxg) {
+    public void setGxg(Boolean gxg) {
         this.gxg = gxg;
     }
 
@@ -247,10 +235,12 @@ public class Study {
                 ", replicateSampleSize='" + replicateSampleSize + '\'' +
                 ", platform='" + platform + '\'' +
                 ", pubmedId='" + pubmedId + '\'' +
-                ", cnv='" + cnv + '\'' +
-                ", gxe='" + gxe + '\'' +
-                ", gxg='" + gxg + '\'' +
+                ", cnv=" + cnv +
+                ", gxe=" + gxe +
+                ", gxg=" + gxg +
+                ", diseaseTrait=" + diseaseTrait +
                 ", efoTraits=" + efoTraits +
+                ", singleNucleotidePolymorphisms=" + singleNucleotidePolymorphisms +
                 ", housekeeping=" + housekeeping +
                 '}';
     }

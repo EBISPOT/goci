@@ -20,7 +20,6 @@
     <!-- Include Select2 JS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
 
-
     <!--Tags input http://timschlechter.github.io/bootstrap-tagsinput/examples/-->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"/>
     <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
@@ -79,63 +78,84 @@
         <thead>
         <tr>
             <th></th>
-            <th>SNP</th>
+            <th>Region</th>
             <th>Genes (author reported)</th>
             <th>Strongest Allele</th>
+            <th>SNP</th>
             <th>Risk Frequency</th>
             <th>p-Value Float</th>
             <th>p-Value Text</th>
             <th>OR per Copy Num</th>
             <th>OR entered (reciprocal)</th>
+            <th>OR-Type</th>
             <th>OR per Copy Range</th>
             <th>OR per Copy Unit Description</th>
             <th>Std Error</th>
-            <th>OR-Type</th>
+            <th>SNP Type</th>
             <th>Multi-SNP haplotype</th>
             <th>SNP:SNP interaction</th>
-            <th>SNP Type</th>
+
         </tr>
         </thead>
         <tbody>
-        <tr th:each="studyAssociation : ${studyAssociations}">
-            <td><a th:href="@{/associations/{associationId}(associationId=${studyAssociation.id})}">Edit</a></td>
-
-            <!--Study association can have multiple SNPs linked to it-->
+        <tr th:each="snpAssociationForm: ${snpAssociationForms}">
             <td>
-                <span th:each="snp : ${studyAssociation.snps}" th:text="${snp.rsId}"></span>
+                <a th:href="@{/associations/{associationId}(associationId=${snpAssociationForm.associationId})}">Edit</a>
             </td>
-            <td th:text="${studyAssociation.authorReportedGene} ?: 'null'"></td>
-            <td th:text="${studyAssociation.strongestAllele} ?: 'null'"></td>
-            <td th:text="${studyAssociation.riskFrequency}?: 'null' "></td>
-            <td th:text="${studyAssociation.pvalueFloat} ?: 'null'"></td>
-            <td th:text="${studyAssociation.pvalueText} ?: 'null'"></td>
-            <td th:text="${studyAssociation.orPerCopyNum} ?: 'null'"></td>
-            <td th:text="${studyAssociation.orPerCopyRecip} ?: 'null'"></td>
-            <td th:text="${studyAssociation.orPerCopyRange} ?: 'null'"></td>
-            <td th:text="${studyAssociation.orPerCopyUnitDescr} ?: 'null'"></td>
-            <td th:text="${studyAssociation.orPerCopyStdError} ?: 'null'"></td>
-            <td th:switch="${studyAssociation.orType}">
+
+            <!--Region-->
+            <td>N/A</td>
+
+            <!--Gene-->
+            <td>
+                <span th:each="gene : ${snpAssociationForm.authorReportedGenes}"
+                      th:text="${gene} ?: 'null'"></span>
+            </td>
+
+            <!--Strongest risk allele-->
+            <td>
+                <span th:each="row : ${snpAssociationForm.snpFormRows}"
+                      th:text="${row.strongestRiskAllele} ?: 'null'"></span>
+            </td>
+
+            <!--SNPs-->
+            <td>
+                     <span th:each="row : ${snpAssociationForm.snpFormRows}"
+                           th:text="${row.snp} ?: 'null'"></span>
+            </td>
+
+            <td th:text="${snpAssociationForm.riskFrequency}?: 'null' "></td>
+            <td th:text="${snpAssociationForm.pvalueFloat} ?: 'null'"></td>
+            <td th:text="${snpAssociationForm.pvalueText} ?: 'null'"></td>
+            <td th:text="${snpAssociationForm.orPerCopyNum} ?: 'null'"></td>
+            <td th:text="${snpAssociationForm.orPerCopyRecip} ?: 'null'"></td>
+            <td th:switch="${snpAssociationForm.orType}">
                 <p th:case="'null'">null</p>
 
                 <p th:case="'0'">No</p>
 
                 <p th:case="'1'">Yes</p>
             </td>
-            <td th:switch="${studyAssociation.multiSnpHaplotype}">
+
+            <td th:text="${snpAssociationForm.orPerCopyRange} ?: 'null'"></td>
+            <td th:text="${snpAssociationForm.orPerCopyUnitDescr} ?: 'null'"></td>
+            <td th:text="${snpAssociationForm.orPerCopyStdError} ?: 'null'"></td>
+            <td th:text="${snpAssociationForm.SnpType}"></td>
+            <td th:switch="${snpAssociationForm.multiSnpHaplotype}">
                 <p th:case="'null'">null</p>
 
-                <p th:case="'0'">No</p>
+                <p th:case="false">No</p>
 
-                <p th:case="'1'">Yes</p>
+                <p th:case="true">Yes</p>
             </td>
-            <td th:switch="${studyAssociation.snpInteraction}">
+            <td th:switch="${snpAssociationForm.snpInteraction}">
                 <p th:case="'null'">null</p>
 
-                <p th:case="'0'">No</p>
+                <p th:case="false">No</p>
 
-                <p th:case="'1'">Yes</p>
+                <p th:case="true">Yes</p>
             </td>
-            <td th:text="${studyAssociation.SnpType}"></td>
+
         </tr>
         </tbody>
     </table>
@@ -143,14 +163,18 @@
 
 <br/>
 
-<div class="container-fluid">
+
+<div class="container-fluid" th:object="${study}">
     <div class="row">
-
-
         <div class="col-md-10">
             <!--Button-->
             <input type="button" class="btn btn-primary" value="Add SNPs from spreadsheet" data-toggle="collapse"
                    data-target="#uploadSNPsForn"/>
+            <a th:href="@{/studies/{studyId}/associations/add(studyId=*{id})}" class="btn btn-primary">Add
+                standard SNP or multi-SNP haplotype</a>
+            <a th:href="@{/studies/{studyId}/associations/add(studyId=*{id})}"
+               class="btn btn-primary">Add SNP:SNP interaction</a>
+
         </div>
     </div>
 </div>
@@ -193,228 +217,7 @@
         </div>
     </div>
 </div>
-<br/>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-10">
-            <!--Button-->
-            <input type="button" class="btn btn-primary" value="Add new SNP" data-toggle="collapse"
-                   data-target="#addSNPForm"/>
-        </div>
-    </div>
-</div>
-
-
-<div class="container-fluid">
-<div class="row">
-<div class="form-group">
-<div class="col-md-10">
-
-
-<div id="addSNPForm" class="collapse">
-    <form class="form-horizontal" method="post" name="addSNPForm">
-
-
-
-
-        <div class="form-group">
-            <label for="authorgenes" class="control-label col-md-2">Gene(s)</label>
-
-            <div class="col-md-10">
-                <input type="text" class="form-control" id="authorgenes"
-                       th:value="${studyAssociation.authorReportedGene}" name="authorReportedGene"/>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="strongestAllele" class="control-label col-md-2">Strongest SNP-Risk
-                Allele</label>
-
-            <div class="col-md-10">
-                <input type="text" class="form-control" id="strongestAllele"
-                       th:value="${studyAssociation.strongestAllele}" name="strongestAllele"/>
-            </div>
-        </div>
-
-        <!-- Curator will enter a list of SNPs and these are stored in a collection,
-       which is passed back to controller to create SNPs in SNP table -->
-        <div class="form-group">
-            <label for="snps" class="control-label col-md-2">SNP(s)</label>
-
-            <div class="col-md-10">
-                <input type="text" class="form-control" id="snps"
-                       th:value="${reportedSNPs.reportedSNPValue}" name="reportedSNPValue"
-                       data-role="tagsinput"/>
-            </div>
-        </div>
-
-
-        <div class="form-group">
-            <label for="riskFrequency" class="control-label col-md-2">Risk Allele Frequency in
-                Controls</label>
-
-            <div class="col-md-10">
-                <input type="text" class="form-control" id="riskFrequency"
-                       th:value="${studyAssociation.riskFrequency}" name="riskFrequency"/>
-            </div>
-        </div>
-
-
-        <div class="form-group">
-            <label for="allele" class="control-label col-md-2">Allele</label>
-
-            <div class="col-md-10">
-                <input type="text" class="form-control" id="allele"
-                       th:value="${studyAssociation.allele}" name="allele"/>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="pvalueMantissa" class="control-label col-md-2">P-value (mantissa)</label>
-
-            <div class="col-md-10">
-                <input type="text" class="form-control" id="pvalueMantissa"
-                       th:value="${studyAssociation.pvalueMantissa}" name="pvalueMantissa"/>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="pvalueExponent" class="control-label col-md-2">P-value (exponent)</label>
-
-            <div class="col-md-10">
-                <input type="text" class="form-control" id="pvalueExponent"
-                       th:value="${studyAssociation.pvalueExponent}" name="pvalueExponent"/>
-            </div>
-        </div>
-
-
-        <div class="form-group">
-            <label for="pvalueText" class="control-label col-md-2">P-value (Text)</label>
-
-            <div class="col-md-10">
-                <input type="text" class="form-control" id="pvalueText"
-                       th:value="${studyAssociation.pvalueText}" name="pvalueText"/>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="EFOTrait" class="control-label col-md-2">EFO Trait:</label>
-
-            <div class="col-md-10">
-                <select name="efoTraits" th:value="${studyAssociation.efoTraits}"
-
-                        class="form-control select2-select"
-                        multiple="multiple" id="EFOTrait">
-                    <option th:each="efoTrait : ${efoTraits}"
-                            th:value="${efoTrait.id}"
-                            th:text="${efoTrait.trait}"></option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="orPerCopyNum" class="control-label col-md-2">OR/HR/RR per copy (Num)</label>
-
-            <div class="col-md-10">
-                <input type="text" class="form-control" name="orPerCopyNum" id="orPerCopyNum"
-                       th:value="${studyAssociation.orPerCopyNum}"/>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="orPerCopyRecip" class="control-label col-md-2">OR/HR/RR per copy
-                reciprocal</label>
-
-            <div class="col-md-10">
-                <input type="text" class="form-control" id="orPerCopyRecip"
-                       th:value="${studyAssociation.orPerCopyRecip}" name="orPerCopyRecip"/>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="orPerCopyRange" class="control-label col-md-2">OR/HR/RR per copy (Range)</label>
-
-            <div class="col-md-10">
-                <input type="text" class="form-control" id="orPerCopyRange"
-                       th:value="${studyAssociation.orPerCopyRange}" name="orPerCopyRange"/>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="orPerCopyUnitDescr" class="control-label col-md-2">OR/HR/RR per copy (Unit
-                Description)</label>
-
-            <div class="col-md-10">
-                <input type="text" class="form-control" id="orPerCopyUnitDescr"
-                       th:value="${studyAssociation.orPerCopyUnitDescr}" name="orPerCopyUnitDescr"/>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="orPerCopyStdError" class="control-label col-md-2">Standard Error</label>
-
-            <div class="col-md-10">
-                <input type="text" class="form-control" id="orPerCopyStdError"
-                       th:value="${studyAssociation.orPerCopyStdError}" name="orPerCopyStdError"/>
-            </div>
-        </div>
-
-        <!--Checkboxes: th:value is the value that will be assigned if the box is checked
-                        th:field is the value it will be assigned to.  -->
-
-        <div class="form-group">
-            <label for="snpType" class="control-label col-md-2">SNP type</label>
-
-            <div class="col-md-10" id="snpType">
-                <label class="radio-inline">
-                    <input type="radio" name="snpType" th:value="'Novel'"
-                           th:field="${studyAssociation.snpType}">Novel</input>
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="snpType" th:value="'Known'"
-                           th:field="${studyAssociation.snpType}">Known</input>
-                </label>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="multiSNPHaplotype" class="control-label col-md-2">Multi-SNP Haplotype</label>
-            <input id="multiSNPHaplotype" type="checkbox" th:value="'1'"
-                   th:field="${studyAssociation.multiSnpHaplotype}"/>
-        </div>
-
-        <div class="form-group">
-            <label for="snpInteraction" class="control-label col-md-2">SNP:SNP Interactions</label>
-            <input id="snpInteraction" type="checkbox" th:value="'1'" th:field="${studyAssociation.snpInteraction}"/>
-        </div>
-
-
-        <div class="form-group">
-            <label for="orType" class="control-label col-md-2">ORType</label>
-            <input id="orType" type="checkbox" th:value="'1'" th:field="${studyAssociation.orType}"/>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <button type="submit" class="btn btn-primary">Save</button>
-            </div>
-        </div>
-
-    </form>
-</div>
-
-</div>
-</div>
-</div>
-</div>
-
-<script>
-    $(function () {
-        // turn the element to select2 select style
-        $('#EFOTrait').select2();
-    });
-</script>
 
 </body>
 </html>

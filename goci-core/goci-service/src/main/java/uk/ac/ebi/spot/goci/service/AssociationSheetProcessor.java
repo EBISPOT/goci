@@ -355,23 +355,22 @@ public class AssociationSheetProcessor {
                 } else {
                     // Create a new association
                     Association thisAssociation = new Association();
-                    thisAssociation.setAuthorReportedGene(authorReportedGene);
-                    thisAssociation.setStrongestAllele(strongestAllele);
+                 //   thisAssociation.setAuthorReportedGene(authorReportedGene);
                     thisAssociation.setRiskFrequency(riskFrequency);
                     thisAssociation.setPvalueFloat(pvalueFloat);
                     thisAssociation.setPvalueText(pvalueText);
                     thisAssociation.setOrPerCopyNum(orPerCopyNum);
-                    thisAssociation.setOrType(orType);
+               //     thisAssociation.setOrType(orType);
                     thisAssociation.setSnpType(snpType);
-                    thisAssociation.setMultiSnpHaplotype(multiSnpHaplotype);
-                    thisAssociation.setSnpInteraction(snpInteraction);
+                 //   thisAssociation.setMultiSnpHaplotype(multiSnpHaplotype);
+                //    thisAssociation.setSnpInteraction(snpInteraction);
                     thisAssociation.setPvalueMantissa(pvalueMantissa);
                     thisAssociation.setPvalueExponent(pvalueExponent);
                     thisAssociation.setOrPerCopyRecip(orPerCopyRecip);
                     thisAssociation.setOrPerCopyStdError(orPerCopyStdError);
                     thisAssociation.setOrPerCopyRange(orPerCopyRange);
                     thisAssociation.setOrPerCopyUnitDescr(orPerCopyUnitDescr);
-                    thisAssociation.setReportedGenes(reportedGenes);
+
 
                     // Add all newly created associations to collection
                     allSnpAssociations.add(thisAssociation);
