@@ -72,8 +72,10 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSep
                                                                    snpID + " (risk alleles = " + riskAlleles + ")");
                             }
                             else {
-                                associationIdToSnpId.put(associationID, snpID);
-                                snpIdToRiskAlleleMap.put(snpID, riskAlleles.iterator().next());
+                                if (!riskAlleles.isEmpty()) {
+                                    associationIdToSnpId.put(associationID, snpID);
+                                    snpIdToRiskAlleleMap.put(snpID, riskAlleles.iterator().next());
+                                }
                             }
                         }
                     }
