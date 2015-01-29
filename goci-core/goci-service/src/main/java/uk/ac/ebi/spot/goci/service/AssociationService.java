@@ -9,12 +9,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.Locus;
+import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Javadocs go here!
@@ -84,9 +88,14 @@ public class AssociationService {
     public void loadAssociatedData(Association association) {
         int traitCount = association.getEfoTraits().size();
         Study study = studyService.deepFetchOne(association.getStudy());
-        Collection<SingleNucleotidePolymorphism> snps = snpService.deepFetchAll(association.getSnps());
-
-        int reportedGeneCount = association.getReportedGenes().size();
+        int reportedGeneCount = 0;
+        Collection<SingleNucleotidePolymorphism> snps = new HashSet<>();
+        association.getLoci().forEach(
+                locus -> snps.addAll(
+                        locus.getStrongestRiskAlleles()
+                                .stream()
+                                .map(RiskAllele::getSnp)
+                                .collect(Collectors.toList())));
         getLog().info("Association '" + association.getId() + "' is mapped to " +
                               "" + traitCount + " EFO traits, " + reportedGeneCount + " genes, " +
                               "study id = " + study.getId() + " and " + snps.size() + " SNPs");
