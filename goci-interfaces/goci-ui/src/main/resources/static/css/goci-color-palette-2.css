@@ -1,0 +1,87 @@
+.color-primary {
+    color: #263596 !important;
+}
+
+.color-primary-accent {
+    color: #7783CB !important;
+}
+
+.color-primary-bold {
+    color: #0C1862 !important;
+}
+
+.background-color-primary {
+    background-color: #263596 !important;
+}
+
+.background-color-primary-accent {
+    background-color: #7783CB !important;
+}
+
+.background-color-primary-bold {
+    background-color: #0C1862 !important;
+}
+
+.color-secondary {
+    color: #4A2295 !important;
+}
+
+.color-secondary-accent {
+    color: #9274CA !important;
+}
+
+.color-secondary-bold {
+    color: #290B61 !important;
+}
+
+.background-color-secondary {
+    background-color: #4A2295 !important;
+}
+
+.background-color-secondary-accent {
+    background-color: #9274CA !important;
+}
+
+.background-color-secondary-bold {
+    background-color: #290B61 !important;
+}
+
+.color-complementary {
+    color: #DBA61F !important;
+}
+
+.color-complementary-accent {
+    color: #EDCD7D !important;
+}
+
+.color-complementary-bold {
+    color: #8E690A !important;
+}
+
+.background-color-complementary {
+    background-color: #DBA61F !important;
+}
+
+.background-color-complementary-accent {
+    background-color: #EDCD7D !important;
+}
+
+.background-color-complementary-bold {
+    background-color: #8E690A !important;
+}
+
+a {
+    color: #290B61;
+}
+
+a:hover {
+    color: #0C1862;
+}
+
+.list-group-item:hover {
+    background-color: #7783CB !important;
+}
+
+.btn:hover {
+    background-color: #263596 !important;
+}

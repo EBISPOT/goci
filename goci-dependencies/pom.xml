@@ -27,7 +27,7 @@
     <properties>
         <goci.version>2.0.0-SNAPSHOT</goci.version>
         <hibernate.jpa.2.1.version>1.0.0.Final</hibernate.jpa.2.1.version>
-        <owlapi.version>4.0.1</owlapi.version>
+        <owlapi.version>3.4.3</owlapi.version>
         <HermiT.version>1.3.8.1</HermiT.version>
     </properties>
 

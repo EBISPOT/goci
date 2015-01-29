@@ -20,7 +20,23 @@
     <dependencies>
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-repository</artifactId>
+            <artifactId>goci-service</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sourceforge.owlapi</groupId>
+            <artifactId>owlapi-distribution</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.hermit-reasoner</groupId>
+            <artifactId>org.semanticweb.hermit</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc6</artifactId>
+            <version>11.2.0.3</version>
         </dependency>
 
         <dependency>
@@ -42,10 +58,10 @@
     </dependencies>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <start-class>uk.ac.ebi.spot.gwas.Application</start-class>
-        <java.version>1.8</java.version>
-    </properties>
+   		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+   		<start-class>uk.ac.ebi.spot.goci.SolrIndexerApplication</start-class>
+   		<java.version>1.8</java.version>
+   	</properties>
 
     <build>
         <plugins>

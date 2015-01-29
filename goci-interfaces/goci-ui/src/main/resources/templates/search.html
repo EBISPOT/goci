@@ -1,198 +1,344 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-    <title>GWAS Search Demo</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <link rel="icon" href="../../favicon.ico"/>
 
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>-->
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>-->
-    <link rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}"/>
-    <link rel="stylesheet" href="/css/bootstrap-theme.min.css" th:href="@{css/bootstrap-theme.min.css}"/>
-    <link rel="stylesheet" href="/css/bootstrap-table.css" th:href="@{css/bootstrap-table.css}"/>
-    <link rel="stylesheet" href="/css/goci-ui.css"/>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/js/goci-ui.js"></script>
+    <title>GWAS Catalog</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../static/css/bootstrap.css" th:href="@{css/bootstrap.min.css}" rel="stylesheet"/>
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" rel="stylesheet"/>
+    <link href="../static/css/bootstrap-table.css" th:href="@{css/bootstrap-table.css}" rel="stylesheet"/>
+    <link href="../static/css/bootstrap-theme.css" th:href="@{css/bootstrap-theme.min.css}" rel="stylesheet" />
+
+    <!-- Custom styles for this template -->
+    <link href="../static/css/jumbotron.css" th:href="@{css/jumbotron.css}" rel="stylesheet"/>
+    <link href="../static/css/sticky-footer-navbar.css" th:href="@{css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{css/goci-ui.css}"/>
+    <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{css/icons/flaticon.css}"/>
+    <link rel="stylesheet" href="../static/css/goci-color-palette-1.css" th:href="@{css/goci-color-palette-1.css}"/>
 
 
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
-<body>
-<nav class="navbar navbar-inverse" role="navigation">
-    <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
+
+<body onload="loadResults();">
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
         <div class="navbar-header">
-            <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+            <button type="button"
+                    class="navbar-toggle collapsed"
+                    data-toggle="collapse"
+                    data-target="#navbar"
+                    aria-expanded="false"
+                    aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="http://www.genome.gov/gwastudies/" class="navbar-brand">GWAS Logo</a>
+            <a class="navbar-brand" href="#">GWAS Catalog</a>
         </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="index.html" th:href="@{/.}">Home <span class="sr-only">(current)</span></a></li>
+                <li class="active"><a href="search.html" th:href="@{search}">Search</a></li>
+                <li><a href="http://www.ebi.ac.uk/fgpt/gwas">View</a></li>
+                <li class="hidden-sm"><a href="downloads.html" th:href="@{downloads}">Download</a></li>
+                <li><a href="help.html" th:href="@{help}">Help</a></li>
+                <li class="hidden-sm"><a href="about.html" th:href="@{about}">About</a></li>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div id="navbarCollapse" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-
-                <li><a href="home">Home </a></li>
-                <li class="active"><a href="search">Search the catalog <span class="sr-only">(current)</span></a></li>
-                <li><a href="about">About us</a></li>
-                <li><a href="publications">Publications</a></li>
-                <li><a href="downloads">Downloads</a></li>
-                <li><a href="http://www.ebi.ac.uk/fgpt/gwas">GWAS Diagram</a></li>
+                <li><a class="icon" href="http://www.ebi.ac.uk"><img alt="EBI logo"
+                                                                     src="../static/icons/EMBL_EBI_Logo_white_scaled.png"
+                                                                     th:src="@{icons/EMBL_EBI_Logo_white_scaled.png}"/></a>
+                </li>
+                <li><a class="icon" href="http://www.genome.gov"><img alt="GWAS logo"
+                                                                      src="../static/icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png"
+                                                                      th:src="@{icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png}"/></a>
+                </li>
             </ul>
-
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
+        </div>
+        <!--/.navbar-collapse -->
+    </div>
+    <div class="navbar-bottom-banner-1 background-color-complementary">
+    </div>
+    <div class="navbar-bottom-banner-2 background-color-primary-bold">
+    </div>
+    <div class="navbar-bottom-banner-3 background-color-primary">
+    </div>
 </nav>
 
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron background-color-primary-accent">
+    <div class="container">
+        <div class="gwas-circle">
+            <img src="../static/images/gwas-circle.png" th:src="@{/images/gwas-circle.png}"/>
+        </div>
+        <div>
+            <h1>GWAS Catalog</h1>
 
-<div class="container-fluid">
-    <ol class="breadcrumb">
+            <h3>A Catalog of Published Genome-Wide Association Studies</h3>
+
+            <!-- search box goes here -->
+            <div class="input-group" th:object="${result}">
+                <input type="text" class="form-control" placeholder="Search the catalog" id="search-box" th:field="*{query}"/>
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="search-button">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </span>
+            </div>
+            <div class="examples">
+                Examples:
+                <a href="/search?query=breast%20cancer">breast cancer</a>,
+                <a href="/search?query=rs7329174">rs7329174</a>,
+                <a href="/search?query=Yang">Yang</a>,
+                <a href="/search?query=44892362">44892362</a>,
+                <a href="/search?query=2q37.1">2q37.1</a>,
+                <a href="/search?query=HBS1L">HBS1L</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid tight-to-top">
+    <div style="display: none">
+        <ul th:object="${result}">
+            <li id="query" th:text="*{query}">User query</li>
+        </ul>
+    </div>
+
+    <ol class="breadcrumb background-color-complementary-accent">
         <li><a href="home">GWAS</a></li>
         <li class="active">Search</li>
     </ol>
 
-    <div class="row">
-        <div class="col-md-7 col-md-offset-3">
-            <h1>A Catalog of Published Genome-Wide Association Studies</h1>
-        </div>
-    </div>
+    <!--
 
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <div id="imaginary_container">
-                <div class="input-group stylish-input-group">
-                    <input type="text" class="form-control" placeholder="Search the catalog" id="search-box">
-                       <span class="input-group-addon">
-                            <button type="submit" id="search-button" >
-                                <span class="glyphicon glyphicon-search"></span>
-                            </button>
-                        </span>
-                    </input>
-                </div>
-                <div class="examples">
-                    Examples:
-                    <a href="">breast cancer</a>,
-                    <a href="">rs7329174</a>,
-                    <a href="">Yang</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+    #####################################
+    #  Page specific content goes here  #
+    #####################################
 
-<!--<div class="results-container">-->
-<div class="container-fluid" id="lower_container" style="display: none">
-    <!--<div class="container-fluid" id="lower_container" style="display: block">-->
+    -->
+    <div class="container-fluid" id="lower_container" style="display: none">
+        <div class="row">
+            <div class="col-md-3 tight-to-side" id="filter-bar">
+                <div class="panel panel-default">
+                    <div class="panel-heading background-color-primary-accent">
+                        <h3 class="panel-title">Refine search results</h3>
+                            <span class="pull-right clickable" onclick="toggleSidebar('.panel-heading span.clickable')"><i
+                                    class="glyphicon glyphicon-chevron-up"></i></span>
+                    </div>
+                    <div class="panel-body">
+                        <div id="facets">
+                            <b>Show results for</b>
 
+                            <div class="list-group">
+                                <!--add an "active" class annotation to each a tag when it's selected-->
+                                <a href="#" class="list-group-item" id="studyFacet"> <span class="badge">0
+                                </span>
+                                    Studies</a>
+                                <a href="#" class="list-group-item" id="associationFacet"> <span class="badge">
+                                    0</span>
+                                    Associations</a>
+                                <a href="#" class="list-group-item" id="efotraitFacet"> <span class="badge">0
+                                </span>
+                                    Ontology terms</a>
+                                <a href="#" class="list-group-item" id="singlenucleotidepolymorphismFacet"> <span class="badge">
+                                    0</span>
+                                    SNPs</a>
+                            </div>
 
-<div class="row">
-        <div class="col-md-3" id="filter-bar">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Refine search results</h3>
-                    <span class="pull-right clickable" onclick="toggleSidebar('.panel-heading span.clickable')"><i class="glyphicon glyphicon-chevron-up"></i></span>
-                </div>
-                <div class="panel-body">
-                    <div id="facets">
-                    <b>Show results for</b>
-                        <div class="list-group">
-                            <!--add an "active" class annotation to each a tag when it's selected-->
-                            <a href="#" class="list-group-item">    <span class="badge">3</span>
-                                Studies</a>
-                            <a href="#" class="list-group-item">    <span class="badge">14</span>
-                                SNPs</a>
-                            <a href="#" class="list-group-item">    <span class="badge">2</span>
-                                Traits</a>
-                            <a href="#" class="list-group-item disabled">    <span class="badge">0</span>
-                                Some other facet with no results</a>
                         </div>
 
-                    </div>
+                        <div id="filters">
+                            <b>Filter results by</b>
 
-                    <div id="filters">
-                    <b>Filter results by</b>
-
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <b>P-value</b> from <input type="text" size="5" id="pval-min"/> to <input type="text" size="5" id="pval-max"/>
-                                <i>e.g. 5E-8</i>
-                            </li>
-
-                            <li class="list-group-item">
-                                <b>Odds ratio</b> from <input type="text" size="5" id="or-min"/> to <input type="text" size="5" id="or-max"/>
-                            </li>
-                            <li class="list-group-item">
-                                <b>Date</b> from <input type="text" id="date-min" size="10"/> to <input type="text" id="date-max" size="10"/>
-                            </li>
-                            <li class="list-group-item">
-
-                                <b>Disease trait</b>
-                            <div class="btn-group">
-
-                                    <button type="button" class="btn btn-default">Child of search term</button>
-                                    <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><span class="caret"></span></button>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="#">Diabetes</a></li>
-                                        <li><a href="#">Cancer</a></li>
-                                        <li><a href="#">Lupus</a></li>
-                                        <li><a href="#">Body weight</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
-
-                    </div>
-
-                    <div>
-                        <button type="button" class="btn btn-default">Apply filters</button>
-                        <button type="button" class="btn btn-default pull-right">Clear all filters</button>
+                            <div class="list-group">
+                                <div class="list-group-item filter-element">
+                                    <span class="filter-label">p-value</span>
+                                    <input class="filter-value" type="text" id="pval-min" placeholder="from"/>
+                                    <input class="filter-value" type="text" id="pval-max" placeholder="to"/>
                                 </div>
 
+                                <div class="list-group-item filter-element">
+                                    <span class="filter-label">Odds ratio</span>
+                                    <input class="filter-value" type="text" id="or-min" placeholder="from"/>
+                                    <input class="filter-value" type="text" id="or-max" placeholder="to"/>
+                                </div>
+
+                                <div class="list-group-item filter-element">
+                                    <span class="filter-label">beta coefficient</span>
+                                    <input class="filter-value" type="text" id="beta-min" placeholder="from"/>
+                                    <input class="filter-value" type="text" id="beta-max" placeholder="to"/>
+                                </div>
+
+                                <div class="list-group-item filter-element">
+                                    <span class="filter-label">Study date</span>
+                                    <input class="filter-value" data-provide="datepicker" id="date-min" placeholder="from"/>
+                                    <input class="filter-value" type="text" id="date-max" placeholder="to"/>
+                                </div>
+
+                                <div class="list-group-item filter-element">
+                                    <div class="filter-label">Trait</div>
+                                    <div class="filter-values">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-default">Child trait</button>
+                                            <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false">
+                                                <span class="caret"></span>
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li><a href="#">Diabetes</a></li>
+                                                <li><a href="#">Cancer</a></li>
+                                                <li><a href="#">Lupus</a></li>
+                                                <li><a href="#">Body weight</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <button type="button" class="btn btn-default">Apply filters</button>
+                            <button type="button" class="btn btn-default pull-right">Clear all filters</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9" id="results-area">
+
+                <div id="noResults" style="display: none" th:object="${result}">
+                    <h2>No results found for search term <em><span id="search-term-noResult" th:text="*{query}">Query term</span></em></h2>
+                </div>
+
+                <div id="results" th:object="${result}">
+                    <h2>Search results for <em><span id="search-term" th:text="*{query}">Quer term</span></em></h2>
+
+                    <div id="studyTable">
+                        <h3><i>Studies</i></h3>
+                        <table class="table" id="studySummaries">
+                            <thead>
+                            <tr>
+                                <th>Author</th>
+                                <th>Publication</th>
+                                <th>Title</th>
+                                <th>Disease/Trait</th>
+                                <th>Date</th>
+                                <th>Pubmed ID</th>
+
+
+
+                            </tr>
+                            </thead>
+
+
+                        </table>
+                    </div>
+                    <div id="associationTable">
+                        <h3><i>Associations</i></h3>
+
+                        <table class="table" id="associationSummaries">
+                            <thead>
+                            <tr>
+                                <th>RS ID</th>
+                                <th>Chromosome location</th>
+                                <th>Strongest allele</th>
+                                <th>p-value</th>
+                                <th>OR or beta-cofficient</th>
+                                <th>Unit description</th>
+
+
+                            </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+
+                    <div id="efotraitTable">
+                        <h3><i>EFO traits</i></h3>
+                        <table class="table" id="efotraitSummaries">
+                            <thead>
+                            <tr>
+                                <th>Trait name</th>
+                                <th>EFO URI</th>
+                                <th>Synonyms</th>
+                                <th>Child count</th>
+
+                            </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+                    <div id="singlenucleotidepolymorphismTable">
+                        <h3><i>SNPs</i></h3>
+
+                        <table class="table" id="snpSummaries">
+                            <thead>
+                            <tr>
+                                <th>RS ID</th>
+                                <th>Base pair location</th>
+                                <th>Chromosome region</th>
+                                <th>Genes</th>
+                            </tr>
+                            </thead>
+
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-9" id="results-area">
-            <h2>Search results for <span id="search-term"><em></em></span></h2>
-            <table class="table">
-                <thead>
-                <tr>
-
-                    <th data-field="author">Author</th>
-                    <th data-field="publication">Publication</th>
-                    <th data-field="title">Title</th>
-                    <th data-field="diseaseTrait">Disease/Trait</th>
-                    <th data-field="studydate">Date</th>
-                    <th data-field="pubmedId">Pubmed ID</th>
-
-                    <!--<th data-field="rsId">SNP count</th>-->
-
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="gs : ${search}">
-
-                    <td th:text="${gs.author} ?: 'null'">Author</td>
-                    <td th:text="${gs.publication} ?: 'null'">Publication</td>
-                    <td th:text="${gs.title} ?: 'null'">Title</td>
-                    <td th:text="${gs.diseaseTrait.trait} ?: 'null'">Trait</td>
-                    <td th:text="${gs.studyDate} ?: 'null'">Date</td>
-                    <td th:text="${gs.pubmedID} ?: 'null'">PubMed ID</td>
-
-
-
-                </tr>
-                </tbody>
-            </table>
-        </div>
     </div>
-<!--</div>-->
+
 </div>
+
+<hr/>
+
+<!-- /container -->
+
+<footer class="footer background-color-primary-accent">
+    <!--<div class="footer-banner background-color-primary"></div>-->
+    <div class="container">
+        <p class="text-muted">Copyright &copy; EMBL-EBI 2015 | EBI is an Outstation of the
+            <a href="http://www.embl.org">European Molecular
+                Biology
+                Laboratory</a> |
+            <a href="//www.ebi.ac.uk/about/privacy">Privacy</a> |
+            <a href="//www.ebi.ac.uk/about/cookies">Cookies</a> |
+            <a href="//www.ebi.ac.uk/about/terms-of-use">Terms of use</a></p>
+    </div>
+</footer>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+<script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../static/js/ie10-viewport-bug-workaround.js" th:src="@{js/ie10-viewport-bug-workaround.js}"></script>
+
+<!-- GOCI JavaScript
+================================================== -->
+<script src="../static/js/goci-ui.js" th:src="@{js/goci-ui.js}"></script>
+<script src="../static/js/solrsearch.js" th:src="@{js/solrsearch.js}"></script>
 
 </body>
 </html>
-

@@ -1,9 +1,12 @@
 package uk.ac.ebi.spot.goci.model;
 
 import org.apache.solr.client.solrj.beans.Field;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.solr.core.mapping.SolrDocument;
-import uk.ac.ebi.spot.goci.model.Study;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.TimeZone;
 
 /**
  * Javadocs go here!
@@ -11,26 +14,35 @@ import uk.ac.ebi.spot.goci.model.Study;
  * @author Tony Burdett
  * @date 23/12/14
  */
-@SolrDocument(solrCoreName = "gwas")
-public class StudyDocument {
-    @Id @Field private String id;
+public class StudyDocument extends Document<Study> {
     @Field private String pubmedId;
     @Field private String title;
     @Field private String author;
     @Field private String publication;
-    @Field private String resourcename;
+    @Field private String publicationDate;
+
+    @Field private String trait;
+    @Field("traitUri") private Collection<String> traitUris;
 
     public StudyDocument(Study study) {
-        this.id = "study_".concat(study.getId().toString());
+        super(study);
         this.pubmedId = study.getPubmedId();
         this.title = study.getTitle();
         this.author = study.getAuthor();
         this.publication = study.getPublication();
-        this.resourcename = study.getClass().getSimpleName();
-    }
+        if (study.getDiseaseTrait() != null) {
+            this.trait = study.getDiseaseTrait().getTrait();
+        }
 
-    public String getId() {
-        return id;
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+        if (study.getStudyDate() != null) {
+            this.publicationDate = df.format(study.getStudyDate());
+        }
+
+
+        this.traitUris = new ArrayList<>();
+        study.getEfoTraits().forEach(efoTrait -> traitUris.add(efoTrait.getUri()));
     }
 
     public String getPubmedId() {
@@ -49,7 +61,16 @@ public class StudyDocument {
         return publication;
     }
 
-    public String getResourcename() {
-        return resourcename;
+    public String getTrait() {
+        return trait;
     }
+
+    public Collection<String> getTraitUris() {
+        return traitUris;
+    }
+
+    public String getPublicationDate() {
+        return publicationDate;
+    }
+
 }
