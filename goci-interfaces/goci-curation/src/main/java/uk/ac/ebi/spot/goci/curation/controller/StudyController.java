@@ -309,6 +309,15 @@ public class StudyController {
         java.util.Date studyAddedDate = new java.util.Date();
         housekeeping.setStudyAddedDate(studyAddedDate);
 
+        // Set status
+        CurationStatus status = curationStatusRepository.findByStatus("Awaiting Curation");
+        housekeeping.setCurationStatus(status);
+
+        // Set curator
+        Curator curator = curatorRepository.findByLastName("Level 1 Curator");
+        housekeeping.setCurator(curator);
+
+
         // Save housekeeping
         housekeepingRepository.save(housekeeping);
 
