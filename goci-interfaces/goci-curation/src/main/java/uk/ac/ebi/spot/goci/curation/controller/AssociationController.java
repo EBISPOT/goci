@@ -295,7 +295,6 @@ public class AssociationController {
         Locus locus = new Locus();
 
         // Set locus description and haplotype count
-
         // Set this number to the number of rows entered by curator
         Integer numberOfRows = snpAssociationForm.getSnpFormRows().size();
         if (numberOfRows > 1) {
@@ -316,16 +315,18 @@ public class AssociationController {
 
         for (SnpFormRow row : rows) {
 
+            // Create snps from row information
+            String curatorEnteredSNP = row.getSnp();
+            SingleNucleotidePolymorphism snp = createSnp(curatorEnteredSNP);
+
             // Get the curator entered risk allele
             String curatorEnteredRiskAllele = row.getStrongestRiskAllele();
             RiskAllele riskAllele = createRiskAllele(curatorEnteredRiskAllele);
 
             // For allele assign a SNP
-            String curatorEnteredSNP = row.getSnp();
-            SingleNucleotidePolymorphism snp = createSnp(curatorEnteredSNP);
             riskAllele.setSnp(snp);
 
-            // Save risk allele
+            // Save changes to risk allele
             riskAlleleRepository.save(riskAllele);
             locusRiskAlleles.add(riskAllele);
         }
@@ -349,7 +350,7 @@ public class AssociationController {
         for (String authorReportedGene : authorReportedGenes) {
 
             // Check if gene already exists
-            Gene gene = geneRepository.findByGeneName(authorReportedGene);
+            Gene gene = geneRepository.findByGeneNameIgnoreCase(authorReportedGene);
 
             // If gene doesn't exist then create and save
             if (gene == null) {
@@ -376,7 +377,9 @@ public class AssociationController {
             //Create new risk allele
             RiskAllele newRiskAllele = new RiskAllele();
             newRiskAllele.setRiskAlleleName(curatorEnteredRiskAllele);
-            riskAllele = newRiskAllele;
+
+            // Save risk allele
+            riskAllele = riskAlleleRepository.save(newRiskAllele);
         }
 
         return riskAllele;
