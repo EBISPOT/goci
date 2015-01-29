@@ -107,16 +107,6 @@ function setCountBadges(countArray){
     }
 }
 
-function processStudies(studies){
-    var table = $("<tbody>");
-    for(var i=0; i<studies.length; i++){
-        var study = studies[i];
-
-         proccessStudy(study,table);
-    }
-    $('#studySummaries').append(table);
-};
-
 
 function processStudy(study, table){
     var row = $("<tr>");
@@ -130,35 +120,30 @@ function processStudy(study, table){
 }
 
 
-function processAssociations(associations){
-    var table = $("<tbody>");
-    for(var i=0; i<associations.length; i++){
-        var association = associations[i];
-         proccessAssociation(association,table);
-
-    }
-    $('#associationSummaries').append(table);
-
-}
-
 function processAssociation(association, table){
     var row = $("<tr>");
     row.append($("<td>").html(association.rsId));
     row.append($("<td>").html(association.chromosomePosition));
     row.append($("<td>").html(association.strongestAllele));
     row.append($("<td>").html(association.pValue));
-    row.append($("<td>").html(association.orPerCopyNum));
-    row.append($("<td>").html(association.orPerCopyUnitDescr));
-    table.append(row);
-}
 
-function processTraits(efoTraits){
-    var table = $("<tbody>");
-    for(var i=0; i<efoTraits.length; i++){
-        var efotrait = efoTraits[i];
-        processStudies(efotrait,table);
+    if(association.orType == '1'){
+        row.append($("<td>").html(association.orPerCopyNum));
+        row.append($("<td>").html(''));
     }
-    $('#efotraitSummaries').append(table);
+    else {
+        row.append($("<td>").html(''));
+        if (association.orPerCopyUnitDescr != null) {
+            var beta = (association.orPerCopyNum).concat(' ').concat(association.orPerCopyUnitDescr);
+            console.log(beta);
+            row.append($("<td>").html(beta));
+        }
+        else{
+            row.append($("<td>").html(association.orPerCopyNum));
+        }
+    }
+
+    table.append(row);
 }
 
 function processTrait(efotrait, table){
@@ -190,11 +175,6 @@ function processTrait(efotrait, table){
     table.append(row);
 }
 
-//<th>RS ID</th>
-//<th>Base pair location</th>
-//<th>Chromosome region</th>
-//<th>Genes</th>
-
 function processSnp(snp, table){
     var row = $("<tr>");
     row.append($("<td>").html(snp.rsId));
@@ -207,10 +187,7 @@ function processSnp(snp, table){
             if(gene == ''){
                 gene = snp.gene[j];
             }
-            //else if(j > 4){
-            //    gene = gene.concat(", [...]");
-            //    break;
-            //}
+
             else{
                 gene = gene.concat(", ").concat(snp.gene[j]);
             }
