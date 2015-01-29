@@ -17,7 +17,8 @@ import java.util.Set;
  * @author Tony Burdett
  * @date 29/01/15
  */
-public class Association_locus_links_for_single_snp extends CommaSeparatedFieldSplitter implements SpringJdbcMigration {
+public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSeparatedFieldSplitter
+        implements SpringJdbcMigration {
     private static final String SELECT_SNPS =
             "SELECT ID, SNP FROM GWASSNP";
 
