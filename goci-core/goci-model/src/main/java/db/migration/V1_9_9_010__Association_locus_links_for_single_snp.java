@@ -46,11 +46,17 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSep
                 for (Long snpID : snpIdToRsIdMap.keySet()) {
                     if (snpIdToRsIdMap.get(snpID).equals(snp)) {
                         if (associationIdToSnpId.containsKey(associationID)) {
-                            throw new RuntimeException(
-                                    "Can't link association '" + associationID + "' to single SNP - " +
-                                            "more than one connected rsID (" +
-                                            "existing = " + associationIdToSnpId.get(associationID) + ", " +
-                                            "new = " + snpID + ")");
+                            // check for equality of SNP names
+                            String rsExisting = snpIdToRsIdMap.get(associationIdToSnpId.get(associationID));
+                            String rsNew = snpIdToRsIdMap.get(snpID);
+                            if (!rsExisting.equals(rsNew)) {
+                                // can't safely ignore, this isn't simply duplicate entries in SNP table
+                                throw new RuntimeException(
+                                        "Can't link association '" + associationID + "' to single SNP - " +
+                                                "more than one connected rsID (" +
+                                                "existing = " + associationIdToSnpId.get(associationID) + ", " +
+                                                "new = " + snpID + ")");
+                            }
                         }
                         else {
                             if (riskAlleles.size() > 1) {
