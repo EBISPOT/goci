@@ -33,7 +33,7 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSep
         SnpRowHandler snpHandler = new SnpRowHandler();
         jdbcTemplate.query(SELECT_SNPS, snpHandler);
         final Map<Long, String> snpIdToRsIdMap = snpHandler.getIdToRsIdMap();
-        final Map<Long, String> snpIdToRiskAlleleMap = snpHandler.getIdToRiskAlleleMap();
+        final Map<Long, String> snpIdToRiskAlleleMap = new HashMap<>();
 
         // get all associations and link to gene id
         final Map<Long, Long> associationIdToSnpId = new HashMap<>();
@@ -41,6 +41,7 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSep
             long associationID = resultSet.getLong(1);
 
             Set<String> snps = split(resultSet.getString(3).trim());
+            Set<String> riskAlleles = split(resultSet.getString(2).trim());
             snps.forEach(snp -> {
                 for (Long snpID : snpIdToRsIdMap.keySet()) {
                     if (snpIdToRsIdMap.get(snpID).equals(snp)) {
@@ -52,7 +53,14 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSep
                                             "new = " + snpID + ")");
                         }
                         else {
-                            associationIdToSnpId.put(associationID, snpID);
+                            if (riskAlleles.size() > 1) {
+                                throw new RuntimeException("Single SNP with multiple risk alleles for SNP - " +
+                                                                   snpID + " (risk alleles = " + riskAlleles + ")");
+                            }
+                            else {
+                                associationIdToSnpId.put(associationID, snpID);
+                                snpIdToRiskAlleleMap.put(snpID, riskAlleles.iterator().next());
+                            }
                         }
                     }
                 }
@@ -128,24 +136,17 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSep
 
     public class SnpRowHandler implements RowCallbackHandler {
         private Map<Long, String> idToRsIdMap;
-        private Map<Long, String> idToRiskAlleleMap;
 
         public SnpRowHandler() {
             this.idToRsIdMap = new HashMap<>();
-            this.idToRiskAlleleMap = new HashMap<>();
         }
 
         @Override public void processRow(ResultSet resultSet) throws SQLException {
             idToRsIdMap.put(resultSet.getLong(1), resultSet.getString(2).trim());
-            idToRsIdMap.put(resultSet.getLong(1), resultSet.getString(3).trim());
         }
 
         public Map<Long, String> getIdToRsIdMap() {
             return idToRsIdMap;
-        }
-
-        public Map<Long, String> getIdToRiskAlleleMap() {
-            return idToRiskAlleleMap;
         }
     }
 
