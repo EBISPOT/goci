@@ -248,10 +248,10 @@ public class StudyController {
         // TODO POSSIBLY CHANGE LOGIC SO THIS DATE IS SET BY NIGHTLY RELEASE PROCESS
         // OTHERWISE ANY TIME USER SAVES FROM WHEN STATUS IS SET TO "publish study"
         // THE DATE GETS UPDATED
-    /*    if (currentStatus != null && currentStatus.getStatus().equals("Publish study")){
+        if (currentStatus != null && currentStatus.getStatus().equals("Publish study")) {
             java.util.Date publishDate = new java.util.Date();
             housekeeping.setPublishDate(publishDate);
-        }*/
+        }
 
         if (currentStatus != null && currentStatus.getStatus().equals("Send to NCBI")) {
             java.util.Date sendToNCBIDate = new java.util.Date();
