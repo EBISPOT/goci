@@ -1,12 +1,22 @@
 package db.migration;
 
 import org.flywaydb.core.api.migration.spring.SpringJdbcMigration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -28,6 +38,12 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSep
                     "FROM GWASSTUDIESSNP " +
                     "WHERE SNP NOT LIKE '%,%' " +
                     "AND SNP NOT LIKE '%:%'";
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
 
     public void migrate(JdbcTemplate jdbcTemplate) throws Exception {
         // get all genes
@@ -127,14 +143,20 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSep
             // create a single risk allele and get the risk allele id
             Map<String, Object> riskAlleleArgs = new HashMap<>();
             riskAlleleArgs.put("RISK_ALLELE_NAME", snpIdToRiskAlleleMap.get(snpId));
-            Number riskAlleleId = insertRiskAllele.execute(riskAlleleArgs);
+            Number riskAlleleId = insertRiskAllele.executeAndReturnKey(riskAlleleArgs);
             snpIdToRiskAlleleIdMap.put(snpId, riskAlleleId.longValue());
 
-            // now create the RISK_ALLELE_SNP link
-            Map<String, Object> riskAlleleSnpArgs = new HashMap<>();
-            riskAlleleSnpArgs.put("RISK_ALLELE_ID", riskAlleleId);
-            riskAlleleSnpArgs.put("SNP_ID", snpId);
-            insertRiskAlleleSnp.execute(riskAlleleSnpArgs);
+            try {
+                // now create the RISK_ALLELE_SNP link
+                Map<String, Object> riskAlleleSnpArgs = new HashMap<>();
+                riskAlleleSnpArgs.put("RISK_ALLELE_ID", riskAlleleId.longValue());
+                riskAlleleSnpArgs.put("SNP_ID", snpId);
+                insertRiskAlleleSnp.execute(riskAlleleSnpArgs);
+            }
+            catch (DataIntegrityViolationException e) {
+                throw new RuntimeException(
+                        "Failed to insert link between snp = " + snpId + " and risk allele = " + riskAlleleId, e);
+            }
         }
 
         // finally, create the locus -> risk allele link
