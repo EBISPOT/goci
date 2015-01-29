@@ -13,4 +13,6 @@ import uk.ac.ebi.spot.goci.model.CurationStatus;
  */
 @RepositoryRestResource
 public interface CurationStatusRepository extends JpaRepository<CurationStatus, Long> {
+
+    CurationStatus findByStatus(String status);
 }
