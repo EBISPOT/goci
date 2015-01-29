@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
 import uk.ac.ebi.spot.goci.curation.service.SnpAssociationForm;
 import uk.ac.ebi.spot.goci.curation.service.SnpFormRow;
 import uk.ac.ebi.spot.goci.model.*;
@@ -255,10 +256,74 @@ public class AssociationController {
         return "redirect:/studies/" + editedAssociation.getStudy().getId() + "/associations";
     }
 
+
+    // Add multiple rows to table
+    @RequestMapping(value = "/associations/{associationId}", params = {"addRows"})
+    public String addRowsEditMode(SnpAssociationForm snpAssociationForm, Model model, @PathVariable Long associationId) {
+        Integer numberOfRows = snpAssociationForm.getMultiSnpHaplotypeNum();
+
+        // Add number of rows curator selected
+        while (numberOfRows != 0) {
+            snpAssociationForm.getSnpFormRows().add(new SnpFormRow());
+            numberOfRows--;
+        }
+
+        // Pass back updated form
+        model.addAttribute("snpAssociationForm", snpAssociationForm);
+
+        // Also passes back study object to view so we can create links back to main study page
+        Association currentAssociation = associationRepository.findOne(associationId);
+        Study associationStudy = currentAssociation.getStudy();
+        Long studyId = associationStudy.getId();
+        model.addAttribute("study", studyRepository.findOne(studyId));
+
+        return "edit_standard_or_multi_snp_association";
+    }
+
+    // Add single row to table
+    @RequestMapping(value = "/associations/{associationId}", params = {"addRow"})
+    public String addRowEditMode(SnpAssociationForm snpAssociationForm, Model model, @PathVariable Long associationId) {
+        snpAssociationForm.getSnpFormRows().add(new SnpFormRow());
+
+        // Pass back updated form
+        model.addAttribute("snpAssociationForm", snpAssociationForm);
+
+        // Also passes back study object to view so we can create links back to main study page
+        Association currentAssociation = associationRepository.findOne(associationId);
+        Study associationStudy = currentAssociation.getStudy();
+        Long studyId = associationStudy.getId();
+        model.addAttribute("study", studyRepository.findOne(studyId));
+
+        return "edit_standard_or_multi_snp_association";
+    }
+
+    // Remove row from table
+    @RequestMapping(value = "/associations/{associationId}", params = {"removeRow"})
+    public String removeRowEditMode(SnpAssociationForm snpAssociationForm, HttpServletRequest req, Model model, @PathVariable Long associationId) {
+
+        //Index of value to remove
+        final Integer rowId = Integer.valueOf(req.getParameter("removeRow"));
+
+        // Remove row
+        snpAssociationForm.getSnpFormRows().remove(rowId.intValue());
+
+        // Pass back updated form
+        model.addAttribute("snpAssociationForm", snpAssociationForm);
+
+        // Also passes back study object to view so we can create links back to main study page
+        Association currentAssociation = associationRepository.findOne(associationId);
+        Study associationStudy = currentAssociation.getStudy();
+        Long studyId = associationStudy.getId();
+        model.addAttribute("study", studyRepository.findOne(studyId));
+
+        return "edit_standard_or_multi_snp_association";
+    }
+
+
    /* General purpose methods */
 
     // Takes information in addSNPForm and creates association
-    private Association createStandardAssociation(SnpAssociationForm snpAssociationForm) {
+    private Association createStandardAssociation(SnpAssociationForm snpAssociationForm) throws DataIntegrityException {
 
         Association association = new Association();
 
@@ -288,11 +353,20 @@ public class AssociationController {
             association.setPvalueFloat(associationCalculationService.calculatePvalueFloat(pvalueMantissa, pvalueExponent));
         }
 
-
-        // Add loci to association
-        // For multi-snp and standard snps we assume their is only one locus
         Collection<Locus> loci = new ArrayList<>();
-        Locus locus = new Locus();
+
+        // Add loci to association or if we are editing an existing one find it
+        // For multi-snp and standard snps we assume their is only one locus
+        Locus locus= new Locus();
+        if(association.getLoci() != null){
+            Association associationUserIsEditing= associationRepository.findOne(snpAssociationForm.getAssociationId());
+            Collection<Locus> associationLoci =associationUserIsEditing.getLoci();
+
+            for(Locus associationLocus:associationLoci){
+                locus = associationLocus;
+            }
+        }
+
 
         // Set locus description and haplotype count
         // Set this number to the number of rows entered by curator
@@ -326,6 +400,11 @@ public class AssociationController {
             // For allele assign SNP if one isn't already present
             if (riskAllele.getSnp() == null) {
                 riskAllele.setSnp(snp);
+            } else {
+                if (!riskAllele.getSnp().equals(snp)) {
+                    throw new DataIntegrityException("Risk allele: " + riskAllele.getRiskAlleleName() + " has SNP " + riskAllele.getSnp().getRsId() + " attached in database, cannot also add " + snp.getRsId());
+
+                }
             }
 
 
@@ -469,6 +548,13 @@ public class AssociationController {
         return snpAssociationForm;
     }
 
+
+    @ExceptionHandler(DataIntegrityException.class)
+    public String handleDataIntegrityException(DataIntegrityException dataIntegrityException, Model model) {
+        return dataIntegrityException.getMessage();
+    }
+
+
     /* Model Attributes :
     *  Used for dropdowns in HTML forms
     */
@@ -478,4 +564,6 @@ public class AssociationController {
     public List<EfoTrait> populateEfoTraits() {
         return efoTraitRepository.findAll();
     }
+
 }
+
