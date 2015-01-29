@@ -358,7 +358,7 @@ public class AssociationController {
         // Add loci to association or if we are editing an existing one find it
         // For multi-snp and standard snps we assume their is only one locus
         Locus locus= new Locus();
-        if(association.getLoci() != null){
+        if(!association.getLoci().isEmpty()){
             Association associationUserIsEditing= associationRepository.findOne(snpAssociationForm.getAssociationId());
             Collection<Locus> associationLoci =associationUserIsEditing.getLoci();
 
