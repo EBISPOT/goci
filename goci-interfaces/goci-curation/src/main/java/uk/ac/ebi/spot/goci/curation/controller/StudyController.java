@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
 import uk.ac.ebi.spot.goci.curation.service.PubmedIdForImport;
 import uk.ac.ebi.spot.goci.curation.service.StudySearchFilter;
@@ -179,7 +180,7 @@ public class StudyController {
     // Edit an existing study
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateStudy(@ModelAttribute Study study, Model model, @PathVariable Long studyId) {
+    public String updateStudy(@ModelAttribute Study study, Model model, @PathVariable Long studyId, RedirectAttributes redirectAttributes) {
 
         // Use id in URL to get study and then its associated housekeeping
         Study existingStudy = studyRepository.findOne(studyId);
@@ -191,6 +192,11 @@ public class StudyController {
 
         // Saves the new information returned from form
         studyRepository.save(study);
+
+        // Add save message
+        String message = "Changes saved successfully";
+        redirectAttributes.addFlashAttribute("changesSaved", message);
+
         return "redirect:/studies/" + study.getId();
     }
 
@@ -239,7 +245,7 @@ public class StudyController {
 
     // Update page with housekeeping/curator information linked to a study
     @RequestMapping(value = "/{studyId}/housekeeping", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping, @PathVariable Long studyId) {
+    public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping, @PathVariable Long studyId, RedirectAttributes redirectAttributes) {
 
         // Establish whether user has set status to "Publish study" and "Send to NCBI"
         // as corresponding dates will be set in housekeeping table
@@ -269,12 +275,18 @@ public class StudyController {
 
         // Save our study
         studyRepository.save(study);
+
+        // Add save message
+        String message = "Changes saved successfully";
+        redirectAttributes.addFlashAttribute("changesSaved", message);
+
         return "redirect:/studies/" + study.getId() + "/housekeeping";
     }
 
     /* Model Attributes :
     *  Used for dropdowns in HTML forms
     */
+
 
     // Disease Traits
     @ModelAttribute("diseaseTraits")

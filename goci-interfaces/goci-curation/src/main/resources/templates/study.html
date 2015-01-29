@@ -69,6 +69,17 @@
 
 <br/>
 
+<!--Alert if data is saved-->
+<div class="container-fluid" th:if="${!#strings.isEmpty(changesSaved)}">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="alert alert-success">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:text="${changesSaved}">Success!</strong>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="container-fluid">
     <div class="row">
@@ -135,7 +146,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="initialSampleSize" class="control-label col-md-2">Initial Sample Description:</label>
+                    <label for="initialSampleSize" class="control-label col-md-2">Initial Sample
+                        Description:</label>
 
                     <div class="col-md-10">
                         <input type="text" th:field="*{initialSampleSize}" class="form-control"

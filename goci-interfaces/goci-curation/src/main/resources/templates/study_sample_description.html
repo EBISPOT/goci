@@ -73,6 +73,18 @@
 </div>
 
 
+<!--Alert if data is saved-->
+<div class="container" th:if="${!#strings.isEmpty(changesSaved)}">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="alert alert-success">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:text="${changesSaved}">Success!</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container">
     <div class="row">
         <h4>Initial Sample Description:</h4>

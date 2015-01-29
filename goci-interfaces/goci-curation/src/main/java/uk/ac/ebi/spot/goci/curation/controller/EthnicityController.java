@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.service.CountryOfOrigin;
 import uk.ac.ebi.spot.goci.curation.service.CountryOfRecruitment;
 import uk.ac.ebi.spot.goci.model.Country;
@@ -78,7 +79,7 @@ public class EthnicityController {
 
     // Add new ethnicity/sample information to a study
     @RequestMapping(value = "/studies/{studyId}/sampledescription", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String addStudySampleDescription(@ModelAttribute Ethnicity ethnicity, @PathVariable Long studyId) {
+    public String addStudySampleDescription(@ModelAttribute Ethnicity ethnicity, @PathVariable Long studyId, RedirectAttributes redirectAttributes) {
         Study study = studyRepository.findOne(studyId);
 
         // Set the study for our ethnicity
@@ -86,6 +87,12 @@ public class EthnicityController {
 
         // Save our ethnicity/sample information
         Ethnicity updatedEthnicity = ethnicityRepository.save(ethnicity);
+
+        // Add save message
+        String message = "Changes saved successfully";
+        redirectAttributes.addFlashAttribute("changesSaved", message);
+
+
         return "redirect:/studies/" + studyId + "/sampledescription";
     }
 
@@ -147,7 +154,7 @@ public class EthnicityController {
     // Edit existing ethnicity/sample information
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/sampledescriptions/{ethnicityId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateSampleDescription(@ModelAttribute Ethnicity ethnicity, @ModelAttribute CountryOfOrigin countryOfOrigin, @ModelAttribute CountryOfRecruitment countryOfRecruitment) {
+    public String updateSampleDescription(@ModelAttribute Ethnicity ethnicity, @ModelAttribute CountryOfOrigin countryOfOrigin, @ModelAttribute CountryOfRecruitment countryOfRecruitment, RedirectAttributes redirectAttributes) {
 
         // Set country of origin based on values returned
         List<String> listOfOriginCountries = Arrays.asList(countryOfOrigin.getOriginCountryValues());
@@ -161,6 +168,11 @@ public class EthnicityController {
 
         // Saves the new information returned from form
         Ethnicity updatedEthnicity = ethnicityRepository.save(ethnicity);
+
+        // Add save message
+        String message = "Changes saved successfully";
+        redirectAttributes.addFlashAttribute("changesSaved", message);
+
         return "redirect:/studies/" + updatedEthnicity.getStudy().getId() + "/sampledescription";
     }
 
