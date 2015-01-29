@@ -45,9 +45,9 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSep
             snps.forEach(snp -> {
                 for (Long snpID : snpIdToRsIdMap.keySet()) {
                     if (snpIdToRsIdMap.get(snpID).equals(snp)) {
-                        if (!associationIdToSnpId.containsKey(associationID)) {
+                        if (associationIdToSnpId.containsKey(associationID)) {
                             throw new RuntimeException(
-                                    "Can't link association '" + associationID + " to single SNP - " +
+                                    "Can't link association '" + associationID + "' to single SNP - " +
                                             "more than one connected rsID (" +
                                             "existing = " + associationIdToSnpId.get(associationID) + ", " +
                                             "new = " + snpID + ")");
