@@ -32,12 +32,12 @@ function solrSearch(queryTerm){
 }
 
 function processData(data){
-   console.log("Solr search return data");
+   console.log("Solr search returned data");
 
     setCountBadges(data.facet_counts.facet_fields.resourcename);
 
     var groups = data.grouped.pubmedId.groups;
-    var queryTerm = data.responseHeader.params.q.substring(5);
+ //   var queryTerm = data.responseHeader.params.q.substring(5);
 
 
     console.log("Due to process " + groups.length + " groups");
@@ -48,11 +48,6 @@ function processData(data){
         var traitTable = $("<tbody>");
         var snpTable = $("<tbody>");
 
-        var innerStudyTab = $("<tbody>");
-        var innerAssociationTab = $("<tbody>");
-        var innerTraitTab = $("<tbody>");
-        var innerSnpTab = $("<tbody>");
-
         for(var i=0; i<groups.length; i++){
             var documents = groups[i].doclist.docs;
 
@@ -60,102 +55,41 @@ function processData(data){
                var doc = documents[j];
 
                 if (doc.resourcename == "study") {
-                    if(studyTable.find('tr').length == 5){
-                        processStudy(doc, innerStudyTab);
+                    if(studyTable.find('tr').length == 5) {
+                        var toggle = $('<tr data-toggle="collapse" data-target=".hiddenStudy" class="accordion-toggle"> <td colspan="6"><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span></button></td></tr> ');
+                        studyTable.append(toggle);
                     }
-                    else {
-                        processStudy(doc, studyTable);
-                    }
+                    processStudy(doc, studyTable);
+
                 }
                 else if (doc.resourcename == "association") {
                     if(associationTable.find('tr').length == 5){
-                        processAssociation(doc, innerAssociationTab);
+                        var toggle = $('<tr data-toggle="collapse" data-target=".hiddenAssociation" class="accordion-toggle"> <td colspan="6"><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span></button></td></tr> ');
+                        associationTable.append(toggle);
                     }
-                    else {
-                        processAssociation(doc, associationTable);
-                    }
+                    processAssociation(doc, associationTable);
                 }
                 else if (doc.resourcename == "diseaseTrait") {
                     if(traitTable.find('tr').length == 5){
-                        processTrait(doc, innerTraitTab);
+                        var toggle = $('<tr data-toggle="collapse" data-target=".hiddenTrait" class="accordion-toggle"> <td colspan="6"><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span></button></td></tr> ');
+                        traitTable.append(toggle);
                     }
-                    else {
-                        processTrait(doc, traitTable);
-                    }
+                    processTrait(doc, traitTable);
                 }
                 else if (doc.resourcename == "singleNucleotidePolymorphism") {
                     if(snpTable.find('tr').length == 5){
-                        processSnp(doc, innerSnpTab);
+                        var toggle = $('<tr data-toggle="collapse" data-target=".hiddenSNP" class="accordion-toggle"> <td colspan="6"><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span></button></td></tr> ');
+                        snpTable.append(toggle);
                     }
-                    else {
-                        processSnp(doc, snpTable);
-                    }
+                    processSnp(doc, snpTable);
                 }
             }
         }
 
-        if(studyTable.find('tr').length == 5) {
-            var hider = $('<tr data-toggle="collapse" data-target="#innerStudy" class="accordion-toggle"> <td colspan="6"><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span></button></td></tr> ');
-
-            var hiddenData = $('<td colspan="6" class="hiddenRow">');
-            var hiddenDiv = $('<div class="accordian-body collapse" id="innerStudy">')
-            var innerTable = $('<table class="table" id="innerStudyTable">');
-
-            innerTable.append(innerStudyTab);
-            hiddenDiv.appendTo(hiddenData).append(innerTable);
-
-            studyTable.append(hider);
-            studyTable.append(hiddenData.appendTo('<tr>'));
-       }
-
-        if(associationTable.find('tr').length == 5) {
-            var hider = $('<tr data-toggle="collapse" data-target="#innerAssociation" class="accordion-toggle"> <td colspan="6"><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span></button></td></tr> ');
-
-            var hiddenData = $('<td colspan="6" class="hiddenRow">');
-            var hiddenDiv = $('<div class="accordian-body collapse" id="innerAssociation">')
-            var innerTable = $('<table class="table" id="innerAssociationTable">');
-
-            innerTable.append(innerAssociationTab);
-            hiddenDiv.appendTo(hiddenData).append(innerTable);
-
-            associationTable.append(hider);
-            associationTable.append(hiddenData.appendTo('<tr>'));
-
-        }
-
-        if(traitTable.find('tr').length == 5) {
-            var hider = $('<tr data-toggle="collapse" data-target="#innerTrait" class="accordion-toggle"> <td colspan="6"><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span></button></td></tr> ');
-
-            var hiddenData = $('<td colspan="6" class="hiddenRow">');
-            var hiddenDiv = $('<div class="accordian-body collapse" id="innerTrait">')
-            var innerTable = $('<table class="table" id="innerTraitTable">');
-
-            innerTable.append(innerTraitTab);
-            hiddenDiv.appendTo(hiddenData).append(innerTable);
-
-            traitTable.append(hider);
-            traitTable.append(hiddenData.appendTo('<tr>'));
-        }
-
-        if(snpTable.find('tr').length == 5) {
-            var hider = $('<tr data-toggle="collapse" data-target="#innerSNP" class="accordion-toggle"> <td colspan="6"><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span></button></td></tr> ');
-
-            var hiddenData = $('<td colspan="6" class="hiddenRow">');
-            var hiddenDiv = $('<div class="accordian-body collapse" id="innerSNP">')
-            var innerTable = $('<table class="table" id="innerSNPTable">');
-
-            innerTable.append(innerSnpTab);
-            hiddenDiv.appendTo(hiddenData).append(innerTable);
-
-            snpTable.append(hider);
-            snpTable.append(hiddenData.appendTo('<tr>'));
-
-        }
-
         $('#studySummaries').append(studyTable);
         $('#associationSummaries').append(associationTable);
-        $('#traitSummaries').append(traitTable);
-        $('#snpSummaries').append(snpTable);
+        $('#diseasetraitSummaries').append(traitTable);
+        $('#singlenucleotidepolymorphismSummaries').append(snpTable);
     }
     else{
         $('#noResults').show();
@@ -178,12 +112,12 @@ function setCountBadges(countArray){
         var count = countArray[i+1];
 
         if(count > 0){
-            var facet = $('#' +resource + 'Facet span');
+            var facet = $('#' +resource + '-facet span');
             facet.empty();
             facet.append(count);
         }
         else{
-            $('#' +resource+ 'Facet').addClass("disabled");
+            $('#' +resource+ '-facet').addClass("disabled");
             $('#' +resource+ 'Table').hide();
         }
     }
@@ -192,6 +126,11 @@ function setCountBadges(countArray){
 
 function processStudy(study, table){
     var row = $("<tr>");
+    if(table.find('tr').length > 6){
+        row.addClass('accordion-body');
+        row.addClass('collapse');
+        row.addClass('hiddenStudy');
+    }
     row.append($("<td>").html(study.author));
     row.append($("<td>").html(study.publication));
     row.append($("<td>").html(study.title));
@@ -201,11 +140,13 @@ function processStudy(study, table){
     table.append(row);
 }
 
-
 function processAssociation(association, table){
     var row = $("<tr>");
-    row.append($("<td>").html(association.rsId));
-    row.append($("<td>").html(association.chromosomePosition));
+    if(table.find('tr').length > 6){
+        row.addClass('accordion-body');
+        row.addClass('collapse');
+        row.addClass('hiddenAssociation');
+    }
     row.append($("<td>").html(association.strongestAllele));
     row.append($("<td>").html(association.pValue));
 
@@ -223,6 +164,25 @@ function processAssociation(association, table){
             row.append($("<td>").html(association.orPerCopyNum));
         }
     }
+    row.append($("<td>").html(association.chromosomePosition));
+
+    var gene = '';
+    if(snp.gene != null){
+        for(var j=0; j < association.gene.length; j++){
+            if(gene == ''){
+                gene = association.gene[j];
+            }
+
+            else{
+                gene = gene.concat(", ").concat(association.gene[j]);
+            }
+        }
+    }
+    row.append($("<td>").html(gene));
+//    TO DO: make the author field into a link to the study page using the pmid
+    var study = association.author.concat(" et al.");
+    row.append($("<td>").html(study));
+
 
     table.append(row);
 }
@@ -230,6 +190,11 @@ function processAssociation(association, table){
 function processTrait(diseasetrait, table){
 
     var row = $("<tr>");
+    if(table.find('tr').length > 6){
+        row.addClass('accordion-body');
+        row.addClass('collapse');
+        row.addClass('hiddenTrait');
+    }
     row.append($("<td>").html(diseasetrait.trait));
 
     var efo = '';
@@ -282,6 +247,11 @@ function processTrait(diseasetrait, table){
 
 function processSnp(snp, table){
     var row = $("<tr>");
+    if(table.find('tr').length > 6){
+        row.addClass('accordion-body');
+        row.addClass('collapse');
+        row.addClass('hiddenSNP');
+    }
     row.append($("<td>").html(snp.rsId));
     row.append($("<td>").html(snp.chromosomePosition));
     row.append($("<td>").html(snp.region));

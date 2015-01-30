@@ -10,10 +10,25 @@
             doSearch()
         });
 
-          $('#search-button').click(function(){
-                  doSearch()
+        $('#search-button').click(function(){
+              doSearch()
+        });
 
-          });
+        $('#study-facet').click(function(){
+            applyFacet("study")
+        });
+
+        $('#association-facet').click(function(){
+            applyFacet("association")
+        });
+
+        $('#diseasetrait-facet').click(function(){
+            applyFacet("diseasetrait")
+        });
+
+        $('#singlenucleotidepolymorphism-facet').click(function(){
+            applyFacet("singenucleotidepolymorphism")
+        });
 
         $('.toplevel-view').hover(function() {
             $(this).addClass("background-color-complementary-accent", 300, "easeOutExpo");
@@ -29,9 +44,20 @@ function doSearch(){
     window.location = "search?query=" + searchTerm;
 }
 
+function applyFacet(facet){
+    var searchTerm = $("#search-box").val();
+    window.location = "search?query=" + searchTerm + "&facet=" + facet;
+}
+
 function loadResults(){
     if ($('#query').text() != ''){
-        solrSearch($('#query').text());
+        if($('#facet').text() != ''){
+            solrFacet($('#query').text(), $('#facet').text());
+        }
+        else
+        {
+            solrSearch($('#query').text());
+        }
         $('#lower_container').show();
 
         if($('.breadcrumb').children().length == 2){
