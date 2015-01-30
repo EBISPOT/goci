@@ -50,10 +50,10 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSep
         SnpRowHandler snpHandler = new SnpRowHandler();
         jdbcTemplate.query(SELECT_SNPS, snpHandler);
         final Map<Long, String> snpIdToRsIdMap = snpHandler.getIdToRsIdMap();
-        final Map<Long, String> snpIdToRiskAlleleMap = new HashMap<>();
 
         // get all associations and link to gene id
         final Map<Long, Long> associationIdToSnpId = new HashMap<>();
+        final Map<Long, String> associationIdToRiskAlleleName = new HashMap<>();
         jdbcTemplate.query(SELECT_ASSOCIATIONS_AND_SNPS, (resultSet, i) -> {
             long associationID = resultSet.getLong(1);
 
@@ -90,7 +90,7 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSep
                             else {
                                 if (!riskAlleles.isEmpty()) {
                                     associationIdToSnpId.put(associationID, snpID);
-                                    snpIdToRiskAlleleMap.put(snpID, riskAlleles.iterator().next());
+                                    associationIdToRiskAlleleName.put(associationID, riskAlleles.iterator().next());
                                 }
                             }
                         }
@@ -111,64 +111,60 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSep
                         .withTableName("ASSOCIATION_LOCUS")
                         .usingColumns("ASSOCIATION_ID", "LOCUS_ID");
 
-        Map<Long, Long> associationIdToLocusIdMap = new HashMap<>();
-        for (Long associationId : associationIdToSnpId.keySet()) {
-            // create a single locus and get the locus ID
-            Map<String, Object> locusArgs = new HashMap<>();
-            locusArgs.put("HAPLOTYPE_SNP_COUNT", 1);
-            locusArgs.put("DESCRIPTION", "Single variant");
-            Number locusId = insertLocus.executeAndReturnKey(locusArgs);
-            associationIdToLocusIdMap.put(associationId, locusId.longValue());
-
-            // now create the ASSOCIATION_LOCUS link
-            Map<String, Object> associationLocusArgs = new HashMap<>();
-            associationLocusArgs.put("ASSOCIATION_ID", associationId);
-            associationLocusArgs.put("LOCUS_ID", locusId);
-            insertAssociationLocus.execute(associationLocusArgs);
-        }
-
         SimpleJdbcInsert insertRiskAllele =
                 new SimpleJdbcInsert(jdbcTemplate)
                         .withTableName("RISK_ALLELE")
                         .usingColumns("RISK_ALLELE_NAME")
                         .usingGeneratedKeyColumns("ID");
 
+        SimpleJdbcInsert insertLocusRiskAllele =
+                new SimpleJdbcInsert(jdbcTemplate)
+                        .withTableName("LOCUS_RISK_ALLELE")
+                        .usingColumns("LOCUS_ID", "RISK_ALLELE_ID");
+
         SimpleJdbcInsert insertRiskAlleleSnp =
                 new SimpleJdbcInsert(jdbcTemplate)
                         .withTableName("RISK_ALLELE_SNP")
                         .usingColumns("RISK_ALLELE_ID", "SNP_ID");
 
-        Map<Long, Long> snpIdToRiskAlleleIdMap = new HashMap<>();
-        for (Long snpId : snpIdToRiskAlleleMap.keySet()) {
-            // create a single risk allele and get the risk allele id
-            Map<String, Object> riskAlleleArgs = new HashMap<>();
-            riskAlleleArgs.put("RISK_ALLELE_NAME", snpIdToRiskAlleleMap.get(snpId));
-            Number riskAlleleId = insertRiskAllele.executeAndReturnKey(riskAlleleArgs);
-            snpIdToRiskAlleleIdMap.put(snpId, riskAlleleId.longValue());
+        Map<Long, Long> associationIdToLocusIdMap = new HashMap<>();
+        for (Long associationID : associationIdToSnpId.keySet()) {
+            // create a single LOCUS and get the locus ID
+            Map<String, Object> locusArgs = new HashMap<>();
+            locusArgs.put("HAPLOTYPE_SNP_COUNT", 1);
+            locusArgs.put("DESCRIPTION", "Single variant");
+            Number locusID = insertLocus.executeAndReturnKey(locusArgs);
+            associationIdToLocusIdMap.put(associationID, locusID.longValue());
 
+            // now create the ASSOCIATION_LOCUS link
+            Map<String, Object> associationLocusArgs = new HashMap<>();
+            associationLocusArgs.put("ASSOCIATION_ID", associationID);
+            associationLocusArgs.put("LOCUS_ID", locusID);
+            insertAssociationLocus.execute(associationLocusArgs);
+
+            // now create a single RISK_ALLELE and get the risk allele ID
+            Map<String, Object> riskAlleleArgs = new HashMap<>();
+            riskAlleleArgs.put("RISK_ALLELE_NAME", associationIdToRiskAlleleName.get(associationID));
+            Number riskAlleleID = insertRiskAllele.executeAndReturnKey(riskAlleleArgs);
+
+            // now create the LOCUS_RISK_ALLELE link
+            Map<String, Object> locusRiskAlleleArgs = new HashMap<>();
+            locusRiskAlleleArgs.put("LOCUS_ID", associationIdToLocusIdMap.get(locusID.longValue()));
+            locusRiskAlleleArgs.put("RISK_ALLELE_ID", associationIdToRiskAlleleName.get(riskAlleleID.longValue()));
+            insertLocusRiskAllele.execute(locusRiskAlleleArgs);
+
+            // now create the RISK_ALLELE_SNP link
+            Long snpID = associationIdToSnpId.get(associationID);
             try {
-                // now create the RISK_ALLELE_SNP link
                 Map<String, Object> riskAlleleSnpArgs = new HashMap<>();
-                riskAlleleSnpArgs.put("RISK_ALLELE_ID", riskAlleleId.longValue());
-                riskAlleleSnpArgs.put("SNP_ID", snpId);
+                riskAlleleSnpArgs.put("RISK_ALLELE_ID", riskAlleleID.longValue());
+                riskAlleleSnpArgs.put("SNP_ID", snpID);
                 insertRiskAlleleSnp.execute(riskAlleleSnpArgs);
             }
             catch (DataIntegrityViolationException e) {
                 throw new RuntimeException(
-                        "Failed to insert link between snp = " + snpId + " and risk allele = " + riskAlleleId, e);
+                        "Failed to insert link between snp = " + snpID + " and risk allele = " + riskAlleleID, e);
             }
-        }
-
-        // finally, create the locus -> risk allele link
-        SimpleJdbcInsert insertLocusRiskAllele =
-                new SimpleJdbcInsert(jdbcTemplate)
-                        .withTableName("LOCUS_RISK_ALLELE")
-                        .usingColumns("LOCUS_ID", "RISK_ALLELE_ID");
-        for (Map.Entry<Long, Long> associationSnpIdPair : associationIdToSnpId.entrySet()) {
-            Map<String, Object> locusRiskAlleleArgs = new HashMap<>();
-            locusRiskAlleleArgs.put("LOCUS_ID", associationIdToLocusIdMap.get(associationSnpIdPair.getKey()));
-            locusRiskAlleleArgs.put("RISK_ALLELE_ID", snpIdToRiskAlleleIdMap.get(associationSnpIdPair.getValue()));
-            insertLocusRiskAllele.execute(locusRiskAlleleArgs);
         }
     }
 
