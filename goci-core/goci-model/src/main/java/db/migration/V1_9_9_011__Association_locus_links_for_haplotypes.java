@@ -120,6 +120,7 @@ public class V1_9_9_011__Association_locus_links_for_haplotypes extends CommaSep
                             .forEach(snpID -> {
                                          if (!associationIdToSnpIds.containsKey(associationID)) {
                                              associationIdToSnpIds.put(associationID, new ArrayList<>());
+                                             associationIdToRiskAlleleNames.put(associationID, new ArrayList<>());
                                          }
                                          if (!associationIdToSnpIds.get(associationID).contains(snpID)) {
                                              // add the new associated snp and risk allele
