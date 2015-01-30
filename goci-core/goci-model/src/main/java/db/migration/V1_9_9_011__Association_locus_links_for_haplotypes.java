@@ -171,19 +171,7 @@ public class V1_9_9_011__Association_locus_links_for_haplotypes extends CommaSep
                         .usingColumns("LOCUS_ID", "REPORTED_GENE_ID");
 
         for (Long associationID : associationIdToSnpIds.keySet()) {
-            // create a single LOCUS and get the locus ID
-            Map<String, Object> locusArgs = new HashMap<>();
-            locusArgs.put("HAPLOTYPE_SNP_COUNT", 1);
-            locusArgs.put("DESCRIPTION", "Single variant");
-            Number locusID = insertLocus.executeAndReturnKey(locusArgs);
-
-            // now create the ASSOCIATION_LOCUS link
-            Map<String, Object> associationLocusArgs = new HashMap<>();
-            associationLocusArgs.put("ASSOCIATION_ID", associationID);
-            associationLocusArgs.put("LOCUS_ID", locusID);
-            insertAssociationLocus.execute(associationLocusArgs);
-
-            // iterate over each snp/risk allele pair
+            // get snp/risk allele pairs
             List<Long> snps = associationIdToSnpIds.get(associationID);
             List<String> riskAlleles = associationIdToRiskAlleleNames.get(associationID);
 
@@ -191,48 +179,64 @@ public class V1_9_9_011__Association_locus_links_for_haplotypes extends CommaSep
                 throw new RuntimeException("Mismatched SNP ID/Risk Allele name pairs for " +
                                                    "association " + associationID + " (" + snps + ", " + riskAlleles+ ")");
             }
-            Iterator<Long> snpIterator = snps.iterator();
-            Iterator<String> riskAlleleIterator = riskAlleles.iterator();
+            else {
+                // create a single LOCUS and get the locus ID
+                Map<String, Object> locusArgs = new HashMap<>();
+                locusArgs.put("HAPLOTYPE_SNP_COUNT", snps.size());
+                locusArgs.put("DESCRIPTION", String.valueOf(snps.size()) + " SNP haplotype");
+                Number locusID = insertLocus.executeAndReturnKey(locusArgs);
 
-            while (riskAlleleIterator.hasNext()) {
-                Long snpID = snpIterator.next();
-                String riskAlleleName = riskAlleleIterator.next();
+                // now create the ASSOCIATION_LOCUS link
+                Map<String, Object> associationLocusArgs = new HashMap<>();
+                associationLocusArgs.put("ASSOCIATION_ID", associationID);
+                associationLocusArgs.put("LOCUS_ID", locusID);
+                insertAssociationLocus.execute(associationLocusArgs);
 
-                // now create a single RISK_ALLELE and get the risk allele ID
-                Map<String, Object> riskAlleleArgs = new HashMap<>();
-                riskAlleleArgs.put("RISK_ALLELE_NAME", riskAlleleName);
-                Number riskAlleleID = insertRiskAllele.executeAndReturnKey(riskAlleleArgs);
+                Iterator<Long> snpIterator = snps.iterator();
+                Iterator<String> riskAlleleIterator = riskAlleles.iterator();
 
-                // now create the LOCUS_RISK_ALLELE link
-                Map<String, Object> locusRiskAlleleArgs = new HashMap<>();
-                locusRiskAlleleArgs.put("LOCUS_ID", locusID.longValue());
-                locusRiskAlleleArgs.put("RISK_ALLELE_ID", riskAlleleID.longValue());
-                insertLocusRiskAllele.execute(locusRiskAlleleArgs);
+                while (riskAlleleIterator.hasNext()) {
+                    Long snpID = snpIterator.next();
+                    String riskAlleleName = riskAlleleIterator.next();
 
-                // now create the RISK_ALLELE_SNP link
-                try {
-                    Map<String, Object> riskAlleleSnpArgs = new HashMap<>();
-                    riskAlleleSnpArgs.put("RISK_ALLELE_ID", riskAlleleID.longValue());
-                    riskAlleleSnpArgs.put("SNP_ID", snpID);
-                    insertRiskAlleleSnp.execute(riskAlleleSnpArgs);
+                    // now create a single RISK_ALLELE and get the risk allele ID
+                    Map<String, Object> riskAlleleArgs = new HashMap<>();
+                    riskAlleleArgs.put("RISK_ALLELE_NAME", riskAlleleName);
+                    Number riskAlleleID = insertRiskAllele.executeAndReturnKey(riskAlleleArgs);
+
+                    // now create the LOCUS_RISK_ALLELE link
+                    Map<String, Object> locusRiskAlleleArgs = new HashMap<>();
+                    locusRiskAlleleArgs.put("LOCUS_ID", locusID.longValue());
+                    locusRiskAlleleArgs.put("RISK_ALLELE_ID", riskAlleleID.longValue());
+                    insertLocusRiskAllele.execute(locusRiskAlleleArgs);
+
+                    // now create the RISK_ALLELE_SNP link
+                    try {
+                        Map<String, Object> riskAlleleSnpArgs = new HashMap<>();
+                        riskAlleleSnpArgs.put("RISK_ALLELE_ID", riskAlleleID.longValue());
+                        riskAlleleSnpArgs.put("SNP_ID", snpID);
+                        insertRiskAlleleSnp.execute(riskAlleleSnpArgs);
+                    }
+                    catch (DataIntegrityViolationException e) {
+                        throw new RuntimeException(
+                                "Failed to insert link between snp = " + snpID + " and risk allele = " + riskAlleleID,
+                                e);
+                    }
                 }
-                catch (DataIntegrityViolationException e) {
-                    throw new RuntimeException(
-                            "Failed to insert link between snp = " + snpID + " and risk allele = " + riskAlleleID, e);
-                }
-            }
 
-            // finally create the AUTHOR_REPORTED_GENE link
-            for (Long geneID : associationIdToGeneIds.get(associationID)) {
-                try {
-                    Map<String, Object> authorReportedGeneArgs = new HashMap<>();
-                    authorReportedGeneArgs.put("LOCUS_ID", locusID.longValue());
-                    authorReportedGeneArgs.put("REPORTED_GENE_ID", geneID);
-                    insertAuthorReportedGene.execute(authorReportedGeneArgs);
-                }
-                catch (DataIntegrityViolationException e) {
-                    throw new RuntimeException(
-                            "Failed to insert link between locus = " + locusID + " and reported gene  = " + geneID, e);
+                // finally create the AUTHOR_REPORTED_GENE link
+                for (Long geneID : associationIdToGeneIds.get(associationID)) {
+                    try {
+                        Map<String, Object> authorReportedGeneArgs = new HashMap<>();
+                        authorReportedGeneArgs.put("LOCUS_ID", locusID.longValue());
+                        authorReportedGeneArgs.put("REPORTED_GENE_ID", geneID);
+                        insertAuthorReportedGene.execute(authorReportedGeneArgs);
+                    }
+                    catch (DataIntegrityViolationException e) {
+                        throw new RuntimeException(
+                                "Failed to insert link between locus = " + locusID + " and reported gene  = " + geneID,
+                                e);
+                    }
                 }
             }
         }
