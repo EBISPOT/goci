@@ -5,18 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -30,11 +23,14 @@ import java.util.Set;
  */
 public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSeparatedFieldSplitter
         implements SpringJdbcMigration {
+    private static final String SELECT_GENES =
+            "SELECT ID, GENE FROM GWASGENE";
+
     private static final String SELECT_SNPS =
             "SELECT ID, SNP FROM GWASSNP";
 
     private static final String SELECT_ASSOCIATIONS_AND_SNPS =
-            "SELECT DISTINCT ID, STRONGESTALLELE, SNP " +
+            "SELECT DISTINCT ID, STRONGESTALLELE, GENE, SNP " +
                     "FROM GWASSTUDIESSNP " +
                     "WHERE SNP NOT LIKE '%,%' " +
                     "AND SNP NOT LIKE '%:%'";
@@ -47,56 +43,95 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSep
 
     public void migrate(JdbcTemplate jdbcTemplate) throws Exception {
         // get all genes
-        SnpRowHandler snpHandler = new SnpRowHandler();
+        IdAndStringRowHandler geneHandler = new IdAndStringRowHandler();
+        jdbcTemplate.query(SELECT_GENES, geneHandler);
+        final Map<Long, String> geneIdToNameMap = geneHandler.getIdToStringMap();
+
+        // get all snps
+        IdAndStringRowHandler snpHandler = new IdAndStringRowHandler();
         jdbcTemplate.query(SELECT_SNPS, snpHandler);
-        final Map<Long, String> snpIdToRsIdMap = snpHandler.getIdToRsIdMap();
+        final Map<Long, String> snpIdToRsIdMap = snpHandler.getIdToStringMap();
 
         // get all associations and link to gene id
+        final Map<Long, Set<Long>> associationIdToGeneIds = new HashMap<>();
         final Map<Long, Long> associationIdToSnpId = new HashMap<>();
         final Map<Long, String> associationIdToRiskAlleleName = new HashMap<>();
         jdbcTemplate.query(SELECT_ASSOCIATIONS_AND_SNPS, (resultSet, i) -> {
             long associationID = resultSet.getLong(1);
 
-            Set<String> snps = split(resultSet.getString(3).trim());
-            String riskAlleleStr = resultSet.getString(2);
             Set<String> riskAlleles;
+            Set<String> genes;
+            Set<String> snps;
+
+            String riskAlleleStr = resultSet.getString(2);
             if (riskAlleleStr != null) {
                 riskAlleles = split(resultSet.getString(2).trim());
             }
             else {
                 riskAlleles = new HashSet<>();
             }
-            snps.forEach(snp -> {
-                for (Long snpID : snpIdToRsIdMap.keySet()) {
-                    if (snpIdToRsIdMap.get(snpID).equals(snp)) {
+
+            String genesStr = resultSet.getString(3);
+            if (genesStr != null) {
+                genes = split(genesStr.trim());
+            }
+            else {
+                genes = new HashSet<>();
+            }
+
+            String snpsStr = resultSet.getString(4);
+            if (snpsStr != null) {
+                snps = split(snpsStr.trim());
+            }
+            else {
+                snps = new HashSet<>();
+            }
+
+            genes.forEach(gene -> geneIdToNameMap.keySet()
+                    .stream()
+                    .filter(geneID -> geneIdToNameMap.get(geneID).equals(gene))
+                    .forEach(geneID -> {
+                        if (!associationIdToGeneIds.containsKey(associationID)) {
+                            associationIdToGeneIds.put(associationID, new HashSet<>());
+                        }
+                        // add the new associated gene
+                        associationIdToGeneIds.get(associationID).add(geneID);
+                    }));
+
+            snps.forEach(snp -> snpIdToRsIdMap.keySet()
+                    .stream()
+                    .filter(snpID -> snpIdToRsIdMap.get(snpID).equals(snp))
+                    .forEach(snpID -> {
                         if (associationIdToSnpId.containsKey(associationID)) {
                             // check for equality of SNP names
-                            String rsExisting = snpIdToRsIdMap.get(associationIdToSnpId.get(associationID));
+                            String rsExisting =
+                                    snpIdToRsIdMap.get(associationIdToSnpId.get(associationID));
                             String rsNew = snpIdToRsIdMap.get(snpID);
                             if (!rsExisting.equals(rsNew)) {
                                 // can't safely ignore, this isn't simply duplicate entries in SNP table
                                 throw new RuntimeException(
                                         "Can't link association '" + associationID + "' to single SNP - " +
                                                 "more than one connected rsID (" +
-                                                "existing = " + associationIdToSnpId.get(associationID) + ", " +
+                                                "existing = " + associationIdToSnpId.get(associationID) +
+                                                ", " +
                                                 "new = " + snpID + ")");
                             }
                         }
                         else {
                             if (riskAlleles.size() > 1) {
-                                throw new RuntimeException("Single SNP with multiple risk alleles for SNP - " +
-                                                                   snpID + " (risk alleles = " + riskAlleles + ")");
+                                throw new RuntimeException(
+                                        "Single SNP with multiple risk alleles for SNP - " +
+                                                snpID + " (risk alleles = " + riskAlleles + ")");
                             }
                             else {
                                 if (!riskAlleles.isEmpty()) {
                                     associationIdToSnpId.put(associationID, snpID);
-                                    associationIdToRiskAlleleName.put(associationID, riskAlleles.iterator().next());
+                                    associationIdToRiskAlleleName.put(associationID,
+                                                                      riskAlleles.iterator().next());
                                 }
                             }
                         }
-                    }
-                }
-            });
+                    }));
             return null;
         });
 
@@ -126,6 +161,11 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSep
                 new SimpleJdbcInsert(jdbcTemplate)
                         .withTableName("RISK_ALLELE_SNP")
                         .usingColumns("RISK_ALLELE_ID", "SNP_ID");
+
+        SimpleJdbcInsert insertAuthorReportedGene =
+                new SimpleJdbcInsert(jdbcTemplate)
+                        .withTableName("AUTHOR_REPORTED_GENE")
+                        .usingColumns("LOCUS_ID", "REPORTED_GENE_ID");
 
         Map<Long, Long> associationIdToLocusIdMap = new HashMap<>();
         for (Long associationID : associationIdToSnpId.keySet()) {
@@ -165,22 +205,36 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSep
                 throw new RuntimeException(
                         "Failed to insert link between snp = " + snpID + " and risk allele = " + riskAlleleID, e);
             }
+
+            // finally create the AUTHOR_REPORTED_GENE link
+            for (Long geneID : associationIdToGeneIds.get(associationID)) {
+                try {
+                    Map<String, Object> authorReportedGeneArgs = new HashMap<>();
+                    authorReportedGeneArgs.put("LOCUS_ID", locusID.longValue());
+                    authorReportedGeneArgs.put("REPORTED_GENE_ID", geneID);
+                    insertAuthorReportedGene.execute(authorReportedGeneArgs);
+                }
+                catch (DataIntegrityViolationException e) {
+                    throw new RuntimeException(
+                            "Failed to insert link between locus = " + locusID + " and reported gene  = " + geneID, e);
+                }
+            }
         }
     }
 
-    public class SnpRowHandler implements RowCallbackHandler {
-        private Map<Long, String> idToRsIdMap;
+    public class IdAndStringRowHandler implements RowCallbackHandler {
+        private Map<Long, String> idToStringMap;
 
-        public SnpRowHandler() {
-            this.idToRsIdMap = new HashMap<>();
+        public IdAndStringRowHandler() {
+            this.idToStringMap = new HashMap<>();
         }
 
         @Override public void processRow(ResultSet resultSet) throws SQLException {
-            idToRsIdMap.put(resultSet.getLong(1), resultSet.getString(2).trim());
+            idToStringMap.put(resultSet.getLong(1), resultSet.getString(2).trim());
         }
 
-        public Map<Long, String> getIdToRsIdMap() {
-            return idToRsIdMap;
+        public Map<Long, String> getIdToStringMap() {
+            return idToStringMap;
         }
     }
 
