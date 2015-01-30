@@ -1,4 +1,5 @@
-import uk.ac.ebi.spot.goci.model.db.migration.CommaSeparatedFieldSplitter;
+package db.migrations;
+
 import org.flywaydb.core.api.migration.spring.SpringJdbcMigration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

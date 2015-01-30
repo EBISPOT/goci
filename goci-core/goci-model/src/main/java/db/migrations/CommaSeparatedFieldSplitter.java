@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.model.db.migration;
+package db.migrations;
 
 import java.util.ArrayList;
 import java.util.List;
