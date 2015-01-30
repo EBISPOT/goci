@@ -23,7 +23,7 @@ import java.util.Set;
  * @author Tony Burdett
  * @date 29/01/15
  */
-public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSeparatedFieldSplitter
+public class V1_9_9_010__Association_locus_links_for_single_snp extends FieldSplitter
         implements SpringJdbcMigration {
     private static final String SELECT_GENES =
             "SELECT ID, GENE FROM GWASGENE";
@@ -89,25 +89,24 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSep
                 snps = new ArrayList<>();
             }
 
-            genes.forEach(gene -> geneIdToNameMap.keySet()
-                    .stream()
-                    .filter(geneID -> geneIdToNameMap.get(geneID).equals(gene))
-                    .forEach(geneID -> {
+            for (String gene : genes) {
+                for (long geneID : geneIdToNameMap.keySet()) {
+                    if (geneIdToNameMap.get(geneID).equals(gene)) {
                         if (!associationIdToGeneIds.containsKey(associationID)) {
                             associationIdToGeneIds.put(associationID, new HashSet<>());
                         }
                         if (!associationIdToGeneIds.get(associationID).contains(geneID)) {
                             // add the new associated gene
-                            if (geneID != null){
-                                associationIdToGeneIds.get(associationID).add(geneID);
-                            }
+                            associationIdToGeneIds.get(associationID).add(geneID);
                         }
-                    }));
+                        break; // we break here to handle duplicate entries in the gene table of the database
+                    }
+                }
+            }
 
-            snps.forEach(snp -> snpIdToRsIdMap.keySet()
-                    .stream()
-                    .filter(snpID -> snpIdToRsIdMap.get(snpID).equals(snp))
-                    .forEach(snpID -> {
+            for (String snp : snps) {
+                for (long snpID : snpIdToRsIdMap.keySet()) {
+                    if (snpIdToRsIdMap.get(snpID).equals(snp)) {
                         if (associationIdToSnpId.containsKey(associationID)) {
                             // check for equality of SNP names
                             String rsExisting =
@@ -137,7 +136,10 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSep
                                 }
                             }
                         }
-                    }));
+                        break; // we break here to handle duplicate entries in the snp table of the database
+                    }
+                }
+            }
             return null;
         });
 
@@ -176,7 +178,7 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends CommaSep
         for (Long associationID : associationIdToSnpId.keySet()) {
             // create a single LOCUS and get the locus ID
             Map<String, Object> locusArgs = new HashMap<>();
-            locusArgs.put("HAPLOTYPE_SNP_COUNT", 1);
+            locusArgs.put("HAPLOTYPE_SNP_COUNT", null);
             locusArgs.put("DESCRIPTION", "Single variant");
             Number locusID = insertLocus.executeAndReturnKey(locusArgs);
 
