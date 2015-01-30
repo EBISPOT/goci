@@ -132,11 +132,33 @@ public class V1_9_9_011__Association_locus_links_for_haplotypes extends CommaSep
                 }
             }
             else {
-                throw new RuntimeException("Mismatched number of snps and risk alleles for " +
-                                                   "association " + associationID + " " +
-                                                   "(snp string = " + snpsStr + " and " +
-                                                   "risk allele string = " + riskAlleleStr+ ") - " +
-                                                   "cannot convert to a haplotype");
+                if (snps.size() == 1 && snps.iterator().next().equalsIgnoreCase("nr")) {
+                    String snp = snps.iterator().next();
+                    String riskAllele = "?";
+
+                    snpIdToRsIdMap.keySet()
+                            .stream()
+                            .filter(snpID -> snpIdToRsIdMap.get(snpID).equals(snp))
+                            .forEach(snpID -> {
+                                         if (!associationIdToSnpIds.containsKey(associationID)) {
+                                             associationIdToSnpIds.put(associationID, new ArrayList<>());
+                                             associationIdToRiskAlleleNames.put(associationID, new ArrayList<>());
+                                         }
+                                         if (!associationIdToSnpIds.get(associationID).contains(snpID)) {
+                                             // add the new associated snp and risk allele
+                                             associationIdToSnpIds.get(associationID).add(snpID);
+                                             associationIdToRiskAlleleNames.get(associationID).add(riskAllele);
+                                         }
+                                     }
+                            );
+                }
+                else {
+                    throw new RuntimeException("Mismatched number of snps and risk alleles for " +
+                                                       "association " + associationID + " " +
+                                                       "(snp string = " + snpsStr + " and " +
+                                                       "risk allele string = " + riskAlleleStr + ") - " +
+                                                       "cannot convert to a haplotype");
+                }
             }
             return null;
         });
