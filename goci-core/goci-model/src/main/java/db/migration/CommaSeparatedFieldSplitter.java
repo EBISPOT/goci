@@ -1,7 +1,7 @@
 package db.migration;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Javadocs go here!
@@ -10,8 +10,8 @@ import java.util.Set;
  * @date 29/01/15
  */
 public abstract class CommaSeparatedFieldSplitter {
-    protected Set<String> split(String commaSeparatedString) {
-        Set<String> elements = new HashSet<>();
+    protected List<String> split(String commaSeparatedString) {
+        List<String> elements = new ArrayList<>();
         String[] rawTokens = commaSeparatedString.split(",");
         for (String rawToken : rawTokens) {
             elements.add(rawToken.trim());
