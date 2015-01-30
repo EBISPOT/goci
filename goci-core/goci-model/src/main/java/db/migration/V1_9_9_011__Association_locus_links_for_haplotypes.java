@@ -59,6 +59,7 @@ public class V1_9_9_011__Association_locus_links_for_haplotypes extends FieldSpl
         final Map<Long, Set<Long>> associationIdToGeneIds = new HashMap<>();
         final Map<Long, List<Long>> associationIdToSnpIds = new HashMap<>();
         final Map<Long, List<String>> associationIdToRiskAlleleNames = new HashMap<>();
+        final Map<Long, String> associationIdToMigratedDescription = new HashMap<>();
         jdbcTemplate.query(SELECT_ASSOCIATIONS_AND_SNPS, (resultSet, i) -> {
             long associationID = resultSet.getLong(1);
 
@@ -73,6 +74,7 @@ public class V1_9_9_011__Association_locus_links_for_haplotypes extends FieldSpl
             else {
                 riskAlleles = new ArrayList<>();
             }
+            associationIdToMigratedDescription.put(associationID, riskAlleleStr);
 
             String genesStr = resultSet.getString(3);
             if (genesStr != null) {
@@ -137,6 +139,13 @@ public class V1_9_9_011__Association_locus_links_for_haplotypes extends FieldSpl
                 while (snpIterator.hasNext()) {
                     String snp = snpIterator.next().trim();
                     String riskAllele = snp + "-?";
+                    for (String nextRiskAllele : riskAlleles) {
+                        if (nextRiskAllele.contains(snp)) {
+                            // overwrite with actual value
+                            riskAllele = nextRiskAllele;
+                            break;
+                        }
+                    }
 
                     for (long snpID : snpIdToRsIdMap.keySet()) {
                         if (snpIdToRsIdMap.get(snpID).equals(snp)) {
@@ -160,7 +169,7 @@ public class V1_9_9_011__Association_locus_links_for_haplotypes extends FieldSpl
         SimpleJdbcInsert insertLocus =
                 new SimpleJdbcInsert(jdbcTemplate)
                         .withTableName("LOCUS")
-                        .usingColumns("HAPLOTYPE_SNP_COUNT", "DESCRIPTION")
+                        .usingColumns("HAPLOTYPE_SNP_COUNT", "DESCRIPTION", "MIGRATED_DESCRIPTION")
                         .usingGeneratedKeyColumns("ID");
 
         SimpleJdbcInsert insertAssociationLocus =
@@ -204,6 +213,7 @@ public class V1_9_9_011__Association_locus_links_for_haplotypes extends FieldSpl
                 Map<String, Object> locusArgs = new HashMap<>();
                 locusArgs.put("HAPLOTYPE_SNP_COUNT", snps.size());
                 locusArgs.put("DESCRIPTION", String.valueOf(snps.size()) + " SNP haplotype");
+                locusArgs.put("MIGRATED_DESCRIPTION", associationIdToMigratedDescription.get(associationID));
                 Number locusID = insertLocus.executeAndReturnKey(locusArgs);
 
                 // now create the ASSOCIATION_LOCUS link
