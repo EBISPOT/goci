@@ -1,4 +1,4 @@
-package db.migrations;
+package db.migration;
 
 import java.util.ArrayList;
 import java.util.List;

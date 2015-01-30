@@ -1,4 +1,4 @@
-package db.migrations;
+package db.migration;
 
 import org.flywaydb.core.api.migration.spring.SpringJdbcMigration;
 import org.slf4j.Logger;
