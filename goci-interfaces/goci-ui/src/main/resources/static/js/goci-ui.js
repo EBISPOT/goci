@@ -33,7 +33,6 @@ function loadResults(){
     if ($('#query').text() != ''){
         solrSearch($('#query').text());
         $('#lower_container').show();
-        //$('#search-term').text($('#query').text());
 
         if($('.breadcrumb').children().length == 2){
             var gwas = $('ol.breadcrumb li:last-child');
@@ -43,11 +42,6 @@ function loadResults(){
 
             $('.breadcrumb').append($("<li></li>").attr("class", "active").text($('#query').text())) ;
         }
-
-
-
-
-
     }
 };
 

@@ -36,19 +36,22 @@ function processData(data){
 
     setCountBadges(data.facet_counts.facet_fields.resourcename);
 
-    //var documents = data.response.docs;
     var groups = data.grouped.pubmedId.groups;
     var queryTerm = data.responseHeader.params.q.substring(5);
-    //$('#search-term').text(queryTerm);
-
 
 
     console.log("Due to process " + groups.length + " groups");
 
-    if(groups.length != 0){var studyTable = $("<tbody>");
+    if(groups.length != 0){
+        var studyTable = $("<tbody>");
         var associationTable = $("<tbody>");
         var traitTable = $("<tbody>");
         var snpTable = $("<tbody>");
+
+        var innerStudyTab = $("<tbody>");
+        var innerAssociationTab = $("<tbody>");
+        var innerTraitTab = $("<tbody>");
+        var innerSnpTab = $("<tbody>");
 
         for(var i=0; i<groups.length; i++){
             var documents = groups[i].doclist.docs;
@@ -57,22 +60,101 @@ function processData(data){
                var doc = documents[j];
 
                 if (doc.resourcename == "study") {
-                    processStudy(doc, studyTable);
+                    if(studyTable.find('tr').length == 5){
+                        processStudy(doc, innerStudyTab);
+                    }
+                    else {
+                        processStudy(doc, studyTable);
+                    }
                 }
                 else if (doc.resourcename == "association") {
-                    processAssociation(doc, associationTable);
+                    if(associationTable.find('tr').length == 5){
+                        processAssociation(doc, innerAssociationTab);
+                    }
+                    else {
+                        processAssociation(doc, associationTable);
+                    }
                 }
-                else if (doc.resourcename == "efoTrait") {
-                    processTrait(doc, traitTable);
+                else if (doc.resourcename == "diseaseTrait") {
+                    if(traitTable.find('tr').length == 5){
+                        processTrait(doc, innerTraitTab);
+                    }
+                    else {
+                        processTrait(doc, traitTable);
+                    }
                 }
                 else if (doc.resourcename == "singleNucleotidePolymorphism") {
-                    processSnp(doc, snpTable);
+                    if(snpTable.find('tr').length == 5){
+                        processSnp(doc, innerSnpTab);
+                    }
+                    else {
+                        processSnp(doc, snpTable);
+                    }
                 }
             }
         }
+
+        if(studyTable.find('tr').length == 5) {
+            var hider = $('<tr data-toggle="collapse" data-target="#innerStudy" class="accordion-toggle"> <td colspan="6"><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span></button></td></tr> ');
+
+            var hiddenData = $('<td colspan="6" class="hiddenRow">');
+            var hiddenDiv = $('<div class="accordian-body collapse" id="innerStudy">')
+            var innerTable = $('<table class="table" id="innerStudyTable">');
+
+            innerTable.append(innerStudyTab);
+            hiddenDiv.appendTo(hiddenData).append(innerTable);
+
+            studyTable.append(hider);
+            studyTable.append(hiddenData.appendTo('<tr>'));
+       }
+
+        if(associationTable.find('tr').length == 5) {
+            var hider = $('<tr data-toggle="collapse" data-target="#innerAssociation" class="accordion-toggle"> <td colspan="6"><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span></button></td></tr> ');
+
+            var hiddenData = $('<td colspan="6" class="hiddenRow">');
+            var hiddenDiv = $('<div class="accordian-body collapse" id="innerAssociation">')
+            var innerTable = $('<table class="table" id="innerAssociationTable">');
+
+            innerTable.append(innerAssociationTab);
+            hiddenDiv.appendTo(hiddenData).append(innerTable);
+
+            associationTable.append(hider);
+            associationTable.append(hiddenData.appendTo('<tr>'));
+
+        }
+
+        if(traitTable.find('tr').length == 5) {
+            var hider = $('<tr data-toggle="collapse" data-target="#innerTrait" class="accordion-toggle"> <td colspan="6"><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span></button></td></tr> ');
+
+            var hiddenData = $('<td colspan="6" class="hiddenRow">');
+            var hiddenDiv = $('<div class="accordian-body collapse" id="innerTrait">')
+            var innerTable = $('<table class="table" id="innerTraitTable">');
+
+            innerTable.append(innerTraitTab);
+            hiddenDiv.appendTo(hiddenData).append(innerTable);
+
+            traitTable.append(hider);
+            traitTable.append(hiddenData.appendTo('<tr>'));
+        }
+
+        if(snpTable.find('tr').length == 5) {
+            var hider = $('<tr data-toggle="collapse" data-target="#innerSNP" class="accordion-toggle"> <td colspan="6"><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span></button></td></tr> ');
+
+            var hiddenData = $('<td colspan="6" class="hiddenRow">');
+            var hiddenDiv = $('<div class="accordian-body collapse" id="innerSNP">')
+            var innerTable = $('<table class="table" id="innerSNPTable">');
+
+            innerTable.append(innerSnpTab);
+            hiddenDiv.appendTo(hiddenData).append(innerTable);
+
+            snpTable.append(hider);
+            snpTable.append(hiddenData.appendTo('<tr>'));
+
+        }
+
         $('#studySummaries').append(studyTable);
         $('#associationSummaries').append(associationTable);
-        $('#efotraitSummaries').append(traitTable);
+        $('#traitSummaries').append(traitTable);
         $('#snpSummaries').append(snpTable);
     }
     else{
@@ -135,7 +217,6 @@ function processAssociation(association, table){
         row.append($("<td>").html(''));
         if (association.orPerCopyUnitDescr != null) {
             var beta = (association.orPerCopyNum).concat(' ').concat(association.orPerCopyUnitDescr);
-            console.log(beta);
             row.append($("<td>").html(beta));
         }
         else{
@@ -146,24 +227,48 @@ function processAssociation(association, table){
     table.append(row);
 }
 
-function processTrait(efotrait, table){
+function processTrait(diseasetrait, table){
 
     var row = $("<tr>");
-    row.append($("<td>").html(efotrait.trait));
-    row.append($("<td>").html(efotrait.shortForm));
+    row.append($("<td>").html(diseasetrait.trait));
+
+    var efo = '';
+    if(diseasetrait.efoLink != null){
+        for(var j=0; j < diseasetrait.efoLink.length; j++){
+            var data = diseasetrait.efoLink[j].split("|");
+            var link = "<a href='".concat(data[2]).concat("' target='_blank'>").concat(data[0]).concat("</a>");
+
+            if(efo == ''){
+                efo = link;
+            }
+            //else if(j > 4){
+            //    efo = efo.concat(", [...]");
+            //    break;
+            //}
+            else{
+                efo = efo.concat(", <br>").concat(link);
+            }
+        }
+    }
+    else{
+        efo = "N/A";
+    }
+    row.append($("<td>").html(efo));
+
+
 
     var syns = '';
-    if(efotrait.synonym != null){
-        for(var j=0; j < efotrait.synonym.length; j++){
+    if(diseasetrait.synonym != null){
+        for(var j=0; j < diseasetrait.synonym.length; j++){
             if(syns == ''){
-                syns = efotrait.synonym[j];
+                syns = diseasetrait.synonym[j];
             }
             else if(j > 4){
                 syns = syns.concat(", [...]");
                 break;
             }
             else{
-                syns = syns.concat(", ").concat(efotrait.synonym[j]);
+                syns = syns.concat(", ").concat(diseasetrait.synonym[j]);
             }
         }
     }
@@ -171,7 +276,7 @@ function processTrait(efotrait, table){
     row.append($("<td>").html(syns));
 
     //subtract one from child count as each term is a child of itself in the Solr index
-    row.append($("<td>").html(efotrait.child.length-1));
+    //row.append($("<td>").html(diseasetrait.child.length-1));
     table.append(row);
 }
 
