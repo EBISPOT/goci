@@ -99,7 +99,9 @@ public class V1_9_9_011__Association_locus_links_for_haplotypes extends CommaSep
                         }
                         if (!associationIdToGeneIds.get(associationID).contains(geneID)) {
                             // add the new associated gene
-                            associationIdToGeneIds.get(associationID).add(geneID);
+                            if (geneID != null){
+                                associationIdToGeneIds.get(associationID).add(geneID);
+                            }
                         }
                     }));
 
@@ -225,17 +227,20 @@ public class V1_9_9_011__Association_locus_links_for_haplotypes extends CommaSep
                 }
 
                 // finally create the AUTHOR_REPORTED_GENE link
-                for (Long geneID : associationIdToGeneIds.get(associationID)) {
-                    try {
-                        Map<String, Object> authorReportedGeneArgs = new HashMap<>();
-                        authorReportedGeneArgs.put("LOCUS_ID", locusID.longValue());
-                        authorReportedGeneArgs.put("REPORTED_GENE_ID", geneID);
-                        insertAuthorReportedGene.execute(authorReportedGeneArgs);
-                    }
-                    catch (DataIntegrityViolationException e) {
-                        throw new RuntimeException(
-                                "Failed to insert link between locus = " + locusID + " and reported gene  = " + geneID,
-                                e);
+                if (associationIdToGeneIds.containsKey(associationID)) {
+                    for (Long geneID : associationIdToGeneIds.get(associationID)) {
+                        try {
+                            Map<String, Object> authorReportedGeneArgs = new HashMap<>();
+                            authorReportedGeneArgs.put("LOCUS_ID", locusID.longValue());
+                            authorReportedGeneArgs.put("REPORTED_GENE_ID", geneID);
+                            insertAuthorReportedGene.execute(authorReportedGeneArgs);
+                        }
+                        catch (DataIntegrityViolationException e) {
+                            throw new RuntimeException(
+                                    "Failed to insert link between locus = " + locusID + " and reported gene  = " +
+                                            geneID,
+                                    e);
+                        }
                     }
                 }
             }
