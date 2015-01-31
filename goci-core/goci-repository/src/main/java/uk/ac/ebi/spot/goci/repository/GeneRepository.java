@@ -6,10 +6,12 @@ import uk.ac.ebi.spot.goci.model.Gene;
 
 /**
  * Created by emma on 01/12/14.
- * @author emma
  *
- * Repository accessing Gene entity object
+ * @author emma
+ *         <p/>
+ *         Repository accessing Gene entity object
  */
 @RepositoryRestResource
 public interface GeneRepository extends JpaRepository<Gene, Long> {
+    Gene findByGeneNameIgnoreCase(String geneName);
 }

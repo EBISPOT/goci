@@ -16,7 +16,6 @@ import javax.validation.constraints.NotNull;
 public class Region {
     @Id
     @GeneratedValue
-    @NotNull
     private Long id;
 
     private String name;

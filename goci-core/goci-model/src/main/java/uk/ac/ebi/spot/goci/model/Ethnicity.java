@@ -14,7 +14,6 @@ import javax.persistence.*;
 public class Ethnicity {
     @Id
     @GeneratedValue
-    @Column(name = "ID")
     private Long id;
 
     private String type;
@@ -29,6 +28,7 @@ public class Ethnicity {
 
     private String description;
 
+    // In database but not available in curation interface forms as no longer used
     private String previouslyReported;
 
     private String sampleSizesMatch;
