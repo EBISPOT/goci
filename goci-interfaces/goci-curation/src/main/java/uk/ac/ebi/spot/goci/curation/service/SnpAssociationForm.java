@@ -1,7 +1,7 @@
-
 package uk.ac.ebi.spot.goci.curation.service;
 
 import uk.ac.ebi.spot.goci.model.EfoTrait;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -9,13 +9,16 @@ import java.util.List;
 
 /**
  * Created by emma on 28/01/15.
- * @author emma
  *
- * New service class to deal with form used by curators to enter snp/association details
+ * @author emma
+ *         <p/>
+ *         New service class to deal with form used by curators to enter snp/association details
  */
 
 public class SnpAssociationForm {
 
+    // Holds ID of association so we can create a link on form to edit the
+    // linked association
     private Long associationId;
 
     private String riskFrequency;
@@ -29,10 +32,6 @@ public class SnpAssociationForm {
     private String snpType;
 
     private Boolean multiSnpHaplotype = false;
-
-    private String multiSnpHaplotypeDescr;
-
-    private Integer multiSnpHaplotypeNum;
 
     private Boolean snpInteraction = false;
 
@@ -54,8 +53,14 @@ public class SnpAssociationForm {
 
     private Collection<String> authorReportedGenes;
 
+    // These attributes store locus attributes
+    private String multiSnpHaplotypeDescr;
+
+    private Integer multiSnpHaplotypeNum;
+
     private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
+    // Constructors
     public SnpAssociationForm() {
     }
 
@@ -83,7 +88,7 @@ public class SnpAssociationForm {
         this.efoTraits = efoTraits;
     }
 
-
+    // Getters/setters
     public Long getAssociationId() {
         return associationId;
     }

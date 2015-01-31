@@ -27,7 +27,6 @@ public class ObjectConverter {
     private Map<Class, Collection<DocumentEnrichmentService>> documentToEnricherMap;
 
     @Autowired
-
     public ObjectConverter(Collection<DocumentEnrichmentService> documentEnrichmentServices) {
         this.documentEnrichmentServices = documentEnrichmentServices;
         this.documentToEnricherMap = new HashMap<>();

@@ -309,6 +309,14 @@ public class StudyController {
         java.util.Date studyAddedDate = new java.util.Date();
         housekeeping.setStudyAddedDate(studyAddedDate);
 
+        // Set status
+        CurationStatus status = curationStatusRepository.findByStatus("Awaiting Curation");
+        housekeeping.setCurationStatus(status);
+
+        // Set curator
+        Curator curator = curatorRepository.findByLastName("Level 1 Curator");
+        housekeeping.setCurator(curator);
+
         // Save housekeeping
         housekeepingRepository.save(housekeeping);
 
@@ -321,11 +329,10 @@ public class StudyController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(PubmedLookupException.class)
     public String handlePubmedLookupException(PubmedLookupException pubmedLookupException) {
-        //  return pubmedLookupException.getMessage();
         return "pubmed_lookup_warning";
     }
 
-    @ExceptionHandler({PubmedImportException.class})
+    @ExceptionHandler(PubmedImportException.class)
     public String handlePubmedImportException(PubmedImportException pubmedImportException) {
         return "pubmed_import_warning";
     }

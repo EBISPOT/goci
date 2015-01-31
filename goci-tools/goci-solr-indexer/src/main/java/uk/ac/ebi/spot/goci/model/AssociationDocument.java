@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 /**
  * Javadocs go here!
@@ -17,14 +18,14 @@ import java.util.TimeZone;
  * @date 16/01/15
  */
 public class AssociationDocument extends Document<Association> {
-    @Field private String strongestAllele;
     @Field private String riskFrequency;
     @Field private String qualifier;
     @Field private String orPerCopyUnitDescr;
     @Field private String orType;
-
     @Field private float orPerCopyNum;
     @Field private float pValue;
+
+    @Field("strongestAllele") private Set<String> strongestAlleles;
 
     @Field("gene") private Collection<String> genes;
     @Field("trait") private Collection<String> traits;
@@ -47,21 +48,26 @@ public class AssociationDocument extends Document<Association> {
 
     public AssociationDocument(Association association) {
         super(association);
-        this.strongestAllele = association.getStrongestAllele();
         this.riskFrequency = association.getRiskFrequency();
         this.qualifier = association.getPvalueText();
         this.orPerCopyUnitDescr = association.getOrPerCopyUnitDescr();
-        this.orType = association.getOrType();
+        this.orType = String.valueOf(association.getOrType());
 
-        if(association.getOrPerCopyNum() != null) {
+        if (association.getOrPerCopyNum() != null) {
             this.orPerCopyNum = association.getOrPerCopyNum();
         }
         if (association.getPvalueFloat() != null) {
             this.pValue = association.getPvalueFloat();
         }
 
+        strongestAlleles = new HashSet<>();
+        association.getLoci().forEach(
+                locus -> locus.getStrongestRiskAlleles().forEach(
+                        riskAllele -> strongestAlleles.add(riskAllele.getRiskAlleleName())));
         this.genes = new HashSet<>();
-        association.getReportedGenes().forEach(gene -> genes.add(gene.getGeneName()));
+        association.getLoci().forEach(
+                locus -> locus.getAuthorReportedGenes().forEach(
+                        gene -> genes.add(gene.getGeneName())));
         this.traits = new HashSet<>();
         this.traitUris = new HashSet<>();
         association.getEfoTraits().forEach(trait -> {
@@ -85,7 +91,14 @@ public class AssociationDocument extends Document<Association> {
         this.chromosomePositions = new HashSet<>();
         this.regions = new HashSet<>();
         this.lastModifiedDates = new HashSet<>();
-        for (SingleNucleotidePolymorphism snp : association.getSnps()) {
+        Collection<SingleNucleotidePolymorphism> snps = new HashSet<>();
+        association.getLoci().forEach(
+                locus -> snps.addAll(
+                        locus.getStrongestRiskAlleles()
+                                .stream()
+                                .map(RiskAllele::getSnp)
+                                .collect(Collectors.toList())));
+        for (SingleNucleotidePolymorphism snp : snps) {
             rsIds.add(snp.getRsId());
             chromosomeNames.add(snp.getChromosomeName());
             if (snp.getChromosomePosition() != null) {
@@ -101,8 +114,8 @@ public class AssociationDocument extends Document<Association> {
         }
     }
 
-    public String getStrongestAllele() {
-        return strongestAllele;
+    public Set<String> getStrongestAlleles() {
+        return strongestAlleles;
     }
 
     public String getRiskFrequency() {

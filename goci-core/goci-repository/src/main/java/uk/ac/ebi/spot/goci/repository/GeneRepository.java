@@ -13,5 +13,5 @@ import uk.ac.ebi.spot.goci.model.Gene;
  */
 @RepositoryRestResource
 public interface GeneRepository extends JpaRepository<Gene, Long> {
-    Gene findByGeneName(String geneName);
+    Gene findByGeneNameIgnoreCase(String geneName);
 }
