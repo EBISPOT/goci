@@ -61,7 +61,7 @@ public class SolrSearchController {
             @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "group", required = false, defaultValue = "false") boolean useGroups,
-            @RequestParam(value = "groupBy", required = false) String groupBy,
+            @RequestParam(value = "group.by", required = false) String groupBy,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
