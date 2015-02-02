@@ -88,7 +88,7 @@ public class V1_9_9_012__Association_locus_links_for_interaction_studies extends
 
             String snpsStr = resultSet.getString(4);
             if (snpsStr != null) {
-                rsIds = split(snpsStr.trim(), ":");
+                rsIds = split(snpsStr.trim(), "x", ":");
             }
             else {
                 rsIds = new ArrayList<>();
@@ -190,18 +190,19 @@ public class V1_9_9_012__Association_locus_links_for_interaction_studies extends
                                       "risk allele string = " + riskAlleleStr + ").  " +
                                       "Inferring risk alleles from SNP");
                 while (rsIdIterator.hasNext()) {
-                    String snp = rsIdIterator.next().trim();
-                    String riskAllele = snp + "-?";
+                    String rsId = rsIdIterator.next().trim();
+                    String riskAllele = rsId + "-?";
                     for (String nextRiskAllele : riskAlleles) {
-                        if (nextRiskAllele.contains(snp)) {
+                        if (nextRiskAllele.contains(rsId)) {
                             // overwrite with actual value
                             riskAllele = nextRiskAllele;
                             break;
                         }
                     }
 
+                    boolean foundSnp = false;
                     for (long snpID : snpIdToRsIdMap.keySet()) {
-                        if (snpIdToRsIdMap.get(snpID).equals(snp)) {
+                        if (snpIdToRsIdMap.get(snpID).equals(rsId)) {
                             if (!associationIdToSnpIds.containsKey(associationID)) {
                                 associationIdToSnpIds.put(associationID, new ArrayList<>());
                                 associationIdToRiskAlleleNames.put(associationID, new ArrayList<>());
@@ -211,7 +212,26 @@ public class V1_9_9_012__Association_locus_links_for_interaction_studies extends
                                 associationIdToSnpIds.get(associationID).add(snpID);
                                 associationIdToRiskAlleleNames.get(associationID).add(riskAllele);
                             }
+                            foundSnp = true;
                             break; // we break here to handle duplicate entries in the snp table of the database
+                        }
+                    }
+
+                    if (!foundSnp) {
+                        // the SNP with the RS_ID in GWASSTUDIESSNP doesn't exist in GWASSNP,
+                        // so create a new SINGLE_NUCLEOTIDE_POLYMORPHISM entry
+                        Map<String, Object> snpArgs = new HashMap<>();
+                        snpArgs.put("RS_ID", rsId);
+                        insertSnp.execute(snpArgs);
+                        long snpID = insertSnp.executeAndReturnKey(snpArgs).longValue();
+                        if (!associationIdToSnpIds.containsKey(associationID)) {
+                            associationIdToSnpIds.put(associationID, new ArrayList<>());
+                            associationIdToRiskAlleleNames.put(associationID, new ArrayList<>());
+                        }
+                        if (!associationIdToSnpIds.get(associationID).contains(snpID)) {
+                            // add the new associated gene
+                            associationIdToSnpIds.get(associationID).add(snpID);
+                            associationIdToRiskAlleleNames.get(associationID).add(riskAllele);
                         }
                     }
                 }
