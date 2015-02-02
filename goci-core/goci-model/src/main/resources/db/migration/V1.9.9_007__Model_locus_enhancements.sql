@@ -30,7 +30,8 @@ version: 1.9.9.007 (pre 2.0)
 CREATE TABLE "LOCUS" (
     "ID" NUMBER(19,0),
     "HAPLOTYPE_SNP_COUNT" NUMBER(19,0),
-    "DESCRIPTION" VARCHAR2(255 CHAR));
+    "DESCRIPTION" VARCHAR2(255 CHAR),
+    "MIGRATED_DESCRIPTION" VARCHAR2(255 CHAR));
 
 --------------------------------------------------------
 --  DDL for Table RISK_ALLELE
