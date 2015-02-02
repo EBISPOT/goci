@@ -21,8 +21,16 @@ public class StudyDocument extends Document<Study> {
     @Field private String publication;
     @Field private String publicationDate;
 
+    @Field private String platform;
+    @Field private Boolean cnv;
+
+    @Field private String initialSampleDescription;
+    @Field private String replicateSampleDescription;
+
     @Field private String trait;
     @Field("traitUri") private Collection<String> traitUris;
+
+    @Field private int associationCount;
 
     public StudyDocument(Study study) {
         super(study);
@@ -30,6 +38,13 @@ public class StudyDocument extends Document<Study> {
         this.title = study.getTitle();
         this.author = study.getAuthor();
         this.publication = study.getPublication();
+
+        this.platform = study.getPlatform();
+        this.cnv = study.getCnv();
+
+        this.initialSampleDescription = study.getInitialSampleSize();
+        this.replicateSampleDescription = study.getReplicateSampleSize();
+
         if (study.getDiseaseTrait() != null) {
             this.trait = study.getDiseaseTrait().getTrait();
         }
@@ -43,6 +58,8 @@ public class StudyDocument extends Document<Study> {
 
         this.traitUris = new ArrayList<>();
         study.getEfoTraits().forEach(efoTrait -> traitUris.add(efoTrait.getUri()));
+
+        this.associationCount = study.getAssociations().size();
     }
 
     public String getPubmedId() {
@@ -61,6 +78,26 @@ public class StudyDocument extends Document<Study> {
         return publication;
     }
 
+    public String getPublicationDate() {
+        return publicationDate;
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public Boolean getCnv() {
+        return cnv;
+    }
+
+    public String getInitialSampleDescription() {
+        return initialSampleDescription;
+    }
+
+    public String getReplicateSampleDescription() {
+        return replicateSampleDescription;
+    }
+
     public String getTrait() {
         return trait;
     }
@@ -69,8 +106,11 @@ public class StudyDocument extends Document<Study> {
         return traitUris;
     }
 
-    public String getPublicationDate() {
-        return publicationDate;
+    public int getAssociationCount() {
+        return associationCount;
     }
 
+    public void setAssociationCount(int associationCount) {
+        this.associationCount = associationCount;
+    }
 }

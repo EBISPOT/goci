@@ -163,12 +163,18 @@
     <field name="chromosomeName" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="chromosomePosition" type="int" indexed="true" stored="true" multiValued="true" />
     <field name="region" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="gene" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="reportedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="mappedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
 
     <!-- study -->
     <field name="pubmedId" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="publication" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="publicationDate" type="date" indexed="true" stored="true" multiValued="false" />
+    <field name="platform" type="text_general" indexed="true" stored="true"/>
+    <field name="cnv" type="boolean" indexed="true" stored="true"/>
+    <field name="initialSampleDescription" type="text_general" indexed="true" stored="true"/>
+    <field name="replicateSampleDescription" type="text_general" indexed="true" stored="true"/>
+    <field name="associationCount" type="int" indexed="true" stored="true" multiValued="true" />
 
     <!-- diseasetrait -->
     <field name="trait" type="text_general" indexed="true" stored="true" multiValued="true" />

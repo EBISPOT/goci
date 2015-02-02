@@ -27,7 +27,8 @@ public class AssociationDocument extends Document<Association> {
 
     @Field("strongestAllele") private Set<String> strongestAlleles;
 
-    @Field("gene") private Collection<String> genes;
+    @Field("reportedGene") private Collection<String> reportedGenes;
+    @Field("mappedGene") private Collection<String> mappedGenes;
     @Field("trait") private Collection<String> traits;
     @Field("traitUri") private Collection<String> traitUris;
 
@@ -64,10 +65,15 @@ public class AssociationDocument extends Document<Association> {
         association.getLoci().forEach(
                 locus -> locus.getStrongestRiskAlleles().forEach(
                         riskAllele -> strongestAlleles.add(riskAllele.getRiskAlleleName())));
-        this.genes = new HashSet<>();
+        this.reportedGenes = new HashSet<>();
         association.getLoci().forEach(
                 locus -> locus.getAuthorReportedGenes().forEach(
-                        gene -> genes.add(gene.getGeneName())));
+                        gene -> reportedGenes.add(gene.getGeneName())));
+        this.mappedGenes = new HashSet<>();
+        association.getLoci().forEach(
+                locus -> locus.getStrongestRiskAlleles().forEach(
+                        riskAllele -> riskAllele.getSnp().getGenes().forEach(
+                                gene -> mappedGenes.add(gene.getGeneName()))));
         this.traits = new HashSet<>();
         this.traitUris = new HashSet<>();
         association.getEfoTraits().forEach(trait -> {
@@ -105,7 +111,7 @@ public class AssociationDocument extends Document<Association> {
                 chromosomePositions.add(Integer.parseInt(snp.getChromosomePosition()));
             }
             snp.getRegions().forEach(region -> regions.add(region.getName()));
-            snp.getGenes().forEach(gene -> genes.add(gene.getGeneName()));
+            snp.getGenes().forEach(gene -> reportedGenes.add(gene.getGeneName()));
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
             df.setTimeZone(TimeZone.getTimeZone("UTC"));
             if (snp.getLastUpdateDate() != null) {
@@ -134,8 +140,8 @@ public class AssociationDocument extends Document<Association> {
         return pValue;
     }
 
-    public Collection<String> getGenes() {
-        return genes;
+    public Collection<String> getReportedGenes() {
+        return reportedGenes;
     }
 
     public Collection<String> getTraits() {
