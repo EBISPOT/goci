@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.curation.service;
+package uk.ac.ebi.spot.goci.curation.model;
 
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 
