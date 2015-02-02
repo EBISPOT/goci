@@ -132,9 +132,9 @@
             <td th:switch="${snpAssociationForm.orType}">
                 <p th:case="'null'">null</p>
 
-                <p th:case="'0'">No</p>
+                <p th:case="false">No</p>
 
-                <p th:case="'1'">Yes</p>
+                <p th:case="true">Yes</p>
             </td>
 
             <td th:text="${snpAssociationForm.orPerCopyRange} ?: 'null'"></td>
