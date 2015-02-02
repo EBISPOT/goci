@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import uk.ac.ebi.spot.goci.model.SearchResult;
@@ -49,11 +50,11 @@ public class SearchController {
 
     }
 
-    @RequestMapping(value = "/search", produces = MediaType.TEXT_HTML_VALUE)
-    String search(Model model, @RequestParam(required=false) String query, @RequestParam String facet){
+    @RequestMapping(value = "/search/{facet}", produces = MediaType.TEXT_HTML_VALUE)
+    String search(Model model, @RequestParam(required=false) String query, @PathVariable String facet){
 //        model.addAttribute("search", studyRepository.findAll());
 
-        System.out.println(query);
+        System.out.println(query + " in facet " + facet);
 
         SearchResult result = new SearchResult();
         result.setQuery(query);

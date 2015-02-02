@@ -46,13 +46,16 @@ function doSearch(){
 
 function applyFacet(facet){
     var searchTerm = $("#search-box").val();
-    window.location = "search?query=" + searchTerm + "&facet=" + facet;
+    //solrFacet($('#query').text(), $('#facet').text());
+    solrFacet(searchTerm, facet);
+
+    //window.location = "search/"+ facet + "?query=" + searchTerm;
 }
 
 function loadResults(){
     if ($('#query').text() != ''){
         if($('#facet').text() != ''){
-            solrFacet($('#query').text(), $('#facet').text());
+            //solrFacet($('#query').text(), $('#facet').text());
         }
         else
         {

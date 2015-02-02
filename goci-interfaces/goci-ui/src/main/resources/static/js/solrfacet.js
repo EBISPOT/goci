@@ -7,7 +7,7 @@ var solrBaseURL = 'http://orange.ebi.ac.uk:8983/solr/gwas/select'
 
 var resources = ['study', 'association', 'diseasetrait', 'singlenucleotidepolymorphism'];
 
-function solrfacet(queryTerm, facet){
+function solrFacet(queryTerm, facet){
 
     console.log("Solr research request received for " + queryTerm + " and facet " + facet);
     var searchTerm = 'text:"'.concat(queryTerm).concat('"');
@@ -49,13 +49,15 @@ function solrfacet(queryTerm, facet){
 }
 
 function processFacet(data){
-    setCountBadges(data.facet_counts.facet_fields.resourcename);
+    console.log("Received data and ready to process");
+    //setCountBadges(data.facet_counts.facet_fields.resourcename);
 
     var resource = data.responseHeader.params.fq.substring(13);
+    console.log("Facet is " + resource);
 
     for(var f=0; f < resources.length; f++){
-        if(resource != resources[f]){
-            $('#' +resource+ 'Table').hide();
+        if(resources[f] != resource){
+            $('#' +resources[f]+ 'Table').hide();
         }
     }
 
@@ -130,7 +132,7 @@ function processAssociations(associations, table) {
             row.append($("<td>").html(association.chromosomePosition));
 
             var gene = '';
-            if (snp.gene != null) {
+            if (association.gene != null) {
                 for (var j = 0; j < association.gene.length; j++) {
                     if (gene == '') {
                         gene = association.gene[j];

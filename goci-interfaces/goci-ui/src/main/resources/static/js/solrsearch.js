@@ -126,7 +126,7 @@ function setCountBadges(countArray){
 
 function processStudy(study, table){
     var row = $("<tr>");
-    if(table.find('tr').length > 6){
+    if(table.find('tr').length > 5){
         row.addClass('accordion-body');
         row.addClass('collapse');
         row.addClass('hiddenStudy');
@@ -142,7 +142,7 @@ function processStudy(study, table){
 
 function processAssociation(association, table){
     var row = $("<tr>");
-    if(table.find('tr').length > 6){
+    if(table.find('tr').length > 5){
         row.addClass('accordion-body');
         row.addClass('collapse');
         row.addClass('hiddenAssociation');
@@ -167,7 +167,7 @@ function processAssociation(association, table){
     row.append($("<td>").html(association.chromosomePosition));
 
     var gene = '';
-    if(snp.gene != null){
+    if(association.gene != null){
         for(var j=0; j < association.gene.length; j++){
             if(gene == ''){
                 gene = association.gene[j];
@@ -190,7 +190,7 @@ function processAssociation(association, table){
 function processTrait(diseasetrait, table){
 
     var row = $("<tr>");
-    if(table.find('tr').length > 6){
+    if(table.find('tr').length > 5){
         row.addClass('accordion-body');
         row.addClass('collapse');
         row.addClass('hiddenTrait');
@@ -247,7 +247,7 @@ function processTrait(diseasetrait, table){
 
 function processSnp(snp, table){
     var row = $("<tr>");
-    if(table.find('tr').length > 6){
+    if(table.find('tr').length > 5){
         row.addClass('accordion-body');
         row.addClass('collapse');
         row.addClass('hiddenSNP');
