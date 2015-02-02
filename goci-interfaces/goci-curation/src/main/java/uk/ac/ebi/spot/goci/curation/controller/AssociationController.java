@@ -7,8 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
-import uk.ac.ebi.spot.goci.curation.service.SnpAssociationForm;
-import uk.ac.ebi.spot.goci.curation.service.SnpFormRow;
+import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
+import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.AssociationBatchLoaderService;
@@ -72,6 +72,7 @@ public class AssociationController {
         // For our associations create a form object and return
         Collection<SnpAssociationForm> snpAssociationForms = new ArrayList<>();
         for (Association association : associations) {
+            // TODO WOULD NEED SOME SORT OF CHECK FOR SNP:SNP INTERACTION
             SnpAssociationForm snpAssociationForm = createSnpAssociationForm(association);
             snpAssociationForms.add(snpAssociationForm);
         }
@@ -353,20 +354,22 @@ public class AssociationController {
             association.setPvalueFloat(associationCalculationService.calculatePvalueFloat(pvalueMantissa, pvalueExponent));
         }
 
-        Collection<Locus> loci = new ArrayList<>();
-
         // Add loci to association or if we are editing an existing one find it
         // For multi-snp and standard snps we assume their is only one locus
-        Locus locus= new Locus();
-        if(!association.getLoci().isEmpty()){
-            Association associationUserIsEditing= associationRepository.findOne(snpAssociationForm.getAssociationId());
-            Collection<Locus> associationLoci =associationUserIsEditing.getLoci();
 
-            for(Locus associationLocus:associationLoci){
+        Collection<Locus> loci = new ArrayList<>();
+        Locus locus = new Locus();
+
+        // Check for existing locus
+        if (!association.getLoci().isEmpty()) {
+            Association associationUserIsEditing = associationRepository.findOne(snpAssociationForm.getAssociationId());
+            Collection<Locus> associationLoci = associationUserIsEditing.getLoci();
+
+            // Based on assumption we have only one locus
+            for (Locus associationLocus : associationLoci) {
                 locus = associationLocus;
             }
         }
-
 
         // Set locus description and haplotype count
         // Set this number to the number of rows entered by curator
@@ -380,7 +383,7 @@ public class AssociationController {
         Collection<String> authorReportedGenes = snpAssociationForm.getAuthorReportedGenes();
         Collection<Gene> locusGenes = createGenes(authorReportedGenes);
 
-        // Set locus attribute
+        // Set locus genes
         locus.setAuthorReportedGenes(locusGenes);
 
         // Handle rows entered for haplotype by curator
@@ -410,8 +413,10 @@ public class AssociationController {
 
             // Save changes to risk allele
             riskAlleleRepository.save(riskAllele);
+
             locusRiskAlleles.add(riskAllele);
         }
+
         // Assign all created risk alleles to locus
         locus.setStrongestRiskAlleles(locusRiskAlleles);
 
@@ -454,7 +459,7 @@ public class AssociationController {
         // Check if it exists
         RiskAllele riskAllele = riskAlleleRepository.findByRiskAlleleName(curatorEnteredRiskAllele);
 
-        // If it doesn't exist create it
+        // If it doesn't exist create and save
         if (riskAllele == null) {
             //Create new risk allele
             RiskAllele newRiskAllele = new RiskAllele();
@@ -472,7 +477,7 @@ public class AssociationController {
         // Check if SNP already exists database
         SingleNucleotidePolymorphism snp = singleNucleotidePolymorphismRepository.findByRsIdIgnoreCase(curatorEnteredSNP);
 
-        // If SNP doesn't already exist, create and save
+        // If SNP doesn't exist, create and save
         if (snp == null) {
             // Create new SNP
             SingleNucleotidePolymorphism newSNP = new SingleNucleotidePolymorphism();
@@ -519,6 +524,7 @@ public class AssociationController {
 
         Collection<Gene> locusGenes = new ArrayList<>();
         Collection<RiskAllele> locusRiskAlleles = new ArrayList<>();
+
         for (Locus locus : loci) {
             locusGenes.addAll(locus.getAuthorReportedGenes());
             locusRiskAlleles.addAll(locus.getStrongestRiskAlleles());
@@ -548,6 +554,8 @@ public class AssociationController {
         return snpAssociationForm;
     }
 
+
+  /*  Exception handling */
 
     @ExceptionHandler(DataIntegrityException.class)
     public String handleDataIntegrityException(DataIntegrityException dataIntegrityException, Model model) {
