@@ -120,6 +120,7 @@
     <div style="display: none">
         <ul th:object="${result}">
             <li id="query" th:text="*{query}">User query</li>
+            <li id="facet" th:text="*{facet}">Facet</li>
         </ul>
     </div>
 
@@ -150,16 +151,16 @@
 
                             <div class="list-group">
                                 <!--add an "active" class annotation to each a tag when it's selected-->
-                                <a href="#" class="list-group-item" id="studyFacet"> <span class="badge">0
+                                <a href="#" class="list-group-item" id="study-facet"> <span class="badge">0
                                 </span>
                                     Studies</a>
-                                <a href="#" class="list-group-item" id="associationFacet"> <span class="badge">
+                                <a href="#" class="list-group-item" id="association-facet"> <span class="badge">
                                     0</span>
                                     Associations</a>
-                                <a href="#" class="list-group-item" id="efotraitFacet"> <span class="badge">0
+                                <a href="#" class="list-group-item" id="diseasetrait-facet"> <span class="badge">0
                                 </span>
-                                    Ontology terms</a>
-                                <a href="#" class="list-group-item" id="singlenucleotidepolymorphismFacet"> <span class="badge">
+                                    Catalog traits</a>
+                                <a href="#" class="list-group-item" id="singlenucleotidepolymorphism-facet"> <span class="badge">
                                     0</span>
                                     SNPs</a>
                             </div>
@@ -229,7 +230,7 @@
                 </div>
 
                 <div id="results" th:object="${result}">
-                    <h2>Search results for <em><span id="search-term" th:text="*{query}">Quer term</span></em></h2>
+                    <h2>Search results for <em><span id="search-term" th:text="*{query}">query term</span></em></h2>
 
                     <div id="studyTable">
                         <h3><i>Studies</i></h3>
@@ -243,8 +244,6 @@
                                 <th>Date</th>
                                 <th>Pubmed ID</th>
 
-
-
                             </tr>
                             </thead>
 
@@ -257,13 +256,13 @@
                         <table class="table" id="associationSummaries">
                             <thead>
                             <tr>
-                                <th>RS ID</th>
-                                <th>Chromosome location</th>
                                 <th>Strongest allele</th>
                                 <th>p-value</th>
                                 <th>Odds ratio</th>
                                 <th>betac-coefficient &amp; unit description</th>
-
+                                <th>Chromosome location</th>
+                                <th>Gene(s)</th>
+                                <th>Study</th>
 
                             </tr>
                             </thead>
@@ -271,15 +270,14 @@
                         </table>
                     </div>
 
-                    <div id="efotraitTable">
-                        <h3><i>EFO traits</i></h3>
-                        <table class="table" id="efotraitSummaries">
+                    <div id="diseasetraitTable">
+                        <h3><i>Disease traits</i></h3>
+                        <table class="table" id="diseasetraitSummaries">
                             <thead>
                             <tr>
                                 <th>Trait name</th>
-                                <th>EFO URI</th>
-                                <th>Synonyms</th>
-                                <th>Child count</th>
+                                <th>Mapped EFO traits</th>
+                                <th>EFO synonyms</th>
 
                             </tr>
                             </thead>
@@ -289,7 +287,7 @@
                     <div id="singlenucleotidepolymorphismTable">
                         <h3><i>SNPs</i></h3>
 
-                        <table class="table" id="snpSummaries">
+                        <table class="table" id="singlenucleotidepolymorphismSummaries">
                             <thead>
                             <tr>
                                 <th>RS ID</th>

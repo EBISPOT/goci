@@ -48,4 +48,21 @@ public class SearchController {
 
 
     }
+
+//    @RequestMapping(value = "/search", produces = MediaType.TEXT_HTML_VALUE)
+//    String search(Model model, @RequestParam(required=false) String query, @RequestParam String facet){
+////        model.addAttribute("search", studyRepository.findAll());
+//
+//        System.out.println(query);
+//
+//        SearchResult result = new SearchResult();
+//        result.setQuery(query);
+//        result.setFacet(facet);
+//
+//        model.addAttribute("result", result);
+//
+//        return "search";
+//
+//
+//    }
 }
