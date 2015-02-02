@@ -173,12 +173,13 @@ public class V1_9_9_012__Association_locus_links_for_interaction_studies extends
                         long snpID = insertSnp.executeAndReturnKey(snpArgs).longValue();
                         if (!associationIdToSnpIds.containsKey(associationID)) {
                             associationIdToSnpIds.put(associationID, new ArrayList<>());
+                            associationIdToRiskAlleleNames.put(associationID, new ArrayList<>());
                         }
                         if (!associationIdToSnpIds.get(associationID).contains(snpID)) {
                             // add the new associated gene
                             associationIdToSnpIds.get(associationID).add(snpID);
+                            associationIdToRiskAlleleNames.get(associationID).add(riskAllele);
                         }
-
                     }
                 }
             }
