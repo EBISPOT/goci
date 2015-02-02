@@ -10,5 +10,13 @@ import uk.ac.ebi.spot.goci.model.Document;
  * @date 19/01/15
  */
 public interface DocumentEnrichmentService<D extends Document> {
+    /**
+     * The priority of a document enrichment service indicates the order in which enrichments will be run, lowest value
+     * first.  This enables enrichment chaining.
+     *
+     * @return the priority of this enrichment service in the enrichment chain.  Low values run first
+     */
+    int getPriority();
+
     void doEnrichment(D document);
 }
