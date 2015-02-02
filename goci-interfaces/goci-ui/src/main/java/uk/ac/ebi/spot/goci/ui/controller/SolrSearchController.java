@@ -23,6 +23,7 @@ import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.ui.SearchConfiguration;
+import uk.ac.ebi.spot.goci.ui.exception.IllegalParameterCombinationException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -55,14 +56,25 @@ public class SolrSearchController {
     @RequestMapping(value = "api/search", produces = MediaType.APPLICATION_JSON_VALUE)
     public void doSolrSearch(
             @RequestParam("q") String query,
-            @RequestParam("json.wrf") String callbackFunction,
-            @RequestParam(value = "maxResults", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+            @RequestParam(value = "callback", required = false) String callbackFunction,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "group", required = false, defaultValue = "false") boolean useGroups,
+            @RequestParam(value = "group.by", required = false) String groupBy,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
         addFacet(solrSearchBuilder, searchConfiguration.getDefaultFacet());
-        addJsonpCallback(solrSearchBuilder, callbackFunction);
-        addMaxResults(solrSearchBuilder, maxResults);
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+        if (useGroups) {
+            addGrouping(solrSearchBuilder, groupBy, maxResults);
+        }
+        else {
+            addRowsAndPage(solrSearchBuilder, maxResults, page);
+        }
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -72,13 +84,17 @@ public class SolrSearchController {
     @RequestMapping(value = "api/search/study", produces = MediaType.APPLICATION_JSON_VALUE)
     public void doStudySolrSearch(
             @RequestParam("q") String query,
-            @RequestParam("json.wrf") String callbackFunction,
-            @RequestParam(value = "maxResults", required = false, defaultValue = "10000") int maxResults,
+            @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+            @RequestParam(value = "callback", required = false) String callbackFunction,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
-        addJsonpCallback(solrSearchBuilder, callbackFunction);
-        addMaxResults(solrSearchBuilder, maxResults);
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+        addRowsAndPage(solrSearchBuilder, maxResults, page);
         addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), Study.class.getSimpleName());
         addQuery(solrSearchBuilder, query);
 
@@ -89,13 +105,17 @@ public class SolrSearchController {
     @RequestMapping(value = "api/search/snp", produces = MediaType.APPLICATION_JSON_VALUE)
     public void doSnpSolrSearch(
             @RequestParam("q") String query,
-            @RequestParam("json.wrf") String callbackFunction,
-            @RequestParam(value = "maxResults", required = false, defaultValue = "10000") int maxResults,
+            @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+            @RequestParam(value = "callback", required = false) String callbackFunction,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
-        addJsonpCallback(solrSearchBuilder, callbackFunction);
-        addMaxResults(solrSearchBuilder, maxResults);
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+        addRowsAndPage(solrSearchBuilder, maxResults, page);
         addFilterQuery(solrSearchBuilder,
                        searchConfiguration.getDefaultFacet(),
                        SingleNucleotidePolymorphism.class.getSimpleName());
@@ -108,13 +128,17 @@ public class SolrSearchController {
     @RequestMapping(value = "api/search/association", produces = MediaType.APPLICATION_JSON_VALUE)
     public void doAssociationSolrSearch(
             @RequestParam("q") String query,
-            @RequestParam("json.wrf") String callbackFunction,
-            @RequestParam(value = "maxResults", required = false, defaultValue = "10000") int maxResults,
+            @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+            @RequestParam(value = "callback", required = false) String callbackFunction,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
-        addJsonpCallback(solrSearchBuilder, callbackFunction);
-        addMaxResults(solrSearchBuilder, maxResults);
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+        addRowsAndPage(solrSearchBuilder, maxResults, page);
         addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), Association.class.getSimpleName());
         addQuery(solrSearchBuilder, query);
 
@@ -125,13 +149,17 @@ public class SolrSearchController {
     @RequestMapping(value = "api/search/trait", produces = MediaType.APPLICATION_JSON_VALUE)
     public void doTraitSolrSearch(
             @RequestParam("q") String query,
-            @RequestParam("json.wrf") String callbackFunction,
-            @RequestParam(value = "maxResults", required = false, defaultValue = "10000") int maxResults,
+            @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+            @RequestParam(value = "callback", required = false) String callbackFunction,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
-        addJsonpCallback(solrSearchBuilder, callbackFunction);
-        addMaxResults(solrSearchBuilder, maxResults);
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+        addRowsAndPage(solrSearchBuilder, maxResults, page);
         addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), DiseaseTrait.class.getSimpleName());
         addQuery(solrSearchBuilder, query);
 
@@ -142,8 +170,9 @@ public class SolrSearchController {
     private StringBuilder buildBaseSearchRequest() {
         // build base request
         StringBuilder solrSearchBuilder = new StringBuilder();
-        solrSearchBuilder.append(searchConfiguration.getGwasSearchServer().toString());
-        solrSearchBuilder.append("/select?");
+        solrSearchBuilder.append(searchConfiguration.getGwasSearchServer().toString())
+                         .append("/select?")
+                         .append("wt=json");
         return solrSearchBuilder;
     }
 
@@ -153,12 +182,25 @@ public class SolrSearchController {
     }
 
     private void addJsonpCallback(StringBuilder solrSearchBuilder, String callbackFunction) {
-        solrSearchBuilder.append("&wt=json");
-        solrSearchBuilder.append("&json.wrf=").append(callbackFunction);
+        if (callbackFunction == null) {
+            throw new IllegalParameterCombinationException("If jsonp = true, you must specify a callback function " +
+                                                                   "name with 'callback' parameter");
+        }
+        else {
+            solrSearchBuilder.append("&json.wrf=").append(callbackFunction);
+        }
     }
 
-    private void addMaxResults(StringBuilder solrSearchBuilder, int maxResults) {
-        solrSearchBuilder.append("&rows=").append(maxResults);
+    private void addGrouping(StringBuilder solrSearchBuilder, String groupBy, int maxResults) {
+        solrSearchBuilder.append("&rows=10000")
+                         .append("&group=true")
+                         .append("&group.limit=").append(maxResults)
+                         .append("&group.field=").append(groupBy);
+    }
+
+    private void addRowsAndPage(StringBuilder solrSearchBuilder, int maxResults, int page) {
+        solrSearchBuilder.append("&rows=").append(maxResults)
+                         .append("&start=").append((page - 1) * maxResults);
     }
 
     private void addFilterQuery(StringBuilder solrSearchBuilder, String filterOn, String filterBy) {
@@ -195,6 +237,13 @@ public class SolrSearchController {
             entity.writeTo(out);
             EntityUtils.consume(entity);
         }
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    private String handleIllegalParameterCombinationException(IllegalParameterCombinationException e) {
+        getLog().error("An illegal parameter combination was received", e);
+        return "An illegal parameter combination was received: " + e.getMessage();
     }
 
     @ExceptionHandler
