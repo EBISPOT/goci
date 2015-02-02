@@ -86,43 +86,28 @@
                 <tr>
                     <th data-field="month" data-switchable="true">Month</th>
                     <th data-field="year" data-sortable="true">Year</th>
-                    <th data-field="monthly total studies" data-sortable="true">Monthly Total Studies
-                    </th>
+                    <th data-field="curator" data-sortable="true">Curator</th>
                     <th data-field="monthly total entries" data-sortable="true">Monthly Total
                         Entries
                     </th>
-                    <th data-field="curator" data-sortable="true">Curator</th>
+                    <th data-field="monthly total studies" data-sortable="true">Monthly Total Studies
+                    </th>
+
                     <th data-field="curator total studies" data-sortable="true">Curator Total Studies</th>
                     <th data-field="curator total entries" data-sortable="true">Curator Total Entries</th>
-                    <th data-field="pubmedid" data-sortable="true">Outstanding Queries</th>
+                    <th data-field="query" data-sortable="true">Outstanding Queries</th>
 
 
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="study : ${studies}">
+                <tr th:each="curatorTotalsTableRow: ${curatorTotalsTableRows}">
 
-                    <td><a th:href="@{/studies/{studyId}(studyId=${study.id})}" class="btn btn-link">Edit</a></td>
+                    <td th:text="${month} ?: 'null' "></td>
+                    <td th:text="${year} ?: 'null'"></td>
+                    <td th:text="${curator} ?: 'null'"></td>
+                    <td th:text="${totalEntries} ?: 'null'"></td>
 
-                    <!-- Use an conditional here as a study can have a null attributes-->
-                    <!-- Using thymeleaf elvis operator for string, date attributes-->
-
-                    <td th:text="${study.author} ?: 'null' "></td>
-                    <td th:text="${study.title} ?: 'null'"></td>
-                    <td th:text="${study.studyDate} ?: 'null'"></td>
-                    <td th:text="${study.pubmedId} ?: 'null'"></td>
-                    <td th:text="${study.publication} ?: 'null'"></td>
-
-                    <!--If study has associated disease trait return traits name-->
-                    <td th:text="${study.diseaseTrait != null} ? ${study.diseaseTrait.trait} : 'null'"></td>
-
-                    <!--If study has associated housekeeping object then get the following attributes -->
-
-                    <td th:text="${study.housekeeping != null and study.housekeeping.curator !=null } ? ${study.housekeeping.curator.lastName} : 'null'"></td>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : 'null'"></td>
-                    <td th:text="${study.housekeeping !=null} ? ${study.housekeeping.notes} : 'null'"></td>
-
-                    <!--<td><a th:href="@{/studies/{studyId}/delete(studyId=${study.id})}" class="btn btn-danger">Delete</a> </td>-->
                 </tr>
                 </tbody>
             </table>
@@ -130,21 +115,6 @@
     </div>
 </div>
 
-<script>
-    $(function () {
-        // turn the element to select2 select style
-        $('#curationStatus').select2({ placeholder: "Select a status",
-            allowClear: true});
-    });
-</script>
-
-<script>
-    $(function () {
-        // turn the element to select2 select style
-        $('#curator').select2({ placeholder: "Select a curator",
-            allowClear: true});
-    });
-</script>
 
 
 <script>

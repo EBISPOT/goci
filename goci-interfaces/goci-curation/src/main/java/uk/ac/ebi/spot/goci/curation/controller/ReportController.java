@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by emma on 29/01/15.
  *
  * @author emma
+ *         Report controller, used to reurn curator monthly totals to view
  */
 @Controller
 @RequestMapping("/reports")

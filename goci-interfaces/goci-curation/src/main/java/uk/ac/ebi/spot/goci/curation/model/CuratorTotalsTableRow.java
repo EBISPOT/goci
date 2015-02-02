@@ -9,7 +9,7 @@ import uk.ac.ebi.spot.goci.model.Curator;
 @Service
 public class CuratorTotalsTableRow {
 
-    private Curator curator;
+    private String curator;
     private String month;
     private String year;
     private Integer monthlyTotalStudies;
@@ -22,25 +22,23 @@ public class CuratorTotalsTableRow {
     }
 
 
-    public CuratorTotalsTableRow(Curator curator, String month, String year, Integer monthlyTotalStudies, Integer monthlyTotalEntries, Integer curatorTotalStudies, Integer curatorTotalEntries, Integer outstandingQueries) {
+    public CuratorTotalsTableRow(String curator, Integer outstandingQueries, Integer curatorTotalEntries, Integer curatorTotalStudies, Integer monthlyTotalEntries, Integer monthlyTotalStudies, String year, String month) {
         this.curator = curator;
-        this.month = month;
-        this.year = year;
-        this.monthlyTotalStudies = monthlyTotalStudies;
-        this.monthlyTotalEntries = monthlyTotalEntries;
-        this.curatorTotalStudies = curatorTotalStudies;
-        this.curatorTotalEntries = curatorTotalEntries;
         this.outstandingQueries = outstandingQueries;
+        this.curatorTotalEntries = curatorTotalEntries;
+        this.curatorTotalStudies = curatorTotalStudies;
+        this.monthlyTotalEntries = monthlyTotalEntries;
+        this.monthlyTotalStudies = monthlyTotalStudies;
+        this.year = year;
+        this.month = month;
     }
 
 
-
-
-    public Curator getCurator() {
+    public String getCurator() {
         return curator;
     }
 
-    public void setCurator(Curator curator) {
+    public void setCurator(String curator) {
         this.curator = curator;
     }
 
