@@ -62,8 +62,8 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends FieldSpl
             long associationID = resultSet.getLong(1);
 
             List<String> riskAlleles;
-            List<String> genes;
-            List<String> snps;
+            List<String> geneNames;
+            List<String> rsIds;
 
             String riskAlleleStr = resultSet.getString(2);
             if (riskAlleleStr != null) {
@@ -75,23 +75,31 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends FieldSpl
 
             String genesStr = resultSet.getString(3);
             if (genesStr != null) {
-                genes = split(genesStr.trim());
+                geneNames = split(genesStr.trim());
             }
             else {
-                genes = new ArrayList<>();
+                geneNames = new ArrayList<>();
             }
 
             String snpsStr = resultSet.getString(4);
             if (snpsStr != null) {
-                snps = split(snpsStr.trim());
+                rsIds = split(snpsStr.trim());
             }
             else {
-                snps = new ArrayList<>();
+                rsIds = new ArrayList<>();
             }
 
-            for (String gene : genes) {
+            // in case we need to add new genes
+            SimpleJdbcInsert insertGene =
+                    new SimpleJdbcInsert(jdbcTemplate)
+                            .withTableName("GENE")
+                            .usingColumns("GENE_NAME")
+                            .usingGeneratedKeyColumns("ID");
+
+            for (String geneName : geneNames) {
+                boolean found = false;
                 for (long geneID : geneIdToNameMap.keySet()) {
-                    if (geneIdToNameMap.get(geneID).equals(gene)) {
+                    if (geneIdToNameMap.get(geneID).equals(geneName)) {
                         if (!associationIdToGeneIds.containsKey(associationID)) {
                             associationIdToGeneIds.put(associationID, new HashSet<>());
                         }
@@ -99,14 +107,38 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends FieldSpl
                             // add the new associated gene
                             associationIdToGeneIds.get(associationID).add(geneID);
                         }
+                        found = true;
                         break; // we break here to handle duplicate entries in the gene table of the database
+                    }
+                }
+
+                if (!found) {
+                    // the GENE with the GENE_NAME in GWASSTUDIESSNP doesn't exist in GWASGENE,
+                    // so create a new GENE entry
+                    Map<String, Object> geneArgs = new HashMap<>();
+                    geneArgs.put("GENE_NAME", geneName);
+                    long geneID = insertGene.executeAndReturnKey(geneArgs).longValue();
+                    if (!associationIdToGeneIds.containsKey(associationID)) {
+                        associationIdToGeneIds.put(associationID, new HashSet<>());
+                    }
+                    if (!associationIdToGeneIds.get(associationID).contains(geneID)) {
+                        // add the new associated gene
+                        associationIdToGeneIds.get(associationID).add(geneID);
                     }
                 }
             }
 
-            for (String snp : snps) {
+            // in case we need to add new SNPs
+            SimpleJdbcInsert insertSnp =
+                    new SimpleJdbcInsert(jdbcTemplate)
+                            .withTableName("SINGLE_NUCLEOTIDE_POLYMORPHISM")
+                            .usingColumns("RS_ID")
+                            .usingGeneratedKeyColumns("ID");
+
+            for (String rsId : rsIds) {
+                boolean foundSnp = false;
                 for (long snpID : snpIdToRsIdMap.keySet()) {
-                    if (snpIdToRsIdMap.get(snpID).equals(snp)) {
+                    if (snpIdToRsIdMap.get(snpID).equals(rsId)) {
                         if (associationIdToSnpId.containsKey(associationID)) {
                             // check for equality of SNP names
                             String rsExisting =
@@ -136,8 +168,18 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends FieldSpl
                                 }
                             }
                         }
+                        foundSnp = true;
                         break; // we break here to handle duplicate entries in the snp table of the database
                     }
+                }
+
+                if (!foundSnp) {
+                    // the SNP with the RS_ID in GWASSTUDIESSNP doesn't exist in GWASSNP,
+                    // so create a new SINGLE_NUCLEOTIDE_POLYMORPHISM entry
+                    Map<String, Object> snpArgs = new HashMap<>();
+                    snpArgs.put("RS_ID", rsId);
+                    long snpID = insertSnp.executeAndReturnKey(snpArgs).longValue();
+                    associationIdToSnpId.put(associationID, snpID);
                 }
             }
             return null;

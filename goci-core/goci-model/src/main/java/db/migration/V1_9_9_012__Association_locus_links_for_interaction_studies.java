@@ -67,8 +67,8 @@ public class V1_9_9_012__Association_locus_links_for_interaction_studies extends
             long associationID = resultSet.getLong(1);
 
             List<String> riskAlleles;
-            List<String> genes;
-            List<String> snps;
+            List<String> geneNames;
+            List<String> rsIds;
 
             String riskAlleleStr = resultSet.getString(2);
             if (riskAlleleStr != null) {
@@ -80,23 +80,31 @@ public class V1_9_9_012__Association_locus_links_for_interaction_studies extends
 
             String genesStr = resultSet.getString(3);
             if (genesStr != null) {
-                genes = split(genesStr.trim());
+                geneNames = split(genesStr.trim());
             }
             else {
-                genes = new ArrayList<>();
+                geneNames = new ArrayList<>();
             }
 
             String snpsStr = resultSet.getString(4);
             if (snpsStr != null) {
-                snps = split(snpsStr.trim(), ":");
+                rsIds = split(snpsStr.trim(), "x", ":");
             }
             else {
-                snps = new ArrayList<>();
+                rsIds = new ArrayList<>();
             }
 
-            for (String gene : genes) {
+            // in case we need to add new genes
+            SimpleJdbcInsert insertGene =
+                    new SimpleJdbcInsert(jdbcTemplate)
+                            .withTableName("GENE")
+                            .usingColumns("GENE_NAME")
+                            .usingGeneratedKeyColumns("ID");
+
+            for (String geneName : geneNames) {
+                boolean found = false;
                 for (long geneID : geneIdToNameMap.keySet()) {
-                    if (geneIdToNameMap.get(geneID).equals(gene)) {
+                    if (geneIdToNameMap.get(geneID).equals(geneName)) {
                         if (!associationIdToGeneIds.containsKey(associationID)) {
                             associationIdToGeneIds.put(associationID, new HashSet<>());
                         }
@@ -104,20 +112,44 @@ public class V1_9_9_012__Association_locus_links_for_interaction_studies extends
                             // add the new associated gene
                             associationIdToGeneIds.get(associationID).add(geneID);
                         }
+                        found = true;
                         break; // we break here to handle duplicate entries in the gene table of the database
+                    }
+                }
+
+                if (!found) {
+                    // the GENE with the GENE_NAME in GWASSTUDIESSNP doesn't exist in GWASGENE,
+                    // so create a new GENE entry
+                    Map<String, Object> geneArgs = new HashMap<>();
+                    geneArgs.put("GENE_NAME", geneName);
+                    long geneID = insertGene.executeAndReturnKey(geneArgs).longValue();
+                    if (!associationIdToGeneIds.containsKey(associationID)) {
+                        associationIdToGeneIds.put(associationID, new HashSet<>());
+                    }
+                    if (!associationIdToGeneIds.get(associationID).contains(geneID)) {
+                        // add the new associated gene
+                        associationIdToGeneIds.get(associationID).add(geneID);
                     }
                 }
             }
 
-            Iterator<String> snpIterator = snps.iterator();
+            // in case we need to add new SNPs
+            SimpleJdbcInsert insertSnp =
+                    new SimpleJdbcInsert(jdbcTemplate)
+                            .withTableName("SINGLE_NUCLEOTIDE_POLYMORPHISM")
+                            .usingColumns("RS_ID")
+                            .usingGeneratedKeyColumns("ID");
+
+            Iterator<String> rsIdIterator = rsIds.iterator();
             Iterator<String> riskAlleleIterator = riskAlleles.iterator();
-            if (snps.size() == riskAlleles.size()) {
-                while(snpIterator.hasNext()) {
-                    String snp = snpIterator.next().trim();
+            if (rsIds.size() == riskAlleles.size()) {
+                while(rsIdIterator.hasNext()) {
+                    String rsId = rsIdIterator.next().trim();
                     String riskAllele = riskAlleleIterator.next().trim();
 
+                    boolean foundSnp = false;
                     for (long snpID : snpIdToRsIdMap.keySet()) {
-                        if (snpIdToRsIdMap.get(snpID).equals(snp)) {
+                        if (snpIdToRsIdMap.get(snpID).equals(rsId)) {
                             if (!associationIdToSnpIds.containsKey(associationID)) {
                                 associationIdToSnpIds.put(associationID, new ArrayList<>());
                                 associationIdToRiskAlleleNames.put(associationID, new ArrayList<>());
@@ -127,7 +159,26 @@ public class V1_9_9_012__Association_locus_links_for_interaction_studies extends
                                 associationIdToSnpIds.get(associationID).add(snpID);
                                 associationIdToRiskAlleleNames.get(associationID).add(riskAllele);
                             }
+                            foundSnp = true;
                             break; // we break here to handle duplicate entries in the snp table of the database
+                        }
+                    }
+
+                    if (!foundSnp) {
+                        // the SNP with the RS_ID in GWASSTUDIESSNP doesn't exist in GWASSNP,
+                        // so create a new SINGLE_NUCLEOTIDE_POLYMORPHISM entry
+                        Map<String, Object> snpArgs = new HashMap<>();
+                        snpArgs.put("RS_ID", rsId);
+                        insertSnp.execute(snpArgs);
+                        long snpID = insertSnp.executeAndReturnKey(snpArgs).longValue();
+                        if (!associationIdToSnpIds.containsKey(associationID)) {
+                            associationIdToSnpIds.put(associationID, new ArrayList<>());
+                            associationIdToRiskAlleleNames.put(associationID, new ArrayList<>());
+                        }
+                        if (!associationIdToSnpIds.get(associationID).contains(snpID)) {
+                            // add the new associated gene
+                            associationIdToSnpIds.get(associationID).add(snpID);
+                            associationIdToRiskAlleleNames.get(associationID).add(riskAllele);
                         }
                     }
                 }
@@ -138,12 +189,20 @@ public class V1_9_9_012__Association_locus_links_for_interaction_studies extends
                                       "(snp string = " + snpsStr + " and " +
                                       "risk allele string = " + riskAlleleStr + ").  " +
                                       "Inferring risk alleles from SNP");
-                while (snpIterator.hasNext()) {
-                    String snp = snpIterator.next().trim();
-                    String riskAllele = snp + "-?";
+                while (rsIdIterator.hasNext()) {
+                    String rsId = rsIdIterator.next().trim();
+                    String riskAllele = rsId + "-?";
+                    for (String nextRiskAllele : riskAlleles) {
+                        if (nextRiskAllele.contains(rsId)) {
+                            // overwrite with actual value
+                            riskAllele = nextRiskAllele;
+                            break;
+                        }
+                    }
 
+                    boolean foundSnp = false;
                     for (long snpID : snpIdToRsIdMap.keySet()) {
-                        if (snpIdToRsIdMap.get(snpID).equals(snp)) {
+                        if (snpIdToRsIdMap.get(snpID).equals(rsId)) {
                             if (!associationIdToSnpIds.containsKey(associationID)) {
                                 associationIdToSnpIds.put(associationID, new ArrayList<>());
                                 associationIdToRiskAlleleNames.put(associationID, new ArrayList<>());
@@ -153,7 +212,26 @@ public class V1_9_9_012__Association_locus_links_for_interaction_studies extends
                                 associationIdToSnpIds.get(associationID).add(snpID);
                                 associationIdToRiskAlleleNames.get(associationID).add(riskAllele);
                             }
+                            foundSnp = true;
                             break; // we break here to handle duplicate entries in the snp table of the database
+                        }
+                    }
+
+                    if (!foundSnp) {
+                        // the SNP with the RS_ID in GWASSTUDIESSNP doesn't exist in GWASSNP,
+                        // so create a new SINGLE_NUCLEOTIDE_POLYMORPHISM entry
+                        Map<String, Object> snpArgs = new HashMap<>();
+                        snpArgs.put("RS_ID", rsId);
+                        insertSnp.execute(snpArgs);
+                        long snpID = insertSnp.executeAndReturnKey(snpArgs).longValue();
+                        if (!associationIdToSnpIds.containsKey(associationID)) {
+                            associationIdToSnpIds.put(associationID, new ArrayList<>());
+                            associationIdToRiskAlleleNames.put(associationID, new ArrayList<>());
+                        }
+                        if (!associationIdToSnpIds.get(associationID).contains(snpID)) {
+                            // add the new associated gene
+                            associationIdToSnpIds.get(associationID).add(snpID);
+                            associationIdToRiskAlleleNames.get(associationID).add(riskAllele);
                         }
                     }
                 }
