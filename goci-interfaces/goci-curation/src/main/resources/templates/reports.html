@@ -66,36 +66,76 @@
     </div>
 </nav>
 
-<br/>
+<div class="container-fluid">
+    <div class="row">
+        <div class="pull-right">
+            <div id="filterParametersForm">
+
+                <form class="form-inline" name="filterParametersForm" role="form" method="post"
+                      th:action="@{/reports(filters=true)}"
+                      th:object="${studySearchFilter} ">
+
+                    <div class="form-group">
+                        <label for="year" class="control-label">Year:</label>
+                        <select name="year" class="form-control select2-select"
+                                th:field="*{yearFilter}" id="year">
+                            <!-- Empty value for first entry-->
+                            <option value=""></option>
+                            <option th:each="year : ${years}"
+                                    th:value="${year}"
+                                    th:text="${year}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="month" class="control-label">Month:</label>
+                        <select name="month" th:field="*{monthFilter}"
+                                class="form-control select2-select" id="month">
+                            <!-- Empty value for first entry-->
+                            <option value=""></option>
+                            <option th:each="month : ${months}"
+                                    th:value="${month}"
+                                    th:text="${month}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <br/>
 
 <div class="container-fluid">
     <div class="row">
-
-
         <div class="col-md-12">
 
             <table id="mainTable" class="table table-hover table-bordered" data-toggle="table"
-                   data-show-columns="true"
-                   data-search="true"
-                   data-sort-order="desc">
+                   data-sort-order="desc"
+                   data-search="true">
+
 
                 <thead>
                 <tr>
-                    <th data-field="month" data-switchable="true">Month</th>
+                    <th data-field="month" data-sortable="true">Month</th>
                     <th data-field="year" data-sortable="true">Year</th>
                     <th data-field="curator" data-sortable="true">Curator</th>
-                    <th data-field="monthly total entries" data-sortable="true">Monthly Total
-                        Entries
-                    </th>
-                    <th data-field="monthly total studies" data-sortable="true">Monthly Total Studies
-                    </th>
+                    <!--          <th data-field="monthly total entries" data-sortable="true">Monthly Total
+                                  Entries
+                              </th>
+                              <th data-field="monthly total studies" data-sortable="true">Monthly Total Studies
+                              </th>
 
-                    <th data-field="curator total studies" data-sortable="true">Curator Total Studies</th>
+                              <th data-field="curator total studies" data-sortable="true">Curator Total Studies</th>-->
                     <th data-field="curator total entries" data-sortable="true">Curator Total Entries</th>
-                    <th data-field="query" data-sortable="true">Outstanding Queries</th>
+                    <!--  <th data-field="query" data-sortable="true">Outstanding Queries</th>-->
 
 
                 </tr>
@@ -103,10 +143,10 @@
                 <tbody>
                 <tr th:each="curatorTotalsTableRow: ${curatorTotalsTableRows}">
 
-                    <td th:text="${month} ?: 'null' "></td>
-                    <td th:text="${year} ?: 'null'"></td>
-                    <td th:text="${curator} ?: 'null'"></td>
-                    <td th:text="${totalEntries} ?: 'null'"></td>
+                    <td th:text="${curatorTotalsTableRow.month} ?: 'null' "></td>
+                    <td th:text="${curatorTotalsTableRow.year} ?: 'null'"></td>
+                    <td th:text="${curatorTotalsTableRow.curator} ?: 'null'"></td>
+                    <td th:text="${curatorTotalsTableRow.curatorTotalEntries} ?: 'null'"></td>
 
                 </tr>
                 </tbody>
@@ -114,18 +154,24 @@
         </div>
     </div>
 </div>
-
-
+<script>
+    $(function () {
+        // turn the element to select2 select style
+        $('#curationStatus').select2({ placeholder: "Select a year",
+            allowClear: true});
+    });
+</script>
 
 <script>
-    //    Count our table rows
-    function myFunction() {
-        // Minus 1 to account for heading
-        var x = document.getElementById("mainTable").rows.length - 1;
-        return "Total Studies: " + x;
-    }
-    document.getElementById("total").innerHTML = myFunction();
+    $(function () {
+        // turn the element to select2 select style
+        $('#curator').select2({ placeholder: "Select a month",
+            allowClear: true});
+    });
 </script>
+
+
+
 
 
 <!-- extensions -->

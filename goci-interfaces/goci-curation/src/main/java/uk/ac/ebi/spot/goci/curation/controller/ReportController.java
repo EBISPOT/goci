@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import uk.ac.ebi.spot.goci.curation.model.CuratorTotalsTableRow;
 import uk.ac.ebi.spot.goci.curation.model.DateRange;
+import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
@@ -52,6 +55,104 @@ public class ReportController {
         Collection<Curator> allCurators = curatorRepository.findAll();
 
         // This map will hold our date range and the associated curator and total
+        Map<DateRange, Map<Curator, AtomicInteger>> dateMap = createDateMap(allCurators);
+
+        for (DateRange dateRange : dateMap.keySet()) {
+            for (Curator curator : dateMap.get(dateRange).keySet()) {
+                CuratorTotalsTableRow row = new CuratorTotalsTableRow();
+                row.setCurator(curator.getLastName());
+                row.setCuratorTotalEntries(dateMap.get(dateRange).get(curator).get());
+
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(dateRange.getDateTo());
+
+                String month = new SimpleDateFormat("MMM").format(cal.getTime());
+                row.setMonth(month);
+
+                String year = new SimpleDateFormat("yyyy").format(cal.getTime());
+                row.setYear(year);
+                curatorTotalsTableRows.add(row);
+            }
+        }
+
+        model.addAttribute("curatorTotalsTableRows", curatorTotalsTableRows);
+
+        // Add a studySearchFilter to model in case user want to filter table
+        model.addAttribute("studySearchFilter", new StudySearchFilter());
+        return "reports";
+
+    }
+
+
+    // Studies by curator and/or status
+    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, params = "filters=true", method = RequestMethod.POST)
+    public String filteredSearch(@ModelAttribute StudySearchFilter studySearchFilter, Model model) {
+
+        Collection<CuratorTotalsTableRow> curatorTotalsTableRows = new ArrayList<>();
+        Collection<Curator> allCurators = curatorRepository.findAll();
+
+        // This map will hold our date range and the associated curator and total
+        Map<DateRange, Map<Curator, AtomicInteger>> dateMap = createDateMap(allCurators);
+
+        // Get filter text
+        String filterYear = studySearchFilter.getYearFilter();
+        String filterMonth = studySearchFilter.getMonthFilter();
+
+        for (DateRange dateRange : dateMap.keySet()) {
+            for (Curator curator : dateMap.get(dateRange).keySet()) {
+                CuratorTotalsTableRow row = new CuratorTotalsTableRow();
+                row.setCurator(curator.getLastName());
+                row.setCuratorTotalEntries(dateMap.get(dateRange).get(curator).get());
+
+                // Handle filters
+
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(dateRange.getDateFrom());
+
+                String month = new SimpleDateFormat("MMM").format(cal.getTime());
+                row.setMonth(month);
+
+                String year = new SimpleDateFormat("yyyy").format(cal.getTime());
+                row.setYear(year);
+
+                // If user entered a year
+                if (filterYear != null && !filterYear.isEmpty()) {
+                    // If we have year and month find by both
+                    if (filterMonth != null && !filterMonth.isEmpty()) {
+                        if (filterMonth.equalsIgnoreCase(month) && filterYear.equalsIgnoreCase(year)) {
+                            curatorTotalsTableRows.add(row);
+                        }
+
+                    } else {
+                        // return just year
+                        if (filterYear.equals(year)) {
+                            curatorTotalsTableRows.add(row);
+                        }
+
+                    }
+                }
+                // If user entered curator
+                else if (filterMonth != null && !filterMonth.isEmpty()) {
+                    if (filterMonth.equalsIgnoreCase(month)) {
+                        curatorTotalsTableRows.add(row);
+                    }
+                }
+
+                // If all else fails return all studies
+                else {
+                    curatorTotalsTableRows.add(row);
+                }
+            }
+        }
+
+        model.addAttribute("curatorTotalsTableRows", curatorTotalsTableRows);
+        return "reports";
+    }
+
+/*General purpose methods*/
+
+    private Map<DateRange, Map<Curator, AtomicInteger>> createDateMap(Collection<Curator> allCurators) {
+
         Map<DateRange, Map<Curator, AtomicInteger>> dateMap = new HashMap<>();
 
         // This loop will set up our index of dates and associated curators and their totals
@@ -89,20 +190,22 @@ public class ReportController {
                     //Create a new date range
                     Calendar calDateFrom = Calendar.getInstance();
                     calDateFrom.setTime(studyDate);
-                    calDateFrom.set(Calendar.DAY_OF_MONTH, calDateFrom.getActualMinimum(Calendar.DAY_OF_MONTH));
-                    calDateFrom.set(Calendar.HOUR_OF_DAY, 0);
-                    calDateFrom.set(Calendar.MINUTE, 0);
-                    calDateFrom.set(Calendar.SECOND, 0);
-                    calDateFrom.set(Calendar.MILLISECOND, 0);
+                    calDateFrom.set(Calendar.MONTH, calDateFrom.get(Calendar.MONTH)-1);
+                    calDateFrom.set(Calendar.DAY_OF_MONTH, calDateFrom.getActualMaximum(Calendar.DAY_OF_MONTH));
+                    calDateFrom.set(Calendar.HOUR_OF_DAY, 23);
+                    calDateFrom.set(Calendar.MINUTE, 59);
+                    calDateFrom.set(Calendar.SECOND, 59);
+                    calDateFrom.set(Calendar.MILLISECOND, 999);
                     Date dateFrom = calDateFrom.getTime();
 
                     Calendar calDateTo = Calendar.getInstance();
                     calDateTo.setTime(studyDate);
+                    calDateFrom.set(Calendar.MONTH, calDateFrom.get(Calendar.MONTH)+1);
                     calDateTo.set(Calendar.DAY_OF_MONTH, calDateTo.getActualMaximum(Calendar.DAY_OF_MONTH));
-                    calDateTo.set(Calendar.HOUR_OF_DAY, 23);
-                    calDateTo.set(Calendar.MINUTE, 59);
-                    calDateTo.set(Calendar.SECOND, 59);
-                    calDateTo.set(Calendar.MILLISECOND, 999);
+                    calDateTo.set(Calendar.HOUR_OF_DAY, 00);
+                    calDateTo.set(Calendar.MINUTE, 00);
+                    calDateTo.set(Calendar.SECOND, 01);
+                    calDateTo.set(Calendar.MILLISECOND, 000);
                     Date dateTo = calDateTo.getTime();
 
                     DateRange dateRange = new DateRange(dateFrom, dateTo);
@@ -114,28 +217,29 @@ public class ReportController {
                 }
             }
         } // End of curator for loop
-
-        for (DateRange dateRange : dateMap.keySet()) {
-
-            for (Curator curator : dateMap.get(dateRange).keySet()) {
-                CuratorTotalsTableRow row = new CuratorTotalsTableRow();
-                row.setCurator(curator.getLastName());
-                row.setCuratorTotalEntries(dateMap.get(dateRange).get(curator).get());
-                Calendar cal1 = Calendar.getInstance();
-                cal1.setTime(dateRange.getDateFrom());
-
-
-                String month = new SimpleDateFormat("MMM").format(cal1.getTime());
-
-                row.setMonth(month);
-
-                String year = new SimpleDateFormat("yyyy").format(cal1.getTime());
-
-                row.setYear(year);
-                curatorTotalsTableRows.add(row);
-            }
-        }
-        model.addAttribute("curatorTotalsTableRows", curatorTotalsTableRows);
-        return "reports";
+        return dateMap;
     }
+
+
+    // Curators
+    @ModelAttribute("months")
+    public String[] populateMonths(Model model) {
+        String[] shortMonths = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+        return shortMonths;
+    }
+
+    // Curation statuses
+    @ModelAttribute("years")
+    public List<String> populateYears(Model model) {
+        List<String> years = new ArrayList<>();
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        int endYear = 2005;
+        while (year >= endYear) {
+            String stringYear = String.valueOf(year);
+            years.add(stringYear);
+            year--;
+        }
+        return years;
+    }
+
 }
