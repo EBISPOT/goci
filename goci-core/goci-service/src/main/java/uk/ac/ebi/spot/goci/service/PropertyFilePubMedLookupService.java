@@ -63,9 +63,13 @@ public class PropertyFilePubMedLookupService implements GwasPubMedLookupService 
 
         try {
             properties.load(getClass().getClassLoader().getResource("application.properties").openStream());
-            this.summaryString = properties.getProperty("pubmed.root")
-                    .concat(properties.getProperty("pubmed.gwas.summary"));
-            this.xmlVersion = properties.getProperty("pubmed.xml.version");
+            if (properties.getProperty("pubmed.root") != null && properties.getProperty("pubmed.gwas.summary") != null) {
+                this.summaryString = properties.getProperty("pubmed.root")
+                        .concat(properties.getProperty("pubmed.gwas.summary"));
+            }
+            if (properties.getProperty("pubmed.xml.version") != null) {
+                this.xmlVersion = properties.getProperty("pubmed.xml.version");
+            }
         } catch (IOException e) {
             throw new RuntimeException(
                     "Unable to create dispatcher service: failed to read application.properties resource", e);

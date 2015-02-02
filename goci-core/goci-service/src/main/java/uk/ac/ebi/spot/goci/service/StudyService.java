@@ -84,6 +84,13 @@ public class StudyService {
         return studies;
     }
 
+    @Transactional(readOnly = true)
+    public Collection<Study> deepFindByDiseaseTraitId(Long diseaseTraitId) {
+        Collection<Study> studies = studyRepository.findByDiseaseTraitId(diseaseTraitId);
+        studies.forEach(this::loadAssociatedData);
+        return studies;
+    }
+
     public void loadAssociatedData(Study study) {
         int efoTraitCount = study.getEfoTraits().size();
         getLog().info(

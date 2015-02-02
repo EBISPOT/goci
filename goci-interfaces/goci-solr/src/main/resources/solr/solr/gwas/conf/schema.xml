@@ -175,6 +175,7 @@
     <field name="traitUri" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="shortForm" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="label" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="efoLink" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="synonym" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="parent" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="child" type="text_general" indexed="true" stored="true" multiValued="true" />
