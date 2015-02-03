@@ -19,7 +19,8 @@ public class SnpDocument extends Document<SingleNucleotidePolymorphism> {
     @Field private String chromosomeName;
     @Field private int chromosomePosition;
     @Field("region") private Set<String> regions;
-    @Field("gene") private Set<String> genes;
+    @Field("mappedGene") private Set<String> genes;
+    @Field private String context;
     @Field private String last_modified;
 
     public SnpDocument(SingleNucleotidePolymorphism snp) {
@@ -33,6 +34,7 @@ public class SnpDocument extends Document<SingleNucleotidePolymorphism> {
         snp.getRegions().forEach(region -> regions.add(region.getName()));
         this.genes = new HashSet<>();
         snp.getGenomicContexts().forEach(context -> genes.add(context.getGene().getGeneName()));
+        this.context = snp.getFunctionalClass();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
         if (snp.getLastUpdateDate() != null) {
@@ -58,6 +60,10 @@ public class SnpDocument extends Document<SingleNucleotidePolymorphism> {
 
     public Set<String> getGenes() {
         return genes;
+    }
+
+    public String getContext() {
+        return context;
     }
 
     public String getLast_modified() {
