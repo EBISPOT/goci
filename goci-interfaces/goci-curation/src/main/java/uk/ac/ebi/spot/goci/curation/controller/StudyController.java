@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -41,6 +43,12 @@ public class StudyController {
 
     // Pubmed ID lookup service
     private PropertyFilePubMedLookupService propertyFilePubMedLookupService;
+
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
 
     @Autowired
     public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, PropertyFilePubMedLookupService propertyFilePubMedLookupService) {
@@ -341,11 +349,13 @@ public class StudyController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(PubmedLookupException.class)
     public String handlePubmedLookupException(PubmedLookupException pubmedLookupException) {
+        getLog().error("pubmed lookup exception", pubmedLookupException);
         return "pubmed_lookup_warning";
     }
 
     @ExceptionHandler(PubmedImportException.class)
     public String handlePubmedImportException(PubmedImportException pubmedImportException) {
+        getLog().error("pubmed import exception", pubmedImportException);
         return "pubmed_import_warning";
     }
 }
