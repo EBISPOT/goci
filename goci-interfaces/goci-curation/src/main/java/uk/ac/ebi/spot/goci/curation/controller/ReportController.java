@@ -65,6 +65,7 @@ public class ReportController {
 
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(dateRange.getDateTo());
+                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH));
 
                 String month = new SimpleDateFormat("MMM").format(cal.getTime());
                 row.setMonth(month);
@@ -105,9 +106,9 @@ public class ReportController {
                 row.setCuratorTotalEntries(dateMap.get(dateRange).get(curator).get());
 
                 // Handle filters
-
                 Calendar cal = Calendar.getInstance();
-                cal.setTime(dateRange.getDateFrom());
+                cal.setTime(dateRange.getDateTo());
+                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH));
 
                 String month = new SimpleDateFormat("MMM").format(cal.getTime());
                 row.setMonth(month);
@@ -190,22 +191,38 @@ public class ReportController {
                     //Create a new date range
                     Calendar calDateFrom = Calendar.getInstance();
                     calDateFrom.setTime(studyDate);
-                    calDateFrom.set(Calendar.MONTH, calDateFrom.get(Calendar.MONTH)-1);
-                    calDateFrom.set(Calendar.DAY_OF_MONTH, calDateFrom.getActualMaximum(Calendar.DAY_OF_MONTH));
-                    calDateFrom.set(Calendar.HOUR_OF_DAY, 23);
-                    calDateFrom.set(Calendar.MINUTE, 59);
-                    calDateFrom.set(Calendar.SECOND, 59);
-                    calDateFrom.set(Calendar.MILLISECOND, 999);
+
+                    // If its January we need to set range from end of Dec of last year
+                    if (calDateFrom.get(Calendar.MONTH) == 1) {
+                        calDateFrom.set(Calendar.YEAR, calDateFrom.get(Calendar.YEAR) - 1);
+                        calDateFrom.set(Calendar.MONTH, Calendar.DECEMBER);
+                        calDateFrom.set(Calendar.DAY_OF_MONTH, calDateFrom.getActualMaximum(Calendar.DAY_OF_MONTH));
+                        calDateFrom.set(Calendar.HOUR_OF_DAY, 23);
+                        calDateFrom.set(Calendar.MINUTE, 59);
+                        calDateFrom.set(Calendar.SECOND, 59);
+                        //   calDateFrom.set(Calendar.MILLISECOND, 000);
+
+
+                    } else {
+                        calDateFrom.set(Calendar.MONTH, calDateFrom.get(Calendar.MONTH) - 1);
+                        calDateFrom.set(Calendar.DAY_OF_MONTH, calDateFrom.getActualMaximum(Calendar.DAY_OF_MONTH));
+                        calDateFrom.set(Calendar.HOUR_OF_DAY, 23);
+                        calDateFrom.set(Calendar.MINUTE, 59);
+                        calDateFrom.set(Calendar.SECOND, 59);
+                        //   calDateFrom.set(Calendar.MILLISECOND, 000);
+                    }
+
+
                     Date dateFrom = calDateFrom.getTime();
 
                     Calendar calDateTo = Calendar.getInstance();
                     calDateTo.setTime(studyDate);
-                    calDateFrom.set(Calendar.MONTH, calDateFrom.get(Calendar.MONTH)+1);
+                    calDateTo.set(Calendar.MONTH, calDateTo.get(Calendar.MONTH));
                     calDateTo.set(Calendar.DAY_OF_MONTH, calDateTo.getActualMaximum(Calendar.DAY_OF_MONTH));
-                    calDateTo.set(Calendar.HOUR_OF_DAY, 00);
-                    calDateTo.set(Calendar.MINUTE, 00);
-                    calDateTo.set(Calendar.SECOND, 01);
-                    calDateTo.set(Calendar.MILLISECOND, 000);
+                    calDateTo.set(Calendar.HOUR_OF_DAY, 23);
+                    calDateTo.set(Calendar.MINUTE, 59);
+                    calDateTo.set(Calendar.SECOND, 59);
+                    //       calDateTo.set(Calendar.MILLISECOND, 000);
                     Date dateTo = calDateTo.getTime();
 
                     DateRange dateRange = new DateRange(dateFrom, dateTo);
