@@ -31,6 +31,10 @@ public class GenomicContext {
     @ManyToOne
     private Gene gene;
 
+    // JPA no-args constructor
+    public GenomicContext() {
+    }
+
     public GenomicContext(boolean isIntergenic,
                           boolean isUpstream,
                           boolean isDownstream,
