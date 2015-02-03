@@ -9,6 +9,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}"/>
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css" th:href="@{css/bootstrap-theme.min.css}"/>
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css" th:href="@{css/bootstrap-sortable.css}"/>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
@@ -31,6 +32,10 @@
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.5.0/bootstrap-table.min.js"></script>
+
+    <!--http://datatables.net/-->
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.4/css/jquery.dataTables.css"/>
+    <script src=" //cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
 
 
 </head>
@@ -116,17 +121,11 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-
-            <table id="mainTable" class="table table-hover table-bordered" data-toggle="table"
-                   data-sort-order="desc"
-                   data-search="true">
-
-
+            <table id="mainTable" class="table table-hover table-bordered">
                 <thead>
                 <tr>
-                    <th data-field="month" data-sortable="true">Month</th>
-                    <th data-field="year" data-sortable="true">Year</th>
-                    <th data-field="curator" data-sortable="true">Curator</th>
+                    <th>Period</th>
+                    <th>Curator</th>
                     <!--          <th data-field="monthly total entries" data-sortable="true">Monthly Total
                                   Entries
                               </th>
@@ -134,7 +133,7 @@
                               </th>
 
                               <th data-field="curator total studies" data-sortable="true">Curator Total Studies</th>-->
-                    <th data-field="curator total entries" data-sortable="true">Curator Total Entries</th>
+                    <th>Curator Total Entries</th>
                     <!--  <th data-field="query" data-sortable="true">Outstanding Queries</th>-->
 
 
@@ -143,8 +142,7 @@
                 <tbody>
                 <tr th:each="curatorTotalsTableRow: ${curatorTotalsTableRows}">
 
-                    <td th:text="${curatorTotalsTableRow.month} ?: 'null' "></td>
-                    <td th:text="${curatorTotalsTableRow.year} ?: 'null'"></td>
+                    <td th:text="${curatorTotalsTableRow.period} ?: 'null'"></td>
                     <td th:text="${curatorTotalsTableRow.curator} ?: 'null'"></td>
                     <td th:text="${curatorTotalsTableRow.curatorTotalEntries} ?: 'null'"></td>
 
@@ -170,18 +168,16 @@
     });
 </script>
 
-
-
-
-
-<!-- extensions -->
-<script src="/js/bootstrap-table-export.js"></script>
-
-<!-- plugins -->
-<script src="/js/tableExport.js"></script>
-<script src="/js/jquery.base64.js"></script>
-<script src="/js/html2canvas.js"></script>
-
+<script>
+    $(document).ready(function () {
+        $('#mainTable').dataTable({
+            "order": [
+                [ 2, "desc" ]
+            ],
+            "paging": false
+        });
+    });
+</script>
 
 </body>
 </html>

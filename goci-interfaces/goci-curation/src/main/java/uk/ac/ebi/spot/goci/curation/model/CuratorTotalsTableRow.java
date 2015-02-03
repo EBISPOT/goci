@@ -17,22 +17,23 @@ public class CuratorTotalsTableRow {
     private Integer curatorTotalStudies;
     private Integer curatorTotalEntries;
     private Integer outstandingQueries;
+    private String period;
 
     public CuratorTotalsTableRow() {
     }
 
 
-    public CuratorTotalsTableRow(String curator, Integer outstandingQueries, Integer curatorTotalEntries, Integer curatorTotalStudies, Integer monthlyTotalEntries, Integer monthlyTotalStudies, String year, String month) {
+    public CuratorTotalsTableRow(String period, String curator, String month, String year, Integer monthlyTotalStudies, Integer monthlyTotalEntries, Integer curatorTotalStudies, Integer curatorTotalEntries, Integer outstandingQueries) {
+        this.period = period;
         this.curator = curator;
-        this.outstandingQueries = outstandingQueries;
-        this.curatorTotalEntries = curatorTotalEntries;
-        this.curatorTotalStudies = curatorTotalStudies;
-        this.monthlyTotalEntries = monthlyTotalEntries;
-        this.monthlyTotalStudies = monthlyTotalStudies;
-        this.year = year;
         this.month = month;
+        this.year = year;
+        this.monthlyTotalStudies = monthlyTotalStudies;
+        this.monthlyTotalEntries = monthlyTotalEntries;
+        this.curatorTotalStudies = curatorTotalStudies;
+        this.curatorTotalEntries = curatorTotalEntries;
+        this.outstandingQueries = outstandingQueries;
     }
-
 
     public String getCurator() {
         return curator;
@@ -96,5 +97,13 @@ public class CuratorTotalsTableRow {
 
     public void setOutstandingQueries(Integer outstandingQueries) {
         this.outstandingQueries = outstandingQueries;
+    }
+
+    public String getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(String period) {
+        this.period = period;
     }
 }

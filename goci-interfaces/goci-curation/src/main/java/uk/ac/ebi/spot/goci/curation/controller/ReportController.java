@@ -72,6 +72,8 @@ public class ReportController {
 
                 String year = new SimpleDateFormat("yyyy").format(cal.getTime());
                 row.setYear(year);
+
+                row.setPeriod(year + " " + month);
                 curatorTotalsTableRows.add(row);
             }
         }
@@ -116,6 +118,7 @@ public class ReportController {
                 String year = new SimpleDateFormat("yyyy").format(cal.getTime());
                 row.setYear(year);
 
+                row.setPeriod(year + " " + month);
                 // If user entered a year
                 if (filterYear != null && !filterYear.isEmpty()) {
                     // If we have year and month find by both
