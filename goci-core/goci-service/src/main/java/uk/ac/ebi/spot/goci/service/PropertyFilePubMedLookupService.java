@@ -169,14 +169,15 @@ public class PropertyFilePubMedLookupService implements GwasPubMedLookupService 
             if (System.getProperty("http.proxyPort") != null) {
                 proxy = new HttpHost(System.getProperty("http.proxyHost"), Integer.parseInt(System.getProperty
                         ("http.proxyPort")));
-
+                getLog().info("setting proxy 1 "+ proxy);
             } else {
                 proxy = new HttpHost(System.getProperty("http.proxyHost"));
+                getLog().info("setting proxy 2 "+ proxy);
             }
-            getLog().info("setting proxy "+ proxy);
+            getLog().info("setting proxy 3 "+ proxy);
             httpGet.setConfig(RequestConfig.custom().setProxy(proxy).build());
         }
-        getLog().info("fetching from "+ searchString+"doing http get"+httpGet.toString());
+        getLog().info("fetching from "+ searchString+" doing http get "+httpGet.toString());
         try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
             if (response.getStatusLine().getStatusCode() == HttpStatus.OK.value()) {
                 HttpEntity entity = response.getEntity();
