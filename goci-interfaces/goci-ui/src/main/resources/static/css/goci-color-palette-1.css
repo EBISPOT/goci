@@ -82,6 +82,10 @@ a.list-group-item:hover {
     background-color: #E7F7F9;
 }
 
+a.list-group-item.selected {
+    background-color: #B0DFE6;
+}
+
 a > .toplevel-view {
     color: #333;
 }
