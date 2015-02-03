@@ -26,6 +26,10 @@ public class SingleNucleotidePolymorphism {
 
     private String chromosomePosition;
 
+    private Long merged;
+
+    private String functionalClass;
+
     private Date lastUpdateDate;
 
     @ManyToMany
@@ -34,11 +38,8 @@ public class SingleNucleotidePolymorphism {
             inverseJoinColumns = @JoinColumn(name = "REGION_ID"))
     private Collection<Region> regions;
 
-    @ManyToMany
-    @JoinTable(name = "SNP_GENE",
-            joinColumns = @JoinColumn(name = "SNP_ID"),
-            inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
-    private Collection<Gene> genes;
+    @OneToMany(mappedBy = "snp")
+    private Collection<GenomicContext> genomicContexts;
 
     // JPA no-args constructor
     public SingleNucleotidePolymorphism() {
@@ -47,15 +48,17 @@ public class SingleNucleotidePolymorphism {
     public SingleNucleotidePolymorphism(String rsId,
                                         String chromosomeName,
                                         String chromosomePosition,
-                                        Timestamp lastUpdateDate,
-                                        Collection<Region> regions,
-                                        Collection<Gene> genes) {
+                                        Long merged,
+                                        String functionalClass,
+                                        Date lastUpdateDate,
+                                        Collection<Region> regions) {
         this.rsId = rsId;
         this.chromosomeName = chromosomeName;
         this.chromosomePosition = chromosomePosition;
+        this.merged = merged;
+        this.functionalClass = functionalClass;
         this.lastUpdateDate = lastUpdateDate;
         this.regions = regions;
-        this.genes = genes;
     }
 
     public Long getId() {
@@ -90,11 +93,27 @@ public class SingleNucleotidePolymorphism {
         this.chromosomePosition = chromosomePosition;
     }
 
+    public Long getMerged() {
+        return merged;
+    }
+
+    public void setMerged(Long merged) {
+        this.merged = merged;
+    }
+
+    public String getFunctionalClass() {
+        return functionalClass;
+    }
+
+    public void setFunctionalClass(String functionalClass) {
+        this.functionalClass = functionalClass;
+    }
+
     public Date getLastUpdateDate() {
         return lastUpdateDate;
     }
 
-    public void setLastUpdateDate(Timestamp lastUpdateDate) {
+    public void setLastUpdateDate(Date lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
     }
 
@@ -106,12 +125,12 @@ public class SingleNucleotidePolymorphism {
         this.regions = regions;
     }
 
-    public Collection<Gene> getGenes() {
-        return genes;
+    public Collection<GenomicContext> getGenomicContexts() {
+        return genomicContexts;
     }
 
-    public void setGenes(Collection<Gene> genes) {
-        this.genes = genes;
+    public void setGenomicContexts(Collection<GenomicContext> genomicContexts) {
+        this.genomicContexts = genomicContexts;
     }
 
     @Override
@@ -121,9 +140,9 @@ public class SingleNucleotidePolymorphism {
                 ", rsId='" + rsId + '\'' +
                 ", chromosomeName='" + chromosomeName + '\'' +
                 ", chromosomePosition='" + chromosomePosition + '\'' +
+                ", merged=" + merged +
+                ", functionalClass='" + functionalClass + '\'' +
                 ", lastUpdateDate=" + lastUpdateDate +
-                ", regions=" + regions +
-                ", genes=" + genes +
                 '}';
     }
 }

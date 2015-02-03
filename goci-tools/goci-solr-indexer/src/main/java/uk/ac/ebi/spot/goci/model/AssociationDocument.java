@@ -69,11 +69,6 @@ public class AssociationDocument extends Document<Association> {
         association.getLoci().forEach(
                 locus -> locus.getAuthorReportedGenes().forEach(
                         gene -> reportedGenes.add(gene.getGeneName())));
-        this.mappedGenes = new HashSet<>();
-        association.getLoci().forEach(
-                locus -> locus.getStrongestRiskAlleles().forEach(
-                        riskAllele -> riskAllele.getSnp().getGenes().forEach(
-                                gene -> mappedGenes.add(gene.getGeneName()))));
         this.traits = new HashSet<>();
         this.traitUris = new HashSet<>();
         association.getEfoTraits().forEach(trait -> {
@@ -95,6 +90,7 @@ public class AssociationDocument extends Document<Association> {
         this.rsIds = new HashSet<>();
         this.chromosomeNames = new HashSet<>();
         this.chromosomePositions = new HashSet<>();
+        this.mappedGenes = new HashSet<>();
         this.regions = new HashSet<>();
         this.lastModifiedDates = new HashSet<>();
         Collection<SingleNucleotidePolymorphism> snps = new HashSet<>();
@@ -111,7 +107,8 @@ public class AssociationDocument extends Document<Association> {
                 chromosomePositions.add(Integer.parseInt(snp.getChromosomePosition()));
             }
             snp.getRegions().forEach(region -> regions.add(region.getName()));
-            snp.getGenes().forEach(gene -> reportedGenes.add(gene.getGeneName()));
+            snp.getGenomicContexts().forEach(
+                    context -> mappedGenes.add(context.getGene().getGeneName()));
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
             df.setTimeZone(TimeZone.getTimeZone("UTC"));
             if (snp.getLastUpdateDate() != null) {
