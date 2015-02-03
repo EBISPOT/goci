@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci;
 
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
@@ -9,6 +10,7 @@ import uk.ac.ebi.spot.goci.exception.SolrIndexingException;
 import uk.ac.ebi.spot.goci.owl.OntologyLoader;
 import uk.ac.ebi.spot.goci.owl.ReasonedOntologyLoader;
 
+import javax.validation.constraints.NotNull;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.Collections;
@@ -21,8 +23,11 @@ import java.util.Collections;
  */
 @Component
 public class SolrIndexerConfiguration {
+    @NotNull @Value("${search.server}")
+    private String solrServer;
+
     @Bean SolrServer solrServer() {
-        return new HttpSolrServer("http://orange.ebi.ac.uk:8983/solr");
+        return new HttpSolrServer(solrServer);
     }
 
     @Bean OntologyLoader ontologyLoader() {

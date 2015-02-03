@@ -93,7 +93,8 @@ public class StudyService {
 
     public void loadAssociatedData(Study study) {
         int efoTraitCount = study.getEfoTraits().size();
+        int associationCount = study.getAssociations().size();
         getLog().info(
-                "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits");
+                "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits and has " + associationCount + " associations");
     }
 }
