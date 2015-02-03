@@ -85,6 +85,14 @@
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <label for="previouslyReported" class="control-label col-md-2"></label>
+
+                        <div class="col-md-10">
+                            <input type="hidden" th:field="${ethnicity.previouslyReported}" class="form-control" id="previouslyReported"/>
+                        </div>
+                    </div>
+
 
                     <!--Type dropdown-->
                     <div class="form-group">
@@ -111,7 +119,7 @@
                         <div class="col-md-10">
                             <select name="ethnicGroup" class="form-control select2-select"
                                     multiple="multiple" data-placeholder="Choose ethnic group"
-                                    th:field="${ethnicity.ethnicGroup}"
+                                    th:field="${ethnicGroup.ethnicGroupValues}"
                                     id="ethnicGroup">
                                 <option th:each="ethnicGroup : ${ethnicGroups}"
                                         th:value="${ethnicGroup}"
