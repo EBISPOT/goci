@@ -56,30 +56,29 @@ function processData(data){
 
                 if (doc.resourcename == "study") {
                     if(studyTable.find('tr').length == 5) {
-                        var toggle = $('<tr data-toggle="collapse" data-target=".hiddenStudy" class="accordion-toggle"> <td colspan="6"><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span></button></td></tr> ');
-                        studyTable.append(toggle);
+                        $('#studyToggle').show();
+
                     }
                     processStudy(doc, studyTable);
 
                 }
                 else if (doc.resourcename == "association") {
                     if(associationTable.find('tr').length == 5){
-                        var toggle = $('<tr data-toggle="collapse" data-target=".hiddenAssociation" class="accordion-toggle"> <td colspan="6"><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span></button></td></tr> ');
-                        associationTable.append(toggle);
+                        $('#associationToggle').show();
+
                     }
                     processAssociation(doc, associationTable);
                 }
                 else if (doc.resourcename == "diseaseTrait") {
                     if(traitTable.find('tr').length == 5){
-                        var toggle = $('<tr data-toggle="collapse" data-target=".hiddenTrait" class="accordion-toggle"> <td colspan="6"><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span></button></td></tr> ');
-                        traitTable.append(toggle);
+                        $('#diseasetraitToggle').show();
                     }
                     processTrait(doc, traitTable);
                 }
                 else if (doc.resourcename == "singleNucleotidePolymorphism") {
                     if(snpTable.find('tr').length == 5){
-                        var toggle = $('<tr data-toggle="collapse" data-target=".hiddenSNP" class="accordion-toggle"> <td colspan="6"><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span></button></td></tr> ');
-                        snpTable.append(toggle);
+                        $('#singlenucleotidepolymorphismToggle').show();
+
                     }
                     processSnp(doc, snpTable);
                 }
@@ -126,7 +125,7 @@ function setCountBadges(countArray){
 
 function processStudy(study, table){
     var row = $("<tr>");
-    if(table.find('tr').length > 6){
+    if(table.find('tr').length >= 5){
         row.addClass('accordion-body');
         row.addClass('collapse');
         row.addClass('hiddenStudy');
@@ -142,7 +141,7 @@ function processStudy(study, table){
 
 function processAssociation(association, table){
     var row = $("<tr>");
-    if(table.find('tr').length > 6){
+    if(table.find('tr').length >= 5){
         row.addClass('accordion-body');
         row.addClass('collapse');
         row.addClass('hiddenAssociation');
@@ -167,7 +166,7 @@ function processAssociation(association, table){
     row.append($("<td>").html(association.chromosomePosition));
 
     var gene = '';
-    if(snp.gene != null){
+    if(association.gene != null){
         for(var j=0; j < association.gene.length; j++){
             if(gene == ''){
                 gene = association.gene[j];
@@ -190,7 +189,7 @@ function processAssociation(association, table){
 function processTrait(diseasetrait, table){
 
     var row = $("<tr>");
-    if(table.find('tr').length > 6){
+    if(table.find('tr').length >= 5){
         row.addClass('accordion-body');
         row.addClass('collapse');
         row.addClass('hiddenTrait');
@@ -247,7 +246,7 @@ function processTrait(diseasetrait, table){
 
 function processSnp(snp, table){
     var row = $("<tr>");
-    if(table.find('tr').length > 6){
+    if(table.find('tr').length >= 5){
         row.addClass('accordion-body');
         row.addClass('collapse');
         row.addClass('hiddenSNP');

@@ -7,7 +7,7 @@ var solrBaseURL = 'http://orange.ebi.ac.uk:8983/solr/gwas/select'
 
 var resources = ['study', 'association', 'diseasetrait', 'singlenucleotidepolymorphism'];
 
-function solrfacet(queryTerm, facet){
+function solrFacet(queryTerm, facet){
 
     console.log("Solr research request received for " + queryTerm + " and facet " + facet);
     var searchTerm = 'text:"'.concat(queryTerm).concat('"');
@@ -20,10 +20,10 @@ function solrfacet(queryTerm, facet){
         group = 'true';
         field = 'pubmedId';
     }
-    else if(facet == "association" || facet == "singlenucleotidepolymorphism"){
-        group = 'true';
-        field = 'rsId';
-    }
+    //else if(facet == "association" || facet == "singlenucleotidepolymorphism"){
+    //    group = 'true';
+    //    field = 'rsId';
+    //}
 
     $.ajax({
         url: solrBaseURL,
@@ -49,32 +49,50 @@ function solrfacet(queryTerm, facet){
 }
 
 function processFacet(data){
-    setCountBadges(data.facet_counts.facet_fields.resourcename);
+    console.log("Received data and ready to process");
+    //setCountBadges(data.facet_counts.facet_fields.resourcename);
 
     var resource = data.responseHeader.params.fq.substring(13);
+    console.log("Facet is " + resource);
 
     for(var f=0; f < resources.length; f++){
-        if(resource != resources[f]){
-            $('#' +resource+ 'Table').hide();
+        if(resources[f] != resource){
+            $('#' + resources[f] + 'Summaries tbody').remove();
+            $('#' + resources[f] + 'Table').hide();
         }
+        else{
+            $('#' + resource + 'Summaries tbody').remove();
+            $('#' + resource + 'Table').show();
+            $('#' + resource + 'Toggle').hide();
+        }
+
     }
 
     var table = $("<tbody>");
 
     if(data.responseHeader.params.group == 'true'){
-        if(resource == "study"){
+        //if(resource == "study"){
             processStudies(data.grouped.pubmedId.groups, table);
+        //}
+        //else if(resource == "association"){
+        //    processAssociations(data.grouped.rsId.groups, table)
+        //}
+        //else{
+        //    processSnps(data.grouped.rsId.groups, table)
+        //
+        //}
+    }
+    else {
+        if (resource == "association") {
+            processAssociations(data.response.docs, table)
         }
-        else if(resource == "association"){
-            processAssociations(data.grouped.rsId.groups, table)
-        }
-        else{
-            processSnps(data.grouped.rsId.groups, table)
+        else if (resource == "singlenucleotidepolymorphism") {
+            processSnps(data.response.docs, table)
 
         }
-    }
-    else{
-        processTraits(data.resource.docs, table);
+        else{
+            processTraits(data.response.docs, table);
+         }
     }
 
 
@@ -104,10 +122,11 @@ function processStudies(studies, table){
 
 function processAssociations(associations, table) {
     for (var i = 0; i < associations.length; i++) {
-        var documents = associations[i].doclist.docs;
-
-        for (var j = 0; j < documents.length; j++) {
-            var association = documents[j];
+        //var documents = associations[i].doclist.docs;
+        //
+        //for (var j = 0; j < documents.length; j++) {
+        //    var association = documents[j];
+        var association = associations[i];
 
             var row = $("<tr>");
             row.append($("<td>").html(association.strongestAllele));
@@ -130,7 +149,7 @@ function processAssociations(associations, table) {
             row.append($("<td>").html(association.chromosomePosition));
 
             var gene = '';
-            if (snp.gene != null) {
+            if (association.gene != null) {
                 for (var j = 0; j < association.gene.length; j++) {
                     if (gene == '') {
                         gene = association.gene[j];
@@ -147,7 +166,7 @@ function processAssociations(associations, table) {
             row.append($("<td>").html(study));
             table.append(row);
         }
-    }
+    //}
 }
 
 function processTraits(diseasetraits, table){
@@ -209,10 +228,12 @@ function processTraits(diseasetraits, table){
 
 function processSnps(snps, table){
     for (var i = 0; i < snps.length; i++) {
-        var documents = snps[i].doclist.docs;
+        //var documents = snps[i].doclist.docs;
+        //
+        //for (var j = 0; j < documents.length; j++) {
+        //    var snp = documents[j];
 
-        for (var j = 0; j < documents.length; j++) {
-            var snp = documents[j];
+        var snp = snps[i];
             var row = $("<tr>");
             row.append($("<td>").html(snp.rsId));
             row.append($("<td>").html(snp.chromosomePosition));
@@ -233,5 +254,5 @@ function processSnps(snps, table){
             row.append($("<td>").html(gene));
             table.append(row);
         }
-    }
+    //}
 }
