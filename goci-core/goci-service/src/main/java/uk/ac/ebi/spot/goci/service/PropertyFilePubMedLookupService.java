@@ -8,6 +8,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -42,6 +44,11 @@ import java.util.Properties;
 @Service
 public class PropertyFilePubMedLookupService implements GwasPubMedLookupService {
 
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
 
     // xml version is very important here , it must be "&version=2.0"
     private String xmlVersion;
@@ -162,12 +169,14 @@ public class PropertyFilePubMedLookupService implements GwasPubMedLookupService 
             if (System.getProperty("http.proxyPort") != null) {
                 proxy = new HttpHost(System.getProperty("http.proxyHost"), Integer.parseInt(System.getProperty
                         ("http.proxyPort")));
+
             } else {
                 proxy = new HttpHost(System.getProperty("http.proxyHost"));
             }
+            getLog().info("setting proxy "+ proxy);
             httpGet.setConfig(RequestConfig.custom().setProxy(proxy).build());
         }
-
+        getLog().info("fetching from "+ searchString+"doing http get"+httpGet.toString());
         try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
             if (response.getStatusLine().getStatusCode() == HttpStatus.OK.value()) {
                 HttpEntity entity = response.getEntity();
