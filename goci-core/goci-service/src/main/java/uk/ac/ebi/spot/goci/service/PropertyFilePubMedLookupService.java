@@ -1,16 +1,13 @@
 package uk.ac.ebi.spot.goci.service;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.HttpHost;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -26,7 +23,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,25 +35,19 @@ import java.util.Properties;
  *
  * @author Tony Burdett
  *         Date 26/10/11
- *         <p>
+ *         <p/>
  *         Adapted by Emma (2015-01-16) based on code written by Tony.
  */
 
 @Service
 public class PropertyFilePubMedLookupService implements GwasPubMedLookupService {
-    public static final int PUBMED_MAXRECORDS = 1000;
 
-    private HttpContext httpContext;
-    private HttpClient httpClient;
-    private String summaryString;
 
     // xml version is very important here , it must be "&version=2.0"
     private String xmlVersion;
+    private String summaryString;
 
     public PropertyFilePubMedLookupService() {
-        this.httpContext = new BasicHttpContext();
-        this.httpContext.setAttribute(ClientContext.COOKIE_STORE, new BasicCookieStore());
-        this.httpClient = new DefaultHttpClient();
 
         Properties properties = new Properties();
 
@@ -83,7 +73,7 @@ public class PropertyFilePubMedLookupService implements GwasPubMedLookupService 
 
         // Run query and create study object
         try {
-            response = doPubmedQuery(URI.create(summaryString.replace("{idlist}", pubmedId) + xmlVersion));
+            response = dispatchSearch(summaryString.replace("{idlist}", pubmedId) + xmlVersion);
 
             NodeList docSumNodes = response.getElementsByTagName("DocumentSummary");
 
@@ -161,30 +151,52 @@ public class PropertyFilePubMedLookupService implements GwasPubMedLookupService 
     }
 
     // Uses Entrez Programming Utilities (E-utilities) service to query Pubmed with supplied id
-    private Document doPubmedQuery(URI queryUri) throws IOException {
-        HttpGet httpGet = new HttpGet(queryUri);
-        HttpResponse response = httpClient.execute(httpGet, httpContext);
-        HttpEntity entity = response.getEntity();
-        InputStream entityIn = entity.getContent();
 
-        try {
+    private Document dispatchSearch(String searchString) throws IOException {
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet(searchString);
+
+        // This will set our proxy
+        if (System.getProperty("http.proxyHost") != null) {
+            HttpHost proxy;
+            if (System.getProperty("http.proxyPort") != null) {
+                proxy = new HttpHost(System.getProperty("http.proxyHost"), Integer.parseInt(System.getProperty
+                        ("http.proxyPort")));
+            } else {
+                proxy = new HttpHost(System.getProperty("http.proxyHost"));
+            }
+            httpGet.setConfig(RequestConfig.custom().setProxy(proxy).build());
+        }
+
+        try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
             if (response.getStatusLine().getStatusCode() == HttpStatus.OK.value()) {
+                HttpEntity entity = response.getEntity();
                 try {
-                    DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-                    return db.parse(entityIn);
-                } catch (SAXException e) {
-                    throw new IOException("Could not parse response from PubMed due to an exception reading content",
-                            e);
-                } catch (ParserConfigurationException e) {
-                    throw new IOException("Could not parse response from PubMed due to an exception reading content",
-                            e);
+                    InputStream in = entity.getContent();
+                    return parsePubmedResponse(in);
+                } finally {
+                    EntityUtils.consume(entity);
                 }
+
+
             } else {
                 throw new IOException(
-                        "Could not obtain results from '" + queryUri + "' due to an unknown communication problem");
+                        "Could not obtain results from '" + searchString + "' due to an unknown communication problem");
             }
-        } finally {
-            entityIn.close();
+
+        }
+    }
+
+    private Document parsePubmedResponse(InputStream inputStream) throws IOException {
+        try {
+            DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            return db.parse(inputStream);
+        } catch (SAXException e) {
+            throw new IOException("Could not parse response from PubMed due to an exception reading content",
+                    e);
+        } catch (ParserConfigurationException e) {
+            throw new IOException("Could not parse response from PubMed due to an exception reading content",
+                    e);
         }
     }
 }
