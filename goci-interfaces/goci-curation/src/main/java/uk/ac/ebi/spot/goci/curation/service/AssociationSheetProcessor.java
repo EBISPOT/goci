@@ -6,10 +6,13 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.service.AssociationCalculationService;
+import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
+import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -24,7 +27,7 @@ import java.util.ArrayList;
 public class AssociationSheetProcessor {
 
     private XSSFSheet sheet;
-    private ArrayList<Association> allSnpAssociations = new ArrayList<Association>();
+    private Collection<SnpAssociationForm> snpAssociationForms = new ArrayList<>();
     private AssociationCalculationService associationCalculationService = new AssociationCalculationService();
     private Logger log = LoggerFactory.getLogger(getClass());
     private String logMessage;
@@ -58,7 +61,6 @@ public class AssociationSheetProcessor {
                 String authorReportedGene;
                 String strongestAllele;
                 String snp;
-
 
                 // Get gene values
                 if (row.getCell(0, row.RETURN_BLANK_AS_NULL) != null) {
@@ -159,15 +161,6 @@ public class AssociationSheetProcessor {
                     logMessage = "Error in field 'pvalue exponent' in row " + rowNum + 1 + "\n";
                 }
 
-                // This is calculated from mantissa and exponent
-                Float pvalueFloat;
-
-                if (pvalueExponent != null && pvalueMantissa != null) {
-                    pvalueFloat = associationCalculationService.calculatePvalueFloat(pvalueMantissa, pvalueExponent);
-                } else {
-                    pvalueFloat = Float.valueOf(0);
-                }
-
 
                 String pvalueText;
                 if (row.getCell(6, row.RETURN_BLANK_AS_NULL) != null) {
@@ -239,7 +232,7 @@ public class AssociationSheetProcessor {
 
                 String multiSnpHaplotype;
                 if (row.getCell(9, row.RETURN_BLANK_AS_NULL) != null) {
-                    orType = row.getCell(9).getRichStringCellValue().getString();
+                    multiSnpHaplotype = row.getCell(9).getRichStringCellValue().getString();
                     logMessage = "Error in field 'OR type' in row " + rowNum + 1 + "\n";
                 } else {
                     multiSnpHaplotype = null;
@@ -310,18 +303,82 @@ public class AssociationSheetProcessor {
                 }
 
 
-
                 if (authorReportedGene == null && strongestAllele == null && snp == null && riskFrequency == null) {
                     done = true;
                     getLog().debug("Empty row that wasn't caught via 'row = null'");
                 } else {
                     // Create a new form which will be passed back to controller and handled there
                     SnpAssociationForm snpAssociationForm = new SnpAssociationForm();
-                    snpAssociationForm.
+                    snpAssociationForm.setRiskFrequency(riskFrequency);
+                    snpAssociationForm.setPvalueText(pvalueText);
+                    snpAssociationForm.setOrPerCopyNum(orPerCopyNum);
 
 
+                    if (orType.equalsIgnoreCase("Y")) {
+                        snpAssociationForm.setOrType(true);
+                    } else {
+                        snpAssociationForm.setOrType(false);
+                    }
+
+                    if (multiSnpHaplotype.equalsIgnoreCase("Y")) {
+                        snpAssociationForm.setMultiSnpHaplotype(true);
+                    } else {
+                        snpAssociationForm.setMultiSnpHaplotype(false);
+                    }
+
+                    snpAssociationForm.setSnpType(snpType);
+                    snpAssociationForm.setPvalueMantissa(pvalueMantissa);
+                    snpAssociationForm.setPvalueExponent(pvalueExponent);
+                    snpAssociationForm.setOrPerCopyRecip(orPerCopyRecip);
+                    snpAssociationForm.setOrPerCopyStdError(orPerCopyStdError);
+                    snpAssociationForm.setOrPerCopyRange(orPerCopyRange);
+                    snpAssociationForm.setOrPerCopyUnitDescr(orPerCopyUnitDescr);
+
+                    // TODO HOW DO WE HANDLE SNPS
+
+                    List<String> snps = new ArrayList<>();
+                    String[] separatedSnps = snp.split(",");
+                    for (String separatedSnp : separatedSnps) {
+                        snps.add(separatedSnp.trim());
+                    }
+
+
+                    List<String> riskAlleles = new ArrayList<>();
+                    String[] separatedRiskAlleles = strongestAllele.split(",");
+                    for (String separatedRiskAllele : separatedRiskAlleles) {
+                        snps.add(separatedRiskAllele.trim());
+                    }
+
+                    Iterator<String> riskAlleleIterator = riskAlleles.iterator();
+                    Iterator<String> snpIterator = snps.iterator();
+                    Collection<SnpFormRow> snpFormRows = new ArrayList<>();
+                    if (riskAlleles.size() == snps.size()) {
+
+                        while (riskAlleleIterator.hasNext()){
+                            SnpFormRow snpFormRow = new SnpFormRow();
+                            String snpValue = snpIterator.next().trim();
+                            String riskAlleleValue = riskAlleleIterator.next().trim();
+                            snpFormRow.setSnp(snpValue);
+                            snpFormRow.setStrongestRiskAllele(riskAlleleValue);
+                            snpFormRows.add(snpFormRow);
+                        }
+
+                    } else {
+                        getLog().error("Mismatched number of snps and risk alleles");
+                    }
+
+
+                    // Handle curator entered genes
+                    String[] genes = authorReportedGene.split(",");
+                    Collection<String> authorReportedGenes = new ArrayList<>();
+
+                    for (String gene : genes) {
+                        gene.trim();
+                        authorReportedGenes.add(gene);
+                    }
+                    snpAssociationForm.setAuthorReportedGenes(authorReportedGenes);
                     // Add all newly created associations to collection
-                    allSnpAssociations.add(thisAssociation);
+                    snpAssociationForms.add(snpAssociationForm);
                 }
 
             }
@@ -329,8 +386,8 @@ public class AssociationSheetProcessor {
         }
     }
 
-    public ArrayList<Association> getAllSnpAssociations() {
-        return allSnpAssociations;
+    public Collection<SnpAssociationForm> getAllSnpAssociations() {
+        return snpAssociationForms;
     }
 
     public String getLogMessage() {
