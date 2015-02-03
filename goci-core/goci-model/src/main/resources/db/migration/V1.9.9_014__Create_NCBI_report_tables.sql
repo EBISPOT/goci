@@ -44,8 +44,7 @@ CREATE TABLE "SNP_MAPPED_GENE" (
   IS_INTERGENIC NUMBER(1,0),
   IS_UPSTREAM NUMBER(1,0),
   IS_DOWNSTREAM NUMBER(1,0),
-  DISTANCE NUMBER(19,0),
-);
+  DISTANCE NUMBER(19,0));
 
 --------------------------------------------------------
 --  DDL for Table ASSOCIATION_REPORT
