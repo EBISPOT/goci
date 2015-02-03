@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.service;
+package uk.ac.ebi.spot.goci.curation.service;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -7,19 +7,17 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.Gene;
-import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.service.AssociationCalculationService;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 
 /**
  * @author emma
- *         <p>
+ *         <p/>
  *         This class takes an Excel spreadsheet sheet and extracts all the association records
  *         For each SNP, an Association object is created
- *         <p>
+ *         <p/>
  *         Created from code originally written by Dani. Adapted to fit with new curation system.
  */
 
@@ -61,16 +59,10 @@ public class AssociationSheetProcessor {
                 String strongestAllele;
                 String snp;
 
-                // Create a collection to hold newly identified SNPs
-                Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
-                Collection<Gene> reportedGenes = new ArrayList<>();
 
-
+                // Get gene values
                 if (row.getCell(0, row.RETURN_BLANK_AS_NULL) != null) {
                     authorReportedGene = row.getCell(0).getRichStringCellValue().getString();
-
-                    Gene reportedGene = new Gene();
-                    reportedGenes.add(reportedGene);
                     logMessage = "Error in field 'Gene' in row " + rowNum + 1 + "\n";
 
                 } else {
@@ -79,6 +71,7 @@ public class AssociationSheetProcessor {
                     logMessage = "Error in field 'Gene' in row " + rowNum + 1 + "\n";
                 }
 
+                // Get Strongest SNP-Risk Allele
                 if (row.getCell(1, row.RETURN_BLANK_AS_NULL) != null) {
                     strongestAllele = row.getCell(1).getRichStringCellValue().getString();
                     logMessage = "Error in field 'Risk allele' in row " + rowNum + 1 + "\n";
@@ -89,31 +82,9 @@ public class AssociationSheetProcessor {
                     logMessage = "Error in field 'Risk allele' in row " + rowNum + 1 + "\n";
                 }
 
+
                 if (row.getCell(2, row.RETURN_BLANK_AS_NULL) != null) {
                     snp = row.getCell(2).getRichStringCellValue().getString();
-
-                /* TODO COMMENTING OUT UNTIL WE KNOW MORE ABOUT HANDLING HOW TO HANDLE MULTIPLE SNPS
-
-                // More than one SNP entered in row, user should separate these with comma
-                    if (snp.contains(",")) {
-                        String[] splitSnpStrings = snp.split(",");
-                        for (String splitSnpString : splitSnpStrings) {
-                            // Create a new SNP object
-                            SingleNucleotidePolymorphism newSnp = new SingleNucleotidePolymorphism();
-                            newSnp.setRsId(splitSnpString);
-
-                            // Add to collection
-                            snps.add(newSnp);
-                        }
-                    }*/
-
-                    // Single snp entered, assuming string with no comma is a single entry
-
-                    SingleNucleotidePolymorphism newSnp = new SingleNucleotidePolymorphism();
-                    newSnp.setRsId(snp);
-
-                    // Add to collection
-                    snps.add(newSnp);
 
                     logMessage = "Error in field 'SNP' in row " + rowNum + 1 + "\n";
 
@@ -266,6 +237,16 @@ public class AssociationSheetProcessor {
                     logMessage = "Error in field 'OR type' in row " + rowNum + 1 + "\n";
                 }
 
+                String multiSnpHaplotype;
+                if (row.getCell(9, row.RETURN_BLANK_AS_NULL) != null) {
+                    orType = row.getCell(9).getRichStringCellValue().getString();
+                    logMessage = "Error in field 'OR type' in row " + rowNum + 1 + "\n";
+                } else {
+                    multiSnpHaplotype = null;
+                    getLog().debug("OR type is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'OR type' in row " + rowNum + 1 + "\n";
+                }
+
                 String orPerCopyRange;
                 if (row.getCell(10, row.RETURN_BLANK_AS_NULL) != null) {
                     orPerCopyRange = row.getCell(10).getRichStringCellValue().getString();
@@ -328,48 +309,15 @@ public class AssociationSheetProcessor {
                     logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
                 }
 
-                String multiSnpHaplotype;
-                if (row.getCell(13, row.RETURN_BLANK_AS_NULL) != null) {
-                    multiSnpHaplotype = row.getCell(13).getRichStringCellValue().getString();
-                    logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
-                } else {
-                    multiSnpHaplotype = null;
-                    getLog().debug("SNP type is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
-                }
-
-                String snpInteraction;
-                if (row.getCell(13, row.RETURN_BLANK_AS_NULL) != null) {
-                    snpInteraction = row.getCell(13).getRichStringCellValue().getString();
-                    logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
-                } else {
-                    snpInteraction = null;
-                    getLog().debug("SNP type is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
-                }
 
 
                 if (authorReportedGene == null && strongestAllele == null && snp == null && riskFrequency == null) {
                     done = true;
                     getLog().debug("Empty row that wasn't caught via 'row = null'");
                 } else {
-                    // Create a new association
-                    Association thisAssociation = new Association();
-                 //   thisAssociation.setAuthorReportedGene(authorReportedGene);
-                    thisAssociation.setRiskFrequency(riskFrequency);
-                    thisAssociation.setPvalueFloat(pvalueFloat);
-                    thisAssociation.setPvalueText(pvalueText);
-                    thisAssociation.setOrPerCopyNum(orPerCopyNum);
-               //     thisAssociation.setOrType(orType);
-                    thisAssociation.setSnpType(snpType);
-                 //   thisAssociation.setMultiSnpHaplotype(multiSnpHaplotype);
-                //    thisAssociation.setSnpInteraction(snpInteraction);
-                    thisAssociation.setPvalueMantissa(pvalueMantissa);
-                    thisAssociation.setPvalueExponent(pvalueExponent);
-                    thisAssociation.setOrPerCopyRecip(orPerCopyRecip);
-                    thisAssociation.setOrPerCopyStdError(orPerCopyStdError);
-                    thisAssociation.setOrPerCopyRange(orPerCopyRange);
-                    thisAssociation.setOrPerCopyUnitDescr(orPerCopyUnitDescr);
+                    // Create a new form which will be passed back to controller and handled there
+                    SnpAssociationForm snpAssociationForm = new SnpAssociationForm();
+                    snpAssociationForm.
 
 
                     // Add all newly created associations to collection

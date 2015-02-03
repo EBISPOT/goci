@@ -9,10 +9,10 @@ import org.springframework.web.multipart.MultipartFile;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
+import uk.ac.ebi.spot.goci.curation.service.AssociationBatchLoaderService;
+import uk.ac.ebi.spot.goci.curation.service.AssociationCalculationService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
-import uk.ac.ebi.spot.goci.service.AssociationBatchLoaderService;
-import uk.ac.ebi.spot.goci.service.AssociationCalculationService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -352,6 +352,8 @@ public class AssociationController {
 
         if (pvalueMantissa != null && pvalueExponent != null) {
             association.setPvalueFloat(associationCalculationService.calculatePvalueFloat(pvalueMantissa, pvalueExponent));
+        } else {
+            association.setPvalueFloat(Float.valueOf(0));
         }
 
         // Add loci to association or if we are editing an existing one find it

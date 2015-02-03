@@ -1,14 +1,11 @@
-package uk.ac.ebi.spot.goci.service;
+package uk.ac.ebi.spot.goci.curation.service;
 
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Association;
 
-import java.io.File;
 import java.util.ArrayList;
 
 
