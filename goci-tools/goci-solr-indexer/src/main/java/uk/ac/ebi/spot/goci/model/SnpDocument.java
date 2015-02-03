@@ -32,7 +32,7 @@ public class SnpDocument extends Document<SingleNucleotidePolymorphism> {
         this.regions = new HashSet<>();
         snp.getRegions().forEach(region -> regions.add(region.getName()));
         this.genes = new HashSet<>();
-        snp.getGenes().forEach(gene -> genes.add(gene.getGeneName()));
+        snp.getGenomicContexts().forEach(context -> genes.add(context.getGene().getGeneName()));
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
         if (snp.getLastUpdateDate() != null) {
