@@ -195,14 +195,16 @@
         </div>
     </div>
 
+
     <div class="form-group">
         <label for="orPerCopyNum" class="control-label col-md-2">OR/HR/RR per copy (Num)</label>
 
         <div class="col-md-10">
-            <input type="text" class="form-control" name="orPerCopyNum" id="orPerCopyNum"
-                   th:filed="*{orPerCopyNum}"/>
+            <input type="text" class="form-control" id="orPerCopyNum"
+                   th:field="*{orPerCopyNum}" name="orPerCopyNum"/>
         </div>
     </div>
+
 
     <div class="form-group">
         <label for="orPerCopyRecip" class="control-label col-md-2">OR/HR/RR per copy
@@ -213,6 +215,8 @@
                    th:field="*{orPerCopyRecip}" name="orPerCopyRecip"/>
         </div>
     </div>
+
+
 
     <div class="form-group">
         <label for="orPerCopyRange" class="control-label col-md-2">OR/HR/RR per copy (Range)</label>
@@ -266,7 +270,7 @@
 
     <!--Hidden field-->
     <div class="form-group">
-        <label for="snpInteraction" class="control-label col-md-2">snpInteraction</label>
+        <label for="snpInteraction" class="control-label col-md-2"></label>
         <input id="snpInteraction" type="hidden"
                th:field="*{multiSnpHaplotype}"/>
     </div>
