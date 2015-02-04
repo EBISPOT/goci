@@ -87,6 +87,33 @@ public class AssociationService {
         return allAssociations;
     }
 
+    @Transactional(readOnly = true)
+    public List<Association> deepFindPublished() {
+        List<Association> allAssociations = associationRepository.findByStudyHousekeepingPublishDateIsNotNull();
+        // iterate over all Associations and grab region info
+        getLog().info("Obtained " + allAssociations.size() + " associations, starting deep load...");
+        allAssociations.forEach(this::loadAssociatedData);
+        return allAssociations;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Association> deepFindPublished(Sort sort) {
+        List<Association> allAssociations = associationRepository.findByStudyHousekeepingPublishDateIsNotNull(sort);
+        // iterate over all Associations and grab region info
+        getLog().info("Obtained " + allAssociations.size() + " associations, starting deep load...");
+        allAssociations.forEach(this::loadAssociatedData);
+        return allAssociations;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Association> deepFindPublished(Pageable pageable) {
+        Page<Association> allAssociations = associationRepository.findByStudyHousekeepingPublishDateIsNotNull(pageable);
+        // iterate over all Associations and grab region info
+        getLog().info("Obtained " + allAssociations.getSize() + " associations, starting deep load...");
+        allAssociations.forEach(this::loadAssociatedData);
+        return allAssociations;
+    }
+
     public void loadAssociatedData(Association association) {
         int traitCount = association.getEfoTraits().size();
         Study study = studyService.deepFetchOne(association.getStudy());

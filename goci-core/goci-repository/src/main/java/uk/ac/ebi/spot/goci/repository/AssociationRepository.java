@@ -1,9 +1,15 @@
 package uk.ac.ebi.spot.goci.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.Study;
+
 import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -15,4 +21,10 @@ import java.util.Collection;
 @RepositoryRestResource
 public interface AssociationRepository extends JpaRepository<Association, Long> {
     Collection<Association> findByStudyId(long studyId);
+
+    List<Association> findByStudyHousekeepingPublishDateIsNotNull();
+
+    List<Association> findByStudyHousekeepingPublishDateIsNotNull(Sort sort);
+
+    Page<Association> findByStudyHousekeepingPublishDateIsNotNull(Pageable pageable);
 }

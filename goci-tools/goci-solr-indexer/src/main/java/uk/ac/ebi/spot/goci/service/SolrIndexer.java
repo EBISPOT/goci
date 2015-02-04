@@ -153,11 +153,11 @@ public class SolrIndexer {
     Integer mapAssociations() {
         Sort sort = new Sort(new Sort.Order("id"));
         Pageable pager = new PageRequest(0, pageSize, sort);
-        Page<Association> associationPage = associationService.deepFindAll(pager);
+        Page<Association> associationPage = associationService.deepFindPublished(pager);
         associationMapper.map(associationPage.getContent());
         while (associationPage.hasNext()) {
             pager = pager.next();
-            associationPage = associationService.deepFindAll(pager);
+            associationPage = associationService.deepFindPublished(pager);
             associationMapper.map(associationPage.getContent());
             if (sysOutLogging) {
                 System.out.print(".");
