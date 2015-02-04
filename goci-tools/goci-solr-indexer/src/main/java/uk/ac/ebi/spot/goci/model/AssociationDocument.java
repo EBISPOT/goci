@@ -18,17 +18,19 @@ import java.util.stream.Collectors;
  * @date 16/01/15
  */
 public class AssociationDocument extends Document<Association> {
-    @Field private String riskFrequency;
-    @Field private String qualifier;
-    @Field private String orPerCopyUnitDescr;
-    @Field private String orType;
-    @Field private float orPerCopyNum;
-    @Field private float pValue;
-
-    @Field("strongestAllele") private Set<String> strongestAlleles;
-
+    @Field("region") private Set<String> regions;
     @Field("reportedGene") private Collection<String> reportedGenes;
     @Field("mappedGene") private Collection<String> mappedGenes;
+    @Field("strongestAllele") private Set<String> strongestAlleles;
+
+    @Field private String riskFrequency;
+    @Field private String qualifier;
+
+    @Field private float pValue;
+    @Field private float orPerCopyNum;
+    @Field private String orPerCopyUnitDescr;
+    @Field private String orType;
+
     @Field("trait") private Collection<String> traits;
     @Field("traitUri") private Collection<String> traitUris;
 
@@ -38,12 +40,10 @@ public class AssociationDocument extends Document<Association> {
     @Field private String author;
     @Field private String publication;
 
-    // additional fields from snp
-    // NB. gene field is already captured in author reported genes, may need to split?
+    // additional search fields from snps
     @Field("rsId") private Set<String> rsIds;
     @Field("chromosomeName") private Set<String> chromosomeNames;
     @Field("chromosomePosition") private Set<Integer> chromosomePositions;
-    @Field("region") private Set<String> regions;
     @Field("last_modified") private Set<String> lastModifiedDates;
 
 
