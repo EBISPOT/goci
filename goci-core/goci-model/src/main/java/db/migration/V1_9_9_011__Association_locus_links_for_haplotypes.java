@@ -121,6 +121,7 @@ public class V1_9_9_011__Association_locus_links_for_haplotypes extends FieldSpl
                     Map<String, Object> geneArgs = new HashMap<>();
                     geneArgs.put("GENE_NAME", geneName);
                     long geneID = insertGene.executeAndReturnKey(geneArgs).longValue();
+                    geneIdToNameMap.put(geneID, geneName);
                     if (!associationIdToGeneIds.containsKey(associationID)) {
                         associationIdToGeneIds.put(associationID, new HashSet<>());
                     }
@@ -169,6 +170,7 @@ public class V1_9_9_011__Association_locus_links_for_haplotypes extends FieldSpl
                         snpArgs.put("RS_ID", rsId);
                         insertSnp.execute(snpArgs);
                         long snpID = insertSnp.executeAndReturnKey(snpArgs).longValue();
+                        snpIdToRsIdMap.put(snpID, rsId);
                         if (!associationIdToSnpIds.containsKey(associationID)) {
                             associationIdToSnpIds.put(associationID, new ArrayList<>());
                         }
@@ -221,6 +223,7 @@ public class V1_9_9_011__Association_locus_links_for_haplotypes extends FieldSpl
                         snpArgs.put("RS_ID", rsId);
                         insertSnp.execute(snpArgs);
                         long snpID = insertSnp.executeAndReturnKey(snpArgs).longValue();
+                        snpIdToRsIdMap.put(snpID, rsId);
                         if (!associationIdToSnpIds.containsKey(associationID)) {
                             associationIdToSnpIds.put(associationID, new ArrayList<>());
                             associationIdToRiskAlleleNames.put(associationID, new ArrayList<>());

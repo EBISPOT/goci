@@ -86,7 +86,7 @@ public class SingleNucleotidePolymorphismService {
 
     public void loadAssociatedData(SingleNucleotidePolymorphism snp) {
         int regionCount = snp.getRegions().size();
-        int geneCount = snp.getGenes().size();
+        int geneCount = snp.getGenomicContexts().size();
         getLog().info(
                 "SNP '" + snp.getRsId() + "' is mapped to " + regionCount + " regions and " + geneCount + " genes");
     }

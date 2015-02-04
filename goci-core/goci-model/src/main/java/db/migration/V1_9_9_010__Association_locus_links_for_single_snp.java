@@ -118,6 +118,7 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends FieldSpl
                     Map<String, Object> geneArgs = new HashMap<>();
                     geneArgs.put("GENE_NAME", geneName);
                     long geneID = insertGene.executeAndReturnKey(geneArgs).longValue();
+                    geneIdToNameMap.put(geneID, geneName);
                     if (!associationIdToGeneIds.containsKey(associationID)) {
                         associationIdToGeneIds.put(associationID, new HashSet<>());
                     }
@@ -179,6 +180,7 @@ public class V1_9_9_010__Association_locus_links_for_single_snp extends FieldSpl
                     Map<String, Object> snpArgs = new HashMap<>();
                     snpArgs.put("RS_ID", rsId);
                     long snpID = insertSnp.executeAndReturnKey(snpArgs).longValue();
+                    snpIdToRsIdMap.put(snpID, rsId);
                     associationIdToSnpId.put(associationID, snpID);
                 }
             }
