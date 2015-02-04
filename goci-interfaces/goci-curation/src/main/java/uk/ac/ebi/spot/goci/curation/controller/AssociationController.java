@@ -83,6 +83,68 @@ public class AssociationController {
         return "study_association";
     }
 
+    // Upload a spreadsheet of snp association information
+    @RequestMapping(value = "/studies/{studyId}/associations/upload", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String uploadStudySnps(@RequestParam("file") MultipartFile file, @PathVariable Long studyId, Model model) {
+
+        // Establish our study object
+        Study study = studyRepository.findOne(studyId);
+
+        if (!file.isEmpty()) {
+            // Save the uploaded file received in a multipart request as a file in the upload directory
+            // The default temporary-file directory is specified by the system property java.io.tmpdir.
+
+            String uploadDir = System.getProperty("java.io.tmpdir");
+
+            // Create file
+            File uploadedFile = new File(uploadDir + file.getOriginalFilename());
+
+            // Copy contents of multipart request to newly created file
+            try {
+                file.transferTo(uploadedFile);
+            } catch (IOException e) {
+                throw new RuntimeException(
+                        "Unable to to upload file ", e);
+            }
+
+            String uploadedFilePath = uploadedFile.getAbsolutePath();
+
+            // Set permissions
+            uploadedFile.setExecutable(true, false);
+            uploadedFile.setReadable(true, false);
+            uploadedFile.setWritable(true, false);
+
+            // Send file, including path, to SNP batch loader process
+            Collection<SnpAssociationForm> snpAssociationForms = new ArrayList<>();
+            try {
+                snpAssociationForms = associationBatchLoaderService.processData(uploadedFilePath);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Create our associations
+            if (!snpAssociationForms.isEmpty()) {
+                for (SnpAssociationForm snpAssociationForm : snpAssociationForms) {
+                    Association association = createStandardAssociation(snpAssociationForm);
+
+                    // Set the study ID for our association
+                    association.setStudy(study);
+
+                    // Save our association information
+                    associationRepository.save(association);
+                }
+
+            }
+            return "redirect:/studies/" + studyId + "/associations";
+
+        } else {
+            // File is empty so let user know
+            model.addAttribute("study", studyRepository.findOne(studyId));
+            return "empty_snpfile_upload_warning";
+        }
+
+    }
+
     // Generate a empty form page to add standard or multi-snp haplotype
     @RequestMapping(value = "/studies/{studyId}/associations/add", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String addStandardSnps(Model model, @PathVariable Long studyId) {
@@ -94,6 +156,15 @@ public class AssociationController {
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
         return "add_standard_or_multi_snp_association";
+    }
+
+    // Generate a empty form page to add standard or multi-snp haplotype
+    @RequestMapping(value = "/studies/{studyId}/associations/add_interaction", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String addSnpInteraction(Model model, @PathVariable Long studyId) {
+
+        // Also passes back study object to view so we can create links back to main study page
+        model.addAttribute("study", studyRepository.findOne(studyId));
+        return "add_snp_interaction_association";
     }
 
     // Add multiple rows to table
@@ -150,51 +221,6 @@ public class AssociationController {
     }
 
 
-    // Upload a spreadsheet of snp association information
-    @RequestMapping(value = "/studies/{studyId}/associations/upload", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String uploadStudySnps(@RequestParam("file") MultipartFile file, @PathVariable Long studyId, Model model) {
-
-        if (!file.isEmpty()) {
-            // Save the uploaded file received in a multipart request as a file in the upload directory
-            // The default temporary-file directory is specified by the system property java.io.tmpdir.
-
-            String uploadDir = System.getProperty("java.io.tmpdir");
-
-            // Create file
-            File uploadedFile = new File(uploadDir + file.getOriginalFilename());
-
-            // Copy contents of multipart request to newly created file
-            try {
-                file.transferTo(uploadedFile);
-            } catch (IOException e) {
-                throw new RuntimeException(
-                        "Unable to to upload file ", e);
-            }
-
-            String uploadedFilePath = uploadedFile.getAbsolutePath();
-
-            // Set permissions
-            uploadedFile.setExecutable(true, false);
-            uploadedFile.setReadable(true, false);
-            uploadedFile.setWritable(true, false);
-
-            // Send file, including path, to SNP batch loader process
-            try {
-                ArrayList<Association> associationsFromFile = associationBatchLoaderService.processData(uploadedFilePath);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return "redirect:/studies/" + studyId + "/associations";
-
-        } else {
-            // File is empty so let user know
-            model.addAttribute("study", studyRepository.findOne(studyId));
-            return "empty_snpfile_upload_warning";
-        }
-    }
-
-
     // Add new standard or multi-snp haplotype association/snp information to a study
     @RequestMapping(value = "/studies/{studyId}/associations/add", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String addStudySnps(@ModelAttribute SnpAssociationForm snpAssociationForm, @PathVariable Long studyId) {
@@ -224,15 +250,27 @@ public class AssociationController {
         // Return association with that ID
         Association associationToView = associationRepository.findOne(associationId);
 
-        // Create form and return to user
-        SnpAssociationForm snpAssociationForm = createSnpAssociationForm(associationToView);
-        model.addAttribute("snpAssociationForm", snpAssociationForm);
-
-        // Also passes back study object to view so we can create links back to main study page
+        // Establish study
         Long studyId = associationToView.getStudy().getId();
-        model.addAttribute("study", studyRepository.findOne(studyId));
 
-        return "edit_standard_or_multi_snp_association";
+        // Placeholder until we get something working
+        if (associationToView.getSnpInteraction() != null && associationToView.getSnpInteraction()) {
+            model.addAttribute("study", studyRepository.findOne(studyId));
+            return "edit_snp_interaction_association";
+
+        } else {
+            // Create form and return to user
+            SnpAssociationForm snpAssociationForm = createSnpAssociationForm(associationToView);
+            model.addAttribute("snpAssociationForm", snpAssociationForm);
+
+            // Also passes back study object to view so we can create links back to main study page
+            model.addAttribute("study", studyRepository.findOne(studyId));
+
+            return "edit_standard_or_multi_snp_association";
+
+        }
+
+
     }
 
 
@@ -331,22 +369,19 @@ public class AssociationController {
         // Set simple string and float association attributes
         association.setRiskFrequency(snpAssociationForm.getRiskFrequency());
         association.setPvalueText(snpAssociationForm.getPvalueText());
-        association.setOrPerCopyNum(snpAssociationForm.getOrPerCopyNum());
         association.setOrType(snpAssociationForm.getOrType());
         association.setSnpType(snpAssociationForm.getSnpType());
         association.setMultiSnpHaplotype(snpAssociationForm.getMultiSnpHaplotype());
         association.setSnpInteraction(snpAssociationForm.getSnpInteraction());
-        association.setPvalueMantissa(snpAssociationForm.getPvalueMantissa());
-        association.setPvalueExponent(snpAssociationForm.getPvalueExponent());
-        association.setOrPerCopyRecip(snpAssociationForm.getOrPerCopyRecip());
-        association.setOrPerCopyStdError(snpAssociationForm.getOrPerCopyStdError());
-        association.setOrPerCopyRange(snpAssociationForm.getOrPerCopyRange());
-        association.setOrPerCopyUnitDescr(snpAssociationForm.getOrPerCopyUnitDescr());
 
         // Add collection of EFO traits
         association.setEfoTraits(snpAssociationForm.getEfoTraits());
 
-        // Calculate float
+        // Set mantissa and exponent
+        association.setPvalueMantissa(snpAssociationForm.getPvalueMantissa());
+        association.setPvalueExponent(snpAssociationForm.getPvalueExponent());
+
+        // Calculate p-value float
         Integer pvalueMantissa = snpAssociationForm.getPvalueMantissa();
         Integer pvalueExponent = snpAssociationForm.getPvalueExponent();
 
@@ -356,9 +391,44 @@ public class AssociationController {
             association.setPvalueFloat(Float.valueOf(0));
         }
 
+        // If reciprocal is given, program will calculate OR from that
+        // This logic is retained from Dani's original code
+        Float orPerCopyNum = snpAssociationForm.getOrPerCopyNum();
+        Float orPerCopyRecip = snpAssociationForm.getOrPerCopyRecip();
+        Float orPerCopyStdError = snpAssociationForm.getOrPerCopyStdError();
+        String orPerCopyRange = snpAssociationForm.getOrPerCopyRange();
+        boolean recipReverse = false;
+
+        // Calculate OR per copy num
+        if ((orPerCopyRecip != null) && (orPerCopyNum == null)) {
+            orPerCopyNum = ((100 / orPerCopyRecip) / 100);
+            association.setOrPerCopyNum(orPerCopyNum);
+            recipReverse = true;
+        }
+        // Otherwise set to whatever is in form
+        else {
+            association.setOrPerCopyNum(snpAssociationForm.getOrPerCopyNum());
+        }
+
+        // Set OrPerCopyRecip
+        association.setOrPerCopyRecip(snpAssociationForm.getOrPerCopyRecip());
+
+        // This logic is retained from Dani's original code
+        if ((orPerCopyRecip != null) && (orPerCopyRange != null) && recipReverse) {
+            orPerCopyRange = associationCalculationService.reverseCI(orPerCopyRange);
+            association.setOrPerCopyRange(orPerCopyRange);
+        } else if ((orPerCopyRange.isEmpty()) && (orPerCopyStdError != null)) {
+            orPerCopyRange = associationCalculationService.setRange(orPerCopyStdError, orPerCopyNum);
+            association.setOrPerCopyRange(orPerCopyRange);
+        } else {
+            association.setOrPerCopyRange(snpAssociationForm.getOrPerCopyRange());
+        }
+
+        association.setOrPerCopyStdError(snpAssociationForm.getOrPerCopyStdError());
+        association.setOrPerCopyUnitDescr(snpAssociationForm.getOrPerCopyUnitDescr());
+
         // Add loci to association or if we are editing an existing one find it
         // For multi-snp and standard snps we assume their is only one locus
-
         Collection<Locus> loci = new ArrayList<>();
         Locus locus = new Locus();
 
@@ -367,7 +437,7 @@ public class AssociationController {
             Association associationUserIsEditing = associationRepository.findOne(snpAssociationForm.getAssociationId());
             Collection<Locus> associationLoci = associationUserIsEditing.getLoci();
 
-            // Based on assumption we have only one locus
+            // Based on assumption we have only one locus for standard and multi-snp haplotype
             for (Locus associationLocus : associationLoci) {
                 locus = associationLocus;
             }
@@ -378,8 +448,9 @@ public class AssociationController {
         Integer numberOfRows = snpAssociationForm.getSnpFormRows().size();
         if (numberOfRows > 1) {
             locus.setHaplotypeSnpCount(numberOfRows);
-            locus.setDescription(numberOfRows + "-SNP Haplotype");
         }
+
+        locus.setDescription(snpAssociationForm.getMultiSnpHaplotypeDescr());
 
         // Create gene from each string entered, may sure to check pre-existence
         Collection<String> authorReportedGenes = snpAssociationForm.getAuthorReportedGenes();
@@ -411,8 +482,6 @@ public class AssociationController {
 
                 }
             }
-
-
             // Save changes to risk allele
             riskAlleleRepository.save(riskAllele);
 
@@ -438,8 +507,9 @@ public class AssociationController {
         Collection<Gene> locusGenes = new ArrayList<>();
         for (String authorReportedGene : authorReportedGenes) {
 
-            // Check if gene already exists
-            Gene gene = geneRepository.findByGeneNameIgnoreCase(authorReportedGene);
+            // Check if gene already exists, note we may have duplicates so for moment just take first one
+            List<Gene> genesInDatabase = geneRepository.findByGeneNameIgnoreCase(authorReportedGene);
+            Gene gene = genesInDatabase.get(0);
 
             // If gene doesn't exist then create and save
             if (gene == null) {
