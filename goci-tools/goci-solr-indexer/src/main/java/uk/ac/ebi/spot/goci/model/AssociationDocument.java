@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.model;
 
 import org.apache.solr.client.solrj.beans.Field;
 
+import java.beans.Introspector;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field("traitUri") private Collection<String> traitUris;
 
     // additional fields from study
+    @Field private String studyId;
     @Field private String pubmedId;
     @Field private String title;
     @Field private String author;
@@ -74,6 +76,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         });
 
         Study study = association.getStudy();
+        this.studyId = Introspector.decapitalize(Study.class.getSimpleName())
+                .concat(":")
+                .concat(String.valueOf(study.getId()));
         this.pubmedId = study.getPubmedId();
         this.title = study.getTitle();
         this.author = study.getAuthor();

@@ -188,28 +188,16 @@
     <field name="parent" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="child" type="text_general" indexed="true" stored="true" multiValued="true" />
 
-    <!--
-    @Field private String shortForm;
-    @Field("label") private Set<String> labels;
-    @Field("synonym") private Set<String> synonyms;
-    @Field("description") private Set<String> description;
-
-    @Field("parent") private Set<String> superclassLabels;
-    @Field("child") private Set<String> subclassLabels;
-
-    @Field("*_rel") private Map<String, Set<String>> relations = new HashMap<>();
-
-    -->
-
     <!-- association -->
-    <field name="strongestAllele" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="riskFrequency" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="qualifier" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="orPerCopyUnitDescr" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="orType" type="text_general" indexed="false" stored="true" multiValued="true" />
-    <field name="orPerCopyNum" type="float" indexed="true" stored="true" multiValued="true" />
-    <field name="orPerCopyRange" type="text_general" indexed="false" stored="true" multiValued="true" />
-    <field name="pValue" type="float" indexed="true" stored="true" multiValued="true" />
+    <field name="studyId" type="text_general" indexed="true" stored="true" multiValued="false" />
+    <field name="strongestAllele" type="text_general" indexed="true" stored="true" multiValued="false" />
+    <field name="riskFrequency" type="text_general" indexed="true" stored="true" multiValued="false" />
+    <field name="orPerCopyUnitDescr" type="text_general" indexed="true" stored="true" multiValued="false" />
+    <field name="orType" type="boolean" indexed="true" stored="true" multiValued="false" />
+    <field name="orPerCopyNum" type="float" indexed="true" stored="true" multiValued="false" />
+    <field name="orPerCopyRange" type="text_general" indexed="false" stored="true" multiValued="false" />
+    <field name="pValue" type="float" indexed="true" stored="true" multiValued="false" />
 
 
     <!-- Main body of document extracted by SolrCell.
