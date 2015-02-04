@@ -114,6 +114,13 @@ public class AssociationService {
         return allAssociations;
     }
 
+    @Transactional(readOnly = true)
+    public Collection<Association> deepFindBySingleNucleotidePolymorphismId(Long snpId) {
+        Collection<Association> associations = associationRepository.findByLociStrongestRiskAllelesSnpId(snpId);
+        associations.forEach(this::loadAssociatedData);
+        return associations;
+    }
+
     public void loadAssociatedData(Association association) {
         int traitCount = association.getEfoTraits().size();
         Study study = studyService.deepFetchOne(association.getStudy());

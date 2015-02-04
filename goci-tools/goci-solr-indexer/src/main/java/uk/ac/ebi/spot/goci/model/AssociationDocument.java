@@ -16,7 +16,7 @@ import java.util.TimeZone;
  * @author Tony Burdett
  * @date 16/01/15
  */
-public class AssociationDocument extends Document<Association> {
+public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field private String region;
     @Field private String mappedGene;
     @Field private String strongestAllele;
@@ -215,10 +215,6 @@ public class AssociationDocument extends Document<Association> {
 
     public Collection<String> getTraits() {
         return traits;
-    }
-
-    public Collection<String> getTraitUris() {
-        return traitUris;
     }
 
     public String getPubmedId() {

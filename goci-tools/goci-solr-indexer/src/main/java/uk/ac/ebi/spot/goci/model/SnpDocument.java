@@ -14,7 +14,7 @@ import java.util.TimeZone;
  * @author Tony Burdett
  * @date 23/12/14
  */
-public class SnpDocument extends Document<SingleNucleotidePolymorphism> {
+public class SnpDocument extends OntologyEnabledDocument<SingleNucleotidePolymorphism> {
     @Field private String rsId;
     @Field private String chromosomeName;
     @Field private int chromosomePosition;
@@ -22,6 +22,9 @@ public class SnpDocument extends Document<SingleNucleotidePolymorphism> {
     @Field("mappedGene") private Set<String> genes;
     @Field private String context;
     @Field private String last_modified;
+
+    @Field("qualifier") private Set<String> qualifiers;
+    @Field("trait") private Set<String> traits;
 
     public SnpDocument(SingleNucleotidePolymorphism snp) {
         super(snp);
@@ -68,6 +71,30 @@ public class SnpDocument extends Document<SingleNucleotidePolymorphism> {
 
     public String getLast_modified() {
         return last_modified;
+    }
+
+    public Set<String> getQualifiers() {
+        return qualifiers;
+    }
+
+    public void setQualifiers(Set<String> qualifiers) {
+        this.qualifiers = qualifiers;
+    }
+
+    public void addQualifier(String qualifier) {
+        this.qualifiers.add(qualifier);
+    }
+
+    public Set<String> getTraits() {
+        return traits;
+    }
+
+    public void setTraits(Set<String> traits) {
+        this.traits = traits;
+    }
+
+    public void addTrait(String trait) {
+        this.traits.add(trait);
     }
 
     @Override
