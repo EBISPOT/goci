@@ -105,11 +105,11 @@ public class SolrIndexer {
     Integer mapStudies() {
         Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "studyDate"));
         Pageable pager = new PageRequest(0, pageSize, sort);
-        Page<Study> studyPage = studyService.deepFindAll(pager);
+        Page<Study> studyPage = studyService.deepFindPublished(pager);
         studyMapper.map(studyPage.getContent());
         while (studyPage.hasNext()) {
             pager = pager.next();
-            studyPage = studyService.deepFindAll(pager);
+            studyPage = studyService.deepFindPublished(pager);
             studyMapper.map(studyPage.getContent());
             if (sysOutLogging) {
                 System.out.print(".");

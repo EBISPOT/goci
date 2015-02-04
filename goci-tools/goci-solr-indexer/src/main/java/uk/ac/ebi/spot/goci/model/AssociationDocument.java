@@ -270,21 +270,25 @@ public class AssociationDocument extends Document<Association> {
     }
 
     private String setOrAppend(String current, String toAppend, String delim) {
-        if (current.isEmpty()) {
-            current = toAppend;
-        }
-        else {
-            current = current.concat(delim).concat(toAppend);
+        if (toAppend != null && !toAppend.isEmpty()) {
+            if (current == null || current.isEmpty()) {
+                current = toAppend;
+            }
+            else {
+                current = current.concat(delim).concat(toAppend);
+            }
         }
         return current;
     }
 
     private StringBuilder setOrAppend(StringBuilder current, String toAppend, String delim) {
-        if (current.length() == 0) {
-            current.append(toAppend);
-        }
-        else {
-            current.append(delim).append(toAppend);
+        if (toAppend != null && !toAppend.isEmpty()) {
+            if (current.length() == 0) {
+                current.append(toAppend);
+            }
+            else {
+                current.append(delim).append(toAppend);
+            }
         }
         return current;
     }

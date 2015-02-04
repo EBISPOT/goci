@@ -20,6 +20,7 @@ public class StudyDocument extends Document<Study> {
     @Field private String author;
     @Field private String publication;
     @Field private String publicationDate;
+    @Field private String catalogAddedDate;
 
     @Field private String platform;
     @Field private Boolean cnv;
@@ -54,6 +55,9 @@ public class StudyDocument extends Document<Study> {
         if (study.getStudyDate() != null) {
             this.publicationDate = df.format(study.getStudyDate());
         }
+        if (study.getHousekeeping().getPublishDate() != null) {
+            this.catalogAddedDate = df.format(study.getHousekeeping().getPublishDate());
+        }
 
 
         this.traitUris = new ArrayList<>();
@@ -80,6 +84,10 @@ public class StudyDocument extends Document<Study> {
 
     public String getPublicationDate() {
         return publicationDate;
+    }
+
+    public String getCatalogAddedDate() {
+        return catalogAddedDate;
     }
 
     public String getPlatform() {

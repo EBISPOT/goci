@@ -171,6 +171,7 @@
     <field name="pubmedId" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="publication" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="publicationDate" type="date" indexed="true" stored="true" multiValued="false" />
+    <field name="catalogAddedDate" type="date" indexed="true" stored="true" multiValued="false" />
     <field name="platform" type="text_general" indexed="true" stored="true"/>
     <field name="cnv" type="boolean" indexed="true" stored="true"/>
     <field name="initialSampleDescription" type="text_general" indexed="true" stored="true"/>
@@ -207,6 +208,7 @@
     <field name="orPerCopyUnitDescr" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="orType" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="orPerCopyNum" type="float" indexed="true" stored="true" multiValued="true" />
+    <field name="orPerCopyRange" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="pValue" type="float" indexed="true" stored="true" multiValued="true" />
 
 

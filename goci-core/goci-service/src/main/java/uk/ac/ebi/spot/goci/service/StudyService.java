@@ -12,6 +12,7 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,14 +37,14 @@ public class StudyService {
     }
 
     /**
-     * A facade service around a {@link uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository} that
-     * retrieves all SNPs, and then within the same datasource transaction additionally loads other objects referenced
-     * by this SNP (so Genes and Regions).
+     * A facade service around a {@link uk.ac.ebi.spot.goci.repository.StudyRepository} that retrieves all studies, and
+     * then within the same datasource transaction additionally loads other objects referenced by this study (traits,
+     * associations, housekeeping).
      * <p>
-     * Use this when you know you will need deep information about a SNP and do not have an open session that can be
+     * Use this when you know you will need deep information about a study and do not have an open session that can be
      * used to lazy load extra data.
      *
-     * @return a list of SingleNucleotidePolymorphisms
+     * @return a list of Studies
      */
     @Transactional(readOnly = true)
     public List<Study> deepFindAll() {
@@ -72,6 +73,43 @@ public class StudyService {
         return studies;
     }
 
+    /**
+     * A facade service around a {@link uk.ac.ebi.spot.goci.repository.StudyRepository} that retrieves all studies, and
+     * then within the same datasource transaction additionally loads other objects referenced by this study (traits,
+     * associations, housekeeping).
+     * <p>
+     * Use this when you know you will need deep information about a study and do not have an open session that can be
+     * used to lazy load extra data.
+     *
+     * @return a list of Studies
+     */
+    @Transactional(readOnly = true)
+    public List<Study> deepFindPublished() {
+        List<Study> studies = studyRepository.findByHousekeepingPublishDateIsNotNull();
+        // iterate over all studies and grab trait info
+        getLog().info("Obtained " + studies.size() + " studies, starting deep load...");
+        studies.forEach(this::loadAssociatedData);
+        return studies;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Study> deepFindPublished(Sort sort) {
+        List<Study> studies = studyRepository.findByHousekeepingPublishDateIsNotNull(sort);
+        // iterate over all studies and grab region info
+        getLog().info("Obtained " + studies.size() + " studies, starting deep load...");
+        studies.forEach(this::loadAssociatedData);
+        return studies;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Study> deepFindPublished(Pageable pageable) {
+        Page<Study> studies = studyRepository.findByHousekeepingPublishDateIsNotNull(pageable);
+        // iterate over all studies and grab region info
+        getLog().info("Obtained " + studies.getSize() + " studies, starting deep load...");
+        studies.forEach(this::loadAssociatedData);
+        return studies;
+    }
+
     @Transactional(readOnly = true)
     public Study deepFetchOne(Study study) {
         loadAssociatedData(study);
@@ -94,7 +132,16 @@ public class StudyService {
     public void loadAssociatedData(Study study) {
         int efoTraitCount = study.getEfoTraits().size();
         int associationCount = study.getAssociations().size();
-        getLog().info(
-                "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits and has " + associationCount + " associations");
+        Date publishDate = study.getHousekeeping().getPublishDate();
+        if (publishDate != null) {
+            getLog().info(
+                    "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
+                            "has " + associationCount + " associations and was published on " + publishDate.toString());
+        }
+        else {
+            getLog().info(
+                    "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
+                            "has " + associationCount + " associations and is not yet published");
+        }
     }
 }
