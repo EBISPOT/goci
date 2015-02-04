@@ -55,7 +55,7 @@
             <li><a th:href="@{/studies}">Home</a></li>
             <li><a th:href="@{/studies/new}">Add Study</a></li>
             <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
-            <!--<li><a href="#">Count Data</a></li>-->
+            <li><a th:href="@{/reports}">Reports</a></li>
         </ul>
         <!--    <ul class="nav navbar-nav navbar-right">
                 <li>
@@ -92,6 +92,8 @@
 
 <div class="form-group">
     <div class="col-md-10 col-md-offset-2">
+
+
         <table class="table table-hover table-bordered">
 
             <div class="form-group">
@@ -136,6 +138,14 @@
             </tr>
             </tbody>
         </table>
+    </div>
+</div>
+<div class="form-group">
+    <label for="multiSnpHaplotypeDescr" class="control-label col-md-2">Multi-SNP haplotype description:</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="multiSnpHaplotypeDescr"
+               th:field="*{multiSnpHaplotypeDescr}"/>
     </div>
 </div>
 
