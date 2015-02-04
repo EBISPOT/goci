@@ -30,8 +30,9 @@ public class SnpToTraitEnrichmentService implements DocumentEnrichmentService<Sn
         Collection<Association> associations = associationService
                 .deepFindBySingleNucleotidePolymorphismId(Long.valueOf(document.getId().split(":")[1]));
         associations.forEach(association -> {
-            document.addQualifier(association.getPvalueText());
-            document.addTrait(association.getStudy().getDiseaseTrait().getTrait());
+            if (association.getPvalueText() != null) {
+                document.addQualifier(association.getPvalueText());
+            }
             association.getEfoTraits().forEach(trait -> document.addTraitUri(trait.getUri()));
         });
     }

@@ -24,7 +24,6 @@ public class SnpDocument extends OntologyEnabledDocument<SingleNucleotidePolymor
     @Field private String last_modified;
 
     @Field("qualifier") private Set<String> qualifiers;
-    @Field("trait") private Set<String> traits;
 
     public SnpDocument(SingleNucleotidePolymorphism snp) {
         super(snp);
@@ -43,6 +42,7 @@ public class SnpDocument extends OntologyEnabledDocument<SingleNucleotidePolymor
         if (snp.getLastUpdateDate() != null) {
             this.last_modified = df.format(snp.getLastUpdateDate());
         }
+        this.qualifiers = new HashSet<>();
     }
 
     public String getRsId() {
@@ -83,18 +83,6 @@ public class SnpDocument extends OntologyEnabledDocument<SingleNucleotidePolymor
 
     public void addQualifier(String qualifier) {
         this.qualifiers.add(qualifier);
-    }
-
-    public Set<String> getTraits() {
-        return traits;
-    }
-
-    public void setTraits(Set<String> traits) {
-        this.traits = traits;
-    }
-
-    public void addTrait(String trait) {
-        this.traits.add(trait);
     }
 
     @Override

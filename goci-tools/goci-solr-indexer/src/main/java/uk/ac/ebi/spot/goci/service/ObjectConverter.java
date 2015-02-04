@@ -80,6 +80,15 @@ public class ObjectConverter {
                 ParameterizedType parameterizedType = ((ParameterizedType) type);
                 if (parameterizedType.getRawType().equals(DocumentEnrichmentService.class)) {
                     Type[] typeArgs = parameterizedType.getActualTypeArguments();
+                    for (Type typeArg : typeArgs) {
+                        if (typeArg instanceof Class) {
+                            return Optional.of((Class) typeArg);
+                        }
+                        else if (typeArg instanceof ParameterizedType) {
+                            // only recurse to one level of abstraction, that's more than enough!
+                            return Optional.of((Class) ((ParameterizedType) typeArg).getRawType());
+                        }
+                    }
                     if (typeArgs.length == 1 && typeArgs[0] instanceof Class) {
                         return Optional.of((Class) typeArgs[0]);
                     }
