@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TimeZone;
-import java.util.stream.Collectors;
 
 /**
  * Javadocs go here!
@@ -18,10 +17,11 @@ import java.util.stream.Collectors;
  * @date 16/01/15
  */
 public class AssociationDocument extends Document<Association> {
-    @Field("region") private Set<String> regions;
+    @Field private String region;
+    @Field private String mappedGene;
+    @Field private String strongestAllele;
+    @Field private String context;
     @Field("reportedGene") private Collection<String> reportedGenes;
-    @Field("mappedGene") private Collection<String> mappedGenes;
-    @Field("strongestAllele") private Set<String> strongestAlleles;
 
     @Field private String riskFrequency;
     @Field private String qualifier;
@@ -29,7 +29,11 @@ public class AssociationDocument extends Document<Association> {
     @Field private float pValue;
     @Field private float orPerCopyNum;
     @Field private String orPerCopyUnitDescr;
+    @Field private String orPerCopyRange;
     @Field private String orType;
+
+    @Field private String platform;
+    @Field private boolean cnv;
 
     @Field("trait") private Collection<String> traits;
     @Field("traitUri") private Collection<String> traitUris;
@@ -41,7 +45,7 @@ public class AssociationDocument extends Document<Association> {
     @Field private String publication;
 
     // additional search fields from snps
-    @Field("rsId") private Set<String> rsIds;
+    @Field private String rsId;
     @Field("chromosomeName") private Set<String> chromosomeNames;
     @Field("chromosomePosition") private Set<Integer> chromosomePositions;
     @Field("last_modified") private Set<String> lastModifiedDates;
@@ -53,6 +57,7 @@ public class AssociationDocument extends Document<Association> {
         this.qualifier = association.getPvalueText();
         this.orPerCopyUnitDescr = association.getOrPerCopyUnitDescr();
         this.orType = String.valueOf(association.getOrType());
+        this.orPerCopyRange = association.getOrPerCopyRange();
 
         if (association.getOrPerCopyNum() != null) {
             this.orPerCopyNum = association.getOrPerCopyNum();
@@ -61,14 +66,6 @@ public class AssociationDocument extends Document<Association> {
             this.pValue = association.getPvalueFloat();
         }
 
-        strongestAlleles = new HashSet<>();
-        association.getLoci().forEach(
-                locus -> locus.getStrongestRiskAlleles().forEach(
-                        riskAllele -> strongestAlleles.add(riskAllele.getRiskAlleleName())));
-        this.reportedGenes = new HashSet<>();
-        association.getLoci().forEach(
-                locus -> locus.getAuthorReportedGenes().forEach(
-                        gene -> reportedGenes.add(gene.getGeneName())));
         this.traits = new HashSet<>();
         this.traitUris = new HashSet<>();
         association.getEfoTraits().forEach(trait -> {
@@ -81,44 +78,111 @@ public class AssociationDocument extends Document<Association> {
         this.title = study.getTitle();
         this.author = study.getAuthor();
         this.publication = study.getPublication();
+        this.platform = study.getPlatform();
+        this.cnv = study.getCnv();
         if (study.getDiseaseTrait() != null) {
             traits.add(study.getDiseaseTrait().getTrait());
         }
         this.traitUris = new ArrayList<>();
         study.getEfoTraits().forEach(efoTrait -> traitUris.add(efoTrait.getUri()));
 
-        this.rsIds = new HashSet<>();
         this.chromosomeNames = new HashSet<>();
         this.chromosomePositions = new HashSet<>();
-        this.mappedGenes = new HashSet<>();
-        this.regions = new HashSet<>();
         this.lastModifiedDates = new HashSet<>();
-        Collection<SingleNucleotidePolymorphism> snps = new HashSet<>();
-        association.getLoci().forEach(
-                locus -> snps.addAll(
-                        locus.getStrongestRiskAlleles()
-                                .stream()
-                                .map(RiskAllele::getSnp)
-                                .collect(Collectors.toList())));
-        for (SingleNucleotidePolymorphism snp : snps) {
-            rsIds.add(snp.getRsId());
-            chromosomeNames.add(snp.getChromosomeName());
-            if (snp.getChromosomePosition() != null) {
-                chromosomePositions.add(Integer.parseInt(snp.getChromosomePosition()));
-            }
-            snp.getRegions().forEach(region -> regions.add(region.getName()));
-            snp.getGenomicContexts().forEach(
-                    context -> mappedGenes.add(context.getGene().getGeneName()));
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-            df.setTimeZone(TimeZone.getTimeZone("UTC"));
-            if (snp.getLastUpdateDate() != null) {
-                lastModifiedDates.add(df.format(snp.getLastUpdateDate()));
-            }
+
+        this.reportedGenes = new HashSet<>();
+        if (association.getLoci().size() > 1) {
+            // if this association has multiple loci, this is a SNP x SNP study
+            association.getLoci().forEach(
+                    locus -> {
+                        locus.getStrongestRiskAlleles().forEach(
+                                riskAllele -> {
+                                    strongestAllele =
+                                            setOrAppend(strongestAllele, riskAllele.getRiskAlleleName(), " x ");
+
+                                    SingleNucleotidePolymorphism snp = riskAllele.getSnp();
+                                    rsId = setOrAppend(rsId, snp.getRsId(), " x ");
+
+                                    final StringBuilder regionBuilder = new StringBuilder();
+                                    snp.getRegions().forEach(
+                                            region -> setOrAppend(regionBuilder, region.getName(), " / "));
+                                    region = setOrAppend(region, regionBuilder.toString(), " : ");
+
+                                    final StringBuilder mappedGeneBuilder = new StringBuilder();
+                                    snp.getGenomicContexts().forEach(
+                                            context -> setOrAppend(mappedGeneBuilder,
+                                                                   context.getGene().getGeneName(),
+                                                                   " / "));
+                                    mappedGene = setOrAppend(mappedGene, mappedGeneBuilder.toString(), " : ");
+
+                                    context = snp.getFunctionalClass();
+                                    chromosomeNames.add(snp.getChromosomeName());
+                                    if (snp.getChromosomePosition() != null) {
+                                        chromosomePositions.add(Integer.parseInt(snp.getChromosomePosition()));
+                                    }
+                                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                                    df.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                    if (snp.getLastUpdateDate() != null) {
+                                        lastModifiedDates.add(df.format(snp.getLastUpdateDate()));
+                                    }
+                                }
+                        );
+                        locus.getAuthorReportedGenes().forEach(gene -> reportedGenes.add(gene.getGeneName()));
+                    }
+            );
+        }
+        else {
+            // this is a single study or a haplotype
+            association.getLoci().forEach(
+                    locus -> {
+                        locus.getStrongestRiskAlleles().forEach(
+                                riskAllele -> {
+                                    strongestAllele =
+                                            setOrAppend(strongestAllele, riskAllele.getRiskAlleleName(), ", ");
+
+                                    SingleNucleotidePolymorphism snp = riskAllele.getSnp();
+                                    rsId = setOrAppend(rsId, snp.getRsId(), ", ");
+
+                                    final StringBuilder regionBuilder = new StringBuilder();
+                                    snp.getRegions().forEach(
+                                            region -> setOrAppend(regionBuilder, region.getName(), " / "));
+                                    region = setOrAppend(region, regionBuilder.toString(), ", ");
+
+                                    final StringBuilder mappedGeneBuilder = new StringBuilder();
+                                    snp.getGenomicContexts().forEach(
+                                            context -> setOrAppend(mappedGeneBuilder,
+                                                                   context.getGene().getGeneName(),
+                                                                   " / "));
+                                    mappedGene = setOrAppend(mappedGene, mappedGeneBuilder.toString(), ", ");
+
+                                    context = snp.getFunctionalClass();
+                                    chromosomeNames.add(snp.getChromosomeName());
+                                    if (snp.getChromosomePosition() != null) {
+                                        chromosomePositions.add(Integer.parseInt(snp.getChromosomePosition()));
+                                    }
+                                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                                    df.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                    if (snp.getLastUpdateDate() != null) {
+                                        lastModifiedDates.add(df.format(snp.getLastUpdateDate()));
+                                    }
+                                }
+                        );
+                        locus.getAuthorReportedGenes().forEach(gene -> reportedGenes.add(gene.getGeneName()));
+                    }
+            );
         }
     }
 
-    public Set<String> getStrongestAlleles() {
-        return strongestAlleles;
+    public String getRegion() {
+        return region;
+    }
+
+    public String getMappedGene() {
+        return mappedGene;
+    }
+
+    public String getStrongestAllele() {
+        return strongestAllele;
     }
 
     public String getRiskFrequency() {
@@ -131,6 +195,14 @@ public class AssociationDocument extends Document<Association> {
 
     public String getOrPerCopyUnitDescr() {
         return orPerCopyUnitDescr;
+    }
+
+    public String getOrPerCopyRange() {
+        return orPerCopyRange;
+    }
+
+    public String getContext() {
+        return context;
     }
 
     public float getpValue() {
@@ -165,8 +237,16 @@ public class AssociationDocument extends Document<Association> {
         return publication;
     }
 
-    public Set<String> getRsIds() {
-        return rsIds;
+    public String getPlatform() {
+        return platform;
+    }
+
+    public boolean isCnv() {
+        return cnv;
+    }
+
+    public String getRsId() {
+        return rsId;
     }
 
     public Set<String> getChromosomeNames() {
@@ -175,10 +255,6 @@ public class AssociationDocument extends Document<Association> {
 
     public Set<Integer> getChromosomePositions() {
         return chromosomePositions;
-    }
-
-    public Set<String> getRegions() {
-        return regions;
     }
 
     public Set<String> getLastModifiedDates() {
@@ -191,5 +267,25 @@ public class AssociationDocument extends Document<Association> {
 
     public String getOrType() {
         return orType;
+    }
+
+    private String setOrAppend(String current, String toAppend, String delim) {
+        if (current.isEmpty()) {
+            current = toAppend;
+        }
+        else {
+            current = current.concat(delim).concat(toAppend);
+        }
+        return current;
+    }
+
+    private StringBuilder setOrAppend(StringBuilder current, String toAppend, String delim) {
+        if (current.length() == 0) {
+            current.append(toAppend);
+        }
+        else {
+            current.append(delim).append(toAppend);
+        }
+        return current;
     }
 }
