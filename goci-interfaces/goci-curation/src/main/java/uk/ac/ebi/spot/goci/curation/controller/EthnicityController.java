@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import uk.ac.ebi.spot.goci.curation.model.CountryOfOrigin;
-import uk.ac.ebi.spot.goci.curation.model.CountryOfRecruitment;
-import uk.ac.ebi.spot.goci.curation.model.EthnicGroup;
+import uk.ac.ebi.spot.goci.curation.model.*;
 import uk.ac.ebi.spot.goci.model.Country;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -71,16 +69,40 @@ public class EthnicityController {
         // Return an empty ethnicity object so curators can add new ethnicity/sample information to study
         model.addAttribute("ethnicity", new Ethnicity());
 
+        // Return an SampleDescription object for each type
+        Study study = studyRepository.findOne(studyId);
+
+        if (study.getInitialSampleSize() != null && !study.getInitialSampleSize().isEmpty()) {
+            InitialSampleDescription initialSampleDescription = new InitialSampleDescription();
+            initialSampleDescription.setInitialSampleDescription(study.getInitialSampleSize());
+            model.addAttribute("initialSampleDescription", initialSampleDescription);
+        } else {
+            model.addAttribute("initialSampleDescription", new InitialSampleDescription());
+        }
+
+        if (study.getReplicateSampleSize() != null && !study.getReplicateSampleSize().isEmpty()) {
+            ReplicationSampleDescription replicationSampleDescription = new ReplicationSampleDescription();
+            replicationSampleDescription.setReplicationSampleDescription(study.getReplicateSampleSize());
+            model.addAttribute("replicationSampleDescription", replicationSampleDescription);
+        } else {
+            model.addAttribute("replicationSampleDescription", new ReplicationSampleDescription());
+        }
+
         // Also passes back study object to view so we can create links back to main study page
-        model.addAttribute("study", studyRepository.findOne(studyId));
+        model.addAttribute("study", study);
         return "study_sample_description";
     }
 
 
     // Add new ethnicity/sample information to a study
     @RequestMapping(value = "/studies/{studyId}/sampledescription", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String addStudySampleDescription(@ModelAttribute Ethnicity ethnicity, @PathVariable Long studyId, RedirectAttributes redirectAttributes) {
+    public String addStudySampleDescription(@ModelAttribute Ethnicity ethnicity, @ModelAttribute InitialSampleDescription initialSampleDescription, @ModelAttribute ReplicationSampleDescription replicationSampleDescription, @PathVariable Long studyId, RedirectAttributes redirectAttributes) {
+
         Study study = studyRepository.findOne(studyId);
+
+        // Set our descriptions which are attributes of the study
+        study.setInitialSampleSize(initialSampleDescription.getInitialSampleDescription());
+        study.setReplicateSampleSize(replicationSampleDescription.getReplicationSampleDescription());
 
         // Set the study for our ethnicity
         ethnicity.setStudy(study);

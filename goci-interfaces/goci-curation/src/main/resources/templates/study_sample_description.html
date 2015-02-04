@@ -85,11 +85,40 @@
     </div>
 </div>
 
+<br></br>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10">
+            <form class="form-horizontal" method="post" th:object="${initialSampleDescription}"
+                  name="addInitialSampleDescription">
+
+                <div class="form-group">
+                    <label for="sampleInitialDescription" class="control-label col-md-2">Initial Sample
+                        Description:</label>
+
+                    <div class="col-md-10">
+                        <input id="sampleInitialDescription" class="form-control" type="text"
+                               th:field="*{initialSampleDescription}"/>
+                    </div>
+                </div>
+
+
+                <!--Button -->
+                <div class="form-group inline">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <div class="container">
     <div class="row">
-        <h4>Initial Sample Description:</h4>
-
-        <p th:text="${study.initialSampleSize} ?: 'NA'"></p>
 
         <table id="initialTable" class="table table-hover table-bordered">
             <thead>
@@ -132,11 +161,39 @@
     </div>
 </div>
 
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10">
+            <form class="form-horizontal" method="post" th:object="${replicationSampleDescription}"
+                  name="addReplicationSampleDescription">
+
+                <div class="form-group">
+                    <label for="sampleReplicationDescription" class="control-label col-md-2">Replication Sample
+                        Description:</label>
+
+                    <div class="col-md-10">
+                        <input id="sampleReplicationDescription" class="form-control" type="text"
+                               th:field="*{replicationSampleDescription}"/>
+                    </div>
+                </div>
+
+                <!--Button -->
+                <div class="form-group inline">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <div class="container">
     <div class="row">
-        <h4>Replication Sample Description:</h4>
 
-        <p th:text="${study.replicateSampleSize} ?: 'NA'"></p>
         <table id="replicationTable" class="table table-hover table-bordered">
             <thead>
             <tr>
