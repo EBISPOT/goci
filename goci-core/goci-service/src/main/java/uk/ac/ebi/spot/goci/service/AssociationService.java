@@ -9,7 +9,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.Locus;
+import uk.ac.ebi.spot.goci.model.Gene;
+import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -18,6 +19,7 @@ import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -88,16 +90,30 @@ public class AssociationService {
     public void loadAssociatedData(Association association) {
         int traitCount = association.getEfoTraits().size();
         Study study = studyService.deepFetchOne(association.getStudy());
-        int reportedGeneCount = 0;
+        AtomicInteger reportedGeneCount = new AtomicInteger();
         Collection<SingleNucleotidePolymorphism> snps = new HashSet<>();
+        Collection<Region> regions = new HashSet<>();
+        Collection<Gene> mappedGenes = new HashSet<>();
         association.getLoci().forEach(
-                locus -> snps.addAll(
-                        locus.getStrongestRiskAlleles()
-                                .stream()
-                                .map(RiskAllele::getSnp)
-                                .collect(Collectors.toList())));
+                locus -> {
+                    locus.getStrongestRiskAlleles().stream().map(RiskAllele::getSnp).forEach(
+                            snp -> {
+                                snp.getRegions().forEach(regions::add);
+                                snp.getGenomicContexts().forEach(context -> mappedGenes.add(context.getGene()));
+                                snps.add(snp);
+                            }
+                    );
+
+                    snps.addAll(locus.getStrongestRiskAlleles()
+                                        .stream()
+                                        .map(RiskAllele::getSnp)
+                                        .collect(Collectors.toList()));
+                    reportedGeneCount.addAndGet(locus.getAuthorReportedGenes().size());
+                });
         getLog().info("Association '" + association.getId() + "' is mapped to " +
-                              "" + traitCount + " EFO traits, " + reportedGeneCount + " genes, " +
-                              "study id = " + study.getId() + " and " + snps.size() + " SNPs");
+                              "" + traitCount + " EFO traits where study id = " + study.getId() + " " +
+                              "(author reported " + reportedGeneCount + " gene(s)); " +
+                              "this reports on " + snps.size() + " SNPs in " + regions.size() + " regions, " +
+                              "mapped to " + mappedGenes.size() + " genes.");
     }
 }
