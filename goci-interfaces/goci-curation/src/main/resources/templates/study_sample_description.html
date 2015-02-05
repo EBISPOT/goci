@@ -90,8 +90,8 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10">
-            <form class="form-horizontal" method="post"
-                  name="addInitialSampleDescription">
+            <form class="form-horizontal" method="post" name="addSampleDescription" th:object="${study}"
+                  th:action="@{/studies/{studyId}/initialreplicationsampledescription(studyId=*{id})}">
 
                 <div class="form-group">
                     <label for="sampleInitialDescription" class="control-label col-md-2">Initial Sample
@@ -230,7 +230,7 @@
         <div class="col-md-10">
             <div id="add_ethnicity_form" class="collapse">
                 <form class="form-horizontal" method="post" th:object="${ethnicity}"
-                      name="addEthnicityForm">
+                      name="addEthnicityForm"  >
 
                     <!--Type dropdown-->
                     <div class="form-group">
