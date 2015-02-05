@@ -90,7 +90,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10">
-            <form class="form-horizontal" method="post" th:object="${initialSampleDescription}"
+            <form class="form-horizontal" method="post"
                   name="addInitialSampleDescription">
 
                 <div class="form-group">
@@ -99,7 +99,17 @@
 
                     <div class="col-md-10">
                         <input id="sampleInitialDescription" class="form-control" type="text"
-                               th:field="*{initialSampleDescription}"/>
+                               th:field="${initialSampleDescription.initialSampleDescription}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="sampleReplicationDescription" class="control-label col-md-2">Replication Sample
+                        Description:</label>
+
+                    <div class="col-md-10">
+                        <input id="sampleReplicationDescription" class="form-control" type="text"
+                               th:field="${replicationSampleDescription.replicationSampleDescription}"/>
                     </div>
                 </div>
 
@@ -158,35 +168,6 @@
             </tr>
             </tbody>
         </table>
-    </div>
-</div>
-
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-10">
-            <form class="form-horizontal" method="post" th:object="${replicationSampleDescription}"
-                  name="addReplicationSampleDescription">
-
-                <div class="form-group">
-                    <label for="sampleReplicationDescription" class="control-label col-md-2">Replication Sample
-                        Description:</label>
-
-                    <div class="col-md-10">
-                        <input id="sampleReplicationDescription" class="form-control" type="text"
-                               th:field="*{replicationSampleDescription}"/>
-                    </div>
-                </div>
-
-                <!--Button -->
-                <div class="form-group inline">
-                    <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </div>
-
-            </form>
-        </div>
     </div>
 </div>
 
