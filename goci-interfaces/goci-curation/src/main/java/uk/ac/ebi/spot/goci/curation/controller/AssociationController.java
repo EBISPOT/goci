@@ -94,7 +94,7 @@ public class AssociationController {
             // Save the uploaded file received in a multipart request as a file in the upload directory
             // The default temporary-file directory is specified by the system property java.io.tmpdir.
 
-            String uploadDir = System.getProperty("java.io.tmpdir")+File.pathSeparator+"gwas_batch_upload"+File.pathSeparator;
+            String uploadDir = System.getProperty("java.io.tmpdir")+"gwas_batch_upload"+File.separator;
 
             // Create file
             File uploadedFile = new File(uploadDir + file.getOriginalFilename());
