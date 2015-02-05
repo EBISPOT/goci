@@ -9,6 +9,7 @@ P-value (Text)		- same as in web form
 OR per copy or beta (Num)	- must be either numeric or empty. If reciprocal is given, program will calculate OR from that.
 OR entered (reciprocal)	- must be numeric or empty
 OR-type? (Y/N)	 -	must not be empty!
+Multi-SNP Haplotype? (Y/N)	 -	must not be empty!
 Confidence Interval - if no CI given but there is a std error, leave blank and programm will calculate CI.
 Beta unit and direction	 -	must not be empty!
 Standard Error	- must be numeric or empty

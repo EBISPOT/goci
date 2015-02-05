@@ -34,7 +34,7 @@
             <li><a th:href="@{/studies}">Home</a></li>
             <li><a th:href="@{/studies/new}">Add Study</a></li>
             <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
-            <!--<li><a href="#">Count Data</a></li>-->
+            <li><a th:href="@{/reports}">Reports</a></li>
         </ul>
         <!--<ul class="nav navbar-nav navbar-right">
             <li>
@@ -84,6 +84,19 @@
         </div>
     </div>
 </div>
+
+<!--Alert if data is saved-->
+<div class="container-fluid" th:if="${!#strings.isEmpty(changesSaved)}">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="alert alert-success">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:text="${changesSaved}">Success!</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="container-fluid">
     <div class="row">

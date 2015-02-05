@@ -105,11 +105,11 @@ public class SolrIndexer {
     Integer mapStudies() {
         Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "studyDate"));
         Pageable pager = new PageRequest(0, pageSize, sort);
-        Page<Study> studyPage = studyService.deepFindAll(pager);
+        Page<Study> studyPage = studyService.deepFindPublished(pager);
         studyMapper.map(studyPage.getContent());
         while (studyPage.hasNext()) {
             pager = pager.next();
-            studyPage = studyService.deepFindAll(pager);
+            studyPage = studyService.deepFindPublished(pager);
             studyMapper.map(studyPage.getContent());
             if (sysOutLogging) {
                 System.out.print(".");
@@ -153,11 +153,11 @@ public class SolrIndexer {
     Integer mapAssociations() {
         Sort sort = new Sort(new Sort.Order("id"));
         Pageable pager = new PageRequest(0, pageSize, sort);
-        Page<Association> associationPage = associationService.deepFindAll(pager);
+        Page<Association> associationPage = associationService.deepFindPublished(pager);
         associationMapper.map(associationPage.getContent());
         while (associationPage.hasNext()) {
             pager = pager.next();
-            associationPage = associationService.deepFindAll(pager);
+            associationPage = associationService.deepFindPublished(pager);
             associationMapper.map(associationPage.getContent());
             if (sysOutLogging) {
                 System.out.print(".");

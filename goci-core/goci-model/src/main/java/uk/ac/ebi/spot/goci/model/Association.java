@@ -50,7 +50,7 @@ public class Association {
 
     private String orPerCopyUnitDescr;
 
-    @OneToOne
+    @ManyToOne
     private Study study;
 
     // Association can have a number of loci attached depending on whether its a multi-snp haplotype

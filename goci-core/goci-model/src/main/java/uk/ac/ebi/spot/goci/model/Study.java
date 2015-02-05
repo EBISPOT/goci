@@ -49,7 +49,10 @@ public class Study {
 
     private Boolean gxe=false;
 
-    private Boolean gxg= false;
+    private Boolean gxg=false;
+
+    @OneToMany(mappedBy = "study")
+    private Collection<Association> associations;
 
     @ManyToOne
     @JoinTable(name = "STUDY_DISEASE_TRAIT",
@@ -189,6 +192,14 @@ public class Study {
 
     public void setGxg(Boolean gxg) {
         this.gxg = gxg;
+    }
+
+    public Collection<Association> getAssociations() {
+        return associations;
+    }
+
+    public void setAssociations(Collection<Association> associations) {
+        this.associations = associations;
     }
 
     public DiseaseTrait getDiseaseTrait() {

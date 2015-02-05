@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -7,9 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
-import uk.ac.ebi.spot.goci.curation.service.PubmedIdForImport;
-import uk.ac.ebi.spot.goci.curation.service.StudySearchFilter;
+import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
+import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.PropertyFilePubMedLookupService;
@@ -40,6 +43,12 @@ public class StudyController {
 
     // Pubmed ID lookup service
     private PropertyFilePubMedLookupService propertyFilePubMedLookupService;
+
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
 
     @Autowired
     public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, PropertyFilePubMedLookupService propertyFilePubMedLookupService) {
@@ -179,7 +188,7 @@ public class StudyController {
     // Edit an existing study
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateStudy(@ModelAttribute Study study, Model model, @PathVariable Long studyId) {
+    public String updateStudy(@ModelAttribute Study study, Model model, @PathVariable Long studyId, RedirectAttributes redirectAttributes) {
 
         // Use id in URL to get study and then its associated housekeeping
         Study existingStudy = studyRepository.findOne(studyId);
@@ -191,6 +200,11 @@ public class StudyController {
 
         // Saves the new information returned from form
         studyRepository.save(study);
+
+        // Add save message
+        String message = "Changes saved successfully";
+        redirectAttributes.addFlashAttribute("changesSaved", message);
+
         return "redirect:/studies/" + study.getId();
     }
 
@@ -239,7 +253,7 @@ public class StudyController {
 
     // Update page with housekeeping/curator information linked to a study
     @RequestMapping(value = "/{studyId}/housekeeping", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping, @PathVariable Long studyId) {
+    public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping, @PathVariable Long studyId, RedirectAttributes redirectAttributes) {
 
         // Establish whether user has set status to "Publish study" and "Send to NCBI"
         // as corresponding dates will be set in housekeeping table
@@ -269,12 +283,18 @@ public class StudyController {
 
         // Save our study
         studyRepository.save(study);
+
+        // Add save message
+        String message = "Changes saved successfully";
+        redirectAttributes.addFlashAttribute("changesSaved", message);
+
         return "redirect:/studies/" + study.getId() + "/housekeeping";
     }
 
     /* Model Attributes :
     *  Used for dropdowns in HTML forms
     */
+
 
     // Disease Traits
     @ModelAttribute("diseaseTraits")
@@ -329,11 +349,13 @@ public class StudyController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(PubmedLookupException.class)
     public String handlePubmedLookupException(PubmedLookupException pubmedLookupException) {
+        getLog().error("pubmed lookup exception", pubmedLookupException);
         return "pubmed_lookup_warning";
     }
 
     @ExceptionHandler(PubmedImportException.class)
     public String handlePubmedImportException(PubmedImportException pubmedImportException) {
+        getLog().error("pubmed import exception", pubmedImportException);
         return "pubmed_import_warning";
     }
 }
