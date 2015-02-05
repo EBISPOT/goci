@@ -13,149 +13,15 @@ import java.util.Set;
  * @author Tony Burdett
  * @date 23/12/14
  */
-public class TraitDocument extends Document<DiseaseTrait> {
+public class TraitDocument extends OntologyEnabledDocument<DiseaseTrait> {
     @Field private String trait;
-
-    @Field("traitUri") private Set<String> traitUris;
-
-    @Field("shortForm") private Set<String> shortForms;
-    @Field("label") private Set<String> labels;
-    @Field("synonym") private Set<String> synonyms;
-    @Field("description") private Set<String> descriptions;
-
-    @Field("efoLink") private Set<String> efoLinks;
-
-    @Field("parent") private Set<String> superclassLabels;
-    @Field("child") private Set<String> subclassLabels;
-
-    @Field("*_rel") private Map<String, Set<String>> relations;
 
     public TraitDocument(DiseaseTrait diseaseTrait) {
         super(diseaseTrait);
         this.trait = diseaseTrait.getTrait();
-        this.traitUris = new HashSet<>();
-        this.shortForms = new HashSet<>();
-        this.labels = new HashSet<>();
-        this.synonyms = new HashSet<>();
-        this.descriptions = new HashSet<>();
-        this.superclassLabels = new HashSet<>();
-        this.subclassLabels = new HashSet<>();
-        this.relations = new HashMap<>();
-        this.efoLinks = new HashSet<>();
     }
 
     public String getTrait() {
         return trait;
-    }
-
-    public Set<String> getTraitUris() {
-        return traitUris;
-    }
-
-    public void setTraitUris(Set<String> traitUris) {
-        this.traitUris = traitUris;
-    }
-
-    public void addTraitUri(String traitUri) {
-        traitUris.add(traitUri);
-    }
-
-    public Set<String> getShortForms() {
-        return shortForms;
-    }
-
-    public void setShortForms(Set<String> shortForms) {
-        this.shortForms = shortForms;
-    }
-
-    public void addShortForm(String shortForm) {
-        shortForms.add(shortForm);
-    }
-
-    public Set<String> getLabels() {
-        return labels;
-    }
-
-    public void setLabels(Set<String> labels) {
-        this.labels = labels;
-    }
-
-    public void addLabel(String label) {
-        labels.add(label);
-    }
-
-    public Set<String> getSynonyms() {
-        return synonyms;
-    }
-
-    public void setSynonyms(Set<String> synonyms) {
-        this.synonyms = synonyms;
-    }
-
-    public void addSynonym(String synonym) {
-        synonyms.add(synonym);
-    }
-
-    public Set<String> getDescriptions() {
-        return descriptions;
-    }
-
-    public void setDescriptions(Set<String> descriptions) {
-        this.descriptions = descriptions;
-    }
-
-    public void addDescription(String description) {
-        descriptions.add(description);
-    }
-
-    public Set<String> getSuperclassLabels() {
-        return superclassLabels;
-    }
-
-    public void setSuperclassLabels(Set<String> superclassLabels) {
-        this.superclassLabels = superclassLabels;
-    }
-
-    public void addSuperclassLabel(String superclassLabel) {
-        superclassLabels.add(superclassLabel);
-    }
-
-    public Set<String> getSubclassLabels() {
-        return subclassLabels;
-    }
-
-    public void setSubclassLabels(Set<String> subclassLabels) {
-        this.subclassLabels = subclassLabels;
-    }
-
-    public void addSubclassLabel(String subclassLabel) {
-        subclassLabels.add(subclassLabel);
-    }
-
-    public Map<String, Set<String>> getRelations() {
-        return relations;
-    }
-
-    public void setRelations(Map<String, Set<String>> relations) {
-        this.relations = relations;
-    }
-
-    public void addRelation(String relationship, Set<String> relatedClassLabels) {
-        if (!relations.containsKey(relationship)) {
-            relations.put(relationship, new HashSet<>());
-        }
-        relations.get(relationship).addAll(relatedClassLabels);
-    }
-
-    public Set<String> getEfoLinks() {
-        return efoLinks;
-    }
-
-    public void setEfoLinks(Set<String> efoLinks) {
-        this.efoLinks = efoLinks;
-    }
-
-    public void addEfoLink(String efoLink){
-        efoLinks.add(efoLink);
     }
 }
