@@ -19,6 +19,7 @@ import uk.ac.ebi.spot.goci.service.PropertyFilePubMedLookupService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
 import javax.validation.Valid;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -40,6 +41,7 @@ public class StudyController {
     private EfoTraitRepository efoTraitRepository;
     private CuratorRepository curatorRepository;
     private CurationStatusRepository curationStatusRepository;
+    private AssociationRepository associationRepository;
 
     // Pubmed ID lookup service
     private PropertyFilePubMedLookupService propertyFilePubMedLookupService;
@@ -51,13 +53,14 @@ public class StudyController {
     }
 
     @Autowired
-    public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, PropertyFilePubMedLookupService propertyFilePubMedLookupService) {
+    public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, AssociationRepository associationRepository, PropertyFilePubMedLookupService propertyFilePubMedLookupService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
         this.efoTraitRepository = efoTraitRepository;
         this.curatorRepository = curatorRepository;
         this.curationStatusRepository = curationStatusRepository;
+        this.associationRepository = associationRepository;
         this.propertyFilePubMedLookupService = propertyFilePubMedLookupService;
     }
 
@@ -209,12 +212,24 @@ public class StudyController {
     }
 
 
-/*    // Delete an existing study
+    // Delete an existing study
     @RequestMapping(value = "/{studyId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewStudyToDelete(Model model, @PathVariable Long studyId) {
+
         Study studyToDelete = studyRepository.findOne(studyId);
-        model.addAttribute("studyToDelete", studyToDelete);
-        return "delete_study";
+
+        // Check if it has any associations
+        Collection<Association> associations = associationRepository.findByStudyId(studyId);
+
+        // If so warn the curator
+        if (!associations.isEmpty()) {
+            return "delete_study_with_associations_warning";
+
+        } else {
+            model.addAttribute("studyToDelete", studyToDelete);
+            return "delete_study";
+        }
+
     }
 
     @RequestMapping(value = "/{studyId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
@@ -223,11 +238,18 @@ public class StudyController {
         // Find our study based in the ID
         Study studyToDelete = studyRepository.findOne(studyId);
 
-        // What do we need to delete ?
+        // TODO WHAT HAPPENS TO HOUSEKEEPING
+
+        Long housekeepingId = studyToDelete.getHousekeeping().getId();
+        Housekeeping housekeepingAttachedToStudy = housekeepingRepository.findOne(housekeepingId);
+        housekeepingRepository.delete(housekeepingAttachedToStudy);
+
+        // Delete study
+        studyRepository.delete(studyToDelete);
 
         //studyRepository.delete(studyToDelete);
-        return "redirect:/studies/";
-    }*/
+        return "redirect:/studies";
+    }
 
     /* Study housekeeping/curator information */
 
