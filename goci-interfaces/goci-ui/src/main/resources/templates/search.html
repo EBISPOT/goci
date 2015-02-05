@@ -28,7 +28,13 @@
     <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{css/icons/flaticon.css}"/>
     <link rel="stylesheet" href="../static/css/goci-color-palette-1.css" th:href="@{css/goci-color-palette-1.css}"/>
 
+    <!--Bootstrap table: http://bootstrap-table.wenzhixin.net.cn/-->
+    <!-- Latest compiled and minified CSS -->
+    <!--<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.5.0/bootstrap-table.min.css"/>-->
 
+
+    <!--<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>-->
+    <!--<link rel="stylesheet" href="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.css"/>-->
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -92,7 +98,7 @@
         <div>
             <h1>GWAS Catalog</h1>
 
-            <h3>A Catalog of Published Genome-Wide Association Studies</h3>
+            <h3>The NHGRI-EBI Catalog of published genome-wide association studies</h3>
 
             <!-- search box goes here -->
             <div class="input-group" th:object="${result}">
@@ -118,7 +124,7 @@
 
 <div class="container-fluid tight-to-top">
     <div style="display: none">
-        <ul th:object="${result}">
+        <ul th:object="${result}" id="variables">
             <li id="query" th:text="*{query}">User query</li>
             <li id="facet" th:text="*{facet}">Facet</li>
         </ul>
@@ -166,60 +172,61 @@
                             </div>
 
                         </div>
+                         <form id="filter-form">
+                            <div id="filters">
+                                <b>Filter results by</b>
 
-                        <div id="filters">
-                            <b>Filter results by</b>
+                                <div class="list-group">
+                                    <div class="list-group-item filter-element ">
+                                        <span class="filter-label">p-value</span>
+                                        <input class="filter-value" type="text" id="pval-min" placeholder="from"/>
+                                        <input class="filter-value" type="text" id="pval-max" placeholder="to"/>
+                                    </div>
 
-                            <div class="list-group">
-                                <div class="list-group-item filter-element">
-                                    <span class="filter-label">p-value</span>
-                                    <input class="filter-value" type="text" id="pval-min" placeholder="from"/>
-                                    <input class="filter-value" type="text" id="pval-max" placeholder="to"/>
-                                </div>
+                                    <div class="list-group-item filter-element ">
+                                        <span class="filter-label">Odds ratio</span>
+                                        <input class="filter-value" type="text" id="or-min" placeholder="from" />
+                                        <input class="filter-value" type="text" id="or-max" placeholder="to" />
+                                    </div>
 
-                                <div class="list-group-item filter-element">
-                                    <span class="filter-label">Odds ratio</span>
-                                    <input class="filter-value" type="text" id="or-min" placeholder="from"/>
-                                    <input class="filter-value" type="text" id="or-max" placeholder="to"/>
-                                </div>
+                                    <div class="list-group-item filter-element ">
+                                        <span class="filter-label">beta coefficient</span>
+                                        <input class="filter-value" type="text" id="beta-min" placeholder="from" />
+                                        <input class="filter-value" type="text" id="beta-max" placeholder="to" />
+                                    </div>
 
-                                <div class="list-group-item filter-element">
-                                    <span class="filter-label">beta coefficient</span>
-                                    <input class="filter-value" type="text" id="beta-min" placeholder="from"/>
-                                    <input class="filter-value" type="text" id="beta-max" placeholder="to"/>
-                                </div>
+                                    <div class="list-group-item filter-element ">
+                                        <span class="filter-label">Study date</span>
+                                        <input class="filter-value" data-provide="datepicker" id="date-min" placeholder="from"/>
+                                        <input class="filter-value" type="text" id="date-max" placeholder="to"/>
+                                    </div>
 
-                                <div class="list-group-item filter-element">
-                                    <span class="filter-label">Study date</span>
-                                    <input class="filter-value" data-provide="datepicker" id="date-min" placeholder="from"/>
-                                    <input class="filter-value" type="text" id="date-max" placeholder="to"/>
-                                </div>
-
-                                <div class="list-group-item filter-element">
-                                    <span class="filter-label">Trait</span>
-                                        <div class="filter-values">
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-default">Child trait</button>
-                                                <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false">
-                                                    <span class="caret"></span>
-                                                    <span class="sr-only">Toggle Dropdown</span>
-                                                </button>
-                                                <ul class="dropdown-menu" role="menu">
-                                                    <li><a href="#">Diabetes</a></li>
-                                                    <li><a href="#">Cancer</a></li>
-                                                    <li><a href="#">Lupus</a></li>
-                                                    <li><a href="#">Body weight</a></li>
-                                                </ul>
+                                    <div class="list-group-item filter-element ">
+                                        <span class="filter-label">Trait</span>
+                                            <div class="filter-values">
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-default">Child trait</button>
+                                                    <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false">
+                                                        <span class="caret"></span>
+                                                        <span class="sr-only">Toggle Dropdown</span>
+                                                    </button>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <!--<li><a href="#">Diabetes</a></li>-->
+                                                        <!--<li><a href="#">Cancer</a></li>-->
+                                                        <!--<li><a href="#">Lupus</a></li>-->
+                                                        <!--<li><a href="#">Body weight</a></li>-->
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                        <div>
-                            <button type="button" class="btn btn-default">Apply filters</button>
-                            <button type="button" class="btn btn-default pull-right">Clear all filters</button>
-                        </div>
+                            <div>
+                                <button type="submit" class="btn btn-default">Apply filters</button>
+                                <button type="button" class="btn btn-default pull-right" id="clear-filter">Clear all filters</button>
+                            </div>
+                         </form>
                     </div>
                 </div>
             </div>
@@ -234,18 +241,36 @@
 
                     <div id="studyTable">
                         <h3><i>Studies</i></h3>
-                        <table class="table" id="studySummaries">
+
+                        <!--<table id="studySummaries" class="table table-hover" data-toggle="table" data-sort-order="desc">-->
+                            <!--<thead>-->
+                            <!--<tr>-->
+                                <!--<th data-field="author"-->
+                                    <!--data-sortable="true">Author</th>-->
+                                <!--<th data-field="publication"-->
+                                    <!--data-sortable="true">Publication</th>-->
+                                <!--<th data-field="title"-->
+                                    <!--data-sortable="true">Title</th>-->
+                                <!--<th data-field="diseasetrait"-->
+                                    <!--data-sortable="true">Disease/Trait</th>-->
+                                <!--<th data-field="date"-->
+                                    <!--data-sortable="true">Date</th>-->
+                                <!--<th data-field="pubmedid"-->
+                                    <!--data-sortable="true">Pubmed ID</th>-->
+                        <table id="studySummaries" class="table table-hover table-striped">
                             <thead>
                             <tr>
                                 <th>Author</th>
+                                <th>Date</th>
                                 <th>Publication</th>
                                 <th>Title</th>
                                 <th>Disease/Trait</th>
-                                <th>Date</th>
-                                <th>Pubmed ID</th>
-
+                                <th>Association count</th>
+                                <th></th>
                             </tr>
                             </thead>
+                            <tbody></tbody>
+
 
 
                         </table>
@@ -254,19 +279,23 @@
                     <div id="associationTable">
                         <h3><i>Associations</i></h3>
 
-                        <table class="table" id="associationSummaries">
+                        <table class="table table-hover table-striped" id="associationSummaries">
                             <thead>
                             <tr>
                                 <th>Strongest allele</th>
-                                <th>p-value</th>
+                                <th>p-value (qualifier)</th>
                                 <th>Odds ratio</th>
-                                <th>betac-coefficient &amp; unit description</th>
+                                <th>beta-coefficient &amp; unit description</th>
+                                <th>[95% CI]</th>
                                 <th>Chromosome location</th>
-                                <th>Gene(s)</th>
+                                <th>Reported gene(s)</th>
+                                <th>Mapped gene(s)</th>
                                 <th>Study</th>
 
                             </tr>
                             </thead>
+                            <tbody></tbody>
+
 
                         </table>
                         <button class="btn btn-default btn-xs accordion-toggle" id="associationToggle" data-toggle="collapse" data-target=".hiddenAssociation" aria-expanded="false" aria-controls="hiddenAssociation" style="display: none"><span class="glyphicon glyphicon-chevron-right"></span></button>
@@ -274,7 +303,7 @@
 
                     <div id="diseasetraitTable">
                         <h3><i>Disease traits</i></h3>
-                        <table class="table" id="diseasetraitSummaries">
+                        <table class="table table-hover table-striped" id="diseasetraitSummaries">
                             <thead>
                             <tr>
                                 <th>Trait name</th>
@@ -283,6 +312,8 @@
 
                             </tr>
                             </thead>
+                            <tbody></tbody>
+
 
                         </table>
                         <button class="btn btn-default btn-xs accordion-toggle" id="diseasetraitToggle" data-toggle="collapse" data-target=".hiddenTrait" aria-expanded="false" aria-controls="hiddenTrait" style="display: none"><span class="glyphicon glyphicon-chevron-right"></span></button>
@@ -290,15 +321,19 @@
                     <div id="singlenucleotidepolymorphismTable">
                         <h3><i>SNPs</i></h3>
 
-                        <table class="table" id="singlenucleotidepolymorphismSummaries">
+                        <table class="table table-hover table-striped" id="singlenucleotidepolymorphismSummaries">
                             <thead>
                             <tr>
                                 <th>RS ID</th>
                                 <th>Base pair location</th>
                                 <th>Chromosome region</th>
+                                <th>Context</th>
                                 <th>Genes</th>
+                                <th>Mapped EFO traits</th>
                             </tr>
                             </thead>
+                            <tbody></tbody>
+
 
                         </table>
                         <button class="btn btn-default btn-xs accordion-toggle" id="singlenucleotidepolymorphismToggle" data-toggle="collapse" data-target=".hiddenSNP" aria-expanded="false" aria-controls="hiddenSNP" style="display: none"><span class="glyphicon glyphicon-chevron-right"></span></button>
@@ -334,6 +369,12 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 <script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
+
+<!--<script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>-->
+<!--<script src="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"></script>-->
+
+<!-- Latest compiled and minified JavaScript -->
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.5.0/bootstrap-table.min.js"></script>-->
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="../static/js/ie10-viewport-bug-workaround.js" th:src="@{js/ie10-viewport-bug-workaround.js}"></script>
 
@@ -342,5 +383,6 @@
 <script src="../static/js/goci-ui.js" th:src="@{js/goci-ui.js}"></script>
 <script src="../static/js/solrsearch.js" th:src="@{js/solrsearch.js}"></script>
 <script src="../static/js/solrfacet.js" th:src="@{js/solrfacet.js}"></script>
+<script src="../static/js/solrfilter.js" th:src="@{js/solrfilter.js}"></script>
 </body>
 </html>

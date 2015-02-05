@@ -165,3 +165,7 @@ a > .toplevel-view {
     color: #333;
 }
 
+table .collapse.in {
+    display:table-row;
+}
+
