@@ -14,13 +14,16 @@ import java.util.TimeZone;
  * @author Tony Burdett
  * @date 23/12/14
  */
-public class SnpDocument extends Document<SingleNucleotidePolymorphism> {
+public class SnpDocument extends OntologyEnabledDocument<SingleNucleotidePolymorphism> {
     @Field private String rsId;
     @Field private String chromosomeName;
     @Field private int chromosomePosition;
     @Field("region") private Set<String> regions;
-    @Field("gene") private Set<String> genes;
+    @Field("mappedGene") private Set<String> genes;
+    @Field private String context;
     @Field private String last_modified;
+
+    @Field("qualifier") private Set<String> qualifiers;
 
     public SnpDocument(SingleNucleotidePolymorphism snp) {
         super(snp);
@@ -33,11 +36,13 @@ public class SnpDocument extends Document<SingleNucleotidePolymorphism> {
         snp.getRegions().forEach(region -> regions.add(region.getName()));
         this.genes = new HashSet<>();
         snp.getGenomicContexts().forEach(context -> genes.add(context.getGene().getGeneName()));
+        this.context = snp.getFunctionalClass();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
         if (snp.getLastUpdateDate() != null) {
             this.last_modified = df.format(snp.getLastUpdateDate());
         }
+        this.qualifiers = new HashSet<>();
     }
 
     public String getRsId() {
@@ -60,8 +65,24 @@ public class SnpDocument extends Document<SingleNucleotidePolymorphism> {
         return genes;
     }
 
+    public String getContext() {
+        return context;
+    }
+
     public String getLast_modified() {
         return last_modified;
+    }
+
+    public Set<String> getQualifiers() {
+        return qualifiers;
+    }
+
+    public void setQualifiers(Set<String> qualifiers) {
+        this.qualifiers = qualifiers;
+    }
+
+    public void addQualifier(String qualifier) {
+        this.qualifiers.add(qualifier);
     }
 
     @Override
