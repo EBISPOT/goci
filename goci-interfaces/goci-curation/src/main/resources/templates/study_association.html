@@ -94,6 +94,7 @@
             <th>SNP Type</th>
             <th>Multi-SNP haplotype</th>
             <th>SNP:SNP interaction</th>
+            <th></th>
 
         </tr>
         </thead>
@@ -154,6 +155,10 @@
                 <p th:case="false">No</p>
 
                 <p th:case="true">Yes</p>
+            </td>
+            <td>
+                <a th:href="@{/associations/{associationId}/delete(associationId=${snpAssociationForm.associationId})}"
+                   class="btn btn-danger">Delete</a>
             </td>
 
         </tr>

@@ -359,6 +359,48 @@ public class AssociationController {
     }
 
 
+    // Delete an association
+    @RequestMapping(value = "associations/{associationId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String viewAssociationToDelete(Model model, @PathVariable Long associationId) {
+
+        // Return association as a form
+        Association associationToView = associationRepository.findOne(associationId);
+        SnpAssociationForm snpAssociationForm = createSnpAssociationForm(associationToView);
+        model.addAttribute("snpAssociationForm", snpAssociationForm);
+
+        // Return study
+        Study study = studyRepository.findOne(associationToView.getStudy().getId());
+        model.addAttribute("study", study);
+
+        return "delete_standard_or_multisnp_association";
+    }
+
+    // Delete an association
+    @RequestMapping(value = "associations/{associationId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String deleteAssociation(Model model, @PathVariable Long associationId) {
+
+        // Get association
+        Association associationToDelete = associationRepository.findOne(associationId);
+
+        // Get all loci for association
+        Collection<Locus> loci = associationToDelete.getLoci();
+
+        // Delete each locus, which in trun deletes link to genes via author_reported_gene table,
+        // Snp and risk allele are not deleted as they may be used in other associations
+        for (Locus locus : loci) {
+            locusRepository.delete(locus);
+        }
+
+        // Delete association
+        associationRepository.delete(associationToDelete);
+
+        // Get study
+        Study study = studyRepository.findOne(associationToDelete.getStudy().getId());
+
+        return "redirect:/studies/" + study.getId() + "/associations";
+    }
+
+
    /* General purpose methods */
 
     // Takes information in addSNPForm and creates association
@@ -476,14 +518,17 @@ public class AssociationController {
             // For allele assign SNP if one isn't already present
             if (riskAllele.getSnp() == null) {
                 riskAllele.setSnp(snp);
-            } else {
+
+                // Save changes to risk allele
+                riskAlleleRepository.save(riskAllele);
+            }
+
+            else {
                 if (!riskAllele.getSnp().equals(snp)) {
                     throw new DataIntegrityException("Risk allele: " + riskAllele.getRiskAlleleName() + " has SNP " + riskAllele.getSnp().getRsId() + " attached in database, cannot also add " + snp.getRsId());
 
                 }
             }
-            // Save changes to risk allele
-            riskAlleleRepository.save(riskAllele);
 
             locusRiskAlleles.add(riskAllele);
         }
@@ -614,7 +659,7 @@ public class AssociationController {
         snpAssociationForm.setAuthorReportedGenes(authorReportedGenes);
 
         // Handle snp rows
-        List<SnpFormRow> snpFormRows = new ArrayList<>();
+        List<SnpFormRow> snpFormRows = new ArrayList<SnpFormRow>();
         for (RiskAllele riskAllele : locusRiskAlleles) {
             SnpFormRow snpFormRow = new SnpFormRow();
             snpFormRow.setStrongestRiskAllele(riskAllele.getRiskAlleleName());
