@@ -32,10 +32,11 @@ public class V1_9_9_016__Association_locus_links_for_unusual_single_snps extends
             "SELECT ID, SNP FROM GWASSNP";
 
     private static final String SELECT_ASSOCIATIONS_AND_SNPS =
-            "SELECT DISTINCT ID, STRONGESTALLELE, GENE, SNP " +
-                    "FROM GWASSTUDIESSNP " +
-                    "WHERE SNP NOT LIKE '%,%' " +
-                    "AND SNP NOT LIKE '%:%'";
+            "SELECT DISTINCT ID, STRONGESTALLELE, GENE, SNP FROM GWASSTUDIESSNP " +
+                    "WHERE SNP LIKE 'chr%:%' " +
+                    "OR SNP LIKE 'HLA-%:%' " +
+                    "OR SNP LIKE 'DRB%:%' " +
+                    "OR SNP IN ('hg18_chr11:27369242','B*38:02','A*11:01','B*55:02','ch2:211694960','A*02:01')";
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
