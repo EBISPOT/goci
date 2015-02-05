@@ -108,16 +108,27 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     SingleNucleotidePolymorphism snp = riskAllele.getSnp();
                                     rsId = setOrAppend(rsId, snp.getRsId(), " x ");
 
+                                    final Set<String> regionNames = new HashSet<>();
                                     final StringBuilder regionBuilder = new StringBuilder();
                                     snp.getRegions().forEach(
-                                            region -> setOrAppend(regionBuilder, region.getName(), " / "));
+                                            region -> {
+                                                if (!regionNames.contains(region.getName())) {
+                                                    regionNames.add(region.getName());
+                                                    setOrAppend(regionBuilder, region.getName(), " / ");
+                                                }
+                                            });
                                     region = setOrAppend(region, regionBuilder.toString(), " : ");
 
+                                    final Set<String> geneNames = new HashSet<>();
                                     final StringBuilder mappedGeneBuilder = new StringBuilder();
                                     snp.getGenomicContexts().forEach(
-                                            context -> setOrAppend(mappedGeneBuilder,
-                                                                   context.getGene().getGeneName(),
-                                                                   " / "));
+                                            context -> {
+                                                String geneName = context.getGene().getGeneName();
+                                                if (!geneNames.contains(geneName)) {
+                                                    geneNames.add(geneName);
+                                                    setOrAppend(mappedGeneBuilder, geneName, " / ");
+                                                }
+                                            });
                                     mappedGene = setOrAppend(mappedGene, mappedGeneBuilder.toString(), " : ");
 
                                     context = snp.getFunctionalClass();
@@ -148,16 +159,27 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     SingleNucleotidePolymorphism snp = riskAllele.getSnp();
                                     rsId = setOrAppend(rsId, snp.getRsId(), ", ");
 
+                                    final Set<String> regionNames = new HashSet<>();
                                     final StringBuilder regionBuilder = new StringBuilder();
                                     snp.getRegions().forEach(
-                                            region -> setOrAppend(regionBuilder, region.getName(), " / "));
+                                            region -> {
+                                                if (!regionNames.contains(region.getName())) {
+                                                    regionNames.add(region.getName());
+                                                    setOrAppend(regionBuilder, region.getName(), " / ");
+                                                }
+                                            });
                                     region = setOrAppend(region, regionBuilder.toString(), ", ");
 
+                                    final Set<String> geneNames = new HashSet<>();
                                     final StringBuilder mappedGeneBuilder = new StringBuilder();
                                     snp.getGenomicContexts().forEach(
-                                            context -> setOrAppend(mappedGeneBuilder,
-                                                                   context.getGene().getGeneName(),
-                                                                   " / "));
+                                            context -> {
+                                                String geneName = context.getGene().getGeneName();
+                                                if (!geneNames.contains(geneName)) {
+                                                    geneNames.add(geneName);
+                                                    setOrAppend(mappedGeneBuilder, geneName, " / ");
+                                                }
+                                            });
                                     mappedGene = setOrAppend(mappedGene, mappedGeneBuilder.toString(), ", ");
 
                                     context = snp.getFunctionalClass();
@@ -220,6 +242,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     public Collection<String> getTraits() {
         return traits;
+    }
+
+    public String getStudyId() {
+        return studyId;
     }
 
     public String getPubmedId() {
