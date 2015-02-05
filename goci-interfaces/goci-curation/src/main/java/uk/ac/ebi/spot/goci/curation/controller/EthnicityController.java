@@ -95,14 +95,31 @@ public class EthnicityController {
 
 
     // Add new ethnicity/sample information to a study
-    @RequestMapping(value = "/studies/{studyId}/sampledescription", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String addStudySampleDescription(@ModelAttribute Ethnicity ethnicity, @ModelAttribute InitialSampleDescription initialSampleDescription, @ModelAttribute ReplicationSampleDescription replicationSampleDescription, @PathVariable Long studyId, RedirectAttributes redirectAttributes) {
+    @RequestMapping(value = "/studies/{studyId}/initialreplicationsampledescription", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String addStudyInitialReplcationSampleDescription(@ModelAttribute InitialSampleDescription initialSampleDescription, @ModelAttribute ReplicationSampleDescription replicationSampleDescription, @PathVariable Long studyId, RedirectAttributes redirectAttributes) {
 
         Study study = studyRepository.findOne(studyId);
 
         // Set our descriptions which are attributes of the study
         study.setInitialSampleSize(initialSampleDescription.getInitialSampleDescription());
         study.setReplicateSampleSize(replicationSampleDescription.getReplicationSampleDescription());
+
+        // Save study
+        studyRepository.save(study);
+
+        // Add save message
+        String message = "Changes saved successfully";
+        redirectAttributes.addFlashAttribute("changesSaved", message);
+
+        return "redirect:/studies/" + studyId + "/sampledescription";
+    }
+
+
+    // Add new ethnicity/sample information to a study
+    @RequestMapping(value = "/studies/{studyId}/sampledescription", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String addStudySampleDescription(@ModelAttribute Ethnicity ethnicity, @PathVariable Long studyId, RedirectAttributes redirectAttributes) {
+
+        Study study = studyRepository.findOne(studyId);
 
         // Set the study for our ethnicity
         ethnicity.setStudy(study);
