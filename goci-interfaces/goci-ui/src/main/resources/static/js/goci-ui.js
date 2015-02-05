@@ -7,35 +7,45 @@
          // alert(window.location.pathname);
 
         $('#search-box').change(function(){
-            doSearch()
+            doSearch();
         });
 
         $('#search-button').click(function(){
-              doSearch()
+              doSearch();
+        });
+
+
+        $('#filter-form').submit(function(event){
+            event.preventDefault();
+            doFiltering();
+        });
+
+        $('#clear-filter').click(function(){
+            clearFilters();
         });
 
         $('#study-facet').click(function(){
             $('a.list-group-item').removeClass('selected');
             $(this).addClass('selected');
-            applyFacet("study")
+            applyFacet("study");
         });
 
         $('#association-facet').click(function(){
             $('a.list-group-item').removeClass('selected');
             $(this).addClass('selected');
-            applyFacet("association")
+            applyFacet("association");
         });
 
         $('#diseasetrait-facet').click(function(){
             $('a.list-group-item').removeClass('selected');
             $(this).addClass('selected');
-            applyFacet("diseasetrait")
+            applyFacet("diseasetrait");
         });
 
         $('#singlenucleotidepolymorphism-facet').click(function(){
             $('a.list-group-item').removeClass('selected');
             $(this).addClass('selected');
-            applyFacet("singlenucleotidepolymorphism")
+            applyFacet("singlenucleotidepolymorphism");
         });
 
         $('.toplevel-view').hover(function() {
@@ -68,7 +78,10 @@ function doSearch(){
 }
 
 function applyFacet(facet){
+    console.log(facet);
     var searchTerm = $("#search-box").val();
+
+    $('#facet').text(facet);
 
     if($('.breadcrumb').children().length == 3){
         var gwas = $('ol.breadcrumb li:last-child');
@@ -152,4 +165,15 @@ function toggleSidebar(ts){
             $(ts).parents('#filter-bar').siblings('#results-area').removeClass('col-md-9').addClass('col-md-11');
         }
 };
+
+function clearFilters(){
+   $('#filter-form').find('input').val('');
+
+    if($('#facet').text() == ''){
+        doSearch();
+    }
+    else{
+        applyFacet($('#facet').text());
+    }
+}
 
