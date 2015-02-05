@@ -105,7 +105,8 @@ public class AssociationDocument extends Document<Association> {
                 chromosomePositions.add(Integer.parseInt(snp.getChromosomePosition()));
             }
             snp.getRegions().forEach(region -> regions.add(region.getName()));
-            snp.getGenes().forEach(gene -> genes.add(gene.getGeneName()));
+            snp.getGenomicContexts().forEach(
+                    context -> genes.add(context.getGene().getGeneName()));
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
             df.setTimeZone(TimeZone.getTimeZone("UTC"));
             if (snp.getLastUpdateDate() != null) {
