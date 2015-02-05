@@ -368,7 +368,7 @@ public class AssociationController {
         SnpAssociationForm snpAssociationForm = createSnpAssociationForm(associationToView);
         model.addAttribute("snpAssociationForm", snpAssociationForm);
 
-        // Return study
+        // Return study, this will be used to create link back to page containing all studies for that association
         Study study = studyRepository.findOne(associationToView.getStudy().getId());
         model.addAttribute("study", study);
 
@@ -379,13 +379,17 @@ public class AssociationController {
     @RequestMapping(value = "associations/{associationId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String deleteAssociation(Model model, @PathVariable Long associationId) {
 
+
         // Get association
         Association associationToDelete = associationRepository.findOne(associationId);
+
+        // Get study Id for redirect
+        Long studyId = associationToDelete.getStudy().getId();
 
         // Get all loci for association
         Collection<Locus> loci = associationToDelete.getLoci();
 
-        // Delete each locus, which in trun deletes link to genes via author_reported_gene table,
+        // Delete each locus, which in turn deletes link to genes via author_reported_gene table,
         // Snp and risk allele are not deleted as they may be used in other associations
         for (Locus locus : loci) {
             locusRepository.delete(locus);
@@ -397,7 +401,7 @@ public class AssociationController {
         // Get study
         Study study = studyRepository.findOne(associationToDelete.getStudy().getId());
 
-        return "redirect:/studies/" + study.getId() + "/associations";
+        return "redirect:/studies/" + studyId + "/associations";
     }
 
 
@@ -521,9 +525,7 @@ public class AssociationController {
 
                 // Save changes to risk allele
                 riskAlleleRepository.save(riskAllele);
-            }
-
-            else {
+            } else {
                 if (!riskAllele.getSnp().equals(snp)) {
                     throw new DataIntegrityException("Risk allele: " + riskAllele.getRiskAlleleName() + " has SNP " + riskAllele.getSnp().getRsId() + " attached in database, cannot also add " + snp.getRsId());
 
