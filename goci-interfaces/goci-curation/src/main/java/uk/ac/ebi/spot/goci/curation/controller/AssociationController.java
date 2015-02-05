@@ -94,10 +94,11 @@ public class AssociationController {
             // Save the uploaded file received in a multipart request as a file in the upload directory
             // The default temporary-file directory is specified by the system property java.io.tmpdir.
 
-            String uploadDir = System.getProperty("java.io.tmpdir");
+            String uploadDir = System.getProperty("java.io.tmpdir")+File.pathSeparator+"gwas_batch_upload"+File.pathSeparator;
 
             // Create file
             File uploadedFile = new File(uploadDir + file.getOriginalFilename());
+            uploadedFile.getParentFile().mkdirs();
 
             // Copy contents of multipart request to newly created file
             try {
@@ -463,7 +464,7 @@ public class AssociationController {
         if ((orPerCopyRecip != null) && (orPerCopyRange != null) && recipReverse) {
             orPerCopyRange = associationCalculationService.reverseCI(orPerCopyRange);
             association.setOrPerCopyRange(orPerCopyRange);
-        } else if ((orPerCopyRange.isEmpty()) && (orPerCopyStdError != null)) {
+        } else if ((orPerCopyRange == null) && (orPerCopyRange.isEmpty()) && (orPerCopyStdError != null)) {
             orPerCopyRange = associationCalculationService.setRange(orPerCopyStdError, orPerCopyNum);
             association.setOrPerCopyRange(orPerCopyRange);
         } else {
@@ -556,10 +557,16 @@ public class AssociationController {
 
             // Check if gene already exists, note we may have duplicates so for moment just take first one
             List<Gene> genesInDatabase = geneRepository.findByGeneNameIgnoreCase(authorReportedGene);
-            Gene gene = genesInDatabase.get(0);
+            Gene gene;
+
+            // Exists in database already
+            if (genesInDatabase.size() > 0) {
+                gene = genesInDatabase.get(0);
+            }
+
 
             // If gene doesn't exist then create and save
-            if (gene == null) {
+            else {
                 // Create new gene
                 Gene newGene = new Gene();
                 newGene.setGeneName(authorReportedGene);
@@ -567,6 +574,8 @@ public class AssociationController {
                 // Save gene
                 gene = geneRepository.save(newGene);
             }
+
+
             // Add genes to collection
             locusGenes.add(gene);
         }
