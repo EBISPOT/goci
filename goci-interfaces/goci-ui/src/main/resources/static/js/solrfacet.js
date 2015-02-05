@@ -175,8 +175,19 @@ function processAssociations(associations, table) {
         var association = associations[i];
 
         var row = $("<tr>");
-        row.append($("<td>").html(association.strongestAllele));
+        if(association.rsId != null){
+            if(association.rsId.length == 1 && !association.rsId[0].contains('x')){
+                var dbsnp = "<a href='http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=".concat(association.rsId[0].substring(2)).concat("'>").concat(association.strongestAllele).concat("</a>");
+                row.append($("<td>").html(dbsnp));
+            }
+            else {
+                //for (var k = 0; k < association.rsId.length; k++) {
+                //
+                //}
+                row.append($("<td>").html(association.strongestAllele));
 
+            }
+        }
         var pval = association.pValue;
         if(association.qualifier != null && association.qualifier != ''){
             pval = pval.toString().concat(" ").concat(association.qualifier[0]);
@@ -307,10 +318,11 @@ function processSnps(snps, table){
         //    var snp = documents[j];
 
         var snp = snps[i];
-            var row = $("<tr>");
-            row.append($("<td>").html(snp.rsId));
-            row.append($("<td>").html(snp.chromosomePosition));
-            row.append($("<td>").html(snp.region));
+        var row = $("<tr>");
+        row.append($("<td>").html(snp.rsId));
+        var location = "chr".concat(snp.chromosomeName).concat(":").concat(snp.chromosomePosition);
+        row.append($("<td>").html(location));
+        row.append($("<td>").html(snp.region));
         row.append($("<td>").html(snp.context));
 
         var gene = '';
