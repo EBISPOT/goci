@@ -22,6 +22,7 @@
     <!-- Custom styles for this template -->
     <link href="../static/css/jumbotron.css" th:href="@{css/jumbotron.css}" rel="stylesheet"/>
     <link href="../static/css/sticky-footer-navbar.css" th:href="@{css/sticky-footer-navbar.css}" rel="stylesheet"/>
+    <link href="../static/css/datepicker.css" th:href="@{css/datepicker.css}" rel="stylesheet"/>
 
     <!-- Additional styling on top of bootstrap -->
     <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{css/goci-ui.css}"/>
@@ -134,6 +135,10 @@
         <li><a href="home">GWAS</a></li>
         <li class="active">Search</li>
     </ol>
+    
+    <div id="catalog-stats">
+        <i>As of 02/05/15, the catalog includes 2107 publications and 15285 SNPs. The SNP data in the catalog has been mapped to dbSNP Build 142 and Genome Assembly, GRCh38/hg37.p13.</i>
+    </div>
 
     <!--
 
@@ -197,8 +202,10 @@
 
                                     <div class="list-group-item filter-element ">
                                         <span class="filter-label">Study date</span>
+                                        <!--<div class="input-append date" id="dp3" data-date="12-02-2012" data-date-format="dd-mm-yyyy">-->
                                         <input class="filter-value" data-provide="datepicker" id="date-min" placeholder="from"/>
-                                        <input class="filter-value" type="text" id="date-max" placeholder="to"/>
+                                        <input class="filter-value" data-provide="datepicker" id="date-max" placeholder="to"/>
+                                            <!--</div>-->
                                     </div>
 
                                     <div class="list-group-item filter-element ">
@@ -282,7 +289,7 @@
                         <table class="table table-hover table-striped" id="associationSummaries">
                             <thead>
                             <tr>
-                                <th>Strongest allele</th>
+                                <th>Risk/effect SNP-allele</th>
                                 <th>p-value (qualifier)</th>
                                 <th>Odds ratio</th>
                                 <th>beta-coefficient &amp; unit description</th>
@@ -302,7 +309,7 @@
                     </div>
 
                     <div id="diseasetraitTable">
-                        <h3><i>Disease traits</i></h3>
+                        <h3><i>Traits</i></h3>
                         <table class="table table-hover table-striped" id="diseasetraitSummaries">
                             <thead>
                             <tr>
@@ -324,11 +331,11 @@
                         <table class="table table-hover table-striped" id="singlenucleotidepolymorphismSummaries">
                             <thead>
                             <tr>
-                                <th>RS ID</th>
+                                <th>rsID</th>
                                 <th>Base pair location</th>
                                 <th>Chromosome region</th>
                                 <th>Context</th>
-                                <th>Genes</th>
+                                <th>Mapped genes</th>
                                 <th>Mapped EFO traits</th>
                             </tr>
                             </thead>
@@ -352,7 +359,7 @@
 <footer class="footer background-color-primary-accent">
     <!--<div class="footer-banner background-color-primary"></div>-->
     <div class="container">
-        <p class="text-muted">Copyright &copy; EMBL-EBI 2015 | EBI is an Outstation of the
+        <p class="text-muted">Copyright &copy; EMBL-EBI 2015 | EMBL-EBI is an Outstation of the
             <a href="http://www.embl.org">European Molecular
                 Biology
                 Laboratory</a> |
@@ -369,6 +376,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 <script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
+<script src="../static/js/bootstrap-datepicker.js.js" th:src="@{js/bootstrap-datepicker.js}"></script>
 
 <!--<script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>-->
 <!--<script src="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"></script>-->

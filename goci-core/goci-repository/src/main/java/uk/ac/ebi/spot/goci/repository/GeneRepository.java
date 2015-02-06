@@ -4,6 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import uk.ac.ebi.spot.goci.model.Gene;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Created by emma on 01/12/14.
  *
@@ -13,5 +16,5 @@ import uk.ac.ebi.spot.goci.model.Gene;
  */
 @RepositoryRestResource
 public interface GeneRepository extends JpaRepository<Gene, Long> {
-    Gene findByGeneNameIgnoreCase(String geneName);
+   List<Gene> findByGeneNameIgnoreCase(String geneName);
 }

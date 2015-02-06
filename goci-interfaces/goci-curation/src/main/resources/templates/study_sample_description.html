@@ -47,7 +47,7 @@
             <li><a th:href="@{/studies}">Home</a></li>
             <li><a th:href="@{/studies/new}">Add Study</a></li>
             <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
-            <!--<li><a href="#">Count Data</a></li>-->
+            <li><a th:href="@{/reports}">Reports</a></li>
         </ul>
         <!--
                 <ul class="nav navbar-nav navbar-right">
@@ -73,11 +73,62 @@
 </div>
 
 
+<!--Alert if data is saved-->
+<div class="container" th:if="${!#strings.isEmpty(changesSaved)}">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="alert alert-success">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:text="${changesSaved}">Success!</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br></br>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10">
+            <form class="form-horizontal" method="post"
+                  name="addInitialSampleDescription">
+
+                <div class="form-group">
+                    <label for="sampleInitialDescription" class="control-label col-md-2">Initial Sample
+                        Description:</label>
+
+                    <div class="col-md-10">
+                        <input id="sampleInitialDescription" class="form-control" type="text"
+                               th:field="${initialSampleDescription.initialSampleDescription}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="sampleReplicationDescription" class="control-label col-md-2">Replication Sample
+                        Description:</label>
+
+                    <div class="col-md-10">
+                        <input id="sampleReplicationDescription" class="form-control" type="text"
+                               th:field="${replicationSampleDescription.replicationSampleDescription}"/>
+                    </div>
+                </div>
+
+
+                <!--Button -->
+                <div class="form-group inline">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <div class="container">
     <div class="row">
-        <h4>Initial Sample Description:</h4>
-
-        <p th:text="${study.initialSampleSize} ?: 'NA'"></p>
 
         <table id="initialTable" class="table table-hover table-bordered">
             <thead>
@@ -120,11 +171,10 @@
     </div>
 </div>
 
+
 <div class="container">
     <div class="row">
-        <h4>Replication Sample Description:</h4>
 
-        <p th:text="${study.replicateSampleSize} ?: 'NA'"></p>
         <table id="replicationTable" class="table table-hover table-bordered">
             <thead>
             <tr>

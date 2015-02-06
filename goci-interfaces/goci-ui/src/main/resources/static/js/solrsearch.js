@@ -159,7 +159,7 @@ function processStudy(study, table){
     var row = $("<tr>");
     //row.addClass('clickable');
     //row.attr('data-toggle', 'collapse');
-    //row.attr('id', study.id);
+    ////row.attr('id', study.id);
     //row.attr('data-target', '.'.concat(study.id));
 
     if(table.find('tr').length >= 10){
@@ -176,7 +176,7 @@ function processStudy(study, table){
     row.append($("<td>").html(study.title));
     row.append($("<td>").html(study.trait));
     row.append($("<td>").html(study.associationCount));
-    var plusicon = "<button class='btn btn-default btn-xs accordion-toggle' id='".concat(study.id).concat("' data-toggle='collapse' data-target='.").concat(study.id).concat("' aria-expanded='false' aria-controls='").concat(study.id).concat("'><span class='glyphicon glyphicon-plus'></span></button>");
+    var plusicon = "<button class='btn btn-default btn-xs accordion-toggle' data-toggle='collapse' data-target='.".concat(study.id).concat("' aria-expanded='false' aria-controls='").concat(study.id).concat("'><span class='glyphicon glyphicon-plus'></span></button>");
 
     row.append($("<td>").html(plusicon));
     table.append(row);
@@ -185,17 +185,31 @@ function processStudy(study, table){
     var hiddenrow = $("<tr>");
     hiddenrow.addClass(study.id);
     hiddenrow.addClass('collapse');
-    hiddenrow.append($("<td>"));
-    hiddenrow.append($("<td colspan='3'>").html(study.initialSampleDescription));
-    hiddenrow.append($("<td>").html(study.replicateSampleDescription));
-    hiddenrow.append($("<td>").html(study.platform));
+    hiddenrow.addClass('accordion-body');
+    hiddenrow.addClass('hiddenRow');
+    //hiddenrow.append($("<td>"));
 
-    if(study.cnv){
-      hiddenrow.append($("<td>").html("yes"));
-    }
-    else{
-        hiddenrow.append($("<td>").html("no"));
-    }
+
+    //var c1 = $("<td>").addClass('hiddenRow').attr('colspan', 3);
+    //c1.append($("<div>").addClass('collapse').addClass(study.id).html(study.initialSampleDescription));
+    //hiddenrow.append(c1);
+    //var c2 = $("<td>").addClass('hiddenRow').attr('colspan', 2);
+    //c2.append($("<div>").addClass('collapse').addClass(study.id).html(study.replicateSampleDescription));
+    //hiddenrow.append(c2);
+    //var c3 = $("<td>").addClass('hiddenRow').attr('colspan', 3);
+    //c3.append($("<div>").addClass('collapse').addClass(study.id).html(study.platform));
+    //hiddenrow.append(c3);
+    //
+    //if(study.cnv){
+    //    var c4 = $("<td>").addClass('hiddenRow');
+    //    c4.append($("<div>").addClass('collapse').addClass(study.id).html("yes"));
+    //    hiddenrow.append(c4);
+    //}
+    //else{
+    //    var c4 = $("<td>").addClass('hiddenRow');
+    //    c4.append($("<div>").addClass('collapse').addClass(study.id).html("no"));
+    //    hiddenrow.append(c4);
+    //}
     table.append(hiddenrow);
 }
 
@@ -207,8 +221,20 @@ function processAssociation(association, table){
         row.addClass('hiddenAssociation');
     }
 
-    //if(association.strongestAllele != null){
-        row.append($("<td>").html(association.strongestAllele));
+    if(association.rsId != null){
+        if(association.rsId.length == 1 && (association.rsId[0].indexOf('x') == -1)){
+            var dbsnp = "<a href='http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=".concat(association.rsId[0].substring(2)).concat("'>").concat(association.strongestAllele).concat("</a>");
+            row.append($("<td>").html(dbsnp));
+        }
+        else {
+            //for (var k = 0; k < association.rsId.length; k++) {
+            //
+            //}
+            row.append($("<td>").html(association.strongestAllele));
+
+        }
+    }
+
     //}
     //else{
     //    var location = "chr".concat(association.chromosomeName).concat(":").concat(association.chromosomePosition);
@@ -346,7 +372,9 @@ function processSnp(snp, table){
         row.addClass('hiddenSNP');
     }
     row.append($("<td>").html(snp.rsId));
-    row.append($("<td>").html(snp.chromosomePosition));
+
+    var location = "chr".concat(snp.chromosomeName).concat(":").concat(snp.chromosomePosition);
+    row.append($("<td>").html(location));
     row.append($("<td>").html(snp.region));
     row.append($("<td>").html(snp.context));
 

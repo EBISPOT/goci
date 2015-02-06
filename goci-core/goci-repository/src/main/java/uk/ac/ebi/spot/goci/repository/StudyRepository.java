@@ -38,6 +38,11 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     @Query("select s from Study s where s.housekeeping.curationStatus.id = :status and s.housekeeping.curator.id = :curator")
     Collection<Study> findByCurationStatusAndCuratorAllIgnoreCase(@Param("status") Long status, @Param("curator") Long curator);
 
+    @Query("select s from Study s where s.housekeeping.curator.id = :curator")
+    Collection<Study> findByCuratorOrderByStudyDateDesc( @Param("curator") Long curator);
+
+
+
     List<Study> findByHousekeepingPublishDateIsNotNull();
 
     List<Study> findByHousekeepingPublishDateIsNotNull(Sort sort);

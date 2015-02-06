@@ -68,47 +68,38 @@
 </nav>
 
 
-<!--Link back to study page -->
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-10">
-            <a class="btn btn-link btn-lg" th:href="@{/studies/{studyId}/associations(studyId=${study.id})}">Back</a>
-        </div>
-    </div>
-</div>
-
 <div class="container">
 <div class="row">
 <div class="col-md-10">
-<div class="form-group">
-<div id="addSNPForm">
-<form class="form-horizontal" method="post" name="addSNPForm" th:object="${snpAssociationForm}">
 
-<div class="alert alert-info col-md-offset-2 col-md-7">
+
+<div class="alert alert-danger col-md-offset-2 col-md-8">
     <a href="#" class="close" data-dismiss="alert">&times;</a>
-    <strong>Note</strong> Use the add row buttons below if its a multi-snp haplotype
+    <strong>Warning!</strong> Are you sure you want to delete the following SNP association? If not,
+    <!--Return to disease traits page-->
+    <a th:href="@{/studies/{studyId}/associations(studyId=${study.id})}" class="alert-link">Cancel</a>
 
 </div>
 
 <div class="form-group">
+<div id="editSNPForm">
+<form class="form-horizontal" method="post" name="editSNPForm" th:object="${snpAssociationForm}">
+
+
+<div class="form-group">
     <div class="col-md-10 col-md-offset-2">
-
-
         <table class="table table-hover table-bordered">
 
-            <div class="form-group">
-                <div class="col-md-10">
-                    <input type="text" class="form-control" id="multiSnpHaplotypeNum"
-                           th:field="*{multiSnpHaplotypeNum}"
-                           placeholder="Enter the number of table rows required"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-10">
-                    <button type="submit" name="addRows" class="btn btn-default">Add multiple rows</button>
-                </div>
-            </div>
 
+            <div class="form-group">
+                <label for="multiSnpHaplotypeDescr" class="control-label col-md-2">Multi-SNP haplotype
+                    description:</label>
+
+                <div class="col-md-10">
+                    <input type="text" class="form-control" id="multiSnpHaplotypeDescr"
+                           th:field="*{multiSnpHaplotypeDescr}"/>
+                </div>
+            </div>
 
             <thead>
             <tr>
@@ -138,14 +129,6 @@
             </tr>
             </tbody>
         </table>
-    </div>
-</div>
-<div class="form-group">
-    <label for="multiSnpHaplotypeDescr" class="control-label col-md-2">Multi-SNP haplotype description:</label>
-
-    <div class="col-md-10">
-        <input type="text" class="form-control" id="multiSnpHaplotypeDescr"
-               th:field="*{multiSnpHaplotypeDescr}"/>
     </div>
 </div>
 
@@ -213,14 +196,16 @@
     </div>
 </div>
 
+
 <div class="form-group">
     <label for="orPerCopyNum" class="control-label col-md-2">OR/HR/RR per copy (Num)</label>
 
     <div class="col-md-10">
-        <input type="text" class="form-control" name="orPerCopyNum" id="orPerCopyNum"
-               th:filed="*{orPerCopyNum}"/>
+        <input type="text" class="form-control" id="orPerCopyNum"
+               th:field="*{orPerCopyNum}" name="orPerCopyNum"/>
     </div>
 </div>
+
 
 <div class="form-group">
     <label for="orPerCopyRecip" class="control-label col-md-2">OR/HR/RR per copy
@@ -231,6 +216,7 @@
                th:field="*{orPerCopyRecip}" name="orPerCopyRecip"/>
     </div>
 </div>
+
 
 <div class="form-group">
     <label for="orPerCopyRange" class="control-label col-md-2">OR/HR/RR per copy (Range)</label>
@@ -282,14 +268,22 @@
            th:field="*{multiSnpHaplotype}"/>
 </div>
 
+<!--Hidden field-->
+<div class="form-group">
+    <label for="snpInteraction" class="control-label col-md-2"></label>
+    <input id="snpInteraction" type="hidden"
+           th:field="*{multiSnpHaplotype}"/>
+</div>
+<!--End hidden-->
+
 <div class="form-group">
     <label for="orType" class="control-label col-md-2">ORType</label>
     <input id="orType" type="checkbox" th:field="*{orType}"/>
 </div>
 
 <div class="form-group">
-    <div class="col-md-offset-2 col-md-10">
-        <button type="submit" class="btn btn-primary">Save</button>
+    <div class="col-md-offset-8 col-md-2">
+        <button type="submit" class="btn btn-danger">Delete</button>
     </div>
 </div>
 

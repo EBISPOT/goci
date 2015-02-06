@@ -47,7 +47,7 @@
             <li><a th:href="@{/studies}">Home</a></li>
             <li><a th:href="@{/studies/new}">Add Study</a></li>
             <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
-            <!--<li><a href="#">Count Data</a></li>-->
+            <li><a th:href="@{/reports}">Reports</a></li>
         </ul>
         <!-- <ul class="nav navbar-nav navbar-right">
              <li>
@@ -94,6 +94,7 @@
             <th>SNP Type</th>
             <th>Multi-SNP haplotype</th>
             <th>SNP:SNP interaction</th>
+            <th></th>
 
         </tr>
         </thead>
@@ -132,9 +133,9 @@
             <td th:switch="${snpAssociationForm.orType}">
                 <p th:case="'null'">null</p>
 
-                <p th:case="'0'">No</p>
+                <p th:case="false">No</p>
 
-                <p th:case="'1'">Yes</p>
+                <p th:case="true">Yes</p>
             </td>
 
             <td th:text="${snpAssociationForm.orPerCopyRange} ?: 'null'"></td>
@@ -155,6 +156,10 @@
 
                 <p th:case="true">Yes</p>
             </td>
+            <td>
+                <a th:href="@{/associations/{associationId}/delete(associationId=${snpAssociationForm.associationId})}"
+                   class="btn btn-danger">Delete</a>
+            </td>
 
         </tr>
         </tbody>
@@ -172,7 +177,7 @@
                    data-target="#uploadSNPsForn"/>
             <a th:href="@{/studies/{studyId}/associations/add(studyId=*{id})}" class="btn btn-primary">Add
                 standard SNP or multi-SNP haplotype</a>
-            <a th:href="@{/studies/{studyId}/associations/add(studyId=*{id})}"
+            <a th:href="@{/studies/{studyId}/associations/add_interaction(studyId=*{id})}"
                class="btn btn-primary">Add SNP:SNP interaction</a>
 
         </div>

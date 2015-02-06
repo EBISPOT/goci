@@ -68,6 +68,10 @@
             $(this).find('span').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
         });
 
+        $('.collapse').on('show.bs.collapse', function () {
+            $('.collapse.in').collapse('hide');
+        });
+
     });
 
 //};
