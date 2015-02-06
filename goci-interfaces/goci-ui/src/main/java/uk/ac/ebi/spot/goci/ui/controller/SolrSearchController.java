@@ -102,7 +102,7 @@ public class SolrSearchController {
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
 
-    @RequestMapping(value = "api/search/snp", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "api/search/singlenucleotidepolymorphism", produces = MediaType.APPLICATION_JSON_VALUE)
     public void doSnpSolrSearch(
             @RequestParam("q") String query,
             @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
@@ -146,7 +146,7 @@ public class SolrSearchController {
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
 
-    @RequestMapping(value = "api/search/trait", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "api/search/diseasetrait", produces = MediaType.APPLICATION_JSON_VALUE)
     public void doTraitSolrSearch(
             @RequestParam("q") String query,
             @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
@@ -174,6 +174,54 @@ public class SolrSearchController {
                          .append("/select?")
                          .append("wt=json");
         return solrSearchBuilder;
+    }
+
+    @RequestMapping(value = "api/search/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void doFilterSolrSearch(
+            @RequestParam("q") String query,
+            @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+            @RequestParam(value = "callback", required = false) String callbackFunction,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "pvalfilter", required = false) String pvalRange,
+            @RequestParam(value = "orfilter", required = false) String orRange,
+            @RequestParam(value = "betafilter", required = false) String betaRange,
+            @RequestParam(value = "datefilter", required = false) String dateRange,
+            HttpServletResponse response) throws IOException {
+        StringBuilder solrSearchBuilder = buildBaseSearchRequest();
+
+        addFacet(solrSearchBuilder, searchConfiguration.getDefaultFacet());
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+        addRowsAndPage(solrSearchBuilder, maxResults, page);
+
+        if(pvalRange != "") {
+            System.out.println(pvalRange);
+            addFilterQuery(solrSearchBuilder, "pValue", pvalRange);
+        }
+        /**TO DO - when we split OR and beta, modify this controller to reflect that change!!***/
+        if(orRange != "") {
+            System.out.println(orRange);
+
+            addFilterQuery(solrSearchBuilder, "orPerCopyNum", orRange );
+            addFilterQuery(solrSearchBuilder, "orType", "true" );
+        }
+        if(betaRange != "") {
+            System.out.println(betaRange);
+
+            addFilterQuery(solrSearchBuilder, "orPerCopyNum", betaRange );
+            addFilterQuery(solrSearchBuilder, "orType", "false" );
+        }
+        if(dateRange != "") {
+            System.out.println(dateRange);
+
+            addFilterQuery(solrSearchBuilder, "publicationDate", dateRange );
+        }
+        addQuery(solrSearchBuilder, query);
+
+        // dispatch search
+        dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
 
     private void addFacet(StringBuilder solrSearchBuilder, String facet) {
