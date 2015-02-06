@@ -1,80 +1,72 @@
+$(document).ready(function() {
 
-//function init() {
-
-    $(document).ready(function () {
-
-         ////if(window.location == )
-         // alert(window.location.pathname);
-
-        $('#search-box').change(function(){
-            doSearch();
-        });
-
-        $('#search-button').click(function(){
-              doSearch();
-        });
-
-
-        $('#filter-form').submit(function(event){
-            event.preventDefault();
-            doFiltering();
-        });
-
-        $('#clear-filter').click(function(){
-            clearFilters();
-        });
-
-        $('#study-facet').click(function(){
-            $('a.list-group-item').removeClass('selected');
-            $(this).addClass('selected');
-            applyFacet("study");
-        });
-
-        $('#association-facet').click(function(){
-            $('a.list-group-item').removeClass('selected');
-            $(this).addClass('selected');
-            applyFacet("association");
-        });
-
-        $('#diseasetrait-facet').click(function(){
-            $('a.list-group-item').removeClass('selected');
-            $(this).addClass('selected');
-            applyFacet("diseasetrait");
-        });
-
-        $('#singlenucleotidepolymorphism-facet').click(function(){
-            $('a.list-group-item').removeClass('selected');
-            $(this).addClass('selected');
-            applyFacet("singlenucleotidepolymorphism");
-        });
-
-        $('.toplevel-view').hover(function() {
-            $(this).addClass("background-color-complementary-accent", 300, "easeOutExpo");
-        }, function() {
-            $(this).removeClass("background-color-complementary-accent", 300, "easeOutExpo");
-        });
-
-        $('#studyToggle').click(function(){
-            $(this).find('span').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
-        });
-
-        $('#associationToggle').click(function(){
-            $(this).find('span').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
-        });
-        $('#diseasetraitToggle').click(function(){
-            $(this).find('span').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
-        });
-        $('#singlenucleotidepolymorphismToggle').click(function(){
-            $(this).find('span').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
-        });
-
-        $('.collapse').on('show.bs.collapse', function () {
-            $('.collapse.in').collapse('hide');
-        });
-
+    $('#search-box').change(function() {
+        doSearch();
     });
 
-//};
+    $('#search-button').click(function() {
+        doSearch();
+    });
+
+
+    $('#filter-form').submit(function(event) {
+        event.preventDefault();
+        doFiltering();
+    });
+
+    $('#clear-filter').click(function() {
+        clearFilters();
+    });
+
+    $('#study-facet').click(function() {
+        $('a.list-group-item').removeClass('selected');
+        $(this).addClass('selected');
+        applyFacet("study");
+    });
+
+    $('#association-facet').click(function() {
+        $('a.list-group-item').removeClass('selected');
+        $(this).addClass('selected');
+        applyFacet("association");
+    });
+
+    $('#diseasetrait-facet').click(function() {
+        $('a.list-group-item').removeClass('selected');
+        $(this).addClass('selected');
+        applyFacet("diseasetrait");
+    });
+
+    $('#singlenucleotidepolymorphism-facet').click(function() {
+        $('a.list-group-item').removeClass('selected');
+        $(this).addClass('selected');
+        applyFacet("singlenucleotidepolymorphism");
+    });
+
+    $('.toplevel-view').hover(function() {
+        $(this).addClass("background-color-complementary-accent", 300, "easeOutExpo");
+    }, function() {
+        $(this).removeClass("background-color-complementary-accent", 300, "easeOutExpo");
+    });
+
+    $('#studyToggle').click(function() {
+        $(this).find('span').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
+    });
+
+    $('#associationToggle').click(function() {
+        $(this).find('span').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
+    });
+    $('#diseasetraitToggle').click(function() {
+        $(this).find('span').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
+    });
+    $('#singlenucleotidepolymorphismToggle').click(function() {
+        $(this).find('span').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
+    });
+
+    $('.collapse').on('show.bs.collapse', function() {
+        $('.collapse.in').collapse('hide');
+    });
+});
+
 
 function doSearch(){
     var searchTerm = $("#search-box").val();

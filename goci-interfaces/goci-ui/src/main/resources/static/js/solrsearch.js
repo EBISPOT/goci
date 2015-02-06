@@ -42,7 +42,7 @@ function solrSearch(queryTerm){
         });
 
 
-};
+}
 
 function processData(data){
    console.log("Solr search returned data");

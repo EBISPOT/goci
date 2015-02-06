@@ -175,8 +175,8 @@ function processAssociations(associations, table) {
         var association = associations[i];
 
         var row = $("<tr>");
-        if(association.rsId != null){
-            if(association.rsId.length == 1 && !association.rsId[0].contains('x')){
+        if(association.rsId){
+            if(association.rsId.length == 1 && association.rsId[0].indexOf('x') != -1){
                 var dbsnp = "<a href='http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=".concat(association.rsId[0].substring(2)).concat("'>").concat(association.strongestAllele).concat("</a>");
                 row.append($("<td>").html(dbsnp));
             }
@@ -187,6 +187,9 @@ function processAssociations(associations, table) {
                 row.append($("<td>").html(association.strongestAllele));
 
             }
+        }
+        else {
+            console.log("No rsID for " + association.id);
         }
         var pval = association.pValue;
         if(association.qualifier != null && association.qualifier != ''){

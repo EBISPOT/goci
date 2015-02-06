@@ -102,8 +102,19 @@ a > .toplevel-view {
     background-color: #B0DFE6;
 }
 
-.btn-default:hover {
+.btn-default {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+.btn-default:hover,
+.btn-default:focus,
+.btn-default.focus,
+.btn-default:active,
+.btn-default.active,
+.open > .dropdown-toggle.btn-default {
     background-image: linear-gradient(to bottom, #D3EFF3 0%, #B0DFE6 100%);
+    background-color: #B0DFE6;
 }
 
 .navbar {
