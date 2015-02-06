@@ -193,24 +193,24 @@ public class SolrSearchController {
         addRowsAndPage(solrSearchBuilder, maxResults, page);
 
         if (pvalRange != "") {
-            System.out.println(pvalRange);
+            getLog().debug(pvalRange);
             addFilterQuery(solrSearchBuilder, "pValue", pvalRange);
         }
         /**TO DO - when we split OR and beta, modify this controller to reflect that change!!***/
         if (orRange != "") {
-            System.out.println(orRange);
+            getLog().debug(orRange);
 
             addFilterQuery(solrSearchBuilder, "orPerCopyNum", orRange);
             addFilterQuery(solrSearchBuilder, "orType", "true");
         }
         if (betaRange != "") {
-            System.out.println(betaRange);
+            getLog().debug(betaRange);
 
             addFilterQuery(solrSearchBuilder, "orPerCopyNum", betaRange);
             addFilterQuery(solrSearchBuilder, "orType", "false");
         }
         if (dateRange != "") {
-            System.out.println(dateRange);
+            getLog().debug(dateRange);
 
             addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
         }
@@ -276,7 +276,7 @@ public class SolrSearchController {
         }
 
         try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
-            System.out.println(response.getStatusLine());
+            getLog().debug("Received HTTP response: " + response.getStatusLine().toString());
             HttpEntity entity = response.getEntity();
             entity.writeTo(out);
             EntityUtils.consume(entity);
