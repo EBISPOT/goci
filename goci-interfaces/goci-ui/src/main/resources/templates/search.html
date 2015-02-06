@@ -246,7 +246,7 @@
                 <div id="results" th:object="${result}">
                     <h2>Search results for <em><span id="search-term" th:text="*{query}">query term</span></em></h2>
 
-                    <div id="studyTable">
+                    <div id="studyTable" class="results-table">
                         <h3><i>Studies</i></h3>
 
                         <!--<table id="studySummaries" class="table table-hover" data-toggle="table" data-sort-order="desc">-->
@@ -283,7 +283,7 @@
                         </table>
                         <button class="btn btn-default btn-xs accordion-toggle" id="studyToggle" data-toggle="collapse" data-target=".hiddenStudy" aria-expanded="false" aria-controls="hiddenStudy" style="display: none"><span class="glyphicon glyphicon-chevron-right"></span></button>
                     </div>
-                    <div id="associationTable">
+                    <div id="associationTable" class="results-table">
                         <h3><i>Associations</i></h3>
 
                         <table class="table table-hover table-striped" id="associationSummaries">
@@ -308,7 +308,7 @@
                         <button class="btn btn-default btn-xs accordion-toggle" id="associationToggle" data-toggle="collapse" data-target=".hiddenAssociation" aria-expanded="false" aria-controls="hiddenAssociation" style="display: none"><span class="glyphicon glyphicon-chevron-right"></span></button>
                     </div>
 
-                    <div id="diseasetraitTable">
+                    <div id="diseasetraitTable" class="results-table">
                         <h3><i>Traits</i></h3>
                         <table class="table table-hover table-striped" id="diseasetraitSummaries">
                             <thead>
@@ -325,7 +325,7 @@
                         </table>
                         <button class="btn btn-default btn-xs accordion-toggle" id="diseasetraitToggle" data-toggle="collapse" data-target=".hiddenTrait" aria-expanded="false" aria-controls="hiddenTrait" style="display: none"><span class="glyphicon glyphicon-chevron-right"></span></button>
                     </div>
-                    <div id="singlenucleotidepolymorphismTable">
+                    <div id="singlenucleotidepolymorphismTable" class="results-table">
                         <h3><i>SNPs</i></h3>
 
                         <table class="table table-hover table-striped" id="singlenucleotidepolymorphismSummaries">
