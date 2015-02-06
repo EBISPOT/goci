@@ -8,11 +8,15 @@ import java.util.Collection;
 
 /**
  * Created by emma on 28/11/14.
- * @author emma
  *
- * Repository accessing Ethnicity entity object
+ * @author emma
+ *         <p/>
+ *         Repository accessing Ethnicity entity object
  */
 @RepositoryRestResource
 public interface EthnicityRepository extends JpaRepository<Ethnicity, Long> {
     Collection<Ethnicity> findByStudyIdAndType(Long studyId, String Type);
+
+    Collection<Ethnicity> findByStudyId(Long studyId);
+
 }

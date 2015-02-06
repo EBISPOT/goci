@@ -19,6 +19,8 @@ import uk.ac.ebi.spot.goci.service.PropertyFilePubMedLookupService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -40,6 +42,8 @@ public class StudyController {
     private EfoTraitRepository efoTraitRepository;
     private CuratorRepository curatorRepository;
     private CurationStatusRepository curationStatusRepository;
+    private AssociationRepository associationRepository;
+    private EthnicityRepository ethnicityRepository;
 
     // Pubmed ID lookup service
     private PropertyFilePubMedLookupService propertyFilePubMedLookupService;
@@ -51,15 +55,18 @@ public class StudyController {
     }
 
     @Autowired
-    public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, PropertyFilePubMedLookupService propertyFilePubMedLookupService) {
+    public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, AssociationRepository associationRepository, EthnicityRepository ethnicityRepository, PropertyFilePubMedLookupService propertyFilePubMedLookupService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
         this.efoTraitRepository = efoTraitRepository;
         this.curatorRepository = curatorRepository;
         this.curationStatusRepository = curationStatusRepository;
+        this.associationRepository = associationRepository;
+        this.ethnicityRepository = ethnicityRepository;
         this.propertyFilePubMedLookupService = propertyFilePubMedLookupService;
     }
+
 
     /* All studies and various filtered lists */
 
@@ -209,25 +216,84 @@ public class StudyController {
     }
 
 
-/*    // Delete an existing study
+    // Delete an existing study
     @RequestMapping(value = "/{studyId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewStudyToDelete(Model model, @PathVariable Long studyId) {
+
         Study studyToDelete = studyRepository.findOne(studyId);
-        model.addAttribute("studyToDelete", studyToDelete);
-        return "delete_study";
+
+        // Check if it has any associations
+        Collection<Association> associations = associationRepository.findByStudyId(studyId);
+
+        // If so warn the curator
+        if (!associations.isEmpty()) {
+            return "delete_study_with_associations_warning";
+
+        } else {
+            model.addAttribute("studyToDelete", studyToDelete);
+            return "delete_study";
+        }
+
     }
 
     @RequestMapping(value = "/{studyId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String deleteStudy(@PathVariable Long studyId) {
 
-        // Find our study based in the ID
+        // Find our study based on the ID
         Study studyToDelete = studyRepository.findOne(studyId);
 
-        // What do we need to delete ?
+        // Before we delete the study get its associated housekeeping and ethnicity
+        Long housekeepingId = studyToDelete.getHousekeeping().getId();
+        Housekeeping housekeepingAttachedToStudy = housekeepingRepository.findOne(housekeepingId);
+        Collection<Ethnicity> ethnicitiesAttachedToStudy = ethnicityRepository.findByStudyId(studyId);
 
-        //studyRepository.delete(studyToDelete);
-        return "redirect:/studies/";
-    }*/
+        // Delete ethnicity information linked to this study
+        for (Ethnicity ethnicity : ethnicitiesAttachedToStudy) {
+            ethnicityRepository.delete(ethnicity);
+        }
+
+        // Delete study
+        studyRepository.delete(studyToDelete);
+
+        // Delete housekeeping
+        housekeepingRepository.delete(housekeepingAttachedToStudy);
+
+        return "redirect:/studies";
+    }
+
+    // Duplicate a study
+    @RequestMapping(value = "/{studyId}/duplicate", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String duplicateStudy(@PathVariable Long studyId, RedirectAttributes redirectAttributes) {
+
+        // Find study user wants to duplicate, based on the ID
+        Study studyToDuplicate = studyRepository.findOne(studyId);
+
+        // New study will be created by copying existing study details
+        Study duplicateStudy = copyStudy(studyToDuplicate);
+
+        // Create housekeeping object and add duplicate message
+        Housekeeping studyHousekeeping = createHousekeeping();
+        studyHousekeeping.setNotes("Duplicate of study: " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId());
+        duplicateStudy.setHousekeeping(studyHousekeeping);
+
+        // Save newly duplicated study
+        studyRepository.save(duplicateStudy);
+
+        // Copy existing ethnicity
+        Collection<Ethnicity> studyToDuplicateEthnicities = ethnicityRepository.findByStudyId(studyId);
+        for (Ethnicity studyToDuplicateEthnicity : studyToDuplicateEthnicities) {
+            Ethnicity duplicateEthnicity = copyEthnicity(studyToDuplicateEthnicity);
+            duplicateEthnicity.setStudy(duplicateStudy);
+            ethnicityRepository.save(duplicateEthnicity);
+        }
+
+        // Add duplicate message
+        String message = "Study is a duplicate of "+ studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId();
+        redirectAttributes.addFlashAttribute("duplicateMessage", message);
+
+        return "redirect:/studies/" + duplicateStudy.getId();
+    }
+
 
     /* Study housekeeping/curator information */
 
@@ -291,10 +357,96 @@ public class StudyController {
         return "redirect:/studies/" + study.getId() + "/housekeeping";
     }
 
+
+    /* General purpose methods */
+
+    private Housekeeping createHousekeeping() {
+        // Create housekeeping object and create the study added date
+        Housekeeping housekeeping = new Housekeeping();
+        java.util.Date studyAddedDate = new java.util.Date();
+        housekeeping.setStudyAddedDate(studyAddedDate);
+
+        // Set status
+        CurationStatus status = curationStatusRepository.findByStatus("Awaiting Curation");
+        housekeeping.setCurationStatus(status);
+
+        // Set curator
+        Curator curator = curatorRepository.findByLastName("Level 1 Curator");
+        housekeeping.setCurator(curator);
+
+        // Save housekeeping
+        housekeepingRepository.save(housekeeping);
+
+        // Save housekeeping
+        return housekeeping;
+    }
+
+    private Study copyStudy(Study studyToDuplicate) {
+
+        Study duplicateStudy = new Study();
+        duplicateStudy.setAuthor(studyToDuplicate.getAuthor());
+        duplicateStudy.setStudyDate(studyToDuplicate.getStudyDate());
+        duplicateStudy.setPublication(studyToDuplicate.getPublication());
+        duplicateStudy.setTitle(studyToDuplicate.getTitle());
+        duplicateStudy.setInitialSampleSize(studyToDuplicate.getInitialSampleSize());
+        duplicateStudy.setReplicateSampleSize(studyToDuplicate.getReplicateSampleSize());
+        duplicateStudy.setPlatform(studyToDuplicate.getPlatform());
+        duplicateStudy.setPubmedId(studyToDuplicate.getPubmedId());
+        duplicateStudy.setCnv(studyToDuplicate.getCnv());
+        duplicateStudy.setGxe(studyToDuplicate.getGxe());
+        duplicateStudy.setGxg(studyToDuplicate.getGxg());
+        duplicateStudy.setDiseaseTrait(studyToDuplicate.getDiseaseTrait());
+
+        // Deal with EFO traits
+        Collection<EfoTrait> efoTraits= studyToDuplicate.getEfoTraits();
+        Collection<EfoTrait> efoTraitsDuplicateStudy=new ArrayList<EfoTrait>();
+
+        if(efoTraits != null && !efoTraits.isEmpty()){
+            efoTraitsDuplicateStudy.addAll(efoTraits);
+            duplicateStudy.setEfoTraits(efoTraitsDuplicateStudy);
+        }
+
+
+        return duplicateStudy;
+    }
+
+    private Ethnicity copyEthnicity(Ethnicity studyToDuplicateEthnicity) {
+        Ethnicity duplicateEthnicity = new Ethnicity();
+        duplicateEthnicity.setType(studyToDuplicateEthnicity.getType());
+        duplicateEthnicity.setNumberOfIndividuals(studyToDuplicateEthnicity.getNumberOfIndividuals());
+        duplicateEthnicity.setEthnicGroup(studyToDuplicateEthnicity.getEthnicGroup());
+        duplicateEthnicity.setCountryOfOrigin(studyToDuplicateEthnicity.getCountryOfOrigin());
+        duplicateEthnicity.setCountryOfRecruitment(studyToDuplicateEthnicity.getCountryOfRecruitment());
+        duplicateEthnicity.setDescription(studyToDuplicateEthnicity.getDescription());
+        duplicateEthnicity.setPreviouslyReported(studyToDuplicateEthnicity.getPreviouslyReported());
+        duplicateEthnicity.setSampleSizesMatch(studyToDuplicateEthnicity.getSampleSizesMatch());
+        duplicateEthnicity.setNotes(studyToDuplicateEthnicity.getNotes());
+
+        return duplicateEthnicity;
+
+    }
+
+
+
+    /* Exception handling */
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(PubmedLookupException.class)
+    public String handlePubmedLookupException(PubmedLookupException pubmedLookupException) {
+        getLog().error("pubmed lookup exception", pubmedLookupException);
+        return "pubmed_lookup_warning";
+    }
+
+    @ExceptionHandler(PubmedImportException.class)
+    public String handlePubmedImportException(PubmedImportException pubmedImportException) {
+        getLog().error("pubmed import exception", pubmedImportException);
+        return "pubmed_import_warning";
+    }
+
+
     /* Model Attributes :
     *  Used for dropdowns in HTML forms
     */
-
 
     // Disease Traits
     @ModelAttribute("diseaseTraits")
@@ -320,42 +472,4 @@ public class StudyController {
         return curationStatusRepository.findAll();
     }
 
-
-    /* General purpose methods */
-
-    private Housekeeping createHousekeeping() {
-        // Create housekeeping object and create the study added date
-        Housekeeping housekeeping = new Housekeeping();
-        java.util.Date studyAddedDate = new java.util.Date();
-        housekeeping.setStudyAddedDate(studyAddedDate);
-
-        // Set status
-        CurationStatus status = curationStatusRepository.findByStatus("Awaiting Curation");
-        housekeeping.setCurationStatus(status);
-
-        // Set curator
-        Curator curator = curatorRepository.findByLastName("Level 1 Curator");
-        housekeeping.setCurator(curator);
-
-        // Save housekeeping
-        housekeepingRepository.save(housekeeping);
-
-        // Save housekeeping
-        return housekeeping;
-    }
-
-    /* Exception handling */
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(PubmedLookupException.class)
-    public String handlePubmedLookupException(PubmedLookupException pubmedLookupException) {
-        getLog().error("pubmed lookup exception", pubmedLookupException);
-        return "pubmed_lookup_warning";
-    }
-
-    @ExceptionHandler(PubmedImportException.class)
-    public String handlePubmedImportException(PubmedImportException pubmedImportException) {
-        getLog().error("pubmed import exception", pubmedImportException);
-        return "pubmed_import_warning";
-    }
 }

@@ -81,6 +81,18 @@
     </div>
 </div>
 
+<!--Alert if data is duplicate-->
+<div class="container-fluid" th:if="${!#strings.isEmpty(duplicateMessage)}">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="alert alert-info">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:text="${duplicateMessage}">Success!</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-8">
