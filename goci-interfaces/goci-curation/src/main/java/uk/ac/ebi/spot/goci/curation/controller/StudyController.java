@@ -42,6 +42,7 @@ public class StudyController {
     private CuratorRepository curatorRepository;
     private CurationStatusRepository curationStatusRepository;
     private AssociationRepository associationRepository;
+    private EthnicityRepository ethnicityRepository;
 
     // Pubmed ID lookup service
     private PropertyFilePubMedLookupService propertyFilePubMedLookupService;
@@ -53,7 +54,7 @@ public class StudyController {
     }
 
     @Autowired
-    public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, AssociationRepository associationRepository, PropertyFilePubMedLookupService propertyFilePubMedLookupService) {
+    public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, AssociationRepository associationRepository, EthnicityRepository ethnicityRepository, PropertyFilePubMedLookupService propertyFilePubMedLookupService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
@@ -61,8 +62,10 @@ public class StudyController {
         this.curatorRepository = curatorRepository;
         this.curationStatusRepository = curationStatusRepository;
         this.associationRepository = associationRepository;
+        this.ethnicityRepository = ethnicityRepository;
         this.propertyFilePubMedLookupService = propertyFilePubMedLookupService;
     }
+
 
     /* All studies and various filtered lists */
 
@@ -235,17 +238,24 @@ public class StudyController {
     @RequestMapping(value = "/{studyId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String deleteStudy(@PathVariable Long studyId) {
 
-        // Find our study based in the ID
+        // Find our study based on the ID
         Study studyToDelete = studyRepository.findOne(studyId);
 
-        // TODO WHAT HAPPENS TO HOUSEKEEPING
-
-        Long housekeepingId = studyToDelete.getHousekeeping().getId();
+        // Before we delete the study get its associated housekeeping and ethnicity
+        Long housekeepingId =studyToDelete.getHousekeeping().getId();
         Housekeeping housekeepingAttachedToStudy = housekeepingRepository.findOne(housekeepingId);
-        housekeepingRepository.delete(housekeepingAttachedToStudy);
+        Collection<Ethnicity> ethnicitiesAttachedToStudy = ethnicityRepository.findByStudyId(studyId);
+
+        // Delete ethnicity information linked to this study
+        for (Ethnicity ethnicity : ethnicitiesAttachedToStudy) {
+            ethnicityRepository.delete(ethnicity);
+        }
 
         // Delete study
         studyRepository.delete(studyToDelete);
+
+        // Delete housekeeping
+        housekeepingRepository.delete(housekeepingAttachedToStudy);
 
         //studyRepository.delete(studyToDelete);
         return "redirect:/studies";
