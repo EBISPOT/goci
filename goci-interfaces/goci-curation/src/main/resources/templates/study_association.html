@@ -73,7 +73,8 @@
 <br/>
 
 <div class="container-fluid">
-    <table id="mainTable" class="table table-hover table-bordered">
+    <table id="mainTable" class="table table-hover table-bordered"
+           data-toggle="table">
         <caption>Existing SNP information</caption>
         <thead>
         <tr>
@@ -94,14 +95,29 @@
             <th>SNP Type</th>
             <th>Multi-SNP haplotype</th>
             <th>SNP:SNP interaction</th>
-            <th></th>
+            <th>SNP Checked?</th>
 
         </tr>
         </thead>
         <tbody>
         <tr th:each="snpAssociationForm: ${snpAssociationForms}">
             <td>
-                <a th:href="@{/associations/{associationId}(associationId=${snpAssociationForm.associationId})}">Edit</a>
+                <div class="btn-group">
+                    <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+                        Action<span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a th:href="@{/associations/{associationId}(associationId=${snpAssociationForm.associationId})}">Edit</a>
+                        </li>
+                        <li>
+                            <a th:href="@{/associations/{associationId}/delete(associationId=${snpAssociationForm.associationId})}">Delete</a>
+                        </li>
+
+                        <li>
+                            <a th:href="@{/studies/{studyId}/associations/approve_all(studyId=${study.Id})}">Delete</a>
+                        </li>
+                    </ul>
+                </div>
             </td>
 
             <!--Region-->
@@ -156,9 +172,13 @@
 
                 <p th:case="true">Yes</p>
             </td>
-            <td>
-                <a th:href="@{/associations/{associationId}/delete(associationId=${snpAssociationForm.associationId})}"
-                   class="btn btn-danger">Delete</a>
+
+            <td th:switch="${snpAssociationForm.snpChecked}">
+                <p th:case="'null'">null</p>
+
+                <p th:case="false">No</p>
+
+                <p th:case="true">Yes</p>
             </td>
 
         </tr>
