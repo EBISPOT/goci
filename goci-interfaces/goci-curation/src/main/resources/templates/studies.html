@@ -154,7 +154,6 @@
                 <caption id="total"></caption>
                 <thead>
                 <tr>
-                    <th data-field="edit" data-switchable="false"></th>
                     <th data-field="author" data-sortable="true">Author</th>
                     <th data-field="title" data-sortable="true">Title</th>
                     <th data-field="studydate" data-sortable="true">Study Date</th>
@@ -164,14 +163,12 @@
                     <th data-field="curator" data-sortable="true">Curator</th>
                     <th data-field="curationstatus" data-sortable="true">Curator Status</th>
                     <th data-field="notes">Notes</th>
-                    <th data-field="delete" data-switchable="false"></th>
+                    <th data-field="action" data-switchable="false"></th>
 
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="study : ${studies}">
-
-                    <td><a th:href="@{/studies/{studyId}(studyId=${study.id})}" class="btn btn-link">Edit</a></td>
 
                     <!-- Use an conditional here as a study can have a null attributes-->
                     <!-- Using thymeleaf elvis operator for string, date attributes-->
@@ -191,8 +188,22 @@
                     <td th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : 'null'"></td>
                     <td th:text="${study.housekeeping !=null} ? ${study.housekeeping.notes} : 'null'"></td>
 
-                    <td><a th:href="@{/studies/{studyId}/delete(studyId=${study.id})}" class="btn btn-danger">Delete</a>
+                    <td>
+
+                        <div class="btn-group">
+                            <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+                                Action
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a th:href="@{/studies/{studyId}(studyId=${study.id})}">Edit</a></li>
+                                <li><a th:href="@{/studies/{studyId}/delete(studyId=${study.id})}">Delete</a></li>
+                                <li><a th:href="@{/studies/{studyId}/duplicate(studyId=${study.id})}">Duplicate</a></li>
+                            </ul>
+                        </div>
+
+
                     </td>
+
                 </tr>
                 </tbody>
             </table>
