@@ -18,10 +18,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.DiseaseTrait;
-import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
-import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.ui.SearchConfiguration;
 import uk.ac.ebi.spot.goci.ui.exception.IllegalParameterCombinationException;
 
@@ -95,7 +91,7 @@ public class SolrSearchController {
             addJsonpCallback(solrSearchBuilder, callbackFunction);
         }
         addRowsAndPage(solrSearchBuilder, maxResults, page);
-        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), Study.class.getSimpleName());
+        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "Study");
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -118,7 +114,7 @@ public class SolrSearchController {
         addRowsAndPage(solrSearchBuilder, maxResults, page);
         addFilterQuery(solrSearchBuilder,
                        searchConfiguration.getDefaultFacet(),
-                       SingleNucleotidePolymorphism.class.getSimpleName());
+                       "SingleNucleotidePolymorphism");
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -139,7 +135,7 @@ public class SolrSearchController {
             addJsonpCallback(solrSearchBuilder, callbackFunction);
         }
         addRowsAndPage(solrSearchBuilder, maxResults, page);
-        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), Association.class.getSimpleName());
+        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "Association");
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -160,7 +156,7 @@ public class SolrSearchController {
             addJsonpCallback(solrSearchBuilder, callbackFunction);
         }
         addRowsAndPage(solrSearchBuilder, maxResults, page);
-        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), DiseaseTrait.class.getSimpleName());
+        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "DiseaseTrait");
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -171,8 +167,8 @@ public class SolrSearchController {
         // build base request
         StringBuilder solrSearchBuilder = new StringBuilder();
         solrSearchBuilder.append(searchConfiguration.getGwasSearchServer().toString())
-                         .append("/select?")
-                         .append("wt=json");
+                .append("/select?")
+                .append("wt=json");
         return solrSearchBuilder;
     }
 
@@ -196,27 +192,27 @@ public class SolrSearchController {
         }
         addRowsAndPage(solrSearchBuilder, maxResults, page);
 
-        if(pvalRange != "") {
+        if (pvalRange != "") {
             System.out.println(pvalRange);
             addFilterQuery(solrSearchBuilder, "pValue", pvalRange);
         }
         /**TO DO - when we split OR and beta, modify this controller to reflect that change!!***/
-        if(orRange != "") {
+        if (orRange != "") {
             System.out.println(orRange);
 
-            addFilterQuery(solrSearchBuilder, "orPerCopyNum", orRange );
-            addFilterQuery(solrSearchBuilder, "orType", "true" );
+            addFilterQuery(solrSearchBuilder, "orPerCopyNum", orRange);
+            addFilterQuery(solrSearchBuilder, "orType", "true");
         }
-        if(betaRange != "") {
+        if (betaRange != "") {
             System.out.println(betaRange);
 
-            addFilterQuery(solrSearchBuilder, "orPerCopyNum", betaRange );
-            addFilterQuery(solrSearchBuilder, "orType", "false" );
+            addFilterQuery(solrSearchBuilder, "orPerCopyNum", betaRange);
+            addFilterQuery(solrSearchBuilder, "orType", "false");
         }
-        if(dateRange != "") {
+        if (dateRange != "") {
             System.out.println(dateRange);
 
-            addFilterQuery(solrSearchBuilder, "publicationDate", dateRange );
+            addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
         }
         addQuery(solrSearchBuilder, query);
 
@@ -241,14 +237,14 @@ public class SolrSearchController {
 
     private void addGrouping(StringBuilder solrSearchBuilder, String groupBy, int maxResults) {
         solrSearchBuilder.append("&rows=10000")
-                         .append("&group=true")
-                         .append("&group.limit=").append(maxResults)
-                         .append("&group.field=").append(groupBy);
+                .append("&group=true")
+                .append("&group.limit=").append(maxResults)
+                .append("&group.field=").append(groupBy);
     }
 
     private void addRowsAndPage(StringBuilder solrSearchBuilder, int maxResults, int page) {
         solrSearchBuilder.append("&rows=").append(maxResults)
-                         .append("&start=").append((page - 1) * maxResults);
+                .append("&start=").append((page - 1) * maxResults);
     }
 
     private void addFilterQuery(StringBuilder solrSearchBuilder, String filterOn, String filterBy) {
