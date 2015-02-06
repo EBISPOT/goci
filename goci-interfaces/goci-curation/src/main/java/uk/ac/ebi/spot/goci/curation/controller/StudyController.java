@@ -19,6 +19,7 @@ import uk.ac.ebi.spot.goci.service.PropertyFilePubMedLookupService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -261,16 +262,16 @@ public class StudyController {
     }
 
     // Duplicate a study
-    @RequestMapping(value = "/{studyId}/duplicate", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    @RequestMapping(value = "/{studyId}/duplicate", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String duplicateStudy(@PathVariable Long studyId, RedirectAttributes redirectAttributes) {
 
         // Find study user wants to duplicate, based on the ID
         Study studyToDuplicate = studyRepository.findOne(studyId);
 
-        // New study will be created by copying existing study
+        // New study will be created by copying existing study details
         Study duplicateStudy = copyStudy(studyToDuplicate);
 
-        // Create housekeeping object
+        // Create housekeeping object and add duplicate message
         Housekeeping studyHousekeeping = createHousekeeping();
         studyHousekeeping.setNotes("Duplicate of study: " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId());
         duplicateStudy.setHousekeeping(studyHousekeeping);
@@ -286,7 +287,7 @@ public class StudyController {
             ethnicityRepository.save(duplicateEthnicity);
         }
 
-        // Add save message
+        // Add duplicate message
         String message = "Study is a duplicate of "+ studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId();
         redirectAttributes.addFlashAttribute("duplicateMessage", message);
 
@@ -395,7 +396,16 @@ public class StudyController {
         duplicateStudy.setGxe(studyToDuplicate.getGxe());
         duplicateStudy.setGxg(studyToDuplicate.getGxg());
         duplicateStudy.setDiseaseTrait(studyToDuplicate.getDiseaseTrait());
-        duplicateStudy.setEfoTraits(studyToDuplicate.getEfoTraits());
+
+        // Deal with EFO traits
+        Collection<EfoTrait> efoTraits= studyToDuplicate.getEfoTraits();
+        Collection<EfoTrait> efoTraitsDuplicateStudy=new ArrayList<EfoTrait>();
+
+        if(efoTraits != null && !efoTraits.isEmpty()){
+            efoTraitsDuplicateStudy.addAll(efoTraits);
+            duplicateStudy.setEfoTraits(efoTraitsDuplicateStudy);
+        }
+
 
         return duplicateStudy;
     }
