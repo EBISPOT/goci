@@ -94,7 +94,7 @@ public class AssociationController {
             // Save the uploaded file received in a multipart request as a file in the upload directory
             // The default temporary-file directory is specified by the system property java.io.tmpdir.
 
-            String uploadDir = System.getProperty("java.io.tmpdir")+File.separator+"gwas_batch_upload"+File.separator;
+            String uploadDir = System.getProperty("java.io.tmpdir") + File.separator + "gwas_batch_upload" + File.separator;
 
             // Create file
             File uploadedFile = new File(uploadDir + file.getOriginalFilename());
@@ -405,6 +405,21 @@ public class AssociationController {
         return "redirect:/studies/" + studyId + "/associations";
     }
 
+
+    @RequestMapping(value = "/studies/{studyId}/associations/approve_all", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String approveAll(Model model, @PathVariable Long studyId) {
+
+
+        // Get all associations
+        Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
+
+        for (Association association : studyAssociations) {
+            association.setSnpChecked(true);
+            associationRepository.save(association);
+        }
+        return "redirect:/studies/" + studyId + "/associations";
+
+    }
 
    /* General purpose methods */
 
