@@ -35,6 +35,8 @@ public class SnpAssociationForm {
 
     private Boolean snpInteraction = false;
 
+    private Boolean snpChecked = false;
+
     private Integer pvalueMantissa;
 
     private Integer pvalueExponent;
@@ -65,7 +67,7 @@ public class SnpAssociationForm {
     }
 
 
-    public SnpAssociationForm(Long associationId, String riskFrequency, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, String multiSnpHaplotypeDescr, Integer multiSnpHaplotypeNum, Boolean snpInteraction, Integer pvalueMantissa, Integer pvalueExponent, Float pvalueFloat, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, List<SnpFormRow> snpFormRows, Collection<String> authorReportedGenes, Collection<EfoTrait> efoTraits) {
+    public SnpAssociationForm(Long associationId, String riskFrequency, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Boolean snpChecked, Integer pvalueMantissa, Integer pvalueExponent, Float pvalueFloat, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, List<SnpFormRow> snpFormRows, Collection<String> authorReportedGenes, String multiSnpHaplotypeDescr, Integer multiSnpHaplotypeNum, Collection<EfoTrait> efoTraits) {
         this.associationId = associationId;
         this.riskFrequency = riskFrequency;
         this.pvalueText = pvalueText;
@@ -73,9 +75,8 @@ public class SnpAssociationForm {
         this.orType = orType;
         this.snpType = snpType;
         this.multiSnpHaplotype = multiSnpHaplotype;
-        this.multiSnpHaplotypeDescr = multiSnpHaplotypeDescr;
-        this.multiSnpHaplotypeNum = multiSnpHaplotypeNum;
         this.snpInteraction = snpInteraction;
+        this.snpChecked = snpChecked;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
         this.pvalueFloat = pvalueFloat;
@@ -85,6 +86,8 @@ public class SnpAssociationForm {
         this.orPerCopyUnitDescr = orPerCopyUnitDescr;
         this.snpFormRows = snpFormRows;
         this.authorReportedGenes = authorReportedGenes;
+        this.multiSnpHaplotypeDescr = multiSnpHaplotypeDescr;
+        this.multiSnpHaplotypeNum = multiSnpHaplotypeNum;
         this.efoTraits = efoTraits;
     }
 
@@ -247,6 +250,14 @@ public class SnpAssociationForm {
 
     public void setEfoTraits(Collection<EfoTrait> efoTraits) {
         this.efoTraits = efoTraits;
+    }
+
+    public Boolean getSnpChecked() {
+        return snpChecked;
+    }
+
+    public void setSnpChecked(Boolean snpChecked) {
+        this.snpChecked = snpChecked;
     }
 }
 
