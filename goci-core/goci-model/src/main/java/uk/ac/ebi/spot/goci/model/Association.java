@@ -38,6 +38,8 @@ public class Association {
 
     private Boolean snpInteraction = false;
 
+    private Boolean snpChecked = false;
+
     private Integer pvalueMantissa;
 
     private Integer pvalueExponent;
@@ -72,8 +74,7 @@ public class Association {
     public Association() {
     }
 
-
-    public Association(String riskFrequency, String allele, Float pvalueFloat, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, Study study, Collection<Locus> loci, Collection<EfoTrait> efoTraits) {
+    public Association(String riskFrequency, String allele, Float pvalueFloat, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Boolean snpChecked, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, Study study, Collection<Locus> loci, Collection<EfoTrait> efoTraits) {
         this.riskFrequency = riskFrequency;
         this.allele = allele;
         this.pvalueFloat = pvalueFloat;
@@ -83,6 +84,7 @@ public class Association {
         this.snpType = snpType;
         this.multiSnpHaplotype = multiSnpHaplotype;
         this.snpInteraction = snpInteraction;
+        this.snpChecked = snpChecked;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
         this.orPerCopyRecip = orPerCopyRecip;
@@ -93,6 +95,8 @@ public class Association {
         this.loci = loci;
         this.efoTraits = efoTraits;
     }
+
+
 
     public Long getId() {
         return id;
@@ -246,6 +250,14 @@ public class Association {
         this.efoTraits = efoTraits;
     }
 
+    public Boolean getSnpChecked() {
+        return snpChecked;
+    }
+
+    public void setSnpChecked(Boolean snpChecked) {
+        this.snpChecked = snpChecked;
+    }
+
     @Override
     public String toString() {
         return "Association{" +
@@ -259,6 +271,7 @@ public class Association {
                 ", snpType='" + snpType + '\'' +
                 ", multiSnpHaplotype=" + multiSnpHaplotype +
                 ", snpInteraction=" + snpInteraction +
+                ", snpChecked=" + snpChecked +
                 ", pvalueMantissa=" + pvalueMantissa +
                 ", pvalueExponent=" + pvalueExponent +
                 ", orPerCopyRecip=" + orPerCopyRecip +
