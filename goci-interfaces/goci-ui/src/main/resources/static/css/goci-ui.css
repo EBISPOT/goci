@@ -169,3 +169,7 @@ table .collapse.in {
     display:table-row;
 }
 
+
+.hiddenRow {
+    padding: 0 !important;
+}
