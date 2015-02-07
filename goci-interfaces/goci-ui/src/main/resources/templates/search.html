@@ -119,6 +119,8 @@
 
 <div class="container tight-to-top">
     <ol class="breadcrumb background-color-complementary-accent">
+        <li><a href="home">GWAS</a></li>
+        <li class="active">Search</li>
     </ol>
 
     <div>
@@ -130,6 +132,13 @@
         #####################################
 
         -->
+
+        <div style="display: none">
+            <ul th:object="${result}" id="variables">
+                <li id="query" th:text="*{query}">User query</li>
+                <li id="facet" th:text="*{facet}">Facet</li>
+            </ul>
+        </div>
 
         <div class="container-fluid" id="lower_container" style="display: none">
             <div class="row">
@@ -216,19 +225,22 @@
                     </div>
                 </div>
                 <div class="col-md-9" id="results-area">
+                    <div id="loadingResults">
+
+                    </div>
 
                     <div id="noResults" style="display: none" th:object="${result}">
                         <h2>No results found for search term <em><span id="search-term-noResult" th:text="*{query}">Query term</span></em></h2>
                     </div>
 
-                    <div id="results" th:object="${result}">
+                    <div id="results" style="display:none" th:object="${result}">
                         <h2>Search results for <em><span id="search-term" th:text="*{query}">query term</span></em></h2>
 
-                        <div id="studyTable" class="results-table">
+                        <div id="study-summaries" class="results-container">
                             <h3><i>Studies</i></h3>
 
-                            <table id="studySummaries" class="table table-hover table-striped">
-                                <thead>
+                            <table id="study-table" class="table table-hover table-striped">
+                                <thead id="study-table-header">
                                 <tr>
                                     <th>Author</th>
                                     <th>Date</th>
@@ -239,15 +251,21 @@
                                     <th></th>
                                 </tr>
                                 </thead>
-                                <tbody></tbody>
+                                <tbody id="study-table-body">
+                                </tbody>
                             </table>
-                            <button class="btn btn-default btn-xs accordion-toggle" id="studyToggle" data-toggle="collapse" data-target=".hiddenStudy" aria-expanded="false" aria-controls="hiddenStudy" style="display: none"><span class="glyphicon glyphicon-chevron-right"></span></button>
+                            <button class="toggle btn btn-default btn-xs accordion-toggle"
+                                    data-toggle="collapse"
+                                    data-target="#study-summaries .hidden-resource"
+                                    aria-expanded="false">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </button>
                         </div>
-                        <div id="associationTable" class="results-table">
+                        <div id="association-summaries" class="results-container">
                             <h3><i>Associations</i></h3>
 
-                            <table class="table table-hover table-striped" id="associationSummaries">
-                                <thead id="association-summary-header">
+                            <table id="association-table" class="table table-hover table-striped">
+                                <thead id="association-table-header">
                                 <tr>
                                     <th>Risk/effect SNP-allele</th>
                                     <th>p-value (qualifier)</th>
@@ -260,33 +278,42 @@
                                     <th>Study</th>
                                 </tr>
                                 </thead>
-                                <tbody id="association-summary-body">
+                                <tbody id="association-table-body">
                                 </tbody>
                             </table>
-                            <button class="btn btn-default btn-xs accordion-toggle" id="associationToggle" data-toggle="collapse" data-target=".hiddenAssociation" aria-expanded="false" aria-controls="hiddenAssociation" style="display: none"><span class="glyphicon glyphicon-chevron-right"></span></button>
+                            <button class="toggle btn btn-default btn-xs accordion-toggle"
+                                    data-toggle="collapse"
+                                    data-target="#association-summaries .hidden-resource"
+                                    aria-expanded="false">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </button>
                         </div>
 
-                        <div id="diseasetraitTable" class="results-table">
+                        <div id="diseasetrait-summaries" class="results-container">
                             <h3><i>Traits</i></h3>
-                            <table class="table table-hover table-striped" id="diseasetraitSummaries">
-                                <thead id="disease-trait-header">
+                            <table id="diseasetrait-table" class="table table-hover table-striped">
+                                <thead id="diseasetrait-table-header">
                                 <tr>
                                     <th>Trait name</th>
                                     <th>Mapped EFO traits</th>
                                     <th>EFO synonyms</th>
-
                                 </tr>
                                 </thead>
-                                <tbody id="disease-trait-body">
+                                <tbody id="diseasetrait-table-body">
                                 </tbody>
                             </table>
-                            <button class="btn btn-default btn-xs accordion-toggle" id="diseasetraitToggle" data-toggle="collapse" data-target=".hiddenTrait" aria-expanded="false" aria-controls="hiddenTrait" style="display: none"><span class="glyphicon glyphicon-chevron-right"></span></button>
+                            <button class="toggle btn btn-default btn-xs accordion-toggle"
+                                    data-toggle="collapse"
+                                    data-target="#diseasetrait-summaries .hidden-resource"
+                                    aria-expanded="false">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </button>
                         </div>
-                        <div id="singlenucleotidepolymorphismTable" class="results-table">
+                        <div id="singlenucleotidepolymorphism-summaries" class="results-container">
                             <h3><i>SNPs</i></h3>
 
-                            <table class="table table-hover table-striped" id="singlenucleotidepolymorphismSummaries">
-                                <thead id="snp-header">
+                            <table id="singlenucleotidepolymorphism-table" class="table table-hover table-striped">
+                                <thead id="singlenucleotidepolymorphism-table-header">
                                 <tr>
                                     <th>rsID</th>
                                     <th>Base pair location</th>
@@ -296,10 +323,15 @@
                                     <th>Mapped EFO traits</th>
                                 </tr>
                                 </thead>
-                                <tbody id="snp-body">
+                                <tbody id="singlenucleotidepolymorphism-table-body">
                                 </tbody>
                             </table>
-                            <button class="btn btn-default btn-xs accordion-toggle" id="singlenucleotidepolymorphismToggle" data-toggle="collapse" data-target=".hiddenSNP" aria-expanded="false" aria-controls="hiddenSNP" style="display: none"><span class="glyphicon glyphicon-chevron-right"></span></button>
+                            <button class="toggle btn btn-default btn-xs accordion-toggle"
+                                    data-toggle="collapse"
+                                    data-target="#singlenucleotidepolymorphism-summaries .hidden-resource"
+                                    aria-expanded="false">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -333,7 +365,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 <script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
-<script src="../static/js/bootstrap-datepicker.js.js" th:src="@{js/bootstrap-datepicker.js}"></script>
+<script src="../static/js/bootstrap-datepicker.js" th:src="@{js/bootstrap-datepicker.js}"></script>
 
 <!-- Latest compiled and minified JavaScript -->
 <!--<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.5.0/bootstrap-table.min.js"></script>-->

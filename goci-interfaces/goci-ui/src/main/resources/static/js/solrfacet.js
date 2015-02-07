@@ -2,10 +2,23 @@
  * Created by dwelter on 28/01/15.
  */
 
-
-var solrBaseURL = 'http://orange.ebi.ac.uk:8983/solr/gwas/select'
-
 var resources = ['study', 'association', 'diseasetrait', 'singlenucleotidepolymorphism'];
+
+function applyFacet(){
+    var searchTerm = $("#search-box").val();
+    $('a.list-group-item').removeClass('selected');
+    buildBreadcrumbs();
+    if (window.location.hash) {
+        var facet = window.location.hash.substr(1);
+        console.log("Searching: " + searchTerm + " with facet: " + facet + "...");
+        $('#facet').text(facet);
+        $('#' + facet + "-facet").addClass('selected');
+        solrFacet(searchTerm, facet);
+    }
+    else {
+        clearFacetting();
+    }
+}
 
 function solrFacet(queryTerm, facet){
     console.log("Solr research request received for " + queryTerm + " and facet " + facet);
@@ -20,6 +33,11 @@ function solrFacet(queryTerm, facet){
 
 function clearFacetting() {
     $('#facet').text();
+    // collapse all expanded sections
+
+    $(".hidden-resource").hide();
+    $(".toggle").show();
+    $(".results-container:not(.no-results)").show();
     $(".results-table").show();
 
 }
@@ -29,14 +47,16 @@ function processFacet(data){
     var resource = data.responseHeader.params.fq.substring(13).toLowerCase();
     console.log("Facet is " + resource);
     for(var f=0; f < resources.length; f++){
+        var summaries = $('#' + resources[f] + '-summaries');
         if(resources[f] != resource){
-            $('#' + resources[f] + 'Summaries tbody').empty();
-            $('#' + resources[f] + 'Table').hide();
+            summaries.find('.toggle').show();
+            summaries.find('.hidden-resource').collapse('hide');
+            summaries.hide();
         }
         else{
-            $('#' + resource + 'Summaries tbody').empty();
-            $('#' + resource + 'Table').show();
-            $('#' + resource + 'Toggle').hide();
+            summaries.show();
+            summaries.find('.hidden-resource').collapse('show');
+            summaries.find('.toggle').hide();
         }
     }
 
@@ -49,13 +69,10 @@ function processFacet(data){
     }
     else if (resource == "singlenucleotidepolymorphism") {
         processSnps(data.response.docs, table)
-
     }
     else{
         processTraits(data.response.docs, table);
     }
-
-    $('#' +resource+ 'Summaries').append(table);
 }
 
 
@@ -115,7 +132,6 @@ function processAssociations(associations, table) {
         var pval = association.pValue;
         if(association.qualifier != null && association.qualifier != ''){
             pval = pval.toString().concat(" ").concat(association.qualifier[0]);
-            console.log(pval);
         }
         row.append($("<td>").html(pval));
             if (association.orType == true) {
@@ -197,8 +213,6 @@ function processTraits(diseasetraits, table){
             efo = "N/A";
         }
         row.append($("<td>").html(efo));
-
-
 
         var syns = '';
         if(diseasetrait.synonym != null){

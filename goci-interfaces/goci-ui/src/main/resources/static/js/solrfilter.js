@@ -3,90 +3,138 @@
  */
 
 
-var resources = ['study', 'association', 'diseasetrait', 'singlenucleotidepolymorphism'];
+$(document).ready(function () {
+    $('#filter-form').submit(function (event) {
+        event.preventDefault();
+        doFiltering();
+    });
 
+    $('#clear-filter').click(function () {
+        clearFilters();
+    });
+});
 
-function doFiltering(){
-
+function doFiltering() {
     var pvalRange = '';
     var orRange = '';
     var betaRange = '';
     var dateRange = '';
 
-    //if($('#pval-min').val()!= '' || $('#pval-max').val()!= ''){
-        if($('#pval-min').val()!= '' && $('#pval-max').val()!= ''){
-            pvalRange = "[".concat($('#pval-min').val()).concat("+TO+").concat($('#pval-max').val()).concat("]");
+    var pvalMin = $('#pval-min').val();
+    var pvalMax = $('#pval-max').val();
+    if (pvalMin || pvalMax) {
+        pvalRange = "[";
+        if (pvalMin) {
+            pvalRange = pvalRange.concat(pvalMin);
         }
-        else if($('#pval-min').val() == '' && $('#pval-max').val()!= ''){
-            pvalRange = "[*+TO+".concat($('#pval-max').val()).concat("]");
+        else {
+            pvalRange = pvalRange.concat("*");
         }
-        else if($('#pval-min').val()!= '' && $('#pval-max').val()== ''){
-            pvalRange = "[".concat($('#pval-min').val()).concat("+TO+*]");
+        pvalRange = pvalRange.concat("+TO+");
+        if (pvalMax) {
+            pvalRange = pvalRange.concat(pvalMax);
         }
-    //}
-    console.log(pvalRange);
+        else {
+            pvalRange = pvalRange.concat("*");
+        }
+        pvalRange = pvalRange.concat("]");
+        console.log(pvalRange);
+    }
 
-    //if($('#or-min').val()!= '' || $('#or-max').val()!= ''){
-        if($('#or-min').val()!= '' && $('#or-max').val()!= ''){
-            orRange = "[".concat($('#or-min').val()).concat("+TO+").concat($('#or-max').val()).concat("]");
+    var orMin = $('#or-min').val();
+    var orMax = $('#or-max').val();
+    if (orMin || orMax) {
+        orRange = "[";
+        if (orMin) {
+            orRange = orRange.concat(orMin);
         }
-        else if($('#or-min').val() == '' && $('#or-max').val()!= ''){
-            orRange = "[*+TO+".concat($('#or-max').val()).concat("]");
+        else {
+            orRange = orRange.concat("*");
         }
-        else if($('#or-min').val()!= '' && $('#or-max').val()== ''){
-            orRange = "[".concat($('#or-min').val()).concat("+TO+*]");
+        orRange = orRange.concat("+TO+");
+        if (orMax) {
+            orRange = orRange.concat(orMax);
         }
-    //}
-    console.log(orRange);
+        else {
+            orRange = orRange.concat("*");
+        }
+        orRange = orRange.concat("]");
+        console.log(orRange);
+    }
 
-    //if($('#beta-min').val()!= '' || $('#beta-max').val()!= ''){
-        if($('#beta-min').val()!= '' && $('#beta-max').val()!= ''){
-            betaRange = "[".concat($('#beta-min').val()).concat("+TO+").concat($('#beta-max').val()).concat("]");
+    var betaMin = $('#beta-min').val();
+    var betaMax = $('#beta-max').val();
+    if (betaMin || betaMax) {
+        betaRange = "[";
+        if (betaMin) {
+            betaRange = betaRange.concat(betaMin);
         }
-        else if($('#beta-min').val() == '' && $('#beta-max').val()!= ''){
-            betaRange = "[*+TO+".concat($('#beta-max').val()).concat("]");
+        else {
+            betaRange = betaRange.concat("*");
         }
-        else if($('#beta-min').val()!= '' && $('#beta-max').val()== ''){
-            betaRange = "[".concat($('#beta-min').val()).concat("+TO+*]");
+        betaRange = betaRange.concat("+TO+");
+        if (betaMax) {
+            betaRange = betaRange.concat(betaMax);
         }
-    //}
-    console.log(betaRange);
+        else {
+            betaRange = betaRange.concat("*");
+        }
+        betaRange = betaRange.concat("]");
+        console.log(betaRange);
+    }
 
-    //if($('#date-min').val()!= '' || $('#date-max').val()!= ''){
-        if($('#date-min').val()!= '' && $('#date-max').val()!= ''){
-            dateRange = "[".concat($('#date-min').val()).concat("T00:00:00Z+TO+").concat($('#date-max').val()).concat("T00:00:00Z]");
+    var dateMin = $('#date-min').val();
+    var dateMax = $('#date-max').val();
+    if (dateMin || dateMax) {
+        dateRange = "[";
+        if (dateMin) {
+            dateRange = dateRange.concat(dateMin).concat("T00:00:00Z");
         }
-        else if($('#date-min').val() == '' && $('#date-max').val()!= ''){
-            dateRange = "[*+TO+".concat($('#date-max').val()).concat("T00:00:00Z]");
+        else {
+            dateRange = dateRange.concat("*");
         }
-        else if($('#date-min').val()!= '' && $('#date-max').val()== ''){
-            dateRange = "[".concat($('#date-min').val()).concat("T00:00:00Z+TO+*]");
+        dateRange = dateRange.concat("+TO+");
+        if (dateMax) {
+            dateRange = dateRange.concat(dateMax).concat("T00:00:00Z");
         }
-    //}
+        else {
+            dateRange = dateRange.concat("*");
+        }
+        dateRange = dateRange.concat("]");
+        console.log(dateRange);
+    }
     console.log(dateRange);
 
     solrfilter(pvalRange, orRange, betaRange, dateRange);
+}
 
+function clearFilters() {
+    $('#filter-form').find('input').val('');
+
+    if ($('#facet').text()) {
+        doSearch();
+    }
+    else {
+        applyFacet();
+    }
 }
 
 
+function solrfilter(pval, or, beta, date) {
+    var query = $('#query').text();
+    console.log("Solr research request received for " + query + " and filters " + pval + ", " + or + ", " + beta + " and " + date);
+    var searchTerm = 'text:"'.concat(query).concat('"');
 
-function solrfilter(pval, or, beta, date){
-
-    console.log("Solr research request received for " + $('#query').text() + " and filters " + pval + ", " + or + ", " + beta + " and " + date);
-    var searchTerm = 'text:"'.concat($('#query').text()).concat('"');
-
-    $.getJSON('api/search/filter', {'q': searchTerm,
-        'max' : 100000,
+    $.getJSON('api/search/filter', {
+        'q': searchTerm,
+        'max': 100000,
         'pvalfilter': pval,
         'orfilter': or,
         'betafilter': beta,
         'datefilter': date
     })
-        .done(function(data) {
+        .done(function (data) {
             console.log(data);
             processData(data);
         });
-
-
 }
