@@ -36,8 +36,8 @@ function clearFacetting() {
     // collapse all expanded sections
 
     $(".hidden-resource").hide();
-    $(".toggle").show();
     $(".results-container:not(.no-results)").show();
+    $(".results-container.more-results .toggle").show();
     $(".results-table").show();
 
 }
@@ -49,7 +49,9 @@ function processFacet(data){
     for(var f=0; f < resources.length; f++){
         var summaries = $('#' + resources[f] + '-summaries');
         if(resources[f] != resource){
-            summaries.find('.toggle').show();
+            if (summaries.hasClass("more-results")) {
+                summaries.find('.toggle').show();
+            }
             summaries.find('.hidden-resource').collapse('hide');
             summaries.hide();
         }

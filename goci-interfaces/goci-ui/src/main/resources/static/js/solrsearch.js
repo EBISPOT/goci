@@ -101,6 +101,7 @@ function processData(data) {
             if (doc.resourcename == "study") {
                 if (studyTable.find('tr').length == 10) {
                     $('#study-summaries .toggle').show();
+                    $('#study-summaries').addClass("more-results");
 
                 }
                 processStudy(doc, studyTable);
@@ -108,20 +109,20 @@ function processData(data) {
             else if (doc.resourcename == "association") {
                 if (associationTable.find('tr').length == 5) {
                     $('#association-summaries .toggle').show();
-
+                    $('#association-summaries').addClass("more-results");
                 }
                 processAssociation(doc, associationTable);
             }
             else if (doc.resourcename == "diseaseTrait") {
                 if (traitTable.find('tr').length == 5) {
                     $('#diseasetrait-summaries .toggle').show();
-                }
+                    $('#diseasetrait-summaries').addClass("more-results");                }
                 processTrait(doc, traitTable);
             }
             else if (doc.resourcename == "singleNucleotidePolymorphism") {
                 if (snpTable.find('tr').length == 5) {
                     $('#singlenucleotidepolymorphism-summaries .toggle').show();
-
+                    $('#singlenucleotidepolymorphism-summaries').addClass("more-results");
                 }
                 processSnp(doc, snpTable);
             }
@@ -378,12 +379,11 @@ function updateCountBadges(countArray) {
         var resource = countArray[i];
         var count = countArray[i + 1];
 
-        if (count > 0) {
-            var facet = $('#' + resource + '-facet span');
-            facet.empty();
-            facet.append(count);
-        }
-        else {
+        var facet = $('#' + resource + '-facet span');
+        facet.empty();
+        facet.append(count);
+
+        if (count == 0) {
             $('#' + resource + '-facet').addClass("disabled");
             var summary = $('#' + resource + '-summaries');
             summary.addClass("no-results");
