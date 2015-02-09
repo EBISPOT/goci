@@ -1,177 +1,182 @@
 /**
  * Created by dwelter on 20/01/15.
  */
+var SearchState = {
+    LOADING: {value: 0},
+    NO_RESULTS: {value: 1},
+    RESULTS: {value: 2}
+};
 
-//var solrBaseURL = 'http://orange.ebi.ac.uk:8983/solr/gwas/select'
+$(document).ready(function () {
+    console.log("solr search loaded and ready");
+    $('.toggle').click(function () {
+        $(this).find('span').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
+    });
+    if (window.history && window.history.pushState) {
+        $(window).on('popstate', function () {
+            applyFacet();
+        });
+    }
+    loadResults();
+});
 
-function solrSearch(queryTerm){
+function loadResults() {
+    var searchTerm = $('#query').text();
+    console.log("Search term is " + searchTerm);
+    if (searchTerm) {
+        console.log("Loading results for " + searchTerm);
+        buildBreadcrumbs();
+        solrSearch(searchTerm);
+        if (window.location.hash) {
+            applyFacet();
+        }
+        else {
+            // no facets to apply, so make sure we are showing all results tables
+            clearFacetting();
+        }
+        $('#lower_container').show();
+    }
+}
 
+function buildBreadcrumbs() {
+    // build breadcrumb trail
+    console.log("Updating breadcrumbs...");
+    $(".breadcrumb").empty();
+    var breadcrumbs = $("ol.breadcrumb");
+    // defaults
+    breadcrumbs.append('<li><a href="home">GWAS</a></li>');
+    breadcrumbs.append('<li><a href="search">Search</a></li>');
+    var searchTerm = $('#query').text();
+    if (!window.location.hash) {
+        console.log("Final breadcrumb is for '" + searchTerm + "'");
+        breadcrumbs.append('<li class="active">' + searchTerm + '</li>');
+    }
+    else {
+        var facet = window.location.hash.substr(1);
+        console.log("Need breadcrumbs for '" + searchTerm + "' and '" + facet + "'");
+        breadcrumbs.append('<li><a href="search?query=' + searchTerm + '">' + searchTerm + '</a></li>');
+        var last = $("<li></li>").attr("class", "active");
+        if (facet == "study") {
+            last.text("Studies");
+        }
+        else if (facet == "association") {
+            last.text("Associations");
+        }
+        else if (facet == "diseasetrait") {
+            last.text("Catalog traits");
+        }
+        else if (facet == "singlenucleotidepolymorphism") {
+            last.text("SNPs");
+        }
+        breadcrumbs.append(last);
+    }
+}
+
+function solrSearch(queryTerm) {
     console.log("Solr research request received for " + queryTerm);
     var searchTerm = 'text:"'.concat(queryTerm).concat('"');
-    //
-    //$.ajax({
-    //    url: solrBaseURL,
-    //    data: {'q': searchTerm,
-    //            'indent': 'true',
-    //            'rows' : 1000000,
-    //            'facet':'true',
-    //            'facet.field':'resourcename',
-    //            'group' : 'true',
-    //            'group.field' : 'pubmedId',
-    //            'group.limit' : '-1',
-    //            'wt':'json'},
-    //    dataType: 'jsonp',
-    //    jsonp: 'json.wrf',
-    //    //success: function(response){
-    //    //    console.log(response);
-    //    //},
-    //    success: processData,
-    //    error: fail
-    //});
-
-    $.getJSON('api/search', {'q': searchTerm,
-                    'max' : 100000
-                    //'facet':'true',
-                    //'facet.field':'resourcename',
-                    //'group' : 'true',
-                    //'group.by' : 'pubmedId'
-    })
-        .done(function(data) {
+    setState(SearchState.LOADING);
+    $.getJSON('api/search', {'q': searchTerm, 'max': 100000})
+        .done(function (data) {
             console.log(data);
             processData(data);
         });
+}
 
-
-};
-
-function processData(data){
-   console.log("Solr search returned data");
-
-    setCountBadges(data.facet_counts.facet_fields.resourcename);
-
-
-    //var groups = data.grouped.pubmedId.groups;
- //   var queryTerm = data.responseHeader.params.q.substring(5);
-
+function processData(data) {
     var documents = data.response.docs;
+    console.log("Solr search returned " + documents.length + " documents");
+    updateCountBadges(data.facet_counts.facet_fields.resourcename);
+    if (documents.length != 0) {
+        var studyTable = $('#study-table-body').empty();
+        var associationTable = $('#association-table-body').empty();
+        var traitTable = $('#diseasetrait-table-body').empty();
+        var snpTable = $('#singlenucleotidepolymorphism-table-body').empty();
 
-    //console.log("Due to process " + groups.length + " groups");
+        $(".results-container .toggle").hide();
 
-    console.log("Due to process " + documents.length + " documents");
+        for (var j = 0; j < documents.length; j++) {
+            var doc = documents[j];
 
+            if (doc.resourcename == "study") {
+                if (studyTable.find('tr').length == 10) {
+                    $('#study-summaries .toggle').show();
+                    $('#study-summaries').addClass("more-results");
 
-    //if(groups.length != 0){
-    if(documents.length != 0){
-        var studyTable = $('#studySummaries').find('tbody').empty();
-        var associationTable = $('#associationSummaries').find('tbody').empty();
-        var traitTable = $('#diseasetraitSummaries').find('tbody').empty();
-        var snpTable = $('#singlenucleotidepolymorphismSummaries').find('tbody').empty();
-
-        //var si = 0;
-        //var ai = 0;
-        //var ti = 0;
-        //var sni = 0;
-
-        //for(var i=0; i<groups.length; i++){
-        //    var documents = groups[i].doclist.docs;
-
-            for(var j=0; j< documents.length; j++) {
-               var doc = documents[j];
-
-                if (doc.resourcename == "study") {
-                    if(studyTable.find('tr').length == 10) {
-                        $('#studyToggle').show();
-
-                    }
-                    processStudy(doc, studyTable);
                 }
-                else if (doc.resourcename == "association") {
-                    if(associationTable.find('tr').length == 5){
-                        $('#associationToggle').show();
-
-                    }
-                    processAssociation(doc, associationTable);
-                }
-                else if (doc.resourcename == "diseaseTrait") {
-                    if(traitTable.find('tr').length == 5){
-                        $('#diseasetraitToggle').show();
-                    }
-                    processTrait(doc, traitTable);
-                }
-                else if (doc.resourcename == "singleNucleotidePolymorphism") {
-                    if(snpTable.find('tr').length == 5){
-                        $('#singlenucleotidepolymorphismToggle').show();
-
-                    }
-                    processSnp(doc, snpTable);
-                }
+                processStudy(doc, studyTable);
             }
-        //}
-
-        $('#studySummaries').append(studyTable);
-        //$('#studySummaries').attr('data-toggle', 'table');
-        //$('#studySummaries').dataTable();
-
-        $('#associationSummaries').append(associationTable);
-        //$('#associationSummaries').dataTable();
-
-        $('#diseasetraitSummaries').append(traitTable);
-        //$('#diseasetraitSummaries').dataTable();
-
-        $('#singlenucleotidepolymorphismSummaries').append(snpTable);
-        //$('#singlenucleotidepolymorphismSummaries').dataTable();
-
+            else if (doc.resourcename == "association") {
+                if (associationTable.find('tr').length == 5) {
+                    $('#association-summaries .toggle').show();
+                    $('#association-summaries').addClass("more-results");
+                }
+                processAssociation(doc, associationTable);
+            }
+            else if (doc.resourcename == "diseaseTrait") {
+                if (traitTable.find('tr').length == 5) {
+                    $('#diseasetrait-summaries .toggle').show();
+                    $('#diseasetrait-summaries').addClass("more-results");                }
+                processTrait(doc, traitTable);
+            }
+            else if (doc.resourcename == "singleNucleotidePolymorphism") {
+                if (snpTable.find('tr').length == 5) {
+                    $('#singlenucleotidepolymorphism-summaries .toggle').show();
+                    $('#singlenucleotidepolymorphism-summaries').addClass("more-results");
+                }
+                processSnp(doc, snpTable);
+            }
+        }
+        setState(SearchState.RESULTS);
     }
-    else{
-        $('#noResults').show();
-        //$('#search-term-noResult').text(queryTerm);
-        $('#results').hide();
+    else {
+        setState(SearchState.NO_RESULTS);
     }
 
     console.log("Data display complete");
 }
 
-function fail(){
-    console.log("Oh dear, something went wrong there");
-}
-
-
-
-function setCountBadges(countArray){
-    for(var i=0; i<countArray.length; i=i+2){
-        var resource = countArray[i];
-        var count = countArray[i+1];
-
-        if(count > 0){
-            var facet = $('#' +resource + '-facet span');
-            facet.empty();
-            facet.append(count);
-        }
-        else{
-            $('#' +resource+ '-facet').addClass("disabled");
-            $('#' +resource+ 'Table').hide();
-        }
+function setState(state) {
+    var loading = $('#loading');
+    var noresults = $('#noResults');
+    var results = $('#results');
+    console.log("Search state update...");
+    console.log(state);
+    switch (state.value) {
+        case 0:
+            loading.show();
+            noresults.hide();
+            results.hide();
+            break;
+        case 1:
+            loading.hide();
+            noresults.show();
+            results.hide();
+            break;
+        case 2:
+            loading.hide();
+            noresults.hide();
+            results.show();
+            break;
+        default:
+            console.log("Unknown search state; redirecting to search page");
+            window.location = "/search";
     }
 }
 
-
-function processStudy(study, table){
+function processStudy(study, table) {
     var row = $("<tr>");
-    //row.addClass('clickable');
-    //row.attr('data-toggle', 'collapse');
-    ////row.attr('id', study.id);
-    //row.attr('data-target', '.'.concat(study.id));
 
-    if(table.find('tr').length >= 10){
+    if (table.find('tr').length >= 10) {
         row.addClass('accordion-body');
         row.addClass('collapse');
-        row.addClass('hiddenStudy');
+        row.addClass('hidden-resource');
     }
-    var ukpmc = "http://www.ukpmc.ac.uk/abstract/MED/".concat(study.pubmedId);
-    var link = "<a href='".concat(ukpmc).concat("' target='_blank'>").concat(study.author).concat("</a>");
+    var europepmc = "http://www.europepmc.org/abstract/MED/".concat(study.pubmedId);
+    var link = "<a href='".concat(europepmc).concat("' target='_blank'>").concat(study.author).concat("</a>");
 
     row.append($("<td>").html(link));
-    row.append($("<td>").html(study.publicationDate.substring(0,10)));
+    row.append($("<td>").html(study.publicationDate.substring(0, 10)));
     row.append($("<td>").html(study.publication));
     row.append($("<td>").html(study.title));
     row.append($("<td>").html(study.trait));
@@ -186,69 +191,38 @@ function processStudy(study, table){
     hiddenrow.addClass(study.id);
     hiddenrow.addClass('collapse');
     hiddenrow.addClass('accordion-body');
-    hiddenrow.addClass('hiddenRow');
-    //hiddenrow.append($("<td>"));
+    hiddenrow.addClass('hidden-study-row');
 
-
-    //var c1 = $("<td>").addClass('hiddenRow').attr('colspan', 3);
-    //c1.append($("<div>").addClass('collapse').addClass(study.id).html(study.initialSampleDescription));
-    //hiddenrow.append(c1);
-    //var c2 = $("<td>").addClass('hiddenRow').attr('colspan', 2);
-    //c2.append($("<div>").addClass('collapse').addClass(study.id).html(study.replicateSampleDescription));
-    //hiddenrow.append(c2);
-    //var c3 = $("<td>").addClass('hiddenRow').attr('colspan', 3);
-    //c3.append($("<div>").addClass('collapse').addClass(study.id).html(study.platform));
-    //hiddenrow.append(c3);
-    //
-    //if(study.cnv){
-    //    var c4 = $("<td>").addClass('hiddenRow');
-    //    c4.append($("<div>").addClass('collapse').addClass(study.id).html("yes"));
-    //    hiddenrow.append(c4);
-    //}
-    //else{
-    //    var c4 = $("<td>").addClass('hiddenRow');
-    //    c4.append($("<div>").addClass('collapse').addClass(study.id).html("no"));
-    //    hiddenrow.append(c4);
-    //}
     table.append(hiddenrow);
 }
 
-function processAssociation(association, table){
+function processAssociation(association, table) {
     var row = $("<tr>");
-    if(table.find('tr').length >= 5){
+    if (table.find('tr').length >= 5) {
         row.addClass('accordion-body');
         row.addClass('collapse');
-        row.addClass('hiddenAssociation');
+        row.addClass('hidden-resource');
     }
 
-    if(association.rsId != null){
-        if(association.rsId.length == 1 && (association.rsId[0].indexOf('x') == -1)){
+    if (association.rsId != null) {
+        if (association.rsId.length == 1 && (association.rsId[0].indexOf('x') == -1)) {
             var dbsnp = "<a href='http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=".concat(association.rsId[0].substring(2)).concat("'>").concat(association.strongestAllele).concat("</a>");
             row.append($("<td>").html(dbsnp));
         }
         else {
-            //for (var k = 0; k < association.rsId.length; k++) {
-            //
-            //}
             row.append($("<td>").html(association.strongestAllele));
 
         }
     }
 
-    //}
-    //else{
-    //    var location = "chr".concat(association.chromosomeName).concat(":").concat(association.chromosomePosition);
-    //    row.append($("<td>").html(location));
-    //}
-
     var pval = association.pValue;
 
-    if(association.qualifier != null && association.qualifier != ''){
+    if (association.qualifier != null && association.qualifier != '') {
         pval = pval.toString().concat(" ").concat(association.qualifier[0]);
     }
     row.append($("<td>").html(pval));
 
-    if(association.orType == true){
+    if (association.orType == true) {
         row.append($("<td>").html(association.orPerCopyNum));
         row.append($("<td>").html(''));
     }
@@ -258,26 +232,21 @@ function processAssociation(association, table){
             var beta = (association.orPerCopyNum).toString().concat(" ").concat(association.orPerCopyUnitDescr);
             row.append($("<td>").html(beta));
         }
-        else{
+        else {
             row.append($("<td>").html(association.orPerCopyNum));
         }
     }
-    //if(association.orPerCopyRange != null){
-        row.append($("<td>").html(association.orPerCopyRange));
-    //}
-    //else{
-    //    row.append($("<td>").html(''));
-    //}
+    row.append($("<td>").html(association.orPerCopyRange));
     row.append($("<td>").html(association.chromosomePosition));
 
     var repgene = '';
-    if(association.reportedGene != null){
-        for(var j=0; j < association.reportedGene.length; j++){
-            if(repgene == ''){
+    if (association.reportedGene != null) {
+        for (var j = 0; j < association.reportedGene.length; j++) {
+            if (repgene == '') {
                 repgene = association.reportedGene[j];
             }
 
-            else{
+            else {
                 repgene = repgene.concat(", ").concat(association.reportedGene[j]);
             }
         }
@@ -285,73 +254,66 @@ function processAssociation(association, table){
     row.append($("<td>").html(repgene));
 
     var mapgene = '';
-    if(association.mappedGene != null){
-        for(var j=0; j < association.mappedGene.length; j++){
-            if(mapgene == ''){
+    if (association.mappedGene != null) {
+        for (var j = 0; j < association.mappedGene.length; j++) {
+            if (mapgene == '') {
                 mapgene = association.mappedGene[j];
             }
 
-            else{
+            else {
                 mapgene = mapgene.concat(", ").concat(association.mappedGene[j]);
             }
         }
     }
     row.append($("<td>").html(mapgene));
 //    TO DO: make the author field into a link to the study page using the pmid
-    var ukpmc = "http://www.ukpmc.ac.uk/abstract/MED/".concat(association.pubmedId);
-    var study = "<a href='".concat(ukpmc).concat("' target='_blank'>").concat(association.author).concat("</a>");
+    var europepmc = "http://www.europepmc.org/abstract/MED/".concat(association.pubmedId);
+    var study = "<a href='".concat(europepmc).concat("' target='_blank'>").concat(association.author).concat("</a>");
     row.append($("<td>").html(study));
 
 
     table.append(row);
 }
 
-function processTrait(diseasetrait, table){
-
+function processTrait(diseasetrait, table) {
     var row = $("<tr>");
-    if(table.find('tr').length >= 5){
+    if (table.find('tr').length >= 5) {
         row.addClass('accordion-body');
         row.addClass('collapse');
-        row.addClass('hiddenTrait');
+        row.addClass('hidden-resource');
     }
     row.append($("<td>").html(diseasetrait.trait));
 
     var efo = '';
-    if(diseasetrait.efoLink != null){
-        for(var j=0; j < diseasetrait.efoLink.length; j++){
+    if (diseasetrait.efoLink != null) {
+        for (var j = 0; j < diseasetrait.efoLink.length; j++) {
             var data = diseasetrait.efoLink[j].split("|");
             var link = "<a href='".concat(data[2]).concat("' target='_blank'>").concat(data[0]).concat("</a>");
 
-            if(efo == ''){
+            if (efo == '') {
                 efo = link;
             }
-            //else if(j > 4){
-            //    efo = efo.concat(", [...]");
-            //    break;
-            //}
-            else{
+            else {
                 efo = efo.concat(", <br>").concat(link);
             }
         }
     }
-    else{
+    else {
         efo = "N/A";
     }
     row.append($("<td>").html(efo));
 
-
-
     var syns = '';
-    if(diseasetrait.synonym != null){
-        for(var j=0; j < diseasetrait.synonym.length; j++){
-            if(syns == ''){
+    if (diseasetrait.synonym != null) {
+        for (var j = 0; j < diseasetrait.synonym.length; j++) {
+            if (syns == '') {
                 syns = diseasetrait.synonym[j];
             }
-            else if(j > 4){
+            else if (j > 4) {
                 syns = syns.concat(", [...]");
                 break;
             }
-            else{
+            else {
                 syns = syns.concat(", ").concat(diseasetrait.synonym[j]);
             }
         }
@@ -359,17 +321,15 @@ function processTrait(diseasetrait, table){
 
     row.append($("<td>").html(syns));
 
-    //subtract one from child count as each term is a child of itself in the Solr index
-    //row.append($("<td>").html(diseasetrait.child.length-1));
     table.append(row);
 }
 
-function processSnp(snp, table){
+function processSnp(snp, table) {
     var row = $("<tr>");
-    if(table.find('tr').length >= 5){
+    if (table.find('tr').length >= 5) {
         row.addClass('accordion-body');
         row.addClass('collapse');
-        row.addClass('hiddenSNP');
+        row.addClass('hidden-resource');
     }
     row.append($("<td>").html(snp.rsId));
 
@@ -379,13 +339,13 @@ function processSnp(snp, table){
     row.append($("<td>").html(snp.context));
 
     var gene = '';
-    if(snp.mappedGene != null){
-        for(var j=0; j < snp.mappedGene.length; j++){
-            if(gene == ''){
+    if (snp.mappedGene != null) {
+        for (var j = 0; j < snp.mappedGene.length; j++) {
+            if (gene == '') {
                 gene = snp.mappedGene[j];
             }
 
-            else{
+            else {
                 gene = gene.concat(", ").concat(snp.mappedGene[j]);
             }
         }
@@ -393,22 +353,41 @@ function processSnp(snp, table){
     row.append($("<td>").html(gene));
 
     var efo = '';
-    if(snp.efoLink != null){
-        for(var j=0; j < snp.efoLink.length; j++){
+    if (snp.efoLink != null) {
+        for (var j = 0; j < snp.efoLink.length; j++) {
             var data = snp.efoLink[j].split("|");
             var link = "<a href='".concat(data[2]).concat("' target='_blank'>").concat(data[0]).concat("</a>");
 
-            if(efo == ''){
+            if (efo == '') {
                 efo = link;
             }
-            else{
+            else {
                 efo = efo.concat(", <br>").concat(link);
             }
         }
     }
-    else{
+    else {
         efo = "N/A";
     }
     row.append($("<td>").html(efo));
     table.append(row);
+}
+
+function updateCountBadges(countArray) {
+    console.log("Updating facet counts for " + (countArray.length / 2) + " badges");
+    for (var i = 0; i < countArray.length; i = i + 2) {
+        var resource = countArray[i];
+        var count = countArray[i + 1];
+
+        var facet = $('#' + resource + '-facet span');
+        facet.empty();
+        facet.append(count);
+
+        if (count == 0) {
+            $('#' + resource + '-facet').addClass("disabled");
+            var summary = $('#' + resource + '-summaries');
+            summary.addClass("no-results");
+            summary.hide();
+        }
+    }
 }
