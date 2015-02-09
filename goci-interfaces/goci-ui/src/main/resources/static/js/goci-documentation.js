@@ -21,10 +21,17 @@ var loadDocumentation = function(pagename, content) {
 
         if (displayName.toLowerCase() == "about") {
             $("#help-item").removeClass("active");
+            $("#downloads-item").removeClass("active");
             $("#about-item").addClass("active");
+        }
+        else if (displayName.toLowerCase() == "downloads") {
+            $("#about-item").removeClass("active");
+            $("#help-item").removeClass("active");
+            $("#downloads-item").addClass("active");
         }
         else {
             $("#about-item").removeClass("active");
+            $("#downloads-item").removeClass("active");
             $("#help-item").addClass("active");
         }
         $("#current-page").text(displayName);

@@ -11,4 +11,4 @@ The input format is "mantissa"e-"exponent, e.g. 5e-8.
 
 ==== Got a question that isn't answered here?
 
-Email us at mailto:gwas-users@ebi.ac.uk
+Email us at gwas-users@ebi.ac.uk
