@@ -53,6 +53,27 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>output-html</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sourceDirectory>src/main/resources/docs</sourceDirectory>
+                    <outputDirectory>target/classes/templates</outputDirectory>
+                    <backend>html</backend>
+                    <doctype>book</doctype>
+                    <headerFooter>false</headerFooter>
+                    <preserveDirectories>true</preserveDirectories>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 
