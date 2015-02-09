@@ -403,7 +403,7 @@ public class AssociationController {
         return "redirect:/studies/" + studyId + "/associations";
     }
 
-   /*  Approve snp associations */
+    /*  Approve snp associations */
     // Approve all SNPs
     @RequestMapping(value = "/studies/{studyId}/associations/approve_all", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String approveAll(Model model, @PathVariable Long studyId) {
@@ -495,10 +495,9 @@ public class AssociationController {
         Locus locus = new Locus();
 
         // Check for existing locus
-        if (!association.getLoci().isEmpty()) {
+        if (snpAssociationForm.getAssociationId() != null) {
             Association associationUserIsEditing = associationRepository.findOne(snpAssociationForm.getAssociationId());
             Collection<Locus> associationLoci = associationUserIsEditing.getLoci();
-
             // Based on assumption we have only one locus for standard and multi-snp haplotype
             for (Locus associationLocus : associationLoci) {
                 locus = associationLocus;
