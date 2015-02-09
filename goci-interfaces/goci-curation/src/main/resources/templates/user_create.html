@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+        >
+<head>
+    <title>GWAS Curation Demo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-user-create" role="form" th:action="@{/user/create}" method="post"
+                  th:object="${user_create_form}">
+
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+
+                    <p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
+                </div>
+
+
+                <h2>Create a user:</h2>
+
+                <div class="form-group">
+                    <label for="email" class="control-label col-md-2">Email</label>
+                    <input type="text" id="email" name="email" th:field="*{email}" class="form-control"
+                           placeholder="Your email"/>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="control-label col-md-2">Password</label>
+                    <input type="password" id="password" name="password" th:field="*{password}" class="form-control"
+                           placeholder="Password"/>
+                </div>
+                <div class="form-group">
+                    <label for="passwordRepeated" class="control-label col-md-2">Repeat Password</label>
+                    <input type="passwordRepeated" id="passwordRepeated" name="passwordRepeated"
+                           th:field="*{passwordRepeated}" class="form-control"
+                           placeholder="Repeat Password"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="Role" class="control-label col-md-2">Role:</label>
+
+
+                    <select name="Role" th:field="*{role}" class="form-control"
+                            id="Role">
+
+                        <option th:each="userRole : ${userRoles}"
+                                th:value="${userRoles}"
+                                th:text="${userRoles}"></option>
+                    </select>
+
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
