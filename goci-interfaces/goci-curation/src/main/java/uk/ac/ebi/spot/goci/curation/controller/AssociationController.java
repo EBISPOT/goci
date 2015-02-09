@@ -405,14 +405,15 @@ public class AssociationController {
         return "redirect:/studies/" + studyId + "/associations";
     }
 
-
+   /*  Approve snp associations */
+    // Approve all SNPs
     @RequestMapping(value = "/studies/{studyId}/associations/approve_all", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String approveAll(Model model, @PathVariable Long studyId) {
-
 
         // Get all associations
         Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
 
+        // For each one set snpChecked attribute to true
         for (Association association : studyAssociations) {
             association.setSnpChecked(true);
             associationRepository.save(association);
