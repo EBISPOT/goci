@@ -18,6 +18,15 @@ var loadDocumentation = function(pagename, content) {
         var displayName = pagename.replace(/(^| )(\w)/g, function(x) {
             return x.toUpperCase();
         });
+
+        if (displayName.toLowerCase() == "about") {
+            $("#help-item").removeClass("active");
+            $("#about-item").addClass("active");
+        }
+        else {
+            $("#about-item").removeClass("active");
+            $("#help-item").addClass("active");
+        }
         $("#current-page").text(displayName);
         console.log("Updated breadcrumb (" + displayName + ")");
         // load the data content

@@ -24,6 +24,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 
         // dynamically generated docs pages
         registry.addViewController("/docs/about").setViewName("docs-template");
+        registry.addViewController("/docs/downloads").setViewName("docs-template");
         registry.addViewController("/docs/help").setViewName("docs-template");
         registry.addViewController("/docs/methods").setViewName("docs-template");
         registry.addViewController("/docs/ontology").setViewName("docs-template");
