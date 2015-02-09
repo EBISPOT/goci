@@ -1,0 +1,14 @@
+= FAQs
+
+== Frequently Asked Questions
+
+=== How do I filter my results by p-value?
+
+To filter association results by p-value, enter a minimum and/or maximum p-value into the appropriate search box.
+The input format is "mantissa"e-"exponent, e.g. 5e-8.
+
+'''
+
+==== Got a question that isn't answered here?
+
+Email us at mailto:gwas-users@ebi.ac.uk
