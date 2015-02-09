@@ -70,7 +70,7 @@ public class AssociationController {
         associations.addAll(associationRepository.findByStudyId(studyId));
 
         // For our associations create a form object and return
-        Collection<SnpAssociationForm> snpAssociationForms = new ArrayList<>();
+        Collection<SnpAssociationForm> snpAssociationForms = new ArrayList<SnpAssociationForm>();
         for (Association association : associations) {
             // TODO WOULD NEED SOME SORT OF CHECK FOR SNP:SNP INTERACTION
             SnpAssociationForm snpAssociationForm = createSnpAssociationForm(association);
@@ -270,8 +270,6 @@ public class AssociationController {
             return "edit_standard_or_multi_snp_association";
 
         }
-
-
     }
 
 
@@ -407,7 +405,7 @@ public class AssociationController {
 
    /*  Approve snp associations */
     // Approve all SNPs
-    @RequestMapping(value = "/studies/{studyId}/associations/approve_all", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    @RequestMapping(value = "/studies/{studyId}/associations/approve_all", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String approveAll(Model model, @PathVariable Long studyId) {
 
         // Get all associations
@@ -429,13 +427,14 @@ public class AssociationController {
 
         Association association = new Association();
 
-        // Set simple string and float association attributes
+        // Set simple string, boolean and float association attributes
         association.setRiskFrequency(snpAssociationForm.getRiskFrequency());
         association.setPvalueText(snpAssociationForm.getPvalueText());
         association.setOrType(snpAssociationForm.getOrType());
         association.setSnpType(snpAssociationForm.getSnpType());
         association.setMultiSnpHaplotype(snpAssociationForm.getMultiSnpHaplotype());
         association.setSnpInteraction(snpAssociationForm.getSnpInteraction());
+        association.setSnpChecked(snpAssociationForm.getSnpChecked());
 
         // Add collection of EFO traits
         association.setEfoTraits(snpAssociationForm.getEfoTraits());
@@ -517,7 +516,7 @@ public class AssociationController {
 
         // Create gene from each string entered, may sure to check pre-existence
         Collection<String> authorReportedGenes = snpAssociationForm.getAuthorReportedGenes();
-        Collection<Gene> locusGenes = createGenes(authorReportedGenes);
+        Collection<Gene> locusGenes = createGene(authorReportedGenes);
 
         // Set locus genes
         locus.setAuthorReportedGenes(locusGenes);
@@ -567,7 +566,7 @@ public class AssociationController {
     }
 
 
-    private Collection<Gene> createGenes(Collection<String> authorReportedGenes) {
+    private Collection<Gene> createGene(Collection<String> authorReportedGenes) {
         Collection<Gene> locusGenes = new ArrayList<>();
         for (String authorReportedGene : authorReportedGenes) {
 
@@ -650,6 +649,7 @@ public class AssociationController {
         snpAssociationForm.setOrType(association.getOrType());
         snpAssociationForm.setSnpType(association.getSnpType());
         snpAssociationForm.setMultiSnpHaplotype(association.getMultiSnpHaplotype());
+        snpAssociationForm.setSnpChecked(association.getSnpChecked());
         snpAssociationForm.setSnpInteraction(association.getSnpInteraction());
         snpAssociationForm.setPvalueMantissa(association.getPvalueMantissa());
         snpAssociationForm.setPvalueExponent(association.getPvalueExponent());
