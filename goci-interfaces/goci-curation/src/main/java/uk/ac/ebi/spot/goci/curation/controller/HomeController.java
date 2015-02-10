@@ -4,10 +4,14 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 
 /**
  * Created by emma on 09/02/15.
+ * @author emma
+ *
+ * Home controller directs users to welcome page
  */
 @Controller
 @RequestMapping("/")
@@ -16,9 +20,9 @@ public class HomeController {
     public HomeController() {
     }
 
-    // Return all studies
-    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE)
-    public String showHomePage(Model model) {
+    // Return home page
+    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String getHomePage(Model model) {
         return "home";
     }
 }
