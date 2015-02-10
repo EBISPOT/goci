@@ -168,7 +168,8 @@
                     <td th:text="${study.author} ?: 'null' "></td>
                     <td th:text="${study.title} ?: 'null'"></td>
                     <td th:text="${#calendars.format(study.studyDate,'dd MMMM yyyy')} ?: 'null'"></td>
-                    <td th:text="${study.pubmedId} ?: 'null'"></td>
+                    <td><a th:href="@{http://www.ncbi.nlm.nih.gov/pubmed/{pubmedId}(pubmedId=${study.pubmedId})}"
+                           th:text="${study.pubmedId} ?: 'null'" target="_blank"></a></td>
                     <td th:text="${study.publication} ?: 'null'"></td>
 
                     <!--If study has associated disease trait return traits name-->
