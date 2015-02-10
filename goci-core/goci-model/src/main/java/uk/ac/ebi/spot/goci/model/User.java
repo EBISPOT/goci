@@ -5,6 +5,8 @@ import javax.persistence.*;
 /**
  * Created by emma on 09/02/15.
  * @author emma
+ *
+ * Model object representing a user
  */
 @Entity
 public class User {
@@ -17,7 +19,7 @@ public class User {
 
     private String passwordHash;
 
-    @Enumerated(EnumType.STRING)
+    @OneToOne
     private Role role;
 
     // JPA no-args constructor
