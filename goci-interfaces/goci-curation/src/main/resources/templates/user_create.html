@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-        >
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>GWAS Curation Demo</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -53,8 +52,8 @@
                             id="Role">
 
                         <option th:each="userRole : ${userRoles}"
-                                th:value="${userRoles}"
-                                th:text="${userRoles}"></option>
+                                th:value="${userRole.id}"
+                                th:text="${userRole.role}"></option>
                     </select>
 
                 </div>

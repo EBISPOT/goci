@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+        >
 <head>
     <title>GWAS Curation Demo</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -23,15 +23,22 @@
                 You have been logged out.
             </div>
 
-            <form class="form-signin" role="form" th:action="@{/login}" method="post">
+            <form class="form" role="form" th:action="@{/login}" method="post">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+
                 <h2 class="form-signin-heading">Please sign in to GWAS curation tool</h2>
-                <label for="username" class="sr-only">User Name</label>
-                <input type="text" id="username" name="username" class="form-control" placeholder="User name"/>
-                <label for="password" class="sr-only">Password</label>
-                <input type="password" id="password" name="password" class="form-control" placeholder="Password"/>
 
-                <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-
+                <div class="form-group">
+                    <label for="useremail" class="control-label">User email</label>
+                    <input type="email" id="useremail" name="useremail" class="form-control" placeholder="User name"/>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="control-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Password"/>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+                </div>
             </form>
         </div>
     </div>
