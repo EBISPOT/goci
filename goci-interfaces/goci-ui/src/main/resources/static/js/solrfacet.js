@@ -16,8 +16,6 @@ function applyFacet(){
         solrFacet(searchTerm, facet);
     }
     else {
-        console.log("This is where I come from");
-
         clearFacetting();
     }
 }

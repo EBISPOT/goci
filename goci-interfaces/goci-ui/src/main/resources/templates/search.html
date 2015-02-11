@@ -242,7 +242,7 @@
                         <h2>No results found for search term <em><span id="search-term-noResult" th:text="*{query}">Query term</span></em></h2>
                     </div>
 
-                    <div id="results" style="display:none" th:object="${result}">
+                    <div id="results" th:object="${result}">
                         <h2>Search results for <em><span id="search-term" th:text="*{query}">query term</span></em></h2>
 
                         <div id="study-summaries" class="results-container">

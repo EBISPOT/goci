@@ -12,6 +12,14 @@ $(document).ready(function () {
     $('.table-toggle').click(function () {
         $(this).find('span').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
     });
+
+    $('#study-table-body').on('click', 'button.row-toggle', function(){
+        $(this).find('span').toggleClass('glyphicon-plus glyphicon-minus');
+        var target = $(this).attr('data-target');
+        $(target).collapse('toggle');
+
+    }) ;
+
     if (window.history && window.history.pushState) {
         $(window).on('popstate', function () {
             applyFacet();
@@ -25,18 +33,22 @@ function loadResults() {
     console.log("Search term is " + searchTerm);
     if (searchTerm) {
         console.log("Loading results for " + searchTerm);
+
+        buildBreadcrumbs();
+
         $('#lower_container').show();
         $('#loadingResults').show();
 
-        buildBreadcrumbs();
         solrSearch(searchTerm);
         if (window.location.hash) {
+            console.log("Applying a facet");
             applyFacet();
         }
-        else {
-            // no facets to apply, so make sure we are showing all results tables
-            clearFacetting();
-        }
+        //else {
+        //    console.log("Clearing all facets");
+        //    // no facets to apply, so make sure we are showing all results tables
+        //    clearFacetting();
+        //}
         //$('#lower_container').show();
     }
 }
@@ -171,11 +183,14 @@ function setState(state) {
 
 function processStudy(study, table) {
     var row = $("<tr>");
+    var hiddenrow = $("<tr>");
+
 
     if (table.find('tr').length >= 10) {
         row.addClass('accordion-body');
         row.addClass('collapse');
         row.addClass('hidden-resource');
+        //hiddenrow.addClass('hidden-resource');
     }
     var europepmc = "http://www.europepmc.org/abstract/MED/".concat(study.pubmedId);
     var link = "<a href='".concat(europepmc).concat("' target='_blank'>").concat(study.author).concat("</a>");
@@ -186,17 +201,59 @@ function processStudy(study, table) {
     row.append($("<td>").html(study.title));
     row.append($("<td>").html(study.trait));
     row.append($("<td>").html(study.associationCount));
-    var plusicon = "<button class='btn btn-default btn-xs accordion-toggle' data-toggle='collapse' data-target='.".concat(study.id).concat("' aria-expanded='false' aria-controls='").concat(study.id).concat("'><span class='glyphicon glyphicon-plus'></span></button>");
+
+    var id = (study.id).replace(':', '-');
+    var plusicon = "<button class='row-toggle btn btn-default btn-xs accordion-toggle' data-toggle='collapse' data-target='.".concat(id).concat(".hidden-study-row' aria-expanded='false' aria-controls='").concat(study.id).concat("'><span class='glyphicon glyphicon-plus'></span></button>");
 
     row.append($("<td>").html(plusicon));
     table.append(row);
 
 
-    var hiddenrow = $("<tr>");
-    hiddenrow.addClass(study.id);
+    hiddenrow.addClass(id);
     hiddenrow.addClass('collapse');
     hiddenrow.addClass('accordion-body');
     hiddenrow.addClass('hidden-study-row');
+
+
+
+    var innerTable = $("<table>").attr('style', 'width: 100%');
+    innerTable.html("<th><i>Initial sample description</i></th><th><i>Replication sample description</i></th><th><i>Platform [SNPs passing QC]</i></th><th><i>CNV study?</i></th>");
+
+    var itrow = $("<tr>");
+
+
+    //var c1 = $("<td>").attr('colspan', 3);
+    //c1.addClass(study.id).html(study.initialSampleDescription);
+    //hiddenrow.append(c1);
+    //var c2 = $("<td>").addClass(study.id).html(study.replicateSampleDescription);
+    //hiddenrow.append(c2);
+    //var c3 = $("<td>").attr('colspan', 2);
+    //c3.addClass(study.id).html(study.platform);
+    //hiddenrow.append(c3);
+    //
+    //if(study.cnv){
+    //    var c4 = $("<td>");
+    //    c4.addClass(study.id).html("yes");
+    //    hiddenrow.append(c4);
+    //}
+    //else{
+    //    var c4 = $("<td>");
+    //    c4.addClass(study.id).html("no");
+    //    hiddenrow.append(c4);
+    //}
+    itrow.append($("<td>").attr('style', 'width: 35%').html(study.initialSampleDescription));
+    itrow.append($("<td>").attr('style', 'width: 35%').html(study.replicateSampleDescription));
+    itrow.append($("<td>").attr('style', 'width: 20%').html(study.platform));
+
+    if(study.cnv){
+        itrow.append($("<td>").attr('style', 'width: 10%').html("yes"));
+    }
+    else{
+        itrow.append($("<td>").attr('style', 'width: 10%').html("no"));
+    }
+    innerTable.append(itrow);
+    hiddenrow.append($('<td>'));
+    hiddenrow.append($('<td>').attr('colspan', 6).append(innerTable));
 
     table.append(hiddenrow);
 }
@@ -387,6 +444,13 @@ function updateCountBadges(countArray) {
         var facet = $('#' + resource + '-facet span');
         facet.empty();
         facet.append(count);
+
+        if($('#' + resource + '-facet').hasClass("disabled")){
+            $('#' + resource + '-facet').removeClass("disabled");
+            var summary = $('#' + resource + '-summaries');
+            summary.removeClass("no-results");
+            summary.show();
+        }
 
         if (count == 0) {
             $('#' + resource + '-facet').addClass("disabled");

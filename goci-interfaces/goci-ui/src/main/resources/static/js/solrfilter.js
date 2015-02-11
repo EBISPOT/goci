@@ -109,14 +109,18 @@ function doFiltering() {
 }
 
 function clearFilters() {
+    console.log("Clearing all filters");
     $('#filter-form').find('input').val('');
 
-    if ($('#facet').text()) {
-        doSearch();
-    }
-    else {
-        applyFacet();
-    }
+    //if ($('#facet').text()) {
+    //    console.log("No facet, so I'm redoing the search");
+        //doSearch();
+        loadResults();
+    //}
+    //else {
+    //    console.log("Reapplying the facet without filters for facet " + $('#facet').text());
+    //    applyFacet();
+    //}
 }
 
 
