@@ -42,13 +42,14 @@ public class AssociationController {
     private GeneRepository geneRepository;
     private RiskAlleleRepository riskAlleleRepository;
     private LocusRepository locusRepository;
+    private AssociationReportRepository associationReportRepository;
 
     // Services
     private AssociationBatchLoaderService associationBatchLoaderService;
     private AssociationCalculationService associationCalculationService;
 
     @Autowired
-    public AssociationController(AssociationRepository associationRepository, StudyRepository studyRepository, EfoTraitRepository efoTraitRepository, SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository, GeneRepository geneRepository, RiskAlleleRepository riskAlleleRepository, LocusRepository locusRepository, AssociationBatchLoaderService associationBatchLoaderService, AssociationCalculationService associationCalculationService) {
+    public AssociationController(AssociationRepository associationRepository, StudyRepository studyRepository, EfoTraitRepository efoTraitRepository, SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository, GeneRepository geneRepository, RiskAlleleRepository riskAlleleRepository, LocusRepository locusRepository, AssociationReportRepository associationReportRepository, AssociationBatchLoaderService associationBatchLoaderService, AssociationCalculationService associationCalculationService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -56,6 +57,7 @@ public class AssociationController {
         this.geneRepository = geneRepository;
         this.riskAlleleRepository = riskAlleleRepository;
         this.locusRepository = locusRepository;
+        this.associationReportRepository = associationReportRepository;
         this.associationBatchLoaderService = associationBatchLoaderService;
         this.associationCalculationService = associationCalculationService;
     }
@@ -394,6 +396,12 @@ public class AssociationController {
             locusRepository.delete(locus);
         }
 
+        // Delete report if it has one
+        AssociationReport associationReport = associationReportRepository.findByAssociationId(associationId);
+        if (associationReport != null) {
+            associationReportRepository.delete(associationReport);
+        }
+
         // Delete association
         associationRepository.delete(associationToDelete);
 
@@ -598,11 +606,16 @@ public class AssociationController {
 
     private RiskAllele createRiskAllele(String curatorEnteredRiskAllele) {
 
-        // Check if it exists
-        RiskAllele riskAllele = riskAlleleRepository.findByRiskAlleleName(curatorEnteredRiskAllele);
+        // Check if it exists, note database contains duplicates
+        List<RiskAllele> riskAlleles = riskAlleleRepository.findByRiskAlleleName(curatorEnteredRiskAllele);
+        RiskAllele riskAllele;
+
+        if (riskAlleles.size() > 0) {
+            riskAllele = riskAlleles.get(0);
+        }
 
         // If it doesn't exist create and save
-        if (riskAllele == null) {
+        else {
             //Create new risk allele
             RiskAllele newRiskAllele = new RiskAllele();
             newRiskAllele.setRiskAlleleName(curatorEnteredRiskAllele);
@@ -616,11 +629,15 @@ public class AssociationController {
 
     private SingleNucleotidePolymorphism createSnp(String curatorEnteredSNP) {
 
-        // Check if SNP already exists database
-        SingleNucleotidePolymorphism snp = singleNucleotidePolymorphismRepository.findByRsIdIgnoreCase(curatorEnteredSNP);
+        // Check if SNP already exists database, note database contains duplicates
+        List<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms = singleNucleotidePolymorphismRepository.findByRsIdIgnoreCase(curatorEnteredSNP);
+        SingleNucleotidePolymorphism snp;
+        if (singleNucleotidePolymorphisms.size() > 0) {
+            snp = singleNucleotidePolymorphisms.get(0);
+        }
 
         // If SNP doesn't exist, create and save
-        if (snp == null) {
+        else {
             // Create new SNP
             SingleNucleotidePolymorphism newSNP = new SingleNucleotidePolymorphism();
             newSNP.setRsId(curatorEnteredSNP);
