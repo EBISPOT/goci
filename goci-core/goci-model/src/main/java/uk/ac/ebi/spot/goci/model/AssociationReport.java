@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import java.util.Date;
 
 /**
@@ -18,7 +19,7 @@ import java.util.Date;
 public class AssociationReport {
     @Id
     @GeneratedValue
-    private Long associationId;
+    private Long id;
 
     private Integer geneError;
 
@@ -35,6 +36,8 @@ public class AssociationReport {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastUpdateDate;
 
+    @OneToOne
+    private Association association;
 
     // JPA no-args constructor
     public AssociationReport() {
