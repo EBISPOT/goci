@@ -9,7 +9,7 @@ var SearchState = {
 
 $(document).ready(function () {
     console.log("solr search loaded and ready");
-    $('.toggle').click(function () {
+    $('.table-toggle').click(function () {
         $(this).find('span').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
     });
     if (window.history && window.history.pushState) {
@@ -25,6 +25,9 @@ function loadResults() {
     console.log("Search term is " + searchTerm);
     if (searchTerm) {
         console.log("Loading results for " + searchTerm);
+        $('#lower_container').show();
+        $('#loadingResults').show();
+
         buildBreadcrumbs();
         solrSearch(searchTerm);
         if (window.location.hash) {
@@ -34,7 +37,7 @@ function loadResults() {
             // no facets to apply, so make sure we are showing all results tables
             clearFacetting();
         }
-        $('#lower_container').show();
+        //$('#lower_container').show();
     }
 }
 
@@ -100,7 +103,7 @@ function processData(data) {
 
             if (doc.resourcename == "study") {
                 if (studyTable.find('tr').length == 10) {
-                    $('#study-summaries .toggle').show();
+                    $('#study-summaries .table-toggle').show();
                     $('#study-summaries').addClass("more-results");
 
                 }
@@ -108,26 +111,28 @@ function processData(data) {
             }
             else if (doc.resourcename == "association") {
                 if (associationTable.find('tr').length == 5) {
-                    $('#association-summaries .toggle').show();
+                    $('#association-summaries .table-toggle').show();
                     $('#association-summaries').addClass("more-results");
                 }
                 processAssociation(doc, associationTable);
             }
             else if (doc.resourcename == "diseaseTrait") {
                 if (traitTable.find('tr').length == 5) {
-                    $('#diseasetrait-summaries .toggle').show();
+                    $('#diseasetrait-summaries .table-toggle').show();
                     $('#diseasetrait-summaries').addClass("more-results");                }
                 processTrait(doc, traitTable);
             }
             else if (doc.resourcename == "singleNucleotidePolymorphism") {
                 if (snpTable.find('tr').length == 5) {
-                    $('#singlenucleotidepolymorphism-summaries .toggle').show();
+                    $('#singlenucleotidepolymorphism-summaries .table-toggle').show();
                     $('#singlenucleotidepolymorphism-summaries').addClass("more-results");
                 }
                 processSnp(doc, snpTable);
             }
         }
         setState(SearchState.RESULTS);
+        $('#loadingResults').hide();
+
     }
     else {
         setState(SearchState.NO_RESULTS);
