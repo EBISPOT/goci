@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
+import java.util.List;
+
 
 /**
  * Created by emma on 21/11/14.
@@ -17,6 +19,6 @@ import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 public interface SingleNucleotidePolymorphismRepository extends JpaRepository<SingleNucleotidePolymorphism, Long> {
     SingleNucleotidePolymorphism findByRsId(String rsId);
 
-    SingleNucleotidePolymorphism findByRsIdIgnoreCase(String rsId);
+   List<SingleNucleotidePolymorphism> findByRsIdIgnoreCase(String rsId);
 }
 
