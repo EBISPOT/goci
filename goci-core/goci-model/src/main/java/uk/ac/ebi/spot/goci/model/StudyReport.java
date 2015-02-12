@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -10,6 +11,7 @@ import javax.persistence.OneToOne;
  * @author Tony Burdett
  * @date 12/02/15
  */
+@Entity
 public class StudyReport {
     @Id
     @GeneratedValue
