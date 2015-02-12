@@ -126,11 +126,13 @@ a > .toplevel-view {
 }
 
 .list-group-item.disabled {
-    background-color: #FFF6EC;
+    color: #DDD;
+    background-color: #FFF;
 }
 
 .list-group-item.disabled:hover {
-    background-color: #FFF6EC;
+    color: #DDD;
+    background-color: #FFF;
 }
 
 .list-group-item > .badge {

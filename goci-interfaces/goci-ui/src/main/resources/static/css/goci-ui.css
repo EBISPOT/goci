@@ -57,7 +57,7 @@
 
 .filter-values {
     display: inline-block;
-    width: 65%;
+    width: 60%;
     margin-left: 0;
     margin-right: 0;
 }
@@ -146,6 +146,10 @@
     width: 200px;
     height: 100%;
     padding-top: 20px;
+}
+
+.search-results-container {
+    margin-top: 10px;
 }
 
 .tight-to-top {
