@@ -77,7 +77,7 @@ version: 1.9.9.022 (pre 2.0)
 --------------------------------------------------------
 
 CREATE OR REPLACE TRIGGER USER_TRG
-BEFORE INSERT ON USER
+BEFORE INSERT ON "USER"
 FOR EACH ROW
     BEGIN
         IF :NEW.ID IS NULL THEN
@@ -91,7 +91,7 @@ ALTER TRIGGER USER_TRG ENABLE;
 -- Create trigger on ROLE
 --------------------------------------------------------
 CREATE OR REPLACE TRIGGER ROLE_TRG
-BEFORE INSERT ON ROLE
+BEFORE INSERT ON "ROLE"
 FOR EACH ROW
     BEGIN
         IF :NEW.ID IS NULL THEN
