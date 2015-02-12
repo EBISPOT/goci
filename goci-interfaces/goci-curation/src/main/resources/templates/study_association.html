@@ -191,14 +191,15 @@
 
 <div class="container-fluid" th:object="${study}">
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-12">
             <!--Button-->
-            <input type="button" class="btn btn-primary" value="Add SNPs from spreadsheet" data-toggle="collapse"
-                   data-target="#uploadSNPsForn"/>
             <a th:href="@{/studies/{studyId}/associations/add(studyId=*{id})}" class="btn btn-primary">Add
-                standard SNP or multi-SNP haplotype</a>
+                standard SNP</a>
+            <a th:href="@{/studies/{studyId}/associations/add(studyId=*{id})}" class="btn btn-primary">Add multi-SNP haplotype</a>
             <a th:href="@{/studies/{studyId}/associations/add_interaction(studyId=*{id})}"
                class="btn btn-primary">Add SNP:SNP interaction</a>
+            <input type="button" class="btn btn-primary pull-right" value="Add SNPs from spreadsheet" data-toggle="collapse"
+                   data-target="#uploadSNPsForn"/>
 
         </div>
     </div>
