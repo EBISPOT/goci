@@ -1,8 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -22,6 +20,10 @@ public class RiskAllele {
             joinColumns = @JoinColumn(name = "RISK_ALLELE_ID"),
             inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
     private SingleNucleotidePolymorphism snp;
+
+
+    @ManyToMany(mappedBy = "strongestRiskAlleles")
+    private Collection<Locus> loci;
 
 
     // JPA no-args constructor
@@ -64,5 +66,13 @@ public class RiskAllele {
                 ", riskAlleleName='" + riskAlleleName + '\'' +
                 ", snp=" + snp +
                 '}';
+    }
+
+    public Collection<Locus> getLoci() {
+        return loci;
+    }
+
+    public void setLoci(Collection<Locus> loci) {
+        this.loci = loci;
     }
 }

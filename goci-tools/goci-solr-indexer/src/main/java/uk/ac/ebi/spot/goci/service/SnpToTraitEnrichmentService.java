@@ -36,4 +36,5 @@ public class SnpToTraitEnrichmentService implements DocumentEnrichmentService<Sn
             association.getEfoTraits().forEach(trait -> document.addTraitUri(trait.getUri()));
         });
     }
+
 }
