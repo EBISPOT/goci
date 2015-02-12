@@ -8,7 +8,7 @@ Designed for execution with Flyway database migrations tool.
 
 author:  Tony Burdett
 date:    February 12th 2015
-version: 1.9.9.022 (pre 2.0)
+version: 1.9.9.023 (pre 2.0)
 ################################################################################
 
 */
@@ -137,11 +137,18 @@ INSERT INTO ASSOCIATION_REPORT (ASSOCIATION_ID, SNP_PENDING, LAST_UPDATE_DATE, G
   SELECT ID, SNPPENDING, LASTUPDATEDATE, GENE_ERROR, PUBMDID_ERROR, SNP_ID_ERROR, SNP_GENE_ON_DIFF_CHR, NO_GENEID_FOR_SYMBOL, GENE_NOT_ON_GENOME FROM GWASSTUDIESSNP;
 
 --------------------------------------------------------
--- Create proper triggers on Reports
+-- Drop temporary Triggers and Sequences
 --------------------------------------------------------
+
+DROP SEQUENCE SRN_SEQUENCE;
+DROP SEQUENCE ARN_SEQUENCE;
 
 DROP TRIGGER SRN_TRG;
 DROP TRIGGER ARN_TRG;
+
+--------------------------------------------------------
+-- Create proper triggers on Reports
+--------------------------------------------------------
 
 CREATE OR REPLACE TRIGGER STUDY_REPORT_TRG
 BEFORE INSERT ON STUDY_REPORT
@@ -165,9 +172,4 @@ FOR EACH ROW
 /
 ALTER TRIGGER ASSOCIATION_REPORT_TRG ENABLE;
 
---------------------------------------------------------
--- Drop temporary Sequences
---------------------------------------------------------
-DROP SEQUENCE SRN_SEQUENCE;
-DROP SEQUENCE ARN_SEQUENCE;
 
