@@ -39,7 +39,8 @@ public class OntologyDAO extends Initializable {
     // configurable ontology elements with sensible defaults
     private Resource ontologyResource;
 
-    private String ontologyURI = "http://www.ebi.ac.uk/efo/efo.owl";
+    private String ontologyURI = "www.ebi.ac.uk/efo";
+//  private String ontologyURI = "file:///Users/catherineleroy/Documents/github_project/ExperimentalFactorOntology/ExFactorInOWL/releasecandidate/my_efo_merged.owl";
     private String ontologySynonymAnnotationURI = "http://www.ebi.ac.uk/efo/alternative_term";
     private String ontologyObsoleteClassURI = "http://www.geneontology.org/formats/oboInOwl#ObsoleteClass";
 
@@ -104,7 +105,10 @@ public class OntologyDAO extends Initializable {
             OWLOntologyManager manager;
             if (getOntologyConfiguration() != null) {
                 manager = getOntologyConfiguration().getOWLOntologyManager();
-                ontology = manager.getOntology(IRI.create(getOntologyURI()));
+                ontology = manager.getOntology(IRI.create("http://www.ebi.ac.uk/efo"));
+// Catherine Leroy : I have commented the line below out as trying to run goci-datapublisher I realised that this line was overiding the settings done through
+//                   goci-datapublisher/src/main/appresources/goci-datapublisher.xml
+//              ontology = manager.getOntology(IRI.create(getOntologyURI()));
                 if (ontology == null) {
                     getLog().info("Loading Ontology '" + getOntologyURI() + "'...");
                     ontology = manager.loadOntologyFromOntologyDocument(IRI.create(getOntologyURI()));
