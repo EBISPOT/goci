@@ -96,6 +96,20 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-8">
+            <div>
+
+                <a th:href="@{http://www.ncbi.nlm.nih.gov/pubmed/{pubmedId}(pubmedId=${study.pubmedId})}"
+                   target="_blank"> View paper in pubmed</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+
             <form id="studyForm" class="form-horizontal" method="post" th:object="${study}" name="studyForm"
                   th:action="@{/studies/{studyId}(studyId=*{id})}">
 
