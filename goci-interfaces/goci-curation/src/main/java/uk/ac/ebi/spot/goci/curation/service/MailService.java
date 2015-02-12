@@ -36,11 +36,20 @@ public class MailService {
     public void sendEmailNotification(Study study, String status) {
 
         // Set up some of the values used in mail body
-        String studyTrait = study.getDiseaseTrait().getTrait();
         String studyTitle = study.getTitle();
         String pubmedLink = "http://www.ncbi.nlm.nih.gov/pubmed/" + study.getPubmedId();
-        String notes = study.getHousekeeping().getNotes();
         String currentCurator = study.getHousekeeping().getCurator().getLastName();
+
+        // These could be null so catch this case
+        String studyTrait = null;
+        if (study.getDiseaseTrait() != null && !study.getDiseaseTrait().getTrait().isEmpty()) {
+            studyTrait = study.getDiseaseTrait().getTrait();
+        }
+
+        String notes = null;
+        if (study.getHousekeeping().getNotes() != null && !study.getHousekeeping().getNotes().isEmpty()) {
+            notes = study.getHousekeeping().getNotes();
+        }
 
         // Format date
         Date studyDate = study.getStudyDate();
@@ -50,6 +59,7 @@ public class MailService {
         // TODO CHANGE THIS
         String editStudyLink = "http://localhost:55000/studies/" + study.getId();
 
+        // Format mail message
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(getTo());
         mailMessage.setFrom(getFrom());
