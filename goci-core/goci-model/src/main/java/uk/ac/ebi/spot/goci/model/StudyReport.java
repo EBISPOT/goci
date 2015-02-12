@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import java.util.Date;
 
 /**
  * Javadocs go here!
@@ -23,9 +24,9 @@ public class StudyReport {
 
     private String ncbiFirstAuthor;
 
-    private String ncbiNormalisedFirstAuthor;
+    private String ncbiNormalizedFirstAuthor;
 
-    private String ncbiFirstUpdateDate;
+    private Date ncbiFirstUpdateDate;
 
     @OneToOne
     private Study study;
@@ -37,11 +38,12 @@ public class StudyReport {
     public StudyReport(Long pubmedIdError,
                        String ncbiPaperTitle,
                        String ncbiFirstAuthor,
-                       String ncbiNormalisedFirstAuthor, String ncbiFirstUpdateDate) {
+                       String ncbiNormalizedFirstAuthor,
+                       Date ncbiFirstUpdateDate) {
         this.pubmedIdError = pubmedIdError;
         this.ncbiPaperTitle = ncbiPaperTitle;
         this.ncbiFirstAuthor = ncbiFirstAuthor;
-        this.ncbiNormalisedFirstAuthor = ncbiNormalisedFirstAuthor;
+        this.ncbiNormalizedFirstAuthor = ncbiNormalizedFirstAuthor;
         this.ncbiFirstUpdateDate = ncbiFirstUpdateDate;
     }
 
@@ -77,19 +79,19 @@ public class StudyReport {
         this.ncbiFirstAuthor = ncbiFirstAuthor;
     }
 
-    public String getNcbiNormalisedFirstAuthor() {
-        return ncbiNormalisedFirstAuthor;
+    public String getNcbiNormalizedFirstAuthor() {
+        return ncbiNormalizedFirstAuthor;
     }
 
-    public void setNcbiNormalisedFirstAuthor(String ncbiNormalisedFirstAuthor) {
-        this.ncbiNormalisedFirstAuthor = ncbiNormalisedFirstAuthor;
+    public void setNcbiNormalizedFirstAuthor(String ncbiNormalizedFirstAuthor) {
+        this.ncbiNormalizedFirstAuthor = ncbiNormalizedFirstAuthor;
     }
 
-    public String getNcbiFirstUpdateDate() {
+    public Date getNcbiFirstUpdateDate() {
         return ncbiFirstUpdateDate;
     }
 
-    public void setNcbiFirstUpdateDate(String ncbiFirstUpdateDate) {
+    public void setNcbiFirstUpdateDate(Date ncbiFirstUpdateDate) {
         this.ncbiFirstUpdateDate = ncbiFirstUpdateDate;
     }
 
@@ -107,7 +109,7 @@ public class StudyReport {
                 ", pubmedIdError=" + pubmedIdError +
                 ", ncbiPaperTitle='" + ncbiPaperTitle + '\'' +
                 ", ncbiFirstAuthor='" + ncbiFirstAuthor + '\'' +
-                ", ncbiNormalisedFirstAuthor='" + ncbiNormalisedFirstAuthor + '\'' +
+                ", ncbiNormalizedFirstAuthor='" + ncbiNormalizedFirstAuthor + '\'' +
                 ", ncbiFirstUpdateDate='" + ncbiFirstUpdateDate + '\'' +
                 '}';
     }
