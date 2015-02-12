@@ -145,3 +145,12 @@ a > .toplevel-view {
     background-image: linear-gradient(to bottom, #E7F7F9 50%, #D3EFF3 100%);
 }
 
+.table-striped > tbody > tr:nth-child(odd) {
+    background-color: #F6FDFC;
+}
+
+.table-hover > tbody > tr:hover {
+    background-color: #F6FDFC;
+}
+
+

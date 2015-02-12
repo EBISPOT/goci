@@ -246,45 +246,49 @@
                         <h2>Search results for <em><span id="search-term" th:text="*{query}">query term</span></em></h2>
 
                         <div id="study-summaries" class="results-container">
-                            <h3><i>Studies</i></h3>
+                            <div>
+                            <span class="col-md-6"><h3><i>Studies</i></h3></span>
+                            <span class="col-md-6"><button type="button" id="expand-table" class="btn btn-default pull-right table-collapsed" onclick="">Expand all studies</button>    </span>  </div>
 
-                            <table id="study-table" class="table table-hover table-striped">
+                            <table id="study-table" class="table table-striped-study">
                                 <thead id="study-table-header">
                                 <tr>
-                                    <th>Author</th>
-                                    <th>Date</th>
-                                    <th>Publication</th>
-                                    <th>Title</th>
-                                    <th>Disease/Trait</th>
-                                    <th>Association count</th>
-                                    <th></th>
+                                    <th style="width: 12%">Author</th>
+                                    <th style="width: 10%">Date</th>
+                                    <th style="width: 15%">Publication</th>
+                                    <th style="width: 30%">Title</th>
+                                    <th style="width: 20%">Disease/Trait</th>
+                                    <th style="width: 8%">Association count</th>
+                                    <th style="width: 5%"></th>
                                 </tr>
+
                                 </thead>
                                 <tbody id="study-table-body">
                                 </tbody>
                             </table>
-                            <button class="table-toggle btn btn-default btn-xs accordion-toggle"
+                            <button class="table-toggle btn btn-default btn-xs accordion-toggle study-toggle"
                                     data-toggle="collapse"
                                     data-target="#study-summaries .hidden-resource"
-                                    aria-expanded="false">
-                                <span class="ttbutton glyphicon glyphicon-chevron-right"></span>
+                                    aria-expanded="false"
+                                    style="display: none">
+                                <span class="ttbutton glyphicon glyphicon-chevron-down"></span>
                             </button>
                         </div>
                         <div id="association-summaries" class="results-container">
                             <h3><i>Associations</i></h3>
 
-                            <table id="association-table" class="table table-hover table-striped">
+                            <table id="association-table" class="table table-striped">
                                 <thead id="association-table-header">
                                 <tr>
-                                    <th>Risk/effect SNP-allele</th>
-                                    <th>p-value (qualifier)</th>
-                                    <th>Odds ratio</th>
-                                    <th>beta-coefficient &amp; unit description</th>
-                                    <th>[95% CI]</th>
-                                    <th>Chromosome location</th>
-                                    <th>Reported gene(s)</th>
-                                    <th>Mapped gene(s)</th>
-                                    <th>Study</th>
+                                    <th style="width: 15%">Risk/effect SNP-allele</th>
+                                    <th style="width: 10%">p-value (qualifier)</th>
+                                    <th style="width: 10%">Odds ratio</th>
+                                    <th style="width: 10%">beta-coefficient &amp; unit description</th>
+                                    <th style="width: 10%">[95% CI]</th>
+                                    <th style="width: 10%">Chromosome location</th>
+                                    <th style="width: 12%">Reported gene(s)</th>
+                                    <th style="width: 12%">Mapped gene(s)</th>
+                                    <th style="width: 10%">Study</th>
                                 </tr>
                                 </thead>
                                 <tbody id="association-table-body">
@@ -293,19 +297,20 @@
                             <button class="table-toggle btn btn-default btn-xs accordion-toggle"
                                     data-toggle="collapse"
                                     data-target="#association-summaries .hidden-resource"
-                                    aria-expanded="false">
-                                <span class="ttbutton glyphicon glyphicon-chevron-right"></span>
+                                    aria-expanded="false"
+                                    style="display: none">
+                                <span class="ttbutton glyphicon glyphicon-chevron-down"></span>
                             </button>
                         </div>
 
                         <div id="diseasetrait-summaries" class="results-container">
                             <h3><i>Traits</i></h3>
-                            <table id="diseasetrait-table" class="table table-hover table-striped">
+                            <table id="diseasetrait-table" class="table table-striped">
                                 <thead id="diseasetrait-table-header">
                                 <tr>
-                                    <th>Trait name</th>
-                                    <th>Mapped EFO traits</th>
-                                    <th>EFO synonyms</th>
+                                    <th style="width: 35%">Trait name</th>
+                                    <th style="width: 35%">Mapped EFO traits</th>
+                                    <th style="width: 30%">EFO synonyms</th>
                                 </tr>
                                 </thead>
                                 <tbody id="diseasetrait-table-body">
@@ -314,17 +319,18 @@
                             <button class="table-toggle btn btn-default btn-xs accordion-toggle"
                                     data-toggle="collapse"
                                     data-target="#diseasetrait-summaries .hidden-resource"
-                                    aria-expanded="false">
-                                <span class="ttbutton glyphicon glyphicon-chevron-right"></span>
+                                    aria-expanded="false"
+                                    style="display: none">
+                            <span class="ttbutton glyphicon glyphicon-chevron-down"></span>
                             </button>
                         </div>
                         <div id="singlenucleotidepolymorphism-summaries" class="results-container">
                             <h3><i>SNPs</i></h3>
 
-                            <table id="singlenucleotidepolymorphism-table" class="table table-hover table-striped">
+                            <table id="singlenucleotidepolymorphism-table" class="table table-striped">
                                 <thead id="singlenucleotidepolymorphism-table-header">
                                 <tr>
-                                    <th>rsID</th>
+                                    <th >rsID</th>
                                     <th>Base pair location</th>
                                     <th>Chromosome region</th>
                                     <th>Context</th>
@@ -338,8 +344,9 @@
                             <button class="table-toggle btn btn-default btn-xs accordion-toggle"
                                     data-toggle="collapse"
                                     data-target="#singlenucleotidepolymorphism-summaries .hidden-resource"
-                                    aria-expanded="false">
-                                <span class="ttbutton glyphicon glyphicon-chevron-right"></span>
+                                    aria-expanded="false"
+                                    style="display: none">
+                            <span class="ttbutton glyphicon glyphicon-chevron-down"></span>
                             </button>
                         </div>
                     </div>
