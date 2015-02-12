@@ -30,6 +30,10 @@ public class StudyDocument extends Document<Study> {
 
     @Field private String trait;
     @Field("traitUri") private Collection<String> traitUris;
+    @Field private Collection<String> rsIds;
+    @Field private Collection<String> chromosomePositions;
+    @Field private Collection<String> regions;
+
 
     @Field private int associationCount;
 
@@ -120,5 +124,45 @@ public class StudyDocument extends Document<Study> {
 
     public void setAssociationCount(int associationCount) {
         this.associationCount = associationCount;
+    }
+
+    public void addRsId(String rsId) {
+         rsIds.add(rsId);
+    }
+
+    public Collection<String> getRsIds() {
+        return rsIds;
+    }
+
+    public void setRsIds(Collection<String> rsIds) {
+        this.rsIds = rsIds;
+    }
+
+    public void addChromosomePosition(String chromosomePosition) {
+        chromosomePositions.add(chromosomePosition);
+    }
+
+    public void addRegion(String region) {
+        regions.add(region);
+    }
+
+    public Collection<String> getChromosomePositions() {
+        return chromosomePositions;
+    }
+
+    public void setChromosomePositions(Collection<String> chromosomePositions) {
+        this.chromosomePositions = chromosomePositions;
+    }
+
+    public Collection<String> getRegions() {
+        return regions;
+    }
+
+    public void setRegions(Collection<String> regions) {
+        this.regions = regions;
+    }
+
+    public void addMappedGene(Gene gene) {
+        //TO DO - ADD MAPPED GENE STUFF
     }
 }

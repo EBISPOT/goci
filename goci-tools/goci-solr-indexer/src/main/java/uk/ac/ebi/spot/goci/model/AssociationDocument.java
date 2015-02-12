@@ -5,7 +5,6 @@ import org.apache.solr.client.solrj.beans.Field;
 import java.beans.Introspector;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,8 +35,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field private String platform;
     @Field private boolean cnv;
 
-    @Field("trait") private Collection<String> traits;
+    @Field("label") private Collection<String> traits;
     @Field("traitUri") private Collection<String> traitUris;
+
+    @Field private String trait;
 
     // additional fields from study
     @Field private String studyId;
@@ -86,10 +87,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         this.platform = study.getPlatform();
         this.cnv = study.getCnv();
         if (study.getDiseaseTrait() != null) {
-            traits.add(study.getDiseaseTrait().getTrait());
+            this.trait = study.getDiseaseTrait().getTrait();
         }
-        this.traitUris = new ArrayList<>();
-        study.getEfoTraits().forEach(efoTrait -> traitUris.add(efoTrait.getUri()));
+//        this.traitUris = new ArrayList<>();
+//        study.getEfoTraits().forEach(efoTrait -> traitUris.add(efoTrait.getUri()));
 
         this.chromosomeNames = new HashSet<>();
         this.chromosomePositions = new HashSet<>();
@@ -292,5 +293,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             }
         }
         return current;
+    }
+
+    public String getTrait() {
+        return trait;
     }
 }

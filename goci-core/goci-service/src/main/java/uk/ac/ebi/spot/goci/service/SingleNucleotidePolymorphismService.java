@@ -90,4 +90,11 @@ public class SingleNucleotidePolymorphismService {
         getLog().info(
                 "SNP '" + snp.getRsId() + "' is mapped to " + regionCount + " regions and " + geneCount + " genes");
     }
+
+    @Transactional(readOnly = true)
+    public Collection<SingleNucleotidePolymorphism> deepFindByStudyId(Long studyId) {
+        Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms = snpRepository.findByRiskAllelesLociAssociationStudyId(studyId);
+        singleNucleotidePolymorphisms.forEach(this::loadAssociatedData);
+        return singleNucleotidePolymorphisms;
+    }
 }
