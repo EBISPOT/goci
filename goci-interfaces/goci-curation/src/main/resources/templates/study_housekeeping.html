@@ -74,10 +74,10 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.publishDate !=null } ? ${study.housekeeping.publishDate} : 'null'"></td>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.sendToNCBIDate !=null } ? ${study.housekeeping.sendToNCBIDate} : 'null'"></td>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.studyAddedDate !=null } ? ${study.housekeeping.studyAddedDate} : 'null'"></td>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.lastUpdateDate !=null } ? ${study.housekeeping.lastUpdateDate} : 'null'"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.publishDate !=null } ? ${#calendars.format(study.housekeeping.publishDate, 'dd MMMM yyyy')} : 'null'"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.sendToNCBIDate !=null } ? ${#calendars.format(study.housekeeping.sendToNCBIDate, 'dd MMMM yyyy')} : 'null'"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.studyAddedDate !=null } ? ${#calendars.format(study.housekeeping.studyAddedDate, 'dd MMMM yyyy')} : 'null'"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.lastUpdateDate !=null } ? ${#calendars.format(study.housekeeping.lastUpdateDate, 'dd MMMM yyyy')} : 'null'"></td>
                 </tr>
                 </tbody>
             </table>
@@ -144,7 +144,7 @@
                            class="control-label col-md-2">Ethnicity checked, first
                         level:</label>
                     <input id="ethnicityCheckedLevelOne" type="checkbox" th:field="*{ethnicityCheckedLevelOne}"
-                          />
+                            />
                 </div>
 
                 <div class="form-group">
@@ -152,14 +152,14 @@
                            class="control-label col-md-2">Ethnicity checked, second
                         level:</label>
                     <input id="ethnicityCheckedLevelTwo" type="checkbox" th:field="*{ethnicityCheckedLevelTwo}"
-                          />
+                            />
                 </div>
 
                 <div class="form-group">
                     <label for="ethnicityBackFilled" th:for="${#ids.next('ethnicityBackFilled')}"
                            class="control-label col-md-2">Ethnicity backfilled:</label>
                     <input id="ethnicityBackFilled" type="checkbox" th:field="*{ethnicityBackFilled}"
-                           />
+                            />
                 </div>
 
 
@@ -168,7 +168,7 @@
                            class="control-label col-md-2">Study/SNP checked, first
                         level:</label>
                     <input id="studySnpCheckedLevelOne" type="checkbox" th:field="*{studySnpCheckedLevelOne}"
-                          />
+                            />
                 </div>
 
                 <div class="form-group">
@@ -176,14 +176,14 @@
                            class="control-label col-md-2">Study/SNP checked, second
                         level:</label>
                     <input id="studySnpCheckedLevelTwo" type="checkbox" th:field="*{studySnpCheckedLevelTwo}"
-                          />
+                            />
                 </div>
 
 
                 <div class="form-group">
                     <label for="checkedNCBIError" th:for="${#ids.next('checkedNCBIError')}"
                            class="control-label col-md-2">Checked NCBI Error:</label>
-                    <input id="checkedNCBIError" type="checkbox" th:field="*{checkedNCBIError}" />
+                    <input id="checkedNCBIError" type="checkbox" th:field="*{checkedNCBIError}"/>
                 </div>
 
 
@@ -216,7 +216,6 @@
                         </select>
                     </div>
                 </div>
-
 
 
                 <!--Hidden-->
