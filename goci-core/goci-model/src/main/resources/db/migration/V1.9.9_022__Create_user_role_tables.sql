@@ -42,24 +42,24 @@ version: 1.9.9.022 (pre 2.0)
 --------------------------------------------------------
   CREATE UNIQUE INDEX "USER_ID_PK" ON "USER" ("ID");
 
-  --------------------------------------------------------
+--------------------------------------------------------
 --  DDL for Index ROLE_ID_PK
 --------------------------------------------------------
   CREATE UNIQUE INDEX "ROLE_ID_PK" ON "ROLE" ("ID");
 
-  --------------------------------------------------------
+--------------------------------------------------------
 --  Constraints for Table USER
 --------------------------------------------------------
   ALTER TABLE "USER" ADD PRIMARY KEY ("ID") ENABLE;
   ALTER TABLE "USER" MODIFY ("ID" NOT NULL ENABLE);
 
-    --------------------------------------------------------
+--------------------------------------------------------
 --  Constraints for Table ROLE
 --------------------------------------------------------
   ALTER TABLE "ROLE" ADD PRIMARY KEY ("ID") ENABLE;
   ALTER TABLE "ROLE" MODIFY ("ID" NOT NULL ENABLE);
 
-  --------------------------------------------------------
+--------------------------------------------------------
 --  Ref Constraints for Table USER
 --------------------------------------------------------
   ALTER TABLE "USER" ADD CONSTRAINT "STUDY_ROLE_ID_FK" FOREIGN KEY ("ROLE_ID")
@@ -71,12 +71,6 @@ version: 1.9.9.022 (pre 2.0)
 #  CREATE SEQUENCES and TRIGGERS  #
 ###################################
 */
-
---------------------------------------------------------
--- Create HIBERNATE_SEQUENCE
---------------------------------------------------------
-CREATE SEQUENCE HIBERNATE_SEQUENCE MINVALUE 10000000 MAXVALUE 9999999999999999999999999999 START WITH 10000000 INCREMENT BY 1 NOCYCLE NOORDER CACHE 20;
-
 
 --------------------------------------------------------
 -- Create trigger on USER
