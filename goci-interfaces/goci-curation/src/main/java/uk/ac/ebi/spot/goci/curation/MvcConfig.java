@@ -1,11 +1,14 @@
+/*
 package uk.ac.ebi.spot.goci.curation;
 
+*/
 /**
  * Created by emma on 24/11/14.
  *
  * Configuration class for configuring Spring MVC in the application.
  *
- */
+ *//*
+
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -22,4 +25,4 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/studies").setViewName("studies");
     }
-}
+}*/
