@@ -1,7 +1,5 @@
 package uk.ac.ebi.spot.goci.model;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -9,11 +7,10 @@ import javax.persistence.OneToOne;
 import java.util.Date;
 
 /**
- * Created by emma on 11/02/15.
+ * Javadocs go here!
  *
- * @author emma
- *         <p/>
- *         Model object representing an association report
+ * @author Tony Burdett
+ * @date 12/02/15
  */
 @Entity
 public class AssociationReport {
@@ -21,9 +18,13 @@ public class AssociationReport {
     @GeneratedValue
     private Long id;
 
-    private Integer geneError;
+    private boolean snpPending;
 
-    private Integer pubmedIdError;
+    private Date lastUpdateDate;
+
+    private Long geneError;
+
+    private Long pubmedIdError;
 
     private String snpError;
 
@@ -33,9 +34,6 @@ public class AssociationReport {
 
     private String geneNotOnGenome;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date lastUpdateDate;
-
     @OneToOne
     private Association association;
 
@@ -43,31 +41,61 @@ public class AssociationReport {
     public AssociationReport() {
     }
 
-    public AssociationReport(Integer geneError, Integer pubmedIdError, String snpError, String snpGeneOnDiffChr, String noGeneForSymbol, String geneNotOnGenome, Date lastUpdateDate) {
+    public AssociationReport(boolean snpPending,
+                             Date lastUpdateDate,
+                             Long geneError,
+                             Long pubmedIdError,
+                             String snpError,
+                             String snpGeneOnDiffChr,
+                             String noGeneForSymbol,
+                             String geneNotOnGenome) {
+        this.snpPending = snpPending;
+        this.lastUpdateDate = lastUpdateDate;
         this.geneError = geneError;
         this.pubmedIdError = pubmedIdError;
         this.snpError = snpError;
         this.snpGeneOnDiffChr = snpGeneOnDiffChr;
         this.noGeneForSymbol = noGeneForSymbol;
         this.geneNotOnGenome = geneNotOnGenome;
-        this.lastUpdateDate = lastUpdateDate;
-
-
     }
 
-    public Integer getGeneError() {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public boolean isSnpPending() {
+        return snpPending;
+    }
+
+    public void setSnpPending(boolean snpPending) {
+        this.snpPending = snpPending;
+    }
+
+    public Date getLastUpdateDate() {
+        return lastUpdateDate;
+    }
+
+    public void setLastUpdateDate(Date lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
+    }
+
+    public Long getGeneError() {
         return geneError;
     }
 
-    public void setGeneError(Integer geneError) {
+    public void setGeneError(Long geneError) {
         this.geneError = geneError;
     }
 
-    public Integer getPubmedIdError() {
+    public Long getPubmedIdError() {
         return pubmedIdError;
     }
 
-    public void setPubmedIdError(Integer pubmedIdError) {
+    public void setPubmedIdError(Long pubmedIdError) {
         this.pubmedIdError = pubmedIdError;
     }
 
@@ -103,25 +131,25 @@ public class AssociationReport {
         this.geneNotOnGenome = geneNotOnGenome;
     }
 
-    public Date getLastUpdateDate() {
-        return lastUpdateDate;
+    public Association getAssociation() {
+        return association;
     }
 
-    public void setLastUpdateDate(Date lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
+    public void setAssociation(Association association) {
+        this.association = association;
     }
 
-
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return "AssociationReport{" +
-                "geneError=" + geneError +
+                "id=" + id +
+                ", snpPending=" + snpPending +
+                ", lastUpdateDate=" + lastUpdateDate +
+                ", geneError=" + geneError +
                 ", pubmedIdError=" + pubmedIdError +
                 ", snpError='" + snpError + '\'' +
                 ", snpGeneOnDiffChr='" + snpGeneOnDiffChr + '\'' +
                 ", noGeneForSymbol='" + noGeneForSymbol + '\'' +
                 ", geneNotOnGenome='" + geneNotOnGenome + '\'' +
-                ", lastUpdateDate=" + lastUpdateDate +
                 '}';
     }
 }

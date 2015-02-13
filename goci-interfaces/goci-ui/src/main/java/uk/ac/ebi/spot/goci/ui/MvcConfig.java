@@ -16,13 +16,18 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
+        // core pages
         registry.addViewController("/").setViewName("index");
         registry.addViewController("/home").setViewName("index");
         registry.addViewController("/search").setViewName("search");
-        registry.addViewController("/ontology").setViewName("ontology");
         registry.addViewController("/downloads").setViewName("downloads");
-        registry.addViewController("/about").setViewName("about");
-        registry.addViewController("/help").setViewName("help");
-        registry.addViewController("/methods").setViewName("methods");
+
+        // dynamically generated docs pages
+        registry.addViewController("/docs").setViewName("docs");
+        registry.addViewController("/docs/about").setViewName("docs-template");
+        registry.addViewController("/docs/downloads").setViewName("docs-template");
+        registry.addViewController("/docs/faq").setViewName("docs-template");
+        registry.addViewController("/docs/methods").setViewName("docs-template");
+        registry.addViewController("/docs/ontology").setViewName("docs-template");
     }
 }

@@ -1,0 +1,8 @@
+= Downloading the GWAS Catalog
+
+== Downloading the GWAS Catalog
+
+The most recent edition of the GWAS Catalog is http://www.genome.gov/admin/gwascatalog.txt[available for download here]
+
+We are working to provide richer, fully customise-able downloads of GWAS data and these will be available soon.
+

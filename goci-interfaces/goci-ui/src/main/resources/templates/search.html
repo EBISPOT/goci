@@ -53,16 +53,16 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">GWAS Catalog</a>
+            <a class="navbar-brand" href="index.html" th:href="@{home}">GWAS Catalog</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="index.html" th:href="@{/.}">Home <span class="sr-only">(current)</span></a></li>
+                <li><a href="index.html" th:href="@{home}">Home <span class="sr-only">(current)</span></a></li>
                 <li class="active"><a href="search.html" th:href="@{search}">Search</a></li>
                 <li><a href="http://www.ebi.ac.uk/fgpt/gwas">View</a></li>
-                <li class="hidden-sm"><a href="downloads.html" th:href="@{downloads}">Download</a></li>
-                <li><a href="help.html" th:href="@{help}">Help</a></li>
-                <li class="hidden-sm"><a href="about.html" th:href="@{about}">About</a></li>
+                <li class="hidden-sm"><a href="docs/downloads" th:href="@{docs/downloads}">Download</a></li>
+                <li><a href="docs" th:href="@{docs}">Help</a></li>
+                <li class="hidden-sm"><a href="docs/about" th:href="@{docs/about}">About</a></li>
 
                 <li><a class="icon" href="http://www.ebi.ac.uk"><img alt="EBI logo"
                                                                      src="../static/icons/EMBL_EBI_Logo_white_scaled.png"
@@ -117,7 +117,7 @@
     </div>
 </div>
 
-<div class="container tight-to-top">
+<div class="container-fluid tight-to-top">
     <ol class="breadcrumb background-color-complementary-accent">
         <li><a href="home">GWAS</a></li>
         <li class="active">Search</li>
@@ -232,8 +232,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-9" id="results-area">
-                    <div id="loadingResults">
+                <div class="col-md-9" id="results-area" >
+                    <div id="loadingResults" class="col-md-offset-4" style="display: none">
+                        <button class="btn btn-lg"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading...</button>
 
                     </div>
 
@@ -262,11 +263,11 @@
                                 <tbody id="study-table-body">
                                 </tbody>
                             </table>
-                            <button class="toggle btn btn-default btn-xs accordion-toggle"
+                            <button class="table-toggle btn btn-default btn-xs accordion-toggle"
                                     data-toggle="collapse"
                                     data-target="#study-summaries .hidden-resource"
                                     aria-expanded="false">
-                                <span class="glyphicon glyphicon-chevron-right"></span>
+                                <span class="ttbutton glyphicon glyphicon-chevron-right"></span>
                             </button>
                         </div>
                         <div id="association-summaries" class="results-container">
@@ -289,11 +290,11 @@
                                 <tbody id="association-table-body">
                                 </tbody>
                             </table>
-                            <button class="toggle btn btn-default btn-xs accordion-toggle"
+                            <button class="table-toggle btn btn-default btn-xs accordion-toggle"
                                     data-toggle="collapse"
                                     data-target="#association-summaries .hidden-resource"
                                     aria-expanded="false">
-                                <span class="glyphicon glyphicon-chevron-right"></span>
+                                <span class="ttbutton glyphicon glyphicon-chevron-right"></span>
                             </button>
                         </div>
 
@@ -310,11 +311,11 @@
                                 <tbody id="diseasetrait-table-body">
                                 </tbody>
                             </table>
-                            <button class="toggle btn btn-default btn-xs accordion-toggle"
+                            <button class="table-toggle btn btn-default btn-xs accordion-toggle"
                                     data-toggle="collapse"
                                     data-target="#diseasetrait-summaries .hidden-resource"
                                     aria-expanded="false">
-                                <span class="glyphicon glyphicon-chevron-right"></span>
+                                <span class="ttbutton glyphicon glyphicon-chevron-right"></span>
                             </button>
                         </div>
                         <div id="singlenucleotidepolymorphism-summaries" class="results-container">
@@ -334,11 +335,11 @@
                                 <tbody id="singlenucleotidepolymorphism-table-body">
                                 </tbody>
                             </table>
-                            <button class="toggle btn btn-default btn-xs accordion-toggle"
+                            <button class="table-toggle btn btn-default btn-xs accordion-toggle"
                                     data-toggle="collapse"
                                     data-target="#singlenucleotidepolymorphism-summaries .hidden-resource"
                                     aria-expanded="false">
-                                <span class="glyphicon glyphicon-chevron-right"></span>
+                                <span class="ttbutton glyphicon glyphicon-chevron-right"></span>
                             </button>
                         </div>
                     </div>
