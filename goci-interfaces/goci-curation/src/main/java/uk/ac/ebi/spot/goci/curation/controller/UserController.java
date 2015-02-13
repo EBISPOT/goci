@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import uk.ac.ebi.spot.goci.curation.model.UserCreateForm;
-import uk.ac.ebi.spot.goci.model.Role;
-import uk.ac.ebi.spot.goci.model.User;
-import uk.ac.ebi.spot.goci.repository.RoleRepository;
-import uk.ac.ebi.spot.goci.repository.UserRepository;
+import uk.ac.ebi.spot.goci.model.SecureRole;
+import uk.ac.ebi.spot.goci.model.SecureUser;
+import uk.ac.ebi.spot.goci.repository.SecureRoleRepository;
+import uk.ac.ebi.spot.goci.repository.SecureUserRepository;
 
 import java.util.List;
 
@@ -29,12 +29,12 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
 
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
+    private SecureUserRepository secureUserRepository;
+    private SecureRoleRepository roleRepository;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(SecureUserRepository secureUserRepository) {
+        this.secureUserRepository = secureUserRepository;
     }
 
     // Return empty form
@@ -54,13 +54,11 @@ public class UserController {
             return "user_create";
         }
         try {
-            User newUser = createUser(userCreateForm);
+            SecureUser newSecureUser = createUser(userCreateForm);
             // Save our new user
-            userRepository.save(newUser);
+            secureUserRepository.save(newSecureUser);
 
-        }
-        //TODO MAKE EMAIL UNIQUE
-        catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             bindingResult.reject("email.exists", "Email already exists");
             return "user_create";
         }
@@ -72,17 +70,17 @@ public class UserController {
     /* General purpose methods */
 
     // Takes information in form and create a user
-    private User createUser(UserCreateForm form) {
-        User user = new User();
-        user.setEmail(form.getEmail());
-        user.setPasswordHash(new BCryptPasswordEncoder().encode(form.getPassword()));
-        user.setRole(form.getRole());
-        return user;
+    private SecureUser createUser(UserCreateForm form) {
+        SecureUser secureUser = new SecureUser();
+        secureUser.setEmail(form.getEmail());
+        secureUser.setPasswordHash(new BCryptPasswordEncoder().encode(form.getPassword()));
+        secureUser.setRole(form.getSecureRole());
+        return secureUser;
     }
 
     // Roles, used in role dropdown on form
     @ModelAttribute("userRoles")
-    public List<Role> populateUserRoles(Model model) {
+    public List<SecureRole> populateUserRoles(Model model) {
         return roleRepository.findAll();
     }
 
