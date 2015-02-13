@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>GWAS Curation Demo</title>
+    <title>GWAS Curation Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
@@ -16,10 +16,7 @@
 
 </head>
 <body>
-<!--TODO
-- REIMPLEMENTED LOGIN
-- COUNT
--->
+
 
 <nav role="navigation" class="navbar navbar-default">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -41,13 +38,13 @@
             <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
             <!--<li><a href="#">Count Data</a></li>-->
         </ul>
-        <!--    <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <form th:action="@{/logout}" method="post">
-                        <input type="submit" value="Sign Out"/>
-                    </form>
-                </li>
-            </ul>-->
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" value="Sign Out"/>
+                </form>
+            </li>
+        </ul>
     </div>
 </nav>
 

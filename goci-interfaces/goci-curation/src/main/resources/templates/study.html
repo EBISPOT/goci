@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>GWAS Curation Demo</title>
+    <title>GWAS Curation Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -24,9 +24,6 @@
 </head>
 <body>
 
-<!--TODO
-- REIMPLEMENTED LOGIN
-- COUNT -->
 
 <nav role="navigation" class="navbar navbar-default">
     <div class="navbar-header">
@@ -46,13 +43,13 @@
             <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
             <li><a th:href="@{/reports}">Reports</a></li>
         </ul>
-        <!-- <ul class="nav navbar-nav navbar-right">
-             <li>
-                 <form th:action="@{/logout}" method="post">
-                     <input type="submit" value="Sign Out"/>
-                 </form>
-             </li>
-         </ul>-->
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" value="Sign Out"/>
+                </form>
+            </li>
+        </ul>
     </div>
 </nav>
 

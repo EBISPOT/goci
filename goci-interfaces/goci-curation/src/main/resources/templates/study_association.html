@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>GWAS Curation Demo</title>
+    <title>GWAS Curation Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -27,10 +27,6 @@
 </head>
 <body>
 
-<!--TODO
-- REIMPLEMENTED LOGIN
-- COUNT -->
-
 <nav role="navigation" class="navbar navbar-default">
     <div class="navbar-header">
         <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
@@ -49,13 +45,13 @@
             <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
             <li><a th:href="@{/reports}">Reports</a></li>
         </ul>
-        <!-- <ul class="nav navbar-nav navbar-right">
-             <li>
-                 <form th:action="@{/logout}" method="post">
-                     <input type="submit" value="Sign Out"/>
-                 </form>
-             </li>
-         </ul>-->
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" value="Sign Out"/>
+                </form>
+            </li>
+        </ul>
     </div>
 </nav>
 
@@ -114,7 +110,8 @@
                         </li>
 
                         <li>
-                            <a th:href="@{/studies/{studyId}/associations/approve_all(studyId=${study.Id})}">Approve All SNPs</a>
+                            <a th:href="@{/studies/{studyId}/associations/approve_all(studyId=${study.Id})}">Approve All
+                                SNPs</a>
                         </li>
                     </ul>
                 </div>
@@ -191,14 +188,17 @@
 
 <div class="container-fluid" th:object="${study}">
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-12">
             <!--Button-->
-            <input type="button" class="btn btn-primary" value="Add SNPs from spreadsheet" data-toggle="collapse"
-                   data-target="#uploadSNPsForn"/>
             <a th:href="@{/studies/{studyId}/associations/add(studyId=*{id})}" class="btn btn-primary">Add
-                standard SNP or multi-SNP haplotype</a>
+                standard SNP</a>
+            <a th:href="@{/studies/{studyId}/associations/add(studyId=*{id})}" class="btn btn-primary">Add multi-SNP
+                haplotype</a>
             <a th:href="@{/studies/{studyId}/associations/add_interaction(studyId=*{id})}"
                class="btn btn-primary">Add SNP:SNP interaction</a>
+            <input type="button" class="btn btn-primary pull-right" value="Add SNPs from spreadsheet"
+                   data-toggle="collapse"
+                   data-target="#uploadSNPsForn"/>
 
         </div>
     </div>

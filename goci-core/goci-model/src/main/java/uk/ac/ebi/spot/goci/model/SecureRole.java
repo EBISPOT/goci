@@ -12,7 +12,7 @@ import javax.persistence.Id;
  * Current roles are admin, curator, submitter
  */
 @Entity
-public class Role {
+public class SecureRole {
     @Id
     @GeneratedValue
     private Long id;
@@ -20,10 +20,10 @@ public class Role {
     private String role;
 
     // JPA no-args constructor
-    public Role() {
+    public SecureRole() {
     }
 
-    public Role(String role) {
+    public SecureRole(String role) {
         this.role = role;
     }
 

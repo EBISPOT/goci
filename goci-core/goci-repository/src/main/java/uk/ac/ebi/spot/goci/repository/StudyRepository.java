@@ -27,7 +27,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Collection<Study> findByDiseaseTraitId(Long diseaseTraitId);
 
-    Study findByPubmedId(String pubmedId);
+    Collection<Study> findByPubmedId(String pubmedId);
 
     // Custom queries
     @Query("select s from Study s where s.housekeeping.curationStatus.id = :status")

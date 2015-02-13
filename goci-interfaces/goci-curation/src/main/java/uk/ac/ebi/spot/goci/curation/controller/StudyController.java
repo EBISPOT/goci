@@ -138,8 +138,8 @@ public class StudyController {
         String pubmedId = pubmedIdForImport.getPubmedId().trim();
 
         // Check if there is an existing study with the same pubmed id
-        Study existingStudy = studyRepository.findByPubmedId(pubmedId);
-        if (existingStudy != null) {
+        Collection<Study> existingStudies = studyRepository.findByPubmedId(pubmedId);
+        if (existingStudies != null) {
             throw new PubmedImportException();
         }
 

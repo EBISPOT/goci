@@ -9,27 +9,29 @@ import javax.persistence.*;
  * Model object representing a user
  */
 @Entity
-public class User {
+public class SecureUser {
 
     @Id
     @GeneratedValue
     private Long id;
 
+    // Email must be unique
+    @Column(unique=true)
     private String email;
 
     private String passwordHash;
 
     @OneToOne
-    private Role role;
+    private SecureRole role;
 
     // JPA no-args constructor
-    public User() {
+    public SecureUser() {
     }
 
-    public User(String email, String passwordHash, Role role) {
+    public SecureUser(String email, String passwordHash, SecureRole secureRole) {
         this.email = email;
         this.passwordHash = passwordHash;
-        this.role = role;
+        this.role = secureRole;
     }
 
     public Long getId() {
@@ -56,17 +58,17 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
-    public Role getRole() {
+    public SecureRole getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(SecureRole role) {
         this.role = role;
     }
 
     @Override
     public String toString() {
-        return "User{" +
+        return "SecureUser{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", passwordHash='" + passwordHash + '\'' +
