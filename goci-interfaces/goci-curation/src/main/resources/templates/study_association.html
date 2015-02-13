@@ -49,13 +49,13 @@
             <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
             <li><a th:href="@{/reports}">Reports</a></li>
         </ul>
-        <!-- <ul class="nav navbar-nav navbar-right">
-             <li>
-                 <form th:action="@{/logout}" method="post">
-                     <input type="submit" value="Sign Out"/>
-                 </form>
-             </li>
-         </ul>-->
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" value="Sign Out"/>
+                </form>
+            </li>
+        </ul>
     </div>
 </nav>
 
@@ -114,7 +114,8 @@
                         </li>
 
                         <li>
-                            <a th:href="@{/studies/{studyId}/associations/approve_all(studyId=${study.Id})}">Approve All SNPs</a>
+                            <a th:href="@{/studies/{studyId}/associations/approve_all(studyId=${study.Id})}">Approve All
+                                SNPs</a>
                         </li>
                     </ul>
                 </div>
@@ -195,10 +196,12 @@
             <!--Button-->
             <a th:href="@{/studies/{studyId}/associations/add(studyId=*{id})}" class="btn btn-primary">Add
                 standard SNP</a>
-            <a th:href="@{/studies/{studyId}/associations/add(studyId=*{id})}" class="btn btn-primary">Add multi-SNP haplotype</a>
+            <a th:href="@{/studies/{studyId}/associations/add(studyId=*{id})}" class="btn btn-primary">Add multi-SNP
+                haplotype</a>
             <a th:href="@{/studies/{studyId}/associations/add_interaction(studyId=*{id})}"
                class="btn btn-primary">Add SNP:SNP interaction</a>
-            <input type="button" class="btn btn-primary pull-right" value="Add SNPs from spreadsheet" data-toggle="collapse"
+            <input type="button" class="btn btn-primary pull-right" value="Add SNPs from spreadsheet"
+                   data-toggle="collapse"
                    data-target="#uploadSNPsForn"/>
 
         </div>

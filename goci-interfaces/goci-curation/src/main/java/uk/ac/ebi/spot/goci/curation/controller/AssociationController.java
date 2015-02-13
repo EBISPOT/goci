@@ -395,13 +395,6 @@ public class AssociationController {
         for (Locus locus : loci) {
             locusRepository.delete(locus);
         }
-
-        // Delete report if it has one
-        AssociationReport associationReport = associationReportRepository.findByAssociationId(associationId);
-        if (associationReport != null) {
-            associationReportRepository.delete(associationReport);
-        }
-
         // Delete association
         associationRepository.delete(associationToDelete);
 
