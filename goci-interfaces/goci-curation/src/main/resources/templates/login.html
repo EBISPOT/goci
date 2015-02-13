@@ -24,13 +24,13 @@
             </div>
 
             <form class="form" role="form" th:action="@{/login}" method="post">
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+               <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
                 <h2 class="form-signin-heading">Please sign in to GWAS curation tool</h2>
 
                 <div class="form-group">
                     <label for="useremail" class="control-label">User email</label>
-                    <input type="email" id="useremail" name="useremail" class="form-control" placeholder="User name"/>
+                    <input type="email" id="useremail" name="useremail" class="form-control" placeholder="User email"/>
                 </div>
                 <div class="form-group">
                     <label for="password" class="control-label">Password</label>
