@@ -29,7 +29,14 @@ public class GeneService {
 
     @Transactional(readOnly = true)
     public Collection<Gene> deepFindByStudyId(Long studyId) {
-        Collection<Gene> genes = geneRepository.findByLociAssociationStudyId(studyId);
+        Collection<Gene> genes = geneRepository.findByAuthorReportedFromLociAssociationStudyId(studyId);
+        genes.forEach(this::loadAssociatedData);
+        return genes;
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<Gene> deepFindBySnpId(Long studyId) {
+        Collection<Gene> genes = geneRepository.findByAuthorReportedFromLociAssociationStudyId(studyId);
         genes.forEach(this::loadAssociatedData);
         return genes;
     }

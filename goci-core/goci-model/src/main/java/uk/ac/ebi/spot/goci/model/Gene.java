@@ -3,6 +3,8 @@ package uk.ac.ebi.spot.goci.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import java.util.Collection;
 
 /**
  * Created by emma on 01/12/14.
@@ -19,6 +21,9 @@ public class Gene {
     private Long id;
 
     private String geneName;
+
+    @ManyToMany(mappedBy = "authorReportedGenes")
+    private Collection<Locus> authorReportedFromLoci;
 
     // JPA no-args constructor
     public Gene() {
@@ -42,6 +47,14 @@ public class Gene {
 
     public void setGeneName(String geneName) {
         this.geneName = geneName;
+    }
+
+    public Collection<Locus> getAuthorReportedFromLoci() {
+        return authorReportedFromLoci;
+    }
+
+    public void setAuthorReportedFromLoci(Collection<Locus> authorReportedFromLoci) {
+        this.authorReportedFromLoci = authorReportedFromLoci;
     }
 
     @Override
