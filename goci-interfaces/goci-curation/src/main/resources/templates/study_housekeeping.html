@@ -186,6 +186,14 @@
                     <input id="checkedNCBIError" type="checkbox" th:field="*{checkedNCBIError}"/>
                 </div>
 
+<!--
+                <div class="form-group">
+                    <label for="snpsRechecked" th:for="${#ids.next('snpsRechecked')}"
+                           class="control-label col-md-2">SNPs rechecked?:</label>
+                    <input id="snpsRechecked" type="checkbox" th:field="*{snpsRechecked}"/>
+                </div>
+-->
+
 
                 <!--Dropdowns-->
 
@@ -217,7 +225,6 @@
                     </div>
                 </div>
 
-
                 <!--Hidden-->
                 <div class="form-group">
                     <label for="studyAddedDate" class="control-label col-md-2"></label>
@@ -229,7 +236,6 @@
                     <input id="lastUpdateDate" type="hidden" th:field="*{lastUpdateDate}"/>
                 </div>
                 <!--End hidden-->
-
 
                 <!--Button -->
                 <div class="form-group">
