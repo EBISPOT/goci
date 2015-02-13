@@ -1,5 +1,8 @@
 package uk.ac.ebi.spot.goci.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Javadocs go here!
  *
@@ -9,5 +12,13 @@ package uk.ac.ebi.spot.goci.model;
 public abstract class EmbeddableDocument<O> extends OntologyEnabledDocument<O> {
     public EmbeddableDocument(O object) {
         super(object);
+    }
+
+    public void embed(Document document) {
+        Map<String, Object> propertyValueMap = new HashMap<>();
+
+        // inspect all getter properties on the document being embedded
+
+
     }
 }
