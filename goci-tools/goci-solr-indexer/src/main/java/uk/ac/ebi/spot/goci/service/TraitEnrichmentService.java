@@ -1,10 +1,21 @@
 package uk.ac.ebi.spot.goci.service;
 
+import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.model.TraitDocument;
+
 /**
  * Javadocs go here!
  *
  * @author Tony Burdett
  * @date 13/02/15
  */
-public class TraitEnrichmentService {
+@Service
+public class TraitEnrichmentService implements DocumentEnrichmentService<TraitDocument> {
+    @Override public int getPriority() {
+        return 1;
+    }
+
+    @Override public void doEnrichment(TraitDocument document) {
+
+    }
 }
