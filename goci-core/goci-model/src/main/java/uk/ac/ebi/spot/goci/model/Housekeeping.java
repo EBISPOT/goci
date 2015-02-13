@@ -34,6 +34,8 @@ public class Housekeeping {
 
     private Boolean checkedNCBIError = false;
 
+    private Boolean snpsRechecked = false;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date publishDate;
 

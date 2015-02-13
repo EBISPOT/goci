@@ -12,13 +12,11 @@ import uk.ac.ebi.spot.goci.curation.model.DateRange;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by emma on 29/01/15.
@@ -33,48 +31,53 @@ public class ReportController {
     // Repositories allowing access to database objects associated with a study
     private StudyRepository studyRepository;
     private CuratorRepository curatorRepository;
-    private CurationStatusRepository curationStatusRepository;
 
     // Table row
     private CuratorTotalsTableRow curatorTotalsTableRow;
 
     @Autowired
-    public ReportController(StudyRepository studyRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, CuratorTotalsTableRow curatorTotalsTableRow) {
+    public ReportController(StudyRepository studyRepository, CuratorRepository curatorRepository, CuratorTotalsTableRow curatorTotalsTableRow) {
         this.studyRepository = studyRepository;
         this.curatorRepository = curatorRepository;
-        this.curationStatusRepository = curationStatusRepository;
         this.curatorTotalsTableRow = curatorTotalsTableRow;
     }
 
-
     // Return counts
-    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE)
+    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String getCountsTable(Model model) {
 
         Collection<CuratorTotalsTableRow> curatorTotalsTableRows = new ArrayList<>();
         Collection<Curator> allCurators = curatorRepository.findAll();
 
-        // This map will hold our date range and the associated curator and total
-        Map<DateRange, Map<Curator, AtomicInteger>> dateMap = createDateMap(allCurators);
+        // This list will hold our date ranges
+        List<DateRange> dateRanges = createDateList();
 
-        for (DateRange dateRange : dateMap.keySet()) {
-            for (Curator curator : dateMap.get(dateRange).keySet()) {
-                CuratorTotalsTableRow row = new CuratorTotalsTableRow();
-                row.setCurator(curator.getLastName());
-                row.setCuratorTotalEntries(dateMap.get(dateRange).get(curator).get());
+        for (Curator curator : allCurators) {
+            for (DateRange dateRange : dateRanges) {
 
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(dateRange.getDateTo());
-                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH));
+                // Query database for studies between certain dates curated by current curator
+                List<Study> studies = studyRepository.findByStudyDateAndCurator(curator.getId(), dateRange.getDateFrom(), dateRange.getDateTo());
 
-                String month = new SimpleDateFormat("MMM").format(cal.getTime());
-                row.setMonth(month);
+                if (studies.size() != 0) {
 
-                String year = new SimpleDateFormat("yyyy").format(cal.getTime());
-                row.setYear(year);
+                    CuratorTotalsTableRow row = new CuratorTotalsTableRow();
+                    row.setCurator(curator.getLastName());
+                    row.setCuratorTotalEntries(studies.size());
 
-                row.setPeriod(year + " " + month);
-                curatorTotalsTableRows.add(row);
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(dateRange.getDateTo());
+                    cal.set(Calendar.MONTH, cal.get(Calendar.MONTH));
+
+                    // Create year and month to add as period
+                    String month = new SimpleDateFormat("MMM").format(cal.getTime());
+                    row.setMonth(month);
+
+                    String year = new SimpleDateFormat("yyyy").format(cal.getTime());
+                    row.setYear(year);
+
+                    row.setPeriod(year + " " + month);
+                    curatorTotalsTableRows.add(row);
+                }
             }
         }
 
@@ -91,60 +94,62 @@ public class ReportController {
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, params = "filters=true", method = RequestMethod.POST)
     public String filteredSearch(@ModelAttribute StudySearchFilter studySearchFilter, Model model) {
 
-        Collection<CuratorTotalsTableRow> curatorTotalsTableRows = new ArrayList<>();
-        Collection<Curator> allCurators = curatorRepository.findAll();
-
-        // This map will hold our date range and the associated curator and total
-        Map<DateRange, Map<Curator, AtomicInteger>> dateMap = createDateMap(allCurators);
-
         // Get filter text
         String filterYear = studySearchFilter.getYearFilter();
         String filterMonth = studySearchFilter.getMonthFilter();
 
-        for (DateRange dateRange : dateMap.keySet()) {
-            for (Curator curator : dateMap.get(dateRange).keySet()) {
-                CuratorTotalsTableRow row = new CuratorTotalsTableRow();
-                row.setCurator(curator.getLastName());
-                row.setCuratorTotalEntries(dateMap.get(dateRange).get(curator).get());
+        Collection<CuratorTotalsTableRow> curatorTotalsTableRows = new ArrayList<>();
+        Collection<Curator> allCurators = curatorRepository.findAll();
 
-                // Handle filters
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(dateRange.getDateTo());
-                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH));
+        // This map will hold our date range and the associated curator and total
+        List<DateRange> dateRanges = createDateList();
 
-                String month = new SimpleDateFormat("MMM").format(cal.getTime());
-                row.setMonth(month);
+        for (Curator curator : allCurators) {
+            for (DateRange dateRange : dateRanges) {
 
-                String year = new SimpleDateFormat("yyyy").format(cal.getTime());
-                row.setYear(year);
+                List<Study> studies = studyRepository.findByStudyDateAndCurator(curator.getId(), dateRange.getDateFrom(), dateRange.getDateTo());
 
-                row.setPeriod(year + " " + month);
-                // If user entered a year
-                if (filterYear != null && !filterYear.isEmpty()) {
-                    // If we have year and month find by both
-                    if (filterMonth != null && !filterMonth.isEmpty()) {
-                        if (filterMonth.equalsIgnoreCase(month) && filterYear.equalsIgnoreCase(year)) {
-                            curatorTotalsTableRows.add(row);
+                if (studies.size() != 0) {
+
+                    CuratorTotalsTableRow row = new CuratorTotalsTableRow();
+                    row.setCurator(curator.getLastName());
+                    row.setCuratorTotalEntries(studies.size());
+
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(dateRange.getDateTo());
+                    cal.set(Calendar.MONTH, cal.get(Calendar.MONTH));
+
+                    // Create year and month to add as period
+                    String month = new SimpleDateFormat("MMM").format(cal.getTime());
+                    row.setMonth(month);
+
+                    String year = new SimpleDateFormat("yyyy").format(cal.getTime());
+                    row.setYear(year);
+
+                    row.setPeriod(year + " " + month);
+
+                    // Organise the results according to filter option
+                    if (filterYear != null && !filterYear.isEmpty()) {
+                        // If year and month find by both
+                        if (filterMonth != null && !filterMonth.isEmpty()) {
+                            if (filterMonth.equalsIgnoreCase(month) && filterYear.equalsIgnoreCase(year)) {
+                                curatorTotalsTableRows.add(row);
+                            }
+                        } else {
+                            // return just year
+                            if (filterYear.equals(year)) {
+                                curatorTotalsTableRows.add(row);
+                            }
                         }
-
-                    } else {
-                        // return just year
-                        if (filterYear.equals(year)) {
-                            curatorTotalsTableRows.add(row);
+                    }
+                    // If user entered a month
+                    else {
+                        if (filterMonth != null && !filterMonth.isEmpty()) {
+                            if (filterMonth.equalsIgnoreCase(month)) {
+                                curatorTotalsTableRows.add(row);
+                            }
                         }
-
                     }
-                }
-                // If user entered curator
-                else if (filterMonth != null && !filterMonth.isEmpty()) {
-                    if (filterMonth.equalsIgnoreCase(month)) {
-                        curatorTotalsTableRows.add(row);
-                    }
-                }
-
-                // If all else fails return all studies
-                else {
-                    curatorTotalsTableRows.add(row);
                 }
             }
         }
@@ -152,107 +157,92 @@ public class ReportController {
         model.addAttribute("curatorTotalsTableRows", curatorTotalsTableRows);
         return "reports";
     }
-
 /*General purpose methods*/
 
-    private Map<DateRange, Map<Curator, AtomicInteger>> createDateMap(Collection<Curator> allCurators) {
+    private List<DateRange> createDateList() {
 
-        Map<DateRange, Map<Curator, AtomicInteger>> dateMap = new HashMap<>();
+        List<DateRange> dateRanges = new ArrayList<>();
+        Collection<Study> allStudies = studyRepository.findAll();
 
-        // This loop will set up our index of dates and associated curators and their totals
-        for (Curator curator : allCurators) {
+        for (Study study : allStudies) {
+            // Get study date
+            Date studyDate = study.getStudyDate();
 
-            // Get all studies assigned to that curator
-            Collection<Study> allStudies = studyRepository.findByCuratorOrderByStudyDateDesc(curator.getId());
+            boolean found = false;
 
-            for (Study study : allStudies) {
+            for (DateRange dateRange : dateRanges) {
 
-                // Get study date
-                Date studyDate = study.getStudyDate();
-
-                boolean found = false;
-
-                // For each date range kep
-                for (DateRange dateRange : dateMap.keySet()) {
-
-                    if (dateRange.contains(studyDate)) {
-                        Map<Curator, AtomicInteger> curatorTotals = dateMap.get(dateRange);
-                        if (curatorTotals.containsKey(curator)) {
-                            curatorTotals.get(curator).getAndIncrement();
-
-                        } else {
-                            curatorTotals.put(curator, new AtomicInteger(1));
-                        }
-                        found = true;
-                        break;
-                    }
-                }
-
-                // If the date is not in our index
-                if (!found) {
-
-                    //Create a new date range
-                    Calendar calDateFrom = Calendar.getInstance();
-                    calDateFrom.setTime(studyDate);
-
-                    // If its January we need to set range from end of Dec of last year
-                    if (calDateFrom.get(Calendar.MONTH) == 1) {
-                        calDateFrom.set(Calendar.YEAR, calDateFrom.get(Calendar.YEAR) - 1);
-                        calDateFrom.set(Calendar.MONTH, Calendar.DECEMBER);
-                        calDateFrom.set(Calendar.DAY_OF_MONTH, calDateFrom.getActualMaximum(Calendar.DAY_OF_MONTH));
-                        calDateFrom.set(Calendar.HOUR_OF_DAY, 23);
-                        calDateFrom.set(Calendar.MINUTE, 59);
-                        calDateFrom.set(Calendar.SECOND, 59);
-                        //   calDateFrom.set(Calendar.MILLISECOND, 000);
-
-
-                    } else {
-                        calDateFrom.set(Calendar.MONTH, calDateFrom.get(Calendar.MONTH) - 1);
-                        calDateFrom.set(Calendar.DAY_OF_MONTH, calDateFrom.getActualMaximum(Calendar.DAY_OF_MONTH));
-                        calDateFrom.set(Calendar.HOUR_OF_DAY, 23);
-                        calDateFrom.set(Calendar.MINUTE, 59);
-                        calDateFrom.set(Calendar.SECOND, 59);
-                        //   calDateFrom.set(Calendar.MILLISECOND, 000);
-                    }
-
-
-                    Date dateFrom = calDateFrom.getTime();
-
-                    Calendar calDateTo = Calendar.getInstance();
-                    calDateTo.setTime(studyDate);
-                    calDateTo.set(Calendar.MONTH, calDateTo.get(Calendar.MONTH));
-                    calDateTo.set(Calendar.DAY_OF_MONTH, calDateTo.getActualMaximum(Calendar.DAY_OF_MONTH));
-                    calDateTo.set(Calendar.HOUR_OF_DAY, 23);
-                    calDateTo.set(Calendar.MINUTE, 59);
-                    calDateTo.set(Calendar.SECOND, 59);
-                    //       calDateTo.set(Calendar.MILLISECOND, 000);
-                    Date dateTo = calDateTo.getTime();
-
-                    DateRange dateRange = new DateRange(dateFrom, dateTo);
-
-                    // Won't have any totals for this date already so set up our index
-                    Map<Curator, AtomicInteger> curatorTotals = new HashMap<>();
-                    curatorTotals.put(curator, new AtomicInteger(1));
-                    dateMap.put(dateRange, curatorTotals);
+                if (dateRange.contains(studyDate)) {
+                    found = true;
+                    break;
                 }
             }
-        } // End of curator for loop
-        return dateMap;
+            // If the date is not in our index
+            if (!found) {
+                DateRange dateRange = createDateRange(studyDate);
+                dateRanges.add(dateRange);
+
+            }
+        }
+        return dateRanges;
     }
 
+    // Creates a range from a supplied date, range should be from the very end of the previous month
+    // to end of current month of study date
+    private DateRange createDateRange(Date studyDate) {
+        //Create a new date range
+        Calendar calDateFrom = Calendar.getInstance();
+        calDateFrom.setTime(studyDate);
 
-    // Curators
+        // If its January we need to set range from end of Dec of last year
+        if (calDateFrom.get(Calendar.MONTH) == 0) {
+            calDateFrom.set(Calendar.YEAR, calDateFrom.get(Calendar.YEAR) - 1);
+            calDateFrom.set(Calendar.MONTH, Calendar.DECEMBER);
+            calDateFrom.set(Calendar.DAY_OF_MONTH, calDateFrom.getActualMaximum(Calendar.DAY_OF_MONTH));
+            calDateFrom.set(Calendar.HOUR_OF_DAY, 23);
+            calDateFrom.set(Calendar.MINUTE, 59);
+            calDateFrom.set(Calendar.SECOND, 59);
+
+
+        } else {
+            calDateFrom.set(Calendar.MONTH, calDateFrom.get(Calendar.MONTH) - 1);
+            calDateFrom.set(Calendar.DAY_OF_MONTH, calDateFrom.getActualMaximum(Calendar.DAY_OF_MONTH));
+            calDateFrom.set(Calendar.HOUR_OF_DAY, 23);
+            calDateFrom.set(Calendar.MINUTE, 59);
+            calDateFrom.set(Calendar.SECOND, 59);
+
+        }
+
+        Date dateFrom = calDateFrom.getTime();
+
+        Calendar calDateTo = Calendar.getInstance();
+        calDateTo.setTime(studyDate);
+        calDateTo.set(Calendar.MONTH, calDateTo.get(Calendar.MONTH));
+        calDateTo.set(Calendar.DAY_OF_MONTH, calDateTo.getActualMaximum(Calendar.DAY_OF_MONTH));
+        calDateTo.set(Calendar.HOUR_OF_DAY, 23);
+        calDateTo.set(Calendar.MINUTE, 59);
+        calDateTo.set(Calendar.SECOND, 59);
+        Date dateTo = calDateTo.getTime();
+
+        DateRange dateRange = new DateRange(dateFrom, dateTo);
+
+        return dateRange;
+
+    }
+
+    // Months used in dropdown
     @ModelAttribute("months")
     public String[] populateMonths(Model model) {
         String[] shortMonths = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
         return shortMonths;
     }
 
-    // Curation statuses
+    // Years used in dropdown
     @ModelAttribute("years")
     public List<String> populateYears(Model model) {
         List<String> years = new ArrayList<>();
         int year = Calendar.getInstance().get(Calendar.YEAR);
+        // Only have studies with dates up as far as 2005
         int endYear = 2005;
         while (year >= endYear) {
             String stringYear = String.valueOf(year);

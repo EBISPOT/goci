@@ -34,8 +34,11 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.5.0/bootstrap-table.min.js"></script>
 
     <!--http://datatables.net/-->
-    <link rel="stylesheet" href="//cdn.datatables.net/1.10.4/css/jquery.dataTables.css"/>
-    <script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css"/>
+    <script src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/plug-ins/f2c75b7247b/sorting/datetime-moment.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+
 
 </head>
 <body>
@@ -125,16 +128,7 @@
                 <tr>
                     <th>Period</th>
                     <th>Curator</th>
-                    <!--          <th data-field="monthly total entries" data-sortable="true">Monthly Total
-                                  Entries
-                              </th>
-                              <th data-field="monthly total studies" data-sortable="true">Monthly Total Studies
-                              </th>
-
-                              <th data-field="curator total studies" data-sortable="true">Curator Total Studies</th>-->
                     <th>Curator Total Entries</th>
-                    <!--  <th data-field="query" data-sortable="true">Outstanding Queries</th>-->
-
 
                 </tr>
                 </thead>
@@ -169,14 +163,16 @@
 
 <script>
     $(document).ready(function () {
+
+        $.fn.dataTable.moment('YYYY MMMM', 'en');
         $('#mainTable').dataTable({
-            "order": [
-                [ 2, "desc" ]
-            ],
             "paging": false
         });
     });
+
+
 </script>
+
 
 </body>
 </html>

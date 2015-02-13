@@ -70,6 +70,9 @@ public class Association {
             inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
+    @OneToOne(mappedBy = "association", cascade = CascadeType.REMOVE)
+    private AssociationReport associationReport;
+
     // JPA no-args constructor
     public Association() {
     }
@@ -256,6 +259,14 @@ public class Association {
 
     public void setSnpChecked(Boolean snpChecked) {
         this.snpChecked = snpChecked;
+    }
+
+    public AssociationReport getAssociationReport() {
+        return associationReport;
+    }
+
+    public void setAssociationReport(AssociationReport associationReport) {
+        this.associationReport = associationReport;
     }
 
     @Override
