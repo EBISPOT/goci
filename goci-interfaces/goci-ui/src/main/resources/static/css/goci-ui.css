@@ -237,3 +237,12 @@ a > .toplevel-view {
     vertical-align: bottom;
     border-bottom: 2px solid #ddd;
 }
+
+.glyphicon-link {
+    color: #A6703F;
+}
+
+#trait-dropdown > ul > li {
+    padding-left: 3%;
+    padding-bottom: 1%;
+}
