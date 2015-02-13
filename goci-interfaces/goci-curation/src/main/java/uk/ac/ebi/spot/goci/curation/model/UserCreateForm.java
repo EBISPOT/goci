@@ -1,7 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import uk.ac.ebi.spot.goci.model.Role;
+import uk.ac.ebi.spot.goci.model.SecureRole;
 
 import javax.validation.constraints.NotNull;
 
@@ -24,16 +24,16 @@ public class UserCreateForm {
     private String passwordRepeated = "";
 
     @NotNull
-    private Role role;
+    private SecureRole secureRole;
 
     public UserCreateForm() {
     }
 
-    public UserCreateForm(String email, String password, String passwordRepeated, Role role) {
+    public UserCreateForm(String email, String password, String passwordRepeated, SecureRole secureRole) {
         this.email = email;
         this.password = password;
         this.passwordRepeated = passwordRepeated;
-        this.role = role;
+        this.secureRole = secureRole;
     }
 
     public String getEmail() {
@@ -60,11 +60,11 @@ public class UserCreateForm {
         this.passwordRepeated = passwordRepeated;
     }
 
-    public Role getRole() {
-        return role;
+    public SecureRole getSecureRole() {
+        return secureRole;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setSecureRole(SecureRole secureRole) {
+        this.secureRole = secureRole;
     }
 }
