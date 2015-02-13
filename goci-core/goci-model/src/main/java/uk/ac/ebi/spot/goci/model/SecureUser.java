@@ -9,7 +9,7 @@ import javax.persistence.*;
  * Model object representing a user
  */
 @Entity
-public class User {
+public class SecureUser {
 
     @Id
     @GeneratedValue
@@ -23,10 +23,10 @@ public class User {
     private Role role;
 
     // JPA no-args constructor
-    public User() {
+    public SecureUser() {
     }
 
-    public User(String email, String passwordHash, Role role) {
+    public SecureUser(String email, String passwordHash, Role role) {
         this.email = email;
         this.passwordHash = passwordHash;
         this.role = role;
