@@ -12,6 +12,20 @@ $(document).ready(function () {
     $('#clear-filter').click(function () {
         clearFilters();
     });
+
+    $('#date-min').datepicker({
+        format: "yyyy-mm",
+        endDate: "today",
+        startView: 1,
+        minViewMode: 1
+    });
+
+    $('#date-max').datepicker({
+        format: "yyyy-mm",
+        endDate: "today",
+        startView: 1,
+        minViewMode: 1
+    });
 });
 
 function doFiltering() {
