@@ -6,11 +6,12 @@ import uk.ac.ebi.spot.goci.model.SecureUser;
 
 /**
  * Created by emma on 09/02/15.
- * @author emma
  *
- * Repository accessing User entity object
+ * @author emma
+ *         <p/>
+ *         Repository accessing User entity object
  */
 @RepositoryRestResource
-public interface SecureUserRepository extends JpaRepository<SecureUser,Long> {
+public interface SecureUserRepository extends JpaRepository<SecureUser, Long> {
     SecureUser findByEmail(String email);
 }
