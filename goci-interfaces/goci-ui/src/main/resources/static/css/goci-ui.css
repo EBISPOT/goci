@@ -48,9 +48,24 @@
     margin-right: 0;
 }
 
+.pval-label {
+    font-weight: bold;
+    display: inline-block;
+    width: 7%;
+    margin-left: 0.5em;
+    margin-right: 0;
+}
+
 .filter-value {
     display: inline-block;
     width: 30%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.p-value {
+    display: inline-block;
+    width: 20%;
     margin-left: 0;
     margin-right: 0;
 }

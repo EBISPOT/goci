@@ -12,6 +12,20 @@ $(document).ready(function () {
     $('#clear-filter').click(function () {
         clearFilters();
     });
+
+    $('#date-min').datepicker({
+        format: "yyyy-mm",
+        endDate: "today",
+        startView: 1,
+        minViewMode: 1
+    });
+
+    $('#date-max').datepicker({
+        format: "yyyy-mm",
+        endDate: "today",
+        startView: 1,
+        minViewMode: 1
+    });
 });
 
 function doFiltering() {
@@ -20,22 +34,45 @@ function doFiltering() {
     var betaRange = '';
     var dateRange = '';
 
-    var pvalMin = $('#pval-min').val();
-    var pvalMax = $('#pval-max').val();
-    if (pvalMin || pvalMax) {
-        pvalRange = "[";
-        if (pvalMin) {
-            pvalRange = pvalRange.concat(pvalMin);
+    //var pvalMin = $('#pval-min').val();
+    //var pvalMax = $('#pval-max').val();
+    //if (pvalMin || pvalMax) {
+    //    pvalRange = "[";
+    //    if (pvalMin) {
+    //        pvalRange = pvalRange.concat(pvalMin);
+    //    }
+    //    else {
+    //        pvalRange = pvalRange.concat("*");
+    //    }
+    //    pvalRange = pvalRange.concat("+TO+");
+    //    if (pvalMax) {
+    //        pvalRange = pvalRange.concat(pvalMax);
+    //    }
+    //    else {
+    //        pvalRange = pvalRange.concat("*");
+    //    }
+    //    pvalRange = pvalRange.concat("]");
+    //    console.log(pvalRange);
+    //}
+
+    var pvalMant = $('#pval-mant').val();
+    var pvalExp = $('#pval-exp').val();
+    if (pvalMant || pvalExp) {
+        pvalRange = "[*+TO+";
+        if (pvalMant) {
+            pvalRange = pvalRange.concat(pvalMant);
         }
         else {
-            pvalRange = pvalRange.concat("*");
+            //if no mantissa was entered, assume 1
+            pvalRange = pvalRange.concat("1");
         }
-        pvalRange = pvalRange.concat("+TO+");
-        if (pvalMax) {
-            pvalRange = pvalRange.concat(pvalMax);
+        pvalRange = pvalRange.concat("e");
+        if (pvalExp) {
+            pvalRange = pvalRange.concat(pvalExp);
         }
         else {
-            pvalRange = pvalRange.concat("*");
+            //if no exponent was entered, use the catalog cut-off
+            pvalRange = pvalRange.concat("-5");
         }
         pvalRange = pvalRange.concat("]");
         console.log(pvalRange);
@@ -82,20 +119,31 @@ function doFiltering() {
         betaRange = betaRange.concat("]");
         console.log(betaRange);
     }
-
     var dateMin = $('#date-min').val();
     var dateMax = $('#date-max').val();
     if (dateMin || dateMax) {
         dateRange = "[";
         if (dateMin) {
-            dateRange = dateRange.concat(dateMin).concat("T00:00:00Z");
+            dateRange = dateRange.concat(dateMin).concat("-01T00:00:00Z");
         }
         else {
             dateRange = dateRange.concat("*");
         }
         dateRange = dateRange.concat("+TO+");
         if (dateMax) {
-            dateRange = dateRange.concat(dateMax).concat("T00:00:00Z");
+            var year = dateMax.split("-")[0];
+            var month = parseInt(date.split("-")[1]);
+            var newdate = dateMax;
+            if(month === 12){
+                newdate = (parseInt(year)+1).toString().concat('-01');
+            }
+            else if (month > 9 && month < 12){
+                newdate = year.concat("-").concat(month+1);
+            }
+            else{
+                newdate = year.concat("-0").concat(month+1);
+            }
+            dateRange = dateRange.concat(newdate).concat("-01T00:00:00Z");
         }
         else {
             dateRange = dateRange.concat("*");

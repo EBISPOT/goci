@@ -119,7 +119,7 @@
 
 <div class="container-fluid tight-to-top">
     <ol class="breadcrumb background-color-complementary-accent">
-        <li><a href="home">GWAS</a></li>
+        <li><a href="home">Home</a></li>
         <li class="active">Search</li>
     </ol>
 
@@ -164,9 +164,9 @@
                                     <a href="#diseasetrait" class="list-group-item" id="diseasetrait-facet"> <span class="badge">0
                                     </span>
                                         Catalog traits</a>
-                                    <a href="#singlenucleotidepolymorphism" class="list-group-item" id="singlenucleotidepolymorphism-facet"> <span class="badge">
-                                        0</span>
-                                        SNPs</a>
+                                    <!--<a href="#singlenucleotidepolymorphism" class="list-group-item" id="singlenucleotidepolymorphism-facet"> <span class="badge">-->
+                                        <!--0</span>-->
+                                        <!--SNPs</a>-->
                                 </div>
 
                             </div>
@@ -177,8 +177,12 @@
                                     <div class="list-group">
                                         <div class="list-group-item filter-element ">
                                             <span class="filter-label">p-value</span>
-                                            <input class="filter-value" type="text" id="pval-min" placeholder="from"/>
-                                            <input class="filter-value" type="text" id="pval-max" placeholder="to"/>
+                                            <!--<input class="filter-value" type="text" id="pval-min" placeholder="from"/>-->
+                                            <!--<input class="filter-value" type="text" id="pval-max" placeholder="to"/>-->
+                                            <span class="pval-label">&le;</span>
+                                            <input class="p-value" type="text" id="pval-mant" placeholder="5"/>
+                                            <span class="pval-label">x 10</span>
+                                            <input class="p-value" type="text" id="pval-exp" placeholder="-8"/>
                                         </div>
 
                                         <div class="list-group-item filter-element ">
@@ -197,24 +201,23 @@
                                             <span class="filter-label">Study date</span>
                                             <input class="filter-value"
                                                    data-provide="datepicker"
-                                                   data-date-format="yyyy-mm-dd"
+                                                   data-date-format="yyyy-mm"
                                                    id="date-min"
                                                    placeholder="from"/>
                                             <input class="filter-value"
                                                    data-provide="datepicker"
-                                                   data-date-format="yyyy-mm-dd"
+                                                   data-date-format="yyyy-mm"
                                                    id="date-max"
                                                    placeholder="to"/>
                                         </div>
 
                                         <div class="list-group-item filter-element ">
-                                            <span class="filter-label">Trait</span>
+                                            <span class="filter-label">Catalog trait</span>
                                             <div class="filter-values">
-                                                <div class="btn-group">
-                                                    <button type="button" class="btn btn-default">Child trait</button>
-                                                    <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false">
-                                                        <span class="caret"></span>
-                                                        <span class="sr-only">Toggle Dropdown</span>
+                                                <div class="btn-group" id="trait-dropdown">
+                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                            Reported trait
+                                                         <span class="caret"></span>
                                                     </button>
                                                     <ul class="dropdown-menu" role="menu">
                                                     </ul>
@@ -257,7 +260,7 @@
                                     <th style="width: 10%">Date</th>
                                     <th style="width: 15%">Publication</th>
                                     <th style="width: 30%">Title</th>
-                                    <th style="width: 20%">Disease/Trait</th>
+                                    <th style="width: 20%">Reported trait</th>
                                     <th style="width: 8%">Association count</th>
                                     <th style="width: 5%"></th>
                                 </tr>
@@ -280,14 +283,17 @@
                             <table id="association-table" class="table table-striped">
                                 <thead id="association-table-header">
                                 <tr>
-                                    <th style="width: 15%">Risk/effect SNP-allele</th>
-                                    <th style="width: 10%">p-value (qualifier)</th>
-                                    <th style="width: 10%">Odds ratio</th>
-                                    <th style="width: 10%">beta-coefficient &amp; unit description</th>
-                                    <th style="width: 10%">[95% CI]</th>
-                                    <th style="width: 10%">Chromosome location</th>
-                                    <th style="width: 12%">Reported gene(s)</th>
-                                    <th style="width: 12%">Mapped gene(s)</th>
+                                    <th style="width: 10%">Risk/effect SNP-allele</th>
+                                    <th style="width: 8%">Risk Allele Frequency in Controls</th>
+                                    <th style="width: 8%">p-value (qualifier)</th>
+                                    <th style="width: 6%">Odds ratio</th>
+                                    <th style="width: 8%">beta-coefficient &amp; unit description</th>
+                                    <th style="width: 8%">[95% CI]</th>
+                                    <th style="width: 10%">Base pair location</th>
+                                    <th style="width: 8%">Context</th>
+                                    <th style="width: 8%">Chromosome region</th>
+                                    <th style="width: 8%">Reported gene(s)</th>
+                                    <th style="width: 8%">Mapped gene(s)</th>
                                     <th style="width: 10%">Study</th>
                                 </tr>
                                 </thead>
@@ -304,13 +310,13 @@
                         </div>
 
                         <div id="diseasetrait-summaries" class="results-container">
-                            <h3><i>Traits</i></h3>
+                            <h3><i>Catalog traits</i></h3>
                             <table id="diseasetrait-table" class="table table-striped">
                                 <thead id="diseasetrait-table-header">
                                 <tr>
-                                    <th style="width: 35%">Trait name</th>
-                                    <th style="width: 35%">Mapped EFO traits</th>
-                                    <th style="width: 30%">EFO synonyms</th>
+                                    <th style="width: 35%">Reported trait</th>
+                                    <th style="width: 35%">Mapped ontology traits</th>
+                                    <th style="width: 30%">Ontology traits synonyms</th>
                                 </tr>
                                 </thead>
                                 <tbody id="diseasetrait-table-body">
@@ -324,31 +330,31 @@
                             <span class="ttbutton glyphicon glyphicon-chevron-down"></span>
                             </button>
                         </div>
-                        <div id="singlenucleotidepolymorphism-summaries" class="results-container">
-                            <h3><i>SNPs</i></h3>
+                        <!--<div id="singlenucleotidepolymorphism-summaries" class="results-container">-->
+                            <!--<h3><i>SNPs</i></h3>-->
 
-                            <table id="singlenucleotidepolymorphism-table" class="table table-striped">
-                                <thead id="singlenucleotidepolymorphism-table-header">
-                                <tr>
-                                    <th >rsID</th>
-                                    <th>Base pair location</th>
-                                    <th>Chromosome region</th>
-                                    <th>Context</th>
-                                    <th>Mapped genes</th>
-                                    <th>Mapped EFO traits</th>
-                                </tr>
-                                </thead>
-                                <tbody id="singlenucleotidepolymorphism-table-body">
-                                </tbody>
-                            </table>
-                            <button class="table-toggle btn btn-default btn-xs accordion-toggle"
-                                    data-toggle="collapse"
-                                    data-target="#singlenucleotidepolymorphism-summaries .hidden-resource"
-                                    aria-expanded="false"
-                                    style="display: none">
-                            <span class="ttbutton glyphicon glyphicon-chevron-down"></span>
-                            </button>
-                        </div>
+                            <!--<table id="singlenucleotidepolymorphism-table" class="table table-striped">-->
+                                <!--<thead id="singlenucleotidepolymorphism-table-header">-->
+                                <!--<tr>-->
+                                    <!--<th >rsID</th>-->
+                                    <!--<th>Base pair location</th>-->
+                                    <!--<th>Chromosome region</th>-->
+                                    <!--<th>Context</th>-->
+                                    <!--<th>Mapped genes</th>-->
+                                    <!--<th>Mapped EFO traits</th>-->
+                                <!--</tr>-->
+                                <!--</thead>-->
+                                <!--<tbody id="singlenucleotidepolymorphism-table-body">-->
+                                <!--</tbody>-->
+                            <!--</table>-->
+                            <!--<button class="table-toggle btn btn-default btn-xs accordion-toggle"-->
+                                    <!--data-toggle="collapse"-->
+                                    <!--data-target="#singlenucleotidepolymorphism-summaries .hidden-resource"-->
+                                    <!--aria-expanded="false"-->
+                                    <!--style="display: none">-->
+                            <!--<span class="ttbutton glyphicon glyphicon-chevron-down"></span>-->
+                            <!--</button>-->
+                        <!--</div>-->
                     </div>
                 </div>
             </div>
