@@ -1,16 +1,19 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import org.springframework.security.core.authority.AuthorityUtils;
-import uk.ac.ebi.spot.goci.model.Role;
-import uk.ac.ebi.spot.goci.model.User;
+import uk.ac.ebi.spot.goci.model.SecureRole;
+import uk.ac.ebi.spot.goci.model.SecureUser;
 
 /**
  * Created by emma on 10/02/15.
+ * @author emma
+ *
+ * Describes our current user, with enough information to authorise our user
  */
 public class CurrentUser extends org.springframework.security.core.userdetails.User {
 
     // Wrap user model object
-    private User user;
+    private SecureUser secureUser;
 
 
     /*
@@ -21,22 +24,22 @@ public class CurrentUser extends org.springframework.security.core.userdetails.U
      It will be available as the only element of the list when UserDetails.getAuthorities() is called.
      */
 
-    public CurrentUser(User user) {
-        super(user.getEmail(), user.getPasswordHash(), AuthorityUtils.createAuthorityList(user.getRole().toString()));
-        this.user = user;
+    public CurrentUser(SecureUser secureUser) {
+        super(secureUser.getEmail(), secureUser.getPasswordHash(), AuthorityUtils.createAuthorityList(secureUser.getRole().toString()));
+        this.secureUser = secureUser;
     }
 
-    public User getUser() {
-        return user;
+    public SecureUser getSecureUser() {
+        return secureUser;
     }
 
     public Long getId() {
-        return user.getId();
+        return secureUser.getId();
 
     }
 
-    public Role getRole() {
-        return user.getRole();
+    public SecureRole getRole() {
+        return secureUser.getRole();
     }
 
 }
