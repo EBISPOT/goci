@@ -16,16 +16,16 @@ $(document).ready(function () {
     });
 
     //toggle the +/- sign on the expand study button and expand the appropriate study
-    $('#study-table-body').on('click', 'button.row-toggle', function(){
+    $('#study-table-body').on('click', 'button.row-toggle', function () {
         $(this).find('span').toggleClass('glyphicon-plus glyphicon-minus');
         var target = $(this).attr('data-target');
         $(target).collapse('toggle');
 
-    }) ;
+    });
 
-    $('#expand-table').click(function(){
+    $('#expand-table').click(function () {
         //if the table is collapsed, expand it
-        if($(this).hasClass('table-collapsed')){
+        if ($(this).hasClass('table-collapsed')) {
             $('#study-table-body').find('.hidden-resource').collapse('show');
             $('#study-table-body').find('.hidden-study-row').collapse('show');
             $('#study-table-body').find('span.tgb').removeClass('glyphicon-plus').addClass('glyphicon-minus');
@@ -34,7 +34,7 @@ $(document).ready(function () {
             $(this).empty().text("Collapse all studies");
         }
         //else collapse it
-        else{
+        else {
             $('#study-table-body').find('.hidden-resource').collapse('hide');
             $('#study-table-body').find('.hidden-study-row').collapse('hide');
             $('#study-table-body').find('span.tgb').removeClass('glyphicon-minus').addClass('glyphicon-plus');
@@ -44,10 +44,15 @@ $(document).ready(function () {
         }
     });
 
-    $('.study-toggle').click(function(){
+    $('.study-toggle').click(function () {
         $('#study-table-body').find('.hidden-study-row.in').collapse('hide');
     });
 
+    // Tooltips for various filter and table headings
+    $('[data-toggle="tooltip"]').tooltip({
+        placement: 'top',
+        container: 'body'
+    });
 
     if (window.history && window.history.pushState) {
         $(window).on('popstate', function () {
@@ -254,10 +259,10 @@ function processStudy(study, table) {
     var r4 = $("<tr>");
     r4.append($("<th>").attr('style', 'width: 30%').html("CNV study?"));
 
-    if(study.cnv){
+    if (study.cnv) {
         r4.append($("<td>").html("yes"));
     }
-    else{
+    else {
         r4.append($("<td>").html("no"));
     }
     innerTable.append(r4);
@@ -465,7 +470,7 @@ function updateCountBadges(countArray) {
         facet.empty();
         facet.append(count);
 
-        if($('#' + resource + '-facet').hasClass("disabled")){
+        if ($('#' + resource + '-facet').hasClass("disabled")) {
             $('#' + resource + '-facet').removeClass("disabled");
             var summary = $('#' + resource + '-summaries');
             summary.removeClass("no-results");
