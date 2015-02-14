@@ -13,7 +13,7 @@ import java.util.Set;
  * @author Tony Burdett
  * @date 04/02/15
  */
-public abstract class OntologyEnabledDocument<O> extends Document<O> {
+public abstract class OntologyEnabledDocument<O> extends EmbeddableDocument<O> {
     @Field("traitUri") private Set<String> traitUris;
 
     @Field("shortForm") private Set<String> shortForms;

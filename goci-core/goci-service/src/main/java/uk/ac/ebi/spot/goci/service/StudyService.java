@@ -47,7 +47,7 @@ public class StudyService {
      * @return a list of Studies
      */
     @Transactional(readOnly = true)
-    public List<Study> deepFindAll() {
+    public List<Study> findAll() {
         List<Study> allStudies = studyRepository.findAll();
         // iterate over all studies and grab trait info
         getLog().info("Obtained " + allStudies.size() + " studies, starting deep load...");
@@ -56,7 +56,7 @@ public class StudyService {
     }
 
     @Transactional(readOnly = true)
-    public List<Study> deepFindAll(Sort sort) {
+    public List<Study> findAll(Sort sort) {
         List<Study> studies = studyRepository.findAll(sort);
         // iterate over all studies and grab region info
         getLog().info("Obtained " + studies.size() + " studies, starting deep load...");
@@ -65,7 +65,7 @@ public class StudyService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Study> deepFindAll(Pageable pageable) {
+    public Page<Study> findAll(Pageable pageable) {
         Page<Study> studies = studyRepository.findAll(pageable);
         // iterate over all studies and grab region info
         getLog().info("Obtained " + studies.getSize() + " studies, starting deep load...");
@@ -84,7 +84,7 @@ public class StudyService {
      * @return a list of Studies
      */
     @Transactional(readOnly = true)
-    public List<Study> deepFindPublished() {
+    public List<Study> findPublishedudies() {
         List<Study> studies = studyRepository.findByHousekeepingPublishDateIsNotNull();
         // iterate over all studies and grab trait info
         getLog().info("Obtained " + studies.size() + " studies, starting deep load...");
@@ -93,7 +93,7 @@ public class StudyService {
     }
 
     @Transactional(readOnly = true)
-    public List<Study> deepFindPublished(Sort sort) {
+    public List<Study> findPublishedStudies(Sort sort) {
         List<Study> studies = studyRepository.findByHousekeepingPublishDateIsNotNull(sort);
         // iterate over all studies and grab region info
         getLog().info("Obtained " + studies.size() + " studies, starting deep load...");
@@ -102,7 +102,7 @@ public class StudyService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Study> deepFindPublished(Pageable pageable) {
+    public Page<Study> findPublishedStudies(Pageable pageable) {
         Page<Study> studies = studyRepository.findByHousekeepingPublishDateIsNotNull(pageable);
         // iterate over all studies and grab region info
         getLog().info("Obtained " + studies.getSize() + " studies, starting deep load...");
@@ -111,19 +111,35 @@ public class StudyService {
     }
 
     @Transactional(readOnly = true)
-    public Study deepFetchOne(Study study) {
+    public Study fetchOne(Study study) {
         loadAssociatedData(study);
         return study;
     }
 
     @Transactional(readOnly = true)
-    public Collection<Study> deepFetchAll(Collection<Study> studies) {
+    public Collection<Study> fetchAll(Collection<Study> studies) {
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
 
     @Transactional(readOnly = true)
-    public Collection<Study> deepFindByDiseaseTraitId(Long diseaseTraitId) {
+    public Collection<Study> findBySnpId(Long snpId) {
+        Collection<Study> studies = studyRepository
+                .findByAssociationsLociRiskAllelesSnpIdAndHousekeepingPublishDateIsNotNull(snpId);
+        studies.forEach(this::loadAssociatedData);
+        return studies;
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<Study> findByAssociationId(Long associationId) {
+        Collection<Study> studies = studyRepository
+                .findByAssociationIdAndHousekeepingPublishDateIsNotNull(associationId);
+        studies.forEach(this::loadAssociatedData);
+        return studies;
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<Study> findByDiseaseTraitId(Long diseaseTraitId) {
         Collection<Study> studies = studyRepository.findByDiseaseTraitId(diseaseTraitId);
         studies.forEach(this::loadAssociatedData);
         return studies;

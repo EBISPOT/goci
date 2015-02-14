@@ -105,11 +105,11 @@ public class SolrIndexer {
     Integer mapStudies() {
         Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "studyDate"));
         Pageable pager = new PageRequest(0, pageSize, sort);
-        Page<Study> studyPage = studyService.deepFindPublished(pager);
+        Page<Study> studyPage = studyService.findPublishedStudies(pager);
         studyMapper.map(studyPage.getContent());
         while (studyPage.hasNext()) {
             pager = pager.next();
-            studyPage = studyService.deepFindPublished(pager);
+            studyPage = studyService.findPublishedStudies(pager);
             studyMapper.map(studyPage.getContent());
             if (sysOutLogging) {
                 System.out.print(".");
@@ -121,11 +121,11 @@ public class SolrIndexer {
     Integer mapSnps() {
         Sort sort = new Sort(new Sort.Order("rsId"));
         Pageable pager = new PageRequest(0, pageSize, sort);
-        Page<SingleNucleotidePolymorphism> snpPage = snpService.deepFindAll(pager);
+        Page<SingleNucleotidePolymorphism> snpPage = snpService.findAll(pager);
         snpMapper.map(snpPage.getContent());
         while (snpPage.hasNext()) {
             pager = pager.next();
-            snpPage = snpService.deepFindAll(pager);
+            snpPage = snpService.findAll(pager);
             snpMapper.map(snpPage.getContent());
             if (sysOutLogging) {
                 System.out.print(".");
@@ -153,11 +153,11 @@ public class SolrIndexer {
     Integer mapAssociations() {
         Sort sort = new Sort(new Sort.Order("id"));
         Pageable pager = new PageRequest(0, pageSize, sort);
-        Page<Association> associationPage = associationService.deepFindPublished(pager);
+        Page<Association> associationPage = associationService.findPublishedAssociations(pager);
         associationMapper.map(associationPage.getContent());
         while (associationPage.hasNext()) {
             pager = pager.next();
-            associationPage = associationService.deepFindPublished(pager);
+            associationPage = associationService.findPublishedAssociations(pager);
             associationMapper.map(associationPage.getContent());
             if (sysOutLogging) {
                 System.out.print(".");

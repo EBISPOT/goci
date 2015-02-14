@@ -4,8 +4,6 @@ import org.apache.solr.client.solrj.beans.Field;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.TimeZone;
 
 /**
@@ -14,7 +12,8 @@ import java.util.TimeZone;
  * @author Tony Burdett
  * @date 23/12/14
  */
-public class StudyDocument extends Document<Study> {
+public class StudyDocument extends EmbeddableDocument<Study> {
+    // basic study information
     @Field private String pubmedId;
     @Field private String title;
     @Field private String author;
@@ -28,10 +27,18 @@ public class StudyDocument extends Document<Study> {
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
 
-    @Field private String trait;
-    @Field("traitUri") private Collection<String> traitUris;
-
     @Field private int associationCount;
+
+    // embedded association info
+
+    // embedded trait info
+
+    // embedded snp info
+
+    // embedded gene info
+
+    // genomic info from snp, association
+
 
     public StudyDocument(Study study) {
         super(study);
@@ -46,10 +53,6 @@ public class StudyDocument extends Document<Study> {
         this.initialSampleDescription = study.getInitialSampleSize();
         this.replicateSampleDescription = study.getReplicateSampleSize();
 
-        if (study.getDiseaseTrait() != null) {
-            this.trait = study.getDiseaseTrait().getTrait();
-        }
-
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
         if (study.getStudyDate() != null) {
@@ -58,12 +61,6 @@ public class StudyDocument extends Document<Study> {
         if (study.getHousekeeping().getPublishDate() != null) {
             this.catalogAddedDate = df.format(study.getHousekeeping().getPublishDate());
         }
-
-
-        this.traitUris = new ArrayList<>();
-        study.getEfoTraits().forEach(efoTrait -> traitUris.add(efoTrait.getUri()));
-
-        this.associationCount = study.getAssociations().size();
     }
 
     public String getPubmedId() {
@@ -104,14 +101,6 @@ public class StudyDocument extends Document<Study> {
 
     public String getReplicateSampleDescription() {
         return replicateSampleDescription;
-    }
-
-    public String getTrait() {
-        return trait;
-    }
-
-    public Collection<String> getTraitUris() {
-        return traitUris;
     }
 
     public int getAssociationCount() {

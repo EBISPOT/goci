@@ -44,5 +44,16 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Page<Study> findByHousekeepingPublishDateIsNotNull(Pageable pageable);
 
+    List<Study> findByAssociationsLociRiskAllelesSnpIdAndHousekeepingPublishDateIsNotNull(Long snpId);
+
+    List<Study> findByAssociationsLociRiskAllelesSnpAndHousekeepingPublishDateIsNotNull(Sort sort, Long snpId);
+
+    Page<Study> findByAssociationsLociRiskAllelesSnpAndHousekeepingPublishDateIsNotNull(Pageable pageable, Long snpId);
+
+    List<Study> findByAssociationIdAndHousekeepingPublishDateIsNotNull(Long associationId);
+
+    List<Study> findByAssociationIdAndHousekeepingPublishDateIsNotNull(Sort sort, Long associationId);
+
+    Page<Study> findByAssociationIdAndHousekeepingPublishDateIsNotNull(Pageable pageable, Long associationId);
 }
 
