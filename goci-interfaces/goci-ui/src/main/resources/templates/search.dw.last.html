@@ -176,7 +176,7 @@
 
                                     <div class="list-group">
                                         <div class="list-group-item filter-element ">
-                                            <span class="filter-label" data-toggle="tooltip" data-original-title="Reported p-value for strongest SNP risk allele">p-value</span>
+                                            <span class="filter-label">p-value</span>
                                             <!--<input class="filter-value" type="text" id="pval-min" placeholder="from"/>-->
                                             <!--<input class="filter-value" type="text" id="pval-max" placeholder="to"/>-->
                                             <span class="pval-label">&le;</span>
@@ -186,19 +186,19 @@
                                         </div>
 
                                         <div class="list-group-item filter-element ">
-                                            <span class="filter-label" data-toggle="tooltip" data-original-title="Reported odds ratio associated with strongest SNP risk allele">Odds ratio</span>>Odds ratio</span>
+                                            <span class="filter-label">Odds ratio</span>
                                             <input class="filter-value" type="text" id="or-min" placeholder="from" />
                                             <input class="filter-value" type="text" id="or-max" placeholder="to" />
                                         </div>
 
                                         <div class="list-group-item filter-element ">
-                                            <span class="filter-label" data-toggle="tooltip" data-original-title="Reported beta coefficient associated with strongest SNP risk allele">beta coefficient</span>
+                                            <span class="filter-label">beta coefficient</span>
                                             <input class="filter-value" type="text" id="beta-min" placeholder="from" />
                                             <input class="filter-value" type="text" id="beta-max" placeholder="to" />
                                         </div>
 
                                         <div class="list-group-item filter-element ">
-                                            <span class="filter-label" data-toggle="tooltip" data-original-title="Publication date (online (epub) date if available)">Study date</span>
+                                            <span class="filter-label">Study date</span>
                                             <input class="filter-value"
                                                    data-provide="datepicker"
                                                    data-date-format="yyyy-mm"
@@ -212,8 +212,7 @@
                                         </div>
 
                                         <div class="list-group-item filter-element ">
-                                            <span class="filter-label" data-toggle="tooltip" data-original-title="Disease or trait examined in study">Catalog Trait
-                                            </span>
+                                            <span class="filter-label">Catalog trait</span>
                                             <div class="filter-values">
                                                 <div class="btn-group" id="trait-dropdown">
                                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -257,14 +256,15 @@
                             <table id="study-table" class="table table-striped-study">
                                 <thead id="study-table-header">
                                 <tr>
-                                    <th style="width: 12%" data-toggle="tooltip" data-original-title="Name of first author">Author</th>
-                                    <th style="width: 10%" data-toggle="tooltip" data-original-title="Publication date (online (epub) date if available)">Date</th>
-                                    <th style="width: 15%" data-toggle="tooltip" data-original-title="Abbreviated journal name">Publication</th>
-                                    <th style="width: 30%" data-toggle="tooltip" data-original-title="Title of paper">Title</th>
-                                    <th style="width: 20%" data-toggle="tooltip" data-original-title="Disease or trait examined in study">Reported Trait</th>
-                                    <th style="width: 8%" data-toggle="tooltip" data-original-title="Count of associations linked to this study">Association count</th>
+                                    <th style="width: 12%">Author</th>
+                                    <th style="width: 10%">Date</th>
+                                    <th style="width: 15%">Publication</th>
+                                    <th style="width: 30%">Title</th>
+                                    <th style="width: 20%">Reported trait</th>
+                                    <th style="width: 8%">Association count</th>
                                     <th style="width: 5%"></th>
                                 </tr>
+
                                 </thead>
                                 <tbody id="study-table-body">
                                 </tbody>
@@ -283,42 +283,18 @@
                             <table id="association-table" class="table table-striped">
                                 <thead id="association-table-header">
                                 <tr>
-                                    <th style="width: 10%" data-toggle="tooltip" data-original-title="SNP(s) most strongly associated with trait + risk allele (? for unknown risk allele). May also refer to a haplotype">
-                                        Risk/effect SNP-allele
-                                    </th>
-                                    <th style="width: 8%">
-                                        Risk Allele Frequency in Controls
-                                    </th>
-                                    <th style="width: 8%" data-toggle="tooltip" data-original-title="Reported p-value for strongest SNP risk allele">
-                                        p-value (qualifier)
-                                    </th>
-                                    <th style="width: 6%" data-toggle="tooltip" data-original-title="Reported odds ratio associated with strongest SNP risk allele">
-                                        Odds ratio
-                                    </th>
-                                    <th style="width: 8%" data-toggle="tooltip" data-original-title="Reported beta-coefficient associated with strongest SNP risk allele">
-                                        beta-coefficient &amp; unit description
-                                    </th>
-                                    <th style="width: 8%" data-toggle="tooltip" data-original-title="Reported 95% confidence interval associated with strongest SNP risk allele">
-                                        [95% CI]
-                                    </th>
-                                    <th style="width: 10%" data-toggle="tooltip" data-original-title="Chromosomal position associated with rs number">
-                                        Base pair location
-                                    </th>
-                                    <th style="width: 8%">
-                                        Context
-                                    </th>
-                                    <th style="width: 8%">
-                                        Chromosome region
-                                    </th>
-                                    <th style="width: 8%" data-toggle="tooltip" data-original-title="Gene(s) reported by author">
-                                        Reported gene(s)
-                                    </th>
-                                    <th style="width: 8%" data-toggle="tooltip" data-original-title="Gene(s) mapped to the strongest SNP (NCBI). If the SNP is located within a gene, that gene is listed. If the SNP is intergenic, the upstream and downstream genes are listed, separated by a hyphen">
-                                        Mapped gene(s)
-                                    </th>
-                                    <th style="width: 10%" data-toggle="tooltip" data-original-title="Link to study information">
-                                        Study
-                                    </th>
+                                    <th style="width: 10%">Risk/effect SNP-allele</th>
+                                    <th style="width: 8%">Risk Allele Frequency in Controls</th>
+                                    <th style="width: 8%">p-value (qualifier)</th>
+                                    <th style="width: 6%">Odds ratio</th>
+                                    <th style="width: 8%">beta-coefficient &amp; unit description</th>
+                                    <th style="width: 8%">[95% CI]</th>
+                                    <th style="width: 10%">Base pair location</th>
+                                    <th style="width: 8%">Context</th>
+                                    <th style="width: 8%">Chromosome region</th>
+                                    <th style="width: 8%">Reported gene(s)</th>
+                                    <th style="width: 8%">Mapped gene(s)</th>
+                                    <th style="width: 10%">Study</th>
                                 </tr>
                                 </thead>
                                 <tbody id="association-table-body">
@@ -338,9 +314,9 @@
                             <table id="diseasetrait-table" class="table table-striped">
                                 <thead id="diseasetrait-table-header">
                                 <tr>
-                                    <th style="width: 35%" data-toggle="tooltip" data-original-title="Disease or trait name">Reported trait</th>
-                                    <th style="width: 35%" data-toggle="tooltip" data-original-title="Mapped Experimental Factor Ontology disease or trait name">Mapped ontology traits</th>
-                                    <th style="width: 30%" data-toggle="tooltip" data-original-title="Related Experimental Factor Ontology term">Ontology traits synonyms</th>
+                                    <th style="width: 35%">Reported trait</th>
+                                    <th style="width: 35%">Mapped ontology traits</th>
+                                    <th style="width: 30%">Ontology traits synonyms</th>
                                 </tr>
                                 </thead>
                                 <tbody id="diseasetrait-table-body">
