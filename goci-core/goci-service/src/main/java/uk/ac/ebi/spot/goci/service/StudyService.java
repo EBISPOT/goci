@@ -125,7 +125,7 @@ public class StudyService {
     @Transactional(readOnly = true)
     public Collection<Study> findBySnpId(Long snpId) {
         Collection<Study> studies =
-                studyRepository.findByAssociationsLociRiskAllelesSnpIdAndHousekeepingPublishDateIsNotNull(snpId);
+                studyRepository.findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingPublishDateIsNotNull(snpId);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
@@ -133,7 +133,7 @@ public class StudyService {
     @Transactional(readOnly = true)
     public Collection<Study> findByAssociationId(Long associationId) {
         Collection<Study> studies =
-                studyRepository.findByAssociationIdAndHousekeepingPublishDateIsNotNull(associationId);
+                studyRepository.findByAssociationsIdAndHousekeepingPublishDateIsNotNull(associationId);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
