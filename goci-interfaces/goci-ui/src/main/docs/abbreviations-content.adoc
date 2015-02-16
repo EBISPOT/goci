@@ -2,6 +2,8 @@
 
 == Full Description of Abbreviations used in the Catalog
 
+<<Special Characters>>, <<A>>, <<B>>, <<C>>, <<D>>, <<E>>, <<F>>, <<G>>, <<H>>, <<I>>, <<K>>, <<L>>, <<M>>, <<N>> ,<<O>>, <<P>>, <<Q>>, <<R>>, <<S>>, <<T>>, <<U>>, <<V>>, <<W>>, <<XYZ>>
+
 === Special Characters
 
 ?: A risk allele not reported
