@@ -282,13 +282,50 @@ function processAssociation(association, table) {
     }
 
     if (association.rsId != null) {
-        if (association.rsId.length == 1 && (association.rsId[0].indexOf('x') == -1)) {
+        if ((association.rsId[0].indexOf(',') == -1) && (association.rsId[0].indexOf('x') == -1)) {
             var rsidsearch = "<span><a href='/search?query=".concat(association.rsId[0]).concat("'>").concat(association.strongestAllele).concat("</a></span>");
-            var dbsnp = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(association.rsId[0].substring(2)).concat("'  target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
+            var dbsnp = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(association.rsId[0]).concat("'  target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
             row.append($("<td>").html(rsidsearch.concat('&nbsp;&nbsp;').concat(dbsnp)));
         }
         else {
-            row.append($("<td>").html(association.strongestAllele));
+            var content = '';
+            var rsIds = '';
+            var alleles = '';
+            var type = '';
+            if(association.rsId[0].indexOf(',') != -1) {
+                rsIds = association.rsId[0].split(',');
+                alleles = association.strongestAllele.split(',');
+                type = ',';
+            }
+            else if(association.rsId[0].indexOf('x') != -1){
+                rsIds = association.rsId[0].split('x');
+                alleles = association.strongestAllele.split('x');
+                type = 'x';
+            }
+
+            for(var i=0; i<alleles.length; i++){
+                console.log(alleles[i].trim()) ;
+                for (var j=0; j<rsIds.length; j++){
+                    if(alleles[i].trim().indexOf(rsIds[j].trim()) != -1){
+                        var rsidsearch = "<span><a href='/search?query=".concat(rsIds[j].trim()).concat("'>").concat(alleles[i].trim()).concat("</a></span>");
+                        var dbsnp = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(rsIds[j].trim()).concat("'  target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
+                        if(content == ''){
+                            content = content.concat(rsidsearch.concat('&nbsp;&nbsp;').concat(dbsnp));
+                            console.log(content);
+                        }
+                        else{
+                            if(type == 'x'){
+                                content = content.concat(' x ').concat(rsidsearch.concat('&nbsp;&nbsp;').concat(dbsnp));
+                            }
+                            else{
+                                content = content.concat(', <br>').concat(rsidsearch.concat('&nbsp;&nbsp;').concat(dbsnp));
+                            }
+                            console.log(content);
+                        }
+                    }
+                }
+            }
+            row.append($("<td>").html(content));
 
         }
     }
@@ -315,9 +352,20 @@ function processAssociation(association, table) {
         }
     }
     row.append($("<td>").html(association.orPerCopyRange));
-
-    var regionsearch = "<span><a href='/search?query=".concat(association.region).concat("'>").concat(association.region).concat("</a></span>");
-    row.append($("<td>").html(regionsearch));
+    if(association.region != null) {
+        if (association.region[0].indexOf('[') != -1) {
+            var region = association.region[0].split('[')[0];
+            var regionsearch = "<span><a href='/search?query=".concat(region).concat("'>").concat(association.region[0]).concat("</a></span>");
+            row.append($("<td>").html(regionsearch));
+        }
+        else {
+            var regionsearch = "<span><a href='/search?query=".concat(association.region).concat("'>").concat(association.region).concat("</a></span>");
+            row.append($("<td>").html(regionsearch));
+        }
+    }
+    else{
+        row.append($("<td>"));
+    }
 
     var location = "chr";
     if(association.chromosomeName != null){
@@ -340,14 +388,19 @@ function processAssociation(association, table) {
 
     var repgene = '';
     if (association.reportedGene != null) {
-        for (var j = 0; j < association.reportedGene.length; j++) {
-            var repgeneearch = "<span><a href='/search?query=".concat(association.reportedGene[j]).concat("'>").concat(association.reportedGene[j]).concat("</a></span>");
-            if (repgene == '') {
-                repgene = repgeneearch;
-            }
+        if(association.reportedGene[0] == "NR"){
+            repgene = association.reportedGene[0];
+        }
+        else{
+            for (var j = 0; j < association.reportedGene.length; j++) {
+                var repgeneearch = "<span><a href='/search?query=".concat(association.reportedGene[j]).concat("'>").concat(association.reportedGene[j]).concat("</a></span>");
+                if (repgene == '') {
+                    repgene = repgeneearch;
+                }
 
-            else {
-                repgene = repgene.concat(", ").concat(repgeneearch);
+                else {
+                    repgene = repgene.concat(", ").concat(repgeneearch);
+                }
             }
         }
     }
@@ -376,8 +429,12 @@ function processAssociation(association, table) {
     }
 
 //    TO DO: add study date to the link text
+ //   var studydate = association.publicationDate.substring(0, 4);
+ //   var author = association.author.concat(",&nbsp;").concat(studydate);
+    var author = association.author;
+
     var europepmc = "http://www.europepmc.org/abstract/MED/".concat(association.pubmedId);
-    var searchlink = "<span><a href='/search?query=".concat(association.author).concat("'>").concat(association.author).concat("</a></span>");
+    var searchlink = "<span><a href='/search?query=".concat(association.author).concat("'>").concat(author).concat("</a></span>");
     var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
     row.append($("<td>").html(searchlink.concat('&nbsp;&nbsp;').concat(epmclink)));
 
@@ -387,8 +444,7 @@ function processAssociation(association, table) {
 
 function processTrait(diseasetrait, table) {
     var row = $("<tr>");
-    if (table.find('tr').length >= 5) {
-        row.addClass('accordion-body');
+    if (table.find('tr').length >= 5) { row.addClass('accordion-body');
         row.addClass('collapse');
         row.addClass('hidden-resource');
     }
