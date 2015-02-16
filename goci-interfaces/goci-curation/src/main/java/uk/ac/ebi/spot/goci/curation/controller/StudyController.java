@@ -140,7 +140,7 @@ public class StudyController {
 
         // Check if there is an existing study with the same pubmed id
         Collection<Study> existingStudies = studyRepository.findByPubmedId(pubmedId);
-        if (existingStudies != null) {
+        if (existingStudies.size() > 0) {
             throw new PubmedImportException();
         }
 
