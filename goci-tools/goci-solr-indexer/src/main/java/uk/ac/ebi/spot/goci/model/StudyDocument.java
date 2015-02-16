@@ -4,6 +4,8 @@ import org.apache.solr.client.solrj.beans.Field;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Set;
 import java.util.TimeZone;
 
 /**
@@ -30,14 +32,24 @@ public class StudyDocument extends EmbeddableDocument<Study> {
     @Field private int associationCount;
 
     // embedded association info
+    @Field("riskFrequency") private Collection<String> riskFrequencies;
+    @Field("qualifier") private Collection<String> qualifiers;
+    @Field("pValue") private Collection<Float> pValues;
+    @Field("orPerCopyNum") private Collection<Float> orPerCopyNums;
+    @Field("orPerCopyUnitDescr") private Collection<String> orPerCopyUnitDescrs;
+    @Field("orPerCopyRange") private Collection<String> orPerCopyRanges;
+    @Field("orType") private Collection<String> orTypes;
+    @Field("rsId") private Collection<String> rsIds;
+    @Field("strongestAllele") private Collection<String> strongestAlleles;
+    @Field("context") private Collection<String> contexts;
+    @Field("region") private Collection<String> regions;
+    @Field("mappedGene") private Collection<String> mappedGenes;
+    @Field("reportedGene") private Collection<String> reportedGenes;
+    @Field("chromosomeName") private Collection<String> chromosomeNames;
+    @Field("chromosomePosition") private Collection<Integer> chromosomePositions;
+    @Field("last_modified") private Collection<String> lastModifiedDates;
 
     // embedded trait info
-
-    // embedded snp info
-
-    // embedded gene info
-
-    // genomic info from snp, association
 
 
     public StudyDocument(Study study) {
@@ -107,7 +119,133 @@ public class StudyDocument extends EmbeddableDocument<Study> {
         return associationCount;
     }
 
-    public void setAssociationCount(int associationCount) {
-        this.associationCount = associationCount;
+    public Collection<String> getRiskFrequencies() {
+        return riskFrequencies;
+    }
+
+    public void addRiskFrequency(String riskFrequency) {
+        this.riskFrequencies.add(riskFrequency);
+    }
+
+    public Collection<String> getQualifiers() {
+        return qualifiers;
+    }
+
+    public void addQualifier(String qualifier) {
+        this.qualifiers.add(qualifier);
+    }
+
+    public Collection<Float> getpValues() {
+        return pValues;
+    }
+
+    public void addPValue(Float pValue) {
+        this.pValues.add(pValue);
+    }
+
+    public Collection<Float> getOrPerCopyNums() {
+        return orPerCopyNums;
+    }
+
+    public void addOrPerCopyNum(Float orPerCopyNum) {
+        this.orPerCopyNums.add(orPerCopyNum);
+    }
+
+    public Collection<String> getOrPerCopyUnitDescrs() {
+        return orPerCopyUnitDescrs;
+    }
+
+    public void addOrPerCopyUnitDescr(String orPerCopyUnitDescr) {
+        this.orPerCopyUnitDescrs.add(orPerCopyUnitDescr);
+    }
+
+    public Collection<String> getOrPerCopyRanges() {
+        return orPerCopyRanges;
+    }
+
+    public void addOrPerCopyRanges(String orPerCopyRange) {
+        this.orPerCopyRanges.add(orPerCopyRange);
+    }
+
+    public Collection<String> getOrTypes() {
+        return orTypes;
+    }
+
+    public void addOrType(String orType) {
+        this.orTypes.add(orType);
+    }
+
+    public Collection<String> getRsIds() {
+        return rsIds;
+    }
+
+    public void addRsId(String rsId) {
+        this.rsIds.add(rsId);
+    }
+
+    public Collection<String> getStrongestAlleles() {
+        return strongestAlleles;
+    }
+
+    public void addStrongestAllele(String strongestAllele) {
+        this.strongestAlleles.add(strongestAllele);
+    }
+
+    public Collection<String> getContexts() {
+        return contexts;
+    }
+
+    public void addContext(String context) {
+        this.contexts.add(context);
+    }
+
+    public Collection<String> getRegions() {
+        return regions;
+    }
+
+    public void addRegion(String region) {
+        this.regions.add(region);
+    }
+
+
+    public Collection<String> getMappedGenes() {
+        return mappedGenes;
+    }
+
+    public void addMappedGenes(Collection<String> mappedGenes) {
+        this.mappedGenes.addAll(mappedGenes);
+    }
+
+    public Collection<String> getReportedGenes() {
+        return reportedGenes;
+    }
+
+    public void addReportedGenes(Collection<String> reportedGenes) {
+        this.reportedGenes.addAll(reportedGenes);
+    }
+
+
+    public Collection<String> getChromosomeNames() {
+        return chromosomeNames;
+    }
+
+    public void addChromosomeName(String chromosomeName) {
+        this.chromosomeNames.add(chromosomeName);
+    }
+
+    public Collection<Integer> getChromosomePositions() {
+        return chromosomePositions;
+    }
+
+    public void addChromosomePosition(Integer chromosomePosition) {
+        this.chromosomePositions.add(chromosomePosition);
+    }
+
+    public Collection<String> getLastModifiedDates() {
+        return lastModifiedDates;
+    }
+
+    public void addLastModifiedDate(String lastModifiedDate) {
+        this.lastModifiedDates.add(lastModifiedDate);
     }
 }

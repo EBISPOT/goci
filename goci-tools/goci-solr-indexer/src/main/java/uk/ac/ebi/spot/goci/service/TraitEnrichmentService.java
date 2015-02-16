@@ -7,7 +7,7 @@ import uk.ac.ebi.spot.goci.model.MappedGeneDocument;
 import uk.ac.ebi.spot.goci.model.ReportedGeneDocument;
 import uk.ac.ebi.spot.goci.model.SnpDocument;
 import uk.ac.ebi.spot.goci.model.StudyDocument;
-import uk.ac.ebi.spot.goci.model.TraitDocument;
+import uk.ac.ebi.spot.goci.model.DiseaseTraitDocument;
 
 /**
  * Javadocs go here!
@@ -16,7 +16,7 @@ import uk.ac.ebi.spot.goci.model.TraitDocument;
  * @date 13/02/15
  */
 @Service
-public class TraitEnrichmentService implements DocumentEnrichmentService<TraitDocument> {
+public class TraitEnrichmentService implements DocumentEnrichmentService<DiseaseTraitDocument> {
     private StudyService studyService;
     private AssociationService associationService;
     private SingleNucleotidePolymorphismService snpService;
@@ -37,7 +37,7 @@ public class TraitEnrichmentService implements DocumentEnrichmentService<TraitDo
         return 3;
     }
 
-    @Override public void doEnrichment(TraitDocument document) {
+    @Override public void doEnrichment(DiseaseTraitDocument document) {
         long id = Long.valueOf(document.getId().split(":")[1]);
 
         studyService.findByDiseaseTraitId(id).forEach(

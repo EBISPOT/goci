@@ -8,11 +8,11 @@ import org.apache.solr.client.solrj.beans.Field;
  * @author Tony Burdett
  * @date 23/12/14
  */
-public class TraitDocument extends EmbeddableDocument<DiseaseTrait> {
+public class DiseaseTraitDocument extends EmbeddableDocument<DiseaseTrait> {
     // basic DiseaseTrait information
     @Field private String traitName;
 
-    public TraitDocument(DiseaseTrait diseaseTrait) {
+    public DiseaseTraitDocument(DiseaseTrait diseaseTrait) {
         super(diseaseTrait);
         this.traitName = diseaseTrait.getTrait();
     }
