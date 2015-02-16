@@ -221,22 +221,21 @@
 
                                             <div class="filter-values">
                                                 <div class="btn-group" id="trait-dropdown">
-                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                                                            aria-expanded="false">
+                                                    <button type="button" class="btn btn-default dropdown-toggle multiSelect" aria-expanded="false">
                                                         Reported trait
                                                         <span class="caret"></span>
                                                     </button>
-                                                    <ul class="dropdown-menu" role="menu">
+                                                    <ul class="dropdown-menu scrollable-menu" role="menu">
                                                     </ul>
                                                 </div>
                                             </div>
 
                                         </div>
+                                    </div>
 
-                                        <div>
-                                            <button type="submit" class="btn btn-default">Apply filters</button>
-                                            <button type="button" class="btn btn-default pull-right" id="clear-filter">Clear all filters</button>
-                                        </div>
+                                    <div>
+                                        <button type="submit" class="btn btn-default">Apply filters</button>
+                                        <button type="button" class="btn btn-default pull-right" id="clear-filter">Clear all filters</button>
                                     </div>
                                 </div>
                              </form>
@@ -314,22 +313,24 @@
                                                data-original-title="Reported p-value for strongest SNP risk allele">  </span></th>
                                     <th style="width: 6%">Odds ratio&nbsp;<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
                                                                                 data-original-title="Reported odds ratio associated with strongest SNP risk allele"></span></th>
-                                    <th style="width: 8%">beta-coefficient &amp; unit description&nbsp;<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
+                                    <th style="width: 6%">beta-coefficient &amp; unit description&nbsp;<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
                                                                            data-original-title="Reported beta-coefficient associated with strongest SNP risk allele">
                                     </span></th>
-                                    <th style="width: 8%">[95% CI]&nbsp;<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
+                                    <th style="width: 6%">[95% CI]&nbsp;<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
                                                                                     data-original-title="Reported 95% confidence interval associated with strongest SNP risk allele"> </span></th>
-                                    <th style="width: 10%">Base pair location&nbsp;<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
+                                    <th style="width: 8%">Base pair location&nbsp;<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
                                                                                                data-original-title="Chromosomal base pair location"></span></th>
-                                    <th style="width: 8%"> Context&nbsp;<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
-                                                                                   data-original-title="Genomic context"></span></th>
                                     <th style="width: 8%">Chromosome region&nbsp;<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
                                                                                        data-original-title="Chromosomal region"> </span></th>
+                                    <th style="width: 8%"> Context&nbsp;<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
+                                                                                   data-original-title="Genomic context"></span></th>
                                     <th style="width: 8%">Reported gene(s)&nbsp;<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
                                                                                       data-original-title="Gene(s) reported by author"></span></th>
                                     <th style="width: 8%">Mapped gene(s)&nbsp;<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
                                                   data-original-title="Gene(s) mapped to the strongest SNP (NCBI). If the SNP is located within a gene, that gene is listed. If the SNP is intergenic, the upstream and downstream genes are listed, separated by a hyphen"> </span></th>
-                                    <th style="width: 10%">Study&nbsp;<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
+                                    <th style="width: 8%">Reported trait&nbsp;<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
+                                                                                     data-original-title="Disease or trait examined in study"></span></th>
+                                    <th style="width: 8%">Study&nbsp;<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
                                                                             data-original-title="Link to study information"></span></th>
                                 </tr>
                                 </thead>

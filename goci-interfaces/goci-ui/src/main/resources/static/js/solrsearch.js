@@ -227,14 +227,15 @@ function processStudy(study, table) {
         row.addClass('hidden-resource');
     }
     var europepmc = "http://www.europepmc.org/abstract/MED/".concat(study.pubmedId);
-    var searchlink = "<span><a href='/search?query=".concat(study.author).concat("'>").concat(study.author).concat("</a></span>");
+    var authorsearch = "<span><a href='/search?query=".concat(study.author).concat("'>").concat(study.author).concat("</a></span>");
     var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
 
-    row.append($("<td>").html(searchlink.concat('&nbsp;&nbsp;').concat(epmclink)));
+    row.append($("<td>").html(authorsearch.concat('&nbsp;&nbsp;').concat(epmclink)));
     row.append($("<td>").html(study.publicationDate.substring(0, 10)));
     row.append($("<td>").html(study.publication));
     row.append($("<td>").html(study.title));
-    row.append($("<td>").html(study.trait));
+    var traitsearch = "<span><a href='/search?query=".concat(study.trait).concat("'>").concat(study.trait).concat("</a></span>");
+    row.append($("<td>").html(traitsearch));
     row.append($("<td>").html(study.associationCount));
 
     var id = (study.id).replace(':', '-');
@@ -282,9 +283,9 @@ function processAssociation(association, table) {
 
     if (association.rsId != null) {
         if (association.rsId.length == 1 && (association.rsId[0].indexOf('x') == -1)) {
-            var searchlink = "<span><a href='/search?query=".concat(association.rsId[0]).concat("'>").concat(association.strongestAllele).concat("</a></span>");
+            var rsidsearch = "<span><a href='/search?query=".concat(association.rsId[0]).concat("'>").concat(association.strongestAllele).concat("</a></span>");
             var dbsnp = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(association.rsId[0].substring(2)).concat("'  target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
-            row.append($("<td>").html(searchlink.concat('&nbsp;&nbsp;').concat(dbsnp)));
+            row.append($("<td>").html(rsidsearch.concat('&nbsp;&nbsp;').concat(dbsnp)));
         }
         else {
             row.append($("<td>").html(association.strongestAllele));
@@ -314,7 +315,9 @@ function processAssociation(association, table) {
         }
     }
     row.append($("<td>").html(association.orPerCopyRange));
-    row.append($("<td>").html(association.region));
+
+    var regionsearch = "<span><a href='/search?query=".concat(association.region).concat("'>").concat(association.region).concat("</a></span>");
+    row.append($("<td>").html(regionsearch));
 
     var location = "chr";
     if(association.chromosomeName != null){
@@ -324,7 +327,8 @@ function processAssociation(association, table) {
         location = location.concat("?");
     }
     if(association.chromosomePosition){
-        location = location.concat(":").concat(association.chromosomePosition);
+        var locationsearch = "<span><a href='/search?query=".concat(association.chromosomePosition).concat("'>").concat(association.chromosomePosition).concat("</a></span>");
+        location = location.concat(":").concat(locationsearch);
     }
     else{
         location = location.concat(":").concat("?");
@@ -337,12 +341,13 @@ function processAssociation(association, table) {
     var repgene = '';
     if (association.reportedGene != null) {
         for (var j = 0; j < association.reportedGene.length; j++) {
+            var repgeneearch = "<span><a href='/search?query=".concat(association.reportedGene[j]).concat("'>").concat(association.reportedGene[j]).concat("</a></span>");
             if (repgene == '') {
-                repgene = association.reportedGene[j];
+                repgene = repgeneearch;
             }
 
             else {
-                repgene = repgene.concat(", ").concat(association.reportedGene[j]);
+                repgene = repgene.concat(", ").concat(repgeneearch);
             }
         }
     }
@@ -351,17 +356,26 @@ function processAssociation(association, table) {
     var mapgene = '';
     if (association.mappedGene != null) {
         for (var j = 0; j < association.mappedGene.length; j++) {
+            var mapgeneearch = "<span><a href='/search?query=".concat(association.mappedGene[j]).concat("'>").concat(association.mappedGene[j]).concat("</a></span>");
             if (mapgene == '') {
-                mapgene = association.mappedGene[j];
+                mapgene = mapgeneearch;
             }
 
             else {
-                mapgene = mapgene.concat(", ").concat(association.mappedGene[j]);
+                mapgene = mapgene.concat(", ").concat(mapgeneearch);
             }
         }
     }
     row.append($("<td>").html(mapgene));
-//    TO DO: make the author field into a link to the study page using the pmid
+
+    if(association.trait != null){var traitsearch = "<span><a href='/search?query=".concat(association.trait).concat("'>").concat(association.trait).concat("</a></span>");
+        row.append($("<td>").html(traitsearch));
+    }
+    else {
+        row.append($("<td>"));
+    }
+
+//    TO DO: add study date to the link text
     var europepmc = "http://www.europepmc.org/abstract/MED/".concat(association.pubmedId);
     var searchlink = "<span><a href='/search?query=".concat(association.author).concat("'>").concat(association.author).concat("</a></span>");
     var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
@@ -378,22 +392,23 @@ function processTrait(diseasetrait, table) {
         row.addClass('collapse');
         row.addClass('hidden-resource');
     }
-    row.append($("<td>").html(diseasetrait.trait));
+    var traitsearch = "<span><a href='/search?query=".concat(diseasetrait.trait).concat("'>").concat(diseasetrait.trait).concat("</a></span>");
+    row.append($("<td>").html(traitsearch));
 
-    $('#trait-dropdown ul').append($("<li>").html("<input type='checkbox' value='".concat(diseasetrait.trait).concat("'/>").concat(diseasetrait.trait).concat("</a>")));
+    $('#trait-dropdown ul').append($("<li>").html("<input type='checkbox' class='trait-check' value='".concat(diseasetrait.trait).concat("'/>&nbsp;").concat(diseasetrait.trait).concat("</a>")));
 
     var efo = '';
     if (diseasetrait.efoLink != null) {
         for (var j = 0; j < diseasetrait.efoLink.length; j++) {
             var data = diseasetrait.efoLink[j].split("|");
-            var searchlink = "<span><a href='/search?query=".concat(data[0]).concat("'>").concat(data[0]).concat("</a></span>");
+            var efosearch = "<span><a href='/search?query=".concat(data[0]).concat("'>").concat(data[0]).concat("</a></span>");
             var link = "<a href='".concat(data[2]).concat("' target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
 
             if (efo == '') {
-                efo = searchlink.concat('&nbsp;&nbsp;').concat(link);
+                efo = efosearch.concat('&nbsp;&nbsp;').concat(link);
             }
             else {
-                efo = efo.concat(", <br>").concat(searchlink.concat('&nbsp;&nbsp;').concat(link));
+                efo = efo.concat(", <br>").concat(efosearch.concat('&nbsp;&nbsp;').concat(link));
             }
         }
     }
@@ -405,15 +420,16 @@ function processTrait(diseasetrait, table) {
     var syns = '';
     if (diseasetrait.synonym != null) {
         for (var j = 0; j < diseasetrait.synonym.length; j++) {
+            var synonymsearch = "<span><a href='/search?query=".concat(diseasetrait.synonym[j]).concat("'>").concat(diseasetrait.synonym[j]).concat("</a></span>");
             if (syns == '') {
-                syns = diseasetrait.synonym[j];
+                syns = synonymsearch;
             }
             else if (j > 4) {
                 syns = syns.concat(", [...]");
                 break;
             }
             else {
-                syns = syns.concat(", ").concat(diseasetrait.synonym[j]);
+                syns = syns.concat(", ").concat(synonymsearch);
             }
         }
     }

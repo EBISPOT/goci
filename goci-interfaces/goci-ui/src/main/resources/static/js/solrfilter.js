@@ -26,6 +26,19 @@ $(document).ready(function () {
         startView: 1,
         minViewMode: 1
     });
+
+//if the dropdown button is clicked, toggle the open element on the div
+    $('.dropdown-toggle.multiSelect').on('click', function(event){
+        $(this).parent().toggleClass("open");
+    });
+
+//if there is a click anywhere in the page body and the trait selector is open but the click was in the dropdown, close the dropdown
+    $('body').on('click', function (e) {
+        if ($('#trait-dropdown').hasClass('open') && !$('#trait-dropdown').is(e.target) && !$('#trait-dropdown').children().is(e.target) && !$('#trait-dropdown').children().find('input').is(e.target)) {
+            $('#trait-dropdown').removeClass("open");
+        }
+    });
+
 });
 
 function doFiltering() {
@@ -33,6 +46,7 @@ function doFiltering() {
     var orRange = '';
     var betaRange = '';
     var dateRange = '';
+    var traits = [];
 
     //var pvalMin = $('#pval-min').val();
     //var pvalMax = $('#pval-max').val();
@@ -132,7 +146,7 @@ function doFiltering() {
         dateRange = dateRange.concat("+TO+");
         if (dateMax) {
             var year = dateMax.split("-")[0];
-            var month = parseInt(date.split("-")[1]);
+            var month = parseInt(dateMax.split("-")[1]);
             var newdate = dateMax;
             if(month === 12){
                 newdate = (parseInt(year)+1).toString().concat('-01');
@@ -151,9 +165,20 @@ function doFiltering() {
         dateRange = dateRange.concat("]");
         console.log(dateRange);
     }
-    console.log(dateRange);
 
-    solrfilter(pvalRange, orRange, betaRange, dateRange);
+    var traitInput = $('#trait-dropdown ul li input:checked');
+    for(var i=0; i<traitInput.length; i++){
+
+        var trait = traitInput[i].value;
+        trait = trait.replace(/\s/g, '+');
+        console.log(trait);
+        traits[i] = trait;
+
+    }
+    console.log(traits);
+
+
+    solrfilter(pvalRange, orRange, betaRange, dateRange, traits);
 }
 
 function clearFilters() {
@@ -172,9 +197,9 @@ function clearFilters() {
 }
 
 
-function solrfilter(pval, or, beta, date) {
+function solrfilter(pval, or, beta, date, traits) {
     var query = $('#query').text();
-    console.log("Solr research request received for " + query + " and filters " + pval + ", " + or + ", " + beta + " and " + date);
+    console.log("Solr research request received for " + query + " and filters " + pval + ", " + or + ", " + beta + ", " + date + " and " + traits);
     var searchTerm = 'text:"'.concat(query).concat('"');
 
     $.getJSON('api/search/filter', {
@@ -183,7 +208,8 @@ function solrfilter(pval, or, beta, date) {
         'pvalfilter': pval,
         'orfilter': or,
         'betafilter': beta,
-        'datefilter': date
+        'datefilter': date,
+        'traitfilter[]': traits
     })
         .done(function (data) {
             console.log(data);

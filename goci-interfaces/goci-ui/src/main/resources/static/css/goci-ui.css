@@ -246,3 +246,9 @@ a > .toplevel-view {
     padding-left: 3%;
     padding-bottom: 1%;
 }
+
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
