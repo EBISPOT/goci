@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.curation.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -461,13 +462,13 @@ public class StudyController {
     // Disease Traits
     @ModelAttribute("diseaseTraits")
     public List<DiseaseTrait> populateDiseaseTraits(Model model) {
-        return diseaseTraitRepository.findAll();
+        return diseaseTraitRepository.findAll(sortByTraitAsc());
     }
 
     // EFO traits
     @ModelAttribute("efoTraits")
     public List<EfoTrait> populateEFOTraits(Model model) {
-        return efoTraitRepository.findAll();
+        return efoTraitRepository.findAll(sortByTraitAsc());
     }
 
     // Curators
@@ -481,5 +482,11 @@ public class StudyController {
     public List<CurationStatus> populateCurationStatuses(Model model) {
         return curationStatusRepository.findAll();
     }
+
+    // Returns a Sort object which sorts disease traits in ascending order by trait
+    private Sort sortByTraitAsc() {
+        return new Sort(Sort.Direction.ASC, "trait");
+    }
+
 
 }

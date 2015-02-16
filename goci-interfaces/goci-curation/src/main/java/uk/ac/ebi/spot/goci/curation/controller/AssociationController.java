@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -723,7 +724,12 @@ public class AssociationController {
     // EFO traits
     @ModelAttribute("efoTraits")
     public List<EfoTrait> populateEfoTraits() {
-        return efoTraitRepository.findAll();
+        return efoTraitRepository.findAll(sortByTraitAsc());
+    }
+
+    // Returns a Sort object which sorts disease traits in ascending order by trait
+    private Sort sortByTraitAsc() {
+        return new Sort(Sort.Direction.ASC, "trait");
     }
 
 }
