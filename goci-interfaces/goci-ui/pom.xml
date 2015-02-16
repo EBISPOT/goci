@@ -17,21 +17,10 @@
 	</parent>
 
 	<dependencies>
-		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>ojdbc6</artifactId>
-			<version>11.2.0.3</version>
-		</dependency>
-
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
         </dependency>
-
-		<dependency>
-			<groupId>uk.ac.ebi.spot</groupId>
-			<artifactId>goci-repository</artifactId>
-		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -64,6 +53,27 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>output-html</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sourceDirectory>src/main/docs</sourceDirectory>
+                    <outputDirectory>${project.build.directory}/classes/static/docs/content/</outputDirectory>
+                    <backend>html</backend>
+                    <doctype>book</doctype>
+                    <headerFooter>false</headerFooter>
+                    <preserveDirectories>true</preserveDirectories>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>GWAS Curation Demo</title>
+    <title>GWAS Curation Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -27,10 +27,6 @@
 </head>
 <body>
 
-<!--TODO
-- REIMPLEMENTED LOGIN
-- COUNT -->
-
 <nav role="navigation" class="navbar navbar-default">
     <div class="navbar-header">
         <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
@@ -47,15 +43,15 @@
             <li><a th:href="@{/studies}">Home</a></li>
             <li><a th:href="@{/studies/new}">Add Study</a></li>
             <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
-            <!--<li><a href="#">Count Data</a></li>-->
+            <li><a th:href="@{/reports}">Reports</a></li>
         </ul>
-        <!-- <ul class="nav navbar-nav navbar-right">
-             <li>
-                 <form th:action="@{/logout}" method="post">
-                     <input type="submit" value="Sign Out"/>
-                 </form>
-             </li>
-         </ul>-->
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" value="Sign Out"/>
+                </form>
+            </li>
+        </ul>
     </div>
 </nav>
 
@@ -73,7 +69,8 @@
 <br/>
 
 <div class="container-fluid">
-    <table id="mainTable" class="table table-hover table-bordered">
+    <table id="mainTable" class="table table-hover table-bordered"
+           data-toggle="table">
         <caption>Existing SNP information</caption>
         <thead>
         <tr>
@@ -94,13 +91,30 @@
             <th>SNP Type</th>
             <th>Multi-SNP haplotype</th>
             <th>SNP:SNP interaction</th>
+            <th>SNP Checked?</th>
 
         </tr>
         </thead>
         <tbody>
         <tr th:each="snpAssociationForm: ${snpAssociationForms}">
             <td>
-                <a th:href="@{/associations/{associationId}(associationId=${snpAssociationForm.associationId})}">Edit</a>
+                <div class="btn-group">
+                    <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+                        Action<span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a th:href="@{/associations/{associationId}(associationId=${snpAssociationForm.associationId})}">Edit</a>
+                        </li>
+                        <li>
+                            <a th:href="@{/associations/{associationId}/delete(associationId=${snpAssociationForm.associationId})}">Delete</a>
+                        </li>
+
+                        <li>
+                            <a th:href="@{/studies/{studyId}/associations/approve_all(studyId=${study.Id})}">Approve All
+                                SNPs</a>
+                        </li>
+                    </ul>
+                </div>
             </td>
 
             <!--Region-->
@@ -132,9 +146,9 @@
             <td th:switch="${snpAssociationForm.orType}">
                 <p th:case="'null'">null</p>
 
-                <p th:case="'0'">No</p>
+                <p th:case="false">No</p>
 
-                <p th:case="'1'">Yes</p>
+                <p th:case="true">Yes</p>
             </td>
 
             <td th:text="${snpAssociationForm.orPerCopyRange} ?: 'null'"></td>
@@ -156,6 +170,14 @@
                 <p th:case="true">Yes</p>
             </td>
 
+            <td th:switch="${snpAssociationForm.snpChecked}">
+                <p th:case="'null'">null</p>
+
+                <p th:case="false">No</p>
+
+                <p th:case="true">Yes</p>
+            </td>
+
         </tr>
         </tbody>
     </table>
@@ -166,14 +188,17 @@
 
 <div class="container-fluid" th:object="${study}">
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-12">
             <!--Button-->
-            <input type="button" class="btn btn-primary" value="Add SNPs from spreadsheet" data-toggle="collapse"
-                   data-target="#uploadSNPsForn"/>
             <a th:href="@{/studies/{studyId}/associations/add(studyId=*{id})}" class="btn btn-primary">Add
-                standard SNP or multi-SNP haplotype</a>
-            <a th:href="@{/studies/{studyId}/associations/add(studyId=*{id})}"
+                standard SNP</a>
+            <a th:href="@{/studies/{studyId}/associations/add(studyId=*{id})}" class="btn btn-primary">Add multi-SNP
+                haplotype</a>
+            <a th:href="@{/studies/{studyId}/associations/add_interaction(studyId=*{id})}"
                class="btn btn-primary">Add SNP:SNP interaction</a>
+            <input type="button" class="btn btn-primary pull-right" value="Add SNPs from spreadsheet"
+                   data-toggle="collapse"
+                   data-target="#uploadSNPsForn"/>
 
         </div>
     </div>

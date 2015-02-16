@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>GWAS Curation Demo</title>
+    <title>GWAS Curation Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
@@ -27,19 +27,13 @@
 
     <!--Bootstrap table: http://bootstrap-table.wenzhixin.net.cn/-->
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.5.0/bootstrap-table.min.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.6.0/bootstrap-table.min.css"/>
 
     <!-- Latest compiled and minified JavaScript -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.5.0/bootstrap-table.min.js"></script>
-
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.6.0/bootstrap-table.min.js"></script>
 
 </head>
 <body>
-
-<!--TODO
-- REIMPLEMENTED LOGIN
-- COUNT
-- DELETE STUDY-->
 
 
 <nav role="navigation" class="navbar navbar-default">
@@ -58,16 +52,16 @@
             <li><a th:href="@{/studies}">Home</a></li>
             <li><a th:href="@{/studies/new}">Add Study</a></li>
             <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
-            <!--<li><a href="#">Count Data</a></li>-->
+            <li><a th:href="@{/reports}">Reports</a></li>
         </ul>
 
-        <!--<ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav navbar-right">
             <li>
                 <form th:action="@{/logout}" method="post">
                     <input type="submit" value="Sign Out"/>
                 </form>
             </li>
-        </ul>-->
+        </ul>
     </div>
 </nav>
 
@@ -122,39 +116,20 @@
 <div class="container-fluid">
     <div class="row">
 
-        <!--http://aqvatarius.com/themes/atlant_v1_3/html/table-export.html#-->
-<!--        <div class="btn-group pull-right">
-            <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown"> Export Data
-            </button>
-            <ul class="dropdown-menu">
-
-                <li><a href="#"
-                       onClick="$('#mainTable').tableExport({type:'csv',escape:'true', ignoreColumn:'[0]'});">
-                    CSV</a>
-                </li>
-                <li><a href="#"
-                       onClick="$('#mainTable').tableExport({type:'txt',escape:'true', ignoreColumn:'[0]'});">
-                    TXT</a>
-                </li>
-                <li><a href="#"
-                       onClick="$('#mainTable').tableExport({type:'excel',escape:'true', ignoreColumn:'[0]'});">
-                    XLS</a>
-                </li>
-            </ul>
-        </div>-->
-
 
         <div class="col-md-12">
             <div id="filter-bar"></div>
-            <table id="mainTable" class="table table-hover table-bordered" data-toggle="table"
+            <table id="mainTable" class="table table-hover table-bordered"
+                   data-toggle="table"
+                   data-show-pagination-switch="true"
                    data-show-columns="true"
                    data-search="true"
-                   data-show-export="true"
-                   data-sort-order="desc">
+                   data-sort-order="asc"
+                   data-pagination="true">
                 <caption id="total"></caption>
                 <thead>
                 <tr>
-                    <th data-field="edit" data-switchable="false"></th>
+                    <th data-field="action" data-switchable="false"></th>
                     <th data-field="author" data-sortable="true">Author</th>
                     <th data-field="title" data-sortable="true">Title</th>
                     <th data-field="studydate" data-sortable="true">Study Date</th>
@@ -164,22 +139,32 @@
                     <th data-field="curator" data-sortable="true">Curator</th>
                     <th data-field="curationstatus" data-sortable="true">Curator Status</th>
                     <th data-field="notes">Notes</th>
-                    <!--<th data-field="delete" data-switchable="false"></th>-->
 
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="study : ${studies}">
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+                                Action<span class="caret"></span></button>
 
-                    <td><a th:href="@{/studies/{studyId}(studyId=${study.id})}" class="btn btn-link">Edit</a></td>
+                            <ul class="dropdown-menu">
+                                <li><a th:href="@{/studies/{studyId}(studyId=${study.id})}">Edit</a></li>
+                                <li><a th:href="@{/studies/{studyId}/delete(studyId=${study.id})}">Delete</a></li>
+                                <li><a th:href="@{/studies/{studyId}/duplicate(studyId=${study.id})}">Duplicate</a></li>
+                            </ul>
+                        </div>
+                    </td>
 
                     <!-- Use an conditional here as a study can have a null attributes-->
                     <!-- Using thymeleaf elvis operator for string, date attributes-->
 
                     <td th:text="${study.author} ?: 'null' "></td>
                     <td th:text="${study.title} ?: 'null'"></td>
-                    <td th:text="${study.studyDate} ?: 'null'"></td>
-                    <td th:text="${study.pubmedId} ?: 'null'"></td>
+                    <td th:text="${#calendars.format(study.studyDate,'dd MMMM yyyy')} ?: 'null'"></td>
+                    <td><a th:href="@{http://www.ncbi.nlm.nih.gov/pubmed/{pubmedId}(pubmedId=${study.pubmedId})}"
+                           th:text="${study.pubmedId} ?: 'null'" target="_blank"></a></td>
                     <td th:text="${study.publication} ?: 'null'"></td>
 
                     <!--If study has associated disease trait return traits name-->
@@ -191,7 +176,7 @@
                     <td th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : 'null'"></td>
                     <td th:text="${study.housekeeping !=null} ? ${study.housekeeping.notes} : 'null'"></td>
 
-                    <!--<td><a th:href="@{/studies/{studyId}/delete(studyId=${study.id})}" class="btn btn-danger">Delete</a> </td>-->
+
                 </tr>
                 </tbody>
             </table>
@@ -225,7 +210,6 @@
     }
     document.getElementById("total").innerHTML = myFunction();
 </script>
-
 
 <!-- extensions -->
 <script src="/js/bootstrap-table-export.js"></script>

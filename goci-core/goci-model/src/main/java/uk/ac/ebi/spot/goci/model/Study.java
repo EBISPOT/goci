@@ -75,6 +75,9 @@ public class Study {
     @OneToOne
     private Housekeeping housekeeping;
 
+    @OneToOne(mappedBy = "study", cascade = CascadeType.REMOVE)
+    private StudyReport studyReport;
+
     // JPA no-args constructor
     public Study() {
     }
@@ -232,6 +235,14 @@ public class Study {
 
     public void setHousekeeping(Housekeeping housekeeping) {
         this.housekeeping = housekeeping;
+    }
+
+    public StudyReport getStudyReport() {
+        return studyReport;
+    }
+
+    public void setStudyReport(StudyReport studyReport) {
+        this.studyReport = studyReport;
     }
 
     @Override

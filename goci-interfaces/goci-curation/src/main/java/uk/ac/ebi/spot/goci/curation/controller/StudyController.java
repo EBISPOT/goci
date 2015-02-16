@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -7,15 +9,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
-import uk.ac.ebi.spot.goci.curation.service.PubmedIdForImport;
-import uk.ac.ebi.spot.goci.curation.service.StudySearchFilter;
+import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
+import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
+import uk.ac.ebi.spot.goci.curation.service.MailService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.PropertyFilePubMedLookupService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -37,19 +43,31 @@ public class StudyController {
     private EfoTraitRepository efoTraitRepository;
     private CuratorRepository curatorRepository;
     private CurationStatusRepository curationStatusRepository;
+    private AssociationRepository associationRepository;
+    private EthnicityRepository ethnicityRepository;
 
     // Pubmed ID lookup service
     private PropertyFilePubMedLookupService propertyFilePubMedLookupService;
+    private MailService mailService;
+
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
 
     @Autowired
-    public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, PropertyFilePubMedLookupService propertyFilePubMedLookupService) {
+    public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, AssociationRepository associationRepository, EthnicityRepository ethnicityRepository, PropertyFilePubMedLookupService propertyFilePubMedLookupService, MailService mailService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
         this.efoTraitRepository = efoTraitRepository;
         this.curatorRepository = curatorRepository;
         this.curationStatusRepository = curationStatusRepository;
+        this.associationRepository = associationRepository;
+        this.ethnicityRepository = ethnicityRepository;
         this.propertyFilePubMedLookupService = propertyFilePubMedLookupService;
+        this.mailService = mailService;
     }
 
     /* All studies and various filtered lists */
@@ -120,8 +138,8 @@ public class StudyController {
         String pubmedId = pubmedIdForImport.getPubmedId().trim();
 
         // Check if there is an existing study with the same pubmed id
-        Study existingStudy = studyRepository.findByPubmedId(pubmedId);
-        if (existingStudy != null) {
+        Collection<Study> existingStudies = studyRepository.findByPubmedId(pubmedId);
+        if (existingStudies != null) {
             throw new PubmedImportException();
         }
 
@@ -179,7 +197,7 @@ public class StudyController {
     // Edit an existing study
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateStudy(@ModelAttribute Study study, Model model, @PathVariable Long studyId) {
+    public String updateStudy(@ModelAttribute Study study, Model model, @PathVariable Long studyId, RedirectAttributes redirectAttributes) {
 
         // Use id in URL to get study and then its associated housekeeping
         Study existingStudy = studyRepository.findOne(studyId);
@@ -191,29 +209,93 @@ public class StudyController {
 
         // Saves the new information returned from form
         studyRepository.save(study);
+
+        // Add save message
+        String message = "Changes saved successfully";
+        redirectAttributes.addFlashAttribute("changesSaved", message);
+
         return "redirect:/studies/" + study.getId();
     }
 
 
-/*    // Delete an existing study
+    // Delete an existing study
     @RequestMapping(value = "/{studyId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewStudyToDelete(Model model, @PathVariable Long studyId) {
+
         Study studyToDelete = studyRepository.findOne(studyId);
-        model.addAttribute("studyToDelete", studyToDelete);
-        return "delete_study";
+
+        // Check if it has any associations
+        Collection<Association> associations = associationRepository.findByStudyId(studyId);
+
+        // If so warn the curator
+        if (!associations.isEmpty()) {
+            return "delete_study_with_associations_warning";
+
+        } else {
+            model.addAttribute("studyToDelete", studyToDelete);
+            return "delete_study";
+        }
+
     }
 
     @RequestMapping(value = "/{studyId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String deleteStudy(@PathVariable Long studyId) {
 
-        // Find our study based in the ID
+        // Find our study based on the ID
         Study studyToDelete = studyRepository.findOne(studyId);
 
-        // What do we need to delete ?
+        // Before we delete the study get its associated housekeeping and ethnicity
+        Long housekeepingId = studyToDelete.getHousekeeping().getId();
+        Housekeeping housekeepingAttachedToStudy = housekeepingRepository.findOne(housekeepingId);
+        Collection<Ethnicity> ethnicitiesAttachedToStudy = ethnicityRepository.findByStudyId(studyId);
 
-        //studyRepository.delete(studyToDelete);
-        return "redirect:/studies/";
-    }*/
+        // Delete ethnicity information linked to this study
+        for (Ethnicity ethnicity : ethnicitiesAttachedToStudy) {
+            ethnicityRepository.delete(ethnicity);
+        }
+
+        // Delete study
+        studyRepository.delete(studyToDelete);
+
+        // Delete housekeeping
+        housekeepingRepository.delete(housekeepingAttachedToStudy);
+
+        return "redirect:/studies";
+    }
+
+    // Duplicate a study
+    @RequestMapping(value = "/{studyId}/duplicate", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String duplicateStudy(@PathVariable Long studyId, RedirectAttributes redirectAttributes) {
+
+        // Find study user wants to duplicate, based on the ID
+        Study studyToDuplicate = studyRepository.findOne(studyId);
+
+        // New study will be created by copying existing study details
+        Study duplicateStudy = copyStudy(studyToDuplicate);
+
+        // Create housekeeping object and add duplicate message
+        Housekeeping studyHousekeeping = createHousekeeping();
+        studyHousekeeping.setNotes("Duplicate of study: " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId());
+        duplicateStudy.setHousekeeping(studyHousekeeping);
+
+        // Save newly duplicated study
+        studyRepository.save(duplicateStudy);
+
+        // Copy existing ethnicity
+        Collection<Ethnicity> studyToDuplicateEthnicities = ethnicityRepository.findByStudyId(studyId);
+        for (Ethnicity studyToDuplicateEthnicity : studyToDuplicateEthnicities) {
+            Ethnicity duplicateEthnicity = copyEthnicity(studyToDuplicateEthnicity);
+            duplicateEthnicity.setStudy(duplicateStudy);
+            ethnicityRepository.save(duplicateEthnicity);
+        }
+
+        // Add duplicate message
+        String message = "Study is a duplicate of " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId();
+        redirectAttributes.addFlashAttribute("duplicateMessage", message);
+
+        return "redirect:/studies/" + duplicateStudy.getId();
+    }
+
 
     /* Study housekeeping/curator information */
 
@@ -239,38 +321,138 @@ public class StudyController {
 
     // Update page with housekeeping/curator information linked to a study
     @RequestMapping(value = "/{studyId}/housekeeping", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping, @PathVariable Long studyId) {
+    public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping, @PathVariable Long studyId, RedirectAttributes redirectAttributes) {
+
+
+        // Establishlinked study
+        Study study = studyRepository.findOne(studyId);
 
         // Establish whether user has set status to "Publish study" and "Send to NCBI"
         // as corresponding dates will be set in housekeeping table
         CurationStatus currentStatus = housekeeping.getCurationStatus();
 
-        // TODO POSSIBLY CHANGE LOGIC SO THIS DATE IS SET BY NIGHTLY RELEASE PROCESS
-        // OTHERWISE ANY TIME USER SAVES FROM WHEN STATUS IS SET TO "publish study"
-        // THE DATE GETS UPDATED
+   /*      TODO POSSIBLY CHANGE LOGIC SO THIS DATE IS SET BY NIGHTLY RELEASE PROCESS
+        OTHERWISE ANY TIME USER SAVES FROM WHEN STATUS IS SET TO "publish study"
+        THE DATE GETS UPDATED*/
         if (currentStatus != null && currentStatus.getStatus().equals("Publish study")) {
             java.util.Date publishDate = new java.util.Date();
             housekeeping.setPublishDate(publishDate);
         }
 
+        //Set date and send email notification
         if (currentStatus != null && currentStatus.getStatus().equals("Send to NCBI")) {
             java.util.Date sendToNCBIDate = new java.util.Date();
             housekeeping.setSendToNCBIDate(sendToNCBIDate);
+            mailService.sendEmailNotification(study, currentStatus.getStatus());
+        }
+
+        // Send notification email to curators
+        if (currentStatus != null && currentStatus.getStatus().equals("Level 1 curation done")) {
+            mailService.sendEmailNotification(study, currentStatus.getStatus());
         }
 
         // Save housekeeping returned from form
         housekeepingRepository.save(housekeeping);
-
-        // Find study
-        Study study = studyRepository.findOne(studyId);
 
         // Set study housekeeping
         study.setHousekeeping(housekeeping);
 
         // Save our study
         studyRepository.save(study);
+
+        // Add save message
+        String message = "Changes saved successfully";
+        redirectAttributes.addFlashAttribute("changesSaved", message);
+
         return "redirect:/studies/" + study.getId() + "/housekeeping";
     }
+
+
+    /* General purpose methods */
+
+    private Housekeeping createHousekeeping() {
+        // Create housekeeping object and create the study added date
+        Housekeeping housekeeping = new Housekeeping();
+        java.util.Date studyAddedDate = new java.util.Date();
+        housekeeping.setStudyAddedDate(studyAddedDate);
+
+        // Set status
+        CurationStatus status = curationStatusRepository.findByStatus("Awaiting Curation");
+        housekeeping.setCurationStatus(status);
+
+        // Set curator
+        Curator curator = curatorRepository.findByLastName("Level 1 Curator");
+        housekeeping.setCurator(curator);
+
+        // Save housekeeping
+        housekeepingRepository.save(housekeeping);
+
+        // Save housekeeping
+        return housekeeping;
+    }
+
+    private Study copyStudy(Study studyToDuplicate) {
+
+        Study duplicateStudy = new Study();
+        duplicateStudy.setAuthor(studyToDuplicate.getAuthor());
+        duplicateStudy.setStudyDate(studyToDuplicate.getStudyDate());
+        duplicateStudy.setPublication(studyToDuplicate.getPublication());
+        duplicateStudy.setTitle(studyToDuplicate.getTitle());
+        duplicateStudy.setInitialSampleSize(studyToDuplicate.getInitialSampleSize());
+        duplicateStudy.setReplicateSampleSize(studyToDuplicate.getReplicateSampleSize());
+        duplicateStudy.setPlatform(studyToDuplicate.getPlatform());
+        duplicateStudy.setPubmedId(studyToDuplicate.getPubmedId());
+        duplicateStudy.setCnv(studyToDuplicate.getCnv());
+        duplicateStudy.setGxe(studyToDuplicate.getGxe());
+        duplicateStudy.setGxg(studyToDuplicate.getGxg());
+        duplicateStudy.setDiseaseTrait(studyToDuplicate.getDiseaseTrait());
+
+        // Deal with EFO traits
+        Collection<EfoTrait> efoTraits = studyToDuplicate.getEfoTraits();
+        Collection<EfoTrait> efoTraitsDuplicateStudy = new ArrayList<EfoTrait>();
+
+        if (efoTraits != null && !efoTraits.isEmpty()) {
+            efoTraitsDuplicateStudy.addAll(efoTraits);
+            duplicateStudy.setEfoTraits(efoTraitsDuplicateStudy);
+        }
+
+
+        return duplicateStudy;
+    }
+
+    private Ethnicity copyEthnicity(Ethnicity studyToDuplicateEthnicity) {
+        Ethnicity duplicateEthnicity = new Ethnicity();
+        duplicateEthnicity.setType(studyToDuplicateEthnicity.getType());
+        duplicateEthnicity.setNumberOfIndividuals(studyToDuplicateEthnicity.getNumberOfIndividuals());
+        duplicateEthnicity.setEthnicGroup(studyToDuplicateEthnicity.getEthnicGroup());
+        duplicateEthnicity.setCountryOfOrigin(studyToDuplicateEthnicity.getCountryOfOrigin());
+        duplicateEthnicity.setCountryOfRecruitment(studyToDuplicateEthnicity.getCountryOfRecruitment());
+        duplicateEthnicity.setDescription(studyToDuplicateEthnicity.getDescription());
+        duplicateEthnicity.setPreviouslyReported(studyToDuplicateEthnicity.getPreviouslyReported());
+        duplicateEthnicity.setSampleSizesMatch(studyToDuplicateEthnicity.getSampleSizesMatch());
+        duplicateEthnicity.setNotes(studyToDuplicateEthnicity.getNotes());
+
+        return duplicateEthnicity;
+
+    }
+
+
+
+    /* Exception handling */
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(PubmedLookupException.class)
+    public String handlePubmedLookupException(PubmedLookupException pubmedLookupException) {
+        getLog().error("pubmed lookup exception", pubmedLookupException);
+        return "pubmed_lookup_warning";
+    }
+
+    @ExceptionHandler(PubmedImportException.class)
+    public String handlePubmedImportException(PubmedImportException pubmedImportException) {
+        getLog().error("pubmed import exception", pubmedImportException);
+        return "pubmed_import_warning";
+    }
+
 
     /* Model Attributes :
     *  Used for dropdowns in HTML forms
@@ -300,40 +482,4 @@ public class StudyController {
         return curationStatusRepository.findAll();
     }
 
-
-    /* General purpose methods */
-
-    private Housekeeping createHousekeeping() {
-        // Create housekeeping object and create the study added date
-        Housekeeping housekeeping = new Housekeeping();
-        java.util.Date studyAddedDate = new java.util.Date();
-        housekeeping.setStudyAddedDate(studyAddedDate);
-
-        // Set status
-        CurationStatus status = curationStatusRepository.findByStatus("Awaiting Curation");
-        housekeeping.setCurationStatus(status);
-
-        // Set curator
-        Curator curator = curatorRepository.findByLastName("Level 1 Curator");
-        housekeeping.setCurator(curator);
-
-        // Save housekeeping
-        housekeepingRepository.save(housekeeping);
-
-        // Save housekeeping
-        return housekeeping;
-    }
-
-    /* Exception handling */
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(PubmedLookupException.class)
-    public String handlePubmedLookupException(PubmedLookupException pubmedLookupException) {
-        return "pubmed_lookup_warning";
-    }
-
-    @ExceptionHandler(PubmedImportException.class)
-    public String handlePubmedImportException(PubmedImportException pubmedImportException) {
-        return "pubmed_import_warning";
-    }
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>GWAS Curation Demo</title>
+    <title>GWAS Curation Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
@@ -32,10 +32,6 @@
 
 </head>
 <body>
-<!--TODO
-- REIMPLEMENTED LOGIN
-- COUNT
--->
 
 <nav role="navigation" class="navbar navbar-default">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -55,15 +51,15 @@
             <li><a th:href="@{/studies}">Home</a></li>
             <li><a th:href="@{/studies/new}">Add Study</a></li>
             <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
-            <!--<li><a href="#">Count Data</a></li>-->
+            <li><a th:href="@{/reports}">Reports</a></li>
         </ul>
-        <!--    <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <form th:action="@{/logout}" method="post">
-                        <input type="submit" value="Sign Out"/>
-                    </form>
-                </li>
-            </ul>-->
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" value="Sign Out"/>
+                </form>
+            </li>
+        </ul>
     </div>
 </nav>
 
@@ -92,6 +88,8 @@
 
 <div class="form-group">
     <div class="col-md-10 col-md-offset-2">
+
+
         <table class="table table-hover table-bordered">
 
             <div class="form-group">
@@ -136,6 +134,14 @@
             </tr>
             </tbody>
         </table>
+    </div>
+</div>
+<div class="form-group">
+    <label for="multiSnpHaplotypeDescr" class="control-label col-md-2">Multi-SNP haplotype description:</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="multiSnpHaplotypeDescr"
+               th:field="*{multiSnpHaplotypeDescr}"/>
     </div>
 </div>
 
@@ -271,10 +277,14 @@
     <input id="multiSNPHaplotype" type="checkbox"
            th:field="*{multiSnpHaplotype}"/>
 </div>
-
 <div class="form-group">
     <label for="orType" class="control-label col-md-2">ORType</label>
     <input id="orType" type="checkbox" th:field="*{orType}"/>
+</div>
+
+<div class="form-group">
+    <label for="snpChecked" class="control-label col-md-2">SNP checked?</label>
+    <input id="snpChecked" type="checkbox" th:field="*{snpChecked}"/>
 </div>
 
 <div class="form-group">

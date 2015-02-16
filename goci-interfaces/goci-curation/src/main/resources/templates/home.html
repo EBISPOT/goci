@@ -3,7 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
 <head>
-    <title>GWAS Curation Demo</title>
+    <title>GWAS Curation Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -18,10 +18,11 @@
 
 <div class="container">
     <div class="row">
+        <div class="jumbotron">
         <h1>Welcome!</h1>
 
-        <p>Click <a th:href="@{/studies}">here</a> to login to curation tool</p>
-
+        <p><a th:href="@{/login}">Login</a> to GWAS curation tool</p>
+</div>
     </div>
 </div>
 </body>

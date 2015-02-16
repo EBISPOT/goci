@@ -37,11 +37,11 @@ public class SingleNucleotidePolymorphismController {
     }
 
     // Return snp by rsID
-    @RequestMapping(value = "/{rsId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+/*    @RequestMapping(value = "/{rsId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     String snp(Model model, @PathVariable String rsId) {
         model.addAttribute("snps", singleNucleotidePolymorphismRepository.findByRsIdIgnoreCase(rsId));
         return "snps";
-    }
+    }*/
 
     // TODO COULD EXPAND THIS AND HAVE A PAGE TO SEE ALL GENES ASSOCIATED WITH A SNP
 }

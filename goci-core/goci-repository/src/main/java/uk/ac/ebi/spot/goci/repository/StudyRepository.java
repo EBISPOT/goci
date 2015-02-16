@@ -10,6 +10,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import uk.ac.ebi.spot.goci.model.Study;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,7 +27,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Collection<Study> findByDiseaseTraitId(Long diseaseTraitId);
 
-    Study findByPubmedId(String pubmedId);
+    Collection<Study> findByPubmedId(String pubmedId);
 
     // Custom queries
     @Query("select s from Study s where s.housekeeping.curationStatus.id = :status")
@@ -37,6 +38,13 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     @Query("select s from Study s where s.housekeeping.curationStatus.id = :status and s.housekeeping.curator.id = :curator")
     Collection<Study> findByCurationStatusAndCuratorAllIgnoreCase(@Param("status") Long status, @Param("curator") Long curator);
+
+    @Query("select s from Study s where s.housekeeping.curator.id = :curator")
+    Collection<Study> findByCuratorOrderByStudyDateDesc( @Param("curator") Long curator);
+
+    // Custom query to calculate curator totals
+    @Query("select s from Study s where s.housekeeping.curator.id = :curator and s.studyDate between :dateFrom and :dateTo")
+    List<Study> findByStudyDateAndCurator(@Param("curator") Long curator, @Param("dateFrom") Date dateFrom, @Param("dateTo") Date dateTo);
 
     List<Study> findByHousekeepingPublishDateIsNotNull();
 

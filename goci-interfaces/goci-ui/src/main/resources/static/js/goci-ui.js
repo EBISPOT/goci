@@ -1,139 +1,30 @@
-
-//function init() {
-
-    $(document).ready(function () {
-
-         ////if(window.location == )
-         // alert(window.location.pathname);
-
-        $('#search-box').change(function(){
-            doSearch()
-        });
-
-        $('#search-button').click(function(){
-              doSearch()
-        });
-
-        $('#study-facet').click(function(){
-            $('a.list-group-item').removeClass('selected');
-            $(this).addClass('selected');
-            applyFacet("study")
-        });
-
-        $('#association-facet').click(function(){
-            $('a.list-group-item').removeClass('selected');
-            $(this).addClass('selected');
-            applyFacet("association")
-        });
-
-        $('#diseasetrait-facet').click(function(){
-            $('a.list-group-item').removeClass('selected');
-            $(this).addClass('selected');
-            applyFacet("diseasetrait")
-        });
-
-        $('#singlenucleotidepolymorphism-facet').click(function(){
-            $('a.list-group-item').removeClass('selected');
-            $(this).addClass('selected');
-            applyFacet("singlenucleotidepolymorphism")
-        });
-
-        $('.toplevel-view').hover(function() {
-            $(this).addClass("background-color-complementary-accent", 300, "easeOutExpo");
-        }, function() {
-            $(this).removeClass("background-color-complementary-accent", 300, "easeOutExpo");
-        });
-
-        $('#studyToggle').click(function(){
-            $(this).find('span').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
-        });
-
-        $('#associationToggle').click(function(){
-            $(this).find('span').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
-        });
-        $('#diseasetraitToggle').click(function(){
-            $(this).find('span').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
-        });
-        $('#singlenucleotidepolymorphismToggle').click(function(){
-            $(this).find('span').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
-        });
-
+$(document).ready(function() {
+    $('#search-box').change(function() {
+        doSearch();
     });
 
-//};
+    $('#search-button').click(function() {
+        doSearch();
+    });
+
+    $('.toplevel-view').hover(function() {
+        $(this).addClass("background-color-complementary-accent", 300, "easeOutExpo");
+    }, function() {
+        $(this).removeClass("background-color-complementary-accent", 300, "easeOutExpo");
+    });
+
+    //$('.collapse').on('show.bs.collapse', function() {
+    //    $('.collapse.in').collapse('hide');
+    //});
+});
 
 function doSearch(){
     var searchTerm = $("#search-box").val();
+    // redirect to search page
     window.location = "search?query=" + searchTerm;
 }
 
-function applyFacet(facet){
-    var searchTerm = $("#search-box").val();
-
-    if($('.breadcrumb').children().length == 3){
-        var gwas = $('ol.breadcrumb li:last-child');
-        gwas.removeClass('active');
-        gwas.empty();
-        var url = "<a href='search?query=" + searchTerm + "'>" + searchTerm + "</a>";
-        gwas.append(url);
-
-        var last = $("<li></li>").attr("class", "active");
-        if(facet == "study"){
-            last.text("Studies");
-        }
-        else if(facet == "association"){
-            last.text("Associations");
-        }
-        else if(facet == "diseasetrait"){
-            last.text("Catalog traits");
-        }
-        else if(facet == "singlenucleotidepolymorphism"){
-            last.text("SNPs");
-        }
-
-        $('.breadcrumb').append(last) ;
-    }
-    else{
-        var last = $('ol.breadcrumb li:last-child');
-        last.empty();
-
-        if(facet == "study"){
-            last.text("Studies");
-        }
-        else if(facet == "association"){
-            last.text("Associations");
-        }
-        else if(facet == "diseasetrait"){
-            last.text("Catalog traits");
-        }
-        else if(facet == "singlenucleotidepolymorphism"){
-            last.text("SNPs");
-        }
-    }
-    solrFacet(searchTerm, facet);
-
-}
-
-function loadResults(){
-    if ($('#query').text() != ''){
-
-        solrSearch($('#query').text());
-
-        $('#lower_container').show();
-
-        if($('.breadcrumb').children().length == 2){
-            var gwas = $('ol.breadcrumb li:last-child');
-            gwas.removeClass('active');
-            gwas.empty();
-            gwas.append("<a href='search'>Search</a>");
-
-            $('.breadcrumb').append($("<li></li>").attr("class", "active").text($('#query').text())) ;
-        }
-    }
-};
-
 function toggleSidebar(ts){
-   
         if ($(ts).hasClass('panel-collapsed')) {
             // expand the panel
             $(ts).parents('.panel').find('.panel-body').slideDown();
@@ -151,5 +42,5 @@ function toggleSidebar(ts){
             $(ts).parents('#filter-bar').removeClass('col-md-3').addClass('col-md-1');
             $(ts).parents('#filter-bar').siblings('#results-area').removeClass('col-md-9').addClass('col-md-11');
         }
-};
+}
 

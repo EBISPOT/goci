@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>GWAS Curation Demo</title>
+    <title>GWAS Curation Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -24,9 +24,6 @@
 </head>
 <body>
 
-<!--TODO
-- REIMPLEMENTED LOGIN
-- COUNT -->
 
 <nav role="navigation" class="navbar navbar-default">
     <div class="navbar-header">
@@ -44,15 +41,15 @@
             <li><a th:href="@{/studies}">Home</a></li>
             <li><a th:href="@{/studies/new}">Add Study</a></li>
             <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
-            <!--<li><a href="#">Count Data</a></li>-->
+            <li><a th:href="@{/reports}">Reports</a></li>
         </ul>
-        <!-- <ul class="nav navbar-nav navbar-right">
-             <li>
-                 <form th:action="@{/logout}" method="post">
-                     <input type="submit" value="Sign Out"/>
-                 </form>
-             </li>
-         </ul>-->
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" value="Sign Out"/>
+                </form>
+            </li>
+        </ul>
     </div>
 </nav>
 
@@ -69,13 +66,49 @@
 
 <br/>
 
+<!--Alert if data is saved-->
+<div class="container-fluid" th:if="${!#strings.isEmpty(changesSaved)}">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="alert alert-success">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:text="${changesSaved}">Success!</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Alert if data is duplicate-->
+<div class="container-fluid" th:if="${!#strings.isEmpty(duplicateMessage)}">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="alert alert-info">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:text="${duplicateMessage}">Success!</strong>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-8">
+            <div>
+
+                <a th:href="@{http://www.ncbi.nlm.nih.gov/pubmed/{pubmedId}(pubmedId=${study.pubmedId})}"
+                   target="_blank"> View paper in pubmed</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+
             <form id="studyForm" class="form-horizontal" method="post" th:object="${study}" name="studyForm"
                   th:action="@{/studies/{studyId}(studyId=*{id})}">
-
 
                 <!--Hidden fields-->
                 <div class="form-group">
@@ -83,6 +116,24 @@
 
                     <div class="col-md-10">
                         <input type="hidden" th:field="*{id}" class="form-control" id="id"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="initialSampleSize" class="control-label col-md-2"></label>
+
+                    <div class="col-md-10">
+                        <input type="hidden" th:field="*{initialSampleSize}" class="form-control"
+                               id="initialSampleSize"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="replicateSampleSize" class="control-label col-md-2"></label>
+
+                    <div class="col-md-10">
+                        <input type="hidden" th:field="*{replicateSampleSize}" class="form-control"
+                               id="replicateSampleSize"/>
                     </div>
                 </div>
 
@@ -134,25 +185,6 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="initialSampleSize" class="control-label col-md-2">Initial Sample Description:</label>
-
-                    <div class="col-md-10">
-                        <input type="text" th:field="*{initialSampleSize}" class="form-control"
-                               id="initialSampleSize"/>
-                    </div>
-                </div>
-
-
-                <div class="form-group">
-                    <label for="replicateSampleSize" class="control-label col-md-2">Replication Sample
-                        Description:</label>
-
-                    <div class="col-md-10">
-                        <input type="text" th:field="*{replicateSampleSize}" class="form-control"
-                               id="replicateSampleSize"/>
-                    </div>
-                </div>
 
                 <div class="form-group">
                     <label for="diseaseTrait" class="control-label col-md-2">Disease Trait:</label>

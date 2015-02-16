@@ -18,10 +18,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.DiseaseTrait;
-import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
-import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.ui.SearchConfiguration;
 import uk.ac.ebi.spot.goci.ui.exception.IllegalParameterCombinationException;
 
@@ -95,14 +91,14 @@ public class SolrSearchController {
             addJsonpCallback(solrSearchBuilder, callbackFunction);
         }
         addRowsAndPage(solrSearchBuilder, maxResults, page);
-        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), Study.class.getSimpleName());
+        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "Study");
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
 
-    @RequestMapping(value = "api/search/snp", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "api/search/singlenucleotidepolymorphism", produces = MediaType.APPLICATION_JSON_VALUE)
     public void doSnpSolrSearch(
             @RequestParam("q") String query,
             @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
@@ -118,7 +114,7 @@ public class SolrSearchController {
         addRowsAndPage(solrSearchBuilder, maxResults, page);
         addFilterQuery(solrSearchBuilder,
                        searchConfiguration.getDefaultFacet(),
-                       SingleNucleotidePolymorphism.class.getSimpleName());
+                       "SingleNucleotidePolymorphism");
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -139,14 +135,14 @@ public class SolrSearchController {
             addJsonpCallback(solrSearchBuilder, callbackFunction);
         }
         addRowsAndPage(solrSearchBuilder, maxResults, page);
-        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), Association.class.getSimpleName());
+        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "Association");
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
 
-    @RequestMapping(value = "api/search/trait", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "api/search/diseasetrait", produces = MediaType.APPLICATION_JSON_VALUE)
     public void doTraitSolrSearch(
             @RequestParam("q") String query,
             @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
@@ -160,7 +156,7 @@ public class SolrSearchController {
             addJsonpCallback(solrSearchBuilder, callbackFunction);
         }
         addRowsAndPage(solrSearchBuilder, maxResults, page);
-        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), DiseaseTrait.class.getSimpleName());
+        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "DiseaseTrait");
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -171,9 +167,57 @@ public class SolrSearchController {
         // build base request
         StringBuilder solrSearchBuilder = new StringBuilder();
         solrSearchBuilder.append(searchConfiguration.getGwasSearchServer().toString())
-                         .append("/select?")
-                         .append("wt=json");
+                .append("/select?")
+                .append("wt=json");
         return solrSearchBuilder;
+    }
+
+    @RequestMapping(value = "api/search/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void doFilterSolrSearch(
+            @RequestParam("q") String query,
+            @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+            @RequestParam(value = "callback", required = false) String callbackFunction,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "pvalfilter", required = false) String pvalRange,
+            @RequestParam(value = "orfilter", required = false) String orRange,
+            @RequestParam(value = "betafilter", required = false) String betaRange,
+            @RequestParam(value = "datefilter", required = false) String dateRange,
+            HttpServletResponse response) throws IOException {
+        StringBuilder solrSearchBuilder = buildBaseSearchRequest();
+
+        addFacet(solrSearchBuilder, searchConfiguration.getDefaultFacet());
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+        addRowsAndPage(solrSearchBuilder, maxResults, page);
+
+        if (pvalRange != "") {
+            getLog().debug(pvalRange);
+            addFilterQuery(solrSearchBuilder, "pValue", pvalRange);
+        }
+        /**TO DO - when we split OR and beta, modify this controller to reflect that change!!***/
+        if (orRange != "") {
+            getLog().debug(orRange);
+
+            addFilterQuery(solrSearchBuilder, "orPerCopyNum", orRange);
+            addFilterQuery(solrSearchBuilder, "orType", "true");
+        }
+        if (betaRange != "") {
+            getLog().debug(betaRange);
+
+            addFilterQuery(solrSearchBuilder, "orPerCopyNum", betaRange);
+            addFilterQuery(solrSearchBuilder, "orType", "false");
+        }
+        if (dateRange != "") {
+            getLog().debug(dateRange);
+
+            addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
+        }
+        addQuery(solrSearchBuilder, query);
+
+        // dispatch search
+        dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
 
     private void addFacet(StringBuilder solrSearchBuilder, String facet) {
@@ -193,14 +237,14 @@ public class SolrSearchController {
 
     private void addGrouping(StringBuilder solrSearchBuilder, String groupBy, int maxResults) {
         solrSearchBuilder.append("&rows=10000")
-                         .append("&group=true")
-                         .append("&group.limit=").append(maxResults)
-                         .append("&group.field=").append(groupBy);
+                .append("&group=true")
+                .append("&group.limit=").append(maxResults)
+                .append("&group.field=").append(groupBy);
     }
 
     private void addRowsAndPage(StringBuilder solrSearchBuilder, int maxResults, int page) {
         solrSearchBuilder.append("&rows=").append(maxResults)
-                         .append("&start=").append((page - 1) * maxResults);
+                .append("&start=").append((page - 1) * maxResults);
     }
 
     private void addFilterQuery(StringBuilder solrSearchBuilder, String filterOn, String filterBy) {
@@ -232,7 +276,7 @@ public class SolrSearchController {
         }
 
         try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
-            System.out.println(response.getStatusLine());
+            getLog().debug("Received HTTP response: " + response.getStatusLine().toString());
             HttpEntity entity = response.getEntity();
             entity.writeTo(out);
             EntityUtils.consume(entity);

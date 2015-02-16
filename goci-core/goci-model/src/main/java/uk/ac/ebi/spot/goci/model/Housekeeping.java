@@ -34,6 +34,8 @@ public class Housekeeping {
 
     private Boolean checkedNCBIError = false;
 
+    private Boolean snpsRechecked = false;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date publishDate;
 
@@ -60,14 +62,14 @@ public class Housekeeping {
     public Housekeeping() {
     }
 
-
-    public Housekeeping(Boolean studySnpCheckedLevelOne, Boolean studySnpCheckedLevelTwo, Boolean ethnicityCheckedLevelOne, Boolean ethnicityCheckedLevelTwo, Boolean ethnicityBackFilled, Boolean checkedNCBIError, Date publishDate, Date sendToNCBIDate, Date studyAddedDate, Date lastUpdateDate, String fileName, String notes, Curator curator, CurationStatus curationStatus) {
+    public Housekeeping(Boolean studySnpCheckedLevelOne, Boolean studySnpCheckedLevelTwo, Boolean ethnicityCheckedLevelOne, Boolean ethnicityCheckedLevelTwo, Boolean ethnicityBackFilled, Boolean checkedNCBIError, Boolean snpsRechecked, Date publishDate, Date sendToNCBIDate, Date studyAddedDate, Date lastUpdateDate, String fileName, String notes, Curator curator, CurationStatus curationStatus) {
         this.studySnpCheckedLevelOne = studySnpCheckedLevelOne;
         this.studySnpCheckedLevelTwo = studySnpCheckedLevelTwo;
         this.ethnicityCheckedLevelOne = ethnicityCheckedLevelOne;
         this.ethnicityCheckedLevelTwo = ethnicityCheckedLevelTwo;
         this.ethnicityBackFilled = ethnicityBackFilled;
         this.checkedNCBIError = checkedNCBIError;
+        this.snpsRechecked = snpsRechecked;
         this.publishDate = publishDate;
         this.sendToNCBIDate = sendToNCBIDate;
         this.studyAddedDate = studyAddedDate;
@@ -132,6 +134,14 @@ public class Housekeeping {
 
     public void setCheckedNCBIError(Boolean checkedNCBIError) {
         this.checkedNCBIError = checkedNCBIError;
+    }
+
+    public Boolean getSnpsRechecked() {
+        return snpsRechecked;
+    }
+
+    public void setSnpsRechecked(Boolean snpsRechecked) {
+        this.snpsRechecked = snpsRechecked;
     }
 
     public Date getPublishDate() {
@@ -202,20 +212,21 @@ public class Housekeeping {
     public String toString() {
         return "Housekeeping{" +
                 "id=" + id +
-                ", studySnpCheckedLevelOne='" + studySnpCheckedLevelOne + '\'' +
-                ", studySnpCheckedLevelTwo='" + studySnpCheckedLevelTwo + '\'' +
-                ", ethnicityCheckedLevelOne='" + ethnicityCheckedLevelOne + '\'' +
-                ", ethnicityCheckedLevelTwo='" + ethnicityCheckedLevelTwo + '\'' +
-                ", ethnicityBackFilled='" + ethnicityBackFilled + '\'' +
-                ", checkedNCBIError='" + checkedNCBIError + '\'' +
+                ", studySnpCheckedLevelOne=" + studySnpCheckedLevelOne +
+                ", studySnpCheckedLevelTwo=" + studySnpCheckedLevelTwo +
+                ", ethnicityCheckedLevelOne=" + ethnicityCheckedLevelOne +
+                ", ethnicityCheckedLevelTwo=" + ethnicityCheckedLevelTwo +
+                ", ethnicityBackFilled=" + ethnicityBackFilled +
+                ", checkedNCBIError=" + checkedNCBIError +
+                ", snpsRechecked=" + snpsRechecked +
                 ", publishDate=" + publishDate +
                 ", sendToNCBIDate=" + sendToNCBIDate +
                 ", studyAddedDate=" + studyAddedDate +
                 ", lastUpdateDate=" + lastUpdateDate +
                 ", fileName='" + fileName + '\'' +
+                ", notes='" + notes + '\'' +
                 ", curator=" + curator +
                 ", curationStatus=" + curationStatus +
-                ", notes='" + notes + '\'' +
                 '}';
     }
 }
