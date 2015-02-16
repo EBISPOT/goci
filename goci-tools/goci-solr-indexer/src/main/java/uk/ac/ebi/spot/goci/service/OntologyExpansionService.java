@@ -25,7 +25,7 @@ public class OntologyExpansionService implements DocumentEnrichmentService<Ontol
     }
 
     @Override public int getPriority() {
-        return 1;
+        return 4;
     }
 
     @Override public void doEnrichment(OntologyEnabledDocument<?> document) {

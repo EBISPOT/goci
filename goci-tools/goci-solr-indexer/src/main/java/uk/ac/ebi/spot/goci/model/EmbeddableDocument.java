@@ -6,6 +6,7 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -36,17 +37,38 @@ public abstract class EmbeddableDocument<O> extends Document<O> {
                 BeanInfo docInfo = Introspector.getBeanInfo(document.getClass());
                 for (PropertyDescriptor descriptor : docInfo.getPropertyDescriptors()) {
                     if (!excludeNames.contains(descriptor.getName())) {
-                        try {
-                            // determine method to update this document with doc being embedded
-                            Method propertyAdderMethod = findPropertyAdder(descriptor);
-                            // invoke read method on passed document
-                            Object fieldToEmbed = descriptor.getReadMethod().invoke(document);
-                            propertyAdderMethod.invoke(this, fieldToEmbed);
+                        boolean isExcluded = false;
+                        Method readMethod = descriptor.getReadMethod();
+                        readMethod.setAccessible(true);
+                        if (readMethod.isAnnotationPresent(NonEmbeddableField.class)) {
+                            isExcluded = true;
                         }
-                        catch (InvocationTargetException | IllegalAccessException e) {
-                            throw new DocumentEmbeddingException(
-                                    "Failed to read property '" + descriptor.getName() + "'",
-                                    e);
+                        else {
+                            try {
+                                Field field = document.getClass().getDeclaredField(descriptor.getName());
+                                field.setAccessible(true);
+                                if (field.isAnnotationPresent(NonEmbeddableField.class)) {
+                                    isExcluded = true;
+                                }
+                            }
+                            catch (NoSuchFieldException e) {
+                                // no field with this name, skip
+                            }
+                        }
+
+                        if (!isExcluded) {
+                            try {
+                                // determine method to update this document with doc being embedded
+                                Method propertyAdderMethod = findPropertyAdder(descriptor);
+                                // invoke read method on passed document
+                                Object fieldToEmbed = descriptor.getReadMethod().invoke(document);
+                                propertyAdderMethod.invoke(this, fieldToEmbed);
+                            }
+                            catch (InvocationTargetException | IllegalAccessException e) {
+                                throw new DocumentEmbeddingException(
+                                        "Failed to read property '" + descriptor.getName() + "'",
+                                        e);
+                            }
                         }
                     }
                 }

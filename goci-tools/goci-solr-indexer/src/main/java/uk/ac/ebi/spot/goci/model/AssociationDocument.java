@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
@@ -18,16 +19,16 @@ import java.util.TimeZone;
  * @author Tony Burdett
  * @date 16/01/15
  */
-public class AssociationDocument extends EmbeddableDocument<Association> {
+public class AssociationDocument extends OntologyEnabledDocument<Association> {
     // basic Association information
-    @Field private String riskFrequency;
+    @Field @NonEmbeddableField private String riskFrequency;
     @Field private String qualifier;
 
-    @Field private float pValue;
-    @Field private float orPerCopyNum;
-    @Field private String orPerCopyUnitDescr;
-    @Field private String orPerCopyRange;
-    @Field private String orType;
+    @Field @NonEmbeddableField private float pValue;
+    @Field @NonEmbeddableField private float orPerCopyNum;
+    @Field @NonEmbeddableField private String orPerCopyUnitDescr;
+    @Field @NonEmbeddableField private String orPerCopyRange;
+    @Field @NonEmbeddableField private String orType;
 
     // additional included genetic data...
     // capture loci/risk alleles for association;
@@ -47,6 +48,33 @@ public class AssociationDocument extends EmbeddableDocument<Association> {
     @Field("chromosomeName") private Set<String> chromosomeNames;
     @Field("chromosomePosition") private Set<Integer> chromosomePositions;
     @Field("last_modified") private Set<String> lastModifiedDates;
+
+    // embedded study info
+    @Field private String pubmedId;
+    @Field private String title;
+    @Field private String author;
+    @Field private String publication;
+    @Field private String publicationDate;
+    @Field private String catalogAddedDate;
+
+    @Field private String platform;
+    @Field private Boolean cnv;
+
+    @Field private String initialSampleDescription;
+    @Field private String replicateSampleDescription;
+
+    // embedded EfoTrait info
+    @Field("mappedLabel") private Collection<String> mappedLabels;
+    @Field("mappedUri") private Collection<String> mappedUris;
+
+    // embedded OntologyEnabledDocument info
+    @Field("traitUri") private Collection<String> traitUris;
+    @Field("shortForm") private Collection<String> shortForms;
+    @Field("label") private Collection<String> labels;
+    @Field("synonym") private Collection<String> synonyms;
+    @Field("description") private Collection<String> descriptions;
+    @Field("efoLink") private Collection<String> efoLinks;
+    @Field("parent") private Collection<String> superclassLabels;
 
     public AssociationDocument(Association association) {
         super(association);
@@ -69,6 +97,17 @@ public class AssociationDocument extends EmbeddableDocument<Association> {
 
         this.reportedGenes = new HashSet<>();
         embedGeneticData(association);
+
+        this.mappedLabels = new LinkedHashSet<>();
+        this.mappedUris = new LinkedHashSet<>();
+
+        this.traitUris = new LinkedHashSet<>();
+        this.shortForms = new LinkedHashSet<>();
+        this.labels = new LinkedHashSet<>();
+        this.synonyms = new LinkedHashSet<>();
+        this.descriptions = new LinkedHashSet<>();
+        this.efoLinks = new LinkedHashSet<>();
+        this.superclassLabels = new LinkedHashSet<>();
     }
 
     public String getRegion() {
@@ -135,6 +174,82 @@ public class AssociationDocument extends EmbeddableDocument<Association> {
         return orType;
     }
 
+    public void addPubmedId(String pubmedId) {
+        this.pubmedId = pubmedId;
+    }
+
+    public void addTitle(String title) {
+        this.title = title;
+    }
+
+    public void addAuthor(String author) {
+        this.author = author;
+    }
+
+    public void addPublication(String publication) {
+        this.publication = publication;
+    }
+
+    public void addPublicationDate(String publicationDate) {
+        this.publicationDate = publicationDate;
+    }
+
+    public void addCatalogAddedDate(String catalogAddedDate) {
+        this.catalogAddedDate = catalogAddedDate;
+    }
+
+    public void addPlatform(String platform) {
+        this.platform = platform;
+    }
+
+    public void addCnv(Boolean cnv) {
+        this.cnv = cnv;
+    }
+
+    public void addInitialSampleDescription(String initialSampleDescription) {
+        this.initialSampleDescription = initialSampleDescription;
+    }
+
+    public void addReplicateSampleDescription(String replicateSampleDescription) {
+        this.replicateSampleDescription = replicateSampleDescription;
+    }
+
+    public void addMappedLabel(String mappedLabel) {
+        this.mappedLabels.add(mappedLabel);
+    }
+
+    public void addMappedUri(String mappedUri) {
+        this.mappedUris.add(mappedUri);
+    }
+
+    public void addTraitUris(Collection<String> traitUris) {
+        this.traitUris.addAll(traitUris);
+    }
+
+    public void addShortForms(Collection<String> shortForms) {
+        this.shortForms.addAll(shortForms);
+    }
+
+    public void addLabels(Collection<String> labels) {
+        this.labels.addAll(labels);
+    }
+
+    public void addSynonyms(Collection<String> synonyms) {
+        this.synonyms.addAll(synonyms);
+    }
+
+    public void addDescriptions(Collection<String> descriptions) {
+        this.descriptions.addAll(descriptions);
+    }
+
+    public void addEfoLinks(Collection<String> efoLinks) {
+        this.efoLinks.addAll(efoLinks);
+    }
+
+    public void addSuperclassLabels(Collection<String> superclassLabels) {
+        this.superclassLabels.addAll(superclassLabels);
+    }
+
     private void embedGeneticData(Association association) {
         if (association.getLoci().size() > 1) {
             // if this association has multiple loci, this is a SNP x SNP study
@@ -172,7 +287,7 @@ public class AssociationDocument extends EmbeddableDocument<Association> {
                                     }
                                 }
                         );
-                        locus.getAuthorReportedGenes().forEach(gene -> reportedGenes.add(gene.getGeneName()));
+                        locus.getAuthorReportedGenes().forEach(gene -> reportedGenes.add(gene.getGeneName().trim()));
                     }
             );
         }
@@ -212,7 +327,7 @@ public class AssociationDocument extends EmbeddableDocument<Association> {
                                     }
                                 }
                         );
-                        locus.getAuthorReportedGenes().forEach(gene -> reportedGenes.add(gene.getGeneName()));
+                        locus.getAuthorReportedGenes().forEach(gene -> reportedGenes.add(gene.getGeneName().trim()));
                     }
             );
         }
@@ -222,12 +337,13 @@ public class AssociationDocument extends EmbeddableDocument<Association> {
         List<String> genes = new ArrayList<>();
         snp.getGenomicContexts().forEach(
                 context -> {
-                    if (!genes.contains(context.getGene().getGeneName())) {
+                    String geneName = context.getGene().getGeneName().trim();
+                    if (!genes.contains(geneName)) {
                         if (context.isDownstream()) {
-                            genes.add(0, context.getGene().getGeneName());
+                            genes.add(0, geneName);
                         }
                         else {
-                            genes.add(context.getGene().getGeneName());
+                            genes.add(geneName);
                         }
                     }
                 });

@@ -179,6 +179,13 @@
     <field name="associationCount" type="int" indexed="true" stored="true" multiValued="true" />
 
     <!-- diseasetrait -->
+    <field name="traitName" type="text_general" indexed="true" stored="true" multiValued="true" />
+
+    <!-- efotrait -->
+    <field name="mappedLabel" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="mappedUri" type="text_general" indexed="true" stored="true" multiValued="true" />
+
+    <!-- ontology expanded info -->
     <field name="trait" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="traitUri" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="shortForm" type="text_general" indexed="true" stored="true" multiValued="true" />
@@ -189,15 +196,15 @@
     <field name="child" type="text_general" indexed="true" stored="true" multiValued="true" />
 
     <!-- association -->
+    <field name="strongestAllele" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="pValue" type="float" indexed="true" stored="true" multiValued="false" />
     <field name="qualifier" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="studyId" type="text_general" indexed="true" stored="true" multiValued="false" />
-    <field name="strongestAllele" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="riskFrequency" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="orPerCopyUnitDescr" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="orType" type="boolean" indexed="true" stored="true" multiValued="false" />
     <field name="orPerCopyNum" type="float" indexed="true" stored="true" multiValued="false" />
     <field name="orPerCopyRange" type="text_general" indexed="false" stored="true" multiValued="false" />
-    <field name="pValue" type="float" indexed="true" stored="true" multiValued="false" />
+    <field name="studyId" type="text_general" indexed="true" stored="true" multiValued="false" />
 
 
     <!-- Main body of document extracted by SolrCell.

@@ -2,10 +2,13 @@ package uk.ac.ebi.spot.goci.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationDocument;
 import uk.ac.ebi.spot.goci.model.DiseaseTraitDocument;
 import uk.ac.ebi.spot.goci.model.EfoDocument;
 import uk.ac.ebi.spot.goci.model.StudyDocument;
+
+import java.util.Collection;
 
 /**
  * Javadocs go here!
@@ -26,14 +29,15 @@ public class StudyEnrichmentService implements DocumentEnrichmentService<StudyDo
     }
 
     @Override public int getPriority() {
-        return 2;
+        return 1;
     }
 
     @Override public void doEnrichment(StudyDocument document) {
         long id = Long.valueOf(document.getId().split(":")[1]);
 
-        associationService.findPublishedAssociationsByStudyId(id).forEach(
-                association -> document.embed(new AssociationDocument(association)));
+        Collection<Association> associations = associationService.findPublishedAssociationsByStudyId(id);
+        document.setAssociationCount(associations.size());
+        associations.forEach(association -> document.embed(new AssociationDocument(association)));
 
         traitService.findReportedTraitByStudyId(id).forEach(
                 trait -> document.embed(new DiseaseTraitDocument(trait)));

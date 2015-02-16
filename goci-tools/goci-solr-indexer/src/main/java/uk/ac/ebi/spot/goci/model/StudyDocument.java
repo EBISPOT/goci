@@ -29,10 +29,9 @@ public class StudyDocument extends EmbeddableDocument<Study> {
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
 
-    @Field private int associationCount;
+    @Field @NonEmbeddableField private int associationCount;
 
     // embedded Association info
-    @Field("riskFrequency") private Collection<String> riskFrequencies;
     @Field("qualifier") private Collection<String> qualifiers;
     @Field("pValue") private Collection<Float> pValues;
     @Field("orPerCopyNum") private Collection<Float> orPerCopyNums;
@@ -53,8 +52,8 @@ public class StudyDocument extends EmbeddableDocument<Study> {
     @Field("traitName") private Collection<String> traitNames;
 
     // embedded EfoTrait info
-    @Field private Collection<String> mappedLabels;
-    @Field private Collection<String> mappedUris;
+    @Field("mappedLabel") private Collection<String> mappedLabels;
+    @Field("mappedUri") private Collection<String> mappedUris;
 
     // embedded OntologyEnabledDocument info
     @Field("traitUri") private Collection<String> traitUris;
@@ -87,7 +86,6 @@ public class StudyDocument extends EmbeddableDocument<Study> {
             this.catalogAddedDate = df.format(study.getHousekeeping().getPublishDate());
         }
 
-        this.riskFrequencies = new LinkedHashSet<>();
         this.qualifiers = new LinkedHashSet<>();
         this.pValues = new LinkedHashSet<>();
         this.orPerCopyNums = new LinkedHashSet<>();
@@ -162,209 +160,104 @@ public class StudyDocument extends EmbeddableDocument<Study> {
         return associationCount;
     }
 
-    public Collection<String> getRiskFrequencies() {
-        return riskFrequencies;
-    }
-
-    public void addRiskFrequency(String riskFrequency) {
-        this.riskFrequencies.add(riskFrequency);
-    }
-
-    public Collection<String> getQualifiers() {
-        return qualifiers;
+    public void setAssociationCount(int associationCount) {
+        this.associationCount = associationCount;
     }
 
     public void addQualifier(String qualifier) {
         this.qualifiers.add(qualifier);
     }
 
-    public Collection<Float> getpValues() {
-        return pValues;
-    }
-
     public void addPValue(float pValue) {
         this.pValues.add(pValue);
-    }
-
-    public Collection<Float> getOrPerCopyNums() {
-        return orPerCopyNums;
     }
 
     public void addOrPerCopyNum(float orPerCopyNum) {
         this.orPerCopyNums.add(orPerCopyNum);
     }
 
-    public Collection<String> getOrPerCopyUnitDescrs() {
-        return orPerCopyUnitDescrs;
-    }
-
     public void addOrPerCopyUnitDescr(String orPerCopyUnitDescr) {
         this.orPerCopyUnitDescrs.add(orPerCopyUnitDescr);
-    }
-
-    public Collection<String> getOrPerCopyRanges() {
-        return orPerCopyRanges;
     }
 
     public void addOrPerCopyRange(String orPerCopyRange) {
         this.orPerCopyRanges.add(orPerCopyRange);
     }
 
-    public Collection<String> getOrTypes() {
-        return orTypes;
-    }
-
     public void addOrType(String orType) {
         this.orTypes.add(orType);
-    }
-
-    public Collection<String> getRsIds() {
-        return rsIds;
     }
 
     public void addRsId(String rsId) {
         this.rsIds.add(rsId);
     }
 
-    public Collection<String> getStrongestAlleles() {
-        return strongestAlleles;
-    }
-
     public void addStrongestAllele(String strongestAllele) {
         this.strongestAlleles.add(strongestAllele);
-    }
-
-    public Collection<String> getContexts() {
-        return contexts;
     }
 
     public void addContext(String context) {
         this.contexts.add(context);
     }
 
-    public Collection<String> getRegions() {
-        return regions;
-    }
-
     public void addRegion(String region) {
         this.regions.add(region);
-    }
-
-    public Collection<String> getMappedGenes() {
-        return mappedGenes;
     }
 
     public void addMappedGene(String mappedGene) {
         this.mappedGenes.add(mappedGene);
     }
 
-    public Collection<String> getReportedGenes() {
-        return reportedGenes;
-    }
-
     public void addReportedGenes(Collection<String> reportedGenes) {
         this.reportedGenes.addAll(reportedGenes);
-    }
-
-
-    public Collection<String> getChromosomeNames() {
-        return chromosomeNames;
     }
 
     public void addChromosomeNames(Collection<String> chromosomeNames) {
         this.chromosomeNames.addAll(chromosomeNames);
     }
 
-    public Collection<Integer> getChromosomePositions() {
-        return chromosomePositions;
-    }
-
     public void addChromosomePositions(Collection<Integer> chromosomePositions) {
         this.chromosomePositions.addAll(chromosomePositions);
-    }
-
-    public Collection<String> getLastModifiedDates() {
-        return lastModifiedDates;
     }
 
     public void addLastModifiedDates(Collection<String> lastModifiedDates) {
         this.lastModifiedDates.addAll(lastModifiedDates);
     }
 
-    public Collection<String> getTraitNames() {
-        return traitNames;
-    }
-
     public void addTraitName(String traitName) {
         this.traitNames.add(traitName);
-    }
-
-    public Collection<String> getMappedLabels() {
-        return mappedLabels;
     }
 
     public void addMappedLabel(String mappedLabel) {
         this.mappedLabels.add(mappedLabel);
     }
 
-    public Collection<String> getMappedUris() {
-        return mappedUris;
-    }
-
     public void addMappedUri(String mappedUri) {
         this.mappedUris.add(mappedUri);
-    }
-
-    public Collection<String> getTraitUris() {
-        return traitUris;
     }
 
     public void addTraitUris(Collection<String> traitUris) {
         this.traitUris.addAll(traitUris);
     }
 
-    public Collection<String> getShortForms() {
-        return shortForms;
-    }
-
     public void addShortForms(Collection<String> shortForms) {
         this.shortForms.addAll(shortForms);
-    }
-
-    public Collection<String> getLabels() {
-        return labels;
     }
 
     public void addLabels(Collection<String> labels) {
         this.labels.addAll(labels);
     }
 
-    public Collection<String> getSynonyms() {
-        return synonyms;
-    }
-
     public void addSynonyms(Collection<String> synonyms) {
         this.synonyms.addAll(synonyms);
-    }
-
-    public Collection<String> getDescriptions() {
-        return descriptions;
     }
 
     public void addDescriptions(Collection<String> descriptions) {
         this.descriptions.addAll(descriptions);
     }
 
-    public Collection<String> getEfoLinks() {
-        return efoLinks;
-    }
-
     public void addEfoLinks(Collection<String> efoLinks) {
         this.efoLinks.addAll(efoLinks);
-    }
-
-    public Collection<String> getSuperclassLabels() {
-        return superclassLabels;
     }
 
     public void addSuperclassLabels(Collection<String> superclassLabels) {
