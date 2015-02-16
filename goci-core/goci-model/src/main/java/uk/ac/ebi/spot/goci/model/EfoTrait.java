@@ -3,6 +3,9 @@ package uk.ac.ebi.spot.goci.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import java.util.Collection;
 
 /**
  * Created by emma on 04/12/14.
@@ -21,6 +24,12 @@ public class EfoTrait {
     private String trait;
 
     private String uri;
+
+    @ManyToMany(mappedBy = "efoTraits")
+    private Collection<Study> studies;
+
+    @ManyToMany(mappedBy = "efoTraits")
+    private Collection<Association> associations;
 
     // JPA no-args constructor
     public EfoTrait() {

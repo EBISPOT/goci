@@ -5,9 +5,7 @@ import org.apache.solr.client.solrj.beans.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.TimeZone;
 
 /**
@@ -33,7 +31,7 @@ public class StudyDocument extends EmbeddableDocument<Study> {
 
     @Field private int associationCount;
 
-    // embedded association info
+    // embedded Association info
     @Field("riskFrequency") private Collection<String> riskFrequencies;
     @Field("qualifier") private Collection<String> qualifiers;
     @Field("pValue") private Collection<Float> pValues;
@@ -51,8 +49,21 @@ public class StudyDocument extends EmbeddableDocument<Study> {
     @Field("chromosomePosition") private Collection<Integer> chromosomePositions;
     @Field("last_modified") private Collection<String> lastModifiedDates;
 
-    // embedded trait info
+    // embedded DiseaseTrait info
+    @Field("traitName") private Collection<String> traitNames;
 
+    // embedded EfoTrait info
+    @Field private Collection<String> mappedLabels;
+    @Field private Collection<String> mappedUris;
+
+    // embedded OntologyEnabledDocument info
+    @Field("traitUri") private Collection<String> traitUris;
+    @Field("shortForm") private Collection<String> shortForms;
+    @Field("label") private Collection<String> labels;
+    @Field("synonym") private Collection<String> synonyms;
+    @Field("description") private Collection<String> descriptions;
+    @Field("efoLink") private Collection<String> efoLinks;
+    @Field("parent") private Collection<String> superclassLabels;
 
     public StudyDocument(Study study) {
         super(study);
@@ -92,6 +103,19 @@ public class StudyDocument extends EmbeddableDocument<Study> {
         this.chromosomeNames = new LinkedHashSet<>();
         this.chromosomePositions = new LinkedHashSet<>();
         this.lastModifiedDates = new LinkedHashSet<>();
+
+        this.traitNames = new LinkedHashSet<>();
+
+        this.mappedLabels = new LinkedHashSet<>();
+        this.mappedUris = new LinkedHashSet<>();
+
+        this.traitUris = new LinkedHashSet<>();
+        this.shortForms = new LinkedHashSet<>();
+        this.labels = new LinkedHashSet<>();
+        this.synonyms = new LinkedHashSet<>();
+        this.descriptions = new LinkedHashSet<>();
+        this.efoLinks = new LinkedHashSet<>();
+        this.superclassLabels = new LinkedHashSet<>();
     }
 
     public String getPubmedId() {
@@ -265,5 +289,85 @@ public class StudyDocument extends EmbeddableDocument<Study> {
 
     public void addLastModifiedDates(Collection<String> lastModifiedDates) {
         this.lastModifiedDates.addAll(lastModifiedDates);
+    }
+
+    public Collection<String> getTraitNames() {
+        return traitNames;
+    }
+
+    public void addTraitName(String traitName) {
+        this.traitNames.add(traitName);
+    }
+
+    public Collection<String> getMappedLabels() {
+        return mappedLabels;
+    }
+
+    public void addMappedLabel(String mappedLabel) {
+        this.mappedLabels.add(mappedLabel);
+    }
+
+    public Collection<String> getMappedUris() {
+        return mappedUris;
+    }
+
+    public void addMappedUri(String mappedUri) {
+        this.mappedUris.add(mappedUri);
+    }
+
+    public Collection<String> getTraitUris() {
+        return traitUris;
+    }
+
+    public void addTraitUris(Collection<String> traitUris) {
+        this.traitUris.addAll(traitUris);
+    }
+
+    public Collection<String> getShortForms() {
+        return shortForms;
+    }
+
+    public void addShortForms(Collection<String> shortForms) {
+        this.shortForms.addAll(shortForms);
+    }
+
+    public Collection<String> getLabels() {
+        return labels;
+    }
+
+    public void addLabels(Collection<String> labels) {
+        this.labels.addAll(labels);
+    }
+
+    public Collection<String> getSynonyms() {
+        return synonyms;
+    }
+
+    public void addSynonyms(Collection<String> synonyms) {
+        this.synonyms.addAll(synonyms);
+    }
+
+    public Collection<String> getDescriptions() {
+        return descriptions;
+    }
+
+    public void addDescriptions(Collection<String> descriptions) {
+        this.descriptions.addAll(descriptions);
+    }
+
+    public Collection<String> getEfoLinks() {
+        return efoLinks;
+    }
+
+    public void addEfoLinks(Collection<String> efoLinks) {
+        this.efoLinks.addAll(efoLinks);
+    }
+
+    public Collection<String> getSuperclassLabels() {
+        return superclassLabels;
+    }
+
+    public void addSuperclassLabels(Collection<String> superclassLabels) {
+        this.superclassLabels.addAll(superclassLabels);
     }
 }
