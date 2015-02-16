@@ -129,7 +129,7 @@ public class AssociationService {
         return associations;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Collection<Association> findPublishedAssociationsByDiseaseTraitId(Long diseaseTraitId) {
         Collection<Association> associations = associationRepository.findByStudyDiseaseTraitIdAndStudyHousekeepingPublishDateIsNotNull(
                 diseaseTraitId);
@@ -137,6 +137,13 @@ public class AssociationService {
         return associations;
     }
 
+    @Transactional(readOnly = true)
+    public Collection<Association> findPublishedAssociationsByEfoTraitId(Long efoTraitId) {
+        Collection<Association> associations = associationRepository.findByEfoTraitsIdAndStudyHousekeepingPublishDateIsNotNull(
+                efoTraitId);
+        associations.forEach(this::loadAssociatedData);
+        return associations;
+    }
 
     public void loadAssociatedData(Association association) {
         int traitCount = association.getEfoTraits().size();

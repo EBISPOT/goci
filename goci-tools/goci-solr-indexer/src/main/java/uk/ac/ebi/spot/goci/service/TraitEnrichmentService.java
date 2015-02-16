@@ -3,11 +3,12 @@ package uk.ac.ebi.spot.goci.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.AssociationDocument;
-import uk.ac.ebi.spot.goci.model.MappedGeneDocument;
-import uk.ac.ebi.spot.goci.model.ReportedGeneDocument;
-import uk.ac.ebi.spot.goci.model.SnpDocument;
-import uk.ac.ebi.spot.goci.model.StudyDocument;
 import uk.ac.ebi.spot.goci.model.DiseaseTraitDocument;
+import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.StudyDocument;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Javadocs go here!
@@ -19,11 +20,15 @@ import uk.ac.ebi.spot.goci.model.DiseaseTraitDocument;
 public class TraitEnrichmentService implements DocumentEnrichmentService<DiseaseTraitDocument> {
     private StudyService studyService;
     private AssociationService associationService;
+    private TraitService traitService;
 
     @Autowired
-    public TraitEnrichmentService(StudyService studyService, AssociationService associationService) {
+    public TraitEnrichmentService(StudyService studyService,
+                                  AssociationService associationService,
+                                  TraitService traitService) {
         this.studyService = studyService;
         this.associationService = associationService;
+        this.traitService = traitService;
     }
 
     @Override public int getPriority() {
@@ -34,8 +39,15 @@ public class TraitEnrichmentService implements DocumentEnrichmentService<Disease
         long id = Long.valueOf(document.getId().split(":")[1]);
 
         studyService.findByDiseaseTraitId(id).forEach(
-                study -> document.embed(new StudyDocument(study)));
-        associationService.findPublishedAssociationsByDiseaseTraitId(id).forEach(
-                association -> document.embed(new AssociationDocument(association)));
+                study -> {
+                    document.embed(new StudyDocument(study));
+                    // collect unique efo traits
+                    Set<EfoTrait> efoTraits = new HashSet<>();
+                    traitService.findMappedTraitByStudyId(study.getId()).forEach(efoTraits::add);
+                    // and for each efo trait get all associations
+                    efoTraits.forEach(
+                            trait -> associationService.findPublishedAssociationsByEfoTraitId(trait.getId()).forEach(
+                                    association -> document.embed(new AssociationDocument(association))));
+                });
     }
 }

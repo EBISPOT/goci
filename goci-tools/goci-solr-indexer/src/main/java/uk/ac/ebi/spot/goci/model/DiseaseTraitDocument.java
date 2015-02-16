@@ -46,6 +46,19 @@ public class DiseaseTraitDocument extends EmbeddableDocument<DiseaseTrait> {
     @Field("chromosomePosition") private Collection<Integer> chromosomePositions;
     @Field("last_modified") private Collection<String> lastModifiedDates;
 
+    // embedded EfoTrait info
+    @Field("mappedLabel") private Collection<String> mappedLabels;
+    @Field("mappedUri") private Collection<String> mappedUris;
+
+    // embedded OntologyEnabledDocument info
+    @Field("traitUri") private Collection<String> traitUris;
+    @Field("shortForm") private Collection<String> shortForms;
+    @Field("label") private Collection<String> labels;
+    @Field("synonym") private Collection<String> synonyms;
+    @Field("description") private Collection<String> descriptions;
+    @Field("efoLink") private Collection<String> efoLinks;
+    @Field("parent") private Collection<String> superclassLabels;
+
     public DiseaseTraitDocument(DiseaseTrait diseaseTrait) {
         super(diseaseTrait);
         this.traitName = diseaseTrait.getTrait();
@@ -65,6 +78,17 @@ public class DiseaseTraitDocument extends EmbeddableDocument<DiseaseTrait> {
         this.chromosomeNames = new LinkedHashSet<>();
         this.chromosomePositions = new LinkedHashSet<>();
         this.lastModifiedDates = new LinkedHashSet<>();
+
+        this.mappedLabels = new LinkedHashSet<>();
+        this.mappedUris = new LinkedHashSet<>();
+
+        this.traitUris = new LinkedHashSet<>();
+        this.shortForms = new LinkedHashSet<>();
+        this.labels = new LinkedHashSet<>();
+        this.synonyms = new LinkedHashSet<>();
+        this.descriptions = new LinkedHashSet<>();
+        this.efoLinks = new LinkedHashSet<>();
+        this.superclassLabels = new LinkedHashSet<>();
     }
 
     public String getTraitName() {
@@ -169,5 +193,41 @@ public class DiseaseTraitDocument extends EmbeddableDocument<DiseaseTrait> {
 
     public void addLastModifiedDates(Collection<String> lastModifiedDates) {
         this.lastModifiedDates.addAll(lastModifiedDates);
+    }
+
+    public void addMappedLabel(String mappedLabel) {
+        this.mappedLabels.add(mappedLabel);
+    }
+
+    public void addMappedUri(String mappedUri) {
+        this.mappedUris.add(mappedUri);
+    }
+
+    public void addTraitUris(Collection<String> traitUris) {
+        this.traitUris.addAll(traitUris);
+    }
+
+    public void addShortForms(Collection<String> shortForms) {
+        this.shortForms.addAll(shortForms);
+    }
+
+    public void addLabels(Collection<String> labels) {
+        this.labels.addAll(labels);
+    }
+
+    public void addSynonyms(Collection<String> synonyms) {
+        this.synonyms.addAll(synonyms);
+    }
+
+    public void addDescriptions(Collection<String> descriptions) {
+        this.descriptions.addAll(descriptions);
+    }
+
+    public void addEfoLinks(Collection<String> efoLinks) {
+        this.efoLinks.addAll(efoLinks);
+    }
+
+    public void addSuperclassLabels(Collection<String> superclassLabels) {
+        this.superclassLabels.addAll(superclassLabels);
     }
 }
