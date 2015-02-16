@@ -84,15 +84,14 @@ public class SolrIndexer {
     public int fetchAndIndex() {
         ExecutorService taskExecutor = Executors.newFixedThreadPool(1);
 
-//        Future<Integer> studyCountFuture = taskExecutor.submit(this::mapStudies);
-//        Future<Integer> associationCountFuture = taskExecutor.submit(this::mapAssociations);
+        Future<Integer> studyCountFuture = taskExecutor.submit(this::mapStudies);
+        Future<Integer> associationCountFuture = taskExecutor.submit(this::mapAssociations);
         Future<Integer> traitCountFuture = taskExecutor.submit(this::mapTraits);
         try {
-//            int studyCount = studyCountFuture.get();
-//            int associationCount = associationCountFuture.get();
+            int studyCount = studyCountFuture.get();
+            int associationCount = associationCountFuture.get();
             int traitCount = traitCountFuture.get();
-//            return studyCount + traitCount + associationCount;
-            return 1;
+            return studyCount + traitCount + associationCount;
         }
         catch (InterruptedException | ExecutionException e) {
             throw new SolrIndexingException("Failed to map one or more documents into Solr", e);
