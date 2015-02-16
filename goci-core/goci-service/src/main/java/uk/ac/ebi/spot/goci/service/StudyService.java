@@ -84,7 +84,7 @@ public class StudyService {
      * @return a list of Studies
      */
     @Transactional(readOnly = true)
-    public List<Study> findPublishedudies() {
+    public List<Study> findPublishedStudies() {
         List<Study> studies = studyRepository.findByHousekeepingPublishDateIsNotNull();
         // iterate over all studies and grab trait info
         getLog().info("Obtained " + studies.size() + " studies, starting deep load...");
@@ -124,23 +124,24 @@ public class StudyService {
 
     @Transactional(readOnly = true)
     public Collection<Study> findBySnpId(Long snpId) {
-        Collection<Study> studies = studyRepository
-                .findByAssociationsLociRiskAllelesSnpIdAndHousekeepingPublishDateIsNotNull(snpId);
+        Collection<Study> studies =
+                studyRepository.findByAssociationsLociRiskAllelesSnpIdAndHousekeepingPublishDateIsNotNull(snpId);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
 
     @Transactional(readOnly = true)
     public Collection<Study> findByAssociationId(Long associationId) {
-        Collection<Study> studies = studyRepository
-                .findByAssociationIdAndHousekeepingPublishDateIsNotNull(associationId);
+        Collection<Study> studies =
+                studyRepository.findByAssociationIdAndHousekeepingPublishDateIsNotNull(associationId);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
 
     @Transactional(readOnly = true)
     public Collection<Study> findByDiseaseTraitId(Long diseaseTraitId) {
-        Collection<Study> studies = studyRepository.findByDiseaseTraitId(diseaseTraitId);
+        Collection<Study> studies =
+                studyRepository.findByDiseaseTraitIdAndHousekeepingPublishDateIsNotNull(diseaseTraitId);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }

@@ -24,7 +24,7 @@ public class AssociationEnrichmentService implements DocumentEnrichmentService<A
     }
 
     @Override public int getPriority() {
-        return 1;
+        return 2;
     }
 
     @Override public void doEnrichment(AssociationDocument document) {

@@ -131,7 +131,8 @@ public class AssociationService {
 
     @Transactional
     public Collection<Association> findPublishedAssociationsByDiseaseTraitId(Long diseaseTraitId) {
-        Collection<Association> associations = associationRepository.findByStudyDiseaseTraitId(diseaseTraitId);
+        Collection<Association> associations = associationRepository.findByStudyDiseaseTraitIdAndStudyHousekeepingPublishDateIsNotNull(
+                diseaseTraitId);
         associations.forEach(this::loadAssociatedData);
         return associations;
     }

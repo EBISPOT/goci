@@ -33,20 +33,13 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class SolrIndexer {
-    @Autowired StudyService studyService;
-    @Autowired SingleNucleotidePolymorphismService snpService;
-    @Autowired DiseaseTraitRepository diseaseTraitRepository;
-    @Autowired AssociationService associationService;
+    private StudyService studyService;
+    private DiseaseTraitRepository diseaseTraitRepository;
+    private AssociationService associationService;
 
-    @Autowired SnpIndex snpIndex;
-    @Autowired StudyIndex studyIndex;
-    @Autowired TraitIndex traitIndex;
-    @Autowired AssociationIndex associationIndex;
-
-    @Autowired StudyMapper studyMapper;
-    @Autowired SingleNucleotidePolymorphismMapper snpMapper;
-    @Autowired TraitMapper traitMapper;
-    @Autowired AssociationMapper associationMapper;
+    private StudyMapper studyMapper;
+    private TraitMapper traitMapper;
+    private AssociationMapper associationMapper;
 
     private int pageSize = 1000;
     private boolean sysOutLogging = false;
@@ -55,6 +48,21 @@ public class SolrIndexer {
 
     protected Logger getLog() {
         return log;
+    }
+
+    @Autowired
+    public SolrIndexer(StudyService studyService,
+                       DiseaseTraitRepository diseaseTraitRepository,
+                       AssociationService associationService,
+                       StudyMapper studyMapper,
+                       TraitMapper traitMapper,
+                       AssociationMapper associationMapper) {
+        this.studyService = studyService;
+        this.diseaseTraitRepository = diseaseTraitRepository;
+        this.associationService = associationService;
+        this.studyMapper = studyMapper;
+        this.traitMapper = traitMapper;
+        this.associationMapper = associationMapper;
     }
 
     public int getPageSize() {
@@ -77,15 +85,13 @@ public class SolrIndexer {
         ExecutorService taskExecutor = Executors.newFixedThreadPool(1);
 
         Future<Integer> studyCountFuture = taskExecutor.submit(this::mapStudies);
-        Future<Integer> snpCountFuture = taskExecutor.submit(this::mapSnps);
         Future<Integer> traitCountFuture = taskExecutor.submit(this::mapTraits);
         Future<Integer> associationCountFuture = taskExecutor.submit(this::mapAssociations);
         try {
             int studyCount = studyCountFuture.get();
-            int snpCount = snpCountFuture.get();
             int traitCount = traitCountFuture.get();
             int associationCount = associationCountFuture.get();
-            return studyCount + snpCount + traitCount + associationCount;
+            return studyCount + traitCount + associationCount;
         }
         catch (InterruptedException | ExecutionException e) {
             throw new SolrIndexingException("Failed to map one or more documents into Solr", e);
@@ -118,20 +124,20 @@ public class SolrIndexer {
         return (int) studyPage.getTotalElements();
     }
 
-    Integer mapSnps() {
-        Sort sort = new Sort(new Sort.Order("rsId"));
+    Integer mapAssociations() {
+        Sort sort = new Sort(new Sort.Order("id"));
         Pageable pager = new PageRequest(0, pageSize, sort);
-        Page<SingleNucleotidePolymorphism> snpPage = snpService.findAll(pager);
-        snpMapper.map(snpPage.getContent());
-        while (snpPage.hasNext()) {
+        Page<Association> associationPage = associationService.findPublishedAssociations(pager);
+        associationMapper.map(associationPage.getContent());
+        while (associationPage.hasNext()) {
             pager = pager.next();
-            snpPage = snpService.findAll(pager);
-            snpMapper.map(snpPage.getContent());
+            associationPage = associationService.findPublishedAssociations(pager);
+            associationMapper.map(associationPage.getContent());
             if (sysOutLogging) {
                 System.out.print(".");
             }
         }
-        return (int) snpPage.getTotalElements();
+        return (int) associationPage.getTotalElements();
     }
 
     Integer mapTraits() {
@@ -148,21 +154,5 @@ public class SolrIndexer {
             }
         }
         return (int) diseaseTraitPage.getTotalElements();
-    }
-
-    Integer mapAssociations() {
-        Sort sort = new Sort(new Sort.Order("id"));
-        Pageable pager = new PageRequest(0, pageSize, sort);
-        Page<Association> associationPage = associationService.findPublishedAssociations(pager);
-        associationMapper.map(associationPage.getContent());
-        while (associationPage.hasNext()) {
-            pager = pager.next();
-            associationPage = associationService.findPublishedAssociations(pager);
-            associationMapper.map(associationPage.getContent());
-            if (sysOutLogging) {
-                System.out.print(".");
-            }
-        }
-        return (int) associationPage.getTotalElements();
     }
 }
