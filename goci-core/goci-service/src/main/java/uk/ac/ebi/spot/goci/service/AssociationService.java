@@ -136,6 +136,7 @@ public class AssociationService {
         return associations;
     }
 
+
     public void loadAssociatedData(Association association) {
         int traitCount = association.getEfoTraits().size();
         Study study = studyService.fetchOne(association.getStudy());

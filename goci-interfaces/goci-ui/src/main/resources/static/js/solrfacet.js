@@ -16,8 +16,6 @@ function applyFacet(){
         solrFacet(searchTerm, facet);
     }
     else {
-        console.log("This is where I come from");
-
         clearFacetting();
     }
 }
@@ -41,7 +39,7 @@ function clearFacetting() {
     $(".results-container.more-results .table-toggle").show();
     $(".hidden-resource.in").collapse('hide');
 
-    $(".ttbutton:not(.glyphicon-chevron-right)").toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
+    $(".ttbutton:not(.glyphicon-chevron-down)").toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
 
 }
 

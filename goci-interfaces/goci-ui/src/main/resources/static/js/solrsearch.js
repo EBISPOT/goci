@@ -9,9 +9,51 @@ var SearchState = {
 
 $(document).ready(function () {
     console.log("solr search loaded and ready");
+    //toggle the chevron on the expand/collapse table button
     $('.table-toggle').click(function () {
-        $(this).find('span').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
+        $(this).find('span').toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
+
     });
+
+    //toggle the +/- sign on the expand study button and expand the appropriate study
+    $('#study-table-body').on('click', 'button.row-toggle', function () {
+        $(this).find('span').toggleClass('glyphicon-plus glyphicon-minus');
+        var target = $(this).attr('data-target');
+        $(target).collapse('toggle');
+
+    });
+
+    $('#expand-table').click(function () {
+        //if the table is collapsed, expand it
+        if ($(this).hasClass('table-collapsed')) {
+            $('#study-table-body').find('.hidden-resource').collapse('show');
+            $('#study-table-body').find('.hidden-study-row').collapse('show');
+            $('#study-table-body').find('span.tgb').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+            $('.study-toggle').find('span').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+            $(this).removeClass('table-collapsed')
+            $(this).empty().text("Collapse all studies");
+        }
+        //else collapse it
+        else {
+            $('#study-table-body').find('.hidden-resource').collapse('hide');
+            $('#study-table-body').find('.hidden-study-row').collapse('hide');
+            $('#study-table-body').find('span.tgb').removeClass('glyphicon-minus').addClass('glyphicon-plus');
+            $('.study-toggle').find('span').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+            $(this).addClass('table-collapsed');
+            $(this).empty().text("Expand all studies");
+        }
+    });
+
+    $('.study-toggle').click(function () {
+        $('#study-table-body').find('.hidden-study-row.in').collapse('hide');
+    });
+
+    // Tooltips for various filter and table headings
+    $('[data-toggle="tooltip"]').tooltip({
+        placement: 'top',
+        container: 'body'
+    });
+
     if (window.history && window.history.pushState) {
         $(window).on('popstate', function () {
             applyFacet();
@@ -25,18 +67,22 @@ function loadResults() {
     console.log("Search term is " + searchTerm);
     if (searchTerm) {
         console.log("Loading results for " + searchTerm);
+
+        buildBreadcrumbs();
+
         $('#lower_container').show();
         $('#loadingResults').show();
 
-        buildBreadcrumbs();
         solrSearch(searchTerm);
         if (window.location.hash) {
+            console.log("Applying a facet");
             applyFacet();
         }
-        else {
-            // no facets to apply, so make sure we are showing all results tables
-            clearFacetting();
-        }
+        //else {
+        //    console.log("Clearing all facets");
+        //    // no facets to apply, so make sure we are showing all results tables
+        //    clearFacetting();
+        //}
         //$('#lower_container').show();
     }
 }
@@ -68,9 +114,9 @@ function buildBreadcrumbs() {
         else if (facet == "diseasetrait") {
             last.text("Catalog traits");
         }
-        else if (facet == "singlenucleotidepolymorphism") {
-            last.text("SNPs");
-        }
+        //else if (facet == "singlenucleotidepolymorphism") {
+        //    last.text("SNPs");
+        //}
         breadcrumbs.append(last);
     }
 }
@@ -94,15 +140,15 @@ function processData(data) {
         var studyTable = $('#study-table-body').empty();
         var associationTable = $('#association-table-body').empty();
         var traitTable = $('#diseasetrait-table-body').empty();
-        var snpTable = $('#singlenucleotidepolymorphism-table-body').empty();
+        //var snpTable = $('#singlenucleotidepolymorphism-table-body').empty();
+        $('#trait-dropdown ul').empty();
 
         $(".results-container .toggle").hide();
-
         for (var j = 0; j < documents.length; j++) {
             var doc = documents[j];
 
             if (doc.resourcename == "study") {
-                if (studyTable.find('tr').length == 10) {
+                if (studyTable.find('.mainrow').length == 5) {
                     $('#study-summaries .table-toggle').show();
                     $('#study-summaries').addClass("more-results");
 
@@ -119,25 +165,25 @@ function processData(data) {
             else if (doc.resourcename == "diseaseTrait") {
                 if (traitTable.find('tr').length == 5) {
                     $('#diseasetrait-summaries .table-toggle').show();
-                    $('#diseasetrait-summaries').addClass("more-results");                }
+                    $('#diseasetrait-summaries').addClass("more-results");
+                }
                 processTrait(doc, traitTable);
             }
-            else if (doc.resourcename == "singleNucleotidePolymorphism") {
-                if (snpTable.find('tr').length == 5) {
-                    $('#singlenucleotidepolymorphism-summaries .table-toggle').show();
-                    $('#singlenucleotidepolymorphism-summaries').addClass("more-results");
-                }
-                processSnp(doc, snpTable);
-            }
+            //else if (doc.resourcename == "singleNucleotidePolymorphism") {
+            //    if (snpTable.find('tr').length == 5) {
+            //        $('#singlenucleotidepolymorphism-summaries .table-toggle').show();
+            //        $('#singlenucleotidepolymorphism-summaries').addClass("more-results");
+            //    }
+            //    processSnp(doc, snpTable);
+            //}
         }
         setState(SearchState.RESULTS);
-        $('#loadingResults').hide();
-
     }
     else {
         setState(SearchState.NO_RESULTS);
     }
 
+    $('#loadingResults').hide();
     console.log("Data display complete");
 }
 
@@ -171,32 +217,57 @@ function setState(state) {
 
 function processStudy(study, table) {
     var row = $("<tr>");
+    row.addClass('mainrow');
+    var hiddenrow = $("<tr>");
 
-    if (table.find('tr').length >= 10) {
+
+    if (table.find('.mainrow').length >= 5) {
         row.addClass('accordion-body');
         row.addClass('collapse');
         row.addClass('hidden-resource');
     }
     var europepmc = "http://www.europepmc.org/abstract/MED/".concat(study.pubmedId);
-    var link = "<a href='".concat(europepmc).concat("' target='_blank'>").concat(study.author).concat("</a>");
+    var searchlink = "<span><a href='/search?query=".concat(study.author).concat("'>").concat(study.author).concat("</a></span>");
+    var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
 
-    row.append($("<td>").html(link));
+    row.append($("<td>").html(searchlink.concat('&nbsp;&nbsp;').concat(epmclink)));
     row.append($("<td>").html(study.publicationDate.substring(0, 10)));
     row.append($("<td>").html(study.publication));
     row.append($("<td>").html(study.title));
     row.append($("<td>").html(study.trait));
     row.append($("<td>").html(study.associationCount));
-    var plusicon = "<button class='btn btn-default btn-xs accordion-toggle' data-toggle='collapse' data-target='.".concat(study.id).concat("' aria-expanded='false' aria-controls='").concat(study.id).concat("'><span class='glyphicon glyphicon-plus'></span></button>");
+
+    var id = (study.id).replace(':', '-');
+    var plusicon = "<button class='row-toggle btn btn-default btn-xs accordion-toggle' data-toggle='collapse' data-target='.".concat(id).concat(".hidden-study-row' aria-expanded='false' aria-controls='").concat(study.id).concat("'><span class='glyphicon glyphicon-plus tgb'></span></button>");
 
     row.append($("<td>").html(plusicon));
     table.append(row);
 
 
-    var hiddenrow = $("<tr>");
-    hiddenrow.addClass(study.id);
+    hiddenrow.addClass(id);
     hiddenrow.addClass('collapse');
     hiddenrow.addClass('accordion-body');
     hiddenrow.addClass('hidden-study-row');
+
+    //var innerTable = $("<table>").addClass('table').addClass('sample-info');
+    var innerTable = $("<table>").addClass('sample-info');
+
+    innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Initial sample description")).append($("<td>").html(study.initialSampleDescription)));
+    innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Replication sample description")).append($("<td>").html(study.replicateSampleDescription)));
+    innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Platform [SNPs passing QC]")).append($("<td>").html(study.platform)));
+
+    var r4 = $("<tr>");
+    r4.append($("<th>").attr('style', 'width: 30%').html("CNV study?"));
+
+    if (study.cnv) {
+        r4.append($("<td>").html("yes"));
+    }
+    else {
+        r4.append($("<td>").html("no"));
+    }
+    innerTable.append(r4);
+
+    hiddenrow.append($('<td>').attr('colspan', 7).attr('style', 'border-top: none').append(innerTable));
 
     table.append(hiddenrow);
 }
@@ -211,15 +282,16 @@ function processAssociation(association, table) {
 
     if (association.rsId != null) {
         if (association.rsId.length == 1 && (association.rsId[0].indexOf('x') == -1)) {
-            var dbsnp = "<a href='http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=".concat(association.rsId[0].substring(2)).concat("'>").concat(association.strongestAllele).concat("</a>");
-            row.append($("<td>").html(dbsnp));
+            var searchlink = "<span><a href='/search?query=".concat(association.rsId[0]).concat("'>").concat(association.strongestAllele).concat("</a></span>");
+            var dbsnp = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(association.rsId[0].substring(2)).concat("'  target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
+            row.append($("<td>").html(searchlink.concat('&nbsp;&nbsp;').concat(dbsnp)));
         }
         else {
             row.append($("<td>").html(association.strongestAllele));
 
         }
     }
-
+    row.append($("<td>").html(association.riskFrequency));
     var pval = association.pValue;
 
     if (association.qualifier != null && association.qualifier != '') {
@@ -242,7 +314,25 @@ function processAssociation(association, table) {
         }
     }
     row.append($("<td>").html(association.orPerCopyRange));
-    row.append($("<td>").html(association.chromosomePosition));
+    row.append($("<td>").html(association.region));
+
+    var location = "chr";
+    if(association.chromosomeName != null){
+        location = location.concat(association.chromosomeName);
+    }
+    else{
+        location = location.concat("?");
+    }
+    if(association.chromosomePosition){
+        location = location.concat(":").concat(association.chromosomePosition);
+    }
+    else{
+        location = location.concat(":").concat("?");
+    }
+    row.append($("<td>").html(location));
+
+    row.append($("<td>"));
+//    row.append($("<td>").html(snp.context));
 
     var repgene = '';
     if (association.reportedGene != null) {
@@ -273,8 +363,9 @@ function processAssociation(association, table) {
     row.append($("<td>").html(mapgene));
 //    TO DO: make the author field into a link to the study page using the pmid
     var europepmc = "http://www.europepmc.org/abstract/MED/".concat(association.pubmedId);
-    var study = "<a href='".concat(europepmc).concat("' target='_blank'>").concat(association.author).concat("</a>");
-    row.append($("<td>").html(study));
+    var searchlink = "<span><a href='/search?query=".concat(association.author).concat("'>").concat(association.author).concat("</a></span>");
+    var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
+    row.append($("<td>").html(searchlink.concat('&nbsp;&nbsp;').concat(epmclink)));
 
 
     table.append(row);
@@ -289,17 +380,20 @@ function processTrait(diseasetrait, table) {
     }
     row.append($("<td>").html(diseasetrait.trait));
 
+    $('#trait-dropdown ul').append($("<li>").html("<input type='checkbox' value='".concat(diseasetrait.trait).concat("'/>").concat(diseasetrait.trait).concat("</a>")));
+
     var efo = '';
     if (diseasetrait.efoLink != null) {
         for (var j = 0; j < diseasetrait.efoLink.length; j++) {
             var data = diseasetrait.efoLink[j].split("|");
-            var link = "<a href='".concat(data[2]).concat("' target='_blank'>").concat(data[0]).concat("</a>");
+            var searchlink = "<span><a href='/search?query=".concat(data[0]).concat("'>").concat(data[0]).concat("</a></span>");
+            var link = "<a href='".concat(data[2]).concat("' target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
 
             if (efo == '') {
-                efo = link;
+                efo = searchlink.concat('&nbsp;&nbsp;').concat(link);
             }
             else {
-                efo = efo.concat(", <br>").concat(link);
+                efo = efo.concat(", <br>").concat(searchlink.concat('&nbsp;&nbsp;').concat(link));
             }
         }
     }
@@ -329,54 +423,55 @@ function processTrait(diseasetrait, table) {
     table.append(row);
 }
 
-function processSnp(snp, table) {
-    var row = $("<tr>");
-    if (table.find('tr').length >= 5) {
-        row.addClass('accordion-body');
-        row.addClass('collapse');
-        row.addClass('hidden-resource');
-    }
-    row.append($("<td>").html(snp.rsId));
-
-    var location = "chr".concat(snp.chromosomeName).concat(":").concat(snp.chromosomePosition);
-    row.append($("<td>").html(location));
-    row.append($("<td>").html(snp.region));
-    row.append($("<td>").html(snp.context));
-
-    var gene = '';
-    if (snp.mappedGene != null) {
-        for (var j = 0; j < snp.mappedGene.length; j++) {
-            if (gene == '') {
-                gene = snp.mappedGene[j];
-            }
-
-            else {
-                gene = gene.concat(", ").concat(snp.mappedGene[j]);
-            }
-        }
-    }
-    row.append($("<td>").html(gene));
-
-    var efo = '';
-    if (snp.efoLink != null) {
-        for (var j = 0; j < snp.efoLink.length; j++) {
-            var data = snp.efoLink[j].split("|");
-            var link = "<a href='".concat(data[2]).concat("' target='_blank'>").concat(data[0]).concat("</a>");
-
-            if (efo == '') {
-                efo = link;
-            }
-            else {
-                efo = efo.concat(", <br>").concat(link);
-            }
-        }
-    }
-    else {
-        efo = "N/A";
-    }
-    row.append($("<td>").html(efo));
-    table.append(row);
-}
+//function processSnp(snp, table) {
+//    var row = $("<tr>");
+//    if (table.find('tr').length >= 5) {
+//        row.addClass('accordion-body');
+//        row.addClass('collapse');
+//        row.addClass('hidden-resource');
+//    }
+//    row.append($("<td>").html(snp.rsId));
+//
+//    var location = "chr".concat(snp.chromosomeName).concat(":").concat(snp.chromosomePosition);
+//    row.append($("<td>").html(location));
+//    row.append($("<td>").html(snp.region));
+//    row.append($("<td>").html(snp.context));
+//
+//    var gene = '';
+//    if (snp.mappedGene != null) {
+//        for (var j = 0; j < snp.mappedGene.length; j++) {
+//            if (gene == '') {
+//                gene = snp.mappedGene[j];
+//            }
+//
+//            else {
+//                gene = gene.concat(", ").concat(snp.mappedGene[j]);
+//            }
+//        }
+//    }
+//    row.append($("<td>").html(gene));
+//
+//    var efo = '';
+//    if (snp.efoLink != null) {
+//        for (var j = 0; j < snp.efoLink.length; j++) {
+//            var data = snp.efoLink[j].split("|");
+//            var searchlink = "<span><a href='/search?query=".concat(data[0]).concat("'>").concat(data[0]).concat("</a></span>");
+//            var link = "<a href='".concat(data[2]).concat("' target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
+//
+//            if (efo == '') {
+//                efo = searchlink.concat(link);
+//            }
+//            else {
+//                efo = efo.concat(", <br>").concat(searchlink.concat('&nbsp;').concat(link));
+//            }
+//        }
+//    }
+//    else {
+//        efo = "N/A";
+//    }
+//    row.append($("<td>").html(efo));
+//    table.append(row);
+//}
 
 function updateCountBadges(countArray) {
     console.log("Updating facet counts for " + (countArray.length / 2) + " badges");
@@ -387,6 +482,13 @@ function updateCountBadges(countArray) {
         var facet = $('#' + resource + '-facet span');
         facet.empty();
         facet.append(count);
+
+        if ($('#' + resource + '-facet').hasClass("disabled")) {
+            $('#' + resource + '-facet').removeClass("disabled");
+            var summary = $('#' + resource + '-summaries');
+            summary.removeClass("no-results");
+            summary.show();
+        }
 
         if (count == 0) {
             $('#' + resource + '-facet').addClass("disabled");

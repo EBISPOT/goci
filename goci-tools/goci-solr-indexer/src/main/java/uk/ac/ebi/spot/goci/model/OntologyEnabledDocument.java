@@ -2,9 +2,7 @@ package uk.ac.ebi.spot.goci.model;
 
 import org.apache.solr.client.solrj.beans.Field;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -24,9 +22,6 @@ public abstract class OntologyEnabledDocument<O> extends EmbeddableDocument<O> {
     @Field("efoLink") private Set<String> efoLinks;
 
     @Field("parent") private Set<String> superclassLabels;
-    @Field("child") private Set<String> subclassLabels;
-
-    @Field("*_rel") private Map<String, Set<String>> relations;
 
     public OntologyEnabledDocument(O object) {
         super(object);
@@ -36,8 +31,6 @@ public abstract class OntologyEnabledDocument<O> extends EmbeddableDocument<O> {
         this.synonyms = new HashSet<>();
         this.descriptions = new HashSet<>();
         this.superclassLabels = new HashSet<>();
-        this.subclassLabels = new HashSet<>();
-        this.relations = new HashMap<>();
         this.efoLinks = new HashSet<>();
     }
 
@@ -111,33 +104,6 @@ public abstract class OntologyEnabledDocument<O> extends EmbeddableDocument<O> {
 
     public void addSuperclassLabel(String superclassLabel) {
         superclassLabels.add(superclassLabel);
-    }
-
-    public Set<String> getSubclassLabels() {
-        return subclassLabels;
-    }
-
-    public void setSubclassLabels(Set<String> subclassLabels) {
-        this.subclassLabels = subclassLabels;
-    }
-
-    public void addSubclassLabel(String subclassLabel) {
-        subclassLabels.add(subclassLabel);
-    }
-
-    public Map<String, Set<String>> getRelations() {
-        return relations;
-    }
-
-    public void setRelations(Map<String, Set<String>> relations) {
-        this.relations = relations;
-    }
-
-    public void addRelation(String relationship, Set<String> relatedClassLabels) {
-        if (!relations.containsKey(relationship)) {
-            relations.put(relationship, new HashSet<>());
-        }
-        relations.get(relationship).addAll(relatedClassLabels);
     }
 
     public Set<String> getEfoLinks() {

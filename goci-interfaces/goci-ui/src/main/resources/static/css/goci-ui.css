@@ -48,6 +48,14 @@
     margin-right: 0;
 }
 
+.pval-label {
+    font-weight: bold;
+    display: inline-block;
+    width: 7%;
+    margin-left: 0.5em;
+    margin-right: 0;
+}
+
 .filter-value {
     display: inline-block;
     width: 30%;
@@ -55,9 +63,16 @@
     margin-right: 0;
 }
 
+.p-value {
+    display: inline-block;
+    width: 20%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
 .filter-values {
     display: inline-block;
-    width: 65%;
+    width: 60%;
     margin-left: 0;
     margin-right: 0;
 }
@@ -148,6 +163,10 @@
     padding-top: 20px;
 }
 
+.search-results-container {
+    margin-top: 10px;
+}
+
 .tight-to-top {
     padding-top: 0 !important;
 }
@@ -165,9 +184,9 @@ a > .toplevel-view {
     color: #333;
 }
 
-table .collapse.in {
-    display:table-row;
-}
+/*table .collapse.in {*/
+    /*display:table-row;*/
+/*}*/
 
 
 .hiddenRow {
@@ -187,4 +206,49 @@ table .collapse.in {
 @keyframes spin {
     from { transform: scale(1) rotate(0deg);}
     to { transform: scale(1) rotate(360deg);}
+}
+
+.table-striped-study > tbody > tr:nth-child(4n-3) {
+    background-color: #F6FDFC;
+}
+
+.table-striped-study > tbody > tr:nth-child(4n-2) {
+    background-color: #F6FDFC;
+}
+
+.sample-info {
+    background-color: transparent !important;
+    margin-left: 20%;
+    width: 80%;
+}
+
+.sample-info > thead > tr > th,
+.sample-info > tbody > tr > th,
+.sample-info > tfoot > tr > th,
+.sample-info > thead > tr > td,
+.sample-info > tbody > tr > td,
+.sample-info > tfoot > tr > td {
+    padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    /*border-top: 1px solid #ddd;*/
+}
+.sample-info > thead > tr > th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #ddd;
+}
+
+.context-help {
+    margin-left: 1px;
+    font-size: x-small;
+    top: -0.8em;
+}
+
+.glyphicon-link {
+    color: #A6703F;
+}
+
+#trait-dropdown > ul > li {
+    padding-left: 3%;
+    padding-bottom: 1%;
 }

@@ -1,7 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -33,6 +32,12 @@ public class Locus {
             joinColumns = @JoinColumn(name = "LOCUS_ID"),
             inverseJoinColumns = @JoinColumn(name = "REPORTED_GENE_ID"))
     private Collection<Gene> authorReportedGenes = new ArrayList<>();
+
+    @ManyToOne
+    @JoinTable(name = "ASSOCIATION_LOCUS",
+            joinColumns = @JoinColumn(name = "LOCUS_ID"),
+            inverseJoinColumns = @JoinColumn(name = "ASSOCIATION_ID"))
+    private Association association;
 
     // JPA no-args constructor
     public Locus() {

@@ -1,7 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
 import org.apache.solr.client.solrj.beans.Field;
-import uk.ac.ebi.spot.goci.exception.SolrIndexingException;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
