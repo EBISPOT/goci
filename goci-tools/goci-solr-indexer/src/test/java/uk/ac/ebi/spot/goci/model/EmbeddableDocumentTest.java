@@ -22,10 +22,10 @@ import static org.junit.Assert.fail;
  */
 public class EmbeddableDocumentTest {
     private Study study;
-    private SingleNucleotidePolymorphism snp;
+    private Association association;
 
     private StudyDocument studyDoc;
-    private SnpDocument snpDoc;
+    private AssociationDocument associationDoc;
 
     @Before
     public void setUp() {
@@ -34,19 +34,37 @@ public class EmbeddableDocumentTest {
         h.setPublishDate(new Date());
         this.study = new Study("author", new Date(), "publication", "title", "initial sample size", "replicate " +
                 "sample size", "platform", "123456", false, false, false, null, Collections.<EfoTrait>emptyList(),
-                                Collections.<SingleNucleotidePolymorphism>emptyList(), h);
+                               Collections.<SingleNucleotidePolymorphism>emptyList(), h);
         study.setId(1l);
         this.studyDoc = new StudyDocument(study);
-        this.snp = new SingleNucleotidePolymorphism("rs1234", "1", "1234567", 1l, "intron",
-                                                                            new Date(), Collections.emptyList());
-        snp.setId(2l);
-        this.snpDoc = new SnpDocument(snp);
+
+        this.association = new Association("riskFrequency",
+                                           "allele",
+                                           0.00000005f,
+                                           "pValueText",
+                                           1.0f,
+                                           false,
+                                           "snpType",
+                                           false,
+                                           false,
+                                           true,
+                                           1,
+                                           1,
+                                           1.0f,
+                                           1.0f,
+                                           "orPerCopyRange",
+                                           "orPerCopyDescr",
+                                           study,
+                                           Collections.emptyList(),
+                                           Collections.emptyList());
+        association.setId(2l);
+        this.associationDoc = new AssociationDocument(association);
     }
 
     @Test
     public void testEmbed() {
         try {
-            snpDoc.embed(studyDoc);
+            studyDoc.embed(associationDoc);
         }
         catch (DocumentEmbeddingException e) {
             e.printStackTrace();

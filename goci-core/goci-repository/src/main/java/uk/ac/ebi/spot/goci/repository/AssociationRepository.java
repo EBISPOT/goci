@@ -30,11 +30,11 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
 
     Page<Association> findByStudyHousekeepingPublishDateIsNotNull(Pageable pageable);
 
-    List<Association> findByLociStrongestRiskAllelesSnpIdAndStudyHousekeepingPublishDataIsNotNull(Long snpId);
+    List<Association> findByLociStrongestRiskAllelesSnpIdAndStudyHousekeepingPublishDateIsNotNull(Long snpId);
 
-    List<Association> findByLociStrongestRiskAllelesSnpIdAndStudyHousekeepingPublishDataIsNotNull(Sort sort, Long snpId);
+    List<Association> findByLociStrongestRiskAllelesSnpIdAndStudyHousekeepingPublishDateIsNotNull(Sort sort, Long snpId);
 
-    Page<Association> findByLociStrongestRiskAllelesSnpIdAndStudyHousekeepingPublishDataIsNotNull(Pageable pageable, Long snpId);
+    Page<Association> findByLociStrongestRiskAllelesSnpIdAndStudyHousekeepingPublishDateIsNotNull(Pageable pageable, Long snpId);
 
     List<Association> findByStudyDiseaseTraitId(Long diseaseTraitId);
 

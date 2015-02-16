@@ -124,7 +124,7 @@ public class AssociationService {
     @Transactional(readOnly = true)
     public Collection<Association> findPublishedAssociationsBySnpId(Long snpId) {
         Collection<Association> associations = associationRepository
-                .findByLociStrongestRiskAllelesSnpIdAndStudyHousekeepingPublishDataIsNotNull(snpId);
+                .findByLociStrongestRiskAllelesSnpIdAndStudyHousekeepingPublishDateIsNotNull(snpId);
         associations.forEach(this::loadAssociatedData);
         return associations;
     }

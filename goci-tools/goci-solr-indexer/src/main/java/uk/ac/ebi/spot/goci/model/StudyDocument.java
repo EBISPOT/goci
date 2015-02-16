@@ -5,6 +5,8 @@ import org.apache.solr.client.solrj.beans.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -73,6 +75,23 @@ public class StudyDocument extends EmbeddableDocument<Study> {
         if (study.getHousekeeping().getPublishDate() != null) {
             this.catalogAddedDate = df.format(study.getHousekeeping().getPublishDate());
         }
+
+        this.riskFrequencies = new LinkedHashSet<>();
+        this.qualifiers = new LinkedHashSet<>();
+        this.pValues = new LinkedHashSet<>();
+        this.orPerCopyNums = new LinkedHashSet<>();
+        this.orPerCopyUnitDescrs = new LinkedHashSet<>();
+        this.orPerCopyRanges = new LinkedHashSet<>();
+        this.orTypes = new LinkedHashSet<>();
+        this.rsIds = new LinkedHashSet<>();
+        this.strongestAlleles = new LinkedHashSet<>();
+        this.contexts = new LinkedHashSet<>();
+        this.regions = new LinkedHashSet<>();
+        this.mappedGenes = new LinkedHashSet<>();
+        this.reportedGenes = new LinkedHashSet<>();
+        this.chromosomeNames = new LinkedHashSet<>();
+        this.chromosomePositions = new LinkedHashSet<>();
+        this.lastModifiedDates = new LinkedHashSet<>();
     }
 
     public String getPubmedId() {
@@ -139,7 +158,7 @@ public class StudyDocument extends EmbeddableDocument<Study> {
         return pValues;
     }
 
-    public void addPValue(Float pValue) {
+    public void addPValue(float pValue) {
         this.pValues.add(pValue);
     }
 
@@ -147,7 +166,7 @@ public class StudyDocument extends EmbeddableDocument<Study> {
         return orPerCopyNums;
     }
 
-    public void addOrPerCopyNum(Float orPerCopyNum) {
+    public void addOrPerCopyNum(float orPerCopyNum) {
         this.orPerCopyNums.add(orPerCopyNum);
     }
 
@@ -163,7 +182,7 @@ public class StudyDocument extends EmbeddableDocument<Study> {
         return orPerCopyRanges;
     }
 
-    public void addOrPerCopyRanges(String orPerCopyRange) {
+    public void addOrPerCopyRange(String orPerCopyRange) {
         this.orPerCopyRanges.add(orPerCopyRange);
     }
 
@@ -207,13 +226,12 @@ public class StudyDocument extends EmbeddableDocument<Study> {
         this.regions.add(region);
     }
 
-
     public Collection<String> getMappedGenes() {
         return mappedGenes;
     }
 
-    public void addMappedGenes(Collection<String> mappedGenes) {
-        this.mappedGenes.addAll(mappedGenes);
+    public void addMappedGene(String mappedGene) {
+        this.mappedGenes.add(mappedGene);
     }
 
     public Collection<String> getReportedGenes() {
@@ -229,23 +247,23 @@ public class StudyDocument extends EmbeddableDocument<Study> {
         return chromosomeNames;
     }
 
-    public void addChromosomeName(String chromosomeName) {
-        this.chromosomeNames.add(chromosomeName);
+    public void addChromosomeNames(Collection<String> chromosomeNames) {
+        this.chromosomeNames.addAll(chromosomeNames);
     }
 
     public Collection<Integer> getChromosomePositions() {
         return chromosomePositions;
     }
 
-    public void addChromosomePosition(Integer chromosomePosition) {
-        this.chromosomePositions.add(chromosomePosition);
+    public void addChromosomePositions(Collection<Integer> chromosomePositions) {
+        this.chromosomePositions.addAll(chromosomePositions);
     }
 
     public Collection<String> getLastModifiedDates() {
         return lastModifiedDates;
     }
 
-    public void addLastModifiedDate(String lastModifiedDate) {
-        this.lastModifiedDates.add(lastModifiedDate);
+    public void addLastModifiedDates(Collection<String> lastModifiedDates) {
+        this.lastModifiedDates.addAll(lastModifiedDates);
     }
 }

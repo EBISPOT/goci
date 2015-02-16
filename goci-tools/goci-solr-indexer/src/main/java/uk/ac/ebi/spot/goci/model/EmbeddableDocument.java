@@ -10,7 +10,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Javadocs go here!
@@ -25,25 +27,37 @@ public abstract class EmbeddableDocument<O> extends Document<O> {
 
     public void embed(Document document) {
         try {
-            BeanInfo docInfo = Introspector.getBeanInfo(document.getClass());
-            for (PropertyDescriptor descriptor : docInfo.getPropertyDescriptors()) {
-                if (!descriptor.getName().equals("id")) {
-                    try {
-                        // determine method to update this document with doc being embedded
-                        Method propertyAdderMethod = findPropertyAdder(descriptor);
-                        // invoke read method on passed document
-                        Object fieldToEmbed = descriptor.getReadMethod().invoke(document);
-                        propertyAdderMethod.invoke(this, fieldToEmbed);
-                    }
-                    catch (InvocationTargetException | IllegalAccessException e) {
-                        throw new DocumentEmbeddingException("Failed to read property '" + descriptor.getName() + "'",
-                                                             e);
+            Set<String> excludeNames = new HashSet<>();
+            BeanInfo objectInfo = Introspector.getBeanInfo(Document.class);
+            for (PropertyDescriptor descriptor : objectInfo.getPropertyDescriptors()) {
+                excludeNames.add(descriptor.getName());
+            }
+            try {
+                BeanInfo docInfo = Introspector.getBeanInfo(document.getClass());
+                for (PropertyDescriptor descriptor : docInfo.getPropertyDescriptors()) {
+                    if (!excludeNames.contains(descriptor.getName())) {
+                        try {
+                            // determine method to update this document with doc being embedded
+                            Method propertyAdderMethod = findPropertyAdder(descriptor);
+                            // invoke read method on passed document
+                            Object fieldToEmbed = descriptor.getReadMethod().invoke(document);
+                            propertyAdderMethod.invoke(this, fieldToEmbed);
+                        }
+                        catch (InvocationTargetException | IllegalAccessException e) {
+                            throw new DocumentEmbeddingException(
+                                    "Failed to read property '" + descriptor.getName() + "'",
+                                    e);
+                        }
                     }
                 }
             }
+            catch (IntrospectionException e) {
+                throw new DocumentEmbeddingException("Failed to analyse document in preparation for embedding", e);
+            }
         }
         catch (IntrospectionException e) {
-            throw new DocumentEmbeddingException("Failed to analyse document in preparation for embedding", e);
+            throw new DocumentEmbeddingException(
+                    "Failed to read Object.class when determining which properties to exclude", e);
         }
     }
 

@@ -38,17 +38,17 @@ public class TraitEnrichmentService implements DocumentEnrichmentService<Disease
     }
 
     @Override public void doEnrichment(DiseaseTraitDocument document) {
-        long id = Long.valueOf(document.getId().split(":")[1]);
-
-        studyService.findByDiseaseTraitId(id).forEach(
-                study -> document.embed(new StudyDocument(study)));
-        associationService.findPublishedAssociationsByDiseaseTraitId(id).forEach(
-                association -> document.embed(new AssociationDocument(association)));
-        snpService.findByDiseaseTraitId(id).forEach(
-                snp -> document.embed(new SnpDocument(snp)));
-        geneService.findReportedGenesByDiseaseTraitId(id).forEach(
-                gene -> document.embed(new ReportedGeneDocument(gene)));
-        geneService.findMappedGenesByDiseaseTraitId(id).forEach(
-                gene -> document.embed(new MappedGeneDocument(gene)));
+//        long id = Long.valueOf(document.getId().split(":")[1]);
+//
+//        studyService.findByDiseaseTraitId(id).forEach(
+//                study -> document.embed(new StudyDocument(study)));
+//        associationService.findPublishedAssociationsByDiseaseTraitId(id).forEach(
+//                association -> document.embed(new AssociationDocument(association)));
+//        snpService.findByDiseaseTraitId(id).forEach(
+//                snp -> document.embed(new SnpDocument(snp)));
+//        geneService.findReportedGenesByDiseaseTraitId(id).forEach(
+//                gene -> document.embed(new ReportedGeneDocument(gene)));
+//        geneService.findMappedGenesByDiseaseTraitId(id).forEach(
+//                gene -> document.embed(new MappedGeneDocument(gene)));
     }
 }
