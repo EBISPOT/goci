@@ -222,18 +222,20 @@ public class AssociationDocument extends EmbeddableDocument<Association> {
         List<String> genes = new ArrayList<>();
         snp.getGenomicContexts().forEach(
                 context -> {
-                    if (context.isDownstream()) {
-                        genes.add(0, context.getGene().getGeneName());
-                    }
-                    else {
-                        genes.add(context.getGene().getGeneName());
+                    if (!genes.contains(context.getGene().getGeneName())) {
+                        if (context.isDownstream()) {
+                            genes.add(0, context.getGene().getGeneName());
+                        }
+                        else {
+                            genes.add(context.getGene().getGeneName());
+                        }
                     }
                 });
         String geneString = "";
         if (genes.size() > 2) {
             throw new SolrIndexingException(
                     "Unable to index genetic data for association " +
-                            "'" + association.getId() + ": more than 2 mapped genes " +
+                            "'" + association.getId() + "': more than 2 mapped genes " +
                             "(" + genes + ")");
         }
         else {
