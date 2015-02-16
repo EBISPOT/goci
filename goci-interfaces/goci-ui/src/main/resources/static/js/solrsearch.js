@@ -230,7 +230,7 @@ function processStudy(study, table) {
     var searchlink = "<span><a href='/search?query=".concat(study.author).concat("'>").concat(study.author).concat("</a></span>");
     var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
 
-    row.append($("<td>").html(searchlink.concat('&nbsp;').concat(epmclink)));
+    row.append($("<td>").html(searchlink.concat('&nbsp;&nbsp;').concat(epmclink)));
     row.append($("<td>").html(study.publicationDate.substring(0, 10)));
     row.append($("<td>").html(study.publication));
     row.append($("<td>").html(study.title));
@@ -283,8 +283,8 @@ function processAssociation(association, table) {
     if (association.rsId != null) {
         if (association.rsId.length == 1 && (association.rsId[0].indexOf('x') == -1)) {
             var searchlink = "<span><a href='/search?query=".concat(association.rsId[0]).concat("'>").concat(association.strongestAllele).concat("</a></span>");
-            var dbsnp = "<span><a href='http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=".concat(association.rsId[0].substring(2)).concat("'  target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
-            row.append($("<td>").html(searchlink.concat('&nbsp;').concat(dbsnp)));
+            var dbsnp = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(association.rsId[0].substring(2)).concat("'  target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
+            row.append($("<td>").html(searchlink.concat('&nbsp;&nbsp;').concat(dbsnp)));
         }
         else {
             row.append($("<td>").html(association.strongestAllele));
@@ -314,10 +314,23 @@ function processAssociation(association, table) {
         }
     }
     row.append($("<td>").html(association.orPerCopyRange));
-
-    var location = "chr".concat(association.chromosomeName).concat(":").concat(association.chromosomePosition);
-    row.append($("<td>").html(location));
     row.append($("<td>").html(association.region));
+
+    var location = "chr";
+    if(association.chromosomeName != null){
+        location = location.concat(association.chromosomeName);
+    }
+    else{
+        location = location.concat("?");
+    }
+    if(association.chromosomePosition){
+        location = location.concat(":").concat(association.chromosomePosition);
+    }
+    else{
+        location = location.concat(":").concat("?");
+    }
+    row.append($("<td>").html(location));
+
     row.append($("<td>"));
 //    row.append($("<td>").html(snp.context));
 
@@ -352,7 +365,7 @@ function processAssociation(association, table) {
     var europepmc = "http://www.europepmc.org/abstract/MED/".concat(association.pubmedId);
     var searchlink = "<span><a href='/search?query=".concat(association.author).concat("'>").concat(association.author).concat("</a></span>");
     var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
-    row.append($("<td>").html(searchlink.concat('&nbsp;').concat(epmclink)));
+    row.append($("<td>").html(searchlink.concat('&nbsp;&nbsp;').concat(epmclink)));
 
 
     table.append(row);
@@ -367,7 +380,7 @@ function processTrait(diseasetrait, table) {
     }
     row.append($("<td>").html(diseasetrait.trait));
 
-    $('#trait-dropdown ul').append($("<li>").html("<a href='#'>".concat(diseasetrait.trait).concat("</a>")));
+    $('#trait-dropdown ul').append($("<li>").html("<input type='checkbox' value='".concat(diseasetrait.trait).concat("'/>").concat(diseasetrait.trait).concat("</a>")));
 
     var efo = '';
     if (diseasetrait.efoLink != null) {
@@ -377,10 +390,10 @@ function processTrait(diseasetrait, table) {
             var link = "<a href='".concat(data[2]).concat("' target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
 
             if (efo == '') {
-                efo = searchlink.concat(link);
+                efo = searchlink.concat('&nbsp;&nbsp;').concat(link);
             }
             else {
-                efo = efo.concat(", <br>").concat(searchlink.concat('&nbsp;').concat(link));
+                efo = efo.concat(", <br>").concat(searchlink.concat('&nbsp;&nbsp;').concat(link));
             }
         }
     }
