@@ -65,10 +65,17 @@ public class PropertyFilePubMedLookupService implements GwasPubMedLookupService 
     }
 
     public PropertyFilePubMedLookupService() {
-        this.summaryString = pubmedRoot.concat(pubmedGwasSummary);
+        if (pubmedRoot != null && pubmedGwasSummary != null) {
+            this.summaryString = pubmedRoot.concat(pubmedGwasSummary);
+        }
     }
 
     public Study dispatchSummaryQuery(String pubmedId) throws PubmedLookupException {
+        if (summaryString == null) {
+            throw new PubmedLookupException(
+                    "Unable to search pubmed - no URL configured. " +
+                            "Set pubmed.root, pubmed.gwas.summary and pubmed.xml.version in your config!");
+        }
 
         Document response = null;
 
