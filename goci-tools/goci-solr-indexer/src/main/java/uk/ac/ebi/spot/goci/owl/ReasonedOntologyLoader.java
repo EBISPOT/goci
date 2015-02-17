@@ -56,7 +56,7 @@ public class ReasonedOntologyLoader extends AbstractOntologyLoader {
         int labelledClassCount = 0;
         int synonymCount = 0;
         int synonymedClassCount = 0;
-        getLog().debug("Loading labels...");
+        getLog().debug("Loading " + allClasses.size() + " classes...");
         for (OWLClass ontologyClass : allClasses) {
             IRI clsIri = ontologyClass.getIRI();
 
@@ -75,7 +75,7 @@ public class ReasonedOntologyLoader extends AbstractOntologyLoader {
             }
 
             // get all synonym annotations
-            getLog().debug("Loading synonyms...");
+            getLog().trace("Loading synonyms of " + clsIri.toString() + "...");
             Set<String> synonyms = evaluateSynonymAnnotationValues(ontology, ontologyClass);
             if (!synonyms.isEmpty()) {
                 addSynonyms(clsIri, synonyms);
@@ -84,7 +84,7 @@ public class ReasonedOntologyLoader extends AbstractOntologyLoader {
             }
 
             // get parent labels
-            getLog().debug("Loading parents...");
+            getLog().trace("Loading parents of " + clsIri.toString() + "...");
             Set<OWLClass> parents = reasoner.getSuperClasses(ontologyClass, false).getFlattened();
             // only add type if the parent isn't excluded
             Set<String> parentLabelSet = parents.stream()
@@ -98,23 +98,18 @@ public class ReasonedOntologyLoader extends AbstractOntologyLoader {
             addClassParentLabels(clsIri, parentLabelSet);
 
             // get child labels
-            getLog().debug("Loading children...");
-            Set<String> childLabelSet = new HashSet<>();
-            label.ifPresent(childLabelSet::add); // always add current class to the parents
+            getLog().trace("Loading children of " + clsIri.toString() + "...");
             Set<OWLClass> children = reasoner.getSubClasses(ontologyClass, false).getFlattened();
             // only add type if the child isn't excluded
-            children.stream()
+            Set<String> childLabelSet = children.stream()
                     .filter(allClasses::contains)
-                    .forEach(childClass -> {
-                        // only add type if the parent isn't excluded
-                        getLog().debug("Next child of " + label + ": " + childClass);
-                        evaluateLabelAnnotationValue(ontology, childClass).ifPresent(childLabelSet::add);
-                    });
+                    .peek(child -> getLog().trace("Next child of " + label + ": " + child))
+                    .map(child -> evaluateLabelAnnotationValue(ontology, child))
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .collect(Collectors.toSet());
+            label.ifPresent(childLabelSet::add); // always also add current class to the parents
             addClassChildLabels(clsIri, childLabelSet);
-
-            // todo - get relationships
-
-
         }
 
         getLog().debug("Successfully indexed " + labelCount + " labels on " + labelledClassCount + " classes and " +
