@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -44,6 +45,7 @@ import java.util.Properties;
  */
 
 @Service
+@Component
 public class PropertyFilePubMedLookupService implements GwasPubMedLookupService {
     @NotNull @Value("${pubmed.xml.version}")
     private String xmlVersion; // xml version is very important here , it must be "&version=2.0"
