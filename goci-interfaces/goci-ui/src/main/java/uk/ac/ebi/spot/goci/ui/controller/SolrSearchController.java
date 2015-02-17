@@ -183,6 +183,7 @@ public class SolrSearchController {
             @RequestParam(value = "orfilter", required = false) String orRange,
             @RequestParam(value = "betafilter", required = false) String betaRange,
             @RequestParam(value = "datefilter", required = false) String dateRange,
+            @RequestParam(value = "traitfilter[]", required = false) String[] traits,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
@@ -214,6 +215,12 @@ public class SolrSearchController {
 
             addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
         }
+        if (traits != null) {
+            System.out.println(String.valueOf(traits));
+
+            addFilterQuery(solrSearchBuilder, "trait", traits);
+        }
+
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -249,6 +256,23 @@ public class SolrSearchController {
 
     private void addFilterQuery(StringBuilder solrSearchBuilder, String filterOn, String filterBy) {
         solrSearchBuilder.append("&fq=").append(filterOn).append("%3A").append(filterBy);
+    }
+
+    private void addFilterQuery(StringBuilder solrSearchBuilder, String filterOn, String[] filterBy) {
+        int counter = 0;
+        String filterString = "";
+        for(String filter : filterBy) {
+            if(counter == 0){
+                filterString = filterString.concat(filterOn).concat("%3A%22").concat(filter).concat("%22");
+                counter++;
+            } else{
+                filterString = filterString.concat("+OR+").concat(filterOn).concat("%3A%22").concat(filter).concat("%22");
+                counter++;
+            }
+        }
+        System.out.println(filterString);
+        solrSearchBuilder.append("&fq=").append(filterString);
+
     }
 
     private void addQuery(StringBuilder solrSearchBuilder, String query) throws IOException {

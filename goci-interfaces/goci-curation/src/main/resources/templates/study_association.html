@@ -118,7 +118,8 @@
             </td>
 
             <!--Region-->
-            <td>N/A</td>
+            <td><span th:each="region: ${snpAssociationForm.regions}"
+                      th:text="${region.name} ?: 'null'"></span></td>
 
             <!--Gene-->
             <td>
@@ -207,14 +208,14 @@
 
 <div class="container-fluid">
     <div class="row">
+
         <div class="form-group">
             <div class="col-md-10">
                 <div id="uploadSNPsForn" class="collapse">
 
-
                     <div class="alert alert-info col-md-offset-1 col-md-5">
                         <a href="#" class="close" data-dismiss="alert">&times;</a>
-                        <strong>Note</strong> File must be in xlsx format
+                        <strong>Note</strong> File must be in xlsx format, a <a href="../static/assets/Extraction_template.xlsx" th:href="@{../../assets/Extraction_template.xlsx}" download="Extraction_template.xlsx">template</a> is available
                     </div>
 
                     <!--Form object is a study, this is so we can pass back ID which can be used-->
