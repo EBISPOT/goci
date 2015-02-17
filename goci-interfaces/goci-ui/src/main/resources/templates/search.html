@@ -246,13 +246,12 @@
                                             <div class="filter-values">
                                                 <div class="btn-group" id="trait-dropdown">
                                                     <button type="button"
-                                                            class="btn btn-default dropdown-toggle"
-                                                            data-toggle="dropdown"
+                                                            class="btn btn-default dropdown-toggle multiSelect"
                                                             aria-expanded="false">
                                                         Reported trait
                                                         <span class="caret"></span>
                                                     </button>
-                                                    <ul class="dropdown-menu" role="menu">
+                                                    <ul class="dropdown-menu scrollable-menu" role="menu">
                                                     </ul>
                                                 </div>
                                             </div>
@@ -275,7 +274,8 @@
                 <div class="col-md-9" id="results-area">
                     <div id="loadingResults" class="col-md-offset-4" style="display: none">
                         <button class="btn btn-lg">
-                            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="margin-right: 1em;"></span>Loading...
+                            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"
+                                  style="margin-right: 1em;"></span>Loading...
                         </button>
 
                     </div>
@@ -380,25 +380,25 @@
                                               data-toggle="tooltip"
                                               data-original-title="Reported beta-coefficient associated with strongest SNP risk allele"></span>
                                     </th>
-                                    <th style="width: 8%">[95%
-                                                          CI]<span class="glyphicon glyphicon-question-sign context-help"
-                                                                   data-toggle="tooltip"
-                                                                   data-original-title="Reported 95% confidence interval associated with strongest SNP risk allele"></span>
+                                    <th style="width: 6%">[95% CI]
+                                        <span class="glyphicon glyphicon-question-sign context-help"
+                                              data-toggle="tooltip"
+                                              data-original-title="Reported 95% confidence interval associated with strongest SNP risk allele"></span>
                                     </th>
-                                    <th style="width: 10%">Base pair location
+                                    <th style="width: 6%">Base pair location
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
                                               data-original-title="Chromosomal base pair location"></span>
-                                    </th>
-                                    <th style="width: 8%"> Context
-                                        <span class="glyphicon glyphicon-question-sign context-help"
-                                              data-toggle="tooltip"
-                                              data-original-title="Genomic context"></span>
                                     </th>
                                     <th style="width: 8%">Chromosome region
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
                                               data-original-title="Chromosomal region"></span>
+                                    </th>
+                                    <th style="width: 8%"> Context
+                                        <span class="glyphicon glyphicon-question-sign context-help"
+                                              data-toggle="tooltip"
+                                              data-original-title="Genomic context"></span>
                                     </th>
                                     <th style="width: 8%">Reported gene(s)
                                         <span class="glyphicon glyphicon-question-sign context-help"
@@ -410,7 +410,12 @@
                                               data-toggle="tooltip"
                                               data-original-title="Gene(s) mapped to the strongest SNP (NCBI). If the SNP is located within a gene, that gene is listed. If the SNP is intergenic, the upstream and downstream genes are listed, separated by a hyphen"></span>
                                     </th>
-                                    <th style="width: 10%">Study
+                                    <th style="width: 8%">Reported trait
+                                        <span class="glyphicon glyphicon-question-sign"
+                                              data-toggle="tooltip"
+                                              data-original-title="Disease or trait examined in study"></span>
+                                    </th>
+                                    <th style="width: 8%">Study
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
                                               data-original-title="Link to study information"></span>
