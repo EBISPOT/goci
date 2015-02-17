@@ -29,5 +29,6 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/docs/faq").setViewName("docs-template");
         registry.addViewController("/docs/methods").setViewName("docs-template");
         registry.addViewController("/docs/ontology").setViewName("docs-template");
+        registry.addViewController("/docs/abbreviations").setViewName("docs-template");
     }
 }
