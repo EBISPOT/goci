@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Loads an ontology using the OWLAPI and a HermiT reasoner to classify the ontology.  This allows for richer typing
