@@ -72,7 +72,6 @@ public class SecureUser {
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", passwordHash='" + passwordHash + '\'' +
-                ", role=" + role +
                 '}';
     }
 }

@@ -11,23 +11,25 @@ The search terms "genome-wide" OR "genome AND identification" OR "genome AND ass
 
 Studies and associations are eligible for inclusion in the NHGRI GWAS catalog if they meet the following criteria:
 
-. Include a primary GWAS analysis, defined as array-based genotyping and analysis of 100,000+ pre-QC SNPs selected to tag variation across the genome and without regard to gene content.
-. GWAS data from published studies which are incorporated into new GWAS analyses are eligible, provided they meet the other criteria.
-. Studies imputing sequencing data to genotyping arrays are eligible as long as the arrays include sufficient genome-wide coverage so that the post-imputation analysis meets the definition of a GWAS analysis, as described above.
+* Include a primary GWAS analysis, defined as array-based genotyping and analysis of 100,000+ pre-QC SNPs selected to tag variation across the genome and without regard to gene content.
+* GWAS data from published studies which are incorporated into new GWAS analyses are eligible, provided they meet the other criteria.
+* Studies imputing sequencing data to genotyping arrays are eligible as long as the arrays include sufficient genome-wide coverage so that the post-imputation analysis meets the definition of a GWAS analysis, as described above.
 
 Studies and associations are excluded if:
-. The study was published in a language other than English.
-. SNPs assayed were limited to those in candidate genes.
-. The study uses customized gene-based arrays without a clearly described GWAS backbone, including those selected to replicate published GWAS findings (e.g., Metabochip, Immunochip, etc.).
-. Samples were assayed to measure somatic variation (e.g., in tumor samples).
-. The study does not include any new GWAS data.
+
+* The study was published in a language other than English.
+* SNPs assayed were limited to those in candidate genes.
+* The study uses customized gene-based arrays without a clearly described GWAS backbone, including those selected to replicate published GWAS findings (e.g., Metabochip, Immunochip, etc.).
+* Samples were assayed to measure somatic variation (e.g., in tumor samples).
+* The study does not include any new GWAS data.
 
 Individual SNP-trait associations identified in eligible studies are included in the Catalog if they meet the following criteria:
-. Statistical significance (SNP-trait p-value <1.0 x 10-5) in the overall (initial GWAS + replication) population.
-.. If a study does not report a combined p-value, the p-value and effect size from the largest sample size will be reported as long as the initial and replication samples each show an association of p < 1.0 x 10-5.
-.. If a study does not include a replication stage, significant SNPs from the discovery stage will be reported.
-.. SNP-trait associations that are described as previously known at the time of publication and are statistically significant in the GWAS sample, but are not attempted for replication, are reported.
-.. The most significant SNP from each independent locus is extracted
+
+* Statistical significance (SNP-trait p-value <1.0 x 10-5) in the overall (initial GWAS + replication) population.
+* If a study does not report a combined p-value, the p-value and effect size from the largest sample size will be reported as long as the initial and replication samples each show an association of p < 1.0 x 10-5.
+* If a study does not include a replication stage, significant SNPs from the discovery stage will be reported.
+* SNP-trait associations that are described as previously known at the time of publication and are statistically significant in the GWAS sample, but are not attempted for replication, are reported.
+* The most significant SNP from each independent locus is extracted
 
 === Data extraction
 
@@ -39,6 +41,7 @@ However when a publication includes multiple GWAS analyses, for example on diffe
 In cases where studies containing multiple GWAS analyses are not split, generally because <5 associations are identified for each analysis, individual SNPs are annotated with the specific trait, sample population or analysis method.
 
 Information on the following study-level fields is extracted:
+
 * Author (last name of first author)
 * Study date (online publication date, if available)
 * PubMed URL
@@ -52,6 +55,7 @@ If imputation is used the total number of SNPs after imputation should be entere
 "pooled" is used to denote studies of pooled DNA.
 
 For each identified SNP, we extract:
+
 * Gene, as reported by the author
 * rsID, or other SNP identifier, and risk allele (as reported)
 * Risk allele frequency in controls (if not available among all controls, among the control group with the largest sample size)
@@ -71,5 +75,6 @@ For each identified SNP, we extract:
 * Genes attributed to a SNP are extracted verbatim from the published report; "Intergenic" and "NR" (not reported) were used to denote a location which was not attributed to a particular gene (if it appeared that gene information was sought) or an absence of reporting on location information, respectively.
 
 === Quality control and SNP mapping
+
 An automated pipeline run at the NCBI performs checks for missing information, such as SNP identifiers, resolution of the citation in PubMed, existence of SNPs in dbSNP, confirmation of gene names vs. NCBI's Gene database, confirmation that the reported SNP and gene are in the same chromosomal region, as well as adding additional information such as the SNP's base pair and cytogenetic location in the current human genome reference assembly.
 This information is then used for queries and in the production of the karyotype diagram.

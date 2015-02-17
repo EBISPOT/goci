@@ -17,4 +17,20 @@ import java.util.List;
 @RepositoryRestResource
 public interface GeneRepository extends JpaRepository<Gene, Long> {
    List<Gene> findByGeneNameIgnoreCase(String geneName);
+
+   Collection<Gene> findByAuthorReportedFromLociAssociationStudyId(Long studyId);
+
+   Collection<Gene> findByGenomicContextsSnpRiskAllelesLociAssociationStudyId(Long studyId);
+
+   Collection<Gene> findByAuthorReportedFromLociStrongestRiskAllelesSnpId(Long snpId);
+
+   Collection<Gene> findByGenomicContextsSnpId(Long snpId);
+
+   Collection<Gene> findByAuthorReportedFromLociAssociationId(Long associationId);
+
+   Collection<Gene> findByGenomicContextsSnpRiskAllelesLociAssociationId(Long associationId);
+
+   Collection<Gene> findByGenomicContextsSnpRiskAllelesLociAssociationStudyDiseaseTraitId(Long traitId);
+
+   Collection<Gene> findByGenomicContextsSnpRiskAllelesLociAssociationEfoTraitsId(Long traitId);
 }

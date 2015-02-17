@@ -269,29 +269,12 @@ public class Association {
         this.associationReport = associationReport;
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return "Association{" +
                 "id=" + id +
                 ", riskFrequency='" + riskFrequency + '\'' +
                 ", allele='" + allele + '\'' +
                 ", pvalueFloat=" + pvalueFloat +
-                ", pvalueText='" + pvalueText + '\'' +
-                ", orPerCopyNum=" + orPerCopyNum +
-                ", orType=" + orType +
-                ", snpType='" + snpType + '\'' +
-                ", multiSnpHaplotype=" + multiSnpHaplotype +
-                ", snpInteraction=" + snpInteraction +
-                ", snpChecked=" + snpChecked +
-                ", pvalueMantissa=" + pvalueMantissa +
-                ", pvalueExponent=" + pvalueExponent +
-                ", orPerCopyRecip=" + orPerCopyRecip +
-                ", orPerCopyStdError=" + orPerCopyStdError +
-                ", orPerCopyRange='" + orPerCopyRange + '\'' +
-                ", orPerCopyUnitDescr='" + orPerCopyUnitDescr + '\'' +
-                ", study=" + study +
-                ", loci=" + loci +
-                ", efoTraits=" + efoTraits +
                 '}';
     }
 }

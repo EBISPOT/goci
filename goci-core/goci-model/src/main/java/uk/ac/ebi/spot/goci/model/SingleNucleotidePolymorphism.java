@@ -1,8 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
 
@@ -40,6 +38,9 @@ public class SingleNucleotidePolymorphism {
 
     @OneToMany(mappedBy = "snp")
     private Collection<GenomicContext> genomicContexts;
+
+    @OneToMany(mappedBy = "snp")
+    private Collection<RiskAllele> riskAlleles;
 
     // JPA no-args constructor
     public SingleNucleotidePolymorphism() {
@@ -144,5 +145,13 @@ public class SingleNucleotidePolymorphism {
                 ", functionalClass='" + functionalClass + '\'' +
                 ", lastUpdateDate=" + lastUpdateDate +
                 '}';
+    }
+
+    public Collection<RiskAllele> getRiskAlleles() {
+        return riskAlleles;
+    }
+
+    public void setRiskAlleles(Collection<RiskAllele> riskAlleles) {
+        this.riskAlleles = riskAlleles;
     }
 }

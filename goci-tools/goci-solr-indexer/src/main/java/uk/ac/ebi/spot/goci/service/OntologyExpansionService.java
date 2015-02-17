@@ -7,13 +7,9 @@ import uk.ac.ebi.spot.goci.model.OntologyEnabledDocument;
 import uk.ac.ebi.spot.goci.owl.OntologyLoader;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
- * A service that is capable of enriching {@link uk.ac.ebi.spot.goci.model.TraitDocument}s with information obtained
+ * A service that is capable of enriching {@link uk.ac.ebi.spot.goci.model.DiseaseTraitDocument}s with information obtained
  * from a supplied {@link uk.ac.ebi.spot.goci.owl.OntologyLoader}
  *
  * @author Tony Burdett
@@ -29,7 +25,7 @@ public class OntologyExpansionService implements DocumentEnrichmentService<Ontol
     }
 
     @Override public int getPriority() {
-        return 2;
+        return 4;
     }
 
     @Override public void doEnrichment(OntologyEnabledDocument<?> document) {
@@ -47,22 +43,7 @@ public class OntologyExpansionService implements DocumentEnrichmentService<Ontol
                     .concat("|").concat(traitIRI.toString());
             document.addEfoLink(efolink);
             ontologyLoader.getParentLabels(traitIRI).forEach(document::addSuperclassLabel);
-            ontologyLoader.getChildLabels(traitIRI).forEach(document::addSubclassLabel);
             ontologyLoader.getSynonyms(traitIRI).forEach(document::addSynonym);
-
-            // get relationships
-            Map<String, Set<String>> relations = new HashMap<>();
-            ontologyLoader.getRelationships(traitIRI)
-                    .stream()
-                    .forEach(relationship -> {
-                        if (relations.containsKey(relationship.getPredicateLabel())) {
-                            relations.put(relationship.getPredicateLabel(), new HashSet<>());
-                        }
-                        relations.get(relationship.getPredicateLabel()).add(relationship.getObjectLabel());
-                    });
-            for (Map.Entry<String, Set<String>> entry : relations.entrySet()) {
-                document.addRelation(entry.getKey(), entry.getValue());
-            }
         }
     }
 }

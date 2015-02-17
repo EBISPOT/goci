@@ -2,10 +2,43 @@
 
 == Frequently Asked Questions
 
-=== How do I filter my results by p-value?
+<<What is the difference between a reported trait and a mapped trait?>>
+
+
+<<How do I filter my results by p-value?>>
+
+
+<<How do I filter my results by odds ratio?>>
+
+
+<<What happens to the count values for my search if I apply a filter?>>
+
+'''
+== General
+
+
+
+==== What is the difference between a reported trait and a mapped trait?
+
+Each study is assigned a trait that best represents the phenotype under investigation. This is known as the reported trait as it is taken from the study publication. All reported traits are mapped to terms from the http://www.ebi.ac.uk/efo[Experimental Factor Ontology] resulting in a mapped trait. For more information about how ontologies are used in the catalog see our link:ontology[ontology] page.
+
+
+== Filters
+
+
+
+==== How do I filter my results by p-value?
 
 To filter association results by p-value, enter a minimum and/or maximum p-value into the appropriate search box.
 The input format is "mantissa"e-"exponent, e.g. 5e-8.
+
+==== How do I filter my results by odds ratio?
+
+To filter association results by odds ratio, enter a minimum and/or maximum value into the to and/or from box. You do not need to enter values in both boxes, but doing so will narrow you search results. You should search by values greater than 1.
+
+==== What happens to the count values for my search if I apply a filter?
+
+If you apply a filter to search results the count values will change to reflect the impact of applying the filter. Applying a filter will return a smaller subset of results. For example, at present, if I run a search for the term "asthma" it returns 223 associations. If I apply a p-value filter of 6e-8 the number of associations is now shown as 74.
 
 '''
 

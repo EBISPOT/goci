@@ -142,20 +142,14 @@ public class Ethnicity {
         this.study = study;
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return "Ethnicity{" +
                 "id=" + id +
-                ", study='" + study + '\'' +
-                ", type='" + type + '\'' +
                 ", numberOfIndividuals=" + numberOfIndividuals +
                 ", ethnicGroup='" + ethnicGroup + '\'' +
+                ", description='" + description + '\'' +
                 ", countryOfOrigin='" + countryOfOrigin + '\'' +
                 ", countryOfRecruitment='" + countryOfRecruitment + '\'' +
-                ", description='" + description + '\'' +
-                ", previouslyReported='" + previouslyReported + '\'' +
-                ", sampleSizesMatch='" + sampleSizesMatch + '\'' +
-                ", notes='" + notes + '\'' +
                 '}';
     }
 }

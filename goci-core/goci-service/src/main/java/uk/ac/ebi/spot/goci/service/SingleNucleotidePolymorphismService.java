@@ -46,48 +46,72 @@ public class SingleNucleotidePolymorphismService {
      * @return a list of SingleNucleotidePolymorphisms
      */
     @Transactional(readOnly = true)
-    public List<SingleNucleotidePolymorphism> deepFindAll() {
+    public List<SingleNucleotidePolymorphism> findAll() {
         List<SingleNucleotidePolymorphism> allSnps = snpRepository.findAll();
-        // iterate over all Snps and grab region info
-        getLog().info("Obtained " + allSnps.size() + " SNPs, starting deep load...");
         allSnps.forEach(this::loadAssociatedData);
         return allSnps;
     }
 
     @Transactional(readOnly = true)
-    public List<SingleNucleotidePolymorphism> deepFindAll(Sort sort) {
+    public List<SingleNucleotidePolymorphism> findAll(Sort sort) {
         List<SingleNucleotidePolymorphism> allSnps = snpRepository.findAll(sort);
-        // iterate over all Snps and grab region info
-        getLog().info("Obtained " + allSnps.size() + " SNPs, starting deep load...");
         allSnps.forEach(this::loadAssociatedData);
         return allSnps;
     }
 
     @Transactional(readOnly = true)
-    public Page<SingleNucleotidePolymorphism> deepFindAll(Pageable pageable) {
+    public Page<SingleNucleotidePolymorphism> findAll(Pageable pageable) {
         Page<SingleNucleotidePolymorphism> allSnps = snpRepository.findAll(pageable);
-        // iterate over all Snps and grab region info
-        getLog().info("Obtained " + allSnps.getSize() + " SNPs, starting deep load...");
         allSnps.forEach(this::loadAssociatedData);
         return allSnps;
     }
 
     @Transactional(readOnly = true)
-    public SingleNucleotidePolymorphism deepFetchOne(SingleNucleotidePolymorphism snp) {
+    public SingleNucleotidePolymorphism fetchOne(SingleNucleotidePolymorphism snp) {
         loadAssociatedData(snp);
         return snp;
     }
 
     @Transactional(readOnly = true)
-    public Collection<SingleNucleotidePolymorphism> deepFetchAll(Collection<SingleNucleotidePolymorphism> snps) {
+    public Collection<SingleNucleotidePolymorphism> fetchAll(Collection<SingleNucleotidePolymorphism> snps) {
         snps.forEach(this::loadAssociatedData);
         return snps;
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<SingleNucleotidePolymorphism> findByStudyId(Long studyId) {
+        Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms =
+                snpRepository.findByRiskAllelesLociAssociationStudyId(studyId);
+        singleNucleotidePolymorphisms.forEach(this::loadAssociatedData);
+        return singleNucleotidePolymorphisms;
+    }
+
+    public Collection<SingleNucleotidePolymorphism> findByAssociationId(Long associationId) {
+        Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms =
+                snpRepository.findByRiskAllelesLociAssociationId(associationId);
+        singleNucleotidePolymorphisms.forEach(this::loadAssociatedData);
+        return singleNucleotidePolymorphisms;
+    }
+
+    public Collection<SingleNucleotidePolymorphism> findByDiseaseTraitId(Long traitId) {
+        Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms =
+                snpRepository.findByRiskAllelesLociAssociationStudyDiseaseTraitId(traitId);
+        singleNucleotidePolymorphisms.forEach(this::loadAssociatedData);
+        return singleNucleotidePolymorphisms;
     }
 
     public void loadAssociatedData(SingleNucleotidePolymorphism snp) {
         int regionCount = snp.getRegions().size();
         int geneCount = snp.getGenomicContexts().size();
-        getLog().info(
-                "SNP '" + snp.getRsId() + "' is mapped to " + regionCount + " regions and " + geneCount + " genes");
+        getLog().trace("SNP '" + snp.getRsId() + "' is mapped to " + regionCount + " regions " +
+                               "and " + geneCount + " genes");
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<SingleNucleotidePolymorphism> deepFindByStudyId(Long studyId) {
+        Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms =
+                snpRepository.findByRiskAllelesLociAssociationStudyId(studyId);
+        singleNucleotidePolymorphisms.forEach(this::loadAssociatedData);
+        return singleNucleotidePolymorphisms;
     }
 }
