@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -694,15 +695,20 @@ public class AssociationController {
         }
         snpAssociationForm.setAuthorReportedGenes(authorReportedGenes);
 
-        // Handle snp rows
+        // Handle snp rows and return region details for each snp
+        // Note region is never edited by curator so only appears in table but never in
+        // any edit forms
+        Collection<Region> snpRegions=new ArrayList<Region>();
         List<SnpFormRow> snpFormRows = new ArrayList<SnpFormRow>();
         for (RiskAllele riskAllele : locusRiskAlleles) {
             SnpFormRow snpFormRow = new SnpFormRow();
             snpFormRow.setStrongestRiskAllele(riskAllele.getRiskAlleleName());
             snpFormRow.setSnp(riskAllele.getSnp().getRsId());
+            snpRegions.addAll(riskAllele.getSnp().getRegions());
             snpFormRows.add(snpFormRow);
         }
 
+        snpAssociationForm.setRegions(snpRegions);
         snpAssociationForm.setSnpFormRows(snpFormRows);
         return snpAssociationForm;
     }
@@ -723,7 +729,12 @@ public class AssociationController {
     // EFO traits
     @ModelAttribute("efoTraits")
     public List<EfoTrait> populateEfoTraits() {
-        return efoTraitRepository.findAll();
+        return efoTraitRepository.findAll(sortByTraitAsc());
+    }
+
+    // Returns a Sort object which sorts disease traits in ascending order by trait
+    private Sort sortByTraitAsc() {
+        return new Sort(Sort.Direction.ASC, "trait");
     }
 
 }

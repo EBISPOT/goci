@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,7 +45,7 @@ public class DiseaseTraitController {
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE)
     public String allDiseaseTraits(Model model) {
 
-        model.addAttribute("diseaseTraits", diseaseTraitRepository.findAll());
+        model.addAttribute("diseaseTraits", diseaseTraitRepository.findAll(sortByTraitAsc()));
 
         // Return an empty DiseaseTrait object so user can add a new one
         model.addAttribute("diseaseTrait", new DiseaseTrait());
@@ -58,7 +59,7 @@ public class DiseaseTraitController {
 
         // Catch a null or empty value being entered
         if (bindingResult.hasErrors()) {
-            model.addAttribute("diseaseTraits", diseaseTraitRepository.findAll());
+            model.addAttribute("diseaseTraits", diseaseTraitRepository.findAll(sortByTraitAsc()));
             return "disease_traits";
         }
 
@@ -125,5 +126,10 @@ public class DiseaseTraitController {
         return "redirect:/diseasetraits";
     }
 
+
+    // Returns a Sort object which sorts disease traits in ascending order by trait
+    private Sort sortByTraitAsc() {
+        return new Sort(Sort.Direction.ASC, "trait");
+    }
 
 }
