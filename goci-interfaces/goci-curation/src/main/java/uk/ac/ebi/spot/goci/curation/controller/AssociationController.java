@@ -695,15 +695,20 @@ public class AssociationController {
         }
         snpAssociationForm.setAuthorReportedGenes(authorReportedGenes);
 
-        // Handle snp rows
+        // Handle snp rows and return region details for each snp
+        // Note region is never edited by curator so only appears in table but never in
+        // any edit forms
+        Collection<Region> snpRegions=new ArrayList<Region>();
         List<SnpFormRow> snpFormRows = new ArrayList<SnpFormRow>();
         for (RiskAllele riskAllele : locusRiskAlleles) {
             SnpFormRow snpFormRow = new SnpFormRow();
             snpFormRow.setStrongestRiskAllele(riskAllele.getRiskAlleleName());
             snpFormRow.setSnp(riskAllele.getSnp().getRsId());
+            snpRegions.addAll(riskAllele.getSnp().getRegions());
             snpFormRows.add(snpFormRow);
         }
 
+        snpAssociationForm.setRegions(snpRegions);
         snpAssociationForm.setSnpFormRows(snpFormRows);
         return snpAssociationForm;
     }

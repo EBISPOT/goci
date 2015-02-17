@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.Region;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -62,12 +63,13 @@ public class SnpAssociationForm {
 
     private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
+    private Collection<Region> regions = new ArrayList<>();
+
     // Constructors
     public SnpAssociationForm() {
     }
 
-
-    public SnpAssociationForm(Long associationId, String riskFrequency, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Boolean snpChecked, Integer pvalueMantissa, Integer pvalueExponent, Float pvalueFloat, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, List<SnpFormRow> snpFormRows, Collection<String> authorReportedGenes, String multiSnpHaplotypeDescr, Integer multiSnpHaplotypeNum, Collection<EfoTrait> efoTraits) {
+    public SnpAssociationForm(Long associationId, String riskFrequency, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Boolean snpChecked, Integer pvalueMantissa, Integer pvalueExponent, Float pvalueFloat, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, List<SnpFormRow> snpFormRows, Collection<String> authorReportedGenes, String multiSnpHaplotypeDescr, Integer multiSnpHaplotypeNum, Collection<EfoTrait> efoTraits, Collection<Region> regions) {
         this.associationId = associationId;
         this.riskFrequency = riskFrequency;
         this.pvalueText = pvalueText;
@@ -89,6 +91,7 @@ public class SnpAssociationForm {
         this.multiSnpHaplotypeDescr = multiSnpHaplotypeDescr;
         this.multiSnpHaplotypeNum = multiSnpHaplotypeNum;
         this.efoTraits = efoTraits;
+        this.regions = regions;
     }
 
     // Getters/setters
@@ -258,6 +261,14 @@ public class SnpAssociationForm {
 
     public void setSnpChecked(Boolean snpChecked) {
         this.snpChecked = snpChecked;
+    }
+
+    public Collection<Region> getRegions() {
+        return regions;
+    }
+
+    public void setRegions(Collection<Region> regions) {
+        this.regions = regions;
     }
 }
 

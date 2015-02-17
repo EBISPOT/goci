@@ -118,7 +118,8 @@
             </td>
 
             <!--Region-->
-            <td>N/A</td>
+            <td><span th:each="region: ${snpAssociationForm.regions}"
+                      th:text="${region.name} ?: 'null'"></span></td>
 
             <!--Gene-->
             <td>
