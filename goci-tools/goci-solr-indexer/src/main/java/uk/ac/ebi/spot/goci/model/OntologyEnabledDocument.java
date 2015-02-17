@@ -44,7 +44,7 @@ public abstract class OntologyEnabledDocument<O> extends EmbeddableDocument<O> {
     }
 
     public void addTraitUris(Collection<String> traitUris) {
-        traitUris.addAll(traitUris);
+        this.traitUris.addAll(traitUris);
     }
 
     public void addShortForm(String shortForm) {
