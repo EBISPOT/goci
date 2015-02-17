@@ -168,10 +168,10 @@
     <field name="context" type="text_general" indexed="true" stored="true" multiValued="true" />
 
     <!-- study -->
-    <field name="pubmedId" type="text_general" indexed="true" stored="true" multiValued="false" />
+    <field name="pubmedId" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="publication" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="publicationDate" type="date" indexed="true" stored="true" multiValued="false" />
-    <field name="catalogAddedDate" type="date" indexed="true" stored="true" multiValued="false" />
+    <field name="publicationDate" type="date" indexed="true" stored="true" multiValued="true" />
+    <field name="catalogAddedDate" type="date" indexed="true" stored="true" multiValued="true" />
     <field name="platform" type="text_general" indexed="true" stored="true"/>
     <field name="cnv" type="boolean" indexed="true" stored="true"/>
     <field name="initialSampleDescription" type="text_general" indexed="true" stored="true"/>
