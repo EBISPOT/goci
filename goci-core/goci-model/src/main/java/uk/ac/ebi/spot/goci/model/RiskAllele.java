@@ -59,20 +59,18 @@ public class RiskAllele {
         this.snp = snp;
     }
 
-    @Override
-    public String toString() {
-        return "RiskAllele{" +
-                "id=" + id +
-                ", riskAlleleName='" + riskAlleleName + '\'' +
-                ", snp=" + snp +
-                '}';
-    }
-
     public Collection<Locus> getLoci() {
         return loci;
     }
 
     public void setLoci(Collection<Locus> loci) {
         this.loci = loci;
+    }
+
+    @Override public String toString() {
+        return "RiskAllele{" +
+                "id=" + id +
+                ", riskAlleleName='" + riskAlleleName + '\'' +
+                '}';
     }
 }

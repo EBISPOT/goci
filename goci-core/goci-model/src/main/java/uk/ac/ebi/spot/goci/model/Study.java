@@ -245,25 +245,14 @@ public class Study {
         this.studyReport = studyReport;
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return "Study{" +
                 "id=" + id +
                 ", author='" + author + '\'' +
                 ", studyDate=" + studyDate +
                 ", publication='" + publication + '\'' +
                 ", title='" + title + '\'' +
-                ", initialSampleSize='" + initialSampleSize + '\'' +
-                ", replicateSampleSize='" + replicateSampleSize + '\'' +
-                ", platform='" + platform + '\'' +
                 ", pubmedId='" + pubmedId + '\'' +
-                ", cnv=" + cnv +
-                ", gxe=" + gxe +
-                ", gxg=" + gxg +
-                ", diseaseTrait=" + diseaseTrait +
-                ", efoTraits=" + efoTraits +
-                ", singleNucleotidePolymorphisms=" + singleNucleotidePolymorphisms +
-                ", housekeeping=" + housekeeping +
                 '}';
     }
 }
