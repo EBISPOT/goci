@@ -84,17 +84,16 @@ public class ReasonedOntologyLoader extends AbstractOntologyLoader {
 
             // get parent labels
             getLog().debug("Loading parents...");
-            Set<String> parentLabelSet = new HashSet<>();
-            label.ifPresent(parentLabelSet::add); // always add current class to the parents
             Set<OWLClass> parents = reasoner.getSuperClasses(ontologyClass, false).getFlattened();
             // only add type if the parent isn't excluded
-            parents.stream()
+            Set<String> parentLabelSet = parents.stream()
                     .filter(allClasses::contains)
-                    .forEach(parentClass -> {
-                        // only add type if the parent isn't excluded
-                        getLog().debug("Next parent of " + label + ": " + parentClass);
-                        evaluateLabelAnnotationValue(ontology, parentClass).ifPresent(parentLabelSet::add);
-                    });
+                    .peek(parent -> getLog().trace("Next parent of " + label + ": " + parent))
+                    .map(parent -> evaluateLabelAnnotationValue(ontology, parent))
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .collect(Collectors.toSet());
+            label.ifPresent(parentLabelSet::add); // always also add current class to the parents
             addClassParentLabels(clsIri, parentLabelSet);
 
             // get child labels

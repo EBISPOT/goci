@@ -65,6 +65,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
 
+    // embedded DiseaseTrait info
+    @Field("traitName") private Collection<String> traitNames;
+
     // embedded EfoTrait info
     @Field("mappedLabel") private Collection<String> mappedLabels;
     @Field("mappedUri") private Collection<String> mappedUris;
@@ -100,6 +103,8 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         this.reportedGenes = new HashSet<>();
         this.studyIds = new HashSet<>();
         embedGeneticData(association);
+
+        this.traitNames = new LinkedHashSet<>();
 
         this.mappedLabels = new LinkedHashSet<>();
         this.mappedUris = new LinkedHashSet<>();
@@ -215,6 +220,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     public void addReplicateSampleDescription(String replicateSampleDescription) {
         this.replicateSampleDescription = replicateSampleDescription;
+    }
+
+    public void addTraitName(String traitName) {
+        this.traitNames.add(traitName);
     }
 
     public void addMappedLabel(String mappedLabel) {
