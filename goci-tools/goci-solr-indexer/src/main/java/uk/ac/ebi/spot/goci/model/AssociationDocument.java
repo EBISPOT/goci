@@ -44,6 +44,8 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field("mappedGene") private String mappedGene;
     @Field("reportedGene") private Collection<String> reportedGenes;
 
+    @Field("studyId") private Collection<String> studyIds;
+
     // pluralise all other information, but retain order
     @Field("chromosomeName") private Set<String> chromosomeNames;
     @Field("chromosomePosition") private Set<Integer> chromosomePositions;
@@ -96,6 +98,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         this.lastModifiedDates = new HashSet<>();
 
         this.reportedGenes = new HashSet<>();
+        this.studyIds = new HashSet<>();
         embedGeneticData(association);
 
         this.mappedLabels = new LinkedHashSet<>();
@@ -248,6 +251,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     public void addSuperclassLabels(Collection<String> superclassLabels) {
         this.superclassLabels.addAll(superclassLabels);
+    }
+
+    public void addStudyId(String studyId) {
+        this.studyIds.add(studyId);
     }
 
     private void embedGeneticData(Association association) {

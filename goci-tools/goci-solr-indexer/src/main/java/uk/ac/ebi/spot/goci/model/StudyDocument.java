@@ -14,7 +14,7 @@ import java.util.TimeZone;
  * @author Tony Burdett
  * @date 23/12/14
  */
-public class StudyDocument extends EmbeddableDocument<Study> {
+public class StudyDocument extends OntologyEnabledDocument<Study> {
     // basic study information
     @Field private String pubmedId;
     @Field private String title;

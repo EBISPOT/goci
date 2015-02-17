@@ -11,7 +11,7 @@ import java.util.LinkedHashSet;
  * @author Tony Burdett
  * @date 23/12/14
  */
-public class DiseaseTraitDocument extends EmbeddableDocument<DiseaseTrait> {
+public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> {
     // basic DiseaseTrait information
     @Field private String traitName;
 

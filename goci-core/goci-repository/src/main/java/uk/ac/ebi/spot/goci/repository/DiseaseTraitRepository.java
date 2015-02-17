@@ -26,4 +26,12 @@ public interface DiseaseTraitRepository extends JpaRepository<DiseaseTrait, Long
     List<DiseaseTrait> findByStudiesIdAndStudiesHousekeepingPublishDateIsNotNull(Sort sort, Long studyId);
 
     Page<DiseaseTrait> findByStudiesIdAndStudiesHousekeepingPublishDateIsNotNull(Pageable pageable, Long studyId);
+
+    List<DiseaseTrait> findByStudiesAssociationsIdAndStudiesHousekeepingPublishDateIsNotNull(Long associationId);
+
+    List<DiseaseTrait> findByStudiesAssociationsIdAndStudiesHousekeepingPublishDateIsNotNull(Sort sort,
+                                                                                             Long associationId);
+
+    Page<DiseaseTrait> findByStudiesAssociationsIdAndStudiesHousekeepingPublishDateIsNotNull(Pageable pageable,
+                                                                                             Long associationId);
 }

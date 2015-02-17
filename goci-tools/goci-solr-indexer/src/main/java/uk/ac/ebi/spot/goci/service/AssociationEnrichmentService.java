@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.AssociationDocument;
+import uk.ac.ebi.spot.goci.model.DiseaseTraitDocument;
 import uk.ac.ebi.spot.goci.model.EfoDocument;
 import uk.ac.ebi.spot.goci.model.StudyDocument;
 
@@ -31,7 +32,14 @@ public class AssociationEnrichmentService implements DocumentEnrichmentService<A
         long id = Long.valueOf(document.getId().split(":")[1]);
 
         studyService.findByAssociationId(id).forEach(
-                study -> document.embed(new StudyDocument(study)));
+                study -> {
+                    document.addStudyId(String.valueOf(study.getId()));
+                    document.embed(new StudyDocument(study));
+                });
+
+        traitService.findReportedTraitByAssociationId(id).forEach(
+                trait -> document.embed(new DiseaseTraitDocument(trait)));
+
         traitService.findMappedTraitByAssociationId(id).forEach(
                 trait -> document.embed(new EfoDocument(trait)));
     }

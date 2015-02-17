@@ -31,69 +31,37 @@ public class GeneService {
 
     @Transactional(readOnly = true)
     public Collection<Gene> findReportedGenesByStudyId(Long studyId) {
-        Collection<Gene> genes = geneRepository.findByAuthorReportedFromLociAssociationStudyId(studyId);
-        genes.forEach(this::loadAssociatedData);
-        return genes;
+        return geneRepository.findByAuthorReportedFromLociAssociationStudyId(studyId);
     }
 
     @Transactional
     public Collection<Gene> findMappedGenesByStudyId(Long studyId) {
-        Collection<Gene> genes = geneRepository.findByGenomicContextsSnpRiskAllelesLociAssociationStudyId(studyId);
-        genes.forEach(this::loadAssociatedData);
-        return genes;
+        return geneRepository.findByGenomicContextsSnpRiskAllelesLociAssociationStudyId(studyId);
     }
 
     @Transactional(readOnly = true)
     public Collection<Gene> findReportedGenesBySnpId(Long snpId) {
-        Collection<Gene> genes = geneRepository.findByAuthorReportedFromLociStrongestRiskAllelesSnpId(snpId);
-        genes.forEach(this::loadAssociatedData);
-        return genes;
+        return geneRepository.findByAuthorReportedFromLociStrongestRiskAllelesSnpId(snpId);
     }
 
     public Collection<Gene> findMappedGenesBySnpId(Long snpId) {
-        Collection<Gene> genes = geneRepository.findByGenomicContextsSnpId(snpId);
-        genes.forEach(this::loadAssociatedData);
-        return genes;
+        return geneRepository.findByGenomicContextsSnpId(snpId);
     }
 
     public Collection<Gene> findReportedGenesByAssociationId(Long associationId) {
-        Collection<Gene> genes = geneRepository.findByAuthorReportedFromLociAssociationId(associationId);
-        genes.forEach(this::loadAssociatedData);
-        return genes;
+        return geneRepository.findByAuthorReportedFromLociAssociationId(associationId);
     }
 
     public Collection<Gene> findMappedGenesByAssociationId(Long associationId) {
-        Collection<Gene> genes = geneRepository.findByGenomicContextsSnpRiskAllelesLociAssociationId(associationId);
-        genes.forEach(this::loadAssociatedData);
-        return genes;
+        return geneRepository.findByGenomicContextsSnpRiskAllelesLociAssociationId(associationId);
     }
 
     public Collection<Gene> findReportedGenesByDiseaseTraitId(Long traitId) {
-        Collection<Gene> genes = geneRepository.findByGenomicContextsSnpRiskAllelesLociAssociationStudyDiseaseTraitId(
+        return geneRepository.findByGenomicContextsSnpRiskAllelesLociAssociationStudyDiseaseTraitId(
                 traitId);
-        genes.forEach(this::loadAssociatedData);
-        return genes;
     }
 
     public Collection<Gene> findMappedGenesByDiseaseTraitId(Long traitId) {
-        Collection<Gene> genes = geneRepository.findByGenomicContextsSnpRiskAllelesLociAssociationEfoTraitsId(traitId);
-        genes.forEach(this::loadAssociatedData);
-        return genes;
-    }
-
-    public void loadAssociatedData(Gene gene) {
-//        int efoTraitCount = gene.getEfoTraits().size();
-//        int associationCount = gene.getAssociations().size();
-//        Date publishDate = gene.getHousekeeping().getPublishDate();
-//        if (publishDate != null) {
-//            getLog().info(
-//                    "Study '" + gene.getId() + "' is mapped to " + efoTraitCount + " traits, " +
-//                            "has " + associationCount + " associations and was published on " + publishDate.toString());
-//        }
-//        else {
-//            getLog().info(
-//                    "Study '" + gene.getId() + "' is mapped to " + efoTraitCount + " traits, " +
-//                            "has " + associationCount + " associations and is not yet published");
-//        }
+        return geneRepository.findByGenomicContextsSnpRiskAllelesLociAssociationEfoTraitsId(traitId);
     }
 }

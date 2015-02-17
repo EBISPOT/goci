@@ -31,6 +31,10 @@ public class TraitService {
         return diseaseTraitRepository.findByStudiesIdAndStudiesHousekeepingPublishDateIsNotNull(studyId);
     }
 
+    public Collection<DiseaseTrait> findReportedTraitByAssociationId(Long associationId) {
+        return diseaseTraitRepository.findByStudiesAssociationsIdAndStudiesHousekeepingPublishDateIsNotNull(associationId);
+    }
+
     public Collection<EfoTrait> findMappedTraitByStudyId(Long studyId) {
         return efoTraitRepository.findByStudiesIdAndStudiesHousekeepingPublishDateIsNotNull(studyId);
     }

@@ -49,8 +49,6 @@ public class StudyService {
     @Transactional(readOnly = true)
     public List<Study> findAll() {
         List<Study> allStudies = studyRepository.findAll();
-        // iterate over all studies and grab trait info
-        getLog().info("Obtained " + allStudies.size() + " studies, starting deep load...");
         allStudies.forEach(this::loadAssociatedData);
         return allStudies;
     }
@@ -58,8 +56,6 @@ public class StudyService {
     @Transactional(readOnly = true)
     public List<Study> findAll(Sort sort) {
         List<Study> studies = studyRepository.findAll(sort);
-        // iterate over all studies and grab region info
-        getLog().info("Obtained " + studies.size() + " studies, starting deep load...");
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
@@ -67,8 +63,6 @@ public class StudyService {
     @Transactional(readOnly = true)
     public Page<Study> findAll(Pageable pageable) {
         Page<Study> studies = studyRepository.findAll(pageable);
-        // iterate over all studies and grab region info
-        getLog().info("Obtained " + studies.getSize() + " studies, starting deep load...");
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
@@ -86,8 +80,6 @@ public class StudyService {
     @Transactional(readOnly = true)
     public List<Study> findPublishedStudies() {
         List<Study> studies = studyRepository.findByHousekeepingPublishDateIsNotNull();
-        // iterate over all studies and grab trait info
-        getLog().info("Obtained " + studies.size() + " studies, starting deep load...");
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
@@ -95,8 +87,6 @@ public class StudyService {
     @Transactional(readOnly = true)
     public List<Study> findPublishedStudies(Sort sort) {
         List<Study> studies = studyRepository.findByHousekeepingPublishDateIsNotNull(sort);
-        // iterate over all studies and grab region info
-        getLog().info("Obtained " + studies.size() + " studies, starting deep load...");
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
@@ -104,8 +94,6 @@ public class StudyService {
     @Transactional(readOnly = true)
     public Page<Study> findPublishedStudies(Pageable pageable) {
         Page<Study> studies = studyRepository.findByHousekeepingPublishDateIsNotNull(pageable);
-        // iterate over all studies and grab region info
-        getLog().info("Obtained " + studies.getSize() + " studies, starting deep load...");
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
@@ -151,12 +139,12 @@ public class StudyService {
         int associationCount = study.getAssociations().size();
         Date publishDate = study.getHousekeeping().getPublishDate();
         if (publishDate != null) {
-            getLog().info(
+            getLog().trace(
                     "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
                             "has " + associationCount + " associations and was published on " + publishDate.toString());
         }
         else {
-            getLog().info(
+            getLog().trace(
                     "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
                             "has " + associationCount + " associations and is not yet published");
         }

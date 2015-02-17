@@ -63,8 +63,6 @@ public class AssociationService {
     @Transactional(readOnly = true)
     public List<Association> findAll() {
         List<Association> allAssociations = associationRepository.findAll();
-        // iterate over all Associations and grab region info
-        getLog().info("Obtained " + allAssociations.size() + " associations, starting deep load...");
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
@@ -72,8 +70,6 @@ public class AssociationService {
     @Transactional(readOnly = true)
     public List<Association> findAll(Sort sort) {
         List<Association> allAssociations = associationRepository.findAll(sort);
-        // iterate over all Associations and grab region info
-        getLog().info("Obtained " + allAssociations.size() + " associations, starting deep load...");
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
@@ -81,8 +77,6 @@ public class AssociationService {
     @Transactional(readOnly = true)
     public Page<Association> findAll(Pageable pageable) {
         Page<Association> allAssociations = associationRepository.findAll(pageable);
-        // iterate over all Associations and grab region info
-        getLog().info("Obtained " + allAssociations.getSize() + " associations, starting deep load...");
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
@@ -90,8 +84,6 @@ public class AssociationService {
     @Transactional(readOnly = true)
     public List<Association> findPublishedAssociations() {
         List<Association> allAssociations = associationRepository.findByStudyHousekeepingPublishDateIsNotNull();
-        // iterate over all Associations and grab region info
-        getLog().info("Obtained " + allAssociations.size() + " associations, starting deep load...");
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
@@ -99,8 +91,6 @@ public class AssociationService {
     @Transactional(readOnly = true)
     public List<Association> findPublishedAssociations(Sort sort) {
         List<Association> allAssociations = associationRepository.findByStudyHousekeepingPublishDateIsNotNull(sort);
-        // iterate over all Associations and grab region info
-        getLog().info("Obtained " + allAssociations.size() + " associations, starting deep load...");
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
@@ -108,8 +98,6 @@ public class AssociationService {
     @Transactional(readOnly = true)
     public Page<Association> findPublishedAssociations(Pageable pageable) {
         Page<Association> allAssociations = associationRepository.findByStudyHousekeepingPublishDateIsNotNull(pageable);
-        // iterate over all Associations and grab region info
-        getLog().info("Obtained " + allAssociations.getSize() + " associations, starting deep load...");
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
@@ -131,16 +119,18 @@ public class AssociationService {
 
     @Transactional(readOnly = true)
     public Collection<Association> findPublishedAssociationsByDiseaseTraitId(Long diseaseTraitId) {
-        Collection<Association> associations = associationRepository.findByStudyDiseaseTraitIdAndStudyHousekeepingPublishDateIsNotNull(
-                diseaseTraitId);
+        Collection<Association> associations =
+                associationRepository.findByStudyDiseaseTraitIdAndStudyHousekeepingPublishDateIsNotNull(
+                        diseaseTraitId);
         associations.forEach(this::loadAssociatedData);
         return associations;
     }
 
     @Transactional(readOnly = true)
     public Collection<Association> findPublishedAssociationsByEfoTraitId(Long efoTraitId) {
-        Collection<Association> associations = associationRepository.findByEfoTraitsIdAndStudyHousekeepingPublishDateIsNotNull(
-                efoTraitId);
+        Collection<Association> associations =
+                associationRepository.findByEfoTraitsIdAndStudyHousekeepingPublishDateIsNotNull(
+                        efoTraitId);
         associations.forEach(this::loadAssociatedData);
         return associations;
     }
@@ -168,10 +158,10 @@ public class AssociationService {
                                         .collect(Collectors.toList()));
                     reportedGeneCount.addAndGet(locus.getAuthorReportedGenes().size());
                 });
-        getLog().info("Association '" + association.getId() + "' is mapped to " +
-                              "" + traitCount + " EFO traits where study id = " + study.getId() + " " +
-                              "(author reported " + reportedGeneCount + " gene(s)); " +
-                              "this reports on " + snps.size() + " SNPs in " + regions.size() + " regions, " +
-                              "mapped to " + mappedGenes.size() + " genes.");
+        getLog().trace("Association '" + association.getId() + "' is mapped to " +
+                               "" + traitCount + " EFO traits where study id = " + study.getId() + " " +
+                               "(author reported " + reportedGeneCount + " gene(s)); " +
+                               "this reports on " + snps.size() + " SNPs in " + regions.size() + " regions, " +
+                               "mapped to " + mappedGenes.size() + " genes.");
     }
 }
