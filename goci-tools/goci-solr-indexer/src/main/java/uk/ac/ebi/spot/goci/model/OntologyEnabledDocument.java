@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.model;
 
 import org.apache.solr.client.solrj.beans.Field;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,6 +41,10 @@ public abstract class OntologyEnabledDocument<O> extends EmbeddableDocument<O> {
 
     public void addTraitUri(String traitUri) {
         traitUris.add(traitUri);
+    }
+
+    public void addTraitUris(Collection<String> traitUris) {
+        traitUris.addAll(traitUris);
     }
 
     public void addShortForm(String shortForm) {
