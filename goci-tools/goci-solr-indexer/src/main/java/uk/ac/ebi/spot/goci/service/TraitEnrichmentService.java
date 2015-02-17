@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.AssociationDocument;
 import uk.ac.ebi.spot.goci.model.DiseaseTraitDocument;
+import uk.ac.ebi.spot.goci.model.EfoDocument;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.StudyDocument;
 
@@ -41,13 +42,18 @@ public class TraitEnrichmentService implements DocumentEnrichmentService<Disease
         studyService.findByDiseaseTraitId(id).forEach(
                 study -> {
                     document.embed(new StudyDocument(study));
-                    // collect unique efo traits
+                    // collect unique efo traits by study
                     Set<EfoTrait> efoTraits = new HashSet<>();
                     traitService.findMappedTraitByStudyId(study.getId()).forEach(efoTraits::add);
-                    // and for each efo trait get all associations
+                    // iterate over unique efo traits
                     efoTraits.forEach(
-                            trait -> associationService.findPublishedAssociationsByEfoTraitId(trait.getId()).forEach(
-                                    association -> document.embed(new AssociationDocument(association))));
+                            trait -> {
+                                // embed efo trait info in disease trait document
+                                document.embed(new EfoDocument(trait));
+                                // and embed all associations mapped to this efo trait
+                                associationService.findPublishedAssociationsByEfoTraitId(trait.getId()).forEach(
+                                        association -> document.embed(new AssociationDocument(association)));
+                            });
                 });
     }
 }
