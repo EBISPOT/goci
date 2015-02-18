@@ -32,21 +32,18 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field @NonEmbeddableField private int associationCount;
 
     // embedded Association info
-    @Field("qualifier") private Collection<String> qualifiers;
-    @Field("pValue") private Collection<Float> pValues;
-    @Field("orPerCopyNum") private Collection<Float> orPerCopyNums;
-    @Field("orPerCopyUnitDescr") private Collection<String> orPerCopyUnitDescrs;
-    @Field("orPerCopyRange") private Collection<String> orPerCopyRanges;
-    @Field("orType") private Collection<String> orTypes;
-    @Field("rsId") private Collection<String> rsIds;
-    @Field("strongestAllele") private Collection<String> strongestAlleles;
-    @Field("context") private Collection<String> contexts;
-    @Field("region") private Collection<String> regions;
-    @Field("mappedGene") private Collection<String> mappedGenes;
-    @Field("reportedGene") private Collection<String> reportedGenes;
-    @Field("chromosomeName") private Collection<String> chromosomeNames;
-    @Field("chromosomePosition") private Collection<Integer> chromosomePositions;
-    @Field("last_modified") private Collection<String> lastModifiedDates;
+    @Field("association_qualifier") private Collection<String> qualifiers;
+    @Field("association_rsId") private Collection<String> rsIds;
+    @Field("association_strongestAllele") private Collection<String> strongestAlleles;
+    @Field("association_context") private Collection<String> contexts;
+    @Field("association_region") private Collection<String> regions;
+    @Field("association_mappedGene") private Collection<String> mappedGenes;
+    @Field("association_mappedGeneLinks") private Collection<String> mappedGeneLinks;
+    @Field("association_reportedGene") private Collection<String> reportedGenes;
+    @Field("association_reportedGeneLinks") private Collection<String> reportedGeneLinks;
+    @Field("association_chromosomeName") private Collection<String> chromosomeNames;
+    @Field("association_chromosomePosition") private Collection<Integer> chromosomePositions;
+    @Field("association_last_modified") private Collection<String> lastModifiedDates;
 
     // embedded DiseaseTrait info
     @Field("traitName") private Collection<String> traitNames;
@@ -78,17 +75,14 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         }
 
         this.qualifiers = new LinkedHashSet<>();
-        this.pValues = new LinkedHashSet<>();
-        this.orPerCopyNums = new LinkedHashSet<>();
-        this.orPerCopyUnitDescrs = new LinkedHashSet<>();
-        this.orPerCopyRanges = new LinkedHashSet<>();
-        this.orTypes = new LinkedHashSet<>();
         this.rsIds = new LinkedHashSet<>();
         this.strongestAlleles = new LinkedHashSet<>();
         this.contexts = new LinkedHashSet<>();
         this.regions = new LinkedHashSet<>();
         this.mappedGenes = new LinkedHashSet<>();
+        this.mappedGeneLinks = new LinkedHashSet<>();
         this.reportedGenes = new LinkedHashSet<>();
+        this.reportedGeneLinks = new LinkedHashSet<>();
         this.chromosomeNames = new LinkedHashSet<>();
         this.chromosomePositions = new LinkedHashSet<>();
         this.lastModifiedDates = new LinkedHashSet<>();
@@ -151,26 +145,6 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.qualifiers.add(qualifier);
     }
 
-    public void addPValue(float pValue) {
-        this.pValues.add(pValue);
-    }
-
-    public void addOrPerCopyNum(float orPerCopyNum) {
-        this.orPerCopyNums.add(orPerCopyNum);
-    }
-
-    public void addOrPerCopyUnitDescr(String orPerCopyUnitDescr) {
-        this.orPerCopyUnitDescrs.add(orPerCopyUnitDescr);
-    }
-
-    public void addOrPerCopyRange(String orPerCopyRange) {
-        this.orPerCopyRanges.add(orPerCopyRange);
-    }
-
-    public void addOrType(String orType) {
-        this.orTypes.add(orType);
-    }
-
     public void addRsId(String rsId) {
         this.rsIds.add(rsId);
     }
@@ -191,8 +165,16 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.mappedGenes.add(mappedGene);
     }
 
+    public void addMappedGeneLinks(Collection<String> mappedGeneLinks) {
+        this.mappedGeneLinks.addAll(mappedGeneLinks);
+    }
+
     public void addReportedGenes(Collection<String> reportedGenes) {
         this.reportedGenes.addAll(reportedGenes);
+    }
+
+    public void addReportedGeneLinks(Collection<String> reportedGeneLinks) {
+        this.reportedGeneLinks.addAll(reportedGeneLinks);
     }
 
     public void addChromosomeNames(Collection<String> chromosomeNames) {
