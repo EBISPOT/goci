@@ -13,6 +13,8 @@ import java.util.Collection;
  * Created by emma on 17/02/15.
  *
  * @author emma
+ *         <p>
+ *         Returns collection of views of various studies that have status "Send to NCBI"
  */
 @Service
 public class NCBICatalogService {
@@ -28,7 +30,9 @@ public class NCBICatalogService {
     }
 
 
-    public Collection<CatalogSummaryView> getCatalogSummaryViewsSendToNcbi() {
+    // Query CATALOG_SUMMARY_VIEW table in database
+    // and locate any views with status "Send to NCBI"
+    public Collection<CatalogSummaryView> getCatalogSummaryViewsWithStatusSendToNcbi() {
         CurationStatus curationStatus = curationStatusRepository.findByStatus("Send to NCBI");
         Long statusId = curationStatus.getId();
         Collection<CatalogSummaryView> catalogSummaryViews =
