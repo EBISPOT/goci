@@ -8,6 +8,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -16,7 +18,10 @@ import java.util.List;
  * Created by emma on 17/02/15.
  *
  * @author emma
+ *         <p>
+ *         Creates an array of strings containing data from views which will be added to file.
  */
+
 @Service
 public class ProcessView {
 
@@ -29,44 +34,121 @@ public class ProcessView {
 
     public List<String> serialiseViews() {
 
-        Collection<CatalogSummaryView> views = ncbiCatalogService.getCatalogSummaryViewsSendToNcbi();
-        List<String> viewAsStrings = new ArrayList<String>();
+        Collection<CatalogSummaryView> views = ncbiCatalogService.getCatalogSummaryViewsWithStatusSendToNcbi();
+        List<String> serialisedViews = new ArrayList<String>();
 
+        // For each view create a line from the data returned
         for (CatalogSummaryView view : views) {
 
             String line = "";
+            // Format dates
+            DateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
 
-            String dateAddedToCatalog = view.getCatalogAddedDate().toString() + "\t";
-            String pubmedId = view.getPubmedId() + "\t";
-            String firstAuthor = view.getAuthor() + "\t";
-            String date = view.getPublicationDate().toString() + "\t";
-            String journal = view.getJournal() + "\t";
-            String link = view.getLink() + "\t";
-            String study = view.getStudy() + "\t";
-            String diseaseTrait = view.getDiseaseTrait() + "\t";
-            String initialSampleSize = view.getInitialSampleDescription() + "\t";
-            String replicateSampleSize = view.getReplicateSampleDescription() + "\t";
-            String region = view.getRegion() + "\t";
-            String reportedGenes = view.getReportedGene() + "\t";
-            String strongestSnpRiskAllele = view.getStrongestSnpRiskAllele() + "\t";
-            String snps = view.getSnpRsid() + "\t";
-            String riskAlleleFrequency = view.getRiskAlleleFrequency() + "\t";
-            String pValue = view.getpValue() + "\t";
-            String pValueText = view.getpValueQualifier() + "\t";
-            String orBeta = view.getOrBeta() + "\t";
-            String ciText = view.getCi() + " " + view.getCiQualifier() + "\t";
-            String platform = view.getPlatform() + "\t";
+            // As a default set all strings to empty string with tab
+            // Also trim strings as the database contains newlines/tabs etc.
 
-            String cnv;
+            String dateAddedToCatalog = "" + "\t";
+            if (view.getCatalogAddedDate() != null) {
+                dateAddedToCatalog = df.format(view.getCatalogAddedDate()) + "\t";
+            }
+
+            String pubmedId = "" + "\t";
+            if (view.getPubmedId() != null) {pubmedId = view.getPubmedId().trim() + "\t";}
+
+
+            String firstAuthor = "" + "\t";
+            if (view.getAuthor() != null) {firstAuthor = view.getAuthor().trim() + "\t";}
+
+
+            String date = "" + "\t";
+            if (view.getPublicationDate() != null) {
+                date = df.format(view.getPublicationDate()) + "\t";
+            }
+
+            String journal = "" + "\t";
+            if (view.getJournal() != null) {
+                journal = view.getJournal().trim() + "\t";
+            }
+
+
+            String link = "" + "\t";
+            if (view.getLink() != null) {link = view.getLink().trim() + "\t";}
+
+            String study = "" + "\t";
+            if (view.getStudy() != null) { study = view.getStudy().trim() + "\t";}
+
+            String diseaseTrait = "" + "\t";
+            if (view.getDiseaseTrait() != null) { diseaseTrait = view.getDiseaseTrait().trim() + "\t";}
+
+            String initialSampleSize = "" + "\t";
+            if (view.getInitialSampleDescription() != null && !view.getInitialSampleDescription().isEmpty()) {
+                initialSampleSize = view.getInitialSampleDescription().trim() + "\t";
+            }
+
+            String replicateSampleSize = "" + "\t";
+            if (view.getReplicateSampleDescription() != null && !view.getReplicateSampleDescription().isEmpty()) {
+                replicateSampleSize = view.getReplicateSampleDescription().trim() + "\t";
+            }
+
+            String region = "" + "\t";
+            if (region != null) {region = view.getRegion().trim() + "\t";}
+
+            String reportedGenes = "" + "\t";
+            if (view.getReportedGene() != null && !view.getReportedGene().isEmpty()) {
+                reportedGenes = view.getReportedGene().trim() + "\t";
+            }
+
+
+            String strongestSnpRiskAllele = "" + "\t";
+            if (view.getStrongestSnpRiskAllele() != null) {
+                strongestSnpRiskAllele = view.getStrongestSnpRiskAllele().trim() + "\t";
+            }
+
+            String snps = "" + "\t";
+            if (view.getSnpRsid() != null) {snps = view.getSnpRsid().trim() + "\t";}
+
+
+            String riskAlleleFrequency = "" + "\t";
+            if (view.getRiskAlleleFrequency() != null) {
+                riskAlleleFrequency = view.getRiskAlleleFrequency().trim() + "\t";
+            }
+
+
+            String pValue = "" + "\t";
+            if (view.getpValue() != null) {pValue = view.getpValue().toString().trim() + "\t";}
+
+            String pValueText = "" + "\t";
+            if (view.getpValueQualifier() != null) {pValueText = view.getpValueQualifier().trim() + "\t";}
+
+
+            String orBeta = "" + "\t";
+            if (view.getOrBeta() != null) { orBeta = view.getOrBeta().toString().trim() + "\t";}
+
+
+            String ciText = "" + "\t";
+            if (view.getCi() != null && view.getCiQualifier() != null) {
+                ciText = view.getCi() + " " + view.getCiQualifier() + "\t";
+            }
+            else if (view.getCi() != null) { ciText = view.getCi() + "\t";}
+
+            else if (view.getCiQualifier() != null) {ciText = view.getCiQualifier() + "\t";}
+
+            String platform = "" + "\t";
+            if (view.getPlatform() != null) { platform = view.getPlatform().trim() + "\t";}
+
+            String cnv = "";
             if (view.getCnv() == true) {
                 cnv = "Y" + "\t";
             }
             else {cnv = "N" + "\t";}
 
-            String associationId = view.getAssociationId().toString() + "\t";
-            String studyId = view.getStudyId().toString() + "\t";
+            String associationId = "" + "\t";
+            if (view.getAssociationId() != null) { associationId = view.getAssociationId().toString() + "\t";}
 
-            String resultPublished;
+            String studyId = "" + "\t";
+            if (view.getStudyId() != null) { studyId = view.getStudyId().toString() + "\t";}
+
+            String resultPublished = "";
             if (view.getResultPublished() != null) {
                 resultPublished = "Y" + "\t";
             }
@@ -78,14 +160,14 @@ public class ProcessView {
                     studyId + resultPublished + "\n";
 
 
-            viewAsStrings.add(line);
+            serialisedViews.add(line);
         } // end for
 
-        return viewAsStrings;
+        return serialisedViews;
     }
 
-
-    public void createFileForNcbi(String fileName, List<String> viewsAsStrings) {
+    // For each line
+    public void createFileForNcbi(String fileName, List<String> serialisedViews) {
         File file = new File(fileName);
         BufferedWriter output = null;
         try {
@@ -94,7 +176,43 @@ public class ProcessView {
         catch (IOException e) {
             e.printStackTrace();
         }
-        for (String view: viewsAsStrings){
+
+        // Add header line
+        String header = "";
+        header = "DATE ADDED TO CATALOG" + "\t"
+                + "PUBMEDID" + "\t"
+                + "FIRST AUTHOR" + "\t"
+                + "DATE" + "\t"
+                + "JOURNAL" + "\t"
+                + "LINK" + "\t"
+                + "STUDY" + "\t"
+                + "DISEASE/TRAIT" + "\t"
+                + "INITIAL SAMPLE SIZE" + "\t"
+                + "REPLICATION SAMPLE SIZE" + "\t"
+                + "REGION" + "\t"
+                + "REPORTED GENE(S)" + "\t"
+                + "STRONGEST SNP-RISK ALLELE" + "\t"
+                + "SNPS" + "\t"
+                + "RISK ALLELE FREQUENCY" + "\t"
+                + "P-VALUE" + "\t"
+                + "P-VALUE (TEXT)" + "\t"
+                + "OR OR BETA" + "\t"
+                + "95% CI (TEXT)" + "\t"
+                + "PLATFORM [SNPS PASSING QC]" + "\t"
+                + "CNV" + "\t"
+                + "GWASTUDIESSNPID" + "\t"
+                + "GWASTUDYID" + "\t"
+                + "RESULTPUBLISHED" + "\n";
+
+        try {
+            output.write(header);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        for (String view : serialisedViews) {
 
             try {
                 output.write(view);

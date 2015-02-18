@@ -12,28 +12,36 @@ import java.util.List;
 
 /**
  * Created by emma on 17/02/15.
+ *
+ * @author emma
+ *         <p>
+ *         Application to create a text file that can be sent to NCBI pipeline Takes a file name as an arguement
  */
 @SpringBootApplication
 public class DownloadApplication {
 
-    @Autowired ProcessView processView;
+    @Autowired
+    private ProcessView processView;
 
-    public static void main(String[] args) {
+    public static void main(String... args) {
         System.out.println("Starting catalog download service...");
         ApplicationContext ctx = SpringApplication.run(DownloadApplication.class, args);
         System.out.println("Application executed successfully!");
         SpringApplication.exit(ctx);
     }
 
-    @Bean CommandLineRunner run(String... args) {
+
+    @Bean CommandLineRunner run() {
         return strings -> {
-            System.out.print("Querying database for studies ready to send to NCBI...");
-            List<String> viewsAsStrings = processView.serialiseViews();
-            System.out.print("Querying database for studies ready to send to NCBI...");
-            String fileName = args.toString();
-            processView.createFileForNcbi(fileName, viewsAsStrings);
-            System.out.println("done!\n");
+
+            System.out.println("Querying database for studies ready to send to NCBI...");
+            List<String> serialisedViews = processView.serialiseViews();
+
+            String fileName = strings[0];
+            processView.createFileForNcbi(fileName, serialisedViews);
+            System.out.println("Writing "+strings[0]);
         };
+
     }
 
 }
