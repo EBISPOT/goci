@@ -192,15 +192,15 @@
                 <td>
                     <a th:href="@{/sampledescriptions/{ethnicityId}(ethnicityId=${replicationStudyEthnicityDescription.id})}"
                        class="btn btn-link">Edit</a></td>
-                <td th:text="${replicationStudyEthnicityDescription.type}"></td>
-                <td th:text="${replicationStudyEthnicityDescription.numberOfIndividuals}"></td>
-                <td th:text="${replicationStudyEthnicityDescription.ethnicGroup}"></td>
-                <td th:text="${replicationStudyEthnicityDescription.countryOfOrigin}"></td>
-                <td th:text="${replicationStudyEthnicityDescription.countryOfRecruitment}"></td>
-                <td th:text="${replicationStudyEthnicityDescription.previouslyReported}"></td>
-                <td th:text="${replicationStudyEthnicityDescription.sampleSizesMatch}"></td>
-                <td th:text="${replicationStudyEthnicityDescription.description}"></td>
-                <td th:text="${replicationStudyEthnicityDescription.notes}"></td>
+                <td th:text="${replicationStudyEthnicityDescription.type}  ?: 'null'"></td>
+                <td th:text="${replicationStudyEthnicityDescription.numberOfIndividuals}  ?: 'null'"></td>
+                <td th:text="${replicationStudyEthnicityDescription.ethnicGroup}  ?: 'null'"></td>
+                <td th:text="${replicationStudyEthnicityDescription.countryOfOrigin}  ?: 'null'"></td>
+                <td th:text="${replicationStudyEthnicityDescription.countryOfRecruitment}  ?: 'null'"></td>
+                <td th:text="${replicationStudyEthnicityDescription.previouslyReported}  ?: 'null'"></td>
+                <td th:text="${replicationStudyEthnicityDescription.sampleSizesMatch} ?: 'null'"></td>
+                <td th:text="${replicationStudyEthnicityDescription.description} ?: 'null'"></td>
+                <td th:text="${replicationStudyEthnicityDescription.notes} ?: 'null'"></td>
                 <td>
                     <a th:href="@{/sampledescriptions/{ethnicityId}/delete(ethnicityId=${replicationStudyEthnicityDescription.id})}"
                        class="btn btn-danger">Delete</a></td>
