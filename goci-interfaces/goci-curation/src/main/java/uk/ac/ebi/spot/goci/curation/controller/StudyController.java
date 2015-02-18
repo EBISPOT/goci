@@ -395,7 +395,7 @@ public class StudyController {
     private Study copyStudy(Study studyToDuplicate) {
 
         Study duplicateStudy = new Study();
-        duplicateStudy.setAuthor(studyToDuplicate.getAuthor());
+        duplicateStudy.setAuthor(studyToDuplicate.getAuthor()+" DUP");
         duplicateStudy.setStudyDate(studyToDuplicate.getStudyDate());
         duplicateStudy.setPublication(studyToDuplicate.getPublication());
         duplicateStudy.setTitle(studyToDuplicate.getTitle());
