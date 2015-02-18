@@ -44,7 +44,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field("mappedGene") private String mappedGene;
     @Field("reportedGene") private Collection<String> reportedGenes;
 
-    @Field("studyId") private Collection<String> studyIds;
+    @Field("studyId") @NonEmbeddableField private Collection<String> studyIds;
 
     // pluralise all other information, but retain order
     @Field("chromosomeName") private Set<String> chromosomeNames;

@@ -42,6 +42,7 @@ public class SolrIndexer {
     private AssociationMapper associationMapper;
 
     private int pageSize = 1000;
+    private int maxPages = -1;
     private boolean sysOutLogging = false;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -113,7 +114,7 @@ public class SolrIndexer {
         Pageable pager = new PageRequest(0, pageSize, sort);
         Page<Study> studyPage = studyService.findPublishedStudies(pager);
         studyMapper.map(studyPage.getContent());
-        while (studyPage.hasNext()) {
+        while (studyPage.hasNext() && maxPages != -1 && studyPage.getNumber() < maxPages) {
             pager = pager.next();
             studyPage = studyService.findPublishedStudies(pager);
             studyMapper.map(studyPage.getContent());
@@ -129,7 +130,7 @@ public class SolrIndexer {
         Pageable pager = new PageRequest(0, pageSize, sort);
         Page<Association> associationPage = associationService.findPublishedAssociations(pager);
         associationMapper.map(associationPage.getContent());
-        while (associationPage.hasNext()) {
+        while (associationPage.hasNext() && maxPages != -1 && associationPage.getNumber() < maxPages) {
             pager = pager.next();
             associationPage = associationService.findPublishedAssociations(pager);
             associationMapper.map(associationPage.getContent());
@@ -145,7 +146,7 @@ public class SolrIndexer {
         Pageable pager = new PageRequest(0, pageSize, sort);
         Page<DiseaseTrait> diseaseTraitPage = diseaseTraitRepository.findAll(pager);
         traitMapper.map(diseaseTraitPage.getContent());
-        while (diseaseTraitPage.hasNext()) {
+        while (diseaseTraitPage.hasNext() && maxPages != -1 && diseaseTraitPage.getNumber() < maxPages) {
             pager = pager.next();
             diseaseTraitPage = diseaseTraitRepository.findAll(pager);
             traitMapper.map(diseaseTraitPage.getContent());

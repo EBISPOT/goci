@@ -158,25 +158,25 @@
    <field name="links" type="string" indexed="true" stored="true" multiValued="true"/>
 
     <!-- GWAS catalog specific fields-->
-    <!-- snp -->
-    <field name="rsId" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="chromosomeName" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="chromosomePosition" type="int" indexed="true" stored="true" multiValued="true" />
-    <field name="region" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="reportedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="mappedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="context" type="text_general" indexed="true" stored="true" multiValued="true" />
 
     <!-- study -->
-    <field name="pubmedId" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="publication" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="publicationDate" type="date" indexed="true" stored="true" multiValued="true" />
-    <field name="catalogAddedDate" type="date" indexed="true" stored="true" multiValued="true" />
-    <field name="platform" type="text_general" indexed="true" stored="true"/>
-    <field name="cnv" type="boolean" indexed="true" stored="true"/>
-    <field name="initialSampleDescription" type="text_general" indexed="true" stored="true" multiValued="true"/>
-    <field name="replicateSampleDescription" type="text_general" indexed="true" stored="true" multiValued="true"/>
-    <field name="associationCount" type="int" indexed="true" stored="true" multiValued="true" />
+    <field name="pubmedId" type="text_general" indexed="true" stored="true" multiValued="false" />
+    <field name="publication" type="text_general" indexed="true" stored="true" multiValued="false" />
+    <field name="publicationDate" type="date" indexed="true" stored="true" multiValued="false" />
+    <field name="catalogAddedDate" type="date" indexed="true" stored="true" multiValued="false" />
+    <field name="platform" type="text_general" indexed="true" stored="true" multiValued="false"/>
+    <field name="cnv" type="boolean" indexed="true" stored="true" multiValued="false"/>
+    <field name="initialSampleDescription" type="text_general" indexed="true" stored="true" multiValued="false"/>
+    <field name="replicateSampleDescription" type="text_general" indexed="true" stored="true" multiValued="false"/>
+    <field name="associationCount" type="int" indexed="true" stored="true" multiValued="false" />
+
+    <!-- embedded study -->
+    <field name="study_pubmedId" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="study_publication" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="study_publicationDate" type="date" indexed="true" stored="true" multiValued="true" />
+    <field name="study_catalogAddedDate" type="date" indexed="true" stored="true" multiValued="true" />
+    <field name="study_initialSampleDescription" type="text_general" indexed="true" stored="true" multiValued="true"/>
+    <field name="study_replicateSampleDescription" type="text_general" indexed="true" stored="true" multiValued="true"/>
 
     <!-- diseasetrait -->
     <field name="traitName" type="text_general" indexed="true" stored="true" multiValued="true" />
@@ -196,16 +196,34 @@
     <field name="child" type="text_general" indexed="true" stored="true" multiValued="true" />
 
     <!-- association -->
-    <field name="strongestAllele" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="pValue" type="float" indexed="true" stored="true" multiValued="false" />
-    <field name="qualifier" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="riskFrequency" type="text_general" indexed="true" stored="true" multiValued="false" />
-    <field name="orPerCopyUnitDescr" type="text_general" indexed="true" stored="true" multiValued="false" />
-    <field name="orType" type="boolean" indexed="true" stored="true" multiValued="false" />
+    <field name="qualifier" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="pValue" type="float" indexed="true" stored="true" multiValued="false" />
     <field name="orPerCopyNum" type="float" indexed="true" stored="true" multiValued="false" />
+    <field name="orPerCopyUnitDescr" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="orPerCopyRange" type="text_general" indexed="false" stored="true" multiValued="false" />
+    <field name="orType" type="boolean" indexed="true" stored="true" multiValued="false" />
+    <field name="rsId" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="strongestAllele" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="context" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="region" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="mappedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="reportedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="studyId" type="text_general" indexed="true" stored="true" multiValued="false" />
+    <field name="chromosomeName" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="chromosomePosition" type="int" indexed="true" stored="true" multiValued="true" />
 
+    <!-- embedded association -->
+    <field name="association_qualifier" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="association_rsId" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="association_strongestAllele" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="association_context" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="association_region" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="association_mappedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="association_reportedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="association_chromosomeName" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="association_chromosomePosition" type="int" indexed="true" stored="true" multiValued="true" />
+    <field name="association_last_modified" type="date" indexed="true" stored="true" multiValued="true" />
 
     <!-- Main body of document extracted by SolrCell.
          NOTE: This field is not indexed by default, since it is also copied to "text"
