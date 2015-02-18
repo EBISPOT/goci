@@ -1,12 +1,15 @@
 package uk.ac.ebi.spot.goci.model;
 
 import org.apache.solr.client.solrj.beans.Field;
+import uk.ac.ebi.spot.goci.exception.SolrIndexingException;
 
-import java.beans.Introspector;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -17,42 +20,57 @@ import java.util.TimeZone;
  * @date 16/01/15
  */
 public class AssociationDocument extends OntologyEnabledDocument<Association> {
-    @Field private String region;
-    @Field private String mappedGene;
-    @Field private String strongestAllele;
-    @Field private String context;
-    @Field("reportedGene") private Collection<String> reportedGenes;
-
-    @Field private String riskFrequency;
+    // basic Association information
+    @Field @NonEmbeddableField private String riskFrequency;
     @Field private String qualifier;
 
-    @Field private float pValue;
-    @Field private float orPerCopyNum;
-    @Field private String orPerCopyUnitDescr;
-    @Field private String orPerCopyRange;
-    @Field private String orType;
+    @Field @NonEmbeddableField private float pValue;
+    @Field @NonEmbeddableField private float orPerCopyNum;
+    @Field @NonEmbeddableField private String orPerCopyUnitDescr;
+    @Field @NonEmbeddableField private String orPerCopyRange;
+    @Field @NonEmbeddableField private String orType;
 
-    @Field private String platform;
-    @Field private boolean cnv;
-
-    @Field("label") private Collection<String> traits;
-    @Field("traitUri") private Collection<String> traitUris;
-
-    @Field private String trait;
-
-    // additional fields from study
-    @Field private String studyId;
-    @Field private String pubmedId;
-    @Field private String title;
-    @Field private String author;
-    @Field private String publication;
-
-    // additional search fields from snps
+    // additional included genetic data...
+    // capture loci/risk alleles for association;
+    // if many, collapse risk allele and snp into a single field and use
+    // 'x' or ',' to separate SNP x SNP and haplotype associations respectively
     @Field private String rsId;
+    @Field private String strongestAllele;
+    @Field private String context;
+    @Field private String region;
+    // mapped genes and reported genes must be per snp -
+    // if multiple, separate mapped genes with a hyphen (downstream-upstream) and reported genes with a slash,
+    // and then include 'x' or ',' as designated by multuple loci/risk alleles
+    @Field("mappedGene") private String mappedGene;
+    @Field("reportedGene") private Collection<String> reportedGenes;
+
+    @Field("studyId") private Collection<String> studyIds;
+
+    // pluralise all other information, but retain order
     @Field("chromosomeName") private Set<String> chromosomeNames;
     @Field("chromosomePosition") private Set<Integer> chromosomePositions;
     @Field("last_modified") private Set<String> lastModifiedDates;
 
+    // embedded study info
+    @Field private String pubmedId;
+    @Field private String title;
+    @Field private String author;
+    @Field private String publication;
+    @Field private String publicationDate;
+    @Field private String catalogAddedDate;
+
+    @Field private String platform;
+    @Field private Boolean cnv;
+
+    @Field private String initialSampleDescription;
+    @Field private String replicateSampleDescription;
+
+    // embedded DiseaseTrait info
+    @Field("traitName") private Collection<String> traitNames;
+
+    // embedded EfoTrait info
+    @Field("mappedLabel") private Collection<String> mappedLabels;
+    @Field("mappedUri") private Collection<String> mappedUris;
 
     public AssociationDocument(Association association) {
         super(association);
@@ -69,114 +87,18 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             this.pValue = association.getPvalueFloat();
         }
 
-        this.traits = new HashSet<>();
-        this.traitUris = new HashSet<>();
-        association.getEfoTraits().forEach(trait -> {
-            traits.add(trait.getTrait());
-            traitUris.add(trait.getUri());
-        });
-
-        Study study = association.getStudy();
-        this.studyId = Introspector.decapitalize(Study.class.getSimpleName())
-                .concat(":")
-                .concat(String.valueOf(study.getId()));
-        this.pubmedId = study.getPubmedId();
-        this.title = study.getTitle();
-        this.author = study.getAuthor();
-        this.publication = study.getPublication();
-        this.platform = study.getPlatform();
-        this.cnv = study.getCnv();
-        if (study.getDiseaseTrait() != null) {
-            this.trait = study.getDiseaseTrait().getTrait();
-        }
-//        this.traitUris = new ArrayList<>();
-//        study.getEfoTraits().forEach(efoTrait -> traitUris.add(efoTrait.getUri()));
-
         this.chromosomeNames = new HashSet<>();
         this.chromosomePositions = new HashSet<>();
         this.lastModifiedDates = new HashSet<>();
 
         this.reportedGenes = new HashSet<>();
-        if (association.getLoci().size() > 1) {
-            // if this association has multiple loci, this is a SNP x SNP study
-            association.getLoci().forEach(
-                    locus -> {
-                        locus.getStrongestRiskAlleles().forEach(
-                                riskAllele -> {
-                                    strongestAllele =
-                                            setOrAppend(strongestAllele, riskAllele.getRiskAlleleName(), " x ");
+        this.studyIds = new HashSet<>();
+        embedGeneticData(association);
 
-                                    SingleNucleotidePolymorphism snp = riskAllele.getSnp();
-                                    rsId = setOrAppend(rsId, snp.getRsId(), " x ");
+        this.traitNames = new LinkedHashSet<>();
 
-                                    final StringBuilder regionBuilder = new StringBuilder();
-                                    snp.getRegions().forEach(
-                                            region -> setOrAppend(regionBuilder, region.getName(), " / "));
-                                    region = setOrAppend(region, regionBuilder.toString(), " : ");
-
-                                    final StringBuilder mappedGeneBuilder = new StringBuilder();
-                                    snp.getGenomicContexts().forEach(
-                                            context -> setOrAppend(mappedGeneBuilder,
-                                                                   context.getGene().getGeneName(),
-                                                                   " / "));
-                                    mappedGene = setOrAppend(mappedGene, mappedGeneBuilder.toString(), " : ");
-
-                                    context = snp.getFunctionalClass();
-                                    chromosomeNames.add(snp.getChromosomeName());
-                                    if (snp.getChromosomePosition() != null) {
-                                        chromosomePositions.add(Integer.parseInt(snp.getChromosomePosition()));
-                                    }
-                                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-                                    df.setTimeZone(TimeZone.getTimeZone("UTC"));
-                                    if (snp.getLastUpdateDate() != null) {
-                                        lastModifiedDates.add(df.format(snp.getLastUpdateDate()));
-                                    }
-                                }
-                        );
-                        locus.getAuthorReportedGenes().forEach(gene -> reportedGenes.add(gene.getGeneName()));
-                    }
-            );
-        }
-        else {
-            // this is a single study or a haplotype
-            association.getLoci().forEach(
-                    locus -> {
-                        locus.getStrongestRiskAlleles().forEach(
-                                riskAllele -> {
-                                    strongestAllele =
-                                            setOrAppend(strongestAllele, riskAllele.getRiskAlleleName(), ", ");
-
-                                    SingleNucleotidePolymorphism snp = riskAllele.getSnp();
-                                    rsId = setOrAppend(rsId, snp.getRsId(), ", ");
-
-                                    final StringBuilder regionBuilder = new StringBuilder();
-                                    snp.getRegions().forEach(
-                                            region -> setOrAppend(regionBuilder, region.getName(), " / "));
-                                    region = setOrAppend(region, regionBuilder.toString(), ", ");
-
-                                    final StringBuilder mappedGeneBuilder = new StringBuilder();
-                                    snp.getGenomicContexts().forEach(
-                                            context -> setOrAppend(mappedGeneBuilder,
-                                                                   context.getGene().getGeneName(),
-                                                                   " / "));
-                                    mappedGene = setOrAppend(mappedGene, mappedGeneBuilder.toString(), ", ");
-
-                                    context = snp.getFunctionalClass();
-                                    chromosomeNames.add(snp.getChromosomeName());
-                                    if (snp.getChromosomePosition() != null) {
-                                        chromosomePositions.add(Integer.parseInt(snp.getChromosomePosition()));
-                                    }
-                                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-                                    df.setTimeZone(TimeZone.getTimeZone("UTC"));
-                                    if (snp.getLastUpdateDate() != null) {
-                                        lastModifiedDates.add(df.format(snp.getLastUpdateDate()));
-                                    }
-                                }
-                        );
-                        locus.getAuthorReportedGenes().forEach(gene -> reportedGenes.add(gene.getGeneName()));
-                    }
-            );
-        }
+        this.mappedLabels = new LinkedHashSet<>();
+        this.mappedUris = new LinkedHashSet<>();
     }
 
     public String getRegion() {
@@ -219,34 +141,6 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         return reportedGenes;
     }
 
-    public Collection<String> getTraits() {
-        return traits;
-    }
-
-    public String getPubmedId() {
-        return pubmedId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public String getPublication() {
-        return publication;
-    }
-
-    public String getPlatform() {
-        return platform;
-    }
-
-    public boolean isCnv() {
-        return cnv;
-    }
-
     public String getRsId() {
         return rsId;
     }
@@ -271,6 +165,179 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         return orType;
     }
 
+    public void addPubmedId(String pubmedId) {
+        this.pubmedId = pubmedId;
+    }
+
+    public void addTitle(String title) {
+        this.title = title;
+    }
+
+    public void addAuthor(String author) {
+        this.author = author;
+    }
+
+    public void addPublication(String publication) {
+        this.publication = publication;
+    }
+
+    public void addPublicationDate(String publicationDate) {
+        this.publicationDate = publicationDate;
+    }
+
+    public void addCatalogAddedDate(String catalogAddedDate) {
+        this.catalogAddedDate = catalogAddedDate;
+    }
+
+    public void addPlatform(String platform) {
+        this.platform = platform;
+    }
+
+    public void addCnv(Boolean cnv) {
+        this.cnv = cnv;
+    }
+
+    public void addInitialSampleDescription(String initialSampleDescription) {
+        this.initialSampleDescription = initialSampleDescription;
+    }
+
+    public void addReplicateSampleDescription(String replicateSampleDescription) {
+        this.replicateSampleDescription = replicateSampleDescription;
+    }
+
+    public void addTraitName(String traitName) {
+        this.traitNames.add(traitName);
+    }
+
+    public void addMappedLabel(String mappedLabel) {
+        this.mappedLabels.add(mappedLabel);
+    }
+
+    public void addMappedUri(String mappedUri) {
+        this.mappedUris.add(mappedUri);
+    }
+
+    public void addStudyId(String studyId) {
+        this.studyIds.add(studyId);
+    }
+
+    private void embedGeneticData(Association association) {
+        if (association.getLoci().size() > 1) {
+            // if this association has multiple loci, this is a SNP x SNP study
+            association.getLoci().forEach(
+                    locus -> {
+                        locus.getStrongestRiskAlleles().forEach(
+                                riskAllele -> {
+                                    strongestAllele =
+                                            setOrAppend(strongestAllele, riskAllele.getRiskAlleleName(), " x ");
+
+                                    SingleNucleotidePolymorphism snp = riskAllele.getSnp();
+                                    rsId = setOrAppend(rsId, snp.getRsId(), " x ");
+
+                                    final Set<String> regionNames = new HashSet<>();
+                                    final StringBuilder regionBuilder = new StringBuilder();
+                                    snp.getRegions().forEach(
+                                            region -> {
+                                                if (!regionNames.contains(region.getName())) {
+                                                    regionNames.add(region.getName());
+                                                    setOrAppend(regionBuilder, region.getName(), " / ");
+                                                }
+                                            });
+                                    region = setOrAppend(region, regionBuilder.toString(), " : ");
+                                    mappedGene = setOrAppend(mappedGene, getMappedGeneString(association, snp), " : ");
+
+                                    context = snp.getFunctionalClass();
+                                    chromosomeNames.add(snp.getChromosomeName());
+                                    if (snp.getChromosomePosition() != null) {
+                                        chromosomePositions.add(Integer.parseInt(snp.getChromosomePosition()));
+                                    }
+                                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                                    df.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                    if (snp.getLastUpdateDate() != null) {
+                                        lastModifiedDates.add(df.format(snp.getLastUpdateDate()));
+                                    }
+                                }
+                        );
+                        locus.getAuthorReportedGenes().forEach(gene -> reportedGenes.add(gene.getGeneName().trim()));
+                    }
+            );
+        }
+        else {
+            // this is a single study or a haplotype
+            association.getLoci().forEach(
+                    locus -> {
+                        locus.getStrongestRiskAlleles().forEach(
+                                riskAllele -> {
+                                    strongestAllele =
+                                            setOrAppend(strongestAllele, riskAllele.getRiskAlleleName(), ", ");
+
+                                    SingleNucleotidePolymorphism snp = riskAllele.getSnp();
+                                    rsId = setOrAppend(rsId, snp.getRsId(), ", ");
+
+                                    final Set<String> regionNames = new HashSet<>();
+                                    final StringBuilder regionBuilder = new StringBuilder();
+                                    snp.getRegions().forEach(
+                                            region -> {
+                                                if (!regionNames.contains(region.getName())) {
+                                                    regionNames.add(region.getName());
+                                                    setOrAppend(regionBuilder, region.getName(), " / ");
+                                                }
+                                            });
+                                    region = setOrAppend(region, regionBuilder.toString(), ", ");
+                                    mappedGene = setOrAppend(mappedGene, getMappedGeneString(association, snp), ", ");
+
+                                    context = snp.getFunctionalClass();
+                                    chromosomeNames.add(snp.getChromosomeName());
+                                    if (snp.getChromosomePosition() != null) {
+                                        chromosomePositions.add(Integer.parseInt(snp.getChromosomePosition()));
+                                    }
+                                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                                    df.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                    if (snp.getLastUpdateDate() != null) {
+                                        lastModifiedDates.add(df.format(snp.getLastUpdateDate()));
+                                    }
+                                }
+                        );
+                        locus.getAuthorReportedGenes().forEach(gene -> reportedGenes.add(gene.getGeneName().trim()));
+                    }
+            );
+        }
+    }
+
+    private String getMappedGeneString(Association association, SingleNucleotidePolymorphism snp) {
+        List<String> genes = new ArrayList<>();
+        snp.getGenomicContexts().forEach(
+                context -> {
+                    String geneName = context.getGene().getGeneName().trim();
+                    if (!genes.contains(geneName)) {
+                        if (context.isDownstream()) {
+                            genes.add(0, geneName);
+                        }
+                        else {
+                            genes.add(geneName);
+                        }
+                    }
+                });
+        String geneString = "";
+        if (genes.size() > 2) {
+            throw new SolrIndexingException(
+                    "Unable to index genetic data for association " +
+                            "'" + association.getId() + "': more than 2 mapped genes " +
+                            "(" + genes + ")");
+        }
+        else {
+            if (genes.size() == 2) {
+                geneString = genes.get(0).concat(" - ").concat(genes.get(1));
+            }
+            else {
+                if (!genes.isEmpty()) {
+                    geneString = genes.iterator().next();
+                }
+            }
+        }
+        return geneString;
+    }
+
     private String setOrAppend(String current, String toAppend, String delim) {
         if (toAppend != null && !toAppend.isEmpty()) {
             if (current == null || current.isEmpty()) {
@@ -293,9 +360,5 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             }
         }
         return current;
-    }
-
-    public String getTrait() {
-        return trait;
     }
 }

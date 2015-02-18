@@ -238,6 +238,12 @@ a > .toplevel-view {
     border-bottom: 2px solid #ddd;
 }
 
+.context-help {
+    margin-left: 1px;
+    font-size: x-small;
+    top: -0.8em;
+}
+
 .glyphicon-link {
     color: #A6703F;
 }

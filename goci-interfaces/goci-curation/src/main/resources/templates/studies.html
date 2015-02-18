@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>GWAS Curation Demo</title>
+    <title>GWAS Curation Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
@@ -35,11 +35,6 @@
 </head>
 <body>
 
-<!--TODO
-- REIMPLEMENTED LOGIN
-- COUNT
-- DELETE STUDY-->
-
 
 <nav role="navigation" class="navbar navbar-default">
     <div class="navbar-header">
@@ -60,13 +55,13 @@
             <li><a th:href="@{/reports}">Reports</a></li>
         </ul>
 
-        <!--<ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav navbar-right">
             <li>
                 <form th:action="@{/logout}" method="post">
                     <input type="submit" value="Sign Out"/>
                 </form>
             </li>
-        </ul>-->
+        </ul>
     </div>
 </nav>
 
@@ -168,7 +163,8 @@
                     <td th:text="${study.author} ?: 'null' "></td>
                     <td th:text="${study.title} ?: 'null'"></td>
                     <td th:text="${#calendars.format(study.studyDate,'dd MMMM yyyy')} ?: 'null'"></td>
-                    <td th:text="${study.pubmedId} ?: 'null'"></td>
+                    <td><a th:href="@{http://www.ncbi.nlm.nih.gov/pubmed/{pubmedId}(pubmedId=${study.pubmedId})}"
+                           th:text="${study.pubmedId} ?: 'null'" target="_blank"></a></td>
                     <td th:text="${study.publication} ?: 'null'"></td>
 
                     <!--If study has associated disease trait return traits name-->

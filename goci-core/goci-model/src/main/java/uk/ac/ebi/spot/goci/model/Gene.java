@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import java.util.Collection;
 
 /**
@@ -24,6 +25,9 @@ public class Gene {
 
     @ManyToMany(mappedBy = "authorReportedGenes")
     private Collection<Locus> authorReportedFromLoci;
+
+    @OneToMany(mappedBy = "gene")
+    private Collection<GenomicContext> genomicContexts;
 
     // JPA no-args constructor
     public Gene() {

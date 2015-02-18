@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.curation.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
 import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
+import uk.ac.ebi.spot.goci.curation.service.MailService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.PropertyFilePubMedLookupService;
@@ -47,6 +49,7 @@ public class StudyController {
 
     // Pubmed ID lookup service
     private PropertyFilePubMedLookupService propertyFilePubMedLookupService;
+    private MailService mailService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -55,7 +58,7 @@ public class StudyController {
     }
 
     @Autowired
-    public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, AssociationRepository associationRepository, EthnicityRepository ethnicityRepository, PropertyFilePubMedLookupService propertyFilePubMedLookupService) {
+    public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, AssociationRepository associationRepository, EthnicityRepository ethnicityRepository, PropertyFilePubMedLookupService propertyFilePubMedLookupService, MailService mailService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
@@ -65,8 +68,8 @@ public class StudyController {
         this.associationRepository = associationRepository;
         this.ethnicityRepository = ethnicityRepository;
         this.propertyFilePubMedLookupService = propertyFilePubMedLookupService;
+        this.mailService = mailService;
     }
-
 
     /* All studies and various filtered lists */
 
@@ -136,8 +139,8 @@ public class StudyController {
         String pubmedId = pubmedIdForImport.getPubmedId().trim();
 
         // Check if there is an existing study with the same pubmed id
-        Study existingStudy = studyRepository.findByPubmedId(pubmedId);
-        if (existingStudy != null) {
+        Collection<Study> existingStudies = studyRepository.findByPubmedId(pubmedId);
+        if (existingStudies.size() > 0) {
             throw new PubmedImportException();
         }
 
@@ -288,7 +291,7 @@ public class StudyController {
         }
 
         // Add duplicate message
-        String message = "Study is a duplicate of "+ studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId();
+        String message = "Study is a duplicate of " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId();
         redirectAttributes.addFlashAttribute("duplicateMessage", message);
 
         return "redirect:/studies/" + duplicateStudy.getId();
@@ -321,28 +324,36 @@ public class StudyController {
     @RequestMapping(value = "/{studyId}/housekeeping", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping, @PathVariable Long studyId, RedirectAttributes redirectAttributes) {
 
+
+        // Establishlinked study
+        Study study = studyRepository.findOne(studyId);
+
         // Establish whether user has set status to "Publish study" and "Send to NCBI"
         // as corresponding dates will be set in housekeeping table
         CurationStatus currentStatus = housekeeping.getCurationStatus();
 
-        // TODO POSSIBLY CHANGE LOGIC SO THIS DATE IS SET BY NIGHTLY RELEASE PROCESS
-        // OTHERWISE ANY TIME USER SAVES FROM WHEN STATUS IS SET TO "publish study"
-        // THE DATE GETS UPDATED
+   /*      TODO POSSIBLY CHANGE LOGIC SO THIS DATE IS SET BY NIGHTLY RELEASE PROCESS
+        OTHERWISE ANY TIME USER SAVES FROM WHEN STATUS IS SET TO "publish study"
+        THE DATE GETS UPDATED*/
         if (currentStatus != null && currentStatus.getStatus().equals("Publish study")) {
             java.util.Date publishDate = new java.util.Date();
             housekeeping.setPublishDate(publishDate);
         }
 
+        //Set date and send email notification
         if (currentStatus != null && currentStatus.getStatus().equals("Send to NCBI")) {
             java.util.Date sendToNCBIDate = new java.util.Date();
             housekeeping.setSendToNCBIDate(sendToNCBIDate);
+            mailService.sendEmailNotification(study, currentStatus.getStatus());
+        }
+
+        // Send notification email to curators
+        if (currentStatus != null && currentStatus.getStatus().equals("Level 1 curation done")) {
+            mailService.sendEmailNotification(study, currentStatus.getStatus());
         }
 
         // Save housekeeping returned from form
         housekeepingRepository.save(housekeeping);
-
-        // Find study
-        Study study = studyRepository.findOne(studyId);
 
         // Set study housekeeping
         study.setHousekeeping(housekeeping);
@@ -398,10 +409,10 @@ public class StudyController {
         duplicateStudy.setDiseaseTrait(studyToDuplicate.getDiseaseTrait());
 
         // Deal with EFO traits
-        Collection<EfoTrait> efoTraits= studyToDuplicate.getEfoTraits();
-        Collection<EfoTrait> efoTraitsDuplicateStudy=new ArrayList<EfoTrait>();
+        Collection<EfoTrait> efoTraits = studyToDuplicate.getEfoTraits();
+        Collection<EfoTrait> efoTraitsDuplicateStudy = new ArrayList<EfoTrait>();
 
-        if(efoTraits != null && !efoTraits.isEmpty()){
+        if (efoTraits != null && !efoTraits.isEmpty()) {
             efoTraitsDuplicateStudy.addAll(efoTraits);
             duplicateStudy.setEfoTraits(efoTraitsDuplicateStudy);
         }
@@ -451,13 +462,13 @@ public class StudyController {
     // Disease Traits
     @ModelAttribute("diseaseTraits")
     public List<DiseaseTrait> populateDiseaseTraits(Model model) {
-        return diseaseTraitRepository.findAll();
+        return diseaseTraitRepository.findAll(sortByTraitAsc());
     }
 
     // EFO traits
     @ModelAttribute("efoTraits")
     public List<EfoTrait> populateEFOTraits(Model model) {
-        return efoTraitRepository.findAll();
+        return efoTraitRepository.findAll(sortByTraitAsc());
     }
 
     // Curators
@@ -471,5 +482,11 @@ public class StudyController {
     public List<CurationStatus> populateCurationStatuses(Model model) {
         return curationStatusRepository.findAll();
     }
+
+    // Returns a Sort object which sorts disease traits in ascending order by trait
+    private Sort sortByTraitAsc() {
+        return new Sort(Sort.Direction.ASC, "trait");
+    }
+
 
 }

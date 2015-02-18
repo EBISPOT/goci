@@ -4,8 +4,8 @@ import org.apache.solr.client.solrj.beans.Field;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.TimeZone;
 
 /**
@@ -14,7 +14,8 @@ import java.util.TimeZone;
  * @author Tony Burdett
  * @date 23/12/14
  */
-public class StudyDocument extends Document<Study> {
+public class StudyDocument extends OntologyEnabledDocument<Study> {
+    // basic study information
     @Field private String pubmedId;
     @Field private String title;
     @Field private String author;
@@ -22,20 +23,37 @@ public class StudyDocument extends Document<Study> {
     @Field private String publicationDate;
     @Field private String catalogAddedDate;
 
-    @Field private String platform;
-    @Field private Boolean cnv;
+    @Field @NonEmbeddableField private String platform;
+    @Field @NonEmbeddableField private Boolean cnv;
 
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
 
-    @Field private String trait;
-    @Field("traitUri") private Collection<String> traitUris;
-    @Field private Collection<String> rsIds;
-    @Field private Collection<String> chromosomePositions;
-    @Field private Collection<String> regions;
+    @Field @NonEmbeddableField private int associationCount;
 
+    // embedded Association info
+    @Field("qualifier") private Collection<String> qualifiers;
+    @Field("pValue") private Collection<Float> pValues;
+    @Field("orPerCopyNum") private Collection<Float> orPerCopyNums;
+    @Field("orPerCopyUnitDescr") private Collection<String> orPerCopyUnitDescrs;
+    @Field("orPerCopyRange") private Collection<String> orPerCopyRanges;
+    @Field("orType") private Collection<String> orTypes;
+    @Field("rsId") private Collection<String> rsIds;
+    @Field("strongestAllele") private Collection<String> strongestAlleles;
+    @Field("context") private Collection<String> contexts;
+    @Field("region") private Collection<String> regions;
+    @Field("mappedGene") private Collection<String> mappedGenes;
+    @Field("reportedGene") private Collection<String> reportedGenes;
+    @Field("chromosomeName") private Collection<String> chromosomeNames;
+    @Field("chromosomePosition") private Collection<Integer> chromosomePositions;
+    @Field("last_modified") private Collection<String> lastModifiedDates;
 
-    @Field private int associationCount;
+    // embedded DiseaseTrait info
+    @Field("traitName") private Collection<String> traitNames;
+
+    // embedded EfoTrait info
+    @Field("mappedLabel") private Collection<String> mappedLabels;
+    @Field("mappedUri") private Collection<String> mappedUris;
 
     public StudyDocument(Study study) {
         super(study);
@@ -50,10 +68,6 @@ public class StudyDocument extends Document<Study> {
         this.initialSampleDescription = study.getInitialSampleSize();
         this.replicateSampleDescription = study.getReplicateSampleSize();
 
-        if (study.getDiseaseTrait() != null) {
-            this.trait = study.getDiseaseTrait().getTrait();
-        }
-
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
         if (study.getStudyDate() != null) {
@@ -63,11 +77,26 @@ public class StudyDocument extends Document<Study> {
             this.catalogAddedDate = df.format(study.getHousekeeping().getPublishDate());
         }
 
+        this.qualifiers = new LinkedHashSet<>();
+        this.pValues = new LinkedHashSet<>();
+        this.orPerCopyNums = new LinkedHashSet<>();
+        this.orPerCopyUnitDescrs = new LinkedHashSet<>();
+        this.orPerCopyRanges = new LinkedHashSet<>();
+        this.orTypes = new LinkedHashSet<>();
+        this.rsIds = new LinkedHashSet<>();
+        this.strongestAlleles = new LinkedHashSet<>();
+        this.contexts = new LinkedHashSet<>();
+        this.regions = new LinkedHashSet<>();
+        this.mappedGenes = new LinkedHashSet<>();
+        this.reportedGenes = new LinkedHashSet<>();
+        this.chromosomeNames = new LinkedHashSet<>();
+        this.chromosomePositions = new LinkedHashSet<>();
+        this.lastModifiedDates = new LinkedHashSet<>();
 
-        this.traitUris = new ArrayList<>();
-        study.getEfoTraits().forEach(efoTrait -> traitUris.add(efoTrait.getUri()));
+        this.traitNames = new LinkedHashSet<>();
 
-        this.associationCount = study.getAssociations().size();
+        this.mappedLabels = new LinkedHashSet<>();
+        this.mappedUris = new LinkedHashSet<>();
     }
 
     public String getPubmedId() {
@@ -110,14 +139,6 @@ public class StudyDocument extends Document<Study> {
         return replicateSampleDescription;
     }
 
-    public String getTrait() {
-        return trait;
-    }
-
-    public Collection<String> getTraitUris() {
-        return traitUris;
-    }
-
     public int getAssociationCount() {
         return associationCount;
     }
@@ -126,43 +147,75 @@ public class StudyDocument extends Document<Study> {
         this.associationCount = associationCount;
     }
 
+    public void addQualifier(String qualifier) {
+        this.qualifiers.add(qualifier);
+    }
+
+    public void addPValue(float pValue) {
+        this.pValues.add(pValue);
+    }
+
+    public void addOrPerCopyNum(float orPerCopyNum) {
+        this.orPerCopyNums.add(orPerCopyNum);
+    }
+
+    public void addOrPerCopyUnitDescr(String orPerCopyUnitDescr) {
+        this.orPerCopyUnitDescrs.add(orPerCopyUnitDescr);
+    }
+
+    public void addOrPerCopyRange(String orPerCopyRange) {
+        this.orPerCopyRanges.add(orPerCopyRange);
+    }
+
+    public void addOrType(String orType) {
+        this.orTypes.add(orType);
+    }
+
     public void addRsId(String rsId) {
-         rsIds.add(rsId);
+        this.rsIds.add(rsId);
     }
 
-    public Collection<String> getRsIds() {
-        return rsIds;
+    public void addStrongestAllele(String strongestAllele) {
+        this.strongestAlleles.add(strongestAllele);
     }
 
-    public void setRsIds(Collection<String> rsIds) {
-        this.rsIds = rsIds;
-    }
-
-    public void addChromosomePosition(String chromosomePosition) {
-        chromosomePositions.add(chromosomePosition);
+    public void addContext(String context) {
+        this.contexts.add(context);
     }
 
     public void addRegion(String region) {
-        regions.add(region);
+        this.regions.add(region);
     }
 
-    public Collection<String> getChromosomePositions() {
-        return chromosomePositions;
+    public void addMappedGene(String mappedGene) {
+        this.mappedGenes.add(mappedGene);
     }
 
-    public void setChromosomePositions(Collection<String> chromosomePositions) {
-        this.chromosomePositions = chromosomePositions;
+    public void addReportedGenes(Collection<String> reportedGenes) {
+        this.reportedGenes.addAll(reportedGenes);
     }
 
-    public Collection<String> getRegions() {
-        return regions;
+    public void addChromosomeNames(Collection<String> chromosomeNames) {
+        this.chromosomeNames.addAll(chromosomeNames);
     }
 
-    public void setRegions(Collection<String> regions) {
-        this.regions = regions;
+    public void addChromosomePositions(Collection<Integer> chromosomePositions) {
+        this.chromosomePositions.addAll(chromosomePositions);
     }
 
-    public void addMappedGene(Gene gene) {
-        //TO DO - ADD MAPPED GENE STUFF
+    public void addLastModifiedDates(Collection<String> lastModifiedDates) {
+        this.lastModifiedDates.addAll(lastModifiedDates);
+    }
+
+    public void addTraitName(String traitName) {
+        this.traitNames.add(traitName);
+    }
+
+    public void addMappedLabel(String mappedLabel) {
+        this.mappedLabels.add(mappedLabel);
+    }
+
+    public void addMappedUri(String mappedUri) {
+        this.mappedUris.add(mappedUri);
     }
 }

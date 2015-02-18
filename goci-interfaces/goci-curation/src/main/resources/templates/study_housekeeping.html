@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>GWAS Curation Demo</title>
+    <title>GWAS Curation Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -14,9 +14,6 @@
 </head>
 <body>
 
-<!--TODO
-- REIMPLEMENTED LOGIN
-- COUNT -->
 
 <nav role="navigation" class="navbar navbar-default">
     <div class="navbar-header">
@@ -36,13 +33,13 @@
             <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
             <li><a th:href="@{/reports}">Reports</a></li>
         </ul>
-        <!--<ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav navbar-right">
             <li>
                 <form th:action="@{/logout}" method="post">
                     <input type="submit" value="Sign Out"/>
                 </form>
             </li>
-        </ul>-->
+        </ul>
     </div>
 </nav>
 
@@ -74,10 +71,10 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.publishDate !=null } ? ${study.housekeeping.publishDate} : 'null'"></td>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.sendToNCBIDate !=null } ? ${study.housekeeping.sendToNCBIDate} : 'null'"></td>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.studyAddedDate !=null } ? ${study.housekeeping.studyAddedDate} : 'null'"></td>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.lastUpdateDate !=null } ? ${study.housekeeping.lastUpdateDate} : 'null'"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.publishDate !=null } ? ${#calendars.format(study.housekeeping.publishDate, 'dd MMMM yyyy')} : 'null'"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.sendToNCBIDate !=null } ? ${#calendars.format(study.housekeeping.sendToNCBIDate, 'dd MMMM yyyy')} : 'null'"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.studyAddedDate !=null } ? ${#calendars.format(study.housekeeping.studyAddedDate, 'dd MMMM yyyy')} : 'null'"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.lastUpdateDate !=null } ? ${#calendars.format(study.housekeeping.lastUpdateDate, 'dd MMMM yyyy')} : 'null'"></td>
                 </tr>
                 </tbody>
             </table>
@@ -108,6 +105,7 @@
                 Thus some fields are hidden and spaced throoughout the form to improve view -->
 
                 <!--Hidden-->
+
                 <div class="form-group">
                     <label for="id" class="control-label col-md-2"></label>
                     <input id="id" type="hidden" th:field="*{id}"/>
@@ -134,7 +132,7 @@
 
                 <div class="form-group">
                     <label for="notes" class="control-label col-md-2">Notes</label>
-                    <textarea id="notes" type="text" th:field="*{notes}" cols="180" rows="5"/>
+                    <textarea id="notes" type="text" th:field="*{notes}" cols="150" rows="5"/>
                 </div>
 
                 <!--Checkboxes-->
@@ -144,7 +142,7 @@
                            class="control-label col-md-2">Ethnicity checked, first
                         level:</label>
                     <input id="ethnicityCheckedLevelOne" type="checkbox" th:field="*{ethnicityCheckedLevelOne}"
-                          />
+                            />
                 </div>
 
                 <div class="form-group">
@@ -152,14 +150,14 @@
                            class="control-label col-md-2">Ethnicity checked, second
                         level:</label>
                     <input id="ethnicityCheckedLevelTwo" type="checkbox" th:field="*{ethnicityCheckedLevelTwo}"
-                          />
+                            />
                 </div>
 
                 <div class="form-group">
                     <label for="ethnicityBackFilled" th:for="${#ids.next('ethnicityBackFilled')}"
                            class="control-label col-md-2">Ethnicity backfilled:</label>
                     <input id="ethnicityBackFilled" type="checkbox" th:field="*{ethnicityBackFilled}"
-                           />
+                            />
                 </div>
 
 
@@ -168,7 +166,7 @@
                            class="control-label col-md-2">Study/SNP checked, first
                         level:</label>
                     <input id="studySnpCheckedLevelOne" type="checkbox" th:field="*{studySnpCheckedLevelOne}"
-                          />
+                            />
                 </div>
 
                 <div class="form-group">
@@ -176,14 +174,21 @@
                            class="control-label col-md-2">Study/SNP checked, second
                         level:</label>
                     <input id="studySnpCheckedLevelTwo" type="checkbox" th:field="*{studySnpCheckedLevelTwo}"
-                          />
+                            />
                 </div>
 
 
                 <div class="form-group">
                     <label for="checkedNCBIError" th:for="${#ids.next('checkedNCBIError')}"
                            class="control-label col-md-2">Checked NCBI Error:</label>
-                    <input id="checkedNCBIError" type="checkbox" th:field="*{checkedNCBIError}" />
+                    <input id="checkedNCBIError" type="checkbox" th:field="*{checkedNCBIError}"/>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="snpsRechecked" th:for="${#ids.next('snpsRechecked')}"
+                           class="control-label col-md-2">SNPs rechecked?:</label>
+                    <input id="snpsRechecked" type="checkbox" th:field="*{snpsRechecked}"/>
                 </div>
 
 
@@ -217,8 +222,6 @@
                     </div>
                 </div>
 
-
-
                 <!--Hidden-->
                 <div class="form-group">
                     <label for="studyAddedDate" class="control-label col-md-2"></label>
@@ -230,7 +233,6 @@
                     <input id="lastUpdateDate" type="hidden" th:field="*{lastUpdateDate}"/>
                 </div>
                 <!--End hidden-->
-
 
                 <!--Button -->
                 <div class="form-group">

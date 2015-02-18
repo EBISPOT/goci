@@ -90,15 +90,11 @@ public class Locus {
         this.authorReportedGenes = authorReportedGenes;
     }
 
-
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return "Locus{" +
                 "id=" + id +
                 ", haplotypeSnpCount=" + haplotypeSnpCount +
                 ", description='" + description + '\'' +
-                ", strongestRiskAlleles=" + strongestRiskAlleles +
-                ", authorReportedGenes=" + authorReportedGenes +
                 '}';
     }
 }

@@ -14,6 +14,9 @@ public class DateRange {
     private Date dateFrom;
     private Date dateTo;
 
+    public DateRange() {
+    }
+
     public DateRange(Date dateFrom, Date dateTo) {
         this.dateFrom = dateFrom;
         this.dateTo = dateTo;

@@ -75,6 +75,9 @@ public class Study {
     @OneToOne
     private Housekeeping housekeeping;
 
+    @OneToOne(mappedBy = "study", cascade = CascadeType.REMOVE)
+    private StudyReport studyReport;
+
     // JPA no-args constructor
     public Study() {
     }
@@ -234,25 +237,22 @@ public class Study {
         this.housekeeping = housekeeping;
     }
 
-    @Override
-    public String toString() {
+    public StudyReport getStudyReport() {
+        return studyReport;
+    }
+
+    public void setStudyReport(StudyReport studyReport) {
+        this.studyReport = studyReport;
+    }
+
+    @Override public String toString() {
         return "Study{" +
                 "id=" + id +
                 ", author='" + author + '\'' +
                 ", studyDate=" + studyDate +
                 ", publication='" + publication + '\'' +
                 ", title='" + title + '\'' +
-                ", initialSampleSize='" + initialSampleSize + '\'' +
-                ", replicateSampleSize='" + replicateSampleSize + '\'' +
-                ", platform='" + platform + '\'' +
                 ", pubmedId='" + pubmedId + '\'' +
-                ", cnv=" + cnv +
-                ", gxe=" + gxe +
-                ", gxg=" + gxg +
-                ", diseaseTrait=" + diseaseTrait +
-                ", efoTraits=" + efoTraits +
-                ", singleNucleotidePolymorphisms=" + singleNucleotidePolymorphisms +
-                ", housekeeping=" + housekeeping +
                 '}';
     }
 }

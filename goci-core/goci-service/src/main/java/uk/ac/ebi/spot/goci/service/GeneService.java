@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.repository.GeneRepository;
@@ -12,6 +13,7 @@ import java.util.Collection;
 /**
  * Created by dwelter on 12/02/15.
  */
+@Service
 public class GeneService {
 
     private GeneRepository geneRepository;
@@ -28,32 +30,38 @@ public class GeneService {
     }
 
     @Transactional(readOnly = true)
-    public Collection<Gene> deepFindByStudyId(Long studyId) {
-        Collection<Gene> genes = geneRepository.findByAuthorReportedFromLociAssociationStudyId(studyId);
-        genes.forEach(this::loadAssociatedData);
-        return genes;
+    public Collection<Gene> findReportedGenesByStudyId(Long studyId) {
+        return geneRepository.findByAuthorReportedFromLociAssociationStudyId(studyId);
+    }
+
+    @Transactional
+    public Collection<Gene> findMappedGenesByStudyId(Long studyId) {
+        return geneRepository.findByGenomicContextsSnpRiskAllelesLociAssociationStudyId(studyId);
     }
 
     @Transactional(readOnly = true)
-    public Collection<Gene> deepFindBySnpId(Long studyId) {
-        Collection<Gene> genes = geneRepository.findByAuthorReportedFromLociAssociationStudyId(studyId);
-        genes.forEach(this::loadAssociatedData);
-        return genes;
+    public Collection<Gene> findReportedGenesBySnpId(Long snpId) {
+        return geneRepository.findByAuthorReportedFromLociStrongestRiskAllelesSnpId(snpId);
     }
 
-    public void loadAssociatedData(Gene gene) {
-//        int efoTraitCount = gene.getEfoTraits().size();
-//        int associationCount = gene.getAssociations().size();
-//        Date publishDate = gene.getHousekeeping().getPublishDate();
-//        if (publishDate != null) {
-//            getLog().info(
-//                    "Study '" + gene.getId() + "' is mapped to " + efoTraitCount + " traits, " +
-//                            "has " + associationCount + " associations and was published on " + publishDate.toString());
-//        }
-//        else {
-//            getLog().info(
-//                    "Study '" + gene.getId() + "' is mapped to " + efoTraitCount + " traits, " +
-//                            "has " + associationCount + " associations and is not yet published");
-//        }
+    public Collection<Gene> findMappedGenesBySnpId(Long snpId) {
+        return geneRepository.findByGenomicContextsSnpId(snpId);
+    }
+
+    public Collection<Gene> findReportedGenesByAssociationId(Long associationId) {
+        return geneRepository.findByAuthorReportedFromLociAssociationId(associationId);
+    }
+
+    public Collection<Gene> findMappedGenesByAssociationId(Long associationId) {
+        return geneRepository.findByGenomicContextsSnpRiskAllelesLociAssociationId(associationId);
+    }
+
+    public Collection<Gene> findReportedGenesByDiseaseTraitId(Long traitId) {
+        return geneRepository.findByGenomicContextsSnpRiskAllelesLociAssociationStudyDiseaseTraitId(
+                traitId);
+    }
+
+    public Collection<Gene> findMappedGenesByDiseaseTraitId(Long traitId) {
+        return geneRepository.findByGenomicContextsSnpRiskAllelesLociAssociationEfoTraitsId(traitId);
     }
 }

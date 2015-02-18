@@ -61,70 +61,83 @@ public class AssociationService {
      * @return a list of Associations
      */
     @Transactional(readOnly = true)
-    public List<Association> deepFindAll() {
+    public List<Association> findAll() {
         List<Association> allAssociations = associationRepository.findAll();
-        // iterate over all Associations and grab region info
-        getLog().info("Obtained " + allAssociations.size() + " associations, starting deep load...");
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
 
     @Transactional(readOnly = true)
-    public List<Association> deepFindAll(Sort sort) {
+    public List<Association> findAll(Sort sort) {
         List<Association> allAssociations = associationRepository.findAll(sort);
-        // iterate over all Associations and grab region info
-        getLog().info("Obtained " + allAssociations.size() + " associations, starting deep load...");
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
 
     @Transactional(readOnly = true)
-    public Page<Association> deepFindAll(Pageable pageable) {
+    public Page<Association> findAll(Pageable pageable) {
         Page<Association> allAssociations = associationRepository.findAll(pageable);
-        // iterate over all Associations and grab region info
-        getLog().info("Obtained " + allAssociations.getSize() + " associations, starting deep load...");
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
 
     @Transactional(readOnly = true)
-    public List<Association> deepFindPublished() {
+    public List<Association> findPublishedAssociations() {
         List<Association> allAssociations = associationRepository.findByStudyHousekeepingPublishDateIsNotNull();
-        // iterate over all Associations and grab region info
-        getLog().info("Obtained " + allAssociations.size() + " associations, starting deep load...");
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
 
     @Transactional(readOnly = true)
-    public List<Association> deepFindPublished(Sort sort) {
+    public List<Association> findPublishedAssociations(Sort sort) {
         List<Association> allAssociations = associationRepository.findByStudyHousekeepingPublishDateIsNotNull(sort);
-        // iterate over all Associations and grab region info
-        getLog().info("Obtained " + allAssociations.size() + " associations, starting deep load...");
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
 
     @Transactional(readOnly = true)
-    public Page<Association> deepFindPublished(Pageable pageable) {
+    public Page<Association> findPublishedAssociations(Pageable pageable) {
         Page<Association> allAssociations = associationRepository.findByStudyHousekeepingPublishDateIsNotNull(pageable);
-        // iterate over all Associations and grab region info
-        getLog().info("Obtained " + allAssociations.getSize() + " associations, starting deep load...");
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
 
     @Transactional(readOnly = true)
-    public Collection<Association> deepFindBySingleNucleotidePolymorphismId(Long snpId) {
-        Collection<Association> associations = associationRepository.findByLociStrongestRiskAllelesSnpId(snpId);
+    public Collection<Association> findPublishedAssociationsByStudyId(Long studyId) {
+        Collection<Association> associations = associationRepository.findByStudyId(studyId);
         associations.forEach(this::loadAssociatedData);
         return associations;
     }
 
+    @Transactional(readOnly = true)
+    public Collection<Association> findPublishedAssociationsBySnpId(Long snpId) {
+        Collection<Association> associations = associationRepository
+                .findByLociStrongestRiskAllelesSnpIdAndStudyHousekeepingPublishDateIsNotNull(snpId);
+        associations.forEach(this::loadAssociatedData);
+        return associations;
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<Association> findPublishedAssociationsByDiseaseTraitId(Long diseaseTraitId) {
+        Collection<Association> associations =
+                associationRepository.findByStudyDiseaseTraitIdAndStudyHousekeepingPublishDateIsNotNull(
+                        diseaseTraitId);
+        associations.forEach(this::loadAssociatedData);
+        return associations;
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<Association> findPublishedAssociationsByEfoTraitId(Long efoTraitId) {
+        Collection<Association> associations =
+                associationRepository.findByEfoTraitsIdAndStudyHousekeepingPublishDateIsNotNull(
+                        efoTraitId);
+        associations.forEach(this::loadAssociatedData);
+        return associations;
+    }
 
     public void loadAssociatedData(Association association) {
         int traitCount = association.getEfoTraits().size();
-        Study study = studyService.deepFetchOne(association.getStudy());
+        Study study = studyService.fetchOne(association.getStudy());
         AtomicInteger reportedGeneCount = new AtomicInteger();
         Collection<SingleNucleotidePolymorphism> snps = new HashSet<>();
         Collection<Region> regions = new HashSet<>();
@@ -145,10 +158,10 @@ public class AssociationService {
                                         .collect(Collectors.toList()));
                     reportedGeneCount.addAndGet(locus.getAuthorReportedGenes().size());
                 });
-        getLog().info("Association '" + association.getId() + "' is mapped to " +
-                              "" + traitCount + " EFO traits where study id = " + study.getId() + " " +
-                              "(author reported " + reportedGeneCount + " gene(s)); " +
-                              "this reports on " + snps.size() + " SNPs in " + regions.size() + " regions, " +
-                              "mapped to " + mappedGenes.size() + " genes.");
+        getLog().trace("Association '" + association.getId() + "' is mapped to " +
+                               "" + traitCount + " EFO traits where study id = " + study.getId() + " " +
+                               "(author reported " + reportedGeneCount + " gene(s)); " +
+                               "this reports on " + snps.size() + " SNPs in " + regions.size() + " regions, " +
+                               "mapped to " + mappedGenes.size() + " genes.");
     }
 }

@@ -70,6 +70,9 @@ public class Association {
             inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
+    @OneToOne(mappedBy = "association", cascade = CascadeType.REMOVE)
+    private AssociationReport associationReport;
+
     // JPA no-args constructor
     public Association() {
     }
@@ -258,29 +261,20 @@ public class Association {
         this.snpChecked = snpChecked;
     }
 
-    @Override
-    public String toString() {
+    public AssociationReport getAssociationReport() {
+        return associationReport;
+    }
+
+    public void setAssociationReport(AssociationReport associationReport) {
+        this.associationReport = associationReport;
+    }
+
+    @Override public String toString() {
         return "Association{" +
                 "id=" + id +
                 ", riskFrequency='" + riskFrequency + '\'' +
                 ", allele='" + allele + '\'' +
                 ", pvalueFloat=" + pvalueFloat +
-                ", pvalueText='" + pvalueText + '\'' +
-                ", orPerCopyNum=" + orPerCopyNum +
-                ", orType=" + orType +
-                ", snpType='" + snpType + '\'' +
-                ", multiSnpHaplotype=" + multiSnpHaplotype +
-                ", snpInteraction=" + snpInteraction +
-                ", snpChecked=" + snpChecked +
-                ", pvalueMantissa=" + pvalueMantissa +
-                ", pvalueExponent=" + pvalueExponent +
-                ", orPerCopyRecip=" + orPerCopyRecip +
-                ", orPerCopyStdError=" + orPerCopyStdError +
-                ", orPerCopyRange='" + orPerCopyRange + '\'' +
-                ", orPerCopyUnitDescr='" + orPerCopyUnitDescr + '\'' +
-                ", study=" + study +
-                ", loci=" + loci +
-                ", efoTraits=" + efoTraits +
                 '}';
     }
 }

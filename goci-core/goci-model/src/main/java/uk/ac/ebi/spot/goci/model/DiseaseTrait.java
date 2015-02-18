@@ -5,6 +5,8 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.Collection;
 
 /**
  * Created by emma on 01/12/14.
@@ -23,6 +25,9 @@ public class DiseaseTrait {
 
     @NotBlank
     private String trait;
+
+    @OneToMany(mappedBy = "diseaseTrait")
+    private Collection<Study> studies;
 
     // JPA no-args constructor
     public DiseaseTrait() {
@@ -47,6 +52,14 @@ public class DiseaseTrait {
 
     public void setTrait(String trait) {
         this.trait = trait;
+    }
+
+    public Collection<Study> getStudies() {
+        return studies;
+    }
+
+    public void setStudies(Collection<Study> studies) {
+        this.studies = studies;
     }
 
     @Override

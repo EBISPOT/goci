@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Loads an ontology using the OWLAPI and a HermiT reasoner to classify the ontology.  This allows for richer typing
@@ -55,7 +56,7 @@ public class ReasonedOntologyLoader extends AbstractOntologyLoader {
         int labelledClassCount = 0;
         int synonymCount = 0;
         int synonymedClassCount = 0;
-        getLog().debug("Loading labels...");
+        getLog().debug("Loading " + allClasses.size() + " classes...");
         for (OWLClass ontologyClass : allClasses) {
             IRI clsIri = ontologyClass.getIRI();
 
@@ -74,7 +75,7 @@ public class ReasonedOntologyLoader extends AbstractOntologyLoader {
             }
 
             // get all synonym annotations
-            getLog().debug("Loading synonyms...");
+            getLog().trace("Loading synonyms of " + clsIri.toString() + "...");
             Set<String> synonyms = evaluateSynonymAnnotationValues(ontology, ontologyClass);
             if (!synonyms.isEmpty()) {
                 addSynonyms(clsIri, synonyms);
@@ -83,38 +84,32 @@ public class ReasonedOntologyLoader extends AbstractOntologyLoader {
             }
 
             // get parent labels
-            getLog().debug("Loading parents...");
-            Set<String> parentLabelSet = new HashSet<>();
-            label.ifPresent(parentLabelSet::add); // always add current class to the parents
+            getLog().trace("Loading parents of " + clsIri.toString() + "...");
             Set<OWLClass> parents = reasoner.getSuperClasses(ontologyClass, false).getFlattened();
             // only add type if the parent isn't excluded
-            parents.stream()
+            Set<String> parentLabelSet = parents.stream()
                     .filter(allClasses::contains)
-                    .forEach(parentClass -> {
-                        // only add type if the parent isn't excluded
-                        getLog().debug("Next parent of " + label + ": " + parentClass);
-                        evaluateLabelAnnotationValue(ontology, parentClass).ifPresent(parentLabelSet::add);
-                    });
+                    .peek(parent -> getLog().trace("Next parent of " + label + ": " + parent))
+                    .map(parent -> evaluateLabelAnnotationValue(ontology, parent))
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .collect(Collectors.toSet());
+            label.ifPresent(parentLabelSet::add); // always also add current class to the parents
             addClassParentLabels(clsIri, parentLabelSet);
 
             // get child labels
-            getLog().debug("Loading children...");
-            Set<String> childLabelSet = new HashSet<>();
-            label.ifPresent(childLabelSet::add); // always add current class to the parents
+            getLog().trace("Loading children of " + clsIri.toString() + "...");
             Set<OWLClass> children = reasoner.getSubClasses(ontologyClass, false).getFlattened();
             // only add type if the child isn't excluded
-            children.stream()
+            Set<String> childLabelSet = children.stream()
                     .filter(allClasses::contains)
-                    .forEach(childClass -> {
-                        // only add type if the parent isn't excluded
-                        getLog().debug("Next child of " + label + ": " + childClass);
-                        evaluateLabelAnnotationValue(ontology, childClass).ifPresent(childLabelSet::add);
-                    });
+                    .peek(child -> getLog().trace("Next child of " + label + ": " + child))
+                    .map(child -> evaluateLabelAnnotationValue(ontology, child))
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .collect(Collectors.toSet());
+            label.ifPresent(childLabelSet::add); // always also add current class to the parents
             addClassChildLabels(clsIri, childLabelSet);
-
-            // todo - get relationships
-
-
         }
 
         getLog().debug("Successfully indexed " + labelCount + " labels on " + labelledClassCount + " classes and " +
