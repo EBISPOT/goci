@@ -18,6 +18,17 @@ public class SearchController {
         SearchResult result = new SearchResult();
         result.setQuery(query);
         model.addAttribute("result", result);
+        System.out.println("Hello!");
         return "search";
     }
+
+//    @RequestMapping(value = "stats", produces = MediaType.APPLICATION_JSON_VALUE)
+//    String getStats(Model model){
+//        System.out.println("Hello again!");
+//
+//        String stats = "2015-02-17";
+//
+//        model.addAttribute("data", stats);
+//        return "stats";
+//    }
 }

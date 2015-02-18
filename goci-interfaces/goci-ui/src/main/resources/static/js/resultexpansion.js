@@ -35,6 +35,22 @@ $(document).ready(function () {
              if($('#filter-form').hasClass('in-use')){
                  doFiltering();
              }
+             else if($('#study-summaries').find('th').find('span.sorted').length != 0){
+                 var id = $('#study-summaries').find('span.sorted').parent('th').attr('id');
+                 var field = id;
+
+                 if(id.indexOf('-') != -1){
+                     field = id.split('-')[0];
+                 }
+
+                 if($('#study-summaries').find('span.sorted').hasClass('asc')) {
+                     field = field.concat('+asc');
+                 }
+                 else{
+                     field = field.concat('+desc');
+                 }
+                 doSortingSearch("study", field, id);
+             }
              else{
                 loadResults();
              }
@@ -53,9 +69,26 @@ $(document).ready(function () {
             if($('#filter-form').hasClass('in-use')){
                 doFiltering();
             }
+            else if($('#association-summaries').find('th').find('span.sorted').length != 0){
+                var id = $('#association-summaries').find('span.sorted').parent('th').attr('id');
+                var field = id;
+
+                if(id.indexOf('-') != -1){
+                    field = id.split('-')[0];
+                }
+
+                if($('#association-summaries').find('span.sorted').hasClass('asc')) {
+                    field = field.concat('+asc');
+                }
+                else{
+                    field = field.concat('+desc');
+                }
+                doSortingSearch("association", field, id);
+            }
             else{
                 loadResults();
-            }        }
+            }
+        }
     });
 
     $('.diseasetrait-toggle').click(function () {
@@ -71,9 +104,26 @@ $(document).ready(function () {
             if($('#filter-form').hasClass('in-use')){
                 doFiltering();
             }
+            else if($('#diseasetrait-summaries').find('th').find('span.sorted').length != 0){
+                var id = $('#diseasetrait-summaries').find('span.sorted').parent('th').attr('id');
+                var field = id;
+
+                if(id.indexOf('-') != -1){
+                    field = id.split('-')[0];
+                }
+
+                if($('#diseasetrait-summaries').find('span.sorted').hasClass('asc')) {
+                    field = field.concat('+asc');
+                }
+                else{
+                    field = field.concat('+desc');
+                }
+                doSortingSearch("diseasetrait", field, id);
+            }
             else{
                 loadResults();
-            }        }
+            }
+        }
     });
 
 
@@ -82,6 +132,21 @@ $(document).ready(function () {
 
 
 function loadAdditionalResults(facet, expand){
+    var sort = '';
+    var id= '';
+    if($('#' + facet + '-summaries').find('span.sorted').length != 0){
+        id = $('#' + facet + '-summaries').find('span.sorted').parent('th').attr('id');
+        sort = id;
+        if(id.indexOf('-') != -1){
+            sort = id.split('-')[0];
+        }
+       if($('#' + facet + '-summaries').find('span.sorted').hasClass('asc')){
+           sort = sort.concat('+asc');
+       }
+        else{
+           sort = sort.concat('+desc');
+       }
+    }
     var queryTerm = $('#query').text();
     var pval = processPval();
     var or = processOR();
@@ -99,56 +164,63 @@ function loadAdditionalResults(facet, expand){
             'orfilter': or,
             'betafilter': beta,
             'datefilter': date,
-            'traitfilter[]': traits})
+            'traitfilter[]': traits,
+            'sort': sort})
         .done(function (data) {
-            addResults(data, expand);
+            addResults(data, expand, id);
         });
 }
 
-function addResults(data, expand){
-    var documents = data.response.docs;
-    console.log("Got a bunch of docs" + documents.length);
-
-    if(data.responseHeader.params.fq == "resourcename:study" || $.inArray("resourcename:study", data.responseHeader.params.fq) != -1) {
-        console.log("Processing studies");
-        var studyTable = $('#study-table-body').empty();
-        $('#study-summaries').removeClass('more-results');
-
-        for (var j = 0; j < documents.length; j++) {
-            var doc = documents[j];
-            processStudy(doc, studyTable);
-        }
+function addResults(data, expand, id){
+    if(data.error != null){
+        var sorter = $('#' + id).find('span.sorted');
+        sorter.removeClass('asc desc glyphicon-arrow-up glyphicon-arrow-down').addClass("glyphicon-sort unsorted");
     }
+    else {
+        var documents = data.response.docs;
+        console.log("Got a bunch of docs" + documents.length);
 
-    else if(data.responseHeader.params.fq == "resourcename:association" || $.inArray("resourcename:association", data.responseHeader.params.fq) != -1){
-        console.log("Processing associations");
-        var associationTable = $('#association-table-body').empty();
-        $('#association-summaries').removeClass('more-results');
+        if (data.responseHeader.params.fq == "resourcename:study" || $.inArray("resourcename:study", data.responseHeader.params.fq) != -1) {
+            console.log("Processing studies");
+            var studyTable = $('#study-table-body').empty();
+            $('#study-summaries').removeClass('more-results');
 
-        for (var j = 0; j < documents.length; j++) {
-            var doc = documents[j];
-            processAssociation(doc, associationTable);
-        }
-    }
-
-    else if(data.responseHeader.params.fq == "resourcename:diseasetrait" || $.inArray("resourcename:diseasetrait", data.responseHeader.params.fq) != -1){
-        console.log("Processing diseasetraits");
-        var traitTable = $('#diseasetrait-table-body').empty();
-        $('#diseasetrait-summaries').removeClass('more-results');
-
-        for (var j = 0; j < documents.length; j++) {
-            var doc = documents[j];
-            processTrait(doc, traitTable);
+            for (var j = 0; j < documents.length; j++) {
+                var doc = documents[j];
+                processStudy(doc, studyTable);
+            }
         }
 
-    }
+        else if (data.responseHeader.params.fq == "resourcename:association" || $.inArray("resourcename:association", data.responseHeader.params.fq) != -1) {
+            console.log("Processing associations");
+            var associationTable = $('#association-table-body').empty();
+            $('#association-summaries').removeClass('more-results');
 
-    if(expand){
-        $('.study-toggle').empty().text("Show fewer results");
-        $('#study-table-body').find('.hidden-study-row').collapse('show');
-        $('#study-table-body').find('span.tgb').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-        $('#expand-table').removeClass('table-collapsed')
-        $('#expand-table').empty().text("Collapse all studies");
+            for (var j = 0; j < documents.length; j++) {
+                var doc = documents[j];
+                processAssociation(doc, associationTable);
+            }
+        }
+
+        else if (data.responseHeader.params.fq == "resourcename:diseasetrait" || $.inArray("resourcename:diseasetrait", data.responseHeader.params.fq) != -1) {
+            console.log("Processing diseasetraits");
+            var traitTable = $('#diseasetrait-table-body').empty();
+            $('#diseasetrait-summaries').removeClass('more-results');
+
+            for (var j = 0; j < documents.length; j++) {
+                var doc = documents[j];
+                processTrait(doc, traitTable);
+            }
+
+        }
+
+        if (expand) {
+            $('.study-toggle').empty().text("Show fewer results");
+            $('#study-table-body').find('.hidden-study-row').collapse('show');
+            $('#study-table-body').find('span.tgb').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+            $('#expand-table').removeClass('table-collapsed').addClass('table-expanded');
+            $('#expand-table').empty().text("Collapse all studies");
+        }
     }
 }
 

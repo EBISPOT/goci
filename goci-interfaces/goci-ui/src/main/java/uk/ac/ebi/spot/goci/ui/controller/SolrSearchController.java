@@ -181,6 +181,7 @@ public class SolrSearchController {
         addRowsAndPage(solrSearchBuilder, maxResults, page);
         addFacet(solrSearchBuilder, "traitName_s");
         addFacetMincount(solrSearchBuilder, mincount);
+        addFilterQuery(solrSearchBuilder, "resourcename", "study");
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -259,6 +260,75 @@ public class SolrSearchController {
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
 
+    @RequestMapping(value = "api/search/sort", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void doSortSolrSearch(
+            @RequestParam("q") String query,
+            @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+            @RequestParam(value = "callback", required = false) String callbackFunction,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "facet", required = false) String facet,
+            @RequestParam(value = "group", required = false, defaultValue = "false") boolean useGroups,
+            @RequestParam(value = "group.by", required = false) String groupBy,
+            @RequestParam(value = "group.limit", required = false, defaultValue = "10") int groupLimit,
+            @RequestParam(value = "pvalfilter", required = false) String pvalRange,
+            @RequestParam(value = "orfilter", required = false) String orRange,
+            @RequestParam(value = "betafilter", required = false) String betaRange,
+            @RequestParam(value = "datefilter", required = false) String dateRange,
+            @RequestParam(value = "traitfilter[]", required = false) String[] traits,
+            @RequestParam(value = "sort", required = false) String sort,
+            HttpServletResponse response) throws IOException {
+        StringBuilder solrSearchBuilder = buildBaseSearchRequest();
+
+        addFacet(solrSearchBuilder, searchConfiguration.getDefaultFacet());
+        addFilterQuery(solrSearchBuilder, "resourcename", facet);
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+        if (useGroups) {
+            addGrouping(solrSearchBuilder, groupBy, groupLimit);
+        }
+        else {
+            addRowsAndPage(solrSearchBuilder, maxResults, page);
+        }
+
+        if (pvalRange != "") {
+            getLog().debug(pvalRange);
+            addFilterQuery(solrSearchBuilder, "pValue", pvalRange);
+        }
+        /**TO DO - when we split OR and beta, modify this controller to reflect that change!!***/
+        if (orRange != "") {
+            getLog().debug(orRange);
+
+            addFilterQuery(solrSearchBuilder, "orPerCopyNum", orRange);
+            addFilterQuery(solrSearchBuilder, "orType", "true");
+        }
+        if (betaRange != "") {
+            getLog().debug(betaRange);
+
+            addFilterQuery(solrSearchBuilder, "orPerCopyNum", betaRange);
+            addFilterQuery(solrSearchBuilder, "orType", "false");
+        }
+        if (dateRange != "") {
+            getLog().debug(dateRange);
+
+            addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
+        }
+        if (traits != null) {
+            System.out.println(String.valueOf(traits));
+
+            addFilterQuery(solrSearchBuilder, "traitName_s", traits);
+        }
+        if(sort != ""){
+            addSortQuery(solrSearchBuilder, sort);
+        }
+
+        addQuery(solrSearchBuilder, query);
+
+        // dispatch search
+        dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
+    }
+
     @RequestMapping(value = "api/search/moreresults", produces = MediaType.APPLICATION_JSON_VALUE)
     public void doMoreResultsSolrSearch(
             @RequestParam("q") String query,
@@ -272,6 +342,7 @@ public class SolrSearchController {
             @RequestParam(value = "betafilter", required = false) String betaRange,
             @RequestParam(value = "datefilter", required = false) String dateRange,
             @RequestParam(value = "traitfilter[]", required = false) String[] traits,
+            @RequestParam(value = "sort", required = false) String sort,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
@@ -310,10 +381,18 @@ public class SolrSearchController {
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
 
+        if(sort != ""){
+            addSortQuery(solrSearchBuilder, sort);
+        }
+
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
+    }
+
+    private void addSortQuery(StringBuilder solrSearchBuilder, String sort) {
+        solrSearchBuilder.append("&sort=").append(sort);
     }
 
     private void addFacet(StringBuilder solrSearchBuilder, String facet) {
