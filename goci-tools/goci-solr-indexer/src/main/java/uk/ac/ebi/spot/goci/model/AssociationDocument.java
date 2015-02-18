@@ -42,7 +42,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     // if multiple, separate mapped genes with a hyphen (downstream-upstream) and reported genes with a slash,
     // and then include 'x' or ',' as designated by multuple loci/risk alleles
     @Field("mappedGene") private String mappedGene;
+    @Field("mappedGeneLinks") private Collection<String> mappedGeneLinks;
     @Field("reportedGene") private Collection<String> reportedGenes;
+    @Field("reportedGeneLinks") private Collection<String> reportedGeneLinks;
 
     @Field("studyId") @NonEmbeddableField private Collection<String> studyIds;
 
@@ -87,11 +89,13 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             this.pValue = association.getPvalueFloat();
         }
 
-        this.chromosomeNames = new HashSet<>();
-        this.chromosomePositions = new HashSet<>();
-        this.lastModifiedDates = new HashSet<>();
+        this.chromosomeNames = new LinkedHashSet<>();
+        this.chromosomePositions = new LinkedHashSet<>();
+        this.lastModifiedDates = new LinkedHashSet<>();
 
-        this.reportedGenes = new HashSet<>();
+        this.mappedGeneLinks = new LinkedHashSet<>();
+        this.reportedGenes = new LinkedHashSet<>();
+        this.reportedGeneLinks = new LinkedHashSet<>();
         this.studyIds = new HashSet<>();
         embedGeneticData(association);
 

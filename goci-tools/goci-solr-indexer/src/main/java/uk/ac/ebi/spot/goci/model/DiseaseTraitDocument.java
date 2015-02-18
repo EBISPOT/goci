@@ -38,7 +38,9 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     @Field("association_context") private Collection<String> contexts;
     @Field("association_region") private Collection<String> regions;
     @Field("association_mappedGene") private Collection<String> mappedGenes;
+    @Field("association_mappedGeneLinks") private Collection<String> mappedGeneLinks;
     @Field("association_reportedGene") private Collection<String> reportedGenes;
+    @Field("association_reportedGeneLinks") private Collection<String> reportedGeneLinks;
     @Field("association_chromosomeName") private Collection<String> chromosomeNames;
     @Field("association_chromosomePosition") private Collection<Integer> chromosomePositions;
     @Field("association_last_modified") private Collection<String> lastModifiedDates;
@@ -71,7 +73,9 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.contexts = new LinkedHashSet<>();
         this.regions = new LinkedHashSet<>();
         this.mappedGenes = new LinkedHashSet<>();
+        this.mappedGeneLinks = new LinkedHashSet<>();
         this.reportedGenes = new LinkedHashSet<>();
+        this.reportedGeneLinks = new LinkedHashSet<>();
         this.chromosomeNames = new LinkedHashSet<>();
         this.chromosomePositions = new LinkedHashSet<>();
         this.lastModifiedDates = new LinkedHashSet<>();
@@ -160,8 +164,16 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.mappedGenes.add(mappedGene);
     }
 
+    public void addMappedGeneLinks(Collection<String> mappedGeneLinks) {
+        this.mappedGeneLinks.addAll(mappedGeneLinks);
+    }
+
     public void addReportedGenes(Collection<String> reportedGenes) {
         this.reportedGenes.addAll(reportedGenes);
+    }
+
+    public void addReportedGeneLinks(Collection<String> reportedGeneLinks) {
+        this.reportedGeneLinks.addAll(reportedGeneLinks);
     }
 
     public void addChromosomeNames(Collection<String> chromosomeNames) {
