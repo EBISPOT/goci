@@ -171,6 +171,7 @@
     <field name="associationCount" type="int" indexed="true" stored="true" multiValued="false" />
 
     <!-- embedded study -->
+    <field name="study_title" type="text_general" indexed="true" stored="true" multiValued="true"/>
     <field name="study_pubmedId" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="study_publication" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="study_publicationDate" type="date" indexed="true" stored="true" multiValued="true" />

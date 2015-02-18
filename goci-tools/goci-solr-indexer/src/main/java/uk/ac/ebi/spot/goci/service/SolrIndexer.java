@@ -9,13 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.exception.SolrIndexingException;
-import uk.ac.ebi.spot.goci.index.AssociationIndex;
-import uk.ac.ebi.spot.goci.index.SnpIndex;
-import uk.ac.ebi.spot.goci.index.StudyIndex;
-import uk.ac.ebi.spot.goci.index.TraitIndex;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
-import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
 
@@ -114,7 +109,7 @@ public class SolrIndexer {
         Pageable pager = new PageRequest(0, pageSize, sort);
         Page<Study> studyPage = studyService.findPublishedStudies(pager);
         studyMapper.map(studyPage.getContent());
-        while (studyPage.hasNext() && maxPages != -1 && studyPage.getNumber() < maxPages) {
+        while (studyPage.hasNext() && maxPages != -1 && studyPage.getNumber() < maxPages - 1) {
             pager = pager.next();
             studyPage = studyService.findPublishedStudies(pager);
             studyMapper.map(studyPage.getContent());
@@ -130,7 +125,7 @@ public class SolrIndexer {
         Pageable pager = new PageRequest(0, pageSize, sort);
         Page<Association> associationPage = associationService.findPublishedAssociations(pager);
         associationMapper.map(associationPage.getContent());
-        while (associationPage.hasNext() && maxPages != -1 && associationPage.getNumber() < maxPages) {
+        while (associationPage.hasNext() && maxPages != -1 && associationPage.getNumber() < maxPages - 1) {
             pager = pager.next();
             associationPage = associationService.findPublishedAssociations(pager);
             associationMapper.map(associationPage.getContent());
@@ -146,7 +141,7 @@ public class SolrIndexer {
         Pageable pager = new PageRequest(0, pageSize, sort);
         Page<DiseaseTrait> diseaseTraitPage = diseaseTraitRepository.findAll(pager);
         traitMapper.map(diseaseTraitPage.getContent());
-        while (diseaseTraitPage.hasNext() && maxPages != -1 && diseaseTraitPage.getNumber() < maxPages) {
+        while (diseaseTraitPage.hasNext() && maxPages != -1 && diseaseTraitPage.getNumber() < maxPages - 1) {
             pager = pager.next();
             diseaseTraitPage = diseaseTraitRepository.findAll(pager);
             traitMapper.map(diseaseTraitPage.getContent());
