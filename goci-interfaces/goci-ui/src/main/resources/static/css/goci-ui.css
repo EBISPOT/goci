@@ -167,6 +167,15 @@
     margin-top: 10px;
 }
 
+.results-container > table{
+    margin-bottom: 0 !important;
+}
+
+.results-container{
+    margin-bottom: 20px !important;
+}
+
+
 .tight-to-top {
     padding-top: 0 !important;
 }
