@@ -6,6 +6,7 @@
 
     <artifactId>goci-catalog-data-processor</artifactId>
     <version>2.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <name>GOCI Catalog Data Processor</name>
     <description>Generates various files from views of the database</description>
@@ -18,6 +19,12 @@
     </parent>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc6</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-service</artifactId>
@@ -36,17 +43,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <start-class>uk.ac.ebi.spot.goci.Application</start-class>
+        <start-class>uk.ac.ebi.spot.goci.DownloadApplication</start-class>
         <java.version>1.8</java.version>
     </properties>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
