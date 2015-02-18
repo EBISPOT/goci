@@ -283,12 +283,14 @@
                                 <tbody id="study-table-body">
                                 </tbody>
                             </table>
-                            <button class="table-toggle btn btn-default btn-xs accordion-toggle study-toggle"
-                                    data-toggle="collapse"
-                                    data-target="#study-summaries .hidden-resource"
-                                    aria-expanded="false"
-                                    style="display: none">
-                                <span class="ttbutton glyphicon glyphicon-chevron-down"></span>
+                            <button class="table-toggle btn btn-default btn-xs accordion-toggle study-toggle" style="display: none">
+
+                            <!--data-toggle="collapse"-->
+                                    <!--data-target="#study-summaries .hidden-resource"-->
+                                    <!--aria-expanded="false"-->
+                                    <!--style="display: none">-->
+                                <!--<span class="ttbutton glyphicon glyphicon-chevron-down"></span>-->
+                                Show more results
                             </button>
                         </div>
                         <div id="association-summaries" class="results-container">
@@ -337,12 +339,13 @@
                                 <tbody id="association-table-body">
                                 </tbody>
                             </table>
-                            <button class="table-toggle btn btn-default btn-xs accordion-toggle"
-                                    data-toggle="collapse"
-                                    data-target="#association-summaries .hidden-resource"
-                                    aria-expanded="false"
-                                    style="display: none">
-                                <span class="ttbutton glyphicon glyphicon-chevron-down"></span>
+                            <button class="table-toggle btn btn-default btn-xs accordion-toggle association-toggle"  style="display: none">
+                                    <!--data-toggle="collapse"-->
+                                    <!--data-target="#association-summaries .hidden-resource"-->
+                                    <!--aria-expanded="false"-->
+                                    <!--style="display: none">-->
+                                <!--<span class="ttbutton glyphicon glyphicon-chevron-down"></span>-->
+                                Show more results
                             </button>
                         </div>
 
@@ -362,12 +365,14 @@
                                 <tbody id="diseasetrait-table-body">
                                 </tbody>
                             </table>
-                            <button class="table-toggle btn btn-default btn-xs accordion-toggle"
-                                    data-toggle="collapse"
-                                    data-target="#diseasetrait-summaries .hidden-resource"
-                                    aria-expanded="false"
-                                    style="display: none">
-                            <span class="ttbutton glyphicon glyphicon-chevron-down"></span>
+                            <button class="table-toggle btn btn-default btn-xs accordion-toggle diseasetrait-toggle" style="display: none">
+
+                            <!--data-toggle="collapse"-->
+                                    <!--data-target="#diseasetrait-summaries .hidden-resource"-->
+                                    <!--aria-expanded="false"-->
+                                    <!--style="display: none">-->
+                            <!--<span class="ttbutton glyphicon glyphicon-chevron-down"></span>-->
+                                Show more results
                             </button>
                         </div>
                         <!--<div id="singlenucleotidepolymorphism-summaries" class="results-container">-->
@@ -440,6 +445,6 @@
 <script src="../static/js/solrsearch.js" th:src="@{js/solrsearch.js}"></script>
 <script src="../static/js/solrfacet.js" th:src="@{js/solrfacet.js}"></script>
 <script src="../static/js/solrfilter.js" th:src="@{js/solrfilter.js}"></script>
-
+<script src="../static/js/resultexpansion.js" th:src="@{js/resultexpansion.js}"></script>
 </body>
 </html>

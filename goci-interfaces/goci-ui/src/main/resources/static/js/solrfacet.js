@@ -2,7 +2,7 @@
  * Created by dwelter on 28/01/15.
  */
 
-var resources = ['study', 'association', 'diseasetrait', 'singlenucleotidepolymorphism'];
+var resources = ['study', 'association', 'diseasetrait'];
 
 function applyFacet(){
     var searchTerm = $("#search-box").val();
@@ -35,11 +35,13 @@ function clearFacetting() {
     $('#facet').text();
     // collapse all expanded sections
 
-    $(".results-container:not(.no-results)").show();
-    $(".results-container.more-results .table-toggle").show();
-    $(".hidden-resource.in").collapse('hide');
+    loadResults();
 
-    $(".ttbutton:not(.glyphicon-chevron-down)").toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
+    //$(".results-container:not(.no-results)").show();
+    //$(".results-container.more-results .table-toggle").show();
+    //$(".hidden-resource.in").collapse('hide');
+    //
+    //$(".ttbutton:not(.glyphicon-chevron-down)").toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
 
 }
 
@@ -59,7 +61,7 @@ function processFacet(data){
         else{
             summaries.show();
 
-            summaries.find('.hidden-resource').collapse('show');
+            loadAdditionalResults(resource, false);
             summaries.find('.table-toggle').hide();
         }
     }

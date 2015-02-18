@@ -58,6 +58,7 @@ public class SolrSearchController {
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "group", required = false, defaultValue = "false") boolean useGroups,
             @RequestParam(value = "group.by", required = false) String groupBy,
+            @RequestParam(value = "group.limit", required = false, defaultValue = "10") int groupLimit,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
@@ -66,7 +67,7 @@ public class SolrSearchController {
             addJsonpCallback(solrSearchBuilder, callbackFunction);
         }
         if (useGroups) {
-            addGrouping(solrSearchBuilder, groupBy, maxResults);
+            addGrouping(solrSearchBuilder, groupBy, groupLimit);
         }
         else {
             addRowsAndPage(solrSearchBuilder, maxResults, page);
@@ -163,6 +164,29 @@ public class SolrSearchController {
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
 
+    @RequestMapping(value = "api/search/traitcount", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void doTraitCountSolrSearch(
+            @RequestParam("q") String query,
+            @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+            @RequestParam(value = "callback", required = false) String callbackFunction,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "facet.mincount", required = false, defaultValue = "1") int mincount,
+            HttpServletResponse response) throws IOException {
+        StringBuilder solrSearchBuilder = buildBaseSearchRequest();
+
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+        addRowsAndPage(solrSearchBuilder, maxResults, page);
+        addFacet(solrSearchBuilder, "traitName_s");
+        addFacetMincount(solrSearchBuilder, mincount);
+        addQuery(solrSearchBuilder, query);
+
+        // dispatch search
+        dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
+    }
+
     private StringBuilder buildBaseSearchRequest() {
         // build base request
         StringBuilder solrSearchBuilder = new StringBuilder();
@@ -179,6 +203,9 @@ public class SolrSearchController {
             @RequestParam(value = "callback", required = false) String callbackFunction,
             @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "group", required = false, defaultValue = "false") boolean useGroups,
+            @RequestParam(value = "group.by", required = false) String groupBy,
+            @RequestParam(value = "group.limit", required = false, defaultValue = "10") int groupLimit,
             @RequestParam(value = "pvalfilter", required = false) String pvalRange,
             @RequestParam(value = "orfilter", required = false) String orRange,
             @RequestParam(value = "betafilter", required = false) String betaRange,
@@ -191,7 +218,12 @@ public class SolrSearchController {
         if (useJsonp) {
             addJsonpCallback(solrSearchBuilder, callbackFunction);
         }
-        addRowsAndPage(solrSearchBuilder, maxResults, page);
+        if (useGroups) {
+            addGrouping(solrSearchBuilder, groupBy, groupLimit);
+        }
+        else {
+            addRowsAndPage(solrSearchBuilder, maxResults, page);
+        }
 
         if (pvalRange != "") {
             getLog().debug(pvalRange);
@@ -218,7 +250,64 @@ public class SolrSearchController {
         if (traits != null) {
             System.out.println(String.valueOf(traits));
 
-            addFilterQuery(solrSearchBuilder, "trait", traits);
+            addFilterQuery(solrSearchBuilder, "traitName_s", traits);
+        }
+
+        addQuery(solrSearchBuilder, query);
+
+        // dispatch search
+        dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
+    }
+
+    @RequestMapping(value = "api/search/moreresults", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void doMoreResultsSolrSearch(
+            @RequestParam("q") String query,
+            @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+            @RequestParam(value = "callback", required = false) String callbackFunction,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "facet", required = false) String facet,
+            @RequestParam(value = "pvalfilter", required = false) String pvalRange,
+            @RequestParam(value = "orfilter", required = false) String orRange,
+            @RequestParam(value = "betafilter", required = false) String betaRange,
+            @RequestParam(value = "datefilter", required = false) String dateRange,
+            @RequestParam(value = "traitfilter[]", required = false) String[] traits,
+            HttpServletResponse response) throws IOException {
+        StringBuilder solrSearchBuilder = buildBaseSearchRequest();
+
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+        addFilterQuery(solrSearchBuilder, "resourcename", facet);
+         addRowsAndPage(solrSearchBuilder, maxResults, page);
+
+
+        if (pvalRange != "") {
+            getLog().debug(pvalRange);
+            addFilterQuery(solrSearchBuilder, "pValue", pvalRange);
+        }
+        /**TO DO - when we split OR and beta, modify this controller to reflect that change!!***/
+        if (orRange != "") {
+            getLog().debug(orRange);
+
+            addFilterQuery(solrSearchBuilder, "orPerCopyNum", orRange);
+            addFilterQuery(solrSearchBuilder, "orType", "true");
+        }
+        if (betaRange != "") {
+            getLog().debug(betaRange);
+
+            addFilterQuery(solrSearchBuilder, "orPerCopyNum", betaRange);
+            addFilterQuery(solrSearchBuilder, "orType", "false");
+        }
+        if (dateRange != "") {
+            getLog().debug(dateRange);
+
+            addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
+        }
+        if (traits != null) {
+            System.out.println(String.valueOf(traits));
+
+            addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
 
         addQuery(solrSearchBuilder, query);
@@ -230,6 +319,10 @@ public class SolrSearchController {
     private void addFacet(StringBuilder solrSearchBuilder, String facet) {
         // add configuration
         solrSearchBuilder.append("&facet=true&facet.field=").append(facet);
+    }
+
+    private void addFacetMincount(StringBuilder solrSearchBuilder, int min){
+        solrSearchBuilder.append("&facet.mincount=").append(min);
     }
 
     private void addJsonpCallback(StringBuilder solrSearchBuilder, String callbackFunction) {
