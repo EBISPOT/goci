@@ -148,7 +148,7 @@
    <field name="subject" type="text_general" indexed="true" stored="true"/>
    <field name="description" type="text_general" indexed="true" stored="true"/>
    <field name="comments" type="text_general" indexed="true" stored="true"/>
-   <field name="author" type="text_general" indexed="true" stored="true"/>
+   <field name="author" type="text_general" indexed="true" stored="true" multiValued="true"/>
    <field name="keywords" type="text_general" indexed="true" stored="true"/>
    <field name="category" type="text_general" indexed="true" stored="true"/>
    <field name="resourcename" type="text_general" indexed="true" stored="true"/>
@@ -174,8 +174,8 @@
     <field name="catalogAddedDate" type="date" indexed="true" stored="true" multiValued="true" />
     <field name="platform" type="text_general" indexed="true" stored="true"/>
     <field name="cnv" type="boolean" indexed="true" stored="true"/>
-    <field name="initialSampleDescription" type="text_general" indexed="true" stored="true"/>
-    <field name="replicateSampleDescription" type="text_general" indexed="true" stored="true"/>
+    <field name="initialSampleDescription" type="text_general" indexed="true" stored="true" multiValued="true"/>
+    <field name="replicateSampleDescription" type="text_general" indexed="true" stored="true" multiValued="true"/>
     <field name="associationCount" type="int" indexed="true" stored="true" multiValued="true" />
 
     <!-- diseasetrait -->
@@ -340,6 +340,7 @@
 
    <!-- Create a string version of author for faceting -->
    <copyField source="author" dest="author_s"/>
+   <copyField source="traitName" dest="traitName_s"/>
 	
    <!-- Above, multiple source fields are copied to the [text] field. 
 	  Another way to map multiple source fields to the same 

@@ -72,15 +72,6 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field("mappedLabel") private Collection<String> mappedLabels;
     @Field("mappedUri") private Collection<String> mappedUris;
 
-    // embedded OntologyEnabledDocument info
-    @Field("traitUri") private Collection<String> traitUris;
-    @Field("shortForm") private Collection<String> shortForms;
-    @Field("label") private Collection<String> labels;
-    @Field("synonym") private Collection<String> synonyms;
-    @Field("description") private Collection<String> descriptions;
-    @Field("efoLink") private Collection<String> efoLinks;
-    @Field("parent") private Collection<String> superclassLabels;
-
     public AssociationDocument(Association association) {
         super(association);
         this.riskFrequency = association.getRiskFrequency();
@@ -108,14 +99,6 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
         this.mappedLabels = new LinkedHashSet<>();
         this.mappedUris = new LinkedHashSet<>();
-
-        this.traitUris = new LinkedHashSet<>();
-        this.shortForms = new LinkedHashSet<>();
-        this.labels = new LinkedHashSet<>();
-        this.synonyms = new LinkedHashSet<>();
-        this.descriptions = new LinkedHashSet<>();
-        this.efoLinks = new LinkedHashSet<>();
-        this.superclassLabels = new LinkedHashSet<>();
     }
 
     public String getRegion() {
@@ -232,34 +215,6 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     public void addMappedUri(String mappedUri) {
         this.mappedUris.add(mappedUri);
-    }
-
-    public void addTraitUris(Collection<String> traitUris) {
-        this.traitUris.addAll(traitUris);
-    }
-
-    public void addShortForms(Collection<String> shortForms) {
-        this.shortForms.addAll(shortForms);
-    }
-
-    public void addLabels(Collection<String> labels) {
-        this.labels.addAll(labels);
-    }
-
-    public void addSynonyms(Collection<String> synonyms) {
-        this.synonyms.addAll(synonyms);
-    }
-
-    public void addDescriptions(Collection<String> descriptions) {
-        this.descriptions.addAll(descriptions);
-    }
-
-    public void addEfoLinks(Collection<String> efoLinks) {
-        this.efoLinks.addAll(efoLinks);
-    }
-
-    public void addSuperclassLabels(Collection<String> superclassLabels) {
-        this.superclassLabels.addAll(superclassLabels);
     }
 
     public void addStudyId(String studyId) {

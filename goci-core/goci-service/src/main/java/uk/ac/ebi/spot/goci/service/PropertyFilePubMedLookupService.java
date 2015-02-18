@@ -10,7 +10,9 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -20,6 +22,7 @@ import org.xml.sax.SAXException;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
+import javax.validation.constraints.NotNull;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -42,7 +45,18 @@ import java.util.Properties;
  */
 
 @Service
+@Component
 public class PropertyFilePubMedLookupService implements GwasPubMedLookupService {
+    @NotNull @Value("${pubmed.xml.version}")
+    private String xmlVersion; // xml version is very important here , it must be "&version=2.0"
+
+    @NotNull @Value("${pubmed.root}")
+    private String pubmedRoot;
+
+    @NotNull @Value("${pubmed.gwas.summary}")
+    private String pubmedGwasSummary;
+
+    private String summaryString;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -50,31 +64,18 @@ public class PropertyFilePubMedLookupService implements GwasPubMedLookupService 
         return log;
     }
 
-    // xml version is very important here , it must be "&version=2.0"
-    private String xmlVersion;
-    private String summaryString;
-
     public PropertyFilePubMedLookupService() {
-
-        Properties properties = new Properties();
-
-        try {
-            properties.load(getClass().getClassLoader().getResource("application.properties").openStream());
-            if (properties.getProperty("pubmed.root") != null && properties.getProperty("pubmed.gwas.summary") != null) {
-                this.summaryString = properties.getProperty("pubmed.root")
-                        .concat(properties.getProperty("pubmed.gwas.summary"));
-            }
-            if (properties.getProperty("pubmed.xml.version") != null) {
-                this.xmlVersion = properties.getProperty("pubmed.xml.version");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(
-                    "Unable to create dispatcher service: failed to read application.properties resource", e);
+        if (pubmedRoot != null && pubmedGwasSummary != null) {
+            this.summaryString = pubmedRoot.concat(pubmedGwasSummary);
         }
     }
 
-
     public Study dispatchSummaryQuery(String pubmedId) throws PubmedLookupException {
+        if (summaryString == null) {
+            throw new PubmedLookupException(
+                    "Unable to search pubmed - no URL configured. " +
+                            "Set pubmed.root, pubmed.gwas.summary and pubmed.xml.version in your config!");
+        }
 
         Document response = null;
 
