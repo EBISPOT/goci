@@ -33,6 +33,7 @@
 </head>
 <body>
 
+
 <nav role="navigation" class="navbar navbar-default">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -77,43 +78,29 @@
 <div class="row">
 <div class="col-md-10">
 <div class="form-group">
-<div id="addSNPForm">
-<form class="form-horizontal" method="post" name="addSNPForm" th:object="${snpAssociationForm}">
+<div id="editSNPForm">
+<form class="form-horizontal" method="post" name="editStandardSNPForm" th:object="${snpAssociationForm}">
 
-<div class="alert alert-info col-md-offset-2 col-md-7">
-    <a href="#" class="close" data-dismiss="alert">&times;</a>
-    <strong>Note</strong> Use the add row buttons below if its a multi-snp haplotype
-
-</div>
 
 <div class="form-group">
     <div class="col-md-10 col-md-offset-2">
-
-
         <table class="table table-hover table-bordered">
 
-            <div class="form-group">
-                <div class="col-md-10">
-                    <input type="text" class="form-control" id="multiSnpHaplotypeNum"
-                           th:field="*{multiSnpHaplotypeNum}"
-                           placeholder="Enter the number of table rows required"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-10">
-                    <button type="submit" name="addRows" class="btn btn-default">Add multiple rows</button>
-                </div>
-            </div>
 
+            <div class="form-group">
+                <label for="multiSnpHaplotypeDescr" class="control-label col-md-2"></label>
+
+                <div class="col-md-10">
+                    <input type="hidden" class="form-control" id="multiSnpHaplotypeDescr"
+                           th:field="*{multiSnpHaplotypeDescr}"/>
+                </div>
+            </div>
 
             <thead>
             <tr>
                 <th></th>
                 <th>SNP</th>
                 <th>Strongest SNP-Risk Allele</th>
-                <th>
-                    <button type="submit" name="addRow">Add row</button>
-                </th>
             </tr>
             </thead>
             <tbody>
@@ -126,22 +113,9 @@
                     <input type="text"
                            th:field="*{snpFormRows[__${rowStat.index}__].strongestRiskAllele}"/>
                 </td>
-                <td>
-                    <button type="submit" name="removeRow"
-                            th:value="${rowStat.index}">Remove row
-                    </button>
-                </td>
             </tr>
             </tbody>
         </table>
-    </div>
-</div>
-<div class="form-group">
-    <label for="multiSnpHaplotypeDescr" class="control-label col-md-2">Multi-SNP haplotype description:</label>
-
-    <div class="col-md-10">
-        <input type="text" class="form-control" id="multiSnpHaplotypeDescr"
-               th:field="*{multiSnpHaplotypeDescr}"/>
     </div>
 </div>
 
@@ -157,7 +131,7 @@
 
 <div class="form-group">
     <label for="riskFrequency" class="control-label col-md-2">Risk Allele Frequency in
-        Controls</label>
+                                                              Controls</label>
 
     <div class="col-md-10">
         <input type="text" class="form-control" id="riskFrequency"
@@ -209,24 +183,27 @@
     </div>
 </div>
 
+
 <div class="form-group">
     <label for="orPerCopyNum" class="control-label col-md-2">OR/HR/RR per copy (Num)</label>
 
     <div class="col-md-10">
-        <input type="text" class="form-control" name="orPerCopyNum" id="orPerCopyNum"
-               th:filed="*{orPerCopyNum}"/>
+        <input type="text" class="form-control" id="orPerCopyNum"
+               th:field="*{orPerCopyNum}" name="orPerCopyNum"/>
     </div>
 </div>
 
+
 <div class="form-group">
     <label for="orPerCopyRecip" class="control-label col-md-2">OR/HR/RR per copy
-        reciprocal</label>
+                                                               reciprocal</label>
 
     <div class="col-md-10">
         <input type="text" class="form-control" id="orPerCopyRecip"
                th:field="*{orPerCopyRecip}" name="orPerCopyRecip"/>
     </div>
 </div>
+
 
 <div class="form-group">
     <label for="orPerCopyRange" class="control-label col-md-2">OR/HR/RR per copy (Range)</label>
@@ -239,7 +216,7 @@
 
 <div class="form-group">
     <label for="orPerCopyUnitDescr" class="control-label col-md-2">OR/HR/RR per copy (Unit
-        Description)</label>
+                                                                   Description)</label>
 
     <div class="col-md-10">
         <input type="text" class="form-control" id="orPerCopyUnitDescr"
@@ -272,11 +249,7 @@
     </div>
 </div>
 
-<div class="form-group">
-    <label for="multiSNPHaplotype" class="control-label col-md-2">Multi-SNP Haplotype</label>
-    <input id="multiSNPHaplotype" type="checkbox"
-           th:field="*{multiSnpHaplotype}"/>
-</div>
+
 <div class="form-group">
     <label for="orType" class="control-label col-md-2">ORType</label>
     <input id="orType" type="checkbox" th:field="*{orType}"/>
@@ -286,6 +259,21 @@
     <label for="snpChecked" class="control-label col-md-2">SNP checked?</label>
     <input id="snpChecked" type="checkbox" th:field="*{snpChecked}"/>
 </div>
+
+<!--Hidden field-->
+<div class="form-group">
+    <label for="snpInteraction" class="control-label col-md-2"></label>
+    <input id="snpInteraction" type="hidden"
+           th:field="*{snpInteraction}"/>
+</div>
+
+
+<div class="form-group">
+    <label for="multiSNPHaplotype" class="control-label col-md-2"></label>
+    <input id="multiSNPHaplotype" type="hidden"
+           th:field="*{multiSnpHaplotype}"/>
+</div>
+<!--End hidden-->
 
 <div class="form-group">
     <div class="col-md-offset-2 col-md-10">
@@ -302,7 +290,7 @@
 </div>
 
 <script>
-    $(function () {
+    $(function() {
         // turn the element to select2 select style
         $('#EFOTrait').select2();
     });

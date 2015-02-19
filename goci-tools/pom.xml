@@ -12,5 +12,6 @@
 
     <modules>
         <module>goci-solr-indexer</module>
+        <module>goci-catalog-data-processor</module>
     </modules>
 </project>

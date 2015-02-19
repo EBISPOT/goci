@@ -37,7 +37,7 @@ public class MailService {
 
         // Set up some of the values used in mail body
         String studyTitle = study.getTitle();
-        String pubmedLink = "http://www.ncbi.nlm.nih.gov/pubmed/" + study.getPubmedId();
+        String pubmedLink = "http://europepmc.org/abstract/MED/" + study.getPubmedId();
         String currentCurator = study.getHousekeeping().getCurator().getLastName();
 
         // These could be null so catch this case
@@ -56,8 +56,7 @@ public class MailService {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
         String bodyStudyDate = dateFormat.format(studyDate);
 
-        // TODO CHANGE THIS
-        String editStudyLink = "http://localhost:55000/studies/" + study.getId();
+        String editStudyLink = "http://orange.ebi.ac.uk:55000/studies/" + study.getId();
 
         // Format mail message
         SimpleMailMessage mailMessage = new SimpleMailMessage();
