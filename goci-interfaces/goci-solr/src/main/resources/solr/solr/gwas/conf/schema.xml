@@ -169,6 +169,7 @@
     <field name="initialSampleDescription" type="text_general" indexed="true" stored="true" multiValued="false"/>
     <field name="replicateSampleDescription" type="text_general" indexed="true" stored="true" multiValued="false"/>
     <field name="associationCount" type="int" indexed="true" stored="true" multiValued="false" />
+    <field name="publicationLink" type="text_general" indexed="false" stored="true" multiValued="true" />
 
     <!-- embedded study -->
     <field name="study_author" type="text_general" indexed="true" stored="true" multiValued="true"/>
@@ -179,6 +180,7 @@
     <field name="study_catalogAddedDate" type="date" indexed="true" stored="true" multiValued="true" />
     <field name="study_initialSampleDescription" type="text_general" indexed="true" stored="true" multiValued="true"/>
     <field name="study_replicateSampleDescription" type="text_general" indexed="true" stored="true" multiValued="true"/>
+    <field name="study_publicationLink" type="text_general" indexed="false" stored="true" multiValued="true" />
 
     <!-- diseasetrait -->
     <field name="traitName" type="text_general" indexed="true" stored="true" multiValued="true" />
@@ -210,9 +212,9 @@
     <field name="context" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="region" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="mappedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="mappedGeneEntrezId" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="mappedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="reportedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="reportedGeneEntrezId" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="reportedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="studyId" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="chromosomeName" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="chromosomePosition" type="int" indexed="true" stored="true" multiValued="true" />
@@ -224,7 +226,9 @@
     <field name="association_context" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="association_region" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="association_mappedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="association_mappedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="association_reportedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="association_reportedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="association_chromosomeName" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="association_chromosomePosition" type="int" indexed="true" stored="true" multiValued="true" />
     <field name="association_last_modified" type="date" indexed="true" stored="true" multiValued="true" />
