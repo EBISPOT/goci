@@ -13,23 +13,24 @@ function applyFacet(){
         console.log("Searching: " + searchTerm + " with facet: " + facet + "...");
         $('#facet').text(facet);
         $('#' + facet + "-facet").addClass('selected');
-        solrFacet(searchTerm, facet);
+        //solrFacet(searchTerm, facet);
+        processFacet(facet)
     }
     else {
         clearFacetting();
     }
 }
 
-function solrFacet(queryTerm, facet){
-    console.log("Solr research request received for " + queryTerm + " and facet " + facet);
-    var searchTerm = 'text:"'.concat(queryTerm).concat('"');
-    var url = 'api/search/' + facet;
-    $.getJSON(url, {'q': searchTerm, 'max' : 100000})
-            .done(function(data) {
-                          console.log(data);
-                          processFacet(data);
-                      });
-}
+//function solrFacet(queryTerm, facet){
+//    console.log("Solr research request received for " + queryTerm + " and facet " + facet);
+//    var searchTerm = 'text:"'.concat(queryTerm).concat('"');
+//    var url = 'api/search/' + facet;
+//    $.getJSON(url, {'q': searchTerm, 'max' : 100000})
+//            .done(function(data) {
+//                          console.log(data);
+//                          processFacet(data);
+//                      });
+//}
 
 function clearFacetting() {
     $('#facet').text();
@@ -45,9 +46,9 @@ function clearFacetting() {
 
 }
 
-function processFacet(data){
-    console.log("Received data and ready to process");
-    var resource = data.responseHeader.params.fq.substring(13).toLowerCase();
+function processFacet(resource){
+    //console.log("Received data and ready to process");
+    //var resource = data.responseHeader.params.fq.substring(13).toLowerCase();
     console.log("Facet is " + resource);
     for(var f=0; f < resources.length; f++){
         var summaries = $('#' + resources[f] + '-summaries');

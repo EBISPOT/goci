@@ -186,8 +186,13 @@ function addResults(data, expand, id){
             $('#study-summaries').removeClass('more-results');
 
             for (var j = 0; j < documents.length; j++) {
-                var doc = documents[j];
-                processStudy(doc, studyTable);
+                try{
+                    var doc = documents[j];
+                    processStudy(doc, studyTable);
+                }
+                catch (ex){
+                    console.log("Failure to process document " + ex);
+                }
             }
         }
 
@@ -197,8 +202,13 @@ function addResults(data, expand, id){
             $('#association-summaries').removeClass('more-results');
 
             for (var j = 0; j < documents.length; j++) {
-                var doc = documents[j];
-                processAssociation(doc, associationTable);
+                try{
+                    var doc = documents[j];
+                    processAssociation(doc, associationTable);
+                }
+                catch (ex){
+                    console.log("Failure to process document " + ex);
+                }
             }
         }
 
@@ -208,8 +218,13 @@ function addResults(data, expand, id){
             $('#diseasetrait-summaries').removeClass('more-results');
 
             for (var j = 0; j < documents.length; j++) {
-                var doc = documents[j];
-                processTrait(doc, traitTable);
+                try{
+                    var doc = documents[j];
+                    processTrait(doc, traitTable);
+                }
+                catch (ex){
+                    console.log("Failure to process document " + ex);
+                }
             }
 
         }

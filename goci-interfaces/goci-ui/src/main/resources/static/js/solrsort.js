@@ -100,8 +100,13 @@ function processSortedData(data, id){
                 var studyTable = $('#study-table-body').empty();
 
                 for (var k = 0; k < group.doclist.docs.length; k++) {
-                    var doc = group.doclist.docs[k];
-                    processStudy(doc, studyTable);
+                    try{
+                        var doc = group.doclist.docs[k];
+                        processStudy(doc, studyTable);
+                    }
+                    catch (ex){
+                        console.log("Failure to process document " + ex);
+                    }
                 }
                 if (group.doclist.numFound > 5) {
                     $('#study-summaries .table-toggle').show();
@@ -114,8 +119,13 @@ function processSortedData(data, id){
                 var associationTable = $('#association-table-body').empty();
 
                 for (var k = 0; k < group.doclist.docs.length; k++) {
-                    var doc = group.doclist.docs[k];
-                    processAssociation(doc, associationTable);
+                    try{
+                        var doc = group.doclist.docs[k];
+                        processAssociation(doc, associationTable);
+                    }
+                    catch (ex){
+                        console.log("Failure to process document " + ex);
+                    }
                 }
                 if (group.doclist.numFound > 5) {
                     $('#association-summaries .table-toggle').show();
@@ -127,8 +137,13 @@ function processSortedData(data, id){
             else if (group.groupValue == "diseasetrait") {
                 var traitTable = $('#diseasetrait-table-body').empty();
                 for (var k = 0; k < group.doclist.docs.length; k++) {
-                    var doc = group.doclist.docs[k];
-                    processTrait(doc, traitTable);
+                    try{
+                        var doc = group.doclist.docs[k];
+                        processTrait(doc, traitTable);
+                    }
+                    catch (ex){
+                        console.log("Failure to process document " + ex);
+                    }
                 }
                 if (group.doclist.numFound > 5) {
                     $('#diseasetrait-summaries .table-toggle').show();

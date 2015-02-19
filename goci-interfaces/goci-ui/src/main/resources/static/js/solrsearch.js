@@ -128,12 +128,18 @@ function processData(data) {
         for (var j = 0; j < documents.length; j++) {
             var group = documents[j];
 
+
             if (group.groupValue == "study") {
                 var studyTable = $('#study-table-body').empty();
 
                 for (var k = 0; k < group.doclist.docs.length; k++) {
-                    var doc = group.doclist.docs[k];
-                    processStudy(doc, studyTable);
+                    try{
+                        var doc = group.doclist.docs[k];
+                        processStudy(doc, studyTable);
+                    }
+                    catch (ex){
+                       console.log("Failure to process document " + ex);
+                    }
                 }
                 if (group.doclist.numFound > 5) {
                     $('#study-summaries .table-toggle').show();
@@ -146,8 +152,13 @@ function processData(data) {
                 var associationTable = $('#association-table-body').empty();
 
                 for (var k = 0; k < group.doclist.docs.length; k++) {
-                    var doc = group.doclist.docs[k];
-                    processAssociation(doc, associationTable);
+                    try{
+                        var doc = group.doclist.docs[k];
+                        processAssociation(doc, associationTable);
+                    }
+                    catch (ex){
+                        console.log("Failure to process document " + ex);
+                    }
                 }
                 if (group.doclist.numFound > 5) {
                     $('#association-summaries .table-toggle').show();
@@ -159,8 +170,13 @@ function processData(data) {
             else if (group.groupValue == "diseasetrait") {
                 var traitTable = $('#diseasetrait-table-body').empty();
                 for (var k = 0; k < group.doclist.docs.length; k++) {
-                    var doc = group.doclist.docs[k];
-                    processTrait(doc, traitTable);
+                    try{
+                        var doc = group.doclist.docs[k];
+                         processTrait(doc, traitTable);
+                    }
+                    catch (ex){
+                        console.log("Failure to process document " + ex);
+                    }
                 }
                 if (group.doclist.numFound > 5) {
                     $('#diseasetrait-summaries .table-toggle').show();
@@ -491,23 +507,27 @@ function processTrait(diseasetrait, table) {
     row.append($("<td>").html(syns));
 
     var studies = '';
-    for(var d=0; d<diseasetrait.study_pubmedId.length; d++){
-        var studydate = diseasetrait.study_publicationDate[d].substring(0, 4);
-        var author = diseasetrait.study_author[d];
-        var authorLabel = author.concat(", ").concat(studydate);
-        var pubmedid = diseasetrait.study_pubmedId[d];
+    if(diseasetrait.study_pubmedId != null){
+        for(var d=0; d<diseasetrait.study_pubmedId.length; d++){
+            var studydate = diseasetrait.study_publicationDate[d].substring(0, 4);
+            var author = diseasetrait.study_author[d];
+            var authorLabel = author.concat(", ").concat(studydate);
+            var pubmedid = diseasetrait.study_pubmedId[d];
 
-        var europepmc = "http://www.europepmc.org/abstract/MED/".concat(pubmedid);
-        var searchlink = "<span><a href='/search?query=".concat(author).concat("'>").concat(authorLabel).concat("</a></span>");
-        var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
+            var europepmc = "http://www.europepmc.org/abstract/MED/".concat(pubmedid);
+            var searchlink = "<span><a href='/search?query=".concat(author).concat("'>").concat(authorLabel).concat("</a></span>");
+            var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
 
-        if(studies == ''){
-            studies = studies.concat(searchlink).concat('&nbsp;&nbsp;').concat(epmclink);
+            if(studies == ''){
+                studies = studies.concat(searchlink).concat('&nbsp;&nbsp;').concat(epmclink);
+            }
+            else{
+                studies = studies.concat(",<br>").concat(searchlink).concat('&nbsp;&nbsp;').concat(epmclink);
+            }
         }
-        else{
-            studies = studies.concat(",<br>").concat(searchlink).concat('&nbsp;&nbsp;').concat(epmclink);
-
-        }
+    }
+    else{
+        studies = 'N/A';
     }
 
     row.append($("<td>").html(studies));
