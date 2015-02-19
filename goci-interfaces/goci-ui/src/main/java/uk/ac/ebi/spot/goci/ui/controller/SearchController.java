@@ -18,7 +18,6 @@ public class SearchController {
         SearchResult result = new SearchResult();
         result.setQuery(query);
         model.addAttribute("result", result);
-        System.out.println("Hello!");
         return "search";
     }
 

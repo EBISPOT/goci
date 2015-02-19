@@ -241,7 +241,7 @@ function processStudy(study, table) {
     var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
 
     row.append($("<td>").html(authorsearch.concat('&nbsp;&nbsp;').concat(epmclink)));
-    row.append($("<td>").html(study.publicationDate[0].substring(0, 10)));
+    row.append($("<td>").html(study.publicationDate.substring(0, 10)));
     row.append($("<td>").html(study.publication));
     row.append($("<td>").html(study.title));
     var traitsearch = "<span><a href='/search?query=".concat(study.traitName).concat("'>").concat(study.traitName).concat("</a></span>");
@@ -446,7 +446,7 @@ function processAssociation(association, table) {
         row.append($("<td>"));
     }
 
-    var studydate = association.publicationDate[0].substring(0, 4);
+    var studydate = association.publicationDate.substring(0, 4);
     var author = association.author[0].concat(", ").concat(studydate);
 
     var europepmc = "http://www.europepmc.org/abstract/MED/".concat(association.pubmedId);
