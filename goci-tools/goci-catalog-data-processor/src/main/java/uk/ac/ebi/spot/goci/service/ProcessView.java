@@ -55,10 +55,8 @@ public class ProcessView {
             String pubmedId = "" + "\t";
             if (view.getPubmedId() != null) {pubmedId = view.getPubmedId().trim() + "\t";}
 
-
             String firstAuthor = "" + "\t";
             if (view.getAuthor() != null) {firstAuthor = view.getAuthor().trim() + "\t";}
-
 
             String date = "" + "\t";
             if (view.getPublicationDate() != null) {
@@ -70,7 +68,6 @@ public class ProcessView {
                 journal = view.getJournal().trim() + "\t";
             }
 
-
             String link = "" + "\t";
             if (view.getLink() != null) {link = view.getLink().trim() + "\t";}
 
@@ -81,12 +78,12 @@ public class ProcessView {
             if (view.getDiseaseTrait() != null) { diseaseTrait = view.getDiseaseTrait().trim() + "\t";}
 
             String initialSampleSize = "" + "\t";
-            if (view.getInitialSampleDescription() != null && !view.getInitialSampleDescription().isEmpty()) {
+            if (view.getInitialSampleDescription() != null) {
                 initialSampleSize = view.getInitialSampleDescription().trim() + "\t";
             }
 
             String replicateSampleSize = "" + "\t";
-            if (view.getReplicateSampleDescription() != null && !view.getReplicateSampleDescription().isEmpty()) {
+            if (view.getReplicateSampleDescription() != null) {
                 replicateSampleSize = view.getReplicateSampleDescription().trim() + "\t";
             }
 
@@ -94,10 +91,9 @@ public class ProcessView {
             if (region != null) {region = view.getRegion().trim() + "\t";}
 
             String reportedGenes = "" + "\t";
-            if (view.getReportedGene() != null && !view.getReportedGene().isEmpty()) {
+            if (view.getReportedGene() != null) {
                 reportedGenes = view.getReportedGene().trim() + "\t";
             }
-
 
             String strongestSnpRiskAllele = "" + "\t";
             if (view.getStrongestSnpRiskAllele() != null) {
@@ -113,17 +109,14 @@ public class ProcessView {
                 riskAlleleFrequency = view.getRiskAlleleFrequency().trim() + "\t";
             }
 
-
             String pValue = "" + "\t";
             if (view.getpValue() != null) {pValue = view.getpValue().toString().trim() + "\t";}
 
             String pValueText = "" + "\t";
             if (view.getpValueQualifier() != null) {pValueText = view.getpValueQualifier().trim() + "\t";}
 
-
             String orBeta = "" + "\t";
             if (view.getOrBeta() != null) { orBeta = view.getOrBeta().toString().trim() + "\t";}
-
 
             String ciText = "" + "\t";
             if (view.getCi() != null && view.getCiQualifier() != null) {
@@ -168,7 +161,10 @@ public class ProcessView {
 
     // For each line
     public void createFileForNcbi(String fileName, List<String> serialisedViews) {
+
+        // Create a file from the file name supplied
         File file = new File(fileName);
+
         BufferedWriter output = null;
         try {
             output = new BufferedWriter(new FileWriter(file));
@@ -177,7 +173,7 @@ public class ProcessView {
             e.printStackTrace();
         }
 
-        // Add header line
+        // Create file header line
         String header = "";
         header = "DATE ADDED TO CATALOG" + "\t"
                 + "PUBMEDID" + "\t"
@@ -211,7 +207,7 @@ public class ProcessView {
             e.printStackTrace();
         }
 
-
+        // Write each line
         for (String view : serialisedViews) {
 
             try {
