@@ -257,8 +257,11 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     // and add entrez links for each mapped gene
                                     snp.getGenomicContexts().forEach(context -> {
                                         Gene gene = context.getGene();
-                                        String geneLink = gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
-                                        mappedGeneLinks.add(geneLink);
+                                        if (gene.getEntrezGeneId() != null) {
+                                            String geneLink =
+                                                    gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
+                                            mappedGeneLinks.add(geneLink);
+                                        }
                                     });
 
                                     context = snp.getFunctionalClass();
@@ -275,8 +278,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                         );
                         locus.getAuthorReportedGenes().forEach(gene -> {
                             reportedGenes.add(gene.getGeneName().trim());
-                            String geneLink = gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
-                            reportedGeneLinks.add(geneLink);
+                            if (gene.getEntrezGeneId() != null) {
+                                String geneLink = gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
+                                reportedGeneLinks.add(geneLink);
+                            }
                         });
                     }
             );
@@ -307,8 +312,11 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     // and add entrez links for each mapped gene
                                     snp.getGenomicContexts().forEach(context -> {
                                         Gene gene = context.getGene();
-                                        String geneLink = gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
-                                        mappedGeneLinks.add(geneLink);
+                                        if (gene.getEntrezGeneId() != null) {
+                                            String geneLink =
+                                                    gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
+                                            mappedGeneLinks.add(geneLink);
+                                        }
                                     });
 
                                     context = snp.getFunctionalClass();
@@ -325,8 +333,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                         );
                         locus.getAuthorReportedGenes().forEach(gene -> {
                             reportedGenes.add(gene.getGeneName().trim());
-                            String geneLink = gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
-                            reportedGeneLinks.add(geneLink);
+                            if (gene.getEntrezGeneId() != null) {
+                                String geneLink = gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
+                                reportedGeneLinks.add(geneLink);
+                            }
                         });
                     }
             );
