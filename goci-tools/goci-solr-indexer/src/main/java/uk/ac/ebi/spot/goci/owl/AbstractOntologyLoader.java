@@ -516,7 +516,6 @@ public abstract class AbstractOntologyLoader extends Initializable implements On
     protected Set<String> evaluateSynonymAnnotationValues(OWLOntology ontology, OWLClass ontologyClass) {
         // get all synonym annotations
         Set<String> synonyms = new HashSet<>();
-        getLog().debug("Loading synonyms...");
         for (OWLAnnotationProperty synonymAnnotationProperty : synonymAnnotationProperties) {
             Set<String> synonymVals =
                     getStringLiteralAnnotationValues(ontology, ontologyClass, synonymAnnotationProperty);

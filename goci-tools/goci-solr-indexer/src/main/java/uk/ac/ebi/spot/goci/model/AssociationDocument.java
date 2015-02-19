@@ -114,6 +114,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         return mappedGene;
     }
 
+    public Collection<String> getMappedGeneLinks() {
+        return mappedGeneLinks;
+    }
+
     public String getStrongestAllele() {
         return strongestAllele;
     }
@@ -144,6 +148,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     public Collection<String> getReportedGenes() {
         return reportedGenes;
+    }
+
+    public Collection<String> getReportedGeneLinks() {
+        return reportedGeneLinks;
     }
 
     public String getRsId() {
