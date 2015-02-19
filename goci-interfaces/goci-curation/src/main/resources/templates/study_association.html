@@ -111,7 +111,7 @@
 
                         <li>
                             <a th:href="@{/studies/{studyId}/associations/approve_all(studyId=${study.Id})}">Approve All
-                                SNPs</a>
+                                                                                                             SNPs</a>
                         </li>
                     </ul>
                 </div>
@@ -119,52 +119,52 @@
 
             <!--Region-->
             <td><span th:each="region: ${snpAssociationForm.regions}"
-                      th:text="${region.name} ?: 'null'"></span></td>
+                      th:text="${region.name} ?: ''"></span></td>
 
             <!--Gene-->
             <td>
                 <span th:each="gene : ${snpAssociationForm.authorReportedGenes}"
-                      th:text="${gene} ?: 'null'"></span>
+                      th:text="${gene} ?: ''"></span>
             </td>
 
             <!--Strongest risk allele-->
             <td>
                 <span th:each="row : ${snpAssociationForm.snpFormRows}"
-                      th:text="${row.strongestRiskAllele} ?: 'null'"></span>
+                      th:text="${row.strongestRiskAllele} ?: ''"></span>
             </td>
 
             <!--SNPs-->
             <td>
                      <span th:each="row : ${snpAssociationForm.snpFormRows}"
-                           th:text="${row.snp} ?: 'null'"></span>
+                           th:text="${row.snp} ?: ''"></span>
             </td>
 
-            <td th:text="${snpAssociationForm.riskFrequency}?: 'null' "></td>
-            <td th:text="${snpAssociationForm.pvalueFloat} ?: 'null'"></td>
-            <td th:text="${snpAssociationForm.pvalueText} ?: 'null'"></td>
-            <td th:text="${snpAssociationForm.orPerCopyNum} ?: 'null'"></td>
-            <td th:text="${snpAssociationForm.orPerCopyRecip} ?: 'null'"></td>
+            <td th:text="${snpAssociationForm.riskFrequency}?: '' "></td>
+            <td th:text="${snpAssociationForm.pvalueFloat} ?: ''"></td>
+            <td th:text="${snpAssociationForm.pvalueText} ?: ''"></td>
+            <td th:text="${snpAssociationForm.orPerCopyNum} ?: ''"></td>
+            <td th:text="${snpAssociationForm.orPerCopyRecip} ?: ''"></td>
             <td th:switch="${snpAssociationForm.orType}">
-                <p th:case="'null'">null</p>
+                <p th:case="'null'"></p>
 
                 <p th:case="false">No</p>
 
                 <p th:case="true">Yes</p>
             </td>
 
-            <td th:text="${snpAssociationForm.orPerCopyRange} ?: 'null'"></td>
-            <td th:text="${snpAssociationForm.orPerCopyUnitDescr} ?: 'null'"></td>
-            <td th:text="${snpAssociationForm.orPerCopyStdError} ?: 'null'"></td>
-            <td th:text="${snpAssociationForm.SnpType}"></td>
+            <td th:text="${snpAssociationForm.orPerCopyRange} ?: ''"></td>
+            <td th:text="${snpAssociationForm.orPerCopyUnitDescr} ?: ''"></td>
+            <td th:text="${snpAssociationForm.orPerCopyStdError} ?: ''"></td>
+            <td th:text="${snpAssociationForm.SnpType} ?: ''"></td>
             <td th:switch="${snpAssociationForm.multiSnpHaplotype}">
-                <p th:case="'null'">null</p>
+                <p th:case="'null'"></p>
 
                 <p th:case="false">No</p>
 
                 <p th:case="true">Yes</p>
             </td>
             <td th:switch="${snpAssociationForm.snpInteraction}">
-                <p th:case="'null'">null</p>
+                <p th:case="'null'"></p>
 
                 <p th:case="false">No</p>
 
@@ -172,7 +172,7 @@
             </td>
 
             <td th:switch="${snpAssociationForm.snpChecked}">
-                <p th:case="'null'">null</p>
+                <p th:case="'null'"></p>
 
                 <p th:case="false">No</p>
 
@@ -192,9 +192,9 @@
         <div class="col-md-12">
             <!--Button-->
             <a th:href="@{/studies/{studyId}/associations/add(studyId=*{id})}" class="btn btn-primary">Add
-                standard SNP</a>
+                                                                                                       standard SNP</a>
             <a th:href="@{/studies/{studyId}/associations/add(studyId=*{id})}" class="btn btn-primary">Add multi-SNP
-                haplotype</a>
+                                                                                                       haplotype</a>
             <a th:href="@{/studies/{studyId}/associations/add_interaction(studyId=*{id})}"
                class="btn btn-primary">Add SNP:SNP interaction</a>
             <input type="button" class="btn btn-primary pull-right" value="Add SNPs from spreadsheet"
@@ -215,7 +215,10 @@
 
                     <div class="alert alert-info col-md-offset-1 col-md-5">
                         <a href="#" class="close" data-dismiss="alert">&times;</a>
-                        <strong>Note</strong> File must be in xlsx format, a <a href="../static/assets/Extraction_template.xlsx" th:href="@{../../assets/Extraction_template.xlsx}" download="Extraction_template.xlsx">template</a> is available
+                        <strong>Note</strong> File must be in xlsx format, a
+                        <a href="../static/assets/Extraction_template.xlsx"
+                           th:href="@{../../assets/Extraction_template.xlsx}"
+                           download="Extraction_template.xlsx">template</a> is available
                     </div>
 
                     <!--Form object is a study, this is so we can pass back ID which can be used-->
