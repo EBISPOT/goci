@@ -339,7 +339,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                 context -> {
                     String geneName = context.getGene().getGeneName().trim();
                     if (!genes.contains(geneName)) {
-                        if (context.isDownstream()) {
+                        if (context.isUpstream()) {
                             genes.add(0, geneName);
                         }
                         else {
