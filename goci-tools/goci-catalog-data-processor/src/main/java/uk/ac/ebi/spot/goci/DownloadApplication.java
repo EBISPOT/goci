@@ -15,7 +15,8 @@ import java.util.List;
  *
  * @author emma
  *         <p>
- *         Application to create a text file that can be sent to NCBI pipeline Takes a file name as an arguement
+ *         Application to create a text file that can be sent to NCBI pipeline.
+ *         Takes a file name as an arguement
  */
 @SpringBootApplication
 public class DownloadApplication {
@@ -39,7 +40,7 @@ public class DownloadApplication {
 
             String fileName = strings[0];
             processView.createFileForNcbi(fileName, serialisedViews);
-            System.out.println("Writing "+strings[0]);
+            System.out.println("Writing " + strings[0]);
         };
 
     }
