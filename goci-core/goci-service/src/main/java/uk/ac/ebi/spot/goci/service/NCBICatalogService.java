@@ -33,10 +33,13 @@ public class NCBICatalogService {
     // Query CATALOG_SUMMARY_VIEW table in database
     // and locate any views with status "Send to NCBI"
     public Collection<CatalogSummaryView> getCatalogSummaryViewsWithStatusSendToNcbi() {
+        // Get status
         CurationStatus curationStatus = curationStatusRepository.findByStatus("Send to NCBI");
         Long statusId = curationStatus.getId();
+
+        // Use id of status to search view
         Collection<CatalogSummaryView> catalogSummaryViews =
-                catalogSummaryViewRepository.findByCurationStatus(statusId);
+                catalogSummaryViewRepository.findByCurationStatusOrderByStudyIdDesc(statusId);
         return catalogSummaryViews;
     }
 
