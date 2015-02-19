@@ -23,11 +23,6 @@ $(document).ready(function () {
 
     });
 
-
-    //$('.study-toggle').click(function () {
-    //    $('#study-table-body').find('.hidden-study-row.in').collapse('hide');
-    //});
-
     // Tooltips for various filter and table headings
     $('[data-toggle="tooltip"]').tooltip({
         placement: 'top',
@@ -58,12 +53,6 @@ function loadResults() {
             console.log("Applying a facet");
             applyFacet();
         }
-        //else {
-        //    console.log("Clearing all facets");
-        //    // no facets to apply, so make sure we are showing all results tables
-        //    clearFacetting();
-        //}
-        //$('#lower_container').show();
     }
 }
 
@@ -94,9 +83,7 @@ function buildBreadcrumbs() {
         else if (facet == "diseasetrait") {
             last.text("Catalog traits");
         }
-        //else if (facet == "singlenucleotidepolymorphism") {
-        //    last.text("SNPs");
-        //}
+
         breadcrumbs.append(last);
     }
 }
@@ -122,8 +109,6 @@ function processData(data) {
     }
 
     if (documents.length != 0) {
-        //var snpTable = $('#singlenucleotidepolymorphism-table-body').empty();
-
         $(".results-container .table-toggle").hide();
         for (var j = 0; j < documents.length; j++) {
             var group = documents[j];
@@ -507,12 +492,13 @@ function processTrait(diseasetrait, table) {
     row.append($("<td>").html(syns));
 
     var studies = '';
-    if(diseasetrait.study_pubmedId != null){
-        for(var d=0; d<diseasetrait.study_pubmedId.length; d++){
-            var studydate = diseasetrait.study_publicationDate[d].substring(0, 4);
-            var author = diseasetrait.study_author[d];
-            var authorLabel = author.concat(", ").concat(studydate);
-            var pubmedid = diseasetrait.study_pubmedId[d];
+
+    if(diseasetrait.study_publicationLink != null){
+        for(var d=0; d<diseasetrait.study_publicationLink.length; d++){
+            var data = diseasetrait.study_publicationLink[d].split("|");
+            var author = data[0];
+            var authorLabel = author.concat(", ").concat(data[1]);
+            var pubmedid = data[2];
 
             var europepmc = "http://www.europepmc.org/abstract/MED/".concat(pubmedid);
             var searchlink = "<span><a href='/search?query=".concat(author).concat("'>").concat(authorLabel).concat("</a></span>");
