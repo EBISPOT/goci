@@ -60,6 +60,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field private String publication;
     @Field private String publicationDate;
     @Field private String catalogAddedDate;
+    @Field private String publicationLink;
 
     @Field private String platform;
     @Field private Boolean cnv;
@@ -191,6 +192,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     public void addCatalogAddedDate(String catalogAddedDate) {
         this.catalogAddedDate = catalogAddedDate;
+    }
+
+    public void addPublicationLink(String publicationLink) {
+        this.publicationLink = publicationLink;
     }
 
     public void addPlatform(String platform) {
