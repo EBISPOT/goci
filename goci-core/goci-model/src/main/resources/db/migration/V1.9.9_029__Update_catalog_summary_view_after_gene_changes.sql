@@ -8,9 +8,9 @@ download
 
 Designed for execution with Flyway database migrations tool.
 
-author:  Emma Hastings
-date:    February 17th 2015
-version: 1.9.9.027 (pre 2.0)
+author:  Tony Burdett
+date:    February 20th 2015
+version: 1.9.9.029 (pre 2.0)
 ################################################################################
 
 */
@@ -79,12 +79,12 @@ CREATE OR REPLACE VIEW CATALOG_SUMMARY_VIEW (
     snp.CHROMOSOME_POSITION,
     rg.GENE_NAME AS REPORTED_GENE,
     img.GENE_NAME AS MAPPED_GENE,
-    igc.ENTREZ_GENE_ID,
+    img.ENTREZ_GENE_ID,
     umg.GENE_NAME AS UPSTREAM_MAPPED_GENE,
-    ugc.ENTREZ_GENE_ID AS UPSTREAM_ENTREZ_GENE_ID,
+    umg.ENTREZ_GENE_ID AS UPSTREAM_ENTREZ_GENE_ID,
     ugc.DISTANCE AS UPSTREAM_GENE_DISTANCE,
     dmg.GENE_NAME AS DOWNSTREAM_MAPPED_GENE,
-    dgc.ENTREZ_GENE_ID AS DOWNSTREAM_ENTREZ_GENE_ID,
+    dmg.ENTREZ_GENE_ID AS DOWNSTREAM_ENTREZ_GENE_ID,
     dgc.DISTANCE AS DOWNSTREAM_GENE_DISTANCE,
     ra.RISK_ALLELE_NAME AS STRONGEST_SNP_RISK_ALLELE,
     snp.RS_ID AS SNP_RS_ID,
