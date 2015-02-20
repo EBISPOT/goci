@@ -60,6 +60,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field private String publication;
     @Field private String publicationDate;
     @Field private String catalogAddedDate;
+    @Field private String publicationLink;
 
     @Field private String platform;
     @Field private Boolean cnv;
@@ -113,6 +114,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         return mappedGene;
     }
 
+    public Collection<String> getMappedGeneLinks() {
+        return mappedGeneLinks;
+    }
+
     public String getStrongestAllele() {
         return strongestAllele;
     }
@@ -143,6 +148,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     public Collection<String> getReportedGenes() {
         return reportedGenes;
+    }
+
+    public Collection<String> getReportedGeneLinks() {
+        return reportedGeneLinks;
     }
 
     public String getRsId() {
@@ -191,6 +200,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     public void addCatalogAddedDate(String catalogAddedDate) {
         this.catalogAddedDate = catalogAddedDate;
+    }
+
+    public void addPublicationLink(String publicationLink) {
+        this.publicationLink = publicationLink;
     }
 
     public void addPlatform(String platform) {
@@ -249,6 +262,15 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                             });
                                     region = setOrAppend(region, regionBuilder.toString(), " : ");
                                     mappedGene = setOrAppend(mappedGene, getMappedGeneString(association, snp), " : ");
+                                    // and add entrez links for each mapped gene
+                                    snp.getGenomicContexts().forEach(context -> {
+                                        Gene gene = context.getGene();
+                                        if (gene.getEntrezGeneId() != null) {
+                                            String geneLink =
+                                                    gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
+                                            mappedGeneLinks.add(geneLink);
+                                        }
+                                    });
 
                                     context = snp.getFunctionalClass();
                                     chromosomeNames.add(snp.getChromosomeName());
@@ -262,7 +284,13 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     }
                                 }
                         );
-                        locus.getAuthorReportedGenes().forEach(gene -> reportedGenes.add(gene.getGeneName().trim()));
+                        locus.getAuthorReportedGenes().forEach(gene -> {
+                            reportedGenes.add(gene.getGeneName().trim());
+                            if (gene.getEntrezGeneId() != null) {
+                                String geneLink = gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
+                                reportedGeneLinks.add(geneLink);
+                            }
+                        });
                     }
             );
         }
@@ -289,6 +317,15 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                             });
                                     region = setOrAppend(region, regionBuilder.toString(), ", ");
                                     mappedGene = setOrAppend(mappedGene, getMappedGeneString(association, snp), ", ");
+                                    // and add entrez links for each mapped gene
+                                    snp.getGenomicContexts().forEach(context -> {
+                                        Gene gene = context.getGene();
+                                        if (gene.getEntrezGeneId() != null) {
+                                            String geneLink =
+                                                    gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
+                                            mappedGeneLinks.add(geneLink);
+                                        }
+                                    });
 
                                     context = snp.getFunctionalClass();
                                     chromosomeNames.add(snp.getChromosomeName());
@@ -302,7 +339,13 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     }
                                 }
                         );
-                        locus.getAuthorReportedGenes().forEach(gene -> reportedGenes.add(gene.getGeneName().trim()));
+                        locus.getAuthorReportedGenes().forEach(gene -> {
+                            reportedGenes.add(gene.getGeneName().trim());
+                            if (gene.getEntrezGeneId() != null) {
+                                String geneLink = gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
+                                reportedGeneLinks.add(geneLink);
+                            }
+                        });
                     }
             );
         }
@@ -314,7 +357,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                 context -> {
                     String geneName = context.getGene().getGeneName().trim();
                     if (!genes.contains(geneName)) {
-                        if (context.isDownstream()) {
+                        if (context.isUpstream()) {
                             genes.add(0, geneName);
                         }
                         else {
