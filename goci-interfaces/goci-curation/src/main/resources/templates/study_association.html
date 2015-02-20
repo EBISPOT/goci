@@ -68,10 +68,33 @@
 
 <br/>
 
+<div class="container-fluid" th:object="${study}">
+    <div class="row">
+        <div class="col-md-12">
+            <a th:href="@{/studies/{studyId}/associations/approve_all(studyId=${study.Id})}"
+               class="btn btn-default"
+               role="button">Approve All SNPs</a>
+
+            <a th:href="@{/studies/{studyId}/associations/approve_all(studyId=${study.Id})}"
+               class="btn btn-default"
+               role="button">Approve Checked SNPs</a>
+
+            <a th:href="@{/studies/{studyId}/associations/delete_all(studyId=${study.Id})}"
+               class="btn btn-default"
+               role="button">Delete All SNPs</a>
+
+            <a th:href="@{/studies/{studyId}/associations/delete_all(studyId=${study.Id})}"
+               class="btn btn-default"
+               role="button">Delete Checked SNPs</a>
+
+        </div>
+    </div>
+</div>
+
 <div class="container-fluid">
     <table id="mainTable" class="table table-hover table-bordered"
            data-toggle="table">
-        <caption>Existing SNP information</caption>
+        <br/>
         <thead>
         <tr>
             <th></th>
@@ -92,7 +115,7 @@
             <th>Multi-SNP haplotype</th>
             <th>SNP:SNP interaction</th>
             <th>SNP Checked?</th>
-
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -109,10 +132,6 @@
                             <a th:href="@{/associations/{associationId}/delete(associationId=${snpAssociationForm.associationId})}">Delete</a>
                         </li>
 
-                        <li>
-                            <a th:href="@{/studies/{studyId}/associations/approve_all(studyId=${study.Id})}">Approve All
-                                                                                                             SNPs</a>
-                        </li>
                     </ul>
                 </div>
             </td>
@@ -178,7 +197,7 @@
 
                 <p th:case="true">Yes</p>
             </td>
-
+            <td><input type="checkbox" onclick="getRow(this)"></input></td>
         </tr>
         </tbody>
     </table>
@@ -191,9 +210,11 @@
         <div class="col-md-12">
             <!--Button-->
             <a th:href="@{/studies/{studyId}/associations/add_standard(studyId=*{id})}" class="btn btn-primary">Add
-                                                                                                       standard SNP</a>
-            <a th:href="@{/studies/{studyId}/associations/add_multi(studyId=*{id})}" class="btn btn-primary">Add multi-SNP
-                                                                                                       haplotype</a>
+                                                                                                                standard
+                                                                                                                SNP</a>
+            <a th:href="@{/studies/{studyId}/associations/add_multi(studyId=*{id})}" class="btn btn-primary">Add
+                                                                                                             multi-SNP
+                                                                                                             haplotype</a>
             <a th:href="@{/studies/{studyId}/associations/add_interaction(studyId=*{id})}"
                class="btn btn-primary">Add SNP:SNP interaction</a>
             <input type="button" class="btn btn-primary pull-right" value="Add SNPs from spreadsheet"
@@ -245,6 +266,17 @@
         </div>
     </div>
 </div>
+<p id='output'><p>
+
+<script type="text/javascript">
+    var ticked = '';
+
+    $('#mainTable tr td input:checked').each(function(i){
+        ticked = ticked.concat($(this).parents('tr').attr('id'));
+    });
+
+    $('#output').html(ticked);
+</script>
 
 
 </body>
