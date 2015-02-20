@@ -42,12 +42,34 @@ $(document).ready(function () {
 });
 
 function doFiltering() {
-    var pvalRange = '';
-    var orRange = '';
-    var betaRange = '';
-    var dateRange = '';
-    var traits = [];
+    var pvalRange = processPval();
+    var orRange = processOR();
+    var betaRange = processBeta();
+    var dateRange = processDate();
+    var traits = processTraitDropdown();
 
+    $('#filter-form').addClass('in-use')
+    solrfilter(pvalRange, orRange, betaRange, dateRange, traits);
+}
+
+function clearFilters() {
+    console.log("Clearing all filters");
+    $('#filter-form').find('input').val('');
+    $('#filter-form').removeClass('in-use')
+
+
+    //if ($('#facet').text()) {
+    //    console.log("No facet, so I'm redoing the search");
+        //doSearch();
+        loadResults();
+    //}
+    //else {
+    //    console.log("Reapplying the facet without filters for facet " + $('#facet').text());
+    //    applyFacet();
+    //}
+}
+
+function processPval(){
     //var pvalMin = $('#pval-min').val();
     //var pvalMax = $('#pval-max').val();
     //if (pvalMin || pvalMax) {
@@ -69,6 +91,7 @@ function doFiltering() {
     //    console.log(pvalRange);
     //}
 
+    var pvalRange = '';
     var pvalMant = $('#pval-mant').val();
     var pvalExp = $('#pval-exp').val();
     if (pvalMant || pvalExp) {
@@ -91,7 +114,11 @@ function doFiltering() {
         pvalRange = pvalRange.concat("]");
         console.log(pvalRange);
     }
+    return pvalRange;
+}
 
+function processOR(){
+    var orRange = '';
     var orMin = $('#or-min').val();
     var orMax = $('#or-max').val();
     if (orMin || orMax) {
@@ -100,7 +127,7 @@ function doFiltering() {
             orRange = orRange.concat(orMin);
         }
         else {
-            orRange = orRange.concat("*");
+            orRange = orRange.concat("1");
         }
         orRange = orRange.concat("+TO+");
         if (orMax) {
@@ -112,7 +139,11 @@ function doFiltering() {
         orRange = orRange.concat("]");
         console.log(orRange);
     }
+     return orRange;
+}
 
+function processBeta(){
+    var betaRange = '';
     var betaMin = $('#beta-min').val();
     var betaMax = $('#beta-max').val();
     if (betaMin || betaMax) {
@@ -133,6 +164,11 @@ function doFiltering() {
         betaRange = betaRange.concat("]");
         console.log(betaRange);
     }
+    return betaRange;
+}
+
+function processDate(){
+    var dateRange = '';
     var dateMin = $('#date-min').val();
     var dateMax = $('#date-max').val();
     if (dateMin || dateMax) {
@@ -165,7 +201,11 @@ function doFiltering() {
         dateRange = dateRange.concat("]");
         console.log(dateRange);
     }
+    return dateRange;
+}
 
+function processTraitDropdown(){
+    var traits = [];
     var traitInput = $('#trait-dropdown ul li input:checked');
     for(var i=0; i<traitInput.length; i++){
 
@@ -176,24 +216,7 @@ function doFiltering() {
 
     }
     console.log(traits);
-
-
-    solrfilter(pvalRange, orRange, betaRange, dateRange, traits);
-}
-
-function clearFilters() {
-    console.log("Clearing all filters");
-    $('#filter-form').find('input').val('');
-
-    //if ($('#facet').text()) {
-    //    console.log("No facet, so I'm redoing the search");
-        //doSearch();
-        loadResults();
-    //}
-    //else {
-    //    console.log("Reapplying the facet without filters for facet " + $('#facet').text());
-    //    applyFacet();
-    //}
+    return traits;
 }
 
 
@@ -204,7 +227,9 @@ function solrfilter(pval, or, beta, date, traits) {
 
     $.getJSON('api/search/filter', {
         'q': searchTerm,
-        'max': 100000,
+        'group': 'true',
+        'group.by': 'resourcename',
+        'group.limit': 5,
         'pvalfilter': pval,
         'orfilter': or,
         'betafilter': beta,
@@ -212,7 +237,6 @@ function solrfilter(pval, or, beta, date, traits) {
         'traitfilter[]': traits
     })
         .done(function (data) {
-            console.log(data);
             processData(data);
         });
 }

@@ -16,35 +16,35 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     @Field private String traitName;
 
     // embedded study info
-    @Field private String pubmedId;
-    @Field private String title;
-    @Field private String author;
-    @Field private String publication;
-    @Field private String publicationDate;
-    @Field private String catalogAddedDate;
+    @Field("study_pubmedId") private Collection<String> pubmedIds; // combine in one connected field
+    @Field("study_title") private Collection<String> titles;
+    @Field("study_author") private Collection<String> authors; // combine in one connected field
+    @Field("study_publication") private Collection<String> publications;
+    @Field("study_publicationDate") private Collection<String> publicationDates; // combine in one connected field
+    @Field("study_catalogAddedDate") private Collection<String> catalogAddedDates;
+    @Field("study_publicationLink") private Collection<String> publicationLinks;
 
-    @Field private String platform;
-    @Field private Boolean cnv;
-
-    @Field private String initialSampleDescription;
-    @Field private String replicateSampleDescription;
+    @Field("study_initialSampleDescription") private Collection<String> initialSampleDescriptions;
+    @Field("study_replicateSampleDescription") private Collection<String> replicateSampleDescriptions;
 
     // embedded Association info
-    @Field("qualifier") private Collection<String> qualifiers;
-    @Field("pValue") private Collection<Float> pValues;
-    @Field("orPerCopyNum") private Collection<Float> orPerCopyNums;
-    @Field("orPerCopyUnitDescr") private Collection<String> orPerCopyUnitDescrs;
-    @Field("orPerCopyRange") private Collection<String> orPerCopyRanges;
-    @Field("orType") private Collection<String> orTypes;
-    @Field("rsId") private Collection<String> rsIds;
-    @Field("strongestAllele") private Collection<String> strongestAlleles;
-    @Field("context") private Collection<String> contexts;
-    @Field("region") private Collection<String> regions;
-    @Field("mappedGene") private Collection<String> mappedGenes;
-    @Field("reportedGene") private Collection<String> reportedGenes;
-    @Field("chromosomeName") private Collection<String> chromosomeNames;
-    @Field("chromosomePosition") private Collection<Integer> chromosomePositions;
-    @Field("last_modified") private Collection<String> lastModifiedDates;
+    @Field("association_qualifier") private Collection<String> qualifiers;
+    @Field("association_pValue") private Collection<Float> pValues;
+    @Field("association_orPerCopyNum") private Collection<Float> orPerCopyNums;
+    @Field("association_orPerCopyUnitDescr") private Collection<String> orPerCopyUnitDescrs;
+    @Field("association_orPerCopyRange") private Collection<String> orPerCopyRanges;
+    @Field("association_orType") private Collection<String> orTypes;
+    @Field("association_rsId") private Collection<String> rsIds;
+    @Field("association_strongestAllele") private Collection<String> strongestAlleles;
+    @Field("association_context") private Collection<String> contexts;
+    @Field("association_region") private Collection<String> regions;
+    @Field("association_mappedGene") private Collection<String> mappedGenes;
+    @Field("association_mappedGeneLinks") private Collection<String> mappedGeneLinks;
+    @Field("association_reportedGene") private Collection<String> reportedGenes;
+    @Field("association_reportedGeneLinks") private Collection<String> reportedGeneLinks;
+    @Field("association_chromosomeName") private Collection<String> chromosomeNames;
+    @Field("association_chromosomePosition") private Collection<Integer> chromosomePositions;
+    @Field("association_last_modified") private Collection<String> lastModifiedDates;
 
     // embedded EfoTrait info
     @Field("mappedLabel") private Collection<String> mappedLabels;
@@ -53,6 +53,17 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     public DiseaseTraitDocument(DiseaseTrait diseaseTrait) {
         super(diseaseTrait);
         this.traitName = diseaseTrait.getTrait();
+
+        this.pubmedIds = new LinkedHashSet<>();
+        this.titles = new LinkedHashSet<>();
+        this.authors = new LinkedHashSet<>();
+        this.publications = new LinkedHashSet<>();
+        this.publicationDates = new LinkedHashSet<>();
+        this.catalogAddedDates = new LinkedHashSet<>();
+        this.publicationLinks = new LinkedHashSet<>();
+
+        this.initialSampleDescriptions = new LinkedHashSet<>();
+        this.replicateSampleDescriptions = new LinkedHashSet<>();
 
         this.qualifiers = new LinkedHashSet<>();
         this.pValues = new LinkedHashSet<>();
@@ -65,7 +76,9 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.contexts = new LinkedHashSet<>();
         this.regions = new LinkedHashSet<>();
         this.mappedGenes = new LinkedHashSet<>();
+        this.mappedGeneLinks = new LinkedHashSet<>();
         this.reportedGenes = new LinkedHashSet<>();
+        this.reportedGeneLinks = new LinkedHashSet<>();
         this.chromosomeNames = new LinkedHashSet<>();
         this.chromosomePositions = new LinkedHashSet<>();
         this.lastModifiedDates = new LinkedHashSet<>();
@@ -79,43 +92,39 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     }
 
     public void addPubmedId(String pubmedId) {
-        this.pubmedId = pubmedId;
+        this.pubmedIds.add(pubmedId);
     }
 
     public void addTitle(String title) {
-        this.title = title;
+        this.titles.add(title);
     }
 
     public void addAuthor(String author) {
-        this.author = author;
+        this.authors.add(author);
     }
 
     public void addPublication(String publication) {
-        this.publication = publication;
+        this.publications.add(publication);
     }
 
     public void addPublicationDate(String publicationDate) {
-        this.publicationDate = publicationDate;
+        this.publicationDates.add(publicationDate);
     }
 
     public void addCatalogAddedDate(String catalogAddedDate) {
-        this.catalogAddedDate = catalogAddedDate;
+        this.catalogAddedDates.add(catalogAddedDate);
     }
 
-    public void addPlatform(String platform) {
-        this.platform = platform;
-    }
-
-    public void addCnv(Boolean cnv) {
-        this.cnv = cnv;
+    public void addPublicationLink(String publicationLink) {
+        this.publicationLinks.add(publicationLink);
     }
 
     public void addInitialSampleDescription(String initialSampleDescription) {
-        this.initialSampleDescription = initialSampleDescription;
+        this.initialSampleDescriptions.add(initialSampleDescription);
     }
 
     public void addReplicateSampleDescription(String replicateSampleDescription) {
-        this.replicateSampleDescription = replicateSampleDescription;
+        this.replicateSampleDescriptions.add(replicateSampleDescription);
     }
 
     public void addQualifier(String qualifier) {
@@ -162,8 +171,16 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.mappedGenes.add(mappedGene);
     }
 
+    public void addMappedGeneLinks(Collection<String> mappedGeneLinks) {
+        this.mappedGeneLinks.addAll(mappedGeneLinks);
+    }
+
     public void addReportedGenes(Collection<String> reportedGenes) {
         this.reportedGenes.addAll(reportedGenes);
+    }
+
+    public void addReportedGeneLinks(Collection<String> reportedGeneLinks) {
+        this.reportedGeneLinks.addAll(reportedGeneLinks);
     }
 
     public void addChromosomeNames(Collection<String> chromosomeNames) {

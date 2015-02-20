@@ -13,6 +13,11 @@ $(document).ready(function() {
         $(this).removeClass("background-color-complementary-accent", 300, "easeOutExpo");
     });
 
+    //$.getJSON('/stats')
+    //    .done(function (data) {
+    //        console.log(data)
+    //    });
+
     //$('.collapse').on('show.bs.collapse', function() {
     //    $('.collapse.in').collapse('hide');
     //});
