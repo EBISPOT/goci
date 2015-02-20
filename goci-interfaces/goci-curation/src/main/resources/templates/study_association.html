@@ -24,6 +24,9 @@
     <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"/>
     <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
 
+    <!--Handles checkbox in table -->
+    <script src="../static/js/goci-study-association.js" th:src="@{../../../js/goci-study-association.js}"></script>
+
 </head>
 <body>
 
@@ -75,18 +78,69 @@
                class="btn btn-default"
                role="button">Approve All SNPs</a>
 
-            <a th:href="@{/studies/{studyId}/associations/approve_all(studyId=${study.Id})}"
+            <!--th:value used to send study id to javascript file-->
+            <a id="approve-button"
                class="btn btn-default"
-               role="button">Approve Checked SNPs</a>
+               role="button"
+               th:value="${study.Id}">Approve Checked SNPs</a>
 
-            <a th:href="@{/studies/{studyId}/associations/delete_all(studyId=${study.Id})}"
+            <a href="#DeleteAllModal"
                class="btn btn-default"
+               data-toggle="modal"
                role="button">Delete All SNPs</a>
 
-            <a th:href="@{/studies/{studyId}/associations/delete_all(studyId=${study.Id})}"
+            <!--th:value used to send study id to javascript file-->
+            <a href="#DeleteSelectedModal"
                class="btn btn-default"
-               role="button">Delete Checked SNPs</a>
+               role="button"
+               data-toggle="modal">Delete Checked SNPs</a>
 
+        </div>
+    </div>
+</div>
+
+<!-- Modal HTML -->
+<div id="DeleteAllModal" class="modal fade" th:object="${study}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete all SNP associations?</p>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                    <a th:href="@{/studies/{studyId}/associations/delete_all(studyId=${study.Id})}"
+                       class="btn btn-default"
+                       role="button">Delete All SNPs</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="DeleteSelectedModal" class="modal fade" th:object="${study}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete selected SNP associations?</p>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <!--th:value used to send study id to javascript file-->
+                    <a id="delete-button"
+                       class="btn btn-default"
+                       role="button"
+                       th:value="${study.Id}">Delete Checked SNPs</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -197,7 +251,14 @@
 
                 <p th:case="true">Yes</p>
             </td>
-            <td><input type="checkbox" onclick="getRow(this)"></input></td>
+
+            <!--This checkbox is used to approve and delete all SNP associations-->
+            <td><input type="checkbox"
+                       name="checkboxId"
+                       class="association-selector"
+                       th:value="${snpAssociationForm.associationId}"></input>
+            </td>
+
         </tr>
         </tbody>
     </table>
@@ -266,17 +327,6 @@
         </div>
     </div>
 </div>
-<p id='output'><p>
-
-<script type="text/javascript">
-    var ticked = '';
-
-    $('#mainTable tr td input:checked').each(function(i){
-        ticked = ticked.concat($(this).parents('tr').attr('id'));
-    });
-
-    $('#output').html(ticked);
-</script>
 
 
 </body>
