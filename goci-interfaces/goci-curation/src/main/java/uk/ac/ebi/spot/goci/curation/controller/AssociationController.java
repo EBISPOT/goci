@@ -517,6 +517,36 @@ public class AssociationController {
         return "redirect:/studies/" + studyId + "/associations";
     }
 
+
+    // Delete all associations linked to a study
+    @RequestMapping(value = "/studies/{studyId}/associations/delete_all",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.POST)
+    public String deleteAllAssociations(Model model, @PathVariable Long studyId) {
+
+        // Get all associations
+        Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
+
+        // For each association get the loci
+        Collection<Locus> loci = new ArrayList<Locus>();
+        for (Association association : studyAssociations) {
+            loci.addAll(association.getLoci());
+        }
+
+        // Delete each locus, which in turn deletes link to genes via author_reported_gene table,
+        // Snp and risk allele are not deleted as they may be used in other associations
+        for (Locus locus : loci) {
+            locusRepository.delete(locus);
+        }
+        // Delete associations
+        for (Association association : studyAssociations) {
+           associationRepository.delete(association);
+        }
+
+        return "redirect:/studies/" + studyId + "/associations";
+    }
+
+
     /*  Approve snp associations */
     // Approve all SNPs
     @RequestMapping(value = "/studies/{studyId}/associations/approve_all",
