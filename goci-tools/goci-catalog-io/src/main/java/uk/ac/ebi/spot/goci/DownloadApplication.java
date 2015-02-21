@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci;
 
+import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -20,7 +21,6 @@ import java.util.List;
  */
 @SpringBootApplication
 public class DownloadApplication {
-
     @Autowired
     private ProcessView processView;
 
@@ -30,7 +30,6 @@ public class DownloadApplication {
         System.out.println("Application executed successfully!");
         SpringApplication.exit(ctx);
     }
-
 
     @Bean CommandLineRunner run() {
         return strings -> {
@@ -42,7 +41,5 @@ public class DownloadApplication {
             processView.createFileForNcbi(fileName, serialisedViews);
             System.out.println("Writing " + strings[0]);
         };
-
     }
-
 }
