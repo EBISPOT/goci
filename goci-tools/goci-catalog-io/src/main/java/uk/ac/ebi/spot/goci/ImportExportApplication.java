@@ -33,16 +33,18 @@ import java.io.IOException;
  */
 @SpringBootApplication
 public class ImportExportApplication {
+    @Autowired
     private CatalogExportRepository catalogExportRepository;
+    @Autowired
     private CatalogImportRepository catalogImportRepository;
-
+    @Autowired
     private SpreadsheetProcessor spreadsheetProcessor;
 
     private OperationMode opMode;
     private File outputFile;
     private File inputFile;
 
-    private int exitCode;
+    private static int exitCode;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -50,64 +52,52 @@ public class ImportExportApplication {
         return log;
     }
 
-    @Autowired
-    public ImportExportApplication(CatalogExportRepository catalogExportRepository,
-                                   CatalogImportRepository catalogImportRepository,
-                                   SpreadsheetProcessor spreadsheetProcessor) {
-        this.catalogExportRepository = catalogExportRepository;
-        this.catalogImportRepository = catalogImportRepository;
-        this.spreadsheetProcessor = spreadsheetProcessor;
-    }
-
     public static void main(String... args) {
         System.out.println("Starting catalog download service...");
         ApplicationContext ctx = SpringApplication.run(ImportExportApplication.class, args);
-        System.out.println("Application executed successfully!");
-        SpringApplication.exit(ctx);
+        SpringApplication.exit(ctx, () -> exitCode);
     }
 
     @Bean CommandLineRunner run() {
         return strings -> {
             bindOptions();
-            this.exitCode = parseArguments(strings);
+            exitCode = parseArguments(strings);
 
-            switch (opMode) {
-                case NCBI:
-                    try {
-                        doNCBIExport(outputFile);
-                    }
-                    catch (Exception e) {
-                        System.err.println("NCBI export failed (" + e.getMessage() + ")");
-                        this.exitCode += 2;
-                    }
-                    break;
-                case DOWNLOAD:
-                    try {
-                        doDownloadExport(outputFile);
-                    }
-                    catch (Exception e) {
-                        System.err.println("Download export failed (" + e.getMessage() + ")");
-                        this.exitCode += 3;
-                    }
-                    break;
-                case LOAD:
-                    try {
-                        doLoad(inputFile);
-                    }
-                    catch (Exception e) {
-                        System.err.println("Loading NCBI data failed (" + e.getMessage() + ")");
-                        this.exitCode += 4;
-                    }
-                    break;
-                default:
-                    System.err.println("No operation mode specified");
-                    this.exitCode += 1;
+            if (exitCode == 0) {
+                switch (opMode) {
+                    case NCBI:
+                        try {
+                            doNCBIExport(outputFile);
+                        }
+                        catch (Exception e) {
+                            System.err.println("NCBI export failed (" + e.getMessage() + ")");
+                            exitCode += 2;
+                        }
+                        break;
+                    case DOWNLOAD:
+                        try {
+                            doDownloadExport(outputFile);
+                        }
+                        catch (Exception e) {
+                            System.err.println("Download export failed (" + e.getMessage() + ")");
+                            exitCode += 3;
+                        }
+                        break;
+                    case LOAD:
+                        try {
+                            doLoad(inputFile);
+                        }
+                        catch (Exception e) {
+                            System.err.println("Loading NCBI data failed (" + e.getMessage() + ")");
+                            exitCode += 4;
+                        }
+                        break;
+                    default:
+                        System.err.println("No operation mode specified");
+                        exitCode += 1;
+                }
             }
         };
-    }
-
-    @Bean ExitCodeGenerator exitCodeGenerator() {
-        return () -> exitCode;
     }
 
     void doNCBIExport(File outFile) throws IOException {

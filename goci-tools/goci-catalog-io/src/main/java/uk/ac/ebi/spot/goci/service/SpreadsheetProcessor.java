@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -17,11 +18,12 @@ import java.io.OutputStream;
  * @author Tony Burdett
  * @date 23/02/15
  */
+@Service
 public class SpreadsheetProcessor {
-    @Value("${gwas.export.delimiter}")
+    @Value("${gwas.export.delimiter:\t}")
     private String delim;
-    @Value("${gwas.export.encoding}")
-    private String encoding = "UTF-8";
+    @Value("${gwas.export.encoding:UTF-8}")
+    private String encoding;
 
     public void writeToFile(String[][] data, File fileOut) throws IOException {
         writeToFile(data, fileOut, this.delim);

@@ -28,7 +28,7 @@ public class CatalogExportRepository {
     private static final String FROM_CLAUSE =
             " FROM CATALOG_SUMMARY_VIEW ";
     private static final String NCBI_WHERE_CLAUSE =
-            " WHERE CURATION_STATUS = 'Send to NCBI ";
+            " WHERE CURATION_STATUS = 'Send to NCBI'";
     private static final String DOWNLOAD_WHERE_CLAUSE =
             " WHERE RESULT_PUBLISHED IS NOT NULL ";
 
