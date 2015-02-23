@@ -71,10 +71,10 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.publishDate !=null } ? ${#calendars.format(study.housekeeping.publishDate, 'dd MMMM yyyy')} : 'null'"></td>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.sendToNCBIDate !=null } ? ${#calendars.format(study.housekeeping.sendToNCBIDate, 'dd MMMM yyyy')} : 'null'"></td>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.studyAddedDate !=null } ? ${#calendars.format(study.housekeeping.studyAddedDate, 'dd MMMM yyyy')} : 'null'"></td>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.lastUpdateDate !=null } ? ${#calendars.format(study.housekeeping.lastUpdateDate, 'dd MMMM yyyy')} : 'null'"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.publishDate !=null } ? ${#calendars.format(study.housekeeping.publishDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.sendToNCBIDate !=null } ? ${#calendars.format(study.housekeeping.sendToNCBIDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.studyAddedDate !=null } ? ${#calendars.format(study.housekeeping.studyAddedDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.lastUpdateDate !=null } ? ${#calendars.format(study.housekeeping.lastUpdateDate, 'dd MMMM yyyy')} : ''"></td>
                 </tr>
                 </tbody>
             </table>
