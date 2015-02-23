@@ -6,8 +6,12 @@ import org.springframework.stereotype.Repository;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBindings;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,46 +40,73 @@ public class CatalogExportRepository {
 
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
+    private Collection<CatalogDataMapper> dataMappers;
+
+    @Autowired(required = false)
     public CatalogExportRepository(JdbcTemplate jdbcTemplate) {
+        this(jdbcTemplate, Collections.emptyList());
+    }
+
+    @Autowired(required = false)
+    public CatalogExportRepository(JdbcTemplate jdbcTemplate, Collection<CatalogDataMapper> dataMappers) {
         this.jdbcTemplate = jdbcTemplate;
+        this.dataMappers = dataMappers;
         this.df = new SimpleDateFormat("dd-MMM-yyyy");
     }
 
     public String[][] getNCBISpreadsheet() {
-        final Map<String, String> dbToNCBI = new LinkedHashMap<>();
+        List<String> ncbiOutputHeaders = CatalogHeaderBindings.getNcbiHeaders()
+                .stream()
+                .filter(binding -> binding.getNcbiName() != null)
+                .map(CatalogHeaderBinding::getNcbiName)
+                .collect(Collectors.toList());
+
         List<String> ncbiQueryHeaders = CatalogHeaderBindings.getNcbiHeaders()
                 .stream()
-                .peek(binding -> dbToNCBI.put(binding.getDatabaseName(), binding.getNcbiName()))
+                .filter(binding -> binding.getDatabaseName() != null)
                 .map(CatalogHeaderBinding::getDatabaseName)
                 .collect(Collectors.toList());
 
         String query = buildSelectClause(ncbiQueryHeaders) + FROM_CLAUSE + NCBI_WHERE_CLAUSE;
         List<String[]> rows = jdbcTemplate.query(query, (resultSet, i) -> {
-            String[] values = new String[dbToNCBI.keySet().size()];
-            int col = 0;
+            Map<CatalogHeaderBinding, String> dataForMapping = new LinkedHashMap<>();
+            Map<CatalogHeaderBinding, String> rowMap = new LinkedHashMap<>();
             for (CatalogHeaderBinding binding : CatalogHeaderBindings.getNcbiHeaders()) {
-                if (binding.isDate()) {
-                    Date value = resultSet.getDate(binding.getDatabaseName());
-                    if (value != null) {
-                        values[col++] = df.format(value);
+                if (binding.getNcbiName() != null) {
+                    // insert headings in declaration order (this is the correct order)
+                    // which controls for reinsertion
+                    rowMap.put(binding, "");
+                }
+
+                // now extract data if possible
+                if (binding.getDatabaseName() != null) {
+                    if (binding.getNcbiName() != null) {
+                        rowMap.put(binding, extractValue(binding, resultSet));
                     }
                     else {
-                        values[col++] = "";
+                        // if ncbi name is null, this data needs mapping
+                        dataForMapping.put(binding, extractValue(binding, resultSet));
                     }
                 }
-                else {
-                    String value = resultSet.getString(binding.getDatabaseName());
-                    if (value != null) {
-                        values[col++] = resultSet.getString(binding.getDatabaseName()).trim();
-                    }
-                    else {
-                        values[col++] = "";
-                    }
-                }
+
+                // now we've mapped all the direct values, collect up those for processing
+                dataMappers.stream()
+                        .filter(mapper -> rowMap.containsKey(mapper.getOutputField()))
+                        .forEach(mapper -> rowMap.put(mapper.getOutputField(), mapper.produceOutput(dataForMapping)));
             }
-            return values;
+
+            // finally, convert rowMap into a string array and return
+            String[] row = new String[rowMap.keySet().size()];
+            int col = 0;
+            for (CatalogHeaderBinding key : rowMap.keySet()) {
+                row[col++] = rowMap.get(key);
+            }
+            return row;
         });
+
+        // add the first row, our headers
+        rows.add(0, ncbiOutputHeaders.toArray(new String[ncbiOutputHeaders.size()]));
+        // and convert to a 2D string array
         return rows.toArray(new String[rows.size()][]);
     }
 
@@ -131,5 +162,26 @@ public class CatalogExportRepository {
         sb.append(" ");
 
         return sb.toString();
+    }
+
+    private String extractValue(CatalogHeaderBinding binding, ResultSet resultSet) throws SQLException {
+        if (binding.isDate()) {
+            Date value = resultSet.getDate(binding.getDatabaseName());
+            if (value != null) {
+                return df.format(value);
+            }
+            else {
+                return "";
+            }
+        }
+        else {
+            String value = resultSet.getString(binding.getDatabaseName());
+            if (value != null) {
+                return resultSet.getString(binding.getDatabaseName()).trim();
+            }
+            else {
+                return "";
+            }
+        }
     }
 }
