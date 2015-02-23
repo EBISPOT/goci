@@ -10,4 +10,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class CatalogImportRepository {
+    public void loadNCBIMappedData(String[][] data) {
+
+    }
 }
