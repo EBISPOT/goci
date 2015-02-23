@@ -270,20 +270,13 @@
                                 </div>
                             </form>
                             </div>
-                            <div id="catalog-stats" style="padding-top: 10%">
-                                <!--<ul th:object="${stats}" id="variables">-->
-                                    <!--<li id="date" th:text="*{date}">Latest data release: 2015-02-17</li>-->
-                                    <!--<li id="studies" th:text="*{studies}">2109 studies</li>-->
-                                    <!--<li id="associations" th:text="*{associations}">15317 associations</li>-->
-                                    <!--<li id="genomebuild" th:text="*{genomebuild}">Genome Assembly GRCh38/hg37.p13</li>-->
-
-                                <!--</ul>-->
+                            <div id="catalog-stats" style="display: none">
                                 <h4>Catalog stats</h4>
-                                <ul id="stats">
-                                    <li id="date" >Latest data release: 2015-02-17</li>
-                                    <li id="studies" >2109 studies</li>
-                                    <li id="associations" >15317 associations</li>
-                                    <li id="genomebuild" >Genome Assembly GRCh38/hg37.p13</li>
+                                <ul>
+                                    <li id="releasedate-stat" ></li>
+                                    <li id="studies-stat" ></li>
+                                    <li id="associations-stat" ></li>
+                                    <li id="genomebuild" ></li>
 
                                 </ul>
                             </div>
@@ -310,7 +303,7 @@
                             <h2>Search results for
                                 <em><span id="search-term" th:text="*{query}">query term</span></em>
                             </h2>
-                            <a href="results.txt" target="_blank">Download search results
+                            <a href="api/search/downloads?q=*" target="_blank" id="results-download">Download search results
                                 <span class="glyphicon glyphicon-download-alt"> </span>
                             </a>
                         </div>

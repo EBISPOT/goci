@@ -109,7 +109,10 @@ public class SolrIndexer {
         Pageable pager = new PageRequest(0, pageSize, sort);
         Page<Study> studyPage = studyService.findPublishedStudies(pager);
         studyMapper.map(studyPage.getContent());
-        while (studyPage.hasNext() && maxPages != -1 && studyPage.getNumber() < maxPages - 1) {
+        while (studyPage.hasNext()) {
+            if (maxPages != -1 && studyPage.getNumber() >= maxPages - 1) {
+                break;
+            }
             pager = pager.next();
             studyPage = studyService.findPublishedStudies(pager);
             studyMapper.map(studyPage.getContent());
@@ -125,7 +128,10 @@ public class SolrIndexer {
         Pageable pager = new PageRequest(0, pageSize, sort);
         Page<Association> associationPage = associationService.findPublishedAssociations(pager);
         associationMapper.map(associationPage.getContent());
-        while (associationPage.hasNext() && maxPages != -1 && associationPage.getNumber() < maxPages - 1) {
+        while (associationPage.hasNext()) {
+            if (maxPages != -1 && associationPage.getNumber() >= maxPages - 1) {
+                break;
+            }
             pager = pager.next();
             associationPage = associationService.findPublishedAssociations(pager);
             associationMapper.map(associationPage.getContent());
@@ -141,7 +147,10 @@ public class SolrIndexer {
         Pageable pager = new PageRequest(0, pageSize, sort);
         Page<DiseaseTrait> diseaseTraitPage = diseaseTraitRepository.findAll(pager);
         traitMapper.map(diseaseTraitPage.getContent());
-        while (diseaseTraitPage.hasNext() && maxPages != -1 && diseaseTraitPage.getNumber() < maxPages - 1) {
+        while (diseaseTraitPage.hasNext()) {
+            if (maxPages != -1 && diseaseTraitPage.getNumber() >= maxPages - 1) {
+                break;
+            }
             pager = pager.next();
             diseaseTraitPage = diseaseTraitRepository.findAll(pager);
             traitMapper.map(diseaseTraitPage.getContent());

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
@@ -39,7 +40,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -517,7 +520,102 @@ public class AssociationController {
         return "redirect:/studies/" + studyId + "/associations";
     }
 
+
+    // Delete all associations linked to a study
+    @RequestMapping(value = "/studies/{studyId}/associations/delete_all",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.GET)
+    public String deleteAllAssociations(Model model, @PathVariable Long studyId) {
+
+        // Get all associations
+        Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
+
+        // For each association get the loci
+        Collection<Locus> loci = new ArrayList<Locus>();
+        for (Association association : studyAssociations) {
+            loci.addAll(association.getLoci());
+        }
+
+        // Delete each locus, which in turn deletes link to genes via author_reported_gene table,
+        // Snp and risk allele are not deleted as they may be used in other associations
+        for (Locus locus : loci) {
+            locusRepository.delete(locus);
+        }
+        // Delete associations
+        for (Association association : studyAssociations) {
+            associationRepository.delete(association);
+        }
+
+        return "redirect:/studies/" + studyId + "/associations";
+    }
+
+    // Delete checked SNP associations
+    @RequestMapping(value = "/studies/{studyId}/associations/delete_checked",
+                    produces = MediaType.APPLICATION_JSON_VALUE,
+                    method = RequestMethod.GET)
+    public @ResponseBody
+    Map<String, String> deleteChecked(@RequestParam(value = "associationIds[]") String[] associationsIds) {
+
+        String message = "";
+        Integer count = 0;
+
+        Collection<Locus> loci = new ArrayList<Locus>();
+        Collection<Association> studyAssociations = new ArrayList<Association>();
+
+        // For each association get the loci attached
+        for (String associationId : associationsIds) {
+            Association association = associationRepository.findOne(Long.valueOf(associationId));
+            loci.addAll(association.getLoci());
+            studyAssociations.add(association);
+            count++;
+        }
+
+        // Delete each locus, which in turn deletes link to genes via author_reported_gene table,
+        // Snp and risk allele are not deleted as they may be used in other associations
+        for (Locus locus : loci) {
+            locusRepository.delete(locus);
+        }
+        // Delete associations
+        for (Association association : studyAssociations) {
+            associationRepository.delete(association);
+        }
+
+        message = "Successfully deleted " + count + " associations";
+
+        Map<String, String> result = new HashMap<>();
+        result.put("message", message);
+        return result;
+
+    }
+
     /*  Approve snp associations */
+
+    // Approve checked SNPs
+    @RequestMapping(value = "/studies/{studyId}/associations/approve_checked",
+                    produces = MediaType.APPLICATION_JSON_VALUE,
+                    method = RequestMethod.GET)
+    public @ResponseBody
+    Map<String, String> approveChecked(@RequestParam(value = "associationIds[]") String[] associationsIds) {
+
+        String message = "";
+        Integer count = 0;
+
+        // For each one set snpChecked attribute to true
+        for (String associationId : associationsIds) {
+            Association association = associationRepository.findOne(Long.valueOf(associationId));
+            association.setSnpChecked(true);
+            associationRepository.save(association);
+            count++;
+        }
+        message = "Successfully updated " + count + " associations";
+
+        Map<String, String> result = new HashMap<>();
+        result.put("message", message);
+        return result;
+
+    }
+
+
     // Approve all SNPs
     @RequestMapping(value = "/studies/{studyId}/associations/approve_all",
                     produces = MediaType.TEXT_HTML_VALUE,

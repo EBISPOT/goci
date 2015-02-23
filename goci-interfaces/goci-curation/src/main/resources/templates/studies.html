@@ -160,21 +160,21 @@
                         <!-- Use an conditional here as a study can have a null attributes-->
                         <!-- Using thymeleaf elvis operator for string, date attributes-->
 
-                        <td th:text="${study.author} ?: 'null' "></td>
-                        <td th:text="${study.title} ?: 'null'"></td>
-                        <td th:text="${#calendars.format(study.studyDate,'dd MMMM yyyy')} ?: 'null'"></td>
-                        <td><a th:href="@{http://www.ncbi.nlm.nih.gov/pubmed/{pubmedId}(pubmedId=${study.pubmedId})}"
-                               th:text="${study.pubmedId} ?: 'null'" target="_blank"></a></td>
-                        <td th:text="${study.publication} ?: 'null'"></td>
+                        <td th:text="${study.author} ?: '' "></td>
+                        <td th:text="${study.title} ?: ''"></td>
+                        <td th:text="${#calendars.format(study.studyDate,'dd MMMM yyyy')} ?: ''"></td>
+                        <td><a th:href="@{http://europepmc.org/abstract/MED/{pubmedId}(pubmedId=${study.pubmedId})}"
+                               th:text="${study.pubmedId} ?: ''" target="_blank"></a></td>
+                        <td th:text="${study.publication} ?: ''"></td>
 
                         <!--If study has associated disease trait return traits name-->
-                        <td th:text="${study.diseaseTrait != null} ? ${study.diseaseTrait.trait} : 'null'"></td>
+                        <td th:text="${study.diseaseTrait != null} ? ${study.diseaseTrait.trait} : ''"></td>
 
                         <!--If study has associated housekeeping object then get the following attributes -->
 
-                        <td th:text="${study.housekeeping != null and study.housekeeping.curator !=null } ? ${study.housekeeping.curator.lastName} : 'null'"></td>
-                        <td th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : 'null'"></td>
-                        <td th:text="${study.housekeeping !=null} ? ${study.housekeeping.notes} : 'null'"></td>
+                        <td th:text="${study.housekeeping != null and study.housekeeping.curator !=null } ? ${study.housekeeping.curator.lastName} : ''"></td>
+                        <td th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : ''"></td>
+                        <td th:text="${study.housekeeping !=null} ? ${study.housekeeping.notes} : ''"></td>
 
 
                     </tr>
