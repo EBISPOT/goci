@@ -23,6 +23,7 @@ public enum CatalogHeaderBinding {
     CHROMOSOME_POSITION("CHROMOSOME_POSITION", false, "CHR_POS"),
     REPORTED_GENE("REPORTED_GENE", "REPORTED GENE(S)", "REPORTED GENE(S)"),
     MAPPED_GENE("MAPPED GENE", false, true),
+    DOWNLOAD_MAPPED_GENE(null, false, "MAPPED GENE"),
     ENTREZ_GENE_ID("ENTREZ_GENE_ID", false, "SNP_GENE_IDS"),
     UPSTREAM_MAPPED_GENE("UPSTREAM_MAPPED_GENE", false, true),
     UPSTREAM_ENTREZ_GENE_ID("UPSTREAM_ENTREZ_GENE_ID", false, "UPSTREAM_GENE_ID"),
@@ -36,24 +37,22 @@ public enum CatalogHeaderBinding {
     SNP_ID("SNP_ID", false, false),
     CONTEXT("CONTEXT", false, "CONTEXT"),
     IS_INTERGENIC("IS_INTERGENIC", false, true),
+    DOWNLOAD_INTERGENIC(null, false, "INTERGENIC"),
     RISK_ALLELE_FREQUENCY("RISK_ALLELE_FREQUENCY", "RISK ALLELE FREQUENCY", "RISK ALLELE FREQUENCY"),
     P_VALUE("P_VALUE", "P-VALUE", "P-VALUE"),
     P_VALUE_QUALIFIER("P_VALUE_QUALIFIER", "P-VALUE (TEXT)", "P-VALUE (TEXT)"),
     OR_BETA("OR_BETA", "OR OR BETA", "OR or BETA"),
-    CI("CI", "95% CI (TEXT)", "95% CI (TEXT)"),
+    CI("CI", true, true),
     CI_QUALIFIER("CI_QUALIFIER", true, true),
+    SPREADSHEET_CI(null, "95% CI (TEXT)", "95% CI (TEXT)"),
     PLATFORM("PLATFORM", "PLATFORM [SNPS PASSING QC]", "PLATFORM [SNPS PASSING QC]"),
-    CNV("CNV", "CNV", "CNV"),
+    CNV("CNV", true, true),
+    SPREADSHEET_CNV(null, "CNV", "CNV"),
     ASSOCIATION_ID("ASSOCIATION_ID", "GWASTUDIESSNPID", false),
     STUDY_ID("STUDY_ID", "GWASTUDYID", false),
-    RESULT_PUBLISHED("RESULT_PUBLISHED", "RESULTPUBLISHED", false),
-    CURATION_STATUS("CURATION_STATUS", false, false),
-
-    // Composite fields for NCBI, Downloads
+    RESULT_PUBLISHED("RESULT_PUBLISHED", true, false),
     NCBI_RESULT_PUBLISHED(null, "RESULTPUBLISHED", false),
-    NCBI_CNV(null, "CNV", false),
-    SPREADSHEET_CI(null, "95% CI (TEXT)", "95% CI (TEXT)"),
-    DOWNLOAD_MAPPED_GENE(null, false, "")
+    CURATION_STATUS("CURATION_STATUS", false, false);
 
     private String databaseName;
     private boolean isNcbiRequired;
