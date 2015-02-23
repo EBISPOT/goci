@@ -101,6 +101,8 @@ function solrSearch(queryTerm) {
 
 function processData(data) {
     var documents = data.grouped.resourcename.groups;
+
+    setDownloadLink(data.responseHeader.params);
     console.log("Solr search returned " + documents.length + " documents");
     updateCountBadges(data.facet_counts.facet_fields.resourcename);
 
@@ -398,11 +400,11 @@ function processAssociation(association, table) {
         //}
         //else{
             for (var j = 0; j < association.reportedGeneLinks.length; j++) {
-                var gene = association.reportedGeneLinks[0].split("|")[0];
-                var geneId = association.reportedGeneLinks[0].split("|")[1];
+                var gene = association.reportedGeneLinks[j].split("|")[0];
+                var geneId = association.reportedGeneLinks[j].split("|")[1];
 
                 var repgenesearch = "<span><a href='/search?query=".concat(gene).concat("'>").concat(gene).concat("</a></span>");
-                var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?g=".concat(geneId).concat("'  target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
+                var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=".concat(geneId).concat("'  target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
 
                 if (repgene == '') {
                     repgene = repgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);
@@ -434,21 +436,17 @@ function processAssociation(association, table) {
     row.append($("<td>").html(repgene));
 
     var mapgene = '';
-    if (association.mappedGene != null) {
+    if (association.mappedGeneLinks != null && association.mappedGene != null) {
+        mapgene = association.mappedGene[0];
         for (var j = 0; j < association.mappedGeneLinks.length; j++) {
-            var gene = association.mappedGeneLinks[0].split("|")[0];
-            var geneId = association.mappedGeneLinks[0].split("|")[1];
+            var gene = association.mappedGeneLinks[j].split("|")[0];
+            var geneId = association.mappedGeneLinks[j].split("|")[1];
 
             var mapgenesearch = "<span><a href='/search?query=".concat(gene).concat("'>").concat(gene).concat("</a></span>");
-            var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?g=".concat(geneId).concat("'  target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
+            var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=".concat(geneId).concat("'  target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
 
-            if (mapgene == '') {
-                mapgene = mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);;
-            }
+            mapgene = mapgene.replace(gene, mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl));
 
-            else {
-                mapgene = mapgene.concat(", ").concat(mapgenesearch).concat('&nbsp;&nbsp;').concat(ensembl);;
-            }
         }
     }
     else if (association.mappedGene != null) {
@@ -459,7 +457,7 @@ function processAssociation(association, table) {
             }
 
             else {
-                mapgene = mapgene.concat(", ").concat(mapgenesearch);
+                mapgene = mapgene.concat("-").concat(mapgenesearch);
             }
         }
     }
@@ -607,4 +605,36 @@ function processTraitCounts(data) {
         var count = traits[i + 1];
         $('#trait-dropdown ul').append($("<li>").html("<input type='checkbox' class='trait-check' value='".concat(trait).concat("'/>&nbsp;").concat(trait).concat(" (").concat(count).concat(")</a>")));
     }
+}
+
+function setDownloadLink(searchParams){
+    var baseUrl = 'api/search/downloads?';
+    var q= "q=".concat(searchParams.q);
+
+    var pval = '&pvalfilter='.concat(processPval());
+    var or = '&orfilter='.concat(processOR());
+    var beta = '&betafilter='.concat(processBeta());
+    var date = '&datefilter='.concat(processDate());
+    var traitFilter = '&traitfilter[]=';
+    var trait = '';
+
+    var traits = processTraitDropdown();
+
+    if(traits != ''){
+        for(var t=0; t<traits.length; t++){
+            trait = trait.concat(traitFilter).concat(traits[t]);
+        }
+    }
+    else{
+        trait = traitFilter;
+    }
+
+    var url = baseUrl.concat(q).concat(pval).concat(or).concat(beta).concat(date).concat(trait);
+
+    //url = encodeURI(url);
+
+
+    console.log(url);
+    $('#results-download').removeAttr('href').attr('href', url);
+
 }

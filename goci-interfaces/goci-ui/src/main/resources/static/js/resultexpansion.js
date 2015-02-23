@@ -180,6 +180,8 @@ function addResults(data, expand, id){
         var documents = data.response.docs;
         console.log("Got a bunch of docs" + documents.length);
 
+        setDownloadLink(data.responseHeader.params);
+
         if (data.responseHeader.params.fq == "resourcename:study" || $.inArray("resourcename:study", data.responseHeader.params.fq) != -1) {
             console.log("Processing studies");
             var studyTable = $('#study-table-body').empty();
