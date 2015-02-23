@@ -28,9 +28,9 @@ public class CatalogExportRepository {
     private static final String FROM_CLAUSE =
             " FROM CATALOG_SUMMARY_VIEW ";
     private static final String NCBI_WHERE_CLAUSE =
-            " WHERE CURATION_STATUS = 'Send to NCBI'";
+            " WHERE CURATION_STATUS = 'Send to NCBI' ORDER BY STUDY_ID DESC ";
     private static final String DOWNLOAD_WHERE_CLAUSE =
-            " WHERE RESULT_PUBLISHED IS NOT NULL ";
+            " WHERE RESULT_PUBLISHED IS NOT NULL ORDER BY STUDY_ID DESC ";
 
     private final DateFormat df;
 
@@ -56,10 +56,22 @@ public class CatalogExportRepository {
             int col = 0;
             for (CatalogHeaderBinding binding : CatalogHeaderBindings.getNcbiHeaders()) {
                 if (binding.isDate()) {
-                    values[col++] = df.format(resultSet.getDate(binding.getDatabaseName()));
+                    Date value = resultSet.getDate(binding.getDatabaseName());
+                    if (value != null) {
+                        values[col++] = df.format(value);
+                    }
+                    else {
+                        values[col++] = "";
+                    }
                 }
                 else {
-                    values[col++] = resultSet.getString(binding.getDatabaseName()).trim();
+                    String value = resultSet.getString(binding.getDatabaseName());
+                    if (value != null) {
+                        values[col++] = resultSet.getString(binding.getDatabaseName()).trim();
+                    }
+                    else {
+                        values[col++] = "";
+                    }
                 }
             }
             return values;
@@ -70,9 +82,9 @@ public class CatalogExportRepository {
     public String[][] getDownloadSpreadsheet() {
         final Map<String, Integer> columnNumberByLabel = new HashMap<>();
         final AtomicInteger colNum = new AtomicInteger();
-        List<String> ncbiQueryHeaders = CatalogHeaderBindings.getNcbiHeaders()
+        List<String> ncbiQueryHeaders = CatalogHeaderBindings.getDownloadHeaders()
                 .stream()
-                .peek(binding -> columnNumberByLabel.put(binding.getNcbiName(), colNum.getAndIncrement()))
+                .peek(binding -> columnNumberByLabel.put(binding.getDownloadName(), colNum.getAndIncrement()))
                 .map(CatalogHeaderBinding::getDatabaseName)
                 .collect(Collectors.toList());
 
@@ -80,12 +92,24 @@ public class CatalogExportRepository {
         List<String[]> rows = jdbcTemplate.query(query, (resultSet, i) -> {
             String[] values = new String[columnNumberByLabel.keySet().size()];
             int col = 0;
-            for (CatalogHeaderBinding binding : CatalogHeaderBindings.getNcbiHeaders()) {
+            for (CatalogHeaderBinding binding : CatalogHeaderBindings.getDownloadHeaders()) {
                 if (binding.isDate()) {
-                    values[col] = df.format(resultSet.getDate(binding.getDatabaseName()));
+                    Date value = resultSet.getDate(binding.getDatabaseName());
+                    if (value != null) {
+                        values[col++] = df.format(value);
+                    }
+                    else {
+                        values[col++] = "";
+                    }
                 }
                 else {
-                    values[col] = resultSet.getString(binding.getDatabaseName()).trim();
+                    String value = resultSet.getString(binding.getDatabaseName());
+                    if (value != null) {
+                        values[col++] = resultSet.getString(binding.getDatabaseName()).trim();
+                    }
+                    else {
+                        values[col++] = "";
+                    }
                 }
             }
             return values;

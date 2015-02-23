@@ -22,7 +22,7 @@ public enum CatalogHeaderBinding {
     CHROMOSOME_NAME("CHROMOSOME_NAME", false, "CHR_ID"),
     CHROMOSOME_POSITION("CHROMOSOME_POSITION", false, "CHR_POS"),
     REPORTED_GENE("REPORTED_GENE", "REPORTED GENE(S)", "REPORTED GENE(S)"),
-    MAPPED_GENE("MAPPED GENE", false, "MAPPED GENE"),
+    MAPPED_GENE("MAPPED GENE", false, true),
     ENTREZ_GENE_ID("ENTREZ_GENE_ID", false, "SNP_GENE_IDS"),
     UPSTREAM_MAPPED_GENE("UPSTREAM_MAPPED_GENE", false, true),
     UPSTREAM_ENTREZ_GENE_ID("UPSTREAM_ENTREZ_GENE_ID", false, "UPSTREAM_GENE_ID"),
@@ -47,7 +47,13 @@ public enum CatalogHeaderBinding {
     ASSOCIATION_ID("ASSOCIATION_ID", "GWASTUDIESSNPID", false),
     STUDY_ID("STUDY_ID", "GWASTUDYID", false),
     RESULT_PUBLISHED("RESULT_PUBLISHED", "RESULTPUBLISHED", false),
-    CURATION_STATUS("CURATION_STATUS", false, false);
+    CURATION_STATUS("CURATION_STATUS", false, false),
+
+    // Composite fields for NCBI, Downloads
+    NCBI_RESULT_PUBLISHED(null, "RESULTPUBLISHED", false),
+    NCBI_CNV(null, "CNV", false),
+    SPREADSHEET_CI(null, "95% CI (TEXT)", "95% CI (TEXT)"),
+    DOWNLOAD_MAPPED_GENE(null, false, "")
 
     private String databaseName;
     private boolean isNcbiRequired;
@@ -103,6 +109,7 @@ public enum CatalogHeaderBinding {
         if (isDownloadRequired) {
             this.downloadName = downloadName;
         }
+        this.isDate = isDate;
     }
 
     public String getDatabaseName() {

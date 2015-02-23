@@ -71,6 +71,7 @@ public class ImportExportApplication {
                         }
                         catch (Exception e) {
                             System.err.println("NCBI export failed (" + e.getMessage() + ")");
+                            getLog().error("NCBI export failed", e);
                             exitCode += 2;
                         }
                         break;
@@ -80,6 +81,7 @@ public class ImportExportApplication {
                         }
                         catch (Exception e) {
                             System.err.println("Download export failed (" + e.getMessage() + ")");
+                            getLog().error("Download export failed", e);
                             exitCode += 3;
                         }
                         break;
@@ -89,6 +91,7 @@ public class ImportExportApplication {
                         }
                         catch (Exception e) {
                             System.err.println("Loading NCBI data failed (" + e.getMessage() + ")");
+                            getLog().error("Loading NCBI data failed", e);
                             exitCode += 4;
                         }
                         break;
