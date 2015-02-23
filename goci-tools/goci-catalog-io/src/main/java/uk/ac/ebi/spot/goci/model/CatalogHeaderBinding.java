@@ -50,7 +50,7 @@ public enum CatalogHeaderBinding {
     SPREADSHEET_CNV(null, "CNV", "CNV"),
     ASSOCIATION_ID("ASSOCIATION_ID", "GWASTUDIESSNPID", false),
     STUDY_ID("STUDY_ID", "GWASTUDYID", false),
-    RESULT_PUBLISHED("RESULT_PUBLISHED", true, false),
+    RESULT_PUBLISHED("RESULT_PUBLISHED", true, false, true),
     NCBI_RESULT_PUBLISHED(null, "RESULTPUBLISHED", false),
     CURATION_STATUS("CURATION_STATUS", false, false);
 

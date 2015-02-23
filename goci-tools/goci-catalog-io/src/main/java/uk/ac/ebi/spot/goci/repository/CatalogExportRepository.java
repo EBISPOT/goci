@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -38,9 +39,15 @@ public class CatalogExportRepository {
     private final DateFormat df;
 
     private JdbcTemplate jdbcTemplate;
+
     private Collection<CatalogDataMapper> dataMappers;
 
-    @Autowired
+    @Autowired(required = false)
+    public CatalogExportRepository(JdbcTemplate jdbcTemplate) {
+        this(jdbcTemplate, Collections.emptyList());
+    }
+
+    @Autowired(required = false)
     public CatalogExportRepository(JdbcTemplate jdbcTemplate, Collection<CatalogDataMapper> dataMappers) {
         this.jdbcTemplate = jdbcTemplate;
         this.dataMappers = dataMappers;
@@ -48,10 +55,15 @@ public class CatalogExportRepository {
     }
 
     public String[][] getNCBISpreadsheet() {
-        final Map<String, String> dbToNCBI = new LinkedHashMap<>();
+        List<String> ncbiOutputHeaders = CatalogHeaderBindings.getNcbiHeaders()
+                .stream()
+                .filter(binding -> binding.getNcbiName() != null)
+                .map(CatalogHeaderBinding::getNcbiName)
+                .collect(Collectors.toList());
+
         List<String> ncbiQueryHeaders = CatalogHeaderBindings.getNcbiHeaders()
                 .stream()
-                .peek(binding -> dbToNCBI.put(binding.getDatabaseName(), binding.getNcbiName()))
+                .filter(binding -> binding.getDatabaseName() != null)
                 .map(CatalogHeaderBinding::getDatabaseName)
                 .collect(Collectors.toList());
 
@@ -66,13 +78,15 @@ public class CatalogExportRepository {
                     rowMap.put(binding, "");
                 }
 
-                // if database name is null, this is an output-only field
-                if (binding.getDatabaseName() == null) {
-                    dataForMapping.put(binding, extractValue(binding, resultSet));
-                }
-                else {
-                    // this updates the value we already inserted, above
-                    rowMap.put(binding, extractValue(binding, resultSet));
+                // now extract data if possible
+                if (binding.getDatabaseName() != null) {
+                    if (binding.getNcbiName() != null) {
+                        rowMap.put(binding, extractValue(binding, resultSet));
+                    }
+                    else {
+                        // if ncbi name is null, this data needs mapping
+                        dataForMapping.put(binding, extractValue(binding, resultSet));
+                    }
                 }
 
                 // now we've mapped all the direct values, collect up those for processing
@@ -89,6 +103,10 @@ public class CatalogExportRepository {
             }
             return row;
         });
+
+        // add the first row, our headers
+        rows.add(0, ncbiOutputHeaders.toArray(new String[ncbiOutputHeaders.size()]));
+        // and convert to a 2D string array
         return rows.toArray(new String[rows.size()][]);
     }
 
