@@ -305,17 +305,17 @@ function processAssociation(association, table) {
                 for (var j=0; j<rsIds.length; j++){
                     if(alleles[i].trim().indexOf(rsIds[j].trim()) != -1){
                         var rsidsearch = "<span><a href='/search?query=".concat(rsIds[j].trim()).concat("'>").concat(alleles[i].trim()).concat("</a></span>");
-                        var dbsnp = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(rsIds[j].trim()).concat("'  target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
+                        var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(rsIds[j].trim()).concat("'  target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
                         if(content == ''){
-                            content = content.concat(rsidsearch.concat('&nbsp;&nbsp;').concat(dbsnp));
+                            content = content.concat(rsidsearch.concat('&nbsp;&nbsp;').concat(ensembl));
                             console.log(content);
                         }
                         else{
                             if(type == 'x'){
-                                content = content.concat(' x ').concat(rsidsearch.concat('&nbsp;&nbsp;').concat(dbsnp));
+                                content = content.concat(' x ').concat(rsidsearch.concat('&nbsp;&nbsp;').concat(ensembl));
                             }
                             else{
-                                content = content.concat(', <br>').concat(rsidsearch.concat('&nbsp;&nbsp;').concat(dbsnp));
+                                content = content.concat(', <br>').concat(rsidsearch.concat('&nbsp;&nbsp;').concat(ensembl));
                             }
                             console.log(content);
                         }
@@ -390,19 +390,43 @@ function processAssociation(association, table) {
     row.append($("<td>").html(association.context));
 
     var repgene = '';
-    if (association.reportedGene != null) {
+
+    if (association.reportedGeneLinks != null) {
+        ////what happens with NR genes?
+        //if(association.reportedGeneLinks[0].indexOf("NR") != -1){
+        //    repgene = association.reportedGeneLinks[0].split("|")[0];
+        //}
+        //else{
+            for (var j = 0; j < association.reportedGeneLinks.length; j++) {
+                var gene = association.reportedGeneLinks[0].split("|")[0];
+                var geneId = association.reportedGeneLinks[0].split("|")[1];
+
+                var repgenesearch = "<span><a href='/search?query=".concat(gene).concat("'>").concat(gene).concat("</a></span>");
+                var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?g=".concat(geneId).concat("'  target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
+
+                if (repgene == '') {
+                    repgene = repgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);
+                }
+
+                else {
+                    repgene = repgene.concat(", ").concat(repgenesearch).concat('&nbsp;&nbsp;').concat(ensembl);
+                }
+            }
+        //}
+    }
+    else if (association.reportedGene != null) {
         if(association.reportedGene[0] == "NR"){
             repgene = association.reportedGene[0];
         }
         else{
             for (var j = 0; j < association.reportedGene.length; j++) {
-                var repgeneearch = "<span><a href='/search?query=".concat(association.reportedGene[j]).concat("'>").concat(association.reportedGene[j]).concat("</a></span>");
+                var repgenesearch = "<span><a href='/search?query=".concat(association.reportedGene[j]).concat("'>").concat(association.reportedGene[j]).concat("</a></span>");
                 if (repgene == '') {
-                    repgene = repgeneearch;
+                    repgene = repgenesearch;
                 }
 
                 else {
-                    repgene = repgene.concat(", ").concat(repgeneearch);
+                    repgene = repgene.concat(", ").concat(repgenesearch);
                 }
             }
         }
@@ -411,14 +435,31 @@ function processAssociation(association, table) {
 
     var mapgene = '';
     if (association.mappedGene != null) {
-        for (var j = 0; j < association.mappedGene.length; j++) {
-            var mapgeneearch = "<span><a href='/search?query=".concat(association.mappedGene[j]).concat("'>").concat(association.mappedGene[j]).concat("</a></span>");
+        for (var j = 0; j < association.mappedGeneLinks.length; j++) {
+            var gene = association.mappedGeneLinks[0].split("|")[0];
+            var geneId = association.mappedGeneLinks[0].split("|")[1];
+
+            var mapgenesearch = "<span><a href='/search?query=".concat(gene).concat("'>").concat(gene).concat("</a></span>");
+            var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?g=".concat(geneId).concat("'  target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
+
             if (mapgene == '') {
-                mapgene = mapgeneearch;
+                mapgene = mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);;
             }
 
             else {
-                mapgene = mapgene.concat(", ").concat(mapgeneearch);
+                mapgene = mapgene.concat(", ").concat(mapgenesearch).concat('&nbsp;&nbsp;').concat(ensembl);;
+            }
+        }
+    }
+    else if (association.mappedGene != null) {
+        for (var j = 0; j < association.mappedGene.length; j++) {
+            var mapgenesearch = "<span><a href='/search?query=".concat(association.mappedGene[j]).concat("'>").concat(association.mappedGene[j]).concat("</a></span>");
+            if (mapgene == '') {
+                mapgene = mapgenesearch;
+            }
+
+            else {
+                mapgene = mapgene.concat(", ").concat(mapgenesearch);
             }
         }
     }
@@ -449,7 +490,7 @@ function processTrait(diseasetrait, table) {
     //    row.addClass('collapse');
     //    row.addClass('hidden-resource');
     //}
-    var traitsearch = "<span><a href='/search?query=".concat(diseasetrait.traitName).concat("'>").concat(diseasetrait.traitName).concat("</a></span>");
+    var traitsearch = "<span><a href='/search?query=".concat(diseasetrait.traitName[0]).concat("'>").concat(diseasetrait.traitName[0]).concat("</a></span>");
     row.append($("<td>").html(traitsearch));
 
     var efo = '';
