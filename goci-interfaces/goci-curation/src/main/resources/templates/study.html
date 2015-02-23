@@ -90,18 +90,6 @@
     </div>
 </div>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-8">
-            <div>
-
-                <a th:href="@{http://europepmc.org/abstract/MED/{pubmedId}(pubmedId=${study.pubmedId})}"
-                   target="_blank"> View paper in pubmed</a>
-
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="container-fluid">
     <div class="row">
@@ -163,10 +151,13 @@
                     </div>
                 </div>
                 <div class="form-group">
+
                     <label for="pubmed" class="control-label col-md-2">Pubmed</label>
 
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="pubmed" th:field="*{pubmedId}"/>
+                        <a th:href="@{http://europepmc.org/abstract/MED/{pubmedId}(pubmedId=${study.pubmedId})}"
+                           target="_blank"> View paper in pubmed</a>
                     </div>
                 </div>
                 <div class="form-group">
@@ -245,19 +236,19 @@
 </div>
 
 <script>
-    $(function () {
+    $(function() {
         // turn the element to select2 select style
         $('#EFOTrait').select2({ placeholder: "Select an EFO trait",
-            allowClear: true});
+                                   allowClear: true});
     });
 </script>
 
 
 <script>
-    $(function () {
+    $(function() {
         // turn the element to select2 select style
         $('#diseaseTrait').select2({ placeholder: "Select a disease/trait",
-            allowClear: true});
+                                       allowClear: true});
     });
 </script>
 
