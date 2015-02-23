@@ -76,7 +76,7 @@ public class CatalogExportRepository {
                 .map(CatalogHeaderBinding::getDatabaseName)
                 .collect(Collectors.toList());
 
-        String query = buildSelectClause(ncbiQueryHeaders) + FROM_CLAUSE + NCBI_WHERE_CLAUSE;
+        String query = buildSelectClause(ncbiQueryHeaders) + FROM_CLAUSE + DOWNLOAD_WHERE_CLAUSE;
         List<String[]> rows = jdbcTemplate.query(query, (resultSet, i) -> {
             String[] values = new String[columnNumberByLabel.keySet().size()];
             int col = 0;
