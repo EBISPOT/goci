@@ -26,6 +26,7 @@ function setStats(data){
         $('#studies-stat').text(data.studies + " studies");
         $('#associations-stat').text(data.associations + " SNP-trait associations");
         $('#genomebuild').text("Genome assembly " + data.genebuild);
+        $('#dbsnpbuild').text("dbSNP Build " + data.dbsnpbuild);
         $('#catalog-stats').show();
     }
     catch (ex){
