@@ -696,9 +696,11 @@ public class AssociationController {
             orPerCopyRange = associationCalculationService.reverseCI(orPerCopyRange);
             association.setOrPerCopyRange(orPerCopyRange);
         }
-        else if ((orPerCopyRange == null) && (orPerCopyRange.isEmpty()) && (orPerCopyStdError != null)) {
-            orPerCopyRange = associationCalculationService.setRange(orPerCopyStdError, orPerCopyNum);
-            association.setOrPerCopyRange(orPerCopyRange);
+        else if ((orPerCopyRange == null) && (orPerCopyStdError != null)) {
+            if (orPerCopyRange.isEmpty()) {
+                orPerCopyRange = associationCalculationService.setRange(orPerCopyStdError, orPerCopyNum);
+                association.setOrPerCopyRange(orPerCopyRange);
+            }
         }
         else {
             association.setOrPerCopyRange(snpAssociationForm.getOrPerCopyRange());
