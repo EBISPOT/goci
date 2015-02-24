@@ -146,122 +146,121 @@
 </div>
 
 <div class="container-fluid">
-    <table id="mainTable" class="table table-hover table-bordered"
-           data-toggle="table">
-        <br/>
-        <thead>
-        <tr>
-            <th></th>
-            <th>Region</th>
-            <th>Genes (author reported)</th>
-            <th>Strongest Allele</th>
-            <th>SNP</th>
-            <th>Risk Frequency</th>
-            <th>p-Value Float</th>
-            <th>p-Value Text</th>
-            <th>OR per Copy Num</th>
-            <th>OR entered (reciprocal)</th>
-            <th>OR-Type</th>
-            <th>OR per Copy Range</th>
-            <th>OR per Copy Unit Description</th>
-            <th>Std Error</th>
-            <th>SNP Type</th>
-            <th>Multi-SNP haplotype</th>
-            <th>SNP:SNP interaction</th>
-            <th>SNP Checked?</th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="snpAssociationForm: ${snpAssociationForms}">
-            <td>
-                <div class="btn-group">
-                    <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">
-                        Action<span class="caret"></span></button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a th:href="@{/associations/{associationId}(associationId=${snpAssociationForm.associationId})}">Edit</a>
-                        </li>
-                        <li>
-                            <a th:href="@{/associations/{associationId}/delete(associationId=${snpAssociationForm.associationId})}">Delete</a>
-                        </li>
+    <div class="row">
+        <div class="col-md-12">
+            <table id="mainTable" class="table table-hover table-bordered"
+                   data-toggle="table">
+                <br/>
+                <thead>
+                <tr>
+                    <th>Region</th>
+                    <th>Genes (author reported)</th>
+                    <th>Strongest Allele</th>
+                    <th>SNP</th>
+                    <th>Risk Frequency</th>
+                    <th>p-Value Float</th>
+                    <th>p-Value Text</th>
+                    <th>OR per Copy Num</th>
+                    <th>OR entered (reciprocal)</th>
+                    <th>OR-Type</th>
+                    <th>OR per Copy Range</th>
+                    <th>OR per Copy Unit Description</th>
+                    <th>Std Error</th>
+                    <th>SNP Type</th>
+                    <th>Multi-SNP haplotype</th>
+                    <th>SNP:SNP interaction</th>
+                    <th>SNP Checked?</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="snpAssociationForm: ${snpAssociationForms}">
 
-                    </ul>
-                </div>
-            </td>
+                    <!--Region-->
+                    <td><span th:each="region: ${snpAssociationForm.regions}"
+                              th:text="${region.name} ?: ''"></span></td>
 
-            <!--Region-->
-            <td><span th:each="region: ${snpAssociationForm.regions}"
-                      th:text="${region.name} ?: ''"></span></td>
-
-            <!--Gene-->
-            <td>
+                    <!--Gene-->
+                    <td>
                 <span th:each="gene : ${snpAssociationForm.authorReportedGenes}"
                       th:text="${gene} ?: ''"></span>
-            </td>
+                    </td>
 
-            <!--Strongest risk allele-->
-            <td>
+                    <!--Strongest risk allele-->
+                    <td>
                 <span th:each="row : ${snpAssociationForm.snpFormRows}"
                       th:text="${row.strongestRiskAllele} ?: ''"></span>
-            </td>
+                    </td>
 
-            <!--SNPs-->
-            <td>
+                    <!--SNPs-->
+                    <td>
                      <span th:each="row : ${snpAssociationForm.snpFormRows}"
                            th:text="${row.snp} ?: ''"></span>
-            </td>
+                    </td>
 
-            <td th:text="${snpAssociationForm.riskFrequency}?: '' "></td>
-            <td th:text="${snpAssociationForm.pvalueFloat} ?: ''"></td>
-            <td th:text="${snpAssociationForm.pvalueText} ?: ''"></td>
-            <td th:text="${snpAssociationForm.orPerCopyNum} ?: ''"></td>
-            <td th:text="${snpAssociationForm.orPerCopyRecip} ?: ''"></td>
-            <td th:switch="${snpAssociationForm.orType}">
-                <p th:case="'null'"></p>
+                    <td th:text="${snpAssociationForm.riskFrequency}?: '' "></td>
+                    <td th:text="${snpAssociationForm.pvalueFloat} ?: ''"></td>
+                    <td th:text="${snpAssociationForm.pvalueText} ?: ''"></td>
+                    <td th:text="${snpAssociationForm.orPerCopyNum} ?: ''"></td>
+                    <td th:text="${snpAssociationForm.orPerCopyRecip} ?: ''"></td>
+                    <td th:switch="${snpAssociationForm.orType}">
+                        <p th:case="'null'"></p>
 
-                <p th:case="false">No</p>
+                        <p th:case="false">No</p>
 
-                <p th:case="true">Yes</p>
-            </td>
+                        <p th:case="true">Yes</p>
+                    </td>
 
-            <td th:text="${snpAssociationForm.orPerCopyRange} ?: ''"></td>
-            <td th:text="${snpAssociationForm.orPerCopyUnitDescr} ?: ''"></td>
-            <td th:text="${snpAssociationForm.orPerCopyStdError} ?: ''"></td>
-            <td th:text="${snpAssociationForm.SnpType} ?: ''"></td>
-            <td th:switch="${snpAssociationForm.multiSnpHaplotype}">
-                <p th:case="'null'"></p>
+                    <td th:text="${snpAssociationForm.orPerCopyRange} ?: ''"></td>
+                    <td th:text="${snpAssociationForm.orPerCopyUnitDescr} ?: ''"></td>
+                    <td th:text="${snpAssociationForm.orPerCopyStdError} ?: ''"></td>
+                    <td th:text="${snpAssociationForm.SnpType} ?: ''"></td>
+                    <td th:switch="${snpAssociationForm.multiSnpHaplotype}">
+                        <p th:case="'null'"></p>
 
-                <p th:case="false">No</p>
+                        <p th:case="false">No</p>
 
-                <p th:case="true">Yes</p>
-            </td>
-            <td th:switch="${snpAssociationForm.snpInteraction}">
-                <p th:case="'null'"></p>
+                        <p th:case="true">Yes</p>
+                    </td>
+                    <td th:switch="${snpAssociationForm.snpInteraction}">
+                        <p th:case="'null'"></p>
 
-                <p th:case="false">No</p>
+                        <p th:case="false">No</p>
 
-                <p th:case="true">Yes</p>
-            </td>
+                        <p th:case="true">Yes</p>
+                    </td>
 
-            <td th:switch="${snpAssociationForm.snpChecked}">
-                <p th:case="'null'"></p>
+                    <td th:switch="${snpAssociationForm.snpChecked}">
+                        <p th:case="'null'"></p>
 
-                <p th:case="false">No</p>
+                        <p th:case="false">No</p>
 
-                <p th:case="true">Yes</p>
-            </td>
+                        <p th:case="true">Yes</p>
+                    </td>
 
-            <!--This checkbox is used to approve and delete all SNP associations-->
-            <td><input type="checkbox"
-                       name="checkboxId"
-                       class="association-selector"
-                       th:value="${snpAssociationForm.associationId}"></input>
-            </td>
+                    <td>
+                        <div class="btn-group-vertical  btn-group-sm" role="group" aria-label="...">
+                            <a th:href="@{/associations/{associationId}(associationId=${snpAssociationForm.associationId})}"
+                               class="btn btn-default">Edit</a>
+                            <a th:href="@{/associations/{associationId}/approve(associationId=${snpAssociationForm.associationId})}"
+                               class="btn btn-default">Approve</a>
+                            <a th:href="@{/associations/{associationId}/delete(associationId=${snpAssociationForm.associationId})}"
+                               class="btn btn-danger">Delete</a>
+                        </div>
+                    </td>
 
-        </tr>
-        </tbody>
-    </table>
+                    <!--This checkbox is used to approve and delete all SNP associations-->
+                    <td><input type="checkbox"
+                               name="checkboxId"
+                               class="association-selector"
+                               th:value="${snpAssociationForm.associationId}"></input>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <br/>
