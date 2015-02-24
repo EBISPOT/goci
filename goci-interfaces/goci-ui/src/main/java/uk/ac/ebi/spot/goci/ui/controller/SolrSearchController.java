@@ -1,7 +1,5 @@
 package uk.ac.ebi.spot.goci.ui.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
@@ -24,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import uk.ac.ebi.spot.goci.ui.SearchConfiguration;
 import uk.ac.ebi.spot.goci.ui.exception.IllegalParameterCombinationException;
+import uk.ac.ebi.spot.goci.ui.service.JsonProcessingService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -573,6 +572,7 @@ public class SolrSearchController {
         String studycount;
         String associationcount;
         String genebuild;
+        String dbsnpbuild;
 
         Properties properties = new Properties();
         try {
@@ -581,11 +581,13 @@ public class SolrSearchController {
             studycount = properties.getProperty("studycount");
             associationcount = properties.getProperty("assocationcount");
             genebuild = properties.getProperty("genomebuild");
+            dbsnpbuild = properties.getProperty("dbsnpbuild");
 
             response.put("date", releasedate);
             response.put("studies", studycount);
             response.put("associations", associationcount);
             response.put("genebuild", genebuild);
+            response.put("dbsnpbuild", dbsnpbuild);
 
         }
         catch (IOException e) {
@@ -626,11 +628,10 @@ public class SolrSearchController {
             BufferedReader br = new BufferedReader(new InputStreamReader(entity.getContent()));
 
             String output;
-            System.out.println("Output from Server .... \n");
             while ((output = br.readLine()) != null) {
 
-                file = processJson(output);
-
+                JsonProcessingService jsonProcessor = new JsonProcessingService(output);
+                file = jsonProcessor.processJson();
 
             }
 
@@ -643,265 +644,5 @@ public class SolrSearchController {
         return file;
     }
 
-    private String processJson(String output) throws IOException {
 
-        String header = "Date Added to Catalog\tPUBMEDID\tFirst Author\tDate\tJournal\tLink\tStudy\tDisease/Trait\tInitial Sample Size\tReplication Sample Size\tRegion\tChr_id\tChr_pos\tReported Gene(s)\tMapped_gene\tUpstream_gene_id\tDownstream_gene_id\tSnp_gene_ids\tUpstream_gene_distance\tDownstream_gene_distance\tStrongest SNP-Risk Allele\tSNPs\tMerged\tSnp_id_current\tContext\tIntergenic\tRisk Allele Frequency\tp-Value\tPvalue_mlog\tp-Value (text)\tOR or beta\t95% CI (text)\tPlatform [SNPs passing QC]\tCNV\r\n";
-
-        StringBuilder result = new StringBuilder();
-        result.append(header);
-
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = mapper.readTree(output);
-        JsonNode responseNode = node.get("response");
-        JsonNode docs = responseNode.get("docs");
-
-        for(JsonNode doc : docs) {
-            StringBuilder line = new StringBuilder();
-
-            if(doc.get("catalogAddedDate") != null){
-                String date = doc.get("catalogAddedDate").asText();
-                line.append(date.substring(0,10));
-
-            }
-            else{
-                line.append(" ");
-            }
-            line.append("\t");
-            line.append(doc.get("pubmedId").asText());
-            line.append("\t");
-            line.append(doc.get("author_s").asText());
-            line.append("\t");
-            if(doc.get("publicationDate") != null){
-                String date = doc.get("publicationDate").asText();
-                line.append(date.substring(0,10));
-
-            }
-            else{
-                line.append(" ");
-            }
-            line.append("\t");
-            line.append(doc.get("publication").asText());
-            line.append("\t");
-
-            String pubLink = "www.ncbi.nlm.nih.gov/pubmed/".concat(doc.get("pubmedId").asText());
-            line.append(pubLink);
-            line.append("\t");
-
-            line.append(doc.get("title").get(0).asText());
-            line.append("\t");
-            line.append(doc.get("traitName_s").asText());
-            line.append("\t");
-            line.append(doc.get("initialSampleDescription").asText());
-            line.append("\t");
-            line.append(doc.get("replicateSampleDescription").asText());
-            line.append("\t");
-            if(doc.get("region") != null) {
-                line.append(doc.get("region").get(0).asText());
-            }
-            else{
-                line.append(" ");
-            }
-            line.append("\t");
-            if(doc.get("chromosomeName") != null) {
-                line.append(doc.get("chromosomeName").get(0).asText());
-            }
-            else{
-                line.append(" ");
-            }
-            line.append("\t");
-            if(doc.get("chromosomePosition") != null) {
-                line.append(doc.get("chromosomePosition").get(0).asText());
-            }
-            else{
-                line.append(" ");
-            }
-            line.append("\t");
-
-            if(doc.get("reportedGene") != null){
-                int it = 0;
-                for(JsonNode gene : doc.get("reportedGene")){
-                    if(it > 0){
-                       line.append(", ");
-                    }
-                    line.append(gene.asText());
-                    it++;
-                }
-            }
-            line.append("\t");
-            if(doc.get("mappedGene") != null) {
-                line.append(doc.get("mappedGene").get(0).asText());
-            }
-            else{
-                line.append(" ");
-            }
-            line.append("\t");
-            if(doc.get("mappedGeneLinks") != null) {
-                if(doc.get("mappedGeneLinks").size() == 1){
-                    line.append(" ");
-                    line.append("\t");
-                    line.append(" ");
-                    line.append("\t");
-                    String geneLink = doc.get("mappedGeneLinks").get(0).asText();
-                    int index = geneLink.indexOf("|");
-                    String geneId = geneLink.substring(index+1);
-                    line.append(geneId);
-                    line.append("\t");
-                }
-                else{
-                    if(doc.get("mappedGene") != null) {
-                        String upstream = null;
-                        String downstream = null;
-                        String mapped = doc.get("mappedGene").get(0).asText();
-
-                        for(JsonNode geneLink : doc.get("mappedGeneLinks")) {
-                            int index = geneLink.asText().indexOf("|");
-                            String gene = geneLink.asText().substring(0, index - 1);
-                            String geneId = geneLink.asText().substring(index + 1);
-
-                            if(mapped.indexOf(gene) == 0){
-                                upstream = geneId;
-                            }
-                            else{
-                                downstream = geneId;
-                            }
-
-                        }
-                        line.append(upstream);
-                        line.append("\t");
-                        line.append(downstream);
-                        line.append("\t");
-                        line.append(" ");
-                        line.append("\t");
-
-                    }
-                    else{
-                        line.append(" ");
-                        line.append("\t");
-                        line.append(" ");
-                        line.append("\t");
-                        line.append(" ");
-                        line.append("\t");
-                    }
-
-                }
-
-            }
-            else{
-                line.append(" ");
-                line.append("\t");
-                line.append(" ");
-                line.append("\t");
-                line.append(" ");
-                line.append("\t");
-            }
-
-//            line.append(doc.get("upstreamDistance").asText());
-            line.append(" ");
-            line.append("\t");
-//            line.append(doc.get("downstreamDistance").asText());
-            line.append(" ");
-            line.append("\t");
-
-            if(doc.get("strongestAllele") != null) {
-                line.append(doc.get("strongestAllele").get(0).asText());
-            }
-            else{
-                line.append(" ");
-            }
-            line.append("\t");
-            if(doc.get("rsId") != null){
-                line.append(doc.get("rsId").get(0).asText());
-            }
-            else{
-                line.append(" ");
-            }
-            line.append("\t");
-//            line.append(doc.get("merged").asText());
-            line.append(" ");
-            line.append("\t");
-            if(doc.get("rsId") != null){
-                String rsId = doc.get("rsId").get(0).asText();
-
-                if(rsId.indexOf("rs") == 0 && rsId.indexOf("rs", 2) == -1) {
-                    line.append(rsId.substring(2));
-                }
-                else{
-                    line.append(" ");
-                }
-            }
-            else{
-                line.append(" ");
-            }
-            line.append("\t");
-
-            if(doc.get("context") != null) {
-                line.append(doc.get("context").get(0).asText());
-                line.append("\t");
-                line.append("0");
-                line.append("\t");
-            }
-            else{
-                line.append(" ");
-                line.append("\t");
-                line.append("1");
-                line.append("\t");
-
-            }
-
-            if(doc.get("riskFrequency") != null) {
-                line.append(doc.get("riskFrequency").asText());
-            }
-            else{
-                line.append(" ");
-            }
-            line.append("\t");
-            if(doc.get("pValue") != null){
-                if(!doc.get("pValue").asText().equals("NR")) {
-                    double pvalue = doc.get("pValue").asDouble();
-                    line.append(pvalue);
-                    line.append("\t");
-                    double mlog = Math.log10(pvalue);
-                    line.append(-mlog);
-                }
-                else {
-                    line.append(doc.get("pValue").asText());
-                    line.append("\t");
-                    line.append(" ");
-                }
-            }
-            else{
-                line.append(" ");
-                line.append("\t");
-                line.append(" ");
-            }
-
-            line.append("\t");
-            if(doc.get("qualifier") != null) {
-                line.append(doc.get("qualifier").get(0).asText());
-            }
-            else{
-                line.append(" ");
-            }            line.append("\t");
-            line.append(doc.get("orPerCopyNum").asText());
-            line.append("\t");
-            if(doc.get("orPerCopyRange") != null) {
-                line.append(doc.get("orPerCopyRange").asText());
-            }
-            else{
-                line.append(" ");
-            }
-            line.append("\t");
-//            line.append(doc.get("platform").asText());
-            line.append(" ");
-            line.append("\t");
-//            line.append(doc.get("cnv").asText());
-            line.append("N");
-            line.append("\r\n");
-
-            result.append(line.toString());
-
-        }
-//        return "Hello world. Your search results are coming soon to a browser near you.";
-        return result.toString();
-    }
 }
