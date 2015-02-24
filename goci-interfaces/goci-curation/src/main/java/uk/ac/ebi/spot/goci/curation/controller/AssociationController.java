@@ -590,6 +590,23 @@ public class AssociationController {
 
     /*  Approve snp associations */
 
+
+    // Approve a SNP association
+    @RequestMapping(value = "associations/{associationId}/approve",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.GET)
+    public String approveSnpAssociation(Model model, @PathVariable Long associationId) {
+
+        Association association = associationRepository.findOne(associationId);
+
+        // Set snpChecked attribute to true
+        association.setSnpChecked(true);
+        associationRepository.save(association);
+
+        return "redirect:/studies/" + association.getStudy().getId() + "/associations";
+    }
+
+
     // Approve checked SNPs
     @RequestMapping(value = "/studies/{studyId}/associations/approve_checked",
                     produces = MediaType.APPLICATION_JSON_VALUE,
@@ -761,15 +778,17 @@ public class AssociationController {
                 // Save changes to risk allele
                 riskAlleleRepository.save(riskAllele);
             }
+            // If there is a SNP already assigned to the risk allele
+            // and the rsId of that SNP is not equal to rsID of the SNP the curator entered
+            // throw an error
             else {
-                if (!riskAllele.getSnp().equals(snp)) {
+                if (!riskAllele.getSnp().getRsId().trim().equals(snp.getRsId().trim())) {
                     throw new DataIntegrityException("Risk allele: " + riskAllele.getRiskAlleleName() + " has SNP " +
                                                              riskAllele.getSnp().getRsId() +
                                                              " attached in database, cannot also add " + snp.getRsId());
 
                 }
             }
-
             locusRiskAlleles.add(riskAllele);
         }
 
