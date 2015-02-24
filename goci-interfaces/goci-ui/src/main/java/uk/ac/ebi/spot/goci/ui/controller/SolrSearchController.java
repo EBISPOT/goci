@@ -564,44 +564,6 @@ public class SolrSearchController {
         return dispatchSearch(searchString);
     }
 
-    @RequestMapping(value = "api/search/stats", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody Map<String, Object> getCatalogStats() {
-        Map<String, Object> response = new HashMap<>();
-
-        String releasedate;
-        String studycount;
-        String associationcount;
-        String genebuild;
-        String dbsnpbuild;
-
-        Properties properties = new Properties();
-        try {
-            properties.load(getClass().getClassLoader().getResource("catalogstats.properties").openStream());
-            releasedate = properties.getProperty("releasedate");
-            studycount = properties.getProperty("studycount");
-            associationcount = properties.getProperty("assocationcount");
-            genebuild = properties.getProperty("genomebuild");
-            dbsnpbuild = properties.getProperty("dbsnpbuild");
-
-            response.put("date", releasedate);
-            response.put("studies", studycount);
-            response.put("associations", associationcount);
-            response.put("genebuild", genebuild);
-            response.put("dbsnpbuild", dbsnpbuild);
-
-        }
-        catch (IOException e) {
-            throw new RuntimeException(
-                    "Unable to create dispatcher service: failed to read pubmed.properties resource", e);
-        }
-        catch (NumberFormatException e) {
-            throw new RuntimeException(
-                    "Unable to create dispatcher service: you must provide a integer query interval " +
-                            "in minutes (pubmed.query.interval.mins)", e);
-        }
-
-        return response;
-    }
 
     //TO DO use jackson to read the json and parse it into a string
     private String dispatchSearch(String searchString) throws IOException {
