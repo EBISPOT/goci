@@ -88,12 +88,11 @@ public class CatalogExportRepository {
                         dataForMapping.put(binding, extractValue(binding, resultSet));
                     }
                 }
-
-                // now we've mapped all the direct values, collect up those for processing
-                dataMappers.stream()
-                        .filter(mapper -> rowMap.containsKey(mapper.getOutputField()))
-                        .forEach(mapper -> rowMap.put(mapper.getOutputField(), mapper.produceOutput(dataForMapping)));
             }
+            // now we've mapped all the direct values, collect up those for processing
+            dataMappers.stream()
+                    .filter(mapper -> rowMap.containsKey(mapper.getOutputField()))
+                    .forEach(mapper -> rowMap.put(mapper.getOutputField(), mapper.produceOutput(dataForMapping)));
 
             // finally, convert rowMap into a string array and return
             String[] row = new String[rowMap.keySet().size()];
@@ -111,40 +110,58 @@ public class CatalogExportRepository {
     }
 
     public String[][] getDownloadSpreadsheet() {
-        final Map<String, Integer> columnNumberByLabel = new HashMap<>();
-        final AtomicInteger colNum = new AtomicInteger();
-        List<String> ncbiQueryHeaders = CatalogHeaderBindings.getDownloadHeaders()
+        List<String> downloadOutputHeaders = CatalogHeaderBindings.getDownloadHeaders()
                 .stream()
-                .peek(binding -> columnNumberByLabel.put(binding.getDownloadName(), colNum.getAndIncrement()))
+                .filter(binding -> binding.getDownloadName() != null)
+                .map(CatalogHeaderBinding::getDownloadName)
+                .collect(Collectors.toList());
+
+        List<String> downloadQueryHeaders = CatalogHeaderBindings.getDownloadHeaders()
+                .stream()
+                .filter(binding -> binding.getDatabaseName() != null)
                 .map(CatalogHeaderBinding::getDatabaseName)
                 .collect(Collectors.toList());
 
-        String query = buildSelectClause(ncbiQueryHeaders) + FROM_CLAUSE + DOWNLOAD_WHERE_CLAUSE;
+        String query = buildSelectClause(downloadQueryHeaders) + FROM_CLAUSE + DOWNLOAD_WHERE_CLAUSE;
         List<String[]> rows = jdbcTemplate.query(query, (resultSet, i) -> {
-            String[] values = new String[columnNumberByLabel.keySet().size()];
-            int col = 0;
+            Map<CatalogHeaderBinding, String> dataForMapping = new LinkedHashMap<>();
+            Map<CatalogHeaderBinding, String> rowMap = new LinkedHashMap<>();
             for (CatalogHeaderBinding binding : CatalogHeaderBindings.getDownloadHeaders()) {
-                if (binding.isDate()) {
-                    Date value = resultSet.getDate(binding.getDatabaseName());
-                    if (value != null) {
-                        values[col++] = df.format(value);
-                    }
-                    else {
-                        values[col++] = "";
-                    }
+                if (binding.getDownloadName() != null) {
+                    // insert headings in declaration order (this is the correct order)
+                    // which controls for reinsertion
+                    rowMap.put(binding, "");
                 }
-                else {
-                    String value = resultSet.getString(binding.getDatabaseName());
-                    if (value != null) {
-                        values[col++] = resultSet.getString(binding.getDatabaseName()).trim();
+
+                // now extract data if possible
+                if (binding.getDatabaseName() != null) {
+                    if (binding.getDownloadName() != null) {
+                        rowMap.put(binding, extractValue(binding, resultSet));
                     }
                     else {
-                        values[col++] = "";
+                        // if download name is null, this data needs mapping
+                        dataForMapping.put(binding, extractValue(binding, resultSet));
                     }
                 }
             }
-            return values;
+
+            // now we've mapped all the direct values, collect up those for processing
+            dataMappers.stream()
+                    .filter(mapper -> rowMap.containsKey(mapper.getOutputField()))
+                    .forEach(mapper -> rowMap.put(mapper.getOutputField(), mapper.produceOutput(dataForMapping)));
+
+            // finally, convert rowMap into a string array and return
+            String[] row = new String[rowMap.keySet().size()];
+            int col = 0;
+            for (CatalogHeaderBinding key : rowMap.keySet()) {
+                row[col++] = rowMap.get(key);
+            }
+            return row;
         });
+
+        // add the first row, our headers
+        rows.add(0, downloadOutputHeaders.toArray(new String[downloadOutputHeaders.size()]));
+        // and convert to a 2D string array
         return rows.toArray(new String[rows.size()][]);
     }
 

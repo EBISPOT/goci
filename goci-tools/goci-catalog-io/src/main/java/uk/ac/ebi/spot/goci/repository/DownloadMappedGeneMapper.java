@@ -1,7 +1,8 @@
 package uk.ac.ebi.spot.goci.repository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import uk.ac.ebi.spot.goci.exception.DataExportException;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
 
 import java.util.Arrays;
@@ -16,6 +17,12 @@ import java.util.Map;
  */
 @Component
 public class DownloadMappedGeneMapper implements CatalogDataMapper {
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
+
     @Override public List<CatalogHeaderBinding> getRequiredDatabaseFields() {
         return Arrays.asList(CatalogHeaderBinding.MAPPED_GENE,
                              CatalogHeaderBinding.UPSTREAM_MAPPED_GENE,
@@ -37,11 +44,11 @@ public class DownloadMappedGeneMapper implements CatalogDataMapper {
                 output = up + " - " + down;
             }
             else {
-                throw new DataExportException(
-                        "Unable to extract mapped data correctly from catalog: " +
-                                CatalogHeaderBinding.MAPPED_GENE.getDatabaseName() + " is empty, " +
-                                "and neither were both " + CatalogHeaderBinding.UPSTREAM_MAPPED_GENE + " and " +
-                                CatalogHeaderBinding.DOWNLOAD_MAPPED_GENE + " availble");
+                getLog().warn("Unable to extract mapped data correctly from catalog: " +
+                                      CatalogHeaderBinding.MAPPED_GENE.getDatabaseName() + " is empty, " +
+                                      "and neither were both " + CatalogHeaderBinding.UPSTREAM_MAPPED_GENE + " and " +
+                                      CatalogHeaderBinding.DOWNLOAD_MAPPED_GENE + " available");
+                output = "";
             }
         }
         else {
