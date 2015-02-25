@@ -1,3 +1,17 @@
+#ebi-logo{
+   padding-bottom: 9px !important;
+    padding-top: 11px !important;
+    padding-left: 7px !important;
+    padding-right: 7px !important;
+}
+
+#nhgri-logo{
+    padding-bottom: 7px !important;
+    padding-top: 8px !important;
+    padding-left: 5px !important;
+    padding-right: 0px !important;
+}
+
 #imaginary_container {
     margin-top: 5%;
 }

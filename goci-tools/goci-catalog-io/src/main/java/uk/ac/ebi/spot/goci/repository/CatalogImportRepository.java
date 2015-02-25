@@ -5,10 +5,9 @@ import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBindings;
 
 import java.lang.reflect.Array;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Javadocs go here!
@@ -50,7 +49,54 @@ public class CatalogImportRepository {
         return result;
     }
 
-    private void mapData (Map<CatalogHeaderBinding, Integer>headerBindingIntegerMap, String[][] data){
+    private void mapData(Map<CatalogHeaderBinding, Integer> headerBindingIntegerMap, String[][] data) {
+        // Read through each line
+        for (String[] line : data) {
+            // Study report attributes
+            Long studyId;
+            Integer pubmedIdErrorStudy;
+            String ncbiPaperTitle;
+            String ncbiFirstAuthor;
+            String ncbiNormalisedFirstAuthor;
+            Date ncbiFrstUpdateDate;
+
+            // Association report attributes
+            Long associationId;
+            Boolean snpPending;
+            Date lastUpdateDate;
+            Integer geneError;
+            Integer pubmedIdErrorAss;
+            String snpError;
+
+            // For each key in our map, extract the cell at that index
+            for (Map.Entry<CatalogHeaderBinding, Integer> entry : headerBindingIntegerMap.entrySet()) {
+                String valueToInsert = line[entry.getValue()];
+                CatalogHeaderBinding databaseColName = entry.getKey();
+
+                if (databaseColName.equals(CatalogHeaderBinding.STUDY_ID)) {
+
+                    studyId = Long.valueOf(valueToInsert);
+
+                }
+
+            }
+
+            // Once you have all bits for a study report, association report add them
+            addStudyReport();
+        }
+    }
+
+    private void addStudyReport() {
+
+
+    }
+
+    private void addAssociationReport() {
+
+
+    }
+
+    private void addMappedData() {
 
     }
 
