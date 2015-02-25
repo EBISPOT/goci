@@ -5,6 +5,7 @@
 
 	<artifactId>goci-ui</artifactId>
 	<version>2.0.0-SNAPSHOT</version>
+    <packaging>war</packaging>
 
 	<name>GOCI Search Interface</name>
 	<description>The public portal for the GWAS Catalog</description>
@@ -39,6 +40,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
 	</dependencies>
 
 	<properties>
