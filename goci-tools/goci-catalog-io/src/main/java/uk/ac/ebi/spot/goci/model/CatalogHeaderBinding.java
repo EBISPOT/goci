@@ -62,6 +62,7 @@ public enum CatalogHeaderBinding {
     // Added to deal with file returned from NCBI
     PUBMED_ID_ERROR("PUBMED_ID_ERROR", false, false, "pubmdID_error"),
     SNP_ERROR("SNP_ERROR", false, false, "snp_id_error"),
+    GENE_ERROR("GENE_ERROR", false, false, "gene_id_error"),
     SNP_GENE_ON_DIFF_CHR("SNP_GENE_ON_DIFF_CHR", false, false, "snp_gene_on_diff_chr"),
     NO_GENE_FOR_SYMBOL("NO_GENE_FOR_SYMBOL", false, false, "no_geneid_for_symbol"),
     GENE_NOT_ON_GENOME("GENE_NOT_ON_GENOME", false, false, "gene_not_on_genome");

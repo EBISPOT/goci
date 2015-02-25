@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.repository;
 
 import org.springframework.stereotype.Repository;
+import uk.ac.ebi.spot.goci.exception.DataImportException;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBindings;
 
@@ -53,20 +54,34 @@ public class CatalogImportRepository {
         // Read through each line
         for (String[] line : data) {
             // Study report attributes
-            Long studyId;
-            Integer pubmedIdErrorStudy;
-            String ncbiPaperTitle;
-            String ncbiFirstAuthor;
-            String ncbiNormalisedFirstAuthor;
-            Date ncbiFrstUpdateDate;
+            Long studyId = null; // STUDY_ID
+            Integer pubmedIdError = null;  // PUBMED_ID_ERROR
+            String ncbiPaperTitle = null; // ??
+            String ncbiFirstAuthor = null; // ??
+            String ncbiNormalisedFirstAuthor = null; // ??
+            Date ncbiFirstUpdateDate = null; // ??
 
             // Association report attributes
-            Long associationId;
-            Boolean snpPending;
-            Date lastUpdateDate;
-            Integer geneError;
-            Integer pubmedIdErrorAss;
-            String snpError;
+            Long associationId = null; // ASSOCIATION_ID
+            Boolean snpPending = null; // ??
+            Date lastUpdateDate = null; // LAST_UPDATE_DATE
+            Long geneError = null; // GENE_ERROR
+            String snpError = null; // SNP_ERROR
+            String snpGeneOnDiffChr = null; // SNP_GENE_ON_DIFF_CHR
+            String noGeneForSymbol = null; // NO_GENE_FOR_SYMBOL
+            String geneNotOnGenome = null; // GENE_NOT_ON_GENOME
+
+            // mapped genetic info
+            String region = null; // REGION
+            String chromosomeName = null; // CHROMOSOME_NAME
+            String chromosomePosition = null; // CHROMOSOME_POSITION
+            String upstreamMappedGene = null; // UPSTREAM_MAPPED_GENE
+            String upstreamEntrezGeneId = null; // UPSTREAM_ENTREZ_GENE_ID
+            Integer upstreamGeneDistance = null; // UPSTREAM_GENE_DISTANCE
+            String downstreamMappedGene = null; // DOWNSTREAM_MAPPED_GENE
+            String downstreamEntrezGeneId = null; // DOWNSTREAM_ENTREZ_GENE_ID
+            Integer downstreamGeneDistance = null; // DOWNSTREAM_GENE_DISTANCE
+            Boolean isIntergenic = null; // IS_INTERGENIC
 
             // For each key in our map, extract the cell at that index
             for (CatalogHeaderBinding binding : headerColumnMap.keySet()) {
@@ -76,40 +91,128 @@ public class CatalogImportRepository {
                         studyId = Long.valueOf(valueToInsert);
                         break;
                     case PUBMED_ID_ERROR:
-                        pubmedIdErrorStudy = Integer.valueOf(valueToInsert);
+                        pubmedIdError = Integer.valueOf(valueToInsert);
                         break;
-                    case
-
+                    case ASSOCIATION_ID:
+                        associationId = Long.valueOf(valueToInsert);
+                        break;
+                    case GENE_ERROR:
+                        geneError = Long.valueOf(valueToInsert);
+                        break;
+                    case SNP_ERROR:
+                        snpError = valueToInsert;
+                        break;
+                    case SNP_GENE_ON_DIFF_CHR:
+                        snpGeneOnDiffChr = valueToInsert;
+                        break;
+                    case NO_GENE_FOR_SYMBOL:
+                        noGeneForSymbol = valueToInsert;
+                        break;
+                    case GENE_NOT_ON_GENOME:
+                        geneNotOnGenome = valueToInsert;
+                        break;
+                    case REGION:
+                        region = valueToInsert;
+                        break;
+                    case CHROMOSOME_NAME:
+                        chromosomeName = valueToInsert;
+                        break;
+                    case CHROMOSOME_POSITION:
+                        chromosomePosition = valueToInsert;
+                        break;
+                    case UPSTREAM_MAPPED_GENE:
+                        upstreamMappedGene = valueToInsert;
+                        break;
+                    case UPSTREAM_ENTREZ_GENE_ID:
+                        upstreamEntrezGeneId = valueToInsert;
+                        break;
+                    case UPSTREAM_GENE_DISTANCE:
+                        upstreamGeneDistance = Integer.valueOf(valueToInsert);
+                        break;
+                    case DOWNSTREAM_MAPPED_GENE:
+                        downstreamMappedGene = valueToInsert;
+                        break;
+                    case DOWNSTREAM_ENTREZ_GENE_ID:
+                        downstreamEntrezGeneId = valueToInsert;
+                        break;
+                    case DOWNSTREAM_GENE_DISTANCE:
+                        downstreamGeneDistance = Integer.valueOf(valueToInsert);
+                        break;
+                    case IS_INTERGENIC:
+                        isIntergenic = Boolean.valueOf(valueToInsert);
+                        break;
+                    default:
+                        throw new DataImportException(
+                                "Unrecognised column flagged for import: " + binding.getLoadName());
                 }
-
-                if (databaseColName.equals(CatalogHeaderBinding.STUDY_ID)) {
-
-                    studyId = Long.valueOf(valueToInsert);
-
-                }
-
+                // Once you have all bits for a study report, association report add them
+                addStudyReport(studyId,
+                               pubmedIdError,
+                               ncbiPaperTitle,
+                               ncbiFirstAuthor,
+                               ncbiNormalisedFirstAuthor,
+                               ncbiFirstUpdateDate);
+                addAssociationReport(associationId,
+                                     snpPending,
+                                     lastUpdateDate,
+                                     geneError,
+                                     snpError,
+                                     snpGeneOnDiffChr,
+                                     noGeneForSymbol,
+                                     geneNotOnGenome);
+                addMappedData(studyId,
+                              associationId,
+                              region,
+                              chromosomeName,
+                              chromosomePosition,
+                              upstreamMappedGene,
+                              upstreamEntrezGeneId,
+                              upstreamGeneDistance,
+                              downstreamMappedGene,
+                              downstreamEntrezGeneId,
+                              downstreamGeneDistance,
+                              isIntergenic);
             }
-
-            // Once you have all bits for a study report, association report add them
-            addStudyReport();
         }
     }
 
-    private void addStudyReport() {
+    private void addStudyReport(Long studyId,
+                                Integer pubmedIdError,
+                                String ncbiPaperTitle,
+                                String ncbiFirstAuthor,
+                                String ncbiNormalisedFirstAuthor, Date ncbiFirstUpdateDate) {
 
 
     }
 
-    private void addAssociationReport() {
+    private void addAssociationReport(Long associationId,
+                                      Boolean snpPending,
+                                      Date lastUpdateDate,
+                                      Long geneError,
+                                      String snpError,
+                                      String snpGeneOnDiffChr,
+                                      String noGeneForSymbol,
+                                      String geneNotOnGenome) {
 
 
     }
 
-    private void addMappedData() {
+    private void addMappedData(Long studyId,
+                               Long associationId,
+                               String region,
+                               String chromosomeName,
+                               String chromosomePosition,
+                               String upstreamMappedGene,
+                               String upstreamEntrezGeneId,
+                               Integer upstreamGeneDistance,
+                               String downstreamMappedGene,
+                               String downstreamEntrezGeneId,
+                               Integer downstreamGeneDistance, Boolean isIntergenic) {
+
 
     }
 
-    public static <T> T[] extractRange(T[] array, int startIndex) {
+    private static <T> T[] extractRange(T[] array, int startIndex) {
         if (startIndex > array.length) {
             return (T[]) Array.newInstance(array.getClass().getComponentType(), 0);
         }
