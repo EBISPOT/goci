@@ -49,7 +49,7 @@ public class CatalogImportRepository {
         return result;
     }
 
-    private void mapData(Map<CatalogHeaderBinding, Integer> headerBindingIntegerMap, String[][] data) {
+    private void mapData(Map<CatalogHeaderBinding, Integer> headerColumnMap, String[][] data) {
         // Read through each line
         for (String[] line : data) {
             // Study report attributes
@@ -69,9 +69,18 @@ public class CatalogImportRepository {
             String snpError;
 
             // For each key in our map, extract the cell at that index
-            for (Map.Entry<CatalogHeaderBinding, Integer> entry : headerBindingIntegerMap.entrySet()) {
-                String valueToInsert = line[entry.getValue()];
-                CatalogHeaderBinding databaseColName = entry.getKey();
+            for (CatalogHeaderBinding binding : headerColumnMap.keySet()) {
+                String valueToInsert = line[headerColumnMap.get(binding)];
+                switch (binding) {
+                    case STUDY_ID:
+                        studyId = Long.valueOf(valueToInsert);
+                        break;
+                    case PUBMED_ID_ERROR:
+                        pubmedIdErrorStudy = Integer.valueOf(valueToInsert);
+                        break;
+                    case
+
+                }
 
                 if (databaseColName.equals(CatalogHeaderBinding.STUDY_ID)) {
 
