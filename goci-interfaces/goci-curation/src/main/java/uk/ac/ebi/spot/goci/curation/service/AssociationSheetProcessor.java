@@ -17,11 +17,10 @@ import java.util.List;
 
 /**
  * @author emma
- *         <p/>
- *         This class takes an Excel spreadsheet sheet and extracts all the association records
- *         For each SNP, an SnpAssociationForm object is created and passed back to the controller for
- *         further processing
- *         <p/>
+ *         <p>
+ *         This class takes an Excel spreadsheet sheet and extracts all the association records For each SNP, an
+ *         SnpAssociationForm object is created and passed back to the controller for further processing
+ *         <p>
  *         Created from code originally written by Dani/Tony. Adapted to fit with new curation system.
  */
 
@@ -60,7 +59,8 @@ public class AssociationSheetProcessor {
                 done = true;
                 getLog().debug("Last row read");
                 logMessage = "All spreadsheet data processed successfully";
-            } else {
+            }
+            else {
 
                 // Strings that store first 3 columns
                 String authorReportedGene;
@@ -72,7 +72,8 @@ public class AssociationSheetProcessor {
                     authorReportedGene = row.getCell(0).getRichStringCellValue().getString();
                     logMessage = "Error in field 'Gene' in row " + rowNum + 1 + "\n";
 
-                } else {
+                }
+                else {
                     authorReportedGene = null;
                     getLog().debug("Gene is null in row " + row.getRowNum());
                     logMessage = "Error in field 'Gene' in row " + rowNum + 1 + "\n";
@@ -83,7 +84,8 @@ public class AssociationSheetProcessor {
                     strongestAllele = row.getCell(1).getRichStringCellValue().getString();
                     logMessage = "Error in field 'Risk allele' in row " + rowNum + 1 + "\n";
 
-                } else {
+                }
+                else {
                     strongestAllele = null;
                     getLog().debug("Risk allele is null in row " + row.getRowNum());
                     logMessage = "Error in field 'Risk allele' in row " + rowNum + 1 + "\n";
@@ -96,7 +98,8 @@ public class AssociationSheetProcessor {
 
                     logMessage = "Error in field 'SNP' in row " + rowNum + 1 + "\n";
 
-                } else {
+                }
+                else {
                     snp = null;
                     getLog().debug("SNP is null in row " + row.getRowNum());
                     logMessage = "Error in field 'SNP' in row " + rowNum + 1 + "\n";
@@ -118,7 +121,8 @@ public class AssociationSheetProcessor {
 
                             break;
                     }
-                } else {
+                }
+                else {
                     getLog().debug("RF is null in row " + row.getRowNum());
                     logMessage = "Error in field 'Risk Frequency' in row " + rowNum + 1 + "\n";
                 }
@@ -141,7 +145,8 @@ public class AssociationSheetProcessor {
 
                             break;
                     }
-                } else {
+                }
+                else {
                     pvalueMantissa = null;
                     getLog().debug("pvalue mantissa is null in row " + row.getRowNum());
                     logMessage = "Error in field 'pvalue mantissa' in row " + rowNum + 1 + "\n";
@@ -162,7 +167,8 @@ public class AssociationSheetProcessor {
 
                             break;
                     }
-                } else {
+                }
+                else {
                     pvalueExponent = null;
                     getLog().debug("pvalue exponent is null in row " + row.getRowNum());
                     logMessage = "Error in field 'pvalue exponent' in row " + rowNum + 1 + "\n";
@@ -174,7 +180,8 @@ public class AssociationSheetProcessor {
                     pvalueText = row.getCell(6).getRichStringCellValue().getString();
                     logMessage = "Error in field 'pvaluetxt' in row " + rowNum + 1 + "\n";
 
-                } else {
+                }
+                else {
                     pvalueText = null;
                     getLog().debug("pvalue text is null in row " + row.getRowNum());
                     logMessage = "Error in field 'pvaluetxt' in row " + rowNum + 1 + "\n";
@@ -194,7 +201,8 @@ public class AssociationSheetProcessor {
                             logMessage = "Error in field 'OR' in row " + rowNum + 1 + "\n";
                             break;
                     }
-                } else {
+                }
+                else {
                     orPerCopyNum = null;
                     getLog().debug("OR is null in row " + row.getRowNum());
                     logMessage = "Error in field 'OR' in row " + rowNum + 1 + "\n";
@@ -214,7 +222,8 @@ public class AssociationSheetProcessor {
                             logMessage = "Error in field 'OR recip' in row " + rowNum + 1 + "\n";
                             break;
                     }
-                } else {
+                }
+                else {
                     orPerCopyRecip = null;
                     getLog().debug("OR recip is null in row " + row.getRowNum());
                     logMessage = "Error in field 'OR recip' in row " + rowNum + 1 + "\n";
@@ -222,12 +231,12 @@ public class AssociationSheetProcessor {
                 }
 
 
-
                 String orType;
                 if (row.getCell(9, row.RETURN_BLANK_AS_NULL) != null) {
                     orType = row.getCell(9).getRichStringCellValue().getString();
                     logMessage = "Error in field 'OR type' in row " + rowNum + 1 + "\n";
-                } else {
+                }
+                else {
                     orType = null;
                     getLog().debug("OR type is null in row " + row.getRowNum());
                     logMessage = "Error in field 'OR type' in row " + rowNum + 1 + "\n";
@@ -238,7 +247,8 @@ public class AssociationSheetProcessor {
                 if (row.getCell(10, row.RETURN_BLANK_AS_NULL) != null) {
                     multiSnpHaplotype = row.getCell(10).getRichStringCellValue().getString();
                     logMessage = "Error in field 'Multi-SNP Haplotype' in row " + rowNum + 1 + "\n";
-                } else {
+                }
+                else {
                     multiSnpHaplotype = null;
                     getLog().debug("OR type is null in row " + row.getRowNum());
                     logMessage = "Error in field 'Multi-SNP Haplotype' in row " + rowNum + 1 + "\n";
@@ -249,7 +259,8 @@ public class AssociationSheetProcessor {
                 if (row.getCell(11, row.RETURN_BLANK_AS_NULL) != null) {
                     orPerCopyRange = row.getCell(11).getRichStringCellValue().getString();
                     logMessage = "Error in field 'CI' in row " + rowNum + 1 + "\n";
-                } else {
+                }
+                else {
                     orPerCopyRange = null;
                     getLog().debug("CI is null in row " + row.getRowNum());
                     logMessage = "Error in field 'CI' in row " + rowNum + 1 + "\n";
@@ -260,7 +271,8 @@ public class AssociationSheetProcessor {
                 if (row.getCell(12) != null) {
                     orPerCopyUnitDescr = row.getCell(12).getRichStringCellValue().getString();
                     logMessage = "Error in field 'OR direction' in row " + rowNum + 1 + "\n";
-                } else {
+                }
+                else {
                     orPerCopyUnitDescr = null;
                     getLog().debug("OR direction is null in row " + row.getRowNum());
                     logMessage = "Error in field 'OR direction' in row " + rowNum + 1 + "\n";
@@ -280,7 +292,8 @@ public class AssociationSheetProcessor {
                             logMessage = "Error in field 'Standard Error' in row " + rowNum + 1 + "\n";
                             break;
                     }
-                } else {
+                }
+                else {
                     orPerCopyStdError = null;
                     getLog().debug("SE is null in row " + row.getRowNum());
                     logMessage = "Error in field 'Standard Error' in row " + rowNum + 1 + "\n";
@@ -291,7 +304,8 @@ public class AssociationSheetProcessor {
                 if (row.getCell(14, row.RETURN_BLANK_AS_NULL) != null) {
                     snpType = row.getCell(14).getRichStringCellValue().getString();
                     logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
-                } else {
+                }
+                else {
                     snpType = null;
                     getLog().debug("SNP type is null in row " + row.getRowNum());
                     logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
@@ -301,32 +315,61 @@ public class AssociationSheetProcessor {
                 if (authorReportedGene == null && strongestAllele == null && snp == null && riskFrequency == null) {
                     done = true;
                     getLog().debug("Empty row that wasn't caught via 'row = null'");
-                } else {
+                }
+                else {
                     // Create a new form which will be passed back to controller and handled there
                     SnpAssociationForm snpAssociationForm = new SnpAssociationForm();
                     snpAssociationForm.setRiskFrequency(riskFrequency);
                     snpAssociationForm.setPvalueText(pvalueText);
-                    snpAssociationForm.setOrPerCopyNum(orPerCopyNum);
 
 
                     if (orType.equalsIgnoreCase("Y")) {
                         snpAssociationForm.setOrType(true);
-                    } else {
+                    }
+                    else {
                         snpAssociationForm.setOrType(false);
                     }
 
                     if (multiSnpHaplotype.equalsIgnoreCase("Y")) {
                         snpAssociationForm.setMultiSnpHaplotype(true);
-                    } else {
+                    }
+                    else {
                         snpAssociationForm.setMultiSnpHaplotype(false);
                     }
 
                     snpAssociationForm.setSnpType(snpType);
                     snpAssociationForm.setPvalueMantissa(pvalueMantissa);
                     snpAssociationForm.setPvalueExponent(pvalueExponent);
+
+                    boolean recipReverse = false;
+                    // Calculate OR per copy num
+                    if ((orPerCopyRecip != null) && (orPerCopyNum == null)) {
+                        orPerCopyNum = ((100 / orPerCopyRecip) / 100);
+                        snpAssociationForm.setOrPerCopyNum(orPerCopyNum);
+                        recipReverse = true;
+                    }
+                    // Otherwise set to whatever is in upload
+                    else {
+                        snpAssociationForm.setOrPerCopyNum(orPerCopyNum);
+                    }
+
                     snpAssociationForm.setOrPerCopyRecip(orPerCopyRecip);
                     snpAssociationForm.setOrPerCopyStdError(orPerCopyStdError);
-                    snpAssociationForm.setOrPerCopyRange(orPerCopyRange);
+
+                    // This logic is retained from Dani's original code
+                    if ((orPerCopyRecip != null) && (orPerCopyRange != null) && recipReverse) {
+                        orPerCopyRange = associationCalculationService.reverseCI(orPerCopyRange);
+                        snpAssociationForm.setOrPerCopyRange(orPerCopyRange);
+                    }
+                    else if ((orPerCopyRange == null) && (orPerCopyStdError != null)) {
+                        orPerCopyRange = associationCalculationService.setRange(orPerCopyStdError, orPerCopyNum);
+                        snpAssociationForm.setOrPerCopyRange(orPerCopyRange);
+                    }
+                    else {
+                        snpAssociationForm.setOrPerCopyRange(orPerCopyRange);
+                    }
+
+
                     snpAssociationForm.setOrPerCopyUnitDescr(orPerCopyUnitDescr);
 
                     // For our list of snps and risk alleles separate by comma
@@ -362,7 +405,8 @@ public class AssociationSheetProcessor {
                             snpFormRows.add(snpFormRow);
                         }
 
-                    } else {
+                    }
+                    else {
                         // TODO THIS SHOULD DIE CLEANLY
                         getLog().error("Mismatched number of snps and risk alleles");
                     }
