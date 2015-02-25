@@ -666,6 +666,11 @@ public class AssociationController {
         association.setMultiSnpHaplotype(snpAssociationForm.getMultiSnpHaplotype());
         association.setSnpInteraction(snpAssociationForm.getSnpInteraction());
         association.setSnpChecked(snpAssociationForm.getSnpChecked());
+        association.setOrPerCopyNum(snpAssociationForm.getOrPerCopyNum());
+        association.setOrPerCopyRecip(snpAssociationForm.getOrPerCopyRecip());
+        association.setOrPerCopyRange(snpAssociationForm.getOrPerCopyRange());
+        association.setOrPerCopyStdError(snpAssociationForm.getOrPerCopyStdError());
+        association.setOrPerCopyUnitDescr(snpAssociationForm.getOrPerCopyUnitDescr());
 
         // Add collection of EFO traits
         association.setEfoTraits(snpAssociationForm.getEfoTraits());
@@ -685,46 +690,6 @@ public class AssociationController {
         else {
             association.setPvalueFloat(Float.valueOf(0));
         }
-
-        // If reciprocal is given, program will calculate OR from that
-        // This logic is retained from Dani's original code
-        Float orPerCopyNum = snpAssociationForm.getOrPerCopyNum();
-        Float orPerCopyRecip = snpAssociationForm.getOrPerCopyRecip();
-        Float orPerCopyStdError = snpAssociationForm.getOrPerCopyStdError();
-        String orPerCopyRange = snpAssociationForm.getOrPerCopyRange();
-        boolean recipReverse = false;
-
-        // Calculate OR per copy num
-        if ((orPerCopyRecip != null) && (orPerCopyNum == null)) {
-            orPerCopyNum = ((100 / orPerCopyRecip) / 100);
-            association.setOrPerCopyNum(orPerCopyNum);
-            recipReverse = true;
-        }
-        // Otherwise set to whatever is in form
-        else {
-            association.setOrPerCopyNum(snpAssociationForm.getOrPerCopyNum());
-        }
-
-        // Set OrPerCopyRecip
-        association.setOrPerCopyRecip(snpAssociationForm.getOrPerCopyRecip());
-
-        // This logic is retained from Dani's original code
-        if ((orPerCopyRecip != null) && (orPerCopyRange != null) && recipReverse) {
-            orPerCopyRange = associationCalculationService.reverseCI(orPerCopyRange);
-            association.setOrPerCopyRange(orPerCopyRange);
-        }
-        else if ((orPerCopyRange == null) && (orPerCopyStdError != null)) {
-            if (orPerCopyRange.isEmpty()) {
-                orPerCopyRange = associationCalculationService.setRange(orPerCopyStdError, orPerCopyNum);
-                association.setOrPerCopyRange(orPerCopyRange);
-            }
-        }
-        else {
-            association.setOrPerCopyRange(snpAssociationForm.getOrPerCopyRange());
-        }
-
-        association.setOrPerCopyStdError(snpAssociationForm.getOrPerCopyStdError());
-        association.setOrPerCopyUnitDescr(snpAssociationForm.getOrPerCopyUnitDescr());
 
         // Add loci to association or if we are editing an existing one find it
         // For multi-snp and standard snps we assume their is only one locus
