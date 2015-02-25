@@ -2,12 +2,18 @@ package uk.ac.ebi.spot.goci.repository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.object.SqlUpdate;
 import org.springframework.stereotype.Repository;
 import uk.ac.ebi.spot.goci.exception.DataImportException;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBindings;
 
 import java.lang.reflect.Array;
+import java.sql.Types;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,10 +29,43 @@ import java.util.Map;
  */
 @Repository
 public class CatalogImportRepository {
+    private JdbcTemplate jdbcTemplate;
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
         return log;
+    }
+
+    @Autowired(required = false)
+    public CatalogImportRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        SimpleJdbcInsert insertStudyReport =
+                new SimpleJdbcInsert(jdbcTemplate)
+                        .withTableName("STUDY_REPORT")
+                        .usingColumns("STUDY_ID")
+                        .usingColumns("PUBMED_ID_ERROR")
+                        .usingColumns("NCBI_PAPER_TITLE")
+                        .usingColumns("NCBI_FIRST_AUTHOR")
+                        .usingColumns("NCBI_NORMALIZED_FIRST_AUTHOR")
+                        .usingColumns("NCBI_FIRST_UPDATE_DATE")
+                        .usingGeneratedKeyColumns("ID");
+
+        StudyReportUpdate updateStudyReport = new StudyReportUpdate(jdbcTemplate);
+
+        SimpleJdbcInsert insertAssociationReport =
+                new SimpleJdbcInsert(jdbcTemplate)
+                        .withTableName("ASSOCIATION_REPORT")
+                        .usingColumns("ASSOCIATION_ID")
+                        .usingColumns("LAST_UPDATE_DATE")
+                        .usingColumns("GENE_ERROR")
+                        .usingColumns("SNP_ERROR")
+                        .usingColumns("SNP_GENE_ON_DIFF_CHR")
+                        .usingColumns("NO_GENE_FOR_SYMBOL")
+                        .usingColumns("GENE_NOT_ON_GENOME")
+                        .usingGeneratedKeyColumns("ID");
+
+        AssociationReportUpdate updateAssociationReport = new AssociationReportUpdate(jdbcTemplate);
     }
 
     public void loadNCBIMappedData(String[][] data) {
@@ -264,6 +303,52 @@ public class CatalogImportRepository {
 
             System.arraycopy(array, startIndex, response, 0, response.length);
             return response;
+        }
+    }
+
+    private class StudyReportUpdate extends SqlUpdate {
+        private StudyReportUpdate(JdbcTemplate jdbcTemplate) {
+            setJdbcTemplate(jdbcTemplate);
+            setSql("UPDATE STUDY_REPORT SET " +
+                           "STUDY_ID = ?, " +
+                           "PUBMED_ID_ERROR = ?, " +
+                           "NCBI_PAPER_TITLE = ?, " +
+                           "NCBI_FIRST_AUTHOR = ?, " +
+                           "NCBI_NORMALIZED_FIRST_AUTHOR = ?, " +
+                           "NCBI_FIRST_UPDATE_DATE = ?" +
+                           "WHERE ID = ?");
+            declareParameter(new SqlParameter("studyId", Types.NUMERIC));
+            declareParameter(new SqlParameter("pubmedIdError", Types.NUMERIC));
+            declareParameter(new SqlParameter("id", Types.NUMERIC));
+            // ... declare more parameters!
+            compile();
+        }
+    }
+
+    private class AssociationReportUpdate extends SqlUpdate {
+        public AssociationReportUpdate(JdbcTemplate jdbcTemplate) {
+            //        Long associationId = null; // ASSOCIATION_ID
+            //        Date lastUpdateDate = null; // LAST_UPDATE_DATE
+            //        Long geneError = null; // GENE_ERROR
+            //        String snpError = null; // SNP_ERROR
+            //        String snpGeneOnDiffChr = null; // SNP_GENE_ON_DIFF_CHR
+            //        String noGeneForSymbol = null; // NO_GENE_FOR_SYMBOL
+            //        String geneNotOnGenome = null; // GENE_NOT_ON_GENOME
+            setJdbcTemplate(jdbcTemplate);
+            setSql("UPDATE ASSOCIATION_REPORT SET " +
+                           "ASSOCIATION_ID = ?, " +
+                           "LAST_UPDATE_DATE = ?, " +
+                           "GENE_ERROR = ?, " +
+                           "SNP_ERROR = ?, " +
+                           "SNP_GENE_ON_DIFF_CHR = ?, " +
+                           "NO_GENE_FOR_SYMBOL = ?, " +
+                           "GENE_NOT_ON_GENOME = ?, " +
+                           "WHERE ID = ?");
+            declareParameter(new SqlParameter("associationId", Types.NUMERIC));
+            declareParameter(new SqlParameter("lastUpdateDate", Types.NUMERIC));
+            declareParameter(new SqlParameter("id", Types.NUMERIC));
+            // ... declare more parameters!
+            compile();
         }
     }
 }
