@@ -27,7 +27,7 @@ public enum CatalogHeaderBinding {
     REPORTED_GENE("REPORTED_GENE", "REPORTED GENE(S)", "REPORTED GENE(S)", false),
     MAPPED_GENE("MAPPED_GENE", false, true, false),
     DOWNLOAD_MAPPED_GENE(null, false, "MAPPED GENE", false),
-    ENTREZ_GENE_ID("ENTREZ_GENE_ID", false, "SNP_GENE_IDS", true),
+    ENTREZ_GENE_ID("ENTREZ_GENE_ID", false, "SNP_GENE_IDS", "SNP_GENE_IDS"),
     UPSTREAM_MAPPED_GENE("UPSTREAM_MAPPED_GENE", false, true, "upstream_gene_symbol"),
     UPSTREAM_ENTREZ_GENE_ID("UPSTREAM_ENTREZ_GENE_ID", false, "UPSTREAM_GENE_ID", "upstream_gene"),
     UPSTREAM_GENE_DISTANCE("UPSTREAM_GENE_DISTANCE", false, "UPSTREAM_GENE_DISTANCE", "upstream_gene_distance"),
@@ -56,7 +56,7 @@ public enum CatalogHeaderBinding {
     SPREADSHEET_CNV(null, "CNV", "CNV", false),
     ASSOCIATION_ID("ASSOCIATION_ID", "GWASTUDIESSNPID", false, "studies_snp_id"),
     STUDY_ID("STUDY_ID", "GWASTUDYID", false, "gwas_study_id"),
-    RESULT_PUBLISHED("RESULT_PUBLISHED", true, false, true, false),
+    RESULT_PUBLISHED("RESULT_PUBLISHED", true, false, false, false),
     NCBI_RESULT_PUBLISHED(null, "RESULTPUBLISHED", false, false),
     CURATION_STATUS("CURATION_STATUS", false, false, false),
     // Added to deal with file returned from NCBI
@@ -214,6 +214,14 @@ public enum CatalogHeaderBinding {
 
     boolean requiredByDownload() {
         return this.isDownloadRequired;
+    }
+
+    public String getLoadName() {
+        return this.loadName;
+    }
+
+    public boolean requiredByLoad() {
+        return this.isLoadRequired;
     }
 
     public boolean isDate() {

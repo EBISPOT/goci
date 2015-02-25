@@ -12,6 +12,7 @@ import java.util.List;
 public class CatalogHeaderBindings {
     private static List<CatalogHeaderBinding> ncbiHeaders = new ArrayList<>();
     private static List<CatalogHeaderBinding> downloadHeaders = new ArrayList<>();
+    private static List<CatalogHeaderBinding> loadHeaders = new ArrayList<>();
 
     static {
         for (CatalogHeaderBinding catalogHeaderBinding : CatalogHeaderBinding.values()) {
@@ -20,6 +21,9 @@ public class CatalogHeaderBindings {
             }
             if (catalogHeaderBinding.requiredByDownload()) {
                 downloadHeaders.add(catalogHeaderBinding);
+            }
+            if (catalogHeaderBinding.requiredByLoad()) {
+                loadHeaders.add(catalogHeaderBinding);
             }
         }
     }
@@ -30,5 +34,9 @@ public class CatalogHeaderBindings {
 
     public static List<CatalogHeaderBinding> getDownloadHeaders() {
         return downloadHeaders;
+    }
+
+    public static List<CatalogHeaderBinding> getLoadHeaders() {
+        return loadHeaders;
     }
 }
