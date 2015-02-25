@@ -9,11 +9,6 @@ var SearchState = {
 
 $(document).ready(function () {
     console.log("solr search loaded and ready");
-    //toggle the chevron on the expand/collapse table button
-    $('.table-toggle').click(function () {
-        $(this).find('span').toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
-
-    });
 
     //toggle the +/- sign on the expand study button and expand the appropriate study
     $('#study-table-body').on('click', 'button.row-toggle', function () {
@@ -52,6 +47,9 @@ function loadResults() {
         if (window.location.hash) {
             console.log("Applying a facet");
             applyFacet();
+        }
+        else{
+            clearFacetting();
         }
     }
 }
