@@ -61,6 +61,10 @@ public enum CatalogHeaderBinding {
     CURATION_STATUS("CURATION_STATUS", false, false, false),
     // Added to deal with file returned from NCBI
     PUBMED_ID_ERROR("PUBMED_ID_ERROR", false, false, "pubmdID_error"),
+    NCBI_PAPER_TITLE("NCBI_PAPER_TITLE", false, false, "paper_title"),
+    NCBI_FIRST_AUTHOR("NCBI_FIRST_AUTHOR", false, false, "author_first"),
+    NCBI_NORMALISED_FIRST_AUTHOR("NCBI_NORMALIZED_FIRST_AUTHOR", false, false, "normalized_author_first"),
+    NCBI_FIRST_UPDATE_DATE("NCBI_FIRST_UPDATE_DATE", false, false, "pub_date"),
     SNP_ERROR("SNP_ERROR", false, false, "snp_id_error"),
     GENE_ERROR("GENE_ERROR", false, false, "gene_id_error"),
     SNP_GENE_ON_DIFF_CHR("SNP_GENE_ON_DIFF_CHR", false, false, "snp_gene_on_diff_chr"),

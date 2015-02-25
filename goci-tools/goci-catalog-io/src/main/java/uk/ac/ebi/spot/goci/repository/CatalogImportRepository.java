@@ -1,11 +1,16 @@
 package uk.ac.ebi.spot.goci.repository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import uk.ac.ebi.spot.goci.exception.DataImportException;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBindings;
 
 import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +23,12 @@ import java.util.Map;
  */
 @Repository
 public class CatalogImportRepository {
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
+
     public void loadNCBIMappedData(String[][] data) {
 
         // Create a map of col number to header
@@ -51,19 +62,24 @@ public class CatalogImportRepository {
     }
 
     private void mapData(Map<CatalogHeaderBinding, Integer> headerColumnMap, String[][] data) {
+        // 2014-08-01 00:00:00.000
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
         // Read through each line
+        int row = 0;
+        boolean caughtErrors = false;
         for (String[] line : data) {
+            row++;
             // Study report attributes
             Long studyId = null; // STUDY_ID
             Integer pubmedIdError = null;  // PUBMED_ID_ERROR
-            String ncbiPaperTitle = null; // ??
-            String ncbiFirstAuthor = null; // ??
-            String ncbiNormalisedFirstAuthor = null; // ??
-            Date ncbiFirstUpdateDate = null; // ??
+            String ncbiPaperTitle = null; // NCBI_PAPER_TITLE
+            String ncbiFirstAuthor = null; // NCBI_FIRST_AUTHOR
+            String ncbiNormalisedFirstAuthor = null; // NCBI_NORMALIZED_FIRST_AUTHOR
+            Date ncbiFirstUpdateDate = null; // NCBI_FIRST_UPDATE_DATE
 
             // Association report attributes
             Long associationId = null; // ASSOCIATION_ID
-            Boolean snpPending = null; // ??
             Date lastUpdateDate = null; // LAST_UPDATE_DATE
             Long geneError = null; // GENE_ERROR
             String snpError = null; // SNP_ERROR
@@ -85,94 +101,120 @@ public class CatalogImportRepository {
 
             // For each key in our map, extract the cell at that index
             for (CatalogHeaderBinding binding : headerColumnMap.keySet()) {
-                String valueToInsert = line[headerColumnMap.get(binding)];
-                switch (binding) {
-                    case STUDY_ID:
-                        studyId = Long.valueOf(valueToInsert);
-                        break;
-                    case PUBMED_ID_ERROR:
-                        pubmedIdError = Integer.valueOf(valueToInsert);
-                        break;
-                    case ASSOCIATION_ID:
-                        associationId = Long.valueOf(valueToInsert);
-                        break;
-                    case GENE_ERROR:
-                        geneError = Long.valueOf(valueToInsert);
-                        break;
-                    case SNP_ERROR:
-                        snpError = valueToInsert;
-                        break;
-                    case SNP_GENE_ON_DIFF_CHR:
-                        snpGeneOnDiffChr = valueToInsert;
-                        break;
-                    case NO_GENE_FOR_SYMBOL:
-                        noGeneForSymbol = valueToInsert;
-                        break;
-                    case GENE_NOT_ON_GENOME:
-                        geneNotOnGenome = valueToInsert;
-                        break;
-                    case REGION:
-                        region = valueToInsert;
-                        break;
-                    case CHROMOSOME_NAME:
-                        chromosomeName = valueToInsert;
-                        break;
-                    case CHROMOSOME_POSITION:
-                        chromosomePosition = valueToInsert;
-                        break;
-                    case UPSTREAM_MAPPED_GENE:
-                        upstreamMappedGene = valueToInsert;
-                        break;
-                    case UPSTREAM_ENTREZ_GENE_ID:
-                        upstreamEntrezGeneId = valueToInsert;
-                        break;
-                    case UPSTREAM_GENE_DISTANCE:
-                        upstreamGeneDistance = Integer.valueOf(valueToInsert);
-                        break;
-                    case DOWNSTREAM_MAPPED_GENE:
-                        downstreamMappedGene = valueToInsert;
-                        break;
-                    case DOWNSTREAM_ENTREZ_GENE_ID:
-                        downstreamEntrezGeneId = valueToInsert;
-                        break;
-                    case DOWNSTREAM_GENE_DISTANCE:
-                        downstreamGeneDistance = Integer.valueOf(valueToInsert);
-                        break;
-                    case IS_INTERGENIC:
-                        isIntergenic = Boolean.valueOf(valueToInsert);
-                        break;
-                    default:
-                        throw new DataImportException(
-                                "Unrecognised column flagged for import: " + binding.getLoadName());
+                try {
+                    String valueToInsert = line[headerColumnMap.get(binding)];
+                    switch (binding) {
+                        case STUDY_ID:
+                            studyId = Long.valueOf(valueToInsert);
+                            break;
+                        case PUBMED_ID_ERROR:
+                            pubmedIdError = Integer.valueOf(valueToInsert);
+                            break;
+                        case NCBI_PAPER_TITLE:
+                            ncbiPaperTitle = valueToInsert;
+                            break;
+                        case NCBI_FIRST_AUTHOR:
+                            ncbiFirstAuthor = valueToInsert;
+                            break;
+                        case NCBI_NORMALISED_FIRST_AUTHOR:
+                            ncbiNormalisedFirstAuthor = valueToInsert;
+                            break;
+                        case NCBI_FIRST_UPDATE_DATE:
+                            ncbiFirstUpdateDate = df.parse(valueToInsert);
+                            break;
+                        case ASSOCIATION_ID:
+                            associationId = Long.valueOf(valueToInsert);
+                            break;
+                        case GENE_ERROR:
+                            geneError = Long.valueOf(valueToInsert);
+                            break;
+                        case SNP_ERROR:
+                            snpError = valueToInsert;
+                            break;
+                        case SNP_GENE_ON_DIFF_CHR:
+                            snpGeneOnDiffChr = valueToInsert;
+                            break;
+                        case NO_GENE_FOR_SYMBOL:
+                            noGeneForSymbol = valueToInsert;
+                            break;
+                        case GENE_NOT_ON_GENOME:
+                            geneNotOnGenome = valueToInsert;
+                            break;
+                        case REGION:
+                            region = valueToInsert;
+                            break;
+                        case CHROMOSOME_NAME:
+                            chromosomeName = valueToInsert;
+                            break;
+                        case CHROMOSOME_POSITION:
+                            chromosomePosition = valueToInsert;
+                            break;
+                        case UPSTREAM_MAPPED_GENE:
+                            upstreamMappedGene = valueToInsert;
+                            break;
+                        case UPSTREAM_ENTREZ_GENE_ID:
+                            upstreamEntrezGeneId = valueToInsert;
+                            break;
+                        case UPSTREAM_GENE_DISTANCE:
+                            upstreamGeneDistance = Integer.valueOf(valueToInsert);
+                            break;
+                        case DOWNSTREAM_MAPPED_GENE:
+                            downstreamMappedGene = valueToInsert;
+                            break;
+                        case DOWNSTREAM_ENTREZ_GENE_ID:
+                            downstreamEntrezGeneId = valueToInsert;
+                            break;
+                        case DOWNSTREAM_GENE_DISTANCE:
+                            downstreamGeneDistance = Integer.valueOf(valueToInsert);
+                            break;
+                        case IS_INTERGENIC:
+                            isIntergenic = Boolean.valueOf(valueToInsert);
+                            break;
+                        default:
+                            throw new DataImportException(
+                                    "Unrecognised column flagged for import: " + binding.getLoadName());
+                    }
+                    // Once you have all bits for a study report, association report add them
+                    addStudyReport(studyId,
+                                   pubmedIdError,
+                                   ncbiPaperTitle,
+                                   ncbiFirstAuthor,
+                                   ncbiNormalisedFirstAuthor,
+                                   ncbiFirstUpdateDate);
+                    addAssociationReport(associationId,
+                                         lastUpdateDate,
+                                         geneError,
+                                         snpError,
+                                         snpGeneOnDiffChr,
+                                         noGeneForSymbol,
+                                         geneNotOnGenome);
+                    addMappedData(studyId,
+                                  associationId,
+                                  region,
+                                  chromosomeName,
+                                  chromosomePosition,
+                                  upstreamMappedGene,
+                                  upstreamEntrezGeneId,
+                                  upstreamGeneDistance,
+                                  downstreamMappedGene,
+                                  downstreamEntrezGeneId,
+                                  downstreamGeneDistance,
+                                  isIntergenic);
                 }
-                // Once you have all bits for a study report, association report add them
-                addStudyReport(studyId,
-                               pubmedIdError,
-                               ncbiPaperTitle,
-                               ncbiFirstAuthor,
-                               ncbiNormalisedFirstAuthor,
-                               ncbiFirstUpdateDate);
-                addAssociationReport(associationId,
-                                     snpPending,
-                                     lastUpdateDate,
-                                     geneError,
-                                     snpError,
-                                     snpGeneOnDiffChr,
-                                     noGeneForSymbol,
-                                     geneNotOnGenome);
-                addMappedData(studyId,
-                              associationId,
-                              region,
-                              chromosomeName,
-                              chromosomePosition,
-                              upstreamMappedGene,
-                              upstreamEntrezGeneId,
-                              upstreamGeneDistance,
-                              downstreamMappedGene,
-                              downstreamEntrezGeneId,
-                              downstreamGeneDistance,
-                              isIntergenic);
+                catch (ParseException e) {
+                    getLog().error("Unable to parse date at row " + row, e);
+                    caughtErrors = true;
+                }
+                catch (Exception e) {
+                    getLog().error("Unable to insert data at row " + row, e);
+                    caughtErrors = true;
+                }
             }
+        }
+
+        if (caughtErrors) {
+            throw new DataImportException("Caught errors whilst processing data import - " +
+                                                  "please check the logs for more information");
         }
     }
 
@@ -186,7 +228,6 @@ public class CatalogImportRepository {
     }
 
     private void addAssociationReport(Long associationId,
-                                      Boolean snpPending,
                                       Date lastUpdateDate,
                                       Long geneError,
                                       String snpError,
