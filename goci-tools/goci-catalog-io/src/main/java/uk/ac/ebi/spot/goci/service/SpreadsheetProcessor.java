@@ -94,7 +94,7 @@ public class SpreadsheetProcessor {
         // we won't be able to read it using current methods
         if (!in.markSupported()) {
             throw new UnsupportedOperationException(
-                    "Unable to read merged MAGE-TAB documents from a remote URL currently " +
+                    "Unable to read documents from a remote URL currently " +
                             "(input stream that does not support the mark() operation).  " +
                             "Try downloading the file and reading a local copy instead.");
         }
