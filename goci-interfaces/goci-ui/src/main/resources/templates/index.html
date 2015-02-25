@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <link rel="icon" href="../../favicon.ico"/>
+    <link rel="icon" href="../static/images/favicon.ico" th:href="@{images/favicon.ico}"/>
 
     <title>GWAS Catalog</title>
 
@@ -56,7 +56,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="index.html" th:href="@{/home}">Home <span class="sr-only">(current)</span></a></li>
+                <li class="active"><a href="index.html" th:href="@{home}">Home <span class="sr-only">(current)</span></a></li>
                 <li><a href="search.html" th:href="@{search}">Search</a></li>
                 <li><a href="http://www.ebi.ac.uk/fgpt/gwas">GWAS</a></li>
                 <li class="hidden-sm"><a href="docs/downloads" th:href="@{docs/downloads}">Download</a></li>
@@ -87,7 +87,7 @@
 <div class="jumbotron background-color-primary-accent">
     <div class="container">
         <div class="gwas-circle">
-            <img src="../static/images/gwas-circle.png" th:src="@{/images/gwas-circle.png}"/>
+            <img src="../static/images/gwas-circle.png" th:src="@{images/gwas-circle.png}"/>
         </div>
         <div>
             <h1>GWAS Catalog</h1>
@@ -105,12 +105,12 @@
             </div>
             <div class="examples">
                 Examples:
-                <a href="/search?query=breast%20cancer">breast cancer</a>,
-                <a href="/search?query=rs7329174">rs7329174</a>,
-                <a href="/search?query=Yang">Yang</a>,
-                <a href="/search?query=44892362">44892362</a>,
-                <a href="/search?query=2q37.1">2q37.1</a>,
-                <a href="/search?query=HBS1L">HBS1L</a>
+                <a href="search?query=breast%20cancer">breast cancer</a>,
+                <a href="search?query=rs7329174">rs7329174</a>,
+                <a href="search?query=Yang">Yang</a>,
+                <a href="search?query=44892362">44892362</a>,
+                <a href="search?query=2q37.1">2q37.1</a>,
+                <a href="search?query=HBS1L">HBS1L</a>
             </div>
         </div>
     </div>
