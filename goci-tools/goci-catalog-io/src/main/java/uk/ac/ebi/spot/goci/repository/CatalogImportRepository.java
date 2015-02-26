@@ -14,6 +14,7 @@ import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBindings;
 
 import java.lang.reflect.Array;
+import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -52,13 +53,19 @@ public class CatalogImportRepository {
         return log;
     }
 
+
     @Autowired(required = false)
     public CatalogImportRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertStudyReport =
                 new SimpleJdbcInsert(jdbcTemplate)
                         .withTableName("STUDY_REPORT")
-                        .usingColumns("STUDY_ID","PUBMED_ID_ERROR", "NCBI_PAPER_TITLE", "NCBI_FIRST_AUTHOR", "NCBI_NORMALIZED_FIRST_AUTHOR", "NCBI_FIRST_UPDATE_DATE")
+                        .usingColumns("STUDY_ID",
+                                      "PUBMED_ID_ERROR",
+                                      "NCBI_PAPER_TITLE",
+                                      "NCBI_FIRST_AUTHOR",
+                                      "NCBI_NORMALIZED_FIRST_AUTHOR",
+                                      "NCBI_FIRST_UPDATE_DATE")
                         .usingGeneratedKeyColumns("ID");
 
         this.updateStudyReport = new StudyReportUpdate(jdbcTemplate);
@@ -310,14 +317,15 @@ public class CatalogImportRepository {
         studyArgs.put("NCBI_FIRST_AUTHOR", ncbiFirstAuthor);
         studyArgs.put("NCBI_NORMALIZED_FIRST_AUTHOR", ncbiNormalisedFirstAuthor);
         studyArgs.put("NCBI_FIRST_UPDATE_DATE", ncbiFirstUpdateDate);
-
+        String sql = "UPDATE STUDY_REPORT SET NCBI_FIRST_AUTHOR = ? WHERE ID = ?";
 
         // Check for an existing id in database
         try {
           Long studyReportIdInDatabase = jdbcTemplate.queryForObject(SELECT_STUDY_REPORTS, Long.class, studyId);
-            studyArgs.put("ID", studyReportIdInDatabase);
-            int rows = updateStudyReport.updateByNamedParam(studyArgs);
-            System.out.println(rows);
+            Object[] params = { ncbiFirstAuthor, studyReportIdInDatabase};
+        int rows=    jdbcTemplate.update(sql, params);
+
+
         }
         catch (EmptyResultDataAccessException e) {
             insertStudyReport.execute(studyArgs);
@@ -441,6 +449,7 @@ public class CatalogImportRepository {
             declareParameter(new SqlParameter("GENE_NOT_ON_GENOME", Types.VARCHAR));
             declareParameter(new SqlParameter("ID", Types.NUMERIC));
             compile();
+
         }
     }
 
