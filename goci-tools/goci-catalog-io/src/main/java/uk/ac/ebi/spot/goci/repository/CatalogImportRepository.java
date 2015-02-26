@@ -281,6 +281,15 @@ public class CatalogImportRepository {
                                 String ncbiFirstAuthor,
                                 String ncbiNormalisedFirstAuthor, Date ncbiFirstUpdateDate) {
 
+        if (studyId == null) {
+            throw new DataImportException("Caught errors whilst processing data import - " +
+                                                  "trying to add study report with no study ID");
+        }
+
+        if (ncbiPaperTitle == null) {
+            throw new DataImportException("Caught errors whilst processing data import - " +
+                                                  "trying to add study report with no paper title");
+        }
 
         // Check for an existing id in database
         Long studyReportIdInDatabase = jdbcTemplate.queryForObject(SELECT_STUDY_REPORTS, Long.class, studyId);
@@ -290,10 +299,11 @@ public class CatalogImportRepository {
         studyArgs.put("PUBMED_ID_ERROR", pubmedIdError);
         studyArgs.put("NCBI_PAPER_TITLE", ncbiPaperTitle);
         studyArgs.put("NCBI_FIRST_AUTHOR", ncbiFirstAuthor);
-        studyArgs.put("NCBI_NORMALISED_FIRST_AUTHOR", ncbiNormalisedFirstAuthor);
+        studyArgs.put("NCBI_NORMALIZED_FIRST_AUTHOR", ncbiNormalisedFirstAuthor);
         studyArgs.put("NCBI_FIRST_UPDATE_DATE", ncbiFirstUpdateDate);
 
-        if (studyReportIdInDatabase != null) {
+
+        if (studyReportIdInDatabase == null) {
             insertStudyReport.execute(studyArgs);
         }
 
@@ -313,7 +323,8 @@ public class CatalogImportRepository {
                                       String noGeneForSymbol,
                                       String geneNotOnGenome) {
 
-        Long associationReportIdInDatabase = jdbcTemplate.queryForObject(SELECT_ASSOCIATION_REPORTS, Long.class, associationId);
+        Long associationReportIdInDatabase =
+                jdbcTemplate.queryForObject(SELECT_ASSOCIATION_REPORTS, Long.class, associationId);
 
         Map<String, Object> associationArgs = new HashMap<>();
         associationArgs.put("ASSOCIATION_ID", associationId);
@@ -324,7 +335,7 @@ public class CatalogImportRepository {
         associationArgs.put("NO_GENE_FOR_SYMBOL", noGeneForSymbol);
         associationArgs.put("GENE_NOT_ON_GENOME", geneNotOnGenome);
 
-        if(associationReportIdInDatabase != null) {
+        if (associationReportIdInDatabase == null) {
             insertAssociationReport.execute(associationArgs);
         }
         else {
@@ -380,13 +391,13 @@ public class CatalogImportRepository {
                            "NCBI_NORMALIZED_FIRST_AUTHOR = ?, " +
                            "NCBI_FIRST_UPDATE_DATE = ?" +
                            "WHERE ID = ?");
-            declareParameter(new SqlParameter("studyId", Types.NUMERIC));
-            declareParameter(new SqlParameter("pubmedIdError", Types.NUMERIC));
-            declareParameter(new SqlParameter("ncbiPaperTitle", Types.VARCHAR));
-            declareParameter(new SqlParameter("ncbiFirstAuthor", Types.VARCHAR));
-            declareParameter(new SqlParameter("ncbiNormalizedFirstAuthor", Types.VARCHAR));
-            declareParameter(new SqlParameter("ncbiFirstUpdateDate", Types.DATE));
-            declareParameter(new SqlParameter("id", Types.NUMERIC));
+            declareParameter(new SqlParameter("STUDY_ID", Types.NUMERIC));
+            declareParameter(new SqlParameter("PUBMED_ID_ERROR", Types.NUMERIC));
+            declareParameter(new SqlParameter("NCBI_PAPER_TITLE", Types.VARCHAR));
+            declareParameter(new SqlParameter("NCBI_FIRST_AUTHOR", Types.VARCHAR));
+            declareParameter(new SqlParameter("NCBI_NORMALIZED_FIRST_AUTHOR", Types.VARCHAR));
+            declareParameter(new SqlParameter("NCBI_FIRST_UPDATE_DATE", Types.DATE));
+            declareParameter(new SqlParameter("ID", Types.NUMERIC));
             compile();
         }
     }
