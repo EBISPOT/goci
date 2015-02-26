@@ -62,6 +62,7 @@ For each identified SNP, we extract:
 * SNPS: Strongest SNP; If a haplotype is reported above, this field may include more than one rs number (multiple SNPs comprising the haplotype). Multiple SNPs may also be included if proxy SNPs are reported.
 * RISK ALLELE FREQUENCY: Reported risk/effect allele frequency associated with strongest SNP in controls (if not available among all controls, among the control group with the largest sample size). If the associated locus is a haplotype the haplotype frequency will be extracted.
 * P-VALUE: Reported p-value for strongest SNP risk allele. Note that p-values are rounded to 1 significant digit (for example, a published p- value of 4.8 x 10-7 is rounded to 5 x 10-7).
+* PVALUE_MLOG: -log(p-value)
 * P-VALUE (TEXT): Information describing context of p-value (e.g. females, smokers).
 * OR or BETA: Reported odds ratio or beta-coefficient associated with strongest SNP risk allele. Note that if an OR <1 is reported this is inverted, along with the reported allele, so that all ORs included in the Catalog are >1. Appropriate unit and increase/decrease are included for beta coefficients.
 * 95% CI (TEXT): Reported 95% confidence interval associated with strongest SNP risk allele, along with unit in the case of beta-coefficients. If 95% CIs are not published, we estimate these using the standard error, where available.
