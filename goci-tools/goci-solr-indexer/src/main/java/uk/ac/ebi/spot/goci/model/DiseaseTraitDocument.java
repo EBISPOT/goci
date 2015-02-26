@@ -16,12 +16,13 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     @Field private String traitName;
 
     // embedded study info
-    @Field("study_pubmedId") private Collection<String> pubmedIds;
+    @Field("study_pubmedId") private Collection<String> pubmedIds; // combine in one connected field
     @Field("study_title") private Collection<String> titles;
-    @Field("study_author") private Collection<String> authors;
+    @Field("study_author") private Collection<String> authors; // combine in one connected field
     @Field("study_publication") private Collection<String> publications;
-    @Field("study_publicationDate") private Collection<String> publicationDates;
+    @Field("study_publicationDate") private Collection<String> publicationDates; // combine in one connected field
     @Field("study_catalogAddedDate") private Collection<String> catalogAddedDates;
+    @Field("study_publicationLink") private Collection<String> publicationLinks;
 
     @Field("study_initialSampleDescription") private Collection<String> initialSampleDescriptions;
     @Field("study_replicateSampleDescription") private Collection<String> replicateSampleDescriptions;
@@ -59,6 +60,8 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.publications = new LinkedHashSet<>();
         this.publicationDates = new LinkedHashSet<>();
         this.catalogAddedDates = new LinkedHashSet<>();
+        this.publicationLinks = new LinkedHashSet<>();
+
         this.initialSampleDescriptions = new LinkedHashSet<>();
         this.replicateSampleDescriptions = new LinkedHashSet<>();
 
@@ -110,6 +113,10 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
 
     public void addCatalogAddedDate(String catalogAddedDate) {
         this.catalogAddedDates.add(catalogAddedDate);
+    }
+
+    public void addPublicationLink(String publicationLink) {
+        this.publicationLinks.add(publicationLink);
     }
 
     public void addInitialSampleDescription(String initialSampleDescription) {

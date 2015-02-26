@@ -60,18 +60,24 @@
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="index.html" th:href="@{home}">Home <span class="sr-only">(current)</span></a></li>
                 <li class="active"><a href="search.html" th:href="@{search}">Search</a></li>
-                <li><a href="http://www.ebi.ac.uk/fgpt/gwas">View</a></li>
+                <li><a href="http://www.ebi.ac.uk/fgpt/gwas">Diagram</a></li>
                 <li class="hidden-sm"><a href="docs/downloads" th:href="@{docs/downloads}">Download</a></li>
                 <li><a href="docs" th:href="@{docs}">Help</a></li>
                 <li class="hidden-sm"><a href="docs/about" th:href="@{docs/about}">About</a></li>
 
-                <li><a class="icon" href="http://www.ebi.ac.uk"><img alt="EBI logo"
-                                                                     src="../static/icons/EMBL_EBI_Logo_white_scaled.png"
-                                                                     th:src="@{icons/EMBL_EBI_Logo_white_scaled.png}"/></a>
+                <li>
+                    <a class="icon" id="ebi-logo" href="http://www.ebi.ac.uk">
+                        <img alt="EBI logo"
+                             src="../static/icons/EMBL_EBI_Logo_white.png"
+                             th:src="@{icons/EMBL_EBI_Logo_white.png}"/>
+                    </a>
                 </li>
-                <li><a class="icon" href="http://www.genome.gov"><img alt="GWAS logo"
-                                                                      src="../static/icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png"
-                                                                      th:src="@{icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png}"/></a>
+                <li>
+                    <a class="icon" id="nhgri-logo" href="http://www.genome.gov">
+                        <img alt="GWAS logo"
+                             src="../static/icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png"
+                             th:src="@{icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png}"/>
+                    </a>
                 </li>
             </ul>
         </div>

@@ -71,10 +71,10 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.publishDate !=null } ? ${#calendars.format(study.housekeeping.publishDate, 'dd MMMM yyyy')} : 'null'"></td>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.sendToNCBIDate !=null } ? ${#calendars.format(study.housekeeping.sendToNCBIDate, 'dd MMMM yyyy')} : 'null'"></td>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.studyAddedDate !=null } ? ${#calendars.format(study.housekeeping.studyAddedDate, 'dd MMMM yyyy')} : 'null'"></td>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.lastUpdateDate !=null } ? ${#calendars.format(study.housekeeping.lastUpdateDate, 'dd MMMM yyyy')} : 'null'"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.publishDate !=null } ? ${#calendars.format(study.housekeeping.publishDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.sendToNCBIDate !=null } ? ${#calendars.format(study.housekeeping.sendToNCBIDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.studyAddedDate !=null } ? ${#calendars.format(study.housekeeping.studyAddedDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.lastUpdateDate !=null } ? ${#calendars.format(study.housekeeping.lastUpdateDate, 'dd MMMM yyyy')} : ''"></td>
                 </tr>
                 </tbody>
             </table>
@@ -126,13 +126,13 @@
 
                 <div class="form-group">
                     <label for="fileName" class="control-label col-md-2">File name</label>
-                    <textarea id="fileName" type="text" th:field="*{fileName}"/>
+                    <textarea id="fileName" type="text" th:field="*{fileName}" class="col-md-8"/>
                 </div>
 
 
                 <div class="form-group">
                     <label for="notes" class="control-label col-md-2">Notes</label>
-                    <textarea id="notes" type="text" th:field="*{notes}" cols="150" rows="5"/>
+                    <textarea id="notes" type="text" th:field="*{notes}" class="col-md-8" />
                 </div>
 
                 <!--Checkboxes-->
@@ -197,7 +197,7 @@
                 <div class="form-group">
                     <label for="curator" class="control-label col-md-2">Curator:</label>
 
-                    <div class="col-md-10">
+                    <div class="col-md-4">
                         <select th:field="*{curator}" id="curator" class="form-control select2-select">
                             <!-- Empty value for first entry-->
                             <option value=""></option>
@@ -209,9 +209,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="curationStatus" class="control-label col-md-2">Curator Status:</label>
+                    <label for="curationStatus" class="control-label col-md-2">Curation Status:</label>
 
-                    <div class="col-md-10">
+                    <div class="col-md-4">
                         <select th:field="*{curationStatus}" id="curationStatus" class="form-control select2-select">
                             <!-- Empty value for first entry-->
                             <option value=""></option>

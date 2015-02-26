@@ -93,7 +93,7 @@ public class CatalogSummaryView {
 
     private Date resultPublished;
 
-    private Long curationStatus;
+    private String curationStatus;
 
     // JPA no-args constructor
     public CatalogSummaryView() {
@@ -139,7 +139,8 @@ public class CatalogSummaryView {
                               Boolean cnv,
                               Long associationId,
                               Long studyId,
-                              Date resultPublished, Long curationStatus) {
+                              Date resultPublished,
+                              String curationStatus) {
         this.id = id;
         this.catalogAddedDate = catalogAddedDate;
         this.pubmedId = pubmedId;
@@ -503,11 +504,11 @@ public class CatalogSummaryView {
         this.resultPublished = resultPublished;
     }
 
-    public Long getCurationStatus() {
+    public String getCurationStatus() {
         return curationStatus;
     }
 
-    public void setCurationStatus(Long curationStatus) {
+    public void setCurationStatus(String curationStatus) {
         this.curationStatus = curationStatus;
     }
 

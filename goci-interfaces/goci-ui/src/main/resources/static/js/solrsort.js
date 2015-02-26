@@ -93,6 +93,8 @@ function processSortedData(data, id){
     else{
         var documents = data.grouped.resourcename.groups;
 
+        setDownloadLink(data.responseHeader.params);
+
         for (var j = 0; j < documents.length; j++) {
             var group = documents[j];
 

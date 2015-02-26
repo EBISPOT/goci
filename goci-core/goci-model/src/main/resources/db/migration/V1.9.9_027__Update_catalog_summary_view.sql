@@ -10,7 +10,7 @@ Designed for execution with Flyway database migrations tool.
 
 author:  Emma Hastings
 date:    February 17th 2015
-version: 1.9.9.029 (pre 2.0)
+version: 1.9.9.027 (pre 2.0)
 ################################################################################
 
 */

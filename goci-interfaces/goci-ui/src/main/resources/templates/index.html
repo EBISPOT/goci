@@ -58,18 +58,24 @@
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a href="index.html" th:href="@{/home}">Home <span class="sr-only">(current)</span></a></li>
                 <li><a href="search.html" th:href="@{search}">Search</a></li>
-                <li><a href="http://www.ebi.ac.uk/fgpt/gwas">View</a></li>
+                <li><a href="http://www.ebi.ac.uk/fgpt/gwas">Diagram</a></li>
                 <li class="hidden-sm"><a href="docs/downloads" th:href="@{docs/downloads}">Download</a></li>
                 <li><a href="docs" th:href="@{docs}">Help</a></li>
                 <li class="hidden-sm"><a href="docs/about" th:href="@{docs/about}">About</a></li>
 
-                <li><a class="icon" href="http://www.ebi.ac.uk"><img alt="EBI logo"
-                                                                     src="../static/icons/EMBL_EBI_Logo_white_scaled.png"
-                                                                     th:src="@{icons/EMBL_EBI_Logo_white_scaled.png}"/></a>
+                <li>
+                    <a class="icon" id="ebi-logo" href="http://www.ebi.ac.uk">
+                        <img alt="EBI logo"
+                             src="../static/icons/EMBL_EBI_Logo_white.png"
+                             th:src="@{icons/EMBL_EBI_Logo_white.png}"/>
+                    </a>
                 </li>
-                <li><a class="icon" href="http://www.genome.gov"><img alt="GWAS logo"
-                                                                      src="../static/icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png"
-                                                                      th:src="@{icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png}"/></a>
+                <li>
+                    <a class="icon" id="nhgri-logo" href="http://www.genome.gov">
+                        <img alt="GWAS logo"
+                             src="../static/icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png"
+                             th:src="@{icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png}"/>
+                    </a>
                 </li>
             </ul>
         </div>
@@ -122,7 +128,33 @@
             <div class="col-md-4 toplevel-view">
                 <h2 class="flaticon-information9 color-primary-bold">About</h2>
 
-                <p>A description of the GWAS Catalog, including citation <information class=""></information></p>
+                <p>A description of the GWAS Catalog, including background and citation information.</p>
+            </div>
+        </a>
+        <a href="http://www.ebi.ac.uk/fgpt/gwas">
+            <div class="col-md-4 toplevel-view">
+                <h2 class="flaticon-image11 color-primary-bold">Diagram</h2>
+
+                <p>An interactive visualisation of all SNP-trait associations with genome-wide significance
+                   (p&lt;5E-8). </p>
+            </div>
+        </a>
+        <a href="docs/downloads" th:href="@{docs/downloads}">
+            <div class="col-md-4 toplevel-view">
+                <h2 class="flaticon-mailbox2 color-primary-bold">Download</h2>
+
+                <p>Including a full copy of the GWAS Catalog in spreadsheet format.</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="row">
+        <a href="search.html" th:href="@{search}">
+            <div class="col-md-4 toplevel-view">
+                <h2 class="flaticon-search11 color-primary-bold">Search</h2>
+
+                <p>You can search the catalog in a number of ways, including by trait, SNP identifier, study and
+                   gene. </p>
             </div>
         </a>
         <a href="docs/methods" th:href="@{docs/methods}">
@@ -137,32 +169,6 @@
                 <h2 class="flaticon-owl3 color-primary-bold">Ontology</h2>
 
                 <p>Details of the ontology representation of GWAS Catalog traits.</p>
-            </div>
-        </a>
-    </div>
-
-    <div class="row">
-        <a href="search.html" th:href="@{search}">
-            <div class="col-md-4 toplevel-view">
-                <h2 class="flaticon-search11 color-primary-bold">Search</h2>
-
-                <p>You can search the catalog in a number of ways, including by trait, SNP identifier, study and
-                   gene. </p>
-            </div>
-        </a>
-        <a href="http://www.ebi.ac.uk/fgpt/gwas">
-            <div class="col-md-4 toplevel-view">
-                <h2 class="flaticon-image11 color-primary-bold">View</h2>
-
-                <p>An interactive visualisation of all SNP-trait associations with genome-wide significance
-                   (p&lt;5E-8). </p>
-            </div>
-        </a>
-        <a href="docs/downloads" th:href="@{docs/downloads}">
-            <div class="col-md-4 toplevel-view">
-                <h2 class="flaticon-mailbox2 color-primary-bold">Download</h2>
-
-                <p>Including a full copy of the GWAS Catalog in spreadsheet format.</p>
             </div>
         </a>
     </div>

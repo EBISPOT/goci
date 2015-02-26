@@ -148,15 +148,15 @@
                 <td>
                     <a th:href="@{/sampledescriptions/{ethnicityId}(ethnicityId=${initialStudyEthnicityDescription.id})}"
                        class="btn btn-link">Edit</a></td>
-                <td th:text="${initialStudyEthnicityDescription.type} ?: 'null'"></td>
-                <td th:text="${initialStudyEthnicityDescription.numberOfIndividuals} ?: 'null'"></td>
-                <td th:text="${initialStudyEthnicityDescription.ethnicGroup} ?: 'null'"></td>
-                <td th:text="${initialStudyEthnicityDescription.countryOfOrigin} ?: 'null'"></td>
-                <td th:text="${initialStudyEthnicityDescription.countryOfRecruitment} ?: 'null'"></td>
-                <td th:text="${initialStudyEthnicityDescription.previouslyReported} ?: 'null'"></td>
-                <td th:text="${initialStudyEthnicityDescription.sampleSizesMatch} ?: 'null'"></td>
-                <td th:text="${initialStudyEthnicityDescription.description} ?: 'null'"></td>
-                <td th:text="${initialStudyEthnicityDescription.notes} ?: 'null'"></td>
+                <td th:text="${initialStudyEthnicityDescription.type} ?: ''"></td>
+                <td th:text="${initialStudyEthnicityDescription.numberOfIndividuals} ?: ''"></td>
+                <td th:text="${initialStudyEthnicityDescription.ethnicGroup} ?: ''"></td>
+                <td th:text="${initialStudyEthnicityDescription.countryOfOrigin} ?: ''"></td>
+                <td th:text="${initialStudyEthnicityDescription.countryOfRecruitment} ?: ''"></td>
+                <td th:text="${initialStudyEthnicityDescription.previouslyReported} ?: ''"></td>
+                <td th:text="${initialStudyEthnicityDescription.sampleSizesMatch} ?: ''"></td>
+                <td th:text="${initialStudyEthnicityDescription.description} ?: ''"></td>
+                <td th:text="${initialStudyEthnicityDescription.notes} ?: ''"></td>
                 <td>
                     <a th:href="@{/sampledescriptions/{ethnicityId}/delete(ethnicityId=${initialStudyEthnicityDescription.id})}"
                        class="btn btn-danger">Delete</a></td>
@@ -192,15 +192,15 @@
                 <td>
                     <a th:href="@{/sampledescriptions/{ethnicityId}(ethnicityId=${replicationStudyEthnicityDescription.id})}"
                        class="btn btn-link">Edit</a></td>
-                <td th:text="${replicationStudyEthnicityDescription.type}  ?: 'null'"></td>
-                <td th:text="${replicationStudyEthnicityDescription.numberOfIndividuals}  ?: 'null'"></td>
-                <td th:text="${replicationStudyEthnicityDescription.ethnicGroup}  ?: 'null'"></td>
-                <td th:text="${replicationStudyEthnicityDescription.countryOfOrigin}  ?: 'null'"></td>
-                <td th:text="${replicationStudyEthnicityDescription.countryOfRecruitment}  ?: 'null'"></td>
-                <td th:text="${replicationStudyEthnicityDescription.previouslyReported}  ?: 'null'"></td>
-                <td th:text="${replicationStudyEthnicityDescription.sampleSizesMatch} ?: 'null'"></td>
-                <td th:text="${replicationStudyEthnicityDescription.description} ?: 'null'"></td>
-                <td th:text="${replicationStudyEthnicityDescription.notes} ?: 'null'"></td>
+                <td th:text="${replicationStudyEthnicityDescription.type}  ?: ''"></td>
+                <td th:text="${replicationStudyEthnicityDescription.numberOfIndividuals}  ?: ''"></td>
+                <td th:text="${replicationStudyEthnicityDescription.ethnicGroup}  ?: ''"></td>
+                <td th:text="${replicationStudyEthnicityDescription.countryOfOrigin}  ?: ''"></td>
+                <td th:text="${replicationStudyEthnicityDescription.countryOfRecruitment}  ?: ''"></td>
+                <td th:text="${replicationStudyEthnicityDescription.previouslyReported}  ?: ''"></td>
+                <td th:text="${replicationStudyEthnicityDescription.sampleSizesMatch} ?: ''"></td>
+                <td th:text="${replicationStudyEthnicityDescription.description} ?: ''"></td>
+                <td th:text="${replicationStudyEthnicityDescription.notes} ?: ''"></td>
                 <td>
                     <a th:href="@{/sampledescriptions/{ethnicityId}/delete(ethnicityId=${replicationStudyEthnicityDescription.id})}"
                        class="btn btn-danger">Delete</a></td>

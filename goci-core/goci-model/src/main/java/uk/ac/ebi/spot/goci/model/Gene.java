@@ -23,6 +23,8 @@ public class Gene {
 
     private String geneName;
 
+    private String entrezGeneId;
+
     @ManyToMany(mappedBy = "authorReportedGenes")
     private Collection<Locus> authorReportedFromLoci;
 
@@ -53,6 +55,14 @@ public class Gene {
         this.geneName = geneName;
     }
 
+    public String getEntrezGeneId() {
+        return entrezGeneId;
+    }
+
+    public void setEntrezGeneId(String entrezGeneId) {
+        this.entrezGeneId = entrezGeneId;
+    }
+
     public Collection<Locus> getAuthorReportedFromLoci() {
         return authorReportedFromLoci;
     }
@@ -61,11 +71,11 @@ public class Gene {
         this.authorReportedFromLoci = authorReportedFromLoci;
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return "Gene{" +
                 "id=" + id +
                 ", geneName='" + geneName + '\'' +
+                ", entrezGeneId='" + entrezGeneId + '\'' +
                 '}';
     }
 }

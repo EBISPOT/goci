@@ -14,12 +14,14 @@ $(document).ready(function () {
             //$('#study-table-body').find('.hidden-resource').collapse('hide');
             $('#study-table-body').find('.hidden-study-row').collapse('hide');
             $('#study-table-body').find('span.tgb').removeClass('glyphicon-minus').addClass('glyphicon-plus');
-            $('#study-table-body').find('tr:gt(29)').remove();
-
             $(this).addClass('table-collapsed');
             $(this).empty().text("Expand all studies");
-            $('#study-summaries').addClass('more-results');
-            $('.study-toggle').empty().text("Show more results");
+
+            if (!window.location.hash) {
+                $('#study-table-body').find('tr:gt(29)').remove();
+                $('#study-summaries').addClass('more-results');
+                $('.study-toggle').empty().text("Show more results");
+            }
         }
     });
 
@@ -179,6 +181,8 @@ function addResults(data, expand, id){
     else {
         var documents = data.response.docs;
         console.log("Got a bunch of docs" + documents.length);
+
+        setDownloadLink(data.responseHeader.params);
 
         if (data.responseHeader.params.fq == "resourcename:study" || $.inArray("resourcename:study", data.responseHeader.params.fq) != -1) {
             console.log("Processing studies");

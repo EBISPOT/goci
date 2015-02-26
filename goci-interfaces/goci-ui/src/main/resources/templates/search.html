@@ -63,19 +63,19 @@
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="index.html" th:href="@{home}">Home <span class="sr-only">(current)</span></a></li>
                 <li class="active"><a href="search.html" th:href="@{search}">Search</a></li>
-                <li><a href="http://www.ebi.ac.uk/fgpt/gwas">View</a></li>
+                <li><a href="http://www.ebi.ac.uk/fgpt/gwas">Diagram</a></li>
                 <li class="hidden-sm"><a href="docs/downloads" th:href="@{docs/downloads}">Download</a></li>
                 <li><a href="docs" th:href="@{docs}">Help</a></li>
                 <li class="hidden-sm"><a href="docs/about" th:href="@{docs/about}">About</a></li>
                 <li>
-                    <a class="icon" href="http://www.ebi.ac.uk">
+                    <a class="icon" id="ebi-logo" href="http://www.ebi.ac.uk">
                         <img alt="EBI logo"
-                             src="../static/icons/EMBL_EBI_Logo_white_scaled.png"
-                             th:src="@{icons/EMBL_EBI_Logo_white_scaled.png}"/>
+                             src="../static/icons/EMBL_EBI_Logo_white.png"
+                             th:src="@{icons/EMBL_EBI_Logo_white.png}"/>
                     </a>
                 </li>
                 <li>
-                    <a class="icon" href="http://www.genome.gov">
+                    <a class="icon" id="nhgri-logo" href="http://www.genome.gov">
                         <img alt="GWAS logo"
                              src="../static/icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png"
                              th:src="@{icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png}"/>
@@ -191,7 +191,7 @@
                                             <span class="filter-label">p-value
                                                 <span class="glyphicon glyphicon-question-sign context-help"
                                                       data-toggle="tooltip"
-                                                      data-original-title="Reported p-value for strongest SNP risk allele"></span>
+                                                      data-original-title="p-value for SNP-disease/trait association"></span>
                                             </span>
                                             <span class="pval-label">&le;</span>
                                             <input class="p-value" type="text" id="pval-mant" placeholder="5"/>
@@ -203,17 +203,17 @@
                                             <span class="filter-label">Odds ratio
                                                 <span class="glyphicon glyphicon-question-sign context-help"
                                                       data-toggle="tooltip"
-                                                      data-original-title="Reported odds ratio associated with strongest SNP risk allele"></span>
+                                                      data-original-title="Odds ratio associated with SNP-disease/trait association"></span>
                                             </span>
                                             <input class="filter-value" type="text" id="or-min" placeholder="from"/>
                                             <input class="filter-value" type="text" id="or-max" placeholder="to"/>
                                         </div>
 
                                         <div class="list-group-item filter-element ">
-                                            <span class="filter-label">beta coefficient
+                                            <span class="filter-label">Beta coefficient
                                                 <span class="glyphicon glyphicon-question-sign context-help"
                                                       data-toggle="tooltip"
-                                                      data-original-title="Reported beta coefficient associated with strongest SNP risk allele"></span>
+                                                      data-original-title="Beta coefficient associated with SNP-disease/trait association"></span>
                                             </span>
                                             <input class="filter-value" type="text" id="beta-min" placeholder="from"/>
                                             <input class="filter-value" type="text" id="beta-max" placeholder="to"/>
@@ -223,7 +223,7 @@
                                             <span class="filter-label">Study date
                                                 <span class="glyphicon glyphicon-question-sign context-help"
                                                       data-toggle="tooltip"
-                                                      data-original-title="Publication date (online (epub) date if available)"></span>
+                                                      data-original-title="Publication date (YYYY-MM-DD)"></span>
                                             </span>
                                             <input class="filter-value"
                                                    data-provide="datepicker"
@@ -241,7 +241,7 @@
                                             <span class="filter-label">Catalog Trait
                                                 <span class="glyphicon glyphicon-question-sign context-help"
                                                       data-toggle="tooltip"
-                                                      data-original-title="Disease or trait examined in study (total number of studies for this trait)"></span>
+                                                      data-original-title="List of related disease/trait descriptions (total number of studies for this trait)"></span>
                                             </span>
 
                                             <div class="filter-values">
@@ -270,21 +270,14 @@
                                 </div>
                             </form>
                             </div>
-                            <div id="catalog-stats" style="padding-top: 10%">
-                                <!--<ul th:object="${stats}" id="variables">-->
-                                    <!--<li id="date" th:text="*{date}">Latest data release: 2015-02-17</li>-->
-                                    <!--<li id="studies" th:text="*{studies}">2109 studies</li>-->
-                                    <!--<li id="associations" th:text="*{associations}">15317 associations</li>-->
-                                    <!--<li id="genomebuild" th:text="*{genomebuild}">Genome Assembly GRCh38/hg37.p13</li>-->
-
-                                <!--</ul>-->
+                            <div id="catalog-stats" style="display: none" class="row">
                                 <h4>Catalog stats</h4>
-                                <ul id="stats">
-                                    <li id="date" >Latest data release: 2015-02-17</li>
-                                    <li id="studies" >2109 studies</li>
-                                    <li id="associations" >15317 associations</li>
-                                    <li id="genomebuild" >Genome Assembly GRCh38/hg37.p13</li>
-
+                                <ul>
+                                    <li id="releasedate-stat" ></li>
+                                    <li id="studies-stat" ></li>
+                                    <li id="associations-stat" ></li>
+                                    <li id="genomebuild" ></li>
+                                    <li id="dbsnpbuild" ></li>
                                 </ul>
                             </div>
                         </div>
@@ -310,14 +303,14 @@
                             <h2>Search results for
                                 <em><span id="search-term" th:text="*{query}">query term</span></em>
                             </h2>
-                            <a href="results.txt" target="_blank">Download search results
+                            <a href="api/search/downloads?q=*" target="_blank" id="results-download">Download search results
                                 <span class="glyphicon glyphicon-download-alt"> </span>
                             </a>
                         </div>
 
 
                         <div id="study-summaries" class="results-container">
-                            <div>
+                            <div class="row" style="margin-top: 0">
                                 <span class="col-md-6" style="padding-left: 0"><h3><i>Studies</i></h3></span>
                                 <span class="col-md-6"><button type="button"
                                                                id="expand-table"
@@ -332,38 +325,38 @@
                                     <th style="width: 12%" id="author_s">Author
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
-                                              data-original-title="Name of first author"></span>
-                                          <span class="glyphicon glyphicon-sort sorting unsorted"> </span>
+                                              data-original-title="First author, along with link to publication in Europe PubMed Central."></span>
+                                          <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
                                     </th>
                                     <th style="width: 10%" id="publicationDate">Date
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
-                                              data-original-title="Publication date (online (epub) date if available)"></span>
-                                        <span class="glyphicon glyphicon-sort sorting unsorted"> </span>
+                                              data-original-title="Publication date (YYYY-MM-DD)"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
                                     </th>
-                                    <th style="width: 15%" id="publication">Publication
+                                    <th style="width: 15%" id="publication">Journal
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
                                               data-original-title="Abbreviated journal name"></span>
-                                        <span class="glyphicon glyphicon-sort sorting unsorted"> </span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
                                     </th>
                                     <th style="width: 30%" id="title">Title
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
                                               data-original-title="Title of paper"></span>
-                                        <span class="glyphicon glyphicon-sort sorting unsorted"> </span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
                                     </th>
                                     <th style="width: 20%" id="traitName_s">Reported trait
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
-                                              data-original-title="Disease or trait examined in study"></span>
-                                        <span class="glyphicon glyphicon-sort sorting unsorted"> </span>
+                                              data-original-title="Description of disease/trait analysed in the study"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
                                     </th>
                                     <th style="width: 8%" id="associationCount">Association count
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
-                                              data-original-title="Count of associations linked to this study"></span>
-                                        <span class="glyphicon glyphicon-sort sorting unsorted"> </span>
+                                              data-original-title="Number of SNP-disease/trait associations included in the Catalog"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
                                     </th>
                                     <th style="width: 5%"></th>
                                 </tr>
@@ -383,57 +376,57 @@
                             <table id="association-table" class="table table-striped">
                                 <thead id="association-table-header">
                                 <tr>
-                                    <th style="width: 10%" id="strongestAllele">Risk/effect SNP-allele
+                                    <th style="width: 10%" id="strongestAllele">SNP
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
-                                              data-original-title="SNP(s) most strongly associated with trait + risk allele (? for unknown risk allele). May also refer to a haplotype"></span>
-                                        <span class="glyphicon glyphicon-sort sorting unsorted"> </span>
+                                              data-original-title="SNP most strongly associated with trait + risk/effect allele. This may also be haplotype or SNPxSNP interaction."></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
                                     </th>
-                                    <th style="width: 8%" id="riskFrequency">Risk Allele Frequency in Controls
+                                    <th style="width: 8%" id="riskFrequency">RAF
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
-                                              data-original-title="Reported risk allele frequency associated with strongest SNP"></span>
-                                        <span class="glyphicon glyphicon-sort sorting unsorted"> </span>
+                                              data-original-title="Risk/effect allele frequency in controls"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
                                     </th>
-                                    <th style="width: 8%" id="pValue">p-value (qualifier)
+                                    <th style="width: 8%" id="pValue">p-value
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
-                                              data-original-title="Reported p-value for strongest SNP risk allele"></span>
-                                        <span class="glyphicon glyphicon-sort sorting unsorted"> </span>
+                                              data-original-title="p-value for most strongly associated SNP, along with any information describing context of p-value"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
                                     </th>
-                                    <th style="width: 6%" id="orPerCopyNum">Odds ratio
+                                    <th style="width: 6%" id="orPerCopyNum">OR
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
-                                              data-original-title="Reported odds ratio associated with strongest SNP risk allele"></span>
-                                        <span class="glyphicon glyphicon-sort sorting unsorted"> </span>
+                                              data-original-title="Odds ratio associated with SNP"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
                                     </th>
-                                    <th style="width: 8%" id="orType">beta-coefficient &amp; unit description
+                                    <th style="width: 8%" id="orType">Beta
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
-                                              data-original-title="Reported beta-coefficient associated with strongest SNP risk allele"></span>
-                                        <span class="glyphicon glyphicon-sort sorting unsorted"> </span>
+                                              data-original-title="Beta-coefficient and unit increase/decrease associated with SNP"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
                                     </th>
-                                    <th style="width: 6%">[95% CI]
+                                    <th style="width: 6%">CI
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
-                                              data-original-title="Reported 95% confidence interval associated with strongest SNP risk allele"></span>
+                                              data-original-title="95% confidence interval for OR or &beta;"></span>
                                     </th>
-                                    <th style="width: 8%">Chromosome region
+                                    <th style="width: 6%">Region
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
-                                              data-original-title="Chromosomal region"></span>
+                                              data-original-title="Cytogenetic region of SNP"></span>
                                     </th>
-                                    <th style="width: 6%" id="chromosomePosition">Base pair location
+                                    <th style="width: 6%" id="chromosomePosition">Location
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
-                                              data-original-title="Chromosomal base pair location"></span>
-                                        <span class="glyphicon glyphicon-sort sorting unsorted"> </span>
+                                              data-original-title="Chromosome and base pair location of SNP"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
 
                                     </th>
-                                    <th style="width: 8%"> Context
+                                    <th style="width: 8%">Functional class
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
-                                              data-original-title="Genomic context"></span>
+                                              data-original-title="Functional class of SNP"></span>
                                     </th>
                                     <th style="width: 8%">Reported gene(s)
                                         <span class="glyphicon glyphicon-question-sign context-help"
@@ -443,19 +436,19 @@
                                     <th style="width: 8%">Mapped gene(s)
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
-                                              data-original-title="Gene(s) mapped to the strongest SNP (NCBI). If the SNP is located within a gene, that gene is listed. If the SNP is intergenic, the upstream and downstream genes are listed, separated by a hyphen"></span>
+                                              data-original-title="Gene(s) mapped by the NCBI"></span>
                                     </th>
                                     <th style="width: 8%" id="traitName_s-alt">Reported trait
                                         <span class="glyphicon glyphicon-question-sign"
                                               data-toggle="tooltip"
-                                              data-original-title="Disease or trait examined in study"></span>
-                                        <span class="glyphicon glyphicon-sort sorting unsorted"> </span>
+                                              data-original-title="Description of disease/trait analysed in the study"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
                                     </th>
                                     <th style="width: 8%" id="author_s-alt">Study
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
-                                              data-original-title="Link to study information"></span>
-                                        <span class="glyphicon glyphicon-sort sorting unsorted"> </span>
+                                              data-original-title="First author and year of publication, along with link to publication in Europe PubMed Central."></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
                                     </th>
                                 </tr>
                                 </thead>
@@ -476,8 +469,8 @@
                                     <th style="width: 30%" id="traitName_s-alt2">Reported trait
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
-                                              data-original-title="Disease or trait name"></span>
-                                        <span class="glyphicon glyphicon-sort sorting unsorted"> </span>
+                                              data-original-title="Description of disease/trait analysed in the study"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
                                     </th>
                                     <th style="width: 25%">Mapped ontology traits
                                         <span class="glyphicon glyphicon-question-sign context-help"
@@ -492,7 +485,7 @@
                                     <th style="width: 15%">Study
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
-                                              data-original-title="Link to study information"></span>
+                                              data-original-title="First author and year of publication, along with link to publication in Europe PubMed Central."></span>
                                     </th>
                                 </tr>
                                 </thead>
@@ -546,6 +539,7 @@
 ================================================== -->
 <script src="../static/js/goci-ui.js" th:src="@{js/goci-ui.js}"></script>
 <script src="../static/js/solrsearch.js" th:src="@{js/solrsearch.js}"></script>
+<script src="../static/js/documentprocessor.js" th:src="@{js/documentprocessor.js}"></script>
 <script src="../static/js/solrfacet.js" th:src="@{js/solrfacet.js}"></script>
 <script src="../static/js/solrfilter.js" th:src="@{js/solrfilter.js}"></script>
 <script src="../static/js/resultexpansion.js" th:src="@{js/resultexpansion.js}"></script>

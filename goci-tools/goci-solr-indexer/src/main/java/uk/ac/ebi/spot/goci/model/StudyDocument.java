@@ -4,6 +4,7 @@ import org.apache.solr.client.solrj.beans.Field;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.TimeZone;
@@ -22,6 +23,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String publication;
     @Field private String publicationDate;
     @Field private String catalogAddedDate;
+    @Field private String publicationLink;
 
     @Field @NonEmbeddableField private String platform;
     @Field @NonEmbeddableField private Boolean cnv;
@@ -74,6 +76,17 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
             this.catalogAddedDate = df.format(study.getHousekeeping().getPublishDate());
         }
 
+        String year;
+        if (study.getStudyDate() != null) {
+            Calendar studyCal = Calendar.getInstance();
+            studyCal.setTime(study.getStudyDate());
+            year = String.valueOf(studyCal.get(Calendar.YEAR));
+        }
+        else {
+            year = "N/A";
+        }
+        this.publicationLink = author.concat("|").concat(year).concat("|").concat(pubmedId);
+
         this.qualifiers = new LinkedHashSet<>();
         this.rsIds = new LinkedHashSet<>();
         this.strongestAlleles = new LinkedHashSet<>();
@@ -115,6 +128,10 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
     public String getCatalogAddedDate() {
         return catalogAddedDate;
+    }
+
+    public String getPublicationLink() {
+        return publicationLink;
     }
 
     public String getPlatform() {
