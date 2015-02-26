@@ -37,6 +37,9 @@ public class CatalogImportRepository {
     private SimpleJdbcInsert insertAssociationReport;
     private AssociationReportUpdate updateAssociationReport;
 
+    private static final String SELECT_STUDY_REPORTS =
+            "SELECT ID FROM STUDY_REPORT WHERE STUDY_ID = ?";
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -219,32 +222,7 @@ public class CatalogImportRepository {
                             throw new DataImportException(
                                     "Unrecognised column flagged for import: " + binding.getLoadName());
                     }
-                    // Once you have all bits for a study report, association report add them
-                    addStudyReport(studyId,
-                                   pubmedIdError,
-                                   ncbiPaperTitle,
-                                   ncbiFirstAuthor,
-                                   ncbiNormalisedFirstAuthor,
-                                   ncbiFirstUpdateDate);
-                    addAssociationReport(associationId,
-                                         lastUpdateDate,
-                                         geneError,
-                                         snpError,
-                                         snpGeneOnDiffChr,
-                                         noGeneForSymbol,
-                                         geneNotOnGenome);
-                    addMappedData(studyId,
-                                  associationId,
-                                  region,
-                                  chromosomeName,
-                                  chromosomePosition,
-                                  upstreamMappedGene,
-                                  upstreamEntrezGeneId,
-                                  upstreamGeneDistance,
-                                  downstreamMappedGene,
-                                  downstreamEntrezGeneId,
-                                  downstreamGeneDistance,
-                                  isIntergenic);
+
                 }
                 catch (ParseException e) {
                     getLog().error("Unable to parse date at row " + row, e);
@@ -255,7 +233,36 @@ public class CatalogImportRepository {
                     caughtErrors = true;
                 }
             }
+
+            // Once you have all bits for a study report, association report add them
+            addStudyReport(studyId,
+                           pubmedIdError,
+                           ncbiPaperTitle,
+                           ncbiFirstAuthor,
+                           ncbiNormalisedFirstAuthor,
+                           ncbiFirstUpdateDate);
+            addAssociationReport(associationId,
+                                 lastUpdateDate,
+                                 geneError,
+                                 snpError,
+                                 snpGeneOnDiffChr,
+                                 noGeneForSymbol,
+                                 geneNotOnGenome);
+            addMappedData(studyId,
+                          associationId,
+                          region,
+                          chromosomeName,
+                          chromosomePosition,
+                          upstreamMappedGene,
+                          upstreamEntrezGeneId,
+                          upstreamGeneDistance,
+                          downstreamMappedGene,
+                          downstreamEntrezGeneId,
+                          downstreamGeneDistance,
+                          isIntergenic);
+
         }
+
 
         if (caughtErrors) {
             throw new DataImportException("Caught errors whilst processing data import - " +
@@ -269,10 +276,26 @@ public class CatalogImportRepository {
                                 String ncbiFirstAuthor,
                                 String ncbiNormalisedFirstAuthor, Date ncbiFirstUpdateDate) {
 
+
+        // Check for an existing id in database
+        Long studyReportIdInDatabase = jdbcTemplate.queryForObject(SELECT_STUDY_REPORTS, Long.class, studyId);
+
         Map<String, Object> studyArgs = new HashMap<>();
         studyArgs.put("STUDY_ID", studyId);
+        studyArgs.put("PUBMED_ID_ERROR", pubmedIdError);
         studyArgs.put("NCBI_PAPER_TITLE", ncbiPaperTitle);
-        insertStudyReport.execute(studyArgs);
+        studyArgs.put("NCBI_FIRST_AUTHOR", ncbiFirstAuthor);
+        studyArgs.put("NCBI_NORMALISED_FIRST_AUTHOR", ncbiNormalisedFirstAuthor);
+        studyArgs.put("NCBI_FIRST_UPDATE_DATE", ncbiFirstUpdateDate);
+
+        if (studyReportIdInDatabase != null) {
+            insertStudyReport.execute(studyArgs);
+        }
+
+        else {
+            studyArgs.put("ID", studyReportIdInDatabase);
+            updateStudyReport.updateByNamedParam(studyArgs);
+        }
 
 
     }
@@ -284,6 +307,16 @@ public class CatalogImportRepository {
                                       String snpGeneOnDiffChr,
                                       String noGeneForSymbol,
                                       String geneNotOnGenome) {
+
+        Map<String, Object> associationArgs = new HashMap<>();
+        associationArgs.put("ASSOCIATION_ID", associationId);
+        associationArgs.put("LAST_UPDATE_DATE", lastUpdateDate);
+        associationArgs.put("GENE_ERROR", geneError);
+        associationArgs.put("SNP_ERROR", snpError);
+        associationArgs.put("SNP_GENE_ON_DIFF_CHR", snpGeneOnDiffChr);
+        associationArgs.put("NO_GENE_FOR_SYMBOL", noGeneForSymbol);
+        associationArgs.put("GENE_NOT_ON_GENOME", geneNotOnGenome);
+        insertAssociationReport.execute(associationArgs);
 
 
     }
