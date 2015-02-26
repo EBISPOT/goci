@@ -27,7 +27,7 @@ public enum CatalogHeaderBinding {
     REPORTED_GENE("REPORTED_GENE", "REPORTED GENE(S)", "REPORTED GENE(S)", false),
     MAPPED_GENE("MAPPED_GENE", false, true, false),
     DOWNLOAD_MAPPED_GENE(null, false, "MAPPED GENE", false),
-    ENTREZ_GENE_ID("ENTREZ_GENE_ID", false, "SNP_GENE_IDS", true),
+    ENTREZ_GENE_ID("ENTREZ_GENE_ID", false, "SNP_GENE_IDS", false),
     UPSTREAM_MAPPED_GENE("UPSTREAM_MAPPED_GENE", false, true, "upstream_gene_symbol"),
     UPSTREAM_ENTREZ_GENE_ID("UPSTREAM_ENTREZ_GENE_ID", false, "UPSTREAM_GENE_ID", "upstream_gene"),
     UPSTREAM_GENE_DISTANCE("UPSTREAM_GENE_DISTANCE", false, "UPSTREAM_GENE_DISTANCE", "upstream_gene_distance"),
@@ -40,7 +40,7 @@ public enum CatalogHeaderBinding {
                               false),
     SNP_RSID("SNP_RSID", "SNPS", "SNPS", false),
     MERGED("MERGED", false, "MERGED", false),
-    SNP_ID("SNP_ID", false, false, "snp_id"),
+    SNP_ID("SNP_ID", false, false, false),
     CONTEXT("CONTEXT", false, "CONTEXT", false),
     IS_INTERGENIC("IS_INTERGENIC", false, true, "intergenic"),
     DOWNLOAD_INTERGENIC(null, false, "INTERGENIC", false),
@@ -56,12 +56,17 @@ public enum CatalogHeaderBinding {
     SPREADSHEET_CNV(null, "CNV", "CNV", false),
     ASSOCIATION_ID("ASSOCIATION_ID", "GWASTUDIESSNPID", false, "studies_snp_id"),
     STUDY_ID("STUDY_ID", "GWASTUDYID", false, "gwas_study_id"),
-    RESULT_PUBLISHED("RESULT_PUBLISHED", true, false, true, false),
+    RESULT_PUBLISHED("RESULT_PUBLISHED", true, false, false, false),
     NCBI_RESULT_PUBLISHED(null, "RESULTPUBLISHED", false, false),
     CURATION_STATUS("CURATION_STATUS", false, false, false),
     // Added to deal with file returned from NCBI
     PUBMED_ID_ERROR("PUBMED_ID_ERROR", false, false, "pubmdID_error"),
+    NCBI_PAPER_TITLE("NCBI_PAPER_TITLE", false, false, "paper_title"),
+    NCBI_FIRST_AUTHOR("NCBI_FIRST_AUTHOR", false, false, "author_first"),
+    NCBI_NORMALISED_FIRST_AUTHOR("NCBI_NORMALIZED_FIRST_AUTHOR", false, false, "normalized_author_first"),
+    NCBI_FIRST_UPDATE_DATE("NCBI_FIRST_UPDATE_DATE", false, false, "pub_date"),
     SNP_ERROR("SNP_ERROR", false, false, "snp_id_error"),
+    GENE_ERROR("GENE_ERROR", false, false, "gene_id_error"),
     SNP_GENE_ON_DIFF_CHR("SNP_GENE_ON_DIFF_CHR", false, false, "snp_gene_on_diff_chr"),
     NO_GENE_FOR_SYMBOL("NO_GENE_FOR_SYMBOL", false, false, "no_geneid_for_symbol"),
     GENE_NOT_ON_GENOME("GENE_NOT_ON_GENOME", false, false, "gene_not_on_genome");
@@ -214,6 +219,14 @@ public enum CatalogHeaderBinding {
 
     boolean requiredByDownload() {
         return this.isDownloadRequired;
+    }
+
+    public String getLoadName() {
+        return this.loadName;
+    }
+
+    public boolean requiredByLoad() {
+        return this.isLoadRequired;
     }
 
     public boolean isDate() {

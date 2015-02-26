@@ -53,7 +53,7 @@ public class ImportExportApplication {
     }
 
     public static void main(String... args) {
-        System.out.println("Starting catalog download service...");
+        System.out.println("Starting catalog I/O service...");
         ApplicationContext ctx = SpringApplication.run(ImportExportApplication.class, args);
         SpringApplication.exit(ctx, () -> exitCode);
     }
