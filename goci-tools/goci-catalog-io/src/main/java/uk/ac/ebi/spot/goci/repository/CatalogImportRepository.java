@@ -31,6 +31,8 @@ import java.util.Map;
 public class CatalogImportRepository {
     private JdbcTemplate jdbcTemplate;
 
+    private SimpleJdbcInsert insertStudyReport;
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -40,7 +42,7 @@ public class CatalogImportRepository {
     @Autowired(required = false)
     public CatalogImportRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        SimpleJdbcInsert insertStudyReport =
+        this.insertStudyReport =
                 new SimpleJdbcInsert(jdbcTemplate)
                         .withTableName("STUDY_REPORT")
                         .usingColumns("STUDY_ID")
@@ -262,6 +264,11 @@ public class CatalogImportRepository {
                                 String ncbiPaperTitle,
                                 String ncbiFirstAuthor,
                                 String ncbiNormalisedFirstAuthor, Date ncbiFirstUpdateDate) {
+
+        Map<String, Object> studyArgs = new HashMap<>();
+        studyArgs.put("STUDY_ID", studyId);
+        studyArgs.put("NCBI_PAPER_TITLE", ncbiPaperTitle);
+        insertStudyReport.execute(studyArgs);
 
 
     }
