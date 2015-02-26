@@ -267,7 +267,11 @@ public class CatalogImportRepository {
 
         Map<String, Object> studyArgs = new HashMap<>();
         studyArgs.put("STUDY_ID", studyId);
+        studyArgs.put("PUBMED_ID_ERROR", pubmedIdError);
         studyArgs.put("NCBI_PAPER_TITLE", ncbiPaperTitle);
+        studyArgs.put("",ncbiFirstAuthor);
+        studyArgs.put("", ncbiNormalisedFirstAuthor);
+        studyArgs.put("", ncbiFirstUpdateDate);
         insertStudyReport.execute(studyArgs);
 
 
