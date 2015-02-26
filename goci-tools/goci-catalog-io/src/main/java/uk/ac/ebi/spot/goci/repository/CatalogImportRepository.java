@@ -303,6 +303,17 @@ public class CatalogImportRepository {
                                       String noGeneForSymbol,
                                       String geneNotOnGenome) {
 
+        Map<String, Object> associationArgs = new HashMap<>();
+        associationArgs.put("ASSOCIATION_ID", associationId);
+        associationArgs.put("LAST_UPDATE_DATE", lastUpdateDate);
+        associationArgs.put("GENE_ERROR", geneError);
+        associationArgs.put("SNP_ERROR", snpError);
+        associationArgs.put("SNP_GENE_ON_DIFF_CHR", snpGeneOnDiffChr);
+        associationArgs.put("NO_GENE_FOR_SYMBOL", noGeneForSymbol);
+        associationArgs.put("GENE_NOT_ON_GENOME", geneNotOnGenome);
+        insertAssociationReport.execute(associationArgs);
+
+
 
     }
 
