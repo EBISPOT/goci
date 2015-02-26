@@ -419,7 +419,7 @@ public class CatalogImportRepository {
                            "SNP_ERROR = ?, " +
                            "SNP_GENE_ON_DIFF_CHR = ?, " +
                            "NO_GENE_FOR_SYMBOL = ?, " +
-                           "GENE_NOT_ON_GENOME = ?, " +
+                           "GENE_NOT_ON_GENOME = ? " +
                            "WHERE ID = ?");
             declareParameter(new SqlParameter("ASSOCIATION_ID", Types.NUMERIC));
             declareParameter(new SqlParameter("LAST_UPDATE_DATE", Types.DATE));
