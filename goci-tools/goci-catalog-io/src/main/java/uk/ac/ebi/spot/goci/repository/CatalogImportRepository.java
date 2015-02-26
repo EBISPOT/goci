@@ -32,6 +32,10 @@ public class CatalogImportRepository {
     private JdbcTemplate jdbcTemplate;
 
     private SimpleJdbcInsert insertStudyReport;
+    private StudyReportUpdate updateStudyReport;
+
+    private SimpleJdbcInsert insertAssociationReport;
+    private AssociationReportUpdate updateAssociationReport;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -53,9 +57,9 @@ public class CatalogImportRepository {
                         .usingColumns("NCBI_FIRST_UPDATE_DATE")
                         .usingGeneratedKeyColumns("ID");
 
-        StudyReportUpdate updateStudyReport = new StudyReportUpdate(jdbcTemplate);
+        this.updateStudyReport = new StudyReportUpdate(jdbcTemplate);
 
-        SimpleJdbcInsert insertAssociationReport =
+        this.insertAssociationReport =
                 new SimpleJdbcInsert(jdbcTemplate)
                         .withTableName("ASSOCIATION_REPORT")
                         .usingColumns("ASSOCIATION_ID")
@@ -67,7 +71,7 @@ public class CatalogImportRepository {
                         .usingColumns("GENE_NOT_ON_GENOME")
                         .usingGeneratedKeyColumns("ID");
 
-        AssociationReportUpdate updateAssociationReport = new AssociationReportUpdate(jdbcTemplate);
+        this.updateAssociationReport = new AssociationReportUpdate(jdbcTemplate);
     }
 
     public void loadNCBIMappedData(String[][] data) {
