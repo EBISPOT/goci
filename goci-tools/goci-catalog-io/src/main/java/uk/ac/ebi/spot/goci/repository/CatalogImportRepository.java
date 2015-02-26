@@ -37,6 +37,8 @@ public class CatalogImportRepository {
     private SimpleJdbcInsert insertAssociationReport;
     private AssociationReportUpdate updateAssociationReport;
 
+    private MappedDataUpdate mappedDataUpdate;
+
     private static final String SELECT_STUDY_REPORTS =
             "SELECT ID FROM STUDY_REPORT WHERE STUDY_ID = ?";
 
@@ -225,32 +227,7 @@ public class CatalogImportRepository {
                             throw new DataImportException(
                                     "Unrecognised column flagged for import: " + binding.getLoadName());
                     }
-                    // Once you have all bits for a study report, association report add them
-                    addStudyReport(studyId,
-                                   pubmedIdError,
-                                   ncbiPaperTitle,
-                                   ncbiFirstAuthor,
-                                   ncbiNormalisedFirstAuthor,
-                                   ncbiFirstUpdateDate);
-                    addAssociationReport(associationId,
-                                         lastUpdateDate,
-                                         geneError,
-                                         snpError,
-                                         snpGeneOnDiffChr,
-                                         noGeneForSymbol,
-                                         geneNotOnGenome);
-                    addMappedData(studyId,
-                                  associationId,
-                                  region,
-                                  chromosomeName,
-                                  chromosomePosition,
-                                  upstreamMappedGene,
-                                  upstreamEntrezGeneId,
-                                  upstreamGeneDistance,
-                                  downstreamMappedGene,
-                                  downstreamEntrezGeneId,
-                                  downstreamGeneDistance,
-                                  isIntergenic);
+
                 }
                 catch (ParseException e) {
                     getLog().error("Unable to parse date at row " + row, e);
@@ -261,7 +238,36 @@ public class CatalogImportRepository {
                     caughtErrors = true;
                 }
             }
+
+            // Once you have all bits for a study report, association report add them
+            addStudyReport(studyId,
+                           pubmedIdError,
+                           ncbiPaperTitle,
+                           ncbiFirstAuthor,
+                           ncbiNormalisedFirstAuthor,
+                           ncbiFirstUpdateDate);
+            addAssociationReport(associationId,
+                                 lastUpdateDate,
+                                 geneError,
+                                 snpError,
+                                 snpGeneOnDiffChr,
+                                 noGeneForSymbol,
+                                 geneNotOnGenome);
+            addMappedData(studyId,
+                          associationId,
+                          region,
+                          chromosomeName,
+                          chromosomePosition,
+                          upstreamMappedGene,
+                          upstreamEntrezGeneId,
+                          upstreamGeneDistance,
+                          downstreamMappedGene,
+                          downstreamEntrezGeneId,
+                          downstreamGeneDistance,
+                          isIntergenic);
+
         }
+
 
         if (caughtErrors) {
             throw new DataImportException("Caught errors whilst processing data import - " +
@@ -292,7 +298,8 @@ public class CatalogImportRepository {
         }
 
         else {
-            updateStudyReport.update(studyArgs);
+            studyArgs.put("ID", studyReportIdInDatabase);
+            updateStudyReport.updateByNamedParam(studyArgs);
         }
 
 
@@ -324,6 +331,7 @@ public class CatalogImportRepository {
             associationArgs.put("ID", associationReportIdInDatabase);
             updateAssociationReport.updateByNamedParam(associationArgs);
         }
+
     }
 
     private void addMappedData(Long studyId,
@@ -357,6 +365,12 @@ public class CatalogImportRepository {
 
     private class StudyReportUpdate extends SqlUpdate {
         private StudyReportUpdate(JdbcTemplate jdbcTemplate) {
+            //            Long studyId = null; // STUDY_ID
+            //            Integer pubmedIdError = null;  // PUBMED_ID_ERROR
+            //            String ncbiPaperTitle = null; // NCBI_PAPER_TITLE
+            //            String ncbiFirstAuthor = null; // NCBI_FIRST_AUTHOR
+            //            String ncbiNormalisedFirstAuthor = null; // NCBI_NORMALIZED_FIRST_AUTHOR
+            //            Date ncbiFirstUpdateDate = null; // NCBI_FIRST_UPDATE_DATE
             setJdbcTemplate(jdbcTemplate);
             setSql("UPDATE STUDY_REPORT SET " +
                            "STUDY_ID = ?, " +
@@ -368,21 +382,24 @@ public class CatalogImportRepository {
                            "WHERE ID = ?");
             declareParameter(new SqlParameter("studyId", Types.NUMERIC));
             declareParameter(new SqlParameter("pubmedIdError", Types.NUMERIC));
+            declareParameter(new SqlParameter("ncbiPaperTitle", Types.VARCHAR));
+            declareParameter(new SqlParameter("ncbiFirstAuthor", Types.VARCHAR));
+            declareParameter(new SqlParameter("ncbiNormalizedFirstAuthor", Types.VARCHAR));
+            declareParameter(new SqlParameter("ncbiFirstUpdateDate", Types.DATE));
             declareParameter(new SqlParameter("id", Types.NUMERIC));
-            // ... declare more parameters!
             compile();
         }
     }
 
     private class AssociationReportUpdate extends SqlUpdate {
         public AssociationReportUpdate(JdbcTemplate jdbcTemplate) {
-            //        Long associationId = null; // ASSOCIATION_ID
-            //        Date lastUpdateDate = null; // LAST_UPDATE_DATE
-            //        Long geneError = null; // GENE_ERROR
-            //        String snpError = null; // SNP_ERROR
-            //        String snpGeneOnDiffChr = null; // SNP_GENE_ON_DIFF_CHR
-            //        String noGeneForSymbol = null; // NO_GENE_FOR_SYMBOL
-            //        String geneNotOnGenome = null; // GENE_NOT_ON_GENOME
+            //            Long associationId = null; // ASSOCIATION_ID
+            //            Date lastUpdateDate = null; // LAST_UPDATE_DATE
+            //            Long geneError = null; // GENE_ERROR
+            //            String snpError = null; // SNP_ERROR
+            //            String snpGeneOnDiffChr = null; // SNP_GENE_ON_DIFF_CHR
+            //            String noGeneForSymbol = null; // NO_GENE_FOR_SYMBOL
+            //            String geneNotOnGenome = null; // GENE_NOT_ON_GENOME
             setJdbcTemplate(jdbcTemplate);
             setSql("UPDATE ASSOCIATION_REPORT SET " +
                            "ASSOCIATION_ID = ?, " +
@@ -394,9 +411,51 @@ public class CatalogImportRepository {
                            "GENE_NOT_ON_GENOME = ?, " +
                            "WHERE ID = ?");
             declareParameter(new SqlParameter("associationId", Types.NUMERIC));
-            declareParameter(new SqlParameter("lastUpdateDate", Types.NUMERIC));
+            declareParameter(new SqlParameter("lastUpdateDate", Types.DATE));
+            declareParameter(new SqlParameter("geneError", Types.NUMERIC));
+            declareParameter(new SqlParameter("snpError", Types.VARCHAR));
+            declareParameter(new SqlParameter("snpGeneOnDiffChr", Types.VARCHAR));
+            declareParameter(new SqlParameter("noGeneForSymbol", Types.VARCHAR));
+            declareParameter(new SqlParameter("geneNotOnGenome", Types.VARCHAR));
             declareParameter(new SqlParameter("id", Types.NUMERIC));
-            // ... declare more parameters!
+            compile();
+        }
+    }
+
+    private class MappedDataUpdate extends SqlUpdate {
+        public MappedDataUpdate(JdbcTemplate jdbcTemplate) {
+            //            String region = null; // REGION
+            //            String chromosomeName = null; // CHROMOSOME_NAME
+            //            String chromosomePosition = null; // CHROMOSOME_POSITION
+            //            String upstreamMappedGene = null; // UPSTREAM_MAPPED_GENE
+            //            String upstreamEntrezGeneId = null; // UPSTREAM_ENTREZ_GENE_ID
+            //            Integer upstreamGeneDistance = null; // UPSTREAM_GENE_DISTANCE
+            //            String downstreamMappedGene = null; // DOWNSTREAM_MAPPED_GENE
+            //            String downstreamEntrezGeneId = null; // DOWNSTREAM_ENTREZ_GENE_ID
+            //            Integer downstreamGeneDistance = null; // DOWNSTREAM_GENE_DISTANCE
+            //            Boolean isIntergenic = null; // IS_INTERGENIC
+            setJdbcTemplate(jdbcTemplate);
+            setSql("UPDATE CATALOG_SUMMARY_VIEW SET " +
+                           "REGION = ?," +
+                           "CHROMOSOME_NAME = ?, " +
+                           "CHROMOSOME_POSITION = ?, " +
+                           "UPSTREAM_MAPPED_GENE = ?, " +
+                           "UPSTREAM_ENTREZ_GENE_ID = ?," +
+                           "UPSTREAM_GENE_DISTANCE = ?," +
+                           "DOWNSTREAM_MAPPED_GENE = ?," +
+                           "DOWNSTREAM_GENE_DISTANCE = ?," +
+                           "IS_INTERGENIC = ?" +
+                           "WHERE STUDY_ID = ? AND ASSOCIATION_ID = ?");
+            declareParameter(new SqlParameter("region", Types.VARCHAR));
+            declareParameter(new SqlParameter("chromosomeName", Types.VARCHAR));
+            declareParameter(new SqlParameter("chromosomePosition", Types.VARCHAR));
+            declareParameter(new SqlParameter("upstreamMappedGene", Types.VARCHAR));
+            declareParameter(new SqlParameter("upstreamEntrezGeneId", Types.VARCHAR));
+            declareParameter(new SqlParameter("upstreamGeneDistance", Types.NUMERIC));
+            declareParameter(new SqlParameter("downstreamMappedGene", Types.VARCHAR));
+            declareParameter(new SqlParameter("downstreamEntrezGeneId", Types.VARCHAR));
+            declareParameter(new SqlParameter("downstreamGeneDistance", Types.NUMERIC));
+            declareParameter(new SqlParameter("isIntergenic", Types.BOOLEAN));
             compile();
         }
     }
