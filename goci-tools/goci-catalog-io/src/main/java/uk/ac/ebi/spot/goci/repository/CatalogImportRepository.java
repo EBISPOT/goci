@@ -33,18 +33,39 @@ public class CatalogImportRepository {
     private JdbcTemplate jdbcTemplate;
 
     private SimpleJdbcInsert insertStudyReport;
-    private StudyReportUpdate updateStudyReport;
 
     private SimpleJdbcInsert insertAssociationReport;
     private AssociationReportUpdate updateAssociationReport;
 
-    private MappedDataUpdate mappedDataUpdate;
-
     private static final String SELECT_STUDY_REPORTS =
             "SELECT ID FROM STUDY_REPORT WHERE STUDY_ID = ?";
 
+    private static final String UPDATE_STUDY_REPORTS =
+            "UPDATE STUDY_REPORT SET " +
+                    "PUBMED_ID_ERROR = ?, " +
+                    "NCBI_PAPER_TITLE = ?, " +
+                    "NCBI_FIRST_AUTHOR = ?, " +
+                    "NCBI_NORMALIZED_FIRST_AUTHOR = ?, " +
+                    "NCBI_FIRST_UPDATE_DATE = ? " +
+                    "WHERE ID = ?";
+
     private static final String SELECT_ASSOCIATION_REPORTS =
             "SELECT ID FROM ASSOCIATION_REPORT WHERE ASSOCIATION_ID = ?";
+
+    private static final String UPDATE_MAPPED_DATA =
+            "UPDATE CATALOG_SUMMARY_VIEW SET " +
+                    "REGION = ?, " +
+                    "CHROMOSOME_NAME = ?, " +
+                    "CHROMOSOME_POSITION = ?, " +
+                    "UPSTREAM_MAPPED_GENE = ?, " +
+                    "UPSTREAM_ENTREZ_GENE_ID = ?, " +
+                    "UPSTREAM_GENE_DISTANCE = ?, " +
+                    "DOWNSTREAM_MAPPED_GENE = ?, " +
+                    "DOWNSTREAM_ENTREZ_GENE_ID = ?, " +
+                    "DOWNSTREAM_GENE_DISTANCE = ?, " +
+                    "IS_INTERGENIC = ? " +
+                    "WHERE STUDY_ID = ? " +
+                    "AND ASSOCIATION_ID = ?";
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -52,21 +73,33 @@ public class CatalogImportRepository {
         return log;
     }
 
+
     @Autowired(required = false)
     public CatalogImportRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertStudyReport =
                 new SimpleJdbcInsert(jdbcTemplate)
                         .withTableName("STUDY_REPORT")
-                        .usingColumns("STUDY_ID","PUBMED_ID_ERROR", "NCBI_PAPER_TITLE", "NCBI_FIRST_AUTHOR", "NCBI_NORMALIZED_FIRST_AUTHOR", "NCBI_FIRST_UPDATE_DATE")
+                        .usingColumns("STUDY_ID",
+                                      "PUBMED_ID_ERROR",
+                                      "NCBI_PAPER_TITLE",
+                                      "NCBI_FIRST_AUTHOR",
+                                      "NCBI_NORMALIZED_FIRST_AUTHOR",
+                                      "NCBI_FIRST_UPDATE_DATE")
                         .usingGeneratedKeyColumns("ID");
 
-        this.updateStudyReport = new StudyReportUpdate(jdbcTemplate);
 
         this.insertAssociationReport =
                 new SimpleJdbcInsert(jdbcTemplate)
                         .withTableName("ASSOCIATION_REPORT")
-                        .usingColumns("ASSOCIATION_ID", "LAST_UPDATE_DATE", "GENE_ERROR", "SNP_ERROR", "SNP_GENE_ON_DIFF_CHR", "NO_GENE_FOR_SYMBOL", "GENE_NOT_ON_GENOME", "SNP_PENDING")
+                        .usingColumns("ASSOCIATION_ID",
+                                      "LAST_UPDATE_DATE",
+                                      "GENE_ERROR",
+                                      "SNP_ERROR",
+                                      "SNP_GENE_ON_DIFF_CHR",
+                                      "NO_GENE_FOR_SYMBOL",
+                                      "GENE_NOT_ON_GENOME",
+                                      "SNP_PENDING")
                         .usingGeneratedKeyColumns("ID");
 
         this.updateAssociationReport = new AssociationReportUpdate(jdbcTemplate);
@@ -149,22 +182,23 @@ public class CatalogImportRepository {
 
                     switch (binding) {
                         case STUDY_ID:
-                            if(valueToInsert.isEmpty()){
+                            if (valueToInsert.isEmpty()) {
                                 studyId = null;
                             }
-                            else{
+                            else {
                                 studyId = Long.valueOf(valueToInsert);
-                            }                            break;
+                            }
+                            break;
                         case PUBMED_ID_ERROR:
-                            if(valueToInsert.isEmpty()){
+                            if (valueToInsert.isEmpty()) {
                                 pubmedIdError = null;
                             }
-                            else{
+                            else {
                                 pubmedIdError = Integer.valueOf(valueToInsert);
                             }
                             break;
                         case NCBI_PAPER_TITLE:
-                            if(valueToInsert.isEmpty()){
+                            if (valueToInsert.isEmpty()) {
                                 ncbiPaperTitle = null;
                             }
                             else {
@@ -172,7 +206,7 @@ public class CatalogImportRepository {
                             }
                             break;
                         case NCBI_FIRST_AUTHOR:
-                            if(valueToInsert.isEmpty()){
+                            if (valueToInsert.isEmpty()) {
                                 ncbiFirstAuthor = null;
                             }
                             else {
@@ -180,7 +214,7 @@ public class CatalogImportRepository {
                             }
                             break;
                         case NCBI_NORMALISED_FIRST_AUTHOR:
-                            if(valueToInsert.isEmpty()){
+                            if (valueToInsert.isEmpty()) {
                                 ncbiNormalisedFirstAuthor = null;
                             }
                             else {
@@ -188,7 +222,7 @@ public class CatalogImportRepository {
                             }
                             break;
                         case NCBI_FIRST_UPDATE_DATE:
-                            if(valueToInsert.isEmpty()){
+                            if (valueToInsert.isEmpty()) {
                                 ncbiFirstUpdateDate = null;
                             }
                             else {
@@ -196,23 +230,23 @@ public class CatalogImportRepository {
                             }
                             break;
                         case ASSOCIATION_ID:
-                            if(valueToInsert.isEmpty()){
+                            if (valueToInsert.isEmpty()) {
                                 associationId = null;
                             }
-                            else{
+                            else {
                                 associationId = Long.valueOf(valueToInsert);
                             }
                             break;
                         case GENE_ERROR:
-                            if(valueToInsert.isEmpty()){
+                            if (valueToInsert.isEmpty()) {
                                 geneError = null;
                             }
-                            else{
+                            else {
                                 geneError = Long.valueOf(valueToInsert);
                             }
                             break;
                         case SNP_ERROR:
-                            if(valueToInsert.isEmpty()){
+                            if (valueToInsert.isEmpty()) {
                                 snpError = null;
                             }
                             else {
@@ -220,7 +254,7 @@ public class CatalogImportRepository {
                             }
                             break;
                         case SNP_GENE_ON_DIFF_CHR:
-                            if(valueToInsert.isEmpty()){
+                            if (valueToInsert.isEmpty()) {
                                 snpGeneOnDiffChr = null;
                             }
                             else {
@@ -228,7 +262,7 @@ public class CatalogImportRepository {
                             }
                             break;
                         case NO_GENE_FOR_SYMBOL:
-                            if(valueToInsert.isEmpty()){
+                            if (valueToInsert.isEmpty()) {
                                 noGeneForSymbol = null;
                             }
                             else {
@@ -236,7 +270,7 @@ public class CatalogImportRepository {
                             }
                             break;
                         case GENE_NOT_ON_GENOME:
-                            if(valueToInsert.isEmpty()){
+                            if (valueToInsert.isEmpty()) {
                                 geneNotOnGenome = null;
                             }
                             else {
@@ -244,15 +278,15 @@ public class CatalogImportRepository {
                             }
                             break;
                         case REGION:
-                            if(valueToInsert.isEmpty()){
-                                region= null;
+                            if (valueToInsert.isEmpty()) {
+                                region = null;
                             }
                             else {
                                 region = valueToInsert;
                             }
                             break;
                         case CHROMOSOME_NAME:
-                            if(valueToInsert.isEmpty()){
+                            if (valueToInsert.isEmpty()) {
                                 chromosomeName = null;
                             }
                             else {
@@ -260,7 +294,7 @@ public class CatalogImportRepository {
                             }
                             break;
                         case CHROMOSOME_POSITION:
-                            if(valueToInsert.isEmpty()){
+                            if (valueToInsert.isEmpty()) {
                                 chromosomePosition = null;
                             }
                             else {
@@ -268,15 +302,15 @@ public class CatalogImportRepository {
                             }
                             break;
                         case UPSTREAM_MAPPED_GENE:
-                            if(valueToInsert.isEmpty()){
-                               upstreamMappedGene= null;
+                            if (valueToInsert.isEmpty()) {
+                                upstreamMappedGene = null;
                             }
                             else {
                                 upstreamMappedGene = valueToInsert;
                             }
                             break;
                         case UPSTREAM_ENTREZ_GENE_ID:
-                            if(valueToInsert.isEmpty()){
+                            if (valueToInsert.isEmpty()) {
                                 upstreamEntrezGeneId = null;
                             }
                             else {
@@ -284,15 +318,15 @@ public class CatalogImportRepository {
                             }
                             break;
                         case UPSTREAM_GENE_DISTANCE:
-                            if(valueToInsert.isEmpty()){
+                            if (valueToInsert.isEmpty()) {
                                 upstreamGeneDistance = null;
                             }
-                            else{
+                            else {
                                 upstreamGeneDistance = Integer.valueOf(valueToInsert);
                             }
                             break;
                         case DOWNSTREAM_MAPPED_GENE:
-                            if(valueToInsert.isEmpty()){
+                            if (valueToInsert.isEmpty()) {
                                 downstreamMappedGene = null;
                             }
                             else {
@@ -300,7 +334,7 @@ public class CatalogImportRepository {
                             }
                             break;
                         case DOWNSTREAM_ENTREZ_GENE_ID:
-                            if(valueToInsert.isEmpty()){
+                            if (valueToInsert.isEmpty()) {
                                 downstreamEntrezGeneId = null;
                             }
                             else {
@@ -308,15 +342,15 @@ public class CatalogImportRepository {
                             }
                             break;
                         case DOWNSTREAM_GENE_DISTANCE:
-                            if(valueToInsert.isEmpty()){
+                            if (valueToInsert.isEmpty()) {
                                 upstreamGeneDistance = null;
                             }
-                            else{
+                            else {
                                 upstreamGeneDistance = Integer.valueOf(valueToInsert);
                             }
                             break;
                         case IS_INTERGENIC:
-                            if(valueToInsert.isEmpty()){
+                            if (valueToInsert.isEmpty()) {
                                 isIntergenic = null;
                             }
                             else {
@@ -348,30 +382,27 @@ public class CatalogImportRepository {
                                ncbiFirstAuthor,
                                ncbiNormalisedFirstAuthor,
                                ncbiFirstUpdateDate);
-            addAssociationReport(associationId,
-                                 lastUpdateDate,
-                                 geneError,
-                                 snpError,
-                                 snpGeneOnDiffChr,
-                                 noGeneForSymbol,
-                                 geneNotOnGenome);
-       /*     addMappedData(studyId,
-                          associationId,
-                          region,
-                          chromosomeName,
-                          chromosomePosition,
-                          upstreamMappedGene,
-                          upstreamEntrezGeneId,
-                          upstreamGeneDistance,
-                          downstreamMappedGene,
-                          downstreamEntrezGeneId,
-                          downstreamGeneDistance,
-                          isIntergenic);*/
+                addAssociationReport(associationId,
+                                     lastUpdateDate,
+                                     geneError,
+                                     snpError,
+                                     snpGeneOnDiffChr,
+                                     noGeneForSymbol,
+                                     geneNotOnGenome);
+                addMappedData(studyId,
+                              associationId,
+                              region,
+                              chromosomeName,
+                              chromosomePosition,
+                              upstreamMappedGene,
+                              upstreamEntrezGeneId,
+                              upstreamGeneDistance,
+                              downstreamMappedGene,
+                              downstreamEntrezGeneId,
+                              downstreamGeneDistance,
+                              isIntergenic);
             }
-
-
         }
-
 
         if (caughtErrors) {
             throw new DataImportException("Caught errors whilst processing data import - " +
@@ -407,9 +438,10 @@ public class CatalogImportRepository {
         // Check for an existing id in database
         try {
             Long studyReportIdInDatabase = jdbcTemplate.queryForObject(SELECT_STUDY_REPORTS, Long.class, studyId);
-            studyArgs.put("ID", studyReportIdInDatabase);
-            int rows = updateStudyReport.updateByNamedParam(studyArgs);
-            System.out.println(rows);
+            Object[] params = {pubmedIdError, ncbiPaperTitle, ncbiFirstAuthor, ncbiNormalisedFirstAuthor,
+                    ncbiFirstUpdateDate, studyReportIdInDatabase};
+            jdbcTemplate.update(UPDATE_STUDY_REPORTS, params);
+
         }
         catch (EmptyResultDataAccessException e) {
             insertStudyReport.execute(studyArgs);
@@ -437,7 +469,8 @@ public class CatalogImportRepository {
         associationArgs.put("GENE_NOT_ON_GENOME", geneNotOnGenome);
         associationArgs.put("SNP_PENDING", null);
 
-        System.out.println(associationId + " - " + lastUpdateDate + " - " + geneError + " - " + snpError + " - " + snpGeneOnDiffChr + " - " + noGeneForSymbol + " - " + geneNotOnGenome);
+        System.out.println(associationId + " - " + lastUpdateDate + " - " + geneError + " - " + snpError + " - " +
+                                   snpGeneOnDiffChr + " - " + noGeneForSymbol + " - " + geneNotOnGenome);
         System.out.println(associationArgs.size());
 
         try {
@@ -446,7 +479,7 @@ public class CatalogImportRepository {
             associationArgs.put("ID", associationReportIdInDatabase);
             updateAssociationReport.updateByNamedParam(associationArgs);
         }
-        catch (EmptyResultDataAccessException e){
+        catch (EmptyResultDataAccessException e) {
             getLog().info("No previous report for association " + associationId);
             insertAssociationReport.execute(associationArgs);
 
@@ -465,8 +498,20 @@ public class CatalogImportRepository {
                                String downstreamMappedGene,
                                String downstreamEntrezGeneId,
                                Integer downstreamGeneDistance, Boolean isIntergenic) {
-
-
+        int rows = jdbcTemplate.update(UPDATE_MAPPED_DATA,
+                                       region,
+                                       chromosomeName,
+                                       chromosomePosition,
+                                       upstreamMappedGene,
+                                       upstreamEntrezGeneId,
+                                       upstreamGeneDistance,
+                                       downstreamMappedGene,
+                                       downstreamEntrezGeneId,
+                                       downstreamGeneDistance,
+                                       isIntergenic,
+                                       studyId,
+                                       associationId);
+        System.out.println("Updated " + rows + " rows");
     }
 
     private static <T> T[] extractRange(T[] array, int startIndex) {
@@ -483,33 +528,6 @@ public class CatalogImportRepository {
         }
     }
 
-    private class StudyReportUpdate extends SqlUpdate {
-        private StudyReportUpdate(JdbcTemplate jdbcTemplate) {
-            //            Long studyId = null; // STUDY_ID
-            //            Integer pubmedIdError = null;  // PUBMED_ID_ERROR
-            //            String ncbiPaperTitle = null; // NCBI_PAPER_TITLE
-            //            String ncbiFirstAuthor = null; // NCBI_FIRST_AUTHOR
-            //            String ncbiNormalisedFirstAuthor = null; // NCBI_NORMALIZED_FIRST_AUTHOR
-            //            Date ncbiFirstUpdateDate = null; // NCBI_FIRST_UPDATE_DATE
-            setJdbcTemplate(jdbcTemplate);
-            setSql("UPDATE STUDY_REPORT SET " +
-                           "STUDY_ID = ?, " +
-                           "PUBMED_ID_ERROR = ?, " +
-                           "NCBI_PAPER_TITLE = ?, " +
-                           "NCBI_FIRST_AUTHOR = ?, " +
-                           "NCBI_NORMALIZED_FIRST_AUTHOR = ?, " +
-                           "NCBI_FIRST_UPDATE_DATE = ? " +
-                           "WHERE ID = ?");
-            declareParameter(new SqlParameter("STUDY_ID", Types.NUMERIC));
-            declareParameter(new SqlParameter("PUBMED_ID_ERROR", Types.NUMERIC));
-            declareParameter(new SqlParameter("NCBI_PAPER_TITLE", Types.VARCHAR));
-            declareParameter(new SqlParameter("NCBI_FIRST_AUTHOR", Types.VARCHAR));
-            declareParameter(new SqlParameter("NCBI_NORMALIZED_FIRST_AUTHOR", Types.VARCHAR));
-            declareParameter(new SqlParameter("NCBI_FIRST_UPDATE_DATE", Types.DATE));
-            declareParameter(new SqlParameter("ID", Types.NUMERIC));
-            compile();
-        }
-    }
 
     private class AssociationReportUpdate extends SqlUpdate {
         public AssociationReportUpdate(JdbcTemplate jdbcTemplate) {
@@ -529,7 +547,7 @@ public class CatalogImportRepository {
                            "SNP_GENE_ON_DIFF_CHR = ?, " +
                            "NO_GENE_FOR_SYMBOL = ?, " +
                            "GENE_NOT_ON_GENOME = ?, " +
-                            "SNP_PENDING = ? " +
+                           "SNP_PENDING = ? " +
                            "WHERE ID = ?");
             declareParameter(new SqlParameter("ASSOCIATION_ID", Types.NUMERIC));
             declareParameter(new SqlParameter("LAST_UPDATE_DATE", Types.DATE));
@@ -538,9 +556,10 @@ public class CatalogImportRepository {
             declareParameter(new SqlParameter("SNP_GENE_ON_DIFF_CHR", Types.VARCHAR));
             declareParameter(new SqlParameter("NO_GENE_FOR_SYMBOL", Types.VARCHAR));
             declareParameter(new SqlParameter("GENE_NOT_ON_GENOME", Types.VARCHAR));
-            declareParameter(new SqlParameter("SNP_PENDING", Types.VARCHAR));
+            declareParameter(new SqlParameter("SNP_PENDING", Types.NUMERIC));
             declareParameter(new SqlParameter("ID", Types.NUMERIC));
             compile();
+
         }
     }
 

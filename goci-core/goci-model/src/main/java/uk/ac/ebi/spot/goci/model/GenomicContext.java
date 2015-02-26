@@ -17,11 +17,11 @@ public class GenomicContext {
     @GeneratedValue
     private Long id;
 
-    private boolean isIntergenic;
+    private Boolean isIntergenic;
 
-    private boolean isUpstream;
+    private Boolean isUpstream;
 
-    private boolean isDownstream;
+    private Boolean isDownstream;
 
     private Long distance;
 

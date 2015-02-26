@@ -18,13 +18,11 @@ public class AssociationReport {
     @GeneratedValue
     private Long id;
 
-    private boolean snpPending;
+    private Boolean snpPending;
 
     private Date lastUpdateDate;
 
     private Long geneError;
-
-    private Long pubmedIdError;
 
     private String snpError;
 
@@ -44,19 +42,19 @@ public class AssociationReport {
     public AssociationReport(boolean snpPending,
                              Date lastUpdateDate,
                              Long geneError,
-                             Long pubmedIdError,
                              String snpError,
                              String snpGeneOnDiffChr,
                              String noGeneForSymbol,
-                             String geneNotOnGenome) {
+                             String geneNotOnGenome,
+                             Association association) {
         this.snpPending = snpPending;
         this.lastUpdateDate = lastUpdateDate;
         this.geneError = geneError;
-        this.pubmedIdError = pubmedIdError;
         this.snpError = snpError;
         this.snpGeneOnDiffChr = snpGeneOnDiffChr;
         this.noGeneForSymbol = noGeneForSymbol;
         this.geneNotOnGenome = geneNotOnGenome;
+        this.association = association;
     }
 
     public Long getId() {
@@ -89,14 +87,6 @@ public class AssociationReport {
 
     public void setGeneError(Long geneError) {
         this.geneError = geneError;
-    }
-
-    public Long getPubmedIdError() {
-        return pubmedIdError;
-    }
-
-    public void setPubmedIdError(Long pubmedIdError) {
-        this.pubmedIdError = pubmedIdError;
     }
 
     public String getSnpError() {
@@ -145,7 +135,6 @@ public class AssociationReport {
                 ", snpPending=" + snpPending +
                 ", lastUpdateDate=" + lastUpdateDate +
                 ", geneError=" + geneError +
-                ", pubmedIdError=" + pubmedIdError +
                 ", snpError='" + snpError + '\'' +
                 ", snpGeneOnDiffChr='" + snpGeneOnDiffChr + '\'' +
                 ", noGeneForSymbol='" + noGeneForSymbol + '\'' +

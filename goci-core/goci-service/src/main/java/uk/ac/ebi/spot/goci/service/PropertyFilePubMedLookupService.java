@@ -31,32 +31,28 @@ import java.io.InputStream;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Properties;
 
 
 /**
  * A GociPubMedDispatcher service that loads PubMed query strings from a properties file, application.properties. Upon
  * construction, this dispatcher is ready to dispatch requests manually,
  *
- * @author Tony Burdett
- *         Date 26/10/11
- *         <p/>
+ * @author Tony Burdett Date 26/10/11
+ *         <p>
  *         Adapted by Emma (2015-01-16) based on code written by Tony.
  */
 
 @Service
 @Component
 public class PropertyFilePubMedLookupService implements GwasPubMedLookupService {
-    @NotNull @Value("${pubmed.xml.version}")
+    @Value("${pubmed.xml.version}")
     private String xmlVersion; // xml version is very important here , it must be "&version=2.0"
 
-    @NotNull @Value("${pubmed.root}")
+    @Value("${pubmed.root}")
     private String pubmedRoot;
 
-    @NotNull @Value("${pubmed.gwas.summary}")
+    @Value("${pubmed.gwas.summary}")
     private String pubmedGwasSummary;
-
-    private String summaryString;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -64,14 +60,13 @@ public class PropertyFilePubMedLookupService implements GwasPubMedLookupService 
         return log;
     }
 
-    public PropertyFilePubMedLookupService() {
-        if (pubmedRoot != null && pubmedGwasSummary != null) {
-            this.summaryString = pubmedRoot.concat(pubmedGwasSummary);
-        }
-    }
-
     public Study dispatchSummaryQuery(String pubmedId) throws PubmedLookupException {
-        if (summaryString == null) {
+
+        String summaryString;
+        if (pubmedRoot != null && pubmedGwasSummary != null) {
+            summaryString = pubmedRoot.concat(pubmedGwasSummary);
+        }
+        else{
             throw new PubmedLookupException(
                     "Unable to search pubmed - no URL configured. " +
                             "Set pubmed.root, pubmed.gwas.summary and pubmed.xml.version in your config!");
@@ -112,7 +107,8 @@ public class PropertyFilePubMedLookupService implements GwasPubMedLookupService 
                     publication = null;
                     pubDate = null;
 
-                } else {
+                }
+                else {
 
                     title = study.getElementsByTagName("Title").item(0).getTextContent();
                     publication = study.getElementsByTagName("Source").item(0).getTextContent();
@@ -129,7 +125,8 @@ public class PropertyFilePubMedLookupService implements GwasPubMedLookupService 
                     java.util.Date studyDate = null;
                     try {
                         studyDate = format.parse(date);
-                    } catch (ParseException e1) {
+                    }
+                    catch (ParseException e1) {
                         e1.printStackTrace();
                     }
                     pubDate = new Date(studyDate.getTime());
@@ -149,10 +146,12 @@ public class PropertyFilePubMedLookupService implements GwasPubMedLookupService 
                 }
 
                 return newStudy;
-            } else {
+            }
+            else {
                 throw new PubmedLookupException("Couldn't find pubmed id " + pubmedId + " in PubMed");
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new PubmedLookupException("Couldn't find pubmed id " + pubmedId + " in PubMed", e);
         }
 
@@ -170,27 +169,30 @@ public class PropertyFilePubMedLookupService implements GwasPubMedLookupService 
             if (System.getProperty("http.proxyPort") != null) {
                 proxy = new HttpHost(System.getProperty("http.proxyHost"), Integer.parseInt(System.getProperty
                         ("http.proxyPort")));
-                getLog().info("Setting proxy  "+ proxy);
-            } else {
+                getLog().info("Setting proxy  " + proxy);
+            }
+            else {
                 proxy = new HttpHost(System.getProperty("http.proxyHost"));
-                getLog().info("Setting proxy  "+ proxy);
+                getLog().info("Setting proxy  " + proxy);
             }
 
             httpGet.setConfig(RequestConfig.custom().setProxy(proxy).build());
         }
-        getLog().info("Fetching from "+ searchString+" doing http get "+httpGet.toString());
+        getLog().info("Fetching from " + searchString + " doing http get " + httpGet.toString());
         try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
             if (response.getStatusLine().getStatusCode() == HttpStatus.OK.value()) {
                 HttpEntity entity = response.getEntity();
                 try {
                     InputStream in = entity.getContent();
                     return parsePubmedResponse(in);
-                } finally {
+                }
+                finally {
                     EntityUtils.consume(entity);
                 }
 
 
-            } else {
+            }
+            else {
                 throw new IOException(
                         "Could not obtain results from '" + searchString + "' due to an unknown communication problem");
             }
@@ -202,12 +204,14 @@ public class PropertyFilePubMedLookupService implements GwasPubMedLookupService 
         try {
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             return db.parse(inputStream);
-        } catch (SAXException e) {
+        }
+        catch (SAXException e) {
             throw new IOException("Could not parse response from PubMed due to an exception reading content",
-                    e);
-        } catch (ParserConfigurationException e) {
+                                  e);
+        }
+        catch (ParserConfigurationException e) {
             throw new IOException("Could not parse response from PubMed due to an exception reading content",
-                    e);
+                                  e);
         }
     }
 }
