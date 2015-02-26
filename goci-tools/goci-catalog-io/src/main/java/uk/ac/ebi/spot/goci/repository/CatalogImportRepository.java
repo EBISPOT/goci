@@ -58,12 +58,7 @@ public class CatalogImportRepository {
         this.insertStudyReport =
                 new SimpleJdbcInsert(jdbcTemplate)
                         .withTableName("STUDY_REPORT")
-                        .usingColumns("STUDY_ID")
-                        .usingColumns("PUBMED_ID_ERROR")
-                        .usingColumns("NCBI_PAPER_TITLE")
-                        .usingColumns("NCBI_FIRST_AUTHOR")
-                        .usingColumns("NCBI_NORMALIZED_FIRST_AUTHOR")
-                        .usingColumns("NCBI_FIRST_UPDATE_DATE")
+                        .usingColumns("STUDY_ID","PUBMED_ID_ERROR", "NCBI_PAPER_TITLE", "NCBI_FIRST_AUTHOR", "NCBI_NORMALIZED_FIRST_AUTHOR", "NCBI_FIRST_UPDATE_DATE")
                         .usingGeneratedKeyColumns("ID");
 
         this.updateStudyReport = new StudyReportUpdate(jdbcTemplate);
@@ -151,6 +146,7 @@ public class CatalogImportRepository {
             for (CatalogHeaderBinding binding : headerColumnMap.keySet()) {
                 try {
                     String valueToInsert = line[headerColumnMap.get(binding)].trim();
+
                     switch (binding) {
                         case STUDY_ID:
                             if(valueToInsert.isEmpty()){
@@ -238,10 +234,10 @@ public class CatalogImportRepository {
                             break;
                         case DOWNSTREAM_GENE_DISTANCE:
                             if(valueToInsert.isEmpty()){
-                                downstreamGeneDistance = null;
+                                upstreamGeneDistance = null;
                             }
                             else{
-                                downstreamGeneDistance = Integer.valueOf(valueToInsert);
+                                upstreamGeneDistance = Integer.valueOf(valueToInsert);
                             }
                             break;
                         case IS_INTERGENIC:
@@ -266,31 +262,31 @@ public class CatalogImportRepository {
             // If no errors for a row, insert
             if (!caughtErrors) {
                 // Once you have all bits for a study report, association report add them
-//                addStudyReport(studyId,
-//                               pubmedIdError,
-//                               ncbiPaperTitle,
-//                               ncbiFirstAuthor,
-//                               ncbiNormalisedFirstAuthor,
-//                               ncbiFirstUpdateDate);
-                addAssociationReport(associationId,
+                addStudyReport(studyId,
+                               pubmedIdError,
+                               ncbiPaperTitle,
+                               ncbiFirstAuthor,
+                               ncbiNormalisedFirstAuthor,
+                               ncbiFirstUpdateDate);
+            addAssociationReport(associationId,
                                  lastUpdateDate,
                                  geneError,
                                  snpError,
                                  snpGeneOnDiffChr,
                                  noGeneForSymbol,
                                  geneNotOnGenome);
-//                addMappedData(studyId,
-//                          associationId,
-//                          region,
-//                          chromosomeName,
-//                          chromosomePosition,
-//                          upstreamMappedGene,
-//                          upstreamEntrezGeneId,
-//                          upstreamGeneDistance,
-//                          downstreamMappedGene,
-//                          downstreamEntrezGeneId,
-//                          downstreamGeneDistance,
-//                          isIntergenic);
+       /*     addMappedData(studyId,
+                          associationId,
+                          region,
+                          chromosomeName,
+                          chromosomePosition,
+                          upstreamMappedGene,
+                          upstreamEntrezGeneId,
+                          upstreamGeneDistance,
+                          downstreamMappedGene,
+                          downstreamEntrezGeneId,
+                          downstreamGeneDistance,
+                          isIntergenic);*/
             }
 
 
@@ -319,9 +315,6 @@ public class CatalogImportRepository {
                                                   "trying to add study report with no paper title");
         }
 
-        // Check for an existing id in database
-        Long studyReportIdInDatabase = jdbcTemplate.queryForObject(SELECT_STUDY_REPORTS, Long.class, studyId);
-
         Map<String, Object> studyArgs = new HashMap<>();
         studyArgs.put("STUDY_ID", studyId);
         studyArgs.put("PUBMED_ID_ERROR", pubmedIdError);
@@ -331,15 +324,17 @@ public class CatalogImportRepository {
         studyArgs.put("NCBI_FIRST_UPDATE_DATE", ncbiFirstUpdateDate);
 
 
-        if (studyReportIdInDatabase == null) {
-            insertStudyReport.execute(studyArgs);
-        }
-
-        else {
+        // Check for an existing id in database
+        try {
+            Long studyReportIdInDatabase = jdbcTemplate.queryForObject(SELECT_STUDY_REPORTS, Long.class, studyId);
             studyArgs.put("ID", studyReportIdInDatabase);
-            updateStudyReport.updateByNamedParam(studyArgs);
+            int rows = updateStudyReport.updateByNamedParam(studyArgs);
+            System.out.println(rows);
         }
+        catch (EmptyResultDataAccessException e) {
+            insertStudyReport.execute(studyArgs);
 
+        }
 
     }
 
@@ -420,7 +415,7 @@ public class CatalogImportRepository {
                            "NCBI_PAPER_TITLE = ?, " +
                            "NCBI_FIRST_AUTHOR = ?, " +
                            "NCBI_NORMALIZED_FIRST_AUTHOR = ?, " +
-                           "NCBI_FIRST_UPDATE_DATE = ?" +
+                           "NCBI_FIRST_UPDATE_DATE = ? " +
                            "WHERE ID = ?");
             declareParameter(new SqlParameter("STUDY_ID", Types.NUMERIC));
             declareParameter(new SqlParameter("PUBMED_ID_ERROR", Types.NUMERIC));
