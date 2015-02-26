@@ -9,14 +9,33 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
 import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 import uk.ac.ebi.spot.goci.curation.service.MailService;
-import uk.ac.ebi.spot.goci.model.*;
-import uk.ac.ebi.spot.goci.repository.*;
+import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.CurationStatus;
+import uk.ac.ebi.spot.goci.model.Curator;
+import uk.ac.ebi.spot.goci.model.DiseaseTrait;
+import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.Ethnicity;
+import uk.ac.ebi.spot.goci.model.Housekeeping;
+import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.repository.AssociationRepository;
+import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
+import uk.ac.ebi.spot.goci.repository.CuratorRepository;
+import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
+import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
+import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
+import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
+import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.PropertyFilePubMedLookupService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
@@ -28,9 +47,8 @@ import java.util.List;
 /**
  * Created by emma on 20/11/14.
  *
- * @author emma
- *         Study Controller interprets user input and transform it into a study
- *         model that is represented to the user by the associated HTML page.
+ * @author emma Study Controller interprets user input and transform it into a study model that is represented to the
+ *         user by the associated HTML page.
  */
 
 @Controller
@@ -58,7 +76,16 @@ public class StudyController {
     }
 
     @Autowired
-    public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, AssociationRepository associationRepository, EthnicityRepository ethnicityRepository, PropertyFilePubMedLookupService propertyFilePubMedLookupService, MailService mailService) {
+    public StudyController(StudyRepository studyRepository,
+                           HousekeepingRepository housekeepingRepository,
+                           DiseaseTraitRepository diseaseTraitRepository,
+                           EfoTraitRepository efoTraitRepository,
+                           CuratorRepository curatorRepository,
+                           CurationStatusRepository curationStatusRepository,
+                           AssociationRepository associationRepository,
+                           EthnicityRepository ethnicityRepository,
+                           PropertyFilePubMedLookupService propertyFilePubMedLookupService,
+                           MailService mailService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
@@ -98,8 +125,10 @@ public class StudyController {
         if (status != null) {
             // If we have curator and status find by both
             if (curator != null) {
-                model.addAttribute("studies", studyRepository.findByCurationStatusAndCuratorAllIgnoreCase(status, curator));
-            } else {
+                model.addAttribute("studies",
+                                   studyRepository.findByCurationStatusAndCuratorAllIgnoreCase(status, curator));
+            }
+            else {
                 model.addAttribute("studies", studyRepository.findByCurationStatusIgnoreCase(status));
             }
         }
@@ -198,7 +227,10 @@ public class StudyController {
     // Edit an existing study
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateStudy(@ModelAttribute Study study, Model model, @PathVariable Long studyId, RedirectAttributes redirectAttributes) {
+    public String updateStudy(@ModelAttribute Study study,
+                              Model model,
+                              @PathVariable Long studyId,
+                              RedirectAttributes redirectAttributes) {
 
         // Use id in URL to get study and then its associated housekeeping
         Study existingStudy = studyRepository.findOne(studyId);
@@ -232,7 +264,8 @@ public class StudyController {
         if (!associations.isEmpty()) {
             return "delete_study_with_associations_warning";
 
-        } else {
+        }
+        else {
             model.addAttribute("studyToDelete", studyToDelete);
             return "delete_study";
         }
@@ -276,7 +309,8 @@ public class StudyController {
 
         // Create housekeeping object and add duplicate message
         Housekeeping studyHousekeeping = createHousekeeping();
-        studyHousekeeping.setNotes("Duplicate of study: " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId());
+        studyHousekeeping.setNotes(
+                "Duplicate of study: " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId());
         duplicateStudy.setHousekeeping(studyHousekeeping);
 
         // Save newly duplicated study
@@ -291,7 +325,8 @@ public class StudyController {
         }
 
         // Add duplicate message
-        String message = "Study is a duplicate of " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId();
+        String message =
+                "Study is a duplicate of " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId();
         redirectAttributes.addFlashAttribute("duplicateMessage", message);
 
         return "redirect:/studies/" + duplicateStudy.getId();
@@ -310,7 +345,8 @@ public class StudyController {
         // If we don't have a housekeeping object create one, this should not occur though as they are created when study is created
         if (study.getHousekeeping() == null) {
             model.addAttribute("studyHousekeeping", new Housekeeping());
-        } else {
+        }
+        else {
             model.addAttribute("studyHousekeeping", study.getHousekeeping());
         }
 
@@ -321,30 +357,67 @@ public class StudyController {
 
 
     // Update page with housekeeping/curator information linked to a study
-    @RequestMapping(value = "/{studyId}/housekeeping", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping, @PathVariable Long studyId, RedirectAttributes redirectAttributes) {
+    @RequestMapping(value = "/{studyId}/housekeeping",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.POST)
+    public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping,
+                                          @PathVariable Long studyId,
+                                          RedirectAttributes redirectAttributes) {
 
 
-        // Establishlinked study
+        // Establish linked study
         Study study = studyRepository.findOne(studyId);
+
+        // For the study check all SNPs have been checked
+        Collection<Association> associations = associationRepository.findByStudyId(studyId);
+        int snpsNotChecked = 0;
+        for (Association association : associations) {
+            // If we have one that is not checked set value
+            if (association.getSnpChecked() == false) {
+                snpsNotChecked = 1;
+            }
+        }
 
         // Establish whether user has set status to "Publish study" and "Send to NCBI"
         // as corresponding dates will be set in housekeeping table
         CurationStatus currentStatus = housekeeping.getCurationStatus();
 
-   /*      TODO POSSIBLY CHANGE LOGIC SO THIS DATE IS SET BY NIGHTLY RELEASE PROCESS
+   /*   TODO POSSIBLY CHANGE LOGIC SO THIS DATE IS SET BY NIGHTLY RELEASE PROCESS
         OTHERWISE ANY TIME USER SAVES FROM WHEN STATUS IS SET TO "publish study"
         THE DATE GETS UPDATED*/
         if (currentStatus != null && currentStatus.getStatus().equals("Publish study")) {
-            java.util.Date publishDate = new java.util.Date();
-            housekeeping.setPublishDate(publishDate);
+
+            // If not checked redirect back to page and make no changes
+            if (snpsNotChecked == 1) {
+                String message =
+                        "Some SNP associations have not been checked, please review before publishing";
+                redirectAttributes.addFlashAttribute("snpsNotChecked", message);
+                return "redirect:/studies/" + study.getId() + "/housekeeping";
+
+            }
+
+            else {
+                java.util.Date publishDate = new java.util.Date();
+                housekeeping.setPublishDate(publishDate);
+            }
         }
 
         //Set date and send email notification
         if (currentStatus != null && currentStatus.getStatus().equals("Send to NCBI")) {
-            java.util.Date sendToNCBIDate = new java.util.Date();
-            housekeeping.setSendToNCBIDate(sendToNCBIDate);
-            mailService.sendEmailNotification(study, currentStatus.getStatus());
+            // If not checked redirect back to page and make no changes
+            if (snpsNotChecked == 1) {
+                String message =
+                        "Some SNP associations have not been checked, please review before sending to NCBI";
+                redirectAttributes.addFlashAttribute("snpsNotChecked", message);
+                return "redirect:/studies/" + study.getId() + "/housekeeping";
+
+            }
+
+            else {
+                java.util.Date sendToNCBIDate = new java.util.Date();
+                housekeeping.setSendToNCBIDate(sendToNCBIDate);
+                mailService.sendEmailNotification(study, currentStatus.getStatus());
+            }
         }
 
         // Send notification email to curators
@@ -364,7 +437,6 @@ public class StudyController {
         // Add save message
         String message = "Changes saved successfully";
         redirectAttributes.addFlashAttribute("changesSaved", message);
-
         return "redirect:/studies/" + study.getId() + "/housekeeping";
     }
 
@@ -395,7 +467,7 @@ public class StudyController {
     private Study copyStudy(Study studyToDuplicate) {
 
         Study duplicateStudy = new Study();
-        duplicateStudy.setAuthor(studyToDuplicate.getAuthor()+" DUP");
+        duplicateStudy.setAuthor(studyToDuplicate.getAuthor() + " DUP");
         duplicateStudy.setStudyDate(studyToDuplicate.getStudyDate());
         duplicateStudy.setPublication(studyToDuplicate.getPublication());
         duplicateStudy.setTitle(studyToDuplicate.getTitle());
