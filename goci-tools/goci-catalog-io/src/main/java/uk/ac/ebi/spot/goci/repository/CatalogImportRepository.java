@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -70,13 +71,7 @@ public class CatalogImportRepository {
         this.insertAssociationReport =
                 new SimpleJdbcInsert(jdbcTemplate)
                         .withTableName("ASSOCIATION_REPORT")
-                        .usingColumns("ASSOCIATION_ID")
-                        .usingColumns("LAST_UPDATE_DATE")
-                        .usingColumns("GENE_ERROR")
-                        .usingColumns("SNP_ERROR")
-                        .usingColumns("SNP_GENE_ON_DIFF_CHR")
-                        .usingColumns("NO_GENE_FOR_SYMBOL")
-                        .usingColumns("GENE_NOT_ON_GENOME")
+                        .usingColumns("ASSOCIATION_ID, LAST_UPDATE_DATE, GENE_ERROR, SNP_ERROR, SNP_GENE_ON_DIFF_CHR, NO_GENE_FOR_SYMBOL, GENE_NOT_ON_GENOME")
                         .usingGeneratedKeyColumns("ID");
 
         this.updateAssociationReport = new AssociationReportUpdate(jdbcTemplate);
@@ -155,13 +150,22 @@ public class CatalogImportRepository {
             // For each key in our map, extract the cell at that index
             for (CatalogHeaderBinding binding : headerColumnMap.keySet()) {
                 try {
-                    String valueToInsert = line[headerColumnMap.get(binding)];
+                    String valueToInsert = line[headerColumnMap.get(binding)].trim();
                     switch (binding) {
                         case STUDY_ID:
-                            studyId = Long.valueOf(valueToInsert);
-                            break;
+                            if(valueToInsert.isEmpty()){
+                                studyId = null;
+                            }
+                            else{
+                                studyId = Long.valueOf(valueToInsert);
+                            }                            break;
                         case PUBMED_ID_ERROR:
-                            pubmedIdError = Integer.valueOf(valueToInsert);
+                            if(valueToInsert.isEmpty()){
+                                pubmedIdError = null;
+                            }
+                            else{
+                                pubmedIdError = Integer.valueOf(valueToInsert);
+                            }
                             break;
                         case NCBI_PAPER_TITLE:
                             ncbiPaperTitle = valueToInsert;
@@ -176,10 +180,20 @@ public class CatalogImportRepository {
                             ncbiFirstUpdateDate = df.parse(valueToInsert);
                             break;
                         case ASSOCIATION_ID:
-                            associationId = Long.valueOf(valueToInsert);
+                            if(valueToInsert.isEmpty()){
+                                associationId = null;
+                            }
+                            else{
+                                associationId = Long.valueOf(valueToInsert);
+                            }
                             break;
                         case GENE_ERROR:
-                            geneError = Long.valueOf(valueToInsert);
+                            if(valueToInsert.isEmpty()){
+                                geneError = null;
+                            }
+                            else{
+                                geneError = Long.valueOf(valueToInsert);
+                            }
                             break;
                         case SNP_ERROR:
                             snpError = valueToInsert;
@@ -209,7 +223,12 @@ public class CatalogImportRepository {
                             upstreamEntrezGeneId = valueToInsert;
                             break;
                         case UPSTREAM_GENE_DISTANCE:
-                            upstreamGeneDistance = Integer.valueOf(valueToInsert);
+                            if(valueToInsert.isEmpty()){
+                                upstreamGeneDistance = null;
+                            }
+                            else{
+                                upstreamGeneDistance = Integer.valueOf(valueToInsert);
+                            }
                             break;
                         case DOWNSTREAM_MAPPED_GENE:
                             downstreamMappedGene = valueToInsert;
@@ -218,7 +237,12 @@ public class CatalogImportRepository {
                             downstreamEntrezGeneId = valueToInsert;
                             break;
                         case DOWNSTREAM_GENE_DISTANCE:
-                            downstreamGeneDistance = Integer.valueOf(valueToInsert);
+                            if(valueToInsert.isEmpty()){
+                                downstreamGeneDistance = null;
+                            }
+                            else{
+                                downstreamGeneDistance = Integer.valueOf(valueToInsert);
+                            }
                             break;
                         case IS_INTERGENIC:
                             isIntergenic = Boolean.valueOf(valueToInsert);
@@ -242,12 +266,12 @@ public class CatalogImportRepository {
             // If no errors for a row, insert
             if (!caughtErrors) {
                 // Once you have all bits for a study report, association report add them
-                addStudyReport(studyId,
-                               pubmedIdError,
-                               ncbiPaperTitle,
-                               ncbiFirstAuthor,
-                               ncbiNormalisedFirstAuthor,
-                               ncbiFirstUpdateDate);
+//                addStudyReport(studyId,
+//                               pubmedIdError,
+//                               ncbiPaperTitle,
+//                               ncbiFirstAuthor,
+//                               ncbiNormalisedFirstAuthor,
+//                               ncbiFirstUpdateDate);
                 addAssociationReport(associationId,
                                  lastUpdateDate,
                                  geneError,
@@ -327,10 +351,8 @@ public class CatalogImportRepository {
                                       String noGeneForSymbol,
                                       String geneNotOnGenome) {
 
-        Long associationReportIdInDatabase =
-                jdbcTemplate.queryForObject(SELECT_ASSOCIATION_REPORTS, Long.class, associationId);
-
         Map<String, Object> associationArgs = new HashMap<>();
+
         associationArgs.put("ASSOCIATION_ID", associationId);
         associationArgs.put("LAST_UPDATE_DATE", lastUpdateDate);
         associationArgs.put("GENE_ERROR", geneError);
@@ -339,12 +361,17 @@ public class CatalogImportRepository {
         associationArgs.put("NO_GENE_FOR_SYMBOL", noGeneForSymbol);
         associationArgs.put("GENE_NOT_ON_GENOME", geneNotOnGenome);
 
-        if (associationReportIdInDatabase == null) {
-            insertAssociationReport.execute(associationArgs);
-        }
-        else {
+
+        try {
+            Long associationReportIdInDatabase =
+                    jdbcTemplate.queryForObject(SELECT_ASSOCIATION_REPORTS, Long.class, associationId);
             associationArgs.put("ID", associationReportIdInDatabase);
             updateAssociationReport.updateByNamedParam(associationArgs);
+        }
+        catch (EmptyResultDataAccessException e){
+            getLog().info("No previous report for this association");
+            insertAssociationReport.execute(associationArgs);
+
         }
 
     }
