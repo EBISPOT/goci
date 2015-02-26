@@ -314,7 +314,7 @@ public class CatalogImportRepository {
 
         // Check for an existing id in database
         try {
-            Long studyReportIdInDatabase = jdbcTemplate.queryForObject(SELECT_STUDY_REPORTS, Long.class, studyId);
+          Long studyReportIdInDatabase = jdbcTemplate.queryForObject(SELECT_STUDY_REPORTS, Long.class, studyId);
             studyArgs.put("ID", studyReportIdInDatabase);
             int rows = updateStudyReport.updateByNamedParam(studyArgs);
             System.out.println(rows);
