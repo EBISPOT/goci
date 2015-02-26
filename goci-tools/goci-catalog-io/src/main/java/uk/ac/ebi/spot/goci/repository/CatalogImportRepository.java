@@ -222,32 +222,7 @@ public class CatalogImportRepository {
                             throw new DataImportException(
                                     "Unrecognised column flagged for import: " + binding.getLoadName());
                     }
-                    // Once you have all bits for a study report, association report add them
-                    addStudyReport(studyId,
-                                   pubmedIdError,
-                                   ncbiPaperTitle,
-                                   ncbiFirstAuthor,
-                                   ncbiNormalisedFirstAuthor,
-                                   ncbiFirstUpdateDate);
-                    addAssociationReport(associationId,
-                                         lastUpdateDate,
-                                         geneError,
-                                         snpError,
-                                         snpGeneOnDiffChr,
-                                         noGeneForSymbol,
-                                         geneNotOnGenome);
-                    addMappedData(studyId,
-                                  associationId,
-                                  region,
-                                  chromosomeName,
-                                  chromosomePosition,
-                                  upstreamMappedGene,
-                                  upstreamEntrezGeneId,
-                                  upstreamGeneDistance,
-                                  downstreamMappedGene,
-                                  downstreamEntrezGeneId,
-                                  downstreamGeneDistance,
-                                  isIntergenic);
+
                 }
                 catch (ParseException e) {
                     getLog().error("Unable to parse date at row " + row, e);
@@ -258,7 +233,36 @@ public class CatalogImportRepository {
                     caughtErrors = true;
                 }
             }
+
+            // Once you have all bits for a study report, association report add them
+            addStudyReport(studyId,
+                           pubmedIdError,
+                           ncbiPaperTitle,
+                           ncbiFirstAuthor,
+                           ncbiNormalisedFirstAuthor,
+                           ncbiFirstUpdateDate);
+            addAssociationReport(associationId,
+                                 lastUpdateDate,
+                                 geneError,
+                                 snpError,
+                                 snpGeneOnDiffChr,
+                                 noGeneForSymbol,
+                                 geneNotOnGenome);
+            addMappedData(studyId,
+                          associationId,
+                          region,
+                          chromosomeName,
+                          chromosomePosition,
+                          upstreamMappedGene,
+                          upstreamEntrezGeneId,
+                          upstreamGeneDistance,
+                          downstreamMappedGene,
+                          downstreamEntrezGeneId,
+                          downstreamGeneDistance,
+                          isIntergenic);
+
         }
+
 
         if (caughtErrors) {
             throw new DataImportException("Caught errors whilst processing data import - " +
@@ -289,7 +293,8 @@ public class CatalogImportRepository {
         }
 
         else {
-            updateStudyReport.update(studyArgs);
+            studyArgs.put("ID", studyReportIdInDatabase);
+            updateStudyReport.updateByNamedParam(studyArgs);
         }
 
 
@@ -312,7 +317,6 @@ public class CatalogImportRepository {
         associationArgs.put("NO_GENE_FOR_SYMBOL", noGeneForSymbol);
         associationArgs.put("GENE_NOT_ON_GENOME", geneNotOnGenome);
         insertAssociationReport.execute(associationArgs);
-
 
 
     }
