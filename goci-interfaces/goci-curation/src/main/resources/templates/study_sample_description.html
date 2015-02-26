@@ -91,7 +91,7 @@
 
                 <div class="form-group">
                     <label for="sampleInitialDescription" class="control-label col-md-2">Initial Sample
-                        Description:</label>
+                                                                                         Description:</label>
 
                     <div class="col-md-10">
                         <input id="sampleInitialDescription" class="form-control" type="text"
@@ -101,7 +101,7 @@
 
                 <div class="form-group">
                     <label for="sampleReplicationDescription" class="control-label col-md-2">Replication Sample
-                        Description:</label>
+                                                                                             Description:</label>
 
                     <div class="col-md-10">
                         <input id="sampleReplicationDescription" class="form-control" type="text"
@@ -158,9 +158,34 @@
                 <td th:text="${initialStudyEthnicityDescription.description} ?: ''"></td>
                 <td th:text="${initialStudyEthnicityDescription.notes} ?: ''"></td>
                 <td>
-                    <a th:href="@{/sampledescriptions/{ethnicityId}/delete(ethnicityId=${initialStudyEthnicityDescription.id})}"
-                       class="btn btn-danger">Delete</a></td>
 
+                    <a href="#deleteIniEthnicity"
+                       data-toggle="modal" class="btn btn-danger">Delete</a>
+
+                    <!-- Modal HTML for delete-->
+                    <div id="deleteIniEthnicity" class="modal fade">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button"
+                                            class="close"
+                                            data-dismiss="modal"
+                                            aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">Confirmation</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you wish to delete this ethnicity information?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <a th:href="@{/sampledescriptions/{ethnicityId}/delete(ethnicityId=${initialStudyEthnicityDescription.id})}"
+                                       class="btn btn-danger">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </td>
             </tr>
             </tbody>
         </table>
@@ -202,8 +227,32 @@
                 <td th:text="${replicationStudyEthnicityDescription.description} ?: ''"></td>
                 <td th:text="${replicationStudyEthnicityDescription.notes} ?: ''"></td>
                 <td>
-                    <a th:href="@{/sampledescriptions/{ethnicityId}/delete(ethnicityId=${replicationStudyEthnicityDescription.id})}"
-                       class="btn btn-danger">Delete</a></td>
+                    <a href="#deleteRepEthnicity"
+                       data-toggle="modal" class="btn btn-danger">Delete</a>
+
+                    <!-- Modal HTML for delete -->
+                    <div id="deleteRepEthnicity" class="modal fade">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button"
+                                            class="close"
+                                            data-dismiss="modal"
+                                            aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">Confirmation</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you wish to delete this ethnicity information?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <a th:href="@{/sampledescriptions/{ethnicityId}/delete(ethnicityId=${replicationStudyEthnicityDescription.id})}"
+                                       class="btn btn-danger">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -304,7 +353,7 @@
 
                     <div class="form-group">
                         <label for="sampleSizesMatch" class="control-label col-md-2">Sample Sizes Match in Catalog at
-                            Study Level?</label>
+                                                                                     Study Level?</label>
 
                         <select th:field="*{sampleSizesMatch}" id="sampleSizesMatch">
                             <option th:each="match : ${sampleSizesMatchOptions}"
@@ -328,21 +377,21 @@
 
 
 <script>
-    $(function () {
+    $(function() {
         // turn the element to select2 select style
         $('#ethnicGroup').select2();
     });
 </script>
 
 <script>
-    $(function () {
+    $(function() {
         // turn the element to select2 select style
         $('#countryOfOrigin').select2();
     });
 </script>
 
 <script>
-    $(function () {
+    $(function() {
         // turn the element to select2 select style
         $('#countryOfRecruitment').select2();
     });

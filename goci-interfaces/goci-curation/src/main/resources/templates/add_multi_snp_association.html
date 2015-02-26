@@ -24,11 +24,12 @@
     <!-- Include Select2 JS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
 
-
     <!--Tags input http://timschlechter.github.io/bootstrap-tagsinput/examples/-->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"/>
     <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
 
+    <!--Handles calculations in form -->
+    <script src="../static/js/goci-snp-association-calculations.js" th:src="@{../../../js/goci-snp-association-calculations.js}"></script>
 
 </head>
 <body>
@@ -78,8 +79,7 @@
 <div class="col-md-10">
 <div class="form-group">
 <div id="addSNPForm">
-<form class="form-horizontal" method="post" name="addMultiSNPForm" th:object="${snpAssociationForm}">
-
+<form class="form-horizontal" method="post" name="snp-association-form" th:object="${snpAssociationForm}">
 <div class="form-group">
     <div class="col-md-10 col-md-offset-2">
 
@@ -220,6 +220,13 @@
         <input type="text" class="form-control" id="orPerCopyRecip"
                th:field="*{orPerCopyRecip}" name="orPerCopyRecip"/>
     </div>
+
+    <div class="col-md-10">
+        <button type="button"
+                class="btn btn-primary pull-right"
+                id="calculate-or">Calculate OR/HR/RR per copy (Num)</button>
+    </div>
+
 </div>
 
 <div class="form-group">
@@ -247,6 +254,12 @@
     <div class="col-md-10">
         <input type="text" class="form-control" id="orPerCopyStdError"
                th:field="*{orPerCopyStdError}" name="orPerCopyStdError"/>
+    </div>
+
+    <div class="col-md-12">
+        <button type="button"
+                class="btn btn-primary pull-right"
+                id="calculate-or-range">Build OR/HR/RR per copy (Range)</button>
     </div>
 </div>
 

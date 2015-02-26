@@ -94,6 +94,18 @@
     </div>
 </div>
 
+<!--Alert if snps not checked-->
+<div class="container-fluid" th:if="${!#strings.isEmpty(snpsNotChecked)}">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="alert alert-warning">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:text="${snpsNotChecked}">Warning!</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="container-fluid">
     <div class="row">
