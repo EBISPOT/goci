@@ -40,6 +40,9 @@ public class CatalogImportRepository {
     private static final String SELECT_STUDY_REPORTS =
             "SELECT ID FROM STUDY_REPORT WHERE STUDY_ID = ?";
 
+    private static final String SELECT_ASSOCIATION_REPORTS =
+            "SELECT ID FROM ASSOCIATION_REPORT WHERE ASSOCIATION_ID = ?";
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -303,6 +306,8 @@ public class CatalogImportRepository {
                                       String noGeneForSymbol,
                                       String geneNotOnGenome) {
 
+        Long associationReportIdInDatabase = jdbcTemplate.queryForObject(SELECT_ASSOCIATION_REPORTS, Long.class, associationId);
+
         Map<String, Object> associationArgs = new HashMap<>();
         associationArgs.put("ASSOCIATION_ID", associationId);
         associationArgs.put("LAST_UPDATE_DATE", lastUpdateDate);
@@ -311,10 +316,14 @@ public class CatalogImportRepository {
         associationArgs.put("SNP_GENE_ON_DIFF_CHR", snpGeneOnDiffChr);
         associationArgs.put("NO_GENE_FOR_SYMBOL", noGeneForSymbol);
         associationArgs.put("GENE_NOT_ON_GENOME", geneNotOnGenome);
-        insertAssociationReport.execute(associationArgs);
 
-
-
+        if(associationReportIdInDatabase != null) {
+            insertAssociationReport.execute(associationArgs);
+        }
+        else {
+            associationArgs.put("ID", associationReportIdInDatabase);
+            updateAssociationReport.updateByNamedParam(associationArgs);
+        }
     }
 
     private void addMappedData(Long studyId,
