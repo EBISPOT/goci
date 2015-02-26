@@ -239,14 +239,16 @@ public class CatalogImportRepository {
                 }
             }
 
-            // Once you have all bits for a study report, association report add them
-            addStudyReport(studyId,
-                           pubmedIdError,
-                           ncbiPaperTitle,
-                           ncbiFirstAuthor,
-                           ncbiNormalisedFirstAuthor,
-                           ncbiFirstUpdateDate);
-            addAssociationReport(associationId,
+            // If no errors for a row, insert
+            if (!caughtErrors) {
+                // Once you have all bits for a study report, association report add them
+                addStudyReport(studyId,
+                               pubmedIdError,
+                               ncbiPaperTitle,
+                               ncbiFirstAuthor,
+                               ncbiNormalisedFirstAuthor,
+                               ncbiFirstUpdateDate);
+          /*  addAssociationReport(associationId,
                                  lastUpdateDate,
                                  geneError,
                                  snpError,
@@ -264,7 +266,9 @@ public class CatalogImportRepository {
                           downstreamMappedGene,
                           downstreamEntrezGeneId,
                           downstreamGeneDistance,
-                          isIntergenic);
+                          isIntergenic);*/
+            }
+
 
         }
 
