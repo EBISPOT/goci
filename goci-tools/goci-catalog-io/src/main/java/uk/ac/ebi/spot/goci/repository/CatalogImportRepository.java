@@ -37,13 +37,35 @@ public class CatalogImportRepository {
     private SimpleJdbcInsert insertAssociationReport;
     private AssociationReportUpdate updateAssociationReport;
 
-    private MappedDataUpdate mappedDataUpdate;
-
     private static final String SELECT_STUDY_REPORTS =
             "SELECT ID FROM STUDY_REPORT WHERE STUDY_ID = ?";
 
+    private static final String UPDATE_STUDY_REPORTS =
+            "UPDATE STUDY_REPORT SET " +
+                    "PUBMED_ID_ERROR = ?, " +
+                    "NCBI_PAPER_TITLE = ?, " +
+                    "NCBI_FIRST_AUTHOR = ?, " +
+                    "NCBI_NORMALIZED_FIRST_AUTHOR = ?, " +
+                    "NCBI_FIRST_UPDATE_DATE = ? " +
+                    "WHERE ID = ?";
+
     private static final String SELECT_ASSOCIATION_REPORTS =
             "SELECT ID FROM ASSOCIATION_REPORT WHERE ASSOCIATION_ID = ?";
+
+    private static final String UPDATE_MAPPED_DATA =
+            "UPDATE CATALOG_SUMMARY_VIEW SET " +
+                    "REGION = ?, " +
+                    "CHROMOSOME_NAME = ?, " +
+                    "CHROMOSOME_POSITION = ?, " +
+                    "UPSTREAM_MAPPED_GENE = ?, " +
+                    "UPSTREAM_ENTREZ_GENE_ID = ?, " +
+                    "UPSTREAM_GENE_DISTANCE = ?, " +
+                    "DOWNSTREAM_MAPPED_GENE = ?, " +
+                    "DOWNSTREAM_ENTREZ_GENE_ID = ?, " +
+                    "DOWNSTREAM_GENE_DISTANCE = ?, " +
+                    "IS_INTERGENIC = ? " +
+                    "WHERE STUDY_ID = ? " +
+                    "AND ASSOCIATION_ID = ?";
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -360,30 +382,27 @@ public class CatalogImportRepository {
                                ncbiFirstAuthor,
                                ncbiNormalisedFirstAuthor,
                                ncbiFirstUpdateDate);
-      /*      addAssociationReport(associationId,
-                                 lastUpdateDate,
-                                 geneError,
-                                 snpError,
-                                 snpGeneOnDiffChr,
-                                 noGeneForSymbol,
-                                 geneNotOnGenome);*/
-       /*     addMappedData(studyId,
-                          associationId,
-                          region,
-                          chromosomeName,
-                          chromosomePosition,
-                          upstreamMappedGene,
-                          upstreamEntrezGeneId,
-                          upstreamGeneDistance,
-                          downstreamMappedGene,
-                          downstreamEntrezGeneId,
-                          downstreamGeneDistance,
-                          isIntergenic);*/
+                addAssociationReport(associationId,
+                                     lastUpdateDate,
+                                     geneError,
+                                     snpError,
+                                     snpGeneOnDiffChr,
+                                     noGeneForSymbol,
+                                     geneNotOnGenome);
+                addMappedData(studyId,
+                              associationId,
+                              region,
+                              chromosomeName,
+                              chromosomePosition,
+                              upstreamMappedGene,
+                              upstreamEntrezGeneId,
+                              upstreamGeneDistance,
+                              downstreamMappedGene,
+                              downstreamEntrezGeneId,
+                              downstreamGeneDistance,
+                              isIntergenic);
             }
-
-
         }
-
 
         if (caughtErrors) {
             throw new DataImportException("Caught errors whilst processing data import - " +
@@ -419,11 +438,9 @@ public class CatalogImportRepository {
         // Check for an existing id in database
         try {
             Long studyReportIdInDatabase = jdbcTemplate.queryForObject(SELECT_STUDY_REPORTS, Long.class, studyId);
-            String updateSql =
-                    "UPDATE STUDY_REPORT SET PUBMED_ID_ERROR = ?, NCBI_PAPER_TITLE = ?, NCBI_FIRST_AUTHOR = ?, NCBI_NORMALIZED_FIRST_AUTHOR = ?, NCBI_FIRST_UPDATE_DATE = ? WHERE ID = ?";
             Object[] params = {pubmedIdError, ncbiPaperTitle, ncbiFirstAuthor, ncbiNormalisedFirstAuthor,
                     ncbiFirstUpdateDate, studyReportIdInDatabase};
-            jdbcTemplate.update(updateSql, params);
+            jdbcTemplate.update(UPDATE_STUDY_REPORTS, params);
 
         }
         catch (EmptyResultDataAccessException e) {
@@ -481,8 +498,20 @@ public class CatalogImportRepository {
                                String downstreamMappedGene,
                                String downstreamEntrezGeneId,
                                Integer downstreamGeneDistance, Boolean isIntergenic) {
-
-
+        int rows = jdbcTemplate.update(UPDATE_MAPPED_DATA,
+                                       region,
+                                       chromosomeName,
+                                       chromosomePosition,
+                                       upstreamMappedGene,
+                                       upstreamEntrezGeneId,
+                                       upstreamGeneDistance,
+                                       downstreamMappedGene,
+                                       downstreamEntrezGeneId,
+                                       downstreamGeneDistance,
+                                       isIntergenic,
+                                       studyId,
+                                       associationId);
+        System.out.println("Updated " + rows + " rows");
     }
 
     private static <T> T[] extractRange(T[] array, int startIndex) {

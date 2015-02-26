@@ -18,7 +18,7 @@ public class AssociationReport {
     @GeneratedValue
     private Long id;
 
-    private boolean snpPending;
+    private Boolean snpPending;
 
     private Date lastUpdateDate;
 
