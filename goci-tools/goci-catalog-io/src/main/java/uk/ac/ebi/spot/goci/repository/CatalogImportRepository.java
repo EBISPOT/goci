@@ -362,4 +362,42 @@ public class CatalogImportRepository {
             compile();
         }
     }
+
+    private class MappedDataUpdate extends SqlUpdate {
+        public MappedDataUpdate(JdbcTemplate jdbcTemplate) {
+            //            String region = null; // REGION
+            //            String chromosomeName = null; // CHROMOSOME_NAME
+            //            String chromosomePosition = null; // CHROMOSOME_POSITION
+            //            String upstreamMappedGene = null; // UPSTREAM_MAPPED_GENE
+            //            String upstreamEntrezGeneId = null; // UPSTREAM_ENTREZ_GENE_ID
+            //            Integer upstreamGeneDistance = null; // UPSTREAM_GENE_DISTANCE
+            //            String downstreamMappedGene = null; // DOWNSTREAM_MAPPED_GENE
+            //            String downstreamEntrezGeneId = null; // DOWNSTREAM_ENTREZ_GENE_ID
+            //            Integer downstreamGeneDistance = null; // DOWNSTREAM_GENE_DISTANCE
+            //            Boolean isIntergenic = null; // IS_INTERGENIC
+            setJdbcTemplate(jdbcTemplate);
+            setSql("UPDATE CATALOG_SUMMARY_VIEW SET " +
+                           "REGION = ?," +
+                           "CHROMOSOME_NAME = ?, " +
+                           "CHROMOSOME_POSITION = ?, " +
+                           "UPSTREAM_MAPPED_GENE = ?, " +
+                           "UPSTREAM_ENTREZ_GENE_ID = ?," +
+                           "UPSTREAM_GENE_DISTANCE = ?," +
+                           "DOWNSTREAM_MAPPED_GENE = ?," +
+                           "DOWNSTREAM_GENE_DISTANCE = ?," +
+                           "IS_INTERGENIC = ?" +
+                           "WHERE STUDY_ID = ? AND ASSOCIATION_ID = ?");
+            declareParameter(new SqlParameter("region", Types.VARCHAR));
+            declareParameter(new SqlParameter("chromosomeName", Types.VARCHAR));
+            declareParameter(new SqlParameter("chromosomePosition", Types.VARCHAR));
+            declareParameter(new SqlParameter("upstreamMappedGene", Types.VARCHAR));
+            declareParameter(new SqlParameter("upstreamEntrezGeneId", Types.VARCHAR));
+            declareParameter(new SqlParameter("upstreamGeneDistance", Types.NUMERIC));
+            declareParameter(new SqlParameter("downstreamMappedGene", Types.VARCHAR));
+            declareParameter(new SqlParameter("downstreamEntrezGeneId", Types.VARCHAR));
+            declareParameter(new SqlParameter("downstreamGeneDistance", Types.NUMERIC));
+            declareParameter(new SqlParameter("isIntergenic", Types.BOOLEAN));
+            compile();
+        }
+    }
 }
