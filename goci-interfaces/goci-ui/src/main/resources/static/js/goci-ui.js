@@ -13,7 +13,7 @@ $(document).ready(function() {
         $(this).removeClass("background-color-complementary-accent", 300, "easeOutExpo");
     });
 
-    $.getJSON('/api/search/stats')
+    $.getJSON('api/search/stats')
         .done(function (data) {
              setStats(data);
         });

@@ -207,7 +207,7 @@ function setState(state) {
             break;
         default:
             console.log("Unknown search state; redirecting to search page");
-            window.location = "/search";
+            window.location = "search";
     }
 }
 
