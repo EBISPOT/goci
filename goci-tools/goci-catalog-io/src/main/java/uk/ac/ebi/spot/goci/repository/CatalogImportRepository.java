@@ -248,25 +248,25 @@ public class CatalogImportRepository {
                                ncbiFirstAuthor,
                                ncbiNormalisedFirstAuthor,
                                ncbiFirstUpdateDate);
-          /*  addAssociationReport(associationId,
+                addAssociationReport(associationId,
                                  lastUpdateDate,
                                  geneError,
                                  snpError,
                                  snpGeneOnDiffChr,
                                  noGeneForSymbol,
                                  geneNotOnGenome);
-            addMappedData(studyId,
-                          associationId,
-                          region,
-                          chromosomeName,
-                          chromosomePosition,
-                          upstreamMappedGene,
-                          upstreamEntrezGeneId,
-                          upstreamGeneDistance,
-                          downstreamMappedGene,
-                          downstreamEntrezGeneId,
-                          downstreamGeneDistance,
-                          isIntergenic);*/
+//                addMappedData(studyId,
+//                          associationId,
+//                          region,
+//                          chromosomeName,
+//                          chromosomePosition,
+//                          upstreamMappedGene,
+//                          upstreamEntrezGeneId,
+//                          upstreamGeneDistance,
+//                          downstreamMappedGene,
+//                          downstreamEntrezGeneId,
+//                          downstreamGeneDistance,
+//                          isIntergenic);
             }
 
 
