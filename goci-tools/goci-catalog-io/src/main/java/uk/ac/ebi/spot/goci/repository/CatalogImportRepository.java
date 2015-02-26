@@ -37,6 +37,9 @@ public class CatalogImportRepository {
     private SimpleJdbcInsert insertAssociationReport;
     private AssociationReportUpdate updateAssociationReport;
 
+    private static final String SELECT_STUDY_REPORTS =
+            "SELECT ID FROM STUDY_REPORT WHERE STUDY_ID = ?";
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -269,14 +272,25 @@ public class CatalogImportRepository {
                                 String ncbiFirstAuthor,
                                 String ncbiNormalisedFirstAuthor, Date ncbiFirstUpdateDate) {
 
+
+        // Check for an existing id in database
+        Long studyReportIdInDatabase = jdbcTemplate.queryForObject(SELECT_STUDY_REPORTS, Long.class, studyId);
+
         Map<String, Object> studyArgs = new HashMap<>();
         studyArgs.put("STUDY_ID", studyId);
         studyArgs.put("PUBMED_ID_ERROR", pubmedIdError);
         studyArgs.put("NCBI_PAPER_TITLE", ncbiPaperTitle);
-        studyArgs.put("",ncbiFirstAuthor);
-        studyArgs.put("", ncbiNormalisedFirstAuthor);
-        studyArgs.put("", ncbiFirstUpdateDate);
-        insertStudyReport.execute(studyArgs);
+        studyArgs.put("NCBI_FIRST_AUTHOR", ncbiFirstAuthor);
+        studyArgs.put("NCBI_NORMALISED_FIRST_AUTHOR", ncbiNormalisedFirstAuthor);
+        studyArgs.put("NCBI_FIRST_UPDATE_DATE", ncbiFirstUpdateDate);
+
+        if (studyReportIdInDatabase != null) {
+            insertStudyReport.execute(studyArgs);
+        }
+
+        else {
+            updateStudyReport.update(studyArgs);
+        }
 
 
     }
