@@ -49,8 +49,9 @@ function loadResults() {
             applyFacet();
         }
         else{
-            clearFacetting();
+            $('#facet').text();
         }
+
     }
 }
 
