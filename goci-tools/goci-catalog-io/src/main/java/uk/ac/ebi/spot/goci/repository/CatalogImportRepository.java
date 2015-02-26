@@ -37,6 +37,8 @@ public class CatalogImportRepository {
     private SimpleJdbcInsert insertAssociationReport;
     private AssociationReportUpdate updateAssociationReport;
 
+    private MappedDataUpdate mappedDataUpdate;
+
     private static final String SELECT_STUDY_REPORTS =
             "SELECT ID FROM STUDY_REPORT WHERE STUDY_ID = ?";
 
@@ -352,6 +354,12 @@ public class CatalogImportRepository {
 
     private class StudyReportUpdate extends SqlUpdate {
         private StudyReportUpdate(JdbcTemplate jdbcTemplate) {
+            //            Long studyId = null; // STUDY_ID
+            //            Integer pubmedIdError = null;  // PUBMED_ID_ERROR
+            //            String ncbiPaperTitle = null; // NCBI_PAPER_TITLE
+            //            String ncbiFirstAuthor = null; // NCBI_FIRST_AUTHOR
+            //            String ncbiNormalisedFirstAuthor = null; // NCBI_NORMALIZED_FIRST_AUTHOR
+            //            Date ncbiFirstUpdateDate = null; // NCBI_FIRST_UPDATE_DATE
             setJdbcTemplate(jdbcTemplate);
             setSql("UPDATE STUDY_REPORT SET " +
                            "STUDY_ID = ?, " +
@@ -363,21 +371,24 @@ public class CatalogImportRepository {
                            "WHERE ID = ?");
             declareParameter(new SqlParameter("studyId", Types.NUMERIC));
             declareParameter(new SqlParameter("pubmedIdError", Types.NUMERIC));
+            declareParameter(new SqlParameter("ncbiPaperTitle", Types.VARCHAR));
+            declareParameter(new SqlParameter("ncbiFirstAuthor", Types.VARCHAR));
+            declareParameter(new SqlParameter("ncbiNormalizedFirstAuthor", Types.VARCHAR));
+            declareParameter(new SqlParameter("ncbiFirstUpdateDate", Types.DATE));
             declareParameter(new SqlParameter("id", Types.NUMERIC));
-            // ... declare more parameters!
             compile();
         }
     }
 
     private class AssociationReportUpdate extends SqlUpdate {
         public AssociationReportUpdate(JdbcTemplate jdbcTemplate) {
-            //        Long associationId = null; // ASSOCIATION_ID
-            //        Date lastUpdateDate = null; // LAST_UPDATE_DATE
-            //        Long geneError = null; // GENE_ERROR
-            //        String snpError = null; // SNP_ERROR
-            //        String snpGeneOnDiffChr = null; // SNP_GENE_ON_DIFF_CHR
-            //        String noGeneForSymbol = null; // NO_GENE_FOR_SYMBOL
-            //        String geneNotOnGenome = null; // GENE_NOT_ON_GENOME
+            //            Long associationId = null; // ASSOCIATION_ID
+            //            Date lastUpdateDate = null; // LAST_UPDATE_DATE
+            //            Long geneError = null; // GENE_ERROR
+            //            String snpError = null; // SNP_ERROR
+            //            String snpGeneOnDiffChr = null; // SNP_GENE_ON_DIFF_CHR
+            //            String noGeneForSymbol = null; // NO_GENE_FOR_SYMBOL
+            //            String geneNotOnGenome = null; // GENE_NOT_ON_GENOME
             setJdbcTemplate(jdbcTemplate);
             setSql("UPDATE ASSOCIATION_REPORT SET " +
                            "ASSOCIATION_ID = ?, " +
@@ -389,9 +400,13 @@ public class CatalogImportRepository {
                            "GENE_NOT_ON_GENOME = ?, " +
                            "WHERE ID = ?");
             declareParameter(new SqlParameter("associationId", Types.NUMERIC));
-            declareParameter(new SqlParameter("lastUpdateDate", Types.NUMERIC));
+            declareParameter(new SqlParameter("lastUpdateDate", Types.DATE));
+            declareParameter(new SqlParameter("geneError", Types.NUMERIC));
+            declareParameter(new SqlParameter("snpError", Types.VARCHAR));
+            declareParameter(new SqlParameter("snpGeneOnDiffChr", Types.VARCHAR));
+            declareParameter(new SqlParameter("noGeneForSymbol", Types.VARCHAR));
+            declareParameter(new SqlParameter("geneNotOnGenome", Types.VARCHAR));
             declareParameter(new SqlParameter("id", Types.NUMERIC));
-            // ... declare more parameters!
             compile();
         }
     }
