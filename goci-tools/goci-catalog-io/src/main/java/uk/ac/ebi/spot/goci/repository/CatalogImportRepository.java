@@ -538,7 +538,7 @@ public class CatalogImportRepository {
             declareParameter(new SqlParameter("SNP_GENE_ON_DIFF_CHR", Types.VARCHAR));
             declareParameter(new SqlParameter("NO_GENE_FOR_SYMBOL", Types.VARCHAR));
             declareParameter(new SqlParameter("GENE_NOT_ON_GENOME", Types.VARCHAR));
-            declareParameter(new SqlParameter("SNP_PENDING", Types.VARCHAR));
+            declareParameter(new SqlParameter("SNP_PENDING", Types.NUMERIC));
             declareParameter(new SqlParameter("ID", Types.NUMERIC));
             compile();
         }
