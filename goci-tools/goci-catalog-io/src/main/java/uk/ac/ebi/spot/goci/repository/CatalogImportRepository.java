@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -57,12 +58,7 @@ public class CatalogImportRepository {
         this.insertStudyReport =
                 new SimpleJdbcInsert(jdbcTemplate)
                         .withTableName("STUDY_REPORT")
-                        .usingColumns("STUDY_ID")
-                        .usingColumns("PUBMED_ID_ERROR")
-                        .usingColumns("NCBI_PAPER_TITLE")
-                        .usingColumns("NCBI_FIRST_AUTHOR")
-                        .usingColumns("NCBI_NORMALIZED_FIRST_AUTHOR")
-                        .usingColumns("NCBI_FIRST_UPDATE_DATE")
+                        .usingColumns("STUDY_ID","PUBMED_ID_ERROR", "NCBI_PAPER_TITLE", "NCBI_FIRST_AUTHOR", "NCBI_NORMALIZED_FIRST_AUTHOR", "NCBI_FIRST_UPDATE_DATE")
                         .usingGeneratedKeyColumns("ID");
 
         this.updateStudyReport = new StudyReportUpdate(jdbcTemplate);
@@ -155,13 +151,19 @@ public class CatalogImportRepository {
             // For each key in our map, extract the cell at that index
             for (CatalogHeaderBinding binding : headerColumnMap.keySet()) {
                 try {
-                    String valueToInsert = line[headerColumnMap.get(binding)];
+                    String valueToInsert = line[headerColumnMap.get(binding)].trim();
+
                     switch (binding) {
                         case STUDY_ID:
                             studyId = Long.valueOf(valueToInsert);
                             break;
                         case PUBMED_ID_ERROR:
-                            pubmedIdError = Integer.valueOf(valueToInsert);
+                            if (!valueToInsert.isEmpty()) {
+                                pubmedIdError = Integer.valueOf(valueToInsert);
+                            }
+                            else {
+                                valueToInsert = null;
+                            }
                             break;
                         case NCBI_PAPER_TITLE:
                             ncbiPaperTitle = valueToInsert;
@@ -209,7 +211,10 @@ public class CatalogImportRepository {
                             upstreamEntrezGeneId = valueToInsert;
                             break;
                         case UPSTREAM_GENE_DISTANCE:
-                            upstreamGeneDistance = Integer.valueOf(valueToInsert);
+                            if (!valueToInsert.isEmpty()) {
+                                upstreamGeneDistance = Integer.valueOf(valueToInsert);
+                            }
+                            else {valueToInsert = null;}
                             break;
                         case DOWNSTREAM_MAPPED_GENE:
                             downstreamMappedGene = valueToInsert;
@@ -218,7 +223,10 @@ public class CatalogImportRepository {
                             downstreamEntrezGeneId = valueToInsert;
                             break;
                         case DOWNSTREAM_GENE_DISTANCE:
-                            downstreamGeneDistance = Integer.valueOf(valueToInsert);
+                            if (!valueToInsert.isEmpty()) {
+                                downstreamGeneDistance = Integer.valueOf(valueToInsert);
+                            }
+                            else {valueToInsert = null;}
                             break;
                         case IS_INTERGENIC:
                             isIntergenic = Boolean.valueOf(valueToInsert);
@@ -295,9 +303,6 @@ public class CatalogImportRepository {
                                                   "trying to add study report with no paper title");
         }
 
-        // Check for an existing id in database
-        Long studyReportIdInDatabase = jdbcTemplate.queryForObject(SELECT_STUDY_REPORTS, Long.class, studyId);
-
         Map<String, Object> studyArgs = new HashMap<>();
         studyArgs.put("STUDY_ID", studyId);
         studyArgs.put("PUBMED_ID_ERROR", pubmedIdError);
@@ -307,15 +312,17 @@ public class CatalogImportRepository {
         studyArgs.put("NCBI_FIRST_UPDATE_DATE", ncbiFirstUpdateDate);
 
 
-        if (studyReportIdInDatabase == null) {
-            insertStudyReport.execute(studyArgs);
-        }
-
-        else {
+        // Check for an existing id in database
+        try {
+            Long studyReportIdInDatabase = jdbcTemplate.queryForObject(SELECT_STUDY_REPORTS, Long.class, studyId);
             studyArgs.put("ID", studyReportIdInDatabase);
-            updateStudyReport.updateByNamedParam(studyArgs);
+            int rows = updateStudyReport.updateByNamedParam(studyArgs);
+            System.out.println(rows);
         }
+        catch (EmptyResultDataAccessException e) {
+            insertStudyReport.execute(studyArgs);
 
+        }
 
     }
 
@@ -393,7 +400,7 @@ public class CatalogImportRepository {
                            "NCBI_PAPER_TITLE = ?, " +
                            "NCBI_FIRST_AUTHOR = ?, " +
                            "NCBI_NORMALIZED_FIRST_AUTHOR = ?, " +
-                           "NCBI_FIRST_UPDATE_DATE = ?" +
+                           "NCBI_FIRST_UPDATE_DATE = ? " +
                            "WHERE ID = ?");
             declareParameter(new SqlParameter("STUDY_ID", Types.NUMERIC));
             declareParameter(new SqlParameter("PUBMED_ID_ERROR", Types.NUMERIC));
