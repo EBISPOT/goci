@@ -293,7 +293,7 @@ public class CatalogImportRepository {
         studyArgs.put("NCBI_NORMALISED_FIRST_AUTHOR", ncbiNormalisedFirstAuthor);
         studyArgs.put("NCBI_FIRST_UPDATE_DATE", ncbiFirstUpdateDate);
 
-        if (studyReportIdInDatabase != null) {
+        if (studyReportIdInDatabase == null) {
             insertStudyReport.execute(studyArgs);
         }
 
@@ -324,7 +324,7 @@ public class CatalogImportRepository {
         associationArgs.put("NO_GENE_FOR_SYMBOL", noGeneForSymbol);
         associationArgs.put("GENE_NOT_ON_GENOME", geneNotOnGenome);
 
-        if(associationReportIdInDatabase != null) {
+        if(associationReportIdInDatabase == null) {
             insertAssociationReport.execute(associationArgs);
         }
         else {
@@ -408,16 +408,16 @@ public class CatalogImportRepository {
                            "SNP_ERROR = ?, " +
                            "SNP_GENE_ON_DIFF_CHR = ?, " +
                            "NO_GENE_FOR_SYMBOL = ?, " +
-                           "GENE_NOT_ON_GENOME = ?, " +
+                           "GENE_NOT_ON_GENOME = ? " +
                            "WHERE ID = ?");
-            declareParameter(new SqlParameter("associationId", Types.NUMERIC));
-            declareParameter(new SqlParameter("lastUpdateDate", Types.DATE));
-            declareParameter(new SqlParameter("geneError", Types.NUMERIC));
-            declareParameter(new SqlParameter("snpError", Types.VARCHAR));
-            declareParameter(new SqlParameter("snpGeneOnDiffChr", Types.VARCHAR));
-            declareParameter(new SqlParameter("noGeneForSymbol", Types.VARCHAR));
-            declareParameter(new SqlParameter("geneNotOnGenome", Types.VARCHAR));
-            declareParameter(new SqlParameter("id", Types.NUMERIC));
+            declareParameter(new SqlParameter("ASSOCIATION_ID", Types.NUMERIC));
+            declareParameter(new SqlParameter("LAST_UPDATE_DATE", Types.DATE));
+            declareParameter(new SqlParameter("GENE_ERROR", Types.NUMERIC));
+            declareParameter(new SqlParameter("SNP_ERROR", Types.VARCHAR));
+            declareParameter(new SqlParameter("SNP_GENE_ON_DIFF_CHR", Types.VARCHAR));
+            declareParameter(new SqlParameter("NO_GENE_FOR_SYMBOL", Types.VARCHAR));
+            declareParameter(new SqlParameter("GENE_NOT_ON_GENOME", Types.VARCHAR));
+            declareParameter(new SqlParameter("ID", Types.NUMERIC));
             compile();
         }
     }
