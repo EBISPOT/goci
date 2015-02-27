@@ -47,6 +47,12 @@
 <<What happens to the count values for my search if I apply a filter?>>
 
 
+<<Why are some columns sortable and other are not?>>
+
+
+<<I tried sorting a column but nothing happened!>>
+
+
 <<What is the difference between filtering by a trait via the trait dropdown and doing a search by clicking on that trait in the results?>>
 
 '''
@@ -111,6 +117,15 @@ If you apply a filter to search results the count values will change to reflect 
 
 ==== What is the difference between filtering by a trait via the trait dropdown and doing a search by clicking on that trait in the results?
 Filtering via the trait dropdown limits the search results to studies that have the selected trait(s) as their reported trait, as well as any associations identified in those studies. Clicking on a trait link does a complete new search for that term, searching across all fields, including title and sample descriptions, so you may get additional results, not just studies annotated with the search trait.
+
+
+== Sorting
+
+==== Why are some columns sortable and other are not?
+Because of the way our search algorithm works, some fields can't be sorted at the moment. We are trying to find a workaround for this. For now, if you really need to sort by an unsortable column, we would recommend downloading the results into a spreadsheet and sorting them that way.
+
+==== I tried sorting by a column but nothing happened!
+Some fields contains results that don't work well with our sorting algorithm. When this happens, rather than introduce a glitch into your results, the table will simply refuse the sort. This is a known issue and we are looking for a way to fix it.
 
 '''
 
