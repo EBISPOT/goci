@@ -5,6 +5,9 @@
 <<Is there any way I can stay informed about new search features and developments?>>
 
 
+<<How should I cite the GWAS Catalog?>>
+
+
 <<How do I do a search?>>
 
 
@@ -53,6 +56,9 @@
 ==== Is there any way I can stay informed about new search features and developments?
 
 You can subscribe to our announcement list by sending an e-mail to gwas-announce-join@ebi.ac.uk with subject heading "subscribe". Traffic on this list will be limited to important announcements only so you don't need to worry about getting bombarded with loads of emails. For queries and user discussion, we have a separate mailing list, gwas-users@ebi.ac.uk.
+
+==== How should I cite the GWAS Catalog?
+Please see the link:about[About] page for citation guidance.
 
 
 == Searching
