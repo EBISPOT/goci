@@ -35,7 +35,6 @@ public class CatalogImportRepository {
     private SimpleJdbcInsert insertStudyReport;
 
     private SimpleJdbcInsert insertAssociationReport;
-    private AssociationReportUpdate updateAssociationReport;
 
     private static final String SELECT_STUDY_REPORTS =
             "SELECT ID FROM STUDY_REPORT WHERE STUDY_ID = ?";
@@ -51,6 +50,17 @@ public class CatalogImportRepository {
 
     private static final String SELECT_ASSOCIATION_REPORTS =
             "SELECT ID FROM ASSOCIATION_REPORT WHERE ASSOCIATION_ID = ?";
+
+    private static final String UPDATE_ASSOCIATION_REPORTS =
+            "UPDATE ASSOCIATION_REPORT SET " +
+                    "LAST_UPDATE_DATE = ?, " +
+                    "GENE_ERROR = ?, " +
+                    "SNP_ERROR = ?, " +
+                    "SNP_GENE_ON_DIFF_CHR = ?, " +
+                    "NO_GENE_FOR_SYMBOL = ?, " +
+                    "GENE_NOT_ON_GENOME = ?, " +
+                    "SNP_PENDING = ? " +
+                    "WHERE ID = ?";
 
     private static final String UPDATE_MAPPED_DATA =
             "UPDATE CATALOG_SUMMARY_VIEW SET " +
@@ -72,7 +82,6 @@ public class CatalogImportRepository {
     protected Logger getLog() {
         return log;
     }
-
 
     @Autowired(required = false)
     public CatalogImportRepository(JdbcTemplate jdbcTemplate) {
@@ -101,8 +110,6 @@ public class CatalogImportRepository {
                                       "GENE_NOT_ON_GENOME",
                                       "SNP_PENDING")
                         .usingGeneratedKeyColumns("ID");
-
-        this.updateAssociationReport = new AssociationReportUpdate(jdbcTemplate);
     }
 
     public void loadNCBIMappedData(String[][] data) {
@@ -426,28 +433,29 @@ public class CatalogImportRepository {
                                                   "trying to add study report with no paper title");
         }
 
-        Map<String, Object> studyArgs = new HashMap<>();
-        studyArgs.put("STUDY_ID", studyId);
-        studyArgs.put("PUBMED_ID_ERROR", pubmedIdError);
-        studyArgs.put("NCBI_PAPER_TITLE", ncbiPaperTitle);
-        studyArgs.put("NCBI_FIRST_AUTHOR", ncbiFirstAuthor);
-        studyArgs.put("NCBI_NORMALIZED_FIRST_AUTHOR", ncbiNormalisedFirstAuthor);
-        studyArgs.put("NCBI_FIRST_UPDATE_DATE", ncbiFirstUpdateDate);
-
-
         // Check for an existing id in database
+        int rows;
         try {
-            Long studyReportIdInDatabase = jdbcTemplate.queryForObject(SELECT_STUDY_REPORTS, Long.class, studyId);
-            Object[] params = {pubmedIdError, ncbiPaperTitle, ncbiFirstAuthor, ncbiNormalisedFirstAuthor,
-                    ncbiFirstUpdateDate, studyReportIdInDatabase};
-            jdbcTemplate.update(UPDATE_STUDY_REPORTS, params);
-
+            Long studyReportId = jdbcTemplate.queryForObject(SELECT_STUDY_REPORTS, Long.class, studyId);
+            rows = jdbcTemplate.update(UPDATE_STUDY_REPORTS,
+                                       pubmedIdError,
+                                       ncbiPaperTitle,
+                                       ncbiFirstAuthor,
+                                       ncbiNormalisedFirstAuthor,
+                                       ncbiFirstUpdateDate,
+                                       studyReportId);
         }
         catch (EmptyResultDataAccessException e) {
-            insertStudyReport.execute(studyArgs);
-
+            Map<String, Object> studyArgs = new HashMap<>();
+            studyArgs.put("STUDY_ID", studyId);
+            studyArgs.put("PUBMED_ID_ERROR", pubmedIdError);
+            studyArgs.put("NCBI_PAPER_TITLE", ncbiPaperTitle);
+            studyArgs.put("NCBI_FIRST_AUTHOR", ncbiFirstAuthor);
+            studyArgs.put("NCBI_NORMALIZED_FIRST_AUTHOR", ncbiNormalisedFirstAuthor);
+            studyArgs.put("NCBI_FIRST_UPDATE_DATE", ncbiFirstUpdateDate);
+            rows = insertStudyReport.execute(studyArgs);
         }
-
+        getLog().trace("Adding report for Study ID: " + studyId + " - Updated " + rows + " rows");
     }
 
     private void addAssociationReport(Long associationId,
@@ -458,33 +466,35 @@ public class CatalogImportRepository {
                                       String noGeneForSymbol,
                                       String geneNotOnGenome) {
 
-        Map<String, Object> associationArgs = new HashMap<>();
 
-        associationArgs.put("ASSOCIATION_ID", associationId);
-        associationArgs.put("LAST_UPDATE_DATE", lastUpdateDate);
-        associationArgs.put("GENE_ERROR", geneError);
-        associationArgs.put("SNP_ERROR", snpError);
-        associationArgs.put("SNP_GENE_ON_DIFF_CHR", snpGeneOnDiffChr);
-        associationArgs.put("NO_GENE_FOR_SYMBOL", noGeneForSymbol);
-        associationArgs.put("GENE_NOT_ON_GENOME", geneNotOnGenome);
-        associationArgs.put("SNP_PENDING", null);
-
-        System.out.println(associationId + " - " + lastUpdateDate + " - " + geneError + " - " + snpError + " - " +
-                                   snpGeneOnDiffChr + " - " + noGeneForSymbol + " - " + geneNotOnGenome);
-        System.out.println(associationArgs.size());
-
+        // Check for an existing id in database
+        int rows;
         try {
-            Long associationReportIdInDatabase =
+            Long associationReportId =
                     jdbcTemplate.queryForObject(SELECT_ASSOCIATION_REPORTS, Long.class, associationId);
-            associationArgs.put("ID", associationReportIdInDatabase);
-            updateAssociationReport.updateByNamedParam(associationArgs);
+            rows = jdbcTemplate.update(UPDATE_ASSOCIATION_REPORTS,
+                                       lastUpdateDate,
+                                       geneError,
+                                       snpError,
+                                       snpGeneOnDiffChr,
+                                       noGeneForSymbol,
+                                       geneNotOnGenome,
+                                       null,
+                                       associationReportId);
         }
         catch (EmptyResultDataAccessException e) {
-            getLog().info("No previous report for association " + associationId);
-            insertAssociationReport.execute(associationArgs);
-
+            Map<String, Object> associationArgs = new HashMap<>();
+            associationArgs.put("ASSOCIATION_ID", associationId);
+            associationArgs.put("LAST_UPDATE_DATE", lastUpdateDate);
+            associationArgs.put("GENE_ERROR", geneError);
+            associationArgs.put("SNP_ERROR", snpError);
+            associationArgs.put("SNP_GENE_ON_DIFF_CHR", snpGeneOnDiffChr);
+            associationArgs.put("NO_GENE_FOR_SYMBOL", noGeneForSymbol);
+            associationArgs.put("GENE_NOT_ON_GENOME", geneNotOnGenome);
+            associationArgs.put("SNP_PENDING", null);
+            rows = insertAssociationReport.execute(associationArgs);
         }
-
+        getLog().trace("Adding report for Association ID: " + associationId + " - Updated " + rows + " rows");
     }
 
     private void addMappedData(Long studyId,
@@ -511,7 +521,8 @@ public class CatalogImportRepository {
                                        isIntergenic,
                                        studyId,
                                        associationId);
-        System.out.println("Updated " + rows + " rows");
+        getLog().trace("Adding mapped data for Study ID: " + studyId + " and Association ID: " + associationId + " " +
+                               "- Updated " + rows + " rows");
     }
 
     private static <T> T[] extractRange(T[] array, int startIndex) {
@@ -560,44 +571,6 @@ public class CatalogImportRepository {
             declareParameter(new SqlParameter("ID", Types.NUMERIC));
             compile();
 
-        }
-    }
-
-    private class MappedDataUpdate extends SqlUpdate {
-        public MappedDataUpdate(JdbcTemplate jdbcTemplate) {
-            //            String region = null; // REGION
-            //            String chromosomeName = null; // CHROMOSOME_NAME
-            //            String chromosomePosition = null; // CHROMOSOME_POSITION
-            //            String upstreamMappedGene = null; // UPSTREAM_MAPPED_GENE
-            //            String upstreamEntrezGeneId = null; // UPSTREAM_ENTREZ_GENE_ID
-            //            Integer upstreamGeneDistance = null; // UPSTREAM_GENE_DISTANCE
-            //            String downstreamMappedGene = null; // DOWNSTREAM_MAPPED_GENE
-            //            String downstreamEntrezGeneId = null; // DOWNSTREAM_ENTREZ_GENE_ID
-            //            Integer downstreamGeneDistance = null; // DOWNSTREAM_GENE_DISTANCE
-            //            Boolean isIntergenic = null; // IS_INTERGENIC
-            setJdbcTemplate(jdbcTemplate);
-            setSql("UPDATE CATALOG_SUMMARY_VIEW SET " +
-                           "REGION = ?," +
-                           "CHROMOSOME_NAME = ?, " +
-                           "CHROMOSOME_POSITION = ?, " +
-                           "UPSTREAM_MAPPED_GENE = ?, " +
-                           "UPSTREAM_ENTREZ_GENE_ID = ?," +
-                           "UPSTREAM_GENE_DISTANCE = ?," +
-                           "DOWNSTREAM_MAPPED_GENE = ?," +
-                           "DOWNSTREAM_GENE_DISTANCE = ?," +
-                           "IS_INTERGENIC = ?" +
-                           "WHERE STUDY_ID = ? AND ASSOCIATION_ID = ?");
-            declareParameter(new SqlParameter("region", Types.VARCHAR));
-            declareParameter(new SqlParameter("chromosomeName", Types.VARCHAR));
-            declareParameter(new SqlParameter("chromosomePosition", Types.VARCHAR));
-            declareParameter(new SqlParameter("upstreamMappedGene", Types.VARCHAR));
-            declareParameter(new SqlParameter("upstreamEntrezGeneId", Types.VARCHAR));
-            declareParameter(new SqlParameter("upstreamGeneDistance", Types.NUMERIC));
-            declareParameter(new SqlParameter("downstreamMappedGene", Types.VARCHAR));
-            declareParameter(new SqlParameter("downstreamEntrezGeneId", Types.VARCHAR));
-            declareParameter(new SqlParameter("downstreamGeneDistance", Types.NUMERIC));
-            declareParameter(new SqlParameter("isIntergenic", Types.BOOLEAN));
-            compile();
         }
     }
 }
