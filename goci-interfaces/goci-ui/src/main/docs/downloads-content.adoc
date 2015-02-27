@@ -4,5 +4,7 @@
 
 The most recent edition of the GWAS Catalog is link:../api/search/downloads/full[available for download here]
 
+For a description of the file's column headings, go to link:fileheaders[this page].
+
 We are working to provide richer, fully customise-able downloads of GWAS data and these will be available soon.
 
