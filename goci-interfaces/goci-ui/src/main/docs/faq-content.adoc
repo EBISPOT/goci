@@ -61,10 +61,10 @@ You can subscribe to our announcement list by sending an e-mail to gwas-announce
 Type the thing you are interested in e.g. “breast cancer” into the search box and hit return or click the search icon.
 
 ==== What can I type into the search bar?
-You can type any text you wish in the search bar. This will then return any exact string matches within a number of data fields in the Catalog, including title, author, journal, reported trait, mapped (ontology) trait, mapped trait's synonyms, mapped trait's parents, sample descriptions, genes and SNPs. 
+You can type any text you wish into the search bar. This will then return any exact string matches within a number of data fields in the Catalog, including title, author, journal, reported trait, mapped (ontology) trait, mapped trait's synonyms, mapped trait's parents, sample descriptions, genes and SNPs. 
 
 ==== What is the difference between a reported trait and a mapped trait?
-Each study is assigned a trait that best represents the phenotype under investigation. This is known as the reported trait as it is taken from the study publication. All reported traits are mapped to terms from the http://www.ebi.ac.uk/efo[Experimental Factor Ontology] resulting in a mapped trait. For more information about how ontologies are used in the catalog see our link:ontology[ontology] page.
+Each study is assigned a trait that best represents the phenotype under investigation. This is known as the reported trait as it is taken from the study publication. All reported traits are mapped to terms from the http://www.ebi.ac.uk/efo[Experimental Factor Ontology] resulting in one or more mapped traits. For more information about how ontologies are used in the catalog see our link:ontology[ontology] page.
 
 ==== Can I limit my search to a specific type of field, e.g. author?
 At the moment, the main search only supports searching across all fields, so if your search term is for example "Parkinson", you will see results for Parkinson's disease as well as studies with a first author named Parkinson. We are working on an "advanced search" mode where you can limit your search to certain fields or search for specific combinations of fields. To be alerted as soon as this functionality becomes available, subscribe to our announcement list (see above for subscription instructions).
