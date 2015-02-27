@@ -101,7 +101,7 @@ Our search functionality is currently unable to allow for typos or term variatio
 
 
 ==== How do I filter my results by p-value?
-To filter association results by p-value, enter a maximum p-value into the appropriate filter box. The input format is "mantissa"e-"exponent, e.g. 5e-8.
+To filter association results by p-value, enter a maximum p-value into the appropriate filter box. The input format is "mantissa"x 10^"exponent"^, e.g. 5 x 10^-8^.
 
 ==== How do I filter my results by odds ratio?
 To filter association results by odds ratio, enter a minimum and/or maximum value into the to and/or from box. You do not need to enter values in both boxes, so if you want values greater than your threshold, only enter a number into the from box or if you want values smaller than your threshold, only enter a number into the to box. The default minimum is 1 and you cannot search for values smaller than this.
