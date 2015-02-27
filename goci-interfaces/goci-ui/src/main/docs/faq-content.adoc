@@ -76,7 +76,7 @@ Type the thing you are interested in e.g. “breast cancer” into the search bo
 You can type any text you wish into the search bar. This will then return any exact string matches within a number of data fields in the Catalog, including title, author, journal, reported trait, mapped (ontology) trait, mapped trait's synonyms, mapped trait's parents, sample descriptions, genes and SNPs. 
 
 ==== What is the difference between a reported trait and a mapped trait?
-Each study is assigned a trait that best represents the phenotype under investigation. This is known as the reported trait as it is taken from the study publication. All reported traits are mapped to terms from the http://www.ebi.ac.uk/efo[Experimental Factor Ontology] resulting in one or more mapped traits. For more information about how ontologies are used in the catalog see our link:ontology[ontology] page.
+Each study is assigned a trait description that best represents the phenotype under investigation. This is known as the reported trait as it is taken from the study publication. All reported traits are mapped to terms from the http://www.ebi.ac.uk/efo[Experimental Factor Ontology] resulting in one or more mapped traits. For more information about how ontologies are used in the catalog see our link:ontology[ontology] page.
 
 ==== Can I limit my search to a specific type of field, e.g. author?
 At the moment, the main search only supports searching across all fields, so if your search term is for example "Parkinson", you will see results for Parkinson's disease as well as studies with a first author named Parkinson. We are working on an "advanced search" mode where you can limit your search to certain fields or search for specific combinations of fields. To be alerted as soon as this functionality becomes available, subscribe to our announcement list (see above for subscription instructions).
@@ -84,7 +84,7 @@ At the moment, the main search only supports searching across all fields, so if 
 For now, if you would like to search for a specific study, you can search by Pubmed ID. To limit your search to a specific trait or set of traits, we would suggest doing a general search for that trait first, then filtering your results using the trait filter dropdown to the left of the search results. For example, following a search for "lupus", you can limit your search results to "Systemic lupus erythematosus" via the dropdown.
 
 ==== What's the difference between the blue links and the brown links?
-Clicking on a term highlighted in blue (eg author, trait or rsID) performs a full new search for this term. Clicking on a little brown link icon next to a term takes you to an external page about this term, eg Pubmed Central for studies or Ensembl for SNPs or genes.
+Clicking on a term highlighted in blue (e.g. author, trait or rsID) performs a full new search for this term. Clicking on a little brown link icon next to a term takes you to an external page related to this term, e.g. Pubmed Central for studies or Ensembl for SNPs or genes.
 
 ==== When I search for a certain trait why are other traits returned?
 The search algorithm searches across a number of fields including study titles, sample descriptions, reported traits, mapped (ontology) traits, mapped traits' synonyms and mapped traits' parents. If your search term is a match to any of these categories, that result will be returned. If you search for "metabolic disease" for example, you will see a number of reported traits mapped to ontology traits such as "type II diabetes mellitus" because metabolic disease is a parent of diabetes in the ontology. Equally, searching for "diabetes" will return some potentially unexpected results as the search returns studies that were carried out in a sample population of diabetics, so the term "diabetes" is matched in the sample description. Filtering via the trait dropdown allows you to exclude unwanted traits for now and a more refined "advanced search" mode is under development.
@@ -101,7 +101,7 @@ Our search functionality is currently unable to allow for typos or term variatio
 
 
 ==== How do I filter my results by p-value?
-To filter association results by p-value, enter a maximum p-value into the appropriate search boxes. The input format is "mantissa"e-"exponent, e.g. 5e-8.
+To filter association results by p-value, enter a maximum p-value into the appropriate filter box. The input format is "mantissa"e-"exponent, e.g. 5e-8.
 
 ==== How do I filter my results by odds ratio?
 To filter association results by odds ratio, enter a minimum and/or maximum value into the to and/or from box. You do not need to enter values in both boxes, so if you want values greater than your threshold, only enter a number into the from box or if you want values smaller than your threshold, only enter a number into the to box. The default minimum is 1 and you cannot search for values smaller than this.
