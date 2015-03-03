@@ -267,8 +267,14 @@ a > .toplevel-view {
     top: -0.8em;
 }
 
-.glyphicon-link {
-    color: #A6703F;
+/*.glyphicon-link {*/
+    /*color: #A6703F;*/
+/*}*/
+
+
+.link-icon{
+    width: 1.5em;
+    height: auto;
 }
 
 #trait-dropdown > ul > li {

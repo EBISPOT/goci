@@ -9,17 +9,20 @@
 
 $(document).ready(function () {
 
-    if($('#traitList').children() == null){
-        loadTraitList();
-    }
+    //if($('#traitList').children() == null){
+    //    console.log("About to load all the traits");
+    //    loadTraitList();
+    //}
+
+    loadTraitList();
 
 });
 
 function loadTraitList() {
 
     var searchTerm = 'traitName_s:*';
-    var facet = 'resourcename';
-    var sort = 'traitName_s';
+    var facet = 'diseasetrait';
+    var sort = 'traitName_s+asc';
 
     $.getJSON('api/search/alltraits', {
         'q': searchTerm,

@@ -105,12 +105,8 @@
             <h3>The NHGRI-EBI Catalog of published genome-wide association studies</h3>
 
             <!-- search box goes here -->
-            <div class="input-group" th:object="${result}">
-                <input type="text"
-                       class="form-control"
-                       placeholder="Search the catalog"
-                       id="search-box"
-                       th:field="*{query}"/>
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search the catalog" id="search-box"/>
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button" id="search-button">
                         <span class="glyphicon glyphicon-search"></span>
@@ -133,7 +129,7 @@
 <div class="container-fluid tight-to-top">
     <ol class="breadcrumb background-color-complementary-accent">
         <li><a href="home">Home</a></li>
-        <li><a href="search">Search</li>
+        <li><a href="search">Search</a></li>
         <li class="active">Trait List</li>
     </ol>
 
@@ -205,9 +201,9 @@
 <!-- GOCI JavaScript
 ================================================== -->
 <script src="../static/js/goci-ui.js" th:src="@{js/goci-ui.js}"></script>
+<script src="../static/js/traitlist.js" th:src="@{js/traitlist.js}"></script>
 <script src="../static/js/solrsearch.js" th:src="@{js/solrsearch.js}"></script>
 <script src="../static/js/documentprocessor.js" th:src="@{js/documentprocessor.js}"></script>
-<script src="../static/js/traitlist.js" th:src="@{js/traitlist.js}"></script>
 
 
 <!-- Google analytics

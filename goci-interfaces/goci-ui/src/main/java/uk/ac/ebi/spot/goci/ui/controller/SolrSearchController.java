@@ -176,6 +176,7 @@ public class SolrSearchController {
             @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "facet.mincount", required = false, defaultValue = "1") int mincount,
+            @RequestParam(value = "facet.limit", required = false, defaultValue = "1000") int limit,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
@@ -185,6 +186,7 @@ public class SolrSearchController {
         addRowsAndPage(solrSearchBuilder, maxResults, page);
         addFacet(solrSearchBuilder, "traitName_s");
         addFacetMincount(solrSearchBuilder, mincount);
+        addFacetLimit(solrSearchBuilder, limit);
         addFilterQuery(solrSearchBuilder, "resourcename", "study");
         addQuery(solrSearchBuilder, query);
 
@@ -436,6 +438,10 @@ public class SolrSearchController {
 
     private void addFacetMincount(StringBuilder solrSearchBuilder, int min){
         solrSearchBuilder.append("&facet.mincount=").append(min);
+    }
+
+    private void addFacetLimit(StringBuilder solrSearchBuilder, int limit){
+        solrSearchBuilder.append("&facet.limit=").append(limit);
     }
 
     private void addJsonpCallback(StringBuilder solrSearchBuilder, String callbackFunction) {
