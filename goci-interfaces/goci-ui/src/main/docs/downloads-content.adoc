@@ -8,3 +8,7 @@ For a description of the file's column headings, go to link:fileheaders[this pag
 
 We are working to provide richer, fully customise-able downloads of GWAS data and these will be available soon.
 
+
+== Citing the GWAS Catalog
+Please see the link:about[About] page for citation guidance.
+

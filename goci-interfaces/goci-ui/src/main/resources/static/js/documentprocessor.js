@@ -172,8 +172,25 @@ function processAssociation(association, table) {
         location = location.concat("?");
     }
     if(association.chromosomePosition){
-        var locationsearch = "<span><a href='search?query=".concat(association.chromosomePosition).concat("'>").concat(association.chromosomePosition).concat("</a></span>");
-        location = location.concat(":").concat(locationsearch);
+        var position = association.chromosomePosition;
+        location = location.concat(":").concat(position);
+
+        console.log(position);
+        var min = position-500;
+        console.log(min);
+        var max = position+500;
+        console.log(max);
+
+        var locationsearch = min.concat("-").concat(max);
+        console.log(locationsearch);
+
+        if(association.chromosomeName != null){
+            locationsearch = association.chromosomeName.concat(locationsearch);
+        }
+
+        var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Location/View?r=".concat(locationsearch).concat("'  target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
+
+        location = location.concat('&nbsp;&nbsp;').concat(ensembl);
     }
     else{
         location = location.concat(":").concat("?");

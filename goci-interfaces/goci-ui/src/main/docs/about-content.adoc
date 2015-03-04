@@ -8,6 +8,27 @@ It is a quality controlled, manually curated, literature-derived collection of a
 The Catalog also publishes the iconic GWAS diagram of all SNP-trait associations, with p-values < 5.0 x 10^-8^, mapped onto the human genome by chromosomal locations and displayed on the human karyotype.
 The diagram is released quarterly and the latest version of the diagram is made available on our website in PDF format and as a PowerPoint slide.
 
+
+== Funding acknowledgements
+
+The NHGRI-EBI GWAS Catalog is funded in part by NHGRI Grant Number 1U41HG007823-01 and BBSRC Grant Number BB/M013146/1, and delivered by collaboration between the NHGRI, EMBL-EBI and NCBI.
+
+
+== Citing the GWAS Catalog
+
+===  How to cite the NHGRI-EBI GWAS Catalog:
+
+_Hindorff LA (NHGRI), Burdett T (EBI), Hall PN (NHGRI), Hasting E (EBI), Junkins HA (NHGRI),  Klemm AK (NHGRI), MacArthur J (EBI), Morales J (EBI), Welter D (EBI), Parkinson H (EBI) and Manolio TA (NHGRI)._
+The NHGRI-EBI Catalog of published genome-wide association studies.
+Available at: www.genome.gov/gwastudies. Accessed [date of access].
+
+=== How to cite the NHGRI-EBI GWAS Catalog paper:
+
+_Welter D, MacArthur J, Morales J, Burdett T, Hall P, Junkins H, Klemm A, Flicek P, Manolio T, Hindorff L, and Parkinson H._
+The NHGRI GWAS Catalog, a curated resource of SNP-trait associations.
+Nucleic Acids Research, 2014, Vol. 42 (Database issue): D1001-D1006.
+
+
 == Curation process
 
 The GWAS Catalog data is extracted from the literature. Extracted information includes publication information, study cohort information such as cohort size, country of recruitment and subject ethnicity, and SNP-disease association information including SNP identifier (i.e. RSID), p-value, gene and risk allele.
@@ -23,19 +44,6 @@ A second curator then performs an additional round of curation to double-check t
 Finally, an automated pipeline run at the NCBI performs checks for missing information, such as SNP identifiers, resolution of the citation in PubMed, existence of SNPs in dbSNP, confirmation of gene names vs. NCBI's Gene database, confirmation that the reported SNP and gene are in the same chromosomal region, as well as adding additional information such as the SNP's base pair and cytogenetic location in the current human genome reference assembly.
 This information is then used for queries and in the production of the karyotype diagram.
 
-== Citing the GWAS Catalog
-
-===  How to cite the NHGRI GWAS Catalog:
-
-_Hindorff LA, MacArthur J (European Bioinformatics Institute), Morales J (European Bioinformatics Institute), Junkins HA, Hall PN, Klemm AK, and Manolio TA._
-The NHGRI-EBI Catalog of published genome-wide association studies.
-Available at: www.genome.gov/gwastudies. Accessed [date of access].
-
-=== How to cite the NHGRI GWAS Catalog paper:
-
-_Welter D, MacArthur J, Morales J, Burdett T, Hall P, Junkins H, Klemm A, Flicek P, Manolio T, Hindorff L, and Parkinson H._
-The NHGRI GWAS Catalog, a curated resource of SNP-trait associations.
-Nucleic Acids Research, 2014, Vol. 42 (Database issue): D1001-D1006.
 
 == Related resources
 

@@ -343,21 +343,33 @@ public class SolrSearchController {
             @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "facet", required = false) String facet,
-            @RequestParam(value = "sort", required = false) String sort,
+            @RequestParam(value = "facet.sort", required = false, defaultValue = "count") String sort,
+            @RequestParam(value = "facet.limit", required = false, defaultValue = "1000") int limit,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
-        addFacet(solrSearchBuilder, searchConfiguration.getDefaultFacet());
-        addFilterQuery(solrSearchBuilder, "resourcename", facet);
         if (useJsonp) {
             addJsonpCallback(solrSearchBuilder, callbackFunction);
         }
-
         addRowsAndPage(solrSearchBuilder, maxResults, page);
+        addFacet(solrSearchBuilder, "traitName_s");
+        addFacetLimit(solrSearchBuilder, limit);
+        addFacetSort(solrSearchBuilder, sort);
+        addFilterQuery(solrSearchBuilder, "resourcename", "study");
+        addQuery(solrSearchBuilder, query);
 
-        if(sort != ""){
-            addSortQuery(solrSearchBuilder, sort);
-        }
+
+        //        addFacet(solrSearchBuilder, searchConfiguration.getDefaultFacet());
+//        addFilterQuery(solrSearchBuilder, "resourcename", facet);
+//        if (useJsonp) {
+//            addJsonpCallback(solrSearchBuilder, callbackFunction);
+//        }
+//
+//        addRowsAndPage(solrSearchBuilder, maxResults, page);
+//
+//        if(sort != ""){
+//            addSortQuery(solrSearchBuilder, sort);
+//        }
 
         addQuery(solrSearchBuilder, query);
 
@@ -442,6 +454,10 @@ public class SolrSearchController {
 
     private void addFacetLimit(StringBuilder solrSearchBuilder, int limit){
         solrSearchBuilder.append("&facet.limit=").append(limit);
+    }
+
+    private void addFacetSort(StringBuilder solrSearchBuilder, String sort){
+        solrSearchBuilder.append("&facet.sort=").append(sort);
     }
 
     private void addJsonpCallback(StringBuilder solrSearchBuilder, String callbackFunction) {
