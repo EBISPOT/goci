@@ -35,39 +35,35 @@ $(document).ready(function () {
             applyFacet();
         });
     }
-    loadResults();
+
+    if($('#query').text() != '') {
+        loadResults();
+    }
 });
 
 function loadResults() {
     var searchTerm = $('#query').text();
-    var traitSearch = $('#traitOnly').text();
 
-    if(traitSearch){
-        console.log("Loading results for " + traitSearch);
-        console.log("Loading results for " + searchTerm);
+    console.log("Loading results for " + searchTerm);
+    buildBreadcrumbs();
+    $('#welcome-container').hide();
+    $('#search-results-container').show();
+    $('#loadingResults').show();
 
-        buildBreadcrumbs();
-
-        $('#welcome-container').hide();
-        $('#search-results-container').show();
-        $('#loadingResults').show();
-
-        traitOnlySearch(traitSearch);
-        if (window.location.hash) {
-            console.log("Applying a facet");
-            applyFacet();
+    if(localStorage.getItem("traits") != null || $('#traitsOnly').text() != null){
+        console.log("I found something in the attic");
+        var traits;
+        if(localStorage.getItem("traits") != null)        {
+            traits = localStorage.getItem("traits");
+            localStorage.clear();
         }
         else{
-            $('#facet').text();
+            traits = $('#traitsOnly').text();
         }
+        traitOnlySearch(traits);
+
     }
-
-    else if (searchTerm) {
-
-        console.log("Loading results for " + searchTerm);
-
-        buildBreadcrumbs();
-
+    else{
         $('#welcome-container').hide();
         $('#search-results-container').show();
         $('#loadingResults').show();
@@ -93,6 +89,10 @@ function buildBreadcrumbs() {
     breadcrumbs.append('<li><a href="home">GWAS</a></li>');
     breadcrumbs.append('<li><a href="search">Search</a></li>');
     var searchTerm = $('#query').text();
+
+    if (searchTerm == '*'){
+        searchTerm = '';
+    }
     if (!window.location.hash) {
         console.log("Final breadcrumb is for '" + searchTerm + "'");
         breadcrumbs.append('<li class="active">' + searchTerm + '</li>');
@@ -127,11 +127,16 @@ function solrSearch(queryTerm) {
         });
 }
 
-function traitOnlySearch(searchTerm) {
-    console.log("Solr research request received for " + searchTerm);
+function traitOnlySearch(traits) {
+    console.log("Solr research request received for " + traits);
     setState(SearchState.LOADING);
-    $.getJSON('api/search', {'q': searchTerm, 'group': 'true', 'group.by': 'resourcename', 'group.limit': 5})
-            .done(function (data) {
+
+    $('#traitOnly').text(traits);
+
+    var searchTraits = traits.split('|');
+    var searchTerm = 'text:*'
+
+    $.getJSON('api/search/traits', {'q': searchTerm, 'group': 'true', 'group.by': 'resourcename', 'group.limit': 5, 'traitfilter[]': searchTraits}).done(function (data) {
                       console.log(data);
                       processData(data);
                   });

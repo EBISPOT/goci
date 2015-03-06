@@ -14,24 +14,24 @@
     <title>GWAS Catalog</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="../static/css/bootstrap.css" th:href="@{css/bootstrap.min.css}"
+    <link href="../static/css/bootstrap.css" th:href="@{../css/bootstrap.min.css}"
           rel="stylesheet"/>
     <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"
           rel="stylesheet"/>
-    <link href="../static/css/bootstrap-table.css" th:href="@{css/bootstrap-table.css}"
+    <link href="../static/css/bootstrap-table.css" th:href="@{../css/bootstrap-table.css}"
           rel="stylesheet"/>
-    <link href="../static/css/bootstrap-theme.css" th:href="@{css/bootstrap-theme.min.css}"
+    <link href="../static/css/bootstrap-theme.css" th:href="@{../css/bootstrap-theme.min.css}"
           rel="stylesheet"/>
 
     <!-- Custom styles for this template -->
-    <link href="../static/css/jumbotron.css" th:href="@{css/jumbotron.css}" rel="stylesheet"/>
-    <link href="../static/css/sticky-footer-navbar.css" th:href="@{css/sticky-footer-navbar.css}" rel="stylesheet"/>
-    <link href="../static/css/datepicker.css" th:href="@{css/datepicker.css}" rel="stylesheet"/>
+    <link href="../static/css/jumbotron.css" th:href="@{../css/jumbotron.css}" rel="stylesheet"/>
+    <link href="../static/css/sticky-footer-navbar.css" th:href="@{../css/sticky-footer-navbar.css}" rel="stylesheet"/>
+    <link href="../static/css/datepicker.css" th:href="@{../css/datepicker.css}" rel="stylesheet"/>
 
     <!-- Additional styling on top of bootstrap -->
-    <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{css/goci-ui.css}"/>
-    <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{css/icons/flaticon.css}"/>
-    <link rel="stylesheet" href="../static/css/goci-color-palette-1.css" th:href="@{css/goci-color-palette-1.css}"/>
+    <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{../css/goci-ui.css}"/>
+    <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{../css/icons/flaticon.css}"/>
+    <link rel="stylesheet" href="../static/css/goci-color-palette-1.css" th:href="@{../css/goci-color-palette-1.css}"/>
 
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -57,16 +57,16 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="index.html" th:href="@{home}">GWAS Catalog</a>
+            <a class="navbar-brand" href="index.html" th:href="@{../home}">GWAS Catalog</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="index.html" th:href="@{home}">Home <span class="sr-only">(current)</span></a></li>
-                <li class="active"><a href="search.html" th:href="@{search}">Search</a></li>
+                <li><a href="../index.html" th:href="@{../home}">Home <span class="sr-only">(current)</span></a></li>
+                <li class="active"><a href="../search.html" th:href="@{../search}">Search</a></li>
                 <li><a href="http://www.ebi.ac.uk/fgpt/gwas">Diagram</a></li>
-                <li class="hidden-sm"><a href="docs/downloads" th:href="@{docs/downloads}">Download</a></li>
-                <li><a href="docs" th:href="@{docs}">Help</a></li>
-                <li class="hidden-sm"><a href="docs/about" th:href="@{docs/about}">About</a></li>
+                <li class="hidden-sm"><a href="../docs/downloads" th:href="@{../docs/downloads}">Download</a></li>
+                <li><a href="../docs" th:href="@{../docs}">Help</a></li>
+                <li class="hidden-sm"><a href="../docs/about" th:href="@{../docs/about}">About</a></li>
                 <li>
                     <a class="icon" id="ebi-logo" href="http://www.ebi.ac.uk">
                         <img alt="EBI logo"
@@ -78,7 +78,7 @@
                     <a class="icon" id="nhgri-logo" href="http://www.genome.gov">
                         <img alt="GWAS logo"
                              src="../static/icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png"
-                             th:src="@{../icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png}"/>
+                             th:src="@{../../icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png}"/>
                     </a>
                 </li>
             </ul>
@@ -97,7 +97,7 @@
 <div class="jumbotron background-color-primary-accent">
     <div class="container">
         <div class="gwas-circle">
-            <img src="../static/images/GWAS_Catalog_circle_178x178.png" th:src="@{images/GWAS_Catalog_circle_178x178.png}"/>
+            <img src="../static/images/GWAS_Catalog_circle_178x178.png" th:src="@{../images/GWAS_Catalog_circle_178x178.png}"/>
         </div>
         <div>
             <h1>GWAS Catalog</h1>
@@ -115,12 +115,12 @@
             </div>
             <div class="examples">
                 Examples:
-                <a href="search?query=breast%20cancer">breast cancer</a>,
-                <a href="search?query=rs7329174">rs7329174</a>,
-                <a href="search?query=Yang">Yang</a>,
+                <a href="../search?query=breast%20cancer">breast cancer</a>,
+                <a href="../search?query=rs7329174">rs7329174</a>,
+                <a href="../search?query=Yang">Yang</a>,
                 <!--<a href="search?query=44892362">44892362</a>,-->
-                <a href="search?query=2q37.1">2q37.1</a>,
-                <a href="search?query=HBS1L">HBS1L</a>
+                <a href="../search?query=2q37.1">2q37.1</a>,
+                <a href="../search?query=HBS1L">HBS1L</a>
             </div>
         </div>
     </div>
@@ -128,8 +128,8 @@
 
 <div class="container-fluid tight-to-top">
     <ol class="breadcrumb background-color-complementary-accent">
-        <li><a href="home">Home</a></li>
-        <li><a href="search">Search</a></li>
+        <li><a href="../home">Home</a></li>
+        <li><a href="../search">Search</a></li>
         <li class="active">Trait List</li>
     </ol>
 
@@ -168,7 +168,6 @@
                         <div class="col-md-2">
                             <button type="submit"
                                     class="btn btn-default"
-                                    id="traitList-submit"
                                     style="margin-right: 15px;">Search for traits</button>
                         </div>
 
@@ -202,20 +201,20 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-<script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
-<script src="../static/js/bootstrap-datepicker.js" th:src="@{js/bootstrap-datepicker.js}"></script>
+<script src="../static/js/bootstrap.min.js" th:src="@{../js/bootstrap.min.js}"></script>
+<script src="../static/js/bootstrap-datepicker.js" th:src="@{../js/bootstrap-datepicker.js}"></script>
 
 <!-- Latest compiled and minified JavaScript -->
 <!--<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.5.0/bootstrap-table.min.js"></script>-->
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<script src="../static/js/ie10-viewport-bug-workaround.js" th:src="@{js/ie10-viewport-bug-workaround.js}"></script>
+<script src="../static/js/ie10-viewport-bug-workaround.js" th:src="@{../js/ie10-viewport-bug-workaround.js}"></script>
 
 <!-- GOCI JavaScript
 ================================================== -->
-<script src="../static/js/goci-ui.js" th:src="@{js/goci-ui.js}"></script>
-<script src="../static/js/traitlist.js" th:src="@{js/traitlist.js}"></script>
-<!--<script src="../static/js/solrsearch.js" th:src="@{js/solrsearch.js}"></script>-->
-<!--<script src="../static/js/documentprocessor.js" th:src="@{js/documentprocessor.js}"></script>-->
+<script src="../static/js/goci-ui.js" th:src="@{../js/goci-ui.js}"></script>
+<script src="../static/js/traitlist.js" th:src="@{../js/traitlist.js}"></script>
+<!--<script src="../static/js/solrsearch.js" th:src="@{../js/solrsearch.js}"></script>-->
+<!--<script src="../static/js/documentprocessor.js" th:src="@{../js/documentprocessor.js}"></script>-->
 
 
 <!-- Google analytics

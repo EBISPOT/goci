@@ -15,8 +15,14 @@ $(document).ready(function () {
     }
 
 
-    $('#traitList-submit').click(function(){
-        searchCheckedTraits();
+    //$('#traitList-submit').click(function(){
+    //    searchCheckedTraits();
+    //});
+
+    $('#traitForm').submit(function (event) {
+        event.preventDefault();
+        console.log("Trait submission request received");
+        getCheckedTraits();
     });
 });
 
@@ -28,9 +34,9 @@ function loadTraitList() {
     var facet = 'traitName_s';
     var sort = 'index';
 
-    $.getJSON('api/search/alltraits', {
+    $.getJSON('../api/search/alltraits', {
         'q': searchTerm,
-        'max': 2000,
+        'max': 1,
         'facet': facet,
         'facet.sort': sort,
         'facet.limit': 2000
@@ -79,38 +85,48 @@ function processTraitDocument(trait, traitList){
     traitList.append(row);
 };
 
-function searchCheckedTraits() {
-    var traits = getCheckedTraits();
+//function searchCheckedTraits() {
+    //var traits = getCheckedTraits();
 
-    var searchTerm = 'diseaseTrait:"';
-    for (var i = 0; i < traits.length; i++) {
-        var trait = traits[i];
-        if (i == 0) {
-            searchTerm = searchTerm.concat(trait).concat('"');
-        }
-        else {
-            searchTerm = searchTerm.concat('+AND+"').concat(trait).concat('"');
-        }
-    }
+    //var searchTerm = 'traitName:"';
+    //for (var i = 0; i < traits.length; i++) {
+    //    var trait = traits[i];
+    //    trait = trait.replace(/\s/g, '+');
+    //
+    //    if (i == 0) {
+    //        searchTerm = searchTerm.concat(trait).concat('"');
+    //    }
+    //    else {
+    //        searchTerm = searchTerm.concat('+OR+"').concat(trait).concat('"');
+    //    }
+    //}
 
-    $("#search-box").val(searchTerm.substring(13));
-    $('#traitOnly').text(searchTerm);
+    //$("#search-box").val(searchTerm.substring(13));
 
-    doSearch();
-}
+//}
 
 function getCheckedTraits(){
-    var traits = [];
+    var traits = '';
     var traitInput = $('#traitList ul li input:checked');
     for(var i=0; i<traitInput.length; i++){
 
         var trait = traitInput[i].value;
         trait = trait.replace(/\s/g, '+');
-        console.log(trait);
-        traits[i] = trait;
+
+        if(i ==0){
+            traits = trait;
+        }
+        else{
+            traits = traits.concat('|').concat(trait);
+        }
 
     }
     console.log(traits);
-    return traits;
+
+    //$('#traitOnly').text(traits);
+
+    localStorage.setItem("traits", traits);
+
+    window.location = "../search?query=*";
 };
 

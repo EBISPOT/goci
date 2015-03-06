@@ -266,6 +266,43 @@ public class SolrSearchController {
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
 
+    @RequestMapping(value = "api/search/traits", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void doTraitsOnlySolrSearch(
+            @RequestParam("q") String query,
+            @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+            @RequestParam(value = "callback", required = false) String callbackFunction,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "group", required = false, defaultValue = "false") boolean useGroups,
+            @RequestParam(value = "group.by", required = false) String groupBy,
+            @RequestParam(value = "group.limit", required = false, defaultValue = "10") int groupLimit,
+            @RequestParam(value = "traitfilter[]", required = false) String[] traits,
+            HttpServletResponse response) throws IOException {
+        StringBuilder solrSearchBuilder = buildBaseSearchRequest();
+
+        addFacet(solrSearchBuilder, searchConfiguration.getDefaultFacet());
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+        if (useGroups) {
+            addGrouping(solrSearchBuilder, groupBy, groupLimit);
+        }
+        else {
+            addRowsAndPage(solrSearchBuilder, maxResults, page);
+        }
+
+        if (traits != null) {
+            System.out.println(String.valueOf(traits));
+
+            addFilterQuery(solrSearchBuilder, "traitName_s", traits);
+        }
+
+        addQuery(solrSearchBuilder, query);
+
+        // dispatch search
+        dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
+    }
+
     @RequestMapping(value = "api/search/sort", produces = MediaType.APPLICATION_JSON_VALUE)
     public void doSortSolrSearch(
             @RequestParam("q") String query,

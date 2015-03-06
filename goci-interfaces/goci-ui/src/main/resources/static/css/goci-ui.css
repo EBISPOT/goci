@@ -68,7 +68,8 @@
     /*width: 7%;*/
     width: 2em;
     margin-left: 0.5em;
-    margin-right: 0;
+    margin-right: 0.3em;
+    text-align: right;
 }
 
 .filter-value {
