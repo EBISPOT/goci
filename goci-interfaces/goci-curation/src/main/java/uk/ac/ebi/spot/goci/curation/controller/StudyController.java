@@ -368,6 +368,12 @@ public class StudyController {
         // Establish linked study
         Study study = studyRepository.findOne(studyId);
 
+        // Before we save housekeeping get the status in database so we can check for a change
+        CurationStatus statusInDatabase = housekeepingRepository.findOne(housekeeping.getId()).getCurationStatus();
+
+        // Save housekeeping returned from form straight away so can access details
+        housekeepingRepository.save(housekeeping);
+
         // For the study check all SNPs have been checked
         Collection<Association> associations = associationRepository.findByStudyId(studyId);
         int snpsNotChecked = 0;
@@ -382,50 +388,57 @@ public class StudyController {
         // as corresponding dates will be set in housekeeping table
         CurationStatus currentStatus = housekeeping.getCurationStatus();
 
-   /*   TODO POSSIBLY CHANGE LOGIC SO THIS DATE IS SET BY NIGHTLY RELEASE PROCESS
+     /*
+        TODO POSSIBLY CHANGE LOGIC SO THIS DATE IS SET BY NIGHTLY RELEASE PROCESS
         OTHERWISE ANY TIME USER SAVES FROM WHEN STATUS IS SET TO "publish study"
-        THE DATE GETS UPDATED*/
-        if (currentStatus != null && currentStatus.getStatus().equals("Publish study")) {
+        THE DATE GETS UPDATED
+     */
 
-            // If not checked redirect back to page and make no changes
-            if (snpsNotChecked == 1) {
-                String message =
-                        "Some SNP associations have not been checked, please review before publishing";
-                redirectAttributes.addFlashAttribute("snpsNotChecked", message);
-                return "redirect:/studies/" + study.getId() + "/housekeeping";
+        // If the status has changed
+        if (currentStatus != statusInDatabase) {
+            if (currentStatus != null && currentStatus.getStatus().equals("Publish study")) {
 
+                // If not checked redirect back to page and make no changes
+                if (snpsNotChecked == 1) {
+                    String message =
+                            "Some SNP associations have not been checked, please review before publishing";
+                    redirectAttributes.addFlashAttribute("snpsNotChecked", message);
+                    return "redirect:/studies/" + study.getId() + "/housekeeping";
+
+                }
+
+                else {
+                    java.util.Date publishDate = new java.util.Date();
+                    housekeeping.setPublishDate(publishDate);
+                }
             }
 
-            else {
-                java.util.Date publishDate = new java.util.Date();
-                housekeeping.setPublishDate(publishDate);
+            //Set date and send email notification
+            if (currentStatus != null && currentStatus.getStatus().equals("Send to NCBI")) {
+                // If not checked redirect back to page and make no changes
+                if (snpsNotChecked == 1) {
+                    String message =
+                            "Some SNP associations have not been checked, please review before sending to NCBI";
+                    redirectAttributes.addFlashAttribute("snpsNotChecked", message);
+                    return "redirect:/studies/" + study.getId() + "/housekeeping";
+
+                }
+
+                else {
+                    java.util.Date sendToNCBIDate = new java.util.Date();
+                    housekeeping.setSendToNCBIDate(sendToNCBIDate);
+                    mailService.sendEmailNotification(study, currentStatus.getStatus());
+                }
             }
-        }
 
-        //Set date and send email notification
-        if (currentStatus != null && currentStatus.getStatus().equals("Send to NCBI")) {
-            // If not checked redirect back to page and make no changes
-            if (snpsNotChecked == 1) {
-                String message =
-                        "Some SNP associations have not been checked, please review before sending to NCBI";
-                redirectAttributes.addFlashAttribute("snpsNotChecked", message);
-                return "redirect:/studies/" + study.getId() + "/housekeeping";
-
-            }
-
-            else {
-                java.util.Date sendToNCBIDate = new java.util.Date();
-                housekeeping.setSendToNCBIDate(sendToNCBIDate);
+            // Send notification email to curators
+            if (currentStatus != null && currentStatus.getStatus().equals("Level 1 curation done")) {
                 mailService.sendEmailNotification(study, currentStatus.getStatus());
             }
         }
 
-        // Send notification email to curators
-        if (currentStatus != null && currentStatus.getStatus().equals("Level 1 curation done")) {
-            mailService.sendEmailNotification(study, currentStatus.getStatus());
-        }
 
-        // Save housekeeping returned from form
+        // Save any changes made to housekeeping
         housekeepingRepository.save(housekeeping);
 
         // Set study housekeeping
