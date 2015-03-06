@@ -11,6 +11,7 @@ public class SearchResult {
 
     private String query;
     private String facet;
+    private String traitOnly;
 
     public String getQuery(){
         return query;
@@ -26,5 +27,13 @@ public class SearchResult {
 
     public void setFacet(String facet) {
         this.facet = facet;
+    }
+
+    public String getTraitOnly() {
+        return traitOnly;
+    }
+
+    public void setTraitOnly(String traitOnly) {
+        this.traitOnly = traitOnly;
     }
 }

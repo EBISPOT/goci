@@ -71,14 +71,14 @@
                     <a class="icon" id="ebi-logo" href="http://www.ebi.ac.uk">
                         <img alt="EBI logo"
                              src="../static/icons/EMBL_EBI_Logo_white.png"
-                             th:src="@{icons/EMBL_EBI_Logo_white.png}"/>
+                             th:src="@{../icons/EMBL_EBI_Logo_white.png}"/>
                     </a>
                 </li>
                 <li>
                     <a class="icon" id="nhgri-logo" href="http://www.genome.gov">
                         <img alt="GWAS logo"
                              src="../static/icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png"
-                             th:src="@{icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png}"/>
+                             th:src="@{../icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png}"/>
                     </a>
                 </li>
             </ul>
@@ -147,24 +147,36 @@
         <div class="container-fluid col-md-9 col-md-offset-2"  id="lower_container">
 
             <h3>List of all reported traits in the GWAS Catalog</h3>
-            <h4>To search by one or more of these traits, select your traits of interest, then hit the "search" button</h4>
+            <h5>To search by one or more of these traits, select your traits of interest, then hit the "search" button</h5>
 
-            <form id="traitForm">
-                <div class="col-md-offset-1" id="traitList">
+            <div class="row">
+                <div id="loadingTraits" class="col-md-offset-4" style="display: none">
+                        <button class="btn btn-lg">
+                            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"
+                                  style="margin-right: 1em;"></span>Loading...
+                        </button>
 
                 </div>
+                <div id="allTraitsDisplay" style="display: none">
+                    <form id="traitForm">
 
-                <div>
-                    <button type="submit"
-                            class="btn btn-default"
-                            style="margin-right: 15px;">Search for traits</button>
+                        <div class="col-md-7 col-md-offset-1" id="traitList">
+                            <ul style="list-style: none;">
+                            </ul>
+                        </div>
+
+                        <div class="col-md-2">
+                            <button type="submit"
+                                    class="btn btn-default"
+                                    id="traitList-submit"
+                                    style="margin-right: 15px;">Search for traits</button>
+                        </div>
+
+                    </form>
                 </div>
-
-            </form>
+            </div>
 
         </div>
-
-
 
     </div>
 

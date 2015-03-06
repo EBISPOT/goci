@@ -150,11 +150,51 @@
             <ul th:object="${result}" id="variables">
                 <li id="query" th:text="*{query}">User query</li>
                 <li id="facet" th:text="*{facet}">Facet</li>
+                <li id="traitOnly" th:text="*{traitOnly}">Disease trait</li>
             </ul>
         </div>
 
-        <div class="container-fluid" id="lower_container" style="display: none">
-            <div class="row search-results-container">
+        <div class="container-fluid" id="lower_container">
+            <div class="row welcome-container col-md-9 col-md-offset-2" id="welcome-container">
+                <h2>Welcome to the GWAS Catalog search page</h2>
+                <h5>Type a search term into the search box above or browse <a href="traitlist">the full list of available traits</a></h5    >
+            </div>
+
+            <div class="container-fluid col-md-9 col-md-offset-2"  id="trait-list-container" style="display: none">
+
+                <h3>List of all reported traits in the GWAS Catalog</h3>
+                <h5>To search by one or more of these traits, select your traits of interest, then hit the "search" button</h5>
+
+                <div class="row">
+                    <div id="loadingTraits" class="col-md-offset-4" style="display: none">
+                        <button class="btn btn-lg">
+                            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"
+                                  style="margin-right: 1em;"></span>Loading...
+                        </button>
+
+                    </div>
+                    <div id="allTraitsDisplay" style="display: none">
+                        <form id="traitForm">
+
+                            <div class="col-md-7 col-md-offset-1" id="traitList">
+                                <ul style="list-style: none;">
+                                </ul>
+                            </div>
+
+                            <div class="col-md-2">
+                            <button type="submit"
+                                    class="btn btn-default"
+                                    id="traitList-submit"
+                                    style="margin-right: 15px;">Search for traits</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row search-results-container" id="search-results-container" style="display: none">
                 <div class="col-md-3 tight-to-side" id="filter-bar">
                     <div class="panel panel-default">
                         <div class="panel-heading background-color-primary-accent">
@@ -544,6 +584,7 @@
 <script src="../static/js/solrfilter.js" th:src="@{js/solrfilter.js}"></script>
 <script src="../static/js/resultexpansion.js" th:src="@{js/resultexpansion.js}"></script>
 <script src="../static/js/solrsort.js" th:src="@{js/solrsort.js}"></script>
+<script src="../static/js/traitlist.js" th:src="@{js/traitlist.js}"></script>
 
 <!-- Google analytics
 ================================================== -->

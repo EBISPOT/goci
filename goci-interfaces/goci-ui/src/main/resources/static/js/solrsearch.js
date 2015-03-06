@@ -18,6 +18,12 @@ $(document).ready(function () {
 
     });
 
+    $.getJSON('api/search/stats')
+            .done(function (data) {
+                      setStats(data);
+                  });
+
+
     // Tooltips for various filter and table headings
     $('[data-toggle="tooltip"]').tooltip({
         placement: 'top',
@@ -34,13 +40,36 @@ $(document).ready(function () {
 
 function loadResults() {
     var searchTerm = $('#query').text();
-    console.log("Search term is " + searchTerm);
-    if (searchTerm) {
+    var traitSearch = $('#traitOnly').text();
+
+    if(traitSearch){
+        console.log("Loading results for " + traitSearch);
         console.log("Loading results for " + searchTerm);
 
         buildBreadcrumbs();
 
-        $('#lower_container').show();
+        $('#welcome-container').hide();
+        $('#search-results-container').show();
+        $('#loadingResults').show();
+
+        traitOnlySearch(traitSearch);
+        if (window.location.hash) {
+            console.log("Applying a facet");
+            applyFacet();
+        }
+        else{
+            $('#facet').text();
+        }
+    }
+
+    else if (searchTerm) {
+
+        console.log("Loading results for " + searchTerm);
+
+        buildBreadcrumbs();
+
+        $('#welcome-container').hide();
+        $('#search-results-container').show();
         $('#loadingResults').show();
 
         solrSearch(searchTerm);
@@ -96,6 +125,16 @@ function solrSearch(queryTerm) {
             console.log(data);
             processData(data);
         });
+}
+
+function traitOnlySearch(searchTerm) {
+    console.log("Solr research request received for " + searchTerm);
+    setState(SearchState.LOADING);
+    $.getJSON('api/search', {'q': searchTerm, 'group': 'true', 'group.by': 'resourcename', 'group.limit': 5})
+            .done(function (data) {
+                      console.log(data);
+                      processData(data);
+                  });
 }
 
 function processData(data) {
@@ -283,4 +322,19 @@ function setDownloadLink(searchParams){
     var url = baseUrl.concat(q).concat(pval).concat(or).concat(beta).concat(date).concat(trait);
     $('#results-download').removeAttr('href').attr('href', url);
 
+}
+
+
+function setStats(data){
+    try{
+        $('#releasedate-stat').text("Last data release on " + data.date);
+        $('#studies-stat').text(data.studies + " studies");
+        $('#associations-stat').text(data.associations + " SNP-trait associations");
+        $('#genomebuild').text("Genome assembly " + data.genebuild);
+        $('#dbsnpbuild').text("dbSNP Build " + data.dbsnpbuild);
+        $('#catalog-stats').show();
+    }
+    catch (ex){
+        console.log("Failure to process stats " + ex);
+    }
 }
