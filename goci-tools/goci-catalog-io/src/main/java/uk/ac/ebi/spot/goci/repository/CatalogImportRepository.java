@@ -5,19 +5,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.object.SqlUpdate;
 import org.springframework.stereotype.Repository;
 import uk.ac.ebi.spot.goci.exception.DataImportException;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBindings;
 
 import java.lang.reflect.Array;
-import java.sql.Types;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +33,10 @@ public class CatalogImportRepository {
     private SimpleJdbcInsert insertStudyReport;
 
     private SimpleJdbcInsert insertAssociationReport;
+
+    private SimpleJdbcInsert insertRegion;
+
+    private SimpleJdbcInsert insertSnpRegion;
 
     private static final String SELECT_STUDY_REPORTS =
             "SELECT ID FROM STUDY_REPORT WHERE STUDY_ID = ?";
@@ -62,20 +64,17 @@ public class CatalogImportRepository {
                     "SNP_PENDING = ? " +
                     "WHERE ID = ?";
 
-    private static final String UPDATE_MAPPED_DATA =
-            "UPDATE CATALOG_SUMMARY_VIEW SET " +
-                    "REGION = ?, " +
-                    "CHROMOSOME_NAME = ?, " +
-                    "CHROMOSOME_POSITION = ?, " +
-                    "UPSTREAM_MAPPED_GENE = ?, " +
-                    "UPSTREAM_ENTREZ_GENE_ID = ?, " +
-                    "UPSTREAM_GENE_DISTANCE = ?, " +
-                    "DOWNSTREAM_MAPPED_GENE = ?, " +
-                    "DOWNSTREAM_ENTREZ_GENE_ID = ?, " +
-                    "DOWNSTREAM_GENE_DISTANCE = ?, " +
-                    "IS_INTERGENIC = ? " +
-                    "WHERE STUDY_ID = ? " +
-                    "AND ASSOCIATION_ID = ?";
+
+    private static final String SELECT_SNP = "SELECT ID FROM SINGLE_NUCLEOTIDE_POLYMORPHISM WHERE RS_ID = ?";
+
+    private static final String SELECT_REGION =
+            "SELECT ID FROM REGION WHERE NAME = ?";
+
+    private static final String SELECT_SNP_REGION =
+            "SELECT SNP_ID FROM SNP_REGION WHERE REGION_ID = ?";
+
+    private static final String UPDATE_SNP =
+            "UPDATE SINGLE_NUCLEOTIDE_POLYMORPHISM SET CHROMOSOME_NAME = ?, CHROMOSOME_POSITION =? WHERE ID =?";
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -170,7 +169,7 @@ public class CatalogImportRepository {
             String noGeneForSymbol = null; // NO_GENE_FOR_SYMBOL
             String geneNotOnGenome = null; // GENE_NOT_ON_GENOME
 
-            // mapped genetic info
+            // Mapped genetic info
             String region = null; // REGION
             String chromosomeName = null; // CHROMOSOME_NAME
             String chromosomePosition = null; // CHROMOSOME_POSITION
@@ -181,6 +180,7 @@ public class CatalogImportRepository {
             String downstreamEntrezGeneId = null; // DOWNSTREAM_ENTREZ_GENE_ID
             Integer downstreamGeneDistance = null; // DOWNSTREAM_GENE_DISTANCE
             Boolean isIntergenic = null; // IS_INTERGENIC
+            String snpId = null; // SNP_ID
 
             // For each key in our map, extract the cell at that index
             for (CatalogHeaderBinding binding : headerColumnMap.keySet()) {
@@ -364,6 +364,14 @@ public class CatalogImportRepository {
                                 isIntergenic = Boolean.valueOf(valueToInsert);
                             }
                             break;
+                        case SNP_ID:
+                            if (valueToInsert.isEmpty()) {
+                                snpId = null;
+                            }
+                            else {
+                                snpId = valueToInsert;
+                            }
+                            break;
                         default:
                             throw new DataImportException(
                                     "Unrecognised column flagged for import: " + binding.getLoadName());
@@ -407,7 +415,8 @@ public class CatalogImportRepository {
                               downstreamMappedGene,
                               downstreamEntrezGeneId,
                               downstreamGeneDistance,
-                              isIntergenic);
+                              isIntergenic,
+                              snpId);
             }
         }
 
@@ -507,22 +516,64 @@ public class CatalogImportRepository {
                                Integer upstreamGeneDistance,
                                String downstreamMappedGene,
                                String downstreamEntrezGeneId,
-                               Integer downstreamGeneDistance, Boolean isIntergenic) {
-        int rows = jdbcTemplate.update(UPDATE_MAPPED_DATA,
-                                       region,
-                                       chromosomeName,
-                                       chromosomePosition,
-                                       upstreamMappedGene,
-                                       upstreamEntrezGeneId,
-                                       upstreamGeneDistance,
-                                       downstreamMappedGene,
-                                       downstreamEntrezGeneId,
-                                       downstreamGeneDistance,
-                                       isIntergenic,
-                                       studyId,
-                                       associationId);
-        getLog().trace("Adding mapped data for Study ID: " + studyId + " and Association ID: " + associationId + " " +
-                               "- Updated " + rows + " rows");
+                               Integer downstreamGeneDistance,
+                               Boolean isIntergenic,
+                               String snpId) {
+
+        // The SNP identifier in the file returned from NCBI is the rsId minus the rs at beginning e.g. 55734731
+        // Get the ID of SNP in database, the snp should already be in database
+        // otherwise it would never have appeared in file sent to NCBI
+        String rsId = "rs" + snpId;
+        Long snpIdInSnpTable = null;
+        try {
+            snpIdInSnpTable = jdbcTemplate.queryForObject(SELECT_SNP, long.class, rsId);
+        }
+        catch (EmptyResultDataAccessException e) {
+            throw new DataImportException("Caught errors whilst processing data import - " +
+                                                  "trying to add NCBI info to SNP not found in database");
+        }
+
+
+        // Add region information
+        Map<String, Object> snpRegionArgs = new HashMap<>();
+        Long regionId = null;
+
+        try {
+            regionId = jdbcTemplate.queryForObject(SELECT_REGION, long.class, region);
+        }
+        catch (EmptyResultDataAccessException e) {
+
+            // Insert region
+            Map<String, Object> regionArgs = new HashMap<>();
+            regionArgs.put("NAME", region);
+            insertRegion.execute(regionArgs);
+            regionId = jdbcTemplate.queryForObject(SELECT_REGION, long.class, region);
+
+        }
+
+        // Create link in SNP_REGION table
+        int snpRegionRows;
+        if (regionId != null) {
+            Collection<Long> snpIdsInSnpRegionTable =
+                    jdbcTemplate.queryForList(SELECT_SNP_REGION, long.class, regionId);
+
+            // Examine all SNPs linked to region and If no link exists then create
+            if (!snpIdsInSnpRegionTable.contains(snpIdInSnpTable)) {
+                snpRegionArgs.put("SNP_ID", snpIdInSnpTable);
+                snpRegionArgs.put("REGION_ID", regionId);
+                snpRegionRows = insertSnpRegion.execute(snpRegionArgs);
+                getLog().trace(
+                        "Adding SNP: " + snpIdInSnpTable + " and Region: " + regionId + " - Updated " + snpRegionRows +
+                                " rows");
+            }
+        }
+
+        // Add chromosome name and position to SNP table
+        Map<String, Object> snpArgs = new HashMap<>();
+        int snpRows = jdbcTemplate.update(UPDATE_SNP, chromosomeName, chromosomePosition, snpIdInSnpTable);
+        getLog().trace(
+                "Adding chromosome name and position to SNP: " + snpIdInSnpTable + " - Updated " + snpRows + " rows");
+
     }
 
     private static <T> T[] extractRange(T[] array, int startIndex) {
@@ -540,37 +591,4 @@ public class CatalogImportRepository {
     }
 
 
-    private class AssociationReportUpdate extends SqlUpdate {
-        public AssociationReportUpdate(JdbcTemplate jdbcTemplate) {
-            //            Long associationId = null; // ASSOCIATION_ID
-            //            Date lastUpdateDate = null; // LAST_UPDATE_DATE
-            //            Long geneError = null; // GENE_ERROR
-            //            String snpError = null; // SNP_ERROR
-            //            String snpGeneOnDiffChr = null; // SNP_GENE_ON_DIFF_CHR
-            //            String noGeneForSymbol = null; // NO_GENE_FOR_SYMBOL
-            //            String geneNotOnGenome = null; // GENE_NOT_ON_GENOME
-            setJdbcTemplate(jdbcTemplate);
-            setSql("UPDATE ASSOCIATION_REPORT SET " +
-                           "ASSOCIATION_ID = ?, " +
-                           "LAST_UPDATE_DATE = ?, " +
-                           "GENE_ERROR = ?, " +
-                           "SNP_ERROR = ?, " +
-                           "SNP_GENE_ON_DIFF_CHR = ?, " +
-                           "NO_GENE_FOR_SYMBOL = ?, " +
-                           "GENE_NOT_ON_GENOME = ?, " +
-                           "SNP_PENDING = ? " +
-                           "WHERE ID = ?");
-            declareParameter(new SqlParameter("ASSOCIATION_ID", Types.NUMERIC));
-            declareParameter(new SqlParameter("LAST_UPDATE_DATE", Types.DATE));
-            declareParameter(new SqlParameter("GENE_ERROR", Types.NUMERIC));
-            declareParameter(new SqlParameter("SNP_ERROR", Types.VARCHAR));
-            declareParameter(new SqlParameter("SNP_GENE_ON_DIFF_CHR", Types.VARCHAR));
-            declareParameter(new SqlParameter("NO_GENE_FOR_SYMBOL", Types.VARCHAR));
-            declareParameter(new SqlParameter("GENE_NOT_ON_GENOME", Types.VARCHAR));
-            declareParameter(new SqlParameter("SNP_PENDING", Types.NUMERIC));
-            declareParameter(new SqlParameter("ID", Types.NUMERIC));
-            compile();
-
-        }
-    }
 }
