@@ -177,6 +177,7 @@ public class SolrSearchController {
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "facet.mincount", required = false, defaultValue = "1") int mincount,
             @RequestParam(value = "facet.limit", required = false, defaultValue = "1000") int limit,
+            @RequestParam(value = "traitfilter[]", required = false) String[] traits,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
@@ -188,6 +189,11 @@ public class SolrSearchController {
         addFacetMincount(solrSearchBuilder, mincount);
         addFacetLimit(solrSearchBuilder, limit);
         addFilterQuery(solrSearchBuilder, "resourcename", "study");
+        if (traits != null) {
+            System.out.println(String.valueOf(traits));
+            addFilterQuery(solrSearchBuilder, "traitName_s", traits);
+        }
+
         addQuery(solrSearchBuilder, query);
 
         // dispatch search

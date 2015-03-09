@@ -13,12 +13,15 @@ $(document).ready(function() {
         $(this).removeClass("background-color-complementary-accent", 300, "easeOutExpo");
     });
 
-
+    var shiftWindow = function() { scrollBy(0, -100) };
+    window.addEventListener("hashchange", shiftWindow);
+    function load() { if (window.location.hash) shiftWindow(); }
 });
 
 
 function doSearch(){
     var searchTerm = $("#search-box").val();
+    console.log("I got rerouted via here");
     // redirect to search page
     window.location = "search?query=" + searchTerm;
 }

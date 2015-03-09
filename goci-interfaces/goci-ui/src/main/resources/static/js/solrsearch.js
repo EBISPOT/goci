@@ -50,16 +50,19 @@ function loadResults() {
     $('#search-results-container').show();
     $('#loadingResults').show();
 
-    if(localStorage.getItem("traits") != null || $('#traitsOnly').text() != null){
-        console.log("I found something in the attic");
+    //if(localStorage.getItem("traits") != null || $('#filter').text() != ''){
+    if($('#filter').text() != ''){
+        //console.log("I found something in the local storage");
         var traits;
-        if(localStorage.getItem("traits") != null)        {
+      /*  if(localStorage.getItem("traits") != null)        {
+            console.log("Value from localstorage: " + localStorage.getItem("traits"));
             traits = localStorage.getItem("traits");
             localStorage.clear();
         }
-        else{
-            traits = $('#traitsOnly').text();
-        }
+        else{*/
+            console.log("Value from filter variable: " + $('#filter').text());
+            traits = $('#filter').text();
+        //}
         traitOnlySearch(traits);
 
     }
@@ -150,7 +153,26 @@ function processData(data) {
     updateCountBadges(data.facet_counts.facet_fields.resourcename);
 
     if(!$('#filter-form').hasClass('in-use')){
-        generateTraitDropdown(data.responseHeader.params.q);
+        if(data.responseHeader.params.q.indexOf('*') != -1 && data.responseHeader.params.fq != null){
+            var fq = data.responseHeader.params.fq;
+
+            if(fq.charAt(fq.length-1) == '"'){
+                fq = fq.substr(0, fq.length-1);
+            };
+
+            var terms = fq.split('"');
+            var traits = []
+
+            for(var i=0; i<terms.length; i++){
+                if(terms[i].indexOf('traitName') == -1){
+                    traits.push(terms[i].replace(/\s/g, '+'));
+                }
+            }
+            generateTraitDropdown(data.responseHeader.params.q, traits);
+        }
+        else{
+            generateTraitDropdown(data.responseHeader.params.q, null);
+        }
     }
 
     if (documents.length != 0) {
@@ -282,8 +304,8 @@ function updateCountBadges(countArray) {
     }
 }
 
-function generateTraitDropdown(queryTrait) {
-    $.getJSON('api/search/traitcount', {'q': queryTrait})
+function generateTraitDropdown(queryTrait, subTraits) {
+    $.getJSON('api/search/traitcount', {'q': queryTrait, 'traitfilter[]': subTraits})
         .done(function (data) {
             console.log(data);
             processTraitCounts(data);
@@ -303,25 +325,53 @@ function processTraitCounts(data) {
 }
 
 function setDownloadLink(searchParams){
+    console.log(searchParams);
     var baseUrl = 'api/search/downloads?';
     var q= "q=".concat(searchParams.q);
 
-    var pval = '&pvalfilter='.concat(processPval());
-    var or = '&orfilter='.concat(processOR());
-    var beta = '&betafilter='.concat(processBeta());
-    var date = '&datefilter='.concat(processDate());
-    var traitFilter = '&traitfilter[]=';
     var trait = '';
+    var traitFilter = '&traitfilter[]=';
+    var pval = '&pvalfilter=';
+    var or = '&orfilter=';
+    var beta = '&betafilter=';
+    var date = '&datefilter=';
 
-    var traits = processTraitDropdown();
+    if(searchParams.q.indexOf('*') != -1 && searchParams.fq != null){
+        console.log('Need to build the download link a bit differently');
 
-    if(traits != ''){
-        for(var t=0; t<traits.length; t++){
-            trait = trait.concat(traitFilter).concat(traits[t]);
+        var fq = searchParams.fq;
+
+        if(fq.charAt(fq.length-1) == '"'){
+            fq = fq.substr(0, fq.length-1);
+        };
+
+        var terms = fq.split('"');
+
+        for(var i=0; i<terms.length; i++){
+            if(terms[i].indexOf('traitName') == -1){
+                console.log(terms[i]);
+                trait = trait.concat(traitFilter).concat(terms[i]);
+            }
         }
+
     }
-    else{
-        trait = traitFilter;
+    else {
+        console.log('Building the download link the default way');
+        pval = pval.concat(processPval());
+        or = or.concat(processOR());
+        beta = beta.concat(processBeta());
+        date = date.concat(processDate());
+
+        var traits = processTraitDropdown();
+
+        if (traits != '') {
+            for (var t = 0; t < traits.length; t++) {
+                trait = trait.concat(traitFilter).concat(traits[t]);
+            }
+        }
+        else {
+            trait = traitFilter;
+        }
     }
 
     var url = baseUrl.concat(q).concat(pval).concat(or).concat(beta).concat(date).concat(trait);

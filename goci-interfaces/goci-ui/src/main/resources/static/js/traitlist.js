@@ -9,7 +9,7 @@
 
 $(document).ready(function () {
 
-    if($('#traitList ul').children().length == 0){
+    if(window.location == 'search/traits' && $('#traitList ul').children().length == 0){
         console.log("About to load all the traits");
         loadTraitList();
     }
@@ -85,25 +85,8 @@ function processTraitDocument(trait, traitList){
     traitList.append(row);
 };
 
-//function searchCheckedTraits() {
-    //var traits = getCheckedTraits();
 
-    //var searchTerm = 'traitName:"';
-    //for (var i = 0; i < traits.length; i++) {
-    //    var trait = traits[i];
-    //    trait = trait.replace(/\s/g, '+');
-    //
-    //    if (i == 0) {
-    //        searchTerm = searchTerm.concat(trait).concat('"');
-    //    }
-    //    else {
-    //        searchTerm = searchTerm.concat('+OR+"').concat(trait).concat('"');
-    //    }
-    //}
 
-    //$("#search-box").val(searchTerm.substring(13));
-
-//}
 
 function getCheckedTraits(){
     var traits = '';
@@ -123,10 +106,16 @@ function getCheckedTraits(){
     }
     console.log(traits);
 
-    //$('#traitOnly').text(traits);
+    if(traits.length > 2000){
+        console.log("Your query is a bit too long.");
+    }
 
-    localStorage.setItem("traits", traits);
+    console.log("Your query is " + traits.length + " characters long"); //$('#traitOnly').text(traits);
 
-    window.location = "../search?query=*";
+    //localStorage.setItem("traits", traits);
+
+    var url =  "../search?query=*&filter="+traits;
+    console.log(url);
+    window.location = url;
 };
 
