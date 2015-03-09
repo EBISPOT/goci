@@ -40,7 +40,7 @@ public enum CatalogHeaderBinding {
                               false),
     SNP_RSID("SNP_RSID", "SNPS", "SNPS", false),
     MERGED("MERGED", false, "MERGED", false),
-    SNP_ID("SNP_ID", false, false, false),
+    SNP_ID("SNP_ID", false, false, "snp_id"),
     CONTEXT("CONTEXT", false, "CONTEXT", false),
     IS_INTERGENIC("IS_INTERGENIC", false, true, "intergenic"),
     DOWNLOAD_INTERGENIC(null, false, "INTERGENIC", false),
