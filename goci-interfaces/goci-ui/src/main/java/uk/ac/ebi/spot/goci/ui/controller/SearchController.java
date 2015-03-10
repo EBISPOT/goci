@@ -14,20 +14,12 @@ import uk.ac.ebi.spot.goci.model.SearchResult;
 @Controller
 public class SearchController {
     @RequestMapping(value = "/search", produces = MediaType.TEXT_HTML_VALUE)
-    String search(Model model, @RequestParam(required = false) String query) {
+    String search(Model model, @RequestParam(required = false) String query, @RequestParam(required = false) String filter) {
         SearchResult result = new SearchResult();
         result.setQuery(query);
+        result.setFilter(filter);
         model.addAttribute("result", result);
         return "search";
     }
 
-//    @RequestMapping(value = "stats", produces = MediaType.APPLICATION_JSON_VALUE)
-//    String getStats(Model model){
-//        System.out.println("Hello again!");
-//
-//        String stats = "2015-02-17";
-//
-//        model.addAttribute("data", stats);
-//        return "stats";
-//    }
 }

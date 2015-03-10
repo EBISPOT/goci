@@ -16,7 +16,7 @@ function processStudy(study, table) {
     //}
     var europepmc = "http://www.europepmc.org/abstract/MED/".concat(study.pubmedId);
     var authorsearch = "<span><a href='search?query=".concat(study.author).concat("'>").concat(study.author).concat("</a></span>");
-    var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
+    var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
 
     row.append($("<td>").html(authorsearch.concat('&nbsp;&nbsp;').concat(epmclink)));
     row.append($("<td>").html(study.publicationDate.substring(0, 10)));
@@ -74,7 +74,7 @@ function processAssociation(association, table) {
     if (association.rsId != null && association.strongestAllele != null) {
         if ((association.rsId[0].indexOf(',') == -1) && (association.rsId[0].indexOf('x') == -1)) {
             var rsidsearch = "<span><a href='search?query=".concat(association.rsId[0]).concat("'>").concat(association.strongestAllele[0]).concat("</a></span>");
-            var dbsnp = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(association.rsId[0]).concat("'  target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
+            var dbsnp = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(association.rsId[0]).concat("'  target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
             row.append($("<td>").html(rsidsearch.concat('&nbsp;&nbsp;').concat(dbsnp)));
         }
         else {
@@ -97,7 +97,7 @@ function processAssociation(association, table) {
                 for (var j=0; j<rsIds.length; j++){
                     if(alleles[i].trim().indexOf(rsIds[j].trim()) != -1){
                         var rsidsearch = "<span><a href='search?query=".concat(rsIds[j].trim()).concat("'>").concat(alleles[i].trim()).concat("</a></span>");
-                        var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(rsIds[j].trim()).concat("'  target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
+                        var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(rsIds[j].trim()).concat("'  target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
                         if(content == ''){
                             content = content.concat(rsidsearch.concat('&nbsp;&nbsp;').concat(ensembl));
                         }
@@ -127,6 +127,15 @@ function processAssociation(association, table) {
 
     if(pval >= 1e-6){
         pval = pval.toExponential(0);
+    }
+    else{
+        pval = pval.toString();
+    }
+
+    if(pval != "0") {
+        var mant = pval.substr(0, 1);
+        var exp = pval.substr(2);
+        pval = mant.concat(" x10").concat("<sup>").concat(exp).concat("</sup>");
     }
 
     if (association.qualifier != null && association.qualifier != '') {
@@ -166,14 +175,26 @@ function processAssociation(association, table) {
 
     var location = "chr";
     if(association.chromosomeName != null){
-        location = location.concat(association.chromosomeName);
+        location = location.concat(association.chromosomeName[0]);
     }
     else{
         location = location.concat("?");
     }
-    if(association.chromosomePosition){
-        var locationsearch = "<span><a href='search?query=".concat(association.chromosomePosition).concat("'>").concat(association.chromosomePosition).concat("</a></span>");
-        location = location.concat(":").concat(locationsearch);
+    if(association.chromosomePosition != null){
+        var position = association.chromosomePosition[0];
+        location = location.concat(":").concat(position);
+
+        var min = parseInt(position)-500;
+        var max = parseInt(position)+500;
+        var locationsearch = min.toString().concat("-").concat(max.toString());
+
+        if(association.chromosomeName != null){
+            locationsearch = association.chromosomeName[0].concat(':').concat(locationsearch);
+        }
+
+        var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Location/View?r=".concat(locationsearch).concat("'  target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
+
+        location = location.concat('&nbsp;&nbsp;').concat(ensembl);
     }
     else{
         location = location.concat(":").concat("?");
@@ -196,7 +217,7 @@ function processAssociation(association, table) {
             var geneId = association.reportedGeneLinks[j].split("|")[1];
 
             var repgenesearch = "<span><a href='search?query=".concat(gene).concat("'>").concat(gene).concat("</a></span>");
-            var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=".concat(geneId).concat("'  target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
+            var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=".concat(geneId).concat("'  target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
 
             if (repgene == '') {
                 repgene = repgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);
@@ -235,7 +256,7 @@ function processAssociation(association, table) {
             var geneId = association.mappedGeneLinks[j].split("|")[1];
 
             var mapgenesearch = "<span><a href='search?query=".concat(gene).concat("'>").concat(gene).concat("</a></span>");
-            var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=".concat(geneId).concat("'  target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
+            var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=".concat(geneId).concat("'  target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
 
             mapgene = mapgene.replace(gene, mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl));
 
@@ -267,7 +288,7 @@ function processAssociation(association, table) {
 
     var europepmc = "http://www.europepmc.org/abstract/MED/".concat(association.pubmedId);
     var searchlink = "<span><a href='search?query=".concat(association.author).concat("'>").concat(author).concat("</a></span>");
-    var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
+    var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
     row.append($("<td>").html(searchlink.concat('&nbsp;&nbsp;').concat(epmclink)));
 
 
@@ -288,7 +309,7 @@ function processTrait(diseasetrait, table) {
         for (var j = 0; j < diseasetrait.efoLink.length; j++) {
             var data = diseasetrait.efoLink[j].split("|");
             var efosearch = "<span><a href='search?query=".concat(data[0]).concat("'>").concat(data[0]).concat("</a></span>");
-            var link = "<a href='".concat(data[2]).concat("' target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
+            var link = "<a href='".concat(data[2]).concat("' target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
 
             if (efo == '') {
                 efo = efosearch.concat('&nbsp;&nbsp;').concat(link);
@@ -333,7 +354,7 @@ function processTrait(diseasetrait, table) {
 
             var europepmc = "http://www.europepmc.org/abstract/MED/".concat(pubmedid);
             var searchlink = "<span><a href='search?query=".concat(author).concat("'>").concat(authorLabel).concat("</a></span>");
-            var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat("<span class='glyphicon glyphicon-link'></span></a></span>");
+            var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
 
             if(studies == ''){
                 studies = studies.concat(searchlink).concat('&nbsp;&nbsp;').concat(epmclink);

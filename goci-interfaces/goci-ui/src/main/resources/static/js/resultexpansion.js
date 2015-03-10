@@ -136,6 +136,8 @@ $(document).ready(function () {
 function loadAdditionalResults(facet, expand){
     var sort = '';
     var id= '';
+
+    //check if there's already a sort on the table
     if($('#' + facet + '-summaries').find('span.sorted').length != 0){
         id = $('#' + facet + '-summaries').find('span.sorted').parent('th').attr('id');
         sort = id;
@@ -150,14 +152,29 @@ function loadAdditionalResults(facet, expand){
        }
     }
     var queryTerm = $('#query').text();
+
+
+
     var pval = processPval();
     var or = processOR();
     var beta = processBeta();
     var date = processDate();
     var traits = processTraitDropdown();
 
+    if($('#filter').text() != '' && traits == ''){
+        var terms = $('#filter').text();
+        terms = terms.replace(/\s/g, '+');
 
-    var searchTerm = 'text:"'.concat(queryTerm).concat('"');
+        traits = terms.split('|');
+
+    }
+
+    if(queryTerm == '*'){
+        var searchTerm = 'text:'.concat(queryTerm);
+    }
+    else{
+        var searchTerm = 'text:"'.concat(queryTerm).concat('"');
+    }
     $.getJSON('api/search/moreresults',
         {'q': searchTerm,
             'max': 1000,

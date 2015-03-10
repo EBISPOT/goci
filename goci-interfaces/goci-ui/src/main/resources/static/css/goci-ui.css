@@ -65,9 +65,11 @@
 .pval-label {
     font-weight: bold;
     display: inline-block;
-    width: 7%;
+    /*width: 7%;*/
+    width: 2em;
     margin-left: 0.5em;
-    margin-right: 0;
+    margin-right: 0.3em;
+    text-align: right;
 }
 
 .filter-value {
@@ -79,7 +81,8 @@
 
 .p-value {
     display: inline-block;
-    width: 20%;
+    /*width: 20%;*/
+    width: 2.5em;
     margin-left: 0;
     margin-right: 0;
 }
@@ -149,7 +152,7 @@
 }
 
 .navbar-brand {
-    background: url(../images/GWAS_Catalog_logo_31x31.png) no-repeat !important;
+    background: url(../images/GWAS_Catalog_banner_logo_34x40.png) no-repeat !important;
     background-position: left center;
     padding-left: 40px;
 }
@@ -267,8 +270,14 @@ a > .toplevel-view {
     top: -0.8em;
 }
 
-.glyphicon-link {
-    color: #A6703F;
+/*.glyphicon-link {*/
+    /*color: #A6703F;*/
+/*}*/
+
+
+.link-icon{
+    width: 1.5em;
+    height: auto;
 }
 
 #trait-dropdown > ul > li {

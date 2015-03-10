@@ -58,9 +58,13 @@ $(document).ready(function () {
 
 function doSortingSearch(facet, field, id){
 
-    var query = $('#query').text();
-    var searchTerm = 'text:"'.concat(query).concat('"');
-    var pval = processPval();
+    var queryTerm = $('#query').text();
+    if(queryTerm == '*'){
+        var searchTerm = 'text:'.concat(queryTerm);
+    }
+    else{
+        var searchTerm = 'text:"'.concat(queryTerm).concat('"');
+    }    var pval = processPval();
     var or = processOR();
     var beta = processBeta();
     var date = processDate();

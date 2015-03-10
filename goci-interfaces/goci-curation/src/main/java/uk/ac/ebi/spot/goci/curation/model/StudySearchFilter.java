@@ -17,14 +17,20 @@ public class StudySearchFilter {
 
     private String yearFilter;
 
+    private String pubmedId;
+
     public StudySearchFilter() {
     }
 
-    public StudySearchFilter(Long statusSearchFilterId, Long curatorSearchFilterId, String monthFilter, String yearFilter) {
+    public StudySearchFilter(Long statusSearchFilterId,
+                             Long curatorSearchFilterId,
+                             String monthFilter,
+                             String yearFilter, String pubmedId) {
         this.statusSearchFilterId = statusSearchFilterId;
         this.curatorSearchFilterId = curatorSearchFilterId;
         this.monthFilter = monthFilter;
         this.yearFilter = yearFilter;
+        this.pubmedId = pubmedId;
     }
 
     public Long getStatusSearchFilterId() {
@@ -57,5 +63,13 @@ public class StudySearchFilter {
 
     public void setYearFilter(String yearFilter) {
         this.yearFilter = yearFilter;
+    }
+
+    public String getPubmedId() {
+        return pubmedId;
+    }
+
+    public void setPubmedId(String pubmedId) {
+        this.pubmedId = pubmedId;
     }
 }
