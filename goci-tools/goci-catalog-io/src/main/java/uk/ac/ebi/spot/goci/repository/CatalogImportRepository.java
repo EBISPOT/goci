@@ -85,6 +85,7 @@ public class CatalogImportRepository {
     @Autowired(required = false)
     public CatalogImportRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+
         this.insertStudyReport =
                 new SimpleJdbcInsert(jdbcTemplate)
                         .withTableName("STUDY_REPORT")
@@ -109,6 +110,11 @@ public class CatalogImportRepository {
                                       "GENE_NOT_ON_GENOME",
                                       "SNP_PENDING")
                         .usingGeneratedKeyColumns("ID");
+
+        this.insertRegion = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("REGION")
+                .usingColumns("NAME")
+                .usingGeneratedKeyColumns("ID");
     }
 
     public void loadNCBIMappedData(String[][] data) {
@@ -537,6 +543,7 @@ public class CatalogImportRepository {
         String rsId = "rs" + snpId;
         Long snpIdInSnpTable = null;
         try {
+            // TODO HOW WILL THIS REACT TO DATABASE DUPLICATES
             snpIdInSnpTable = jdbcTemplate.queryForObject(SELECT_SNP, long.class, rsId);
         }
         catch (EmptyResultDataAccessException e) {
@@ -554,12 +561,13 @@ public class CatalogImportRepository {
         }
         catch (EmptyResultDataAccessException e) {
 
-            // Insert region
+            // Insert region if its not already in database
             Map<String, Object> regionArgs = new HashMap<>();
             regionArgs.put("NAME", region);
             insertRegion.execute(regionArgs);
-            regionId = jdbcTemplate.queryForObject(SELECT_REGION, long.class, region);
 
+            // Get the ID of the newly created region
+            regionId = jdbcTemplate.queryForObject(SELECT_REGION, long.class, region);
         }
 
         // Create link in SNP_REGION table
@@ -580,10 +588,14 @@ public class CatalogImportRepository {
         }
 
         // Add chromosome name, chromosome position and merged value to SNP table
-        Map<String, Object> snpArgs = new HashMap<>();
         int snpRows = jdbcTemplate.update(UPDATE_SNP, chromosomeName, chromosomePosition, merged, snpIdInSnpTable);
         getLog().trace(
-                "Adding chromosome name and position to SNP: " + snpIdInSnpTable + " - Updated " + snpRows + " rows");
+                "Adding chromosome name, chromosome position and merged to SNP: " + snpIdInSnpTable + " - Updated " +
+                        snpRows + " rows");
+
+
+        // Add isIntergenic flag to GENOMIC_CONTEXT table
+        
 
 
     }
