@@ -1,6 +1,8 @@
 package uk.ac.ebi.spot.goci.service;
 
 import org.semanticweb.owlapi.model.IRI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.OntologyEnabledDocument;
@@ -19,6 +21,12 @@ import java.net.URI;
 public class OntologyExpansionService implements DocumentEnrichmentService<OntologyEnabledDocument<?>> {
     private OntologyLoader ontologyLoader;
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
+
     @Autowired
     public OntologyExpansionService(OntologyLoader ontologyLoader) {
         this.ontologyLoader = ontologyLoader;
@@ -35,15 +43,20 @@ public class OntologyExpansionService implements DocumentEnrichmentService<Ontol
 
             // get additional fields for trait documents
             IRI traitIRI = IRI.create(traitURI);
-            document.addShortForm(ontologyLoader.getAccession(traitIRI));
-            document.addLabel(ontologyLoader.getLabel(traitIRI));
+            if (ontologyLoader.getAccession(traitIRI) != null) {
+                document.addShortForm(ontologyLoader.getAccession(traitIRI));
+                document.addLabel(ontologyLoader.getLabel(traitIRI));
 
-            String efolink = ontologyLoader.getLabel(traitIRI)
-                    .concat("|").concat(ontologyLoader.getAccession(traitIRI))
-                    .concat("|").concat(traitIRI.toString());
-            document.addEfoLink(efolink);
-            ontologyLoader.getParentLabels(traitIRI).forEach(document::addSuperclassLabel);
-            ontologyLoader.getSynonyms(traitIRI).forEach(document::addSynonym);
+                String efolink = ontologyLoader.getLabel(traitIRI)
+                        .concat("|").concat(ontologyLoader.getAccession(traitIRI))
+                        .concat("|").concat(traitIRI.toString());
+                document.addEfoLink(efolink);
+                ontologyLoader.getParentLabels(traitIRI).forEach(document::addSuperclassLabel);
+                ontologyLoader.getSynonyms(traitIRI).forEach(document::addSynonym);
+            }
+            else {
+                getLog().warn("No EFO term for " + traitURI + " could be found - this term will not be mapped");
+            }
         }
     }
 }

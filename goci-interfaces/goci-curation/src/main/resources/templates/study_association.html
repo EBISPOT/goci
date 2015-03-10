@@ -27,6 +27,13 @@
     <!--Handles checkbox in table -->
     <script src="../static/js/goci-study-association.js" th:src="@{../../../js/goci-study-association.js}"></script>
 
+    <!--Bootstrap table: http://bootstrap-table.wenzhixin.net.cn/-->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.6.0/bootstrap-table.min.css"/>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.6.0/bootstrap-table.min.js"></script>
+
 </head>
 <body>
 
@@ -148,28 +155,28 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <table id="mainTable" class="table table-hover table-bordered"
-                   data-toggle="table">
+            <table id="mainTable" class="table table-condensed table-bordered">
                 <br/>
                 <thead>
                 <tr>
-                    <th>Region</th>
-                    <th>Genes (author reported)</th>
-                    <th>Strongest Allele</th>
-                    <th>SNP</th>
-                    <th>Risk Frequency</th>
-                    <th>p-Value Float</th>
-                    <th>p-Value Text</th>
-                    <th>OR per Copy Num</th>
-                    <th>OR entered (reciprocal)</th>
-                    <th>OR-Type</th>
-                    <th>OR per Copy Range</th>
-                    <th>OR per Copy Unit Description</th>
-                    <th>Std Error</th>
-                    <th>SNP Type</th>
-                    <th>Multi-SNP haplotype</th>
-                    <th>SNP:SNP interaction</th>
-                    <th>SNP Checked?</th>
+                    <th data-sortable="true">Region</th>
+                    <th data-sortable="true">Genes (author reported)</th>
+                    <th class="col-md-1" data-sortable="true">Strongest Allele</th>
+                    <th class="col-md-1" data-sortable="true">SNP</th>
+                    <th data-sortable="true">Risk Frequency</th>
+                    <th data-sortable="true">p-Value Float</th>
+                    <th data-sortable="true">p-Value Text</th>
+                    <th class="col-md-1" data-sortable="true">EFO trait</th>
+                    <th data-sortable="true">OR per Copy Num</th>
+                    <th data-sortable="true">OR entered (reciprocal)</th>
+                    <th data-sortable="true">OR-Type</th>
+                    <th data-sortable="true">OR per Copy Range</th>
+                    <th data-sortable="true">OR per Copy Unit Description</th>
+                    <th data-sortable="true">Std Error</th>
+                    <th data-sortable="true">SNP Type</th>
+                    <th data-sortable="true">Multi-SNP haplotype</th>
+                    <th data-sortable="true">SNP:SNP interaction</th>
+                    <th data-sortable="true">SNP Checked?</th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -202,6 +209,14 @@
                     <td th:text="${snpAssociationForm.riskFrequency}?: '' "></td>
                     <td th:text="${snpAssociationForm.pvalueFloat} ?: ''"></td>
                     <td th:text="${snpAssociationForm.pvalueText} ?: ''"></td>
+
+                    <!--EFO traits-->
+                    <td>
+                     <span th:each="efoTrait: ${snpAssociationForm.efoTraits}"
+                           th:text="${efoTrait.trait} ?: ''"></span>
+                    </td>
+
+
                     <td th:text="${snpAssociationForm.orPerCopyNum} ?: ''"></td>
                     <td th:text="${snpAssociationForm.orPerCopyRecip} ?: ''"></td>
                     <td th:switch="${snpAssociationForm.orType}">

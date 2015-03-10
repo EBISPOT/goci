@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+
+<div class="container">
+    <div class="row">
+
+        <div class="jumbotron">
+            <h1>What would you like to do?</h1>
+        </div>
+
+
+        <div class="col-md-12">
+            <a th:href="@{/studies}"
+               class="btn btn-default btn-lg"
+               role="button">See all studies</a>
+
+            <a th:href="@{/studies/new}"
+               class="btn btn-default btn-lg"
+               role="button">Add a new study</a>
+
+
+            <a th:href="@{/diseasetraits}"
+               class="btn btn-default btn-lg"
+               role="button">Add or update a disease trait</a>
+            <br/>
+        </div>
+        <br/>
+
+        <div class="col-md-12">
+            <form class="form-horizontal" role="form" method="post" th:action="@{/studies(filters=true)}"
+                  th:object="${studySearchFilter}">
+
+                <div class="page-header">
+                    <h2> Or search for a study by pubmed ID ...</h2>
+                </div>
+
+                <!-- Search input-->
+                <div class="control-group">
+                    <label class="control-label" for="searchinput"></label>
+
+                    <div class="controls">
+                        <input id="searchinput"
+                               name="searchinput"
+                               placeholder="Pubmed ID"
+                               class="input-xlarge search-query"
+                               type="text"
+                               th:field="*{pubmedId}"/>
+                        <button type="Save" class="btn btn-default btn-lg">Search</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+
+</body>
+</html>

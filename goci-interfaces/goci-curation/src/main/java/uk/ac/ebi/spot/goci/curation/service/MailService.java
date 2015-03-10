@@ -56,7 +56,7 @@ public class MailService {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
         String bodyStudyDate = dateFormat.format(studyDate);
 
-        String editStudyLink = "http://orange.ebi.ac.uk:55000/studies/" + study.getId();
+        String editStudyLink = "http://garfield.ebi.ac.uk:8080/gwas/curation/studies/" + study.getId();
 
         // Format mail message
         SimpleMailMessage mailMessage = new SimpleMailMessage();
