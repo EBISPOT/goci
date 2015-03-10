@@ -9,7 +9,7 @@
 
 $(document).ready(function () {
 
-    if(window.location.pathname == '/search/traits' && $('#traitList ul').children().length == 0){
+    if(window.location.pathname.indexOf('/search/traits') != -1 && $('#traitList ul').children().length == 0){
         console.log("About to load all the traits");
         loadTraitList();
     }
