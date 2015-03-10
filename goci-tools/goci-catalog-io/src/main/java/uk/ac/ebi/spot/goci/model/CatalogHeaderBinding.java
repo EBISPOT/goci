@@ -39,7 +39,7 @@ public enum CatalogHeaderBinding {
                               "STRONGEST SNP-RISK ALLELE",
                               false),
     SNP_RSID("SNP_RSID", "SNPS", "SNPS", false),
-    MERGED("MERGED", false, "MERGED", false),
+    MERGED("MERGED", false, "MERGED", "merged"),
     SNP_ID("SNP_ID", false, false, "snp_id"),
     CONTEXT("CONTEXT", false, "CONTEXT", false),
     IS_INTERGENIC("IS_INTERGENIC", false, true, "intergenic"),

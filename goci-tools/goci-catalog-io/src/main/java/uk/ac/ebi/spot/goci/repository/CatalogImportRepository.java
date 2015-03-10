@@ -74,7 +74,7 @@ public class CatalogImportRepository {
             "SELECT SNP_ID FROM SNP_REGION WHERE REGION_ID = ?";
 
     private static final String UPDATE_SNP =
-            "UPDATE SINGLE_NUCLEOTIDE_POLYMORPHISM SET CHROMOSOME_NAME = ?, CHROMOSOME_POSITION =? WHERE ID =?";
+            "UPDATE SINGLE_NUCLEOTIDE_POLYMORPHISM SET CHROMOSOME_NAME = ?, CHROMOSOME_POSITION =?, MERGED = ? WHERE ID =?";
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -181,6 +181,7 @@ public class CatalogImportRepository {
             Integer downstreamGeneDistance = null; // DOWNSTREAM_GENE_DISTANCE
             Boolean isIntergenic = null; // IS_INTERGENIC
             String snpId = null; // SNP_ID
+            Integer merged = null; // MERGED
 
             // For each key in our map, extract the cell at that index
             for (CatalogHeaderBinding binding : headerColumnMap.keySet()) {
@@ -372,6 +373,14 @@ public class CatalogImportRepository {
                                 snpId = valueToInsert;
                             }
                             break;
+                        case MERGED:
+                            if (valueToInsert.isEmpty()) {
+                                merged = null;
+                            }
+                            else {
+                                merged = Integer.valueOf(valueToInsert);
+                            }
+                            break;
                         default:
                             throw new DataImportException(
                                     "Unrecognised column flagged for import: " + binding.getLoadName());
@@ -416,7 +425,8 @@ public class CatalogImportRepository {
                               downstreamEntrezGeneId,
                               downstreamGeneDistance,
                               isIntergenic,
-                              snpId);
+                              snpId,
+                              merged);
             }
         }
 
@@ -518,7 +528,8 @@ public class CatalogImportRepository {
                                String downstreamEntrezGeneId,
                                Integer downstreamGeneDistance,
                                Boolean isIntergenic,
-                               String snpId) {
+                               String snpId,
+                               Integer merged) {
 
         // The SNP identifier in the file returned from NCBI is the rsId minus the rs at beginning e.g. 55734731
         // Get the ID of SNP in database, the snp should already be in database
@@ -568,11 +579,12 @@ public class CatalogImportRepository {
             }
         }
 
-        // Add chromosome name and position to SNP table
+        // Add chromosome name, chromosome position and merged value to SNP table
         Map<String, Object> snpArgs = new HashMap<>();
-        int snpRows = jdbcTemplate.update(UPDATE_SNP, chromosomeName, chromosomePosition, snpIdInSnpTable);
+        int snpRows = jdbcTemplate.update(UPDATE_SNP, chromosomeName, chromosomePosition, merged, snpIdInSnpTable);
         getLog().trace(
                 "Adding chromosome name and position to SNP: " + snpIdInSnpTable + " - Updated " + snpRows + " rows");
+
 
     }
 
