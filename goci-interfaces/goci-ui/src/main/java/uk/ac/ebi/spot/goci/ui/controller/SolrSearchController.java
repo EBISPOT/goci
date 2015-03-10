@@ -258,7 +258,8 @@ public class SolrSearchController {
         if (dateRange != "") {
             getLog().debug(dateRange);
 
-            addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
+            addFilterQuery(solrSearchBuilder, "publicationDate", "study_publicationDate", dateRange);
+
         }
         if (traits != null) {
             System.out.println(String.valueOf(traits));
@@ -271,6 +272,7 @@ public class SolrSearchController {
         // dispatch search
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
+
 
     @RequestMapping(value = "api/search/traits", produces = MediaType.APPLICATION_JSON_VALUE)
     public void doTraitsOnlySolrSearch(
@@ -543,6 +545,11 @@ public class SolrSearchController {
         }
         System.out.println(filterString);
         solrSearchBuilder.append("&fq=").append(filterString);
+
+    }
+
+    private void addFilterQuery(StringBuilder solrSearchBuilder, String filterOn, String filterOnAlt, String filterBy) {
+        solrSearchBuilder.append("&fq=").append(filterOn).append("%3A").append(filterBy).append("+OR+").append(filterOnAlt).append("%3A").append(filterBy);
 
     }
 

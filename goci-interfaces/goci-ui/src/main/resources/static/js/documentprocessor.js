@@ -128,6 +128,15 @@ function processAssociation(association, table) {
     if(pval >= 1e-6){
         pval = pval.toExponential(0);
     }
+    else{
+        pval = pval.toString();
+    }
+
+    if(pval != "0") {
+        var mant = pval.substr(0, 1);
+        var exp = pval.substr(2);
+        pval = mant.concat(" x10").concat("<sup>").concat(exp).concat("</sup>");
+    }
 
     if (association.qualifier != null && association.qualifier != '') {
         pval = pval.toString().concat(" ").concat(association.qualifier[0]);

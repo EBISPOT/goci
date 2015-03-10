@@ -9,15 +9,11 @@
 
 $(document).ready(function () {
 
-    if(window.location == 'search/traits' && $('#traitList ul').children().length == 0){
+    if(window.location.pathname == '/search/traits' && $('#traitList ul').children().length == 0){
         console.log("About to load all the traits");
         loadTraitList();
     }
 
-
-    //$('#traitList-submit').click(function(){
-    //    searchCheckedTraits();
-    //});
 
     $('#traitForm').submit(function (event) {
         event.preventDefault();

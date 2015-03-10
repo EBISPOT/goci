@@ -48,6 +48,13 @@ function doFiltering() {
     var dateRange = processDate();
     var traits = processTraitDropdown();
 
+    if($('#filter').text() != '' && traits == ''){
+        var terms = $('#filter').text();
+        terms = terms.replace(/\s/g, '+');
+        traits = terms.split('|');
+    }
+
+
     $('#filter-form').addClass('in-use')
     solrfilter(pvalRange, orRange, betaRange, dateRange, traits);
 }
@@ -203,8 +210,12 @@ function processTraitDropdown(){
 function solrfilter(pval, or, beta, date, traits) {
     var query = $('#query').text();
     console.log("Solr research request received for " + query + " and filters " + pval + ", " + or + ", " + beta + ", " + date + " and " + traits);
-    var searchTerm = 'text:"'.concat(query).concat('"');
-
+    if(query == '*'){
+        var searchTerm = 'text:'.concat(query);
+    }
+    else{
+        var searchTerm = 'text:"'.concat(query).concat('"');
+    }
     $.getJSON('api/search/filter', {
         'q': searchTerm,
         'group': 'true',

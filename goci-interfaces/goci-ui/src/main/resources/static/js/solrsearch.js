@@ -121,7 +121,12 @@ function buildBreadcrumbs() {
 
 function solrSearch(queryTerm) {
     console.log("Solr research request received for " + queryTerm);
-    var searchTerm = 'text:"'.concat(queryTerm).concat('"');
+    if(queryTerm == '*'){
+        var searchTerm = 'text:'.concat(queryTerm);
+    }
+    else{
+        var searchTerm = 'text:"'.concat(queryTerm).concat('"');
+    }
     setState(SearchState.LOADING);
     $.getJSON('api/search', {'q': searchTerm, 'group': 'true', 'group.by': 'resourcename', 'group.limit': 5})
         .done(function (data) {
@@ -134,7 +139,9 @@ function traitOnlySearch(traits) {
     console.log("Solr research request received for " + traits);
     setState(SearchState.LOADING);
 
-    $('#traitOnly').text(traits);
+    //$('#traitOnly').text(traits);
+
+    traits = traits.replace(/\s/g, '+');
 
     var searchTraits = traits.split('|');
     var searchTerm = 'text:*'
@@ -336,22 +343,23 @@ function setDownloadLink(searchParams){
     var beta = '&betafilter=';
     var date = '&datefilter=';
 
-    if(searchParams.q.indexOf('*') != -1 && searchParams.fq != null){
+    if(searchParams.q.indexOf('*') != -1 && $('#filter').text() != ''){
+
         console.log('Need to build the download link a bit differently');
 
-        var fq = searchParams.fq;
+        var fq = $('#filter').text();
 
-        if(fq.charAt(fq.length-1) == '"'){
-            fq = fq.substr(0, fq.length-1);
-        };
+        //if(fq.charAt(fq.length-1) == '"'){
+        //    fq = fq.substr(0, fq.length-1);
+        //};
 
-        var terms = fq.split('"');
+        var terms = fq.split('|');
 
         for(var i=0; i<terms.length; i++){
-            if(terms[i].indexOf('traitName') == -1){
+            //if(terms[i].indexOf('traitName') == -1){
                 console.log(terms[i]);
                 trait = trait.concat(traitFilter).concat(terms[i]);
-            }
+            //}
         }
 
     }

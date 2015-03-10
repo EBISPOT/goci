@@ -150,7 +150,7 @@
             <ul th:object="${result}" id="variables">
                 <li id="query" th:text="*{query}">User query</li>
                 <li id="facet" th:text="*{facet}">Facet</li>
-                <li id="traitOnly" th:text="*{filter}">Disease trait</li>
+                <li id="filter" th:text="*{filter}">Disease trait</li>
             </ul>
         </div>
 
@@ -550,7 +550,7 @@
 <script src="../static/js/solrfilter.js" th:src="@{js/solrfilter.js}"></script>
 <script src="../static/js/resultexpansion.js" th:src="@{js/resultexpansion.js}"></script>
 <script src="../static/js/solrsort.js" th:src="@{js/solrsort.js}"></script>
-<!--<script src="../static/js/traitlist.js" th:src="@{js/traitlist.js}"></script>-->
+<script src="../static/js/traitlist.js" th:src="@{js/traitlist.js}"></script>
 
 <!-- Google analytics
 ================================================== -->
