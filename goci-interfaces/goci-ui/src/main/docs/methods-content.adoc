@@ -1,5 +1,20 @@
 = Methods
 
+== Curation process
+
+The GWAS Catalog data is extracted from the literature. Extracted information includes publication information, study cohort information such as cohort size, country of recruitment and subject ethnicity, and SNP-disease association information including SNP identifier (i.e. RSID), p-value, gene and risk allele.
+Each study is also assigned a trait that best represents the phenotype under investigation.
+When multiple traits are analysed in the same study either multiple entries are created, or individual SNPs are annotated with their specific traits.
+Traits are used both to query and visualise the data in the Catalog's web form and diagram-based query interfaces.
+
+Data extraction and curation for the GWAS Catalog is an expert activity; each step is performed by scientists supported by a web-based tracking and data entry system which allows multiple curators to search, annotate, verify and publish the Catalog data.
+Papers that qualify for inclusion in the Catalog are identified through weekly PubMed searches.
+They then undergo two levels of curation.
+First all data, including association information for SNPs, traits and general information about the study, are extracted by one curator.
+A second curator then performs an additional round of curation to double-check the accuracy and consistency of all the information.
+Finally, an automated pipeline run at the NCBI performs checks for missing information, such as SNP identifiers, resolution of the citation in PubMed, existence of SNPs in dbSNP, confirmation of gene names vs. NCBI's Gene database, confirmation that the reported SNP and gene are in the same chromosomal region, as well as adding additional information such as the SNP's base pair and cytogenetic location in the current human genome reference assembly.
+This information is then used for queries and in the production of the karyotype diagram.
+
 == Full Description of Methods
 
 === Identification of studies
