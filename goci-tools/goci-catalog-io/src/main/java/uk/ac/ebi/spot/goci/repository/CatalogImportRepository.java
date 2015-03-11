@@ -15,9 +15,13 @@ import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,6 +32,7 @@ import java.util.Map;
  */
 @Repository
 public class CatalogImportRepository {
+
     private JdbcTemplate jdbcTemplate;
 
     private SimpleJdbcInsert insertStudyReport;
@@ -37,6 +42,10 @@ public class CatalogImportRepository {
     private SimpleJdbcInsert insertRegion;
 
     private SimpleJdbcInsert insertSnpRegion;
+
+    private SimpleJdbcInsert insertGene;
+
+    private SimpleJdbcInsert insertGenomicContext;
 
     private static final String SELECT_STUDY_REPORTS =
             "SELECT ID FROM STUDY_REPORT WHERE STUDY_ID = ?";
@@ -64,7 +73,6 @@ public class CatalogImportRepository {
                     "SNP_PENDING = ? " +
                     "WHERE ID = ?";
 
-
     private static final String SELECT_SNP = "SELECT ID FROM SINGLE_NUCLEOTIDE_POLYMORPHISM WHERE RS_ID = ?";
 
     private static final String SELECT_REGION =
@@ -74,7 +82,21 @@ public class CatalogImportRepository {
             "SELECT SNP_ID FROM SNP_REGION WHERE REGION_ID = ?";
 
     private static final String UPDATE_SNP =
-            "UPDATE SINGLE_NUCLEOTIDE_POLYMORPHISM SET CHROMOSOME_NAME = ?, CHROMOSOME_POSITION =?, MERGED = ? WHERE ID =?";
+            "UPDATE SINGLE_NUCLEOTIDE_POLYMORPHISM " +
+                    "SET CHROMOSOME_NAME = ?, " +
+                    "CHROMOSOME_POSITION =?," +
+                    "MERGED = ?, " +
+                    "FUNCTIONAL_CLASS = ?, " +
+                    "LAST_UPDATE_DATE = ? " +
+                    "WHERE ID =?";
+
+    private static final String SELECT_GENE = "SELECT ID FROM GENE WHERE GENE_NAME = ?";
+
+    private static final String SELECT_SNP_ID_FROM_GENOMIC_CONTEXT =
+            "SELECT SNP_ID FROM GENOMIC_CONTEXT WHERE GENE_ID = ?";
+
+    private static final String UPDATE_GENOMIC_CONTEXT =
+            "UPDATE GENOMIC_CONTEXT SET IS_INTERGENIC = ? WHERE SNP_ID =?";
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -83,8 +105,9 @@ public class CatalogImportRepository {
     }
 
     @Autowired(required = false)
-    public CatalogImportRepository(JdbcTemplate jdbcTemplate) {
+    public CatalogImportRepository(JdbcTemplate jdbcTemplate, SimpleJdbcInsert insertSnpRegion) {
         this.jdbcTemplate = jdbcTemplate;
+
 
         this.insertStudyReport =
                 new SimpleJdbcInsert(jdbcTemplate)
@@ -114,6 +137,27 @@ public class CatalogImportRepository {
         this.insertRegion = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("REGION")
                 .usingColumns("NAME")
+                .usingGeneratedKeyColumns("ID");
+
+        this.insertSnpRegion = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("SNP_REGION")
+                .usingColumns("SNP_ID")
+                .usingColumns("REGION_ID");
+
+        this.insertGene = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("GENE")
+                .usingColumns("GENE_NAME")
+                .usingColumns("ENTREZ_GENE_ID")
+                .usingGeneratedKeyColumns("ID");
+
+        this.insertGenomicContext = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("GENOMIC_CONTEXT")
+                .usingColumns("SNP_ID")
+                .usingColumns("GENE_ID")
+                .usingColumns("IS_UPSTREAM")
+                .usingColumns("IS_DOWNSTREAM")
+                .usingColumns("DISTANCE")
+                .usingColumns("IS_INTERGENIC")
                 .usingGeneratedKeyColumns("ID");
     }
 
@@ -169,7 +213,7 @@ public class CatalogImportRepository {
             // Association report attributes
             Long associationId = null; // ASSOCIATION_ID
             Date lastUpdateDate = null; // LAST_UPDATE_DATE
-            Long geneError = null; // GENE_ERROR
+            Integer geneError = null; // GENE_ERROR
             String snpError = null; // SNP_ERROR
             String snpGeneOnDiffChr = null; // SNP_GENE_ON_DIFF_CHR
             String noGeneForSymbol = null; // NO_GENE_FOR_SYMBOL
@@ -188,6 +232,9 @@ public class CatalogImportRepository {
             Boolean isIntergenic = null; // IS_INTERGENIC
             String snpId = null; // SNP_ID
             Integer merged = null; // MERGED
+            String mappedGene = null; // MAPPED_GENE
+            String entrezGeneId = null; // ENTREZ_GENE_ID
+            String functionalClass = null; // FUNCTIONAL_CLASS
 
             // For each key in our map, extract the cell at that index
             for (CatalogHeaderBinding binding : headerColumnMap.keySet()) {
@@ -256,7 +303,7 @@ public class CatalogImportRepository {
                                 geneError = null;
                             }
                             else {
-                                geneError = Long.valueOf(valueToInsert);
+                                geneError = Integer.valueOf(valueToInsert);
                             }
                             break;
                         case SNP_ERROR:
@@ -387,6 +434,30 @@ public class CatalogImportRepository {
                                 merged = Integer.valueOf(valueToInsert);
                             }
                             break;
+                        case MAPPED_GENE:
+                            if (valueToInsert.isEmpty()) {
+                                mappedGene = null;
+                            }
+                            else {
+                                mappedGene = valueToInsert;
+                            }
+                            break;
+                        case ENTREZ_GENE_ID:
+                            if (valueToInsert.isEmpty()) {
+                                entrezGeneId = null;
+                            }
+                            else {
+                                entrezGeneId = valueToInsert;
+                            }
+                            break;
+                        case FUNCTIONAL_CLASS:
+                            if (valueToInsert.isEmpty()) {
+                                functionalClass = null;
+                            }
+                            else {
+                                functionalClass = valueToInsert;
+                            }
+                            break;
                         default:
                             throw new DataImportException(
                                     "Unrecognised column flagged for import: " + binding.getLoadName());
@@ -405,13 +476,15 @@ public class CatalogImportRepository {
 
             // If no errors for a row, insert
             if (!caughtErrors) {
-                // Once you have all bits for a study report, association report add them
+                // Add study report
                 addStudyReport(studyId,
                                pubmedIdError,
                                ncbiPaperTitle,
                                ncbiFirstAuthor,
                                ncbiNormalisedFirstAuthor,
                                ncbiFirstUpdateDate);
+
+                //Add association report
                 addAssociationReport(associationId,
                                      lastUpdateDate,
                                      geneError,
@@ -419,8 +492,9 @@ public class CatalogImportRepository {
                                      snpGeneOnDiffChr,
                                      noGeneForSymbol,
                                      geneNotOnGenome);
-                addMappedData(studyId,
-                              associationId,
+
+                // Add mapped data
+                addMappedData(snpError,
                               region,
                               chromosomeName,
                               chromosomePosition,
@@ -432,7 +506,10 @@ public class CatalogImportRepository {
                               downstreamGeneDistance,
                               isIntergenic,
                               snpId,
-                              merged);
+                              merged,
+                              mappedGene,
+                              entrezGeneId,
+                              functionalClass);
             }
         }
 
@@ -449,12 +526,12 @@ public class CatalogImportRepository {
                                 String ncbiNormalisedFirstAuthor, Date ncbiFirstUpdateDate) {
 
         if (studyId == null) {
-            throw new DataImportException("Caught errors whilst processing data import - " +
+            throw new DataImportException("Caught errors processing data import - " +
                                                   "trying to add study report with no study ID");
         }
 
         if (ncbiPaperTitle == null) {
-            throw new DataImportException("Caught errors whilst processing data import - " +
+            throw new DataImportException("Caught errors processing data import - " +
                                                   "trying to add study report with no paper title");
         }
 
@@ -470,27 +547,30 @@ public class CatalogImportRepository {
                                        ncbiFirstUpdateDate,
                                        studyReportId);
         }
+        // If not in database add a new report
         catch (EmptyResultDataAccessException e) {
-            Map<String, Object> studyArgs = new HashMap<>();
-            studyArgs.put("STUDY_ID", studyId);
-            studyArgs.put("PUBMED_ID_ERROR", pubmedIdError);
-            studyArgs.put("NCBI_PAPER_TITLE", ncbiPaperTitle);
-            studyArgs.put("NCBI_FIRST_AUTHOR", ncbiFirstAuthor);
-            studyArgs.put("NCBI_NORMALIZED_FIRST_AUTHOR", ncbiNormalisedFirstAuthor);
-            studyArgs.put("NCBI_FIRST_UPDATE_DATE", ncbiFirstUpdateDate);
-            rows = insertStudyReport.execute(studyArgs);
+            Map<String, Object> studyReportArgs = new HashMap<>();
+            studyReportArgs.put("STUDY_ID", studyId);
+            studyReportArgs.put("PUBMED_ID_ERROR", pubmedIdError);
+            studyReportArgs.put("NCBI_PAPER_TITLE", ncbiPaperTitle);
+            studyReportArgs.put("NCBI_FIRST_AUTHOR", ncbiFirstAuthor);
+            studyReportArgs.put("NCBI_NORMALIZED_FIRST_AUTHOR", ncbiNormalisedFirstAuthor);
+            studyReportArgs.put("NCBI_FIRST_UPDATE_DATE", ncbiFirstUpdateDate);
+            rows = insertStudyReport.execute(studyReportArgs);
         }
         getLog().trace("Adding report for Study ID: " + studyId + " - Updated " + rows + " rows");
     }
 
     private void addAssociationReport(Long associationId,
                                       Date lastUpdateDate,
-                                      Long geneError,
+                                      Integer geneError,
                                       String snpError,
                                       String snpGeneOnDiffChr,
                                       String noGeneForSymbol,
                                       String geneNotOnGenome) {
 
+        // This is not set in NCBI file, so set to current date
+        lastUpdateDate = new Date();
 
         // Check for an existing id in database
         int rows;
@@ -507,23 +587,23 @@ public class CatalogImportRepository {
                                        null,
                                        associationReportId);
         }
+        // If not in database add a new report
         catch (EmptyResultDataAccessException e) {
-            Map<String, Object> associationArgs = new HashMap<>();
-            associationArgs.put("ASSOCIATION_ID", associationId);
-            associationArgs.put("LAST_UPDATE_DATE", lastUpdateDate);
-            associationArgs.put("GENE_ERROR", geneError);
-            associationArgs.put("SNP_ERROR", snpError);
-            associationArgs.put("SNP_GENE_ON_DIFF_CHR", snpGeneOnDiffChr);
-            associationArgs.put("NO_GENE_FOR_SYMBOL", noGeneForSymbol);
-            associationArgs.put("GENE_NOT_ON_GENOME", geneNotOnGenome);
-            associationArgs.put("SNP_PENDING", null);
-            rows = insertAssociationReport.execute(associationArgs);
+            Map<String, Object> associationReportArgs = new HashMap<>();
+            associationReportArgs.put("ASSOCIATION_ID", associationId);
+            associationReportArgs.put("LAST_UPDATE_DATE", lastUpdateDate);
+            associationReportArgs.put("GENE_ERROR", geneError);
+            associationReportArgs.put("SNP_ERROR", snpError);
+            associationReportArgs.put("SNP_GENE_ON_DIFF_CHR", snpGeneOnDiffChr);
+            associationReportArgs.put("NO_GENE_FOR_SYMBOL", noGeneForSymbol);
+            associationReportArgs.put("GENE_NOT_ON_GENOME", geneNotOnGenome);
+            associationReportArgs.put("SNP_PENDING", null);
+            rows = insertAssociationReport.execute(associationReportArgs);
         }
         getLog().trace("Adding report for Association ID: " + associationId + " - Updated " + rows + " rows");
     }
 
-    private void addMappedData(Long studyId,
-                               Long associationId,
+    private void addMappedData(String snpError,
                                String region,
                                String chromosomeName,
                                String chromosomePosition,
@@ -535,70 +615,209 @@ public class CatalogImportRepository {
                                Integer downstreamGeneDistance,
                                Boolean isIntergenic,
                                String snpId,
-                               Integer merged) {
+                               Integer merged,
+                               String mappedGene, String entrezGeneId, String functionalClass) {
+
+
+        // Do not attempt to add mapped data for entries with snp errors
+        // These tend to come back with just limited region information
+        if (snpError != null && !snpError.isEmpty()) {
+            getLog().trace("Not adding mapped data for: " + snpId + " , with error " + snpError);
+            return;
+        }
 
         // The SNP identifier in the file returned from NCBI is the rsId minus the rs at beginning e.g. 55734731
-        // Get the ID of SNP in database, the snp should already be in database
-        // otherwise it would never have appeared in file sent to NCBI
+        // Get the ID of SNP in database,
+        // Note: the snp should already be in database otherwise it would never have appeared in file sent to NCBI
         String rsId = "rs" + snpId;
-        Long snpIdInSnpTable = null;
+        Long snpIdInSnpTable;
         try {
-            // TODO HOW WILL THIS REACT TO DATABASE DUPLICATES
             snpIdInSnpTable = jdbcTemplate.queryForObject(SELECT_SNP, long.class, rsId);
         }
         catch (EmptyResultDataAccessException e) {
-            throw new DataImportException("Caught errors whilst processing data import - " +
+            throw new DataImportException("Caught errors processing data import - " +
                                                   "trying to add NCBI info to SNP not found in database");
         }
 
-
         // Add region information
-        Map<String, Object> snpRegionArgs = new HashMap<>();
-        Long regionId = null;
-
+        Long regionId;
         try {
             regionId = jdbcTemplate.queryForObject(SELECT_REGION, long.class, region);
         }
         catch (EmptyResultDataAccessException e) {
-
             // Insert region if its not already in database
-            Map<String, Object> regionArgs = new HashMap<>();
-            regionArgs.put("NAME", region);
-            insertRegion.execute(regionArgs);
+            createRegion(region);
 
             // Get the ID of the newly created region
             regionId = jdbcTemplate.queryForObject(SELECT_REGION, long.class, region);
         }
 
         // Create link in SNP_REGION table
-        int snpRegionRows;
         if (regionId != null) {
             Collection<Long> snpIdsInSnpRegionTable =
                     jdbcTemplate.queryForList(SELECT_SNP_REGION, long.class, regionId);
 
-            // Examine all SNPs linked to region and If no link exists then create
+            // Examine all SNPs linked to region and if no link exists then create
             if (!snpIdsInSnpRegionTable.contains(snpIdInSnpTable)) {
-                snpRegionArgs.put("SNP_ID", snpIdInSnpTable);
-                snpRegionArgs.put("REGION_ID", regionId);
-                snpRegionRows = insertSnpRegion.execute(snpRegionArgs);
-                getLog().trace(
-                        "Adding SNP: " + snpIdInSnpTable + " and Region: " + regionId + " - Updated " + snpRegionRows +
-                                " rows");
+                createSnpRegion(snpIdInSnpTable, regionId);
             }
         }
 
-        // Add chromosome name, chromosome position and merged value to SNP table
-        int snpRows = jdbcTemplate.update(UPDATE_SNP, chromosomeName, chromosomePosition, merged, snpIdInSnpTable);
+        // Add chromosome name, chromosome position, functional class, merged and last update date values to SNP table
+        // Last update date is not set in NCBI file, so set to current date
+        Date lastUpdateDate = new Date();
+        int snpRows = jdbcTemplate.update(UPDATE_SNP,
+                                          chromosomeName,
+                                          chromosomePosition,
+                                          merged,
+                                          functionalClass,
+                                          lastUpdateDate,
+                                          snpIdInSnpTable);
         getLog().trace(
-                "Adding chromosome name, chromosome position and merged to SNP: " + snpIdInSnpTable + " - Updated " +
+                "Adding chromosome name, chromosome position, merged, functional class and last update date values to SNP: " +
+                        snpIdInSnpTable + " - Updated " +
                         snpRows + " rows");
 
+        // Process each mapped gene, can either be a single gene or ; separated string of gene names
+        // This gene information comes from the snp_gene_symbols and snp_gene_ids columns
+        List<String> mappedGenes = new ArrayList<String>();
+        if (mappedGene.contains(";")) {
+            mappedGenes = Arrays.asList(mappedGene.split(";"));
+        }
+        else {
+            mappedGenes.add(mappedGene);
+        }
 
-        // Add isIntergenic flag to GENOMIC_CONTEXT table
-        
+        List<String> entrezGeneIds = new ArrayList<String>();
+        if (entrezGeneId.contains(";")) {
+            entrezGeneIds = Arrays.asList(entrezGeneId.split(";"));
+        }
+        else {
+            entrezGeneIds.add(entrezGeneId);
+        }
 
+        // Iterators
+        Iterator mappedGenesIterator = mappedGenes.listIterator();
+        Iterator entrezGeneIdsIterator = entrezGeneIds.listIterator();
+
+        // Add gene information to database
+        Long geneId = null;
+
+        while (mappedGenesIterator.hasNext() && entrezGeneIdsIterator.hasNext()) {
+
+            try {
+                geneId = jdbcTemplate.queryForObject(SELECT_GENE, long.class, mappedGenesIterator.next());
+            }
+            catch (EmptyResultDataAccessException e) {
+                // Insert gene if its not already in database
+                createGene(mappedGenesIterator.next().toString(), entrezGeneIdsIterator.next().toString());
+                geneId = jdbcTemplate.queryForObject(SELECT_GENE, long.class, mappedGenesIterator.next());
+            }
+
+            // Check GENOMIC_CONTEXT table to see if SNP has entry in this table for this gene
+            List snpIdsInGenomicContextTable =
+                    jdbcTemplate.queryForList(SELECT_SNP_ID_FROM_GENOMIC_CONTEXT, long.class, geneId);
+
+            if (!snpIdsInGenomicContextTable.contains(snpIdInSnpTable)) {
+                // Create genomic context, for mapped genes there is no details in file for following attributes...
+                createGenomicContext(geneId, snpIdInSnpTable, false, false, null);
+            } // TODO UPDATES?
+        }// end while
+
+        // Process upstream gene information, there is always only one
+        try {
+            geneId = jdbcTemplate.queryForObject(SELECT_GENE, long.class, upstreamMappedGene);
+        }
+        catch (EmptyResultDataAccessException e) {
+            createGene(upstreamMappedGene, upstreamEntrezGeneId);
+            geneId = jdbcTemplate.queryForObject(SELECT_GENE, long.class, upstreamMappedGene);
+        }
+
+        // If its a new gene, never seen in database, then create genomic context
+        createGenomicContext(geneId, snpIdInSnpTable, true, false, upstreamGeneDistance);
+
+        // Process downstream gene information, there is always only one
+        try {
+            geneId = jdbcTemplate.queryForObject(SELECT_GENE, long.class, downstreamMappedGene);
+        }
+        catch (EmptyResultDataAccessException e) {
+            createGene(downstreamMappedGene, downstreamEntrezGeneId);
+            geneId = jdbcTemplate.queryForObject(SELECT_GENE, long.class, upstreamMappedGene);
+        }
+
+        // If its a new gene, never seen in database, then create genomic context
+        createGenomicContext(geneId, snpIdInSnpTable, false, true, downstreamGeneDistance);
+
+        // Lastly set isIntergenic flag for SNP in GENOMIC_CONTEXT table
+        int genomicContextRows = 0;
+        genomicContextRows = jdbcTemplate.update(UPDATE_GENOMIC_CONTEXT,
+                                                 isIntergenic,
+                                                 snpIdInSnpTable);
+
+        getLog().trace(
+                "Adding isIntergenic details to GENOMIC_CONTEXT table for SNP id: " + snpIdInSnpTable +
+                        " - Updated " +
+                        genomicContextRows + " rows");
 
     }
+
+    private void createRegion(String region) {
+        Map<String, Object> regionArgs = new HashMap<>();
+        regionArgs.put("NAME", region);
+
+        int rows = 0;
+        rows = insertRegion.execute(regionArgs);
+        getLog().trace(
+                "Adding region: " + region + " - Updated " +
+                        rows + " rows");
+    }
+
+    private void createSnpRegion(Long snpId, Long regionId) {
+        Map<String, Object> snpRegionArgs = new HashMap<>();
+        snpRegionArgs.put("SNP_ID", snpId);
+        snpRegionArgs.put("REGION_ID", regionId);
+
+        int rows = 0;
+        rows = insertSnpRegion.execute(snpRegionArgs);
+        getLog().trace(
+                "Adding SNP: " + snpId + " and Region: " + regionId + " - Updated " + rows +
+                        " rows");
+    }
+
+
+    private void createGenomicContext(Long geneId,
+                                      Long snpIdInSnpTable,
+                                      Boolean isUpstream,
+                                      Boolean isDownstream,
+                                      Integer distance) {
+        Map<String, Object> genomicContextArgs = new HashMap<>();
+        genomicContextArgs.put("SNP_ID", snpIdInSnpTable);
+        genomicContextArgs.put("GENE_ID", geneId);
+        genomicContextArgs.put("IS_UPSTREAM", isUpstream);
+        genomicContextArgs.put("IS_DOWNSTREAM", isDownstream);
+        genomicContextArgs.put("DISTANCE", distance);
+
+        int rows = 0;
+        rows = insertGenomicContext.execute(genomicContextArgs);
+        getLog().trace(
+                "Adding genomic context information for gene id: " + geneId + ", linked to snp" + snpIdInSnpTable +
+                        " - Updated " +
+                        rows + " rows");
+    }
+
+    private void createGene(String geneName, String entrezGeneId) {
+        Map<String, Object> geneArgs = new HashMap<>();
+        geneArgs.put("GENE_NAME", geneName);
+        geneArgs.put("ENTREZ_GENE_ID", entrezGeneId);
+
+        int rows = 0;
+        rows = insertGene.execute(geneArgs);
+        getLog().trace(
+                "Adding gene information for gene id: " + geneName + ", entrez id" + entrezGeneId +
+                        " - Updated " +
+                        rows + " rows");
+    }
+
 
     private static <T> T[] extractRange(T[] array, int startIndex) {
         if (startIndex > array.length) {
