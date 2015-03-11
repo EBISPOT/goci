@@ -3,7 +3,7 @@
 == Frequently Asked Questions
 
 
-<<Why has the Catalog moved to the EBI?
+<<Why has the Catalog moved to the EBI?>>
 
 
 <<Is there any way I can stay informed about new search features and developments?>>
