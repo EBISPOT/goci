@@ -22,6 +22,7 @@ public enum CatalogHeaderBinding {
                                  "REPLICATION SAMPLE SIZE",
                                  false),
     REGION("REGION", "REGION", "CYTOGENETIC_LOC", "cytogenetic_loc"),
+    FUNCTIONAL_CLASS("FUNCTIONAL_CLASS", false, false, "functional_class"),
     CHROMOSOME_NAME("CHROMOSOME_NAME", false, "CHR_ID", "chr_id"),
     CHROMOSOME_POSITION("CHROMOSOME_POSITION", false, "CHR_POS", "chr_pos"),
     REPORTED_GENE("REPORTED_GENE", "REPORTED GENE(S)", "REPORTED GENE(S)", false),
