@@ -35,6 +35,9 @@ public class FileController {
     @Value("${download.full}")
     private Resource fullFileDownload;
 
+    @Value("${download.alternative}")
+    private Resource alternativeFileDownload;
+
     @Value("${download.NCBI}")
     private Resource fullFileDownloadNcbi;
 
@@ -58,7 +61,28 @@ public class FileController {
         else {
             throw new FileNotFoundException();
         }
+    }
 
+    @RequestMapping(value = "api/search/downloads/alternative",
+            method = RequestMethod.GET,
+            produces = MediaType.TEXT_PLAIN_VALUE)
+    public void getAlternativeDownload(HttpServletResponse response) throws IOException {
+        if (alternativeFileDownload.exists()) {
+
+            InputStream inputStream = null;
+            inputStream = alternativeFileDownload.getInputStream();
+
+            OutputStream outputStream;
+            outputStream = response.getOutputStream();
+
+            IOUtils.copy(inputStream, outputStream);
+            inputStream.close();
+            outputStream.close();
+
+        }
+        else {
+            throw new FileNotFoundException();
+        }
     }
 
     @RequestMapping(value = "api/search/downloads/full_NCBI",

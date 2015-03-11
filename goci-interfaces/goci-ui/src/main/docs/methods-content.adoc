@@ -15,6 +15,7 @@ A second curator then performs an additional round of curation to double-check t
 Finally, an automated pipeline run at the NCBI performs checks for missing information, such as SNP identifiers, resolution of the citation in PubMed, existence of SNPs in dbSNP, confirmation of gene names vs. NCBI's Gene database, confirmation that the reported SNP and gene are in the same chromosomal region, as well as adding additional information such as the SNP's base pair and cytogenetic location in the current human genome reference assembly.
 This information is then used for queries and in the production of the karyotype diagram.
 
+
 == Full Description of Methods
 
 === Identification of studies
