@@ -33,6 +33,7 @@ import java.util.Map;
 @Repository
 public class CatalogImportRepository {
 
+
     private JdbcTemplate jdbcTemplate;
 
     private SimpleJdbcInsert insertStudyReport;
@@ -58,6 +59,12 @@ public class CatalogImportRepository {
                     "NCBI_NORMALIZED_FIRST_AUTHOR = ?, " +
                     "NCBI_FIRST_UPDATE_DATE = ? " +
                     "WHERE ID = ?";
+
+    private static final String SELECT_HOUSEKEEPING = "SELECT HOUSEKEEPING_ID FROM STUDY WHERE ID = ?";
+
+    private static final String SELECT_STATUS = "SELECT ID FROM CURATION_STATUS WHERE STATUS =? ";
+
+    private static final String UPDATE_HOUSEKEEPING = "UPDATE HOUSEKEEPING SET CURATION_STATUS_ID = ? WHERE ID = ?";
 
     private static final String SELECT_ASSOCIATION_REPORTS =
             "SELECT ID FROM ASSOCIATION_REPORT WHERE ASSOCIATION_ID = ?";
@@ -486,7 +493,8 @@ public class CatalogImportRepository {
                                ncbiFirstUpdateDate);
 
                 //Add association report
-                addAssociationReport(associationId,
+                addAssociationReport(studyId,
+                                     associationId,
                                      lastUpdateDate,
                                      geneError,
                                      snpError,
@@ -560,9 +568,17 @@ public class CatalogImportRepository {
             rows = insertStudyReport.execute(studyReportArgs);
         }
         getLog().trace("Adding report for Study ID: " + studyId + " - Updated " + rows + " rows");
+
+        // Update status if we have an error
+        if (pubmedIdError != null) {
+            updateStudyStatus(studyId);
+        }
+
     }
 
-    private void addAssociationReport(Long associationId,
+
+    private void addAssociationReport(Long studyId,
+                                      Long associationId,
                                       Date lastUpdateDate,
                                       Integer geneError,
                                       String snpError,
@@ -602,6 +618,11 @@ public class CatalogImportRepository {
             rows = insertAssociationReport.execute(associationReportArgs);
         }
         getLog().trace("Adding report for Association ID: " + associationId + " - Updated " + rows + " rows");
+
+        // Update status if we have an error
+        if (snpError != null || geneError!=null) {
+            updateStudyStatus(studyId);
+        }
     }
 
     private void addMappedData(String snpError,
@@ -819,6 +840,41 @@ public class CatalogImportRepository {
 
 
     }
+
+
+    private void updateStudyStatus(Long studyId) {
+
+        // Get study housekeeping ID
+        Long housekeepingId;
+        try {
+            housekeepingId = jdbcTemplate.queryForObject(SELECT_HOUSEKEEPING, long.class, studyId);
+        }
+        catch (EmptyResultDataAccessException e) {
+            throw new DataImportException("Caught errors processing data import - " +
+                                                  "trying to update status of study without housekeeping information found in database");
+        }
+
+        // Get status ID
+        Long statusId;
+        String status = "NCBI pipeline error";
+
+        try {
+            statusId = jdbcTemplate.queryForObject(SELECT_STATUS, long.class, status);
+        }
+        catch (EmptyResultDataAccessException e) {
+            throw new DataImportException(
+                    "Caught errors processing data import - " + "cannot find ID for status " + status);
+        }
+
+
+        // Set status to "NCBI pipeline error"
+        int rows = 0;
+        rows = jdbcTemplate.update(UPDATE_HOUSEKEEPING, statusId, housekeepingId);
+        getLog().trace(
+                "Set status information for study: " + studyId + " - Updated " + rows + " rows");
+
+    }
+
 
     private void createRegion(String region) {
         Map<String, Object> regionArgs = new HashMap<>();
