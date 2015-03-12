@@ -95,8 +95,9 @@ public class CatalogImportRepository {
     private static final String SELECT_SNP_ID_FROM_GENOMIC_CONTEXT =
             "SELECT SNP_ID FROM GENOMIC_CONTEXT WHERE GENE_ID = ?";
 
-    private static final String UPDATE_GENOMIC_CONTEXT =
-            "UPDATE GENOMIC_CONTEXT SET IS_INTERGENIC = ? WHERE SNP_ID =?";
+    private static final String UPDATE_GENOMIC_CONTEXT = "UPDATE GENOMIC_CONTEXT " +
+            "SET IS_UPSTREAM=?, IS_DOWNSTREAM=?, DISTANCE=?, IS_INTERGENIC=? " +
+            "WHERE GENE_ID = ? AND SNP_ID = ?";
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -616,7 +617,9 @@ public class CatalogImportRepository {
                                Boolean isIntergenic,
                                String snpId,
                                Integer merged,
-                               String mappedGene, String entrezGeneId, String functionalClass) {
+                               String mappedGene,
+                               String entrezGeneId,
+                               String functionalClass) {
 
 
         // Do not attempt to add mapped data for entries with snp errors
@@ -675,89 +678,145 @@ public class CatalogImportRepository {
                                           snpIdInSnpTable);
         getLog().trace(
                 "Adding chromosome name, chromosome position, merged, functional class and last update date values to SNP: " +
-                        snpIdInSnpTable + " - Updated " +
-                        snpRows + " rows");
-
-        // Process each mapped gene, can either be a single gene or ; separated string of gene names
-        // This gene information comes from the snp_gene_symbols and snp_gene_ids columns
-        List<String> mappedGenes = new ArrayList<String>();
-        if (mappedGene.contains(";")) {
-            mappedGenes = Arrays.asList(mappedGene.split(";"));
-        }
-        else {
-            mappedGenes.add(mappedGene);
-        }
-
-        List<String> entrezGeneIds = new ArrayList<String>();
-        if (entrezGeneId.contains(";")) {
-            entrezGeneIds = Arrays.asList(entrezGeneId.split(";"));
-        }
-        else {
-            entrezGeneIds.add(entrezGeneId);
-        }
-
-        // Iterators
-        Iterator mappedGenesIterator = mappedGenes.listIterator();
-        Iterator entrezGeneIdsIterator = entrezGeneIds.listIterator();
+                        snpIdInSnpTable + " - Updated " + snpRows + " rows");
 
         // Add gene information to database
         Long geneId = null;
 
-        while (mappedGenesIterator.hasNext() && entrezGeneIdsIterator.hasNext()) {
+        // Process each mapped gene, can either be a single gene or ; separated string of gene names
+        // This gene information comes from the snp_gene_symbols and snp_gene_ids columns
+        if (mappedGene != null && !mappedGene.isEmpty()) {
+            List<String> mappedGenes = new ArrayList<String>();
+            if (mappedGene.contains(";")) {
+                mappedGenes = Arrays.asList(mappedGene.split(";"));
+            }
+            else {
+                mappedGenes.add(mappedGene);
+            }
 
+            List<String> entrezGeneIds = new ArrayList<String>();
+            if (entrezGeneId.contains(";")) {
+                entrezGeneIds = Arrays.asList(entrezGeneId.split(";"));
+            }
+            else {
+                entrezGeneIds.add(entrezGeneId);
+            }
+
+            // Iterators
+            Iterator mappedGenesIterator = mappedGenes.listIterator();
+            Iterator entrezGeneIdsIterator = entrezGeneIds.listIterator();
+
+            while (mappedGenesIterator.hasNext() && entrezGeneIdsIterator.hasNext()) {
+
+                try {
+                    geneId = jdbcTemplate.queryForObject(SELECT_GENE, long.class, mappedGenesIterator.next());
+                }
+                catch (EmptyResultDataAccessException e) {
+                    // Insert gene if its not already in database
+                    createGene(mappedGenesIterator.next().toString(), entrezGeneIdsIterator.next().toString());
+                    geneId = jdbcTemplate.queryForObject(SELECT_GENE, long.class, mappedGenesIterator.next());
+                }
+
+                // Check GENOMIC_CONTEXT table to see if SNP has entry in this table for this gene
+                List snpIdsInGenomicContextTable =
+                        jdbcTemplate.queryForList(SELECT_SNP_ID_FROM_GENOMIC_CONTEXT, long.class, geneId);
+
+                if (!snpIdsInGenomicContextTable.contains(snpIdInSnpTable)) {
+                    // Create genomic context, for mapped genes there is no details in file for following attributes...
+                    createGenomicContext(geneId, snpIdInSnpTable, false, false, null, isIntergenic);
+                }
+                else {
+                    // Update
+                    int genomicContextRows = jdbcTemplate.update(UPDATE_GENOMIC_CONTEXT,
+                                                                 false,
+                                                                 false,
+                                                                 null,
+                                                                 isIntergenic,
+                                                                 geneId,
+                                                                 snpIdInSnpTable);
+                    getLog().trace(
+                            "Updating genomic context for SNP ID: " +
+                                    snpIdInSnpTable + " and GENE ID:" + geneId + " - Updated " +
+                                    genomicContextRows + " rows");
+
+                }
+            }// end while
+        }
+
+        // Process upstream gene information, there is always only one
+        if (upstreamMappedGene != null && !upstreamMappedGene.isEmpty()) {
             try {
-                geneId = jdbcTemplate.queryForObject(SELECT_GENE, long.class, mappedGenesIterator.next());
+                geneId = jdbcTemplate.queryForObject(SELECT_GENE, long.class, upstreamMappedGene);
             }
             catch (EmptyResultDataAccessException e) {
-                // Insert gene if its not already in database
-                createGene(mappedGenesIterator.next().toString(), entrezGeneIdsIterator.next().toString());
-                geneId = jdbcTemplate.queryForObject(SELECT_GENE, long.class, mappedGenesIterator.next());
+                createGene(upstreamMappedGene, upstreamEntrezGeneId);
+                geneId = jdbcTemplate.queryForObject(SELECT_GENE, long.class, upstreamMappedGene);
             }
 
             // Check GENOMIC_CONTEXT table to see if SNP has entry in this table for this gene
             List snpIdsInGenomicContextTable =
                     jdbcTemplate.queryForList(SELECT_SNP_ID_FROM_GENOMIC_CONTEXT, long.class, geneId);
 
+
+            // If its a new gene, never seen in database, then create genomic context
             if (!snpIdsInGenomicContextTable.contains(snpIdInSnpTable)) {
-                // Create genomic context, for mapped genes there is no details in file for following attributes...
-                createGenomicContext(geneId, snpIdInSnpTable, false, false, null);
-            } // TODO UPDATES?
-        }// end while
+                createGenomicContext(geneId, snpIdInSnpTable, true, false, upstreamGeneDistance, isIntergenic);
+            }
 
-        // Process upstream gene information, there is always only one
-        try {
-            geneId = jdbcTemplate.queryForObject(SELECT_GENE, long.class, upstreamMappedGene);
-        }
-        catch (EmptyResultDataAccessException e) {
-            createGene(upstreamMappedGene, upstreamEntrezGeneId);
-            geneId = jdbcTemplate.queryForObject(SELECT_GENE, long.class, upstreamMappedGene);
-        }
+            else {
+                int genomicContextRows =
+                        jdbcTemplate.update(UPDATE_GENOMIC_CONTEXT,
+                                            true,
+                                            false,
+                                            upstreamGeneDistance,
+                                            isIntergenic,
+                                            geneId,
+                                            snpIdInSnpTable);
+                getLog().trace(
+                        "Updating genomic context for SNP ID: " +
+                                snpIdInSnpTable + " and GENE ID:" + geneId + " - Updated " +
+                                genomicContextRows + " rows");
 
-        // If its a new gene, never seen in database, then create genomic context
-        createGenomicContext(geneId, snpIdInSnpTable, true, false, upstreamGeneDistance);
+            }
+        }
 
         // Process downstream gene information, there is always only one
-        try {
-            geneId = jdbcTemplate.queryForObject(SELECT_GENE, long.class, downstreamMappedGene);
+        if (downstreamMappedGene != null && !downstreamMappedGene.isEmpty()) {
+            try {
+                geneId = jdbcTemplate.queryForObject(SELECT_GENE, long.class, downstreamMappedGene);
+            }
+            catch (EmptyResultDataAccessException e) {
+                createGene(downstreamMappedGene, downstreamEntrezGeneId);
+                geneId = jdbcTemplate.queryForObject(SELECT_GENE, long.class, upstreamMappedGene);
+            }
+            // Check GENOMIC_CONTEXT table to see if SNP has entry in this table for this gene
+            List snpIdsInGenomicContextTable =
+                    jdbcTemplate.queryForList(SELECT_SNP_ID_FROM_GENOMIC_CONTEXT, long.class, geneId);
+
+
+            // If its a new gene, never seen in database, then create genomic context
+            if (!snpIdsInGenomicContextTable.contains(snpIdInSnpTable)) {
+                createGenomicContext(geneId, snpIdInSnpTable, false, true, downstreamGeneDistance, isIntergenic);
+            }
+            else {
+
+                int genomicContextRows =
+                        jdbcTemplate.update(UPDATE_GENOMIC_CONTEXT,
+                                            false,
+                                            true,
+                                            downstreamGeneDistance,
+                                            false,
+                                            isIntergenic,
+                                            geneId,
+                                            snpIdInSnpTable);
+                getLog().trace(
+                        "Updating genomic context for SNP ID: " +
+                                snpIdInSnpTable + " and GENE ID:" + geneId + " - Updated " +
+                                genomicContextRows + " rows");
+
+            }
         }
-        catch (EmptyResultDataAccessException e) {
-            createGene(downstreamMappedGene, downstreamEntrezGeneId);
-            geneId = jdbcTemplate.queryForObject(SELECT_GENE, long.class, upstreamMappedGene);
-        }
 
-        // If its a new gene, never seen in database, then create genomic context
-        createGenomicContext(geneId, snpIdInSnpTable, false, true, downstreamGeneDistance);
-
-        // Lastly set isIntergenic flag for SNP in GENOMIC_CONTEXT table
-        int genomicContextRows = 0;
-        genomicContextRows = jdbcTemplate.update(UPDATE_GENOMIC_CONTEXT,
-                                                 isIntergenic,
-                                                 snpIdInSnpTable);
-
-        getLog().trace(
-                "Adding isIntergenic details to GENOMIC_CONTEXT table for SNP id: " + snpIdInSnpTable +
-                        " - Updated " +
-                        genomicContextRows + " rows");
 
     }
 
@@ -784,18 +843,18 @@ public class CatalogImportRepository {
                         " rows");
     }
 
-
     private void createGenomicContext(Long geneId,
                                       Long snpIdInSnpTable,
                                       Boolean isUpstream,
                                       Boolean isDownstream,
-                                      Integer distance) {
+                                      Integer distance, Boolean isIntergenic) {
         Map<String, Object> genomicContextArgs = new HashMap<>();
         genomicContextArgs.put("SNP_ID", snpIdInSnpTable);
         genomicContextArgs.put("GENE_ID", geneId);
         genomicContextArgs.put("IS_UPSTREAM", isUpstream);
         genomicContextArgs.put("IS_DOWNSTREAM", isDownstream);
         genomicContextArgs.put("DISTANCE", distance);
+        genomicContextArgs.put("IS_INTERGENIC", isIntergenic);
 
         int rows = 0;
         rows = insertGenomicContext.execute(genomicContextArgs);
@@ -817,7 +876,6 @@ public class CatalogImportRepository {
                         " - Updated " +
                         rows + " rows");
     }
-
 
     private static <T> T[] extractRange(T[] array, int startIndex) {
         if (startIndex > array.length) {
