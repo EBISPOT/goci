@@ -47,16 +47,24 @@ function doFiltering() {
     var betaRange = processBeta();
     var dateRange = processDate();
     var traits = processTraitDropdown();
+    var addeddate = '';
 
-    if($('#filter').text() != '' && traits == ''){
-        var terms = $('#filter').text();
-        terms = terms.replace(/\s/g, '+');
-        traits = terms.split('|');
+    if($('#filter').text() != ''){
+
+        if($('#filter').text() != 'recent' && traits == '') {
+            var terms = $('#filter').text();
+            terms = terms.replace(/\s/g, '+');
+
+            traits = terms.split('|');
+        }
+        else if($('#filter').text() == 'recent'){
+            addeddate = "[NOW-2MONTH+TO+*]";
+        }
     }
 
 
     $('#filter-form').addClass('in-use')
-    solrfilter(pvalRange, orRange, betaRange, dateRange, traits);
+    solrfilter(pvalRange, orRange, betaRange, dateRange, traits, addeddate);
 }
 
 function clearFilters() {
@@ -207,9 +215,9 @@ function processTraitDropdown(){
 }
 
 
-function solrfilter(pval, or, beta, date, traits) {
+function solrfilter(pval, or, beta, date, traits, addeddate) {
     var query = $('#query').text();
-    console.log("Solr research request received for " + query + " and filters " + pval + ", " + or + ", " + beta + ", " + date + " and " + traits);
+    console.log("Solr research request received for " + query + " and filters " + pval + ", " + or + ", " + beta + ", " + date + ", " + traits + " and " + addeddate);
     if(query == '*'){
         var searchTerm = 'text:'.concat(query);
     }
@@ -225,7 +233,8 @@ function solrfilter(pval, or, beta, date, traits) {
         'orfilter': or,
         'betafilter': beta,
         'datefilter': date,
-        'traitfilter[]': traits
+        'traitfilter[]': traits,
+        'dateaddedfilter': addeddate
     })
         .done(function (data) {
             processData(data);
