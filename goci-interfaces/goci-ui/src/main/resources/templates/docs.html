@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <link rel="icon" href="../../favicon.ico"/>
+    <link rel="icon" href="../static/images/favicon.ico" th:href="@{images/favicon.ico}"/>
 
     <title>GWAS Catalog</title>
 
@@ -151,6 +151,14 @@
                 <h2 class="flaticon-list18 color-primary-bold">Abbreviations</h2>
 
                 <p>Full Description of Abbreviations used in the Catalog.</p>
+            </div>
+        </a>
+
+        <a href="docs/related-resources" th:href="@{docs/programmatic-access}">
+            <div class="col-md-4 toplevel-view">
+                <h2 class="flaticon-list18 color-primary-bold">Programmatic access</h2>
+
+                <p>A guide to how to access catalog data programmatically.</p>
             </div>
         </a>
     </div>

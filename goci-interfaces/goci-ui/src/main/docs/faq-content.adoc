@@ -70,7 +70,7 @@ From September 2010 to the present delivery and development of the Catalog has b
 
 ==== Is there any way I can stay informed about new search features and developments?
 
-You can subscribe to our announcement list by sending an e-mail to gwas-announce-join@ebi.ac.uk with subject heading "subscribe". Traffic on this list will be limited to important announcements only so you don't need to worry about getting bombarded with loads of emails. For queries and user discussion, we have a separate mailing list, gwas-users@ebi.ac.uk.
+You can subscribe to our announcement list by sending an e-mail to gwas-announce-join@ebi.ac.uk with subject heading "subscribe". Traffic on this list will be limited to important announcements only so you don't need to worry about getting bombarded with loads of emails. For queries and user discussion, we have separate mailing lists, gwas-info@ebi.ac.uk to contact the Catalog team and gwas-users@ebi.ac.uk for user discussion (subscribe by emailing gwas-users-join@ebi.ac.uk with subject heading "subscribe").
 
 ==== How should I cite the GWAS Catalog?
 Please see the link:about[About] page for citation guidance.
@@ -139,4 +139,4 @@ Some fields contains results that don't work well with our sorting algorithm. Wh
 '''
 
 ==== Got a question that isn't answered here?
-Email us at gwas-users@ebi.ac.uk
+Email us at gwas-info@ebi.ac.uk.

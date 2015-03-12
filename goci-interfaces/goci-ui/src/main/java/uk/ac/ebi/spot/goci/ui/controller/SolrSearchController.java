@@ -17,19 +17,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import uk.ac.ebi.spot.goci.ui.SearchConfiguration;
 import uk.ac.ebi.spot.goci.ui.exception.IllegalParameterCombinationException;
 import uk.ac.ebi.spot.goci.ui.service.JsonProcessingService;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 /**
@@ -602,15 +600,18 @@ public class SolrSearchController {
                 "to rectify the problem as soon as possible.  If problems persist, please email gwas-info@ebi.ac.uk";
     }
 
-    @RequestMapping(value = "api/search/downloads", produces = MediaType.TEXT_PLAIN_VALUE)
-    public @ResponseBody String getSearchResults(
+//    @RequestMapping(value = "api/search/downloads", produces = MediaType.TEXT_PLAIN_VALUE)
+//    public @ResponseBody String getSearchResults(
+
+    @RequestMapping(value = "api/search/downloads")
+    public void getSearchResults(
             @RequestParam("q") String query,
             @RequestParam(value = "pvalfilter", required = false) String pvalRange,
             @RequestParam(value = "orfilter", required = false) String orRange,
             @RequestParam(value = "betafilter", required = false) String betaRange,
             @RequestParam(value = "datefilter", required = false) String dateRange,
-            @RequestParam(value = "traitfilter[]", required = false) String[] traits
-        ) throws IOException {
+            @RequestParam(value = "traitfilter[]", required = false) String[] traits,
+            HttpServletResponse response) throws IOException {
 
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
@@ -659,12 +660,23 @@ public class SolrSearchController {
         searchString = searchString.replace(" ", "+");
 
         // dispatch search
-        return dispatchSearch(searchString);
+//        return dispatchSearch(searchString);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String now = dateFormat.format(date);
+
+
+        String fileName = "gwas-downloaded_".concat(now).concat("-").concat(query.substring(6, query.length() - 1)).concat(".tsv");
+        response.setContentType("text/tsv");
+        response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
+
+        dispatchDownloadSearch(searchString, response.getOutputStream());
+
+
     }
 
 
-    //TO DO use jackson to read the json and parse it into a string
-    private String dispatchSearch(String searchString) throws IOException {
+    private void dispatchDownloadSearch(String searchString, OutputStream outputStream) throws IOException {
         System.out.println(searchString);
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(searchString);
@@ -698,11 +710,22 @@ public class SolrSearchController {
             EntityUtils.consume(entity);
         }
         if(file == null){
+
+            //TO DO throw exception here and add error handler
             file = "Some error occurred during your request. Please try again or contact the GWAS Catalog team for assistance";
         }
 
-        return file;
-    }
+        InputStream in = new ByteArrayInputStream(file.getBytes("UTF-8"));
 
+        byte[] outputByte = new byte[4096];
+//copy binary contect to output stream
+        while(in.read(outputByte, 0, 4096) != -1)
+        {
+            outputStream.write(outputByte, 0, 4096);
+        }
+        in.close();
+        outputStream.flush();
+
+    }
 
 }

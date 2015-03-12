@@ -17,6 +17,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -42,10 +45,17 @@ public class FileController {
     private Resource fullFileDownloadNcbi;
 
     @RequestMapping(value = "api/search/downloads/full",
-                    method = RequestMethod.GET,
-                    produces = MediaType.TEXT_PLAIN_VALUE)
+                    method = RequestMethod.GET)
     public void getFullDownload(HttpServletResponse response) throws IOException {
-        if (fullFileDownload.exists()) {
+       if (fullFileDownload.exists()) {
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+            String now = dateFormat.format(date);
+
+            String fileName = "gwas_catalog_v1.0-downloaded_".concat(now).concat(".tsv");
+            response.setContentType("text/tsv");
+            response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
 
             InputStream inputStream = null;
             inputStream = fullFileDownload.getInputStream();
@@ -68,6 +78,14 @@ public class FileController {
             produces = MediaType.TEXT_PLAIN_VALUE)
     public void getAlternativeDownload(HttpServletResponse response) throws IOException {
         if (alternativeFileDownload.exists()) {
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+            String now = dateFormat.format(date);
+
+            String fileName = "gwas_catalog_v1.0.1-downloaded_".concat(now).concat(".tsv");
+            response.setContentType("text/tsv");
+            response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
 
             InputStream inputStream = null;
             inputStream = alternativeFileDownload.getInputStream();
