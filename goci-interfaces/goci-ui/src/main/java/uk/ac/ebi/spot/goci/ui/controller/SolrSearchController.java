@@ -16,24 +16,18 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import uk.ac.ebi.spot.goci.ui.SearchConfiguration;
 import uk.ac.ebi.spot.goci.ui.exception.IllegalParameterCombinationException;
 import uk.ac.ebi.spot.goci.ui.service.JsonProcessingService;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 /**
@@ -180,6 +174,8 @@ public class SolrSearchController {
             @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "facet.mincount", required = false, defaultValue = "1") int mincount,
+            @RequestParam(value = "facet.limit", required = false, defaultValue = "1000") int limit,
+            @RequestParam(value = "traitfilter[]", required = false) String[] traits,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
@@ -189,7 +185,13 @@ public class SolrSearchController {
         addRowsAndPage(solrSearchBuilder, maxResults, page);
         addFacet(solrSearchBuilder, "traitName_s");
         addFacetMincount(solrSearchBuilder, mincount);
+        addFacetLimit(solrSearchBuilder, limit);
         addFilterQuery(solrSearchBuilder, "resourcename", "study");
+        if (traits != null) {
+            System.out.println(String.valueOf(traits));
+            addFilterQuery(solrSearchBuilder, "traitName_s", traits);
+        }
+
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -254,8 +256,47 @@ public class SolrSearchController {
         if (dateRange != "") {
             getLog().debug(dateRange);
 
-            addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
+            addFilterQuery(solrSearchBuilder, "publicationDate", "study_publicationDate", dateRange);
+
         }
+        if (traits != null) {
+            System.out.println(String.valueOf(traits));
+
+            addFilterQuery(solrSearchBuilder, "traitName_s", traits);
+        }
+
+        addQuery(solrSearchBuilder, query);
+
+        // dispatch search
+        dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
+    }
+
+
+    @RequestMapping(value = "api/search/traits", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void doTraitsOnlySolrSearch(
+            @RequestParam("q") String query,
+            @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+            @RequestParam(value = "callback", required = false) String callbackFunction,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "group", required = false, defaultValue = "false") boolean useGroups,
+            @RequestParam(value = "group.by", required = false) String groupBy,
+            @RequestParam(value = "group.limit", required = false, defaultValue = "10") int groupLimit,
+            @RequestParam(value = "traitfilter[]", required = false) String[] traits,
+            HttpServletResponse response) throws IOException {
+        StringBuilder solrSearchBuilder = buildBaseSearchRequest();
+
+        addFacet(solrSearchBuilder, searchConfiguration.getDefaultFacet());
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+        if (useGroups) {
+            addGrouping(solrSearchBuilder, groupBy, groupLimit);
+        }
+        else {
+            addRowsAndPage(solrSearchBuilder, maxResults, page);
+        }
+
         if (traits != null) {
             System.out.println(String.valueOf(traits));
 
@@ -330,6 +371,48 @@ public class SolrSearchController {
         if(sort != ""){
             addSortQuery(solrSearchBuilder, sort);
         }
+
+        addQuery(solrSearchBuilder, query);
+
+        // dispatch search
+        dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
+    }
+
+    @RequestMapping(value = "api/search/alltraits", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void doAllTraitsSolrSearch(
+            @RequestParam("q") String query,
+            @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+            @RequestParam(value = "callback", required = false) String callbackFunction,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "facet", required = false) String facet,
+            @RequestParam(value = "facet.sort", required = false, defaultValue = "count") String sort,
+            @RequestParam(value = "facet.limit", required = false, defaultValue = "1000") int limit,
+            HttpServletResponse response) throws IOException {
+        StringBuilder solrSearchBuilder = buildBaseSearchRequest();
+
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+        addRowsAndPage(solrSearchBuilder, maxResults, page);
+        addFacet(solrSearchBuilder, "traitName_s");
+        addFacetLimit(solrSearchBuilder, limit);
+        addFacetSort(solrSearchBuilder, sort);
+        addFilterQuery(solrSearchBuilder, "resourcename", "study");
+        addQuery(solrSearchBuilder, query);
+
+
+        //        addFacet(solrSearchBuilder, searchConfiguration.getDefaultFacet());
+//        addFilterQuery(solrSearchBuilder, "resourcename", facet);
+//        if (useJsonp) {
+//            addJsonpCallback(solrSearchBuilder, callbackFunction);
+//        }
+//
+//        addRowsAndPage(solrSearchBuilder, maxResults, page);
+//
+//        if(sort != ""){
+//            addSortQuery(solrSearchBuilder, sort);
+//        }
 
         addQuery(solrSearchBuilder, query);
 
@@ -412,6 +495,14 @@ public class SolrSearchController {
         solrSearchBuilder.append("&facet.mincount=").append(min);
     }
 
+    private void addFacetLimit(StringBuilder solrSearchBuilder, int limit){
+        solrSearchBuilder.append("&facet.limit=").append(limit);
+    }
+
+    private void addFacetSort(StringBuilder solrSearchBuilder, String sort){
+        solrSearchBuilder.append("&facet.sort=").append(sort);
+    }
+
     private void addJsonpCallback(StringBuilder solrSearchBuilder, String callbackFunction) {
         if (callbackFunction == null) {
             throw new IllegalParameterCombinationException("If jsonp = true, you must specify a callback function " +
@@ -452,6 +543,11 @@ public class SolrSearchController {
         }
         System.out.println(filterString);
         solrSearchBuilder.append("&fq=").append(filterString);
+
+    }
+
+    private void addFilterQuery(StringBuilder solrSearchBuilder, String filterOn, String filterOnAlt, String filterBy) {
+        solrSearchBuilder.append("&fq=").append(filterOn).append("%3A").append(filterBy).append("+OR+").append(filterOnAlt).append("%3A").append(filterBy);
 
     }
 
@@ -504,15 +600,18 @@ public class SolrSearchController {
                 "to rectify the problem as soon as possible.  If problems persist, please email gwas-info@ebi.ac.uk";
     }
 
-    @RequestMapping(value = "api/search/downloads", produces = MediaType.TEXT_PLAIN_VALUE)
-    public @ResponseBody String getSearchResults(
+//    @RequestMapping(value = "api/search/downloads", produces = MediaType.TEXT_PLAIN_VALUE)
+//    public @ResponseBody String getSearchResults(
+
+    @RequestMapping(value = "api/search/downloads")
+    public void getSearchResults(
             @RequestParam("q") String query,
             @RequestParam(value = "pvalfilter", required = false) String pvalRange,
             @RequestParam(value = "orfilter", required = false) String orRange,
             @RequestParam(value = "betafilter", required = false) String betaRange,
             @RequestParam(value = "datefilter", required = false) String dateRange,
-            @RequestParam(value = "traitfilter[]", required = false) String[] traits
-        ) throws IOException {
+            @RequestParam(value = "traitfilter[]", required = false) String[] traits,
+            HttpServletResponse response) throws IOException {
 
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
@@ -561,12 +660,23 @@ public class SolrSearchController {
         searchString = searchString.replace(" ", "+");
 
         // dispatch search
-        return dispatchSearch(searchString);
+//        return dispatchSearch(searchString);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String now = dateFormat.format(date);
+
+
+        String fileName = "gwas-downloaded_".concat(now).concat("-").concat(query.substring(6, query.length() - 1)).concat(".tsv");
+        response.setContentType("text/tsv");
+        response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
+
+        dispatchDownloadSearch(searchString, response.getOutputStream());
+
+
     }
 
 
-    //TO DO use jackson to read the json and parse it into a string
-    private String dispatchSearch(String searchString) throws IOException {
+    private void dispatchDownloadSearch(String searchString, OutputStream outputStream) throws IOException {
         System.out.println(searchString);
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(searchString);
@@ -600,11 +710,22 @@ public class SolrSearchController {
             EntityUtils.consume(entity);
         }
         if(file == null){
+
+            //TO DO throw exception here and add error handler
             file = "Some error occurred during your request. Please try again or contact the GWAS Catalog team for assistance";
         }
 
-        return file;
-    }
+        InputStream in = new ByteArrayInputStream(file.getBytes("UTF-8"));
 
+        byte[] outputByte = new byte[4096];
+//copy binary contect to output stream
+        while(in.read(outputByte, 0, 4096) != -1)
+        {
+            outputStream.write(outputByte, 0, 4096);
+        }
+        in.close();
+        outputStream.flush();
+
+    }
 
 }

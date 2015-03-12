@@ -48,6 +48,13 @@ function doFiltering() {
     var dateRange = processDate();
     var traits = processTraitDropdown();
 
+    if($('#filter').text() != '' && traits == ''){
+        var terms = $('#filter').text();
+        terms = terms.replace(/\s/g, '+');
+        traits = terms.split('|');
+    }
+
+
     $('#filter-form').addClass('in-use')
     solrfilter(pvalRange, orRange, betaRange, dateRange, traits);
 }
@@ -57,11 +64,11 @@ function clearFilters() {
     $('#filter-form').find('input').val('');
     $('#filter-form').removeClass('in-use')
 
+    loadResults();
 
     //if ($('#facet').text()) {
     //    console.log("No facet, so I'm redoing the search");
         //doSearch();
-        loadResults();
     //}
     //else {
     //    console.log("Reapplying the facet without filters for facet " + $('#facet').text());
@@ -70,26 +77,6 @@ function clearFilters() {
 }
 
 function processPval(){
-    //var pvalMin = $('#pval-min').val();
-    //var pvalMax = $('#pval-max').val();
-    //if (pvalMin || pvalMax) {
-    //    pvalRange = "[";
-    //    if (pvalMin) {
-    //        pvalRange = pvalRange.concat(pvalMin);
-    //    }
-    //    else {
-    //        pvalRange = pvalRange.concat("*");
-    //    }
-    //    pvalRange = pvalRange.concat("+TO+");
-    //    if (pvalMax) {
-    //        pvalRange = pvalRange.concat(pvalMax);
-    //    }
-    //    else {
-    //        pvalRange = pvalRange.concat("*");
-    //    }
-    //    pvalRange = pvalRange.concat("]");
-    //    console.log(pvalRange);
-    //}
 
     var pvalRange = '';
     var pvalMant = $('#pval-mant').val();
@@ -223,8 +210,12 @@ function processTraitDropdown(){
 function solrfilter(pval, or, beta, date, traits) {
     var query = $('#query').text();
     console.log("Solr research request received for " + query + " and filters " + pval + ", " + or + ", " + beta + ", " + date + " and " + traits);
-    var searchTerm = 'text:"'.concat(query).concat('"');
-
+    if(query == '*'){
+        var searchTerm = 'text:'.concat(query);
+    }
+    else{
+        var searchTerm = 'text:"'.concat(query).concat('"');
+    }
     $.getJSON('api/search/filter', {
         'q': searchTerm,
         'group': 'true',

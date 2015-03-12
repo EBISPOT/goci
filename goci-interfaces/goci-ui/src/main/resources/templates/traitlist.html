@@ -14,14 +14,19 @@
     <title>GWAS Catalog</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="../static/css/bootstrap.css" th:href="@{../css/bootstrap.min.css}" rel="stylesheet"/>
-    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" rel="stylesheet"/>
-    <link href="../static/css/bootstrap-table.css" th:href="@{../css/bootstrap-table.css}" rel="stylesheet"/>
-    <link href="../static/css/bootstrap-theme.css" th:href="@{../css/bootstrap-theme.min.css}" rel="stylesheet" />
+    <link href="../static/css/bootstrap.css" th:href="@{../css/bootstrap.min.css}"
+          rel="stylesheet"/>
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"
+          rel="stylesheet"/>
+    <link href="../static/css/bootstrap-table.css" th:href="@{../css/bootstrap-table.css}"
+          rel="stylesheet"/>
+    <link href="../static/css/bootstrap-theme.css" th:href="@{../css/bootstrap-theme.min.css}"
+          rel="stylesheet"/>
 
     <!-- Custom styles for this template -->
     <link href="../static/css/jumbotron.css" th:href="@{../css/jumbotron.css}" rel="stylesheet"/>
     <link href="../static/css/sticky-footer-navbar.css" th:href="@{../css/sticky-footer-navbar.css}" rel="stylesheet"/>
+    <link href="../static/css/datepicker.css" th:href="@{../css/datepicker.css}" rel="stylesheet"/>
 
     <!-- Additional styling on top of bootstrap -->
     <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{../css/goci-ui.css}"/>
@@ -52,24 +57,29 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="../home">GWAS Catalog</a>
+            <a class="navbar-brand" href="index.html" th:href="@{../home}">GWAS Catalog</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="../index.html" th:href="@{../home}">Home <span class="sr-only">(current)</span></a></li>
-                <li><a href="../search.html" th:href="@{../search}">Search</a></li>
+                <li class="active"><a href="../search.html" th:href="@{../search}">Search</a></li>
                 <li><a href="http://www.ebi.ac.uk/fgpt/gwas">Diagram</a></li>
-                <li id="downloads-item" class="hidden-sm"><a href="downloads" th:href="@{downloads}">Download</a></li>
-                <li id="help-item"><a href="../docs.html" th:href="@{../docs}">Help</a></li>
-                <li id="about-item" class="hidden-sm"><a href="about" th:href="@{about}">About</a></li>
-
-                <li><a class="icon" id="ebi-logo" href="http://www.ebi.ac.uk"><img alt="EBI logo"
-                                                                     src="../static/icons/EMBL_EBI_Logo_white.png"
-                                                                     th:src="@{../icons/EMBL_EBI_Logo_white.png}"/></a>
+                <li class="hidden-sm"><a href="../docs/downloads" th:href="@{../docs/downloads}">Download</a></li>
+                <li><a href="../docs" th:href="@{../docs}">Help</a></li>
+                <li class="hidden-sm"><a href="../docs/about" th:href="@{../docs/about}">About</a></li>
+                <li>
+                    <a class="icon" id="ebi-logo" href="http://www.ebi.ac.uk">
+                        <img alt="EBI logo"
+                             src="../static/icons/EMBL_EBI_Logo_white.png"
+                             th:src="@{../icons/EMBL_EBI_Logo_white.png}"/>
+                    </a>
                 </li>
-                <li><a class="icon" id="nhgri-logo" href="http://www.genome.gov"><img alt="GWAS logo"
-                                                                      src="../static/icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png"
-                                                                      th:src="@{../icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png}"/></a>
+                <li>
+                    <a class="icon" id="nhgri-logo" href="http://www.genome.gov">
+                        <img alt="GWAS logo"
+                             src="../static/icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png"
+                             th:src="@{../icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png}"/>
+                    </a>
                 </li>
             </ul>
         </div>
@@ -108,7 +118,7 @@
                 <a href="../search?query=breast%20cancer">breast cancer</a>,
                 <a href="../search?query=rs7329174">rs7329174</a>,
                 <a href="../search?query=Yang">Yang</a>,
-                <!--<a href="../search?query=44892362">44892362</a>,-->
+                <!--<a href="search?query=44892362">44892362</a>,-->
                 <a href="../search?query=2q37.1">2q37.1</a>,
                 <a href="../search?query=HBS1L">HBS1L</a>
             </div>
@@ -116,14 +126,14 @@
     </div>
 </div>
 
-<div class="container tight-to-top">
+<div class="container-fluid tight-to-top">
     <ol class="breadcrumb background-color-complementary-accent">
         <li><a href="../home">Home</a></li>
-        <li><a href="../docs">Documentation</a></li>
-        <li id="current-page" class="active">Current page</li>
+        <li><a href="../search">Search</a></li>
+        <li class="active">Trait List</li>
     </ol>
 
-    <div id="docs-content">
+    <div>
 
         <!--
 
@@ -132,6 +142,40 @@
         #####################################
 
         -->
+
+
+        <div class="container-fluid col-md-9 col-md-offset-2"  id="lower_container">
+
+            <h3>List of all reported traits in the GWAS Catalog</h3>
+            <h5>To search by one or more of these traits, select your traits of interest, then hit the "search" button</h5>
+
+            <div class="row">
+                <div id="loadingTraits" class="col-md-offset-4" style="display: none">
+                        <button class="btn btn-lg">
+                            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"
+                                  style="margin-right: 1em;"></span>Loading...
+                        </button>
+
+                </div>
+                <div id="allTraitsDisplay" style="display: none">
+                    <form id="traitForm">
+
+                        <div class="col-md-7 col-md-offset-1" id="traitList">
+                            <ul style="list-style: none;">
+                            </ul>
+                        </div>
+
+                        <div class="col-md-2">
+                            <button type="submit"
+                                    class="btn btn-default"
+                                    style="margin-right: 15px;">Search for traits</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
 
     </div>
 
@@ -144,9 +188,7 @@
     <!--<div class="footer-banner background-color-primary"></div>-->
     <div class="container">
         <p class="text-muted">Copyright &copy; EMBL-EBI 2015 | EMBL-EBI is an Outstation of the
-            <a href="http://www.embl.org">European Molecular
-                                          Biology
-                                          Laboratory</a> |
+            <a href="http://www.embl.org">European Molecular Biology Laboratory</a> |
             <a href="//www.ebi.ac.uk/about/privacy">Privacy</a> |
             <a href="//www.ebi.ac.uk/about/cookies">Cookies</a> |
             <a href="//www.ebi.ac.uk/about/terms-of-use">Terms of use</a></p>
@@ -160,13 +202,20 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 <script src="../static/js/bootstrap.min.js" th:src="@{../js/bootstrap.min.js}"></script>
+<script src="../static/js/bootstrap-datepicker.js" th:src="@{../js/bootstrap-datepicker.js}"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.5.0/bootstrap-table.min.js"></script>-->
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="../static/js/ie10-viewport-bug-workaround.js" th:src="@{../js/ie10-viewport-bug-workaround.js}"></script>
 
 <!-- GOCI JavaScript
 ================================================== -->
 <script src="../static/js/goci-ui.js" th:src="@{../js/goci-ui.js}"></script>
-<script src="../static/js/goci-documentation.js" th:src="@{../js/goci-documentation.js}"></script>
+<script src="../static/js/traitlist.js" th:src="@{../js/traitlist.js}"></script>
+<!--<script src="../static/js/solrsearch.js" th:src="@{../js/solrsearch.js}"></script>-->
+<!--<script src="../static/js/documentprocessor.js" th:src="@{../js/documentprocessor.js}"></script>-->
+
 
 <!-- Google analytics
 ================================================== -->

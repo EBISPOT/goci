@@ -18,6 +18,12 @@ $(document).ready(function () {
 
     });
 
+    $.getJSON('api/search/stats')
+            .done(function (data) {
+                      setStats(data);
+                  });
+
+
     // Tooltips for various filter and table headings
     $('[data-toggle="tooltip"]').tooltip({
         placement: 'top',
@@ -29,18 +35,40 @@ $(document).ready(function () {
             applyFacet();
         });
     }
-    loadResults();
+
+    if($('#query').text() != '') {
+        loadResults();
+    }
 });
 
 function loadResults() {
     var searchTerm = $('#query').text();
-    console.log("Search term is " + searchTerm);
-    if (searchTerm) {
-        console.log("Loading results for " + searchTerm);
 
-        buildBreadcrumbs();
+    console.log("Loading results for " + searchTerm);
+    buildBreadcrumbs();
+    $('#welcome-container').hide();
+    $('#search-results-container').show();
+    $('#loadingResults').show();
 
-        $('#lower_container').show();
+    //if(localStorage.getItem("traits") != null || $('#filter').text() != ''){
+    if($('#filter').text() != ''){
+        //console.log("I found something in the local storage");
+        var traits;
+      /*  if(localStorage.getItem("traits") != null)        {
+            console.log("Value from localstorage: " + localStorage.getItem("traits"));
+            traits = localStorage.getItem("traits");
+            localStorage.clear();
+        }
+        else{*/
+            console.log("Value from filter variable: " + $('#filter').text());
+            traits = $('#filter').text();
+        //}
+        traitOnlySearch(traits);
+
+    }
+    else{
+        $('#welcome-container').hide();
+        $('#search-results-container').show();
         $('#loadingResults').show();
 
         solrSearch(searchTerm);
@@ -64,6 +92,10 @@ function buildBreadcrumbs() {
     breadcrumbs.append('<li><a href="home">GWAS</a></li>');
     breadcrumbs.append('<li><a href="search">Search</a></li>');
     var searchTerm = $('#query').text();
+
+    if (searchTerm == '*'){
+        searchTerm = '';
+    }
     if (!window.location.hash) {
         console.log("Final breadcrumb is for '" + searchTerm + "'");
         breadcrumbs.append('<li class="active">' + searchTerm + '</li>');
@@ -89,13 +121,35 @@ function buildBreadcrumbs() {
 
 function solrSearch(queryTerm) {
     console.log("Solr research request received for " + queryTerm);
-    var searchTerm = 'text:"'.concat(queryTerm).concat('"');
+    if(queryTerm == '*'){
+        var searchTerm = 'text:'.concat(queryTerm);
+    }
+    else{
+        var searchTerm = 'text:"'.concat(queryTerm).concat('"');
+    }
     setState(SearchState.LOADING);
     $.getJSON('api/search', {'q': searchTerm, 'group': 'true', 'group.by': 'resourcename', 'group.limit': 5})
         .done(function (data) {
             console.log(data);
             processData(data);
         });
+}
+
+function traitOnlySearch(traits) {
+    console.log("Solr research request received for " + traits);
+    setState(SearchState.LOADING);
+
+    //$('#traitOnly').text(traits);
+
+    traits = traits.replace(/\s/g, '+');
+
+    var searchTraits = traits.split('|');
+    var searchTerm = 'text:*'
+
+    $.getJSON('api/search/traits', {'q': searchTerm, 'group': 'true', 'group.by': 'resourcename', 'group.limit': 5, 'traitfilter[]': searchTraits}).done(function (data) {
+                      console.log(data);
+                      processData(data);
+                  });
 }
 
 function processData(data) {
@@ -106,7 +160,26 @@ function processData(data) {
     updateCountBadges(data.facet_counts.facet_fields.resourcename);
 
     if(!$('#filter-form').hasClass('in-use')){
-        generateTraitDropdown(data.responseHeader.params.q);
+        if(data.responseHeader.params.q.indexOf('*') != -1 && data.responseHeader.params.fq != null){
+            var fq = data.responseHeader.params.fq;
+
+            if(fq.charAt(fq.length-1) == '"'){
+                fq = fq.substr(0, fq.length-1);
+            };
+
+            var terms = fq.split('"');
+            var traits = []
+
+            for(var i=0; i<terms.length; i++){
+                if(terms[i].indexOf('traitName') == -1){
+                    traits.push(terms[i].replace(/\s/g, '+'));
+                }
+            }
+            generateTraitDropdown(data.responseHeader.params.q, traits);
+        }
+        else{
+            generateTraitDropdown(data.responseHeader.params.q, null);
+        }
     }
 
     if (documents.length != 0) {
@@ -238,8 +311,8 @@ function updateCountBadges(countArray) {
     }
 }
 
-function generateTraitDropdown(queryTrait) {
-    $.getJSON('api/search/traitcount', {'q': queryTrait})
+function generateTraitDropdown(queryTrait, subTraits) {
+    $.getJSON('api/search/traitcount', {'q': queryTrait, 'traitfilter[]': subTraits})
         .done(function (data) {
             console.log(data);
             processTraitCounts(data);
@@ -259,28 +332,72 @@ function processTraitCounts(data) {
 }
 
 function setDownloadLink(searchParams){
+    console.log(searchParams);
     var baseUrl = 'api/search/downloads?';
     var q= "q=".concat(searchParams.q);
 
-    var pval = '&pvalfilter='.concat(processPval());
-    var or = '&orfilter='.concat(processOR());
-    var beta = '&betafilter='.concat(processBeta());
-    var date = '&datefilter='.concat(processDate());
-    var traitFilter = '&traitfilter[]=';
     var trait = '';
+    var traitFilter = '&traitfilter[]=';
+    var pval = '&pvalfilter=';
+    var or = '&orfilter=';
+    var beta = '&betafilter=';
+    var date = '&datefilter=';
 
-    var traits = processTraitDropdown();
+    if(searchParams.q.indexOf('*') != -1 && $('#filter').text() != ''){
 
-    if(traits != ''){
-        for(var t=0; t<traits.length; t++){
-            trait = trait.concat(traitFilter).concat(traits[t]);
+        console.log('Need to build the download link a bit differently');
+
+        var fq = $('#filter').text();
+
+        //if(fq.charAt(fq.length-1) == '"'){
+        //    fq = fq.substr(0, fq.length-1);
+        //};
+
+        var terms = fq.split('|');
+
+        for(var i=0; i<terms.length; i++){
+            //if(terms[i].indexOf('traitName') == -1){
+                console.log(terms[i]);
+                trait = trait.concat(traitFilter).concat(terms[i]);
+            //}
         }
+
     }
-    else{
-        trait = traitFilter;
+    else {
+        console.log('Building the download link the default way');
+        pval = pval.concat(processPval());
+        or = or.concat(processOR());
+        beta = beta.concat(processBeta());
+        date = date.concat(processDate());
+
+        var traits = processTraitDropdown();
+
+        if (traits != '') {
+            for (var t = 0; t < traits.length; t++) {
+                trait = trait.concat(traitFilter).concat(traits[t]);
+            }
+        }
+        else {
+            trait = traitFilter;
+        }
     }
 
     var url = baseUrl.concat(q).concat(pval).concat(or).concat(beta).concat(date).concat(trait);
     $('#results-download').removeAttr('href').attr('href', url);
 
+}
+
+
+function setStats(data){
+    try{
+        $('#releasedate-stat').text("Last data release on " + data.date);
+        $('#studies-stat').text(data.studies + " studies");
+        $('#associations-stat').text(data.associations + " SNP-trait associations");
+        $('#genomebuild').text("Genome assembly " + data.genebuild);
+        $('#dbsnpbuild').text("dbSNP Build " + data.dbsnpbuild);
+        $('#catalog-stats').show();
+    }
+    catch (ex){
+        console.log("Failure to process stats " + ex);
+    }
 }

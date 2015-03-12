@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <link rel="icon" href="../../favicon.ico"/>
+    <link rel="icon" href="../static/images/favicon.ico" th:href="@{images/favicon.ico}"/>
 
     <title>GWAS Catalog</title>
 
@@ -105,12 +105,12 @@
             </div>
             <div class="examples">
                 Examples:
-                <a href="../search?query=breast%20cancer">breast cancer</a>,
-                <a href="../search?query=rs7329174">rs7329174</a>,
-                <a href="../search?query=Yang">Yang</a>,
-                <a href="../search?query=44892362">44892362</a>,
-                <a href="../search?query=2q37.1">2q37.1</a>,
-                <a href="../search?query=HBS1L">HBS1L</a>
+                <a href="search?query=breast%20cancer">breast cancer</a>,
+                <a href="search?query=rs7329174">rs7329174</a>,
+                <a href="search?query=Yang">Yang</a>,
+                <!--<a href="search?query=44892362">44892362</a>,-->
+                <a href="search?query=2q37.1">2q37.1</a>,
+                <a href="search?query=HBS1L">HBS1L</a>
             </div>
         </div>
     </div>
@@ -119,31 +119,46 @@
 <div class="container">
     <div class="row">
         <a href="docs/faq" th:href="@{docs/faq}">
-            <div class="col-md-6 toplevel-view">
+            <div class="col-md-4 toplevel-view">
                 <h2 class="flaticon-information9 color-primary-bold">FAQs</h2>
 
                 <p>Check here for answers to common questions about the GWAS Catalog</p>
             </div>
         </a>
         <a href="docs/methods" th:href="@{docs/methods}">
-            <div class="col-md-6 toplevel-view">
+            <div class="col-md-4 toplevel-view">
                 <h2 class="flaticon-statistics color-primary-bold">Methods</h2>
 
                 <p>A full description of the Catalog eligibility criteria and methods.</p>
             </div>
         </a>
+        <a href="docs/related-resources" th:href="@{docs/related-resources}">
+            <div class="col-md-4 toplevel-view">
+                <h2 class="flaticon-list18 color-primary-bold">Related resources</h2>
+
+                <p>A list of resources related to the GWAS Catalog.</p>
+            </div>
+        </a>
         <a href="docs/ontology" th:href="@{docs/ontology}">
-            <div class="col-md-6 toplevel-view">
+            <div class="col-md-4 toplevel-view">
                 <h2 class="flaticon-owl3 color-primary-bold">Ontology</h2>
 
                 <p>Details of the ontology representation of GWAS Catalog traits.</p>
             </div>
         </a>
-        <a href="docs/ontology" th:href="@{docs/abbreviations}">
-            <div class="col-md-6 toplevel-view">
+        <a href="docs/abreviations" th:href="@{docs/abbreviations}">
+            <div class="col-md-4 toplevel-view">
                 <h2 class="flaticon-list18 color-primary-bold">Abbreviations</h2>
 
                 <p>Full Description of Abbreviations used in the Catalog.</p>
+            </div>
+        </a>
+
+        <a href="docs/related-resources" th:href="@{docs/programmatic-access}">
+            <div class="col-md-4 toplevel-view">
+                <h2 class="flaticon-list18 color-primary-bold">Programmatic access</h2>
+
+                <p>A guide to how to access catalog data programmatically.</p>
             </div>
         </a>
     </div>

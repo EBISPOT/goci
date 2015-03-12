@@ -13,29 +13,15 @@ $(document).ready(function() {
         $(this).removeClass("background-color-complementary-accent", 300, "easeOutExpo");
     });
 
-    $.getJSON('api/search/stats')
-        .done(function (data) {
-             setStats(data);
-        });
-
+    var shiftWindow = function() { scrollBy(0, -100) };
+    window.addEventListener("hashchange", shiftWindow);
+    function load() { if (window.location.hash) shiftWindow(); }
 });
 
-function setStats(data){
-    try{
-        $('#releasedate-stat').text("Last data release on " + data.date);
-        $('#studies-stat').text(data.studies + " studies");
-        $('#associations-stat').text(data.associations + " SNP-trait associations");
-        $('#genomebuild').text("Genome assembly " + data.genebuild);
-        $('#dbsnpbuild').text("dbSNP Build " + data.dbsnpbuild);
-        $('#catalog-stats').show();
-    }
-    catch (ex){
-        console.log("Failure to process stats " + ex);
-    }
-}
 
 function doSearch(){
     var searchTerm = $("#search-box").val();
+    console.log("I got rerouted via here");
     // redirect to search page
     window.location = "search?query=" + searchTerm;
 }
