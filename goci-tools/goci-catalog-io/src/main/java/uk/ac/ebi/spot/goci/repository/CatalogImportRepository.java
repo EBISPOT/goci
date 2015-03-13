@@ -151,23 +151,16 @@ public class CatalogImportRepository {
 
         this.insertSnpRegion = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("SNP_REGION")
-                .usingColumns("SNP_ID")
-                .usingColumns("REGION_ID");
+                .usingColumns("SNP_ID", "REGION_ID");
 
         this.insertGene = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("GENE")
-                .usingColumns("GENE_NAME")
-                .usingColumns("ENTREZ_GENE_ID")
+                .usingColumns("GENE_NAME", "ENTREZ_GENE_ID")
                 .usingGeneratedKeyColumns("ID");
 
         this.insertGenomicContext = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("GENOMIC_CONTEXT")
-                .usingColumns("SNP_ID")
-                .usingColumns("GENE_ID")
-                .usingColumns("IS_UPSTREAM")
-                .usingColumns("IS_DOWNSTREAM")
-                .usingColumns("DISTANCE")
-                .usingColumns("IS_INTERGENIC")
+                .usingColumns("SNP_ID", "GENE_ID", "IS_UPSTREAM", "IS_DOWNSTREAM", "DISTANCE", "IS_INTERGENIC")
                 .usingGeneratedKeyColumns("ID");
     }
 
@@ -243,9 +236,9 @@ public class CatalogImportRepository {
             String downstreamMappedGene = null; // DOWNSTREAM_MAPPED_GENE
             String downstreamEntrezGeneId = null; // DOWNSTREAM_ENTREZ_GENE_ID
             Integer downstreamGeneDistance = null; // DOWNSTREAM_GENE_DISTANCE
-            Boolean isIntergenic = null; // IS_INTERGENIC
+            Integer isIntergenic = null; // IS_INTERGENIC
             String snpId = null; // SNP_ID
-            Boolean merged = null; // MERGED
+            Integer merged = null; // MERGED
             String mappedGene = null; // MAPPED_GENE
             String entrezGeneId = null; // ENTREZ_GENE_ID
             String functionalClass = null; // FUNCTIONAL_CLASS
@@ -418,10 +411,10 @@ public class CatalogImportRepository {
                             break;
                         case DOWNSTREAM_GENE_DISTANCE:
                             if (valueToInsert.isEmpty()) {
-                                upstreamGeneDistance = null;
+                                downstreamGeneDistance = null;
                             }
                             else {
-                                upstreamGeneDistance = Integer.valueOf(valueToInsert);
+                                downstreamGeneDistance = Integer.valueOf(valueToInsert);
                             }
                             break;
                         case IS_INTERGENIC:
@@ -429,7 +422,7 @@ public class CatalogImportRepository {
                                 isIntergenic = null;
                             }
                             else {
-                                isIntergenic = Boolean.valueOf(valueToInsert);
+                                isIntergenic = Integer.valueOf(valueToInsert);
                             }
                             break;
                         case SNP_ID:
@@ -445,7 +438,7 @@ public class CatalogImportRepository {
                                 merged = null;
                             }
                             else {
-                                merged = Boolean.valueOf(valueToInsert);
+                                merged = Integer.valueOf(valueToInsert);
                             }
                             break;
                         case MAPPED_GENE:
@@ -658,9 +651,9 @@ public class CatalogImportRepository {
                                String downstreamMappedGene,
                                String downstreamEntrezGeneId,
                                Integer downstreamGeneDistance,
-                               Boolean isIntergenic,
+                               Integer isIntergenic,
                                String snpId,
-                               Boolean merged,
+                               Integer merged,
                                String mappedGene,
                                String entrezGeneId,
                                String functionalClass) {
@@ -859,8 +852,6 @@ public class CatalogImportRepository {
 
             }
         }
-
-
     }
 
 
@@ -950,7 +941,7 @@ public class CatalogImportRepository {
                                       Long snpIdInSnpTable,
                                       Boolean isUpstream,
                                       Boolean isDownstream,
-                                      Integer distance, Boolean isIntergenic) {
+                                      Integer distance, Integer isIntergenic) {
 
         Map<String, Object> genomicContextArgs = new HashMap<>();
         genomicContextArgs.put("SNP_ID", snpIdInSnpTable);
