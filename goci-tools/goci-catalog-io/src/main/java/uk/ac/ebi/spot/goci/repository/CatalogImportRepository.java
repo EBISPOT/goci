@@ -245,7 +245,7 @@ public class CatalogImportRepository {
             Integer downstreamGeneDistance = null; // DOWNSTREAM_GENE_DISTANCE
             Boolean isIntergenic = null; // IS_INTERGENIC
             String snpId = null; // SNP_ID
-            Integer merged = null; // MERGED
+            Boolean merged = null; // MERGED
             String mappedGene = null; // MAPPED_GENE
             String entrezGeneId = null; // ENTREZ_GENE_ID
             String functionalClass = null; // FUNCTIONAL_CLASS
@@ -445,7 +445,7 @@ public class CatalogImportRepository {
                                 merged = null;
                             }
                             else {
-                                merged = Integer.valueOf(valueToInsert);
+                                merged = Boolean.valueOf(valueToInsert);
                             }
                             break;
                         case MAPPED_GENE:
@@ -491,7 +491,7 @@ public class CatalogImportRepository {
             // If no errors for a row, insert
             if (!caughtErrors) {
                 // Add study report
-                addStudyReport(studyId,
+/*                addStudyReport(studyId,
                                pubmedIdError,
                                ncbiPaperTitle,
                                ncbiFirstAuthor,
@@ -505,10 +505,10 @@ public class CatalogImportRepository {
                                      snpError,
                                      snpGeneOnDiffChr,
                                      noGeneForSymbol,
-                                     geneNotOnGenome);
+                                     geneNotOnGenome);*/
 
                 // Add mapped data
-/*                addMappedData(snpError,
+                addMappedData(snpError,
                               region,
                               chromosomeName,
                               chromosomePosition,
@@ -523,7 +523,7 @@ public class CatalogImportRepository {
                               merged,
                               mappedGene,
                               entrezGeneId,
-                              functionalClass);*/
+                              functionalClass);
 
             }
 
@@ -660,7 +660,7 @@ public class CatalogImportRepository {
                                Integer downstreamGeneDistance,
                                Boolean isIntergenic,
                                String snpId,
-                               Integer merged,
+                               Boolean merged,
                                String mappedGene,
                                String entrezGeneId,
                                String functionalClass) {
@@ -849,7 +849,6 @@ public class CatalogImportRepository {
                                             false,
                                             true,
                                             downstreamGeneDistance,
-                                            false,
                                             isIntergenic,
                                             geneId,
                                             snpIdInSnpTable);
