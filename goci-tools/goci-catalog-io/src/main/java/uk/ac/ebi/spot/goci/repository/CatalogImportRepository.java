@@ -484,7 +484,7 @@ public class CatalogImportRepository {
             // If no errors for a row, insert
             if (!caughtErrors) {
                 // Add study report
-/*                addStudyReport(studyId,
+                addStudyReport(studyId,
                                pubmedIdError,
                                ncbiPaperTitle,
                                ncbiFirstAuthor,
@@ -498,7 +498,7 @@ public class CatalogImportRepository {
                                      snpError,
                                      snpGeneOnDiffChr,
                                      noGeneForSymbol,
-                                     geneNotOnGenome);*/
+                                     geneNotOnGenome);
 
                 // Add mapped data
                 addMappedData(snpError,
@@ -662,7 +662,7 @@ public class CatalogImportRepository {
         // Do not attempt to add mapped data for entries with snp errors
         // These tend to come back with just limited region information
         if (snpError != null && !snpError.isEmpty()) {
-            getLog().trace("Not adding mapped data for: " + snpId + " , with error " + snpError);
+            getLog().info("Not adding mapped data for snpId: " + snpId + " , with error " + snpError);
             return;
         }
 
@@ -676,7 +676,8 @@ public class CatalogImportRepository {
         }
         catch (EmptyResultDataAccessException e) {
             throw new DataImportException("Caught errors processing data import - " +
-                                                  "trying to add NCBI info to SNP not found in database");
+                                                  "trying to add NCBI info for SNP " + rsId +
+                                                  ", but RSID not found in database");
         }
 
         // Add region information
@@ -713,7 +714,7 @@ public class CatalogImportRepository {
                                           functionalClass,
                                           lastUpdateDate,
                                           snpIdInSnpTable);
-        getLog().trace(
+        getLog().info(
                 "Adding chromosome name, chromosome position, merged, functional class and last update date values to SNP: " +
                         snpIdInSnpTable + " - Updated " + snpRows + " rows");
 
@@ -771,7 +772,7 @@ public class CatalogImportRepository {
                                                                  isIntergenic,
                                                                  geneId,
                                                                  snpIdInSnpTable);
-                    getLog().trace(
+                    getLog().info(
                             "Updating genomic context for SNP ID: " +
                                     snpIdInSnpTable + " and GENE ID:" + geneId + " - Updated " +
                                     genomicContextRows + " rows");
