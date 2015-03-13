@@ -153,20 +153,27 @@ function loadAdditionalResults(facet, expand){
     }
     var queryTerm = $('#query').text();
 
-
-
     var pval = processPval();
     var or = processOR();
     var beta = processBeta();
     var date = processDate();
     var traits = processTraitDropdown();
 
-    if($('#filter').text() != '' && traits == ''){
-        var terms = $('#filter').text();
-        terms = terms.replace(/\s/g, '+');
+    if($('#filter').text() != ''){
 
-        traits = terms.split('|');
+      if($('#filter').text() != 'recent' && traits == '') {
+          var terms = $('#filter').text();
+          terms = terms.replace(/\s/g, '+');
 
+          traits = terms.split('|');
+      }
+        else if($('#filter').text() == 'recent' && date == ''){
+          date = "[NOW-2MONTH+TO+*]";
+
+          if(sort == ''){
+              sort = "catalogAddedDate+desc";
+          }
+      }
     }
 
     if(queryTerm == '*'){

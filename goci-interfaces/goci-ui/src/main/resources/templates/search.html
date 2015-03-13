@@ -156,8 +156,8 @@
 
         <div class="container-fluid" id="lower_container">
             <div class="row welcome-container col-md-9" id="welcome-container">
-                <!--<h4><a href="search/q=">View the most recent studies in the Catalog</a> or <a href="search/traits">browse the full list of available traits</a></h4>-->
-                <h4><a href="search/traits">Browse the full list of available traits</a></h4>
+                <h4><a href="search?query=*&amp;filter=recent">View the most recent studies in the Catalog</a> or <a href="search/traits">browse the full list of available traits</a></h4>
+                <!--<h4><a href="search/traits">Browse the full list of available traits</a></h4>-->
             </div>
 
             <div class="row search-results-container" id="search-results-container" style="display: none">
@@ -309,7 +309,7 @@
                             <h2>Search results for
                                 <em><span id="search-term" th:text="*{query}">query term</span></em>
                             </h2>
-                            <a href="api/search/downloads?q=*" target="_blank" id="results-download">Download search results
+                            <a href="api/search/downloads?q=*" id="results-download">Download search results
                                 <span class="glyphicon glyphicon-download-alt"> </span>
                             </a>
                         </div>
