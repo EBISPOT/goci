@@ -5,16 +5,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.curation.model.StudyErrorView;
 import uk.ac.ebi.spot.goci.model.Study;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 
 /**
  * Created by emma on 10/02/15.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Provides email notification
  */
 @Service
@@ -63,14 +65,28 @@ public class MailService {
         mailMessage.setTo(getTo());
         mailMessage.setFrom(getFrom());
         mailMessage.setSubject(study.getAuthor() + " - " + status);
-        mailMessage.setText("The GWAS paper by " + study.getAuthor() + " with study date " + bodyStudyDate + " now has status " + status
-                + "\n" + "Title: " + studyTitle
-                + "\n" + "Trait: " + studyTrait
-                + "\n" + "Pubmed link: " + pubmedLink
-                + "\n" + "Edit link: " + editStudyLink
-                + "\n" + "Current curator: " + currentCurator
-                + "\n" + "Notes: " + notes);
+        mailMessage.setText(
+                "The GWAS paper by " + study.getAuthor() + " with study date " + bodyStudyDate + " now has status " +
+                        status
+                        + "\n" + "Title: " + studyTitle
+                        + "\n" + "Trait: " + studyTrait
+                        + "\n" + "Pubmed link: " + pubmedLink
+                        + "\n" + "Edit link: " + editStudyLink
+                        + "\n" + "Current curator: " + currentCurator
+                        + "\n" + "Notes: " + notes);
         javaMailSender.send(mailMessage);
+
+    }
+
+    // Send single email with all study errors
+    public void sendDailyAuditEmail(Collection<StudyErrorView> studyErrorViews) {
+
+        // Format mail message
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(getTo());
+        mailMessage.setFrom(getFrom());
+        mailMessage.setSubject("Errors identified in NCBI pipeline");
+        mailMessage.setText("The following studies have errors:");
 
     }
 
