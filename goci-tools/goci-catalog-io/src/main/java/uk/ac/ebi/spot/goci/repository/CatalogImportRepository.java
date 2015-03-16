@@ -13,7 +13,6 @@ import uk.ac.ebi.spot.goci.model.CatalogHeaderBindings;
 
 import java.lang.reflect.Array;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,8 +54,7 @@ public class CatalogImportRepository {
                     "PUBMED_ID_ERROR = ?, " +
                     "NCBI_PAPER_TITLE = ?, " +
                     "NCBI_FIRST_AUTHOR = ?, " +
-                    "NCBI_NORMALIZED_FIRST_AUTHOR = ?, " +
-                    "NCBI_FIRST_UPDATE_DATE = ? " +
+                    "NCBI_NORMALIZED_FIRST_AUTHOR = ? " +
                     "WHERE ID = ?";
 
     private static final String SELECT_HOUSEKEEPING = "SELECT HOUSEKEEPING_ID FROM STUDY WHERE ID = ?";
@@ -289,14 +287,6 @@ public class CatalogImportRepository {
                                 ncbiNormalisedFirstAuthor = valueToInsert;
                             }
                             break;
-                        case NCBI_FIRST_UPDATE_DATE:
-                            if (valueToInsert.isEmpty()) {
-                                ncbiFirstUpdateDate = null;
-                            }
-                            else {
-                                ncbiFirstUpdateDate = df.parse(valueToInsert);
-                            }
-                            break;
                         case ASSOCIATION_ID:
                             if (valueToInsert.isEmpty()) {
                                 associationId = null;
@@ -471,11 +461,11 @@ public class CatalogImportRepository {
                     }
 
                 }
-                catch (ParseException e) {
-                    getLog().error("Unable to parse date at row " + row, e);
+                catch (NumberFormatException e) {
+                    getLog().error("Unable to insert data at row " + row, e);
                     caughtErrors = true;
                 }
-                catch (Exception e) {
+                catch (DataImportException e) {
                     getLog().error("Unable to insert data at row " + row, e);
                     caughtErrors = true;
                 }
@@ -565,16 +555,20 @@ public class CatalogImportRepository {
                                                   "trying to add study report with no paper title");
         }
 
+        // Set NCBI First Update date
+        ncbiFirstUpdateDate = new Date();
+
         // Check for an existing id in database
         int rows;
         try {
+
+            // Don't update ncbiFirstUpdateDate as that is set on initial insert
             Long studyReportId = jdbcTemplate.queryForObject(SELECT_STUDY_REPORTS, Long.class, studyId);
             rows = jdbcTemplate.update(UPDATE_STUDY_REPORTS,
                                        pubmedIdError,
                                        ncbiPaperTitle,
                                        ncbiFirstAuthor,
                                        ncbiNormalisedFirstAuthor,
-                                       ncbiFirstUpdateDate,
                                        studyReportId);
         }
         // If not in database add a new report
