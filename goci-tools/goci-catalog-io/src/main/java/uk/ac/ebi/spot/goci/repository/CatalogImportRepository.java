@@ -481,14 +481,20 @@ public class CatalogImportRepository {
                                ncbiNormalisedFirstAuthor,
                                ncbiFirstUpdateDate);
 
-                //Add association report
-                addAssociationReport(associationId,
-                                     lastUpdateDate,
-                                     geneError,
-                                     snpError,
-                                     snpGeneOnDiffChr,
-                                     noGeneForSymbol,
-                                     geneNotOnGenome);
+                // Add association report if file returns an association ID
+                if (associationId != null) {
+                    addAssociationReport(associationId,
+                                         lastUpdateDate,
+                                         geneError,
+                                         snpError,
+                                         snpGeneOnDiffChr,
+                                         noGeneForSymbol,
+                                         geneNotOnGenome);
+                }
+                else {
+                    getLog().warn(
+                            "Row in file with no association id, not adding association report for study: " + studyId);
+                }
 
                 // Add mapped data
                 addMappedData(snpError,
