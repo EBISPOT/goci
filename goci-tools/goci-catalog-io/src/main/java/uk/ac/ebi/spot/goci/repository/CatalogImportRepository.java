@@ -735,18 +735,22 @@ public class CatalogImportRepository {
             }
 
             // Iterators
-            Iterator mappedGenesIterator = mappedGenes.listIterator();
-            Iterator entrezGeneIdsIterator = entrezGeneIds.listIterator();
+            Iterator mappedGenesIterator = mappedGenes.iterator();
+            Iterator entrezGeneIdsIterator = entrezGeneIds.iterator();
 
             while (mappedGenesIterator.hasNext() && entrezGeneIdsIterator.hasNext()) {
 
+                // Establish values in iterators
+                String geneNameItr = mappedGenesIterator.next().toString();
+                String entrezGeneIdItr = entrezGeneIdsIterator.next().toString();
+
                 try {
-                    geneId = jdbcTemplate.queryForObject(SELECT_GENE, Long.class, mappedGenesIterator.next());
+                    geneId = jdbcTemplate.queryForObject(SELECT_GENE, Long.class, geneNameItr);
                 }
                 catch (EmptyResultDataAccessException e) {
                     // Insert gene if its not already in database
-                    createGene(mappedGenesIterator.next().toString(), entrezGeneIdsIterator.next().toString());
-                    geneId = jdbcTemplate.queryForObject(SELECT_GENE, Long.class, mappedGenesIterator.next());
+                    createGene(geneNameItr, entrezGeneIdItr);
+                    geneId = jdbcTemplate.queryForObject(SELECT_GENE, Long.class, geneNameItr);
                 }
 
                 // Check GENOMIC_CONTEXT table to see if SNP has entry in this table for this gene
