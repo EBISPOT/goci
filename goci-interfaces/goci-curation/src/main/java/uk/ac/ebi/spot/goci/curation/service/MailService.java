@@ -81,13 +81,61 @@ public class MailService {
     // Send single email with all study errors
     public void sendDailyAuditEmail(Collection<StudyErrorView> studyErrorViews) {
 
+        // Create email body
+        String emailBody = null;
+
+        for (StudyErrorView studyErrorView : studyErrorViews) {
+            String title = "Title: " + studyErrorView.getTitle() + "\n";
+            String sendToNCBIDate = "Send To NCBI date: " + studyErrorView.getSendToNCBIDate().toString() + "\n";
+            Long studyId = studyErrorView.getStudyId();
+
+            String pubmedIdErrorFound = "N";
+            if (studyErrorView.getPubmedIdError() != null) {
+                pubmedIdErrorFound = "Y";
+            }
+            String pubmedErrorBody = "Pubmed ID error: " + pubmedIdErrorFound + "\n";
+
+
+            String snpErrors = null;
+            for (String snpError : studyErrorView.getSnpErrors()) {
+                snpErrors = snpErrors.concat(snpError);
+            }
+            String snpErrorBody = "SNP Error(s): " + snpErrors + "\n";
+
+
+            String geneNotOnGenomeErrors = null;
+            for (String geneNotOnGenomeError : studyErrorView.getGeneNotOnGenomeErrors()) {
+                geneNotOnGenomeErrors = geneNotOnGenomeErrors.concat(geneNotOnGenomeError);
+            }
+            String geneNotOnGenomeErrorsBody = "Gene Not On Genome Error(s)" + geneNotOnGenomeErrors + "\n";
+
+            String snpGeneOnDiffChrErrors = null;
+            for (String snpGeneOnDiffChrError : studyErrorView.getSnpGeneOnDiffChrErrors()) {
+                snpGeneOnDiffChrErrors = snpGeneOnDiffChrErrors.concat(snpGeneOnDiffChrError);
+            }
+            String snpGeneOnDiffChrErrorsBody =
+                    "SNP Gene On Different Chromosome Error(s)" + snpGeneOnDiffChrErrors + "\n";
+
+            String noGeneForSymbolErrors = null;
+            for (String noGeneForSymbolError : studyErrorView.getNoGeneForSymbolErrors()) {
+                noGeneForSymbolErrors = noGeneForSymbolErrors.concat(noGeneForSymbolError);
+            }
+            String noGeneForSymbolErrorsBody = "No Gene For Symbol Error(s): " + noGeneForSymbolErrors + "\n";
+
+            String editStudyLink = "http://garfield.ebi.ac.uk:8080/gwas/curation/studies/" + studyId;
+
+            emailBody = emailBody + "\n" + title + sendToNCBIDate + pubmedErrorBody + snpErrorBody +
+                    geneNotOnGenomeErrorsBody + snpGeneOnDiffChrErrorsBody + noGeneForSymbolErrorsBody + editStudyLink +
+                    "\n";
+        }
+
         // Format mail message
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(getTo());
         mailMessage.setFrom(getFrom());
-        mailMessage.setSubject("Errors identified in NCBI pipeline");
-        mailMessage.setText("The following studies have errors:");
-
+        mailMessage.setSubject("GWAS NCBI DataFlow Audit Trail");
+        mailMessage.setText("The following studies have errors:" + "\n"
+                                    + emailBody);
     }
 
     // Getter and setters

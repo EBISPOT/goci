@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,7 +18,11 @@ public class StudyErrorView {
 
     private String pubmedId;
 
-    private Long studyError;
+    private Long studyId;
+
+    private Long pubmedIdError;
+
+    private Date sendToNCBIDate;
 
     private List<String> snpErrors = new ArrayList<String>();
 
@@ -29,14 +34,17 @@ public class StudyErrorView {
 
     public StudyErrorView(String title,
                           String pubmedId,
-                          Long studyError,
+                          Long studyId,
+                          Long pubmedIdError,
+                          Date sendToNCBIDate,
                           List<String> snpErrors,
                           List<String> geneNotOnGenomeErrors,
-                          List<String> snpGeneOnDiffChrErrors,
-                          List<String> noGeneForSymbolErrors) {
+                          List<String> snpGeneOnDiffChrErrors, List<String> noGeneForSymbolErrors) {
         this.title = title;
         this.pubmedId = pubmedId;
-        this.studyError = studyError;
+        this.studyId = studyId;
+        this.pubmedIdError = pubmedIdError;
+        this.sendToNCBIDate = sendToNCBIDate;
         this.snpErrors = snpErrors;
         this.geneNotOnGenomeErrors = geneNotOnGenomeErrors;
         this.snpGeneOnDiffChrErrors = snpGeneOnDiffChrErrors;
@@ -59,12 +67,28 @@ public class StudyErrorView {
         this.pubmedId = pubmedId;
     }
 
-    public Long getStudyError() {
-        return studyError;
+    public Long getStudyId() {
+        return studyId;
     }
 
-    public void setStudyError(Long studyError) {
-        this.studyError = studyError;
+    public void setStudyId(Long studyId) {
+        this.studyId = studyId;
+    }
+
+    public Long getPubmedIdError() {
+        return pubmedIdError;
+    }
+
+    public void setPubmedIdError(Long pubmedIdError) {
+        this.pubmedIdError = pubmedIdError;
+    }
+
+    public Date getSendToNCBIDate() {
+        return sendToNCBIDate;
+    }
+
+    public void setSendToNCBIDate(Date sendToNCBIDate) {
+        this.sendToNCBIDate = sendToNCBIDate;
     }
 
     public List<String> getSnpErrors() {

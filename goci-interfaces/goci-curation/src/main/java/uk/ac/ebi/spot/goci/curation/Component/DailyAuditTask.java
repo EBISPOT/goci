@@ -18,6 +18,7 @@ import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -64,14 +65,16 @@ public class DailyAuditTask {
 
         Collection<StudyErrorView> studyErrorViews = new ArrayList<StudyErrorView>();
 
-        // For each study retrieve its study report detail
+        // For each study retrieve its study report and association report details
         for (Study studyWithError : studiesWithErrors) {
 
             // Collect all information required for email
             StudyReport studyReport = studyReportRepository.findByStudyId(studyWithError.getId());
             String title = studyWithError.getTitle();
+            Long studyId = studyWithError.getId();
             String pubmedId = studyWithError.getPubmedId();
-            Long studyError = studyReport.getPubmedIdError();
+            Long pubmedIdError = studyReport.getPubmedIdError();
+            Date sendToNCBIDate = studyWithError.getHousekeeping().getSendToNCBIDate();
             List<String> snpErrors = new ArrayList<String>();
             List<String> geneNotOnGenomeErrors = new ArrayList<String>();
             List<String> snpGeneOnDiffChrErrors = new ArrayList<String>();
@@ -109,7 +112,9 @@ public class DailyAuditTask {
             // Create a view of all errors for each study
             StudyErrorView studyErrorView = new StudyErrorView(title,
                                                                pubmedId,
-                                                               studyError,
+                                                               studyId,
+                                                               pubmedIdError,
+                                                               sendToNCBIDate,
                                                                snpErrors,
                                                                geneNotOnGenomeErrors,
                                                                snpGeneOnDiffChrErrors,
@@ -120,7 +125,6 @@ public class DailyAuditTask {
 
         // Pass details to email method
         mailService.sendDailyAuditEmail(studyErrorViews);
-
 
     }
 }
