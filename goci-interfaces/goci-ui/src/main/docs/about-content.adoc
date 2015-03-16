@@ -33,7 +33,7 @@ Nucleic Acids Research, 2014, Vol. 42 (Database issue): D1001-D1006.
 == Publications
 
 _Welter D, MacArthur J, Morales J, Burdett T, Hall P, Junkins H, Klemm A, Flicek P, Manolio T, Hindorff L, and Parkinson H._
-http://nar.oxfordjournals.org/content/42/D1/D1001.full.pdf?keytype=ref&ijkey=KSpjSbBlTqRydCZ[The NHGRI GWAS Catalog, a curated resource of SNP-trait associations.]
+http://nar.oxfordjournals.org/content/42/D1/D1001.full[The NHGRI GWAS Catalog, a curated resource of SNP-trait associations.]
 Nucleic Acids Research, 2014, Vol. 42 (Database issue): D1001-D1006.
 
 _Hindorff LA, Sethupathy P, Junkins HA, Ramos EM, Mehta JP, Collins FS and Manolio TA._
