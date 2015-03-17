@@ -2,7 +2,7 @@
 
 == Programmatic access
 
-It is possible to programmatically access GWAS Catalog data using structured URIs. The full REST API for the GWAS Catalog is still under development so if your query isn't supported at this time, please check this page regularly for updates or contact the GWAS Catalog team at gwas-info@ebi.ac.uk.
+The full REST API for the GWAS Catalog is still under development so please check this page regularly for updates or contact the GWAS Catalog team at gwas-info@ebi.ac.uk. You can however link into the Catalog and build bookmarks using the guide below.
 
 === Bookmarking your searches
 
