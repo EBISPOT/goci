@@ -24,6 +24,12 @@
             <artifactId>goci-service</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-catalog-io</artifactId>
+            <version>2.0.0-SNAPSHOT</version>
+        </dependency>
+
         <!--<dependency>-->
         <!--<groupId>org.eclipse.birt.runtime.3_7_1</groupId>-->
         <!--<artifactId>derby</artifactId>-->
