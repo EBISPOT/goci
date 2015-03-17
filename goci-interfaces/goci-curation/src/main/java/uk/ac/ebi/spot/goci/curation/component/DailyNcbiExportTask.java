@@ -9,7 +9,6 @@ import uk.ac.ebi.spot.goci.repository.CatalogExportRepository;
 import uk.ac.ebi.spot.goci.service.SpreadsheetProcessor;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -58,8 +57,6 @@ public class DailyNcbiExportTask {
 
         // Call methods to create NCBI spreadsheet
         String[][] data = catalogExportRepository.getNCBISpreadsheet();
-
-
         spreadsheetProcessor.writeToFile(data, outputFile);
 
         // Check we have something in our output file
