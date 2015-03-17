@@ -69,7 +69,10 @@ public enum CatalogHeaderBinding {
     GENE_ERROR("GENE_ERROR", false, false, "gene_id_error"),
     SNP_GENE_ON_DIFF_CHR("SNP_GENE_ON_DIFF_CHR", false, false, "snp_gene_on_diff_chr"),
     NO_GENE_FOR_SYMBOL("NO_GENE_FOR_SYMBOL", false, false, "no_geneid_for_symbol"),
-    GENE_NOT_ON_GENOME("GENE_NOT_ON_GENOME", false, false, "gene_not_on_genome");
+    GENE_NOT_ON_GENOME("GENE_NOT_ON_GENOME", false, false, "gene_not_on_genome"),
+    // Added for the alternative spreadsheet download
+    TRAIT("TRAIT", false, "MAPPED_TRAIT", true),
+    URI("URI", false, "MAPPED_TRAIT_URI", true);
 
     private String databaseName;
     private boolean isNcbiRequired;

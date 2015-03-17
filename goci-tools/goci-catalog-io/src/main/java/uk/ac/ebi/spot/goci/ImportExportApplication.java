@@ -1,18 +1,10 @@
 package uk.ac.ebi.spot.goci;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionGroup;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -85,6 +77,16 @@ public class ImportExportApplication {
                             exitCode += 3;
                         }
                         break;
+                    case DOWNLOAD_ALTERNATIVE:
+                        try {
+                            doAlternativeDownloadExport(outputFile);
+                        }
+                        catch (Exception e) {
+                            System.err.println("Alternative download export failed (" + e.getMessage() + ")");
+                            getLog().error("Alternative download export failed", e);
+                            exitCode += 5;
+                        }
+                        break;
                     case LOAD:
                         try {
                             doLoad(inputFile);
@@ -109,6 +111,20 @@ public class ImportExportApplication {
     }
 
     void doDownloadExport(File outFile) throws IOException {
+        String[][] allData = catalogExportRepository.getDownloadSpreadsheet();
+
+        String[][] data = new String[allData.length][allData[0].length-2];
+
+        for(int i =0; i< allData.length; i++){
+            for(int j =0; j< allData[0].length-2; j++){
+                data[i][j] = allData[i][j];
+            }
+        }
+
+        spreadsheetProcessor.writeToFile(data, outFile);
+    }
+
+    void doAlternativeDownloadExport(File outFile) throws IOException {
         String[][] data = catalogExportRepository.getDownloadSpreadsheet();
         spreadsheetProcessor.writeToFile(data, outFile);
     }
@@ -155,6 +171,9 @@ public class ImportExportApplication {
                 if (cl.hasOption("d")) {
                     this.opMode = OperationMode.DOWNLOAD;
                 }
+                if (cl.hasOption("a")) {
+                    this.opMode = OperationMode.DOWNLOAD_ALTERNATIVE;
+                }
                 if (cl.hasOption("l")) {
                     this.opMode = OperationMode.LOAD;
                 }
@@ -189,6 +208,7 @@ public class ImportExportApplication {
         // -l --load        (load in NCBI mapped file)
         // -f --file        (file to load in)
         // -o --out         (file to write out to)
+        // -a --download_alt  (write out alternative downloads file)
 
         // add input options
         OptionGroup modeGroup = new OptionGroup();
@@ -207,6 +227,14 @@ public class ImportExportApplication {
                 "download",
                 false,
                 "Download - generate an export of the GWAS catalog suitable for download");
+        downloadOption.setRequired(false);
+        modeGroup.addOption(downloadOption);
+
+        Option downloadAltOption = new Option(
+                "a",
+                "download_alt",
+                false,
+                "Download alternative - generate an export of the GWAS catalog, including ontology mappings, suitable for download");
         downloadOption.setRequired(false);
         modeGroup.addOption(downloadOption);
 
@@ -251,6 +279,7 @@ public class ImportExportApplication {
     private enum OperationMode {
         NCBI,
         DOWNLOAD,
+        DOWNLOAD_ALTERNATIVE,
         LOAD
     }
 }
