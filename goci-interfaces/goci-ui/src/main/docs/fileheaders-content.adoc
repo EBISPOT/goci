@@ -1,8 +1,16 @@
+= Description of column headings for downloadable files
+
 == Description of column headings for downloadable files
 
-Note: The SNP data in the catalog has been mapped to dbSNP Build 142 and Genome Assembly, GRCh38/hg37.p13.
+_Note: The SNP data in the catalog has been mapped to dbSNP Build 142 and Genome Assembly, GRCh38/hg37.p13._
 
-==== File headers for catalog version 1.0:
+<<File headers for catalog version 1.0>>
+
+<<File headers for catalog version 1.0.1>>
+
+'''
+
+=== File headers for catalog version 1.0
 
 DATE ADDED TO CATALOG: Date added to catalog
 
@@ -70,10 +78,11 @@ PLATFORM (SNPS PASSING QC): Genotyping platform manufacturer used in Stage 1; al
 
 CNV: Study of copy number variation (yes/no)
 
-Updated: 13 January 2015
+_Updated: 13 January 2015_
 
+'''
 
-==== File headers for catalog version 1.01:
+=== File headers for catalog version 1.0.1
 
 As for version 1.0 plus
 
@@ -81,4 +90,4 @@ EFOTRAIT: Mapped Experimental Factor Ontology trait for this association
 
 EFOURI: URI of the EFO trait
 
-Added: 10 March 2015
+_Added: 10 March 2015_

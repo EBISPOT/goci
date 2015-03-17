@@ -70,6 +70,18 @@ function doSortingSearch(facet, field, id){
     var date = processDate();
     var traits = processTraitDropdown();
 
+    if($('#filter').text() != ''){
+        if($('#filter').text() != 'recent' && traits == '') {
+            var terms = $('#filter').text();
+            terms = terms.replace(/\s/g, '+');
+
+            traits = terms.split('|');
+        }
+        else if($('#filter').text() == 'recent' && date == ''){
+            date = "[NOW-2MONTH+TO+*]";
+        }
+    }
+
 
     $.getJSON('api/search/sort', {
         'q': searchTerm,

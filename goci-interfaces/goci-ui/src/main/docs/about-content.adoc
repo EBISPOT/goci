@@ -17,13 +17,13 @@ The NHGRI-EBI GWAS Catalog is funded in part by http://projectreporter.nih.gov/p
 
 == Citing the GWAS Catalog
 
-===  How to cite the NHGRI-EBI GWAS Catalog:
+===  How to cite NHGRI-EBI GWAS Catalog data:
 
 _Burdett T (EBI), Hall PN (NHGRI), Hasting E (EBI) Hindorff LA (NHGRI), Junkins HA (NHGRI), Klemm AK (NHGRI), MacArthur J (EBI), Manolio TA (NHGRI), Morales J (EBI), Parkinson H (EBI) and Welter D (EBI)._
 The NHGRI-EBI Catalog of published genome-wide association studies.
-Available at: www.genome.gov/gwastudies. Accessed [date of access].
+Available at: www.genome.gov/gwastudies. Accessed [date of access], version [version number].
 
-=== How to cite the NHGRI-EBI GWAS Catalog paper:
+=== How to cite the NHGRI-EBI GWAS Catalog:
 
 _Welter D, MacArthur J, Morales J, Burdett T, Hall P, Junkins H, Klemm A, Flicek P, Manolio T, Hindorff L, and Parkinson H._
 The NHGRI GWAS Catalog, a curated resource of SNP-trait associations.
