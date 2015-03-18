@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>goci-catalog-io</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.0-beta-3</version>
     <packaging>jar</packaging>
 
     <name>GOCI Catalog Import/Export</name>
@@ -14,7 +14,7 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
-        <version>2.0.0-SNAPSHOT</version>
+        <version>2.0.0-beta-3</version>
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
