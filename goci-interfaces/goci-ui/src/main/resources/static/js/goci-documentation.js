@@ -19,6 +19,8 @@ var loadDocumentation = function(pagename, content) {
             return x.toUpperCase();
         });
 
+        displayName = displayName.replace("-", " ");
+
         if (displayName.toLowerCase() == "about") {
             $("#help-item").removeClass("active");
             $("#downloads-item").removeClass("active");

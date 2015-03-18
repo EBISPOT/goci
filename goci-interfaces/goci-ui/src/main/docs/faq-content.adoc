@@ -12,7 +12,7 @@
 <<How should I cite the GWAS Catalog?>>
 
 
-<<Why does the data I downloaded look different from what I downloaded in the old Catalog?>>
+<<Why does the data I just downloaded look different from what I downloaded in the old Catalog?>>
 
 
 <<How do I do a search?>>
@@ -78,7 +78,7 @@ You can subscribe to our announcement list by sending an e-mail to gwas-announce
 ==== How should I cite the GWAS Catalog?
 Please see the link:about[About] page for citation guidance.
 
-==== Why does the data I downloaded look different from what I downloaded in the old Catalog?
+==== Why does the data I just downloaded look different from what I downloaded in the old Catalog?
 
 A number of link:known-issues[known issues] got into the data during the migration. We are working hard to resolve these. Due to the way we now process the Catalog data for the full download, you may find that your spreadsheet has more rows than it did previously as each association between a SNP and a reported gene now gets its own row, i.e. if an association has several author-reported genes, it will be split across as many rows as there are genes.
 
