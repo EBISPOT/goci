@@ -19,9 +19,8 @@ The NHGRI-EBI GWAS Catalog is funded in part by http://projectreporter.nih.gov/p
 
 ===  How to cite NHGRI-EBI GWAS Catalog data:
 
-_Burdett T (EBI), Hall PN (NHGRI), Hasting E (EBI) Hindorff LA (NHGRI), Junkins HA (NHGRI), Klemm AK (NHGRI), MacArthur J (EBI), Manolio TA (NHGRI), Morales J (EBI), Parkinson H (EBI) and Welter D (EBI)._
-The NHGRI-EBI Catalog of published genome-wide association studies.
-Available at: www.genome.gov/gwastudies. Accessed [date of access], version [version number].
+_Burdett T (EBI), Hall PN (NHGRI), Hasting E (EBI) Hindorff LA (NHGRI), Junkins HA (NHGRI), Klemm AK (NHGRI), MacArthur J (EBI), Manolio TA (NHGRI), Morales J (EBI), Parkinson H (EBI) and Welter D (EBI)._ +
+The NHGRI-EBI Catalog of published genome-wide association studies. Available at: www.ebi.ac.uk/gwas. Accessed [date of access], version [version number].
 
 === How to cite the NHGRI-EBI GWAS Catalog:
 
@@ -42,6 +41,21 @@ Proc. Natl Acad. Sci. USA, 2009, 106, 9362–9367
 
 
 
+== Contact
+
+=== Contacting the GWAS Catalog team
+
+To contact the GWAS Catalog team, please email gwas-info@ebi.ac.uk
+
+
+=== Keeping up-to-date with new releases and developments
+
+We announce new releases and other developments on our announcement list, gwas-announce@ebi.ac.uk. Please subscribe by sending an e-mail to gwas-announce-join@ebi.ac.uk with subject heading "subscribe".
+
+
+=== User community
+
+To interact with other GWAS Catalog users, join our user community mailing list, gwas-users@ebi.ac.uk by sending an e-mail to gwas-users-join@ebi.ac.uk with subject heading "subscribe".
 
 
 
