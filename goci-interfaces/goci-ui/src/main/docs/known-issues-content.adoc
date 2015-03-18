@@ -16,7 +16,7 @@ There is a known bug in our search index that incorrectly replaces null values f
 
 '''
 
-Please refer to link:https://www.ebi.ac.uk/panda/jira/issues/?jql=project%20%3D%20GOCI%20AND%20component%20%3D%20%22Data%20Release%22%20ORDER%20BY%20created%20DESC%2C%20priority%20DESC%2C%20assignee%20ASC[our bug tracker] for the status any of these issues.
+Please refer to https://www.ebi.ac.uk/panda/jira/browse/GOCI/component/11750[our bug tracker] for the status any of these issues.
 
 If you find an issue not documented here, please submit a bug report to gwas-info@ebi.ac.uk.
 
