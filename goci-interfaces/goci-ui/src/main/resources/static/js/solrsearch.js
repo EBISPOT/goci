@@ -46,24 +46,29 @@ function loadResults() {
 
     console.log("Loading results for " + searchTerm);
     buildBreadcrumbs();
+
+    if(searchTerm == '*') {
+        if ($('#filter').text() == 'recent') {
+            $('#search-term').text('most recent studies');
+
+        }
+        else {
+            $('#search-term').text('selected traits from list');
+        }
+    }
     $('#welcome-container').hide();
     $('#search-results-container').show();
     $('#loadingResults').show();
 
-    //if(localStorage.getItem("traits") != null || $('#filter').text() != ''){
     if($('#filter').text() != ''){
-        //console.log("I found something in the local storage");
-        var traits;
-      /*  if(localStorage.getItem("traits") != null)        {
-            console.log("Value from localstorage: " + localStorage.getItem("traits"));
-            traits = localStorage.getItem("traits");
-            localStorage.clear();
+        if($('#filter').text() == 'recent'){
+            getMostRecentStudies();
         }
-        else{*/
+        else {
             console.log("Value from filter variable: " + $('#filter').text());
-            traits = $('#filter').text();
-        //}
-        traitOnlySearch(traits);
+            var traits = $('#filter').text();
+            traitOnlySearch(traits);
+        }
 
     }
     else{
@@ -152,6 +157,26 @@ function traitOnlySearch(traits) {
                   });
 }
 
+function getMostRecentStudies() {
+    console.log("Solr research request received for most recent studies");
+    setState(SearchState.LOADING);
+
+    var searchTerm = 'text:*';
+    var dateRange = "[NOW-2MONTH+TO+*]";
+    var sort = "catalogAddedDate+desc"
+
+    $.getJSON('api/search/latest', {'q': searchTerm,
+        'group': 'true',
+        'group.by': 'resourcename',
+        'group.limit': 5,
+        'dateFilter': dateRange,
+        'sort': sort})
+            .done(function (data) {
+        console.log(data);
+        processData(data);
+    });
+}
+
 function processData(data) {
     var documents = data.grouped.resourcename.groups;
 
@@ -163,22 +188,29 @@ function processData(data) {
         if(data.responseHeader.params.q.indexOf('*') != -1 && data.responseHeader.params.fq != null){
             var fq = data.responseHeader.params.fq;
 
-            if(fq.charAt(fq.length-1) == '"'){
-                fq = fq.substr(0, fq.length-1);
-            };
-
-            var terms = fq.split('"');
-            var traits = []
-
-            for(var i=0; i<terms.length; i++){
-                if(terms[i].indexOf('traitName') == -1){
-                    traits.push(terms[i].replace(/\s/g, '+'));
-                }
+            if(fq.indexOf("catalogAddedDate") != -1){
+                var dateRange = "[NOW-2MONTH+TO+*]";
+                generateTraitDropdown(data.responseHeader.params.q, null, dateRange);
             }
-            generateTraitDropdown(data.responseHeader.params.q, traits);
+            else {
+                if (fq.charAt(fq.length - 1) == '"') {
+                    fq = fq.substr(0, fq.length - 1);
+                }
+                ;
+
+                var terms = fq.split('"');
+                var traits = []
+
+                for (var i = 0; i < terms.length; i++) {
+                    if (terms[i].indexOf('traitName') == -1) {
+                        traits.push(terms[i].replace(/\s/g, '+'));
+                    }
+                }
+                generateTraitDropdown(data.responseHeader.params.q, traits, null);
+            }
         }
         else{
-            generateTraitDropdown(data.responseHeader.params.q, null);
+            generateTraitDropdown(data.responseHeader.params.q, null, null);
         }
     }
 
@@ -311,8 +343,8 @@ function updateCountBadges(countArray) {
     }
 }
 
-function generateTraitDropdown(queryTrait, subTraits) {
-    $.getJSON('api/search/traitcount', {'q': queryTrait, 'traitfilter[]': subTraits})
+function generateTraitDropdown(queryTrait, subTraits, dateFilter) {
+    $.getJSON('api/search/traitcount', {'q': queryTrait, 'traitfilter[]': subTraits, dateFilter: dateFilter})
         .done(function (data) {
             console.log(data);
             processTraitCounts(data);
@@ -342,47 +374,49 @@ function setDownloadLink(searchParams){
     var or = '&orfilter=';
     var beta = '&betafilter=';
     var date = '&datefilter=';
+    var addeddate = '&dateaddedfilter=';
+
+    pval = pval.concat(processPval());
+    or = or.concat(processOR());
+    beta = beta.concat(processBeta());
+    var pubdate = date.concat(processDate());
+
+    var traits = processTraitDropdown();
+
+    if (traits != '') {
+        for (var t = 0; t < traits.length; t++) {
+            trait = trait.concat(traitFilter).concat(traits[t]);
+        }
+    }
+    else {
+        trait = traitFilter;
+    }
 
     if(searchParams.q.indexOf('*') != -1 && $('#filter').text() != ''){
 
-        console.log('Need to build the download link a bit differently');
+        console.log('Need to build the download link a bit differently because of ' + $('#filter').text());
 
-        var fq = $('#filter').text();
+        if($('#filter').text() != 'recent' && traits == '') {
+            console.log("Generating trait-based download link for " + $('#filter').text());
+            var terms = $('#filter').text();
+            terms = terms.replace(/\s/g, '+');
+            var traits = terms.split('|');
 
-        //if(fq.charAt(fq.length-1) == '"'){
-        //    fq = fq.substr(0, fq.length-1);
-        //};
-
-        var terms = fq.split('|');
-
-        for(var i=0; i<terms.length; i++){
-            //if(terms[i].indexOf('traitName') == -1){
-                console.log(terms[i]);
-                trait = trait.concat(traitFilter).concat(terms[i]);
-            //}
-        }
-
-    }
-    else {
-        console.log('Building the download link the default way');
-        pval = pval.concat(processPval());
-        or = or.concat(processOR());
-        beta = beta.concat(processBeta());
-        date = date.concat(processDate());
-
-        var traits = processTraitDropdown();
-
-        if (traits != '') {
-            for (var t = 0; t < traits.length; t++) {
-                trait = trait.concat(traitFilter).concat(traits[t]);
+            for(var i=0; i<traits.length; i++){
+                console.log(traits[i]);
+                trait = trait.concat(traitFilter).concat(traits[i]);
             }
+
         }
-        else {
-            trait = traitFilter;
+        else if($('#filter').text() == 'recent'){
+            console.log("Generating date-based download link for " + $('#filter').text());
+
+            var addeddate = addeddate.concat("[NOW-2MONTH+TO+*]");
         }
+
     }
 
-    var url = baseUrl.concat(q).concat(pval).concat(or).concat(beta).concat(date).concat(trait);
+    var url = baseUrl.concat(q).concat(pval).concat(or).concat(beta).concat(pubdate).concat(trait).concat(addeddate);
     $('#results-download').removeAttr('href').attr('href', url);
 
 }

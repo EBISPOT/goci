@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>goci-repository</artifactId>
-    <version>2.0.0-beta-2</version>
+    <version>2.0.0-beta-3</version>
 
     <name>GOCI Repositories</name>
     <description>Provides interfaces for retrieving GOCI objects from the GWAS datasource backend</description>
@@ -13,7 +13,7 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
-        <version>2.0.0-beta-2</version>
+        <version>2.0.0-beta-3</version>
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 

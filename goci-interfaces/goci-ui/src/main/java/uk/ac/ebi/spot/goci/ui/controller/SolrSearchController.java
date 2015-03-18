@@ -17,19 +17,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import uk.ac.ebi.spot.goci.ui.SearchConfiguration;
 import uk.ac.ebi.spot.goci.ui.exception.IllegalParameterCombinationException;
 import uk.ac.ebi.spot.goci.ui.service.JsonProcessingService;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 /**
@@ -178,6 +176,7 @@ public class SolrSearchController {
             @RequestParam(value = "facet.mincount", required = false, defaultValue = "1") int mincount,
             @RequestParam(value = "facet.limit", required = false, defaultValue = "1000") int limit,
             @RequestParam(value = "traitfilter[]", required = false) String[] traits,
+            @RequestParam(value = "dateFilter", required = false) String dateRange,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
@@ -194,6 +193,7 @@ public class SolrSearchController {
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
 
+        addFilterQuery(solrSearchBuilder, "catalogAddedDate", "study_catalogAddedDate", dateRange);
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -224,6 +224,7 @@ public class SolrSearchController {
             @RequestParam(value = "betafilter", required = false) String betaRange,
             @RequestParam(value = "datefilter", required = false) String dateRange,
             @RequestParam(value = "traitfilter[]", required = false) String[] traits,
+            @RequestParam(value = "dateaddedfilter", required = false) String addedDateRange,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
@@ -259,6 +260,12 @@ public class SolrSearchController {
             getLog().debug(dateRange);
 
             addFilterQuery(solrSearchBuilder, "publicationDate", "study_publicationDate", dateRange);
+
+        }
+        if (addedDateRange != "") {
+            getLog().debug(addedDateRange);
+
+            addFilterQuery(solrSearchBuilder, "catalogAddedDate", "study_catalogAddedDate", addedDateRange);
 
         }
         if (traits != null) {
@@ -380,6 +387,44 @@ public class SolrSearchController {
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
 
+    @RequestMapping(value = "api/search/latest", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void doLatestSolrSearch(@RequestParam("q") String query,
+                                   @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+                                   @RequestParam(value = "callback", required = false) String callbackFunction,
+                                   @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+                                   @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                   @RequestParam(value = "group", required = false, defaultValue = "false") boolean useGroups,
+                                   @RequestParam(value = "group.by", required = false) String groupBy,
+                                   @RequestParam(value = "group.limit", required = false, defaultValue = "10") int groupLimit,
+                                   @RequestParam(value = "dateFilter", required = false) String dateRange,
+                                   @RequestParam(value = "sort", required = false) String sort,
+                                   HttpServletResponse response) throws IOException {
+
+        StringBuilder solrSearchBuilder = buildBaseSearchRequest();
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+        addFacet(solrSearchBuilder, searchConfiguration.getDefaultFacet());
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+        if (useGroups) {
+            addGrouping(solrSearchBuilder, groupBy, groupLimit);
+        }
+        else {
+            addRowsAndPage(solrSearchBuilder, maxResults, page);
+        }
+
+        addFilterQuery(solrSearchBuilder, "catalogAddedDate", "study_catalogAddedDate", dateRange);
+
+        addSortQuery(solrSearchBuilder, sort);
+
+        addQuery(solrSearchBuilder, query);
+
+        // dispatch search
+        dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
+    }
+
     @RequestMapping(value = "api/search/alltraits", produces = MediaType.APPLICATION_JSON_VALUE)
     public void doAllTraitsSolrSearch(
             @RequestParam("q") String query,
@@ -401,21 +446,6 @@ public class SolrSearchController {
         addFacetLimit(solrSearchBuilder, limit);
         addFacetSort(solrSearchBuilder, sort);
         addFilterQuery(solrSearchBuilder, "resourcename", "study");
-        addQuery(solrSearchBuilder, query);
-
-
-        //        addFacet(solrSearchBuilder, searchConfiguration.getDefaultFacet());
-//        addFilterQuery(solrSearchBuilder, "resourcename", facet);
-//        if (useJsonp) {
-//            addJsonpCallback(solrSearchBuilder, callbackFunction);
-//        }
-//
-//        addRowsAndPage(solrSearchBuilder, maxResults, page);
-//
-//        if(sort != ""){
-//            addSortQuery(solrSearchBuilder, sort);
-//        }
-
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -466,8 +496,12 @@ public class SolrSearchController {
         if (dateRange != "") {
             getLog().debug(dateRange);
 
-            addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
-        }
+            if(dateRange.contains("NOW")){
+                addFilterQuery(solrSearchBuilder, "catalogAddedDate", dateRange);
+            }
+            else {
+                addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
+            }        }
         if (traits != null) {
             System.out.println(String.valueOf(traits));
 
@@ -602,15 +636,19 @@ public class SolrSearchController {
                 "to rectify the problem as soon as possible.  If problems persist, please email gwas-info@ebi.ac.uk";
     }
 
-    @RequestMapping(value = "api/search/downloads", produces = MediaType.TEXT_PLAIN_VALUE)
-    public @ResponseBody String getSearchResults(
+//    @RequestMapping(value = "api/search/downloads", produces = MediaType.TEXT_PLAIN_VALUE)
+//    public @ResponseBody String getSearchResults(
+
+    @RequestMapping(value = "api/search/downloads")
+    public void getSearchResults(
             @RequestParam("q") String query,
             @RequestParam(value = "pvalfilter", required = false) String pvalRange,
             @RequestParam(value = "orfilter", required = false) String orRange,
             @RequestParam(value = "betafilter", required = false) String betaRange,
             @RequestParam(value = "datefilter", required = false) String dateRange,
-            @RequestParam(value = "traitfilter[]", required = false) String[] traits
-        ) throws IOException {
+            @RequestParam(value = "traitfilter[]", required = false) String[] traits,
+            @RequestParam(value = "dateaddedfilter", required = false) String addedDateRange,
+            HttpServletResponse response) throws IOException {
 
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
@@ -640,13 +678,17 @@ public class SolrSearchController {
         }
         if (dateRange != "") {
             getLog().debug(dateRange);
-
             addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
         }
         if (traits != null) {
             System.out.println(String.valueOf(traits));
 
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
+        }
+        if(addedDateRange != ""){
+            getLog().debug(addedDateRange);
+            addFilterQuery(solrSearchBuilder, "catalogAddedDate", addedDateRange);
+
         }
 
         addQuery(solrSearchBuilder, query);
@@ -659,12 +701,33 @@ public class SolrSearchController {
         searchString = searchString.replace(" ", "+");
 
         // dispatch search
-        return dispatchSearch(searchString);
+//        return dispatchSearch(searchString);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String now = dateFormat.format(date);
+        String fileName;
+
+        if(query.contains("*")){
+            if(addedDateRange != "") {
+                fileName = "gwas-downloaded_".concat(now).concat("-recentStudies.tsv");
+            }
+            else{
+                fileName = "gwas-downloaded_".concat(now).concat("-selectedTraits.tsv");
+            }
+        }
+        else{
+            fileName = "gwas-downloaded_".concat(now).concat("-").concat(query.substring(6, query.length() - 1)).concat(".tsv");
+        }
+        response.setContentType("text/tsv");
+        response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
+
+        dispatchDownloadSearch(searchString, response.getOutputStream());
+
+
     }
 
 
-    //TO DO use jackson to read the json and parse it into a string
-    private String dispatchSearch(String searchString) throws IOException {
+    private void dispatchDownloadSearch(String searchString, OutputStream outputStream) throws IOException {
         System.out.println(searchString);
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(searchString);
@@ -698,11 +761,22 @@ public class SolrSearchController {
             EntityUtils.consume(entity);
         }
         if(file == null){
+
+            //TO DO throw exception here and add error handler
             file = "Some error occurred during your request. Please try again or contact the GWAS Catalog team for assistance";
         }
 
-        return file;
-    }
+        InputStream in = new ByteArrayInputStream(file.getBytes("UTF-8"));
 
+        byte[] outputByte = new byte[4096];
+//copy binary contect to output stream
+        while(in.read(outputByte, 0, 4096) != -1)
+        {
+            outputStream.write(outputByte, 0, 4096);
+        }
+        in.close();
+        outputStream.flush();
+
+    }
 
 }

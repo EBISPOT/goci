@@ -17,7 +17,7 @@
     <link href="../static/css/bootstrap.css" th:href="@{css/bootstrap.min.css}" rel="stylesheet"/>
     <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" rel="stylesheet"/>
     <link href="../static/css/bootstrap-table.css" th:href="@{css/bootstrap-table.css}" rel="stylesheet"/>
-    <link href="../static/css/bootstrap-theme.css" th:href="@{css/bootstrap-theme.min.css}" rel="stylesheet" />
+    <link href="../static/css/bootstrap-theme.css" th:href="@{css/bootstrap-theme.min.css}" rel="stylesheet"/>
 
     <!-- Custom styles for this template -->
     <link href="../static/css/jumbotron.css" th:href="@{css/jumbotron.css}" rel="stylesheet"/>
@@ -173,9 +173,11 @@
         </a>
     </div>
 
-    <div class="row">
-        <h3>Contact</h3>
-        <p>To provide feedback, report a bug or ask a question, contact the GWAS Catalog team on <a href="mailto:gwas-users@ebi.ac.uk">gwas-users@ebi.ac.uk</a>. We'd love to hear from you!</p>
+    <div class="row" style="text-align: center">
+        <p><span style="text-decoration: underline">We'd love to hear from you!</span><br/>
+           To provide feedback or ask a question, contact the GWAS Catalog team on <a href="mailto:gwas-info@ebi.ac.uk">gwas-info@ebi.ac.uk</a>.<br/>
+           If you think you've found a bug, take a look at our <a href="docs/known-issues" th:href="@{docs/known-issues}">known issues page</a>
+        </p>
     </div>
 
     <hr/>
