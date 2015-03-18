@@ -18,62 +18,33 @@ You can bookmark any part of the GWAS Catalog page, including individual questio
 
 === Linking into the Catalog
 
-Any concept that can be searched in the Catalog can also be linked to via a structured URL. Below are some examples of common use cases.
+Any concept that can be searched in the Catalog can also be linked to via a structured URL.
+Links should be structured using the GWAS catalog domain (normally `www.ebi.ac.uk/gwas`), and individual resources can be linked to using the paths as defined below.
 
+==== Traits
 
-==== Base URL
+Link to a trait using a catalog trait name:
 
-The base URL for any Catalog link is
+ GET search?query=breast%20cancer
 
- search?query=
+Link to a trait using an ontology ID:
 
-==== Trait
+ GET search?query=EFO_0004541
 
-Example for a trait such as breast cancer
+==== SNPs
 
- search?query=breast%20cancer
+Link to a SNP using an rsID:
 
+ GET search?query=rs7329174
 
-==== rsID
+==== Genes
 
-Example for a SNP rsID such as rs7329174
+Link to a Gene by HGNC gene name:
 
- search?query=rs7329174
+ GET search?query=HBS1L
 
-==== Gene name
+==== Studies
 
-Example for a gene name such as HBS1L
+Link to a publication by Pubmed ID:
 
- search?query=HBS1L
-
-
-==== Pubmed ID
-
-Example for a Pubmed ID such as 23043469
-
- search?query=23043469
-
-==== Author
-
-Example for a author name such as Yang
-
- search?query=Yang
-
-==== Base pair location
-
-Example for a base pair location such as 40983974
-
- search?query=40983974
-
-==== Cytogenetic location
-
-Example for a cytogenetic location such as 2q37.1
-
- search?query=2q37.1
-
-
-==== Ontology ID
-
-Example for an ontology ID such as EFO_0004541
-
- search?query=EFO_0004541
+ GET search?query=23043469

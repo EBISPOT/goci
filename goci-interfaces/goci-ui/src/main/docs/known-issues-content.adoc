@@ -20,4 +20,4 @@ Please refer to https://www.ebi.ac.uk/panda/jira/browse/GOCI/component/11750[our
 
 If you find an issue not documented here, please submit a bug report to gwas-info@ebi.ac.uk.
 
-statu_Updated: 17 March 2015_
+Updated: 17 March 2015

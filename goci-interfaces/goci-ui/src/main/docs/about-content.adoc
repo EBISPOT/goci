@@ -19,34 +19,26 @@ The NHGRI-EBI GWAS Catalog is funded in part by http://projectreporter.nih.gov/p
 
 ===  How to cite NHGRI-EBI GWAS Catalog data:
 
-_Burdett T (EBI), Hall PN (NHGRI), Hasting E (EBI) Hindorff LA (NHGRI), Junkins HA (NHGRI), Klemm AK (NHGRI), MacArthur J (EBI), Manolio TA (NHGRI), Morales J (EBI), Parkinson H (EBI) and Welter D (EBI)._
-
-The NHGRI-EBI Catalog of published genome-wide association studies.
-
-Available at: www.genome.gov/gwastudies. Accessed [date of access], version [version number].
+_Burdett T (EBI), Hall PN (NHGRI), Hasting E (EBI) Hindorff LA (NHGRI), Junkins HA (NHGRI), Klemm AK (NHGRI), MacArthur J (EBI), Manolio TA (NHGRI), Morales J (EBI), Parkinson H (EBI) and Welter D (EBI)._ +
+The NHGRI-EBI Catalog of published genome-wide association studies. +
+Available at: www.genome.gov/gwastudies. Accessed [date of access], version [version number]. +
 
 === How to cite the NHGRI-EBI GWAS Catalog:
 
-_Welter D, MacArthur J, Morales J, Burdett T, Hall P, Junkins H, Klemm A, Flicek P, Manolio T, Hindorff L, and Parkinson H._
-
-The NHGRI GWAS Catalog, a curated resource of SNP-trait associations.
-
-Nucleic Acids Research, 2014, Vol. 42 (Database issue): D1001-D1006.
+_Welter D, MacArthur J, Morales J, Burdett T, Hall P, Junkins H, Klemm A, Flicek P, Manolio T, Hindorff L, and Parkinson H._ +
+The NHGRI GWAS Catalog, a curated resource of SNP-trait associations. +
+Nucleic Acids Research, 2014, Vol. 42 (Database issue): D1001-D1006. +
 
 
 == Publications
 
-_Welter D, MacArthur J, Morales J, Burdett T, Hall P, Junkins H, Klemm A, Flicek P, Manolio T, Hindorff L, and Parkinson H._
+_Welter D, MacArthur J, Morales J, Burdett T, Hall P, Junkins H, Klemm A, Flicek P, Manolio T, Hindorff L, and Parkinson H._ +
+http://nar.oxfordjournals.org/content/42/D1/D1001.full[The NHGRI GWAS Catalog, a curated resource of SNP-trait associations.] +
+Nucleic Acids Research, 2014, Vol. 42 (Database issue): D1001-D1006. +
 
-http://nar.oxfordjournals.org/content/42/D1/D1001.full[The NHGRI GWAS Catalog, a curated resource of SNP-trait associations.]
-
-Nucleic Acids Research, 2014, Vol. 42 (Database issue): D1001-D1006.
-
-_Hindorff LA, Sethupathy P, Junkins HA, Ramos EM, Mehta JP, Collins FS and Manolio TA._
-
-http://www.genome.gov/Pages/About/OD/NewsAndFeatures/PNASGWASOnlineCatalog.pdf[Potential etiologic and functional implications of genome-wide association loci for human diseases and traits.]
-
-Proc. Natl Acad. Sci. USA, 2009, 106, 9362–9367
+_Hindorff LA, Sethupathy P, Junkins HA, Ramos EM, Mehta JP, Collins FS and Manolio TA._ +
+http://www.genome.gov/Pages/About/OD/NewsAndFeatures/PNASGWASOnlineCatalog.pdf[Potential etiologic and functional implications of genome-wide association loci for human diseases and traits.] +
+Proc. Natl Acad. Sci. USA, 2009, 106, 9362–9367 +
 
 
 
@@ -59,12 +51,12 @@ To contact the GWAS Catalog team, please email gwas-info@ebi.ac.uk. Please see o
 
 === Keeping up-to-date with new releases and developments
 
-We announce new releases and other developments on our announcement list, gwas-announce@ebi.ac.uk. Please subscribe by sending an e-mail to gwas-announce-join@ebi.ac.uk with subject heading "subscribe".
+We announce new releases and other developments on our announcement list, \gwas-announce@ebi.ac.uk. mailto:gwas-announce-join@ebi.ac.uk?subject-subscribe&body=Please+subscribe+me+to+receive+GWAS+Catalog+updates[Sign up for updates].
 
 
 === User community
 
-To interact with other GWAS Catalog users, join our user community mailing list, gwas-users@ebi.ac.uk by sending an e-mail to gwas-users-join@ebi.ac.uk with subject heading "subscribe".
+To interact with other GWAS Catalog users, join our user community mailing list, \gwas-users@ebi.ac.uk. mailto:gwas-announce-join@ebi.ac.uk?subject=subscribe&body=Please+subscribe+me+to+the+GWAS+users+list[Send us a quick email] to subscribe to this list.
 
 
 
