@@ -51,12 +51,12 @@ To contact the GWAS Catalog team, please email gwas-info@ebi.ac.uk. Please see o
 
 === Keeping up-to-date with new releases and developments
 
-We announce new releases and other developments on our announcement list, \gwas-announce@ebi.ac.uk. mailto:gwas-announce-join@ebi.ac.uk?subject-subscribe&body=Please+subscribe+me+to+receive+GWAS+Catalog+updates[Sign up for updates].
+We announce new releases and other developments on our announcement list, \gwas-announce@ebi.ac.uk. link:++mailto:gwas-announce-join@ebi.ac.uk?subject=subscribe&body=Please subscribe me to receive GWAS Catalog updates++[Sign up for updates].
 
 
 === User community
 
-To interact with other GWAS Catalog users, join our user community mailing list, \gwas-users@ebi.ac.uk. mailto:gwas-announce-join@ebi.ac.uk?subject=subscribe&body=Please+subscribe+me+to+the+GWAS+users+list[Send us a quick email] to subscribe to this list.
+To interact with other GWAS Catalog users, join our user community mailing list, \gwas-users@ebi.ac.uk. link:++mailto:gwas-users-join@ebi.ac.uk?subject=subscribe&body=Please subscribe me to the GWAS users list++[Send us a quick email] to subscribe to this list.
 
 
 
