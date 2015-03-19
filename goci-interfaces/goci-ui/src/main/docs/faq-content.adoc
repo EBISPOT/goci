@@ -12,6 +12,9 @@
 <<How should I cite the GWAS Catalog?>>
 
 
+<<Why does the data I just downloaded look different from what I downloaded in the old Catalog?>>
+
+
 <<How do I do a search?>>
 
 
@@ -66,7 +69,7 @@
 
 ==== Why has the Catalog moved to the EBI?
 
-From September 2010 to the present delivery and development of the Catalog has been a collaborative project between EMBL-EBI and NHGRI. In March 2015 the Catalog infrastructure moved to EMBL-EBI to enable delivery of an improved user interface, including ontology driven Catalog searching, and new curatorial infrastructure, supporting improved QC processes. Content available from www.genome.gov/gwastudies/ was last updated 20 Februry 2015 and is now frozen, no further updated content will be available at the NHGRI site. Updated content is available from www.ebi.ac.uk/GWAS/ and will be updated. The download file is now available from http://www.ebi.ac.uk/gwas/api/search/downloads/full and has updated content.
+From September 2010 to the present delivery and development of the Catalog has been a collaborative project between EMBL-EBI and NHGRI. In March 2015 the Catalog infrastructure moved to EMBL-EBI to enable delivery of an improved user interface, including ontology driven Catalog searching, and new curatorial infrastructure, supporting improved QC processes. Content available from www.genome.gov/gwastudies/ was last updated 20 Februry 2015 and is now frozen, no further updated content will be available at the NHGRI site. Updated content is available from www.ebi.ac.uk/GWAS/ and will be updated. The download file is now available from link:../api/search/downloads/full[here] and has updated content.
 
 ==== Is there any way I can stay informed about new search features and developments?
 
@@ -74,6 +77,11 @@ You can subscribe to our announcement list by sending an e-mail to gwas-announce
 
 ==== How should I cite the GWAS Catalog?
 Please see the link:about[About] page for citation guidance.
+
+==== Why does the data I just downloaded look different from what I downloaded in the old Catalog?
+
+A number of link:known-issues[known issues] got into the data during the migration. We are working hard to resolve these. Due to the way we now process the Catalog data for the full download, you may find that your spreadsheet has more rows than it did previously as each association between a SNP and a reported gene now gets its own row, i.e. if an association has several author-reported genes, it will be split across as many rows as there are genes.
+
 
 
 == Searching

@@ -6,7 +6,7 @@ _Note: The SNP data in the catalog has been mapped to dbSNP Build 142 and Genome
 
 <<File headers for catalog version 1.0>>
 
-<<File headers for catalog version 1.0.1>>
+// <<File headers for catalog version 1.0.1>>
 
 '''
 
@@ -81,7 +81,7 @@ CNV: Study of copy number variation (yes/no)
 _Updated: 13 January 2015_
 
 '''
-
+////
 === File headers for catalog version 1.0.1
 
 As for version 1.0 plus
@@ -91,3 +91,4 @@ EFOTRAIT: Mapped Experimental Factor Ontology trait for this association
 EFOURI: URI of the EFO trait
 
 _Added: 10 March 2015_
+////

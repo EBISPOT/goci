@@ -1,3 +1,13 @@
-gwas.log*
+#################################
+# GWAS Catalog Git Ignore Rules #
+#################################
 
+# exclude all log files
+*.log*
+
+# exclude target directories if not exclude in gitignore_global
 */target/
+
+# never commit application properties files
+application.properties
+
