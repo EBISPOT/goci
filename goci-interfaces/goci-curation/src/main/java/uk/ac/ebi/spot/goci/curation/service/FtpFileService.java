@@ -31,9 +31,6 @@ public class FtpFileService {
     @Value("${ftp.server}")
     private String server;
 
-    @Value("${ftp.port}")
-    private int port;
-
     @Value("${ftp.username}")
     private String userName;
 
@@ -50,6 +47,7 @@ public class FtpFileService {
 
     // Constructor
     public FtpFileService() {
+        this.ftpClient = new FTPClient();
     }
 
     // Upload file to NCBI
@@ -83,10 +81,8 @@ public class FtpFileService {
         connect();
 
         // Find file on FTP
-
         FileOutputStream fileOutputStream = new FileOutputStream(annotatedFile);
-        // TODO NEED TO RENAME THIS FILE TO MATCH WHATEVER IS ON THEIR FTP
-        boolean done = ftpClient.retrieveFile("test.txt", fileOutputStream);
+        boolean done = ftpClient.retrieveFile("annotated_gwas.txt", fileOutputStream);
 
         disconnect();
 
@@ -100,13 +96,13 @@ public class FtpFileService {
         // Connect to server
         int reply;
         try {
-            ftpClient.connect(server, port);
+            ftpClient.connect(server);
             getLog().info("Connecting to " + server);
 
             ftpClient.login(userName, password);
             ftpClient.enterLocalPassiveMode();
 
-            reply = ftpClient.getReply();
+            reply = ftpClient.getReplyCode();
 
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftpClient.disconnect();
