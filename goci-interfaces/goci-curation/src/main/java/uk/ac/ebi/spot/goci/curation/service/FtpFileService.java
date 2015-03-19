@@ -65,7 +65,7 @@ public class FtpFileService {
             getLog().info(remoteFile + " uploaded successfully.");
         }
 
-        // Logout and disconnect
+        // Close FTP connection
         disconnect();
     }
 
@@ -73,9 +73,18 @@ public class FtpFileService {
     public File ftpDownload() throws IOException {
 
         // Create a file to write to
+        String uploadDir =
+                System.getProperty("java.io.tmpdir") + File.separator + "gwas_ncbi_export" + File.separator;
+
         DateFormat df = new SimpleDateFormat("yyyy_MM_dd");
         String dateStamp = df.format(new Date());
-        File annotatedFile = new File(dateStamp + "annotated_gwas.txt");
+        File annotatedFile= new File(uploadDir + dateStamp + "_annotated_gwas.txt");
+        annotatedFile.getParentFile().mkdirs();
+
+        // If at this stage we haven't got a file create one
+        if (!annotatedFile.exists()) {
+            annotatedFile.createNewFile();
+        }
 
         // Connect to FTP
         connect();
@@ -84,6 +93,13 @@ public class FtpFileService {
         FileOutputStream fileOutputStream = new FileOutputStream(annotatedFile);
         boolean done = ftpClient.retrieveFile("annotated_gwas.txt", fileOutputStream);
 
+        if (done){
+            getLog().info("Annotated NCBI file downloaded successfully.");
+        }
+
+        fileOutputStream.close();
+
+        // Close FTP connection
         disconnect();
 
         // Return NCBI annotated file
