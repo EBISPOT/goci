@@ -13,12 +13,10 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -31,8 +29,10 @@ import java.util.stream.Collectors;
 public class CatalogExportRepository {
     private static final String FROM_CLAUSE =
             " FROM CATALOG_SUMMARY_VIEW ";
+
+    // TODO INCLUDE OR CLAUSE TO GET ALL PUBLISHED STUDIES ALSO
     private static final String NCBI_WHERE_CLAUSE =
-            " WHERE CURATION_STATUS = 'Send to NCBI' ORDER BY STUDY_ID DESC ";
+            " WHERE CURATION_STATUS = 'Send to NCBI' OR RESULT_PUBLISHED IS NOT NULL ORDER BY STUDY_ID DESC ";
     private static final String DOWNLOAD_WHERE_CLAUSE =
             " WHERE RESULT_PUBLISHED IS NOT NULL ORDER BY STUDY_ID DESC ";
 
@@ -55,18 +55,22 @@ public class CatalogExportRepository {
     }
 
     public String[][] getNCBISpreadsheet() {
+
+        // Get headers for output spreadsheet
         List<String> ncbiOutputHeaders = CatalogHeaderBindings.getNcbiHeaders()
                 .stream()
                 .filter(binding -> binding.getNcbiName() != null)
                 .map(CatalogHeaderBinding::getNcbiName)
                 .collect(Collectors.toList());
 
+        // Get equivalent headers in database
         List<String> ncbiQueryHeaders = CatalogHeaderBindings.getNcbiHeaders()
                 .stream()
                 .filter(binding -> binding.getDatabaseName() != null)
                 .map(CatalogHeaderBinding::getDatabaseName)
                 .collect(Collectors.toList());
 
+        // Build query
         String query = buildSelectClause(ncbiQueryHeaders) + FROM_CLAUSE + NCBI_WHERE_CLAUSE;
         List<String[]> rows = jdbcTemplate.query(query, (resultSet, i) -> {
             Map<CatalogHeaderBinding, String> dataForMapping = new LinkedHashMap<>();
@@ -167,7 +171,7 @@ public class CatalogExportRepository {
 
     private String buildSelectClause(List<String> requiredFields) {
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT ");
+        sb.append("SELECT DISTINCT ");
 
         Iterator<String> requiredFieldIterator = requiredFields.iterator();
         while (requiredFieldIterator.hasNext()) {
@@ -194,6 +198,13 @@ public class CatalogExportRepository {
         else {
             String value = resultSet.getString(binding.getDatabaseName());
             if (value != null) {
+
+                // Remove new lines in value
+                String newline = System.getProperty("line.separator");
+                if (value.contains(newline)) {
+                    value = value.replace("\n", "");
+                }
+
                 return resultSet.getString(binding.getDatabaseName()).trim();
             }
             else {
