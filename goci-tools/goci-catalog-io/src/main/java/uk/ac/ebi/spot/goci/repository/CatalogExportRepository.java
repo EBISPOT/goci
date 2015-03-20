@@ -199,13 +199,13 @@ public class CatalogExportRepository {
             String value = resultSet.getString(binding.getDatabaseName());
             if (value != null) {
 
-                // Remove new lines in value
+                // Remove new lines or carriage returns in value
                 String newline = System.getProperty("line.separator");
                 if (value.contains(newline)) {
-                    value = value.replace("\n", "");
+                    value = value.replaceAll("\n", "").replaceAll("\r", "");
                 }
 
-                return resultSet.getString(binding.getDatabaseName()).trim();
+                return value.trim();
             }
             else {
                 return "";
