@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import uk.ac.ebi.spot.goci.repository.CatalogExportRepository;
 import uk.ac.ebi.spot.goci.repository.CatalogImportRepository;
+import uk.ac.ebi.spot.goci.repository.CatalogMetaDataRepository;
 import uk.ac.ebi.spot.goci.service.SpreadsheetProcessor;
 
 import java.io.File;
@@ -29,6 +30,8 @@ public class ImportExportApplication {
     private CatalogExportRepository catalogExportRepository;
     @Autowired
     private CatalogImportRepository catalogImportRepository;
+    @Autowired
+    private CatalogMetaDataRepository catalogMetaDataRepository;
     @Autowired
     private SpreadsheetProcessor spreadsheetProcessor;
 
@@ -87,6 +90,16 @@ public class ImportExportApplication {
                             exitCode += 5;
                         }
                         break;
+                    case STATS:
+                        try {
+                            doStatsExport(inputFile);
+                        }
+                        catch (Exception e) {
+                            System.err.println("Stats export failed (" + e.getMessage() + ")");
+                            getLog().error("Stats export failed", e);
+                            exitCode += 3;
+                        }
+                        break;
                     case LOAD:
                         try {
                             doLoad(inputFile);
@@ -128,6 +141,11 @@ public class ImportExportApplication {
         String[][] data = catalogExportRepository.getDownloadSpreadsheet();
         spreadsheetProcessor.writeToFile(data, outFile);
     }
+
+    void doStatsExport(File statsFile) throws IOException{
+         catalogMetaDataRepository.getMetaData(statsFile);
+    }
+
 
     void doLoad(File inFile) throws IOException {
         String[][] data = spreadsheetProcessor.readFromFile(inFile);
@@ -177,6 +195,9 @@ public class ImportExportApplication {
                 if (cl.hasOption("l")) {
                     this.opMode = OperationMode.LOAD;
                 }
+                if (cl.hasOption("s")) {
+                    this.opMode = OperationMode.STATS;
+                }
 
                 // file options
                 if (cl.hasOption("f")) {
@@ -198,6 +219,8 @@ public class ImportExportApplication {
     private Options bindOptions() {
         Options options = new Options();
 
+
+
         // help
         Option helpOption = new Option("h", "help", false, "Print the help");
         options.addOption(helpOption);
@@ -209,6 +232,7 @@ public class ImportExportApplication {
         // -f --file        (file to load in)
         // -o --out         (file to write out to)
         // -a --download_alt  (write out alternative downloads file)
+        // -s --stats       (write out catalog meta data)
 
         // add input options
         OptionGroup modeGroup = new OptionGroup();
@@ -235,8 +259,8 @@ public class ImportExportApplication {
                 "download_alt",
                 false,
                 "Download alternative - generate an export of the GWAS catalog, including ontology mappings, suitable for download");
-        downloadOption.setRequired(false);
-        modeGroup.addOption(downloadOption);
+        downloadAltOption.setRequired(false);
+        modeGroup.addOption(downloadAltOption);
 
         Option loadOption = new Option(
                 "l",
@@ -245,6 +269,14 @@ public class ImportExportApplication {
                 "Load - take a spreadsheet file mapped by the NCBI and load into the database");
         loadOption.setRequired(false);
         modeGroup.addOption(loadOption);
+
+        Option statsOption = new Option(
+                "s",
+                "stats",
+                false,
+                "Stats - generate the meta data for the GWAS Catalog published content");
+        statsOption.setRequired(false);
+        modeGroup.addOption(statsOption);
 
         options.addOptionGroup(modeGroup);
 
@@ -280,6 +312,7 @@ public class ImportExportApplication {
         NCBI,
         DOWNLOAD,
         DOWNLOAD_ALTERNATIVE,
+        STATS,
         LOAD
     }
 }
