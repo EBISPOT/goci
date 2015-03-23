@@ -57,7 +57,7 @@ public class FtpFileService {
         connect();
 
         InputStream inputStream = new FileInputStream(outputFile);
-        String remoteFile = outputFile.getName();
+        String remoteFile = "gwas.txt";
 
         boolean done = ftpClient.storeFile(remoteFile, inputStream);
         inputStream.close();

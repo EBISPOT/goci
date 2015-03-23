@@ -247,7 +247,7 @@ public class CatalogImportRepository {
                     String valueToInsert = line[headerColumnMap.get(binding)].trim();
 
                     switch (binding) {
-                        case STUDY_ID:
+                        case CatalogHeaderBinding.STUDY_ID:
                             if (valueToInsert.isEmpty()) {
                                 studyId = null;
                             }
@@ -255,7 +255,7 @@ public class CatalogImportRepository {
                                 studyId = Long.valueOf(valueToInsert);
                             }
                             break;
-                        case PUBMED_ID_ERROR:
+                        case CatalogHeaderBinding.PUBMED_ID_ERROR:
                             if (valueToInsert.isEmpty()) {
                                 pubmedIdError = null;
                             }
@@ -263,7 +263,7 @@ public class CatalogImportRepository {
                                 pubmedIdError = Integer.valueOf(valueToInsert);
                             }
                             break;
-                        case NCBI_PAPER_TITLE:
+                        case CatalogHeaderBinding.NCBI_PAPER_TITLE:
                             if (valueToInsert.isEmpty()) {
                                 ncbiPaperTitle = null;
                             }
@@ -271,7 +271,7 @@ public class CatalogImportRepository {
                                 ncbiPaperTitle = valueToInsert;
                             }
                             break;
-                        case NCBI_FIRST_AUTHOR:
+                        case CatalogHeaderBinding.NCBI_FIRST_AUTHOR:
                             if (valueToInsert.isEmpty()) {
                                 ncbiFirstAuthor = null;
                             }
@@ -279,7 +279,7 @@ public class CatalogImportRepository {
                                 ncbiFirstAuthor = valueToInsert;
                             }
                             break;
-                        case NCBI_NORMALISED_FIRST_AUTHOR:
+                        case CatalogHeaderBinding.NCBI_NORMALISED_FIRST_AUTHOR:
                             if (valueToInsert.isEmpty()) {
                                 ncbiNormalisedFirstAuthor = null;
                             }
@@ -287,7 +287,7 @@ public class CatalogImportRepository {
                                 ncbiNormalisedFirstAuthor = valueToInsert;
                             }
                             break;
-                        case ASSOCIATION_ID:
+                        case CatalogHeaderBinding.ASSOCIATION_ID:
                             if (valueToInsert.isEmpty()) {
                                 associationId = null;
                             }
@@ -295,7 +295,7 @@ public class CatalogImportRepository {
                                 associationId = Long.valueOf(valueToInsert);
                             }
                             break;
-                        case GENE_ERROR:
+                        case CatalogHeaderBinding.GENE_ERROR:
                             if (valueToInsert.isEmpty()) {
                                 geneError = null;
                             }
@@ -303,7 +303,7 @@ public class CatalogImportRepository {
                                 geneError = Integer.valueOf(valueToInsert);
                             }
                             break;
-                        case SNP_ERROR:
+                        case CatalogHeaderBinding.SNP_ERROR:
                             if (valueToInsert.isEmpty()) {
                                 snpError = null;
                             }
@@ -311,7 +311,7 @@ public class CatalogImportRepository {
                                 snpError = valueToInsert;
                             }
                             break;
-                        case SNP_GENE_ON_DIFF_CHR:
+                        case CatalogHeaderBinding.SNP_GENE_ON_DIFF_CHR:
                             if (valueToInsert.isEmpty()) {
                                 snpGeneOnDiffChr = null;
                             }
@@ -319,7 +319,7 @@ public class CatalogImportRepository {
                                 snpGeneOnDiffChr = valueToInsert;
                             }
                             break;
-                        case NO_GENE_FOR_SYMBOL:
+                        case CatalogHeaderBinding.NO_GENE_FOR_SYMBOL:
                             if (valueToInsert.isEmpty()) {
                                 noGeneForSymbol = null;
                             }
@@ -327,7 +327,7 @@ public class CatalogImportRepository {
                                 noGeneForSymbol = valueToInsert;
                             }
                             break;
-                        case GENE_NOT_ON_GENOME:
+                        case CatalogHeaderBinding.GENE_NOT_ON_GENOME:
                             if (valueToInsert.isEmpty()) {
                                 geneNotOnGenome = null;
                             }
@@ -335,7 +335,7 @@ public class CatalogImportRepository {
                                 geneNotOnGenome = valueToInsert;
                             }
                             break;
-                        case REGION:
+                        case CatalogHeaderBinding.REGION:
                             if (valueToInsert.isEmpty()) {
                                 region = null;
                             }
@@ -343,7 +343,7 @@ public class CatalogImportRepository {
                                 region = valueToInsert;
                             }
                             break;
-                        case CHROMOSOME_NAME:
+                        case CatalogHeaderBinding.CHROMOSOME_NAME:
                             if (valueToInsert.isEmpty()) {
                                 chromosomeName = null;
                             }
@@ -351,7 +351,7 @@ public class CatalogImportRepository {
                                 chromosomeName = valueToInsert;
                             }
                             break;
-                        case CHROMOSOME_POSITION:
+                        case CatalogHeaderBinding.CHROMOSOME_POSITION:
                             if (valueToInsert.isEmpty()) {
                                 chromosomePosition = null;
                             }
@@ -359,7 +359,7 @@ public class CatalogImportRepository {
                                 chromosomePosition = valueToInsert;
                             }
                             break;
-                        case UPSTREAM_MAPPED_GENE:
+                        case CatalogHeaderBinding.UPSTREAM_MAPPED_GENE:
                             if (valueToInsert.isEmpty()) {
                                 upstreamMappedGene = null;
                             }
@@ -367,7 +367,7 @@ public class CatalogImportRepository {
                                 upstreamMappedGene = valueToInsert;
                             }
                             break;
-                        case UPSTREAM_ENTREZ_GENE_ID:
+                        case CatalogHeaderBinding.UPSTREAM_ENTREZ_GENE_ID:
                             if (valueToInsert.isEmpty()) {
                                 upstreamEntrezGeneId = null;
                             }
@@ -375,7 +375,7 @@ public class CatalogImportRepository {
                                 upstreamEntrezGeneId = valueToInsert;
                             }
                             break;
-                        case UPSTREAM_GENE_DISTANCE:
+                        case CatalogHeaderBinding.UPSTREAM_GENE_DISTANCE:
                             if (valueToInsert.isEmpty()) {
                                 upstreamGeneDistance = null;
                             }
@@ -383,7 +383,7 @@ public class CatalogImportRepository {
                                 upstreamGeneDistance = Integer.valueOf(valueToInsert);
                             }
                             break;
-                        case DOWNSTREAM_MAPPED_GENE:
+                        case CatalogHeaderBinding.DOWNSTREAM_MAPPED_GENE:
                             if (valueToInsert.isEmpty()) {
                                 downstreamMappedGene = null;
                             }
@@ -391,7 +391,7 @@ public class CatalogImportRepository {
                                 downstreamMappedGene = valueToInsert;
                             }
                             break;
-                        case DOWNSTREAM_ENTREZ_GENE_ID:
+                        case CatalogHeaderBinding.DOWNSTREAM_ENTREZ_GENE_ID:
                             if (valueToInsert.isEmpty()) {
                                 downstreamEntrezGeneId = null;
                             }
@@ -399,7 +399,7 @@ public class CatalogImportRepository {
                                 downstreamEntrezGeneId = valueToInsert;
                             }
                             break;
-                        case DOWNSTREAM_GENE_DISTANCE:
+                        case CatalogHeaderBinding.DOWNSTREAM_GENE_DISTANCE:
                             if (valueToInsert.isEmpty()) {
                                 downstreamGeneDistance = null;
                             }
@@ -407,7 +407,7 @@ public class CatalogImportRepository {
                                 downstreamGeneDistance = Integer.valueOf(valueToInsert);
                             }
                             break;
-                        case IS_INTERGENIC:
+                        case CatalogHeaderBinding.IS_INTERGENIC:
                             if (valueToInsert.isEmpty()) {
                                 isIntergenic = null;
                             }
@@ -415,7 +415,7 @@ public class CatalogImportRepository {
                                 isIntergenic = Integer.valueOf(valueToInsert);
                             }
                             break;
-                        case SNP_ID:
+                        case CatalogHeaderBinding.SNP_ID:
                             if (valueToInsert.isEmpty()) {
                                 snpId = null;
                             }
@@ -423,7 +423,7 @@ public class CatalogImportRepository {
                                 snpId = valueToInsert;
                             }
                             break;
-                        case MERGED:
+                        case CatalogHeaderBinding.MERGED:
                             if (valueToInsert.isEmpty()) {
                                 merged = null;
                             }
@@ -431,7 +431,7 @@ public class CatalogImportRepository {
                                 merged = Integer.valueOf(valueToInsert);
                             }
                             break;
-                        case MAPPED_GENE:
+                        case CatalogHeaderBinding.MAPPED_GENE:
                             if (valueToInsert.isEmpty()) {
                                 mappedGene = null;
                             }
@@ -439,7 +439,7 @@ public class CatalogImportRepository {
                                 mappedGene = valueToInsert;
                             }
                             break;
-                        case ENTREZ_GENE_ID:
+                        case CatalogHeaderBinding.ENTREZ_GENE_ID:
                             if (valueToInsert.isEmpty()) {
                                 entrezGeneId = null;
                             }
@@ -447,7 +447,7 @@ public class CatalogImportRepository {
                                 entrezGeneId = valueToInsert;
                             }
                             break;
-                        case FUNCTIONAL_CLASS:
+                        case CatalogHeaderBinding.FUNCTIONAL_CLASS:
                             if (valueToInsert.isEmpty()) {
                                 functionalClass = null;
                             }
