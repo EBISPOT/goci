@@ -29,12 +29,10 @@ import java.util.stream.Collectors;
 public class CatalogExportRepository {
     private static final String FROM_CLAUSE =
             " FROM CATALOG_SUMMARY_VIEW ";
-
-    // TODO INCLUDE OR CLAUSE TO GET ALL PUBLISHED STUDIES ALSO
     private static final String NCBI_WHERE_CLAUSE =
             " WHERE CURATION_STATUS = 'Send to NCBI' OR RESULT_PUBLISHED IS NOT NULL ORDER BY STUDY_ID DESC ";
     private static final String DOWNLOAD_WHERE_CLAUSE =
-            " WHERE RESULT_PUBLISHED IS NOT NULL ORDER BY STUDY_ID DESC ";
+            " WHERE RESULT_PUBLISHED IS NOT NULL ORDER BY PUBMED_ID DESC ";
 
     private final DateFormat df;
 
