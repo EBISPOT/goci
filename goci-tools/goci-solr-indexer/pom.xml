@@ -63,6 +63,7 @@
    	</properties>
 
     <build>
+        <finalName>gwas-solr-indexer</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

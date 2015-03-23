@@ -38,6 +38,7 @@
 
 
     <build>
+        <finalName>gwas-catalog-io</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
