@@ -395,12 +395,6 @@ public class StudyController {
         // as corresponding dates will be set in housekeeping table
         CurationStatus currentStatus = housekeeping.getCurationStatus();
 
-     /*
-        TODO POSSIBLY CHANGE LOGIC SO THIS DATE IS SET BY NIGHTLY RELEASE PROCESS
-        OTHERWISE ANY TIME USER SAVES FROM WHEN STATUS IS SET TO "publish study"
-        THE DATE GETS UPDATED
-     */
-
         // If the status has changed
         if (currentStatus != statusInDatabase) {
             if (currentStatus != null && currentStatus.getStatus().equals("Publish study")) {
