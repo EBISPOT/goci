@@ -94,7 +94,7 @@ public class FtpFileService {
         boolean done = ftpClient.retrieveFile("annotated_gwas.txt", fileOutputStream);
 
         if (done){
-            getLog().info("Annotated NCBI file downloaded successfully.");
+            getLog().info("Annotated NCBI file downloaded successfully to "+ annotatedFile);
         }
 
         fileOutputStream.close();
