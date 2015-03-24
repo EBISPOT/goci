@@ -358,17 +358,19 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         List<String> genes = new ArrayList<>();
         snp.getGenomicContexts().forEach(
                 context -> {
-                    String geneName = context.getGene().getGeneName().trim();
-                    if (!genes.contains(geneName)) {
-                        if (context.isUpstream()) {
-                            genes.add(0, geneName);
-                            intragenic.set(true);
-                        }
-                        else {
-                            if (context.isDownstream()) {
+                    if (context.getGene() != null && context.getGene().getGeneName() != null) {
+                        String geneName = context.getGene().getGeneName().trim();
+                        if (!genes.contains(geneName)) {
+                            if (context.isUpstream()) {
+                                genes.add(0, geneName);
                                 intragenic.set(true);
                             }
-                            genes.add(geneName);
+                            else {
+                                if (context.isDownstream()) {
+                                    intragenic.set(true);
+                                }
+                                genes.add(geneName);
+                            }
                         }
                     }
                 });
