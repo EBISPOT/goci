@@ -1,5 +1,4 @@
 __author__ = 'Tony Burdett'
-
 import sys
 import datetime
 
@@ -22,6 +21,10 @@ jsonFilePath = sys.argv[1]
 snp2geneMappingFilePath = sys.argv[2]
 sparqlEndPoint = sys.argv[3]
 
+#x = "1.357e-05"
+#y = float(x)
+#print x    
+#exit(0)
 
 # first, load the mappings file (rsid -> gene) as a dictionary
 # rs227724        ENSG00000183691 upstream_gene_variant   
@@ -35,10 +38,14 @@ with open(snp2geneMappingFilePath) as mappings:
 		next(mappings)
 	for line in csv.reader(mappings, delimiter="\t"):
 		if not line[0].startswith("#"):
-			if not line[0] in snpGeneMappings:
-				snpGeneMappings[line[0]] = list()
-			gene2soLabel = line[1] + ":" + line[2];
-			snpGeneMappings[line[0]].append(gene2soLabel)
+			snp_rs_id = line[0]
+                        snp_rs_id = snp_rs_id.replace(" ","")
+			if not snp_rs_id in snpGeneMappings:
+				snpGeneMappings[snp_rs_id] = list()
+			gene2soLabel = line[1].replace(" ","") + ":" + line[2].replace(" ","")
+			print "gene2soLabel = -" + gene2soLabel + "-"
+			print "snp_rs_id = -" + snp_rs_id + "-"
+			snpGeneMappings[snp_rs_id].append(gene2soLabel)
 
 
 
@@ -69,7 +76,7 @@ json = {}
 noMappingCount = 0
 totalCount = 0
 
-soName2soId = {"intron_variant": "http://identifiers.org/so/SO:0001627", "missense_variant": "http://identifiers.org/so/SO:0001583", "synonymous_variant" : "http://identifiers.org/so/SO:0001819", "upstream_gene_variant" : "http://identifiers.org/so/SO:0001631"}
+soName2soId = {"3_prime_UTR_variant" : "http://identifiers.org/so/SO:0001624","5_prime_UTR_variant" : "http://identifiers.org/so/SO:0001583","coding_sequence_variant" : "http://identifiers.org/so/SO:0001580","frameshift_variant" : "http://identifiers.org/so/SO:0001589","intron_variant" : "http://identifiers.org/so/SO:0001627","missense_variant" : "http://identifiers.org/so/SO:0001583","nearest_gene_five_prime_end" : "nearest_gene_five_prime_end","non_coding_transcript_exon_variant" : "http://identifiers.org/so/SO:0001792","splice_acceptor_variant" : "http://identifiers.org/so/SO:0001574","splice_donor_variant" : "http://identifiers.org/so/SO:0001575","splice_region_variant" : "http://identifiers.org/so/SO:0001630","stop_gained" : "http://identifiers.org/so/SO:0001587","stop_lost" : "http://identifiers.org/so/SO:0001578","synonymous_variant" : "http://identifiers.org/so/SO:0001819"}
 
 # parse results and serialize to JSON
 with open(sparqlresults[0]) as results:
@@ -104,13 +111,13 @@ with open(sparqlresults[0]) as results:
 
 					gene["about"] = ["http://identifiers.org/ensembl/" + geneid]
 					geneprov={}
-					geneprov["evidence_codes"] = ["http://identifiers.org/eco/ECO:0000177", "http://identifiers.org/eco/ECO:0000053", soId, "http://identifiers.org/eco/cttv_mapping_pipeline"]
+					geneprov["evidence_codes"] = ["http://identifiers.org/eco/ECO:0000053", soId, "http://identifiers.org/eco/cttv_mapping_pipeline"]
 					geneprov["association_score"] ={"probability" : {"value" : None, "method" : None}, "pvalue": {"value" : None, "method" : None}}
 
 
 					snp["about"] = ["http://identifiers.org/dbsnp/" + snpid]
 					snpprov = {}
-					snpprov["evidence_codes"] = ["http://purl.obolibrary.org/obo/eco/GWAS","http://identifiers.org/eco/ECO:0000033", "http://identifiers.org/eco/ECO:0000205"]
+					snpprov["evidence_codes"] = ["http://identifiers.org/eco/GWAS","http://identifiers.org/eco/ECO:0000033", "http://identifiers.org/eco/ECO:0000205"]
 					pval=0
 					provenance_type = {}
 
@@ -121,11 +128,13 @@ with open(sparqlresults[0]) as results:
 							provenance_type = {"literature":{"pubmed_refs": ["http://identifiers.org/pubmed/" + line[i]]}, "expert": { "status": True} }
 							snpprov["provenance_type"] = provenance_type
 						if i == 2:
-							snpprov["date_asserted"] = line[i]
-							print "date = ", line[i]
+							snpprovDateAsserted = line[i] + "+01:00"
+							snpprovDateAsserted = snpprovDateAsserted.replace(" ","T")
+							snpprov["date_asserted"] = snpprovDateAsserted 
+							print "date = ", snpprovDateAsserted
 						if i == 3:
-							pval = line[i]
-							snpprov["association_score"] = {"pvalue": {"value" : line[i], "method" : None}}
+							pval = float(line[i])
+							snpprov["association_score"] = {"pvalue": {"value" : pval, "method" : None}}
 						if i == 4:
 							efo = line[i]
 							isOrphanet = efo.find("Orphanet")
@@ -144,7 +153,7 @@ with open(sparqlresults[0]) as results:
 					"object": efo,
 					"study_name":"cttv009_gwas_catalog",
 					"pubmed_refs":"http://identifiers.org/pubmed/" + pid,
-					"pvalue":pval,
+					"pvalue":str(pval),
 					"biological_subject":"http://identifiers.org/ensembl/" + geneid}
 
 					json["biological_subject"] = gene
@@ -159,14 +168,22 @@ with open(sparqlresults[0]) as results:
 					#2015-2-5T13:38:44
 					d = datetime.datetime.now()
 					year = str(d.year)
-					month = str(d.month)
+					month=d.month;
+					if d.month < 10 :
+						month = "0" + str(d.month)
 					day = str(d.day)
+				        if d.day < 10 :
+						day = "0" + str(d.day)	
 					hour = str(d.hour)
 					minute = str(d.minute)
 					second = str(d.second)
-					dateAsserted = year + "-" + month + "-" + day + "T" + hour + ":" + minute + ":" + second;
+					dateAsserted = year + "-" + month + "-" + day + "T" + hour + ":" + minute + ":" + second + "+01:00";
+					
+					#as gwas doesn't have a proper version I'm taking the today's date as a version.
+					gwasVersion=year + "-" + month + "-" + day
+					provenance_type = {"database":{"id":"GWAS catalog", "version":gwasVersion}}
 
-					json["evidence"] = {"date_asserted" : dateAsserted , "is_associated" : True, "association_score" : {"probability" : {"value" : None, "method" : None}, "pvalue": {"value" : None, "method" : None}}, "provenance_type" : provenance_type, "evidence_chain" : evidencechain,  "evidence_codes": ["http://purl.obolibrary.org/obo/eco/GWAS", soId,"http://identifiers.org/eco/ECO:0000177","http://identifiers.org/eco/ECO:0000205", "http://identifiers.org/eco/ECO:0000033", "http://identifiers.org/eco/cttv_mapping_pipeline"]}
+					json["evidence"] = {"date_asserted" : dateAsserted , "is_associated" : True, "association_score" : {"probability" : {"value" : None, "method" : None}, "pvalue": {"value" : None, "method" : None}}, "provenance_type" : provenance_type, "evidence_chain" : evidencechain,  "evidence_codes": ["http://identifiers.org/eco/GWAS", soId,"http://identifiers.org/eco/ECO:0000205", "http://identifiers.org/eco/ECO:0000033", "http://identifiers.org/eco/cttv_mapping_pipeline"]}
 					print "appending to full json" + snpid
 					fullJson.append(json);
 					if snpid == "rs975730" :
@@ -183,13 +200,29 @@ with open(sparqlresults[0]) as results:
 
 print "print full json"
 out = open(jsonFilePath, "a")
-oneJsonString = str(fullJson)
-oneJsonString = oneJsonString.replace("'", "\"");
-oneJsonString = oneJsonString.replace("True", "true")
-oneJsonString = oneJsonString.replace("None", "null")
-out.write(oneJsonString)
-out.write("\n")
-out.close()
+for individualJson in fullJson:
+	individualJsonString = str(individualJson)
+        individualJsonString = individualJsonString.replace("'", "\"");
+	individualJsonString = individualJsonString.replace("True", "true")
+	individualJsonString = individualJsonString.replace("None", "null")
+	individualJsonString = individualJsonString.replace("http://identifiers.org/efo/EFO_","http://identifiers.org/efo/")
+	individualJsonString = individualJsonString.replace("http://www.orpha.net/ORDO/Orphanet_","http://identifiers.org/orphanet/")
+	individualJsonString = individualJsonString.replace("http://identifiers.org/ORDO/Orphanet_","http://identifiers.org/orphanet/")
+	individualJsonString = individualJsonString.replace("http://identifiers.org/efo/g/obo/HP_","http://purl.obolibrary.org/obo/HP_")
+        individualJsonString = individualJsonString.replace("http://identifiers.org/efo/g/obo/GO_","http://purl.obolibrary.org/obo/GO_")
+	print "individualJsonString = %s" % individualJsonString 
+	print "\n"
+	out.write(individualJsonString)
+	out.write("\n");
+out.close() 
+
+#oneJsonString = str(fullJson)
+#oneJsonString = oneJsonString.replace("'", "\"");
+#oneJsonString = oneJsonString.replace("True", "true")
+#oneJsonString = oneJsonString.replace("None", "null")
+#out.write(oneJsonString)
+#out.write("\n")
+#out.close()
 
 #for oneJson in fullJson :
 #    oneJsonString = str(oneJson)
