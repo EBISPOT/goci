@@ -109,6 +109,7 @@ public class MailService {
             String snpErrors = "";
             if (!studyErrorView.getSnpErrors().isEmpty()) {
                 snpErrors = studyErrorView.getSnpErrors().toString();
+                snpErrors = createErrorForEmail(snpErrors);
             }
             else {snpErrors = "none";}
             String snpErrorBody = "SNP Error(s): " + snpErrors + "\n";
@@ -117,6 +118,7 @@ public class MailService {
             String geneNotOnGenomeErrors = "";
             if (!studyErrorView.getGeneNotOnGenomeErrors().isEmpty()) {
                 geneNotOnGenomeErrors = studyErrorView.getGeneNotOnGenomeErrors().toString();
+                geneNotOnGenomeErrors = createErrorForEmail(geneNotOnGenomeErrors);
             }
             else {geneNotOnGenomeErrors = "none";}
             String geneNotOnGenomeErrorsBody = "Gene Not On Genome Error(s): " + geneNotOnGenomeErrors + "\n";
@@ -125,6 +127,7 @@ public class MailService {
             String snpGeneOnDiffChrErrors = "";
             if (!studyErrorView.getSnpGeneOnDiffChrErrors().isEmpty()) {
                 snpGeneOnDiffChrErrors = studyErrorView.getSnpGeneOnDiffChrErrors().toString();
+                snpGeneOnDiffChrErrors = createErrorForEmail(snpGeneOnDiffChrErrors);
             }
             else {snpGeneOnDiffChrErrors = "none";}
             String snpGeneOnDiffChrErrorsBody =
@@ -134,6 +137,7 @@ public class MailService {
             String noGeneForSymbolErrors = "";
             if (!studyErrorView.getNoGeneForSymbolErrors().isEmpty()) {
                 noGeneForSymbolErrors = studyErrorView.getNoGeneForSymbolErrors().toString();
+                noGeneForSymbolErrors = createErrorForEmail(noGeneForSymbolErrors);
             }
             else {noGeneForSymbolErrors = "none";}
             String noGeneForSymbolErrorsBody = "No Gene For Symbol Error(s): " + noGeneForSymbolErrors + "\n";
@@ -152,11 +156,20 @@ public class MailService {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(getTo());
         mailMessage.setFrom(getFrom());
-        mailMessage.setSubject("GWAS NCBI DataFlow Audit Trail");
+        mailMessage.setSubject("GWAS Curation daily audit report");
         mailMessage.setText("The following studies have status NCBI pipeline error:" + "\n"
                                     + emailBody);
 
         javaMailSender.send(mailMessage);
+    }
+
+    // Format text for email
+    private String createErrorForEmail(String errorString) {
+        String emailString = errorString;
+        emailString = emailString.replaceAll("\\[", "");
+        emailString = emailString.replaceAll("]", "");
+        emailString = emailString.replaceAll(", ", "\n");
+        return emailString;
     }
 
     // Getter and setters
