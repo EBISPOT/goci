@@ -321,11 +321,13 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     mappedGene = setOrAppend(mappedGene, getMappedGeneString(association, snp), ", ");
                                     // and add entrez links for each mapped gene
                                     snp.getGenomicContexts().forEach(context -> {
-                                        Gene gene = context.getGene();
-                                        if (gene.getEntrezGeneId() != null) {
-                                            String geneLink =
-                                                    gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
-                                            mappedGeneLinks.add(geneLink);
+                                        if (context.getGene() != null) {
+                                            Gene gene = context.getGene();
+                                            if (gene.getEntrezGeneId() != null) {
+                                                String geneLink =
+                                                        gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
+                                                mappedGeneLinks.add(geneLink);
+                                            }
                                         }
                                     });
 
