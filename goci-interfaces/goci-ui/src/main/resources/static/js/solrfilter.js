@@ -58,7 +58,7 @@ function doFiltering() {
             traits = terms.split('|');
         }
         else if($('#filter').text() == 'recent'){
-            addeddate = "[NOW-2MONTH+TO+*]";
+            addeddate = "[NOW-3MONTH+TO+*]";
         }
     }
 
