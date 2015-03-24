@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -60,6 +61,8 @@ public class CatalogImportRepository {
     private static final String SELECT_HOUSEKEEPING = "SELECT HOUSEKEEPING_ID FROM STUDY WHERE ID = ?";
 
     private static final String SELECT_STATUS = "SELECT ID FROM CURATION_STATUS WHERE STATUS =? ";
+
+    private static final String SELECT_CHECKEDNCBIERROR = "SELECT CHECKEDNCBIERROR FROM HOUSEKEEPING WHERE ID =?";
 
     private static final String UPDATE_HOUSEKEEPING =
             "UPDATE HOUSEKEEPING SET CURATION_STATUS_ID = ?, LAST_UPDATE_DATE = ? WHERE ID = ?";
@@ -199,7 +202,8 @@ public class CatalogImportRepository {
 
         // Read through each line
         int row = 0;
-        boolean caughtErrors = false;
+        boolean caughtReadErrors = false;
+        boolean caughtWriteErrors = false;
 
         // This map store information on whether study or its associations have an error
         HashMap<Long, List<Boolean>> studyErrorMap = new HashMap<>();
@@ -461,80 +465,93 @@ public class CatalogImportRepository {
 
                 }
                 catch (NumberFormatException e) {
-                    getLog().error("Unable to insert data at row " + row, e);
-                    caughtErrors = true;
+                    getLog().error("Unable to read data at row " + row + ", from spreadsheet", e);
+                    caughtReadErrors = true;
                 }
                 catch (DataImportException e) {
-                    getLog().error("Unable to insert data at row " + row, e);
-                    caughtErrors = true;
+                    getLog().error("Unable to read data at row " + row + ", from spreadsheet", e);
+                    caughtReadErrors = true;
                 }
             }
 
             // If no errors for a row, insert
-            if (!caughtErrors) {
-                // Add study report
-                addStudyReport(studyId,
-                               pubmedIdError,
-                               ncbiPaperTitle,
-                               ncbiFirstAuthor,
-                               ncbiNormalisedFirstAuthor,
-                               ncbiFirstUpdateDate);
+            if (!caughtReadErrors) {
 
-                // Add association report if file returns an association ID
-                if (associationId != null) {
-                    addAssociationReport(associationId,
-                                         lastUpdateDate,
-                                         geneError,
-                                         snpError,
-                                         snpGeneOnDiffChr,
-                                         noGeneForSymbol,
-                                         geneNotOnGenome);
+                try {      // Add study report
+                    addStudyReport(studyId,
+                                   pubmedIdError,
+                                   ncbiPaperTitle,
+                                   ncbiFirstAuthor,
+                                   ncbiNormalisedFirstAuthor,
+                                   ncbiFirstUpdateDate);
+
+                    // Add association report if file returns an association ID
+                    if (associationId != null) {
+                        addAssociationReport(associationId,
+                                             lastUpdateDate,
+                                             geneError,
+                                             snpError,
+                                             snpGeneOnDiffChr,
+                                             noGeneForSymbol,
+                                             geneNotOnGenome);
+                    }
+                    else {
+                        getLog().warn(
+                                "Row in file with no association id, not adding association report for study: " +
+                                        studyId);
+                    }
+
+                    // Add mapped data
+                    addMappedData(snpError,
+                                  region,
+                                  chromosomeName,
+                                  chromosomePosition,
+                                  upstreamMappedGene,
+                                  upstreamEntrezGeneId,
+                                  upstreamGeneDistance,
+                                  downstreamMappedGene,
+                                  downstreamEntrezGeneId,
+                                  downstreamGeneDistance,
+                                  isIntergenic,
+                                  snpId,
+                                  merged,
+                                  mappedGene,
+                                  entrezGeneId,
+                                  functionalClass);
+
+
+                    // Record information on study errors
+                    List<Boolean> errorStatus = new ArrayList<>();
+                    if (pubmedIdError != null || geneError != null || snpError != null) {
+                        if (studyErrorMap.containsKey(studyId)) {
+                            errorStatus = studyErrorMap.get(studyId);
+                        }
+                        errorStatus.add(true);
+                    }
+                    // No error found
+                    else {
+                        if (studyErrorMap.containsKey(studyId)) {
+                            errorStatus = studyErrorMap.get(studyId);
+                        }
+                        errorStatus.add(false);
+                    }
+                    studyErrorMap.put(studyId, errorStatus);
+
+
                 }
-                else {
-                    getLog().warn(
-                            "Row in file with no association id, not adding association report for study: " + studyId);
+                catch (Exception e) {
+                    getLog().error("Unable to write data at row " + row + ", from spreadsheet", e);
+                    caughtWriteErrors = true;
                 }
 
-                // Add mapped data
-                addMappedData(snpError,
-                              region,
-                              chromosomeName,
-                              chromosomePosition,
-                              upstreamMappedGene,
-                              upstreamEntrezGeneId,
-                              upstreamGeneDistance,
-                              downstreamMappedGene,
-                              downstreamEntrezGeneId,
-                              downstreamGeneDistance,
-                              isIntergenic,
-                              snpId,
-                              merged,
-                              mappedGene,
-                              entrezGeneId,
-                              functionalClass);
 
             }
 
-            // Record information on study errors
-            List<Boolean> errorStatus = new ArrayList<>();
-            if (pubmedIdError != null || geneError != null || snpError != null) {
-                if (studyErrorMap.containsKey(studyId)) {
-                    errorStatus = studyErrorMap.get(studyId);
-                }
-                errorStatus.add(true);
-            }
-            // No error found
-            else {
-                if (studyErrorMap.containsKey(studyId)) {
-                    errorStatus = studyErrorMap.get(studyId);
-                }
-                errorStatus.add(false);
-            }
-            studyErrorMap.put(studyId, errorStatus);
+
         }
 
 
-        if (caughtErrors) {
+        if (caughtReadErrors || caughtWriteErrors) {
             throw new DataImportException("Caught errors whilst processing data import - " +
                                                   "please check the logs for more information");
         }
@@ -741,6 +758,7 @@ public class CatalogImportRepository {
             // Iterators
             Iterator mappedGenesIterator = mappedGenes.iterator();
             Iterator entrezGeneIdsIterator = entrezGeneIds.iterator();
+            List<Long> geneIdsFromDatabase = new ArrayList<Long>();
 
             while (mappedGenesIterator.hasNext() && entrezGeneIdsIterator.hasNext()) {
 
@@ -756,6 +774,14 @@ public class CatalogImportRepository {
                     createGene(geneNameItr, entrezGeneIdItr);
                     geneId = jdbcTemplate.queryForObject(SELECT_GENE, Long.class, geneNameItr);
                 }
+                // Catch case where we have more than one gene
+                catch (IncorrectResultSizeDataAccessException e) {
+                    geneIdsFromDatabase = jdbcTemplate.query(SELECT_GENE,
+                                                             (resultSet, i) -> resultSet.getLong("ID"), geneNameItr);
+                    geneId = geneIdsFromDatabase.get(0);
+
+                }
+
 
                 // Check GENOMIC_CONTEXT table to see if SNP has entry in this table for this gene
                 List snpIdsInGenomicContextTable =
@@ -865,17 +891,22 @@ public class CatalogImportRepository {
             // Get status ID
             Long statusId;
             String status;
+            Integer checkedNCBIError;
 
             // Get study housekeeping ID
             Long housekeepingId;
             try {
                 housekeepingId = jdbcTemplate.queryForObject(SELECT_HOUSEKEEPING, Long.class, studyId);
+
+                // Check if curators have decided to ignore errors in this study
+                checkedNCBIError = jdbcTemplate.queryForObject(SELECT_CHECKEDNCBIERROR, Integer.class, housekeepingId);
             }
             catch (EmptyResultDataAccessException e) {
                 throw new DataImportException("Caught errors processing data import - " +
                                                       "trying to update status of study without housekeeping information found in database");
             }
 
+            // Check for errors
             List<Boolean> errorStatus = studyErrorMap.get(studyId);
 
             // Study has an error
@@ -888,30 +919,34 @@ public class CatalogImportRepository {
                 status = "Publish study";
             }
 
+            // Get status ID
             try {
                 statusId = jdbcTemplate.queryForObject(SELECT_STATUS, Long.class, status);
             }
             catch (EmptyResultDataAccessException e) {
                 throw new DataImportException(
-                        "Caught errors processing data import - " + "cannot find ID for status " + status);
+                        "Caught errors processing data import - cannot find ID for status " + status);
             }
 
-            // Set status and last_update_date
-            Date lastUpdateDate = new Date();
+            // Only update the status if the curators have not ticked the checkedNCBIError
+            if (checkedNCBIError == 0) {
+                // Set status and last_update_date
+                Date lastUpdateDate = new Date();
 
-            int rows = 0;
-            rows = jdbcTemplate.update(UPDATE_HOUSEKEEPING, statusId, lastUpdateDate, housekeepingId);
+                int rows = 0;
+                rows = jdbcTemplate.update(UPDATE_HOUSEKEEPING, statusId, lastUpdateDate, housekeepingId);
 
-            if (status.equals("Publish study")) {
-                //Also update publish date
-                Date publishDate = new Date();
-                jdbcTemplate.update(UPDATE_PUBLISH_DATE, publishDate, housekeepingId);
+                if (status.equals("Publish study")) {
+                    //Also update publish date
+                    Date publishDate = new Date();
+                    jdbcTemplate.update(UPDATE_PUBLISH_DATE, publishDate, housekeepingId);
+                }
 
+                getLog().info(
+                        "Updated housekeeping information for study for study: " + studyId + " - Updated " + rows +
+                                " rows");
             }
 
-            getLog().info(
-                    "Updated housekeeping information for study for study: " + studyId + " - Updated " + rows +
-                            " rows");
 
         }
     }
