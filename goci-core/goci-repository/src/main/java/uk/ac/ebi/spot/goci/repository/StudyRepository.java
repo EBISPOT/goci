@@ -37,14 +37,22 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     Collection<Study> findByCuratorIgnoreCase(@Param("curator") Long curator);
 
     @Query("select s from Study s where s.housekeeping.curationStatus.id = :status and s.housekeeping.curator.id = :curator")
-    Collection<Study> findByCurationStatusAndCuratorAllIgnoreCase(@Param("status") Long status, @Param("curator") Long curator);
+    Collection<Study> findByCurationStatusAndCuratorAllIgnoreCase(@Param("status") Long status,
+                                                                  @Param("curator") Long curator);
 
     @Query("select s from Study s where s.housekeeping.curator.id = :curator")
-    Collection<Study> findByCuratorOrderByStudyDateDesc( @Param("curator") Long curator);
+    Collection<Study> findByCuratorOrderByStudyDateDesc(@Param("curator") Long curator);
 
     // Custom query to calculate curator totals
     @Query("select s from Study s where s.housekeeping.curator.id = :curator and s.studyDate between :dateFrom and :dateTo")
-    List<Study> findByStudyDateAndCurator(@Param("curator") Long curator, @Param("dateFrom") Date dateFrom, @Param("dateTo") Date dateTo);
+    List<Study> findByStudyDateAndCurator(@Param("curator") Long curator,
+                                          @Param("dateFrom") Date dateFrom,
+                                          @Param("dateTo") Date dateTo);
+
+    // Custom query for daily audit emails
+    @Query("select s from Study s where s.housekeeping.curationStatus.id = :status and s.housekeeping.checkedNCBIError = :checkedNCBIError")
+    Collection<Study> findByCurationStatusIgnoreCaseAndCheckedNcbiError(@Param("status") Long status,
+                                                                        @Param("checkedNCBIError") Boolean checkedNCBIError);
 
     List<Study> findByHousekeepingPublishDateIsNotNull();
 
@@ -54,9 +62,11 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     List<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingPublishDateIsNotNull(Long snpId);
 
-    List<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingPublishDateIsNotNull(Sort sort, Long snpId);
+    List<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingPublishDateIsNotNull(Sort sort,
+                                                                                                   Long snpId);
 
-    Page<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingPublishDateIsNotNull(Pageable pageable, Long snpId);
+    Page<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingPublishDateIsNotNull(Pageable pageable,
+                                                                                                   Long snpId);
 
     List<Study> findByAssociationsIdAndHousekeepingPublishDateIsNotNull(Long associationId);
 
