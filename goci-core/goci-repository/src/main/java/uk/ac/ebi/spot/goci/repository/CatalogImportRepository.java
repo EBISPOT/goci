@@ -112,7 +112,7 @@ public class CatalogImportRepository {
         return log;
     }
 
-    @Autowired(required = false)
+    @Autowired
     public CatalogImportRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
 
