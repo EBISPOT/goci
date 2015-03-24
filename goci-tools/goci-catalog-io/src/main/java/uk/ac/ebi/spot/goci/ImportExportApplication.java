@@ -12,13 +12,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import uk.ac.ebi.spot.goci.repository.CatalogExportRepository;
 import uk.ac.ebi.spot.goci.repository.CatalogImportRepository;
+import uk.ac.ebi.spot.goci.repository.CatalogMetaDataRepository;
 import uk.ac.ebi.spot.goci.service.SpreadsheetProcessor;
 
 import java.io.File;
@@ -37,6 +37,8 @@ public class ImportExportApplication {
     private CatalogExportRepository catalogExportRepository;
     @Autowired
     private CatalogImportRepository catalogImportRepository;
+    @Autowired
+    private CatalogMetaDataRepository catalogMetaDataRepository;
     @Autowired
     private SpreadsheetProcessor spreadsheetProcessor;
 
@@ -85,6 +87,16 @@ public class ImportExportApplication {
                             exitCode += 3;
                         }
                         break;
+                    case STATS:
+                        try {
+                            doStatsExport(inputFile);
+                        }
+                        catch (Exception e) {
+                            System.err.println("Stats export failed (" + e.getMessage() + ")");
+                            getLog().error("Stats export failed", e);
+                            exitCode += 3;
+                        }
+                        break;
                     case LOAD:
                         try {
                             doLoad(inputFile);
@@ -113,6 +125,10 @@ public class ImportExportApplication {
         spreadsheetProcessor.writeToFile(data, outFile);
     }
 
+    void doStatsExport(File statsFile) throws IOException{
+        catalogMetaDataRepository.getMetaData(statsFile);
+    }
+
     void doLoad(File inFile) throws IOException {
         String[][] data = spreadsheetProcessor.readFromFile(inFile);
         catalogImportRepository.loadNCBIMappedData(data);
@@ -130,7 +146,7 @@ public class ImportExportApplication {
             // check for mode help option
             if (cl.hasOption("")) {
                 // print out mode help
-                help.printHelp("zooma", options, true);
+                help.printHelp("gwas-catalog-io", options, true);
                 parseArgs += 1;
             }
             else {
@@ -157,6 +173,9 @@ public class ImportExportApplication {
                 }
                 if (cl.hasOption("l")) {
                     this.opMode = OperationMode.LOAD;
+                }
+                if (cl.hasOption("s")) {
+                    this.opMode = OperationMode.STATS;
                 }
 
                 // file options
@@ -218,6 +237,14 @@ public class ImportExportApplication {
         loadOption.setRequired(false);
         modeGroup.addOption(loadOption);
 
+        Option statsOption = new Option(
+                "s",
+                "stats",
+                false,
+                "Stats - generate the meta data for the GWAS Catalog published content");
+        statsOption.setRequired(false);
+        modeGroup.addOption(statsOption);
+
         options.addOptionGroup(modeGroup);
 
         // add input file arguments
@@ -251,6 +278,7 @@ public class ImportExportApplication {
     private enum OperationMode {
         NCBI,
         DOWNLOAD,
+        STATS,
         LOAD
     }
 }
