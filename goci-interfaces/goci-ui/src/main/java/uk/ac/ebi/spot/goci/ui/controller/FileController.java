@@ -44,6 +44,9 @@ public class FileController {
     @Value("${download.NCBI}")
     private Resource fullFileDownloadNcbi;
 
+    @Value("${catalog.stats.file}")
+    private Resource catalogStatsFile;
+
     @RequestMapping(value = "api/search/downloads/full",
                     method = RequestMethod.GET)
     public void getFullDownload(HttpServletResponse response) throws IOException {
@@ -140,7 +143,7 @@ public class FileController {
 
         Properties properties = new Properties();
         try {
-            properties.load(getClass().getClassLoader().getResource("catalogstats.properties").openStream());
+            properties.load(catalogStatsFile.getInputStream());
             releasedate = properties.getProperty("releasedate");
             studycount = properties.getProperty("studycount");
             snpcount = properties.getProperty("snpcount");
