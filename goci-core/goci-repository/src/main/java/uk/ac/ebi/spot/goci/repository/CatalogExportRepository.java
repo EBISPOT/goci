@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -112,13 +114,14 @@ public class CatalogExportRepository {
     }
 
     public String[][] getDownloadSpreadsheet() {
-        List<String> downloadOutputHeaders = CatalogHeaderBindings.getDownloadHeaders()
+        List<String> downloadOutputHeaders = getOrderedDownloadHeaders()
                 .stream()
                 .filter(binding -> binding.getDownloadName() != null)
                 .map(CatalogHeaderBinding::getDownloadName)
                 .collect(Collectors.toList());
 
-        List<String> downloadQueryHeaders = CatalogHeaderBindings.getDownloadHeaders()
+
+        List<String> downloadQueryHeaders = getOrderedDownloadHeaders()
                 .stream()
                 .filter(binding -> binding.getDatabaseName() != null)
                 .map(CatalogHeaderBinding::getDatabaseName)
@@ -128,7 +131,7 @@ public class CatalogExportRepository {
         List<String[]> rows = jdbcTemplate.query(query, (resultSet, i) -> {
             Map<CatalogHeaderBinding, String> dataForMapping = new LinkedHashMap<>();
             Map<CatalogHeaderBinding, String> rowMap = new LinkedHashMap<>();
-            for (CatalogHeaderBinding binding : CatalogHeaderBindings.getDownloadHeaders()) {
+            for (CatalogHeaderBinding binding : getOrderedDownloadHeaders()) {
                 if (binding.getDownloadName() != null) {
                     // insert headings in declaration order (this is the correct order)
                     // which controls for reinsertion
@@ -210,4 +213,64 @@ public class CatalogExportRepository {
             }
         }
     }
+
+     //put the CatalogHeaderBindings into the correct order for the download spreadsheet
+    private List<CatalogHeaderBinding> getOrderedDownloadHeaders() {
+        List<CatalogHeaderBinding> catalogHeaders = CatalogHeaderBindings.getDownloadHeaders();
+        List<CatalogHeaderBinding> orderedHeaders = new ArrayList<CatalogHeaderBinding>();
+
+        List<String> order = Arrays.asList("DATE ADDED TO CATALOG",
+                                           "PUBMEDID",
+                                           "FIRST AUTHOR",
+                                           "DATE",
+                                           "JOURNAL",
+                                           "LINK",
+                                           "STUDY",
+                                           "DISEASE/TRAIT",
+                                           "INITIAL SAMPLE DESCRIPTION",
+                                           "REPLICATION SAMPLE DESCRIPTION",
+                                           "REGION",
+                                           "CHR_ID",
+                                           "CHR_POS",
+                                           "REPORTED GENE(S)",
+                                           "MAPPED_GENE",
+                                           "UPSTREAM_GENE_ID",
+                                           "DOWNSTREAM_GENE_ID",
+                                           "SNP_GENE_IDS",
+                                           "UPSTREAM_GENE_DISTANCE",
+                                           "DOWNSTREAM_GENE_DISTANCE",
+                                           "STRONGEST SNP-RISK ALLELE",
+                                           "SNPS",
+                                           "MERGED",
+                                           "SNP_ID_CURRENT",
+                                           "CONTEXT",
+                                           "INTERGENIC",
+                                           "RISK ALLELE FREQUENCY",
+                                           "P-VALUE",
+                                           "PVALUE_MLOG",
+                                           "P-VALUE (TEXT)",
+                                           "OR or BETA",
+                                           "95% CI (TEXT)",
+                                           "PLATFORM [SNPS PASSING QC]",
+                                           "CNV"/*,
+                                           "MAPPED_TRAIT",
+                                           "MAPPED_TRAIT_URI"*/);
+
+        for(String header : order){
+            for(CatalogHeaderBinding binding : catalogHeaders){
+                if(binding.getDownloadName() != null){
+                    if(binding.getDownloadName().equals(header)){
+                        orderedHeaders.add(binding);
+                    }
+                }
+                else {
+                    if(!orderedHeaders.contains(binding)){
+                        orderedHeaders.add(binding);
+                    }
+                }
+            }
+        }
+        return orderedHeaders;
+    }
+
 }
