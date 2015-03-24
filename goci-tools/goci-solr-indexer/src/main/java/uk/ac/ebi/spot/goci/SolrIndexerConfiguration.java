@@ -28,7 +28,8 @@ public class SolrIndexerConfiguration {
     private Resource efoResource;
 
     @Bean SolrServer solrServer() {
-        return new HttpSolrServer(solrServer);
+        // return new http solr server from "search.server" config element, but remove core name (probably /gwas)
+        return new HttpSolrServer(solrServer.substring(0, solrServer.lastIndexOf('/')));
     }
 
     @Bean OntologyLoader ontologyLoader() {
