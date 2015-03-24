@@ -8,10 +8,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Javadocs go here!
@@ -352,6 +354,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     }
 
     private String getMappedGeneString(Association association, SingleNucleotidePolymorphism snp) {
+        AtomicBoolean intragenic = new AtomicBoolean(false);
         List<String> genes = new ArrayList<>();
         snp.getGenomicContexts().forEach(
                 context -> {
@@ -359,27 +362,40 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                     if (!genes.contains(geneName)) {
                         if (context.isUpstream()) {
                             genes.add(0, geneName);
+                            intragenic.set(true);
                         }
                         else {
+                            if (context.isDownstream()) {
+                                intragenic.set(true);
+                            }
                             genes.add(geneName);
                         }
                     }
                 });
         String geneString = "";
-        if (genes.size() > 2) {
-            throw new SolrIndexingException(
-                    "Unable to index genetic data for association " +
-                            "'" + association.getId() + "': more than 2 mapped genes " +
-                            "(" + genes + ")");
-        }
-        else {
+        if (intragenic.get()) {
+            // should only be 2 genes - one upstream and one downstream
             if (genes.size() == 2) {
                 geneString = genes.get(0).concat(" - ").concat(genes.get(1));
             }
             else {
-                if (!genes.isEmpty()) {
-                    geneString = genes.iterator().next();
+                throw new SolrIndexingException(
+                        "Unable to index genetic data for association " +
+                                "'" + association.getId() + "': wrong number of mapped genes " +
+                                "(expected 2, got " + genes.size() + ": " + genes + ")");
+            }
+        }
+        else {
+            if (!genes.isEmpty()) {
+                StringBuilder gsBuilder = new StringBuilder();
+                Iterator<String> genesIt = genes.iterator();
+                while (genesIt.hasNext()) {
+                    gsBuilder.append(genesIt.next());
+                    if (genesIt.hasNext()) {
+                        gsBuilder.append(", ");
+                    }
                 }
+                geneString = gsBuilder.toString();
             }
         }
         return geneString;
