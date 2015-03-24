@@ -1,7 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
 import org.apache.solr.client.solrj.beans.Field;
-import uk.ac.ebi.spot.goci.exception.SolrIndexingException;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -383,10 +382,16 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                 geneString = genes.get(0).concat(" - ").concat(genes.get(1));
             }
             else {
-                throw new SolrIndexingException(
-                        "Unable to index genetic data for association " +
-                                "'" + association.getId() + "': wrong number of mapped genes " +
-                                "(expected 2, got " + genes.size() + ": " + genes + ")");
+                // this should probably be an exception, but just logging error to enable indexes to build
+                getLog().warn("Indexing bad genetic data for association " +
+                                      "'" + association.getId() + "': wrong number of mapped genes " +
+                                      "(expected 2, got " + genes.size() + ": " + genes + ")");
+                if (genes.size() == 1) {
+                    geneString = genes.get(0);
+                }
+                else {
+                    geneString = "N/A";
+                }
             }
         }
         else {
