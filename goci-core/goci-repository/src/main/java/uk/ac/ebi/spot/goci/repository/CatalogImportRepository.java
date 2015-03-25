@@ -537,26 +537,22 @@ public class CatalogImportRepository {
                     }
                     studyErrorMap.put(studyId, errorStatus);
 
-
                 }
                 catch (Exception e) {
                     getLog().error("Unable to write data at row " + row + ", from spreadsheet", e);
                     caughtWriteErrors = true;
                 }
-
-
             }
-
-
         }
 
+        // For each study in map we update the status
+        updateStudyStatus(studyErrorMap);
 
         if (caughtReadErrors || caughtWriteErrors) {
             throw new DataImportException("Caught errors whilst processing data import - " +
                                                   "please check the logs for more information");
         }
-        // For each study in map we update the status
-        updateStudyStatus(studyErrorMap);
+
 
     }
 
@@ -963,7 +959,7 @@ public class CatalogImportRepository {
                 }
 
                 getLog().info(
-                        "Updated housekeeping information for study for study: " + studyId + " - Updated " + rows +
+                        "Updated housekeeping information for study: " + studyId + " - Updated " + rows +
                                 " rows");
             }
 
