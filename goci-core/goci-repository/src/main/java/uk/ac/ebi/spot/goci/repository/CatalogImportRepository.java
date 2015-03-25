@@ -33,6 +33,7 @@ import java.util.Map;
 @Repository
 public class CatalogImportRepository {
 
+
     private JdbcTemplate jdbcTemplate;
 
     private SimpleJdbcInsert insertStudyReport;
@@ -75,7 +76,9 @@ public class CatalogImportRepository {
 
     private static final String SELECT_STATUS = "SELECT ID FROM CURATION_STATUS WHERE STATUS =? ";
 
-    private static final String SELECT_CHECKEDNCBIERROR = "SELECT CHECKEDNCBIERROR FROM HOUSEKEEPING WHERE ID =?";
+    private static final String SELECT_CURRENT_STATUS_ID = "SELECT CURATION_STATUS_ID FROM HOUSEKEEPING WHERE ID =? ";
+
+    private static final String SELECT_CURRENT_STATUS = "SELECT STATUS FROM CURATION_STATUS WHERE ID =? ";
 
     private static final String UPDATE_HOUSEKEEPING =
             "UPDATE HOUSEKEEPING SET CURATION_STATUS_ID = ?, LAST_UPDATE_DATE = ? WHERE ID = ?";
@@ -904,26 +907,36 @@ public class CatalogImportRepository {
 
         for (Long studyId : studyErrorMap.keySet()) {
 
-            // Get status ID
-            Long statusId;
-            String status;
-            Integer checkedNCBIError;
-
             // Get study housekeeping ID
             Long housekeepingId;
             try {
                 housekeepingId = jdbcTemplate.queryForObject(SELECT_HOUSEKEEPING, Long.class, studyId);
-
-                // Check if curators have decided to ignore errors in this study
-                checkedNCBIError = jdbcTemplate.queryForObject(SELECT_CHECKEDNCBIERROR, Integer.class, housekeepingId);
             }
             catch (EmptyResultDataAccessException e) {
                 throw new DataImportException("Caught errors processing data import - " +
                                                       "trying to update status of study without housekeeping information found in database");
             }
 
+
+            // Get current status
+            String currentStatus = null;
+            Long currentStatusId;
+            try {
+                currentStatusId = jdbcTemplate.queryForObject(SELECT_CURRENT_STATUS_ID, Long.class, housekeepingId);
+            }
+            catch (EmptyResultDataAccessException e) {
+                throw new DataImportException("Caught errors processing data import - " +
+                                                      "trying to update status of study without status information found in database");
+            }
+
+            if (currentStatusId != null) {
+                currentStatus = jdbcTemplate.queryForObject(SELECT_CURRENT_STATUS, String.class, currentStatusId);
+            }
+
+
             // Check for errors
             List<Boolean> errorStatus = studyErrorMap.get(studyId);
+            String status;
 
             // Study has an error
             if (errorStatus.contains(true)) {
@@ -936,6 +949,7 @@ public class CatalogImportRepository {
             }
 
             // Get status ID
+            Long statusId;
             try {
                 statusId = jdbcTemplate.queryForObject(SELECT_STATUS, Long.class, status);
             }
@@ -944,8 +958,8 @@ public class CatalogImportRepository {
                         "Caught errors processing data import - cannot find ID for status " + status);
             }
 
-            // Only update the status if the curators have not ticked the checkedNCBIError
-            if (checkedNCBIError == 0) {
+            // Only update the status if the curators if previous status was "Send to NCBI"
+            if (currentStatus.equalsIgnoreCase("Send to NCBI")) {
                 // Set status and last_update_date
                 Date lastUpdateDate = new Date();
 
