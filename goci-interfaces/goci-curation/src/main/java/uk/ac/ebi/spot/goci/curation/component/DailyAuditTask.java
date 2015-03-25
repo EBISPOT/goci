@@ -61,7 +61,7 @@ public class DailyAuditTask {
         // Get list of all studies with status "NCBI pipeline error"
         CurationStatus status = curationStatusRepository.findByStatus("NCBI pipeline error");
         Long statusId = status.getId();
-        Collection<Study> studiesWithErrors = studyRepository.findByCurationStatusIgnoreCaseAndCheckedNcbiError(statusId, false);
+        Collection<Study> studiesWithErrors = studyRepository.findByCurationStatusIgnoreCase(statusId);
 
         // Send email for all studies with errors
         if (!studiesWithErrors.isEmpty()) {

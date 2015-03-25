@@ -33,6 +33,7 @@ import java.util.Map;
 @Repository
 public class CatalogImportRepository {
 
+
     private JdbcTemplate jdbcTemplate;
 
     private SimpleJdbcInsert insertStudyReport;
@@ -58,18 +59,6 @@ public class CatalogImportRepository {
                     "NCBI_NORMALIZED_FIRST_AUTHOR = ? " +
                     "WHERE ID = ?";
 
-    private static final String SELECT_HOUSEKEEPING = "SELECT HOUSEKEEPING_ID FROM STUDY WHERE ID = ?";
-
-    private static final String SELECT_STATUS = "SELECT ID FROM CURATION_STATUS WHERE STATUS =? ";
-
-    private static final String SELECT_CHECKEDNCBIERROR = "SELECT CHECKEDNCBIERROR FROM HOUSEKEEPING WHERE ID =?";
-
-    private static final String UPDATE_HOUSEKEEPING =
-            "UPDATE HOUSEKEEPING SET CURATION_STATUS_ID = ?, LAST_UPDATE_DATE = ? WHERE ID = ?";
-
-    private static final String UPDATE_PUBLISH_DATE =
-            "UPDATE HOUSEKEEPING SET PUBLISH_DATE = ? WHERE ID = ?";
-
     private static final String SELECT_ASSOCIATION_REPORTS =
             "SELECT ID FROM ASSOCIATION_REPORT WHERE ASSOCIATION_ID = ?";
 
@@ -82,6 +71,20 @@ public class CatalogImportRepository {
                     "NO_GENE_FOR_SYMBOL = ?, " +
                     "GENE_NOT_ON_GENOME = ?" +
                     "WHERE ID = ?";
+
+    private static final String SELECT_HOUSEKEEPING = "SELECT HOUSEKEEPING_ID FROM STUDY WHERE ID = ?";
+
+    private static final String SELECT_STATUS = "SELECT ID FROM CURATION_STATUS WHERE STATUS =? ";
+
+    private static final String SELECT_CURRENT_STATUS_ID = "SELECT CURATION_STATUS_ID FROM HOUSEKEEPING WHERE ID =? ";
+
+    private static final String SELECT_CURRENT_STATUS = "SELECT STATUS FROM CURATION_STATUS WHERE ID =? ";
+
+    private static final String UPDATE_HOUSEKEEPING =
+            "UPDATE HOUSEKEEPING SET CURATION_STATUS_ID = ?, LAST_UPDATE_DATE = ? WHERE ID = ?";
+
+    private static final String UPDATE_PUBLISH_DATE =
+            "UPDATE HOUSEKEEPING SET PUBLISH_DATE = ? WHERE ID = ?";
 
     private static final String SELECT_SNP = "SELECT ID FROM SINGLE_NUCLEOTIDE_POLYMORPHISM WHERE RS_ID = ?";
 
@@ -537,26 +540,22 @@ public class CatalogImportRepository {
                     }
                     studyErrorMap.put(studyId, errorStatus);
 
-
                 }
                 catch (Exception e) {
                     getLog().error("Unable to write data at row " + row + ", from spreadsheet", e);
                     caughtWriteErrors = true;
                 }
-
-
             }
-
-
         }
 
+        // For each study in map we update the status
+        updateStudyStatus(studyErrorMap);
 
         if (caughtReadErrors || caughtWriteErrors) {
             throw new DataImportException("Caught errors whilst processing data import - " +
                                                   "please check the logs for more information");
         }
-        // For each study in map we update the status
-        updateStudyStatus(studyErrorMap);
+
 
     }
 
@@ -686,13 +685,21 @@ public class CatalogImportRepository {
         // Note: the snp should already be in database otherwise it would never have appeared in file sent to NCBI
         String rsId = "rs" + snpId;
         Long snpIdInSnpTable;
+        List<Long> snpIdsInDatabase;
         try {
             snpIdInSnpTable = jdbcTemplate.queryForObject(SELECT_SNP, Long.class, rsId);
         }
+
         catch (EmptyResultDataAccessException e) {
             throw new DataImportException("Caught errors processing data import - " +
                                                   "trying to add NCBI info for SNP " + rsId +
                                                   ", but RSID not found in database");
+        }    // Catch case where we have more than one snp with that RSID
+        catch (IncorrectResultSizeDataAccessException e) {
+            snpIdsInDatabase = jdbcTemplate.query(SELECT_SNP,
+                                                  (resultSet, i) -> resultSet.getLong("ID"), rsId);
+            snpIdInSnpTable = snpIdsInDatabase.get(0);
+
         }
 
         // Add region information
@@ -735,6 +742,7 @@ public class CatalogImportRepository {
 
         // Add gene information to database
         Long geneId = null;
+        List<Long> geneIdsFromDatabase = new ArrayList<Long>();
 
         // Process each mapped gene, can either be a single gene or ; separated string of gene names
         // This gene information comes from the snp_gene_symbols and snp_gene_ids columns
@@ -758,7 +766,6 @@ public class CatalogImportRepository {
             // Iterators
             Iterator mappedGenesIterator = mappedGenes.iterator();
             Iterator entrezGeneIdsIterator = entrezGeneIds.iterator();
-            List<Long> geneIdsFromDatabase = new ArrayList<Long>();
 
             while (mappedGenesIterator.hasNext() && entrezGeneIdsIterator.hasNext()) {
 
@@ -817,6 +824,12 @@ public class CatalogImportRepository {
             catch (EmptyResultDataAccessException e) {
                 createGene(upstreamMappedGene, upstreamEntrezGeneId);
                 geneId = jdbcTemplate.queryForObject(SELECT_GENE, Long.class, upstreamMappedGene);
+            }   // Catch case where we have more than one gene
+            catch (IncorrectResultSizeDataAccessException e) {
+                geneIdsFromDatabase = jdbcTemplate.query(SELECT_GENE,
+                                                         (resultSet, i) -> resultSet.getLong("ID"), upstreamMappedGene);
+                geneId = geneIdsFromDatabase.get(0);
+
             }
 
             // Check GENOMIC_CONTEXT table to see if SNP has entry in this table for this gene
@@ -853,7 +866,13 @@ public class CatalogImportRepository {
             }
             catch (EmptyResultDataAccessException e) {
                 createGene(downstreamMappedGene, downstreamEntrezGeneId);
-                geneId = jdbcTemplate.queryForObject(SELECT_GENE, Long.class, upstreamMappedGene);
+                geneId = jdbcTemplate.queryForObject(SELECT_GENE, Long.class, downstreamMappedGene);
+            }
+            catch (IncorrectResultSizeDataAccessException e) {
+                geneIdsFromDatabase = jdbcTemplate.query(SELECT_GENE,
+                                                         (resultSet, i) -> resultSet.getLong("ID"),
+                                                         downstreamMappedGene);
+                geneId = geneIdsFromDatabase.get(0);
             }
             // Check GENOMIC_CONTEXT table to see if SNP has entry in this table for this gene
             List snpIdsInGenomicContextTable =
@@ -888,26 +907,36 @@ public class CatalogImportRepository {
 
         for (Long studyId : studyErrorMap.keySet()) {
 
-            // Get status ID
-            Long statusId;
-            String status;
-            Integer checkedNCBIError;
-
             // Get study housekeeping ID
             Long housekeepingId;
             try {
                 housekeepingId = jdbcTemplate.queryForObject(SELECT_HOUSEKEEPING, Long.class, studyId);
-
-                // Check if curators have decided to ignore errors in this study
-                checkedNCBIError = jdbcTemplate.queryForObject(SELECT_CHECKEDNCBIERROR, Integer.class, housekeepingId);
             }
             catch (EmptyResultDataAccessException e) {
                 throw new DataImportException("Caught errors processing data import - " +
                                                       "trying to update status of study without housekeeping information found in database");
             }
 
+
+            // Get current status
+            String currentStatus = null;
+            Long currentStatusId;
+            try {
+                currentStatusId = jdbcTemplate.queryForObject(SELECT_CURRENT_STATUS_ID, Long.class, housekeepingId);
+            }
+            catch (EmptyResultDataAccessException e) {
+                throw new DataImportException("Caught errors processing data import - " +
+                                                      "trying to update status of study without status information found in database");
+            }
+
+            if (currentStatusId != null) {
+                currentStatus = jdbcTemplate.queryForObject(SELECT_CURRENT_STATUS, String.class, currentStatusId);
+            }
+
+
             // Check for errors
             List<Boolean> errorStatus = studyErrorMap.get(studyId);
+            String status;
 
             // Study has an error
             if (errorStatus.contains(true)) {
@@ -920,6 +949,7 @@ public class CatalogImportRepository {
             }
 
             // Get status ID
+            Long statusId;
             try {
                 statusId = jdbcTemplate.queryForObject(SELECT_STATUS, Long.class, status);
             }
@@ -928,8 +958,8 @@ public class CatalogImportRepository {
                         "Caught errors processing data import - cannot find ID for status " + status);
             }
 
-            // Only update the status if the curators have not ticked the checkedNCBIError
-            if (checkedNCBIError == 0) {
+            // Only update the status if the curators if previous status was "Send to NCBI"
+            if (currentStatus.equalsIgnoreCase("Send to NCBI")) {
                 // Set status and last_update_date
                 Date lastUpdateDate = new Date();
 
@@ -943,7 +973,7 @@ public class CatalogImportRepository {
                 }
 
                 getLog().info(
-                        "Updated housekeeping information for study for study: " + studyId + " - Updated " + rows +
+                        "Updated housekeeping information for study: " + studyId + " - Updated " + rows +
                                 " rows");
             }
 
