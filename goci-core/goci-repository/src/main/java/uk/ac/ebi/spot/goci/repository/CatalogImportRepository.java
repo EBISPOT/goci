@@ -686,13 +686,21 @@ public class CatalogImportRepository {
         // Note: the snp should already be in database otherwise it would never have appeared in file sent to NCBI
         String rsId = "rs" + snpId;
         Long snpIdInSnpTable;
+        List<Long> snpIdsInDatabase;
         try {
             snpIdInSnpTable = jdbcTemplate.queryForObject(SELECT_SNP, Long.class, rsId);
         }
+
         catch (EmptyResultDataAccessException e) {
             throw new DataImportException("Caught errors processing data import - " +
                                                   "trying to add NCBI info for SNP " + rsId +
                                                   ", but RSID not found in database");
+        }    // Catch case where we have more than one snp with that RSID
+        catch (IncorrectResultSizeDataAccessException e) {
+            snpIdsInDatabase = jdbcTemplate.query(SELECT_SNP,
+                                                  (resultSet, i) -> resultSet.getLong("ID"), rsId);
+            snpIdInSnpTable = snpIdsInDatabase.get(0);
+
         }
 
         // Add region information
