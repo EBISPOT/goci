@@ -58,18 +58,6 @@ public class CatalogImportRepository {
                     "NCBI_NORMALIZED_FIRST_AUTHOR = ? " +
                     "WHERE ID = ?";
 
-    private static final String SELECT_HOUSEKEEPING = "SELECT HOUSEKEEPING_ID FROM STUDY WHERE ID = ?";
-
-    private static final String SELECT_STATUS = "SELECT ID FROM CURATION_STATUS WHERE STATUS =? ";
-
-    private static final String SELECT_CHECKEDNCBIERROR = "SELECT CHECKEDNCBIERROR FROM HOUSEKEEPING WHERE ID =?";
-
-    private static final String UPDATE_HOUSEKEEPING =
-            "UPDATE HOUSEKEEPING SET CURATION_STATUS_ID = ?, LAST_UPDATE_DATE = ? WHERE ID = ?";
-
-    private static final String UPDATE_PUBLISH_DATE =
-            "UPDATE HOUSEKEEPING SET PUBLISH_DATE = ? WHERE ID = ?";
-
     private static final String SELECT_ASSOCIATION_REPORTS =
             "SELECT ID FROM ASSOCIATION_REPORT WHERE ASSOCIATION_ID = ?";
 
@@ -82,6 +70,18 @@ public class CatalogImportRepository {
                     "NO_GENE_FOR_SYMBOL = ?, " +
                     "GENE_NOT_ON_GENOME = ?" +
                     "WHERE ID = ?";
+
+    private static final String SELECT_HOUSEKEEPING = "SELECT HOUSEKEEPING_ID FROM STUDY WHERE ID = ?";
+
+    private static final String SELECT_STATUS = "SELECT ID FROM CURATION_STATUS WHERE STATUS =? ";
+
+    private static final String SELECT_CHECKEDNCBIERROR = "SELECT CHECKEDNCBIERROR FROM HOUSEKEEPING WHERE ID =?";
+
+    private static final String UPDATE_HOUSEKEEPING =
+            "UPDATE HOUSEKEEPING SET CURATION_STATUS_ID = ?, LAST_UPDATE_DATE = ? WHERE ID = ?";
+
+    private static final String UPDATE_PUBLISH_DATE =
+            "UPDATE HOUSEKEEPING SET PUBLISH_DATE = ? WHERE ID = ?";
 
     private static final String SELECT_SNP = "SELECT ID FROM SINGLE_NUCLEOTIDE_POLYMORPHISM WHERE RS_ID = ?";
 
@@ -735,6 +735,7 @@ public class CatalogImportRepository {
 
         // Add gene information to database
         Long geneId = null;
+        List<Long> geneIdsFromDatabase = new ArrayList<Long>();
 
         // Process each mapped gene, can either be a single gene or ; separated string of gene names
         // This gene information comes from the snp_gene_symbols and snp_gene_ids columns
@@ -758,7 +759,6 @@ public class CatalogImportRepository {
             // Iterators
             Iterator mappedGenesIterator = mappedGenes.iterator();
             Iterator entrezGeneIdsIterator = entrezGeneIds.iterator();
-            List<Long> geneIdsFromDatabase = new ArrayList<Long>();
 
             while (mappedGenesIterator.hasNext() && entrezGeneIdsIterator.hasNext()) {
 
@@ -817,6 +817,12 @@ public class CatalogImportRepository {
             catch (EmptyResultDataAccessException e) {
                 createGene(upstreamMappedGene, upstreamEntrezGeneId);
                 geneId = jdbcTemplate.queryForObject(SELECT_GENE, Long.class, upstreamMappedGene);
+            }   // Catch case where we have more than one gene
+            catch (IncorrectResultSizeDataAccessException e) {
+                geneIdsFromDatabase = jdbcTemplate.query(SELECT_GENE,
+                                                         (resultSet, i) -> resultSet.getLong("ID"), upstreamMappedGene);
+                geneId = geneIdsFromDatabase.get(0);
+
             }
 
             // Check GENOMIC_CONTEXT table to see if SNP has entry in this table for this gene
@@ -853,7 +859,13 @@ public class CatalogImportRepository {
             }
             catch (EmptyResultDataAccessException e) {
                 createGene(downstreamMappedGene, downstreamEntrezGeneId);
-                geneId = jdbcTemplate.queryForObject(SELECT_GENE, Long.class, upstreamMappedGene);
+                geneId = jdbcTemplate.queryForObject(SELECT_GENE, Long.class, downstreamMappedGene);
+            }
+            catch (IncorrectResultSizeDataAccessException e) {
+                geneIdsFromDatabase = jdbcTemplate.query(SELECT_GENE,
+                                                         (resultSet, i) -> resultSet.getLong("ID"),
+                                                         downstreamMappedGene);
+                geneId = geneIdsFromDatabase.get(0);
             }
             // Check GENOMIC_CONTEXT table to see if SNP has entry in this table for this gene
             List snpIdsInGenomicContextTable =
