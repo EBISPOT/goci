@@ -54,6 +54,7 @@ public class DailyAuditTask {
         this.associationReportRepository = associationReportRepository;
         this.mailService = mailService;
     }
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -69,9 +70,10 @@ public class DailyAuditTask {
         Long statusId = status.getId();
         Collection<Study> studiesWithErrors = studyRepository.findByCurationStatusIgnoreCase(statusId);
 
+        Collection<StudyErrorView> studyErrorViews = new ArrayList<StudyErrorView>();
         // Send email for all studies with errors
         if (!studiesWithErrors.isEmpty()) {
-            Collection<StudyErrorView> studyErrorViews = new ArrayList<StudyErrorView>();
+
 
             // For each study retrieve its study report and association report details
             for (Study studyWithError : studiesWithErrors) {
@@ -134,8 +136,9 @@ public class DailyAuditTask {
 
             // Pass details to email method
             getLog().info("List of studies with errors calculated, as part of daily audit task");
-            mailService.sendDailyAuditEmail(studyErrorViews);
-
         }
+
+        // Send mail
+        mailService.sendDailyAuditEmail(studyErrorViews);
     }
 }
