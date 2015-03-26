@@ -676,7 +676,7 @@ public class CatalogImportRepository {
         // Do not attempt to add mapped data for entries with snp errors
         // These tend to come back with just limited region information
         if (snpError != null && !snpError.isEmpty()) {
-            getLog().info("Not adding mapped data for snpId: " + snpId + " , with error " + snpError);
+            getLog().info("Not adding mapped data for snpId: rs" + snpId + " , with error " + snpError);
             return;
         }
 
