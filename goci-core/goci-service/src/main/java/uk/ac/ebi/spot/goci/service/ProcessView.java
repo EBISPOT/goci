@@ -110,7 +110,9 @@ public class ProcessView {
             }
 
             String pValue = "" + "\t";
-            if (view.getpValue() != null) {pValue = view.getpValue().toString().trim() + "\t";}
+            if (view.getpValueMantissa() != null && view.getpValueExponent() != null) {
+                pValue = view.getpValueMantissa().toString() + "E" + view.getpValueExponent().toString() + "\t";
+            }
 
             String pValueText = "" + "\t";
             if (view.getpValueQualifier() != null) {pValueText = view.getpValueQualifier().trim() + "\t";}
