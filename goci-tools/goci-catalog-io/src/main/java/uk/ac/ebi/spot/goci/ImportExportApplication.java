@@ -131,21 +131,21 @@ public class ImportExportApplication {
     }
 
     void doDownloadExport(File outFile) throws IOException {
-        String[][] allData = catalogExportRepository.getDownloadSpreadsheet();
-
-        String[][] data = new String[allData.length][allData[0].length-2];
-
-        for(int i =0; i< allData.length; i++){
-            for(int j =0; j< allData[0].length-2; j++){
-                data[i][j] = allData[i][j];
-            }
-        }
-
+//        String[][] allData = catalogExportRepository.getDownloadSpreadsheet("d");
+//
+//        String[][] data = new String[allData.length][allData[0].length-2];
+//
+//        for(int i =0; i< allData.length; i++){
+//            for(int j =0; j< allData[0].length-2; j++){
+//                data[i][j] = allData[i][j];
+//            }
+//        }
+        String[][] data = catalogExportRepository.getDownloadSpreadsheet("d");
         spreadsheetProcessor.writeToFile(data, outFile);
     }
 
     void doAlternativeDownloadExport(File outFile) throws IOException {
-        String[][] data = catalogExportRepository.getDownloadSpreadsheet();
+        String[][] data = catalogExportRepository.getDownloadSpreadsheet("a");
         spreadsheetProcessor.writeToFile(data, outFile);
     }
 

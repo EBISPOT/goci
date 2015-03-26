@@ -68,12 +68,8 @@ public class CatalogMetaDataRepository {
 
 
         Integer studycount = getStudyCount();
-        System.out.println(studycount);
         Integer snpcount = getSNPCount();
-        System.out.println(snpcount);
-
         Integer associationCount = getAssociationCount();
-        System.out.println(associationCount);
 
 
         Date date = new Date();
