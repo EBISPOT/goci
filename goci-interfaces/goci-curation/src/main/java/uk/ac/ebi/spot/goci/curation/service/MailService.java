@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -34,6 +36,11 @@ public class MailService {
     @Autowired
     public MailService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
+    }
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
     }
 
     public void sendEmailNotification(Study study, String status) {
@@ -85,71 +92,79 @@ public class MailService {
         // Create email body
         String emailBody = "";
 
-        for (StudyErrorView studyErrorView : studyErrorViews) {
+        // If we have errors, construct body of email
+        if (!studyErrorViews.isEmpty()) {
+            for (StudyErrorView studyErrorView : studyErrorViews) {
 
-            // Title
-            String title = "Title: " + studyErrorView.getTitle() + "\n";
+                // Title
+                String title = "Title: " + studyErrorView.getTitle() + "\n";
 
-            // Date
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            String sendToNCBIDate = "";
-            if (studyErrorView.getSendToNCBIDate() != null) {
-                sendToNCBIDate = df.format(studyErrorView.getSendToNCBIDate());
+                // Date
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                String sendToNCBIDate = "";
+                if (studyErrorView.getSendToNCBIDate() != null) {
+                    sendToNCBIDate = df.format(studyErrorView.getSendToNCBIDate());
+                }
+                String sendToNCBIDateBody = "Send To NCBI date: " + sendToNCBIDate + "\n";
+
+                // Pubmed error
+                String pubmedIdErrorFound = "No";
+                if (studyErrorView.getPubmedIdError() != null) {
+                    pubmedIdErrorFound = "Yes";
+                }
+                String pubmedErrorBody = "Pubmed ID error: " + pubmedIdErrorFound + "\n";
+
+                // SNP error
+                String snpErrors = "";
+                if (!studyErrorView.getSnpErrors().isEmpty()) {
+                    snpErrors = studyErrorView.getSnpErrors().toString();
+                    snpErrors = createErrorForEmail(snpErrors);
+                }
+                else {snpErrors = "none";}
+                String snpErrorBody = "SNP Error(s): " + snpErrors + "\n";
+
+                // Gene Not On Genome Error
+                String geneNotOnGenomeErrors = "";
+                if (!studyErrorView.getGeneNotOnGenomeErrors().isEmpty()) {
+                    geneNotOnGenomeErrors = studyErrorView.getGeneNotOnGenomeErrors().toString();
+                    geneNotOnGenomeErrors = createErrorForEmail(geneNotOnGenomeErrors);
+                }
+                else {geneNotOnGenomeErrors = "none";}
+                String geneNotOnGenomeErrorsBody = "Gene Not On Genome Error(s): " + geneNotOnGenomeErrors + "\n";
+
+                // SNP Gene On Different Chromosome Error
+                String snpGeneOnDiffChrErrors = "";
+                if (!studyErrorView.getSnpGeneOnDiffChrErrors().isEmpty()) {
+                    snpGeneOnDiffChrErrors = studyErrorView.getSnpGeneOnDiffChrErrors().toString();
+                    snpGeneOnDiffChrErrors = createErrorForEmail(snpGeneOnDiffChrErrors);
+                }
+                else {snpGeneOnDiffChrErrors = "none";}
+                String snpGeneOnDiffChrErrorsBody =
+                        "SNP Gene On Different Chromosome Error(s): " + snpGeneOnDiffChrErrors + "\n";
+
+                // No Gene For Symbol Error
+                String noGeneForSymbolErrors = "";
+                if (!studyErrorView.getNoGeneForSymbolErrors().isEmpty()) {
+                    noGeneForSymbolErrors = studyErrorView.getNoGeneForSymbolErrors().toString();
+                    noGeneForSymbolErrors = createErrorForEmail(noGeneForSymbolErrors);
+                }
+                else {noGeneForSymbolErrors = "none";}
+                String noGeneForSymbolErrorsBody = "No Gene For Symbol Error(s): " + noGeneForSymbolErrors + "\n";
+
+                // Edit link
+                Long studyId = studyErrorView.getStudyId();
+                String editStudyLink = "Edit link: http://garfield.ebi.ac.uk:8080/gwas/curation/studies/" + studyId;
+
+                // Create email body
+                emailBody = emailBody + "\n" + title + sendToNCBIDateBody + pubmedErrorBody + snpErrorBody +
+                        geneNotOnGenomeErrorsBody + snpGeneOnDiffChrErrorsBody + noGeneForSymbolErrorsBody +
+                        editStudyLink +
+                        "\n";
             }
-            String sendToNCBIDateBody = "Send To NCBI date: " + sendToNCBIDate + "\n";
+        }
 
-            // Pubmed error
-            String pubmedIdErrorFound = "No";
-            if (studyErrorView.getPubmedIdError() != null) {
-                pubmedIdErrorFound = "Yes";
-            }
-            String pubmedErrorBody = "Pubmed ID error: " + pubmedIdErrorFound + "\n";
-
-            // SNP error
-            String snpErrors = "";
-            if (!studyErrorView.getSnpErrors().isEmpty()) {
-                snpErrors = studyErrorView.getSnpErrors().toString();
-                snpErrors = createErrorForEmail(snpErrors);
-            }
-            else {snpErrors = "none";}
-            String snpErrorBody = "SNP Error(s): " + snpErrors + "\n";
-
-            // Gene Not On Genome Error
-            String geneNotOnGenomeErrors = "";
-            if (!studyErrorView.getGeneNotOnGenomeErrors().isEmpty()) {
-                geneNotOnGenomeErrors = studyErrorView.getGeneNotOnGenomeErrors().toString();
-                geneNotOnGenomeErrors = createErrorForEmail(geneNotOnGenomeErrors);
-            }
-            else {geneNotOnGenomeErrors = "none";}
-            String geneNotOnGenomeErrorsBody = "Gene Not On Genome Error(s): " + geneNotOnGenomeErrors + "\n";
-
-            // SNP Gene On Different Chromosome Error
-            String snpGeneOnDiffChrErrors = "";
-            if (!studyErrorView.getSnpGeneOnDiffChrErrors().isEmpty()) {
-                snpGeneOnDiffChrErrors = studyErrorView.getSnpGeneOnDiffChrErrors().toString();
-                snpGeneOnDiffChrErrors = createErrorForEmail(snpGeneOnDiffChrErrors);
-            }
-            else {snpGeneOnDiffChrErrors = "none";}
-            String snpGeneOnDiffChrErrorsBody =
-                    "SNP Gene On Different Chromosome Error(s): " + snpGeneOnDiffChrErrors + "\n";
-
-            // No Gene For Symbol Error
-            String noGeneForSymbolErrors = "";
-            if (!studyErrorView.getNoGeneForSymbolErrors().isEmpty()) {
-                noGeneForSymbolErrors = studyErrorView.getNoGeneForSymbolErrors().toString();
-                noGeneForSymbolErrors = createErrorForEmail(noGeneForSymbolErrors);
-            }
-            else {noGeneForSymbolErrors = "none";}
-            String noGeneForSymbolErrorsBody = "No Gene For Symbol Error(s): " + noGeneForSymbolErrors + "\n";
-
-            // Edit link
-            Long studyId = studyErrorView.getStudyId();
-            String editStudyLink = "Edit link: http://garfield.ebi.ac.uk:8080/gwas/curation/studies/" + studyId;
-
-            // Create email body
-            emailBody = emailBody + "\n" + title + sendToNCBIDateBody + pubmedErrorBody + snpErrorBody +
-                    geneNotOnGenomeErrorsBody + snpGeneOnDiffChrErrorsBody + noGeneForSymbolErrorsBody + editStudyLink +
-                    "\n";
+        else {
+            emailBody = "\nNo errors found\n";
         }
 
         // Format mail message
@@ -160,6 +175,7 @@ public class MailService {
         mailMessage.setText("The following studies have status NCBI pipeline error:" + "\n"
                                     + emailBody);
 
+        getLog().info("Sending daily audit email");
         javaMailSender.send(mailMessage);
     }
 
