@@ -33,7 +33,6 @@ import java.util.Map;
 @Repository
 public class CatalogImportRepository {
 
-
     private JdbcTemplate jdbcTemplate;
 
     private SimpleJdbcInsert insertStudyReport;
@@ -209,10 +208,13 @@ public class CatalogImportRepository {
         boolean caughtWriteErrors = false;
 
         // This map store information on whether study or its associations have an error
-        HashMap<Long, List<Boolean>> studyErrorMap = new HashMap<>();
-
+        Map<Long, List<Boolean>> studyErrorMap = new HashMap<>();
+        Map<Long, List<Boolean>> importErrorMap = new HashMap<>();
         for (String[] line : data) {
+
             row++;
+            List<Boolean> importErrors = new ArrayList<>();
+
             // Study report attributes
             Long studyId = null; // STUDY_ID
             Integer pubmedIdError = null;  // PUBMED_ID_ERROR
@@ -467,20 +469,42 @@ public class CatalogImportRepository {
                     }
 
                 }
-                catch (NumberFormatException e) {
+
+                catch (Exception e) {
                     getLog().error("Unable to read data at row " + row + ", from spreadsheet", e);
                     caughtReadErrors = true;
-                }
-                catch (DataImportException e) {
-                    getLog().error("Unable to read data at row " + row + ", from spreadsheet", e);
-                    caughtReadErrors = true;
+
+                    if (importErrorMap.containsKey(studyId)) {
+                        importErrors = studyErrorMap.get(studyId);
+                    }
+                    importErrors.add(true);
+                    importErrorMap.put(studyId, importErrors);
+
                 }
             }
 
             // If no errors for a row, insert
             if (!caughtReadErrors) {
 
-                try {      // Add study report
+                try {
+                    // Record information on study errors which will use to update status
+                    List<Boolean> errorStatus = new ArrayList<>();
+                    if (pubmedIdError != null || geneError != null || snpError != null) {
+                        if (studyErrorMap.containsKey(studyId)) {
+                            errorStatus = studyErrorMap.get(studyId);
+                        }
+                        errorStatus.add(true);
+                    }
+                    // No error found
+                    else {
+                        if (studyErrorMap.containsKey(studyId)) {
+                            errorStatus = studyErrorMap.get(studyId);
+                        }
+                        errorStatus.add(false);
+                    }
+                    studyErrorMap.put(studyId, errorStatus);
+
+                    // Add study report
                     addStudyReport(studyId,
                                    pubmedIdError,
                                    ncbiPaperTitle,
@@ -523,33 +547,21 @@ public class CatalogImportRepository {
                                   functionalClass);
 
 
-                    // Record information on study errors
-                    List<Boolean> errorStatus = new ArrayList<>();
-                    if (pubmedIdError != null || geneError != null || snpError != null) {
-                        if (studyErrorMap.containsKey(studyId)) {
-                            errorStatus = studyErrorMap.get(studyId);
-                        }
-                        errorStatus.add(true);
-                    }
-                    // No error found
-                    else {
-                        if (studyErrorMap.containsKey(studyId)) {
-                            errorStatus = studyErrorMap.get(studyId);
-                        }
-                        errorStatus.add(false);
-                    }
-                    studyErrorMap.put(studyId, errorStatus);
-
                 }
                 catch (Exception e) {
                     getLog().error("Unable to write data at row " + row + ", from spreadsheet", e);
                     caughtWriteErrors = true;
+                    if (importErrorMap.containsKey(studyId)) {
+                        importErrors = studyErrorMap.get(studyId);
+                    }
+                    importErrors.add(true);
+                    importErrorMap.put(studyId, importErrors);
                 }
             }
         }
 
         // For each study in map we update the status
-        updateStudyStatus(studyErrorMap);
+        updateStudyStatus(studyErrorMap, importErrorMap);
 
         if (caughtReadErrors || caughtWriteErrors) {
             throw new DataImportException("Caught errors whilst processing data import - " +
@@ -676,7 +688,7 @@ public class CatalogImportRepository {
         // Do not attempt to add mapped data for entries with snp errors
         // These tend to come back with just limited region information
         if (snpError != null && !snpError.isEmpty()) {
-            getLog().info("Not adding mapped data for snpId: " + snpId + " , with error " + snpError);
+            getLog().info("Not adding mapped data for snpId: rs" + snpId + " , with error " + snpError);
             return;
         }
 
@@ -903,7 +915,7 @@ public class CatalogImportRepository {
     }
 
 
-    private void updateStudyStatus(HashMap<Long, List<Boolean>> studyErrorMap) {
+    private void updateStudyStatus(Map<Long, List<Boolean>> studyErrorMap, Map<Long, List<Boolean>> importErrorMap) {
 
         for (Long studyId : studyErrorMap.keySet()) {
 
@@ -933,16 +945,19 @@ public class CatalogImportRepository {
                 currentStatus = jdbcTemplate.queryForObject(SELECT_CURRENT_STATUS, String.class, currentStatusId);
             }
 
-
             // Check for errors
             List<Boolean> errorStatus = studyErrorMap.get(studyId);
+            List<Boolean> importErrorStatus = importErrorMap.get(studyId);
             String status;
 
             // Study has an error
             if (errorStatus.contains(true)) {
                 status = "NCBI pipeline error";
             }
-
+            // Import detected an error
+            else if (importErrorStatus.contains(true)) {
+                status = "Data import error";
+            }
             // No errors found for study
             else {
                 status = "Publish study";
