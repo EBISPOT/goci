@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -30,9 +32,9 @@ public class CatalogExportRepository {
     private static final String FROM_CLAUSE =
             " FROM CATALOG_SUMMARY_VIEW ";
     private static final String NCBI_WHERE_CLAUSE =
-            " WHERE CURATION_STATUS = 'Send to NCBI' ORDER BY STUDY_ID DESC ";
+            " WHERE CURATION_STATUS = 'Send to NCBI' OR RESULT_PUBLISHED IS NOT NULL ORDER BY STUDY_ID DESC ";
     private static final String DOWNLOAD_WHERE_CLAUSE =
-            " WHERE RESULT_PUBLISHED IS NOT NULL ORDER BY STUDY_ID DESC ";
+            " WHERE RESULT_PUBLISHED IS NOT NULL ORDER BY PUBMED_ID DESC ";
 
     private final DateFormat df;
 
@@ -53,18 +55,22 @@ public class CatalogExportRepository {
     }
 
     public String[][] getNCBISpreadsheet() {
+
+        // Get headers for output spreadsheet
         List<String> ncbiOutputHeaders = CatalogHeaderBindings.getNcbiHeaders()
                 .stream()
                 .filter(binding -> binding.getNcbiName() != null)
                 .map(CatalogHeaderBinding::getNcbiName)
                 .collect(Collectors.toList());
 
+        // Get equivalent headers in database
         List<String> ncbiQueryHeaders = CatalogHeaderBindings.getNcbiHeaders()
                 .stream()
                 .filter(binding -> binding.getDatabaseName() != null)
                 .map(CatalogHeaderBinding::getDatabaseName)
                 .collect(Collectors.toList());
 
+        // Build query
         String query = buildSelectClause(ncbiQueryHeaders) + FROM_CLAUSE + NCBI_WHERE_CLAUSE;
         List<String[]> rows = jdbcTemplate.query(query, (resultSet, i) -> {
             Map<CatalogHeaderBinding, String> dataForMapping = new LinkedHashMap<>();
@@ -108,13 +114,14 @@ public class CatalogExportRepository {
     }
 
     public String[][] getDownloadSpreadsheet() {
-        List<String> downloadOutputHeaders = CatalogHeaderBindings.getDownloadHeaders()
+        List<String> downloadOutputHeaders = getOrderedDownloadHeaders()
                 .stream()
                 .filter(binding -> binding.getDownloadName() != null)
                 .map(CatalogHeaderBinding::getDownloadName)
                 .collect(Collectors.toList());
 
-        List<String> downloadQueryHeaders = CatalogHeaderBindings.getDownloadHeaders()
+
+        List<String> downloadQueryHeaders = getOrderedDownloadHeaders()
                 .stream()
                 .filter(binding -> binding.getDatabaseName() != null)
                 .map(CatalogHeaderBinding::getDatabaseName)
@@ -124,7 +131,7 @@ public class CatalogExportRepository {
         List<String[]> rows = jdbcTemplate.query(query, (resultSet, i) -> {
             Map<CatalogHeaderBinding, String> dataForMapping = new LinkedHashMap<>();
             Map<CatalogHeaderBinding, String> rowMap = new LinkedHashMap<>();
-            for (CatalogHeaderBinding binding : CatalogHeaderBindings.getDownloadHeaders()) {
+            for (CatalogHeaderBinding binding : getOrderedDownloadHeaders()) {
                 if (binding.getDownloadName() != null) {
                     // insert headings in declaration order (this is the correct order)
                     // which controls for reinsertion
@@ -192,7 +199,14 @@ public class CatalogExportRepository {
         else {
             String value = resultSet.getString(binding.getDatabaseName());
             if (value != null) {
-                return resultSet.getString(binding.getDatabaseName()).trim();
+
+                // Remove new lines or carriage returns in value
+                String newline = System.getProperty("line.separator");
+                if (value.contains(newline)) {
+                    value = value.replaceAll("\n", "").replaceAll("\r", "");
+                }
+
+                return value.trim();
             }
             else {
                 return "";
@@ -200,5 +214,63 @@ public class CatalogExportRepository {
         }
     }
 
+     //put the CatalogHeaderBindings into the correct order for the download spreadsheet
+    private List<CatalogHeaderBinding> getOrderedDownloadHeaders() {
+        List<CatalogHeaderBinding> catalogHeaders = CatalogHeaderBindings.getDownloadHeaders();
+        List<CatalogHeaderBinding> orderedHeaders = new ArrayList<CatalogHeaderBinding>();
+
+        List<String> order = Arrays.asList("DATE ADDED TO CATALOG",
+                                           "PUBMEDID",
+                                           "FIRST AUTHOR",
+                                           "DATE",
+                                           "JOURNAL",
+                                           "LINK",
+                                           "STUDY",
+                                           "DISEASE/TRAIT",
+                                           "INITIAL SAMPLE DESCRIPTION",
+                                           "REPLICATION SAMPLE DESCRIPTION",
+                                           "REGION",
+                                           "CHR_ID",
+                                           "CHR_POS",
+                                           "REPORTED GENE(S)",
+                                           "MAPPED_GENE",
+                                           "UPSTREAM_GENE_ID",
+                                           "DOWNSTREAM_GENE_ID",
+                                           "SNP_GENE_IDS",
+                                           "UPSTREAM_GENE_DISTANCE",
+                                           "DOWNSTREAM_GENE_DISTANCE",
+                                           "STRONGEST SNP-RISK ALLELE",
+                                           "SNPS",
+                                           "MERGED",
+                                           "SNP_ID_CURRENT",
+                                           "CONTEXT",
+                                           "INTERGENIC",
+                                           "RISK ALLELE FREQUENCY",
+                                           "P-VALUE",
+                                           "PVALUE_MLOG",
+                                           "P-VALUE (TEXT)",
+                                           "OR or BETA",
+                                           "95% CI (TEXT)",
+                                           "PLATFORM [SNPS PASSING QC]",
+                                           "CNV"/*,
+                                           "MAPPED_TRAIT",
+                                           "MAPPED_TRAIT_URI"*/);
+
+        for(String header : order){
+            for(CatalogHeaderBinding binding : catalogHeaders){
+                if(binding.getDownloadName() != null){
+                    if(binding.getDownloadName().equals(header)){
+                        orderedHeaders.add(binding);
+                    }
+                }
+                else {
+                    if(!orderedHeaders.contains(binding)){
+                        orderedHeaders.add(binding);
+                    }
+                }
+            }
+        }
+        return orderedHeaders;
+    }
 
 }

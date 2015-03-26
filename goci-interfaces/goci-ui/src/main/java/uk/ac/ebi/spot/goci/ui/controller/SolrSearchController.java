@@ -188,12 +188,14 @@ public class SolrSearchController {
         addFacetMincount(solrSearchBuilder, mincount);
         addFacetLimit(solrSearchBuilder, limit);
         addFilterQuery(solrSearchBuilder, "resourcename", "study");
-        if (traits != null) {
+        if (traits != null && traits.length != 0) {
             System.out.println(String.valueOf(traits));
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
 
-        addFilterQuery(solrSearchBuilder, "catalogAddedDate", "study_catalogAddedDate", dateRange);
+        if(dateRange != "") {
+            addFilterQuery(solrSearchBuilder, "catalogAddedDate", "study_catalogAddedDate", dateRange);
+        }
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -268,7 +270,7 @@ public class SolrSearchController {
             addFilterQuery(solrSearchBuilder, "catalogAddedDate", "study_catalogAddedDate", addedDateRange);
 
         }
-        if (traits != null) {
+        if (traits != null && traits.length != 0) {
             System.out.println(String.valueOf(traits));
 
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
@@ -306,7 +308,7 @@ public class SolrSearchController {
             addRowsAndPage(solrSearchBuilder, maxResults, page);
         }
 
-        if (traits != null) {
+        if (traits != null && traits.length != 0) {
             System.out.println(String.valueOf(traits));
 
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
@@ -372,7 +374,7 @@ public class SolrSearchController {
 
             addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
         }
-        if (traits != null) {
+        if (traits != null && traits.length != 0) {
             System.out.println(String.valueOf(traits));
 
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
@@ -497,12 +499,18 @@ public class SolrSearchController {
             getLog().debug(dateRange);
 
             if(dateRange.contains("NOW")){
-                addFilterQuery(solrSearchBuilder, "catalogAddedDate", dateRange);
+                if(facet.equals("diseasetrait")){
+                    addFilterQuery(solrSearchBuilder, "study_catalogAddedDate", dateRange);
+                }
+                else {
+                    addFilterQuery(solrSearchBuilder, "catalogAddedDate", dateRange);
+                }
             }
             else {
                 addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
-            }        }
-        if (traits != null) {
+            }
+        }
+        if (traits != null && traits.length != 0) {
             System.out.println(String.valueOf(traits));
 
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
@@ -680,7 +688,7 @@ public class SolrSearchController {
             getLog().debug(dateRange);
             addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
         }
-        if (traits != null) {
+        if (traits != null && traits.length != 0) {
             System.out.println(String.valueOf(traits));
 
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);

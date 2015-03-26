@@ -1,6 +1,13 @@
 package uk.ac.ebi.spot.goci;
 
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionGroup;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +104,7 @@ public class ImportExportApplication {
                         catch (Exception e) {
                             System.err.println("Stats export failed (" + e.getMessage() + ")");
                             getLog().error("Stats export failed", e);
-                            exitCode += 3;
+                            exitCode += 6;
                         }
                         break;
                     case LOAD:
@@ -164,7 +171,7 @@ public class ImportExportApplication {
             // check for mode help option
             if (cl.hasOption("")) {
                 // print out mode help
-                help.printHelp("zooma", options, true);
+                help.printHelp("gwas-catalog-io", options, true);
                 parseArgs += 1;
             }
             else {
@@ -218,8 +225,6 @@ public class ImportExportApplication {
 
     private Options bindOptions() {
         Options options = new Options();
-
-
 
         // help
         Option helpOption = new Option("h", "help", false, "Print the help");

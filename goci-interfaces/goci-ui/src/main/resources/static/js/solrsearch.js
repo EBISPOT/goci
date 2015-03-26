@@ -162,7 +162,7 @@ function getMostRecentStudies() {
     setState(SearchState.LOADING);
 
     var searchTerm = 'text:*';
-    var dateRange = "[NOW-2MONTH+TO+*]";
+    var dateRange = "[NOW-3MONTH+TO+*]";
     var sort = "catalogAddedDate+desc"
 
     $.getJSON('api/search/latest', {'q': searchTerm,
@@ -189,7 +189,7 @@ function processData(data) {
             var fq = data.responseHeader.params.fq;
 
             if(fq.indexOf("catalogAddedDate") != -1){
-                var dateRange = "[NOW-2MONTH+TO+*]";
+                var dateRange = "[NOW-3MONTH+TO+*]";
                 generateTraitDropdown(data.responseHeader.params.q, null, dateRange);
             }
             else {
@@ -411,7 +411,7 @@ function setDownloadLink(searchParams){
         else if($('#filter').text() == 'recent'){
             console.log("Generating date-based download link for " + $('#filter').text());
 
-            var addeddate = addeddate.concat("[NOW-2MONTH+TO+*]");
+            var addeddate = addeddate.concat("[NOW-3MONTH+TO+*]");
         }
 
     }
