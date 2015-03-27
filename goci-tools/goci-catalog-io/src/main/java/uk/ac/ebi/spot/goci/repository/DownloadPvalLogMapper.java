@@ -22,8 +22,10 @@ public class DownloadPvalLogMapper implements CatalogDataMapper{
     }
 
     @Override public List<CatalogHeaderBinding> getRequiredDatabaseFields() {
-        return Arrays.asList(CatalogHeaderBinding.P_VALUE_MANT_FOR_MLOG,
-                             CatalogHeaderBinding.P_VALUE_EXPO_FOR_MLOG);
+//        return Arrays.asList(CatalogHeaderBinding.P_VALUE_MANT_FOR_MLOG,
+//                             CatalogHeaderBinding.P_VALUE_EXPO_FOR_MLOG);
+        return Arrays.asList(CatalogHeaderBinding.P_VALUE_MANTISSA,
+                             CatalogHeaderBinding.P_VALUE_EXPONENT);
     }
 
     @Override public CatalogHeaderBinding getOutputField() {
@@ -34,8 +36,8 @@ public class DownloadPvalLogMapper implements CatalogDataMapper{
 
         String pvalLog;
 
-        String mant = databaseValues.get(CatalogHeaderBinding.P_VALUE_MANT_FOR_MLOG);
-        String exp = databaseValues.get(CatalogHeaderBinding.P_VALUE_EXPO_FOR_MLOG);
+        String mant = databaseValues.get(CatalogHeaderBinding.P_VALUE_MANTISSA);
+        String exp = databaseValues.get(CatalogHeaderBinding.P_VALUE_EXPONENT);
 
         if(!mant.isEmpty() && !exp.isEmpty()) {
             double m = Double.parseDouble(mant);
