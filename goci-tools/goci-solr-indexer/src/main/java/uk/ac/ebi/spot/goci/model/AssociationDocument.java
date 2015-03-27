@@ -48,6 +48,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field("reportedGeneLinks") private Collection<String> reportedGeneLinks;
     @Field private int upstreamGeneDistance;
     @Field private int downstreamGeneDistance;
+    @Field private boolean merged;
 
     @Field("studyId") @NonEmbeddableField private Collection<String> studyIds;
 
@@ -365,6 +366,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         if (intragenic.get()) {
             // should only be 2 genes - one upstream and one downstream
             if (genes.size() == 2) {
+                // todo - in this case, also add upstream and downstream distances
                 geneString = genes.get(0).concat(" - ").concat(genes.get(1));
             }
             else {
