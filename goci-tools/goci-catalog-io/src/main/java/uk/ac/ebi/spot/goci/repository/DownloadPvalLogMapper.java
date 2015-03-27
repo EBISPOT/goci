@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +22,8 @@ public class DownloadPvalLogMapper implements CatalogDataMapper{
     }
 
     @Override public List<CatalogHeaderBinding> getRequiredDatabaseFields() {
-        return Collections.singletonList(CatalogHeaderBinding.P_VALUE_FOR_MLOG);
+        return Arrays.asList(CatalogHeaderBinding.P_VALUE_MANT_FOR_MLOG,
+                             CatalogHeaderBinding.P_VALUE_EXPO_FOR_MLOG);
     }
 
     @Override public CatalogHeaderBinding getOutputField() {
@@ -33,12 +34,16 @@ public class DownloadPvalLogMapper implements CatalogDataMapper{
 
         String pvalLog;
 
-        String pval = databaseValues.get(CatalogHeaderBinding.P_VALUE_FOR_MLOG);
+        String mant = databaseValues.get(CatalogHeaderBinding.P_VALUE_MANT_FOR_MLOG);
+        String exp = databaseValues.get(CatalogHeaderBinding.P_VALUE_EXPO_FOR_MLOG);
 
-        if(pval != null && pval != "") {
-            double p = Double.parseDouble(pval);
+        if(!mant.isEmpty() && !exp.isEmpty()) {
+            double m = Double.parseDouble(mant);
+            double e = Double.parseDouble(exp);
 
-            double log = -Math.log10(p);
+            double pval = m * Math.pow(10,e);
+
+            double log = -Math.log10(pval);
              pvalLog = String.valueOf(log);
         }
         else {

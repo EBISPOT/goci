@@ -31,6 +31,10 @@ public class CatalogSummaryView {
 
     private String diseaseTrait;
 
+    private String efoTrait;
+
+    private String efoUri;
+
     private String initialSampleDescription;
 
     private String replicateSampleDescription;
@@ -73,7 +77,9 @@ public class CatalogSummaryView {
 
     private String riskAlleleFrequency;
 
-    private Float pValue;
+    private Integer pValueMantissa;
+
+    private Integer pValueExponent;
 
     private String pValueQualifier;
 
@@ -109,6 +115,8 @@ public class CatalogSummaryView {
                               String link,
                               String study,
                               String diseaseTrait,
+                              String efoTrait,
+                              String efoUri,
                               String initialSampleDescription,
                               String replicateSampleDescription,
                               String region,
@@ -130,7 +138,8 @@ public class CatalogSummaryView {
                               String context,
                               Boolean isIntergenic,
                               String riskAlleleFrequency,
-                              Float pValue,
+                              Integer pValueMantissa,
+                              Integer pValueExponent,
                               String pValueQualifier,
                               Float orBeta,
                               String ci,
@@ -150,6 +159,8 @@ public class CatalogSummaryView {
         this.link = link;
         this.study = study;
         this.diseaseTrait = diseaseTrait;
+        this.efoTrait = efoTrait;
+        this.efoUri = efoUri;
         this.initialSampleDescription = initialSampleDescription;
         this.replicateSampleDescription = replicateSampleDescription;
         this.region = region;
@@ -171,7 +182,8 @@ public class CatalogSummaryView {
         this.context = context;
         this.isIntergenic = isIntergenic;
         this.riskAlleleFrequency = riskAlleleFrequency;
-        this.pValue = pValue;
+        this.pValueMantissa = pValueMantissa;
+        this.pValueExponent = pValueExponent;
         this.pValueQualifier = pValueQualifier;
         this.orBeta = orBeta;
         this.ci = ci;
@@ -254,6 +266,22 @@ public class CatalogSummaryView {
 
     public void setDiseaseTrait(String diseaseTrait) {
         this.diseaseTrait = diseaseTrait;
+    }
+
+    public String getEfoTrait() {
+        return efoTrait;
+    }
+
+    public void setEfoTrait(String efoTrait) {
+        this.efoTrait = efoTrait;
+    }
+
+    public String getEfoUri() {
+        return efoUri;
+    }
+
+    public void setEfoUri(String efoUri) {
+        this.efoUri = efoUri;
     }
 
     public String getInitialSampleDescription() {
@@ -392,6 +420,10 @@ public class CatalogSummaryView {
         this.merged = merged;
     }
 
+    public Boolean isMerged() {
+        return merged;
+    }
+
     public Long getSnpId() {
         return snpId;
     }
@@ -416,6 +448,10 @@ public class CatalogSummaryView {
         this.isIntergenic = isIntergenic;
     }
 
+    public Boolean isIntergenic() {
+        return isIntergenic;
+    }
+
     public String getRiskAlleleFrequency() {
         return riskAlleleFrequency;
     }
@@ -424,12 +460,20 @@ public class CatalogSummaryView {
         this.riskAlleleFrequency = riskAlleleFrequency;
     }
 
-    public Float getpValue() {
-        return pValue;
+    public Integer getpValueMantissa() {
+        return pValueMantissa;
     }
 
-    public void setpValue(Float pValue) {
-        this.pValue = pValue;
+    public void setpValueMantissa(Integer pValueMantissa) {
+        this.pValueMantissa = pValueMantissa;
+    }
+
+    public Integer getpValueExponent() {
+        return pValueExponent;
+    }
+
+    public void setpValueExponent(Integer pValueExponent) {
+        this.pValueExponent = pValueExponent;
     }
 
     public String getpValueQualifier() {
@@ -480,6 +524,10 @@ public class CatalogSummaryView {
         this.cnv = cnv;
     }
 
+    public Boolean isCnv() {
+        return cnv;
+    }
+
     public Long getAssociationId() {
         return associationId;
     }
@@ -523,6 +571,8 @@ public class CatalogSummaryView {
                 ", link='" + link + '\'' +
                 ", study='" + study + '\'' +
                 ", diseaseTrait='" + diseaseTrait + '\'' +
+                ", efoTrait='" + efoTrait + '\'' +
+                ", efoUri='" + efoUri + '\'' +
                 ", initialSampleDescription='" + initialSampleDescription + '\'' +
                 ", replicateSampleDescription='" + replicateSampleDescription + '\'' +
                 ", region='" + region + '\'' +
@@ -544,7 +594,8 @@ public class CatalogSummaryView {
                 ", context='" + context + '\'' +
                 ", isIntergenic=" + isIntergenic +
                 ", riskAlleleFrequency='" + riskAlleleFrequency + '\'' +
-                ", pValue=" + pValue +
+                ", pValueMantissa=" + pValueMantissa +
+                ", pValueExponent=" + pValueExponent +
                 ", pValueQualifier='" + pValueQualifier + '\'' +
                 ", orBeta=" + orBeta +
                 ", ci='" + ci + '\'' +
@@ -554,7 +605,7 @@ public class CatalogSummaryView {
                 ", associationId=" + associationId +
                 ", studyId=" + studyId +
                 ", resultPublished=" + resultPublished +
-                ", curationStatus=" + curationStatus +
+                ", curationStatus='" + curationStatus + '\'' +
                 '}';
     }
 }

@@ -71,7 +71,6 @@ public class CatalogMetaDataRepository {
         Integer snpcount = getSNPCount();
         Integer associationCount = getAssociationCount();
 
-
         Date date = new Date();
         String today = df.format(date);
 
@@ -91,7 +90,7 @@ public class CatalogMetaDataRepository {
     }
 
     private Integer getAssociationCount() {
-        return jdbcTemplate.queryForObject(ASSOCIATION_COUNT, Integer.class);
+        return jdbcTemplate.queryForObject(STUDY_COUNT, Integer.class);
     }
 
     private Integer getSNPCount() {
@@ -99,6 +98,6 @@ public class CatalogMetaDataRepository {
     }
 
     private Integer getStudyCount() {
-        return jdbcTemplate.queryForObject(STUDY_COUNT, Integer.class);
+        return jdbcTemplate.queryForObject(ASSOCIATION_COUNT, Integer.class);
     }
 }

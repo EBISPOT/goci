@@ -41,7 +41,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field private String region;
     // mapped genes and reported genes must be per snp -
     // if multiple, separate mapped genes with a hyphen (downstream-upstream) and reported genes with a slash,
-    // and then include 'x' or ',' as designated by multuple loci/risk alleles
+    // and then include 'x' or ',' as designated by multiple loci/risk alleles
     @Field("mappedGene") private String mappedGene;
     @Field("mappedGeneLinks") private Collection<String> mappedGeneLinks;
     @Field("reportedGene") private Collection<String> reportedGenes;
@@ -52,7 +52,6 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     // pluralise all other information, but retain order
     @Field("chromosomeName") private Set<String> chromosomeNames;
     @Field("chromosomePosition") private Set<Integer> chromosomePositions;
-    @Field("last_modified") private Set<String> lastModifiedDates;
 
     // embedded study info
     @Field private String pubmedId;
@@ -93,7 +92,6 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
         this.chromosomeNames = new LinkedHashSet<>();
         this.chromosomePositions = new LinkedHashSet<>();
-        this.lastModifiedDates = new LinkedHashSet<>();
 
         this.mappedGeneLinks = new LinkedHashSet<>();
         this.reportedGenes = new LinkedHashSet<>();
@@ -165,10 +163,6 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     public Set<Integer> getChromosomePositions() {
         return chromosomePositions;
-    }
-
-    public Set<String> getLastModifiedDates() {
-        return lastModifiedDates;
     }
 
     public float getOrPerCopyNum() {
@@ -278,11 +272,6 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     if (snp.getChromosomePosition() != null) {
                                         chromosomePositions.add(Integer.parseInt(snp.getChromosomePosition()));
                                     }
-                                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-                                    df.setTimeZone(TimeZone.getTimeZone("UTC"));
-                                    if (snp.getLastUpdateDate() != null) {
-                                        lastModifiedDates.add(df.format(snp.getLastUpdateDate()));
-                                    }
                                 }
                         );
                         locus.getAuthorReportedGenes().forEach(gene -> {
@@ -334,11 +323,6 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     chromosomeNames.add(snp.getChromosomeName());
                                     if (snp.getChromosomePosition() != null) {
                                         chromosomePositions.add(Integer.parseInt(snp.getChromosomePosition()));
-                                    }
-                                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-                                    df.setTimeZone(TimeZone.getTimeZone("UTC"));
-                                    if (snp.getLastUpdateDate() != null) {
-                                        lastModifiedDates.add(df.format(snp.getLastUpdateDate()));
                                     }
                                 }
                         );
