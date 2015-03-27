@@ -85,10 +85,10 @@ public class JsonProcessingService {
             line.append("\t");
 
             //            line.append(doc.get("upstreamDistance").asText().trim());
-            line.append("");
+            line.append(""); // todo - remove this when above solr field is available
             line.append("\t");
             //            line.append(doc.get("downstreamDistance").asText().trim());
-            line.append("");
+            line.append(""); // todo - remove this when above solr field is available
             line.append("\t");
 
             line.append(getStrongestAllele(doc));
@@ -98,7 +98,7 @@ public class JsonProcessingService {
             line.append(rsId);
             line.append("\t");
             //            line.append(doc.get("merged").asText().trim());
-            line.append("");
+            line.append(""); // todo - remove this when above solr field is available
             line.append("\t");
 
             if(rsId.indexOf("rs") == 0 && rsId.indexOf("rs", 2) == -1) {
@@ -147,10 +147,10 @@ public class JsonProcessingService {
             line.append(getCI(doc));
             line.append("\t");
             //            line.append(doc.get("platform").asText().trim());
-            line.append("");
+            line.append(""); // todo - remove this when above solr field is available
             line.append("\t");
             //            line.append(doc.get("cnv").asText().trim());
-            line.append("N");
+            line.append("N"); // todo - remove this when above solr field is available
             line.append("\r\n");
 
             result.append(line.toString());
