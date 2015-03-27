@@ -46,6 +46,8 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field("mappedGeneLinks") private Collection<String> mappedGeneLinks;
     @Field("reportedGene") private Collection<String> reportedGenes;
     @Field("reportedGeneLinks") private Collection<String> reportedGeneLinks;
+    @Field private int upstreamGeneDistance;
+    @Field private int downstreamGeneDistance;
 
     @Field("studyId") @NonEmbeddableField private Collection<String> studyIds;
 

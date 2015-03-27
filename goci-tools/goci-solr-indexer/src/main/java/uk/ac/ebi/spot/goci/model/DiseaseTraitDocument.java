@@ -24,6 +24,9 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     @Field("study_catalogAddedDate") private Collection<String> catalogAddedDates;
     @Field("study_publicationLink") private Collection<String> publicationLinks;
 
+    @Field("study_platform") private Collection<String> platforms;
+    @Field("study_cnv") private Collection<Boolean> cnvs;
+
     @Field("study_initialSampleDescription") private Collection<String> initialSampleDescriptions;
     @Field("study_replicateSampleDescription") private Collection<String> replicateSampleDescriptions;
 
@@ -61,6 +64,9 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.publicationDates = new LinkedHashSet<>();
         this.catalogAddedDates = new LinkedHashSet<>();
         this.publicationLinks = new LinkedHashSet<>();
+
+        this.platforms = new LinkedHashSet<>();
+        this.cnvs = new LinkedHashSet<>();
 
         this.initialSampleDescriptions = new LinkedHashSet<>();
         this.replicateSampleDescriptions = new LinkedHashSet<>();
@@ -117,6 +123,14 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
 
     public void addPublicationLink(String publicationLink) {
         this.publicationLinks.add(publicationLink);
+    }
+
+    public void addPlatform(String platform) {
+        this.platforms.add(platform);
+    }
+
+    public void addCnv(Boolean cnv) {
+        this.cnvs.add(cnv);
     }
 
     public void addInitialSampleDescription(String initialSampleDescription) {
