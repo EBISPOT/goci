@@ -63,7 +63,7 @@ public class DailyAuditTask {
     }
 
     // Scheduled for 7am everyday
-    @Scheduled(cron = "0 05 16 * * *")
+    @Scheduled(cron = "0 0 7 * * *")
     public void dailyErrorAudit() {
 
         // Get list of all studies with status "NCBI pipeline error"
@@ -77,9 +77,9 @@ public class DailyAuditTask {
         Collection<Study> studiesWithImportErrors = studyRepository.findByCurationStatusIgnoreCase(importErrorStatusId);
 
         // Calculate some totals that we can add as a summary view to email
-        Integer totalStudiesWithNcbiErrors= studiesWithNcbiErrors.size();
+        Integer totalStudiesWithNcbiErrors = studiesWithNcbiErrors.size();
         Integer totalStudiesWithImportErrors = studiesWithImportErrors.size();
-  //      Integer totalNumberOfStudiesSentToNcbi = calculateNumberOfStudiesSentToNcbi(ncbiErrorStatusId);
+        Integer totalNumberOfStudiesSentToNcbi = calculateNumberOfStudiesSentToNcbi();
 
         Collection<StudyErrorView> studyErrorViews = new ArrayList<StudyErrorView>();
         // Send email for all studies with errors
@@ -150,19 +150,23 @@ public class DailyAuditTask {
         }
 
         // Send mail
-        mailService.sendDailyAuditEmail(studyErrorViews,totalStudiesWithNcbiErrors, totalStudiesWithImportErrors);
+        mailService.sendDailyAuditEmail(studyErrorViews, totalStudiesWithNcbiErrors, totalStudiesWithImportErrors);
     }
 
     // Calculate studies sent to NCBI day before
-/*    private Integer calculateNumberOfStudiesSentToNcbi(Long ncbiErrorStatusId) {
+    private Integer calculateNumberOfStudiesSentToNcbi() {
 
         // Get yesterdays date
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
+        cal.set(Calendar.HOUR_OF_DAY, 00);
+        cal.set(Calendar.MINUTE, 00);
+        cal.set(Calendar.SECOND, 00);
+        cal.set(Calendar.MILLISECOND, 00);
         Date date = cal.getTime();
 
-        List<Study> studies = studyRepository.findByCurationStatusAndSendToNcbiDate(ncbiErrorStatusId,date);
+        List<Study> studies = studyRepository.findByHousekeepingSendToNCBIDate(date);
         Integer totalNumberOfStudiesSentToNcbi = studies.size();
         return totalNumberOfStudiesSentToNcbi;
-    }*/
+    }
 }
