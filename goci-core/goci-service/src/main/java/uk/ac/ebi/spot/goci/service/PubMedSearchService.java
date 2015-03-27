@@ -11,7 +11,7 @@ import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
  *         <p>
  *         Adapted by Emma (2015-01-16) based on code written by Tony.
  */
-public interface GwasPubMedLookupService {
+public interface PubMedSearchService {
 
     /**
      * Dispatches a PubMed summary query to obtain publication details for a PubMed ID. Details are then used to create a Study object
@@ -20,6 +20,6 @@ public interface GwasPubMedLookupService {
      * @return uk.ac.ebi.spot.goci.model.Study
      * @throws uk.ac.ebi.spot.goci.service.exception.PubmedLookupException
      */
-    Study dispatchSummaryQuery(String pubmedId) throws PubmedLookupException;
+    Study findPublicationSummary(String pubmedId) throws PubmedLookupException;
 
 }
