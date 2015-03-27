@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
-import uk.ac.ebi.spot.goci.repository.CatalogDataMapper;
+import uk.ac.ebi.spot.goci.model.CatalogDataMapper;
 
 import java.util.Arrays;
 import java.util.List;

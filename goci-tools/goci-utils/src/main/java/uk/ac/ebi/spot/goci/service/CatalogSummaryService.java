@@ -17,14 +17,14 @@ import java.util.Collection;
  *         Returns collection of views of various studies that have status "Send to NCBI"
  */
 @Service
-public class NCBICatalogService {
+public class CatalogSummaryService {
 
     private CatalogSummaryViewRepository catalogSummaryViewRepository;
     private CurationStatusRepository curationStatusRepository;
 
     @Autowired
-    public NCBICatalogService(CatalogSummaryViewRepository catalogSummaryViewRepository,
-                              CurationStatusRepository curationStatusRepository) {
+    public CatalogSummaryService(CatalogSummaryViewRepository catalogSummaryViewRepository,
+                                 CurationStatusRepository curationStatusRepository) {
         this.catalogSummaryViewRepository = catalogSummaryViewRepository;
         this.curationStatusRepository = curationStatusRepository;
     }

@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Bean;
 import uk.ac.ebi.spot.goci.repository.CatalogExportRepository;
 import uk.ac.ebi.spot.goci.repository.CatalogImportRepository;
 import uk.ac.ebi.spot.goci.repository.CatalogMetaDataRepository;
-import uk.ac.ebi.spot.goci.service.SpreadsheetProcessor;
+import uk.ac.ebi.spot.goci.export.CatalogSpreadsheetExporter;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class ImportExportApplication {
     @Autowired
     private CatalogMetaDataRepository catalogMetaDataRepository;
     @Autowired
-    private SpreadsheetProcessor spreadsheetProcessor;
+    private CatalogSpreadsheetExporter catalogSpreadsheetExporter;
 
     private OperationMode opMode;
     private File outputFile;
@@ -127,7 +127,7 @@ public class ImportExportApplication {
 
     void doNCBIExport(File outFile) throws IOException {
         String[][] data = catalogExportRepository.getNCBISpreadsheet();
-        spreadsheetProcessor.writeToFile(data, outFile);
+        catalogSpreadsheetExporter.writeToFile(data, outFile);
     }
 
     void doDownloadExport(File outFile) throws IOException {
@@ -141,12 +141,12 @@ public class ImportExportApplication {
 //            }
 //        }
         String[][] data = catalogExportRepository.getDownloadSpreadsheet("d");
-        spreadsheetProcessor.writeToFile(data, outFile);
+        catalogSpreadsheetExporter.writeToFile(data, outFile);
     }
 
     void doAlternativeDownloadExport(File outFile) throws IOException {
         String[][] data = catalogExportRepository.getDownloadSpreadsheet("a");
-        spreadsheetProcessor.writeToFile(data, outFile);
+        catalogSpreadsheetExporter.writeToFile(data, outFile);
     }
 
     void doStatsExport(File statsFile) throws IOException{
@@ -155,7 +155,7 @@ public class ImportExportApplication {
 
 
     void doLoad(File inFile) throws IOException {
-        String[][] data = spreadsheetProcessor.readFromFile(inFile);
+        String[][] data = catalogSpreadsheetExporter.readFromFile(inFile);
         catalogImportRepository.loadNCBIMappedData(data);
     }
 

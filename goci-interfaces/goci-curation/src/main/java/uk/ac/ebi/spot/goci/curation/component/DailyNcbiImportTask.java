@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.curation.service.FtpFileService;
 import uk.ac.ebi.spot.goci.repository.CatalogImportRepository;
-import uk.ac.ebi.spot.goci.service.SpreadsheetProcessor;
+import uk.ac.ebi.spot.goci.export.CatalogSpreadsheetExporter;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,16 +24,16 @@ public class DailyNcbiImportTask {
 
     private CatalogImportRepository catalogImportRepository;
 
-    private SpreadsheetProcessor spreadsheetProcessor;
+    private CatalogSpreadsheetExporter catalogSpreadsheetExporter;
 
     private FtpFileService ftpFileService;
 
     @Autowired
     public DailyNcbiImportTask(CatalogImportRepository catalogImportRepository,
-                               SpreadsheetProcessor spreadsheetProcessor,
+                               CatalogSpreadsheetExporter catalogSpreadsheetExporter,
                                FtpFileService ftpFileService) {
         this.catalogImportRepository = catalogImportRepository;
-        this.spreadsheetProcessor = spreadsheetProcessor;
+        this.catalogSpreadsheetExporter = catalogSpreadsheetExporter;
         this.ftpFileService = ftpFileService;
     }
 
@@ -51,7 +51,7 @@ public class DailyNcbiImportTask {
 
         // Load into database if we have a file
         if (annotatedFile.length() != 0) {
-            String[][] data = spreadsheetProcessor.readFromFile(annotatedFile);
+            String[][] data = catalogSpreadsheetExporter.readFromFile(annotatedFile);
             catalogImportRepository.loadNCBIMappedData(data);
         }
 

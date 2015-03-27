@@ -1,8 +1,9 @@
-package uk.ac.ebi.spot.goci.service;
+package uk.ac.ebi.spot.goci.export;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.CatalogSummaryView;
+import uk.ac.ebi.spot.goci.service.CatalogSummaryService;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -23,11 +24,11 @@ import java.util.List;
  */
 
 @Service
-public class ProcessView {
-    private NCBICatalogService ncbiCatalogService;
+public class CatalogSerializer {
+    private CatalogSummaryService ncbiCatalogService;
 
     @Autowired
-    public ProcessView(NCBICatalogService ncbiCatalogService) {
+    public CatalogSerializer(CatalogSummaryService ncbiCatalogService) {
         this.ncbiCatalogService = ncbiCatalogService;
     }
 
