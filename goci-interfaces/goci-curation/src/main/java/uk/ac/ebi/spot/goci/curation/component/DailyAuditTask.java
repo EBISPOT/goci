@@ -19,7 +19,6 @@ import uk.ac.ebi.spot.goci.repository.StudyReportRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +39,9 @@ public class DailyAuditTask {
     private AssociationRepository associationRepository;
     private AssociationReportRepository associationReportRepository;
     private MailService mailService;
+
+
+    private Integer totalNumberOfStudiesSentToNcbi;
 
     @Autowired
     public DailyAuditTask(StudyRepository studyRepository,
@@ -62,6 +64,15 @@ public class DailyAuditTask {
         return log;
     }
 
+    // Calculate studies with status 'Send to NCBI' before pipeline runs at 00:15
+    @Scheduled(cron = "0 0 0 * * *")
+    public void calculateNumberOfStudiesSentToNcbi() {
+        CurationStatus status = curationStatusRepository.findByStatus("Send to NCBI");
+        Long statusId = status.getId();
+        Collection<Study> studiesSentToNcbi = studyRepository.findByCurationStatusIgnoreCase(statusId);
+        this.totalNumberOfStudiesSentToNcbi = studiesSentToNcbi.size();
+    }
+
     // Scheduled for 7am everyday
     @Scheduled(cron = "0 0 7 * * *")
     public void dailyErrorAudit() {
@@ -79,7 +90,6 @@ public class DailyAuditTask {
         // Calculate some totals that we can add as a summary view to email
         Integer totalStudiesWithNcbiErrors = studiesWithNcbiErrors.size();
         Integer totalStudiesWithImportErrors = studiesWithImportErrors.size();
-        Integer totalNumberOfStudiesSentToNcbi = calculateNumberOfStudiesSentToNcbi();
 
         Collection<StudyErrorView> studyErrorViews = new ArrayList<StudyErrorView>();
         // Send email for all studies with errors
@@ -150,23 +160,9 @@ public class DailyAuditTask {
         }
 
         // Send mail
-        mailService.sendDailyAuditEmail(studyErrorViews, totalStudiesWithNcbiErrors, totalStudiesWithImportErrors);
-    }
-
-    // Calculate studies sent to NCBI day before
-    private Integer calculateNumberOfStudiesSentToNcbi() {
-
-        // Get yesterdays date
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -1);
-        cal.set(Calendar.HOUR_OF_DAY, 00);
-        cal.set(Calendar.MINUTE, 00);
-        cal.set(Calendar.SECOND, 00);
-        cal.set(Calendar.MILLISECOND, 00);
-        Date date = cal.getTime();
-
-        List<Study> studies = studyRepository.findByHousekeepingSendToNCBIDate(date);
-        Integer totalNumberOfStudiesSentToNcbi = studies.size();
-        return totalNumberOfStudiesSentToNcbi;
+        mailService.sendDailyAuditEmail(studyErrorViews,
+                                        totalStudiesWithNcbiErrors,
+                                        totalStudiesWithImportErrors,
+                                        this.totalNumberOfStudiesSentToNcbi);
     }
 }
