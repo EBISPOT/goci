@@ -1,7 +1,8 @@
-package uk.ac.ebi.spot.goci.repository;
+package uk.ac.ebi.spot.goci.repository.mapper;
 
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
+import uk.ac.ebi.spot.goci.repository.CatalogDataMapper;
 
 import java.util.Arrays;
 import java.util.List;

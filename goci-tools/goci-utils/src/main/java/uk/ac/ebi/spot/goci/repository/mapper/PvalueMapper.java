@@ -1,9 +1,10 @@
-package uk.ac.ebi.spot.goci.repository;
+package uk.ac.ebi.spot.goci.repository.mapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
+import uk.ac.ebi.spot.goci.repository.CatalogDataMapper;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.Map;
  * Created by Dani on 26/03/2015.
  */
 @Component
-public class PvalueMapper implements CatalogDataMapper{
+public class PvalueMapper implements CatalogDataMapper {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
