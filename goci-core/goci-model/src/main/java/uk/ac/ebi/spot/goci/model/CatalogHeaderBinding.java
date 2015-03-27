@@ -52,7 +52,7 @@ public enum CatalogHeaderBinding {
     RISK_ALLELE_FREQUENCY("RISK_ALLELE_FREQUENCY", "RISK ALLELE FREQUENCY", "RISK ALLELE FREQUENCY", false),
     P_VALUE_MANTISSA("P_VALUE_MANTISSA", true, true, false),
     P_VALUE_EXPONENT("P_VALUE_EXPONENT", true, true, false),
-    P_VALUE(null, "P-VALUE", "P-VALUE", false),
+    P_VALUE(null, "P-VALUE", "P-VALUE", true),
 //    P_VALUE_MANT_FOR_MLOG("P_VALUE_MANTISSA", false, true, false),
 //    P_VALUE_EXPO_FOR_MLOG("P_VALUE_EXPONENT", false, true, false),
     DOWNLOAD_P_VALUE_MLOG(null, false, "PVALUE_MLOG", false),
