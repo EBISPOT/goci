@@ -79,7 +79,7 @@ public class DailyAuditTask {
         // Calculate some totals that we can add as a summary view to email
         Integer totalStudiesWithNcbiErrors= studiesWithNcbiErrors.size();
         Integer totalStudiesWithImportErrors = studiesWithImportErrors.size();
-        Integer totalNumberOfStudiesSentToNcbi = calculateNumberOfStudiesSentToNcbi(ncbiErrorStatusId);
+  //      Integer totalNumberOfStudiesSentToNcbi = calculateNumberOfStudiesSentToNcbi(ncbiErrorStatusId);
 
         Collection<StudyErrorView> studyErrorViews = new ArrayList<StudyErrorView>();
         // Send email for all studies with errors
@@ -154,7 +154,7 @@ public class DailyAuditTask {
     }
 
     // Calculate studies sent to NCBI day before
-    private Integer calculateNumberOfStudiesSentToNcbi(Long ncbiErrorStatusId) {
+/*    private Integer calculateNumberOfStudiesSentToNcbi(Long ncbiErrorStatusId) {
 
         // Get yesterdays date
         Calendar cal = Calendar.getInstance();
@@ -164,5 +164,5 @@ public class DailyAuditTask {
         List<Study> studies = studyRepository.findByCurationStatusAndSendToNcbiDate(ncbiErrorStatusId,date);
         Integer totalNumberOfStudiesSentToNcbi = studies.size();
         return totalNumberOfStudiesSentToNcbi;
-    }
+    }*/
 }
