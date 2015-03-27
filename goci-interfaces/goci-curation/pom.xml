@@ -21,24 +21,14 @@
     <dependencies>
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-service</artifactId>
+            <artifactId>goci-utils</artifactId>
         </dependency>
-
-    <!--    <dependency>
-            <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-catalog-io</artifactId>
-        </dependency>-->
 
         <!--<dependency>-->
         <!--<groupId>org.eclipse.birt.runtime.3_7_1</groupId>-->
         <!--<artifactId>derby</artifactId>-->
         <!--<version>10.5.1000001</version>-->
         <!--</dependency>-->
-
-        <dependency>
-            <groupId>commons-net</groupId>
-            <artifactId>commons-net</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.oracle</groupId>
@@ -78,6 +68,11 @@
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
         </dependency>
     </dependencies>
 

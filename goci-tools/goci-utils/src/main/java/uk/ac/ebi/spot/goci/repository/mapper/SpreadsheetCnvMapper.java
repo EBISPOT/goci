@@ -1,7 +1,8 @@
-package uk.ac.ebi.spot.goci.repository;
+package uk.ac.ebi.spot.goci.repository.mapper;
 
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
+import uk.ac.ebi.spot.goci.model.CatalogDataMapper;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,16 +15,16 @@ import java.util.Map;
  * @date 23/02/15
  */
 @Component
-public class NcbiResultPublished implements CatalogDataMapper {
+public class SpreadsheetCnvMapper implements CatalogDataMapper {
     @Override public List<CatalogHeaderBinding> getRequiredDatabaseFields() {
-        return Collections.singletonList(CatalogHeaderBinding.RESULT_PUBLISHED);
+        return Collections.singletonList(CatalogHeaderBinding.CNV);
     }
 
     @Override public CatalogHeaderBinding getOutputField() {
-        return CatalogHeaderBinding.NCBI_RESULT_PUBLISHED;
+        return CatalogHeaderBinding.SPREADSHEET_CNV;
     }
 
     @Override public String produceOutput(Map<CatalogHeaderBinding, String> databaseValues) {
-        return databaseValues.get(CatalogHeaderBinding.RESULT_PUBLISHED).equals("") ? "N" : "Y";
+        return databaseValues.get(CatalogHeaderBinding.CNV).equals("1") ? "Y" : "N";
     }
 }
