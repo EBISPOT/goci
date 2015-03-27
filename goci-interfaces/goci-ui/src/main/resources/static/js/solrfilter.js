@@ -90,7 +90,7 @@ function processPval(){
     var pvalMant = $('#pval-mant').val();
     var pvalExp = $('#pval-exp').val();
     if (pvalMant || pvalExp) {
-        pvalRange = "[*+TO+";
+        //pvalRange = "[*+TO+";
         if (pvalMant) {
             pvalRange = pvalRange.concat(pvalMant);
         }
@@ -106,7 +106,7 @@ function processPval(){
             //if no exponent was entered, use the catalog cut-off
             pvalRange = pvalRange.concat("-5");
         }
-        pvalRange = pvalRange.concat("]");
+     //   pvalRange = pvalRange.concat("]");
         console.log(pvalRange);
     }
     return pvalRange;
