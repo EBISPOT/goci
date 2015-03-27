@@ -37,6 +37,7 @@ public class MailService {
     public MailService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -87,7 +88,8 @@ public class MailService {
     }
 
     // Send single email with all study errors
-    public void sendDailyAuditEmail(Collection<StudyErrorView> studyErrorViews) {
+    public void sendDailyAuditEmail(Collection<StudyErrorView> studyErrorViews, Integer totalStudiesWithNcbiErrors,
+                                    Integer totalStudiesWithImportErrors) {
 
         // Create email body
         String emailBody = "";
@@ -172,7 +174,11 @@ public class MailService {
         mailMessage.setTo(getTo());
         mailMessage.setFrom(getFrom());
         mailMessage.setSubject("GWAS Curation daily audit report");
-        mailMessage.setText("The following studies have status NCBI pipeline error:" + "\n"
+        mailMessage.setText("\nSummary of errors:\n" + "Total number of studies with NCBI pipeline errors: " +
+                                    totalStudiesWithNcbiErrors + "\n" +
+                                    "Total number of studies that failed to update: " + totalStudiesWithImportErrors +
+                                    "\n" +
+                                    "\nThe following studies have status NCBI pipeline error:" + "\n"
                                     + emailBody);
 
         getLog().info("Sending daily audit email");

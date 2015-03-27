@@ -50,9 +50,10 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
                                           @Param("dateTo") Date dateTo);
 
     // Custom query for daily audit emails
-    @Query("select s from Study s where s.housekeeping.curationStatus.id = :status and s.housekeeping.checkedNCBIError = :checkedNCBIError")
-    Collection<Study> findByCurationStatusIgnoreCaseAndCheckedNcbiError(@Param("status") Long status,
-                                                                        @Param("checkedNCBIError") Boolean checkedNCBIError);
+    @Query("select s from Study s where s.housekeeping.curatorStatus.id = :status and s.housekeeping.sendToNCBIDate = :date")
+    List<Study> findByCurationStatusAndSendToNcbiDate(@Param("status") Long status,
+                                                      @Param("date") Date date);
+
 
     List<Study> findByHousekeepingPublishDateIsNotNull();
 
