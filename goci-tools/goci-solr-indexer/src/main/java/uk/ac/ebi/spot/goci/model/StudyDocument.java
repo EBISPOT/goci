@@ -25,8 +25,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String catalogAddedDate;
     @Field private String publicationLink;
 
-    @Field @NonEmbeddableField private String platform;
-    @Field @NonEmbeddableField private Boolean cnv;
+    @Field private String platform;
+    @Field private Boolean cnv;
 
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
