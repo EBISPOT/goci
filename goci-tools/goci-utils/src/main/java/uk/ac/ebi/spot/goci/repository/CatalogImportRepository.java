@@ -489,7 +489,14 @@ public class CatalogImportRepository {
                 try {
                     // Record information on study errors which will use to update status
                     List<Boolean> errorStatus = new ArrayList<>();
-                    if (pubmedIdError != null || geneError != null || snpError != null) {
+                    if (studyId != null && pubmedIdError != null) {
+                        if (studyErrorMap.containsKey(studyId)) {
+                            errorStatus = studyErrorMap.get(studyId);
+                        }
+                        errorStatus.add(true);
+                    }
+                    // Only report these errors where we have an association id
+                    else if (associationId != null && (geneError != null || snpError != null)) {
                         if (studyErrorMap.containsKey(studyId)) {
                             errorStatus = studyErrorMap.get(studyId);
                         }
