@@ -144,7 +144,7 @@
        "content_type": From the HTTP headers of incoming stream
        "resourcename": From SolrCell request param resource.name
    -->
-   <field name="title" type="text_general" indexed="true" stored="true" multiValued="true"/>
+   <field name="title" type="text_general" indexed="true" stored="true" multiValued="false"/>
    <field name="subject" type="text_general" indexed="true" stored="true"/>
    <field name="description" type="text_general" indexed="true" stored="true"/>
    <field name="comments" type="text_general" indexed="true" stored="true"/>
@@ -204,7 +204,8 @@
     <!-- association -->
     <field name="riskFrequency" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="qualifier" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="pValue" type="float" indexed="true" stored="true" multiValued="false" />
+    <field name="pValueMantissa" type="int" indexed="true" stored="true" multiValued="false" />
+    <field name="pValueExponent" type="int" indexed="true" stored="true" multiValued="false" />
     <field name="orPerCopyNum" type="float" indexed="true" stored="true" multiValued="false" />
     <field name="orPerCopyUnitDescr" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="orPerCopyRange" type="text_general" indexed="false" stored="true" multiValued="false" />
@@ -220,6 +221,8 @@
     <field name="studyId" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="chromosomeName" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="chromosomePosition" type="int" indexed="true" stored="true" multiValued="true" />
+    <field name="merged" type="long" indexed="true" stored="true" multiValued="false" />
+
 
     <!-- embedded association -->
     <field name="association_qualifier" type="text_general" indexed="true" stored="true" multiValued="true" />

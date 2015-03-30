@@ -21,9 +21,18 @@ $(document).ready(function() {
 
 function doSearch(){
     var searchTerm = $("#search-box").val();
-    console.log("I got rerouted via here");
+
+    var path = window.location.pathname;
+    var pagename = path.substr(path.lastIndexOf('/') + 1);
+
     // redirect to search page
-    window.location = "search?query=" + searchTerm;
+
+    if(path.indexOf("docs") != -1 && pagename != "docs"){
+        window.location = "../search?query=" + searchTerm;
+    }
+    else{
+        window.location = "search?query=" + searchTerm;
+    }
 }
 
 function toggleSidebar(ts){

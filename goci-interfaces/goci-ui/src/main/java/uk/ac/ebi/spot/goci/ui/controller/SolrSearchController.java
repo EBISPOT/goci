@@ -221,7 +221,7 @@ public class SolrSearchController {
             @RequestParam(value = "group", required = false, defaultValue = "false") boolean useGroups,
             @RequestParam(value = "group.by", required = false) String groupBy,
             @RequestParam(value = "group.limit", required = false, defaultValue = "10") int groupLimit,
-            @RequestParam(value = "pvalfilter", required = false) String pvalRange,
+            @RequestParam(value = "pvalfilter", required = false) String pval,
             @RequestParam(value = "orfilter", required = false) String orRange,
             @RequestParam(value = "betafilter", required = false) String betaRange,
             @RequestParam(value = "datefilter", required = false) String dateRange,
@@ -241,9 +241,9 @@ public class SolrSearchController {
             addRowsAndPage(solrSearchBuilder, maxResults, page);
         }
 
-        if (pvalRange != "") {
-            getLog().debug(pvalRange);
-            addFilterQuery(solrSearchBuilder, "pValue", pvalRange);
+        if (pval != "") {
+            getLog().debug(pval);
+            addPvalueFilterQuery(solrSearchBuilder, pval);
         }
         /**TO DO - when we split OR and beta, modify this controller to reflect that change!!***/
         if (orRange != "") {
@@ -281,6 +281,7 @@ public class SolrSearchController {
         // dispatch search
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
+
 
 
     @RequestMapping(value = "api/search/traits", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -331,7 +332,7 @@ public class SolrSearchController {
             @RequestParam(value = "group", required = false, defaultValue = "false") boolean useGroups,
             @RequestParam(value = "group.by", required = false) String groupBy,
             @RequestParam(value = "group.limit", required = false, defaultValue = "10") int groupLimit,
-            @RequestParam(value = "pvalfilter", required = false) String pvalRange,
+            @RequestParam(value = "pvalfilter", required = false) String pval,
             @RequestParam(value = "orfilter", required = false) String orRange,
             @RequestParam(value = "betafilter", required = false) String betaRange,
             @RequestParam(value = "datefilter", required = false) String dateRange,
@@ -352,9 +353,9 @@ public class SolrSearchController {
             addRowsAndPage(solrSearchBuilder, maxResults, page);
         }
 
-        if (pvalRange != "") {
-            getLog().debug(pvalRange);
-            addFilterQuery(solrSearchBuilder, "pValue", pvalRange);
+        if (pval != "") {
+            getLog().debug(pval);
+            addPvalueFilterQuery(solrSearchBuilder, pval);
         }
         /**TO DO - when we split OR and beta, modify this controller to reflect that change!!***/
         if (orRange != "") {
@@ -462,7 +463,7 @@ public class SolrSearchController {
             @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "facet", required = false) String facet,
-            @RequestParam(value = "pvalfilter", required = false) String pvalRange,
+            @RequestParam(value = "pvalfilter", required = false) String pval,
             @RequestParam(value = "orfilter", required = false) String orRange,
             @RequestParam(value = "betafilter", required = false) String betaRange,
             @RequestParam(value = "datefilter", required = false) String dateRange,
@@ -478,9 +479,9 @@ public class SolrSearchController {
          addRowsAndPage(solrSearchBuilder, maxResults, page);
 
 
-        if (pvalRange != "") {
-            getLog().debug(pvalRange);
-            addFilterQuery(solrSearchBuilder, "pValue", pvalRange);
+        if (pval != "") {
+            getLog().debug(pval);
+            addPvalueFilterQuery(solrSearchBuilder, pval);
         }
         /**TO DO - when we split OR and beta, modify this controller to reflect that change!!***/
         if (orRange != "") {
@@ -527,7 +528,16 @@ public class SolrSearchController {
     }
 
     private void addSortQuery(StringBuilder solrSearchBuilder, String sort) {
-        solrSearchBuilder.append("&sort=").append(sort);
+        if(sort.contains("pValue")){
+            String dir = sort.substring(sort.length()-4);
+
+            String pvalsort = "pValueExponent".concat(dir).concat("%2C+pValueMantissa").concat(dir);
+
+            solrSearchBuilder.append("&sort=").append(pvalsort);
+        }
+        else {
+            solrSearchBuilder.append("&sort=").append(sort);
+        }
     }
 
     private void addFacet(StringBuilder solrSearchBuilder, String facet) {
@@ -590,6 +600,22 @@ public class SolrSearchController {
 
     }
 
+    private void addPvalueFilterQuery(StringBuilder solrSearchBuilder, String pval) {
+       String mant = pval.split("e")[0];
+       String exp = pval.split("e")[1];
+
+       String filterString = "pValueExponent:%7B*%20TO%20"  //{* TO
+               .concat(exp)
+               .concat("%7D+OR+(pValueMantissa%3A%5B*%20TO%20")   //}+OR+(pvalue_mantissa:[* TO%
+               .concat(mant)
+               .concat("+AND+pValueExponent%3A")
+               .concat(exp)
+               .concat(")");
+
+        solrSearchBuilder.append("&fq=").append(filterString);
+    }
+
+
     private void addFilterQuery(StringBuilder solrSearchBuilder, String filterOn, String filterOnAlt, String filterBy) {
         solrSearchBuilder.append("&fq=").append(filterOn).append("%3A").append(filterBy).append("+OR+").append(filterOnAlt).append("%3A").append(filterBy);
 
@@ -650,7 +676,7 @@ public class SolrSearchController {
     @RequestMapping(value = "api/search/downloads")
     public void getSearchResults(
             @RequestParam("q") String query,
-            @RequestParam(value = "pvalfilter", required = false) String pvalRange,
+            @RequestParam(value = "pvalfilter", required = false) String pval,
             @RequestParam(value = "orfilter", required = false) String orRange,
             @RequestParam(value = "betafilter", required = false) String betaRange,
             @RequestParam(value = "datefilter", required = false) String dateRange,
@@ -666,10 +692,9 @@ public class SolrSearchController {
         addFilterQuery(solrSearchBuilder, "resourcename", facet);
         addRowsAndPage(solrSearchBuilder, maxResults, page);
 
-
-        if (pvalRange != "") {
-            getLog().debug(pvalRange);
-            addFilterQuery(solrSearchBuilder, "pValue", pvalRange);
+        if (pval != "") {
+            getLog().debug(pval);
+            addPvalueFilterQuery(solrSearchBuilder, pval);
         }
         /**TO DO - when we split OR and beta, modify this controller to reflect that change!!***/
         if (orRange != "") {
