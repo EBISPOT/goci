@@ -124,8 +124,8 @@ function processAssociation(association, table) {
     }
     row.append($("<td>").html(association.riskFrequency));
 
-    var mantissa = association.pvalueMantissa;
-    var exponent = association.pvalueExponent;
+    var mantissa = association.pValueMantissa;
+    var exponent = association.pValueExponent;
 
     var pval = mantissa.concat(" x10").concat("<sup>").concat(exponent).concat("</sup>");
 

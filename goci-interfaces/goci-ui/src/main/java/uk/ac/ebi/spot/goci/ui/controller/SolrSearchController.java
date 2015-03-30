@@ -528,7 +528,16 @@ public class SolrSearchController {
     }
 
     private void addSortQuery(StringBuilder solrSearchBuilder, String sort) {
-        solrSearchBuilder.append("&sort=").append(sort);
+        if(sort.contains("pValue")){
+            String dir = sort.substring(sort.length()-4);
+
+            String pvalsort = "pValueExponent".concat(dir).concat("%2C+pValueMantissa").concat(dir);
+
+            solrSearchBuilder.append("&sort=").append(pvalsort);
+        }
+        else {
+            solrSearchBuilder.append("&sort=").append(sort);
+        }
     }
 
     private void addFacet(StringBuilder solrSearchBuilder, String facet) {
@@ -595,11 +604,11 @@ public class SolrSearchController {
        String mant = pval.split("e")[0];
        String exp = pval.split("e")[1];
 
-       String filterString = "pvalueExponent:%7B*%20TO%20"  //{* TO
+       String filterString = "pValueExponent:%7B*%20TO%20"  //{* TO
                .concat(exp)
-               .concat("%7D+OR+(pvalueMantissa%3A%5B*%20TO%20")   //}+OR+(pvalue_mantissa:[* TO%
+               .concat("%7D+OR+(pValueMantissa%3A%5B*%20TO%20")   //}+OR+(pvalue_mantissa:[* TO%
                .concat(mant)
-               .concat("+AND+pvalueExponent%3A")
+               .concat("+AND+pValueExponent%3A")
                .concat(exp)
                .concat(")");
 
