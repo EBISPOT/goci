@@ -16,7 +16,7 @@ public class SnpDocument extends EmbeddableDocument<SingleNucleotidePolymorphism
     // basic snp information
     @Field private String rsId;
     @Field private String chromosomeName;
-    @Field private int chromosomePosition;
+    @Field private Integer chromosomePosition;
     @Field private String context;
     @Field private String last_modified;
 
