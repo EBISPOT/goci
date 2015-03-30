@@ -2,16 +2,14 @@ package uk.ac.ebi.spot.goci.model;
 
 import org.apache.solr.client.solrj.beans.Field;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
-import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -25,7 +23,8 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field @NonEmbeddableField private String riskFrequency;
     @Field private String qualifier;
 
-    @Field @NonEmbeddableField private Float pValue;
+    @Field @NonEmbeddableField private Integer pValueMantissa;
+    @Field @NonEmbeddableField private Integer pValueExponent;
     @Field @NonEmbeddableField private Float orPerCopyNum;
     @Field @NonEmbeddableField private String orPerCopyUnitDescr;
     @Field @NonEmbeddableField private String orPerCopyRange;
@@ -46,6 +45,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field("mappedGeneLinks") private Collection<String> mappedGeneLinks;
     @Field("reportedGene") private Collection<String> reportedGenes;
     @Field("reportedGeneLinks") private Collection<String> reportedGeneLinks;
+    @Field @NonEmbeddableField private Long merged;
 
     @Field("studyId") @NonEmbeddableField private Collection<String> studyIds;
 
@@ -86,8 +86,11 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         if (association.getOrPerCopyNum() != null) {
             this.orPerCopyNum = association.getOrPerCopyNum();
         }
-        if (association.getPvalueFloat() != null) {
-            this.pValue = association.getPvalueFloat();
+        if (association.getPvalueMantissa() != null) {
+            this.pValueMantissa = association.getPvalueMantissa();
+        }
+        if(association.getPvalueExponent() != null){
+            this.pValueExponent = association.getPvalueExponent();
         }
 
         this.chromosomeNames = new LinkedHashSet<>();
@@ -141,9 +144,11 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         return context;
     }
 
-    public float getpValue() {
-        return pValue;
+    public int getpValueMantissa() {
+        return pValueMantissa;
     }
+
+    public int getpValueExponent() { return pValueExponent; }
 
     public Collection<String> getReportedGenes() {
         return reportedGenes;
@@ -156,6 +161,8 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     public String getRsId() {
         return rsId;
     }
+
+    public Long getMerged() { return  merged; }
 
     public Set<String> getChromosomeNames() {
         return chromosomeNames;
@@ -246,6 +253,8 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     SingleNucleotidePolymorphism snp = riskAllele.getSnp();
                                     rsId = setOrAppend(rsId, snp.getRsId(), " x ");
 
+                                    merged = snp.getMerged();
+
                                     final Set<String> regionNames = new HashSet<>();
                                     final StringBuilder regionBuilder = new StringBuilder();
                                     snp.getRegions().forEach(
@@ -260,10 +269,18 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     // and add entrez links for each mapped gene
                                     snp.getGenomicContexts().forEach(context -> {
                                         Gene gene = context.getGene();
+
+                                        String distance = "";
+                                        if(context.getDistance() != null) {
+                                            distance = String.valueOf(context.getDistance());
+                                        }
                                         if (gene.getEntrezGeneId() != null) {
                                             String geneLink =
                                                     gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
-                                            mappedGeneLinks.add(geneLink);
+                                            if(!distance.equals("")) {
+                                                geneLink = geneLink.concat("|").concat(distance);
+                                            }
+                                                mappedGeneLinks.add(geneLink);
                                         }
                                     });
 
@@ -311,9 +328,17 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     snp.getGenomicContexts().forEach(context -> {
                                         if (context.getGene() != null) {
                                             Gene gene = context.getGene();
+
+                                            String distance = "";
+                                            if(context.getDistance() != null) {
+                                                distance = String.valueOf(context.getDistance());
+                                            }
                                             if (gene.getEntrezGeneId() != null) {
                                                 String geneLink =
                                                         gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
+                                                if(!distance.equals("")) {
+                                                    geneLink = geneLink.concat("|").concat(distance);
+                                                }
                                                 mappedGeneLinks.add(geneLink);
                                             }
                                         }
@@ -363,6 +388,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         if (intragenic.get()) {
             // should only be 2 genes - one upstream and one downstream
             if (genes.size() == 2) {
+                // todo - in this case, also add upstream and downstream distances
                 geneString = genes.get(0).concat(" - ").concat(genes.get(1));
             }
             else {
