@@ -8,9 +8,9 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import uk.ac.ebi.spot.goci.repository.exception.DataImportException;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBindings;
+import uk.ac.ebi.spot.goci.repository.exception.DataImportException;
 
 import java.lang.reflect.Array;
 import java.text.DateFormat;
@@ -951,11 +951,11 @@ public class CatalogImportRepository {
             String status;
 
             // Study has an error
-            if (errorStatus.contains(true)) {
+            if (errorStatus != null && errorStatus.contains(true)) {
                 status = "NCBI pipeline error";
             }
             // Import detected an error
-            else if (importErrorStatus.contains(true)) {
+            else if (importErrorStatus != null && importErrorStatus.contains(true)) {
                 status = "Data import error";
             }
             // No errors found for study
