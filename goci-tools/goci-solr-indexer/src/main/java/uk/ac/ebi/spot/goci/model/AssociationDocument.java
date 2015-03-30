@@ -25,8 +25,8 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field @NonEmbeddableField private String riskFrequency;
     @Field private String qualifier;
 
-    @Field @NonEmbeddableField private float pValue;
-    @Field @NonEmbeddableField private float orPerCopyNum;
+    @Field @NonEmbeddableField private Float pValue;
+    @Field @NonEmbeddableField private Float orPerCopyNum;
     @Field @NonEmbeddableField private String orPerCopyUnitDescr;
     @Field @NonEmbeddableField private String orPerCopyRange;
     @Field @NonEmbeddableField private String orType;
