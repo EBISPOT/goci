@@ -84,11 +84,14 @@ public class JsonProcessingService {
             line.append(geneIds.get("ingene"));
             line.append("\t");
 
-            //            line.append(doc.get("upstreamDistance").asText().trim());
-            line.append(""); // todo - remove this when above solr field is available
+            Map<String, String> geneDistances = getGeneDistances(doc);
+
+            line.append(geneDistances.get("upstream"));
+//            line.append(""); // todo - remove this when above solr field is available
             line.append("\t");
-            //            line.append(doc.get("downstreamDistance").asText().trim());
-            line.append(""); // todo - remove this when above solr field is available
+
+            line.append(geneDistances.get("downstream"));
+//            line.append(""); // todo - remove this when above solr field is available
             line.append("\t");
 
             line.append(getStrongestAllele(doc));
@@ -97,8 +100,9 @@ public class JsonProcessingService {
             String rsId = getRsId(doc);
             line.append(rsId);
             line.append("\t");
-            //            line.append(doc.get("merged").asText().trim());
-            line.append(""); // todo - remove this when above solr field is available
+
+            line.append(doc.get("merged").asText().trim());
+//            line.append(""); // todo - remove this when above solr field is available
             line.append("\t");
 
             if(rsId.indexOf("rs") == 0 && rsId.indexOf("rs", 2) == -1) {
@@ -146,11 +150,13 @@ public class JsonProcessingService {
             line.append("\t");
             line.append(getCI(doc));
             line.append("\t");
-            //            line.append(doc.get("platform").asText().trim());
-            line.append(""); // todo - remove this when above solr field is available
+
+            line.append(doc.get("platform").asText().trim());
+//            line.append(""); // todo - remove this when above solr field is available
             line.append("\t");
-            //            line.append(doc.get("cnv").asText().trim());
-            line.append("N"); // todo - remove this when above solr field is available
+
+             line.append(getCNV(doc));
+//            line.append("N"); // todo - remove this when above solr field is available
             line.append("\r\n");
 
             result.append(line.toString());
@@ -159,6 +165,7 @@ public class JsonProcessingService {
         //        return "Hello world. Your search results are coming soon to a browser near you.";
         return result.toString();
     }
+
 
     private String getCI(JsonNode doc) {
         String ci;
@@ -427,9 +434,18 @@ public class JsonProcessingService {
                     String mapped = doc.get("mappedGene").get(0).asText().trim();
 
                     for (JsonNode geneLink : doc.get("mappedGeneLinks")) {
-                        int index = geneLink.asText().trim().indexOf("|");
-                        String gene = geneLink.asText().trim().substring(0, index - 1);
-                        String geneId = geneLink.asText().trim().substring(index + 1);
+                        int first = geneLink.asText().trim().indexOf("|");
+                        int last = geneLink.asText().trim().lastIndexOf("|");
+
+                        String gene = geneLink.asText().trim().substring(0, first - 1);
+                        String geneId;
+
+                        if(first != last){
+                            geneId = geneLink.asText().trim().substring(first + 1, last);
+                        }
+                        else {
+                            geneId = geneLink.asText().trim().substring(first + 1);
+                        }
 
                         if (mapped.indexOf(gene) == 0) {
                             upstream = geneId;
@@ -449,6 +465,63 @@ public class JsonProcessingService {
 
 
             return geneIds;
+    }
+
+
+    private String getCNV(JsonNode doc) {
+        String cnvVal = doc.get("cnv").asText().trim();
+        String cnv;
+
+        if(cnvVal.equals("1"))  {
+            cnv = "Y";
+        }
+        else{
+            cnv = "N";
+        }
+        return cnv;
+    }
+
+    private Map<String,String> getGeneDistances(JsonNode doc) {
+        Map<String, String> geneIds = new HashMap<String, String>();
+        String upstream = "";
+        String downstream ="";
+
+        if(doc.get("mappedGeneLinks") != null) {
+            if(doc.get("mappedGeneLinks").size() > 1){
+                if (doc.get("mappedGene") != null) {
+                    String mapped = doc.get("mappedGene").get(0).asText().trim();
+
+                    for (JsonNode geneLink : doc.get("mappedGeneLinks")) {
+                        int first = geneLink.asText().trim().indexOf("|");
+                        int last = geneLink.asText().trim().lastIndexOf("|");
+                        String gene = geneLink.asText().trim().substring(0, first - 1);
+
+                        String geneDist;
+
+                        if(first != last) {
+                            geneDist = geneLink.asText().trim().substring(last + 1);
+                        }
+                        else{
+                            geneDist = "";
+                        }
+
+                        if (mapped.indexOf(gene) == 0) {
+                            upstream = geneDist;
+                        }
+                        else {
+                            downstream = geneDist;
+                        }
+
+                    }
+                }
+            }
+
+        }
+        geneIds.put("upstream", upstream);
+        geneIds.put("downstream", downstream);
+
+
+        return geneIds;
     }
 }
 

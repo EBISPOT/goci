@@ -2,8 +2,6 @@ package uk.ac.ebi.spot.goci.model;
 
 import org.apache.solr.client.solrj.beans.Field;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -11,7 +9,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -25,7 +22,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field @NonEmbeddableField private String riskFrequency;
     @Field private String qualifier;
 
-    @Field @NonEmbeddableField private float pValue;
+//    @Field @NonEmbeddableField private float pValue;
+    @Field @NonEmbeddableField private int pValueMantissa;
+    @Field @NonEmbeddableField private int pValueExponent;
     @Field @NonEmbeddableField private float orPerCopyNum;
     @Field @NonEmbeddableField private String orPerCopyUnitDescr;
     @Field @NonEmbeddableField private String orPerCopyRange;
@@ -46,9 +45,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field("mappedGeneLinks") private Collection<String> mappedGeneLinks;
     @Field("reportedGene") private Collection<String> reportedGenes;
     @Field("reportedGeneLinks") private Collection<String> reportedGeneLinks;
-    @Field private int upstreamGeneDistance;
-    @Field private int downstreamGeneDistance;
-    @Field private boolean merged;
+    @Field @NonEmbeddableField private Long merged;
 
     @Field("studyId") @NonEmbeddableField private Collection<String> studyIds;
 
@@ -89,8 +86,11 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         if (association.getOrPerCopyNum() != null) {
             this.orPerCopyNum = association.getOrPerCopyNum();
         }
-        if (association.getPvalueFloat() != null) {
-            this.pValue = association.getPvalueFloat();
+        if (association.getPvalueMantissa() != null) {
+            this.pValueMantissa = association.getPvalueMantissa();
+        }
+        if(association.getPvalueExponent() != null){
+            this.pValueExponent = association.getPvalueExponent();
         }
 
         this.chromosomeNames = new LinkedHashSet<>();
@@ -106,6 +106,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
         this.mappedLabels = new LinkedHashSet<>();
         this.mappedUris = new LinkedHashSet<>();
+
     }
 
     public String getRegion() {
@@ -144,9 +145,11 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         return context;
     }
 
-    public float getpValue() {
-        return pValue;
+    public int getpValueMantissa() {
+        return pValueMantissa;
     }
+
+    public int getpValueExponent() { return pValueExponent; }
 
     public Collection<String> getReportedGenes() {
         return reportedGenes;
@@ -159,6 +162,8 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     public String getRsId() {
         return rsId;
     }
+
+    public Long getMerged() { return  merged; }
 
     public Set<String> getChromosomeNames() {
         return chromosomeNames;
@@ -249,6 +254,8 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     SingleNucleotidePolymorphism snp = riskAllele.getSnp();
                                     rsId = setOrAppend(rsId, snp.getRsId(), " x ");
 
+                                    merged = snp.getMerged();
+
                                     final Set<String> regionNames = new HashSet<>();
                                     final StringBuilder regionBuilder = new StringBuilder();
                                     snp.getRegions().forEach(
@@ -263,10 +270,18 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     // and add entrez links for each mapped gene
                                     snp.getGenomicContexts().forEach(context -> {
                                         Gene gene = context.getGene();
+
+                                        String distance = "";
+                                        if(context.getDistance() != null) {
+                                            distance = String.valueOf(context.getDistance());
+                                        }
                                         if (gene.getEntrezGeneId() != null) {
                                             String geneLink =
                                                     gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
-                                            mappedGeneLinks.add(geneLink);
+                                            if(distance != "") {
+                                                geneLink = geneLink.concat("|").concat(distance);
+                                            }
+                                                mappedGeneLinks.add(geneLink);
                                         }
                                     });
 
@@ -314,9 +329,17 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     snp.getGenomicContexts().forEach(context -> {
                                         if (context.getGene() != null) {
                                             Gene gene = context.getGene();
+
+                                            String distance = "";
+                                            if(context.getDistance() != null) {
+                                                distance = String.valueOf(context.getDistance());
+                                            }
                                             if (gene.getEntrezGeneId() != null) {
                                                 String geneLink =
                                                         gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
+                                                if(distance != "") {
+                                                    geneLink = geneLink.concat("|").concat(distance);
+                                                }
                                                 mappedGeneLinks.add(geneLink);
                                             }
                                         }
