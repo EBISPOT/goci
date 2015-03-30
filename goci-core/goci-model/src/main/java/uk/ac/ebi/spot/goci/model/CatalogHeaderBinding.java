@@ -52,7 +52,7 @@ public enum CatalogHeaderBinding {
     RISK_ALLELE_FREQUENCY("RISK_ALLELE_FREQUENCY", "RISK ALLELE FREQUENCY", "RISK ALLELE FREQUENCY", false),
     P_VALUE_MANTISSA("P_VALUE_MANTISSA", true, true, false),
     P_VALUE_EXPONENT("P_VALUE_EXPONENT", true, true, false),
-    P_VALUE(null, "P-VALUE", "P-VALUE", false),
+    P_VALUE(null, "P-VALUE", "P-VALUE", true),
 //    P_VALUE_MANT_FOR_MLOG("P_VALUE_MANTISSA", false, true, false),
 //    P_VALUE_EXPO_FOR_MLOG("P_VALUE_EXPONENT", false, true, false),
     DOWNLOAD_P_VALUE_MLOG(null, false, "PVALUE_MLOG", false),
@@ -81,8 +81,8 @@ public enum CatalogHeaderBinding {
     NO_GENE_FOR_SYMBOL("NO_GENE_FOR_SYMBOL", false, false, "no_geneid_for_symbol"),
     GENE_NOT_ON_GENOME("GENE_NOT_ON_GENOME", false, false, "gene_not_on_genome"),
     // Added for the alternative spreadsheet download
-    EFO_TRAIT("EFO_TRAIT", false, "MAPPED_TRAIT", true),
-    EFO_URI("EFO_URI", false, "MAPPED_TRAIT_URI", true);
+    EFO_TRAIT("EFO_TRAIT", false, "MAPPED_TRAIT", false),
+    EFO_URI("EFO_URI", false, "MAPPED_TRAIT_URI", false);
 
     private String databaseName;
     private boolean isNcbiRequired;

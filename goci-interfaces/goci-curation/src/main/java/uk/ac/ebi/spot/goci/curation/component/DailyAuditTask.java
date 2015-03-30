@@ -40,6 +40,9 @@ public class DailyAuditTask {
     private AssociationReportRepository associationReportRepository;
     private MailService mailService;
 
+
+    private Integer totalNumberOfStudiesSentToNcbi;
+
     @Autowired
     public DailyAuditTask(StudyRepository studyRepository,
                           CurationStatusRepository curationStatusRepository,
@@ -61,30 +64,48 @@ public class DailyAuditTask {
         return log;
     }
 
+    // Calculate studies with status 'Send to NCBI' before pipeline runs at 00:15
+    @Scheduled(cron = "0 0 0 * * *")
+    public void calculateNumberOfStudiesSentToNcbi() {
+        CurationStatus status = curationStatusRepository.findByStatus("Send to NCBI");
+        Long statusId = status.getId();
+        Collection<Study> studiesSentToNcbi = studyRepository.findByCurationStatusIgnoreCase(statusId);
+        this.totalNumberOfStudiesSentToNcbi = studiesSentToNcbi.size();
+    }
+
     // Scheduled for 7am everyday
     @Scheduled(cron = "0 0 7 * * *")
     public void dailyErrorAudit() {
 
         // Get list of all studies with status "NCBI pipeline error"
-        CurationStatus status = curationStatusRepository.findByStatus("NCBI pipeline error");
-        Long statusId = status.getId();
-        Collection<Study> studiesWithErrors = studyRepository.findByCurationStatusIgnoreCase(statusId);
+        CurationStatus ncbiErrorStatus = curationStatusRepository.findByStatus("NCBI pipeline error");
+        CurationStatus importErrorStatus = curationStatusRepository.findByStatus("Data import error");
+
+        Long ncbiErrorStatusId = ncbiErrorStatus.getId();
+        Long importErrorStatusId = importErrorStatus.getId();
+
+        Collection<Study> studiesWithNcbiErrors = studyRepository.findByCurationStatusIgnoreCase(ncbiErrorStatusId);
+        Collection<Study> studiesWithImportErrors = studyRepository.findByCurationStatusIgnoreCase(importErrorStatusId);
+
+        // Calculate some totals that we can add as a summary view to email
+        Integer totalStudiesWithNcbiErrors = studiesWithNcbiErrors.size();
+        Integer totalStudiesWithImportErrors = studiesWithImportErrors.size();
 
         Collection<StudyErrorView> studyErrorViews = new ArrayList<StudyErrorView>();
         // Send email for all studies with errors
-        if (!studiesWithErrors.isEmpty()) {
+        if (!studiesWithNcbiErrors.isEmpty()) {
 
 
             // For each study retrieve its study report and association report details
-            for (Study studyWithError : studiesWithErrors) {
+            for (Study studyWithNcbiError : studiesWithNcbiErrors) {
 
                 // Collect all information required for email
-                StudyReport studyReport = studyReportRepository.findByStudyId(studyWithError.getId());
-                String title = studyWithError.getTitle();
-                Long studyId = studyWithError.getId();
-                String pubmedId = studyWithError.getPubmedId();
+                StudyReport studyReport = studyReportRepository.findByStudyId(studyWithNcbiError.getId());
+                String title = studyWithNcbiError.getTitle();
+                Long studyId = studyWithNcbiError.getId();
+                String pubmedId = studyWithNcbiError.getPubmedId();
                 Long pubmedIdError = studyReport.getPubmedIdError();
-                Date sendToNCBIDate = studyWithError.getHousekeeping().getSendToNCBIDate();
+                Date sendToNCBIDate = studyWithNcbiError.getHousekeeping().getSendToNCBIDate();
                 List<String> snpErrors = new ArrayList<String>();
                 List<String> geneNotOnGenomeErrors = new ArrayList<String>();
                 List<String> snpGeneOnDiffChrErrors = new ArrayList<String>();
@@ -92,7 +113,7 @@ public class DailyAuditTask {
 
                 // Get all the associations linked to this study
                 Collection<Association> studyAssociations =
-                        associationRepository.findByStudyId(studyWithError.getId().longValue());
+                        associationRepository.findByStudyId(studyWithNcbiError.getId().longValue());
 
                 // Get all association reports and collate errors
                 for (Association association : studyAssociations) {
@@ -139,6 +160,9 @@ public class DailyAuditTask {
         }
 
         // Send mail
-        mailService.sendDailyAuditEmail(studyErrorViews);
+        mailService.sendDailyAuditEmail(studyErrorViews,
+                                        totalStudiesWithNcbiErrors,
+                                        totalStudiesWithImportErrors,
+                                        this.totalNumberOfStudiesSentToNcbi);
     }
 }
