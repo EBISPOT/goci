@@ -127,7 +127,7 @@ function processAssociation(association, table) {
     var mantissa = association.pValueMantissa;
     var exponent = association.pValueExponent;
 
-    var pval = mantissa.concat(" x10").concat("<sup>").concat(exponent).concat("</sup>");
+    var pval = "".concat(mantissa).concat(" x10").concat("<sup>").concat(exponent).concat("</sup>");
 
 
     //var pval = association.pValue;
