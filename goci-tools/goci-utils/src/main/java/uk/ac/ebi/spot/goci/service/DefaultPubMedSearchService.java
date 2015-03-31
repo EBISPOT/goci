@@ -22,7 +22,6 @@ import org.xml.sax.SAXException;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
-import javax.validation.constraints.NotNull;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -44,7 +43,7 @@ import java.text.SimpleDateFormat;
 
 @Service
 @Component
-public class PropertyFilePubMedLookupService implements GwasPubMedLookupService {
+public class DefaultPubMedSearchService implements PubMedSearchService {
     @Value("${pubmed.xml.version}")
     private String xmlVersion; // xml version is very important here , it must be "&version=2.0"
 
@@ -60,7 +59,7 @@ public class PropertyFilePubMedLookupService implements GwasPubMedLookupService 
         return log;
     }
 
-    public Study dispatchSummaryQuery(String pubmedId) throws PubmedLookupException {
+    public Study findPublicationSummary(String pubmedId) throws PubmedLookupException {
 
         String summaryString;
         if (pubmedRoot != null && pubmedGwasSummary != null) {

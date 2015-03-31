@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.curation.service.FtpFileService;
 import uk.ac.ebi.spot.goci.repository.CatalogExportRepository;
-import uk.ac.ebi.spot.goci.service.SpreadsheetProcessor;
+import uk.ac.ebi.spot.goci.export.CatalogSpreadsheetExporter;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,16 +28,16 @@ public class DailyNcbiExportTask {
 
     private CatalogExportRepository catalogExportRepository;
 
-    private SpreadsheetProcessor spreadsheetProcessor;
+    private CatalogSpreadsheetExporter catalogSpreadsheetExporter;
 
     private FtpFileService ftpFileService;
 
     @Autowired
     public DailyNcbiExportTask(CatalogExportRepository catalogExportRepository,
-                               SpreadsheetProcessor spreadsheetProcessor,
+                               CatalogSpreadsheetExporter catalogSpreadsheetExporter,
                                FtpFileService ftpFileService) {
         this.catalogExportRepository = catalogExportRepository;
-        this.spreadsheetProcessor = spreadsheetProcessor;
+        this.catalogSpreadsheetExporter = catalogSpreadsheetExporter;
         this.ftpFileService = ftpFileService;
     }
 
@@ -47,7 +47,8 @@ public class DailyNcbiExportTask {
         return log;
     }
 
-    @Scheduled(cron = "0 0 22 * * *")
+    // Scheduled for 00:15
+    @Scheduled(cron = "0 15 0 * * *")
     public void dailyNcbiExport() throws IOException {
 
         // Create date stamped file
@@ -68,7 +69,7 @@ public class DailyNcbiExportTask {
 
         // Call methods to create NCBI spreadsheet
         String[][] data = catalogExportRepository.getNCBISpreadsheet();
-        spreadsheetProcessor.writeToFile(data, outputFile);
+        catalogSpreadsheetExporter.writeToFile(data, outputFile);
 
         // Check we have something in our output file
         if (outputFile.length() != 0) {

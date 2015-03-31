@@ -25,8 +25,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String catalogAddedDate;
     @Field private String publicationLink;
 
-    @Field @NonEmbeddableField private String platform;
-    @Field @NonEmbeddableField private Boolean cnv;
+    @Field private String platform;
+    @Field private Boolean cnv;
 
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
@@ -46,6 +46,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field("association_chromosomeName") private Collection<String> chromosomeNames;
     @Field("association_chromosomePosition") private Collection<Integer> chromosomePositions;
     @Field("association_last_modified") private Collection<String> lastModifiedDates;
+//    @Field("association_merged") private Long merged;
 
     // embedded DiseaseTrait info
     @Field("traitName") private Collection<String> traitNames;
@@ -205,6 +206,10 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     public void addLastModifiedDates(Collection<String> lastModifiedDates) {
         this.lastModifiedDates.addAll(lastModifiedDates);
     }
+
+//    public void addMerged(Long merged){
+//        this.merged = merged;
+//    }
 
     public void addTraitName(String traitName) {
         this.traitNames.add(traitName);

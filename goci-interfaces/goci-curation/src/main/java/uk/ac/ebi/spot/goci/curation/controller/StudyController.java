@@ -36,7 +36,7 @@ import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
-import uk.ac.ebi.spot.goci.service.PropertyFilePubMedLookupService;
+import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
 import javax.validation.Valid;
@@ -66,7 +66,7 @@ public class StudyController {
     private EthnicityRepository ethnicityRepository;
 
     // Pubmed ID lookup service
-    private PropertyFilePubMedLookupService propertyFilePubMedLookupService;
+    private DefaultPubMedSearchService defaultPubMedSearchService;
     private MailService mailService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -84,7 +84,7 @@ public class StudyController {
                            CurationStatusRepository curationStatusRepository,
                            AssociationRepository associationRepository,
                            EthnicityRepository ethnicityRepository,
-                           PropertyFilePubMedLookupService propertyFilePubMedLookupService,
+                           DefaultPubMedSearchService defaultPubMedSearchService,
                            MailService mailService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
@@ -94,7 +94,7 @@ public class StudyController {
         this.curationStatusRepository = curationStatusRepository;
         this.associationRepository = associationRepository;
         this.ethnicityRepository = ethnicityRepository;
-        this.propertyFilePubMedLookupService = propertyFilePubMedLookupService;
+        this.defaultPubMedSearchService = defaultPubMedSearchService;
         this.mailService = mailService;
     }
 
@@ -181,7 +181,7 @@ public class StudyController {
         }
 
         // Pass to importer
-        Study importedStudy = propertyFilePubMedLookupService.dispatchSummaryQuery(pubmedId);
+        Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
 
         // Create housekeeping object
         Housekeeping studyHousekeeping = createHousekeeping();

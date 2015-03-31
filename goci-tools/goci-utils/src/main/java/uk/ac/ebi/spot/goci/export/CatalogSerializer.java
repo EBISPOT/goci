@@ -1,8 +1,9 @@
-package uk.ac.ebi.spot.goci.service;
+package uk.ac.ebi.spot.goci.export;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.CatalogSummaryView;
+import uk.ac.ebi.spot.goci.service.CatalogSummaryService;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -23,24 +24,22 @@ import java.util.List;
  */
 
 @Service
-public class ProcessView {
-
-    private NCBICatalogService ncbiCatalogService;
+public class CatalogSerializer {
+    private CatalogSummaryService ncbiCatalogService;
 
     @Autowired
-    public ProcessView(NCBICatalogService ncbiCatalogService) {
+    public CatalogSerializer(CatalogSummaryService ncbiCatalogService) {
         this.ncbiCatalogService = ncbiCatalogService;
     }
 
     public List<String> serialiseViews() {
-
         Collection<CatalogSummaryView> views = ncbiCatalogService.getCatalogSummaryViewsWithStatusSendToNcbi();
-        List<String> serialisedViews = new ArrayList<String>();
+        List<String> serialisedViews = new ArrayList<>();
 
         // For each view create a line from the data returned
         for (CatalogSummaryView view : views) {
 
-            String line = "";
+            String line;
             // Format dates
             DateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
 
@@ -110,7 +109,9 @@ public class ProcessView {
             }
 
             String pValue = "" + "\t";
-            if (view.getpValue() != null) {pValue = view.getpValue().toString().trim() + "\t";}
+            if (view.getpValueMantissa() != null && view.getpValueExponent() != null) {
+                pValue = view.getpValueMantissa().toString() + "E" + view.getpValueExponent().toString() + "\t";
+            }
 
             String pValueText = "" + "\t";
             if (view.getpValueQualifier() != null) {pValueText = view.getpValueQualifier().trim() + "\t";}
@@ -129,8 +130,8 @@ public class ProcessView {
             String platform = "" + "\t";
             if (view.getPlatform() != null) { platform = view.getPlatform().trim() + "\t";}
 
-            String cnv = "";
-            if (view.getCnv() == true) {
+            String cnv;
+            if (view.getCnv()) {
                 cnv = "Y" + "\t";
             }
             else {cnv = "N" + "\t";}
@@ -141,7 +142,7 @@ public class ProcessView {
             String studyId = "" + "\t";
             if (view.getStudyId() != null) { studyId = view.getStudyId().toString() + "\t";}
 
-            String resultPublished = "";
+            String resultPublished;
             if (view.getResultPublished() != null) {
                 resultPublished = "Y" + "\t";
             }
@@ -160,70 +161,44 @@ public class ProcessView {
     }
 
     // For each line
-    public void createFileForNcbi(String fileName, List<String> serialisedViews) {
-
+    public void createFileForNcbi(String fileName, List<String> serialisedViews) throws IOException {
         // Create a file from the file name supplied
         File file = new File(fileName);
 
-        BufferedWriter output = null;
-        try {
-            output = new BufferedWriter(new FileWriter(file));
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        try (BufferedWriter output = new BufferedWriter(new FileWriter(file))) {
+            // Create file header line
+            String header;
+            header = "DATE ADDED TO CATALOG" + "\t"
+                    + "PUBMEDID" + "\t"
+                    + "FIRST AUTHOR" + "\t"
+                    + "DATE" + "\t"
+                    + "JOURNAL" + "\t"
+                    + "LINK" + "\t"
+                    + "STUDY" + "\t"
+                    + "DISEASE/TRAIT" + "\t"
+                    + "INITIAL SAMPLE SIZE" + "\t"
+                    + "REPLICATION SAMPLE SIZE" + "\t"
+                    + "REGION" + "\t"
+                    + "REPORTED GENE(S)" + "\t"
+                    + "STRONGEST SNP-RISK ALLELE" + "\t"
+                    + "SNPS" + "\t"
+                    + "RISK ALLELE FREQUENCY" + "\t"
+                    + "P-VALUE" + "\t"
+                    + "P-VALUE (TEXT)" + "\t"
+                    + "OR OR BETA" + "\t"
+                    + "95% CI (TEXT)" + "\t"
+                    + "PLATFORM [SNPS PASSING QC]" + "\t"
+                    + "CNV" + "\t"
+                    + "GWASTUDIESSNPID" + "\t"
+                    + "GWASTUDYID" + "\t"
+                    + "RESULTPUBLISHED" + "\n";
 
-        // Create file header line
-        String header = "";
-        header = "DATE ADDED TO CATALOG" + "\t"
-                + "PUBMEDID" + "\t"
-                + "FIRST AUTHOR" + "\t"
-                + "DATE" + "\t"
-                + "JOURNAL" + "\t"
-                + "LINK" + "\t"
-                + "STUDY" + "\t"
-                + "DISEASE/TRAIT" + "\t"
-                + "INITIAL SAMPLE SIZE" + "\t"
-                + "REPLICATION SAMPLE SIZE" + "\t"
-                + "REGION" + "\t"
-                + "REPORTED GENE(S)" + "\t"
-                + "STRONGEST SNP-RISK ALLELE" + "\t"
-                + "SNPS" + "\t"
-                + "RISK ALLELE FREQUENCY" + "\t"
-                + "P-VALUE" + "\t"
-                + "P-VALUE (TEXT)" + "\t"
-                + "OR OR BETA" + "\t"
-                + "95% CI (TEXT)" + "\t"
-                + "PLATFORM [SNPS PASSING QC]" + "\t"
-                + "CNV" + "\t"
-                + "GWASTUDIESSNPID" + "\t"
-                + "GWASTUDYID" + "\t"
-                + "RESULTPUBLISHED" + "\n";
-
-        try {
             output.write(header);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        // Write each line
-        for (String view : serialisedViews) {
-
-            try {
+            // Write each line
+            for (String view : serialisedViews) {
                 output.write(view);
             }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-
         }
-        try {
-            output.close();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 }

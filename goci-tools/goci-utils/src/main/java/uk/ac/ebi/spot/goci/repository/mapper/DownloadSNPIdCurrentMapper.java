@@ -1,9 +1,10 @@
-package uk.ac.ebi.spot.goci.repository;
+package uk.ac.ebi.spot.goci.repository.mapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
+import uk.ac.ebi.spot.goci.model.CatalogDataMapper;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +34,7 @@ public class DownloadSNPIdCurrentMapper implements CatalogDataMapper {
 
         String rsId = databaseValues.get(CatalogHeaderBinding.SNP_RSID_FOR_ID);
 
-        if(rsId != null){
+        if(!rsId.isEmpty() && rsId.contains("rs")){
             if(rsId.contains("x")){
                 String front = rsId.split("x")[0].trim();
                 output = front.substring(2);

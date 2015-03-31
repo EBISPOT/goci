@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>uk.ac.ebi.spot</groupId>
     <artifactId>goci-tools</artifactId>
-    <version>2.0.0-beta-5</version>
+    <version>2.0.0.RC</version>
     <packaging>pom</packaging>
     <name>GOCI Tools</name>
 
     <modules>
         <module>goci-solr-indexer</module>
         <module>goci-catalog-io</module>
-    </modules>
+        <module>goci-utils</module>
+  </modules>
 </project>

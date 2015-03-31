@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.exception;
+package uk.ac.ebi.spot.goci.repository.exception;
 
 /**
  * Javadocs go here!

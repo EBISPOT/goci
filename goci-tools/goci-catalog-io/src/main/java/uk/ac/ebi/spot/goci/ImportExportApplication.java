@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Bean;
 import uk.ac.ebi.spot.goci.repository.CatalogExportRepository;
 import uk.ac.ebi.spot.goci.repository.CatalogImportRepository;
 import uk.ac.ebi.spot.goci.repository.CatalogMetaDataRepository;
-import uk.ac.ebi.spot.goci.service.SpreadsheetProcessor;
+import uk.ac.ebi.spot.goci.export.CatalogSpreadsheetExporter;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class ImportExportApplication {
     @Autowired
     private CatalogMetaDataRepository catalogMetaDataRepository;
     @Autowired
-    private SpreadsheetProcessor spreadsheetProcessor;
+    private CatalogSpreadsheetExporter catalogSpreadsheetExporter;
 
     private OperationMode opMode;
     private File outputFile;
@@ -87,6 +87,16 @@ public class ImportExportApplication {
                             exitCode += 3;
                         }
                         break;
+                    case DOWNLOAD_ALTERNATIVE:
+                        try {
+                            doAlternativeDownloadExport(outputFile);
+                        }
+                        catch (Exception e) {
+                            System.err.println("Alternative download export failed (" + e.getMessage() + ")");
+                            getLog().error("Alternative download export failed", e);
+                            exitCode += 5;
+                        }
+                        break;
                     case STATS:
                         try {
                             doStatsExport(inputFile);
@@ -94,7 +104,7 @@ public class ImportExportApplication {
                         catch (Exception e) {
                             System.err.println("Stats export failed (" + e.getMessage() + ")");
                             getLog().error("Stats export failed", e);
-                            exitCode += 3;
+                            exitCode += 6;
                         }
                         break;
                     case LOAD:
@@ -117,20 +127,35 @@ public class ImportExportApplication {
 
     void doNCBIExport(File outFile) throws IOException {
         String[][] data = catalogExportRepository.getNCBISpreadsheet();
-        spreadsheetProcessor.writeToFile(data, outFile);
+        catalogSpreadsheetExporter.writeToFile(data, outFile);
     }
 
     void doDownloadExport(File outFile) throws IOException {
-        String[][] data = catalogExportRepository.getDownloadSpreadsheet();
-        spreadsheetProcessor.writeToFile(data, outFile);
+//        String[][] allData = catalogExportRepository.getDownloadSpreadsheet("d");
+//
+//        String[][] data = new String[allData.length][allData[0].length-2];
+//
+//        for(int i =0; i< allData.length; i++){
+//            for(int j =0; j< allData[0].length-2; j++){
+//                data[i][j] = allData[i][j];
+//            }
+//        }
+        String[][] data = catalogExportRepository.getDownloadSpreadsheet("d");
+        catalogSpreadsheetExporter.writeToFile(data, outFile);
+    }
+
+    void doAlternativeDownloadExport(File outFile) throws IOException {
+        String[][] data = catalogExportRepository.getDownloadSpreadsheet("a");
+        catalogSpreadsheetExporter.writeToFile(data, outFile);
     }
 
     void doStatsExport(File statsFile) throws IOException{
-        catalogMetaDataRepository.getMetaData(statsFile);
+         catalogMetaDataRepository.getMetaData(statsFile);
     }
 
+
     void doLoad(File inFile) throws IOException {
-        String[][] data = spreadsheetProcessor.readFromFile(inFile);
+        String[][] data = catalogSpreadsheetExporter.readFromFile(inFile);
         catalogImportRepository.loadNCBIMappedData(data);
     }
 
@@ -171,6 +196,9 @@ public class ImportExportApplication {
                 if (cl.hasOption("d")) {
                     this.opMode = OperationMode.DOWNLOAD;
                 }
+                if (cl.hasOption("a")) {
+                    this.opMode = OperationMode.DOWNLOAD_ALTERNATIVE;
+                }
                 if (cl.hasOption("l")) {
                     this.opMode = OperationMode.LOAD;
                 }
@@ -208,6 +236,8 @@ public class ImportExportApplication {
         // -l --load        (load in NCBI mapped file)
         // -f --file        (file to load in)
         // -o --out         (file to write out to)
+        // -a --download_alt  (write out alternative downloads file)
+        // -s --stats       (write out catalog meta data)
 
         // add input options
         OptionGroup modeGroup = new OptionGroup();
@@ -228,6 +258,14 @@ public class ImportExportApplication {
                 "Download - generate an export of the GWAS catalog suitable for download");
         downloadOption.setRequired(false);
         modeGroup.addOption(downloadOption);
+
+        Option downloadAltOption = new Option(
+                "a",
+                "download_alt",
+                false,
+                "Download alternative - generate an export of the GWAS catalog, including ontology mappings, suitable for download");
+        downloadAltOption.setRequired(false);
+        modeGroup.addOption(downloadAltOption);
 
         Option loadOption = new Option(
                 "l",
@@ -278,6 +316,7 @@ public class ImportExportApplication {
     private enum OperationMode {
         NCBI,
         DOWNLOAD,
+        DOWNLOAD_ALTERNATIVE,
         STATS,
         LOAD
     }

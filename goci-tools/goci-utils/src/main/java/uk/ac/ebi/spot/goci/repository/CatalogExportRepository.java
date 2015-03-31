@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import uk.ac.ebi.spot.goci.model.CatalogDataMapper;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBindings;
 
@@ -113,15 +114,15 @@ public class CatalogExportRepository {
         return rows.toArray(new String[rows.size()][]);
     }
 
-    public String[][] getDownloadSpreadsheet() {
-        List<String> downloadOutputHeaders = getOrderedDownloadHeaders()
+    public String[][] getDownloadSpreadsheet(String version) {
+        List<String> downloadOutputHeaders = getOrderedDownloadHeaders(version)
                 .stream()
                 .filter(binding -> binding.getDownloadName() != null)
                 .map(CatalogHeaderBinding::getDownloadName)
                 .collect(Collectors.toList());
 
 
-        List<String> downloadQueryHeaders = getOrderedDownloadHeaders()
+        List<String> downloadQueryHeaders = getOrderedDownloadHeaders(version)
                 .stream()
                 .filter(binding -> binding.getDatabaseName() != null)
                 .map(CatalogHeaderBinding::getDatabaseName)
@@ -131,7 +132,7 @@ public class CatalogExportRepository {
         List<String[]> rows = jdbcTemplate.query(query, (resultSet, i) -> {
             Map<CatalogHeaderBinding, String> dataForMapping = new LinkedHashMap<>();
             Map<CatalogHeaderBinding, String> rowMap = new LinkedHashMap<>();
-            for (CatalogHeaderBinding binding : getOrderedDownloadHeaders()) {
+            for (CatalogHeaderBinding binding : getOrderedDownloadHeaders(version)) {
                 if (binding.getDownloadName() != null) {
                     // insert headings in declaration order (this is the correct order)
                     // which controls for reinsertion
@@ -215,46 +216,86 @@ public class CatalogExportRepository {
     }
 
      //put the CatalogHeaderBindings into the correct order for the download spreadsheet
-    private List<CatalogHeaderBinding> getOrderedDownloadHeaders() {
+    private List<CatalogHeaderBinding> getOrderedDownloadHeaders(String version) {
         List<CatalogHeaderBinding> catalogHeaders = CatalogHeaderBindings.getDownloadHeaders();
         List<CatalogHeaderBinding> orderedHeaders = new ArrayList<CatalogHeaderBinding>();
+        List<String> order;
 
-        List<String> order = Arrays.asList("DATE ADDED TO CATALOG",
-                                           "PUBMEDID",
-                                           "FIRST AUTHOR",
-                                           "DATE",
-                                           "JOURNAL",
-                                           "LINK",
-                                           "STUDY",
-                                           "DISEASE/TRAIT",
-                                           "INITIAL SAMPLE DESCRIPTION",
-                                           "REPLICATION SAMPLE DESCRIPTION",
-                                           "REGION",
-                                           "CHR_ID",
-                                           "CHR_POS",
-                                           "REPORTED GENE(S)",
-                                           "MAPPED_GENE",
-                                           "UPSTREAM_GENE_ID",
-                                           "DOWNSTREAM_GENE_ID",
-                                           "SNP_GENE_IDS",
-                                           "UPSTREAM_GENE_DISTANCE",
-                                           "DOWNSTREAM_GENE_DISTANCE",
-                                           "STRONGEST SNP-RISK ALLELE",
-                                           "SNPS",
-                                           "MERGED",
-                                           "SNP_ID_CURRENT",
-                                           "CONTEXT",
-                                           "INTERGENIC",
-                                           "RISK ALLELE FREQUENCY",
-                                           "P-VALUE",
-                                           "PVALUE_MLOG",
-                                           "P-VALUE (TEXT)",
-                                           "OR or BETA",
-                                           "95% CI (TEXT)",
-                                           "PLATFORM [SNPS PASSING QC]",
-                                           "CNV"/*,
-                                           "MAPPED_TRAIT",
-                                           "MAPPED_TRAIT_URI"*/);
+        if(version.equals("d")) {
+            order = Arrays.asList("DATE ADDED TO CATALOG",
+                                               "PUBMEDID",
+                                               "FIRST AUTHOR",
+                                               "DATE",
+                                               "JOURNAL",
+                                               "LINK",
+                                               "STUDY",
+                                               "DISEASE/TRAIT",
+                                               "INITIAL SAMPLE DESCRIPTION",
+                                               "REPLICATION SAMPLE DESCRIPTION",
+                                               "REGION",
+                                               "CHR_ID",
+                                               "CHR_POS",
+                                               "REPORTED GENE(S)",
+                                               "MAPPED_GENE",
+                                               "UPSTREAM_GENE_ID",
+                                               "DOWNSTREAM_GENE_ID",
+                                               "SNP_GENE_IDS",
+                                               "UPSTREAM_GENE_DISTANCE",
+                                               "DOWNSTREAM_GENE_DISTANCE",
+                                               "STRONGEST SNP-RISK ALLELE",
+                                               "SNPS",
+                                               "MERGED",
+                                               "SNP_ID_CURRENT",
+                                               "CONTEXT",
+                                               "INTERGENIC",
+                                               "RISK ALLELE FREQUENCY",
+                                               "P-VALUE",
+                                               "PVALUE_MLOG",
+                                               "P-VALUE (TEXT)",
+                                               "OR or BETA",
+                                               "95% CI (TEXT)",
+                                               "PLATFORM [SNPS PASSING QC]",
+                                               "CNV");
+        }
+
+        else{
+            order = Arrays.asList("DATE ADDED TO CATALOG",
+                                  "PUBMEDID",
+                                  "FIRST AUTHOR",
+                                  "DATE",
+                                  "JOURNAL",
+                                  "LINK",
+                                  "STUDY",
+                                  "DISEASE/TRAIT",
+                                  "INITIAL SAMPLE DESCRIPTION",
+                                  "REPLICATION SAMPLE DESCRIPTION",
+                                  "REGION",
+                                  "CHR_ID",
+                                  "CHR_POS",
+                                  "REPORTED GENE(S)",
+                                  "MAPPED_GENE",
+                                  "UPSTREAM_GENE_ID",
+                                  "DOWNSTREAM_GENE_ID",
+                                  "SNP_GENE_IDS",
+                                  "UPSTREAM_GENE_DISTANCE",
+                                  "DOWNSTREAM_GENE_DISTANCE",
+                                  "STRONGEST SNP-RISK ALLELE",
+                                  "SNPS",
+                                  "MERGED",
+                                  "SNP_ID_CURRENT",
+                                  "CONTEXT",
+                                  "INTERGENIC",
+                                  "RISK ALLELE FREQUENCY",
+                                  "P-VALUE",
+                                  "PVALUE_MLOG",
+                                  "P-VALUE (TEXT)",
+                                  "OR or BETA",
+                                  "95% CI (TEXT)",
+                                  "PLATFORM [SNPS PASSING QC]",
+                                  "CNV",
+                                  "MAPPED_TRAIT",
+                                  "MAPPED_TRAIT_URI");
+        }
 
         for(String header : order){
             for(CatalogHeaderBinding binding : catalogHeaders){

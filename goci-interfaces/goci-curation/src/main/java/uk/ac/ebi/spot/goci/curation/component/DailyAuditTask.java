@@ -1,9 +1,11 @@
 package uk.ac.ebi.spot.goci.curation.component;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import uk.ac.ebi.spot.goci.curation.model.StudyErrorView;
+import uk.ac.ebi.spot.goci.curation.model.StudyAuditView;
 import uk.ac.ebi.spot.goci.curation.service.MailService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationReport;
@@ -26,7 +28,7 @@ import java.util.List;
  *
  * @author emma
  *         <p>
- *         Daily scheduled task to check for errors returned from NCBI pipeline
+ *         Daily scheduled task to record studies sent to NCBI and check for errors returned from NCBI pipeline
  */
 @Component
 public class DailyAuditTask {
@@ -37,6 +39,10 @@ public class DailyAuditTask {
     private AssociationRepository associationRepository;
     private AssociationReportRepository associationReportRepository;
     private MailService mailService;
+
+    // Variables set by first scheduled task, store these here so we can access them when sending email
+    private Integer totalNumberOfStudiesSentToNcbi;
+    private Collection<StudyAuditView> studiesSentToNcbiForEmail = new ArrayList<StudyAuditView>();
 
     @Autowired
     public DailyAuditTask(StudyRepository studyRepository,
@@ -53,81 +59,139 @@ public class DailyAuditTask {
         this.mailService = mailService;
     }
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
+
+    // Calculate studies with status 'Send to NCBI' before pipeline runs at 00:15
+    @Scheduled(cron = "0 0 0 * * *")
+    public void calculateNumberOfStudiesSentToNcbi() {
+        CurationStatus status = curationStatusRepository.findByStatus("Send to NCBI");
+        Long statusId = status.getId();
+        Collection<Study> studiesSentToNcbi = studyRepository.findByCurationStatusIgnoreCase(statusId);
+
+        // Set total
+        this.totalNumberOfStudiesSentToNcbi = studiesSentToNcbi.size();
+
+        // Create list of all studies sent to NCBI
+        Collection<StudyAuditView> studiesSentToNcbiForEmail = new ArrayList<StudyAuditView>();
+
+        if (!studiesSentToNcbi.isEmpty()) {
+            for (Study studySentToNcbi : studiesSentToNcbi) {
+                StudyAuditView studyAuditView = createView(studySentToNcbi);
+                studiesSentToNcbiForEmail.add(studyAuditView);
+            }
+
+            // Pass details to email method
+            getLog().info("List of studies sent to NCBI calculated, as part of daily audit task");
+        }
+
+        this.studiesSentToNcbiForEmail = studiesSentToNcbiForEmail;
+    }
 
     // Scheduled for 7am everyday
     @Scheduled(cron = "0 0 7 * * *")
     public void dailyErrorAudit() {
 
         // Get list of all studies with status "NCBI pipeline error"
-        CurationStatus status = curationStatusRepository.findByStatus("NCBI pipeline error");
-        Long statusId = status.getId();
-        Collection<Study> studiesWithErrors = studyRepository.findByCurationStatusIgnoreCaseAndCheckedNcbiError(statusId, false);
+        CurationStatus ncbiErrorStatus = curationStatusRepository.findByStatus("NCBI pipeline error");
+        CurationStatus importErrorStatus = curationStatusRepository.findByStatus("Data import error");
 
-        // Send email for all studies with errors
-        if (!studiesWithErrors.isEmpty()) {
-            Collection<StudyErrorView> studyErrorViews = new ArrayList<StudyErrorView>();
+        Long ncbiErrorStatusId = ncbiErrorStatus.getId();
+        Long importErrorStatusId = importErrorStatus.getId();
+
+        Collection<Study> studiesWithNcbiErrors = studyRepository.findByCurationStatusIgnoreCase(ncbiErrorStatusId);
+        Collection<Study> studiesWithImportErrors = studyRepository.findByCurationStatusIgnoreCase(importErrorStatusId);
+
+        // Calculate some totals that we can add as a summary view to email
+        Integer totalStudiesWithNcbiErrors = studiesWithNcbiErrors.size();
+        Integer totalStudiesWithImportErrors = studiesWithImportErrors.size();
+
+        Collection<StudyAuditView> studiesWithNcbiErrorsForEmail = new ArrayList<StudyAuditView>();
+        // Send email for all studies with NCBI pipeline errors
+        if (!studiesWithNcbiErrors.isEmpty()) {
 
             // For each study retrieve its study report and association report details
-            for (Study studyWithError : studiesWithErrors) {
-
-                // Collect all information required for email
-                StudyReport studyReport = studyReportRepository.findByStudyId(studyWithError.getId());
-                String title = studyWithError.getTitle();
-                Long studyId = studyWithError.getId();
-                String pubmedId = studyWithError.getPubmedId();
-                Long pubmedIdError = studyReport.getPubmedIdError();
-                Date sendToNCBIDate = studyWithError.getHousekeeping().getSendToNCBIDate();
-                List<String> snpErrors = new ArrayList<String>();
-                List<String> geneNotOnGenomeErrors = new ArrayList<String>();
-                List<String> snpGeneOnDiffChrErrors = new ArrayList<String>();
-                List<String> noGeneForSymbolErrors = new ArrayList<String>();
-
-                // Get all the associations linked to this study
-                Collection<Association> studyAssociations =
-                        associationRepository.findByStudyId(studyWithError.getId().longValue());
-
-                // Get all association reports and collate errors
-                for (Association association : studyAssociations) {
-                    AssociationReport associationReport =
-                            associationReportRepository.findByAssociationId(association.getId());
-
-                    if (associationReport.getSnpError() != null && !associationReport.getSnpError().isEmpty()) {
-                        snpErrors.add(associationReport.getSnpError());
-                    }
-
-                    if (associationReport.getGeneNotOnGenome() != null &&
-                            !associationReport.getGeneNotOnGenome().isEmpty()) {
-                        geneNotOnGenomeErrors.add(associationReport.getGeneNotOnGenome());
-                    }
-
-                    if (associationReport.getSnpGeneOnDiffChr() != null &&
-                            !associationReport.getSnpGeneOnDiffChr().isEmpty()) {
-                        snpGeneOnDiffChrErrors.add(associationReport.getSnpGeneOnDiffChr());
-                    }
-
-                    if (associationReport.getNoGeneForSymbol() != null &&
-                            !associationReport.getNoGeneForSymbol().isEmpty()) {
-                        noGeneForSymbolErrors.add(associationReport.getNoGeneForSymbol());
-                    }
-                }
-
-                // Create a view of all errors for each study
-                StudyErrorView studyErrorView = new StudyErrorView(title,
-                                                                   pubmedId,
-                                                                   studyId,
-                                                                   pubmedIdError,
-                                                                   sendToNCBIDate,
-                                                                   snpErrors,
-                                                                   geneNotOnGenomeErrors,
-                                                                   snpGeneOnDiffChrErrors,
-                                                                   noGeneForSymbolErrors);
-
-                studyErrorViews.add(studyErrorView);
+            for (Study studyWithNcbiError : studiesWithNcbiErrors) {
+                StudyAuditView studyAuditView = createView(studyWithNcbiError);
+                studiesWithNcbiErrorsForEmail.add(studyAuditView);
             }
 
             // Pass details to email method
-            mailService.sendDailyAuditEmail(studyErrorViews);
-
+            getLog().info("List of studies with errors calculated, as part of daily audit task");
         }
+
+        // Send mail
+        mailService.sendDailyAuditEmail(studiesWithNcbiErrorsForEmail,
+                                        totalStudiesWithNcbiErrors,
+                                        totalStudiesWithImportErrors,
+                                        this.totalNumberOfStudiesSentToNcbi,
+                                        this.studiesSentToNcbiForEmail);
+    }
+
+    // Create view objects that will be parsed to create email
+    private StudyAuditView createView(Study study) {
+
+        // Collect all information required for email
+        String title = study.getTitle();
+        Long studyId = study.getId();
+        String pubmedId = study.getPubmedId();
+        String author = study.getAuthor();
+        Date studyDate = study.getStudyDate();
+        Date sendToNCBIDate = study.getHousekeeping().getSendToNCBIDate();
+
+        // Errors
+        StudyReport studyReport = studyReportRepository.findByStudyId(study.getId());
+        Long pubmedIdError = studyReport.getPubmedIdError();
+        List<String> snpErrors = new ArrayList<String>();
+        List<String> geneNotOnGenomeErrors = new ArrayList<String>();
+        List<String> snpGeneOnDiffChrErrors = new ArrayList<String>();
+        List<String> noGeneForSymbolErrors = new ArrayList<String>();
+
+        // Get all the associations linked to this study
+        Collection<Association> studyAssociations =
+                associationRepository.findByStudyId(study.getId().longValue());
+
+        // Get all association reports and collate errors
+        for (Association association : studyAssociations) {
+            AssociationReport associationReport =
+                    associationReportRepository.findByAssociationId(association.getId());
+
+            if (associationReport.getSnpError() != null && !associationReport.getSnpError().isEmpty()) {
+                snpErrors.add(associationReport.getSnpError());
+            }
+
+            if (associationReport.getGeneNotOnGenome() != null &&
+                    !associationReport.getGeneNotOnGenome().isEmpty()) {
+                geneNotOnGenomeErrors.add(associationReport.getGeneNotOnGenome());
+            }
+
+            if (associationReport.getSnpGeneOnDiffChr() != null &&
+                    !associationReport.getSnpGeneOnDiffChr().isEmpty()) {
+                snpGeneOnDiffChrErrors.add(associationReport.getSnpGeneOnDiffChr());
+            }
+
+            if (associationReport.getNoGeneForSymbol() != null &&
+                    !associationReport.getNoGeneForSymbol().isEmpty()) {
+                noGeneForSymbolErrors.add(associationReport.getNoGeneForSymbol());
+            }
+        }
+
+        // Create a view of all errors for each study
+        StudyAuditView studyAuditView = new StudyAuditView(title,
+                                                           pubmedId,
+                                                           studyId,
+                                                           author,
+                                                           sendToNCBIDate,
+                                                           studyDate,
+                                                           pubmedIdError,
+                                                           snpErrors,
+                                                           geneNotOnGenomeErrors,
+                                                           snpGeneOnDiffChrErrors,
+                                                           noGeneForSymbolErrors);
+
+        return studyAuditView;
     }
 }

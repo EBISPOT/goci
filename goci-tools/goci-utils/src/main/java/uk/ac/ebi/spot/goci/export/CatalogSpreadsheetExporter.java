@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.service;
+package uk.ac.ebi.spot.goci.export;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
  * @date 23/02/15
  */
 @Service
-public class SpreadsheetProcessor {
+public class CatalogSpreadsheetExporter {
     @Value("${gwas.export.delimiter:\t}")
     private String delim;
     @Value("${gwas.export.encoding:UTF-8}")

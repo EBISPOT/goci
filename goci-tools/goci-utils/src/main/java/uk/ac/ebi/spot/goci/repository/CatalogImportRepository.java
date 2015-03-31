@@ -8,9 +8,9 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import uk.ac.ebi.spot.goci.exception.DataImportException;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBindings;
+import uk.ac.ebi.spot.goci.repository.exception.DataImportException;
 
 import java.lang.reflect.Array;
 import java.text.DateFormat;
@@ -58,18 +58,6 @@ public class CatalogImportRepository {
                     "NCBI_NORMALIZED_FIRST_AUTHOR = ? " +
                     "WHERE ID = ?";
 
-    private static final String SELECT_HOUSEKEEPING = "SELECT HOUSEKEEPING_ID FROM STUDY WHERE ID = ?";
-
-    private static final String SELECT_STATUS = "SELECT ID FROM CURATION_STATUS WHERE STATUS =? ";
-
-    private static final String SELECT_CHECKEDNCBIERROR = "SELECT CHECKEDNCBIERROR FROM HOUSEKEEPING WHERE ID =?";
-
-    private static final String UPDATE_HOUSEKEEPING =
-            "UPDATE HOUSEKEEPING SET CURATION_STATUS_ID = ?, LAST_UPDATE_DATE = ? WHERE ID = ?";
-
-    private static final String UPDATE_PUBLISH_DATE =
-            "UPDATE HOUSEKEEPING SET PUBLISH_DATE = ? WHERE ID = ?";
-
     private static final String SELECT_ASSOCIATION_REPORTS =
             "SELECT ID FROM ASSOCIATION_REPORT WHERE ASSOCIATION_ID = ?";
 
@@ -82,6 +70,20 @@ public class CatalogImportRepository {
                     "NO_GENE_FOR_SYMBOL = ?, " +
                     "GENE_NOT_ON_GENOME = ?" +
                     "WHERE ID = ?";
+
+    private static final String SELECT_HOUSEKEEPING = "SELECT HOUSEKEEPING_ID FROM STUDY WHERE ID = ?";
+
+    private static final String SELECT_STATUS = "SELECT ID FROM CURATION_STATUS WHERE STATUS =? ";
+
+    private static final String SELECT_CURRENT_STATUS_ID = "SELECT CURATION_STATUS_ID FROM HOUSEKEEPING WHERE ID =? ";
+
+    private static final String SELECT_CURRENT_STATUS = "SELECT STATUS FROM CURATION_STATUS WHERE ID =? ";
+
+    private static final String UPDATE_HOUSEKEEPING =
+            "UPDATE HOUSEKEEPING SET CURATION_STATUS_ID = ?, LAST_UPDATE_DATE = ? WHERE ID = ?";
+
+    private static final String UPDATE_PUBLISH_DATE =
+            "UPDATE HOUSEKEEPING SET PUBLISH_DATE = ? WHERE ID = ?";
 
     private static final String SELECT_SNP = "SELECT ID FROM SINGLE_NUCLEOTIDE_POLYMORPHISM WHERE RS_ID = ?";
 
@@ -206,10 +208,13 @@ public class CatalogImportRepository {
         boolean caughtWriteErrors = false;
 
         // This map store information on whether study or its associations have an error
-        HashMap<Long, List<Boolean>> studyErrorMap = new HashMap<>();
-
+        Map<Long, List<Boolean>> studyErrorMap = new HashMap<>();
+        Map<Long, List<Boolean>> importErrorMap = new HashMap<>();
         for (String[] line : data) {
+
             row++;
+            List<Boolean> importErrors = new ArrayList<>();
+
             // Study report attributes
             Long studyId = null; // STUDY_ID
             Integer pubmedIdError = null;  // PUBMED_ID_ERROR
@@ -464,20 +469,49 @@ public class CatalogImportRepository {
                     }
 
                 }
-                catch (NumberFormatException e) {
+
+                catch (Exception e) {
                     getLog().error("Unable to read data at row " + row + ", from spreadsheet", e);
                     caughtReadErrors = true;
-                }
-                catch (DataImportException e) {
-                    getLog().error("Unable to read data at row " + row + ", from spreadsheet", e);
-                    caughtReadErrors = true;
+
+                    if (importErrorMap.containsKey(studyId)) {
+                        importErrors = studyErrorMap.get(studyId);
+                    }
+                    importErrors.add(true);
+                    importErrorMap.put(studyId, importErrors);
+
                 }
             }
 
             // If no errors for a row, insert
             if (!caughtReadErrors) {
 
-                try {      // Add study report
+                try {
+                    // Record information on study errors which will use to update status
+                    List<Boolean> errorStatus = new ArrayList<>();
+                    if (studyId != null && pubmedIdError != null) {
+                        if (studyErrorMap.containsKey(studyId)) {
+                            errorStatus = studyErrorMap.get(studyId);
+                        }
+                        errorStatus.add(true);
+                    }
+                    // Only report these errors where we have an association id
+                    else if (associationId != null && (geneError != null || snpError != null)) {
+                        if (studyErrorMap.containsKey(studyId)) {
+                            errorStatus = studyErrorMap.get(studyId);
+                        }
+                        errorStatus.add(true);
+                    }
+                    // No error found
+                    else {
+                        if (studyErrorMap.containsKey(studyId)) {
+                            errorStatus = studyErrorMap.get(studyId);
+                        }
+                        errorStatus.add(false);
+                    }
+                    studyErrorMap.put(studyId, errorStatus);
+
+                    // Add study report
                     addStudyReport(studyId,
                                    pubmedIdError,
                                    ncbiPaperTitle,
@@ -520,43 +554,27 @@ public class CatalogImportRepository {
                                   functionalClass);
 
 
-                    // Record information on study errors
-                    List<Boolean> errorStatus = new ArrayList<>();
-                    if (pubmedIdError != null || geneError != null || snpError != null) {
-                        if (studyErrorMap.containsKey(studyId)) {
-                            errorStatus = studyErrorMap.get(studyId);
-                        }
-                        errorStatus.add(true);
-                    }
-                    // No error found
-                    else {
-                        if (studyErrorMap.containsKey(studyId)) {
-                            errorStatus = studyErrorMap.get(studyId);
-                        }
-                        errorStatus.add(false);
-                    }
-                    studyErrorMap.put(studyId, errorStatus);
-
-
                 }
                 catch (Exception e) {
                     getLog().error("Unable to write data at row " + row + ", from spreadsheet", e);
                     caughtWriteErrors = true;
+                    if (importErrorMap.containsKey(studyId)) {
+                        importErrors = studyErrorMap.get(studyId);
+                    }
+                    importErrors.add(true);
+                    importErrorMap.put(studyId, importErrors);
                 }
-
-
             }
-
-
         }
 
+        // For each study in map we update the status
+        updateStudyStatus(studyErrorMap, importErrorMap);
 
         if (caughtReadErrors || caughtWriteErrors) {
             throw new DataImportException("Caught errors whilst processing data import - " +
                                                   "please check the logs for more information");
         }
-        // For each study in map we update the status
-        updateStudyStatus(studyErrorMap);
+
 
     }
 
@@ -677,7 +695,7 @@ public class CatalogImportRepository {
         // Do not attempt to add mapped data for entries with snp errors
         // These tend to come back with just limited region information
         if (snpError != null && !snpError.isEmpty()) {
-            getLog().info("Not adding mapped data for snpId: " + snpId + " , with error " + snpError);
+            getLog().info("Not adding mapped data for snpId: rs" + snpId + " , with error " + snpError);
             return;
         }
 
@@ -686,13 +704,21 @@ public class CatalogImportRepository {
         // Note: the snp should already be in database otherwise it would never have appeared in file sent to NCBI
         String rsId = "rs" + snpId;
         Long snpIdInSnpTable;
+        List<Long> snpIdsInDatabase;
         try {
             snpIdInSnpTable = jdbcTemplate.queryForObject(SELECT_SNP, Long.class, rsId);
         }
+
         catch (EmptyResultDataAccessException e) {
             throw new DataImportException("Caught errors processing data import - " +
                                                   "trying to add NCBI info for SNP " + rsId +
                                                   ", but RSID not found in database");
+        }    // Catch case where we have more than one snp with that RSID
+        catch (IncorrectResultSizeDataAccessException e) {
+            snpIdsInDatabase = jdbcTemplate.query(SELECT_SNP,
+                                                  (resultSet, i) -> resultSet.getLong("ID"), rsId);
+            snpIdInSnpTable = snpIdsInDatabase.get(0);
+
         }
 
         // Add region information
@@ -735,6 +761,7 @@ public class CatalogImportRepository {
 
         // Add gene information to database
         Long geneId = null;
+        List<Long> geneIdsFromDatabase = new ArrayList<Long>();
 
         // Process each mapped gene, can either be a single gene or ; separated string of gene names
         // This gene information comes from the snp_gene_symbols and snp_gene_ids columns
@@ -758,7 +785,6 @@ public class CatalogImportRepository {
             // Iterators
             Iterator mappedGenesIterator = mappedGenes.iterator();
             Iterator entrezGeneIdsIterator = entrezGeneIds.iterator();
-            List<Long> geneIdsFromDatabase = new ArrayList<Long>();
 
             while (mappedGenesIterator.hasNext() && entrezGeneIdsIterator.hasNext()) {
 
@@ -817,6 +843,12 @@ public class CatalogImportRepository {
             catch (EmptyResultDataAccessException e) {
                 createGene(upstreamMappedGene, upstreamEntrezGeneId);
                 geneId = jdbcTemplate.queryForObject(SELECT_GENE, Long.class, upstreamMappedGene);
+            }   // Catch case where we have more than one gene
+            catch (IncorrectResultSizeDataAccessException e) {
+                geneIdsFromDatabase = jdbcTemplate.query(SELECT_GENE,
+                                                         (resultSet, i) -> resultSet.getLong("ID"), upstreamMappedGene);
+                geneId = geneIdsFromDatabase.get(0);
+
             }
 
             // Check GENOMIC_CONTEXT table to see if SNP has entry in this table for this gene
@@ -853,7 +885,13 @@ public class CatalogImportRepository {
             }
             catch (EmptyResultDataAccessException e) {
                 createGene(downstreamMappedGene, downstreamEntrezGeneId);
-                geneId = jdbcTemplate.queryForObject(SELECT_GENE, Long.class, upstreamMappedGene);
+                geneId = jdbcTemplate.queryForObject(SELECT_GENE, Long.class, downstreamMappedGene);
+            }
+            catch (IncorrectResultSizeDataAccessException e) {
+                geneIdsFromDatabase = jdbcTemplate.query(SELECT_GENE,
+                                                         (resultSet, i) -> resultSet.getLong("ID"),
+                                                         downstreamMappedGene);
+                geneId = geneIdsFromDatabase.get(0);
             }
             // Check GENOMIC_CONTEXT table to see if SNP has entry in this table for this gene
             List snpIdsInGenomicContextTable =
@@ -884,42 +922,56 @@ public class CatalogImportRepository {
     }
 
 
-    private void updateStudyStatus(HashMap<Long, List<Boolean>> studyErrorMap) {
+    private void updateStudyStatus(Map<Long, List<Boolean>> studyErrorMap, Map<Long, List<Boolean>> importErrorMap) {
 
         for (Long studyId : studyErrorMap.keySet()) {
-
-            // Get status ID
-            Long statusId;
-            String status;
-            Integer checkedNCBIError;
 
             // Get study housekeeping ID
             Long housekeepingId;
             try {
                 housekeepingId = jdbcTemplate.queryForObject(SELECT_HOUSEKEEPING, Long.class, studyId);
-
-                // Check if curators have decided to ignore errors in this study
-                checkedNCBIError = jdbcTemplate.queryForObject(SELECT_CHECKEDNCBIERROR, Integer.class, housekeepingId);
             }
             catch (EmptyResultDataAccessException e) {
                 throw new DataImportException("Caught errors processing data import - " +
                                                       "trying to update status of study without housekeeping information found in database");
             }
 
-            // Check for errors
-            List<Boolean> errorStatus = studyErrorMap.get(studyId);
 
-            // Study has an error
-            if (errorStatus.contains(true)) {
-                status = "NCBI pipeline error";
+            // Get current status
+            String currentStatus = null;
+            Long currentStatusId;
+            try {
+                currentStatusId = jdbcTemplate.queryForObject(SELECT_CURRENT_STATUS_ID, Long.class, housekeepingId);
+            }
+            catch (EmptyResultDataAccessException e) {
+                throw new DataImportException("Caught errors processing data import - " +
+                                                      "trying to update status of study without status information found in database");
             }
 
+            if (currentStatusId != null) {
+                currentStatus = jdbcTemplate.queryForObject(SELECT_CURRENT_STATUS, String.class, currentStatusId);
+            }
+
+            // Check for errors
+            List<Boolean> errorStatus = studyErrorMap.get(studyId);
+            List<Boolean> importErrorStatus = importErrorMap.get(studyId);
+            String status;
+
+            // Study has an error
+            if (errorStatus != null && errorStatus.contains(true)) {
+                status = "NCBI pipeline error";
+            }
+            // Import detected an error
+            else if (importErrorStatus != null && importErrorStatus.contains(true)) {
+                status = "Data import error";
+            }
             // No errors found for study
             else {
                 status = "Publish study";
             }
 
             // Get status ID
+            Long statusId;
             try {
                 statusId = jdbcTemplate.queryForObject(SELECT_STATUS, Long.class, status);
             }
@@ -928,8 +980,8 @@ public class CatalogImportRepository {
                         "Caught errors processing data import - cannot find ID for status " + status);
             }
 
-            // Only update the status if the curators have not ticked the checkedNCBIError
-            if (checkedNCBIError == 0) {
+            // Only update the status if the curators if previous status was "Send to NCBI"
+            if (currentStatus.equalsIgnoreCase("Send to NCBI")) {
                 // Set status and last_update_date
                 Date lastUpdateDate = new Date();
 
@@ -943,7 +995,7 @@ public class CatalogImportRepository {
                 }
 
                 getLog().info(
-                        "Updated housekeeping information for study for study: " + studyId + " - Updated " + rows +
+                        "Updated housekeeping information for study: " + studyId + " - Updated " + rows +
                                 " rows");
             }
 

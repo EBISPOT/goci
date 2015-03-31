@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.repository;
+package uk.ac.ebi.spot.goci.model;
 
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
 

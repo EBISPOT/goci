@@ -123,20 +123,25 @@ function processAssociation(association, table) {
         row.append($("<td>"));
     }
     row.append($("<td>").html(association.riskFrequency));
-    var pval = association.pValue;
 
-    if(pval >= 1e-6){
-        pval = pval.toExponential(0);
-    }
-    else{
-        pval = pval.toString();
-    }
+    var mantissa = association.pValueMantissa;
+    var exponent = association.pValueExponent;
 
-    if(pval != "0") {
-        var mant = pval.substr(0, 1);
-        var exp = pval.substr(2);
-        pval = mant.concat(" x10").concat("<sup>").concat(exp).concat("</sup>");
-    }
+    var pval = "".concat(mantissa).concat(" x10").concat("<sup>").concat(exponent).concat("</sup>");
+
+
+    //var pval = association.pValue;
+    //if(pval >= 1e-6){
+    //    pval = pval.toExponential(0);
+    //}
+    //else{
+    //    pval = pval.toString();
+    //}
+    //if(pval != "0") {
+    //    var mant = pval.substr(0, 1);
+    //    var exp = pval.substr(2);
+    //    pval = mant.concat(" x10").concat("<sup>").concat(exp).concat("</sup>");
+    //}
 
     if (association.qualifier != null && association.qualifier != '') {
         pval = pval.toString().concat(" ").concat(association.qualifier[0]);

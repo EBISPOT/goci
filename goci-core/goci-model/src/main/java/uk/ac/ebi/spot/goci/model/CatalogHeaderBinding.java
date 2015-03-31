@@ -27,7 +27,7 @@ public enum CatalogHeaderBinding {
     CHROMOSOME_POSITION("CHROMOSOME_POSITION", false, "CHR_POS", "chr_pos"),
     REPORTED_GENE("REPORTED_GENE", "REPORTED GENE(S)", "REPORTED GENE(S)", false),
     MAPPED_GENE("MAPPED_GENE", false, true, "snp_gene_symbols"),
-    DOWNLOAD_MAPPED_GENE(null, false, "MAPPED GENE", false),
+    DOWNLOAD_MAPPED_GENE(null, false, "MAPPED_GENE", false),
     ENTREZ_GENE_ID("ENTREZ_GENE_ID", false, "SNP_GENE_IDS", "snp_gene_ids"),
     UPSTREAM_MAPPED_GENE("UPSTREAM_MAPPED_GENE", false, true, "upstream_gene_symbol"),
     UPSTREAM_ENTREZ_GENE_ID("UPSTREAM_ENTREZ_GENE_ID", false, "UPSTREAM_GENE_ID", "upstream_gene"),
@@ -44,12 +44,17 @@ public enum CatalogHeaderBinding {
     DOWNLOAD_SNP_ID(null, false, "SNP_ID_CURRENT", false),
     MERGED("MERGED", false, "MERGED", "merged"),
     SNP_ID("SNP_ID", false, false, "snp_id"),
-    CONTEXT("CONTEXT", false, "CONTEXT", false),
-    IS_INTERGENIC("IS_INTERGENIC", false, true, "intergenic"),
-    DOWNLOAD_INTERGENIC(null, false, "INTERGENIC", false),
+    INTERGENIC_CONTEXT("IS_INTERGENIC", false, true, false),
+    CONTEXT("CONTEXT", false, true, false),
+    DOWNLOAD_CONTEXT(null, false, "CONTEXT", false),
+    IS_INTERGENIC("IS_INTERGENIC", false, "INTERGENIC", "intergenic"),
+//    DOWNLOAD_INTERGENIC(null, false, "INTERGENIC", false),
     RISK_ALLELE_FREQUENCY("RISK_ALLELE_FREQUENCY", "RISK ALLELE FREQUENCY", "RISK ALLELE FREQUENCY", false),
-    P_VALUE("P_VALUE", "P-VALUE", "P-VALUE", false),
-    P_VALUE_FOR_MLOG("P_VALUE", false, true, false),
+    P_VALUE_MANTISSA("P_VALUE_MANTISSA", true, true, false),
+    P_VALUE_EXPONENT("P_VALUE_EXPONENT", true, true, false),
+    P_VALUE(null, "P-VALUE", "P-VALUE", false),
+//    P_VALUE_MANT_FOR_MLOG("P_VALUE_MANTISSA", false, true, false),
+//    P_VALUE_EXPO_FOR_MLOG("P_VALUE_EXPONENT", false, true, false),
     DOWNLOAD_P_VALUE_MLOG(null, false, "PVALUE_MLOG", false),
     P_VALUE_QUALIFIER("P_VALUE_QUALIFIER", "P-VALUE (TEXT)", "P-VALUE (TEXT)", false),
     OR_BETA("OR_BETA", "OR OR BETA", "OR or BETA", false),
@@ -74,7 +79,10 @@ public enum CatalogHeaderBinding {
     GENE_ERROR("GENE_ERROR", false, false, "gene_error"),
     SNP_GENE_ON_DIFF_CHR("SNP_GENE_ON_DIFF_CHR", false, false, "snp_gene_on_diff_chr"),
     NO_GENE_FOR_SYMBOL("NO_GENE_FOR_SYMBOL", false, false, "no_geneid_for_symbol"),
-    GENE_NOT_ON_GENOME("GENE_NOT_ON_GENOME", false, false, "gene_not_on_genome");
+    GENE_NOT_ON_GENOME("GENE_NOT_ON_GENOME", false, false, "gene_not_on_genome"),
+    // Added for the alternative spreadsheet download
+    EFO_TRAIT("EFO_TRAIT", false, "MAPPED_TRAIT", false),
+    EFO_URI("EFO_URI", false, "MAPPED_TRAIT_URI", false);
 
     private String databaseName;
     private boolean isNcbiRequired;
