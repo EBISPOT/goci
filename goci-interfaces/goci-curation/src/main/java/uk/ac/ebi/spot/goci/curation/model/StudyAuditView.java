@@ -9,10 +9,9 @@ import java.util.List;
  *
  * @author emma
  *         <p>
- *         Model class to deal with errors returned from NCBI pipeline for idividual studies and collate into a single
- *         daily eamil
+ *         Model class to handle information sent to curators as part of a daily audit email
  */
-public class StudyErrorView {
+public class StudyAuditView {
 
     private String title;
 
@@ -20,9 +19,13 @@ public class StudyErrorView {
 
     private Long studyId;
 
-    private Long pubmedIdError;
+    private String author;
 
     private Date sendToNCBIDate;
+
+    private Date studyDate;
+
+    private Long pubmedIdError;
 
     private List<String> snpErrors = new ArrayList<String>();
 
@@ -32,19 +35,24 @@ public class StudyErrorView {
 
     private List<String> noGeneForSymbolErrors = new ArrayList<String>();
 
-    public StudyErrorView(String title,
+    public StudyAuditView(String title,
                           String pubmedId,
                           Long studyId,
-                          Long pubmedIdError,
+                          String author,
                           Date sendToNCBIDate,
+                          Date studyDate,
+                          Long pubmedIdError,
                           List<String> snpErrors,
                           List<String> geneNotOnGenomeErrors,
-                          List<String> snpGeneOnDiffChrErrors, List<String> noGeneForSymbolErrors) {
+                          List<String> snpGeneOnDiffChrErrors,
+                          List<String> noGeneForSymbolErrors) {
         this.title = title;
         this.pubmedId = pubmedId;
         this.studyId = studyId;
-        this.pubmedIdError = pubmedIdError;
+        this.author = author;
         this.sendToNCBIDate = sendToNCBIDate;
+        this.studyDate = studyDate;
+        this.pubmedIdError = pubmedIdError;
         this.snpErrors = snpErrors;
         this.geneNotOnGenomeErrors = geneNotOnGenomeErrors;
         this.snpGeneOnDiffChrErrors = snpGeneOnDiffChrErrors;
@@ -75,12 +83,12 @@ public class StudyErrorView {
         this.studyId = studyId;
     }
 
-    public Long getPubmedIdError() {
-        return pubmedIdError;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setPubmedIdError(Long pubmedIdError) {
-        this.pubmedIdError = pubmedIdError;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public Date getSendToNCBIDate() {
@@ -89,6 +97,22 @@ public class StudyErrorView {
 
     public void setSendToNCBIDate(Date sendToNCBIDate) {
         this.sendToNCBIDate = sendToNCBIDate;
+    }
+
+    public Date getStudyDate() {
+        return studyDate;
+    }
+
+    public void setStudyDate(Date studyDate) {
+        this.studyDate = studyDate;
+    }
+
+    public Long getPubmedIdError() {
+        return pubmedIdError;
+    }
+
+    public void setPubmedIdError(Long pubmedIdError) {
+        this.pubmedIdError = pubmedIdError;
     }
 
     public List<String> getSnpErrors() {
