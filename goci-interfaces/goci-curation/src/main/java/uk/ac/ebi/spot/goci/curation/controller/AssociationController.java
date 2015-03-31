@@ -938,9 +938,9 @@ public class AssociationController {
         return efoTraitRepository.findAll(sortByTraitAsc());
     }
 
-    // Returns a Sort object which sorts disease traits in ascending order by trait
+    // Returns a Sort object which sorts disease traits in ascending order by trait, ignoring case
     private Sort sortByTraitAsc() {
-        return new Sort(Sort.Direction.ASC, "trait");
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "trait").ignoreCase());
     }
 
 }
