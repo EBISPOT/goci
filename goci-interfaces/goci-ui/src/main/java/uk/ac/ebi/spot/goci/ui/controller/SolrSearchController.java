@@ -608,9 +608,11 @@ public class SolrSearchController {
                .concat(exp)
                .concat("%7D+OR+(pValueMantissa%3A%5B*%20TO%20")   //}+OR+(pvalue_mantissa:[* TO%
                .concat(mant)
-               .concat("+AND+pValueExponent%3A")
+               .concat("%5D+AND+pValueExponent%3A%5B")
                .concat(exp)
-               .concat(")");
+               .concat("%20TO%20")
+               .concat(exp)
+               .concat("%5D)");
 
         solrSearchBuilder.append("&fq=").append(filterString);
     }

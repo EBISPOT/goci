@@ -31,6 +31,8 @@ public class JsonProcessingService {
         JsonNode responseNode = node.get("response");
         JsonNode docs = responseNode.get("docs");
 
+        String newline = System.getProperty("line.separator");
+
         for(JsonNode doc : docs) {
             StringBuilder line = new StringBuilder();
 
@@ -58,9 +60,19 @@ public class JsonProcessingService {
             line.append(getTrait(doc));
             line.append("\t");
 
-            line.append(getInitSample(doc));
+            String init = getInitSample(doc);
+            if (init.contains(newline)) {
+                init = init.replaceAll("\n", "").replaceAll("\r", "");
+            }
+
+            line.append(init);
             line.append("\t");
-            line.append(getRepSample(doc));
+
+            String rep = getRepSample(doc);
+            if (rep.contains(newline)) {
+                rep = rep.replaceAll("\n", "").replaceAll("\r", "");
+            }
+            line.append(rep);
             line.append("\t");
 
             line.append(getRegion(doc));
@@ -87,11 +99,9 @@ public class JsonProcessingService {
             Map<String, String> geneDistances = getGeneDistances(doc);
 
             line.append(geneDistances.get("upstream"));
-//            line.append(""); // todo - remove this when above solr field is available
             line.append("\t");
 
             line.append(geneDistances.get("downstream"));
-//            line.append(""); // todo - remove this when above solr field is available
             line.append("\t");
 
             line.append(getStrongestAllele(doc));
@@ -101,8 +111,8 @@ public class JsonProcessingService {
             line.append(rsId);
             line.append("\t");
 
-            line.append(doc.get("merged").asText().trim());
-//            line.append(""); // todo - remove this when above solr field is available
+//            line.append(doc.get("merged").asText().trim());
+            line.append(""); // todo - remove this when above solr field is available
             line.append("\t");
 
             if(rsId.indexOf("rs") == 0 && rsId.indexOf("rs", 2) == -1) {
@@ -151,18 +161,20 @@ public class JsonProcessingService {
             line.append(getCI(doc));
             line.append("\t");
 
-            line.append(doc.get("platform").asText().trim());
-//            line.append(""); // todo - remove this when above solr field is available
+            String platform = doc.get("platform").asText().trim();
+            if (platform.contains(newline)) {
+                platform = platform.replaceAll("\n", "").replaceAll("\r", "");
+            }
+
+            line.append(platform);
             line.append("\t");
 
              line.append(getCNV(doc));
-//            line.append("N"); // todo - remove this when above solr field is available
             line.append("\r\n");
 
             result.append(line.toString());
 
         }
-        //        return "Hello world. Your search results are coming soon to a browser near you.";
         return result.toString();
     }
 
@@ -202,8 +214,10 @@ public class JsonProcessingService {
 
     private double getPvalue(JsonNode doc) {
         double pvalue;
-        if(doc.get("pValue") != null){
-            pvalue = doc.get("pValue").asDouble();
+        if(doc.get("pValueMantissa") != null && doc.get("pValueExponent") != null){
+            int mant = doc.get("pValueMantissa").asInt();
+            int  exp = doc.get("pValueExponent").asInt();
+            pvalue = mant * Math.pow(10, exp);
         }
         else{
            pvalue = -10;
