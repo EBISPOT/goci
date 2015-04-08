@@ -20,7 +20,7 @@ function approveSelectedAssociations(studyId) {
 
 function updateAssociations(studyId, associationIds) {
     // Pass details to method in controller which handles database changes
-    $.getJSON("/studies/" + studyId + "/associations/approve_checked",
+    $.getJSON("associations/approve_checked",
               {"associationIds[]": associationIds},
             //Response
               function(data) {
@@ -50,8 +50,10 @@ function deleteSelectedAssociations(studyId) {
 }
 
 function deleteAssociations(studyId, associationIds) {
+
     // Pass details to method in controller which handles database changes
-    $.getJSON("/studies/" + studyId + "/associations/delete_checked",
+    //$.getJSON("studies/" + studyId + "/associations/delete_checked",
+    $.getJSON("associations/delete_checked",
               {"associationIds[]": associationIds},
             //Response
               function(data) {
