@@ -102,6 +102,10 @@
                role="button"
                data-toggle="modal">Delete Checked SNPs</a>
 
+            <a th:href="@{/studies/{studyId}/associations/download(studyId=${study.Id})}"
+               class="btn btn-default pull-right"
+               role="button">Download SNPs to spreadsheet</a>
+
         </div>
     </div>
 </div>
@@ -292,6 +296,7 @@
                                                                                                              haplotype</a>
             <a th:href="@{/studies/{studyId}/associations/add_interaction(studyId=*{id})}"
                class="btn btn-primary">Add SNP:SNP interaction</a>
+
             <input type="button" class="btn btn-primary pull-right" value="Add SNPs from spreadsheet"
                    data-toggle="collapse"
                    data-target="#uploadSNPsForn"/>

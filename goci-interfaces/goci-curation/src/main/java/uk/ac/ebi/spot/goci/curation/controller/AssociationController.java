@@ -18,6 +18,7 @@ import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 import uk.ac.ebi.spot.goci.curation.service.AssociationBatchLoaderService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationCalculationService;
+import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Gene;
@@ -36,10 +37,14 @@ import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,6 +74,8 @@ public class AssociationController {
     // Services
     private AssociationBatchLoaderService associationBatchLoaderService;
     private AssociationCalculationService associationCalculationService;
+    private AssociationDownloadService associationDownloadService;
+
 
     @Autowired
     public AssociationController(AssociationRepository associationRepository,
@@ -80,7 +87,8 @@ public class AssociationController {
                                  LocusRepository locusRepository,
                                  AssociationReportRepository associationReportRepository,
                                  AssociationBatchLoaderService associationBatchLoaderService,
-                                 AssociationCalculationService associationCalculationService) {
+                                 AssociationCalculationService associationCalculationService,
+                                 AssociationDownloadService associationDownloadService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -91,6 +99,7 @@ public class AssociationController {
         this.associationReportRepository = associationReportRepository;
         this.associationBatchLoaderService = associationBatchLoaderService;
         this.associationCalculationService = associationCalculationService;
+        this.associationDownloadService = associationDownloadService;
     }
 
     /*  Study SNP/Associations */
@@ -649,6 +658,36 @@ public class AssociationController {
         }
         return "redirect:/studies/" + studyId + "/associations";
 
+    }
+
+
+    @RequestMapping(value = "/studies/{studyId}/associations/download",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.GET)
+    public String downloadStudySnps(HttpServletResponse response, Model model, @PathVariable Long studyId)
+            throws IOException {
+
+        Collection<Association> associations = new ArrayList<>();
+        associations.addAll(associationRepository.findByStudyId(studyId));
+        Study study = studyRepository.findOne((studyId));
+
+        if(associations.size() == 0){
+            model.addAttribute("study", study);
+            return "no_association_download_warning";
+        }
+        else{
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+            String now = dateFormat.format(date);
+
+            String fileName = study.getAuthor().concat("-").concat(study.getPubmedId()).concat("-").concat(now).concat(".tsv");
+            response.setContentType("text/tsv");
+            response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
+
+            associationDownloadService.createDownloadFile(response.getOutputStream(), associations);
+
+            return "redirect:/studies/" + studyId + "/associations";
+        }
     }
 
    /* General purpose methods */
