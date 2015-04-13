@@ -475,7 +475,7 @@ public class CatalogImportRepository {
                     caughtReadErrors = true;
 
                     if (importErrorMap.containsKey(studyId)) {
-                        importErrors = studyErrorMap.get(studyId);
+                        importErrors = importErrorMap.get(studyId);
                     }
                     importErrors.add(true);
                     importErrorMap.put(studyId, importErrors);
@@ -559,7 +559,7 @@ public class CatalogImportRepository {
                     getLog().error("Unable to write data at row " + row + ", from spreadsheet", e);
                     caughtWriteErrors = true;
                     if (importErrorMap.containsKey(studyId)) {
-                        importErrors = studyErrorMap.get(studyId);
+                        importErrors = importErrorMap.get(studyId);
                     }
                     importErrors.add(true);
                     importErrorMap.put(studyId, importErrors);
