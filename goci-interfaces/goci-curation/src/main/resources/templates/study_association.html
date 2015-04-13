@@ -25,7 +25,7 @@
     <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
 
     <!--Handles checkbox in table -->
-    <script src="../static/js/goci-study-association.js" th:src="@{../../../js/goci-study-association.js}"></script>
+    <script src="../static/js/goci-study-association.js" th:src="@{../../js/goci-study-association.js}"></script>
 
     <!--Bootstrap table: http://bootstrap-table.wenzhixin.net.cn/-->
     <!-- Latest compiled and minified CSS -->
@@ -101,6 +101,10 @@
                class="btn btn-default"
                role="button"
                data-toggle="modal">Delete Checked SNPs</a>
+
+            <a th:href="@{/studies/{studyId}/associations/download(studyId=${study.Id})}"
+               class="btn btn-default pull-right"
+               role="button">Download SNPs to spreadsheet</a>
 
         </div>
     </div>
@@ -292,6 +296,7 @@
                                                                                                              haplotype</a>
             <a th:href="@{/studies/{studyId}/associations/add_interaction(studyId=*{id})}"
                class="btn btn-primary">Add SNP:SNP interaction</a>
+
             <input type="button" class="btn btn-primary pull-right" value="Add SNPs from spreadsheet"
                    data-toggle="collapse"
                    data-target="#uploadSNPsForn"/>
