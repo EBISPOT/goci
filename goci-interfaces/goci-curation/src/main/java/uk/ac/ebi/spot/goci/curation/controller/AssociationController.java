@@ -352,7 +352,6 @@ public class AssociationController {
         // Establish study
         Long studyId = associationToView.getStudy().getId();
 
-
         // Figure out the number of risk alleles linked to a single association
         // From this we can decide which view to return
         List<RiskAllele> riskAlleles = new ArrayList<>();
@@ -598,8 +597,6 @@ public class AssociationController {
     }
 
     /*  Approve snp associations */
-
-
     // Approve a SNP association
     @RequestMapping(value = "associations/{associationId}/approve",
                     produces = MediaType.TEXT_HTML_VALUE,
@@ -671,16 +668,17 @@ public class AssociationController {
         associations.addAll(associationRepository.findByStudyId(studyId));
         Study study = studyRepository.findOne((studyId));
 
-        if(associations.size() == 0){
+        if (associations.size() == 0) {
             model.addAttribute("study", study);
             return "no_association_download_warning";
         }
-        else{
+        else {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date date = new Date();
             String now = dateFormat.format(date);
 
-            String fileName = study.getAuthor().concat("-").concat(study.getPubmedId()).concat("-").concat(now).concat(".tsv");
+            String fileName =
+                    study.getAuthor().concat("-").concat(study.getPubmedId()).concat("-").concat(now).concat(".tsv");
             response.setContentType("text/tsv");
             response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
 
@@ -824,7 +822,6 @@ public class AssociationController {
                 gene = genesInDatabase.get(0);
             }
 
-
             // If gene doesn't exist then create and save
             else {
                 // Create new gene
@@ -835,7 +832,6 @@ public class AssociationController {
                 gene = geneRepository.save(newGene);
             }
 
-
             // Add genes to collection
             locusGenes.add(gene);
         }
@@ -844,24 +840,12 @@ public class AssociationController {
 
     private RiskAllele createRiskAllele(String curatorEnteredRiskAllele) {
 
-        // Check if it exists, note database contains duplicates
-        List<RiskAllele> riskAlleles = riskAlleleRepository.findByRiskAlleleName(curatorEnteredRiskAllele);
-        RiskAllele riskAllele;
+        //Create new risk allele, at present we always create a new risk allele for each locus within an association
+        RiskAllele riskAllele = new RiskAllele();
+        riskAllele.setRiskAlleleName(curatorEnteredRiskAllele);
 
-        if (riskAlleles.size() > 0) {
-            riskAllele = riskAlleles.get(0);
-        }
-
-        // If it doesn't exist create and save
-        else {
-            //Create new risk allele
-            RiskAllele newRiskAllele = new RiskAllele();
-            newRiskAllele.setRiskAlleleName(curatorEnteredRiskAllele);
-
-            // Save risk allele
-            riskAllele = riskAlleleRepository.save(newRiskAllele);
-        }
-
+        // Save risk allele
+        riskAlleleRepository.save(riskAllele);
         return riskAllele;
     }
 
