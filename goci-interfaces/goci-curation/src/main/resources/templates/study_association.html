@@ -102,6 +102,12 @@
                role="button"
                data-toggle="modal">Delete Checked SNPs</a>
 
+
+            <a th:href="@{/studies/{studyId}/associations/applyefotraits(studyId=${study.Id})}"
+               class="btn btn-default"
+               role="button">Apply EFO trait(s) to all SNPs</a>
+
+
             <a th:href="@{/studies/{studyId}/associations/download(studyId=${study.Id})}"
                class="btn btn-default pull-right"
                role="button">Download SNPs to spreadsheet</a>

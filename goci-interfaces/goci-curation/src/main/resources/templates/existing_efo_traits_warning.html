@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+
+<div class="container">
+
+
+    <div class="alert alert-danger col-md-offset-1 col-md-7">
+        <strong>Warning!</strong> One or more of the associations have already been annotated with EFO terms. By default, these will be over-written by the study-level traits.
+                                 How would you like to proceed?
+    </div>
+
+</div>
+
+<div class="container" th:object="${study}">
+    <div class="row">
+        <div class="col-md-12 col-md-offset-1">
+            <div><a th:href="@{/studies/{studyId}/associations/applyefotraits(studyId=*{id}, e=true, o=true)}" class="btn btn-primary">Over-write existing traits with study-level traits</a>
+                <a th:href="@{/studies/{studyId}/associations/applyefotraits(studyId=*{id}, e=true, o=false)}" class="btn btn-primary">Add study-level traits to the existing traits</a>
+                <a th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

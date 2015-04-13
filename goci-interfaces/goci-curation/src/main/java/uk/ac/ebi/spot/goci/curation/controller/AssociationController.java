@@ -690,6 +690,57 @@ public class AssociationController {
         }
     }
 
+
+    @RequestMapping(value = "/studies/{studyId}/associations/applyefotraits",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.GET)
+    public String applyStudyEFOtraitToSnps(Model model, @PathVariable Long studyId,
+                                           @RequestParam(value = "e", required = false, defaultValue = "false") boolean existing,
+                                           @RequestParam(value = "o", required = false, defaultValue = "true") boolean overwrite)
+            throws IOException {
+
+        Collection<Association> associations = new ArrayList<>();
+        associations.addAll(associationRepository.findByStudyId(studyId));
+        Study study = studyRepository.findOne((studyId));
+        Collection<EfoTrait> efoTraits = study.getEfoTraits();
+
+
+        if(associations.size() == 0 || efoTraits.size() == 0){
+            model.addAttribute("study", study);
+            return "no_association_efo_trait_warning";
+        }
+        else{
+            if(!existing) {
+                for (Association association : associations) {
+                    if (association.getEfoTraits().size() != 0) {
+                        model.addAttribute("study", study);
+                        return "existing_efo_traits_warning";
+                    }
+                }
+            }
+            Collection<EfoTrait> associationTraits = new ArrayList<EfoTrait>();
+
+            for(EfoTrait efoTrait : efoTraits){
+                associationTraits.add(efoTrait);
+            }
+
+            for(Association association : associations){
+                if(association.getEfoTraits().size() != 0 && !overwrite){
+                   for(EfoTrait trait : associationTraits){
+                       association.addEfoTrait(trait);
+                   }
+                }
+                else {
+                    association.setEfoTraits(associationTraits);
+                }
+                associationRepository.save(association);
+            }
+
+            return "redirect:/studies/" + studyId + "/associations";
+        }
+    }
+
+
    /* General purpose methods */
 
     // Takes information in addSNPForm and creates association
