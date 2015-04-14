@@ -139,7 +139,7 @@ public class SingleSnpMultiSnpAssociationService {
             // Create a new risk allele and assign newly created snp
             RiskAllele riskAllele = lociAttributesService.createRiskAllele(curatorEnteredRiskAllele, snp);
 
-            // Check for a proxy and if we have one create a snp
+            // Check for a proxy and if we have one create a proxy snp
             if (row.getProxySnp() != null && !row.getProxySnp().isEmpty()) {
                 String curatorEnteredProxySnp = row.getProxySnp();
                 SingleNucleotidePolymorphism proxySnp = lociAttributesService.createSnp(curatorEnteredProxySnp);
@@ -247,6 +247,8 @@ public class SingleSnpMultiSnpAssociationService {
             if (riskAllele.getProxySnp() != null) {
                 snpFormRow.setProxySnp(riskAllele.getProxySnp().getRsId());
             }
+            else { snpFormRow.setProxySnp(null);}
+
             snpRegions.addAll(riskAllele.getSnp().getRegions());
             snpFormRows.add(snpFormRow);
         }
