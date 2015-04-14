@@ -19,6 +19,7 @@ import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 import uk.ac.ebi.spot.goci.curation.service.AssociationBatchLoaderService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationCalculationService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
+import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
@@ -47,7 +48,9 @@ import java.util.Map;
 /**
  * Created by emma on 06/01/15.
  *
- * @author emma Association controller, interpret user input and transform it into a snp/association model that is
+ * @author emma
+ *         <p>
+ *         Association controller, interpret user input and transform it into a snp/association model that is
  *         represented to the user by the associated HTML page. Used to view, add and edit existing snp/assocaition
  *         information.
  */
@@ -61,11 +64,13 @@ public class AssociationController {
     private EfoTraitRepository efoTraitRepository;
     private LocusRepository locusRepository;
 
+
     // Services
     private AssociationBatchLoaderService associationBatchLoaderService;
     private AssociationCalculationService associationCalculationService;
     private AssociationDownloadService associationDownloadService;
     private SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService;
+    private LociAttributesService lociAttributesService;
 
     @Autowired
     public AssociationController(AssociationRepository associationRepository,
@@ -75,7 +80,8 @@ public class AssociationController {
                                  AssociationBatchLoaderService associationBatchLoaderService,
                                  AssociationCalculationService associationCalculationService,
                                  AssociationDownloadService associationDownloadService,
-                                 SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService) {
+                                 SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService,
+                                 LociAttributesService lociAttributesService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -84,6 +90,7 @@ public class AssociationController {
         this.associationCalculationService = associationCalculationService;
         this.associationDownloadService = associationDownloadService;
         this.singleSnpMultiSnpAssociationService = singleSnpMultiSnpAssociationService;
+        this.lociAttributesService = lociAttributesService;
     }
 
     /*  Study SNP/Associations */
@@ -94,16 +101,20 @@ public class AssociationController {
                     method = RequestMethod.GET)
     public String viewStudySnps(Model model, @PathVariable Long studyId) {
 
+        // Get all associations for a study
         Collection<Association> associations = new ArrayList<>();
         associations.addAll(associationRepository.findByStudyId(studyId));
 
         // For our associations create a form object and return
         Collection<SnpAssociationForm> snpAssociationForms = new ArrayList<SnpAssociationForm>();
         for (Association association : associations) {
-            // TODO WOULD NEED SOME SORT OF CHECK FOR SNP:SNP INTERACTION
-            SnpAssociationForm snpAssociationForm = singleSnpMultiSnpAssociationService.createSnpAssociationForm(
-                    association);
-            snpAssociationForms.add(snpAssociationForm);
+
+            // If its not a snp interaction study
+            if (association.getSnpInteraction() == false) {
+                SnpAssociationForm snpAssociationForm = singleSnpMultiSnpAssociationService.createSnpAssociationForm(
+                        association);
+                snpAssociationForms.add(snpAssociationForm);
+            }
         }
         model.addAttribute("snpAssociationForms", snpAssociationForms);
 
@@ -344,7 +355,6 @@ public class AssociationController {
             for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
                 riskAlleles.add(riskAllele);
             }
-
         }
 
         // Create form and return to user
@@ -466,7 +476,7 @@ public class AssociationController {
     }
 
 
-    // Delete an association
+    // View an association to delele
     @RequestMapping(value = "associations/{associationId}/delete",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
@@ -501,9 +511,13 @@ public class AssociationController {
         // Get all loci for association
         Collection<Locus> loci = associationToDelete.getLoci();
 
-        // Delete each locus, which in turn deletes link to genes via author_reported_gene table,
-        // Snp and risk allele are not deleted as they may be used in other associations
+        // Delete each locus and risk allele, which in turn deletes link to genes via author_reported_gene table,
+        // Snps are not deleted as they may be used in other associations
         for (Locus locus : loci) {
+            Collection<RiskAllele> locusRiskAlleles = locus.getStrongestRiskAlleles();
+            for (RiskAllele riskAllele:locusRiskAlleles){
+                lociAttributesService.deleteRiskAllele(riskAllele);
+            }
             locusRepository.delete(locus);
         }
         // Delete association
@@ -531,9 +545,13 @@ public class AssociationController {
             loci.addAll(association.getLoci());
         }
 
-        // Delete each locus, which in turn deletes link to genes via author_reported_gene table,
-        // Snp and risk allele are not deleted as they may be used in other associations
+        // Delete each locus and risk allele, which in turn deletes link to genes via author_reported_gene table,
+        // Snps are not deleted as they may be used in other associations
         for (Locus locus : loci) {
+            Collection<RiskAllele> locusRiskAlleles = locus.getStrongestRiskAlleles();
+            for (RiskAllele riskAllele:locusRiskAlleles){
+                lociAttributesService.deleteRiskAllele(riskAllele);
+            }
             locusRepository.delete(locus);
         }
         // Delete associations
@@ -565,11 +583,16 @@ public class AssociationController {
             count++;
         }
 
-        // Delete each locus, which in turn deletes link to genes via author_reported_gene table,
-        // Snp and risk allele are not deleted as they may be used in other associations
+        // Delete each locus and risk allele, which in turn deletes link to genes via author_reported_gene table,
+        // Snps are not deleted as they may be used in other associations
         for (Locus locus : loci) {
+            Collection<RiskAllele> locusRiskAlleles = locus.getStrongestRiskAlleles();
+            for (RiskAllele riskAllele:locusRiskAlleles){
+                lociAttributesService.deleteRiskAllele(riskAllele);
+            }
             locusRepository.delete(locus);
         }
+
         // Delete associations
         for (Association association : studyAssociations) {
             associationRepository.delete(association);
