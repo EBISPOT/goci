@@ -13,12 +13,15 @@ public class SnpFormRow {
 
     private String strongestRiskAllele;
 
+    private String proxySnp;
+
     public SnpFormRow() {
     }
 
-    public SnpFormRow(String strongestRiskAllele, String snp) {
-        this.strongestRiskAllele = strongestRiskAllele;
+    public SnpFormRow(String snp, String strongestRiskAllele, String proxySnp) {
         this.snp = snp;
+        this.strongestRiskAllele = strongestRiskAllele;
+        this.proxySnp = proxySnp;
     }
 
     public String getSnp() {
@@ -35,5 +38,13 @@ public class SnpFormRow {
 
     public void setStrongestRiskAllele(String strongestRiskAllele) {
         this.strongestRiskAllele = strongestRiskAllele;
+    }
+
+    public String getProxySnp() {
+        return proxySnp;
+    }
+
+    public void setProxySnp(String proxySnp) {
+        this.proxySnp = proxySnp;
     }
 }
