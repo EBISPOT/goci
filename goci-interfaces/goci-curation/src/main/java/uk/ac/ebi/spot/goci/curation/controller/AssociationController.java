@@ -512,6 +512,7 @@ public class AssociationController {
         // Snps are not deleted as they may be used in other associations
         for (Locus locus : loci) {
             Collection<RiskAllele> locusRiskAlleles = locus.getStrongestRiskAlleles();
+            locus.setStrongestRiskAlleles(new ArrayList<>());
             for (RiskAllele riskAllele:locusRiskAlleles){
                 lociAttributesService.deleteRiskAllele(riskAllele);
             }
@@ -546,6 +547,7 @@ public class AssociationController {
         // Snps are not deleted as they may be used in other associations
         for (Locus locus : loci) {
             Collection<RiskAllele> locusRiskAlleles = locus.getStrongestRiskAlleles();
+            locus.setStrongestRiskAlleles(new ArrayList<>());
             for (RiskAllele riskAllele:locusRiskAlleles){
                 lociAttributesService.deleteRiskAllele(riskAllele);
             }
@@ -584,6 +586,7 @@ public class AssociationController {
         // Snps are not deleted as they may be used in other associations
         for (Locus locus : loci) {
             Collection<RiskAllele> locusRiskAlleles = locus.getStrongestRiskAlleles();
+            locus.setStrongestRiskAlleles(new ArrayList<>());
             for (RiskAllele riskAllele:locusRiskAlleles){
                 lociAttributesService.deleteRiskAllele(riskAllele);
             }
