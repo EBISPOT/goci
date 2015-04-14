@@ -474,8 +474,6 @@ public class AssociationSheetProcessor {
                 fullUri = "http://purl.obolibrary.org/obo/".concat(uri);
             }
 
-            System.out.println(fullUri);
-
             Collection<EfoTrait> traits = efoTraitRepository.findByUri(fullUri);
 
             System.out.println("Number of EFO trait objects retrieved " + traits.size());
