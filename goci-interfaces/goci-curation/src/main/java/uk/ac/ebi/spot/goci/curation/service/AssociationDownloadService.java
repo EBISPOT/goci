@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.curation.service;
 
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
 import java.io.ByteArrayInputStream;
@@ -46,7 +47,7 @@ public class AssociationDownloadService {
     private String processAssociations(Collection<Association> associations) {
 
         String header =
-                "Gene\tStrongest SNP-Risk Allele\tSNP\tRisk Allele Frequency in Controls\tP-value mantissa\tP-value exponent\tP-value (Text)\tOR per copy or beta (Num)\tOR entered (reciprocal)\tOR-type? (Y/N)\tMulti-SNP Haplotype?\tConfidence Interval\tBeta unit and direction\tStandard Error\tSNP type (novel/known)\r\n";
+                "Gene\tStrongest SNP-Risk Allele\tSNP\tRisk Allele Frequency in Controls\tP-value mantissa\tP-value exponent\tP-value (Text)\tOR per copy or beta (Num)\tOR entered (reciprocal)\tOR-type? (Y/N)\tMulti-SNP Haplotype?\tConfidence Interval\tBeta unit and direction\tStandard Error\tSNP type (novel/known)\tEFO traits\r\n";
 
         StringBuilder output = new StringBuilder();
         output.append(header);
@@ -119,6 +120,16 @@ public class AssociationDownloadService {
                 line.append(association.getOrPerCopyRange());
             }
             line.append("\t");
+
+            if(association.getOrPerCopyUnitDescr() == null){
+                line.append("");
+            }
+            else {
+                line.append(association.getOrPerCopyUnitDescr());
+            }
+
+            line.append("\t");
+
             if(association.getOrPerCopyStdError() == null){
                 line.append("");
             }
@@ -128,12 +139,33 @@ public class AssociationDownloadService {
 
             line.append("\t");
             line.append(association.getSnpType());
+            line.append("\t");
+
+            if(association.getEfoTraits() == null){
+                line.append("");
+            }
+            else {
+                extractEfoTraits(association.getEfoTraits(), line);
+            }
             line.append("\r\n");
 
             output.append(line.toString());
         }
 
         return output.toString();
+    }
+
+    private void extractEfoTraits(Collection<EfoTrait> efoTraits, StringBuilder line) {
+        StringBuilder traits = new StringBuilder();
+        for(EfoTrait efoTrait : efoTraits){
+            String uri = efoTrait.getUri();
+            String[] elements = uri.split("/");
+
+            String id = elements[elements.length-1];
+            setOrAppend(traits, id.trim(), ",");
+        }
+
+        line.append(traits.toString());
     }
 
     private void extractGeneticData(Association association, StringBuilder line) {

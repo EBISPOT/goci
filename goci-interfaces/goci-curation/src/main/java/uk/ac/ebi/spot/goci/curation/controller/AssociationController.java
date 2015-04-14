@@ -166,7 +166,7 @@ public class AssociationController {
             // Send file, including path, to SNP batch loader process
             Collection<SnpAssociationForm> snpAssociationForms = new ArrayList<>();
             try {
-                snpAssociationForms = associationBatchLoaderService.processData(uploadedFilePath);
+                snpAssociationForms = associationBatchLoaderService.processData(uploadedFilePath, efoTraitRepository);
             }
             catch (Exception e) {
                 e.printStackTrace();
