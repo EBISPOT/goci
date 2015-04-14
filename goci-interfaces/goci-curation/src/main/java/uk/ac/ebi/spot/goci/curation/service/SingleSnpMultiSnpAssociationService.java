@@ -207,6 +207,7 @@ public class SingleSnpMultiSnpAssociationService {
                     "More than one locus found for association " + association.getId() + ", this is not supported yet"
             );
         }
+
         // Get name of gene and add to form
         Collection<String> authorReportedGenes = new ArrayList<>();
         for (Gene locusGene : locusGenes) {

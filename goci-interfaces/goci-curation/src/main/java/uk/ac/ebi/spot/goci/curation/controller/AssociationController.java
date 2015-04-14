@@ -64,7 +64,6 @@ public class AssociationController {
     private EfoTraitRepository efoTraitRepository;
     private LocusRepository locusRepository;
 
-
     // Services
     private AssociationBatchLoaderService associationBatchLoaderService;
     private AssociationCalculationService associationCalculationService;
@@ -109,12 +108,10 @@ public class AssociationController {
         Collection<SnpAssociationForm> snpAssociationForms = new ArrayList<SnpAssociationForm>();
         for (Association association : associations) {
 
-            // If its not a snp interaction study
-            if (association.getSnpInteraction() == false) {
-                SnpAssociationForm snpAssociationForm = singleSnpMultiSnpAssociationService.createSnpAssociationForm(
-                        association);
-                snpAssociationForms.add(snpAssociationForm);
-            }
+            // TODO WOULD NEED SOME SORT OF CHECK FOR SNP:SNP INTERACTION
+            SnpAssociationForm snpAssociationForm = singleSnpMultiSnpAssociationService.createSnpAssociationForm(
+                    association);
+            snpAssociationForms.add(snpAssociationForm);
         }
         model.addAttribute("snpAssociationForms", snpAssociationForms);
 
