@@ -113,6 +113,16 @@ public class SingleSnpMultiSnpAssociationService {
         // Set locus genes
         locus.setAuthorReportedGenes(locusGenes);
 
+        // Delete any existing risk alleles as we will re-create in next for loop
+        // This should only occur if we are editing an existing study
+        Collection<RiskAllele> existingRiskAlleles = locus.getStrongestRiskAlleles();
+        if (!existingRiskAlleles.isEmpty()){
+            locus.setStrongestRiskAlleles(new ArrayList<>());
+            for (RiskAllele riskAllele:existingRiskAlleles){
+                lociAttributesService.deleteRiskAllele(riskAllele);
+            }
+        }
+
         // Handle rows entered for haplotype by curator
         Collection<SnpFormRow> rows = snpAssociationForm.getSnpFormRows();
         Collection<RiskAllele> locusRiskAlleles = new ArrayList<>();
