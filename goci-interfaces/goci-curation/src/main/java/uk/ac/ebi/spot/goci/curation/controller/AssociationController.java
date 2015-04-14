@@ -513,7 +513,7 @@ public class AssociationController {
         for (Locus locus : loci) {
             Collection<RiskAllele> locusRiskAlleles = locus.getStrongestRiskAlleles();
             locus.setStrongestRiskAlleles(new ArrayList<>());
-            for (RiskAllele riskAllele:locusRiskAlleles){
+            for (RiskAllele riskAllele : locusRiskAlleles) {
                 lociAttributesService.deleteRiskAllele(riskAllele);
             }
             locusRepository.delete(locus);
@@ -548,7 +548,7 @@ public class AssociationController {
         for (Locus locus : loci) {
             Collection<RiskAllele> locusRiskAlleles = locus.getStrongestRiskAlleles();
             locus.setStrongestRiskAlleles(new ArrayList<>());
-            for (RiskAllele riskAllele:locusRiskAlleles){
+            for (RiskAllele riskAllele : locusRiskAlleles) {
                 lociAttributesService.deleteRiskAllele(riskAllele);
             }
             locusRepository.delete(locus);
@@ -587,7 +587,7 @@ public class AssociationController {
         for (Locus locus : loci) {
             Collection<RiskAllele> locusRiskAlleles = locus.getStrongestRiskAlleles();
             locus.setStrongestRiskAlleles(new ArrayList<>());
-            for (RiskAllele riskAllele:locusRiskAlleles){
+            for (RiskAllele riskAllele : locusRiskAlleles) {
                 lociAttributesService.deleteRiskAllele(riskAllele);
             }
             locusRepository.delete(locus);
