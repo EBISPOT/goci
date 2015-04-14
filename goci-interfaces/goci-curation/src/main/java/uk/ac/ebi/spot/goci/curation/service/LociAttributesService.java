@@ -78,6 +78,10 @@ public class LociAttributesService {
         return riskAllele;
     }
 
+    public void deleteRiskAllele(RiskAllele riskAllele) {
+        riskAlleleRepository.delete(riskAllele);
+    }
+
     public SingleNucleotidePolymorphism createSnp(String curatorEnteredSNP) {
 
         // Check if SNP already exists database, note database contains duplicates
