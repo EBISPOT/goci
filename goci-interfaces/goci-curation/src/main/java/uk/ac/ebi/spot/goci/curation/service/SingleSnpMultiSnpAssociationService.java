@@ -72,18 +72,6 @@ public class SingleSnpMultiSnpAssociationService {
         association.setPvalueMantissa(snpAssociationForm.getPvalueMantissa());
         association.setPvalueExponent(snpAssociationForm.getPvalueExponent());
 
-        // Calculate p-value float
-        Integer pvalueMantissa = snpAssociationForm.getPvalueMantissa();
-        Integer pvalueExponent = snpAssociationForm.getPvalueExponent();
-
-        if (pvalueMantissa != null && pvalueExponent != null) {
-            association.setPvalueFloat(associationCalculationService.calculatePvalueFloat(pvalueMantissa,
-                                                                                          pvalueExponent));
-        }
-        else {
-            association.setPvalueFloat(Float.valueOf(0));
-        }
-
         // Add loci to association or if we are editing an existing one find it
         // For multi-snp and standard snps we assume their is only one locus
         Collection<Locus> loci = new ArrayList<>();
@@ -93,9 +81,19 @@ public class SingleSnpMultiSnpAssociationService {
         if (snpAssociationForm.getAssociationId() != null) {
             Association associationUserIsEditing = associationRepository.findOne(snpAssociationForm.getAssociationId());
             Collection<Locus> associationLoci = associationUserIsEditing.getLoci();
+
             // Based on assumption we have only one locus for standard and multi-snp haplotype
-            for (Locus associationLocus : associationLoci) {
-                locus = associationLocus;
+            if (associationLoci.size() == 1) {
+                for (Locus associationLocus : associationLoci) {
+                    locus = associationLocus;
+                }
+            }
+
+            else {
+                throw new RuntimeException(
+                        "More than one locus found for association " + association.getId() +
+                                ", this is not supported yet"
+                );
             }
         }
 
@@ -139,7 +137,7 @@ public class SingleSnpMultiSnpAssociationService {
         // Save our newly created locus
         locusRepository.save(locus);
 
-        // Add locus to collection and link to our repository
+        // Add locus to collection and link to our association
         loci.add(locus);
         association.setLoci(loci);
 
@@ -171,27 +169,44 @@ public class SingleSnpMultiSnpAssociationService {
         snpAssociationForm.setOrPerCopyStdError(association.getOrPerCopyStdError());
         snpAssociationForm.setOrPerCopyRange(association.getOrPerCopyRange());
         snpAssociationForm.setOrPerCopyUnitDescr(association.getOrPerCopyUnitDescr());
-        snpAssociationForm.setPvalueFloat(association.getPvalueFloat());
+
+        // Calculate p-value float, this will appear in table for curators
+        Integer pvalueMantissa = snpAssociationForm.getPvalueMantissa();
+        Integer pvalueExponent = snpAssociationForm.getPvalueExponent();
+
+        if (pvalueMantissa != null && pvalueExponent != null) {
+            snpAssociationForm.setPvalueFloat(associationCalculationService.calculatePvalueFloat(pvalueMantissa,
+                                                                                                 pvalueExponent));
+        }
+        else {
+            snpAssociationForm.setPvalueFloat(Float.valueOf(0));
+        }
 
         // Add collection of Efo traits
         snpAssociationForm.setEfoTraits(association.getEfoTraits());
 
         // For each locus get genes and risk alleles
-        // For multi-snp and standard snps we assume their is only one locus
         Collection<Locus> loci = association.getLoci();
-
         Collection<Gene> locusGenes = new ArrayList<>();
         Collection<RiskAllele> locusRiskAlleles = new ArrayList<RiskAllele>();
 
-        for (Locus locus : loci) {
-            locusGenes.addAll(locus.getAuthorReportedGenes());
-            locusRiskAlleles.addAll(locus.getStrongestRiskAlleles());
+        // For multi-snp and standard snps we assume their is only one locus
+        if (loci.size() == 1) {
+            for (Locus locus : loci) {
+                locusGenes.addAll(locus.getAuthorReportedGenes());
+                locusRiskAlleles.addAll(locus.getStrongestRiskAlleles());
 
-            // There should only be one locus thus should be safe to set these here
-            snpAssociationForm.setMultiSnpHaplotypeNum(locus.getHaplotypeSnpCount());
-            snpAssociationForm.setMultiSnpHaplotypeDescr(locus.getDescription());
+                // There should only be one locus thus should be safe to set these here
+                snpAssociationForm.setMultiSnpHaplotypeNum(locus.getHaplotypeSnpCount());
+                snpAssociationForm.setMultiSnpHaplotypeDescr(locus.getDescription());
+            }
         }
 
+        else {
+            throw new RuntimeException(
+                    "More than one locus found for association " + association.getId() + ", this is not supported yet"
+            );
+        }
         // Get name of gene and add to form
         Collection<String> authorReportedGenes = new ArrayList<>();
         for (Gene locusGene : locusGenes) {
