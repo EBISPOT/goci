@@ -94,6 +94,7 @@
                                 <tr>
                                     <th>SNP</th>
                                     <th>Strongest SNP-Risk Allele</th>
+                                    <th>Proxy SNP</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -104,6 +105,10 @@
                                     <td>
                                         <input type="text"
                                                th:field="*{snpFormRows[__${rowStat.index}__].strongestRiskAllele}"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               th:field="*{snpFormRows[__${rowStat.index}__].proxySnp}"/>
                                     </td>
                                 </tr>
                                 </tbody>

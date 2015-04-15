@@ -105,6 +105,7 @@
                 <th></th>
                 <th>SNP</th>
                 <th>Strongest SNP-Risk Allele</th>
+                <th>Proxy SNP</th>
                 <th>
                     <button type="submit" name="addRow">Add row</button>
                 </th>
@@ -119,6 +120,10 @@
                 <td>
                     <input type="text"
                            th:field="*{snpFormRows[__${rowStat.index}__].strongestRiskAllele}"/>
+                </td>
+                <td>
+                    <input type="text"
+                           th:field="*{snpFormRows[__${rowStat.index}__].proxySnp}"/>
                 </td>
                 <td>
                     <button type="submit" name="removeRow"
