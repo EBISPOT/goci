@@ -304,7 +304,7 @@ public class AssociationSheetProcessor {
                 // Get SNP type (novel / known)
                 String snpType;
                 if (row.getCell(14, row.RETURN_BLANK_AS_NULL) != null) {
-                    snpType = row.getCell(14).getRichStringCellValue().getString();
+                    snpType = row.getCell(14).getRichStringCellValue().getString().toLowerCase();
                     logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
                 }
                 else {
