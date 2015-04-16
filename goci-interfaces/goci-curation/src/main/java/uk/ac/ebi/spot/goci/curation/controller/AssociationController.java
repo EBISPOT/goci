@@ -735,7 +735,9 @@ public class AssociationController {
             for(Association association : associations){
                 if(association.getEfoTraits().size() != 0 && !overwrite){
                    for(EfoTrait trait : associationTraits){
-                       association.addEfoTrait(trait);
+                       if(!association.getEfoTraits().contains(trait)) {
+                           association.addEfoTrait(trait);
+                       }
                    }
                 }
                 else {
