@@ -16,8 +16,9 @@ import java.util.Set;
  *
  * @author emma
  *         <p>
- *         Written to ensure risk alleles are not shared between locus. For each association a new locus will be created
- *         and for each locus new risk alleles are created, they are never reused.
+ *         Written to ensure risk alleles are not shared between loci. For each association a new locus will be created
+ *         and for each locus new risk alleles are created, they are never reused. This allows addition of proxies to
+ *         unique risk alleles.
  */
 public class V1_9_9_037__Risk_alllele_locus_links implements SpringJdbcMigration {
 
@@ -47,9 +48,9 @@ public class V1_9_9_037__Risk_alllele_locus_links implements SpringJdbcMigration
     public void migrate(JdbcTemplate jdbcTemplate) throws Exception {
 
         // Maps to store relevant information
-        final Map<Long, String> riskAlleleIdIdToRiskAlleleName = new HashMap<>();
-        final Map<Long, Long> riskAlleleIdIdToSnpId = new HashMap<>();
-        final Map<Long, Set<Long>> riskAlleleIdIdToLociIds = new HashMap<>();
+        final Map<Long, String> riskAlleleIdToRiskAlleleName = new HashMap<>();
+        final Map<Long, Long> riskAlleleIdToSnpId = new HashMap<>();
+        final Map<Long, Set<Long>> riskAlleleIdToLociIds = new HashMap<>();
 
         jdbcTemplate.query(SELECT_DATA_FOR_UPDATE, (RowMapper<Object>) (resultSet, i) -> {
             String riskAlleleName = resultSet.getString(0);
@@ -57,19 +58,19 @@ public class V1_9_9_037__Risk_alllele_locus_links implements SpringJdbcMigration
             long locusId = resultSet.getLong(2);
             long snpId = resultSet.getLong(3);
 
-            riskAlleleIdIdToRiskAlleleName.put(riskAlleleId, riskAlleleName);
-            riskAlleleIdIdToSnpId.put(riskAlleleId, snpId);
+            riskAlleleIdToRiskAlleleName.put(riskAlleleId, riskAlleleName);
+            riskAlleleIdToSnpId.put(riskAlleleId, snpId);
 
             // Create map of risk allele to linked loci
-            if (riskAlleleIdIdToLociIds.containsKey(riskAlleleId)) {
-                riskAlleleIdIdToLociIds.get(riskAlleleId).add(locusId);
+            if (riskAlleleIdToLociIds.containsKey(riskAlleleId)) {
+                riskAlleleIdToLociIds.get(riskAlleleId).add(locusId);
             }
 
             // First time we see a risk allele don't store the locus ID
             // as this locus will keep the old risk allele id linked
             // to it
             else {
-                riskAlleleIdIdToLociIds.put(riskAlleleId, new HashSet<>());
+                riskAlleleIdToLociIds.put(riskAlleleId, new HashSet<>());
             }
             return null;
 
@@ -88,14 +89,14 @@ public class V1_9_9_037__Risk_alllele_locus_links implements SpringJdbcMigration
                         .usingColumns("RISK_ALLELE_ID", "SNP_ID");
 
         // For each locus create a new risk allele with same name and link to same snp as old id
-        for (long oldRiskAlleleId : riskAlleleIdIdToLociIds.keySet()) {
-            Set<Long> lociIds = riskAlleleIdIdToLociIds.get(oldRiskAlleleId);
+        for (long oldRiskAlleleId : riskAlleleIdToLociIds.keySet()) {
+            Set<Long> lociIds = riskAlleleIdToLociIds.get(oldRiskAlleleId);
 
             // For each locus
             for (long locusId : lociIds) {
 
                 // Get the risk allele name using the old ID
-                String riskAlleleName = riskAlleleIdIdToRiskAlleleName.get(oldRiskAlleleId);
+                String riskAlleleName = riskAlleleIdToRiskAlleleName.get(oldRiskAlleleId);
 
                 //Create new allele
                 Map<String, Object> riskAlleleArgs = new HashMap<>();
@@ -109,7 +110,7 @@ public class V1_9_9_037__Risk_alllele_locus_links implements SpringJdbcMigration
                                     oldRiskAlleleId);
 
                 // Insert new risk allele details into RISK_ALLELE_SNP
-                long snpId = riskAlleleIdIdToSnpId.get(oldRiskAlleleId);
+                long snpId = riskAlleleIdToSnpId.get(oldRiskAlleleId);
                 try {
                     Map<String, Object> riskAlleleSnpArgs = new HashMap<>();
                     riskAlleleSnpArgs.put("RISK_ALLELE_ID", riskAlleleID.longValue());
