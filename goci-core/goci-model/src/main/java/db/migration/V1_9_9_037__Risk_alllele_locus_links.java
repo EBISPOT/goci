@@ -29,7 +29,7 @@ public class V1_9_9_037__Risk_alllele_locus_links implements SpringJdbcMigration
             "ra.risk_allele_name as RISK_ALLELE_NAME FROM RISK_ALLELE ra\n" +
             "JOIN LOCUS_RISK_ALLELE lra ON lra.RISK_ALLELE_ID = ra.ID\n" +
             "JOIN LOCUS l ON l.ID = lra.LOCUS_ID\n" +
-            "join  RISK_ALLELE_SNP ras on ras.RISK_ALLELE_ID=ra.id\n" +
+            "JOIN RISK_ALLELE_SNP ras on ras.RISK_ALLELE_ID=ra.id\n" +
             "JOIN SINGLE_NUCLEOTIDE_POLYMORPHISM snp on snp.id = ras.SNP_ID )r\n" +
             "JOIN (\n" +
             "SELECT RISK_ALLELE, COUNT(LOCUS) AS LOCUS_COUNT FROM (\n" +
@@ -53,10 +53,10 @@ public class V1_9_9_037__Risk_alllele_locus_links implements SpringJdbcMigration
         final Map<Long, Set<Long>> riskAlleleIdToLociIds = new HashMap<>();
 
         jdbcTemplate.query(SELECT_DATA_FOR_UPDATE, (RowMapper<Object>) (resultSet, i) -> {
-            String riskAlleleName = resultSet.getString(0);
-            long riskAlleleId = resultSet.getLong(1);
-            long locusId = resultSet.getLong(2);
-            long snpId = resultSet.getLong(3);
+            String riskAlleleName = resultSet.getString(1);
+            long riskAlleleId = resultSet.getLong(2);
+            long locusId = resultSet.getLong(3);
+            long snpId = resultSet.getLong(4);
 
             riskAlleleIdToRiskAlleleName.put(riskAlleleId, riskAlleleName);
             riskAlleleIdToSnpId.put(riskAlleleId, snpId);
@@ -88,7 +88,7 @@ public class V1_9_9_037__Risk_alllele_locus_links implements SpringJdbcMigration
                         .withTableName("RISK_ALLELE_SNP")
                         .usingColumns("RISK_ALLELE_ID", "SNP_ID");
 
-        // For each locus create a new risk allele with same name and link to same snp as old id
+        // For each locus create a new risk allele with same name and snp as old ID
         for (long oldRiskAlleleId : riskAlleleIdToLociIds.keySet()) {
             Set<Long> lociIds = riskAlleleIdToLociIds.get(oldRiskAlleleId);
 
@@ -98,14 +98,14 @@ public class V1_9_9_037__Risk_alllele_locus_links implements SpringJdbcMigration
                 // Get the risk allele name using the old ID
                 String riskAlleleName = riskAlleleIdToRiskAlleleName.get(oldRiskAlleleId);
 
-                //Create new allele
+                //Create new risk allele
                 Map<String, Object> riskAlleleArgs = new HashMap<>();
                 riskAlleleArgs.put("RISK_ALLELE_NAME", riskAlleleName);
                 Number riskAlleleID = insertRiskAllele.executeAndReturnKey(riskAlleleArgs);
 
                 // Update LOCUS_RISK_ALLELE table
                 jdbcTemplate.update(UPDATE_LOCUS_RISK_ALLELE,
-                                    riskAlleleID,
+                                    riskAlleleID.longValue(),
                                     locusId,
                                     oldRiskAlleleId);
 
