@@ -174,7 +174,8 @@
                     <th class="col-md-1" data-sortable="true">Strongest Allele</th>
                     <th class="col-md-1" data-sortable="true">SNP</th>
                     <th data-sortable="true">Risk Frequency</th>
-                    <th data-sortable="true">p-Value Float</th>
+                    <th data-sortable="true">p-Value Exponent</th>
+                    <th data-sortable="true">p-Value Mantissa</th>
                     <th data-sortable="true">p-Value Text</th>
                     <th class="col-md-1" data-sortable="true">EFO trait</th>
                     <th data-sortable="true">OR per Copy Num</th>
@@ -217,7 +218,10 @@
                     </td>
 
                     <td th:text="${snpAssociationForm.riskFrequency}?: '' "></td>
-                    <td th:text="${snpAssociationForm.pvalueFloat} ?: ''"></td>
+
+                    <!--P Value-->
+                    <td th:text="${snpAssociationForm.pvalueExponent} ?: ''"></td>
+                    <td th:text="${snpAssociationForm.pvalueMantissa} ?: ''"></td>
                     <td th:text="${snpAssociationForm.pvalueText} ?: ''"></td>
 
                     <!--EFO traits-->
