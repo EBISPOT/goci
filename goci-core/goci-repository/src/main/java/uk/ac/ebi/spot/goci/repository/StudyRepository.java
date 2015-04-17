@@ -52,6 +52,8 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     // Custom query for daily audit emails
     List<Study> findByHousekeepingSendToNCBIDate(Date date);
 
+    List<Study> findByAuthorContainingIgnoreCase(String author);
+
     List<Study> findByHousekeepingPublishDateIsNotNull();
 
     List<Study> findByHousekeepingPublishDateIsNotNull(Sort sort);
@@ -78,6 +80,5 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Page<Study> findByDiseaseTraitIdAndHousekeepingPublishDateIsNotNull(Pageable pageable, Long diseaseTraitId);
 
-    List<Study> findByAuthor(String author);
 }
 
