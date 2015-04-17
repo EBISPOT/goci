@@ -131,7 +131,6 @@ public class StudyController {
 
         // Search by author option available from landing page
         if (author != null && !author.isEmpty()) {
-            List<Study> studies = studyRepository.findByAuthorContainingIgnoreCase(author);
             model.addAttribute("studies", studyRepository.findByAuthorContainingIgnoreCase(author));
             return "studies";
         }
