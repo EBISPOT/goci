@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+
+<div class="container">
+    <div class="row">
+        <table id="studyDetailsTable" class="table table-hover table-bordered">
+            <tbody>
+            <tr>
+                <th>Author</th>
+                <td th:text="${study.author} ?: '' "></td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td th:text="${study.title} ?: ''"></td>
+            </tr>
+            <tr>
+                <th>Study Date</th>
+                <td th:text="${#calendars.format(study.studyDate,'yyyy-MM-dd')} ?: ''"></td>
+            </tr>
+            <tr>
+                <th>Pubmed Id</th>
+                <td th:text="${study.pubmedId} ?: ''"></td>
+            </tr>
+            <tr>
+                <th>Publication</th>
+                <td th:text="${study.publication} ?: ''"></td>
+            </tr>
+            <tr>
+                <th>Disease trait</th>
+                <td th:text="${study.diseaseTrait != null} ? ${study.diseaseTrait.trait} : ''"></td>
+            </tr>
+
+            <tr>
+                <th>EFO traits</th>
+                <td><span th:each="efoTrait: ${study.efoTraits}"
+                          th:text="${efoTrait.trait} ?: ''"></span></td>
+            </tr>
+
+            <tr>
+                <th>Curator</th>
+                <td th:text="${housekeeping != null and housekeeping.curator !=null } ? ${housekeeping.curator.getLastName()} : ''"></td>
+            </tr>
+
+            <tr>
+                <th>Curation Status</th>
+                <td th:text="${housekeeping != null and housekeeping.curationStatus !=null } ? ${housekeeping.curationStatus.getStatus()} : ''"></td>
+            </tr>
+
+            <tr>
+                <th>Notes</th>
+                <td th:text="${housekeeping != null and housekeeping.notes !=null } ? ${housekeeping.notes} : ''"></td>
+            </tr>
+
+            <tr>
+                <th>Publish Date</th>
+                <td th:text="${housekeeping != null and housekeeping.publishDate !=null } ? ${#calendars.format(housekeeping.publishDate, 'dd MMMM yyyy')} : ''"></td>
+            </tr>
+
+            <tr>
+                <th>Send to NCBI Date</th>
+                <td th:text="${housekeeping != null and housekeeping.sendToNCBIDate !=null } ? ${#calendars.format(housekeeping.sendToNCBIDate, 'dd MMMM yyyy')} : ''"></td>
+            </tr>
+
+            <tr>
+                <th>Study Added Date</th>
+                <td th:text="${housekeeping != null and housekeeping.studyAddedDate !=null } ? ${#calendars.format(housekeeping.studyAddedDate, 'dd MMMM yyyy')} : ''"></td>
+            </tr>
+
+            <tr>
+                <th>Last Update Date</th>
+                <td th:text="${housekeeping != null and housekeeping.lastUpdateDate !=null } ? ${#calendars.format(housekeeping.lastUpdateDate, 'dd MMMM yyyy')} : ''"></td>
+            </tr>
+            <tr>
+                <th>Ethnicity checked, first level
+                </th>
+                <td th:switch="${housekeeping.ethnicityCheckedLevelOne}">
+                    <p th:case="'null'"></p>
+
+                    <p th:case="false">No</p>
+
+                    <p th:case="true">Yes</p>
+                </td>
+            </tr>
+            <tr>
+                <th>Ethnicity checked, second level
+                </th>
+                <td th:switch="${housekeeping.ethnicityCheckedLevelTwo}">
+                    <p th:case="'null'"></p>
+
+                    <p th:case="false">No</p>
+
+                    <p th:case="true">Yes</p>
+                </td>
+            </tr>
+            <tr>
+                <th>Ethnicity backfilled
+                </th>
+                <td th:switch="${housekeeping.ethnicityBackFilled}">
+                    <p th:case="'null'"></p>
+
+                    <p th:case="false">No</p>
+
+                    <p th:case="true">Yes</p>
+                </td>
+            </tr>
+
+            <tr>
+                <th>Study/SNP checked, first level
+                </th>
+                <td th:switch="${housekeeping.studySnpCheckedLevelOne}">
+                    <p th:case="'null'"></p>
+
+                    <p th:case="false">No</p>
+
+                    <p th:case="true">Yes</p>
+                </td>
+            </tr>
+
+            <tr>
+                <th>Study/SNP checked, second level
+                </th>
+                <td th:switch="${housekeeping.studySnpCheckedLevelTwo}">
+                    <p th:case="'null'"></p>
+
+                    <p th:case="false">No</p>
+
+                    <p th:case="true">Yes</p>
+                </td>
+            </tr>
+
+            <tr>
+                <th>Checked NCBI Error
+                </th>
+                <td th:switch="${housekeeping.checkedNCBIError}">
+                    <p th:case="'null'"></p>
+
+                    <p th:case="false">No</p>
+
+                    <p th:case="true">Yes</p>
+                </td>
+            </tr>
+
+            <tr>
+                <th>Checked NCBI Error
+                </th>
+                <td th:switch="${housekeeping.snpsRechecked}">
+                    <p th:case="'null'"></p>
+
+                    <p th:case="false">No</p>
+
+                    <p th:case="true">Yes</p>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+</body>
+</html>
