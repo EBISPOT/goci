@@ -726,6 +726,9 @@ MobCH: double-bond protons of mobile lipids
 MMnb: mismatch negativity (300-710 ms)
 
 
+MMR: measles, mumps and rubella vaccination
+
+
 MMSE: Mini-mental state examination
 
 
