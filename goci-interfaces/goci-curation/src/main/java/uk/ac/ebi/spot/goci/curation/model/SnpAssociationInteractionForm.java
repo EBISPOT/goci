@@ -45,6 +45,8 @@ public class SnpAssociationInteractionForm {
 
     private String orPerCopyRange;
 
+    private String orPerCopyRecipRange;
+
     private String orPerCopyUnitDescr;
 
     private List<SnpFormColumn> snpFormColumn = new ArrayList<>();
@@ -59,7 +61,7 @@ public class SnpAssociationInteractionForm {
     }
 
 
-    public SnpAssociationInteractionForm(Long associationId, String pvalueText, Float orPerCopyNum, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Boolean snpChecked, Boolean orType, Integer pvalueMantissa, Integer pvalueExponent, Float pvalueFloat, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, List<SnpFormColumn> snpFormColumn, Collection<EfoTrait> efoTraits, Integer numOfInteractions) {
+    public SnpAssociationInteractionForm(Long associationId, String pvalueText, Float orPerCopyNum, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Boolean snpChecked, Boolean orType, Integer pvalueMantissa, Integer pvalueExponent, Float pvalueFloat, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyRecipRange, String orPerCopyUnitDescr, List<SnpFormColumn> snpFormColumn, Collection<EfoTrait> efoTraits, Integer numOfInteractions) {
         this.associationId = associationId;
         this.pvalueText = pvalueText;
         this.orPerCopyNum = orPerCopyNum;
@@ -74,6 +76,7 @@ public class SnpAssociationInteractionForm {
         this.orPerCopyRecip = orPerCopyRecip;
         this.orPerCopyStdError = orPerCopyStdError;
         this.orPerCopyRange = orPerCopyRange;
+        this.orPerCopyRecipRange = orPerCopyRecipRange;
         this.orPerCopyUnitDescr = orPerCopyUnitDescr;
         this.snpFormColumn = snpFormColumn;
         this.efoTraits = efoTraits;
@@ -190,6 +193,14 @@ public class SnpAssociationInteractionForm {
 
     public void setOrPerCopyRange(String orPerCopyRange) {
         this.orPerCopyRange = orPerCopyRange;
+    }
+
+    public String getOrPerCopyRecipRange() {
+        return orPerCopyRecipRange;
+    }
+
+    public void setOrPerCopyRecipRange(String orPerCopyRecipRange) {
+        this.orPerCopyRecipRange = orPerCopyRecipRange;
     }
 
     public String getOrPerCopyUnitDescr() {

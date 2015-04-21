@@ -50,6 +50,8 @@ public class SnpAssociationForm {
 
     private String orPerCopyRange;
 
+    private String orPerCopyRecipRange;
+
     private String orPerCopyUnitDescr;
 
     private List<SnpFormRow> snpFormRows = new ArrayList<>();
@@ -69,7 +71,7 @@ public class SnpAssociationForm {
     public SnpAssociationForm() {
     }
 
-    public SnpAssociationForm(Long associationId, String riskFrequency, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Boolean snpChecked, Integer pvalueMantissa, Integer pvalueExponent, Float pvalueFloat, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, List<SnpFormRow> snpFormRows, Collection<String> authorReportedGenes, String multiSnpHaplotypeDescr, Integer multiSnpHaplotypeNum, Collection<EfoTrait> efoTraits, Collection<Region> regions) {
+    public SnpAssociationForm(Long associationId, String riskFrequency, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Boolean snpChecked, Integer pvalueMantissa, Integer pvalueExponent, Float pvalueFloat, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyRecipRange, String orPerCopyUnitDescr, List<SnpFormRow> snpFormRows, Collection<String> authorReportedGenes, String multiSnpHaplotypeDescr, Integer multiSnpHaplotypeNum, Collection<EfoTrait> efoTraits, Collection<Region> regions) {
         this.associationId = associationId;
         this.riskFrequency = riskFrequency;
         this.pvalueText = pvalueText;
@@ -85,6 +87,7 @@ public class SnpAssociationForm {
         this.orPerCopyRecip = orPerCopyRecip;
         this.orPerCopyStdError = orPerCopyStdError;
         this.orPerCopyRange = orPerCopyRange;
+        this.orPerCopyRecipRange = orPerCopyRecipRange;
         this.orPerCopyUnitDescr = orPerCopyUnitDescr;
         this.snpFormRows = snpFormRows;
         this.authorReportedGenes = authorReportedGenes;
@@ -223,6 +226,14 @@ public class SnpAssociationForm {
         this.orPerCopyRange = orPerCopyRange;
     }
 
+    public String getOrPerCopyRecipRange() {
+        return orPerCopyRecipRange;
+    }
+
+    public void setOrPerCopyRecipRange(String orPerCopyRecipRange) {
+        this.orPerCopyRecipRange = orPerCopyRecipRange;
+    }
+
     public String getOrPerCopyUnitDescr() {
         return orPerCopyUnitDescr;
     }
@@ -270,5 +281,6 @@ public class SnpAssociationForm {
     public void setRegions(Collection<Region> regions) {
         this.regions = regions;
     }
+
 }
 

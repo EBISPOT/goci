@@ -47,7 +47,7 @@ public class AssociationDownloadService {
     private String processAssociations(Collection<Association> associations) {
 
         String header =
-                "Gene\tStrongest SNP-Risk Allele\tSNP\tRisk Allele Frequency in Controls\tP-value mantissa\tP-value exponent\tP-value (Text)\tOR per copy or beta (Num)\tOR entered (reciprocal)\tOR-type? (Y/N)\tMulti-SNP Haplotype?\tConfidence Interval\tBeta unit and direction\tStandard Error\tSNP type (novel/known)\tEFO traits\r\n";
+                "Gene\tStrongest SNP-Risk Allele\tSNP\tRisk Allele Frequency in Controls\tP-value mantissa\tP-value exponent\tP-value (Text)\tOR per copy or beta (Num)\tOR entered (reciprocal)\tOR-type? (Y/N)\tMulti-SNP Haplotype?\tConfidence Interval\tReciprocal confidence interval\tBeta unit and direction\tStandard Error\tSNP type (novel/known)\tEFO traits\r\n";
 
         StringBuilder output = new StringBuilder();
         output.append(header);
@@ -120,6 +120,15 @@ public class AssociationDownloadService {
                 line.append(association.getOrPerCopyRange());
             }
             line.append("\t");
+
+            if(association.getOrPerCopyRecipRange() == null){
+                line.append("");
+            }
+            else {
+                line.append(association.getOrPerCopyRecipRange());
+            }
+            line.append("\t");
+
 
             if(association.getOrPerCopyUnitDescr() == null){
                 line.append("");

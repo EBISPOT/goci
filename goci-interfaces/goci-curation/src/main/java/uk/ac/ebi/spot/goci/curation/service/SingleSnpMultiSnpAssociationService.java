@@ -62,6 +62,7 @@ public class SingleSnpMultiSnpAssociationService {
         association.setOrPerCopyNum(snpAssociationForm.getOrPerCopyNum());
         association.setOrPerCopyRecip(snpAssociationForm.getOrPerCopyRecip());
         association.setOrPerCopyRange(snpAssociationForm.getOrPerCopyRange());
+        association.setOrPerCopyRecipRange(snpAssociationForm.getOrPerCopyRecipRange());
         association.setOrPerCopyStdError(snpAssociationForm.getOrPerCopyStdError());
         association.setOrPerCopyUnitDescr(snpAssociationForm.getOrPerCopyUnitDescr());
 
@@ -186,6 +187,7 @@ public class SingleSnpMultiSnpAssociationService {
         snpAssociationForm.setOrPerCopyRecip(association.getOrPerCopyRecip());
         snpAssociationForm.setOrPerCopyStdError(association.getOrPerCopyStdError());
         snpAssociationForm.setOrPerCopyRange(association.getOrPerCopyRange());
+        snpAssociationForm.setOrPerCopyRecipRange(association.getOrPerCopyRecipRange());
         snpAssociationForm.setOrPerCopyUnitDescr(association.getOrPerCopyUnitDescr());
 
         // Calculate p-value float, this will appear in table for curators

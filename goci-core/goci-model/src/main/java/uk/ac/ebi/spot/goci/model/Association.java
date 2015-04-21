@@ -50,6 +50,8 @@ public class Association {
 
     private String orPerCopyRange;
 
+    private String orPerCopyRecipRange;
+
     private String orPerCopyUnitDescr;
 
     @ManyToOne
@@ -77,7 +79,7 @@ public class Association {
     public Association() {
     }
 
-    public Association(String riskFrequency, String allele, Float pvalueFloat, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Boolean snpChecked, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, Study study, Collection<Locus> loci, Collection<EfoTrait> efoTraits) {
+    public Association(String riskFrequency, String allele, Float pvalueFloat, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Boolean snpChecked, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyRecipRange, String orPerCopyUnitDescr, Study study, Collection<Locus> loci, Collection<EfoTrait> efoTraits) {
         this.riskFrequency = riskFrequency;
         this.allele = allele;
         this.pvalueFloat = pvalueFloat;
@@ -93,6 +95,7 @@ public class Association {
         this.orPerCopyRecip = orPerCopyRecip;
         this.orPerCopyStdError = orPerCopyStdError;
         this.orPerCopyRange = orPerCopyRange;
+        this.orPerCopyRecipRange = orPerCopyRecipRange;
         this.orPerCopyUnitDescr = orPerCopyUnitDescr;
         this.study = study;
         this.loci = loci;
@@ -219,6 +222,14 @@ public class Association {
 
     public void setOrPerCopyRange(String orPerCopyRange) {
         this.orPerCopyRange = orPerCopyRange;
+    }
+
+    public String getOrPerCopyRecipRange() {
+        return orPerCopyRecipRange;
+    }
+
+    public void setOrPerCopyRecipRange(String orPerCopyRecipRange) {
+        this.orPerCopyRecipRange = orPerCopyRecipRange;
     }
 
     public String getOrPerCopyUnitDescr() {
