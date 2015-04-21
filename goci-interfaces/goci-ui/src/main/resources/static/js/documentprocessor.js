@@ -18,7 +18,7 @@ function processStudy(study, table) {
     var authorsearch = "<span><a href='search?query=".concat(study.author).concat("'>").concat(study.author).concat("</a></span>");
     var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
 
-    row.append($("<td>").html(authorsearch.concat('&nbsp;&nbsp;').concat(epmclink)));
+    row.append($("<td>").html(authorsearch.concat(' (PMID: ').concat(study.pubmedId).concat(') &nbsp;&nbsp;').concat(epmclink)));
     row.append($("<td>").html(study.publicationDate.substring(0, 10)));
     row.append($("<td>").html(study.publication));
     row.append($("<td>").html(study.title));
@@ -341,7 +341,7 @@ function processAssociation(association, table) {
     }
 
     var studydate = association.publicationDate.substring(0, 4);
-    var author = association.author[0].concat(", ").concat(studydate);
+    var author = association.author[0].concat(' (PMID: ').concat(association.pubmedId).concat("), ").concat(studydate);
 
     var europepmc = "http://www.europepmc.org/abstract/MED/".concat(association.pubmedId);
     var searchlink = "<span><a href='search?query=".concat(association.author).concat("'>").concat(author).concat("</a></span>");
