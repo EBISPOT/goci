@@ -26,7 +26,7 @@ public class V1_9_9_037__Risk_alllele_locus_links implements SpringJdbcMigration
             "r.LOCUS_ID, r.SINGLE_NUCLEOTIDE_POLYMORPHISM " +
             "FROM (\n" +
             "SELECT  l.id as LOCUS_ID, ra.ID AS RISK_ALLELE, snp.id as SINGLE_NUCLEOTIDE_POLYMORPHISM , " +
-            "ra.risk_allele_name as RISK_ALLELE_NAME FROM RISK_ALLELE ra\n" +
+            "ra.RISK_ALLELE_NAME as RISK_ALLELE_NAME FROM RISK_ALLELE ra\n" +
             "JOIN LOCUS_RISK_ALLELE lra ON lra.RISK_ALLELE_ID = ra.ID\n" +
             "JOIN LOCUS l ON l.ID = lra.LOCUS_ID\n" +
             "JOIN RISK_ALLELE_SNP ras on ras.RISK_ALLELE_ID=ra.id\n" +
@@ -52,7 +52,7 @@ public class V1_9_9_037__Risk_alllele_locus_links implements SpringJdbcMigration
         final Map<Long, Long> riskAlleleIdToSnpId = new HashMap<>();
         final Map<Long, Set<Long>> riskAlleleIdToLociIds = new HashMap<>();
 
-        jdbcTemplate.query(SELECT_DATA_FOR_UPDATE, (RowMapper<Object>) (resultSet, i) -> {
+        jdbcTemplate.query(SELECT_DATA_FOR_UPDATE,(resultSet, i) -> {
             String riskAlleleName = resultSet.getString(1);
             long riskAlleleId = resultSet.getLong(2);
             long locusId = resultSet.getLong(3);
