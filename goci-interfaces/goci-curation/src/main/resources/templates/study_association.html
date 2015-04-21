@@ -173,6 +173,7 @@
                     <th data-sortable="true">Genes (author reported)</th>
                     <th class="col-md-1" data-sortable="true">Strongest Allele</th>
                     <th class="col-md-1" data-sortable="true">SNP</th>
+                    <th class="col-md-1" data-sortable="true">Proxy SNP</th>
                     <th data-sortable="true">Risk Frequency</th>
                     <th data-sortable="true">p-Value Exponent</th>
                     <th data-sortable="true">p-Value Mantissa</th>
@@ -216,6 +217,13 @@
                      <span th:each="row : ${snpAssociationForm.snpFormRows}"
                            th:text="${row.snp} ?: ''"></span>
                     </td>
+
+                    <!--Proxy SNPs-->
+                    <td>
+                     <span th:each="row : ${snpAssociationForm.snpFormRows}"
+                           th:text="${row.proxySnp} ?: ''"></span>
+                    </td>
+
 
                     <td th:text="${snpAssociationForm.riskFrequency}?: '' "></td>
 
