@@ -183,6 +183,7 @@
                     <th data-sortable="true">OR entered (reciprocal)</th>
                     <th data-sortable="true">OR-Type</th>
                     <th data-sortable="true">OR per Copy Range</th>
+                    <th data-sortable="true">OR per Copy Range (reciprocal)</th>
                     <th data-sortable="true">OR per Copy Unit Description</th>
                     <th data-sortable="true">Std Error</th>
                     <th data-sortable="true">SNP Type</th>
@@ -250,9 +251,10 @@
                     </td>
 
                     <td th:text="${snpAssociationForm.orPerCopyRange} ?: ''"></td>
+                    <td th:text="${snpAssociationForm.orPerCopyRecipRange} ?: ''"></td>
                     <td th:text="${snpAssociationForm.orPerCopyUnitDescr} ?: ''"></td>
                     <td th:text="${snpAssociationForm.orPerCopyStdError} ?: ''"></td>
-                    <td th:text="${snpAssociationForm.SnpType} ?: ''"></td>
+                    <td th:text="${snpAssociationForm.snpType} ?: ''"></td>
                     <td th:switch="${snpAssociationForm.multiSnpHaplotype}">
                         <p th:case="'null'"></p>
 

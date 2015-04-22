@@ -490,11 +490,8 @@ public class AssociationSheetProcessor {
 
             Collection<EfoTrait> traits = efoTraitRepository.findByUri(fullUri);
 
-            System.out.println("Number of EFO trait objects retrieved " + traits.size());
-
             for(EfoTrait trait : traits){
                 efoTraits.add(trait);
-                System.out.println(trait.getTrait());
             }
         }
         return efoTraits;
