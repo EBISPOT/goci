@@ -2,7 +2,7 @@
 
 == Description of column headings for downloadable files
 
-_Note: The SNP data in the catalog has been mapped to dbSNP Build 142 and Genome Assembly GRCh38.p2._
+_Note: The SNP data in the catalog has been mapped to dbSNP Build 142 and Genome Assembly GRCh38.p1._
 
 <<File headers for catalog version 1.0>>
 
