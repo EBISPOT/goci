@@ -34,6 +34,12 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.6.0/bootstrap-table.min.js"></script>
 
+    <!-- http://tablesorter.com/docs/-->
+    <script type="text/javascript" src="../static/js/jquery-latest.js" th:src="@{../../js/jquery-latest.js}"></script>
+    <script type="text/javascript"
+            src="../static/js/jquery.tablesorter.js"
+            th:src="@{../../js/jquery.tablesorter.js}"></script>
+
 </head>
 <body>
 
@@ -169,26 +175,26 @@
                 <br/>
                 <thead>
                 <tr>
-                    <th data-sortable="true">Region</th>
-                    <th data-sortable="true">Genes (author reported)</th>
-                    <th class="col-md-1" data-sortable="true">Strongest Allele</th>
-                    <th class="col-md-1" data-sortable="true">SNP</th>
-                    <th class="col-md-1" data-sortable="true">Proxy SNP</th>
-                    <th data-sortable="true">Risk Frequency</th>
-                    <th data-sortable="true">p-Value Exponent</th>
-                    <th data-sortable="true">p-Value Mantissa</th>
-                    <th data-sortable="true">p-Value Text</th>
-                    <th class="col-md-1" data-sortable="true">EFO trait</th>
-                    <th data-sortable="true">OR per Copy Num</th>
-                    <th data-sortable="true">OR entered (reciprocal)</th>
-                    <th data-sortable="true">OR-Type</th>
-                    <th data-sortable="true">OR per Copy Range</th>
-                    <th data-sortable="true">OR per Copy Unit Description</th>
-                    <th data-sortable="true">Std Error</th>
-                    <th data-sortable="true">SNP Type</th>
-                    <th data-sortable="true">Multi-SNP haplotype</th>
-                    <th data-sortable="true">SNP:SNP interaction</th>
-                    <th data-sortable="true">SNP Checked?</th>
+                    <th>Region</th>
+                    <th>Genes (author reported)</th>
+                    <th>Strongest Allele</th>
+                    <th>SNP</th>
+                    <th>Proxy SNP</th>
+                    <th>Risk Frequency</th>
+                    <th>p-Value Exponent</th>
+                    <th>p-Value Mantissa</th>
+                    <th>p-Value Text</th>
+                    <th>EFO trait</th>
+                    <th>OR per Copy Num</th>
+                    <th>OR entered (reciprocal)</th>
+                    <th>OR-Type</th>
+                    <th>OR per Copy Range</th>
+                    <th>OR per Copy Unit Description</th>
+                    <th>Std Error</th>
+                    <th>SNP Type</th>
+                    <th>Multi-SNP haplotype</th>
+                    <th>SNP:SNP interaction</th>
+                    <th>SNP Checked?</th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -252,7 +258,7 @@
                     <td th:text="${snpAssociationForm.orPerCopyRange} ?: ''"></td>
                     <td th:text="${snpAssociationForm.orPerCopyUnitDescr} ?: ''"></td>
                     <td th:text="${snpAssociationForm.orPerCopyStdError} ?: ''"></td>
-                    <td th:text="${snpAssociationForm.SnpType} ?: ''"></td>
+                    <td th:text="${snpAssociationForm.snpType} ?: ''"></td>
                     <td th:switch="${snpAssociationForm.multiSnpHaplotype}">
                         <p th:case="'null'"></p>
 
@@ -365,6 +371,7 @@
     </div>
 </div>
 
+<script>$(document).ready(function() {$("#mainTable").tablesorter();});</script>
 
 </body>
 </html>
