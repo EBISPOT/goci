@@ -301,6 +301,14 @@
                                class="association-selector"
                                th:value="${snpAssociationForm.associationId}"></input>
                     </td>
+
+                    <!-- Errors-->
+                    <td>
+                        <span style="color:red" th:each="error: ${snpAssociationForm.associationErrorMap}"
+                              th:text="${error.value} ?: ''"
+                              th:if="${not #maps.isEmpty(snpAssociationForm.associationErrorMap)}"></span>
+                    </td>
+
                 </tr>
                 </tbody>
             </table>
