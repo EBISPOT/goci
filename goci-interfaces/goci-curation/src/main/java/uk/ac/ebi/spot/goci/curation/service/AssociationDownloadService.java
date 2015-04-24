@@ -49,8 +49,10 @@ public class AssociationDownloadService {
         String header =
                 "Gene\tStrongest SNP-Risk Allele\tSNP\tRisk Allele Frequency in Controls\tP-value mantissa\tP-value exponent\tP-value (Text)\tOR per copy or beta (Num)\tOR entered (reciprocal)\tOR-type? (Y/N)\tMulti-SNP Haplotype?\tConfidence Interval\tReciprocal confidence interval\tBeta unit and direction\tStandard Error\tSNP type (novel/known)\tEFO traits\r\n";
 
+
         StringBuilder output = new StringBuilder();
         output.append(header);
+
 
         for (Association association : associations) {
             StringBuilder line = new StringBuilder();
@@ -62,6 +64,7 @@ public class AssociationDownloadService {
             }
             else {
                 line.append(association.getRiskFrequency());
+
             }
             line.append("\t");
             if(association.getPvalueMantissa() == null){
@@ -69,6 +72,7 @@ public class AssociationDownloadService {
             }
             else {
                 line.append(association.getPvalueMantissa());
+
             }
             line.append("\t");
             if(association.getPvalueExponent() == null){
@@ -97,20 +101,33 @@ public class AssociationDownloadService {
             }
             else {
                 line.append(association.getOrPerCopyRecip());
-            }
+             }
             line.append("\t");
-            if (association.getOrType()) {
-                line.append("Y");
+
+            if(association.getOrType() == null){
+                line.append("");
+
             }
             else {
-                line.append("N");
+                if (association.getOrType()) {
+                    line.append("Y");
+                }
+                else {
+                    line.append("N");
+                }
             }
+
             line.append("\t");
-            if (association.getMultiSnpHaplotype()) {
-                line.append("Y");
+            if(association.getMultiSnpHaplotype() == null){
+                line.append("");
             }
             else {
-                line.append("N");
+                if (association.getMultiSnpHaplotype()) {
+                    line.append("Y");
+                }
+                else {
+                    line.append("N");
+                }
             }
             line.append("\t");
             if(association.getOrPerCopyRange() == null){
@@ -135,7 +152,7 @@ public class AssociationDownloadService {
             }
             else {
                 line.append(association.getOrPerCopyUnitDescr());
-            }
+             }
 
             line.append("\t");
 
@@ -147,7 +164,13 @@ public class AssociationDownloadService {
             }
 
             line.append("\t");
-            line.append(association.getSnpType());
+
+            if(association.getSnpType() == null){
+                line.append("");
+            }
+            else {
+                line.append(association.getSnpType());
+            }
             line.append("\t");
 
             if(association.getEfoTraits() == null){
@@ -159,6 +182,7 @@ public class AssociationDownloadService {
             line.append("\r\n");
 
             output.append(line.toString());
+
         }
 
         return output.toString();
