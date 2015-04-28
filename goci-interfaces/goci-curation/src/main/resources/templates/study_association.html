@@ -156,8 +156,7 @@
                     <th>SNP</th>
                     <th>Proxy SNP</th>
                     <th>Risk Frequency</th>
-                    <th>p-Value Exponent</th>
-                    <th>p-Value Mantissa</th>
+                    <th>p-Value (mantissa x 10 exponent)</th>
                     <th>p-Value Text</th>
                     <th>EFO trait</th>
                     <th>OR per Copy Num</th>
@@ -210,8 +209,7 @@
                     <td th:text="${snpAssociationForm.riskFrequency}?: '' "></td>
 
                     <!--P Value-->
-                    <td th:text="${snpAssociationForm.pvalueExponent} ?: ''"></td>
-                    <td th:text="${snpAssociationForm.pvalueMantissa} ?: ''"></td>
+                    <td th:text="${snpAssociationForm.pvalueMantissa} + 'x 10' + ${snpAssociationForm.pvalueExponent} ?: ''"></td>
                     <td th:text="${snpAssociationForm.pvalueText} ?: ''"></td>
 
                     <!--EFO traits-->
