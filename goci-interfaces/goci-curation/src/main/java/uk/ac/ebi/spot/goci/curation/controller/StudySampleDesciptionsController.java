@@ -1,6 +1,9 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +16,7 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -42,15 +46,22 @@ public class StudySampleDesciptionsController {
         this.studySampleDescriptionsDownloadService = studySampleDescriptionsDownloadService;
     }
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
+
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public void getStudiesSampleDescriptions(HttpServletResponse response, Model model) {
 
         // Get all ethnicities, this will also find all studies with ethnicity information
-        Collection<Ethnicity> ethnicities = ethnicityRepository.findAll();
+        Collection<Ethnicity> ethnicities = ethnicityRepository.findAll(sortByStudyDateDesc());
         Collection<StudySampleDescription> studySampleDescriptions = new ArrayList<>();
 
         for (Ethnicity ethnicity : ethnicities) {
 
+            // Make sure ethnicity has an attached study
             if (ethnicity.getStudy() != null) {
 
                 Study study = ethnicity.getStudy();
@@ -102,6 +113,8 @@ public class StudySampleDesciptionsController {
             }
 
         }
+
+        // Create date stamped tsv download file
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         String now = dateFormat.format(date);
@@ -115,8 +128,15 @@ public class StudySampleDesciptionsController {
                                                                       studySampleDescriptions);
         }
         catch (IOException e) {
+            getLog().error("Cannot create ethnicity download file");
             e.printStackTrace();
         }
 
+    }
+
+
+    // Returns a Sort object which sorts disease traits in ascending order by trait, ignoring case
+    private Sort sortByStudyDateDesc() {
+        return new Sort(new Sort.Order(Sort.Direction.DESC, "study.studyDate"));
     }
 }
