@@ -4,11 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>uk.ac.ebi.spot</groupId>
     <artifactId>goci-interfaces</artifactId>
     <version>2.0.0.RC</version>
+
     <packaging>pom</packaging>
     <name>GOCI Interfaces</name>
+
+    <parent>
+        <groupId>uk.ac.ebi.spot</groupId>
+        <artifactId>goci</artifactId>
+        <version>2.0.0.RC</version>
+    </parent>
 
     <modules>
         <module>goci-solr</module>
