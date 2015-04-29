@@ -423,9 +423,6 @@ FI: fasting insulin
 FLE: female long endurance athletes
 
 
-FMSE: female middle and short endurance athletes
-
-
 FN: femoral neck
 
 
@@ -745,6 +742,9 @@ MMR: measles, mumps and rubella vaccination
 
 
 MMSE: Mini-mental state examination
+
+
+MSE: middle and short endurance athletes
 
 
 MSSS: Multiple Sclerosis Severity Scale
