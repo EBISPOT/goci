@@ -120,6 +120,45 @@ public class AssociationController {
         return "study_association";
     }
 
+    @RequestMapping(value = "/studies/{studyId}/associations/sortpvalue",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.GET)
+    public String sortStudySnpsByPvalue(Model model,
+                                        @PathVariable Long studyId,
+                                        @RequestParam(required = true) String direction) {
+
+        // Get all associations for a study and perform relevant sorting
+        Collection<Association> associations = new ArrayList<>();
+        if (direction.equals("asc")) {
+            associations.addAll(associationRepository.findByStudyId(studyId, sortByPvalueExponentAndMantissaAsc()));
+        }
+
+        else if (direction.equals("desc")){
+            associations.addAll(associationRepository.findByStudyId(studyId, sortByPvalueExponentAndMantissaDesc()));
+        }
+
+        else{
+            associations.addAll(associationRepository.findByStudyId(studyId));
+        }
+
+        // For our associations create a form object and return
+        List<SnpAssociationForm> snpAssociationForms = new ArrayList<SnpAssociationForm>();
+        for (Association association : associations) {
+
+            // TODO WOULD NEED SOME SORT OF CHECK FOR SNP:SNP INTERACTION
+            SnpAssociationForm snpAssociationForm = singleSnpMultiSnpAssociationService.createSnpAssociationForm(
+                    association);
+            snpAssociationForms.add(snpAssociationForm);
+        }
+
+        model.addAttribute("snpAssociationForms", snpAssociationForms);
+
+        // Also passes back study object to view so we can create links back to main study page
+        model.addAttribute("study", studyRepository.findOne(studyId));
+        return "study_association";
+    }
+
+
     // Upload a spreadsheet of snp association information
     @RequestMapping(value = "/studies/{studyId}/associations/upload",
                     produces = MediaType.TEXT_HTML_VALUE,
@@ -776,5 +815,16 @@ public class AssociationController {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "trait").ignoreCase());
     }
 
+    // Returns a Sort object which sorts disease traits in ascending order by trait, ignoring case
+    private Sort sortByPvalueExponentAndMantissaAsc() {
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "pvalueExponent"),
+                        new Sort.Order(Sort.Direction.ASC, "pvalueMantissa"));
+    }
+
+    // Returns a Sort object which sorts disease traits in ascending order by trait, ignoring case
+    private Sort sortByPvalueExponentAndMantissaDesc() {
+        return new Sort(new Sort.Order(Sort.Direction.DESC, "pvalueExponent"),
+                        new Sort.Order(Sort.Direction.DESC, "pvalueMantissa"));
+    }
 }
 
