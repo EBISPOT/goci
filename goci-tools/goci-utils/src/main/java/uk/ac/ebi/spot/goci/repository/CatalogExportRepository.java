@@ -100,12 +100,18 @@ public class CatalogExportRepository {
                     .forEach(mapper -> rowMap.put(mapper.getOutputField(), mapper.produceOutput(dataForMapping)));
 
             // next, generate new unique ID from values for study id, snp id, (author reported) gene id
-            long studyId = Long.valueOf(rowMap.get(CatalogHeaderBinding.STUDY_ID));
-            long snpId = Long.valueOf(rowMap.get(CatalogHeaderBinding.SNP_ID));
-            long reportedGeneId = rowMap.get(CatalogHeaderBinding.REPORTED_GENE).hashCode();
-            long regionId = rowMap.get(CatalogHeaderBinding.REGION).hashCode();
-            long uniqueKey = generateUniqueID(studyId, snpId, reportedGeneId, regionId);
-            rowMap.put(CatalogHeaderBinding.UNIQUE_KEY, Long.toString(uniqueKey));
+            String studyIdStr = rowMap.get(CatalogHeaderBinding.STUDY_ID);
+            String associationIdStr = rowMap.get(CatalogHeaderBinding.ASSOCIATION_ID);
+            String uniqueKey;
+            if (!studyIdStr.isEmpty() && !associationIdStr.isEmpty()) {
+                long studyId = Long.valueOf(studyIdStr);
+                long associationId = Long.valueOf(associationIdStr);
+                uniqueKey = Long.toString(generateUniqueID(studyId, associationId));
+            }
+            else {
+                uniqueKey = "";
+            }
+            rowMap.put(CatalogHeaderBinding.UNIQUE_KEY, uniqueKey);
 
             // finally, convert rowMap into a string array and return
             String[] row = new String[rowMap.keySet().size()];
@@ -234,7 +240,7 @@ public class CatalogExportRepository {
             }
             else {
                 return calculateCantorPair(
-                        recursivelyPair(Arrays.copyOfRange(compositeKeys, 0, compositeKeys.length - 2)),
+                        recursivelyPair(Arrays.copyOfRange(compositeKeys, 0, compositeKeys.length - 1)),
                         compositeKeys[compositeKeys.length - 1]);
             }
         }
