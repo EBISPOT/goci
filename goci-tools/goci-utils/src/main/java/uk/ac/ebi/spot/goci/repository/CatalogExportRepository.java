@@ -99,6 +99,14 @@ public class CatalogExportRepository {
                     .filter(mapper -> rowMap.containsKey(mapper.getOutputField()))
                     .forEach(mapper -> rowMap.put(mapper.getOutputField(), mapper.produceOutput(dataForMapping)));
 
+            // next, generate new unique ID from values for study id, snp id, (author reported) gene id
+            long studyId = Long.valueOf(rowMap.get(CatalogHeaderBinding.STUDY_ID));
+            long snpId = Long.valueOf(rowMap.get(CatalogHeaderBinding.SNP_ID));
+            long reportedGeneId = rowMap.get(CatalogHeaderBinding.REPORTED_GENE).hashCode();
+            long regionId = rowMap.get(CatalogHeaderBinding.REGION).hashCode();
+            long uniqueKey = generateUniqueID(studyId, snpId, reportedGeneId, regionId);
+            rowMap.put(CatalogHeaderBinding.UNIQUE_KEY, Long.toString(uniqueKey));
+
             // finally, convert rowMap into a string array and return
             String[] row = new String[rowMap.keySet().size()];
             int col = 0;
@@ -215,50 +223,79 @@ public class CatalogExportRepository {
         }
     }
 
-     //put the CatalogHeaderBindings into the correct order for the download spreadsheet
+    private long generateUniqueID(long... compositeKeys) {
+        return recursivelyPair(compositeKeys);
+    }
+
+    private long recursivelyPair(long[] compositeKeys) {
+        if (compositeKeys.length > 1) {
+            if (compositeKeys.length == 2) {
+                return calculateCantorPair(compositeKeys[0], compositeKeys[1]);
+            }
+            else {
+                return calculateCantorPair(
+                        recursivelyPair(Arrays.copyOfRange(compositeKeys, 0, compositeKeys.length - 2)),
+                        compositeKeys[compositeKeys.length - 1]);
+            }
+        }
+        else {
+            if (compositeKeys.length == 1) {
+                return compositeKeys[0];
+            }
+            else {
+                return 0;
+            }
+        }
+    }
+
+    private static long calculateCantorPair(long x, long y) {
+        return (long) (0.5 * (x + y) * (x + y + 1) + y);
+    }
+
+    //put the CatalogHeaderBindings into the correct order for the download spreadsheet
     private List<CatalogHeaderBinding> getOrderedDownloadHeaders(String version) {
         List<CatalogHeaderBinding> catalogHeaders = CatalogHeaderBindings.getDownloadHeaders();
         List<CatalogHeaderBinding> orderedHeaders = new ArrayList<CatalogHeaderBinding>();
         List<String> order;
 
-        if(version.equals("d")) {
+        if (version.equals("d")) {
             order = Arrays.asList("DATE ADDED TO CATALOG",
-                                               "PUBMEDID",
-                                               "FIRST AUTHOR",
-                                               "DATE",
-                                               "JOURNAL",
-                                               "LINK",
-                                               "STUDY",
-                                               "DISEASE/TRAIT",
-                                               "INITIAL SAMPLE DESCRIPTION",
-                                               "REPLICATION SAMPLE DESCRIPTION",
-                                               "REGION",
-                                               "CHR_ID",
-                                               "CHR_POS",
-                                               "REPORTED GENE(S)",
-                                               "MAPPED_GENE",
-                                               "UPSTREAM_GENE_ID",
-                                               "DOWNSTREAM_GENE_ID",
-                                               "SNP_GENE_IDS",
-                                               "UPSTREAM_GENE_DISTANCE",
-                                               "DOWNSTREAM_GENE_DISTANCE",
-                                               "STRONGEST SNP-RISK ALLELE",
-                                               "SNPS",
-                                               "MERGED",
-                                               "SNP_ID_CURRENT",
-                                               "CONTEXT",
-                                               "INTERGENIC",
-                                               "RISK ALLELE FREQUENCY",
-                                               "P-VALUE",
-                                               "PVALUE_MLOG",
-                                               "P-VALUE (TEXT)",
-                                               "OR or BETA",
-                                               "95% CI (TEXT)",
-                                               "PLATFORM [SNPS PASSING QC]",
-                                               "CNV");
+                                  "PUBMEDID",
+                                  "FIRST AUTHOR",
+                                  "DATE",
+                                  "JOURNAL",
+                                  "LINK",
+                                  "STUDY",
+                                  "DISEASE/TRAIT",
+                                  "INITIAL SAMPLE DESCRIPTION",
+                                  "REPLICATION SAMPLE DESCRIPTION",
+                                  "REGION",
+                                  "CHR_ID",
+                                  "CHR_POS",
+                                  "REPORTED GENE(S)",
+                                  "MAPPED_GENE",
+                                  "UPSTREAM_GENE_ID",
+                                  "DOWNSTREAM_GENE_ID",
+                                  "SNP_GENE_IDS",
+                                  "UPSTREAM_GENE_DISTANCE",
+                                  "DOWNSTREAM_GENE_DISTANCE",
+                                  "STRONGEST SNP-RISK ALLELE",
+                                  "SNPS",
+                                  "MERGED",
+                                  "SNP_ID_CURRENT",
+                                  "CONTEXT",
+                                  "INTERGENIC",
+                                  "RISK ALLELE FREQUENCY",
+                                  "P-VALUE",
+                                  "PVALUE_MLOG",
+                                  "P-VALUE (TEXT)",
+                                  "OR or BETA",
+                                  "95% CI (TEXT)",
+                                  "PLATFORM [SNPS PASSING QC]",
+                                  "CNV");
         }
 
-        else{
+        else {
             order = Arrays.asList("DATE ADDED TO CATALOG",
                                   "PUBMEDID",
                                   "FIRST AUTHOR",
@@ -297,15 +334,15 @@ public class CatalogExportRepository {
                                   "MAPPED_TRAIT_URI");
         }
 
-        for(String header : order){
-            for(CatalogHeaderBinding binding : catalogHeaders){
-                if(binding.getDownloadName() != null){
-                    if(binding.getDownloadName().equals(header)){
+        for (String header : order) {
+            for (CatalogHeaderBinding binding : catalogHeaders) {
+                if (binding.getDownloadName() != null) {
+                    if (binding.getDownloadName().equals(header)) {
                         orderedHeaders.add(binding);
                     }
                 }
                 else {
-                    if(!orderedHeaders.contains(binding)){
+                    if (!orderedHeaders.contains(binding)) {
                         orderedHeaders.add(binding);
                     }
                 }
