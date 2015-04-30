@@ -39,10 +39,12 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 
 /**
@@ -133,11 +135,11 @@ public class AssociationController {
             associations.addAll(associationRepository.findByStudyId(studyId, sortByPvalueExponentAndMantissaAsc()));
         }
 
-        else if (direction.equals("desc")){
+        else if (direction.equals("desc")) {
             associations.addAll(associationRepository.findByStudyId(studyId, sortByPvalueExponentAndMantissaDesc()));
         }
 
-        else{
+        else {
             associations.addAll(associationRepository.findByStudyId(studyId));
         }
 
@@ -152,6 +154,99 @@ public class AssociationController {
         }
 
         model.addAttribute("snpAssociationForms", snpAssociationForms);
+
+        // Also passes back study object to view so we can create links back to main study page
+        model.addAttribute("study", studyRepository.findOne(studyId));
+        return "study_association";
+    }
+
+
+    @RequestMapping(value = "/studies/{studyId}/associations/sortrsid",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.GET)
+    public String sortStudySnpsByRsid(Model model,
+                                      @PathVariable Long studyId,
+                                      @RequestParam(required = true) String direction) {
+
+        // Get all associations for a study
+        Collection<Association> associations = new ArrayList<>();
+        associations.addAll(associationRepository.findByStudyId(studyId));
+
+        // Sorting will not work for multi-snp haplotype so need to check for that
+        Boolean isMultiSnpHaplotype = false;
+
+        // For our associations create a form object and return
+        List<SnpAssociationForm> snpAssociationForms = new ArrayList<SnpAssociationForm>();
+        for (Association association : associations) {
+            // TODO WOULD NEED SOME SORT OF CHECK FOR SNP:SNP INTERACTION
+            SnpAssociationForm snpAssociationForm = singleSnpMultiSnpAssociationService.createSnpAssociationForm(
+                    association);
+
+            // Record if we have a multi-snp haplotype
+            if (snpAssociationForm.getSnpFormRows() != null) {
+                if (snpAssociationForm.getSnpFormRows().size() > 1) {
+                    isMultiSnpHaplotype = true;
+                }
+            }
+            snpAssociationForms.add(snpAssociationForm);
+        }
+
+        // Perform sorting
+        List<SnpAssociationForm> snpAssociationFormsToReturnToView =  snpAssociationForms;
+        if (isMultiSnpHaplotype == false){
+            // Create map that holds numeric part of rsid and associated form
+            // Will use key for sorting what is returned to view
+            Map<Integer, SnpAssociationForm> rsidDigitSnpAssociationForm = new HashMap<Integer, SnpAssociationForm>();
+
+            for (SnpAssociationForm snpAssociationForm : snpAssociationForms) {
+                List<SnpFormRow> rows = snpAssociationForm.getSnpFormRows();
+
+                // Go through each row and create an integer value from numeric part of rsid
+                for (SnpFormRow row : rows) {
+                    String snp = row.getSnp();
+                    Integer snpNumericSubString = Integer.valueOf(snp.substring(2));
+                    rsidDigitSnpAssociationForm.put(snpNumericSubString, snpAssociationForm);
+                }
+            }
+
+            // Sort map using treemap: // http://www.mkyong.com/java/how-to-sort-a-map-in-java/
+            Map<Integer, SnpAssociationForm> treeMap = null;
+            if (direction.equals("desc")) {
+                treeMap = new TreeMap<Integer, SnpAssociationForm>(
+                        new Comparator<Integer>() {
+
+                            @Override
+                            public int compare(Integer o1, Integer o2) {
+                                return o2.compareTo(o1);
+                            }
+
+                        });
+
+            }
+
+            if (direction.equals("asc")) {
+                treeMap = new TreeMap<Integer, SnpAssociationForm>(
+                        new Comparator<Integer>() {
+
+                            @Override
+                            public int compare(Integer o1, Integer o2) {
+                                return o1.compareTo(o2);
+                            }
+
+                        });
+
+            }
+            treeMap.putAll(rsidDigitSnpAssociationForm);
+
+
+            // Using treemap ,sorted according to the natural ordering of its keys, add forms to list returned to view
+            snpAssociationFormsToReturnToView = new ArrayList<SnpAssociationForm>();
+            for (Map.Entry<Integer, SnpAssociationForm> entry : treeMap.entrySet()) {
+                snpAssociationFormsToReturnToView.add(entry.getValue());
+            }
+        }
+
+        model.addAttribute("snpAssociationForms", snpAssociationFormsToReturnToView);
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
@@ -810,18 +905,16 @@ public class AssociationController {
         return efoTraitRepository.findAll(sortByTraitAsc());
     }
 
-    // Returns a Sort object which sorts disease traits in ascending order by trait, ignoring case
+    // Sort options
     private Sort sortByTraitAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "trait").ignoreCase());
     }
 
-    // Returns a Sort object which sorts disease traits in ascending order by trait, ignoring case
     private Sort sortByPvalueExponentAndMantissaAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "pvalueExponent"),
                         new Sort.Order(Sort.Direction.ASC, "pvalueMantissa"));
     }
 
-    // Returns a Sort object which sorts disease traits in ascending order by trait, ignoring case
     private Sort sortByPvalueExponentAndMantissaDesc() {
         return new Sort(new Sort.Order(Sort.Direction.DESC, "pvalueExponent"),
                         new Sort.Order(Sort.Direction.DESC, "pvalueMantissa"));
