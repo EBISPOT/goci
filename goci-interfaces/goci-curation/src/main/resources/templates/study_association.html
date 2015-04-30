@@ -147,7 +147,14 @@
                     <th>Region</th>
                     <th>Genes (author reported)</th>
                     <th>Strongest Allele</th>
-                    <th>SNP</th>
+                    <th>SNP
+                        <div class="pull-right">
+                            <a th:href="@{/studies/{studyId}/associations/sortrsid(studyId=${study.id},direction='asc')}"
+                               class="btn btn-default btn-xs">Sort asc</a>
+                            <a th:href="@{/studies/{studyId}/associations/sortrsid(studyId=${study.id},direction='desc')}"
+                               class="btn btn-default btn-xs">Sort desc</a>
+                        </div>
+                    </th>
                     <th>Proxy SNP</th>
                     <th>Risk Frequency</th>
                     <th>p-Value (mantissa x 10 exponent)
