@@ -238,6 +238,7 @@
     <field name="association_chromosomeName" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="association_chromosomePosition" type="int" indexed="true" stored="true" multiValued="true" />
     <field name="association_last_modified" type="date" indexed="true" stored="true" multiValued="true" />
+    <field name="association_locusDescription" type="text_general" indexed="true" stored="true" multiValued="true" />
 
     <!-- Main body of document extracted by SolrCell.
          NOTE: This field is not indexed by default, since it is also copied to "text"
