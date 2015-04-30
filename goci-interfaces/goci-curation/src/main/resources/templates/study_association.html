@@ -34,12 +34,6 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.6.0/bootstrap-table.min.js"></script>
 
-    <!-- http://tablesorter.com/docs/-->
-    <script type="text/javascript" src="../static/js/jquery-latest.js" th:src="@{../../js/jquery-latest.js}"></script>
-    <script type="text/javascript"
-            src="../static/js/jquery.tablesorter.js"
-            th:src="@{../../js/jquery.tablesorter.js}"></script>
-
 </head>
 <body>
 
@@ -153,10 +147,24 @@
                     <th>Region</th>
                     <th>Genes (author reported)</th>
                     <th>Strongest Allele</th>
-                    <th>SNP</th>
+                    <th>SNP
+                        <div class="pull-right">
+                            <a th:href="@{/studies/{studyId}/associations/sortrsid(studyId=${study.id},direction='asc')}"
+                               class="btn btn-default btn-xs">Sort asc</a>
+                            <a th:href="@{/studies/{studyId}/associations/sortrsid(studyId=${study.id},direction='desc')}"
+                               class="btn btn-default btn-xs">Sort desc</a>
+                        </div>
+                    </th>
                     <th>Proxy SNP</th>
                     <th>Risk Frequency</th>
-                    <th>p-Value (mantissa x 10 exponent)</th>
+                    <th>p-Value (mantissa x 10 exponent)
+                        <div class="pull-right">
+                            <a th:href="@{/studies/{studyId}/associations/sortpvalue(studyId=${study.id},direction='asc')}"
+                               class="btn btn-default btn-xs">Sort asc</a>
+                            <a th:href="@{/studies/{studyId}/associations/sortpvalue(studyId=${study.id},direction='desc')}"
+                               class="btn btn-default btn-xs">Sort desc</a>
+                        </div>
+                    </th>
                     <th>p-Value Text</th>
                     <th>EFO trait</th>
                     <th>OR per Copy Num</th>
@@ -354,7 +362,6 @@
     </div>
 </div>
 
-<script>$(document).ready(function() {$("#mainTable").tablesorter();});</script>
 
 </body>
 </html>
