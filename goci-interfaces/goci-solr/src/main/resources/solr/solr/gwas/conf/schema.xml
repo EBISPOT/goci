@@ -222,6 +222,7 @@
     <field name="chromosomeName" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="chromosomePosition" type="int" indexed="true" stored="true" multiValued="true" />
     <field name="merged" type="long" indexed="true" stored="true" multiValued="false" />
+    <field name="locusDescription" type="text_general" indexed="true" stored="true" multiValued="false" />
 
 
     <!-- embedded association -->
