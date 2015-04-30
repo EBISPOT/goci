@@ -82,10 +82,16 @@ function processAssociation(association, table) {
             var rsIds = '';
             var alleles = '';
             var type = '';
+            var description = '';
+
             if(association.rsId[0].indexOf(',') != -1) {
                 rsIds = association.rsId[0].split(',');
                 alleles = association.strongestAllele[0].split(',');
                 type = ',';
+
+                if(association.locusDescription != null && association.locusDescription.indexOf('aplotype') != -1){
+                    description = association.locusDescription;
+                }
             }
             else if(association.rsId[0].indexOf('x') != -1){
                 rsIds = association.rsId[0].split('x');
@@ -111,6 +117,9 @@ function processAssociation(association, table) {
                         }
                     }
                 }
+            }
+            if(description != ''){
+                content = content.concat('&nbsp;&nbsp;(').concat(description).concat(')');
             }
             row.append($("<td>").html(content));
 
