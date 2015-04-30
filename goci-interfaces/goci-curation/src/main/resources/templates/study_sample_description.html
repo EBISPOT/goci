@@ -67,7 +67,7 @@
                                                                                          Description:</label>
 
                     <div class="col-md-10">
-                        <input id="sampleInitialDescription" class="form-control" type="text"
+                        <textarea rows="3" id="sampleInitialDescription" class="form-control" type="text"
                                th:field="${initialSampleDescription.initialSampleDescription}"/>
                     </div>
                 </div>
@@ -77,7 +77,7 @@
                                                                                              Description:</label>
 
                     <div class="col-md-10">
-                        <input id="sampleReplicationDescription" class="form-control" type="text"
+                        <textarea rows="3" id="sampleReplicationDescription" class="form-control" type="text"
                                th:field="${replicationSampleDescription.replicationSampleDescription}"/>
                     </div>
                 </div>
@@ -316,12 +316,12 @@
 
                     <div class="form-group">
                         <label for="description" class="control-label col-md-2">Additional Description:</label>
-                        <textarea id="description" type="text" th:field="*{description}"/>
+                        <textarea class="col-md-6" rows="10" id="description" type="text" th:field="*{description}"/>
                     </div>
 
                     <div class="form-group">
                         <label for="notes" class="control-label col-md-2">Notes</label>
-                        <textarea id="notes" type="text" th:field="*{notes}"/>
+                        <textarea class="col-md-6" rows="10"  id="notes" type="text" th:field="*{notes}"/>
                     </div>
 
                     <div class="form-group">
