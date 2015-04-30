@@ -447,4 +447,12 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         }
         return current;
     }
+
+    public String getLocusDescription() {
+        return locusDescription;
+    }
+
+    public void setLocusDescription(String locusDescription) {
+        this.locusDescription = locusDescription;
+    }
 }
