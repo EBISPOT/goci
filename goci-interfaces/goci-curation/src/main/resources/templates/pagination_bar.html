@@ -29,7 +29,7 @@ http://www.stefanalexandru.com/java/spring-boot-with-thymeleaf-and-maven-first-i
                     th:class="${item == currentIndex ? 'active' : '' }">
                     <span th:if='${item == currentIndex}' th:text='${item}'>1</span>
                     <a th:if='${item != currentIndex}'
-                       th:href="@{${item }}">
+                       th:href="@{${item}}">
                         <span th:text='${item}'>1</span>
                     </a>
                 </li>
