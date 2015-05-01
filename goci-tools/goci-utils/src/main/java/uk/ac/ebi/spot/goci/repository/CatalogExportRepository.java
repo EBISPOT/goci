@@ -64,7 +64,6 @@ public class CatalogExportRepository {
     }
 
     public String[][] getNCBISpreadsheet() {
-
         // Get headers for output spreadsheet
         List<String> ncbiOutputHeaders = CatalogHeaderBindings.getNcbiHeaders()
                 .stream()
@@ -88,6 +87,7 @@ public class CatalogExportRepository {
     }
 
     public String[][] getDownloadSpreadsheet(String version) {
+        // Get headers for output spreadsheet (in order)
         List<String> downloadOutputHeaders = getOrderedDownloadHeaders(version)
                 .stream()
                 .filter(binding -> binding.getDownloadInclusion().mapsToColumn())
@@ -95,12 +95,14 @@ public class CatalogExportRepository {
                 .map(binding -> binding.getDownloadInclusion().columnName().get())
                 .collect(Collectors.toList());
 
+        // Get equivalent headers in database
         List<String> downloadQueryHeaders = getOrderedDownloadHeaders(version)
                 .stream()
                 .filter(binding -> binding.getDatabaseName().isPresent())
                 .map(binding -> binding.getDatabaseName().get())
                 .collect(Collectors.toList());
 
+        // export data and return
         return extractData(buildSelectClause(downloadQueryHeaders) + FROM_CLAUSE + DOWNLOAD_WHERE_CLAUSE,
                            getOrderedDownloadHeaders(version),
                            downloadOutputHeaders,

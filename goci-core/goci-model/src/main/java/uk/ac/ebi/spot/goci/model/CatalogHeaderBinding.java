@@ -273,7 +273,7 @@ public enum CatalogHeaderBinding {
                          Inclusion ncbiInclusion,
                          Inclusion downloadInclusion,
                          Inclusion loadInclusion) {
-        this(ncbiInclusion, downloadInclusion, loadInclusion, false);
+        this(databaseName, ncbiInclusion, downloadInclusion, loadInclusion, false);
     }
 
     CatalogHeaderBinding(String databaseName,
