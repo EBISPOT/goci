@@ -3,6 +3,9 @@ package uk.ac.ebi.spot.goci.curation.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
@@ -69,6 +73,8 @@ public class StudyController {
     private DefaultPubMedSearchService defaultPubMedSearchService;
     private MailService mailService;
 
+    public static final int MAX_PAGE_ITEM_DISPLAY = 10;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -101,11 +107,37 @@ public class StudyController {
     /* All studies and various filtered lists */
 
     // Return all studies
-    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE)
-    public String searchStudies(Model model) {
+    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String allStudies(Model model) {
 
-        // Find all studies ordered by study date
-        model.addAttribute("studies", studyRepository.findAll(sortByStudyDateDesc()));
+        // Find all studies ordered by study date and only display first page
+        return "redirect:/studies/page/1";
+    }
+
+    @RequestMapping(value = "/page/{pageNumber}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String allStudiesPage(@PathVariable Integer pageNumber, Model model,  @RequestParam(required = false) String direction) {
+
+
+        Page<Study> studyPage = null;
+        if (direction!= null && direction.contains("author") && direction.contains("asc")) {
+            studyPage = studyRepository.findAll(constructPageSpecification(pageNumber - 1, sortByAuthorAsc()));
+        }
+        else {
+            studyPage =
+                    studyRepository.findAll(constructPageSpecification(pageNumber - 1, sortByStudyDateDesc()));
+        }
+        model.addAttribute("studies", studyPage);
+
+        //Pagination variables
+        long totalStudies = studyPage.getTotalElements();
+        int current = studyPage.getNumber() + 1;
+        int begin = Math.max(1, current - 5); // Returns the greater of two values
+        int end = Math.min(begin + 10, studyPage.getTotalPages()); // how many pages to display in the pagination bar
+
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current);
+        model.addAttribute("totalStudies", totalStudies);
 
         // Add a studySearchFilter to model in case user want to filter table
         model.addAttribute("studySearchFilter", new StudySearchFilter());
@@ -596,5 +628,13 @@ public class StudyController {
 
     private Sort sortByStudyDateDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "studyDate"));}
 
+    private Sort sortByAuthorAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "author"));}
+
+    /* Pagination */
+    // Pagination, method passed page index and inlcudes max number of studies, sorted by study date, to return
+    private Pageable constructPageSpecification(int pageIndex, Sort sort) {
+        Pageable pageSpecification = new PageRequest(pageIndex, MAX_PAGE_ITEM_DISPLAY, sort);
+        return pageSpecification;
+    }
 
 }
