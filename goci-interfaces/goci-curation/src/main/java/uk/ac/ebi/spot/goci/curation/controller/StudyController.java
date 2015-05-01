@@ -104,8 +104,8 @@ public class StudyController {
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE)
     public String searchStudies(Model model) {
 
-        // Find all studies
-        model.addAttribute("studies", studyRepository.findAll());
+        // Find all studies ordered by study date
+        model.addAttribute("studies", studyRepository.findAll(sortByStudyDateDesc()));
 
         // Add a studySearchFilter to model in case user want to filter table
         model.addAttribute("studySearchFilter", new StudySearchFilter());
@@ -125,13 +125,13 @@ public class StudyController {
 
         // Search by pubmed ID option available from landing page
         if (pubmedId != null && !pubmedId.isEmpty()) {
-            model.addAttribute("studies", studyRepository.findByPubmedId(pubmedId));
+            model.addAttribute("studies", studyRepository.findByPubmedId(pubmedId, sortByStudyDateDesc()));
             return "studies";
         }
 
         // Search by author option available from landing page
         if (author != null && !author.isEmpty()) {
-            model.addAttribute("studies", studyRepository.findByAuthorContainingIgnoreCase(author));
+            model.addAttribute("studies", studyRepository.findByAuthorContainingIgnoreCase(author, sortByStudyDateDesc()));
             return "studies";
         }
 
@@ -153,7 +153,7 @@ public class StudyController {
 
         // If all else fails return all studies
         else {
-            model.addAttribute("studies", studyRepository.findAll());
+            model.addAttribute("studies", studyRepository.findAll(sortByStudyDateDesc()));
         }
 
         return "studies";
@@ -588,10 +588,13 @@ public class StudyController {
         return curationStatusRepository.findAll();
     }
 
+    /* Sorting options */
     // Returns a Sort object which sorts disease traits in ascending order by trait, ignoring case
     private Sort sortByTraitAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "trait").ignoreCase());
     }
+
+    private Sort sortByStudyDateDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "studyDate"));}
 
 
 }
