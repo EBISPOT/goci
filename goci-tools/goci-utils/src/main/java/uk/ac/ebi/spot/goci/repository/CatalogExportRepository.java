@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.repository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,7 +22,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -43,6 +44,12 @@ public class CatalogExportRepository {
     private JdbcTemplate jdbcTemplate;
 
     private Collection<CatalogDataMapper> dataMappers;
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
 
     @Autowired(required = false)
     public CatalogExportRepository(JdbcTemplate jdbcTemplate) {
@@ -73,62 +80,11 @@ public class CatalogExportRepository {
                 .map(binding -> binding.getDatabaseName().get())
                 .collect(Collectors.toList());
 
-        // Build query
-        String query = buildSelectClause(ncbiQueryHeaders) + FROM_CLAUSE + NCBI_WHERE_CLAUSE;
-        List<String[]> rows = jdbcTemplate.query(query, (resultSet, i) -> {
-            Map<CatalogHeaderBinding, String> dataForMapping = new LinkedHashMap<>();
-            Map<CatalogHeaderBinding, String> rowMap = new LinkedHashMap<>();
-            for (CatalogHeaderBinding binding : CatalogHeaderBindings.getNcbiHeaders()) {
-                if (binding.getNcbiInclusion().mapsToColumn()) {
-                    // insert headings in declaration order (this is the correct order)
-                    // which controls for reinsertion
-                    rowMap.put(binding, "");
-                }
-
-                // now extract data if possible
-                if (binding.getDatabaseName().isPresent()) {
-                    if (binding.getNcbiInclusion().mapsToColumn()) {
-                        // if data maps to a column, put data in that column
-                        rowMap.put(binding, extractValue(binding, resultSet));
-                    }
-                    else {
-                        // if data doesn't map to a column, extract for processing
-                        dataForMapping.put(binding, extractValue(binding, resultSet));
-                    }
-                }
-            }
-            // now we've added all the direct (1:1) mapping columns, collect up those for processing
-            dataMappers.stream()
-                    .filter(mapper -> rowMap.containsKey(mapper.getOutputField()))
-                    .forEach(mapper -> rowMap.put(mapper.getOutputField(), mapper.produceOutput(dataForMapping)));
-
-            // next, generate new unique ID from values for study id, snp id, (author reported) gene id
-            String studyIdStr = rowMap.get(CatalogHeaderBinding.STUDY_ID);
-            String associationIdStr = rowMap.get(CatalogHeaderBinding.ASSOCIATION_ID);
-            String uniqueKey;
-            if (!studyIdStr.isEmpty() && !associationIdStr.isEmpty()) {
-                long studyId = Long.valueOf(studyIdStr);
-                long associationId = Long.valueOf(associationIdStr);
-                uniqueKey = Long.toString(generateUniqueID(studyId, associationId));
-            }
-            else {
-                uniqueKey = "";
-            }
-            rowMap.put(CatalogHeaderBinding.UNIQUE_KEY, uniqueKey);
-
-            // finally, convert rowMap into a string array and return
-            String[] row = new String[rowMap.keySet().size()];
-            int col = 0;
-            for (CatalogHeaderBinding key : rowMap.keySet()) {
-                row[col++] = rowMap.get(key);
-            }
-            return row;
-        });
-
-        // add the first row, our headers
-        rows.add(0, ncbiOutputHeaders.toArray(new String[ncbiOutputHeaders.size()]));
-        // and convert to a 2D string array
-        return rows.toArray(new String[rows.size()][]);
+        // export data and return
+        return extractData(buildSelectClause(ncbiQueryHeaders) + FROM_CLAUSE + NCBI_WHERE_CLAUSE,
+                           CatalogHeaderBindings.getNcbiHeaders(),
+                           ncbiOutputHeaders,
+                           CatalogHeaderBinding::getNcbiInclusion);
     }
 
     public String[][] getDownloadSpreadsheet(String version) {
@@ -139,55 +95,16 @@ public class CatalogExportRepository {
                 .map(binding -> binding.getDownloadInclusion().columnName().get())
                 .collect(Collectors.toList());
 
-
         List<String> downloadQueryHeaders = getOrderedDownloadHeaders(version)
                 .stream()
                 .filter(binding -> binding.getDatabaseName().isPresent())
                 .map(binding -> binding.getDatabaseName().get())
                 .collect(Collectors.toList());
 
-        String query = buildSelectClause(downloadQueryHeaders) + FROM_CLAUSE + DOWNLOAD_WHERE_CLAUSE;
-        List<String[]> rows = jdbcTemplate.query(query, (resultSet, i) -> {
-            Map<CatalogHeaderBinding, String> dataForMapping = new LinkedHashMap<>();
-            Map<CatalogHeaderBinding, String> rowMap = new LinkedHashMap<>();
-            for (CatalogHeaderBinding binding : getOrderedDownloadHeaders(version)) {
-                if (binding.getDownloadInclusion().mapsToColumn()) {
-                    // insert headings in declaration order (this is the correct order)
-                    // which controls for reinsertion
-                    rowMap.put(binding, "");
-                }
-
-                // now extract data if possible
-                if (binding.getDatabaseName() != null) {
-                    if (binding.getDownloadInclusion().mapsToColumn()) {
-                        // if data maps to a column, put data in that column
-                        rowMap.put(binding, extractValue(binding, resultSet));
-                    }
-                    else {
-                        // if data doesn't map to a column, extract for processing
-                        dataForMapping.put(binding, extractValue(binding, resultSet));
-                    }
-                }
-            }
-
-            // now we've mapped all the direct values, collect up those for processing
-            dataMappers.stream()
-                    .filter(mapper -> rowMap.containsKey(mapper.getOutputField()))
-                    .forEach(mapper -> rowMap.put(mapper.getOutputField(), mapper.produceOutput(dataForMapping)));
-
-            // finally, convert rowMap into a string array and return
-            String[] row = new String[rowMap.keySet().size()];
-            int col = 0;
-            for (CatalogHeaderBinding key : rowMap.keySet()) {
-                row[col++] = rowMap.get(key);
-            }
-            return row;
-        });
-
-        // add the first row, our headers
-        rows.add(0, downloadOutputHeaders.toArray(new String[downloadOutputHeaders.size()]));
-        // and convert to a 2D string array
-        return rows.toArray(new String[rows.size()][]);
+        return extractData(buildSelectClause(downloadQueryHeaders) + FROM_CLAUSE + DOWNLOAD_WHERE_CLAUSE,
+                           getOrderedDownloadHeaders(version),
+                           downloadOutputHeaders,
+                           CatalogHeaderBinding::getDownloadInclusion);
     }
 
     private String buildSelectClause(List<String> requiredFields) {
@@ -204,6 +121,112 @@ public class CatalogExportRepository {
         sb.append(" ");
 
         return sb.toString();
+    }
+
+    private String[][] extractData(String query,
+                                   List<CatalogHeaderBinding> bindings,
+                                   List<String> outputHeaders,
+                                   InclusionExtractor extractor) {
+        getLog().info("Extracting data for spreadsheet export...");
+        final LinkedHashMap<Long, Map<CatalogHeaderBinding, String>> data = new LinkedHashMap<>();
+        List<Map<CatalogHeaderBinding, String>> rows = jdbcTemplate.query(query, (resultSet, i) -> {
+            Map<CatalogHeaderBinding, String> dataForMapping = new LinkedHashMap<>();
+            Map<CatalogHeaderBinding, String> rowMap = new LinkedHashMap<>();
+            for (CatalogHeaderBinding binding : bindings) {
+                if (extractor.extract(binding).mapsToColumn()) {
+                    // insert headings in declaration order (this is the correct order)
+                    // which controls for reinsertion
+                    rowMap.put(binding, "");
+                }
+
+                // now extract data if possible
+                if (binding.getDatabaseName().isPresent()) {
+                    if (extractor.extract(binding).mapsToColumn()) {
+                        // if data maps to a column, put data in that column
+                        rowMap.put(binding, extractValue(binding, resultSet));
+                    }
+                    else {
+                        // if data doesn't map to a column, extract for processing
+                        dataForMapping.put(binding, extractValue(binding, resultSet));
+                    }
+                }
+            }
+            // now we've added all the direct (1:1) mapping columns, collect up those for processing
+            dataMappers.stream()
+                    .filter(mapper -> rowMap.containsKey(mapper.getOutputField()))
+                    .forEach(mapper -> rowMap.put(mapper.getOutputField(), mapper.produceOutput(dataForMapping)));
+
+            // next, generate new unique ID from unique ID values
+            List<Long> identifiers = new ArrayList<>();
+            for (CatalogHeaderBinding binding : bindings) {
+                if (extractor.extract(binding).isIdentifier()) {
+                    try {
+                        identifiers.add(Long.valueOf(rowMap.get(binding)));
+                    }
+                    catch (NumberFormatException e) {
+                        throw new RuntimeException("Cannot use field " + binding + " as ID: " +
+                                                           "not a valid numeric value", e);
+                    }
+                }
+            }
+            long id = generateUniqueID(identifiers);
+            rowMap.put(CatalogHeaderBinding.UNIQUE_KEY, Long.toString(id));
+
+            // check if this row already exists
+            if (data.containsKey(id)) {
+                Map<CatalogHeaderBinding, String> existingValues = data.get(id);
+                // now merge new data with existing values
+                for (CatalogHeaderBinding binding : bindings) {
+                    String existingValue = existingValues.get(binding);
+                    String newValue = rowMap.get(binding);
+                    if (!existingValue.contains(newValue)) {
+                        if (extractor.extract(binding).isConcatenatable()) {
+
+                            // existing value does not already contain new value, comma separate and append
+                            String combinedValue = existingValue.concat(", ").concat(newValue);
+                            // update existing values with this new combined value
+                            existingValues.put(binding, combinedValue);
+                        }
+                        else {
+                            throw new RuntimeException(
+                                    "Non-concatenatable values differ for row ID '" + id + "': " +
+                                            "existing = " + existingValue + ", new = " + newValue + ".\n" +
+                                            "This would result in a new row, causing duplicated unique IDs");
+                        }
+                    }
+                    else {
+                        getLog().debug("Ignoring value '" + newValue + "' - " +
+                                               "already captured by existing data ('" + existingValue + "')");
+                    }
+                }
+            }
+            else {
+                data.put(id, rowMap);
+            }
+
+            return rowMap;
+        });
+
+        // finally, convert each "line" map into a string array
+        getLog().info("Extracted " + rows.size() + " rows of data from the GWAS database, mapping to spreadsheet...");
+        List<String[]> lines = new ArrayList<>();
+        for (long id : data.keySet()) {
+            Map<CatalogHeaderBinding, String> lineMap = data.get(id);
+            String[] line = new String[lineMap.keySet().size()];
+            int col = 0;
+            for (CatalogHeaderBinding key : lineMap.keySet()) {
+                line[col++] = lineMap.get(key);
+            }
+            lines.add(line);
+        }
+
+        // add the first row, our headers
+        lines.add(0, outputHeaders.toArray(new String[outputHeaders.size()]));
+        getLog().info("Spreadsheet flattened down to " + lines.size() +
+                              " rows of data by comma separating non-identifier fields");
+        getLog().info("Spreadsheet data export finished");
+        // and convert all lines into a 2D string array
+        return lines.toArray(new String[lines.size()][]);
     }
 
     private String extractValue(CatalogHeaderBinding binding, ResultSet resultSet) throws SQLException {
@@ -242,6 +265,14 @@ public class CatalogExportRepository {
 
     private long generateUniqueID(long... compositeKeys) {
         return recursivelyPair(compositeKeys);
+    }
+
+    private long generateUniqueID(List<Long> compositeKeys) {
+        long[] longs = new long[compositeKeys.size()];
+        for (int i = 0; i < compositeKeys.size(); i++) {
+            longs[i] = compositeKeys.get(i);
+        }
+        return recursivelyPair(longs);
     }
 
     private long recursivelyPair(long[] compositeKeys) {
@@ -365,5 +396,9 @@ public class CatalogExportRepository {
             }
         }
         return orderedHeaders;
+    }
+
+    private interface InclusionExtractor {
+        CatalogHeaderBinding.Inclusion extract(CatalogHeaderBinding binding);
     }
 }
