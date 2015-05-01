@@ -189,7 +189,7 @@ public class CatalogImportRepository {
         Map<CatalogHeaderBinding, Integer> result = new HashMap<>();
         for (int i : colNumHeaderMap.keySet()) {
             for (CatalogHeaderBinding binding : CatalogHeaderBindings.getLoadHeaders()) {
-                if (binding.getLoadName().toUpperCase().equals(colNumHeaderMap.get(i).toUpperCase())) {
+                if (binding.getLoadInclusion().columnName().get().toUpperCase().equals(colNumHeaderMap.get(i).toUpperCase())) {
                     result.put(binding, i);
                     break;
                 }
@@ -465,7 +465,7 @@ public class CatalogImportRepository {
                             break;
                         default:
                             throw new DataImportException(
-                                    "Unrecognised column flagged for import: " + binding.getLoadName());
+                                    "Unrecognised column flagged for import: " + binding.getLoadInclusion().columnName().get());
                     }
 
                 }
