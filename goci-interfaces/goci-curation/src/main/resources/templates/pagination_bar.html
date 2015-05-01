@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="pagination_bar">
+
+<!-- Pagination bar, based on
+http://www.stefanalexandru.com/java/spring-boot-with-thymeleaf-and-maven-first-impressions-->
+<div class="row">
+    <div class="col-md-12 text-center">
+        <div class='pagination pagination-centered'>
+            <ul class="pagination">
+                <!--First page-->
+                <li th:class="${currentIndex == 1}? 'disabled' : ''">
+                    <span th:if='${currentIndex == 1}'>← First</span>
+                    <a th:if='${currentIndex != 1}'
+                       th:href="@{${'1'}}">← First</a>
+                </li>
+                <!--Move to previous index-->
+                <li th:class="${currentIndex != 1}? '' : 'disabled'">
+                    <span th:if='${currentIndex == 1}'>«</span>
+                    <a th:if='${currentIndex != 1}'
+                       th:href="@{${(currentIndex - 1)}}"
+                       title='Go to previous page'>«</a>
+                </li>
+
+                <!--if item is equal to current page number make it active value, then establish links to other pages-->
+                <li th:each="item : ${#numbers.sequence(beginIndex,endIndex)}"
+                    th:class="${item == currentIndex ? 'active' : '' }">
+                    <span th:if='${item == currentIndex}' th:text='${item}'>1</span>
+                    <a th:if='${item != currentIndex}'
+                       th:href="@{${item }}">
+                        <span th:text='${item}'>1</span>
+                    </a>
+                </li>
+
+                <!--Move to next page-->
+                <li th:class="${currentIndex != studies.totalPages}? '' : 'disabled'">
+                    <span th:if='${currentIndex == studies.totalPages}'>»</span>
+                    <a th:if='${currentIndex != studies.totalPages}'
+                       th:href="@{${(currentIndex + 1)}}" title='Go to next page'>»</a>
+                </li>
+                <!--Last page-->
+                <li th:class="${currentIndex == studies.totalPages}? 'disabled' : ''">
+                    <span th:if='${currentIndex == studies.totalPages}'>Last →</span>
+                    <a th:if='${currentIndex != studies.totalPages}'
+                       th:href="@{${studies.totalPages}}">Last →</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>
