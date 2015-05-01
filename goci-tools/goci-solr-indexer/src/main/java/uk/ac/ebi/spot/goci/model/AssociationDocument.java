@@ -52,7 +52,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field("chromosomeName") private Set<String> chromosomeNames;
     @Field("chromosomePosition") private Set<Integer> chromosomePositions;
 
-    @Field("locusDescription") private String locusDescription;
+    @Field("locusDescription") @NonEmbeddableField private String locusDescription;
 
     // embedded study info
     @Field private String pubmedId;

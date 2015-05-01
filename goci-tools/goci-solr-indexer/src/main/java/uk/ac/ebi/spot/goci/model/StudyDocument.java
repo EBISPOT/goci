@@ -46,7 +46,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field("association_chromosomeName") private Collection<String> chromosomeNames;
     @Field("association_chromosomePosition") private Collection<Integer> chromosomePositions;
     @Field("association_last_modified") private Collection<String> lastModifiedDates;
-    @Field("association_locusDescription") private Collection<String> locusDescriptions;
+//    @Field("association_locusDescription") private Collection<String> locusDescriptions;
 //    @Field("association_merged") private Long merged;
 
     // embedded DiseaseTrait info
@@ -101,7 +101,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.chromosomeNames = new LinkedHashSet<>();
         this.chromosomePositions = new LinkedHashSet<>();
         this.lastModifiedDates = new LinkedHashSet<>();
-        this.locusDescriptions = new LinkedHashSet<>();
+//        this.locusDescriptions = new LinkedHashSet<>();
 
         this.traitNames = new LinkedHashSet<>();
 
@@ -225,7 +225,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.mappedUris.add(mappedUri);
     }
 
-    public void addLocusDescription(String locusDescription){
-        this.locusDescriptions.add(locusDescription);
-    }
+//    public void addLocusDescription(String locusDescription){
+//        this.locusDescriptions.add(locusDescription);
+//    }
 }
