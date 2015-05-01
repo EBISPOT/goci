@@ -29,19 +29,18 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Collection<Study> findByPubmedId(String pubmedId);
 
+    Collection<Study> findByPubmedId(String pubmedId, Sort sort);
+
     // Custom queries
-    @Query("select s from Study s where s.housekeeping.curationStatus.id = :status")
+    @Query("select s from Study s where s.housekeeping.curationStatus.id = :status order by s.studyDate desc")
     Collection<Study> findByCurationStatusIgnoreCase(@Param("status") Long status);
 
-    @Query("select s from Study s where s.housekeeping.curator.id = :curator")
+    @Query("select s from Study s where s.housekeeping.curator.id = :curator order by s.studyDate desc" )
     Collection<Study> findByCuratorIgnoreCase(@Param("curator") Long curator);
 
-    @Query("select s from Study s where s.housekeeping.curationStatus.id = :status and s.housekeeping.curator.id = :curator")
+    @Query("select s from Study s where s.housekeeping.curationStatus.id = :status and s.housekeeping.curator.id = :curator order by s.studyDate desc")
     Collection<Study> findByCurationStatusAndCuratorAllIgnoreCase(@Param("status") Long status,
                                                                   @Param("curator") Long curator);
-
-    @Query("select s from Study s where s.housekeeping.curator.id = :curator")
-    Collection<Study> findByCuratorOrderByStudyDateDesc(@Param("curator") Long curator);
 
     // Custom query to calculate curator totals
     @Query("select s from Study s where s.housekeeping.curator.id = :curator and s.studyDate between :dateFrom and :dateTo")
@@ -49,10 +48,12 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
                                           @Param("dateFrom") Date dateFrom,
                                           @Param("dateTo") Date dateTo);
 
-    // Custom query for daily audit emails
+
     List<Study> findByHousekeepingSendToNCBIDate(Date date);
 
     List<Study> findByAuthorContainingIgnoreCase(String author);
+
+    List<Study> findByAuthorContainingIgnoreCase(String author , Sort sort);
 
     List<Study> findByHousekeepingPublishDateIsNotNull();
 
