@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -60,15 +61,16 @@ public class CatalogExportRepository {
         // Get headers for output spreadsheet
         List<String> ncbiOutputHeaders = CatalogHeaderBindings.getNcbiHeaders()
                 .stream()
-                .filter(binding -> binding.getNcbiName() != null)
-                .map(CatalogHeaderBinding::getNcbiName)
+                .filter(binding -> binding.getNcbiInclusion().mapsToColumn())
+                .filter(binding -> binding.getNcbiInclusion().columnName().isPresent())
+                .map(binding -> binding.getNcbiInclusion().columnName().get())
                 .collect(Collectors.toList());
 
         // Get equivalent headers in database
         List<String> ncbiQueryHeaders = CatalogHeaderBindings.getNcbiHeaders()
                 .stream()
-                .filter(binding -> binding.getDatabaseName() != null)
-                .map(CatalogHeaderBinding::getDatabaseName)
+                .filter(binding -> binding.getDatabaseName().isPresent())
+                .map(binding -> binding.getDatabaseName().get())
                 .collect(Collectors.toList());
 
         // Build query
@@ -77,24 +79,25 @@ public class CatalogExportRepository {
             Map<CatalogHeaderBinding, String> dataForMapping = new LinkedHashMap<>();
             Map<CatalogHeaderBinding, String> rowMap = new LinkedHashMap<>();
             for (CatalogHeaderBinding binding : CatalogHeaderBindings.getNcbiHeaders()) {
-                if (binding.getNcbiName() != null) {
+                if (binding.getNcbiInclusion().mapsToColumn()) {
                     // insert headings in declaration order (this is the correct order)
                     // which controls for reinsertion
                     rowMap.put(binding, "");
                 }
 
                 // now extract data if possible
-                if (binding.getDatabaseName() != null) {
-                    if (binding.getNcbiName() != null) {
+                if (binding.getDatabaseName().isPresent()) {
+                    if (binding.getNcbiInclusion().mapsToColumn()) {
+                        // if data maps to a column, put data in that column
                         rowMap.put(binding, extractValue(binding, resultSet));
                     }
                     else {
-                        // if ncbi name is null, this data needs mapping
+                        // if data doesn't map to a column, extract for processing
                         dataForMapping.put(binding, extractValue(binding, resultSet));
                     }
                 }
             }
-            // now we've mapped all the direct values, collect up those for processing
+            // now we've added all the direct (1:1) mapping columns, collect up those for processing
             dataMappers.stream()
                     .filter(mapper -> rowMap.containsKey(mapper.getOutputField()))
                     .forEach(mapper -> rowMap.put(mapper.getOutputField(), mapper.produceOutput(dataForMapping)));
@@ -131,15 +134,16 @@ public class CatalogExportRepository {
     public String[][] getDownloadSpreadsheet(String version) {
         List<String> downloadOutputHeaders = getOrderedDownloadHeaders(version)
                 .stream()
-                .filter(binding -> binding.getDownloadName() != null)
-                .map(CatalogHeaderBinding::getDownloadName)
+                .filter(binding -> binding.getDownloadInclusion().mapsToColumn())
+                .filter(binding -> binding.getDownloadInclusion().columnName().isPresent())
+                .map(binding -> binding.getDownloadInclusion().columnName().get())
                 .collect(Collectors.toList());
 
 
         List<String> downloadQueryHeaders = getOrderedDownloadHeaders(version)
                 .stream()
-                .filter(binding -> binding.getDatabaseName() != null)
-                .map(CatalogHeaderBinding::getDatabaseName)
+                .filter(binding -> binding.getDatabaseName().isPresent())
+                .map(binding -> binding.getDatabaseName().get())
                 .collect(Collectors.toList());
 
         String query = buildSelectClause(downloadQueryHeaders) + FROM_CLAUSE + DOWNLOAD_WHERE_CLAUSE;
@@ -147,7 +151,7 @@ public class CatalogExportRepository {
             Map<CatalogHeaderBinding, String> dataForMapping = new LinkedHashMap<>();
             Map<CatalogHeaderBinding, String> rowMap = new LinkedHashMap<>();
             for (CatalogHeaderBinding binding : getOrderedDownloadHeaders(version)) {
-                if (binding.getDownloadName() != null) {
+                if (binding.getDownloadInclusion().mapsToColumn()) {
                     // insert headings in declaration order (this is the correct order)
                     // which controls for reinsertion
                     rowMap.put(binding, "");
@@ -155,11 +159,12 @@ public class CatalogExportRepository {
 
                 // now extract data if possible
                 if (binding.getDatabaseName() != null) {
-                    if (binding.getDownloadName() != null) {
+                    if (binding.getDownloadInclusion().mapsToColumn()) {
+                        // if data maps to a column, put data in that column
                         rowMap.put(binding, extractValue(binding, resultSet));
                     }
                     else {
-                        // if download name is null, this data needs mapping
+                        // if data doesn't map to a column, extract for processing
                         dataForMapping.put(binding, extractValue(binding, resultSet));
                     }
                 }
@@ -202,30 +207,36 @@ public class CatalogExportRepository {
     }
 
     private String extractValue(CatalogHeaderBinding binding, ResultSet resultSet) throws SQLException {
-        if (binding.isDate()) {
-            Date value = resultSet.getDate(binding.getDatabaseName());
-            if (value != null) {
-                return df.format(value);
+        if (binding.getDatabaseName().isPresent()) {
+            if (binding.isDate()) {
+                Date value = resultSet.getDate(binding.getDatabaseName().get());
+                if (value != null) {
+                    return df.format(value);
+                }
+                else {
+                    return "";
+                }
             }
             else {
-                return "";
+                String value = resultSet.getString(binding.getDatabaseName().get());
+                if (value != null) {
+
+                    // Remove new lines or carriage returns in value
+                    String newline = System.getProperty("line.separator");
+                    if (value.contains(newline)) {
+                        value = value.replaceAll("\n", "").replaceAll("\r", "");
+                    }
+
+                    return value.trim();
+                }
+                else {
+                    return "";
+                }
             }
         }
         else {
-            String value = resultSet.getString(binding.getDatabaseName());
-            if (value != null) {
-
-                // Remove new lines or carriage returns in value
-                String newline = System.getProperty("line.separator");
-                if (value.contains(newline)) {
-                    value = value.replaceAll("\n", "").replaceAll("\r", "");
-                }
-
-                return value.trim();
-            }
-            else {
-                return "";
-            }
+            throw new RuntimeException("Cannot extract data for binding '" + binding + "': " +
+                                               "no given column name to extract from ResultSet");
         }
     }
 
@@ -261,7 +272,7 @@ public class CatalogExportRepository {
     //put the CatalogHeaderBindings into the correct order for the download spreadsheet
     private List<CatalogHeaderBinding> getOrderedDownloadHeaders(String version) {
         List<CatalogHeaderBinding> catalogHeaders = CatalogHeaderBindings.getDownloadHeaders();
-        List<CatalogHeaderBinding> orderedHeaders = new ArrayList<CatalogHeaderBinding>();
+        List<CatalogHeaderBinding> orderedHeaders = new ArrayList<>();
         List<String> order;
 
         if (version.equals("d")) {
@@ -300,7 +311,6 @@ public class CatalogExportRepository {
                                   "PLATFORM [SNPS PASSING QC]",
                                   "CNV");
         }
-
         else {
             order = Arrays.asList("DATE ADDED TO CATALOG",
                                   "PUBMEDID",
@@ -342,8 +352,8 @@ public class CatalogExportRepository {
 
         for (String header : order) {
             for (CatalogHeaderBinding binding : catalogHeaders) {
-                if (binding.getDownloadName() != null) {
-                    if (binding.getDownloadName().equals(header)) {
+                if (binding.getDownloadInclusion().columnName().isPresent()) {
+                    if (binding.getDownloadInclusion().columnName().get().equals(header)) {
                         orderedHeaders.add(binding);
                     }
                 }
@@ -356,5 +366,4 @@ public class CatalogExportRepository {
         }
         return orderedHeaders;
     }
-
 }
