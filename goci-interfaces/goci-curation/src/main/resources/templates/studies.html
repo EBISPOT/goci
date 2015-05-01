@@ -7,10 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="../static/css/table_padding.css" th:href="@{css/table_padding.css}"/>
-    <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}"/>
-    <link rel="stylesheet" href="../static/css/bootstrap-theme.min.css" th:href="@{css/bootstrap-theme.min.css}"/>
-
+    <link rel="stylesheet" href="../../css/table_padding.css" th:href="@{../../css/table_padding.css}"/>
+    <link rel="stylesheet" href="../../css/bootstrap.min.css" th:href="@{../../css/bootstrap.min.css}"/>
+    <link rel="stylesheet" href="../../css/bootstrap-theme.min.css" th:href="@{../../css/bootstrap-theme.min.css}"/>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
@@ -24,7 +23,6 @@
 
     <!-- Include Select2 JS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
-
 
     <!--Bootstrap table: http://bootstrap-table.wenzhixin.net.cn/-->
     <!-- Latest compiled and minified CSS -->
@@ -90,18 +88,12 @@
         <div class="col-md-12">
             <div id="filter-bar"></div>
             <div class="main-table-wrapper">
-                <table id="mainTable" class="table table-hover table-bordered"
-                       data-toggle="table"
-                       data-show-pagination-switch="true"
-                       data-show-columns="true"
-                       data-search="true"
-                       data-sort-order="asc"
-                       data-pagination="true">
-                    <caption id="total"></caption>
+                <table id="mainTable" class="table table-hover table-bordered">
+                    <caption id="total" th:text="'Total: '+ ${totalStudies}"></caption>
                     <thead>
                     <tr>
-                        <th class="col-md-1" data-field="action" data-switchable="false"></th>
-                        <th class="col-md-1" data-field="author" data-sortable="true">Author</th>
+                        <th class="col-md-1"></th>
+                        <th class="col-md-1">Author</th>
                         <th class="col-md-2" data-field="title" data-sortable="true">Title</th>
                         <th class="col-md-1" data-field="studydate" data-sortable="true">Study Date (YYYY-MM-DD)</th>
                         <th class="col-md-1" data-field="pubmedid" data-sortable="true">Pubmed ID</th>
@@ -171,6 +163,8 @@
                 </table>
             </div>
         </div>
+
+        <div th:include="pagination_bar :: pagination_bar"></div>
     </div>
 </div>
 
@@ -192,17 +186,6 @@
             allowClear: true
         });
     });
-</script>
-
-
-<script>
-    //    Count our table rows
-    function myFunction() {
-        // Minus 1 to account for heading
-        var x = document.getElementById("mainTable").rows.length - 1;
-        return "Total Studies: " + x;
-    }
-    document.getElementById("total").innerHTML = myFunction();
 </script>
 
 </body>
