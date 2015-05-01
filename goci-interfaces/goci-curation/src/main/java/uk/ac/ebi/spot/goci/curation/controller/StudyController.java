@@ -121,11 +121,18 @@ public class StudyController {
         Long status = studySearchFilter.getStatusSearchFilterId();
         Long curator = studySearchFilter.getCuratorSearchFilterId();
         String pubmedId = studySearchFilter.getPubmedId();
+        String author = studySearchFilter.getAuthor();
 
         // Search by pubmed ID option available from landing page
-        if (pubmedId != null) {
+        if (pubmedId != null && !pubmedId.isEmpty()) {
             model.addAttribute("studies", studyRepository.findByPubmedId(pubmedId));
-            return  "studies";
+            return "studies";
+        }
+
+        // Search by author option available from landing page
+        if (author != null && !author.isEmpty()) {
+            model.addAttribute("studies", studyRepository.findByAuthorContainingIgnoreCase(author));
+            return "studies";
         }
 
         // If user entered a status

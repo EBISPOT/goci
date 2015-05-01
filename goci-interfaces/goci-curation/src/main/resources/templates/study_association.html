@@ -25,7 +25,7 @@
     <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
 
     <!--Handles checkbox in table -->
-    <script src="../static/js/goci-study-association.js" th:src="@{../../../js/goci-study-association.js}"></script>
+    <script src="../static/js/goci-study-association.js" th:src="@{../../js/goci-study-association.js}"></script>
 
     <!--Bootstrap table: http://bootstrap-table.wenzhixin.net.cn/-->
     <!-- Latest compiled and minified CSS -->
@@ -102,6 +102,16 @@
                role="button"
                data-toggle="modal">Delete Checked SNPs</a>
 
+
+            <a th:href="@{/studies/{studyId}/associations/applyefotraits(studyId=${study.Id})}"
+               class="btn btn-default"
+               role="button">Apply EFO trait(s) to all SNPs</a>
+
+
+            <a th:href="@{/studies/{studyId}/associations/download(studyId=${study.Id})}"
+               class="btn btn-default pull-right"
+               role="button">Download SNPs to spreadsheet</a>
+
         </div>
     </div>
 </div>
@@ -164,7 +174,8 @@
                     <th class="col-md-1" data-sortable="true">Strongest Allele</th>
                     <th class="col-md-1" data-sortable="true">SNP</th>
                     <th data-sortable="true">Risk Frequency</th>
-                    <th data-sortable="true">p-Value Float</th>
+                    <th data-sortable="true">p-Value Exponent</th>
+                    <th data-sortable="true">p-Value Mantissa</th>
                     <th data-sortable="true">p-Value Text</th>
                     <th class="col-md-1" data-sortable="true">EFO trait</th>
                     <th data-sortable="true">OR per Copy Num</th>
@@ -207,7 +218,10 @@
                     </td>
 
                     <td th:text="${snpAssociationForm.riskFrequency}?: '' "></td>
-                    <td th:text="${snpAssociationForm.pvalueFloat} ?: ''"></td>
+
+                    <!--P Value-->
+                    <td th:text="${snpAssociationForm.pvalueExponent} ?: ''"></td>
+                    <td th:text="${snpAssociationForm.pvalueMantissa} ?: ''"></td>
                     <td th:text="${snpAssociationForm.pvalueText} ?: ''"></td>
 
                     <!--EFO traits-->
@@ -292,6 +306,7 @@
                                                                                                              haplotype</a>
             <a th:href="@{/studies/{studyId}/associations/add_interaction(studyId=*{id})}"
                class="btn btn-primary">Add SNP:SNP interaction</a>
+
             <input type="button" class="btn btn-primary pull-right" value="Add SNPs from spreadsheet"
                    data-toggle="collapse"
                    data-target="#uploadSNPsForn"/>

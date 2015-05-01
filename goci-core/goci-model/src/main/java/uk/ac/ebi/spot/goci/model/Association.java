@@ -253,6 +253,10 @@ public class Association {
         this.efoTraits = efoTraits;
     }
 
+    public void addEfoTrait(EfoTrait efoTrait){
+        efoTraits.add(efoTrait);
+    }
+
     public Boolean getSnpChecked() {
         return snpChecked;
     }

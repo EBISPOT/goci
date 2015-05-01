@@ -163,8 +163,26 @@
                         <td th:text="${study.author} ?: '' "></td>
                         <td th:text="${study.title} ?: ''"></td>
                         <td th:text="${#calendars.format(study.studyDate,'yyyy-MM-dd')} ?: ''"></td>
-                        <td><a th:href="@{http://europepmc.org/abstract/MED/{pubmedId}(pubmedId=${study.pubmedId})}"
-                               th:text="${study.pubmedId} ?: ''" target="_blank"></a></td>
+                        <td><p th:text="${study.pubmedId} ?: ''" ></p>
+                            <div class="btn-group">
+                                <button type="button"
+                                        data-toggle="dropdown"
+                                        class="btn btn-sm btn-default dropdown-toggle">
+                                View paper<span class="caret"></span></button>
+
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a th:href="@{http://europepmc.org/abstract/MED/{pubmedId}(pubmedId=${study.pubmedId})}"
+                                           target="_blank">View in Europe PMC</a></li>
+                                    <li>
+                                        <a th:href="@{http://www.ncbi.nlm.nih.gov/pubmed/?term={pubmedId}(pubmedId=${study.pubmedId})}"
+                                           target="_blank">View in PubMed</a></li>
+
+                                </ul>
+                            </div>
+                        </td>
+
+
                         <td th:text="${study.publication} ?: ''"></td>
 
                         <!--If study has associated disease trait return traits name-->
@@ -188,16 +206,20 @@
 <script>
     $(function() {
         // turn the element to select2 select style
-        $('#curationStatus').select2({ placeholder: "Select a status",
-                                         allowClear: true});
+        $('#curationStatus').select2({
+            placeholder: "Select a status",
+            allowClear: true
+        });
     });
 </script>
 
 <script>
     $(function() {
         // turn the element to select2 select style
-        $('#curator').select2({ placeholder: "Select a curator",
-                                  allowClear: true});
+        $('#curator').select2({
+            placeholder: "Select a curator",
+            allowClear: true
+        });
     });
 </script>
 

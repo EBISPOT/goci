@@ -65,6 +65,11 @@ public class FtpFileService {
             getLog().info(remoteFile + " uploaded successfully.");
         }
 
+        else {
+            getLog().error("Failed to upload file " + remoteFile + " to FTP");
+        }
+
+
         // Close FTP connection
         disconnect();
     }
@@ -78,7 +83,7 @@ public class FtpFileService {
 
         DateFormat df = new SimpleDateFormat("yyyy_MM_dd");
         String dateStamp = df.format(new Date());
-        File annotatedFile= new File(uploadDir + dateStamp + "_annotated_gwas.txt");
+        File annotatedFile = new File(uploadDir + dateStamp + "_annotated_gwas.txt");
         annotatedFile.getParentFile().mkdirs();
 
         // If at this stage we haven't got a file create one
@@ -93,8 +98,12 @@ public class FtpFileService {
         FileOutputStream fileOutputStream = new FileOutputStream(annotatedFile);
         boolean done = ftpClient.retrieveFile("annotated_gwas.txt", fileOutputStream);
 
-        if (done){
-            getLog().info("Annotated NCBI file downloaded successfully to "+ annotatedFile);
+        if (done) {
+            getLog().info("Annotated NCBI file downloaded successfully to " + annotatedFile);
+        }
+
+        else {
+            getLog().error("Failed to download file " + annotatedFile + " from FTP");
         }
 
         fileOutputStream.close();

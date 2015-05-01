@@ -75,7 +75,7 @@ public class DailyAuditTask {
         // Set total
         this.totalNumberOfStudiesSentToNcbi = studiesSentToNcbi.size();
 
-        // Create list of all studies sent to NCBI
+        // Create list of all studies sent to NCBI that will be used to create email text
         Collection<StudyAuditView> studiesSentToNcbiForEmail = new ArrayList<StudyAuditView>();
 
         if (!studiesSentToNcbi.isEmpty()) {
@@ -134,50 +134,65 @@ public class DailyAuditTask {
     // Create view objects that will be parsed to create email
     private StudyAuditView createView(Study study) {
 
-        // Collect all information required for email
+        // Initialise and collect all information required for email
         String title = study.getTitle();
         Long studyId = study.getId();
         String pubmedId = study.getPubmedId();
         String author = study.getAuthor();
         Date studyDate = study.getStudyDate();
-        Date sendToNCBIDate = study.getHousekeeping().getSendToNCBIDate();
 
-        // Errors
-        StudyReport studyReport = studyReportRepository.findByStudyId(study.getId());
-        Long pubmedIdError = studyReport.getPubmedIdError();
+        // possibility that these may not be set in DB
+        Date sendToNCBIDate = null;
+        Long pubmedIdError = null;
         List<String> snpErrors = new ArrayList<String>();
         List<String> geneNotOnGenomeErrors = new ArrayList<String>();
         List<String> snpGeneOnDiffChrErrors = new ArrayList<String>();
         List<String> noGeneForSymbolErrors = new ArrayList<String>();
+
+        StudyReport studyReport = studyReportRepository.findByStudyId(study.getId());
+
+        if (studyReport != null) {
+            pubmedIdError = studyReport.getPubmedIdError();
+        }
+
+        if (study.getHousekeeping().getSendToNCBIDate() != null) {
+            sendToNCBIDate = study.getHousekeeping().getSendToNCBIDate();
+        }
 
         // Get all the associations linked to this study
         Collection<Association> studyAssociations =
                 associationRepository.findByStudyId(study.getId().longValue());
 
         // Get all association reports and collate errors
-        for (Association association : studyAssociations) {
-            AssociationReport associationReport =
-                    associationReportRepository.findByAssociationId(association.getId());
+        if (studyAssociations != null) {
+            for (Association association : studyAssociations) {
+                AssociationReport associationReport =
+                        associationReportRepository.findByAssociationId(association.getId());
 
-            if (associationReport.getSnpError() != null && !associationReport.getSnpError().isEmpty()) {
-                snpErrors.add(associationReport.getSnpError());
-            }
+                // If we have a report try and store the error messages for subsequent email
+                if (associationReport != null) {
+                    if (associationReport.getSnpError() != null && !associationReport.getSnpError().isEmpty()) {
+                        snpErrors.add(associationReport.getSnpError());
+                    }
 
-            if (associationReport.getGeneNotOnGenome() != null &&
-                    !associationReport.getGeneNotOnGenome().isEmpty()) {
-                geneNotOnGenomeErrors.add(associationReport.getGeneNotOnGenome());
-            }
+                    if (associationReport.getGeneNotOnGenome() != null &&
+                            !associationReport.getGeneNotOnGenome().isEmpty()) {
+                        geneNotOnGenomeErrors.add(associationReport.getGeneNotOnGenome());
+                    }
 
-            if (associationReport.getSnpGeneOnDiffChr() != null &&
-                    !associationReport.getSnpGeneOnDiffChr().isEmpty()) {
-                snpGeneOnDiffChrErrors.add(associationReport.getSnpGeneOnDiffChr());
-            }
+                    if (associationReport.getSnpGeneOnDiffChr() != null &&
+                            !associationReport.getSnpGeneOnDiffChr().isEmpty()) {
+                        snpGeneOnDiffChrErrors.add(associationReport.getSnpGeneOnDiffChr());
+                    }
 
-            if (associationReport.getNoGeneForSymbol() != null &&
-                    !associationReport.getNoGeneForSymbol().isEmpty()) {
-                noGeneForSymbolErrors.add(associationReport.getNoGeneForSymbol());
+                    if (associationReport.getNoGeneForSymbol() != null &&
+                            !associationReport.getNoGeneForSymbol().isEmpty()) {
+                        noGeneForSymbolErrors.add(associationReport.getNoGeneForSymbol());
+                    }
+                }
             }
         }
+
 
         // Create a view of all errors for each study
         StudyAuditView studyAuditView = new StudyAuditView(title,
