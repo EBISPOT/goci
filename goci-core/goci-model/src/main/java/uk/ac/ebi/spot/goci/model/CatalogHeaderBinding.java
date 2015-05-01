@@ -108,7 +108,7 @@ public enum CatalogHeaderBinding {
                              new Inclusion.FieldIncluded("DOWNSTREAM_GENE_DISTANCE"),
                              new Inclusion.FieldIncluded("downstream_gene_distance")),
     STRONGEST_SNP_RISK_ALLELE("STRONGEST_SNP_RISK_ALLELE",
-                              new Inclusion.FieldIncluded("STRONGEST SNP-RISK ALLELE"),
+                              new Inclusion.CommaSeparatedIncluded("STRONGEST SNP-RISK ALLELE"),
                               new Inclusion.FieldIncluded("STRONGEST SNP-RISK ALLELE"),
                               new Inclusion.Excluded()),
     SNP_RSID("SNP_RSID",
@@ -123,7 +123,7 @@ public enum CatalogHeaderBinding {
            new Inclusion.Excluded(),
            new Inclusion.FieldIncluded("MERGED"),
            new Inclusion.FieldIncluded("merged")),
-    SNP_ID("SNP_ID", new Inclusion.Excluded(), new Inclusion.Excluded(), new Inclusion.FieldIncluded("snp_id")),
+    SNP_ID("SNP_ID", new Inclusion.UniqueExtracted(), new Inclusion.Excluded(), new Inclusion.FieldIncluded("snp_id")),
     INTERGENIC_CONTEXT("IS_INTERGENIC",
                        new Inclusion.Excluded(),
                        new Inclusion.Extracted(),
@@ -403,6 +403,27 @@ public enum CatalogHeaderBinding {
             }
         }
 
+        class UniqueExtracted implements Inclusion {
+            @Override public boolean isRequired() {
+                return true;
+            }
+
+            @Override public boolean isIdentifier() {
+                return true;
+            }
+
+            @Override public boolean isConcatenatable() {
+                return false;
+            }
+
+            @Override public boolean mapsToColumn() {
+                return false;
+            }
+
+            @Override public Optional<String> columnName() {
+                return Optional.empty();
+            }
+        }
         class Extracted implements Inclusion {
             @Override public boolean isRequired() {
                 return true;

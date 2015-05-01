@@ -162,12 +162,27 @@ public class CatalogExportRepository {
             List<Long> identifiers = new ArrayList<>();
             for (CatalogHeaderBinding binding : bindings) {
                 if (extractor.extract(binding).isIdentifier()) {
-                    try {
-                        identifiers.add(Long.valueOf(rowMap.get(binding)));
+                    String val = null;
+                    if (rowMap.containsKey(binding)) {
+                        val = rowMap.get(binding);
                     }
-                    catch (NumberFormatException e) {
-                        throw new RuntimeException("Cannot use field " + binding + " as ID: " +
-                                                           "not a valid numeric value", e);
+                    else {
+                        val = dataForMapping.get(binding);
+                    }
+
+                    if (val != null) {
+                        if (!val.isEmpty()) {
+                            try {
+                                identifiers.add(Long.valueOf(val));
+                            }
+                            catch (NumberFormatException e) {
+                                throw new RuntimeException("Cannot use field " + binding + " = " + val + " as ID: " +
+                                                                   "not a valid numeric value", e);
+                            }
+                        }
+                    }
+                    else {
+                        throw new RuntimeException("Unable to locate data for binding '" + binding + "'");
                     }
                 }
             }
@@ -181,24 +196,36 @@ public class CatalogExportRepository {
                 for (CatalogHeaderBinding binding : bindings) {
                     String existingValue = existingValues.get(binding);
                     String newValue = rowMap.get(binding);
-                    if (!existingValue.contains(newValue)) {
-                        if (extractor.extract(binding).isConcatenatable()) {
-
-                            // existing value does not already contain new value, comma separate and append
-                            String combinedValue = existingValue.concat(", ").concat(newValue);
-                            // update existing values with this new combined value
-                            existingValues.put(binding, combinedValue);
+                    if (existingValue != null) {
+                        if (!existingValue.contains(newValue)) {
+                            if (extractor.extract(binding).isConcatenatable()) {
+                                // existing value does not already contain new value, comma separate and append
+                                String combinedValue = existingValue.concat(", ").concat(newValue);
+                                // update existing values with this new combined value
+                                existingValues.put(binding, combinedValue);
+                            }
+                            else {
+                                throw new RuntimeException(
+                                        "Non-concatenatable values for " + binding.getDatabaseName().get() + " " +
+                                                "differ in row ID '" + id + "': " +
+                                                "existing = " + existingValue + ", new = " + newValue + ".\n" +
+                                                "This would result in a new row, causing duplicated unique IDs");
+                            }
                         }
                         else {
-                            throw new RuntimeException(
-                                    "Non-concatenatable values differ for row ID '" + id + "': " +
-                                            "existing = " + existingValue + ", new = " + newValue + ".\n" +
-                                            "This would result in a new row, causing duplicated unique IDs");
+                            getLog().debug("Ignoring value '" + newValue + "' for " + binding + " - " +
+                                                   "already captured by existing data ('" + existingValue + "')");
                         }
                     }
                     else {
-                        getLog().debug("Ignoring value '" + newValue + "' - " +
-                                               "already captured by existing data ('" + existingValue + "')");
+                        if (newValue == null) {
+                            getLog().debug("Safely ignoring value null for " + binding + " - " +
+                                                   "existing value already null exported to spreadsheet");
+                        }
+                        else {
+                            throw new RuntimeException("Cannot ignore value '" + newValue + "' for " + binding + " - " +
+                                                               "overrides existing null value");
+                        }
                     }
                 }
             }
@@ -266,7 +293,8 @@ public class CatalogExportRepository {
     }
 
     private long generateUniqueID(long... compositeKeys) {
-        return recursivelyPair(compositeKeys);
+        //        return recursivelyPair(compositeKeys);
+        return concatenateAndHash(compositeKeys);
     }
 
     private long generateUniqueID(List<Long> compositeKeys) {
@@ -274,7 +302,8 @@ public class CatalogExportRepository {
         for (int i = 0; i < compositeKeys.size(); i++) {
             longs[i] = compositeKeys.get(i);
         }
-        return recursivelyPair(longs);
+        //        return recursivelyPair(longs);
+        return concatenateAndHash(longs);
     }
 
     private long recursivelyPair(long[] compositeKeys) {
@@ -300,6 +329,14 @@ public class CatalogExportRepository {
 
     private static long calculateCantorPair(long x, long y) {
         return (long) (0.5 * (x + y) * (x + y + 1) + y);
+    }
+
+    private static long concatenateAndHash(long[] longs) {
+        StringBuilder sb = new StringBuilder();
+        for (long l : longs) {
+            sb.append(l);
+        }
+        return Math.abs((long) sb.toString().hashCode());
     }
 
     //put the CatalogHeaderBindings into the correct order for the download spreadsheet
