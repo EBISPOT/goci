@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 usage() {
-  echo "Usage: increment-version.sh -v [VERSION NUMBER]"
+  echo "Usage: update-version.sh -v [VERSION NUMBER]"
   echo "Required options:"
   echo "  -v    The version to increment the next release to"
 }
@@ -9,7 +9,7 @@ usage() {
 while getopts "v:h" opt; do
   case $opt in
     v)
-      echo "Incrementing GOCI project version number to $OPTARG"
+      echo "Updating GOCI project version number to $OPTARG"
       VERSION=$OPTARG
       ;;
     h)
