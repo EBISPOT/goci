@@ -57,7 +57,7 @@ public enum CatalogHeaderBinding {
            new Inclusion.FieldIncluded("REGION"),
            new Inclusion.FieldIncluded("cytogenetic_loc")),
     FUNCTIONAL_CLASS("FUNCTIONAL_CLASS",
-                     new Inclusion.CommaSeparatedIncluded(),
+                     new Inclusion.Excluded(),
                      new Inclusion.Excluded(),
                      new Inclusion.FieldIncluded("functional_class")),
     CHROMOSOME_NAME("CHROMOSOME_NAME",
