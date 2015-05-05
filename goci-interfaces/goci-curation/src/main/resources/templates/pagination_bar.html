@@ -9,18 +9,18 @@ http://www.stefanalexandru.com/java/spring-boot-with-thymeleaf-and-maven-first-i
 <div class="row">
     <div class="col-md-12 text-center">
         <div class='pagination pagination-centered'>
-            <ul class="pagination">
+            <ul class="pagination" th:if="${filters == null}">
                 <!--First page-->
                 <li th:class="${currentIndex == 1}? 'disabled' : ''">
                     <span th:if='${currentIndex == 1}'>← First</span>
                     <a th:if='${currentIndex != 1}'
-                       th:href="@{${'?pageNumber=1'}}">← First</a>
+                       th:href="@{${'?page=1'}}">← First</a>
                 </li>
                 <!--Move to previous index-->
                 <li th:class="${currentIndex != 1}? '' : 'disabled'">
                     <span th:if='${currentIndex == 1}'>«</span>
                     <a th:if='${currentIndex != 1}'
-                       th:href="@{${('?pageNumber='+(currentIndex - 1))}}"
+                       th:href="@{${('?page='+(currentIndex - 1))}}"
                        title='Go to previous page'>«</a>
                 </li>
 
@@ -29,7 +29,7 @@ http://www.stefanalexandru.com/java/spring-boot-with-thymeleaf-and-maven-first-i
                     th:class="${item == currentIndex ? 'active' : '' }">
                     <span th:if='${item == currentIndex}' th:text='${item}'>1</span>
                     <a th:if='${item != currentIndex}'
-                       th:href="@{${'?pageNumber='+item}}">
+                       th:href="@{${'?page='+item}}">
                         <span th:text='${item}'>1</span>
                     </a>
                 </li>
@@ -38,13 +38,53 @@ http://www.stefanalexandru.com/java/spring-boot-with-thymeleaf-and-maven-first-i
                 <li th:class="${currentIndex != studies.totalPages}? '' : 'disabled'">
                     <span th:if='${currentIndex == studies.totalPages}'>»</span>
                     <a th:if='${currentIndex != studies.totalPages}'
-                       th:href="@{${('?pageNumber='+(currentIndex + 1))}}" title='Go to next page'>»</a>
+                       th:href="@{${('?page='+(currentIndex + 1))}}" title='Go to next page'>»</a>
                 </li>
                 <!--Last page-->
                 <li th:class="${currentIndex == studies.totalPages}? 'disabled' : ''">
                     <span th:if='${currentIndex == studies.totalPages}'>Last →</span>
                     <a th:if='${currentIndex != studies.totalPages}'
-                       th:href="@{${'?pageNumber='+studies.totalPages}}">Last →</a>
+                       th:href="@{${'?page='+studies.totalPages}}">Last →</a>
+                </li>
+            </ul>
+
+            <!--If we have filters-->
+            <ul class="pagination" th:if="${filters != null}">
+                <!--First page-->
+                <li th:class="${currentIndex == 1}? 'disabled' : ''">
+                    <span th:if='${currentIndex == 1}'>← First</span>
+                    <a th:if='${currentIndex != 1}'
+                       th:href="@{${'?page=1'+filters}}">← First</a>
+                </li>
+                <!--Move to previous index-->
+                <li th:class="${currentIndex != 1}? '' : 'disabled'">
+                    <span th:if='${currentIndex == 1}'>«</span>
+                    <a th:if='${currentIndex != 1}'
+                       th:href="@{${('?page='+(currentIndex - 1)+filters)}}"
+                       title='Go to previous page'>«</a>
+                </li>
+
+                <!--if item is equal to current page number make it active value, then establish links to other pages-->
+                <li th:each="item : ${#numbers.sequence(beginIndex,endIndex)}"
+                    th:class="${item == currentIndex ? 'active' : '' }">
+                    <span th:if='${item == currentIndex}' th:text='${item}'>1</span>
+                    <a th:if='${item != currentIndex}'
+                       th:href="@{${'?page='+item+filters}}">
+                        <span th:text='${item}'>1</span>
+                    </a>
+                </li>
+
+                <!--Move to next page-->
+                <li th:class="${currentIndex != studies.totalPages}? '' : 'disabled'">
+                    <span th:if='${currentIndex == studies.totalPages}'>»</span>
+                    <a th:if='${currentIndex != studies.totalPages}'
+                       th:href="@{${('?page='+(currentIndex + 1)+filters)}}" title='Go to next page'>»</a>
+                </li>
+                <!--Last page-->
+                <li th:class="${currentIndex == studies.totalPages}? 'disabled' : ''">
+                    <span th:if='${currentIndex == studies.totalPages}'>Last →</span>
+                    <a th:if='${currentIndex != studies.totalPages}'
+                       th:href="@{${'?page='+studies.totalPages+filters}}">Last →</a>
                 </li>
             </ul>
         </div>
