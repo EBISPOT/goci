@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -52,6 +51,8 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     // pluralise all other information, but retain order
     @Field("chromosomeName") private Set<String> chromosomeNames;
     @Field("chromosomePosition") private Set<Integer> chromosomePositions;
+
+    @Field("locusDescription") @NonEmbeddableField private String locusDescription;
 
     // embedded study info
     @Field private String pubmedId;
@@ -298,6 +299,8 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                 reportedGeneLinks.add(geneLink);
                             }
                         });
+
+                        locusDescription = locus.getDescription();
                     }
             );
         }
@@ -358,6 +361,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                 reportedGeneLinks.add(geneLink);
                             }
                         });
+                        locusDescription = locus.getDescription();
                     }
             );
         }
@@ -442,5 +446,13 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             }
         }
         return current;
+    }
+
+    public String getLocusDescription() {
+        return locusDescription;
+    }
+
+    public void setLocusDescription(String locusDescription) {
+        this.locusDescription = locusDescription;
     }
 }
