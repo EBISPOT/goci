@@ -105,26 +105,82 @@ public class StudyController {
     }
 
     /* All studies and various filtered lists */
-
-    // Return all studies
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String allStudies(Model model) {
+    public String allStudiesPage(Model model,
+                                 @RequestParam(required = false) Integer page,
+                                 @RequestParam(required = false) String pubmed,
+                                 @RequestParam(required = false) String author,
+                                 @RequestParam(required = false) Long status,
+                                 @RequestParam(required = false) Long curator) {
 
-        // Find all studies ordered by study date and only display first page
-        return "redirect:/studies/page/1";
-    }
+        // This will be returned to view and store what curator has searched for
+        StudySearchFilter studySearchFilter = new StudySearchFilter();
 
-    @RequestMapping(value = "/page/{pageNumber}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String allStudiesPage(@PathVariable Integer pageNumber, Model model,  @RequestParam(required = false) String direction) {
+        // Store filters which will be need for pagination bar
+        String filters = null;
 
-
-        Page<Study> studyPage = null;
-        if (direction!= null && direction.contains("author") && direction.contains("asc")) {
-            studyPage = studyRepository.findAll(constructPageSpecification(pageNumber - 1, sortByAuthorAsc()));
+        // Return all studies ordered by date if no page number given
+        if (page == null) {
+            // Find all studies ordered by study date and only display first page
+            return "redirect:/studies?page=1";
         }
-        else {
+
+        // This is the default study page will all studies sorted bu stydu date
+        Page<Study> studyPage =
+                studyRepository.findAll(constructPageSpecification(page - 1, sortByStudyDateDesc()));
+
+        // Search by pubmed ID option available from landing page
+        if (pubmed != null && !pubmed.isEmpty()) {
             studyPage =
-                    studyRepository.findAll(constructPageSpecification(pageNumber - 1, sortByStudyDateDesc()));
+                    studyRepository.findByPubmedId(pubmed, constructPageSpecification(page - 1, sortByStudyDateDesc()));
+            filters = "&pubmed=" + pubmed;
+        }
+
+        // Search by author option available from landing page
+        if (author != null && !author.isEmpty()) {
+            studyPage = studyRepository.findByAuthorContainingIgnoreCase(author, constructPageSpecification(page - 1,
+                                                                                                            sortByStudyDateDesc()));
+            filters = "&author=" + author;
+        }
+
+        // If user entered a status
+        if (status != null) {
+            // If we have curator and status find by both
+            if (curator != null) {
+                studyPage = studyRepository.findByHousekeepingCurationStatusIdAndHousekeepingCuratorId(status,
+                                                                                                       curator,
+                                                                                                       constructPageSpecification(
+                                                                                                               page - 1,
+                                                                                                               sortByStudyDateDesc()));
+                filters = "&status=" + status + "&curator=" + curator;
+                studySearchFilter.setCuratorSearchFilterId(curator);
+                studySearchFilter.setStatusSearchFilterId(status);
+
+            }
+            else {
+                studyPage = studyRepository.findByHousekeepingCurationStatusId(status, constructPageSpecification(
+                        page - 1,
+                        sortByStudyDateDesc()));
+                filters = "&status=" + status;
+                studySearchFilter.setStatusSearchFilterId(status);
+
+            }
+        }
+        // If user entered curator
+        else {
+            if (curator != null) {
+                studyPage = studyRepository.findByHousekeepingCuratorId(curator, constructPageSpecification(
+                        page - 1,
+                        sortByStudyDateDesc()));
+                filters = "&curator=" + curator;
+                studySearchFilter.setCuratorSearchFilterId(curator);
+            }
+
+        }
+
+        // Return study page and filters, filters will be used by pagination bar
+        if (filters != null && !filters.isEmpty()) {
+            model.addAttribute("filters", filters);
         }
         model.addAttribute("studies", studyPage);
 
@@ -140,14 +196,16 @@ public class StudyController {
         model.addAttribute("totalStudies", totalStudies);
 
         // Add a studySearchFilter to model in case user want to filter table
-        model.addAttribute("studySearchFilter", new StudySearchFilter());
+        model.addAttribute("studySearchFilter", studySearchFilter);
 
         return "studies";
     }
 
-    // Studies by curator and/or status
-    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, params = "filters=true", method = RequestMethod.POST)
-    public String searchForStudyByFilter(@ModelAttribute StudySearchFilter studySearchFilter, Model model) {
+    // Redirects from landing page and main page
+    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String searchForStudyByFilter(@ModelAttribute StudySearchFilter studySearchFilter,
+                                         Model model,
+                                         @RequestParam(required = true) String filters) {
 
         // Get ids of objects searched for
         Long status = studySearchFilter.getStatusSearchFilterId();
@@ -157,38 +215,35 @@ public class StudyController {
 
         // Search by pubmed ID option available from landing page
         if (pubmedId != null && !pubmedId.isEmpty()) {
-            model.addAttribute("studies", studyRepository.findByPubmedId(pubmedId, sortByStudyDateDesc()));
-            return "studies";
+            return "redirect:/studies?page=1&pubmed=" + pubmedId;
         }
 
         // Search by author option available from landing page
-        if (author != null && !author.isEmpty()) {
-            model.addAttribute("studies", studyRepository.findByAuthorContainingIgnoreCase(author, sortByStudyDateDesc()));
-            return "studies";
+        else if (author != null && !author.isEmpty()) {
+            return "redirect:/studies?page=1&author=" + author;
         }
 
         // If user entered a status
-        if (status != null) {
+        else if (status != null) {
             // If we have curator and status find by both
             if (curator != null) {
-                model.addAttribute("studies",
-                                   studyRepository.findByCurationStatusAndCuratorAllIgnoreCase(status, curator));
+                return "redirect:/studies?page=1&status=" + status+"&curator="+curator;
             }
             else {
-                model.addAttribute("studies", studyRepository.findByCurationStatusIgnoreCase(status));
+                return "redirect:/studies?page=1&status=" + status;
             }
         }
         // If user entered curator
         else if (curator != null) {
-            model.addAttribute("studies", studyRepository.findByCuratorIgnoreCase(curator));
+            return "redirect:/studies?page=1&curator="+curator;
         }
 
         // If all else fails return all studies
         else {
-            model.addAttribute("studies", studyRepository.findAll(sortByStudyDateDesc()));
+            // Find all studies ordered by study date and only display first page
+            return "redirect:/studies?page=1";
         }
 
-        return "studies";
     }
 
    /* New Study*/
