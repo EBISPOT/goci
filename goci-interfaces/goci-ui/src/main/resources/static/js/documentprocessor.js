@@ -18,7 +18,7 @@ function processStudy(study, table) {
     var authorsearch = "<span><a href='search?query=".concat(study.author).concat("'>").concat(study.author).concat("</a></span>");
     var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
 
-    row.append($("<td>").html(authorsearch.concat('&nbsp;&nbsp;').concat(epmclink)));
+    row.append($("<td>").html(authorsearch.concat(' (PMID: ').concat(study.pubmedId).concat(') &nbsp;&nbsp;').concat(epmclink)));
     row.append($("<td>").html(study.publicationDate.substring(0, 10)));
     row.append($("<td>").html(study.publication));
     row.append($("<td>").html(study.title));
@@ -82,10 +82,16 @@ function processAssociation(association, table) {
             var rsIds = '';
             var alleles = '';
             var type = '';
+            var description = '';
+
             if(association.rsId[0].indexOf(',') != -1) {
                 rsIds = association.rsId[0].split(',');
                 alleles = association.strongestAllele[0].split(',');
                 type = ',';
+
+                if(association.locusDescription != null && association.locusDescription.indexOf('aplotype') != -1){
+                    description = association.locusDescription;
+                }
             }
             else if(association.rsId[0].indexOf('x') != -1){
                 rsIds = association.rsId[0].split('x');
@@ -111,6 +117,9 @@ function processAssociation(association, table) {
                         }
                     }
                 }
+            }
+            if(description != ''){
+                content = content.concat('&nbsp;&nbsp;(').concat(description).concat(')');
             }
             row.append($("<td>").html(content));
 
@@ -341,7 +350,7 @@ function processAssociation(association, table) {
     }
 
     var studydate = association.publicationDate.substring(0, 4);
-    var author = association.author[0].concat(", ").concat(studydate);
+    var author = association.author[0].concat(' (PMID: ').concat(association.pubmedId).concat("), ").concat(studydate);
 
     var europepmc = "http://www.europepmc.org/abstract/MED/".concat(association.pubmedId);
     var searchlink = "<span><a href='search?query=".concat(association.author).concat("'>").concat(author).concat("</a></span>");

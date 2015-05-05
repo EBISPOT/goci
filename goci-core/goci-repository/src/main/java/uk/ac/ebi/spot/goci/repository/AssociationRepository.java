@@ -22,6 +22,8 @@ import java.util.List;
 public interface AssociationRepository extends JpaRepository<Association, Long> {
     Collection<Association> findByStudyId(long studyId);
 
+    Collection<Association> findByStudyId(long studyId, Sort sort);
+
     Collection<Association> findByLociStrongestRiskAllelesSnpId(long snpId);
 
     List<Association> findByStudyHousekeepingPublishDateIsNotNull();

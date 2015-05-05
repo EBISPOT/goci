@@ -53,6 +53,7 @@ public class EmbeddableDocumentTest {
                                            1.0f,
                                            1.0f,
                                            "orPerCopyRange",
+                                           "orPerCopyRecipRange",
                                            "orPerCopyDescr",
                                            study,
                                            Collections.emptyList(),
