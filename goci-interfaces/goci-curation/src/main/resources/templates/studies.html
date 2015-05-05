@@ -93,15 +93,22 @@
                     <thead>
                     <tr>
                         <th class="col-md-1"></th>
-                        <th class="col-md-1">Author</th>
-                        <th class="col-md-2" data-field="title" data-sortable="true">Title</th>
-                        <th class="col-md-1" data-field="studydate" data-sortable="true">Study Date (YYYY-MM-DD)</th>
-                        <th class="col-md-1" data-field="pubmedid" data-sortable="true">Pubmed ID</th>
-                        <th class="col-md-1" data-field="publication" data-sortable="true">Publication</th>
-                        <th class="col-md-1" data-field="diseasetrait" data-sortable="true">Disease/Trait</th>
-                        <th class="col-md-1" data-field="curator" data-sortable="true">Curator</th>
-                        <th class="col-md-1" data-field="curationstatus" data-sortable="true">Curator Status</th>
-                        <th class="col-md-2" data-field="notes">Notes</th>
+                        <th class="col-md-1">Author
+                            <div class="pull-right">
+                                <a th:href="@{${uri}(authorsort=asc)}"
+                                   class="btn btn-default btn-xs">Sort asc</a>
+                                <a th:href="@{${uri}(authorsort=desc)}"
+                                   class="btn btn-default btn-xs">Sort desc</a>
+                            </div>
+                        </th>
+                        <th class="col-md-2">Title</th>
+                        <th class="col-md-1">Study Date (YYYY-MM-DD)</th>
+                        <th class="col-md-1">Pubmed ID</th>
+                        <th class="col-md-1">Publication</th>
+                        <th class="col-md-1">Disease/Trait</th>
+                        <th class="col-md-1">Curator</th>
+                        <th class="col-md-1">Curator Status</th>
+                        <th class="col-md-2">Notes</th>
                     </tr>
                     </thead>
                     <tbody>
