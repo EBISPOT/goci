@@ -31,6 +31,8 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Collection<Study> findByPubmedId(String pubmedId, Sort sort);
 
+    Page<Study> findByPubmedId(String pubmedId, Pageable pageable);
+
     // Custom queries
     @Query("select s from Study s where s.housekeeping.curationStatus.id = :status order by s.studyDate desc")
     Collection<Study> findByCurationStatusIgnoreCase(@Param("status") Long status);
@@ -54,6 +56,8 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     List<Study> findByAuthorContainingIgnoreCase(String author);
 
     List<Study> findByAuthorContainingIgnoreCase(String author , Sort sort);
+
+    Page<Study>  findByAuthorContainingIgnoreCase(String author , Pageable pageable);
 
     List<Study> findByHousekeepingPublishDateIsNotNull();
 
