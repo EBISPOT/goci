@@ -14,13 +14,13 @@ http://www.stefanalexandru.com/java/spring-boot-with-thymeleaf-and-maven-first-i
                 <li th:class="${currentIndex == 1}? 'disabled' : ''">
                     <span th:if='${currentIndex == 1}'>← First</span>
                     <a th:if='${currentIndex != 1}'
-                       th:href="@{${'1'}}">← First</a>
+                       th:href="@{${'?pageNumber=1'}}">← First</a>
                 </li>
                 <!--Move to previous index-->
                 <li th:class="${currentIndex != 1}? '' : 'disabled'">
                     <span th:if='${currentIndex == 1}'>«</span>
                     <a th:if='${currentIndex != 1}'
-                       th:href="@{${(currentIndex - 1)}}"
+                       th:href="@{${('?pageNumber='+(currentIndex - 1))}}"
                        title='Go to previous page'>«</a>
                 </li>
 
@@ -29,7 +29,7 @@ http://www.stefanalexandru.com/java/spring-boot-with-thymeleaf-and-maven-first-i
                     th:class="${item == currentIndex ? 'active' : '' }">
                     <span th:if='${item == currentIndex}' th:text='${item}'>1</span>
                     <a th:if='${item != currentIndex}'
-                       th:href="@{${item}}">
+                       th:href="@{${'?pageNumber='+item}}">
                         <span th:text='${item}'>1</span>
                     </a>
                 </li>
@@ -38,13 +38,13 @@ http://www.stefanalexandru.com/java/spring-boot-with-thymeleaf-and-maven-first-i
                 <li th:class="${currentIndex != studies.totalPages}? '' : 'disabled'">
                     <span th:if='${currentIndex == studies.totalPages}'>»</span>
                     <a th:if='${currentIndex != studies.totalPages}'
-                       th:href="@{${(currentIndex + 1)}}" title='Go to next page'>»</a>
+                       th:href="@{${('?pageNumber='+(currentIndex + 1))}}" title='Go to next page'>»</a>
                 </li>
                 <!--Last page-->
                 <li th:class="${currentIndex == studies.totalPages}? 'disabled' : ''">
                     <span th:if='${currentIndex == studies.totalPages}'>Last →</span>
                     <a th:if='${currentIndex != studies.totalPages}'
-                       th:href="@{${studies.totalPages}}">Last →</a>
+                       th:href="@{${'?pageNumber='+studies.totalPages}}">Last →</a>
                 </li>
             </ul>
         </div>
