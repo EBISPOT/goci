@@ -43,6 +43,7 @@ import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -111,13 +112,9 @@ public class StudyController {
                                  @RequestParam(required = false) String pubmed,
                                  @RequestParam(required = false) String author,
                                  @RequestParam(required = false) Long status,
-                                 @RequestParam(required = false) Long curator) {
+                                 @RequestParam(required = false) Long curator,
+                                 @RequestParam(required = false) String authorsort) {
 
-        // This will be returned to view and store what curator has searched for
-        StudySearchFilter studySearchFilter = new StudySearchFilter();
-
-        // Store filters which will be need for pagination bar
-        String filters = null;
 
         // Return all studies ordered by date if no page number given
         if (page == null) {
@@ -125,22 +122,43 @@ public class StudyController {
             return "redirect:/studies?page=1";
         }
 
+        // This will be returned to view and store what curator has searched for
+        StudySearchFilter studySearchFilter = new StudySearchFilter();
+
+        // Store filters which will be need for pagination bar
+        String filters = "";
+
+        // Set sort object
+        Sort sort = null;
+        if (authorsort != null) {
+            if (authorsort.equals("asc")) {
+                sort = sortByAuthorAsc();
+            }
+
+            else {sort= sortByAuthorDesc();}
+            filters = "&authorsort=" + authorsort;
+        }
+
+        else {
+            sort = sortByStudyDateDesc();
+        }
+
         // This is the default study page will all studies sorted bu stydu date
         Page<Study> studyPage =
-                studyRepository.findAll(constructPageSpecification(page - 1, sortByStudyDateDesc()));
+                studyRepository.findAll(constructPageSpecification(page - 1, sort));
 
         // Search by pubmed ID option available from landing page
         if (pubmed != null && !pubmed.isEmpty()) {
             studyPage =
-                    studyRepository.findByPubmedId(pubmed, constructPageSpecification(page - 1, sortByStudyDateDesc()));
-            filters = "&pubmed=" + pubmed;
+                    studyRepository.findByPubmedId(pubmed, constructPageSpecification(page - 1, sort));
+            filters = filters+"&pubmed=" + pubmed;
         }
 
         // Search by author option available from landing page
         if (author != null && !author.isEmpty()) {
             studyPage = studyRepository.findByAuthorContainingIgnoreCase(author, constructPageSpecification(page - 1,
-                                                                                                            sortByStudyDateDesc()));
-            filters = "&author=" + author;
+                                                                                                            sort));
+            filters = filters+"&author=" + author;
         }
 
         // If user entered a status
@@ -151,8 +169,8 @@ public class StudyController {
                                                                                                        curator,
                                                                                                        constructPageSpecification(
                                                                                                                page - 1,
-                                                                                                               sortByStudyDateDesc()));
-                filters = "&status=" + status + "&curator=" + curator;
+                                                                                                               sort));
+                filters = filters+"&status=" + status + "&curator=" + curator;
                 studySearchFilter.setCuratorSearchFilterId(curator);
                 studySearchFilter.setStatusSearchFilterId(status);
 
@@ -160,8 +178,8 @@ public class StudyController {
             else {
                 studyPage = studyRepository.findByHousekeepingCurationStatusId(status, constructPageSpecification(
                         page - 1,
-                        sortByStudyDateDesc()));
-                filters = "&status=" + status;
+                        sort));
+                filters = filters+"&status=" + status;
                 studySearchFilter.setStatusSearchFilterId(status);
 
             }
@@ -171,8 +189,8 @@ public class StudyController {
             if (curator != null) {
                 studyPage = studyRepository.findByHousekeepingCuratorId(curator, constructPageSpecification(
                         page - 1,
-                        sortByStudyDateDesc()));
-                filters = "&curator=" + curator;
+                       sort));
+                filters =filters+ "&curator=" + curator;
                 studySearchFilter.setCuratorSearchFilterId(curator);
             }
 
@@ -194,6 +212,13 @@ public class StudyController {
         model.addAttribute("endIndex", end);
         model.addAttribute("currentIndex", current);
         model.addAttribute("totalStudies", totalStudies);
+
+        // Return URI, this will help build thymeleaf links
+        String uri = "/studies?page=1";
+        if (filters != null && !filters.isEmpty()) {
+            uri = uri + filters;
+        }
+        model.addAttribute("uri", uri);
 
         // Add a studySearchFilter to model in case user want to filter table
         model.addAttribute("studySearchFilter", studySearchFilter);
@@ -684,6 +709,8 @@ public class StudyController {
     private Sort sortByStudyDateDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "studyDate"));}
 
     private Sort sortByAuthorAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "author"));}
+
+    private Sort sortByAuthorDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "author"));}
 
     /* Pagination */
     // Pagination, method passed page index and inlcudes max number of studies, sorted by study date, to return
