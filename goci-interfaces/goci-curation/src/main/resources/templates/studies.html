@@ -39,46 +39,76 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="pull-right">
-            <div id="filterParametersForm">
+                <div class="col-md-12 col-md-offset-0 pull-left">
+                    <div id="studyTypesfilterParametersForm">
 
-                <form class="form-inline" name="filterParametersForm" role="form" method="post"
-                      th:action="@{/studies(filters=true)}"
-                      th:object="${studySearchFilter} ">
+                        <form class="form-inline" name="filterParametersForm" role="form" method="post"
+                              th:action="@{/studies(filters=true)}"
+                              th:object="${studySearchFilter} ">
 
-                    <div class="form-group">
-                        <label for="curationStatus" class="control-label">Curator Status:</label>
-                        <select name="curationStatus" class="form-control select2-select"
-                                th:field="*{statusSearchFilterId}" id="curationStatus">
-                            <!-- Empty value for first entry-->
-                            <option value=""></option>
-                            <option th:each="curationStatus : ${curationstatuses}"
-                                    th:value="${curationStatus.id}"
-                                    th:text="${curationStatus.status}"></option>
-                        </select>
+                            <div class="form-group">
+                                <label for="studyTypes" class="control-label">Study Type:</label>
+                                <select name="studyTypes" class="form-control  select2-select"
+                                        th:field="*{studyType}" id="studyTypes">
+                                    <!-- Empty value for first entry-->
+                                    <option value=""></option>
+                                    <option th:each="studyType : ${studyTypes}"
+                                            th:value="${studyType}"
+                                            th:text="${studyType}"></option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <div>
+                                    <button type="submit" class="btn btn-primary">Filter by study type</button>
+                                </div>
+                            </div>
+                        </form>
+
                     </div>
 
-                    <div class="form-group">
-                        <label for="curator" class="control-label">Curator:</label>
-                        <select name="curator" th:field="*{curatorSearchFilterId}"
-                                class="form-control select2-select" id="curator">
-                            <!-- Empty value for first entry-->
-                            <option value=""></option>
-                            <option th:each="curator : ${curators}"
-                                    th:value="${curator.id}"
-                                    th:text="${curator.lastName}"></option>
-                        </select>
-                    </div>
+                    <br/>
 
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <button type="submit" class="btn btn-primary">Filter</button>
-                        </div>
+                    <div id="filterParametersForm">
+
+                        <form class="form-inline" name="filterParametersForm" role="form" method="post"
+                              th:action="@{/studies(filters=true)}"
+                              th:object="${studySearchFilter} ">
+
+                            <div class="form-group">
+                                <label for="curationStatus" class="control-label">Curation Status:</label>
+                                <select name="curationStatus" class="form-control select2-select"
+                                        th:field="*{statusSearchFilterId}" id="curationStatus">
+                                    <!-- Empty value for first entry-->
+                                    <option value=""></option>
+                                    <option th:each="curationStatus : ${curationstatuses}"
+                                            th:value="${curationStatus.id}"
+                                            th:text="${curationStatus.status}"></option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="curator" class="control-label">Curator:</label>
+                                <select name="curator" th:field="*{curatorSearchFilterId}"
+                                        class="form-control select2-select" id="curator">
+                                    <!-- Empty value for first entry-->
+                                    <option value=""></option>
+                                    <option th:each="curator : ${curators}"
+                                            th:value="${curator.id}"
+                                            th:text="${curator.lastName}"></option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <div>
+                                    <button type="submit"
+                                            class="btn btn-primary">Filter by curator and/or status</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
-    </div>
 </div>
 
 <br/>
@@ -94,78 +124,78 @@
                     <tr>
                         <th class="col-md-1"></th>
                         <th class="col-md-1">Author
-                            <div class="pull-right">
+                            <div>
                                 <a th:href="@{${uri}(sortType=authorsortasc)}"
-                                   class="btn btn-default btn-xs">Sort asc</a>
+                                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                                 <a th:href="@{${uri}(sortType=authorsortdesc)}"
-                                   class="btn btn-default btn-xs">Sort desc</a>
+                                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                             </div>
                         </th>
-                        <th class="col-md-2">Title
-                            <div class="pull-right">
+                        <th class="col-md-1">Title
+                            <div>
                                 <a th:href="@{${uri}(sortType=titlesortasc)}"
-                                   class="btn btn-default btn-xs">Sort asc</a>
+                                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                                 <a th:href="@{${uri}(sortType=titlesortdesc)}"
-                                   class="btn btn-default btn-xs">Sort desc</a>
+                                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                             </div>
                         </th>
                         <th class="col-md-1">Study Date (YYYY-MM-DD)
-                            <div class="pull-right">
+                            <div>
                                 <a th:href="@{${uri}(sortType=studydatesortasc)}"
-                                   class="btn btn-default btn-xs">Sort asc</a>
+                                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                                 <a th:href="@{${uri}(sortType=studydatesortdesc)}"
-                                   class="btn btn-default btn-xs">Sort desc</a>
+                                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                             </div>
                         </th>
                         <th class="col-md-1">Pubmed ID
-                            <div class="pull-right">
+                            <div>
                                 <a th:href="@{${uri}(sortType=pubmedsortasc)}"
-                                   class="btn btn-default btn-xs">Sort asc</a>
+                                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                                 <a th:href="@{${uri}(sortType=pubmedsortdesc)}"
-                                   class="btn btn-default btn-xs">Sort desc</a>
+                                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                             </div>
                         </th>
                         <th class="col-md-1">Publication
-                            <div class="pull-right">
+                            <div>
                                 <a th:href="@{${uri}(sortType=publicationsortasc)}"
-                                   class="btn btn-default btn-xs">Sort asc</a>
+                                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                                 <a th:href="@{${uri}(sortType=publicationsortdesc)}"
-                                   class="btn btn-default btn-xs">Sort desc</a>
+                                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                             </div>
                         </th>
                         <th class="col-md-1">EFO Trait
-                            <!--<div class="pull-right">
-                                <a th:href="@{${uri}(sortType=efotraitsortasc)}"
-                                   class="btn btn-default btn-xs">Sort asc</a>
-                                <a th:href="@{${uri}(sortType=efotraitsortdesc)}"
-                                   class="btn btn-default btn-xs">Sort desc</a>
-                            </div>-->
+                                             <!--<div class="pull-right">
+                                                 <a th:href="@{${uri}(sortType=efotraitsortasc)}"
+                                                    class="btn btn-default btn-xs">Sort asc</a>
+                                                 <a th:href="@{${uri}(sortType=efotraitsortdesc)}"
+                                                    class="btn btn-default btn-xs">Sort desc</a>
+                                             </div>-->
                         </th>
                         <th class="col-md-1">Disease/Trait
-                            <div class="pull-right">
+                            <div>
                                 <a th:href="@{${uri}(sortType=diseasetraitsortasc)}"
-                                   class="btn btn-default btn-xs">Sort asc</a>
+                                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                                 <a th:href="@{${uri}(sortType=diseasetraitsortdesc)}"
-                                   class="btn btn-default btn-xs">Sort desc</a>
+                                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                             </div>
                         </th>
                         <th class="col-md-1">Curator
-                            <div class="pull-right">
+                            <div>
                                 <a th:href="@{${uri}(sortType=curatorsortasc)}"
-                                   class="btn btn-default btn-xs">Sort asc</a>
+                                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                                 <a th:href="@{${uri}(sortType=curatorsortdesc)}"
-                                   class="btn btn-default btn-xs">Sort desc</a>
+                                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                             </div>
                         </th>
                         <th class="col-md-1">Curation Status
-                            <div class="pull-right">
+                            <div>
                                 <a th:href="@{${uri}(sortType=curationstatussortasc)}"
-                                   class="btn btn-default btn-xs">Sort asc</a>
+                                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                                 <a th:href="@{${uri}(sortType=curationstatussortdesc)}"
-                                   class="btn btn-default btn-xs">Sort desc</a>
+                                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                             </div>
                         </th>
-                        <th class="col-md-2">Notes</th>
+                        <th class="col-md-3">Notes</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -216,7 +246,10 @@
                         <!--If study has associated disease trait or EFO trait return traits name-->
                         <td th:text="${study.diseaseTrait != null} ? ${study.diseaseTrait.trait} : ''"></td>
                         <td><span th:each="efoTrait: ${study.efoTraits}"
-                            th:text="${efoTrait.trait} ?: ''"></span></td>
+                                  th:if="${#arrays.length(study.efoTraits) &gt; 1}" th:text="${efoTrait.trait}+', ' ?: ''"></span>
+                            <span th:each="efoTrait: ${study.efoTraits}"
+                                  th:if="${#arrays.length(study.efoTraits) == 1}" th:text="${efoTrait.trait} ?: ''"></span>
+                        </td>
 
                         <!--If study has associated housekeeping object then get the following attributes -->
 
@@ -250,6 +283,15 @@
         // turn the element to select2 select style
         $('#curator').select2({
             placeholder: "Select a curator",
+            allowClear: true
+        });
+    });
+</script>
+<script>
+    $(function() {
+        // turn the element to select2 select style
+        $('#studyTypes').select2({
+            placeholder: "GXE,GXG..",
             allowClear: true
         });
     });
