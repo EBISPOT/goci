@@ -133,6 +133,14 @@
                                    class="btn btn-default btn-xs">Sort desc</a>
                             </div>
                         </th>
+                        <th class="col-md-1">EFO Trait
+                            <!--<div class="pull-right">
+                                <a th:href="@{${uri}(sortType=efotraitsortasc)}"
+                                   class="btn btn-default btn-xs">Sort asc</a>
+                                <a th:href="@{${uri}(sortType=efotraitsortdesc)}"
+                                   class="btn btn-default btn-xs">Sort desc</a>
+                            </div>-->
+                        </th>
                         <th class="col-md-1">Disease/Trait
                             <div class="pull-right">
                                 <a th:href="@{${uri}(sortType=diseasetraitsortasc)}"
@@ -205,8 +213,10 @@
 
                         <td th:text="${study.publication} ?: ''"></td>
 
-                        <!--If study has associated disease trait return traits name-->
+                        <!--If study has associated disease trait or EFO trait return traits name-->
                         <td th:text="${study.diseaseTrait != null} ? ${study.diseaseTrait.trait} : ''"></td>
+                        <td><span th:each="efoTrait: ${study.efoTraits}"
+                            th:text="${efoTrait.trait} ?: ''"></span></td>
 
                         <!--If study has associated housekeeping object then get the following attributes -->
 
