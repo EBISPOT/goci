@@ -112,6 +112,7 @@ public class StudyController {
                                  @RequestParam(required = false) Integer page,
                                  @RequestParam(required = false) String pubmed,
                                  @RequestParam(required = false) String author,
+                                 @RequestParam(required = false) String studyType,
                                  @RequestParam(required = false) Long status,
                                  @RequestParam(required = false) Long curator,
                                  @RequestParam(required = false) String sortType) {
@@ -152,6 +153,26 @@ public class StudyController {
             studyPage = studyRepository.findByAuthorContainingIgnoreCase(author, constructPageSpecification(page - 1,
                                                                                                             sort));
             filters = filters + "&author=" + author;
+        }
+
+        // Search by study type
+        if (studyType != null && !studyType.isEmpty()) {
+
+            if (studyType.equals("GXE")) {
+                studyPage = studyRepository.findByGxe(true, constructPageSpecification(page - 1,
+                                                                                       sort));
+            }
+            if (studyType.equals("GXG")) {
+                studyPage = studyRepository.findByGxg(true, constructPageSpecification(page - 1,
+                                                                                       sort));
+            }
+
+            if (studyType.equals("CNV")) {
+                studyPage = studyRepository.findByCnv(true, constructPageSpecification(page - 1,
+                                                                                       sort));
+            }
+            studySearchFilter.setStudyType(studyType);
+            filters = filters + "&studyType=" + studyType;
         }
 
         // If user entered a status
@@ -249,6 +270,7 @@ public class StudyController {
         Long curator = studySearchFilter.getCuratorSearchFilterId();
         String pubmedId = studySearchFilter.getPubmedId();
         String author = studySearchFilter.getAuthor();
+        String studyType = studySearchFilter.getStudyType();
 
         // Search by pubmed ID option available from landing page
         if (pubmedId != null && !pubmedId.isEmpty()) {
@@ -258,6 +280,11 @@ public class StudyController {
         // Search by author option available from landing page
         else if (author != null && !author.isEmpty()) {
             return "redirect:/studies?page=1&author=" + author;
+        }
+
+        // Search by study type
+        else if (studyType != null && !studyType.isEmpty()) {
+            return "redirect:/studies?page=1&studyType=" +studyType ;
         }
 
         // If user entered a status
@@ -683,6 +710,8 @@ public class StudyController {
         sortTypeMap.put("pubmedsortdesc", sortByPubmedIdDesc());
         sortTypeMap.put("publicationsortasc", sortByPublicationAsc());
         sortTypeMap.put("publicationsortdesc", sortByPublicationDesc());
+        sortTypeMap.put("efotraitsortasc", sortByEfoTraitAsc());
+        sortTypeMap.put("efotraitsortdesc", sortByEfoTraitDesc());
         sortTypeMap.put("diseasetraitsortasc", sortByDiseaseTraitAsc());
         sortTypeMap.put("diseasetraitsortdesc", sortByDiseaseTraitDesc());
         sortTypeMap.put("curatorsortasc", sortByCuratorAsc());
@@ -741,6 +770,19 @@ public class StudyController {
         return curationStatusRepository.findAll();
     }
 
+
+    // Study types
+    @ModelAttribute("studyTypes")
+    public List<String> populateStudyTypeOptions(Model model) {
+
+        List<String> studyTypesOptions = new ArrayList<String>();
+        studyTypesOptions.add("GXE");
+        studyTypesOptions.add("GXG");
+        studyTypesOptions.add("CNV");
+        return studyTypesOptions;
+    }
+
+
     /* Sorting options */
 
     // Returns a Sort object which sorts disease traits in ascending order by trait, ignoring case
@@ -771,6 +813,10 @@ public class StudyController {
     private Sort sortByDiseaseTraitAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "diseaseTrait.trait"));}
 
     private Sort sortByDiseaseTraitDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "diseaseTrait.trait"));}
+
+    private Sort sortByEfoTraitAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "efoTraits.trait").ignoreCase());}
+
+    private Sort sortByEfoTraitDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "efoTraits.trait").ignoreCase());}
 
     private Sort sortByCuratorAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "housekeeping.curator"));}
 
