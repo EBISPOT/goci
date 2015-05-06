@@ -18,34 +18,37 @@
 <div class="container">
     <div class="row">
 
-        <div class="jumbotron">
+        <div class="jumbotron background-color-primary-accent">
             <h1>What would you like to do?</h1>
         </div>
 
-
-        <div class="col-md-12">
+        <div class="btn-group" role="group" aria-label="...">
             <a th:href="@{/studies}"
                class="btn btn-default btn-lg"
                role="button">See all studies</a>
-
             <a th:href="@{/studies/new}"
                class="btn btn-default btn-lg"
                role="button">Add a new study</a>
-
-
             <a th:href="@{/diseasetraits}"
                class="btn btn-default btn-lg"
                role="button">Add or update a disease trait</a>
-            <br/>
+
+            <div class="btn-group" role="group">
+                 <button type="button" class="btn btn-default  btn-lg dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    Download files
+                 <span class="caret"></span>
+                 </button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a th:href="@{/sampledescriptions}">Studies with ethnicity information</a></li>
+            </ul>
         </div>
-        <br/>
 
         <div class="col-md-12">
             <form class="form-horizontal" role="form" method="post" th:action="@{/studies(filters=true)}"
                   th:object="${studySearchFilter}">
 
                 <div class="page-header">
-                    <h2> Or search for a study by pubmed ID ...</h2>
+                    <h2> Or search for a study by pubmed ID or author ...</h2>
                 </div>
 
                 <!-- Search input-->
@@ -63,10 +66,26 @@
                     </div>
                 </div>
 
+
+                <div class="control-group">
+                    <label class="control-label" for="searchinput"></label>
+
+                    <div class="controls">
+                        <input id="searchinput"
+                               name="searchinput"
+                               placeholder="Author"
+                               class="input-xlarge search-query"
+                               type="text"
+                               th:field="*{author}"/>
+                        <button type="Save" class="btn btn-default btn-lg">Search</button>
+                    </div>
+                </div>
+
             </form>
         </div>
 
     </div>
+</div>
 </div>
 
 

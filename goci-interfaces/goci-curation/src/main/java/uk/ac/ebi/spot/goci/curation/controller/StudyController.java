@@ -121,11 +121,18 @@ public class StudyController {
         Long status = studySearchFilter.getStatusSearchFilterId();
         Long curator = studySearchFilter.getCuratorSearchFilterId();
         String pubmedId = studySearchFilter.getPubmedId();
+        String author = studySearchFilter.getAuthor();
 
         // Search by pubmed ID option available from landing page
-        if (pubmedId != null) {
+        if (pubmedId != null && !pubmedId.isEmpty()) {
             model.addAttribute("studies", studyRepository.findByPubmedId(pubmedId));
-            return  "studies";
+            return "studies";
+        }
+
+        // Search by author option available from landing page
+        if (author != null && !author.isEmpty()) {
+            model.addAttribute("studies", studyRepository.findByAuthorContainingIgnoreCase(author));
+            return "studies";
         }
 
         // If user entered a status
@@ -378,7 +385,7 @@ public class StudyController {
         // Before we save housekeeping get the status in database so we can check for a change
         CurationStatus statusInDatabase = housekeepingRepository.findOne(housekeeping.getId()).getCurationStatus();
 
-        // Save housekeeping returned from form straight away so can access details
+        // Save housekeeping returned from form straight away to save any curator entered details like notes etc
         housekeepingRepository.save(housekeeping);
 
         // For the study check all SNPs have been checked
@@ -401,6 +408,12 @@ public class StudyController {
 
                 // If not checked redirect back to page and make no changes
                 if (snpsNotChecked == 1) {
+
+                    // Restore old status
+                    housekeeping.setCurationStatus(statusInDatabase);
+                    // Save any changes made to housekeeping
+                    housekeepingRepository.save(housekeeping);
+
                     String message =
                             "Some SNP associations have not been checked, please review before publishing";
                     redirectAttributes.addFlashAttribute("snpsNotChecked", message);
@@ -418,6 +431,12 @@ public class StudyController {
             if (currentStatus != null && currentStatus.getStatus().equals("Send to NCBI")) {
                 // If not checked redirect back to page and make no changes
                 if (snpsNotChecked == 1) {
+
+                    // Restore old status
+                    housekeeping.setCurationStatus(statusInDatabase);
+                    // Save any changes made to housekeeping
+                    housekeepingRepository.save(housekeeping);
+
                     String message =
                             "Some SNP associations have not been checked, please review before sending to NCBI";
                     redirectAttributes.addFlashAttribute("snpsNotChecked", message);

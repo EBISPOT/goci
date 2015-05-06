@@ -30,5 +30,12 @@ public interface EfoTraitRepository extends JpaRepository<EfoTrait, Long> {
     List<EfoTrait> findByAssociationsId(Sort sort, Long associationId);
 
     Page<EfoTrait> findByAssociationsId(Pageable pageable, Long associationId);
+
+    List<EfoTrait> findByUri(String uri);
+
+    List<EfoTrait> findByUri(Sort sort, String uri);
+
+    Page<EfoTrait> findByUri(Pageable pageable, String uri);
+
 }
 

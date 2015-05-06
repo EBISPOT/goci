@@ -1,6 +1,12 @@
 package uk.ac.ebi.spot.goci.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import java.util.Collection;
 
 /**
@@ -17,9 +23,15 @@ public class RiskAllele {
 
     @ManyToOne
     @JoinTable(name = "RISK_ALLELE_SNP",
-            joinColumns = @JoinColumn(name = "RISK_ALLELE_ID"),
-            inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
+               joinColumns = @JoinColumn(name = "RISK_ALLELE_ID"),
+               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
     private SingleNucleotidePolymorphism snp;
+
+    @ManyToOne
+    @JoinTable(name = "RISK_ALLELE_PROXY_SNP",
+               joinColumns = @JoinColumn(name = "RISK_ALLELE_ID"),
+               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
+    private SingleNucleotidePolymorphism proxySnp;
 
 
     @ManyToMany(mappedBy = "strongestRiskAlleles")
@@ -30,9 +42,13 @@ public class RiskAllele {
     public RiskAllele() {
     }
 
-    public RiskAllele(String riskAlleleName, SingleNucleotidePolymorphism snp) {
+    public RiskAllele(String riskAlleleName,
+                      SingleNucleotidePolymorphism snp,
+                      SingleNucleotidePolymorphism proxySnp, Collection<Locus> loci) {
         this.riskAlleleName = riskAlleleName;
         this.snp = snp;
+        this.proxySnp = proxySnp;
+        this.loci = loci;
     }
 
     public Long getId() {
@@ -59,6 +75,14 @@ public class RiskAllele {
         this.snp = snp;
     }
 
+    public SingleNucleotidePolymorphism getProxySnp() {
+        return proxySnp;
+    }
+
+    public void setProxySnp(SingleNucleotidePolymorphism proxySnp) {
+        this.proxySnp = proxySnp;
+    }
+
     public Collection<Locus> getLoci() {
         return loci;
     }
@@ -71,6 +95,9 @@ public class RiskAllele {
         return "RiskAllele{" +
                 "id=" + id +
                 ", riskAlleleName='" + riskAlleleName + '\'' +
+                ", snp=" + snp +
+                ", proxySnp=" + proxySnp +
+                ", loci=" + loci +
                 '}';
     }
 }

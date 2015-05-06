@@ -99,7 +99,7 @@
       <!-- oracle JDBC drivers for db comms -->
       <dependency>
           <groupId>com.oracle</groupId>
-          <artifactId>ojdbc6</artifactId>
+          <artifactId>ojdbc7</artifactId>
           <version>11.2.0.3</version>
       </dependency>
       <dependency>

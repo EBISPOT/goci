@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
+import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,16 +41,16 @@ public class AssociationSheetProcessor {
     }
 
     // Constructor
-    public AssociationSheetProcessor(XSSFSheet sheet) {
+    public AssociationSheetProcessor(XSSFSheet sheet, EfoTraitRepository efoTraitRepository) {
         this.sheet = sheet;
         logMessage = "";
 
         // Read through sheet and extract values
-        readSnpAssociations();
+        readSnpAssociations(efoTraitRepository);
     }
 
     // Read and parse uploaded spreadsheet
-    public void readSnpAssociations() {
+    public void readSnpAssociations(EfoTraitRepository efoTraitRepository) {
         boolean done = false;
         int rowNum = 1;
 
@@ -266,10 +268,21 @@ public class AssociationSheetProcessor {
                     logMessage = "Error in field 'CI' in row " + rowNum + 1 + "\n";
                 }
 
+                String orPerCopyRecipRange;
+                if (row.getCell(12, row.RETURN_BLANK_AS_NULL) != null) {
+                    orPerCopyRecipRange = row.getCell(12).getRichStringCellValue().getString();
+                    logMessage = "Error in field 'Reciprocal CI' in row " + rowNum + 1 + "\n";
+                }
+                else {
+                    orPerCopyRecipRange = null;
+                    getLog().debug("CI is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'Reciprocal CI' in row " + rowNum + 1 + "\n";
+                }
+
                 // Get Beta unit and direction/description
                 String orPerCopyUnitDescr;
-                if (row.getCell(12) != null) {
-                    orPerCopyUnitDescr = row.getCell(12).getRichStringCellValue().getString();
+                if (row.getCell(13) != null) {
+                    orPerCopyUnitDescr = row.getCell(13).getRichStringCellValue().getString();
                     logMessage = "Error in field 'OR direction' in row " + rowNum + 1 + "\n";
                 }
                 else {
@@ -280,8 +293,8 @@ public class AssociationSheetProcessor {
 
                 // Get standard error
                 Float orPerCopyStdError = null;
-                if (row.getCell(13, row.RETURN_BLANK_AS_NULL) != null) {
-                    XSSFCell std = row.getCell(13);
+                if (row.getCell(14, row.RETURN_BLANK_AS_NULL) != null) {
+                    XSSFCell std = row.getCell(14);
                     switch (std.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
                             orPerCopyStdError = null;
@@ -301,14 +314,25 @@ public class AssociationSheetProcessor {
 
                 // Get SNP type (novel / known)
                 String snpType;
-                if (row.getCell(14, row.RETURN_BLANK_AS_NULL) != null) {
-                    snpType = row.getCell(14).getRichStringCellValue().getString();
+                if (row.getCell(15, row.RETURN_BLANK_AS_NULL) != null) {
+                    snpType = row.getCell(15).getRichStringCellValue().getString().toLowerCase();
                     logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
                 }
                 else {
                     snpType = null;
                     getLog().debug("SNP type is null in row " + row.getRowNum());
                     logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
+                }
+
+                String efoTrait;
+                if(row.getCell(16, row.RETURN_BLANK_AS_NULL) != null){
+                    efoTrait = row.getCell(16).getRichStringCellValue().getString();
+                    logMessage = "Error in field 'EFO traits' in row " + rowNum + 1 + "\n";
+                }
+                else {
+                    efoTrait = null;
+                    getLog().debug("EFO trait is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'EFO trait' in row " + rowNum + 1 + "\n";
                 }
 
 
@@ -357,8 +381,9 @@ public class AssociationSheetProcessor {
                     snpAssociationForm.setOrPerCopyStdError(orPerCopyStdError);
 
                     // This logic is retained from Dani's original code
-                    if ((orPerCopyRecip != null) && (orPerCopyRange != null) && recipReverse) {
-                        orPerCopyRange = associationCalculationService.reverseCI(orPerCopyRange);
+//                    if ((orPerCopyRecip != null) && (orPerCopyRange != null) && recipReverse) {
+                    if ((orPerCopyRecipRange != null) && recipReverse) {
+                        orPerCopyRange = associationCalculationService.reverseCI(orPerCopyRecipRange);
                         snpAssociationForm.setOrPerCopyRange(orPerCopyRange);
                     }
                     else if ((orPerCopyRange == null) && (orPerCopyStdError != null)) {
@@ -368,6 +393,8 @@ public class AssociationSheetProcessor {
                     else {
                         snpAssociationForm.setOrPerCopyRange(orPerCopyRange);
                     }
+
+                    snpAssociationForm.setOrPerCopyRecipRange(orPerCopyRecipRange);
 
 
                     snpAssociationForm.setOrPerCopyUnitDescr(orPerCopyUnitDescr);
@@ -424,6 +451,20 @@ public class AssociationSheetProcessor {
                     }
                     snpAssociationForm.setAuthorReportedGenes(authorReportedGenes);
 
+                    if(efoTrait != null) {
+                        String[] uris = efoTrait.split(",");
+                        Collection<String> efoUris = new ArrayList<>();
+
+                        for (String uri : uris) {
+                            uri.trim();
+                            efoUris.add(uri);
+                        }
+
+                        Collection<EfoTrait> efoTraits = getEfoTraitsFromRepository(efoUris, efoTraitRepository);
+
+                        snpAssociationForm.setEfoTraits(efoTraits);
+                    }
+
                     // Add all newly created associations to collection
                     snpAssociationForms.add(snpAssociationForm);
                 }
@@ -431,6 +472,29 @@ public class AssociationSheetProcessor {
             }
             rowNum++;
         }
+    }
+
+    private Collection<EfoTrait> getEfoTraitsFromRepository(Collection<String> efoUris, EfoTraitRepository efoTraitRepository) {
+        Collection<EfoTrait> efoTraits = new ArrayList<>();
+        for(String uri : efoUris){
+            String fullUri;
+            if(uri.contains("EFO")){
+               fullUri = "http://www.ebi.ac.uk/efo/".concat(uri);
+            }
+            else if(uri.contains("Orphanet")){
+                fullUri = "http://www.orpha.net/ORDO/".concat(uri);
+            }
+            else {
+                fullUri = "http://purl.obolibrary.org/obo/".concat(uri);
+            }
+
+            Collection<EfoTrait> traits = efoTraitRepository.findByUri(fullUri);
+
+            for(EfoTrait trait : traits){
+                efoTraits.add(trait);
+            }
+        }
+        return efoTraits;
     }
 
     public Collection<SnpAssociationForm> getAllSnpAssociationForms() {
@@ -443,3 +507,4 @@ public class AssociationSheetProcessor {
 
 
 }
+

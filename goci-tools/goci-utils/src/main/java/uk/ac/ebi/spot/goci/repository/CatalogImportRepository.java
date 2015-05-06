@@ -189,7 +189,7 @@ public class CatalogImportRepository {
         Map<CatalogHeaderBinding, Integer> result = new HashMap<>();
         for (int i : colNumHeaderMap.keySet()) {
             for (CatalogHeaderBinding binding : CatalogHeaderBindings.getLoadHeaders()) {
-                if (binding.getLoadName().toUpperCase().equals(colNumHeaderMap.get(i).toUpperCase())) {
+                if (binding.getLoadInclusion().columnName().get().toUpperCase().equals(colNumHeaderMap.get(i).toUpperCase())) {
                     result.put(binding, i);
                     break;
                 }
@@ -465,7 +465,7 @@ public class CatalogImportRepository {
                             break;
                         default:
                             throw new DataImportException(
-                                    "Unrecognised column flagged for import: " + binding.getLoadName());
+                                    "Unrecognised column flagged for import: " + binding.getLoadInclusion().columnName().get());
                     }
 
                 }
@@ -475,7 +475,7 @@ public class CatalogImportRepository {
                     caughtReadErrors = true;
 
                     if (importErrorMap.containsKey(studyId)) {
-                        importErrors = studyErrorMap.get(studyId);
+                        importErrors = importErrorMap.get(studyId);
                     }
                     importErrors.add(true);
                     importErrorMap.put(studyId, importErrors);
@@ -559,7 +559,7 @@ public class CatalogImportRepository {
                     getLog().error("Unable to write data at row " + row + ", from spreadsheet", e);
                     caughtWriteErrors = true;
                     if (importErrorMap.containsKey(studyId)) {
-                        importErrors = studyErrorMap.get(studyId);
+                        importErrors = importErrorMap.get(studyId);
                     }
                     importErrors.add(true);
                     importErrorMap.put(studyId, importErrors);

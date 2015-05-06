@@ -5,6 +5,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
+import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 
 import java.io.File;
 import java.util.Collection;
@@ -28,7 +29,7 @@ public class AssociationBatchLoaderService {
 
     // Returns an array list of new association forms, the controller will turn
     // these into associations and save
-    public Collection<SnpAssociationForm> processData(String fileName) throws Exception {
+    public Collection<SnpAssociationForm> processData(String fileName, EfoTraitRepository efoTraitRepository) throws Exception {
 
         // Open and parse our spreadsheet file
         XSSFSheet sheet = null;
@@ -37,7 +38,7 @@ public class AssociationBatchLoaderService {
         sheet = current.getSheetAt(0);
         AssociationSheetProcessor processor = null;
         try {
-            processor = new AssociationSheetProcessor(sheet);
+            processor = new AssociationSheetProcessor(sheet, efoTraitRepository);
             Collection<SnpAssociationForm> associations = processor.getAllSnpAssociationForms();
             pkg.close();
             return associations;
