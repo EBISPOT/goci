@@ -43,7 +43,6 @@ import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -113,7 +112,14 @@ public class StudyController {
                                  @RequestParam(required = false) String author,
                                  @RequestParam(required = false) Long status,
                                  @RequestParam(required = false) Long curator,
-                                 @RequestParam(required = false) String authorsort) {
+                                 @RequestParam(required = false) String authorsort,
+                                 @RequestParam(required = false) String titlesort,
+                                 @RequestParam(required = false) String studydatesort,
+                                 @RequestParam(required = false) String pubmedsort,
+                                 @RequestParam(required = false) String publicationsort,
+                                 @RequestParam(required = false) String diseasetraitsort,
+                                 @RequestParam(required = false) String curatorsort,
+                                 @RequestParam(required = false) String curationstatussort) {
 
 
         // Return all studies ordered by date if no page number given
@@ -125,7 +131,7 @@ public class StudyController {
         // This will be returned to view and store what curator has searched for
         StudySearchFilter studySearchFilter = new StudySearchFilter();
 
-        // Store filters which will be need for pagination bar
+        // Store filters which will be need for pagination bar and to build URI passe back to view
         String filters = "";
 
         // Set sort object
@@ -134,16 +140,80 @@ public class StudyController {
             if (authorsort.equals("asc")) {
                 sort = sortByAuthorAsc();
             }
-
-            else {sort= sortByAuthorDesc();}
+            else {
+                sort = sortByAuthorDesc();
+            }
             filters = "&authorsort=" + authorsort;
+        }
+        else if (titlesort != null) {
+            if (titlesort.equals("asc")) {
+                sort = sortByTitleAsc();
+            }
+            else {
+                sort = sortByTitleDesc();
+            }
+            filters = "&titlesort=" + titlesort;
+        }
+        else if (studydatesort != null) {
+            if (studydatesort.equals("asc")) {
+                sort = sortByStudyDateAsc();
+            }
+            else {
+                sort = sortByStudyDateDesc();
+            }
+            filters = "&studydatesort=" + studydatesort;
+        }
+        else if (pubmedsort != null) {
+            if (pubmedsort.equals("asc")) {
+                sort = sortByPubmedIdAsc();
+            }
+            else {
+                sort = sortByPubmedIdDesc();
+            }
+            filters = "&pubmedsort=" + pubmedsort;
+        }
+        else if (publicationsort != null) {
+            if (publicationsort.equals("asc")) {
+                sort = sortByPublicationAsc();
+            }
+            else {
+                sort = sortByPublicationDesc();
+            }
+            filters = "&publicationsort=" + publicationsort;
+        }
+        else if (diseasetraitsort != null) {
+            if (diseasetraitsort.equals("asc")) {
+                sort = sortByDiseaseTraitAsc();
+            }
+            else {
+                sort = sortByDiseaseTraitDesc();
+            }
+            filters = "&diseasetraitsort=" + diseasetraitsort;
+        }
+        else if (curatorsort != null) {
+            if (curatorsort.equals("asc")) {
+                sort = sortByCuratorAsc();
+            }
+            else {
+                sort = sortByCuratorDesc();
+            }
+            filters = "&curatorsort=" + curatorsort;
+        }
+        else if (curationstatussort != null) {
+            if (curationstatussort.equals("asc")) {
+                sort = sortByCurationStatusAsc();
+            }
+            else {
+                sort = sortByCurationStatusDesc();
+            }
+            filters = "&curationstatussort=" + curationstatussort;
         }
 
         else {
             sort = sortByStudyDateDesc();
         }
 
-        // This is the default study page will all studies sorted bu stydu date
+        // This is the default study page will all studies sorted bu study date
         Page<Study> studyPage =
                 studyRepository.findAll(constructPageSpecification(page - 1, sort));
 
@@ -151,14 +221,14 @@ public class StudyController {
         if (pubmed != null && !pubmed.isEmpty()) {
             studyPage =
                     studyRepository.findByPubmedId(pubmed, constructPageSpecification(page - 1, sort));
-            filters = filters+"&pubmed=" + pubmed;
+            filters = filters + "&pubmed=" + pubmed;
         }
 
         // Search by author option available from landing page
         if (author != null && !author.isEmpty()) {
             studyPage = studyRepository.findByAuthorContainingIgnoreCase(author, constructPageSpecification(page - 1,
                                                                                                             sort));
-            filters = filters+"&author=" + author;
+            filters = filters + "&author=" + author;
         }
 
         // If user entered a status
@@ -170,7 +240,9 @@ public class StudyController {
                                                                                                        constructPageSpecification(
                                                                                                                page - 1,
                                                                                                                sort));
-                filters = filters+"&status=" + status + "&curator=" + curator;
+                filters = filters + "&status=" + status + "&curator=" + curator;
+
+                // Return these values so they appear in filter results
                 studySearchFilter.setCuratorSearchFilterId(curator);
                 studySearchFilter.setStatusSearchFilterId(status);
 
@@ -179,7 +251,9 @@ public class StudyController {
                 studyPage = studyRepository.findByHousekeepingCurationStatusId(status, constructPageSpecification(
                         page - 1,
                         sort));
-                filters = filters+"&status=" + status;
+                filters = filters + "&status=" + status;
+
+                // Return this value so it appears in filter result
                 studySearchFilter.setStatusSearchFilterId(status);
 
             }
@@ -189,15 +263,17 @@ public class StudyController {
             if (curator != null) {
                 studyPage = studyRepository.findByHousekeepingCuratorId(curator, constructPageSpecification(
                         page - 1,
-                       sort));
-                filters =filters+ "&curator=" + curator;
+                        sort));
+                filters = filters + "&curator=" + curator;
+
+                // Return this value so it appears in filter result
                 studySearchFilter.setCuratorSearchFilterId(curator);
             }
 
         }
 
         // Return study page and filters, filters will be used by pagination bar
-        if (filters != null && !filters.isEmpty()) {
+        if (!filters.isEmpty()) {
             model.addAttribute("filters", filters);
         }
         model.addAttribute("studies", studyPage);
@@ -215,12 +291,12 @@ public class StudyController {
 
         // Return URI, this will help build thymeleaf links
         String uri = "/studies?page=1";
-        if (filters != null && !filters.isEmpty()) {
+        if (!filters.isEmpty()) {
             uri = uri + filters;
         }
         model.addAttribute("uri", uri);
 
-        // Add a studySearchFilter to model in case user want to filter table
+        // Add studySearchFilter to model so user can filter table
         model.addAttribute("studySearchFilter", studySearchFilter);
 
         return "studies";
@@ -252,7 +328,7 @@ public class StudyController {
         else if (status != null) {
             // If we have curator and status find by both
             if (curator != null) {
-                return "redirect:/studies?page=1&status=" + status+"&curator="+curator;
+                return "redirect:/studies?page=1&status=" + status + "&curator=" + curator;
             }
             else {
                 return "redirect:/studies?page=1&status=" + status;
@@ -260,7 +336,7 @@ public class StudyController {
         }
         // If user entered curator
         else if (curator != null) {
-            return "redirect:/studies?page=1&curator="+curator;
+            return "redirect:/studies?page=1&curator=" + curator;
         }
 
         // If all else fails return all studies
@@ -701,16 +777,49 @@ public class StudyController {
     }
 
     /* Sorting options */
+
     // Returns a Sort object which sorts disease traits in ascending order by trait, ignoring case
     private Sort sortByTraitAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "trait").ignoreCase());
     }
+
+    private Sort sortByStudyDateAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "studyDate"));}
 
     private Sort sortByStudyDateDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "studyDate"));}
 
     private Sort sortByAuthorAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "author"));}
 
     private Sort sortByAuthorDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "author"));}
+
+    private Sort sortByTitleAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "title"));}
+
+    private Sort sortByTitleDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "title"));}
+
+    private Sort sortByPublicationAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "publication"));}
+
+    private Sort sortByPublicationDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "publication"));}
+
+    private Sort sortByPubmedIdAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "pubmedId"));}
+
+    private Sort sortByPubmedIdDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "pubmedId"));}
+
+    private Sort sortByDiseaseTraitAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "diseaseTrait"));}
+
+    private Sort sortByDiseaseTraitDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "diseaseTrait"));}
+
+    private Sort sortByCuratorAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "housekeeping.curator"));}
+
+    private Sort sortByCuratorDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "housekeeping.curator"));}
+
+    private Sort sortByCurationStatusAsc() {
+        return new Sort(new Sort.Order(Sort.Direction.ASC,
+                                       "housekeeping.curationStatus"));
+    }
+
+    private Sort sortByCurationStatusDesc() {
+        return new Sort(new Sort.Order(Sort.Direction.DESC,
+                                       "housekeeping.curationStatus"));
+    }
 
     /* Pagination */
     // Pagination, method passed page index and inlcudes max number of studies, sorted by study date, to return
