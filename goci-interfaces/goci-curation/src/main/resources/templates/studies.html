@@ -101,13 +101,62 @@
                                    class="btn btn-default btn-xs">Sort desc</a>
                             </div>
                         </th>
-                        <th class="col-md-2">Title</th>
-                        <th class="col-md-1">Study Date (YYYY-MM-DD)</th>
-                        <th class="col-md-1">Pubmed ID</th>
-                        <th class="col-md-1">Publication</th>
-                        <th class="col-md-1">Disease/Trait</th>
-                        <th class="col-md-1">Curator</th>
-                        <th class="col-md-1">Curator Status</th>
+                        <th class="col-md-2">Title
+                            <div class="pull-right">
+                                <a th:href="@{${uri}(titlesort=asc)}"
+                                   class="btn btn-default btn-xs">Sort asc</a>
+                                <a th:href="@{${uri}(titlesort=desc)}"
+                                   class="btn btn-default btn-xs">Sort desc</a>
+                            </div>
+                        </th>
+                        <th class="col-md-1">Study Date (YYYY-MM-DD)
+                            <div class="pull-right">
+                                <a th:href="@{${uri}(studydatesort=asc)}"
+                                   class="btn btn-default btn-xs">Sort asc</a>
+                                <a th:href="@{${uri}(studydatesort=desc)}"
+                                   class="btn btn-default btn-xs">Sort desc</a>
+                            </div>
+                        </th>
+                        <th class="col-md-1">Pubmed ID
+                            <div class="pull-right">
+                                <a th:href="@{${uri}(pubmedsort=asc)}"
+                                   class="btn btn-default btn-xs">Sort asc</a>
+                                <a th:href="@{${uri}(pubmedsort=desc)}"
+                                   class="btn btn-default btn-xs">Sort desc</a>
+                            </div>
+                        </th>
+                        <th class="col-md-1">Publication
+                            <div class="pull-right">
+                                <a th:href="@{${uri}(publicationsort=asc)}"
+                                   class="btn btn-default btn-xs">Sort asc</a>
+                                <a th:href="@{${uri}(publicationsort=desc)}"
+                                   class="btn btn-default btn-xs">Sort desc</a>
+                            </div>
+                        </th>
+                        <th class="col-md-1">Disease/Trait
+                            <div class="pull-right">
+                                <a th:href="@{${uri}(diseasetraitsort=asc)}"
+                                   class="btn btn-default btn-xs">Sort asc</a>
+                                <a th:href="@{${uri}(diseasetraitsort=desc)}"
+                                   class="btn btn-default btn-xs">Sort desc</a>
+                            </div>
+                        </th>
+                        <th class="col-md-1">Curator
+                            <div class="pull-right">
+                                <a th:href="@{${uri}(curatorsort=asc)}"
+                                   class="btn btn-default btn-xs">Sort asc</a>
+                                <a th:href="@{${uri}(curatorsort=desc)}"
+                                   class="btn btn-default btn-xs">Sort desc</a>
+                            </div>
+                        </th>
+                        <th class="col-md-1">Curation Status
+                            <div class="pull-right">
+                                <a th:href="@{${uri}(curationstatussort=asc)}"
+                                   class="btn btn-default btn-xs">Sort asc</a>
+                                <a th:href="@{${uri}(curationstatussort=desc)}"
+                                   class="btn btn-default btn-xs">Sort desc</a>
+                            </div>
+                        </th>
                         <th class="col-md-2">Notes</th>
                     </tr>
                     </thead>
@@ -133,7 +182,8 @@
                         <td th:text="${study.author} ?: '' "></td>
                         <td th:text="${study.title} ?: ''"></td>
                         <td th:text="${#calendars.format(study.studyDate,'yyyy-MM-dd')} ?: ''"></td>
-                        <td><p th:text="${study.pubmedId} ?: ''" ></p>
+                        <td><p th:text="${study.pubmedId} ?: ''"></p>
+
                             <div class="btn-group">
                                 <button type="button"
                                         data-toggle="dropdown"
