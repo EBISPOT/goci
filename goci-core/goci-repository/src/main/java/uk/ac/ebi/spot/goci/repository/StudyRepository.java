@@ -50,6 +50,12 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
                                           @Param("dateFrom") Date dateFrom,
                                           @Param("dateTo") Date dateTo);
 
+    // Queries for study types
+    Page<Study>findByGxe(Boolean gxe ,Pageable pageable);
+
+    Page<Study>findByGxg(Boolean gxg ,Pageable pageable);
+
+    Page<Study>findByCnv(Boolean cnv ,Pageable pageable);
 
     List<Study> findByHousekeepingSendToNCBIDate(Date date);
 
