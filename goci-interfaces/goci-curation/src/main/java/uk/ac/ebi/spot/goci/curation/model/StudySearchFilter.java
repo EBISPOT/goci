@@ -25,6 +25,8 @@ public class StudySearchFilter {
 
     private Long efoTraitSearchFilterId;
 
+    private String notesQuery;
+
     public StudySearchFilter() {
     }
 
@@ -35,7 +37,7 @@ public class StudySearchFilter {
                              String pubmedId,
                              String author,
                              String studyType,
-                             Long efoTraitSearchFilterId) {
+                             Long efoTraitSearchFilterId, String notesQuery) {
         this.statusSearchFilterId = statusSearchFilterId;
         this.curatorSearchFilterId = curatorSearchFilterId;
         this.monthFilter = monthFilter;
@@ -44,6 +46,7 @@ public class StudySearchFilter {
         this.author = author;
         this.studyType = studyType;
         this.efoTraitSearchFilterId = efoTraitSearchFilterId;
+        this.notesQuery = notesQuery;
     }
 
     public Long getStatusSearchFilterId() {
@@ -109,6 +112,15 @@ public class StudySearchFilter {
 
     public StudySearchFilter setEfoTraitSearchFilterId(Long efoTraitSearchFilterId) {
         this.efoTraitSearchFilterId = efoTraitSearchFilterId;
+        return this;
+    }
+
+    public String getNotesQuery() {
+        return notesQuery;
+    }
+
+    public StudySearchFilter setNotesQuery(String notesQuery) {
+        this.notesQuery = notesQuery;
         return this;
     }
 }

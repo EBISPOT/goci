@@ -114,6 +114,7 @@ public class StudyController {
                                  @RequestParam(required = false) String author,
                                  @RequestParam(required = false) String studyType,
                                  @RequestParam(required = false) Long efoTraitId,
+                                 @RequestParam(required = false) String notesQuery,
                                  @RequestParam(required = false) Long status,
                                  @RequestParam(required = false) Long curator,
                                  @RequestParam(required = false) String sortType) {
@@ -176,12 +177,12 @@ public class StudyController {
             filters = filters + "&studyType=" + studyType;
         }
 
-        // Search by efo trait id
-        if (efoTraitId != null) {
-            studyPage = studyRepository.findByEfoTraitsId(efoTraitId, constructPageSpecification(page - 1,
+        // Search by notes for entered string
+        if (notesQuery != null && !notesQuery.isEmpty()) {
+            studyPage = studyRepository.findByHousekeepingNotesContainingIgnoreCase(notesQuery, constructPageSpecification(page - 1,
                                                                                                  sort));
-            studySearchFilter.setEfoTraitSearchFilterId(efoTraitId);
-            filters = filters + "&efoTraitId=" + efoTraitId;
+            studySearchFilter.setNotesQuery(notesQuery);
+            filters = filters + "&notesQuery=" + notesQuery;
         }
 
         // If user entered a status
@@ -281,6 +282,7 @@ public class StudyController {
         String author = studySearchFilter.getAuthor();
         String studyType = studySearchFilter.getStudyType();
         Long efoTraitId = studySearchFilter.getEfoTraitSearchFilterId();
+        String notesQuery = studySearchFilter.getNotesQuery();
 
         // Search by pubmed ID option available from landing page
         if (pubmedId != null && !pubmedId.isEmpty()) {
@@ -300,6 +302,10 @@ public class StudyController {
         // Search by efo trait
         else if (efoTraitId != null) {
             return "redirect:/studies?page=1&efoTraitId=" + efoTraitId;
+        }
+
+        else if (notesQuery != null && !notesQuery.isEmpty()) {
+            return "redirect:/studies?page=1&notesQuery=" + notesQuery;
         }
 
         // If user entered a status
