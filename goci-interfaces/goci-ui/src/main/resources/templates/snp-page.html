@@ -28,6 +28,8 @@
     <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{css/goci-ui.css}"/>
     <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{css/icons/flaticon.css}"/>
     <link rel="stylesheet" href="../static/css/goci-color-palette-1.css" th:href="@{css/goci-color-palette-1.css}"/>
+    <link rel="stylesheet" href="../static/css/science-and-medicine/flaticon.css" th:href="@{css/science-and-medicine/flaticon.css}"/>
+
 
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -57,7 +59,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="index.html" th:href="@{home}">Home <span class="sr-only">(current)</span></a></li>
+                <li><a href="index.html" th:href="@{home}">Home <span class="sr-only">(current)</span></a></li>
                 <li><a href="search.html" th:href="@{search}">Search</a></li>
                 <li><a href="http://www.ebi.ac.uk/fgpt/gwas">Diagram</a></li>
                 <li class="hidden-sm"><a href="docs/downloads" th:href="@{docs/downloads}">Download</a></li>
@@ -91,10 +93,10 @@
 </nav>
 
 <!-- Main jumbotron for a primary marketing message or call to action -->
-<div class="jumbotron background-color-primary-accent">
-        <div>
+<div class="jumbotron background-color-primary-accent" style="margin: 0%; padding-bottom: 30px;">
+    <div class="container">
             <!-- search box goes here -->
-            <div class="input-group" style="width: 250px; float: right; margin-right: 20px">
+            <div class="input-group" style="width: 250px; float: right;">
                 <input type="text" class="form-control" placeholder="Search the catalog" id="search-box"/>
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button" id="search-button">
@@ -104,36 +106,207 @@
             </div>
 
         </div>
-    <div class="container">
+        <div class="container">
 
-        <div>
-            <h1>rs1234566</h1>
-
-            <p>Location: chr3:987123</p>
-            <p>Known risk alleles: A, C</p>
+            <h1><img alt="externalLink" style="width: 1em; height: auto;" src="../static/icons/dna13.png" th:src="@{icons/dna13.png}">&nbsp;SNP: rs653178</h1>
 
         </div>
     </div>
-    </div>
 </div>
 
-<!--<div class="jumbotron background-color-secondary-accent">-->
-    <!--<div class="container">-->
 
-        <!--<div>-->
-            <!--<h1>rs1234566</h1>-->
 
-              <!--<p>Location: chr3:987123</p>-->
-            <!--<p>Known risk alleles: A, C</p>-->
+<div class="container-fluid" style="padding-top: 30px">
 
+    <ol class="breadcrumb background-color-complementary-accent">
+        <li><a href="home">GWAS</a></li>
+        <li><a href="search">SNPs</a></li>
+        <li class="active">rs653178</li>
+    </ol>
+
+    <div class="container-fluid" id="lower_container">
+    <div class="row">
+        <!--<div class="col-md-2 tight-to-side" id="filter-bar">-->
+            <!--<div class="panel panel-default">-->
+                <!--<div class="panel-heading background-color-primary-accent">-->
+                    <!--<h3 class="panel-title">Jump to</h3>-->
+                                <!--<span class="pull-right clickable"-->
+                                      <!--onclick="toggleSidebar('.panel-heading span.clickable')">-->
+                                    <!--<i class="glyphicon glyphicon-chevron-up"></i>-->
+                                <!--</span>-->
+                <!--</div>-->
+                <!--<div class="panel-body">-->
+                    <!--<div id="facets">-->
+                        <!--<div class="list-group">-->
+                            <!--&lt;!&ndash;add an "active" class annotation to each a tag when it's selected&ndash;&gt;-->
+                            <!--<a href="#study" class="list-group-item" id="study-facet">-->
+                                <!--<span class="badge">0</span>Studies-->
+                            <!--</a>-->
+                            <!--<a href="#association" class="list-group-item" id="association-facet">-->
+                                <!--<span class="badge">0</span>Associations-->
+                            <!--</a>-->
+                            <!--<a href="#diseasetrait" class="list-group-item" id="diseasetrait-facet">-->
+                                <!--<span class="badge">0</span>Catalog traits-->
+                            <!--</a>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+
+                <!--</div>-->
             <!--</div>-->
         <!--</div>-->
-    <!--</div>-->
-<!--</div>-->
 
-<div class="container">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-default">
+                <div class="panel-heading background-color-primary-accent">
+                    <h3 class="panel-title">SNP information</h3>
+                </div>
+                <div class="panel-body">
+                    <div id="summary-info" class="col-md-8">
+                        <div><span style="font-weight: bold; display: inline-block; width: 30%; margin-bottom: 1em">Base pair location</span><span> chr12:111569952</span> </div>
+                        <div><span style="font-weight: bold; display: inline-block; width: 30%; margin-bottom: 1em">Cytogenetic region</span><span> 12q24.12  </span> </div>
+                        <div><span style="font-weight: bold; display: inline-block; width: 30%; margin-bottom: 1em">Functional class</span><span> intron      </span> </div>
+                        <div><span style="font-weight: bold; display: inline-block; width: 30%; margin-bottom: 1em">Mapped gene(s)</span><span> ATXN2         </span> </div>
+                        <div><span style="font-weight: bold; display: inline-block; width: 30%; margin-bottom: 1em">Identified associations</span><span><a href="#">10</a></span> </div>
+                        <div><span style="font-weight: bold; display: inline-block; width: 30%; margin-bottom: 1em">Identified traits</span><span> <a href="#">9</a></span> </div>
+                    </div>
+                    <div id="links" class="col-md-4">
+                        <div style="margin-bottom: 1em">
+                            <button type="button" class="btn btn-default">View in Ensembl</button>
+
+                        </div>
+                        <div style="margin-bottom: 1em"><button type="button" class="btn btn-default">View in dbGap</button>
+                        </div>
+                        <div style="margin-bottom: 1em"><button type="button" class="btn btn-default">View in dbSNP</button></div>
+
+                        <div style="margin-bottom: 1em">other links to external sites</div>
+
+                    </div>
+                </div>
+            </div>
+
+
+    <!--<div class="row">-->
+        <div class="panel panel-default">
+            <div class="panel-heading background-color-primary-accent">
+                <h3 class="panel-title">Associations</h3>
+            </div>
+
+            <div class="panel-body">
+
+                <table id="association-table" class="table table-striped">
+                    <thead id="association-table-header">
+                    <tr>
+                        <th style="width: 10%" id="strongestAllele">Risk allele
+                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="SNP most strongly associated with trait + risk/effect allele. This may also be haplotype or SNPxSNP interaction."></span>
+                                                                    <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                        </th>
+                        <th style="width: 8%" id="riskFrequency">RAF
+                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Risk/effect allele frequency in controls"></span>
+                            <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                        </th>
+                        <th style="width: 12%" id="pValue">p-value
+                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="p-value for most strongly associated SNP, along with any information describing context of p-value"></span>
+                            <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                        </th>
+                        <th style="width: 6%" id="orPerCopyNum">OR
+                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Odds ratio associated with SNP"></span>
+                            <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                        </th>
+                        <th style="width: 14%" id="orType">Beta
+                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Beta-coefficient and unit increase/decrease associated with SNP"></span>
+                            <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                        </th>
+                        <th style="width: 6%">CI
+                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="95% confidence interval for OR or beta"></span>
+                        </th>
+
+                        <th style="width: 8%">Reported gene(s)
+                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Gene(s) reported by author"></span>
+                        </th>
+
+                        <th style="width: 13%" id="traitName_s-alt">Reported trait
+                            <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-original-title="Description of disease/trait analysed in the study"></span>
+                            <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                        </th>
+                        <th style="width: 13%" id="traitName-alt">Mapped trait
+                            <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-original-title="Description of disease/trait mapped to the study"></span>
+                            <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                        </th>
+                        <th style="width: 10%" id="author_s-alt">Study
+                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="First author and year of publication, along with link to publication in Europe PubMed Central."></span>
+                            <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody id="association-table-body">
+                    <tr>
+                        <td><span><a href="search?query=rs653178">rs653178-T</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs653178" target="_blank"><img alt="externalLink" class="link-icon" src="../static/../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td>
+                        <td>0.59</td>
+                        <td>7 x10<sup>-20</sup> (Mean Arterial Pressure)</td>
+                        <td></td>
+                        <td>0.429 mmHg decrease</td>
+                        <td>[0.34-0.52]</td>
+                        <td><span><a href="search?query=ATXN2">ATXN2</a></span></td>
+                        <td><span><a href="search?query=Blood pressure">Blood pressure</a></span></td>
+                        <td>blood pressure</td>
+                        <td><span><a href="search?query=Wain LV">Wain LV, 2011</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/21909110" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td></tr>
+                    <tr><td><span><a href="search?query=rs653178">rs653178-T</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs653178" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td>0.51</td><td>7 x10<sup>-12</sup></td><td></td><td>0.035 mg/dl decrease</td><td>[0.025-0.045]</td><td><span><a href="search?query=ATXN2">ATXN2</a></span>, <span><a href="search?query=PTPN11">PTPN11</a></span></td><td><span><a href="search?query=Urate levels">Urate levels</a></span></td><td>urate measurement</td><td><span><a href="search?query=Kottgen A">Kottgen A, 2012</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/23263486" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td></tr>
+                    <tr><td><span><a href="search?query=rs653178">rs653178-T</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs653178" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td>0.53</td><td>3 x10<sup>-18</sup></td><td></td><td>0.46 mm Hg decrease</td><td>[0.36-0.56]</td><td><span><a href="search?query=SH2B3">SH2B3</a></span>, <span><a href="search?query=ATXN2">ATXN2</a></span></td><td><span><a href="search?query=Diastolic blood pressure">Diastolic blood pressure</a></span></td><td>blood pressure</td><td><span><a href="search?query=Newton-Cheh C">Newton-Cheh C, 2009</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/19430483" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td></tr>
+                    <tr><td><span><a href="search?query=rs653178">rs653178-C</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs653178" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td>0.40</td><td>1 x10<sup>-9</sup></td><td>1.14</td><td></td><td>[1.08-1.19]</td><td><span><a href="search?query=SH2B3">SH2B3</a></span>, <span><a href="search?query=ATXN2">ATXN2</a></span></td><td><span><a href="search?query=Thyroid peroxidase antibody positivity">Thyroid peroxidase antibody positivity</a></span></td><td>thyroid peroxidase antibody measurement</td><td><span><a href="search?query=Medici M">Medici M, 2014</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/24586183" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td></tr>
+                    <tr><td><span><a href="search?query=rs653178">rs653178-C</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs653178" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td>0.40</td><td>1 x10<sup>-7</sup></td><td></td><td>0.0147 unit increase</td><td>[0.0059-0.0235]</td><td><span><a href="search?query=SH2B3">SH2B3</a></span>, <span><a href="search?query=ATXN2">ATXN2</a></span></td><td><span><a href="search?query=Thyroid peroxidase antibody levels">Thyroid peroxidase antibody levels</a></span></td><td>thyroid peroxidase antibody measurement</td><td><span><a href="search?query=Medici M">Medici M, 2014</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/24586183" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td></tr>
+                    <tr><td><span><a href="search?query=rs653178">rs653178-C</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs653178" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td>0.469</td><td>6 x10<sup>-7</sup></td><td>1.22</td><td></td><td>[1.13-1.32]</td><td><span><a href="search?query=SH2B3">SH2B3</a></span>, <span><a href="search?query=ATXN2">ATXN2</a></span></td><td><span><a href="search?query=Peripheral artery disease">Peripheral artery disease</a></span></td><td>peripheral artery disease</td><td><span><a href="search?query=Kullo IJ">Kullo IJ, 2014</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/25009551" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td></tr>
+                    <tr><td><span><a href="search?query=rs653178">rs653178-G</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs653178" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td>0.48</td><td>8 x10<sup>-8</sup>  </td><td>1.21</td><td></td><td>[1.13-1.30]</td><td><span><a href="search?query=SH2B3">SH2B3</a></span>, <span><a href="search?query=ATXN2">ATXN2</a></span></td><td><span><a href="search?query=Celiac disease">Celiac disease</a></span></td><td>celiac disease</td><td><span><a href="search?query=Hunt KA">Hunt KA, 2008</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/18311140" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td></tr>
+                    <tr><td><span><a href="search?query=rs653178">rs653178-T</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs653178" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td>0.50</td><td>4 x10<sup>-11</sup> (eGFRcys)</td><td></td><td>0.01 ml/min/1.73 m2 increase</td><td>[0.009-0.017]</td><td><span><a href="search?query=ATXN2">ATXN2</a></span></td><td><span><a href="search?query=Chronic kidney disease">Chronic kidney disease</a></span></td><td>chronic kidney disease</td><td><span><a href="search?query=Kottgen A">Kottgen A, 2010</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/20383146" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td></tr>
+                    <tr><td><span><a href="search?query=rs653178">rs653178-G</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs653178" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td>0.50</td><td>7 x10<sup>-21</sup></td><td>1.2</td><td></td><td>[1.15-1.24]</td><td><span><a href="search?query=SH2B3">SH2B3</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=10019" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td><span><a href="search?query=Celiac disease">Celiac disease</a></span></td><td>celiac disease</td><td><span><a href="search?query=Dubois PC">Dubois PC, 2010</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/20190752" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td></tr>
+                    <tr><td><span><a href="search?query=rs653178">rs653178-C</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs653178" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td>NR</td><td>3 x10<sup>-19</sup></td><td></td><td></td><td></td><td><span><a href="search?query=SH2B3">SH2B3</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=10019" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td><span><a href="search?query=Celiac disease and Rheumatoid arthritis">Celiac disease and Rheumatoid arthritis</a></span></td><td>immune system disease</td><td><span><a href="search?query=Zhernakova A">Zhernakova A, 2011</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/21383967" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td></tr></tbody>
+
+                </table>
+            </div>
+        </div>
+    <!--</div>-->
+
     <div class="row">
-       Info about the SNP, incl table of associations. goes here
+        <div class="panel panel-default">
+            <div class="panel-heading background-color-primary-accent">
+                <h3 class="panel-title">Traits</h3>
+            </div>
+
+            <div class="panel-body">
+                <table id="diseasetrait-table" class="table table-striped">
+                    <thead id="diseasetrait-table-header">
+                    <tr>
+                        <th style="width: 25%" id="traitName_s-alt2">Reported trait
+                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Description of disease/trait analysed in the study"></span>
+                            <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                        </th>
+                        <th style="width: 25%">Mapped ontology traits
+                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Mapped Experimental Factor Ontology disease or trait name"></span>
+                        </th>
+                        <th style="width: 35%">Ontology traits synonyms
+                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="An alternative Experimental Factor Ontology for a given term such as a commonly used abbreviation or synonym"></span>
+                        </th>
+                        <th style="width: 15%">Study
+                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="First author and year of publication, along with link to publication in Europe PubMed Central."></span>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody id="diseasetrait-table-body">
+                    <tr><td><span><a href="search?query=Peripheral artery disease">Peripheral artery disease</a></span></td><td><span><a href="search?query=peripheral arterial disease">peripheral arterial disease</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0004265" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td><td><span><a href="search?query=peripheral arterial diseases">peripheral arterial diseases</a></span>, <span><a href="search?query=peripheral artery disease">peripheral artery disease</a></span></td><td><span><a href="search?query=Kullo IJ">Kullo IJ, 2014</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/25009551" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td></tr>
+                    <tr><td><span><a href="search?query=Thyroid peroxidase antibody levels">Thyroid peroxidase antibody levels</a></span></td><td><span><a href="search?query=thyroid peroxidase antibody measurement">thyroid peroxidase antibody measurement</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0005666" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td><td></td><td><span><a href="search?query=Medici M">Medici M, 2014</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/24586183" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td></tr>
+                    <tr><td><span><a href="search?query=Thyroid peroxidase antibody positivity">Thyroid peroxidase antibody positivity</a></span></td><td><span><a href="search?query=thyroid peroxidase antibody measurement">thyroid peroxidase antibody measurement</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0005666" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td><td></td><td><span><a href="search?query=Medici M">Medici M, 2014</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/24586183" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td></tr>
+                    <tr><td><span><a href="search?query=Celiac disease and Rheumatoid arthritis">Celiac disease and Rheumatoid arthritis</a></span></td><td><span><a href="search?query=immune system disease">immune system disease</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0000540" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td><td><span><a href="search?query=autoimmune diseases">autoimmune diseases</a></span>, <span><a href="search?query=Other specified disorders of the immune mechanism (disorder)">Other specified disorders of the immune mechanism (disorder)</a></span>, <span><a href="search?query=DEFIC CELL IMMUNITY NOS">DEFIC CELL IMMUNITY NOS</a></span>, <span><a href="search?query=[X]Disorder involving the immune mechanism, unspecified">[X]Disorder involving the immune mechanism, unspecified</a></span>, <span><a href="search?query=Other deficiency of cell-mediated immunity">Other deficiency of cell-mediated immunity</a></span>, [...]</td><td><span><a href="search?query=Zhernakova A">Zhernakova A, 2011</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/21383967" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td></tr>
+                    <tr><td><span><a href="search?query=Celiac disease">Celiac disease</a></span></td><td><span><a href="search?query=celiac disease">celiac disease</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0001060" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></td><td><span><a href="search?query=Celiac syndrome">Celiac syndrome</a></span>, <span><a href="search?query=Celiac rickets (disorder)">Celiac rickets (disorder)</a></span>, <span><a href="search?query=Coeliac sprue">Coeliac sprue</a></span>, <span><a href="search?query=CS - Celiac sprue">CS - Celiac sprue</a></span>, <span><a href="search?query=Gluten-Induced Enteropathy">Gluten-Induced Enteropathy</a></span>, [...]</td><td><span><a href="search?query=Dubois PC">Dubois PC, 2010</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/20190752" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span>,<br><span><a href="search?query=Hunt KA">Hunt KA, 2008</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/18311140" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td></tr>
+                    <tr><td><span><a href="search?query=Chronic kidney disease">Chronic kidney disease</a></span></td><td><span><a href="search?query=chronic kidney disease">chronic kidney disease</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0003884" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></td><td><span><a href="search?query=ESRD">ESRD</a></span>, <span><a href="search?query=Renal Disease, End-Stage">Renal Disease, End-Stage</a></span>, <span><a href="search?query=End-Stage Renal Failure">End-Stage Renal Failure</a></span>, <span><a href="search?query=chronic kidney failure">chronic kidney failure</a></span>, <span><a href="search?query=Chronic Renal Insufficiencies">Chronic Renal Insufficiencies</a></span>, [...]</td><td><span><a href="search?query=Kottgen A">Kottgen A, 2010</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/20383146" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td></tr>
+                    <tr><td><span><a href="search?query=Urate levels">Urate levels</a></span></td><td><span><a href="search?query=urate measurement">urate measurement</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0004531" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td><td><span><a href="search?query=urate levels">urate levels</a></span></td><td><span><a href="search?query=Kottgen A">Kottgen A, 2012</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/23263486" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td></tr>
+                    <tr><td><span><a href="search?query=Blood pressure">Blood pressure</a></span></td><td><span><a href="search?query=blood pressure">blood pressure</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0004325" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td><td><span><a href="search?query=diastolic blood pressure">diastolic blood pressure</a></span>, <span><a href="search?query=systolic pressure">systolic pressure</a></span>, <span><a href="search?query=systolic blood pressure">systolic blood pressure</a></span>, <span><a href="search?query=diastolic pressure">diastolic pressure</a></span></td><td><span><a href="search?query=Wain LV">Wain LV, 2011</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/21909110" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td></tr>
+                    <tr><td><span><a href="search?query=Diastolic blood pressure">Diastolic blood pressure</a></span></td><td><span><a href="search?query=blood pressure">blood pressure</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0004325" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td><td><span><a href="search?query=diastolic blood pressure">diastolic blood pressure</a></span>, <span><a href="search?query=systolic pressure">systolic pressure</a></span>, <span><a href="search?query=systolic blood pressure">systolic blood pressure</a></span>, <span><a href="search?query=diastolic pressure">diastolic pressure</a></span></td><td><span><a href="search?query=Newton-Cheh C">Newton-Cheh C, 2009</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/19430483" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td></tr>
+                    </table>
+            </div>
+        </div>
+    </div>
+
+        </div>
     </div>
 
     <hr/>
