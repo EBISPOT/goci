@@ -313,6 +313,7 @@ public class StudyController {
             return "redirect:/studies?page=1&efoTraitId=" + efoTraitId;
         }
 
+        // Search by string in notes
         else if (notesQuery != null && !notesQuery.isEmpty()) {
             return "redirect:/studies?page=1&notesQuery=" + notesQuery;
         }
@@ -810,6 +811,12 @@ public class StudyController {
         studyTypesOptions.add("GXG");
         studyTypesOptions.add("CNV");
         return studyTypesOptions;
+    }
+
+    // Authors
+    @ModelAttribute("authors")
+    public List<String> populateAuthors(Model model) {
+        return studyRepository.findAllStudyAuthors();
     }
 
 
