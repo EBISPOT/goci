@@ -17,6 +17,7 @@ import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by emma on 09/01/15.
@@ -55,7 +56,9 @@ public class DiseaseTraitController {
 
     // Add a new disease trait
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String addDiseaseTrait(@Valid @ModelAttribute DiseaseTrait diseaseTrait, BindingResult bindingResult, Model model) {
+    public String addDiseaseTrait(@Valid @ModelAttribute DiseaseTrait diseaseTrait,
+                                  BindingResult bindingResult,
+                                  Model model) {
 
         // Catch a null or empty value being entered
         if (bindingResult.hasErrors()) {
@@ -81,7 +84,9 @@ public class DiseaseTraitController {
     }
 
     @RequestMapping(value = "/{diseaseTraitId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String editDiseaseTrait(@Valid @ModelAttribute DiseaseTrait diseaseTrait, BindingResult bindingResult, Model model) {
+    public String editDiseaseTrait(@Valid @ModelAttribute DiseaseTrait diseaseTrait,
+                                   BindingResult bindingResult,
+                                   Model model) {
 
         // Catch a null or empty value being entered
         if (bindingResult.hasErrors()) {
@@ -97,7 +102,9 @@ public class DiseaseTraitController {
 
     // Delete a disease trait
 
-    @RequestMapping(value = "/{diseaseTraitId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    @RequestMapping(value = "/{diseaseTraitId}/delete",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.GET)
     public String viewDiseaseTraitToDelete(Model model, @PathVariable Long diseaseTraitId) {
 
         DiseaseTrait diseaseTraitToView = diseaseTraitRepository.findOne(diseaseTraitId);
@@ -106,7 +113,9 @@ public class DiseaseTraitController {
     }
 
 
-    @RequestMapping(value = "/{diseaseTraitId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    @RequestMapping(value = "/{diseaseTraitId}/delete",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.POST)
     public String deleteDiseaseTrait(@PathVariable Long diseaseTraitId) {
 
         // Need to find any studies linked to this diseaseTrait
@@ -127,9 +136,19 @@ public class DiseaseTraitController {
     }
 
 
+    /* Model Attributes :
+    *  Used for dropdowns in HTML forms
+    */
+
+    // Disease Traits
+    @ModelAttribute("diseaseTraits")
+    public List<DiseaseTrait> populateDiseaseTraits(Model model) {
+        return diseaseTraitRepository.findAll(sortByTraitAsc());
+    }
+
     // Returns a Sort object which sorts disease traits in ascending order by trait
     private Sort sortByTraitAsc() {
-        return new Sort(Sort.Direction.ASC, "trait");
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "trait").ignoreCase());
     }
 
 }
