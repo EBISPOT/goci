@@ -60,6 +60,9 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     // EFO trait query
     Page<Study> findByEfoTraitsId(Long efoTraitId, Pageable pageable);
 
+    // Query housekeeping notes field
+    Page<Study> findByHousekeepingNotesContainingIgnoreCase(String query, Pageable pageable);
+
     List<Study> findByHousekeepingSendToNCBIDate(Date date);
 
     List<Study> findByAuthorContainingIgnoreCase(String author);
