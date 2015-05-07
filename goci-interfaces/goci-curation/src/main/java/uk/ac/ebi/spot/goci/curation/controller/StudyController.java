@@ -177,6 +177,15 @@ public class StudyController {
             filters = filters + "&studyType=" + studyType;
         }
 
+        // Search by efo trait id
+        if (efoTraitId != null) {
+            studyPage = studyRepository.findByEfoTraitsId(efoTraitId, constructPageSpecification(page - 1,
+                                                                                                 sort));
+            studySearchFilter.setEfoTraitSearchFilterId(efoTraitId);
+            filters = filters + "&efoTraitId=" + efoTraitId;
+        }
+
+
         // Search by notes for entered string
         if (notesQuery != null && !notesQuery.isEmpty()) {
             studyPage = studyRepository.findByHousekeepingNotesContainingIgnoreCase(notesQuery, constructPageSpecification(page - 1,
