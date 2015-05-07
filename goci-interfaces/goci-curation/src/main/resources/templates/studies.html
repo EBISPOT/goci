@@ -101,14 +101,42 @@
 
                     <div class="form-group">
                         <div>
-                                    <button type="submit"
-                                            class="btn btn-primary">Filter by curator and/or status</button>
+                            <button type="submit" class="btn btn-primary">Filter by curator and/or status</button>
                         </div>
                     </div>
                 </form>
             </div>
 
             <br/>
+
+            <div id="authorFilterParametersForm">
+
+                <form class="form-inline" name="efoTraitsFilterParametersForm" role="form" method="post"
+                      th:action="@{/studies(filters=true)}"
+                      th:object="${studySearchFilter} ">
+
+                    <div class="form-group">
+                        <label for="authors" class="control-label"></label>
+                        <select name="authors" class="form-control select2-select"
+                                th:field="*{author}" id="authors">
+                            <!-- Empty value for first entry-->
+                            <option value=""></option>
+                            <option th:each="author : ${authors}"
+                                    th:value="${author}"
+                                    th:text="${author}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <div>
+                             <button type="submit" class="btn btn-primary">Filter by author</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <br/>
+
 
             <div id="efoTraitsFilterParametersForm">
 
@@ -130,8 +158,7 @@
 
                     <div class="form-group">
                         <div>
-                                    <button type="submit"
-                                            class="btn btn-primary">Filter by EFO trait</button>
+                            <button type="submit" class="btn btn-primary">Filter by EFO trait</button>
                         </div>
                     </div>
                 </form>
@@ -323,7 +350,8 @@
             // turn the element to select2 select style
             $('#curationStatus').select2({
                 placeholder: "Select a status",
-                allowClear: true
+                allowClear: true,
+                width: 'resolve'
             });
         });
     </script>
@@ -333,7 +361,8 @@
             // turn the element to select2 select style
             $('#curator').select2({
                 placeholder: "Select a curator",
-                allowClear: true
+                allowClear: true,
+                width: 'resolve'
             });
         });
     </script>
@@ -352,10 +381,22 @@
             // turn the element to select2 select style
             $('#efoTraits').select2({
                 placeholder: "Select EFO trait..",
-                allowClear: true
+                allowClear: true,
+                width: 'resolve'
             });
         });
     </script>
+
+<script>
+    $(function() {
+        // turn the element to select2 select style
+        $('#authors').select2({
+            placeholder: "Select author..",
+            allowClear: true,
+            width: 'resolve'
+        });
+    });
+</script>
 
 </body>
 </html>
