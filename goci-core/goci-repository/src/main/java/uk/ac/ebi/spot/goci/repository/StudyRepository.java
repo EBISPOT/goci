@@ -63,6 +63,10 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     // Query housekeeping notes field
     Page<Study> findByHousekeepingNotesContainingIgnoreCase(String query, Pageable pageable);
 
+    // Custom query to get list of study authors
+    @Query("select s.author from Study s order by s.author asc")
+    List<String> findAllStudyAuthors();
+
     List<Study> findByHousekeepingSendToNCBIDate(Date date);
 
     List<Study> findByAuthorContainingIgnoreCase(String author);
