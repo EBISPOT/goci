@@ -4,7 +4,7 @@ package uk.ac.ebi.spot.goci.curation.model;
  * Created by emma on 22/01/15.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Service class used to deal with filter options passed back from HTML form.
  */
 public class StudySearchFilter {
@@ -23,13 +23,19 @@ public class StudySearchFilter {
 
     private String studyType;
 
+    private Long efoTraitSearchFilterId;
+
     public StudySearchFilter() {
     }
 
     public StudySearchFilter(Long statusSearchFilterId,
                              Long curatorSearchFilterId,
                              String monthFilter,
-                             String yearFilter, String pubmedId, String author, String studyType) {
+                             String yearFilter,
+                             String pubmedId,
+                             String author,
+                             String studyType,
+                             Long efoTraitSearchFilterId) {
         this.statusSearchFilterId = statusSearchFilterId;
         this.curatorSearchFilterId = curatorSearchFilterId;
         this.monthFilter = monthFilter;
@@ -37,6 +43,7 @@ public class StudySearchFilter {
         this.pubmedId = pubmedId;
         this.author = author;
         this.studyType = studyType;
+        this.efoTraitSearchFilterId = efoTraitSearchFilterId;
     }
 
     public Long getStatusSearchFilterId() {
@@ -93,6 +100,15 @@ public class StudySearchFilter {
 
     public StudySearchFilter setStudyType(String studyType) {
         this.studyType = studyType;
+        return this;
+    }
+
+    public Long getEfoTraitSearchFilterId() {
+        return efoTraitSearchFilterId;
+    }
+
+    public StudySearchFilter setEfoTraitSearchFilterId(Long efoTraitSearchFilterId) {
+        this.efoTraitSearchFilterId = efoTraitSearchFilterId;
         return this;
     }
 }
