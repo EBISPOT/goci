@@ -40,14 +40,14 @@
 <div class="container-fluid">
     <div class="row">
                 <div class="col-md-12 col-md-offset-0 pull-left">
-                    <div id="studyTypesfilterParametersForm">
+                    <div id="studyTypesFilterParametersForm">
 
-                        <form class="form-inline" name="filterParametersForm" role="form" method="post"
+                        <form class="form-inline" name="studyTypesFilterParametersForm" role="form" method="post"
                               th:action="@{/studies(filters=true)}"
                               th:object="${studySearchFilter} ">
 
                             <div class="form-group">
-                                <label for="studyTypes" class="control-label">Study Type:</label>
+                                <label for="studyTypes" class="control-label"></label>
                                 <select name="studyTypes" class="form-control  select2-select"
                                         th:field="*{studyType}" id="studyTypes">
                                     <!-- Empty value for first entry-->
@@ -69,14 +69,14 @@
 
                     <br/>
 
-                    <div id="filterParametersForm">
+                    <div id="curatorFilterParametersForm">
 
-                        <form class="form-inline" name="filterParametersForm" role="form" method="post"
+                        <form class="form-inline" name="curatorFilterParametersForm" role="form" method="post"
                               th:action="@{/studies(filters=true)}"
                               th:object="${studySearchFilter} ">
 
                             <div class="form-group">
-                                <label for="curationStatus" class="control-label">Curation Status:</label>
+                                <label for="curationStatus" class="control-label"></label>
                                 <select name="curationStatus" class="form-control select2-select"
                                         th:field="*{statusSearchFilterId}" id="curationStatus">
                                     <!-- Empty value for first entry-->
@@ -88,7 +88,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="curator" class="control-label">Curator:</label>
+                                <label for="curator" class="control-label"></label>
                                 <select name="curator" th:field="*{curatorSearchFilterId}"
                                         class="form-control select2-select" id="curator">
                                     <!-- Empty value for first entry-->
@@ -107,6 +107,37 @@
                             </div>
                         </form>
                     </div>
+
+                    <br/>
+
+                    <div id="efoTraitsFilterParametersForm">
+
+                        <form class="form-inline" name="efoTraitsFilterParametersForm" role="form" method="post"
+                              th:action="@{/studies(filters=true)}"
+                              th:object="${studySearchFilter} ">
+
+                            <div class="form-group">
+                                <label for="efoTraits" class="control-label"></label>
+                                <select name="efoTraits" class="form-control select2-select"
+                                        th:field="*{efoTraitSearchFilterId}" id="efoTraits">
+                                    <!-- Empty value for first entry-->
+                                    <option value=""></option>
+                                    <option th:each="efoTrait : ${efoTraits}"
+                                            th:value="${efoTrait.id}"
+                                            th:text="${efoTrait.trait}"></option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <div>
+                                    <button type="submit"
+                                            class="btn btn-primary">Filter by EFO trait</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+
                 </div>
             </div>
 </div>
@@ -285,7 +316,17 @@
     $(function() {
         // turn the element to select2 select style
         $('#studyTypes').select2({
-            placeholder: "GXE,GXG..",
+            placeholder: "Select GXE,GXG..",
+            allowClear: true
+        });
+    });
+</script>
+
+<script>
+    $(function() {
+        // turn the element to select2 select style
+        $('#efoTraits').select2({
+            placeholder: "Select EFO trait..",
             allowClear: true
         });
     });
