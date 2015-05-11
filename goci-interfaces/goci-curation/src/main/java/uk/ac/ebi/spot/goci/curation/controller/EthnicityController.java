@@ -9,7 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import uk.ac.ebi.spot.goci.curation.model.*;
+import uk.ac.ebi.spot.goci.curation.model.CountryOfOrigin;
+import uk.ac.ebi.spot.goci.curation.model.CountryOfRecruitment;
+import uk.ac.ebi.spot.goci.curation.model.EthnicGroup;
+import uk.ac.ebi.spot.goci.curation.model.InitialSampleDescription;
+import uk.ac.ebi.spot.goci.curation.model.ReplicationSampleDescription;
 import uk.ac.ebi.spot.goci.model.Country;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -252,6 +256,26 @@ public class EthnicityController {
         ethnicityRepository.delete(ethnicityToDelete);
         return "redirect:/studies/" + studyId + "/sampledescription";
     }
+
+    // Generate view of ethnicity/sample information linked to a study
+    @RequestMapping(value = "/studies/{studyId}/sampledescription/delete_all",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.GET)
+    public String deleteAllStudySampleDescription(Model model, @PathVariable Long studyId) {
+
+        // Get our study
+        Study study = studyRepository.findOne(studyId);
+
+        // Get all study ethnicity's
+        Collection<Ethnicity> studyEthnicity = ethnicityRepository.findByStudyId(studyId);
+
+        // Delete ethnicity
+        for (Ethnicity ethnicity : studyEthnicity) {
+            ethnicityRepository.delete(ethnicity);
+        }
+        return "redirect:/studies/" + studyId + "/sampledescription";
+    }
+
 
 
     /* Model Attributes :
