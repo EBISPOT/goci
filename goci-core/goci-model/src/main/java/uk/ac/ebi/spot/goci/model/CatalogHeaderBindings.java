@@ -16,13 +16,13 @@ public class CatalogHeaderBindings {
 
     static {
         for (CatalogHeaderBinding catalogHeaderBinding : CatalogHeaderBinding.values()) {
-            if (catalogHeaderBinding.requiredByNcbi()) {
+            if (catalogHeaderBinding.getNcbiInclusion().isRequired()) {
                 ncbiHeaders.add(catalogHeaderBinding);
             }
-            if (catalogHeaderBinding.requiredByDownload()) {
+            if (catalogHeaderBinding.getDownloadInclusion().isRequired()) {
                 downloadHeaders.add(catalogHeaderBinding);
             }
-            if (catalogHeaderBinding.requiredByLoad()) {
+            if (catalogHeaderBinding.getLoadInclusion().isRequired()) {
                 loadHeaders.add(catalogHeaderBinding);
             }
         }
