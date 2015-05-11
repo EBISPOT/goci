@@ -29,19 +29,20 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Collection<Study> findByPubmedId(String pubmedId);
 
-    // Custom queries
-    @Query("select s from Study s where s.housekeeping.curationStatus.id = :status")
+    Page<Study> findByPubmedId(String pubmedId, Pageable pageable);
+
+    // Custom query
+    @Query("select s from Study s where s.housekeeping.curationStatus.id = :status order by s.studyDate desc")
     Collection<Study> findByCurationStatusIgnoreCase(@Param("status") Long status);
 
-    @Query("select s from Study s where s.housekeeping.curator.id = :curator")
-    Collection<Study> findByCuratorIgnoreCase(@Param("curator") Long curator);
+    // Pageable queries for filtering main page
+    Page<Study> findByHousekeepingCurationStatusIdAndHousekeepingCuratorId(Long status,
+                                                                           Long curator,
+                                                                           Pageable pageable);
 
-    @Query("select s from Study s where s.housekeeping.curationStatus.id = :status and s.housekeeping.curator.id = :curator")
-    Collection<Study> findByCurationStatusAndCuratorAllIgnoreCase(@Param("status") Long status,
-                                                                  @Param("curator") Long curator);
+    Page<Study> findByHousekeepingCurationStatusId(Long status, Pageable pageable);
 
-    @Query("select s from Study s where s.housekeeping.curator.id = :curator")
-    Collection<Study> findByCuratorOrderByStudyDateDesc(@Param("curator") Long curator);
+    Page<Study> findByHousekeepingCuratorId(Long curator, Pageable pageable);
 
     // Custom query to calculate curator totals
     @Query("select s from Study s where s.housekeeping.curator.id = :curator and s.studyDate between :dateFrom and :dateTo")
@@ -49,10 +50,30 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
                                           @Param("dateFrom") Date dateFrom,
                                           @Param("dateTo") Date dateTo);
 
-    // Custom query for daily audit emails
+    // Queries for study types
+    Page<Study>findByGxe(Boolean gxe ,Pageable pageable);
+
+    Page<Study>findByGxg(Boolean gxg ,Pageable pageable);
+
+    Page<Study>findByCnv(Boolean cnv ,Pageable pageable);
+
+    // EFO trait query
+    Page<Study> findByEfoTraitsId(Long efoTraitId, Pageable pageable);
+
+    // Query housekeeping notes field
+    Page<Study> findByHousekeepingNotesContainingIgnoreCase(String query, Pageable pageable);
+
+    // Custom query to get list of study authors
+    @Query("select s.author from Study s order by s.author asc")
+    List<String> findAllStudyAuthors();
+
     List<Study> findByHousekeepingSendToNCBIDate(Date date);
 
     List<Study> findByAuthorContainingIgnoreCase(String author);
+
+    List<Study> findByAuthorContainingIgnoreCase(String author , Sort sort);
+
+    Page<Study>  findByAuthorContainingIgnoreCase(String author , Pageable pageable);
 
     List<Study> findByHousekeepingPublishDateIsNotNull();
 
