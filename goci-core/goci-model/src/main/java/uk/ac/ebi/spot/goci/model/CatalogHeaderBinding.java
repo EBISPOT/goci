@@ -172,6 +172,7 @@ public enum CatalogHeaderBinding {
              new Inclusion.FieldIncluded("PLATFORM [SNPS PASSING QC]"),
              new Inclusion.Excluded()),
     CNV("CNV", new Inclusion.Extracted(), new Inclusion.Extracted(), new Inclusion.Excluded()),
+    //change the download field from FieldIncluded to Excluded
     SPREADSHEET_CNV(new Inclusion.FieldIncluded("CNV"),
                     new Inclusion.FieldIncluded("CNV"),
                     new Inclusion.Excluded()),
