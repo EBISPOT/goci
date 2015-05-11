@@ -26,7 +26,6 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String publicationLink;
 
     @Field private String platform;
-    @Field private Boolean cnv;
 
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
@@ -64,7 +63,6 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.publication = study.getPublication();
 
         this.platform = study.getPlatform();
-        this.cnv = study.getCnv();
 
         this.initialSampleDescription = study.getInitialSampleSize();
         this.replicateSampleDescription = study.getReplicateSampleSize();
@@ -139,10 +137,6 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
     public String getPlatform() {
         return platform;
-    }
-
-    public Boolean getCnv() {
-        return cnv;
     }
 
     public String getInitialSampleDescription() {
