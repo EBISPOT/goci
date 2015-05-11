@@ -112,9 +112,9 @@ public class StudyController {
                                  @RequestParam(required = false) Integer page,
                                  @RequestParam(required = false) String pubmed,
                                  @RequestParam(required = false) String author,
-                                 @RequestParam(required = false) String studyType,
-                                 @RequestParam(required = false) Long efoTraitId,
-                                 @RequestParam(required = false) String notesQuery,
+                                 @RequestParam(value = "studytype", required = false) String studyType,
+                                 @RequestParam(value = "efotraitid", required = false) Long efoTraitId,
+                                 @RequestParam(value = "notesquery", required = false) String notesQuery,
                                  @RequestParam(required = false) Long status,
                                  @RequestParam(required = false) Long curator,
                                  @RequestParam(required = false) String sortType) {
@@ -148,6 +148,7 @@ public class StudyController {
             studyPage =
                     studyRepository.findByPubmedId(pubmed, constructPageSpecification(page - 1, sort));
             filters = filters + "&pubmed=" + pubmed;
+            studySearchFilter.setPubmedId(pubmed);
         }
 
         // Search by author option available from landing page
@@ -155,6 +156,7 @@ public class StudyController {
             studyPage = studyRepository.findByAuthorContainingIgnoreCase(author, constructPageSpecification(page - 1,
                                                                                                             sort));
             filters = filters + "&author=" + author;
+            studySearchFilter.setAuthor(author);
         }
 
         // Search by study type
@@ -305,17 +307,17 @@ public class StudyController {
 
         // Search by study type
         else if (studyType != null && !studyType.isEmpty()) {
-            return "redirect:/studies?page=1&studyType=" + studyType;
+            return "redirect:/studies?page=1&studytype=" + studyType;
         }
 
         // Search by efo trait
         else if (efoTraitId != null) {
-            return "redirect:/studies?page=1&efoTraitId=" + efoTraitId;
+            return "redirect:/studies?page=1&efotraitid=" + efoTraitId;
         }
 
         // Search by string in notes
         else if (notesQuery != null && !notesQuery.isEmpty()) {
-            return "redirect:/studies?page=1&notesQuery=" + notesQuery;
+            return "redirect:/studies?page=1&notesquery=" + notesQuery;
         }
 
         // If user entered a status
@@ -872,8 +874,7 @@ public class StudyController {
     /* Pagination */
     // Pagination, method passed page index and inlcudes max number of studies, sorted by study date, to return
     private Pageable constructPageSpecification(int pageIndex, Sort sort) {
-        Pageable pageSpecification = new PageRequest(pageIndex, MAX_PAGE_ITEM_DISPLAY, sort);
-        return pageSpecification;
+        return new PageRequest(pageIndex, MAX_PAGE_ITEM_DISPLAY, sort);
     }
 
 }
