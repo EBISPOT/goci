@@ -898,18 +898,18 @@ public class StudyController {
 
     private Sort sortByEfoTraitDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "efoTraits.trait").ignoreCase());}
 
-    private Sort sortByCuratorAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "housekeeping.curator"));}
+    private Sort sortByCuratorAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "housekeeping.curator.lastName"));}
 
-    private Sort sortByCuratorDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "housekeeping.curator"));}
+    private Sort sortByCuratorDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "housekeeping.curator.lastName"));}
 
     private Sort sortByCurationStatusAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC,
-                                       "housekeeping.curationStatus"));
+                                       "housekeeping.curationStatus.status"));
     }
 
     private Sort sortByCurationStatusDesc() {
         return new Sort(new Sort.Order(Sort.Direction.DESC,
-                                       "housekeeping.curationStatus"));
+                                       "housekeeping.curationStatus.status"));
     }
 
     /* Pagination */
