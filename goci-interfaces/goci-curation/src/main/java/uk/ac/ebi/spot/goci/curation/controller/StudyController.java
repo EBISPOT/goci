@@ -117,7 +117,8 @@ public class StudyController {
                                  @RequestParam(value = "notesquery", required = false) String notesQuery,
                                  @RequestParam(required = false) Long status,
                                  @RequestParam(required = false) Long curator,
-                                 @RequestParam(required = false) String sortType) {
+                                 @RequestParam(required = false) String sortType,
+                                 @RequestParam(value = "diseasetraitid", required = false) Long diseaseTraitId) {
 
 
         // Return all studies ordered by date if no page number given
@@ -185,6 +186,14 @@ public class StudyController {
                                                                                                  sort));
             studySearchFilter.setEfoTraitSearchFilterId(efoTraitId);
             filters = filters + "&efoTraitId=" + efoTraitId;
+        }
+
+        // Search by disease trait id
+        if (diseaseTraitId != null) {
+            studyPage = studyRepository.findByDiseaseTraitId(diseaseTraitId, constructPageSpecification(page - 1,
+                                                                                                 sort));
+            studySearchFilter.setDiseaseTraitSearchFilterId(diseaseTraitId);
+            filters = filters + "&diseasetraitid=" + diseaseTraitId;
         }
 
 
@@ -294,6 +303,7 @@ public class StudyController {
         String studyType = studySearchFilter.getStudyType();
         Long efoTraitId = studySearchFilter.getEfoTraitSearchFilterId();
         String notesQuery = studySearchFilter.getNotesQuery();
+        Long diseaseTraitId = studySearchFilter.getDiseaseTraitSearchFilterId();
 
         // Search by pubmed ID option available from landing page
         if (pubmedId != null && !pubmedId.isEmpty()) {
@@ -313,6 +323,11 @@ public class StudyController {
         // Search by efo trait
         else if (efoTraitId != null) {
             return "redirect:/studies?page=1&efotraitid=" + efoTraitId;
+        }
+
+        // Search by disease trait
+        else if (diseaseTraitId != null) {
+            return "redirect:/studies?page=1&diseasetraitid=" + diseaseTraitId;
         }
 
         // Search by string in notes
