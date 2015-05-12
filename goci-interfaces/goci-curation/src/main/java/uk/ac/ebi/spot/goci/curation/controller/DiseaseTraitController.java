@@ -62,7 +62,11 @@ public class DiseaseTraitController {
                                   Model model, RedirectAttributes redirectAttributes) {
 
         // Check if it exists already
-        String existingTrait= diseaseTraitRepository.findByTraitIgnoreCase(diseaseTrait.getTrait()).getTrait();
+        DiseaseTrait existingDiseaseTrait = diseaseTraitRepository.findByTraitIgnoreCase(diseaseTrait.getTrait());
+        String existingTrait= null;
+        if (existingDiseaseTrait != null){
+            existingTrait = existingDiseaseTrait.getTrait();
+        }
 
         // Catch a null or empty value being entered
         if (bindingResult.hasErrors()) {
@@ -79,6 +83,8 @@ public class DiseaseTraitController {
         // Save disease trait
         else {
             diseaseTraitRepository.save(diseaseTrait);
+            String message = "Trait "+ diseaseTrait.getTrait()+" added to database";
+            redirectAttributes.addFlashAttribute("diseaseTraitSaved", message);
             return "redirect:/diseasetraits";
         }
     }
@@ -118,6 +124,10 @@ public class DiseaseTraitController {
     public String viewDiseaseTraitToDelete(Model model, @PathVariable Long diseaseTraitId) {
 
         DiseaseTrait diseaseTraitToView = diseaseTraitRepository.findOne(diseaseTraitId);
+        Collection<Study> studiesLinkedToTrait = studyRepository.findByDiseaseTraitId(diseaseTraitId);
+
+        model.addAttribute("studies", studiesLinkedToTrait);
+        model.addAttribute("totalStudies", studiesLinkedToTrait.size());
         model.addAttribute("diseaseTrait", diseaseTraitToView);
         return "delete_disease_trait";
     }
@@ -126,23 +136,23 @@ public class DiseaseTraitController {
     @RequestMapping(value = "/{diseaseTraitId}/delete",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
-    public String deleteDiseaseTrait(@PathVariable Long diseaseTraitId) {
+    public String deleteDiseaseTrait(@PathVariable Long diseaseTraitId, RedirectAttributes redirectAttributes) {
 
         // Need to find any studies linked to this diseaseTrait
         Collection<Study> studiesWithDiseaseTrait = studyRepository.findByDiseaseTraitId(diseaseTraitId);
 
         // For each study remove this disease trait and save
         if (!studiesWithDiseaseTrait.isEmpty()) {
-            for (Study study : studiesWithDiseaseTrait) {
-                study.setDiseaseTrait(null);
-                studyRepository.save(study);
-            }
+            String message = "Trait is used in " + studiesWithDiseaseTrait.size() + " study/studies, cannot delete!";
+            redirectAttributes.addFlashAttribute("diseaseTraitUsed", message);
+            return "redirect:/diseasetraits/" + diseaseTraitId + "/delete";
         }
 
-        // Delete disease trait
-        diseaseTraitRepository.delete(diseaseTraitId);
-
-        return "redirect:/diseasetraits";
+        else {
+            // Delete disease trait
+            diseaseTraitRepository.delete(diseaseTraitId);
+            return "redirect:/diseasetraits";
+        }
     }
 
 
