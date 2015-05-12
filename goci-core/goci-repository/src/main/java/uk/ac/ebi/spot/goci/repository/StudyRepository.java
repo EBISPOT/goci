@@ -59,6 +59,8 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Page<Study>findByCnv(Boolean cnv ,Pageable pageable);
 
+    Page<Study>findByHousekeepingCheckedNCBIErrorOrHousekeepingCurationStatusId(Boolean checkedNCBIError,Long status ,Pageable pageable);
+
     // EFO trait query
     Page<Study> findByEfoTraitsId(Long efoTraitId, Pageable pageable);
 
