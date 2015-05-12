@@ -117,7 +117,7 @@ public class StudyController {
                                  @RequestParam(value = "notesquery", required = false) String notesQuery,
                                  @RequestParam(required = false) Long status,
                                  @RequestParam(required = false) Long curator,
-                                 @RequestParam(required = false) String sortType,
+                                 @RequestParam(value = "sorttype", required = false) String sortType,
                                  @RequestParam(value = "diseasetraitid", required = false) Long diseaseTraitId) {
 
 
@@ -137,7 +137,7 @@ public class StudyController {
         Sort sort = findSort(sortType);
         String sortString = "";
         if (sortType != null && !sortType.isEmpty()) {
-            sortString = "&sortType=" + sortType;
+            sortString = "&sorttype=" + sortType;
         }
 
         // This is the default study page will all studies
@@ -177,7 +177,7 @@ public class StudyController {
                                                                                        sort));
             }
             studySearchFilter.setStudyType(studyType);
-            filters = filters + "&studyType=" + studyType;
+            filters = filters + "&studytype=" + studyType;
         }
 
         // Search by efo trait id
@@ -185,13 +185,13 @@ public class StudyController {
             studyPage = studyRepository.findByEfoTraitsId(efoTraitId, constructPageSpecification(page - 1,
                                                                                                  sort));
             studySearchFilter.setEfoTraitSearchFilterId(efoTraitId);
-            filters = filters + "&efoTraitId=" + efoTraitId;
+            filters = filters + "&efotraitid=" + efoTraitId;
         }
 
         // Search by disease trait id
         if (diseaseTraitId != null) {
             studyPage = studyRepository.findByDiseaseTraitId(diseaseTraitId, constructPageSpecification(page - 1,
-                                                                                                 sort));
+                                                                                                        sort));
             studySearchFilter.setDiseaseTraitSearchFilterId(diseaseTraitId);
             filters = filters + "&diseasetraitid=" + diseaseTraitId;
         }
@@ -202,7 +202,7 @@ public class StudyController {
             studyPage = studyRepository.findByHousekeepingNotesContainingIgnoreCase(notesQuery, constructPageSpecification(page - 1,
                                                                                                  sort));
             studySearchFilter.setNotesQuery(notesQuery);
-            filters = filters + "&notesQuery=" + notesQuery;
+            filters = filters + "&notesquery=" + notesQuery;
         }
 
         // If user entered a status
