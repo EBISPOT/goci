@@ -44,6 +44,8 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Page<Study> findByHousekeepingCurationStatusId(Long status, Pageable pageable);
 
+    Page<Study> findByHousekeepingCurationStatusIdNot(Long status, Pageable pageable);
+
     Page<Study> findByHousekeepingCuratorId(Long curator, Pageable pageable);
 
     // Custom query to calculate curator totals
