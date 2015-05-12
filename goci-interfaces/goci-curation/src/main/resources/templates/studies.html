@@ -77,7 +77,11 @@
 
                         <div class="form-group">
                             <div>
-                                <button type="submit" class="btn btn-primary btn-sm">Filter by study type</button>
+                                <button type="submit"
+                                        class="btn btn-primary btn-sm"
+                                        data-toggle="tooltip"
+                                        data-placement="right"
+                                        title="Filter for GXE studies, GXG studies, CNV studies, unpublished studies, studies with errors">Filter by study type</button>
                             </div>
                         </div>
                     </form>
@@ -442,7 +446,7 @@
     $(function() {
         // turn the element to select2 select style
         $('#studyTypes').select2({
-            placeholder: "Select GXE,GXG, unpublished studies...",
+            placeholder: "Select GXE, unpublished studies...",
             allowClear: true
         });
     });
@@ -480,6 +484,10 @@
         });
     });
 </script>
+
+<script>$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})</script>
 
 </body>
 </html>
