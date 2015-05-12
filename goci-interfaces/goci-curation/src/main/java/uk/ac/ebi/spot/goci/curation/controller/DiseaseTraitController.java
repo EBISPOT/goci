@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
@@ -58,12 +59,21 @@ public class DiseaseTraitController {
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String addDiseaseTrait(@Valid @ModelAttribute DiseaseTrait diseaseTrait,
                                   BindingResult bindingResult,
-                                  Model model) {
+                                  Model model, RedirectAttributes redirectAttributes) {
+
+        // Check if it exists already
+        String existingTrait= diseaseTraitRepository.findByTraitIgnoreCase(diseaseTrait.getTrait()).getTrait();
 
         // Catch a null or empty value being entered
         if (bindingResult.hasErrors()) {
             model.addAttribute("diseaseTraits", diseaseTraitRepository.findAll(sortByTraitAsc()));
             return "disease_traits";
+        }
+
+        else if (existingTrait != null && !existingTrait.isEmpty()) {
+            String message = "Trait already exists in database: database value = "+existingTrait+", value entered = "+ diseaseTrait.getTrait();
+            redirectAttributes.addFlashAttribute("diseaseTraitExists", message);
+            return "redirect:/diseasetraits";
         }
 
         // Save disease trait
