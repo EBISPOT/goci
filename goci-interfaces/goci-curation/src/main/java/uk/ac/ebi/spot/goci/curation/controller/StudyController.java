@@ -176,6 +176,19 @@ public class StudyController {
                 studyPage = studyRepository.findByCnv(true, constructPageSpecification(page - 1,
                                                                                        sort));
             }
+
+            // Include the studies with status "NCBI pipeline error"
+            // plus the ones that have the box "checked NCBI error" ticked
+            if (studyType.equals("Errors")) {
+                CurationStatus errorStatus = curationStatusRepository.findByStatus("NCBI pipeline error");
+                Long errorStatusId = errorStatus.getId();
+                studyPage = studyRepository.findByHousekeepingCheckedNCBIErrorOrHousekeepingCurationStatusId(true,
+                                                                                                             errorStatusId,
+                                                                                                             constructPageSpecification(
+                                                                                                                     page -
+                                                                                                                             1,
+                                                                                                                     sort));
+            }
             studySearchFilter.setStudyType(studyType);
             filters = filters + "&studytype=" + studyType;
         }
@@ -827,6 +840,8 @@ public class StudyController {
         studyTypesOptions.add("GXE");
         studyTypesOptions.add("GXG");
         studyTypesOptions.add("CNV");
+        studyTypesOptions.add("Errors");
+        studyTypesOptions.add("Unpublished");
         return studyTypesOptions;
     }
 
