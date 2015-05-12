@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.model.CountryOfOrigin;
 import uk.ac.ebi.spot.goci.curation.model.CountryOfRecruitment;
@@ -24,7 +26,9 @@ import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by emma on 05/01/15.
@@ -244,20 +248,36 @@ public class EthnicityController {
     }
 
 
-    // Delete existing ethnicity/sample information
-    @RequestMapping(value = "/sampledescriptions/{ethnicityId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String deleteSampleDescription(@PathVariable Long ethnicityId) {
+    // Delete checked ethnicity/sample information linked to a study
+    @RequestMapping(value = "/studies/{studyId}/sampledescription/delete_checked",
+                    produces = MediaType.APPLICATION_JSON_VALUE,
+                    method = RequestMethod.GET)
+    public @ResponseBody
+    Map<String, String> deleteChecked(@RequestParam(value = "sampleDescriptionIds[]") String[] sampleDescriptionIds) {
 
-        // Find the associated study
-        Ethnicity ethnicityToDelete = ethnicityRepository.findOne(ethnicityId);
-        Long studyId = ethnicityToDelete.getStudy().getId();
+        String message = "";
+        Integer count = 0;
 
+        // Get all ethnicities
+        Collection<Ethnicity> studyEthnicity = new ArrayList<>();
+        for (String sampleDescriptionId : sampleDescriptionIds) {
+            studyEthnicity.add(ethnicityRepository.findOne(Long.valueOf(sampleDescriptionId)));
+        }
         // Delete ethnicity
-        ethnicityRepository.delete(ethnicityToDelete);
-        return "redirect:/studies/" + studyId + "/sampledescription";
+        for (Ethnicity ethnicity : studyEthnicity) {
+            ethnicityRepository.delete(ethnicity);
+            count++;
+        }
+
+        // Return success message to view
+        message = "Successfully deleted " + count + " sample description(s)";
+
+        Map<String, String> result = new HashMap<>();
+        result.put("message", message);
+        return result;
     }
 
-    // Generate view of ethnicity/sample information linked to a study
+    // Delete all
     @RequestMapping(value = "/studies/{studyId}/sampledescription/delete_all",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
