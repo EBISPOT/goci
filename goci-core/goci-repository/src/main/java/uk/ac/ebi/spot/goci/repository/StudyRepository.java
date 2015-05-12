@@ -27,6 +27,8 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Collection<Study> findByDiseaseTraitId(Long diseaseTraitId);
 
+    Page<Study> findByDiseaseTraitId(Long diseaseTraitId, Pageable pageable);
+
     Collection<Study> findByPubmedId(String pubmedId);
 
     Page<Study> findByPubmedId(String pubmedId, Pageable pageable);
