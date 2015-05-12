@@ -23,6 +23,8 @@
     <!-- Include Select2 JS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
 
+    <!--Handles checkbox in table -->
+    <script src="../static/js/goci-study-sample-description.js" th:src="@{../../js/goci-study-sample-description.js}"></script>
 
 </head>
 <body>
@@ -133,7 +135,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 
-                    <a th:href="@{/studies/{studyId}/sampledescription/delete_all(studyId=${study.Id})}"
+                    <a th:href="@{/studies/{studyId}/sampledescription/delete_all(studyId=${study.id})}"
                        class="btn btn-default"
                        role="button">Delete All Ethnicity information</a>
                 </div>
@@ -142,7 +144,30 @@
     </div>
 </div>
 
+<div id="DeleteSelectedModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete selected ethnicity information associated with this study?</p>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <a id="delete-button"
+                       class="btn btn-default"
+                       role="button">Delete Checked Ethnicity information</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <br/>
+
+<!--Initial table-->
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
@@ -178,13 +203,11 @@
                         <div class="btn-group-vertical  btn-group-sm" role="group" aria-label="...">
                             <a th:href="@{/sampledescriptions/{ethnicityId}(ethnicityId=${initialStudyEthnicityDescription.id})}"
                                class="btn btn-default">Edit</a>
-                            <a th:href="@{/sampledescriptions/{ethnicityId}/delete(ethnicityId=${initialStudyEthnicityDescription.id})}"
-                               class="btn btn-danger">Delete</a>
                         </div>
                     </td>
                     <td><input type="checkbox"
                                name="checkboxId"
-                               class="ethnicity-selector"
+                               class="sample-description-selector"
                                th:value="${initialStudyEthnicityDescription.id}"/>
                     </td>
                 </tr>
@@ -194,7 +217,7 @@
     </div>
 </div>
 
-
+<!--Replication table-->
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
@@ -229,14 +252,12 @@
                         <div class="btn-group-vertical  btn-group-sm" role="group" aria-label="...">
                             <a th:href="@{/sampledescriptions/{ethnicityId}(ethnicityId=${replicationStudyEthnicityDescription.id})}"
                                class="btn btn-default">Edit</a>
-                            <a th:href="@{/sampledescriptions/{ethnicityId}/delete(ethnicityId=${replicationStudyEthnicityDescription.id})}"
-                               class="btn btn-danger">Delete</a>
                         </div>
                     </td>
                     <!--This checkbox is used to delete checked rows-->
                     <td><input type="checkbox"
                                name="checkboxId"
-                               class="ethnicity-selector"
+                               class="sample-description-selector"
                                th:value="${replicationStudyEthnicityDescription.id}"/>
                     </td>
                 </tr>
@@ -246,10 +267,7 @@
     </div>
 </div>
 
-
-
-
-
+<!--Add ethnicity form-->
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
