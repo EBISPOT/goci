@@ -189,6 +189,17 @@ public class StudyController {
                                                                                                                              1,
                                                                                                                      sort));
             }
+
+            if (studyType.equals("Unpublished")) {
+                CurationStatus errorStatus = curationStatusRepository.findByStatus("Publish study");
+                Long errorStatusId = errorStatus.getId();
+                studyPage = studyRepository.findByHousekeepingCurationStatusIdNot(errorStatusId,
+                                                                                  constructPageSpecification(
+                                                                                          page -
+                                                                                                  1,
+                                                                                          sort));
+            }
+
             studySearchFilter.setStudyType(studyType);
             filters = filters + "&studytype=" + studyType;
         }
