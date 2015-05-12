@@ -33,13 +33,25 @@
 <div th:include="header :: navbar"></div>
 
 
-<!--Alert if data is saved-->
+<!--Alert if data is deleted-->
 <div class="container-fluid" th:if="${!#strings.isEmpty(diseaseTraitExists)}">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-6">
             <div class="alert alert-danger">
                 <a href="#" class="close" data-dismiss="alert">&times;</a>
                 <strong th:text="${diseaseTraitExists}">Error: </strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Alert if data is saved-->
+<div class="container-fluid" th:if="${!#strings.isEmpty(diseaseTraitSaved)}">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="alert alert-success">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:text="${diseaseTraitSaved}">Success: </strong>
             </div>
         </div>
     </div>
