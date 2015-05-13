@@ -418,7 +418,6 @@ public class StudyController {
 
         // Update and save study
         importedStudy.setHousekeeping(studyHousekeeping);
-        Study newStudy = studyRepository.save(importedStudy);
 
         // Save new study
         studyRepository.save(importedStudy);
