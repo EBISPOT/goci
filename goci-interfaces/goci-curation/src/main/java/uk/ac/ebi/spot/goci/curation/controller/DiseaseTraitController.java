@@ -48,6 +48,7 @@ public class DiseaseTraitController {
     public String allDiseaseTraits(Model model) {
 
         model.addAttribute("diseaseTraits", diseaseTraitRepository.findAll(sortByTraitAsc()));
+        model.addAttribute("totaldiseaseTraits" , diseaseTraitRepository.findAll(sortByTraitAsc()).size());
 
         // Return an empty DiseaseTrait object so user can add a new one
         model.addAttribute("diseaseTrait", new DiseaseTrait());
