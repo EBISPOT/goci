@@ -104,7 +104,7 @@
                    data-toggle="table"
                    data-search="true"
                    data-sort-order="desc">
-                <caption id="total"></caption>
+                <caption th:text="'Total: '+ ${totaldiseaseTraits}"></caption>
                 <thead>
                 <tr>
                     <th data-field="edit" data-switchable="false"></th>
@@ -126,16 +126,6 @@
         </div>
     </div>
 </div>
-
-<script>
-    //    Count our table rows
-    function myFunction() {
-        // Minus 1 to account for heading
-        var x = document.getElementById("diseaseTraitTable").rows.length - 1;
-        return "Total: " + x;
-    }
-    document.getElementById("total").innerHTML = myFunction();
-</script>
 
 <script>
     $('#addDiseaseTrait').selectize({
