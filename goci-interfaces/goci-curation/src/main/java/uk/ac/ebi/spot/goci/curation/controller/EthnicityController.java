@@ -129,6 +129,23 @@ public class EthnicityController {
 
         Study study = studyRepository.findOne(studyId);
 
+        // Set default values when no country of origin or recruitment supplied
+        if (ethnicity.getCountryOfOrigin() == null) {
+            ethnicity.setCountryOfOrigin("NR");
+        }
+
+        if (ethnicity.getCountryOfOrigin() != null && ethnicity.getCountryOfOrigin().isEmpty()) {
+            ethnicity.setCountryOfOrigin("NR");
+        }
+
+        if (ethnicity.getCountryOfRecruitment() == null) {
+            ethnicity.setCountryOfRecruitment("NR");
+        }
+
+        if (ethnicity.getCountryOfRecruitment() != null && ethnicity.getCountryOfRecruitment().isEmpty()) {
+            ethnicity.setCountryOfRecruitment("NR");
+        }
+
         // Set the study for our ethnicity
         ethnicity.setStudy(study);
 
@@ -219,18 +236,36 @@ public class EthnicityController {
 
     // Edit existing ethnicity/sample information
     // @ModelAttribute is a reference to the object holding the data entered in the form
-    @RequestMapping(value = "/sampledescriptions/{ethnicityId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateSampleDescription(@ModelAttribute Ethnicity ethnicity, @ModelAttribute CountryOfOrigin countryOfOrigin, @ModelAttribute CountryOfRecruitment countryOfRecruitment, EthnicGroup ethnicGroup, RedirectAttributes redirectAttributes) {
+    @RequestMapping(value = "/sampledescriptions/{ethnicityId}",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.POST)
+    public String updateSampleDescription(@ModelAttribute Ethnicity ethnicity,
+                                          @ModelAttribute CountryOfOrigin countryOfOrigin,
+                                          @ModelAttribute CountryOfRecruitment countryOfRecruitment,
+                                          EthnicGroup ethnicGroup,
+                                          RedirectAttributes redirectAttributes) {
 
         // Set country of origin based on values returned
         List<String> listOfOriginCountries = Arrays.asList(countryOfOrigin.getOriginCountryValues());
-        String countryOfOriginJoined = String.join(",", listOfOriginCountries);
-        ethnicity.setCountryOfOrigin(countryOfOriginJoined);
+
+        if (listOfOriginCountries.size() > 0) {
+            String countryOfOriginJoined = String.join(",", listOfOriginCountries);
+            ethnicity.setCountryOfOrigin(countryOfOriginJoined);
+        }
+        else{
+            ethnicity.setCountryOfOrigin("NR");
+        }
 
         // Set country of recruitment based on values returned
         List<String> listOfRecruitmentCountries = Arrays.asList(countryOfRecruitment.getRecruitmentCountryValues());
-        String countryOfRecruitmentJoined = String.join(",", listOfRecruitmentCountries);
-        ethnicity.setCountryOfRecruitment(countryOfRecruitmentJoined);
+
+        if (listOfRecruitmentCountries.size() > 0) {
+            String countryOfRecruitmentJoined = String.join(",", listOfRecruitmentCountries);
+            ethnicity.setCountryOfRecruitment(countryOfRecruitmentJoined);
+        }
+        else{
+            ethnicity.setCountryOfRecruitment("NR");
+        }
 
         // Set ethnic group
         List<String> listOfEthnicGroups = Arrays.asList(ethnicGroup.getEthnicGroupValues());
