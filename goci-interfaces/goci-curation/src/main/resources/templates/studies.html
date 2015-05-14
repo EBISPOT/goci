@@ -81,7 +81,8 @@
                                         class="btn btn-primary btn-sm"
                                         data-toggle="tooltip"
                                         data-placement="right"
-                                        title="Filter for GXE studies, GXG studies, CNV studies, unpublished studies, studies with errors">Filter by study type</button>
+                                        title="Filter for GXE studies, GXG studies, CNV studies, studies that do not have status 'Publish Study',
+                                        studies with errors">Filter by study type</button>
                             </div>
                         </div>
                     </form>
@@ -446,7 +447,7 @@
     $(function() {
         // turn the element to select2 select style
         $('#studyTypes').select2({
-            placeholder: "Select GXE, unpublished studies...",
+            placeholder: "Select GXE, studies with errors...",
             allowClear: true
         });
     });
