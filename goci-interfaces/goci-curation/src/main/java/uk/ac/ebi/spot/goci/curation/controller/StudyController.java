@@ -190,7 +190,7 @@ public class StudyController {
                                                                                                                      sort));
             }
 
-            if (studyType.equals("Studies that do not have status Publish Study")) {
+            if (studyType.equals("Studies in curation queue")) {
                 CurationStatus errorStatus = curationStatusRepository.findByStatus("Publish study");
                 Long errorStatusId = errorStatus.getId();
                 studyPage = studyRepository.findByHousekeepingCurationStatusIdNot(errorStatusId,
@@ -851,7 +851,7 @@ public class StudyController {
         studyTypesOptions.add("GXG");
         studyTypesOptions.add("CNV");
         studyTypesOptions.add("Studies with errors");
-        studyTypesOptions.add("Studies that do not have status Publish Study");
+        studyTypesOptions.add("Studies in curation queue");
         return studyTypesOptions;
     }
 
