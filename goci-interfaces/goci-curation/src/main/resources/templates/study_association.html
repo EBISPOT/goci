@@ -53,7 +53,7 @@
 
 <br/>
 
-<div class="container-fluid" th:object="${study}">
+<div class="container-fluid" th:object="${study}" th:if="${not #lists.isEmpty(snpAssociationForms)}">
     <div class="row">
         <div class="col-md-12">
             <a th:href="@{/studies/{studyId}/associations/approve_all(studyId=${study.Id})}"
@@ -136,11 +136,14 @@
         </div>
     </div>
 </div>
-
+<br/>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <table id="mainTable" class="table table-condensed table-bordered">
+            <div class="well well-sm" th:if="${#lists.isEmpty(snpAssociationForms)}">
+                <p style="color:grey">No snp associations to display for this study</p>
+            </div>
+            <table id="mainTable" class="table table-condensed table-bordered" th:if="${not #lists.isEmpty(snpAssociationForms)}">
                 <br/>
                 <thead>
                 <tr>
