@@ -399,6 +399,9 @@ F2: Factor 2 (visual memory and organization)
 F3: Factor 3 (measure of attention and executive function - Trails A and B)
 
 
+FA: female athletes
+
+
 FC: free cholesterol
 
 
@@ -415,6 +418,9 @@ FG: fibrinogen
 
 
 FI: fasting insulin
+
+
+FLE: female long endurance athletes
 
 
 FN: femoral neck
@@ -663,6 +669,9 @@ LYM: Lymphoma subtypes
 
 === M
 
+MA: male athletes
+
+
 MAP: mean arterial pressure
 
 
@@ -720,13 +729,22 @@ M-LDL-C: Total cholesterol in medium LDL
 M-LDL-PL: Phospholipids in medium LDL
 
 
+MLE: male long endurance athletes
+
+
 MobCH: double-bond protons of mobile lipids
 
 
 MMnb: mismatch negativity (300-710 ms)
 
 
+MMR: measles, mumps and rubella vaccination
+
+
 MMSE: Mini-mental state examination
+
+
+MSE: middle and short endurance athletes
 
 
 MSSS: Multiple Sclerosis Severity Scale

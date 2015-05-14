@@ -120,6 +120,108 @@ public class AssociationController {
         return "study_association";
     }
 
+    @RequestMapping(value = "/studies/{studyId}/associations/sortpvalue",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.GET)
+    public String sortStudySnpsByPvalue(Model model,
+                                        @PathVariable Long studyId,
+                                        @RequestParam(required = true) String direction) {
+
+        // Get all associations for a study and perform relevant sorting
+        Collection<Association> associations = new ArrayList<>();
+        if (direction.equals("asc")) {
+            associations.addAll(associationRepository.findByStudyId(studyId, sortByPvalueExponentAndMantissaAsc()));
+        }
+
+        else if (direction.equals("desc")) {
+            associations.addAll(associationRepository.findByStudyId(studyId, sortByPvalueExponentAndMantissaDesc()));
+        }
+
+        else {
+            associations.addAll(associationRepository.findByStudyId(studyId));
+        }
+
+        // For our associations create a form object and return
+        List<SnpAssociationForm> snpAssociationForms = new ArrayList<SnpAssociationForm>();
+        for (Association association : associations) {
+
+            // TODO WOULD NEED SOME SORT OF CHECK FOR SNP:SNP INTERACTION
+            SnpAssociationForm snpAssociationForm = singleSnpMultiSnpAssociationService.createSnpAssociationForm(
+                    association);
+            snpAssociationForms.add(snpAssociationForm);
+        }
+
+        model.addAttribute("snpAssociationForms", snpAssociationForms);
+
+        // Also passes back study object to view so we can create links back to main study page
+        model.addAttribute("study", studyRepository.findOne(studyId));
+        return "study_association";
+    }
+
+
+    @RequestMapping(value = "/studies/{studyId}/associations/sortrsid",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.GET)
+    public String sortStudySnpsByRsid(Model model,
+                                      @PathVariable Long studyId,
+                                      @RequestParam(required = true) String direction) {
+
+        // Get all associations for a study and perform relevant sorting
+        Collection<Association> associations = new ArrayList<>();
+
+        // Sorting will not work for multi-snp haplotype so need to check for that
+        Boolean isMultiSnpHaplotype = false;
+
+        if (direction.equals("asc")) {
+            associations.addAll(associationRepository.findByStudyId(studyId, sortByRsidAsc()));
+        }
+
+        else if (direction.equals("desc")) {
+            associations.addAll(associationRepository.findByStudyId(studyId, sortByRsidDesc()));
+        }
+
+        else {
+            associations.addAll(associationRepository.findByStudyId(studyId));
+        }
+
+
+
+        // For our associations create a form object and return
+        List<SnpAssociationForm> snpAssociationForms = new ArrayList<SnpAssociationForm>();
+        for (Association association : associations) {
+
+            // TODO WOULD NEED SOME SORT OF CHECK FOR SNP:SNP INTERACTION
+            SnpAssociationForm snpAssociationForm = singleSnpMultiSnpAssociationService.createSnpAssociationForm(
+                    association);
+
+            // Record if we have a multi-snp haplotype
+            if (snpAssociationForm.getSnpFormRows() != null) {
+                if (snpAssociationForm.getSnpFormRows().size() > 1) {
+                    isMultiSnpHaplotype = true;
+                }
+            }
+
+            snpAssociationForms.add(snpAssociationForm);
+        }
+
+        // Only return sorted results if its not a multi-snp haplotype
+        if (isMultiSnpHaplotype == false){
+
+            model.addAttribute("snpAssociationForms", snpAssociationForms);
+
+            // Also passes back study object to view so we can create links back to main study page
+            model.addAttribute("study", studyRepository.findOne(studyId));
+            return "study_association";
+
+        }
+
+        else{
+            return "redirect:/studies/" + studyId + "/associations";
+        }
+
+    }
+
+
     // Upload a spreadsheet of snp association information
     @RequestMapping(value = "/studies/{studyId}/associations/upload",
                     produces = MediaType.TEXT_HTML_VALUE,
@@ -771,10 +873,27 @@ public class AssociationController {
         return efoTraitRepository.findAll(sortByTraitAsc());
     }
 
-    // Returns a Sort object which sorts disease traits in ascending order by trait, ignoring case
+    // Sort options
     private Sort sortByTraitAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "trait").ignoreCase());
     }
 
+    private Sort sortByPvalueExponentAndMantissaAsc() {
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "pvalueExponent"),
+                        new Sort.Order(Sort.Direction.ASC, "pvalueMantissa"));
+    }
+
+    private Sort sortByPvalueExponentAndMantissaDesc() {
+        return new Sort(new Sort.Order(Sort.Direction.DESC, "pvalueExponent"),
+                        new Sort.Order(Sort.Direction.DESC, "pvalueMantissa"));
+    }
+
+    private Sort sortByRsidAsc() {
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "loci.strongestRiskAlleles.snp.rsId"));
+    }
+
+    private Sort sortByRsidDesc() {
+        return new Sort(new Sort.Order(Sort.Direction.DESC, "loci.strongestRiskAlleles.snp.rsId"));
+    }
 }
 

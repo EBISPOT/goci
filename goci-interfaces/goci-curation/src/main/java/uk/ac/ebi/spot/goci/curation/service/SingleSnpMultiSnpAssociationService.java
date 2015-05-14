@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.Region;
@@ -15,7 +16,9 @@ import uk.ac.ebi.spot.goci.repository.LocusRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by emma on 13/04/2015.
@@ -62,6 +65,7 @@ public class SingleSnpMultiSnpAssociationService {
         association.setOrPerCopyNum(snpAssociationForm.getOrPerCopyNum());
         association.setOrPerCopyRecip(snpAssociationForm.getOrPerCopyRecip());
         association.setOrPerCopyRange(snpAssociationForm.getOrPerCopyRange());
+        association.setOrPerCopyRecipRange(snpAssociationForm.getOrPerCopyRecipRange());
         association.setOrPerCopyStdError(snpAssociationForm.getOrPerCopyStdError());
         association.setOrPerCopyUnitDescr(snpAssociationForm.getOrPerCopyUnitDescr());
 
@@ -169,6 +173,9 @@ public class SingleSnpMultiSnpAssociationService {
 
         SnpAssociationForm snpAssociationForm = new SnpAssociationForm();
 
+        // Set error map
+        snpAssociationForm.setAssociationErrorMap(createAssociationErrorMap(association.getAssociationReport()));
+
         // Set association ID
         snpAssociationForm.setAssociationId(association.getId());
 
@@ -186,6 +193,7 @@ public class SingleSnpMultiSnpAssociationService {
         snpAssociationForm.setOrPerCopyRecip(association.getOrPerCopyRecip());
         snpAssociationForm.setOrPerCopyStdError(association.getOrPerCopyStdError());
         snpAssociationForm.setOrPerCopyRange(association.getOrPerCopyRange());
+        snpAssociationForm.setOrPerCopyRecipRange(association.getOrPerCopyRecipRange());
         snpAssociationForm.setOrPerCopyUnitDescr(association.getOrPerCopyUnitDescr());
 
         // Calculate p-value float, this will appear in table for curators
@@ -256,6 +264,35 @@ public class SingleSnpMultiSnpAssociationService {
         snpAssociationForm.setRegions(snpRegions);
         snpAssociationForm.setSnpFormRows(snpFormRows);
         return snpAssociationForm;
+    }
+
+    private Map<String, String> createAssociationErrorMap(AssociationReport associationReport) {
+
+        Map<String, String> associationErrorMap = new HashMap<>();
+
+        //Create map of errors
+        if (associationReport != null) {
+            if (associationReport.getSnpError() != null && !associationReport.getSnpError().isEmpty()) {
+                associationErrorMap.put("SNP Error: ", associationReport.getSnpError());
+            }
+
+            if (associationReport.getGeneNotOnGenome() != null &&
+                    !associationReport.getGeneNotOnGenome().isEmpty()) {
+                associationErrorMap.put("Gene Not On Genome Error: ", associationReport.getGeneNotOnGenome());
+            }
+
+            if (associationReport.getSnpGeneOnDiffChr() != null &&
+                    !associationReport.getSnpGeneOnDiffChr().isEmpty()) {
+                associationErrorMap.put("Snp Gene On Diff Chr: ", associationReport.getSnpGeneOnDiffChr());
+            }
+
+            if (associationReport.getNoGeneForSymbol() != null &&
+                    !associationReport.getNoGeneForSymbol().isEmpty()) {
+                associationErrorMap.put("No Gene For Symbol: ", associationReport.getNoGeneForSymbol());
+            }
+        }
+
+        return associationErrorMap;
     }
 
 
