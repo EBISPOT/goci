@@ -75,7 +75,7 @@ public class StudyController {
     private DefaultPubMedSearchService defaultPubMedSearchService;
     private MailService mailService;
 
-    public static final int MAX_PAGE_ITEM_DISPLAY = 10;
+    public static final int MAX_PAGE_ITEM_DISPLAY = 25;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
