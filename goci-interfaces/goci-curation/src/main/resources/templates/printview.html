@@ -181,7 +181,7 @@
                 </tbody>
             </table>
 
-            <table id="initialTable" class="table table-hover table-bordered">
+            <table id="initialTable" class="table table-hover table-bordered" th:if="${not #lists.isEmpty(initialStudyEthnicityDescriptions)}">
                 <caption>Initial ethnicity details</caption>
                 <thead>
                 <tr>
@@ -210,7 +210,7 @@
                 </tr>
                 </tbody>
             </table>
-            <table id="replicationTable" class="table table-hover table-bordered">
+            <table id="replicationTable" class="table table-hover table-bordered" th:if="${not #lists.isEmpty(replicationStudyEthnicityDescription)}">
                 <caption>Replication ethnicity details</caption>
                 <thead>
                 <tr>
@@ -239,7 +239,7 @@
                 </tr>
                 </tbody>
             </table>
-            <table id="associationTable" class="table table-condensed table-bordered">
+            <table id="associationTable" class="table table-condensed table-bordered" th:if="${not #lists.isEmpty(snpAssociationForms)}" >
                 <caption>SNP association details</caption>
                 <thead>
                 <tr>
