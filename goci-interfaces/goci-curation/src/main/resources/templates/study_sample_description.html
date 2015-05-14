@@ -171,7 +171,10 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
-            <table id="initialTable" class="table table-hover table-bordered">
+            <div class="well well-sm" th:if="${#lists.isEmpty(initialStudyEthnicityDescriptions)}">
+                <p style="color:grey">No initial ethnicity details to display</p>
+            </div>
+            <table id="initialTable" class="table table-hover table-bordered" th:if="${not #lists.isEmpty(initialStudyEthnicityDescriptions)}">
                 <thead>
                 <tr>
                     <th>Type</th>
@@ -221,7 +224,10 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
-            <table id="replicationTable" class="table table-hover table-bordered">
+            <div class="well well-sm" th:if="${#lists.isEmpty(replicationStudyEthnicityDescriptions)}">
+                <p style="color:grey">No replication ethnicity details to display</p>
+            </div>
+            <table id="replicationTable" class="table table-hover table-bordered" th:if="${not #lists.isEmpty(replicationStudyEthnicityDescriptions)}">
                 <thead>
                 <tr>
                     <th>Type</th>
