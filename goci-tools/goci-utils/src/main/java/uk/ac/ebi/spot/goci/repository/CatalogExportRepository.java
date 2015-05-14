@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.repository;
 
+import org.flywaydb.core.internal.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -172,12 +173,18 @@ public class CatalogExportRepository {
 
                     if (val != null) {
                         if (!val.isEmpty()) {
-                            try {
-                                identifiers.add(Long.valueOf(val));
+                            if(!StringUtils.isNumeric(val)){
+                               identifiers.add((long) val.hashCode());
                             }
-                            catch (NumberFormatException e) {
-                                throw new RuntimeException("Cannot use field " + binding + " = " + val + " as ID: " +
-                                                                   "not a valid numeric value", e);
+                            else {
+                                try {
+                                    identifiers.add(Long.valueOf(val));
+                                }
+                                catch (NumberFormatException e) {
+                                    throw new RuntimeException(
+                                            "Cannot use field " + binding + " = " + val + " as ID: " +
+                                                    "not a valid numeric value", e);
+                                }
                             }
                         }
                     }
@@ -204,12 +211,22 @@ public class CatalogExportRepository {
                                 // update existing values with this new combined value
                                 existingValues.put(binding, combinedValue);
                             }
-                            else {
+                            else if(binding.getDatabaseName().isPresent()) {
                                 throw new RuntimeException(
                                         "Non-concatenatable values for " + binding.getDatabaseName().get() + " " +
                                                 "differ in row ID '" + id + "': " +
                                                 "existing = " + existingValue + ", new = " + newValue + ".\n" +
                                                 "This would result in a new row, causing duplicated unique IDs");
+
+                            }
+                            else{
+                                throw new RuntimeException(
+                                        "Non-concatenatable values for " + binding.toString() + " " +
+                                                "differ in row ID '" + id + "': " +
+                                                "existing = " + existingValue + ", new = " + newValue + ".\n" +
+                                                "This would result in a new row, causing duplicated unique IDs");
+
+
                             }
                         }
                         else {
@@ -378,8 +395,7 @@ public class CatalogExportRepository {
                                   "P-VALUE (TEXT)",
                                   "OR or BETA",
                                   "95% CI (TEXT)",
-                                  "PLATFORM [SNPS PASSING QC]",
-                                  "CNV");
+                                  "PLATFORM [SNPS PASSING QC]");
         }
         else {
             order = Arrays.asList("DATE ADDED TO CATALOG",
@@ -415,7 +431,6 @@ public class CatalogExportRepository {
                                   "OR or BETA",
                                   "95% CI (TEXT)",
                                   "PLATFORM [SNPS PASSING QC]",
-                                  "CNV",
                                   "MAPPED_TRAIT",
                                   "MAPPED_TRAIT_URI");
         }
