@@ -151,21 +151,21 @@
                     <th>Genes (author reported)</th>
                     <th>Strongest Allele</th>
                     <th>SNP
-                        <div class="pull-right">
+                        <div>
                             <a th:href="@{/studies/{studyId}/associations/sortrsid(studyId=${study.id},direction='asc')}"
-                               class="btn btn-default btn-xs">Sort asc</a>
+                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                             <a th:href="@{/studies/{studyId}/associations/sortrsid(studyId=${study.id},direction='desc')}"
-                               class="btn btn-default btn-xs">Sort desc</a>
+                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                         </div>
                     </th>
                     <th>Proxy SNP</th>
                     <th>Risk Frequency</th>
                     <th>p-Value (mantissa x 10 exponent)
-                        <div class="pull-right">
+                        <div>
                             <a th:href="@{/studies/{studyId}/associations/sortpvalue(studyId=${study.id},direction='asc')}"
-                               class="btn btn-default btn-xs">Sort asc</a>
+                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                             <a th:href="@{/studies/{studyId}/associations/sortpvalue(studyId=${study.id},direction='desc')}"
-                               class="btn btn-default btn-xs">Sort desc</a>
+                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                         </div>
                     </th>
                     <th>p-Value Text</th>
