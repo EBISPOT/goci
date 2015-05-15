@@ -19,7 +19,7 @@ import java.util.List;
 
 @RepositoryRestResource
 public interface DiseaseTraitRepository extends JpaRepository<DiseaseTrait, Long> {
-    String findByTraitIgnoreCase(String trait);
+    DiseaseTrait findByTraitIgnoreCase(String trait);
 
     List<DiseaseTrait> findByStudiesIdAndStudiesHousekeepingPublishDateIsNotNull(Long studyId);
 
