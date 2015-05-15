@@ -179,7 +179,7 @@ public class StudyController {
 
             // Include the studies with status "NCBI pipeline error"
             // plus the ones that have the box "checked NCBI error" ticked
-            if (studyType.equals("Errors")) {
+            if (studyType.equals("Studies with errors")) {
                 CurationStatus errorStatus = curationStatusRepository.findByStatus("NCBI pipeline error");
                 Long errorStatusId = errorStatus.getId();
                 studyPage = studyRepository.findByHousekeepingCheckedNCBIErrorOrHousekeepingCurationStatusId(true,
@@ -190,7 +190,7 @@ public class StudyController {
                                                                                                                      sort));
             }
 
-            if (studyType.equals("Unpublished")) {
+            if (studyType.equals("Studies in curation queue")) {
                 CurationStatus errorStatus = curationStatusRepository.findByStatus("Publish study");
                 Long errorStatusId = errorStatus.getId();
                 studyPage = studyRepository.findByHousekeepingCurationStatusIdNot(errorStatusId,
@@ -850,8 +850,8 @@ public class StudyController {
         studyTypesOptions.add("GXE");
         studyTypesOptions.add("GXG");
         studyTypesOptions.add("CNV");
-        studyTypesOptions.add("Errors");
-        studyTypesOptions.add("Unpublished");
+        studyTypesOptions.add("Studies with errors");
+        studyTypesOptions.add("Studies in curation queue");
         return studyTypesOptions;
     }
 
