@@ -29,18 +29,21 @@
                     <th>Title</th>
                     <td th:text="${study.title} ?: ''"></td>
                 </tr>
+
                 <tr>
-                    <th>Study Date</th>
-                    <td th:text="${#calendars.format(study.studyDate,'yyyy-MM-dd')} ?: ''"></td>
+                    <th>Publication</th>
+                    <td th:text="${study.publication} ?: ''"></td>
                 </tr>
                 <tr>
                     <th>Pubmed Id</th>
                     <td th:text="${study.pubmedId} ?: ''"></td>
                 </tr>
+
                 <tr>
-                    <th>Publication</th>
-                    <td th:text="${study.publication} ?: ''"></td>
+                    <th>Study Date</th>
+                    <td th:text="${#calendars.format(study.studyDate,'yyyy-MM-dd')} ?: ''"></td>
                 </tr>
+
                 <tr>
                     <th>Disease trait</th>
                     <td th:text="${study.diseaseTrait != null} ? ${study.diseaseTrait.trait} : ''"></td>
@@ -53,65 +56,13 @@
                 </tr>
 
                 <tr>
-                    <th>Curator</th>
-                    <td th:text="${housekeeping != null and housekeeping.curator !=null } ? ${housekeeping.curator.getLastName()} : ''"></td>
+                    <th>Platform</th>
+                    <td th:text="${study.platform} ?: ''"></td>
                 </tr>
 
                 <tr>
-                    <th>Curation Status</th>
-                    <td th:text="${housekeeping != null and housekeeping.curationStatus !=null } ? ${housekeeping.curationStatus.getStatus()} : ''"></td>
-                </tr>
-
-                <tr>
-                    <th>Notes</th>
-                    <td th:text="${housekeeping != null and housekeeping.notes !=null } ? ${housekeeping.notes} : ''"></td>
-                </tr>
-
-                <tr>
-                    <th>Publish Date</th>
-                    <td th:text="${housekeeping != null and housekeeping.publishDate !=null } ? ${#calendars.format(housekeeping.publishDate, 'dd MMMM yyyy')} : ''"></td>
-                </tr>
-
-                <tr>
-                    <th>Send to NCBI Date</th>
-                    <td th:text="${housekeeping != null and housekeeping.sendToNCBIDate !=null } ? ${#calendars.format(housekeeping.sendToNCBIDate, 'dd MMMM yyyy')} : ''"></td>
-                </tr>
-
-                <tr>
-                    <th>Study Added Date</th>
-                    <td th:text="${housekeeping != null and housekeeping.studyAddedDate !=null } ? ${#calendars.format(housekeeping.studyAddedDate, 'dd MMMM yyyy')} : ''"></td>
-                </tr>
-
-                <tr>
-                    <th>Last Update Date</th>
-                    <td th:text="${housekeeping != null and housekeeping.lastUpdateDate !=null } ? ${#calendars.format(housekeeping.lastUpdateDate, 'dd MMMM yyyy')} : ''"></td>
-                </tr>
-                <tr>
-                    <th>Ethnicity checked, first level
-                    </th>
-                    <td th:switch="${housekeeping.ethnicityCheckedLevelOne}">
-                        <p th:case="'null'"></p>
-
-                        <p th:case="false">No</p>
-
-                        <p th:case="true">Yes</p>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Ethnicity checked, second level
-                    </th>
-                    <td th:switch="${housekeeping.ethnicityCheckedLevelTwo}">
-                        <p th:case="'null'"></p>
-
-                        <p th:case="false">No</p>
-
-                        <p th:case="true">Yes</p>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Ethnicity backfilled
-                    </th>
-                    <td th:switch="${housekeeping.ethnicityBackFilled}">
+                    <th>CNV</th>
+                    <td th:switch="${study.cnv}">
                         <p th:case="'null'"></p>
 
                         <p th:case="false">No</p>
@@ -121,9 +72,8 @@
                 </tr>
 
                 <tr>
-                    <th>Study/SNP checked, first level
-                    </th>
-                    <td th:switch="${housekeeping.studySnpCheckedLevelOne}">
+                    <th>GXE</th>
+                    <td th:switch="${study.gxe}">
                         <p th:case="'null'"></p>
 
                         <p th:case="false">No</p>
@@ -133,9 +83,8 @@
                 </tr>
 
                 <tr>
-                    <th>Study/SNP checked, second level
-                    </th>
-                    <td th:switch="${housekeeping.studySnpCheckedLevelTwo}">
+                    <th>GXG</th>
+                    <td th:switch="${study.gxg}">
                         <p th:case="'null'"></p>
 
                         <p th:case="false">No</p>
@@ -144,29 +93,6 @@
                     </td>
                 </tr>
 
-                <tr>
-                    <th>Checked NCBI Error
-                    </th>
-                    <td th:switch="${housekeeping.checkedNCBIError}">
-                        <p th:case="'null'"></p>
-
-                        <p th:case="false">No</p>
-
-                        <p th:case="true">Yes</p>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th>Checked NCBI Error
-                    </th>
-                    <td th:switch="${housekeeping.snpsRechecked}">
-                        <p th:case="'null'"></p>
-
-                        <p th:case="false">No</p>
-
-                        <p th:case="true">Yes</p>
-                    </td>
-                </tr>
 
                 <tr>
                     <th>Initial Sample Description</th>
@@ -181,7 +107,9 @@
                 </tbody>
             </table>
 
-            <table id="initialTable" class="table table-hover table-bordered" th:if="${not #lists.isEmpty(initialStudyEthnicityDescriptions)}">
+            <table id="initialTable"
+                   class="table table-hover table-bordered"
+                   th:if="${not #lists.isEmpty(initialStudyEthnicityDescriptions)}">
                 <caption>Initial ethnicity details</caption>
                 <thead>
                 <tr>
@@ -210,7 +138,9 @@
                 </tr>
                 </tbody>
             </table>
-            <table id="replicationTable" class="table table-hover table-bordered" th:if="${not #lists.isEmpty(replicationStudyEthnicityDescription)}">
+            <table id="replicationTable"
+                   class="table table-hover table-bordered"
+                   th:if="${not #lists.isEmpty(replicationStudyEthnicityDescriptions)}">
                 <caption>Replication ethnicity details</caption>
                 <thead>
                 <tr>
@@ -239,7 +169,9 @@
                 </tr>
                 </tbody>
             </table>
-            <table id="associationTable" class="table table-condensed table-bordered" th:if="${not #lists.isEmpty(snpAssociationForms)}" >
+            <table id="associationTable"
+                   class="table table-condensed table-bordered"
+                   th:if="${not #lists.isEmpty(snpAssociationForms)}">
                 <caption>SNP association details</caption>
                 <thead>
                 <tr>
@@ -341,6 +273,125 @@
                     </td>
 
                     <td th:switch="${snpAssociationForm.snpChecked}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <table id="housekeepingDetailsTable" class="table table-hover table-bordered">
+                <caption>Housekeeping details</caption>
+                <tbody>
+                <tr>
+                    <th>Curator</th>
+                    <td th:text="${housekeeping != null and housekeeping.curator !=null } ? ${housekeeping.curator.getLastName()} : ''"></td>
+                </tr>
+
+                <tr>
+                    <th>Curation Status</th>
+                    <td th:text="${housekeeping != null and housekeeping.curationStatus !=null } ? ${housekeeping.curationStatus.getStatus()} : ''"></td>
+                </tr>
+
+                <tr>
+                    <th>Notes</th>
+                    <td th:text="${housekeeping != null and housekeeping.notes !=null } ? ${housekeeping.notes} : ''"></td>
+                </tr>
+
+                <tr>
+                    <th>File name</th>
+                    <td th:text="${housekeeping != null and housekeeping.fileName !=null } ? ${housekeeping.fileName} : ''"></td>
+                </tr>
+
+                <tr>
+                    <th>Publish Date</th>
+                    <td th:text="${housekeeping != null and housekeeping.publishDate !=null } ? ${#calendars.format(housekeeping.publishDate, 'dd MMMM yyyy')} : ''"></td>
+                </tr>
+
+                <tr>
+                    <th>Send to NCBI Date</th>
+                    <td th:text="${housekeeping != null and housekeeping.sendToNCBIDate !=null } ? ${#calendars.format(housekeeping.sendToNCBIDate, 'dd MMMM yyyy')} : ''"></td>
+                </tr>
+
+                <tr>
+                    <th>Study Added Date</th>
+                    <td th:text="${housekeeping != null and housekeeping.studyAddedDate !=null } ? ${#calendars.format(housekeeping.studyAddedDate, 'dd MMMM yyyy')} : ''"></td>
+                </tr>
+
+                <tr>
+                    <th>Last Update Date</th>
+                    <td th:text="${housekeeping != null and housekeeping.lastUpdateDate !=null } ? ${#calendars.format(housekeeping.lastUpdateDate, 'dd MMMM yyyy')} : ''"></td>
+                </tr>
+                <tr>
+                    <th>Ethnicity checked, first level</th>
+                    <td th:switch="${housekeeping.ethnicityCheckedLevelOne}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Ethnicity checked, second level</th>
+                    <td th:switch="${housekeeping.ethnicityCheckedLevelTwo}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Ethnicity backfilled</th>
+                    <td th:switch="${housekeeping.ethnicityBackFilled}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Study/SNP checked, first level</th>
+                    <td th:switch="${housekeeping.studySnpCheckedLevelOne}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Study/SNP checked, second level</th>
+                    <td th:switch="${housekeeping.studySnpCheckedLevelTwo}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Checked NCBI Error</th>
+                    <td th:switch="${housekeeping.checkedNCBIError}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>SNPs rechecked</th>
+                    <td th:switch="${housekeeping.snpsRechecked}">
                         <p th:case="'null'"></p>
 
                         <p th:case="false">No</p>
