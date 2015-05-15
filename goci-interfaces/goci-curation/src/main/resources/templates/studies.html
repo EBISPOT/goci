@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="../static/css/table_padding.css" th:href="@{/css/table_padding.css}"/>
     <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"/>
     <link rel="stylesheet" href="../static/css/bootstrap-theme.min.css" th:href="@{/css/bootstrap-theme.min.css}"/>
 
@@ -24,12 +23,6 @@
     <!-- Include Select2 JS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
 
-    <!--Bootstrap table: http://bootstrap-table.wenzhixin.net.cn/-->
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.6.0/bootstrap-table.min.css"/>
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.6.0/bootstrap-table.min.js"></script>
 
 </head>
 <body>
@@ -37,231 +30,219 @@
 <!--Include header-->
 <div th:include="header :: navbar"></div>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12 col-md-offset-0 pull-left">
-            <button class="btn btn-default"
-                    type="button"
-                    data-toggle="collapse"
-                    data-target="#collapseOptions"
-                    aria-expanded="false"
-                    aria-controls="collapseOptions">
-                    Show/hide search and filter options
-            </button>
-        </div>
+<div class="panel panel-default col-md-11" >
+    <div class="panel-heading">Refine studies table
+        <button class="btn btn-default"
+                type="button"
+                data-toggle="collapse"
+                data-target="#collapseOptions"
+                aria-expanded="false"
+                aria-controls="collapseOptions">
+                  <span class="glyphicon glyphicon-collapse-up pull-right"></span></button>
     </div>
-</div>
-<br/>
+    <div class="panel-body collapse in" id="collapseOptions">
+        <div id="studyTypesFilterParametersForm">
 
-<div class="collapse in" id="collapseOptions">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="well well-sm">
-                <div id="studyTypesFilterParametersForm">
+            <form class="form-inline" name="studyTypesFilterParametersForm" role="form" method="post"
+                  th:action="@{/studies(filters=true)}"
+                  th:object="${studySearchFilter} ">
 
-                    <form class="form-inline" name="studyTypesFilterParametersForm" role="form" method="post"
-                          th:action="@{/studies(filters=true)}"
-                          th:object="${studySearchFilter} ">
+                <div class="form-group">
+                    <label for="studyTypes" class="control-label"></label>
+                    <select name="studyTypes" class="form-control  select2-select"
+                            th:field="*{studyType}" id="studyTypes">
+                        <!-- Empty value for first entry-->
+                        <option value=""></option>
+                        <option th:each="studyType : ${studyTypes}"
+                                th:value="${studyType}"
+                                th:text="${studyType}"></option>
+                    </select>
+                </div>
 
-                        <div class="form-group">
-                            <label for="studyTypes" class="control-label"></label>
-                            <select name="studyTypes" class="form-control  select2-select"
-                                    th:field="*{studyType}" id="studyTypes">
-                                <!-- Empty value for first entry-->
-                                <option value=""></option>
-                                <option th:each="studyType : ${studyTypes}"
-                                        th:value="${studyType}"
-                                        th:text="${studyType}"></option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <div>
+                <div class="form-group">
+                    <div>
                                 <button type="submit"
                                         class="btn btn-primary btn-sm"
                                         data-toggle="tooltip"
                                         data-placement="right"
                                         title="Filter for GXE studies, GXG studies, CNV studies, studies in curation queue,
                                         studies with errors">Filter by study type</button>
-                            </div>
-                        </div>
-                    </form>
+                    </div>
+                </div>
+            </form>
+        </div>
 
+        <br/>
+
+        <div id="curatorFilterParametersForm">
+
+            <form class="form-inline" name="curatorFilterParametersForm" role="form" method="post"
+                  th:action="@{/studies(filters=true)}"
+                  th:object="${studySearchFilter} ">
+
+                <div class="form-group">
+                    <label for="curationStatus" class="control-label"></label>
+                    <select name="curationStatus" class="form-control select2-select"
+                            th:field="*{statusSearchFilterId}" id="curationStatus">
+                        <!-- Empty value for first entry-->
+                        <option value=""></option>
+                        <option th:each="curationStatus : ${curationstatuses}"
+                                th:value="${curationStatus.id}"
+                                th:text="${curationStatus.status}"></option>
+                    </select>
                 </div>
 
-                <br/>
+                <div class="form-group">
+                    <label for="curator" class="control-label"></label>
+                    <select name="curator" th:field="*{curatorSearchFilterId}"
+                            class="form-control select2-select" id="curator">
+                        <!-- Empty value for first entry-->
+                        <option value=""></option>
+                        <option th:each="curator : ${curators}"
+                                th:value="${curator.id}"
+                                th:text="${curator.lastName}"></option>
+                    </select>
+                </div>
 
-                <div id="curatorFilterParametersForm">
-
-                    <form class="form-inline" name="curatorFilterParametersForm" role="form" method="post"
-                          th:action="@{/studies(filters=true)}"
-                          th:object="${studySearchFilter} ">
-
-                        <div class="form-group">
-                            <label for="curationStatus" class="control-label"></label>
-                            <select name="curationStatus" class="form-control select2-select"
-                                    th:field="*{statusSearchFilterId}" id="curationStatus">
-                                <!-- Empty value for first entry-->
-                                <option value=""></option>
-                                <option th:each="curationStatus : ${curationstatuses}"
-                                        th:value="${curationStatus.id}"
-                                        th:text="${curationStatus.status}"></option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="curator" class="control-label"></label>
-                            <select name="curator" th:field="*{curatorSearchFilterId}"
-                                    class="form-control select2-select" id="curator">
-                                <!-- Empty value for first entry-->
-                                <option value=""></option>
-                                <option th:each="curator : ${curators}"
-                                        th:value="${curator.id}"
-                                        th:text="${curator.lastName}"></option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <div>
+                <div class="form-group">
+                    <div>
                                     <button type="submit"
                                             class="btn btn-primary btn-sm">Filter by curator and/or status</button>
-                            </div>
-                        </div>
-                    </form>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <br/>
+
+        <div id="authorFilterParametersForm">
+
+            <form class="form-inline" name="efoTraitsFilterParametersForm" role="form" method="post"
+                  th:action="@{/studies(filters=true)}"
+                  th:object="${studySearchFilter} ">
+
+                <div class="form-group">
+                    <label for="authors" class="control-label"></label>
+                    <select name="authors" class="form-control select2-select"
+                            th:field="*{author}" id="authors">
+                        <!-- Empty value for first entry-->
+                        <option value=""></option>
+                        <option th:each="author : ${authors}"
+                                th:value="${author}"
+                                th:text="${author}"></option>
+                    </select>
                 </div>
 
-                <br/>
+                <div class="form-group">
+                    <div>
+                        <button type="submit" class="btn btn-primary btn-sm">Filter by author</button>
+                    </div>
+                </div>
+            </form>
+        </div>
 
-                <div id="authorFilterParametersForm">
+        <br/>
 
-                    <form class="form-inline" name="efoTraitsFilterParametersForm" role="form" method="post"
-                          th:action="@{/studies(filters=true)}"
-                          th:object="${studySearchFilter} ">
 
-                        <div class="form-group">
-                            <label for="authors" class="control-label"></label>
-                            <select name="authors" class="form-control select2-select"
-                                    th:field="*{author}" id="authors">
-                                <!-- Empty value for first entry-->
-                                <option value=""></option>
-                                <option th:each="author : ${authors}"
-                                        th:value="${author}"
-                                        th:text="${author}"></option>
-                            </select>
-                        </div>
+        <div id="efoTraitsFilterParametersForm">
 
-                        <div class="form-group">
-                            <div>
-                                <button type="submit" class="btn btn-primary btn-sm">Filter by author</button>
-                            </div>
-                        </div>
-                    </form>
+            <form class="form-inline" name="efoTraitsFilterParametersForm" role="form" method="post"
+                  th:action="@{/studies(filters=true)}"
+                  th:object="${studySearchFilter} ">
+
+                <div class="form-group">
+                    <label for="efoTraits" class="control-label"></label>
+                    <select name="efoTraits" class="form-control select2-select"
+                            th:field="*{efoTraitSearchFilterId}" id="efoTraits">
+                        <!-- Empty value for first entry-->
+                        <option value=""></option>
+                        <option th:each="efoTrait : ${efoTraits}"
+                                th:value="${efoTrait.id}"
+                                th:text="${efoTrait.trait}"></option>
+                    </select>
                 </div>
 
-                <br/>
+                <div class="form-group">
+                    <div>
+                        <button type="submit" class="btn btn-primary btn-sm">Filter by EFO trait</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <br/>
 
 
-                <div id="efoTraitsFilterParametersForm">
+        <div id="diseaseTraitsFilterParametersForm">
 
-                    <form class="form-inline" name="efoTraitsFilterParametersForm" role="form" method="post"
-                          th:action="@{/studies(filters=true)}"
-                          th:object="${studySearchFilter} ">
+            <form class="form-inline" name="diseaseTraitsFilterParametersForm" role="form" method="post"
+                  th:action="@{/studies(filters=true)}"
+                  th:object="${studySearchFilter} ">
 
-                        <div class="form-group">
-                            <label for="efoTraits" class="control-label"></label>
-                            <select name="efoTraits" class="form-control select2-select"
-                                    th:field="*{efoTraitSearchFilterId}" id="efoTraits">
-                                <!-- Empty value for first entry-->
-                                <option value=""></option>
-                                <option th:each="efoTrait : ${efoTraits}"
-                                        th:value="${efoTrait.id}"
-                                        th:text="${efoTrait.trait}"></option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <div>
-                                <button type="submit" class="btn btn-primary btn-sm">Filter by EFO trait</button>
-                            </div>
-                        </div>
-                    </form>
+                <div class="form-group">
+                    <label for="diseaseTraits" class="control-label"></label>
+                    <select name="diseaseTraits" class="form-control select2-select"
+                            th:field="*{diseaseTraitSearchFilterId}" id="diseaseTraits">
+                        <!-- Empty value for first entry-->
+                        <option value=""></option>
+                        <option th:each="diseaseTrait : ${diseaseTraits}"
+                                th:value="${diseaseTrait.id}"
+                                th:text="${diseaseTrait.trait}"></option>
+                    </select>
                 </div>
 
-                <br/>
-
-
-                <div id="diseaseTraitsFilterParametersForm">
-
-                    <form class="form-inline" name="diseaseTraitsFilterParametersForm" role="form" method="post"
-                          th:action="@{/studies(filters=true)}"
-                          th:object="${studySearchFilter} ">
-
-                        <div class="form-group">
-                            <label for="diseaseTraits" class="control-label"></label>
-                            <select name="diseaseTraits" class="form-control select2-select"
-                                    th:field="*{diseaseTraitSearchFilterId}" id="diseaseTraits">
-                                <!-- Empty value for first entry-->
-                                <option value=""></option>
-                                <option th:each="diseaseTrait : ${diseaseTraits}"
-                                        th:value="${diseaseTrait.id}"
-                                        th:text="${diseaseTrait.trait}"></option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <div>
-                                <button type="submit" class="btn btn-primary btn-sm">Filter by disease trait</button>
-                            </div>
-                        </div>
-                    </form>
+                <div class="form-group">
+                    <div>
+                        <button type="submit" class="btn btn-primary btn-sm">Filter by disease trait</button>
+                    </div>
                 </div>
+            </form>
+        </div>
 
 
-                <br/>
+        <br/>
 
-                <div class="row">
-                    <div id="pubmedFilterParametersForm">
+        <div class="row">
+            <div id="pubmedFilterParametersForm">
 
-                        <form class="form-inline" name="pubmedFilterParametersForm" role="form" method="post"
-                              th:action="@{/studies(filters=true)}"
-                              th:object="${studySearchFilter}">
+                <form class="form-inline" name="pubmedFilterParametersForm" role="form" method="post"
+                      th:action="@{/studies(filters=true)}"
+                      th:object="${studySearchFilter}">
 
-                            <div class="col-md-8">
-                                <div class="input-group">
-                                    <input type="text"
-                                           class="form-control"
-                                           th:field="*{pubmedId}"
-                                           placeholder="Search for..."/>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="text"
+                                   class="form-control"
+                                   th:field="*{pubmedId}"
+                                   placeholder="Search for..."/>
                                     <span class="input-group-btn">
                                     <button class="btn btn-primary btn-sm"
                                             type="submit">Search by pubmed ID</button></span>
-                                </div>
-                            </div>
-                        </form>
+                        </div>
                     </div>
-                </div>
+                </form>
+            </div>
+        </div>
 
-                <br/>
+        <br/>
 
-                <div class="row">
-                    <div id="notesFilterParametersForm">
-                        <form class="form-inline" name="notesFilterParametersForm" role="form" method="post"
-                              th:action="@{/studies(filters=true)}"
-                              th:object="${studySearchFilter}">
+        <div class="row">
+            <div id="notesFilterParametersForm">
+                <form class="form-inline" name="notesFilterParametersForm" role="form" method="post"
+                      th:action="@{/studies(filters=true)}"
+                      th:object="${studySearchFilter}">
 
-                            <div class="col-md-8">
-                                <div class="input-group">
-                                    <input type="text"
-                                           class="form-control"
-                                           th:field="*{notesQuery}"
-                                           placeholder="Search for..."/>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="text"
+                                   class="form-control"
+                                   th:field="*{notesQuery}"
+                                   placeholder="Search for..."/>
                                     <span class="input-group-btn">
                                     <button class="btn btn-primary btn-sm" type="submit">Search notes</button></span>
-                                </div>
-                            </div>
-                        </form>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
