@@ -156,23 +156,52 @@
                     </div>
                 </div>
 
-                <div>
-                 <span>This study was split into several analyses based on differing traits or samples:</span>
-                    <div>
-                        <ul>
-                    <li><a href="#">www.ebi.ac.uk/gwas/studies/23534349/7210</a></li>
-                    <li><a href="#">www.ebi.ac.uk/gwas/studies/23534349/7344</a></li>
-                    <li><a href="#">www.ebi.ac.uk/gwas/studies/23534349/7345</a></li>
-                    <li><a href="#">www.ebi.ac.uk/gwas/studies/23534349/7346</a></li>
-                        </ul>
-                        </div>
-                </div>
+                <!--<div>-->
+                 <!--<span>This study was split into several analyses based on differing traits or samples:</span>-->
+                   <!---->
+                <!--</div>-->
 
                 <div class="panel panel-default">
                     <div class="panel-heading background-color-primary-accent">
                         <h3 class="panel-title">Studies</h3>
                     </div>
                     <div class="panel-body">
+
+                        <table id="study-table" class="table table-striped">
+                            <thead id="study-table-header">
+                            <tr>
+                                <th style="width: 25%" id="author_s">Initial sample size
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="First author, along with link to publication in Europe PubMed Central."></span>
+                                    <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                </th>
+                                <th style="width: 20%" id="publicationDate">Replication sample size
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Publication date (YYYY-MM-DD)"></span>
+                                    <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                </th>
+                                <th style="width: 15%" id="publication">Reported trait
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Description of disease/trait analysed in the study"></span>
+                                    <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                </th>
+
+                                <th style="width: 20%" id="traitName_s">Mapped traits(s)
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Description of disease/trait analysed in the study"></span>
+                                    <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                </th>
+                                <th style="width: 10%" id="associationCount">Association count
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Number of SNP-disease/trait associations included in the Catalog"></span>
+                                    <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                </th>
+                                <th style="width: 10%"></th>
+                            </tr>
+
+                            </thead>
+                            <tbody id="study-table-body">
+                            <tr><td>455 African American individuals</td><td>NA</td><td>QRS duration</td><td><a href="http://www.ebi.ac.uk/efo/EFO_0005055">QRS duration</a></td><td>9</td><td><button type="button" class="btn btn-default">View study page</button></td></tr>
+                            <tr><td>455 African American individuals</td><td>NA</td><td>QT interval</td><td><a href="http://www.ebi.ac.uk/efo/EFO_0004682">qt interval</a></td><td>8</td><td><button type="button" class="btn btn-default">View study page</button></td></tr>
+                            <tr><td>455 African American individuals</td><td>NA</td><td>Heart rate</td><td><a href="http://www.ebi.ac.uk/efo/EFO_0004326">heart rate</a></td><td>5</td><td><button type="button" class="btn btn-default">View study page</button></td></tr>
+                            <tr><td>455 African American individuals</td><td>NA</td><td>PR interval</td><td><a href="http://www.ebi.ac.uk/efo/EFO_0004462">pr interval</a></td><td>9</td><td><button type="button" class="btn btn-default">View study page</button></td></tr>
+                            </tbody>
+                        </table>
 
 
                     </div>
