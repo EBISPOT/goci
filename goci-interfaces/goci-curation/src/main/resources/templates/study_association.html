@@ -189,8 +189,14 @@
                 <tr th:each="snpAssociationForm: ${snpAssociationForms}">
 
                     <!--Region-->
-                    <td><span th:each="region: ${snpAssociationForm.regions}"
-                              th:text="${region.name} ?: ''"></span></td>
+                    <td>
+                        <span th:each="region: ${snpAssociationForm.regions}"
+                                   th:if="${#arrays.length(snpAssociationForm.regions) &gt; 1}"
+                                   th:text="${region.name}+', ' ?: ''"></span>
+                        <span th:each="region: ${snpAssociationForm.regions}"
+                              th:if="${#arrays.length(snpAssociationForm.regions) == 1}"
+                              th:text="${region.name} ?: ''"></span>
+                    </td>
 
                     <!--Gene-->
                     <td>
@@ -225,8 +231,13 @@
 
                     <!--EFO traits-->
                     <td>
-                     <span th:each="efoTrait: ${snpAssociationForm.efoTraits}"
-                           th:text="${efoTrait.trait} ?: ''"></span>
+                        <span th:each="efoTrait: ${snpAssociationForm.efoTraits}"
+                              th:if="${#arrays.length(snpAssociationForm.efoTraits) &gt; 1}"
+                              th:text="${efoTrait.trait}+', ' ?: ''"></span>
+                        <span th:each="efoTrait: ${snpAssociationForm.efoTraits}"
+                                  th:if="${#arrays.length(snpAssociationForm.efoTraits) == 1}"
+                                  th:text="${efoTrait.trait} ?: ''"></span>
+
                     </td>
 
 
@@ -283,7 +294,7 @@
                     <td><input type="checkbox"
                                name="checkboxId"
                                class="association-selector"
-                               th:value="${snpAssociationForm.associationId}"></input>
+                               th:value="${snpAssociationForm.associationId}"/>
                     </td>
 
                     <!-- Errors-->
