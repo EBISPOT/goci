@@ -52,7 +52,12 @@
                 <tr>
                     <th>EFO traits</th>
                     <td><span th:each="efoTrait: ${study.efoTraits}"
-                              th:text="${efoTrait.trait} ?: ''"></span></td>
+                              th:if="${#arrays.length(study.efoTraits) &gt; 1}"
+                              th:text="${efoTrait.trait}+', ' ?: ''"></span>
+                        <span th:each="efoTrait: ${study.efoTraits}"
+                              th:if="${#arrays.length(study.efoTraits) == 1}"
+                              th:text="${efoTrait.trait} ?: ''"></span>
+                    </td>
                 </tr>
 
                 <tr>
@@ -237,8 +242,12 @@
 
                     <!--EFO traits-->
                     <td>
-                     <span th:each="efoTrait: ${snpAssociationForm.efoTraits}"
-                           th:text="${efoTrait.trait} ?: ''"></span>
+                        <span th:each="efoTrait: ${snpAssociationForm.efoTraits}"
+                              th:if="${#arrays.length(snpAssociationForm.efoTraits) &gt; 1}"
+                              th:text="${efoTrait.trait} + ', ' ?: ''"></span>
+                        <span th:each="efoTrait: ${snpAssociationForm.efoTraits}"
+                              th:if="${#arrays.length(snpAssociationForm.efoTraits) == 1}"
+                              th:text="${efoTrait.trait} ?: ''"></span>
                     </td>
 
 
