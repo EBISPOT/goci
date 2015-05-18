@@ -23,6 +23,8 @@
     <!-- Include Select2 JS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
 
+    <!--Handles checkbox in table -->
+    <script src="../static/js/goci-study-sample-description.js" th:src="@{../../js/goci-study-sample-description.js}"></script>
 
 </head>
 <body>
@@ -54,7 +56,7 @@
     </div>
 </div>
 
-<br></br>
+<br/>
 
 <div class="container-fluid">
     <div class="row">
@@ -68,7 +70,7 @@
 
                     <div class="col-md-10">
                         <textarea rows="3" id="sampleInitialDescription" class="form-control" type="text"
-                               th:field="${initialSampleDescription.initialSampleDescription}"/>
+                                  th:field="${initialSampleDescription.initialSampleDescription}"></textarea>
                     </div>
                 </div>
 
@@ -78,7 +80,7 @@
 
                     <div class="col-md-10">
                         <textarea rows="3" id="sampleReplicationDescription" class="form-control" type="text"
-                               th:field="${replicationSampleDescription.replicationSampleDescription}"/>
+                                  th:field="${replicationSampleDescription.replicationSampleDescription}"></textarea>
                     </div>
                 </div>
 
@@ -95,158 +97,188 @@
     </div>
 </div>
 
+<br/>
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <!--Button-->
+            <input type="button" class="btn btn-default" value="Add ethnicity" data-toggle="collapse"
+                   data-target="#add_ethnicity_form"/>
 
-        <table id="initialTable" class="table table-hover table-bordered">
-            <thead>
-            <tr>
-                <th></th>
-                <th>Type</th>
-                <th>Number of Individuals</th>
-                <th>Ethnic Group</th>
-                <th>Country of Origin</th>
-                <th>Country of Recruitment</th>
-                <th>Previously Reported</th>
-                <th>Sample Sizes Match</th>
-                <th>Additional Description</th>
-                <th>Notes</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="initialStudyEthnicityDescription: ${initialStudyEthnicityDescriptions}"
-                th:if="${initialStudyEthnicityDescriptions}">
-                <td>
-                    <a th:href="@{/sampledescriptions/{ethnicityId}(ethnicityId=${initialStudyEthnicityDescription.id})}"
-                       class="btn btn-link">Edit</a></td>
-                <td th:text="${initialStudyEthnicityDescription.type} ?: ''"></td>
-                <td th:text="${initialStudyEthnicityDescription.numberOfIndividuals} ?: ''"></td>
-                <td th:text="${initialStudyEthnicityDescription.ethnicGroup} ?: ''"></td>
-                <td th:text="${initialStudyEthnicityDescription.countryOfOrigin} ?: ''"></td>
-                <td th:text="${initialStudyEthnicityDescription.countryOfRecruitment} ?: ''"></td>
-                <td th:text="${initialStudyEthnicityDescription.previouslyReported} ?: ''"></td>
-                <td th:text="${initialStudyEthnicityDescription.sampleSizesMatch} ?: ''"></td>
-                <td th:text="${initialStudyEthnicityDescription.description} ?: ''"></td>
-                <td th:text="${initialStudyEthnicityDescription.notes} ?: ''"></td>
-                <td>
+            <a href="#DeleteAllModal"
+               class="btn btn-default"
+               data-toggle="modal"
+               role="button">Delete All Ethnicity information</a>
 
-                    <a href="#deleteIniEthnicity"
-                       data-toggle="modal" class="btn btn-danger">Delete</a>
+            <!--th:value used to send study id to javascript file-->
+            <a href="#DeleteSelectedModal"
+               class="btn btn-default"
+               role="button"
+               data-toggle="modal">Delete Checked Ethnicity information</a>
 
-                    <!-- Modal HTML for delete-->
-                    <div id="deleteIniEthnicity" class="modal fade">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button"
-                                            class="close"
-                                            data-dismiss="modal"
-                                            aria-hidden="true">&times;</button>
-                                    <h4 class="modal-title">Confirmation</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Are you sure you wish to delete this ethnicity information?</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    <a th:href="@{/sampledescriptions/{ethnicityId}/delete(ethnicityId=${initialStudyEthnicityDescription.id})}"
-                                       class="btn btn-danger">Delete</a>
-                                </div>
-                            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal HTML -->
+<div id="DeleteAllModal" class="modal fade" th:object="${study}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete all ethnicity information associated with this study?</p>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                    <a th:href="@{/studies/{studyId}/sampledescription/delete_all(studyId=${study.id})}"
+                       class="btn btn-default"
+                       role="button">Delete All Ethnicity information</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="DeleteSelectedModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete selected ethnicity information associated with this study?</p>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <a id="delete-button"
+                       class="btn btn-default"
+                       role="button">Delete Checked Ethnicity information</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br/>
+
+<!--Initial table-->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="well well-sm" th:if="${#lists.isEmpty(initialStudyEthnicityDescriptions)}">
+                <p style="color:grey">No initial ethnicity details to display</p>
+            </div>
+            <table id="initialTable" class="table table-hover table-bordered" th:if="${not #lists.isEmpty(initialStudyEthnicityDescriptions)}">
+                <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Number of Individuals</th>
+                    <th>Ethnic Group</th>
+                    <th>Country of Origin</th>
+                    <th>Country of Recruitment</th>
+                    <th>Previously Reported</th>
+                    <th>Sample Sizes Match</th>
+                    <th>Additional Description</th>
+                    <th>Notes</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="initialStudyEthnicityDescription: ${initialStudyEthnicityDescriptions}"
+                    th:if="${initialStudyEthnicityDescriptions}">
+                    <td th:text="${initialStudyEthnicityDescription.type} ?: ''"></td>
+                    <td th:text="${initialStudyEthnicityDescription.numberOfIndividuals} ?: ''"></td>
+                    <td th:text="${initialStudyEthnicityDescription.ethnicGroup} ?: ''"></td>
+                    <td th:text="${initialStudyEthnicityDescription.countryOfOrigin} ?: ''"></td>
+                    <td th:text="${initialStudyEthnicityDescription.countryOfRecruitment} ?: ''"></td>
+                    <td th:text="${initialStudyEthnicityDescription.previouslyReported} ?: ''"></td>
+                    <td th:text="${initialStudyEthnicityDescription.sampleSizesMatch} ?: ''"></td>
+                    <td th:text="${initialStudyEthnicityDescription.description} ?: ''"></td>
+                    <td th:text="${initialStudyEthnicityDescription.notes} ?: ''"></td>
+                    <td>
+                        <div class="btn-group-vertical  btn-group-sm" role="group" aria-label="...">
+                            <a th:href="@{/sampledescriptions/{ethnicityId}(ethnicityId=${initialStudyEthnicityDescription.id})}"
+                               class="btn btn-default">Edit</a>
                         </div>
-                    </div>
-
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                    </td>
+                    <td><input type="checkbox"
+                               name="checkboxId"
+                               class="sample-description-selector"
+                               th:value="${initialStudyEthnicityDescription.id}"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
-
-<div class="container">
+<!--Replication table-->
+<div class="container-fluid">
     <div class="row">
-
-        <table id="replicationTable" class="table table-hover table-bordered">
-            <thead>
-            <tr>
-                <th></th>
-                <th>Type</th>
-                <th>Number of Individuals</th>
-                <th>Ethnic Group</th>
-                <th>Country of Origin</th>
-                <th>Country of Recruitment</th>
-                <th>Previously Reported</th>
-                <th>Sample Sizes Match</th>
-                <th>Additional Description</th>
-                <th>Notes</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="replicationStudyEthnicityDescription: ${replicationStudyEthnicityDescriptions}">
-                <td>
-                    <a th:href="@{/sampledescriptions/{ethnicityId}(ethnicityId=${replicationStudyEthnicityDescription.id})}"
-                       class="btn btn-link">Edit</a></td>
-                <td th:text="${replicationStudyEthnicityDescription.type}  ?: ''"></td>
-                <td th:text="${replicationStudyEthnicityDescription.numberOfIndividuals}  ?: ''"></td>
-                <td th:text="${replicationStudyEthnicityDescription.ethnicGroup}  ?: ''"></td>
-                <td th:text="${replicationStudyEthnicityDescription.countryOfOrigin}  ?: ''"></td>
-                <td th:text="${replicationStudyEthnicityDescription.countryOfRecruitment}  ?: ''"></td>
-                <td th:text="${replicationStudyEthnicityDescription.previouslyReported}  ?: ''"></td>
-                <td th:text="${replicationStudyEthnicityDescription.sampleSizesMatch} ?: ''"></td>
-                <td th:text="${replicationStudyEthnicityDescription.description} ?: ''"></td>
-                <td th:text="${replicationStudyEthnicityDescription.notes} ?: ''"></td>
-                <td>
-                    <a href="#deleteRepEthnicity"
-                       data-toggle="modal" class="btn btn-danger">Delete</a>
-
-                    <!-- Modal HTML for delete -->
-                    <div id="deleteRepEthnicity" class="modal fade">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button"
-                                            class="close"
-                                            data-dismiss="modal"
-                                            aria-hidden="true">&times;</button>
-                                    <h4 class="modal-title">Confirmation</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Are you sure you wish to delete this ethnicity information?</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    <a th:href="@{/sampledescriptions/{ethnicityId}/delete(ethnicityId=${replicationStudyEthnicityDescription.id})}"
-                                       class="btn btn-danger">Delete</a>
-                                </div>
-                            </div>
+        <div class="col-md-10 col-md-offset-1">
+            <div class="well well-sm" th:if="${#lists.isEmpty(replicationStudyEthnicityDescriptions)}">
+                <p style="color:grey">No replication ethnicity details to display</p>
+            </div>
+            <table id="replicationTable" class="table table-hover table-bordered" th:if="${not #lists.isEmpty(replicationStudyEthnicityDescriptions)}">
+                <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Number of Individuals</th>
+                    <th>Ethnic Group</th>
+                    <th>Country of Origin</th>
+                    <th>Country of Recruitment</th>
+                    <th>Previously Reported</th>
+                    <th>Sample Sizes Match</th>
+                    <th>Additional Description</th>
+                    <th>Notes</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="replicationStudyEthnicityDescription: ${replicationStudyEthnicityDescriptions}">
+                    <td th:text="${replicationStudyEthnicityDescription.type}  ?: ''"></td>
+                    <td th:text="${replicationStudyEthnicityDescription.numberOfIndividuals}  ?: ''"></td>
+                    <td th:text="${replicationStudyEthnicityDescription.ethnicGroup}  ?: ''"></td>
+                    <td th:text="${replicationStudyEthnicityDescription.countryOfOrigin}  ?: ''"></td>
+                    <td th:text="${replicationStudyEthnicityDescription.countryOfRecruitment}  ?: ''"></td>
+                    <td th:text="${replicationStudyEthnicityDescription.previouslyReported}  ?: ''"></td>
+                    <td th:text="${replicationStudyEthnicityDescription.sampleSizesMatch} ?: ''"></td>
+                    <td th:text="${replicationStudyEthnicityDescription.description} ?: ''"></td>
+                    <td th:text="${replicationStudyEthnicityDescription.notes} ?: ''"></td>
+                    <td>
+                        <div class="btn-group-vertical  btn-group-sm" role="group" aria-label="...">
+                            <a th:href="@{/sampledescriptions/{ethnicityId}(ethnicityId=${replicationStudyEthnicityDescription.id})}"
+                               class="btn btn-default">Edit</a>
                         </div>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                    </td>
+                    <!--This checkbox is used to delete checked rows-->
+                    <td><input type="checkbox"
+                               name="checkboxId"
+                               class="sample-description-selector"
+                               th:value="${replicationStudyEthnicityDescription.id}"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
-
-<div class="container">
+<!--Add ethnicity form-->
+<div class="container-fluid">
     <div class="row">
-
-        <!--Button-->
-        <input type="button" class="btn btn-primary" value="Add ethnicity" data-toggle="collapse"
-               data-target="#add_ethnicity_form"/>
-    </div>
-</div>
-
-
-<div class="container">
-    <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-10 col-md-offset-1">
             <div id="add_ethnicity_form" class="collapse">
+                <div class="well">
                 <form class="form-horizontal" method="post" th:object="${ethnicity}"
                       name="addEthnicityForm">
 
@@ -316,12 +348,12 @@
 
                     <div class="form-group">
                         <label for="description" class="control-label col-md-2">Additional Description:</label>
-                        <textarea class="col-md-6" rows="10" id="description" type="text" th:field="*{description}"/>
+                        <textarea class="col-md-6" rows="10" id="description" type="text" th:field="*{description}"></textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="notes" class="control-label col-md-2">Notes</label>
-                        <textarea class="col-md-6" rows="10"  id="notes" type="text" th:field="*{notes}"/>
+                        <textarea class="col-md-6" rows="10" id="notes" type="text" th:field="*{notes}"></textarea>
                     </div>
 
                     <div class="form-group">
@@ -343,6 +375,7 @@
                     </div>
 
                 </form>
+                </div>
             </div>
         </div>
     </div>

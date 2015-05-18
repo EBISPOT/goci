@@ -8,8 +8,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import uk.ac.ebi.spot.goci.curation.model.*;
+import uk.ac.ebi.spot.goci.curation.model.CountryOfOrigin;
+import uk.ac.ebi.spot.goci.curation.model.CountryOfRecruitment;
+import uk.ac.ebi.spot.goci.curation.model.EthnicGroup;
+import uk.ac.ebi.spot.goci.curation.model.InitialSampleDescription;
+import uk.ac.ebi.spot.goci.curation.model.ReplicationSampleDescription;
 import uk.ac.ebi.spot.goci.model.Country;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -20,7 +26,9 @@ import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by emma on 05/01/15.
@@ -121,6 +129,23 @@ public class EthnicityController {
 
         Study study = studyRepository.findOne(studyId);
 
+        // Set default values when no country of origin or recruitment supplied
+        if (ethnicity.getCountryOfOrigin() == null) {
+            ethnicity.setCountryOfOrigin("NR");
+        }
+
+        if (ethnicity.getCountryOfOrigin() != null && ethnicity.getCountryOfOrigin().isEmpty()) {
+            ethnicity.setCountryOfOrigin("NR");
+        }
+
+        if (ethnicity.getCountryOfRecruitment() == null) {
+            ethnicity.setCountryOfRecruitment("NR");
+        }
+
+        if (ethnicity.getCountryOfRecruitment() != null && ethnicity.getCountryOfRecruitment().isEmpty()) {
+            ethnicity.setCountryOfRecruitment("NR");
+        }
+
         // Set the study for our ethnicity
         ethnicity.setStudy(study);
 
@@ -211,18 +236,36 @@ public class EthnicityController {
 
     // Edit existing ethnicity/sample information
     // @ModelAttribute is a reference to the object holding the data entered in the form
-    @RequestMapping(value = "/sampledescriptions/{ethnicityId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateSampleDescription(@ModelAttribute Ethnicity ethnicity, @ModelAttribute CountryOfOrigin countryOfOrigin, @ModelAttribute CountryOfRecruitment countryOfRecruitment, EthnicGroup ethnicGroup, RedirectAttributes redirectAttributes) {
+    @RequestMapping(value = "/sampledescriptions/{ethnicityId}",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.POST)
+    public String updateSampleDescription(@ModelAttribute Ethnicity ethnicity,
+                                          @ModelAttribute CountryOfOrigin countryOfOrigin,
+                                          @ModelAttribute CountryOfRecruitment countryOfRecruitment,
+                                          EthnicGroup ethnicGroup,
+                                          RedirectAttributes redirectAttributes) {
 
         // Set country of origin based on values returned
         List<String> listOfOriginCountries = Arrays.asList(countryOfOrigin.getOriginCountryValues());
-        String countryOfOriginJoined = String.join(",", listOfOriginCountries);
-        ethnicity.setCountryOfOrigin(countryOfOriginJoined);
+
+        if (listOfOriginCountries.size() > 0) {
+            String countryOfOriginJoined = String.join(",", listOfOriginCountries);
+            ethnicity.setCountryOfOrigin(countryOfOriginJoined);
+        }
+        else{
+            ethnicity.setCountryOfOrigin("NR");
+        }
 
         // Set country of recruitment based on values returned
         List<String> listOfRecruitmentCountries = Arrays.asList(countryOfRecruitment.getRecruitmentCountryValues());
-        String countryOfRecruitmentJoined = String.join(",", listOfRecruitmentCountries);
-        ethnicity.setCountryOfRecruitment(countryOfRecruitmentJoined);
+
+        if (listOfRecruitmentCountries.size() > 0) {
+            String countryOfRecruitmentJoined = String.join(",", listOfRecruitmentCountries);
+            ethnicity.setCountryOfRecruitment(countryOfRecruitmentJoined);
+        }
+        else{
+            ethnicity.setCountryOfRecruitment("NR");
+        }
 
         // Set ethnic group
         List<String> listOfEthnicGroups = Arrays.asList(ethnicGroup.getEthnicGroupValues());
@@ -240,18 +283,54 @@ public class EthnicityController {
     }
 
 
-    // Delete existing ethnicity/sample information
-    @RequestMapping(value = "/sampledescriptions/{ethnicityId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String deleteSampleDescription(@PathVariable Long ethnicityId) {
+    // Delete checked ethnicity/sample information linked to a study
+    @RequestMapping(value = "/studies/{studyId}/sampledescription/delete_checked",
+                    produces = MediaType.APPLICATION_JSON_VALUE,
+                    method = RequestMethod.GET)
+    public @ResponseBody
+    Map<String, String> deleteChecked(@RequestParam(value = "sampleDescriptionIds[]") String[] sampleDescriptionIds) {
 
-        // Find the associated study
-        Ethnicity ethnicityToDelete = ethnicityRepository.findOne(ethnicityId);
-        Long studyId = ethnicityToDelete.getStudy().getId();
+        String message = "";
+        Integer count = 0;
+
+        // Get all ethnicities
+        Collection<Ethnicity> studyEthnicity = new ArrayList<>();
+        for (String sampleDescriptionId : sampleDescriptionIds) {
+            studyEthnicity.add(ethnicityRepository.findOne(Long.valueOf(sampleDescriptionId)));
+        }
+        // Delete ethnicity
+        for (Ethnicity ethnicity : studyEthnicity) {
+            ethnicityRepository.delete(ethnicity);
+            count++;
+        }
+
+        // Return success message to view
+        message = "Successfully deleted " + count + " sample description(s)";
+
+        Map<String, String> result = new HashMap<>();
+        result.put("message", message);
+        return result;
+    }
+
+    // Delete all
+    @RequestMapping(value = "/studies/{studyId}/sampledescription/delete_all",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.GET)
+    public String deleteAllStudySampleDescription(Model model, @PathVariable Long studyId) {
+
+        // Get our study
+        Study study = studyRepository.findOne(studyId);
+
+        // Get all study ethnicity's
+        Collection<Ethnicity> studyEthnicity = ethnicityRepository.findByStudyId(studyId);
 
         // Delete ethnicity
-        ethnicityRepository.delete(ethnicityToDelete);
+        for (Ethnicity ethnicity : studyEthnicity) {
+            ethnicityRepository.delete(ethnicity);
+        }
         return "redirect:/studies/" + studyId + "/sampledescription";
     }
+
 
 
     /* Model Attributes :
