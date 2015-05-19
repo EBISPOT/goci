@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-10">
+            <table id="studyDetailsTable" class="table table-hover table-bordered">
+                <caption>Study details</caption>
+                <tbody>
+                <tr>
+                    <th>Author</th>
+                    <td th:text="${study.author} ?: '' "></td>
+                </tr>
+                <tr>
+                    <th>Title</th>
+                    <td th:text="${study.title} ?: ''"></td>
+                </tr>
+
+                <tr>
+                    <th>Publication</th>
+                    <td th:text="${study.publication} ?: ''"></td>
+                </tr>
+                <tr>
+                    <th>Pubmed Id</th>
+                    <td th:text="${study.pubmedId} ?: ''"></td>
+                </tr>
+
+                <tr>
+                    <th>Study Date</th>
+                    <td th:text="${#calendars.format(study.studyDate,'yyyy-MM-dd')} ?: ''"></td>
+                </tr>
+
+                <tr>
+                    <th>Disease trait</th>
+                    <td th:text="${study.diseaseTrait != null} ? ${study.diseaseTrait.trait} : ''"></td>
+                </tr>
+
+                <tr>
+                    <th>EFO traits</th>
+                    <td><span th:each="efoTrait: ${study.efoTraits}"
+                              th:if="${#arrays.length(study.efoTraits) &gt; 1}"
+                              th:text="${efoTrait.trait}+', ' ?: ''"></span>
+                        <span th:each="efoTrait: ${study.efoTraits}"
+                              th:if="${#arrays.length(study.efoTraits) == 1}"
+                              th:text="${efoTrait.trait} ?: ''"></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Platform</th>
+                    <td th:text="${study.platform} ?: ''"></td>
+                </tr>
+
+                <tr>
+                    <th>CNV</th>
+                    <td th:switch="${study.cnv}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>GXE</th>
+                    <td th:switch="${study.gxe}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>GXG</th>
+                    <td th:switch="${study.gxg}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <th>Initial Sample Description</th>
+                    <td th:text="${initialSampleDescription} ?: ''"></td>
+                </tr>
+
+                <tr>
+                    <th>Replication Sample Description</th>
+                    <td th:text="${replicateSampleDescription} ?: ''"></td>
+                </tr>
+
+                </tbody>
+            </table>
+
+            <table id="initialTable"
+                   class="table table-hover table-bordered"
+                   th:if="${not #lists.isEmpty(initialStudyEthnicityDescriptions)}">
+                <caption>Initial ethnicity details</caption>
+                <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Number of Individuals</th>
+                    <th>Ethnic Group</th>
+                    <th>Country of Origin</th>
+                    <th>Country of Recruitment</th>
+                    <th>Previously Reported</th>
+                    <th>Sample Sizes Match</th>
+                    <th>Additional Description</th>
+                    <th>Notes</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="initialStudyEthnicityDescription: ${initialStudyEthnicityDescriptions}">
+                    <td th:text="${initialStudyEthnicityDescription.type} ?: ''"></td>
+                    <td th:text="${initialStudyEthnicityDescription.numberOfIndividuals} ?: ''"></td>
+                    <td th:text="${initialStudyEthnicityDescription.ethnicGroup} ?: ''"></td>
+                    <td th:text="${initialStudyEthnicityDescription.countryOfOrigin} ?: ''"></td>
+                    <td th:text="${initialStudyEthnicityDescription.countryOfRecruitment} ?: ''"></td>
+                    <td th:text="${initialStudyEthnicityDescription.previouslyReported} ?: ''"></td>
+                    <td th:text="${initialStudyEthnicityDescription.sampleSizesMatch} ?: ''"></td>
+                    <td th:text="${initialStudyEthnicityDescription.description} ?: ''"></td>
+                    <td th:text="${initialStudyEthnicityDescription.notes} ?: ''"></td>
+                </tr>
+                </tbody>
+            </table>
+            <table id="replicationTable"
+                   class="table table-hover table-bordered"
+                   th:if="${not #lists.isEmpty(replicationStudyEthnicityDescriptions)}">
+                <caption>Replication ethnicity details</caption>
+                <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Number of Individuals</th>
+                    <th>Ethnic Group</th>
+                    <th>Country of Origin</th>
+                    <th>Country of Recruitment</th>
+                    <th>Previously Reported</th>
+                    <th>Sample Sizes Match</th>
+                    <th>Additional Description</th>
+                    <th>Notes</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="replicationStudyEthnicityDescription: ${replicationStudyEthnicityDescriptions}">
+                    <td th:text="${replicationStudyEthnicityDescription.type}  ?: ''"></td>
+                    <td th:text="${replicationStudyEthnicityDescription.numberOfIndividuals}  ?: ''"></td>
+                    <td th:text="${replicationStudyEthnicityDescription.ethnicGroup}  ?: ''"></td>
+                    <td th:text="${replicationStudyEthnicityDescription.countryOfOrigin}  ?: ''"></td>
+                    <td th:text="${replicationStudyEthnicityDescription.countryOfRecruitment}  ?: ''"></td>
+                    <td th:text="${replicationStudyEthnicityDescription.previouslyReported}  ?: ''"></td>
+                    <td th:text="${replicationStudyEthnicityDescription.sampleSizesMatch} ?: ''"></td>
+                    <td th:text="${replicationStudyEthnicityDescription.description} ?: ''"></td>
+                    <td th:text="${replicationStudyEthnicityDescription.notes} ?: ''"></td>
+                </tr>
+                </tbody>
+            </table>
+            <table id="associationTable"
+                   class="table table-condensed table-bordered"
+                   th:if="${not #lists.isEmpty(snpAssociationForms)}">
+                <caption>SNP association details</caption>
+                <thead>
+                <tr>
+                    <th>Region</th>
+                    <th>Genes (author reported)</th>
+                    <th>Strongest Allele</th>
+                    <th>SNP</th>
+                    <th>Proxy SNP</th>
+                    <th>Risk Frequency</th>
+                    <th>p-Value (mantissa x 10 exponent)</th>
+                    <th>p-Value Text</th>
+                    <th>EFO trait</th>
+                    <th>OR per Copy Num</th>
+                    <th>OR entered (reciprocal)</th>
+                    <th>OR-Type</th>
+                    <th>OR per Copy Range</th>
+                    <th>OR per Copy Range (reciprocal)</th>
+                    <th>OR per Copy Unit Description</th>
+                    <th>Std Error</th>
+                    <th>SNP Type</th>
+                    <th>Multi-SNP haplotype</th>
+                    <th>SNP:SNP interaction</th>
+                    <th>SNP Checked?</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="snpAssociationForm: ${snpAssociationForms}">
+
+                    <!--Region-->
+                    <td><span th:each="region: ${snpAssociationForm.regions}"
+                              th:text="${region.name} ?: ''"></span></td>
+
+                    <!--Gene-->
+                    <td>
+                <span th:each="gene : ${snpAssociationForm.authorReportedGenes}"
+                      th:text="${gene} ?: ''"></span>
+                    </td>
+
+                    <!--Strongest risk allele-->
+                    <td>
+                <span th:each="row : ${snpAssociationForm.snpFormRows}"
+                      th:text="${row.strongestRiskAllele} ?: ''"></span>
+                    </td>
+
+                    <!--SNPs-->
+                    <td>
+                     <span th:each="row : ${snpAssociationForm.snpFormRows}"
+                           th:text="${row.snp} ?: ''"></span>
+                    </td>
+
+                    <!--Proxy SNPs-->
+                    <td>
+                     <span th:each="row : ${snpAssociationForm.snpFormRows}"
+                           th:text="${row.proxySnp} ?: ''"></span>
+                    </td>
+
+
+                    <td th:text="${snpAssociationForm.riskFrequency}?: '' "></td>
+
+                    <!--P Value-->
+                    <td th:text="${snpAssociationForm.pvalueMantissa} + 'x 10' + ${snpAssociationForm.pvalueExponent} ?: ''"></td>
+                    <td th:text="${snpAssociationForm.pvalueText} ?: ''"></td>
+
+                    <!--EFO traits-->
+                    <td>
+                        <span th:each="efoTrait: ${snpAssociationForm.efoTraits}"
+                              th:if="${#arrays.length(snpAssociationForm.efoTraits) &gt; 1}"
+                              th:text="${efoTrait.trait} + ', ' ?: ''"></span>
+                        <span th:each="efoTrait: ${snpAssociationForm.efoTraits}"
+                              th:if="${#arrays.length(snpAssociationForm.efoTraits) == 1}"
+                              th:text="${efoTrait.trait} ?: ''"></span>
+                    </td>
+
+
+                    <td th:text="${snpAssociationForm.orPerCopyNum} ?: ''"></td>
+                    <td th:text="${snpAssociationForm.orPerCopyRecip} ?: ''"></td>
+                    <td th:switch="${snpAssociationForm.orType}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+
+                    <td th:text="${snpAssociationForm.orPerCopyRange} ?: ''"></td>
+                    <td th:text="${snpAssociationForm.orPerCopyRecipRange} ?: ''"></td>
+                    <td th:text="${snpAssociationForm.orPerCopyUnitDescr} ?: ''"></td>
+                    <td th:text="${snpAssociationForm.orPerCopyStdError} ?: ''"></td>
+                    <td th:text="${snpAssociationForm.snpType} ?: ''"></td>
+                    <td th:switch="${snpAssociationForm.multiSnpHaplotype}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                    <td th:switch="${snpAssociationForm.snpInteraction}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+
+                    <td th:switch="${snpAssociationForm.snpChecked}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <table id="housekeepingDetailsTable" class="table table-hover table-bordered">
+                <caption>Housekeeping details</caption>
+                <tbody>
+                <tr>
+                    <th>Curator</th>
+                    <td th:text="${housekeeping != null and housekeeping.curator !=null } ? ${housekeeping.curator.getLastName()} : ''"></td>
+                </tr>
+
+                <tr>
+                    <th>Curation Status</th>
+                    <td th:text="${housekeeping != null and housekeeping.curationStatus !=null } ? ${housekeeping.curationStatus.getStatus()} : ''"></td>
+                </tr>
+
+                <tr>
+                    <th>Notes</th>
+                    <td th:text="${housekeeping != null and housekeeping.notes !=null } ? ${housekeeping.notes} : ''"></td>
+                </tr>
+
+                <tr>
+                    <th>File name</th>
+                    <td th:text="${housekeeping != null and housekeeping.fileName !=null } ? ${housekeeping.fileName} : ''"></td>
+                </tr>
+
+                <tr>
+                    <th>Publish Date</th>
+                    <td th:text="${housekeeping != null and housekeeping.publishDate !=null } ? ${#calendars.format(housekeeping.publishDate, 'dd MMMM yyyy')} : ''"></td>
+                </tr>
+
+                <tr>
+                    <th>Send to NCBI Date</th>
+                    <td th:text="${housekeeping != null and housekeeping.sendToNCBIDate !=null } ? ${#calendars.format(housekeeping.sendToNCBIDate, 'dd MMMM yyyy')} : ''"></td>
+                </tr>
+
+                <tr>
+                    <th>Study Added Date</th>
+                    <td th:text="${housekeeping != null and housekeeping.studyAddedDate !=null } ? ${#calendars.format(housekeeping.studyAddedDate, 'dd MMMM yyyy')} : ''"></td>
+                </tr>
+
+                <tr>
+                    <th>Last Update Date</th>
+                    <td th:text="${housekeeping != null and housekeeping.lastUpdateDate !=null } ? ${#calendars.format(housekeeping.lastUpdateDate, 'dd MMMM yyyy')} : ''"></td>
+                </tr>
+                <tr>
+                    <th>Ethnicity checked, first level</th>
+                    <td th:switch="${housekeeping.ethnicityCheckedLevelOne}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Ethnicity checked, second level</th>
+                    <td th:switch="${housekeeping.ethnicityCheckedLevelTwo}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Ethnicity backfilled</th>
+                    <td th:switch="${housekeeping.ethnicityBackFilled}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Study/SNP checked, first level</th>
+                    <td th:switch="${housekeeping.studySnpCheckedLevelOne}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Study/SNP checked, second level</th>
+                    <td th:switch="${housekeeping.studySnpCheckedLevelTwo}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Checked NCBI Error</th>
+                    <td th:switch="${housekeeping.checkedNCBIError}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>SNPs rechecked</th>
+                    <td th:switch="${housekeeping.snpsRechecked}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
