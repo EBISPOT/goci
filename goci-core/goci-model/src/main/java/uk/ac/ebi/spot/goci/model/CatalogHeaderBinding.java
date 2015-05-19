@@ -194,7 +194,7 @@ public enum CatalogHeaderBinding {
                     new Inclusion.Excluded(),
                     new Inclusion.Excluded(),
                     new Inclusion.Excluded()),
-    UNIQUE_KEY(new Inclusion.FieldIncluded("UNIQUE_KEY"), new Inclusion.Extracted(), new Inclusion.Excluded()),
+    UNIQUE_KEY(new Inclusion.FieldIncluded("UNIQUE_KEY"), new Inclusion.Excluded(), new Inclusion.Excluded()),
     // Added to deal with file returned from NCBI
     PUBMED_ID_ERROR("PUBMED_ID_ERROR",
                     new Inclusion.Excluded(),

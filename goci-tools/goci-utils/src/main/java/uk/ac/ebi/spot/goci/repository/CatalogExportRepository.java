@@ -194,7 +194,10 @@ public class CatalogExportRepository {
                 }
             }
             long id = generateUniqueID(identifiers);
-            rowMap.put(CatalogHeaderBinding.UNIQUE_KEY, Long.toString(id));
+
+            if(bindings.contains(CatalogHeaderBinding.UNIQUE_KEY)){
+                rowMap.put(CatalogHeaderBinding.UNIQUE_KEY, Long.toString(id));
+            }
 
             // check if this row already exists
             if (data.containsKey(id)) {
