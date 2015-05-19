@@ -28,6 +28,8 @@
     <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{css/goci-ui.css}"/>
     <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{css/icons/flaticon.css}"/>
     <link rel="stylesheet" href="../static/css/goci-color-palette-1.css" th:href="@{css/goci-color-palette-1.css}"/>
+    <link rel="stylesheet" href="../static/css/science-and-medicine/flaticon.css" th:href="@{css/science-and-medicine/flaticon.css}"/>
+
 
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -57,7 +59,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="index.html" th:href="@{home}">Home <span class="sr-only">(current)</span></a></li>
+                <li><a href="index.html" th:href="@{home}">Home <span class="sr-only">(current)</span></a></li>
                 <li><a href="search.html" th:href="@{search}">Search</a></li>
                 <li><a href="http://www.ebi.ac.uk/fgpt/gwas">Diagram</a></li>
                 <li class="hidden-sm"><a href="docs/downloads" th:href="@{docs/downloads}">Download</a></li>
@@ -91,10 +93,10 @@
 </nav>
 
 <!-- Main jumbotron for a primary marketing message or call to action -->
-<div class="jumbotron background-color-primary-accent">
-    <div>
+<div class="jumbotron background-color-primary-accent" style="margin: 0%; padding-bottom: 30px;">
+    <div class="container">
         <!-- search box goes here -->
-        <div class="input-group" style="width: 250px; float: right; margin-right: 20px">
+        <div class="input-group" style="width: 250px; float: right;">
             <input type="text" class="form-control" placeholder="Search the catalog" id="search-box"/>
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button" id="search-button">
@@ -106,80 +108,241 @@
     </div>
     <div class="container">
 
-        <div>
-            <h1>Type 2 diabetes</h1>
+        <h1><img alt="externalLink" style="width: 1em; height: auto;" src="../static/icons/owl3.png" th:src="@{icons/owl3.png}">&nbsp;Ontology trait: serum IgG measurement (EFO_0004565)</h1>
 
-            <p>Mapped traits: type ii diabetes</p>
-            <p>Definition: you've eaten too much sugar</p>
+    </div>
+</div>
+</div>
 
+
+
+<div class="container-fluid" style="padding-top: 30px">
+
+    <ol class="breadcrumb background-color-complementary-accent">
+        <li><a href="home">GWAS</a></li>
+        <li><a href="search">Traits</a></li>
+        <li class="active">EFO_0004565</li>
+    </ol>
+
+    <div class="container-fluid" id="lower_container">
+        <div class="row">
+
+            <div class="col-md-10 col-md-offset-1">
+                <div class="panel panel-default">
+                    <div class="panel-heading background-color-primary-accent">
+                        <h3 class="panel-title">Trait information</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div id="summary-info" class="col-md-8">
+                            <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Ontology definition</span><span style="display: inline-block; width: 75%; margin-bottom: 1em">A serum immunoglobulin G measurement is the measurement of the IgG antibody isotype produced by plasma cells in response to an immunogen and which function as antibodies, measured in serum</span> </div>
+                            <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Ontology parent</span><span style="display: inline-block; width: 75%; margin-bottom: 1em"><a>antibody measurement</a> </span> </div>
+                            <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Synonyms</span><span style="display: inline-block; width: 75%; margin-bottom: 1em">immunoglobulin G level,<br> IgG level</span> </div>
+                            <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Mapped to reported traits: </span><span style="display: inline-block; width: 75%; margin-bottom: 1em">Food antigen IgG levels,<br> IgG levels</span> </div>
+                        </div>
+                        <div id="links" class="col-md-4">
+                            <div style="margin-bottom: 1em">
+                                <button type="button" class="btn btn-default">View in EFO</button>
+
+                            </div>
+                            <div style="margin-bottom: 1em"><button type="button" class="btn btn-default">View in Bioportal</button>
+                            </div>
+
+                            <div style="margin-bottom: 1em">other links to external sites</div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="panel panel-default">
+                        <div class="panel-heading background-color-primary-accent">
+                            <h3 class="panel-title">Studies  <span class="badge" style="background-color: #398A96;">3</span>
+                            </h3>
+                  <span class="pull-right clickable"
+                        onclick="toggleSidebar('.panel-heading span.clickable')">
+                                    <i class="glyphicon glyphicon-chevron-up"></i>
+                                </span>
+                        </div>
+
+                        <div class="panel-body">
+                            <table id="diseasetrait-table" class="table table-striped">
+                                <thead id="study-table-header">
+                                <tr>
+                                    <th style="width: 12%" id="author_s">Author
+                                        <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="First author, along with link to publication in Europe PubMed Central."></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                    </th>
+                                    <th style="width: 10%" id="publicationDate">Date
+                                        <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Publication date (YYYY-MM-DD)"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                    </th>
+                                    <th style="width: 15%" id="publication">Journal
+                                        <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Abbreviated journal name"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                    </th>
+                                    <th style="width: 30%" id="title">Title
+                                        <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Title of paper"></span>
+                                                                      <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                                    </th>
+                                    <th style="width: 20%" id="traitName_s">Reported trait
+                                        <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Description of disease/trait analysed in the study"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                    </th>
+                                    <th style="width: 8%" id="associationCount">Association count
+                                        <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Number of SNP-disease/trait associations included in the Catalog"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                    </th>
+                                    <th style="width: 5%"></th>
+                                </tr>
+
+                                </thead>
+                                <tbody id="study-table-body">
+                                <tr><td><span><a href="search?query=Buck D">Buck D</a></span> (PMID: 23225573) &nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/23225573" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td>2012-09-07</td><td>Ann Neurol</td><td>Genetic variants in the immunoglobulin heavy chain locus are associated with the IgG index in multiple sclerosis.</td><td><span><a href="search?query=IgG levels">IgG levels</a></span></td><td>1</td><td><button type="button" class="btn btn-default">View study page</button></td></tr>
+                                <!--<tr class="study-7028 collapse accordion-body hidden-study-row"><td colspan="7" style="border-top: none"><table class="sample-info"><tbody>-->
+                                <!--<tr><th style="width: 30%">Initial sample description</th><td>229 European ancestry multiple sclerosis cases</td></tr>-->
+                                <!--<tr><th style="width: 30%">Replication sample description</th><td>409 European ancestry multiple sclerosis cases</td></tr>-->
+                                <!--<tr><th style="width: 30%">Platform [SNPs passing QC]</th><td>Illumina [526,014]</td></tr>-->
+                                <!--<tr><th style="width: 30%">CNV study?</th><td>no</td></tr></tbody></table></td></tr>-->
+                                <tr><td><span><a href="search?query=Liao M">Liao M</a></span> (PMID: 22673310) &nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/22673310" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td>2012-07-06</td><td>Genes Immun</td><td>Genome-wide association study identifies common variants at TNFRSF13B associated with IgG level in a healthy Chinese male population.</td><td><span><a href="search?query=IgG levels">IgG levels</a></span></td><td>1</td><td><button type="button" class="btn btn-default">View study page</button></td></tr>
+                                <!--<tr class="study-6781 collapse accordion-body hidden-study-row"><td colspan="7" style="border-top: none"><table class="sample-info"><tbody>-->
+                                <!--<tr><th style="width: 30%">Initial sample description</th><td>1,999 Chinese ancestry male individuals</td></tr>-->
+                                <!--<tr><th style="width: 30%">Replication sample description</th><td>1,496 Chinese ancestry male individuals</td></tr>-->
+                                <!--<tr><th style="width: 30%">Platform [SNPs passing QC]</th><td>Illumina [1,940,243] (imputed)</td></tr>-->
+                                <!--<tr><th style="width: 30%">CNV study?</th><td>no</td></tr></tbody></table></td></tr>-->
+                                <tr><td><span><a href="search?query=Rubicz R">Rubicz R</a></span> (PMID: 24962563) &nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/24962563" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td>2014-06-30</td><td>Genet Epidemiol</td><td>Genome-wide genetic and transcriptomic investigation of variation in antibody response to dietary antigens.</td><td><span><a href="search?query=Food antigen IgG levels">Food antigen IgG levels</a></span></td><td>7</td><td><button type="button" class="btn btn-default">View study page</button></td></tr>
+                                <!--<tr class="study-7909 collapse accordion-body hidden-study-row"><td colspan="7" style="border-top: none"><table class="sample-info"><tbody>-->
+                                <!--<tr><th style="width: 30%">Initial sample description</th><td>1,367 Mexican Americans from 63 families</td></tr>-->
+                                <!--<tr><th style="width: 30%">Replication sample description</th><td>NA</td></tr>-->
+                                <!--<tr><th style="width: 30%">Platform [SNPs passing QC]</th><td>Illumina [944,565] (imputed)</td></tr>-->
+                                <!--<tr><th style="width: 30%">CNV study?</th><td>no</td></tr></tbody></table></td></tr>-->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel-heading background-color-primary-accent">
+                        <h3 class="panel-title">Associations   <span class="badge" style="background-color: #398A96;">9</span>
+                        </h3>
+
+                  <span class="pull-right clickable"
+                        onclick="toggleSidebar('.panel-heading span.clickable')">
+                                    <i class="glyphicon glyphicon-chevron-up"></i>
+                                </span>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <table id="association-table" class="table">
+                            <thead id="association-table-header">
+                            <tr>
+                                <th style="width: 10%" id="strongestAllele">SNP
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="SNP most strongly associated with trait + risk/effect allele. This may also be haplotype or SNPxSNP interaction."></span>
+                                                                            <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                                </th>
+                                <th style="width: 8%" id="riskFrequency">RAF
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Risk/effect allele frequency in controls"></span>
+                                    <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                </th>
+                                <th style="width: 8%" id="pValue">p-value
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="p-value for most strongly associated SNP, along with any information describing context of p-value"></span>
+                                    <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                </th>
+                                <th style="width: 6%" id="orPerCopyNum">OR
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Odds ratio associated with SNP"></span>
+                                    <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                </th>
+                                <th style="width: 8%" id="orType">Beta
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Beta-coefficient and unit increase/decrease associated with SNP"></span>
+                                    <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                </th>
+                                <th style="width: 6%">CI
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="95% confidence interval for OR or beta"></span>
+                                </th>
+                                <th style="width: 6%">Region
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Cytogenetic region of SNP"></span>
+                                </th>
+                                <th style="width: 6%" id="chromosomePosition">Location
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Chromosome and base pair location of SNP"></span>
+                                                                              <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+
+                                </th>
+                                <th style="width: 8%">Functional class
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Functional class of SNP"></span>
+                                </th>
+                                <th style="width: 8%">Reported gene(s)
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Gene(s) reported by author"></span>
+                                </th>
+                                <th style="width: 8%">Mapped gene(s)
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Gene(s) mapped by the NCBI"></span>
+                                </th>
+                                <th style="width: 8%" id="traitName_s-alt">Reported trait
+                                    <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-original-title="Description of disease/trait analysed in the study"></span>
+                                    <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                </th>
+                                <th style="width: 8%" id="author_s-alt">Study
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="First author and year of publication, along with link to publication in Europe PubMed Central."></span>
+                                    <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody id="association-table-body"><tr><td><span><a href="search?query=rs4792800">rs4792800-G</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs4792800" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td>0.50</td><td>1 x10<sup>-12</sup></td><td></td><td></td><td></td><td><span><a href="search?query=17p11.2">17p11.2</a></span></td><td>chr17:16941853&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Location/View?r=17:16941353-16942353" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td>intron</td><td><span><a href="search?query=TNFRSF13B">TNFRSF13B</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=23495" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=TNFRSF13B">TNFRSF13B</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=23495" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=IgG levels">IgG levels</a></span></td><td><span><a href="search?query=Liao M">Liao M (PMID: 22673310), 2012</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/22673310" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td></tr><tr><td><span><a href="search?query=rs10136766">rs10136766-A</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs10136766" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td>0.27</td><td>8 x10<sup>-16</sup></td><td></td><td>0.229 unit increase</td><td>[NR]</td><td><span><a href="search?query=14q32.33">14q32.33</a></span></td><td>chr14:105766248&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Location/View?r=14:105765748-105766748" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td></td><td><span><a href="search?query=IGHG1">IGHG1</a></span>, <span><a href="search?query=IGHG2">IGHG2</a></span>, <span><a href="search?query=IGHG3">IGHG3</a></span></td><td><span><a href="search?query=IGH">IGH</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=3492" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=IgG levels">IgG levels</a></span></td><td><span><a href="search?query=Buck D">Buck D (PMID: 23225573), 2012</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/23225573" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td></tr><tr><td><span><a href="search?query=rs3135350">rs3135350-G</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs3135350" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td>0.046</td><td>9 x10<sup>-8</sup> (Gliadin)</td><td></td><td>0.51 unit increase</td><td>[NR]</td><td><span><a href="search?query=6p21.32">6p21.32</a></span></td><td>chr6:32425204&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Location/View?r=6:32424704-32425704" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td></td><td><span><a href="search?query=NOTCH4">NOTCH4</a></span>, <span><a href="search?query=HLA-DRA">HLA-DRA</a></span>, <span><a href="search?query=BTNL2">BTNL2</a></span></td><td><span><a href="search?query=TRNAI25">TRNAI25</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=100189401" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=Food antigen IgG levels">Food antigen IgG levels</a></span></td><td><span><a href="search?query=Rubicz R">Rubicz R (PMID: 24962563), 2014</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/24962563" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td></tr><tr><td><span><a href="search?query=rs4848780">rs4848780-T</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs4848780" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td>0.335</td><td>8 x10<sup>-7</sup> (Gliadin)</td><td></td><td>0.21 unit decrease</td><td>[NR]</td><td><span><a href="search?query=2q14.3">2q14.3</a></span></td><td>chr2:122466824&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Location/View?r=2:122466324-122467324" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td></td><td><span><a href="search?query=TSN">TSN</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=7247" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=TSN">TSN</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=7247" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span> - <span><a href="search?query=CNTNAP5">CNTNAP5</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=129684" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=Food antigen IgG levels">Food antigen IgG levels</a></span></td><td><span><a href="search?query=Rubicz R">Rubicz R (PMID: 24962563), 2014</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/24962563" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td></tr><tr><td><span><a href="search?query=rs11635085">rs11635085-G</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs11635085" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td>0.107</td><td>6 x10<sup>-7</sup> (Casein)</td><td></td><td>0.3 unit decrease</td><td>[NR]</td><td><span><a href="search?query=15q26.1">15q26.1</a></span></td><td>chr15:92503406&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Location/View?r=15:92502906-92503906" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td></td><td><span><a href="search?query=C15orf32">C15orf32</a></span></td><td><span><a href="search?query=C15orf32">C15orf32</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=145858" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span> - <span><a href="search?query=LINC00930">LINC00930</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=100144604" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=Food antigen IgG levels">Food antigen IgG levels</a></span></td><td><span><a href="search?query=Rubicz R">Rubicz R (PMID: 24962563), 2014</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/24962563" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td></tr><tr><td><span><a href="search?query=rs9677476">rs9677476-G</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs9677476" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td>0.274</td><td>1 x10<sup>-6</sup> (BSA-a)</td><td></td><td>0.21 unit increase</td><td>[NR]</td><td><span><a href="search?query=2q37.1">2q37.1</a></span></td><td>chr2:231261577&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Location/View?r=2:231261077-231262077" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td>intron</td><td><span><a href="search?query=ARMC9">ARMC9</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=80210" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=ARMC9">ARMC9</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=80210" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=Food antigen IgG levels">Food antigen IgG levels</a></span></td><td><span><a href="search?query=Rubicz R">Rubicz R (PMID: 24962563), 2014</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/24962563" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td></tr><tr><td><span><a href="search?query=rs2360969">rs2360969-T</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs2360969" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td>0.413</td><td>1 x10<sup>-6</sup> (BSA-b)</td><td></td><td>0.21 unit decrease</td><td>[NR]</td><td><span><a href="search?query=2q33.3">2q33.3</a></span></td><td>chr2:207508272&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Location/View?r=2:207507772-207508772" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td></td><td><span><a href="search?query=CREB1">CREB1</a></span></td><td><span><a href="search?query=MIR1302-4">MIR1302-4</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=100302130" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span> - CREB1</td><td><span><a href="search?query=Food antigen IgG levels">Food antigen IgG levels</a></span></td><td><span><a href="search?query=Rubicz R">Rubicz R (PMID: 24962563), 2014</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/24962563" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td></tr><tr><td><span><a href="search?query=rs1372356">rs1372356-C</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs1372356" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td>0.489</td><td>6 x10<sup>-7</sup> (BSA-b)</td><td></td><td>0.2 unit decrease</td><td>[NR]</td><td><span><a href="search?query=14q31.3">14q31.3</a></span></td><td>chr14:88049605&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Location/View?r=14:88049105-88050105" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td>intron</td><td><span><a href="search?query=GPR65">GPR65</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=8477" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=LINC01146">LINC01146</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=283587" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=Food antigen IgG levels">Food antigen IgG levels</a></span></td><td><span><a href="search?query=Rubicz R">Rubicz R (PMID: 24962563), 2014</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/24962563" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td></tr><tr><td><span><a href="search?query=rs2236267">rs2236267-C</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs2236267" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td>0.462</td><td>4 x10<sup>-7</sup> (BSA-b)</td><td></td><td>0.2 unit increase</td><td>[NR]</td><td><span><a href="search?query=14q31.3">14q31.3</a></span></td><td>chr14:88165977&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Location/View?r=14:88165477-88166477" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td></td><td><span><a href="search?query=KCNK10">KCNK10</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=54207" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=LINC01146">LINC01146</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=283587" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span> - <span><a href="search?query=KCNK10">KCNK10</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=54207" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=Food antigen IgG levels">Food antigen IgG levels</a></span></td><td><span><a href="search?query=Rubicz R">Rubicz R (PMID: 24962563), 2014</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/24962563" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+                </div>
+
+
+            </div>
         </div>
+
+        <hr/>
+
     </div>
-</div>
-</div>
+    <!-- /container -->
 
-<!--<div class="jumbotron background-color-secondary-accent">-->
-<!--<div class="container">-->
-
-<!--<div>-->
-<!--<h1>rs1234566</h1>-->
-
-<!--<p>Location: chr3:987123</p>-->
-<!--<p>Known risk alleles: A, C</p>-->
-
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-
-<div class="container">
-    <div class="row">
-        Info about the trait, incl table of studies it's been used in, goes here
-    </div>
-
-    <hr/>
-
-</div>
-<!-- /container -->
-
-<footer class="footer background-color-primary-accent">
-    <!--<div class="footer-banner background-color-primary"></div>-->
-    <div class="container">
-        <p class="text-muted">Copyright &copy; EMBL-EBI 2015 | EMBL-EBI is an Outstation of the
-            <a href="http://www.embl.org">European Molecular
-                                          Biology
-                                          Laboratory</a> |
-            <a href="//www.ebi.ac.uk/about/privacy">Privacy</a> |
-            <a href="//www.ebi.ac.uk/about/cookies">Cookies</a> |
-            <a href="//www.ebi.ac.uk/about/terms-of-use">Terms of use</a></p>
-    </div>
-</footer>
+    <footer class="footer background-color-primary-accent">
+        <!--<div class="footer-banner background-color-primary"></div>-->
+        <div class="container">
+            <p class="text-muted">Copyright &copy; EMBL-EBI 2015 | EMBL-EBI is an Outstation of the
+                <a href="http://www.embl.org">European Molecular
+                                              Biology
+                                              Laboratory</a> |
+                <a href="//www.ebi.ac.uk/about/privacy">Privacy</a> |
+                <a href="//www.ebi.ac.uk/about/cookies">Cookies</a> |
+                <a href="//www.ebi.ac.uk/about/terms-of-use">Terms of use</a></p>
+        </div>
+    </footer>
 
 
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-<script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
-<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<script src="../static/js/ie10-viewport-bug-workaround.js" th:src="@{js/ie10-viewport-bug-workaround.js}"></script>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+    <script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../static/js/ie10-viewport-bug-workaround.js" th:src="@{js/ie10-viewport-bug-workaround.js}"></script>
 
-<!-- GOCI JavaScript
-================================================== -->
-<script src="../static/js/goci-ui.js" th:src="@{js/goci-ui.js}"></script>
+    <!-- GOCI JavaScript
+    ================================================== -->
+    <script src="../static/js/goci-ui.js" th:src="@{js/goci-ui.js}"></script>
 
-<!-- Google analytics
-================================================== -->
-<script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    <!-- Google analytics
+    ================================================== -->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-    ga('create', 'UA-60195133-1', 'auto');
-    ga('send', 'pageview');
+        ga('create', 'UA-60195133-1', 'auto');
+        ga('send', 'pageview');
 
-</script>
+    </script>
 
 </body>
 </html>

@@ -28,7 +28,7 @@
     <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{css/goci-ui.css}"/>
     <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{css/icons/flaticon.css}"/>
     <link rel="stylesheet" href="../static/css/goci-color-palette-1.css" th:href="@{css/goci-color-palette-1.css}"/>
-    <link rel="stylesheet" href="../static/css/science-and-medicine/flaticon.css" th:href="@{css/science-and-medicine/flaticon.css}"/>
+    <!--<link rel="stylesheet" href="../static/css/science-and-medicine/flaticon.css" th:href="@{css/science-and-medicine/flaticon.css}"/>-->
 
 
 
@@ -165,25 +165,28 @@
                     <div class="panel-body">
                         <div id="summary-info" class="col-md-8">
                             <!--flaticon news3-->
-                            <div class="flaticon-news3 color-primary-bold"></div>
+                            <div class="flaticon-news3 color-primary-bold">
+                                <span style="display: inline-block"><h4>Publication</h4></span>
+                                <button type="button" class="btn btn-default pull-right">View publication page</button>
+                            </div>
                             <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Author</span><span style="display: inline-block; width: 75%; margin-bottom: 1em"> Jeff JM</span> </div>
                             <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Title</span><span style="display: inline-block; width: 75%; margin-bottom: 1em">Generalization of variants identified by genome-wide association studies for electrocardiographic traits in African Americans.  </span> </div>
                             <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Journal</span><span style="display: inline-block; width: 75%; margin-bottom: 1em"> Ann Hum Genet      </span> </div>
                             <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Publication date</span><span style="display: inline-block; width: 75%; margin-bottom: 1em"> 2013-03-28       </span> </div>
                             <!--flaticon group12-->
-                            <div class="flaticon-group12 color-primary-bold"></div>
+                            <div class="flaticon-group12 color-primary-bold"><span style="display: inline-block"><h4>Sample descriptions</h4></span></div>
 
                             <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Initial sample description</span><span style="display: inline-block; width: 75%; margin-bottom: 1em"> 455 African American individuals      </span> </div>
                             <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Replication sample description</span><span style="display: inline-block; width: 75%; margin-bottom: 1em"> NA       </span> </div>
 
                                 <!--flaticon text21-->
-                            <div class="flaticon-text21 color-primary-bold"></div>
+                            <div class="flaticon-text21 color-primary-bold"><span style="display: inline-block"><h4>Trait information</h4></span></div>
 
                             <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Reported trait</span><span style="display: inline-block; width: 75%; margin-bottom: 1em">QRS duration</span> </div>
                             <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Mapped trait(s)</span><span style="display: inline-block; width: 75%; margin-bottom: 1em">QRS duration (EFO_0005055)     </span> </div>
 
                                 <!--flaticon settings11-->
-                            <div class="flaticon-settings11 color-primary-bold"></div>
+                            <div class="flaticon-settings11 color-primary-bold"><span style="display: inline-block"><h4>Platform information</h4></span></div>
 
                             <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Platform [SNPs passing QC]</span><span style="display: inline-block; width: 75%; margin-bottom: 1em"> Illumina [>930,000]      </span> </div>
                                 <!--<div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">CNV study?</span><span style="display: inline-block; width: 75%; margin-bottom: 1em"> No       </span> </div>-->
@@ -191,6 +194,10 @@
                             <!--<div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Identified associations</span><span style="display: inline-block; width: 75%; margin-bottom: 1em"> <a href="#">9</a></span> </div>-->
                         </div>
                         <div id="links" class="col-md-4">
+                            <div class="color-primary-bold">
+                                <span style="display: inline-block"><h4><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}">
+                                    External links</h4></span>
+                            </div>
                             <div style="margin-bottom: 1em">
                                 <button type="button" class="btn btn-default">View in PubMed</button>
 
@@ -211,7 +218,12 @@
                 <div class="panel panel-default">
                     <div class="panel-heading background-color-primary-accent">
                         <h3 class="panel-title">Associations  <span class="badge" style="background-color: #398A96;">9</span>
+
                         </h3>
+                         <span class="pull-right clickable"
+                               onclick="toggleSidebar('.panel-heading span.clickable')">
+                                    <i class="glyphicon glyphicon-chevron-up"></i>
+                                </span>
                     </div>
 
                     <div class="panel-body">
