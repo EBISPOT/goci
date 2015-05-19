@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
+import uk.ac.ebi.spot.goci.curation.model.SnpAssociationInteractionForm;
+import uk.ac.ebi.spot.goci.curation.model.SnpFormColumn;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 import uk.ac.ebi.spot.goci.curation.service.AssociationBatchLoaderService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationCalculationService;
@@ -324,11 +326,15 @@ public class AssociationController {
         return "add_multi_snp_association";
     }
 
-    // Generate a empty form page to add standard or multi-snp haplotype
+    // Generate a empty form page to add a interaction association
     @RequestMapping(value = "/studies/{studyId}/associations/add_interaction",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
     public String addSnpInteraction(Model model, @PathVariable Long studyId) {
+
+        // Return form object
+        SnpAssociationInteractionForm emptyForm = new SnpAssociationInteractionForm();
+        model.addAttribute("snpAssociationInteractionForm", emptyForm);
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
@@ -354,6 +360,27 @@ public class AssociationController {
 
         return "add_multi_snp_association";
     }
+
+    // Add multiple rows to table
+    @RequestMapping(value = "/studies/{studyId}/associations/add_interaction", params = {"addCols"})
+    public String addRows(SnpAssociationInteractionForm snpAssociationInteractionForm, Model model, @PathVariable Long studyId) {
+        Integer numberOfCols = snpAssociationInteractionForm.getNumOfInteractions();
+
+        // Add number of cols curator selected
+        while (numberOfCols != 0) {
+            snpAssociationInteractionForm.getSnpFormColumns().add(new SnpFormColumn());
+            numberOfCols--;
+        }
+
+        // Pass back updated form
+        model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
+
+        // Also passes back study object to view so we can create links back to main study page
+        model.addAttribute("study", studyRepository.findOne(studyId));
+
+        return "add_snp_interaction_association";
+    }
+
 
     // Add single row to table
     @RequestMapping(value = "/studies/{studyId}/associations/add_multi", params = {"addRow"})
