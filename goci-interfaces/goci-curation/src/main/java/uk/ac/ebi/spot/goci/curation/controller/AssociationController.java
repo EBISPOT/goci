@@ -396,6 +396,20 @@ public class AssociationController {
         return "add_multi_snp_association";
     }
 
+    // Add single column to table
+    @RequestMapping(value = "/studies/{studyId}/associations/add_interaction", params = {"addCol"})
+    public String addCol(SnpAssociationInteractionForm snpAssociationInteractionForm, Model model, @PathVariable Long studyId) {
+        snpAssociationInteractionForm.getSnpFormColumns().add(new SnpFormColumn());
+
+        // Pass back updated form
+        model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
+
+        // Also passes back study object to view so we can create links back to main study page
+        model.addAttribute("study", studyRepository.findOne(studyId));
+
+        return "add_snp_interaction_association";
+    }
+
     // Remove row from table
     @RequestMapping(value = "/studies/{studyId}/associations/add_multi", params = {"removeRow"})
     public String removeRow(SnpAssociationForm snpAssociationForm,
@@ -418,6 +432,28 @@ public class AssociationController {
         return "add_multi_snp_association";
     }
 
+
+    // Remove column from table
+    @RequestMapping(value = "/studies/{studyId}/associations/add_interaction", params = {"removeCol"})
+    public String removeCol(SnpAssociationInteractionForm snpAssociationInteractionForm,
+                            HttpServletRequest req,
+                            Model model,
+                            @PathVariable Long studyId) {
+
+        //Index of value to remove
+        final Integer colId = Integer.valueOf(req.getParameter("removeCol"));
+
+        // Remove col
+        snpAssociationInteractionForm.getSnpFormColumns().remove(colId.intValue());
+
+        // Pass back updated form
+        model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
+
+        // Also passes back study object to view so we can create links back to main study page
+        model.addAttribute("study", studyRepository.findOne(studyId));
+
+        return "add_snp_interaction_association";
+    }
 
     // Add new standard association/snp information to a study
     @RequestMapping(value = "/studies/{studyId}/associations/add_standard",
