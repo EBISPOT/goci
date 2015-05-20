@@ -114,12 +114,7 @@ public class AssociationController {
         // For our associations create a table view object and return
         Collection<SnpAssociationTableView> snpAssociationTableViews = new ArrayList<SnpAssociationTableView>();
         for (Association association : associations) {
-
-            // Create forms based on number of loci
-            // Standard and multi-snp associations should only have 1
-            // Snp interaction association will have more than 1
-            SnpAssociationTableView snpAssociationTableView =
-                    associationViewService.createSnpAssociationTableView(association);
+            SnpAssociationTableView snpAssociationTableView = associationViewService.createSnpAssociationTableView(association);
             snpAssociationTableViews.add(snpAssociationTableView);
         }
         model.addAttribute("snpAssociationTableViews", snpAssociationTableViews);
