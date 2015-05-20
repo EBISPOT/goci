@@ -19,10 +19,10 @@ import uk.ac.ebi.spot.goci.curation.model.SnpAssociationInteractionForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormColumn;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 import uk.ac.ebi.spot.goci.curation.service.AssociationBatchLoaderService;
-import uk.ac.ebi.spot.goci.curation.service.AssociationCalculationService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
 import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
+import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Locus;
@@ -68,9 +68,9 @@ public class AssociationController {
 
     // Services
     private AssociationBatchLoaderService associationBatchLoaderService;
-    private AssociationCalculationService associationCalculationService;
     private AssociationDownloadService associationDownloadService;
     private SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService;
+    private SnpInteractionAssociationService snpInteractionAssociationService;
     private LociAttributesService lociAttributesService;
 
     @Autowired
@@ -79,18 +79,18 @@ public class AssociationController {
                                  EfoTraitRepository efoTraitRepository,
                                  LocusRepository locusRepository,
                                  AssociationBatchLoaderService associationBatchLoaderService,
-                                 AssociationCalculationService associationCalculationService,
                                  AssociationDownloadService associationDownloadService,
                                  SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService,
+                                 SnpInteractionAssociationService snpInteractionAssociationService,
                                  LociAttributesService lociAttributesService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
         this.locusRepository = locusRepository;
         this.associationBatchLoaderService = associationBatchLoaderService;
-        this.associationCalculationService = associationCalculationService;
         this.associationDownloadService = associationDownloadService;
         this.singleSnpMultiSnpAssociationService = singleSnpMultiSnpAssociationService;
+        this.snpInteractionAssociationService = snpInteractionAssociationService;
         this.lociAttributesService = lociAttributesService;
     }
 
@@ -450,6 +450,26 @@ public class AssociationController {
 
         // Create an association object from details in returned form
         Association newAssociation = singleSnpMultiSnpAssociationService.createAssociation(snpAssociationForm);
+
+        // Set the study ID for our association
+        newAssociation.setStudy(study);
+
+        // Save our association information
+        associationRepository.save(newAssociation);
+
+        return "redirect:/studies/" + studyId + "/associations";
+    }
+
+    @RequestMapping(value = "/studies/{studyId}/associations/add_interaction",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.POST)
+    public String addSnpInteraction(@ModelAttribute SnpAssociationInteractionForm snpAssociationInteractionForm, @PathVariable Long studyId) {
+
+        // Get our study object
+        Study study = studyRepository.findOne(studyId);
+
+        // Create an association object from details in returned form
+        Association newAssociation = snpInteractionAssociationService.createAssociation(snpAssociationInteractionForm);
 
         // Set the study ID for our association
         newAssociation.setStudy(study);
