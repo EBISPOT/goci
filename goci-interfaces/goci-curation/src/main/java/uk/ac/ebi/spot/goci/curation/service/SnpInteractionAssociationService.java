@@ -3,10 +3,12 @@ package uk.ac.ebi.spot.goci.curation.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationInteractionForm;
+import uk.ac.ebi.spot.goci.curation.model.SnpAssociationTableView;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormColumn;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
+import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
@@ -15,10 +17,11 @@ import java.util.Collection;
 
 /**
  * Created by emma on 20/05/2015.
- * @author emma
  *
- *  Service class that creates an association or returns a view of an association, used by AssociationController.
- *  Used only for SNP X SNP interaction associations
+ * @author emma
+ *         <p>
+ *         Service class that creates an association or returns a view of an association, used by AssociationController.
+ *         Used only for SNP X SNP interaction associations
  */
 @Service
 public class SnpInteractionAssociationService {
@@ -30,7 +33,7 @@ public class SnpInteractionAssociationService {
         this.lociAttributesService = lociAttributesService;
     }
 
-    public Association createAssociation(SnpAssociationInteractionForm snpAssociationInteractionForm){
+    public Association createAssociation(SnpAssociationInteractionForm snpAssociationInteractionForm) {
 
         Association association = new Association();
 
@@ -59,7 +62,7 @@ public class SnpInteractionAssociationService {
 
         // For each column create a loci
         Collection<Locus> loci = new ArrayList<>();
-        for(SnpFormColumn col: snpAssociationInteractionForm.getSnpFormColumns()){
+        for (SnpFormColumn col : snpAssociationInteractionForm.getSnpFormColumns()) {
 
             Locus locus = new Locus();
             locus.setDescription("SNP x SNP interaction");
@@ -74,16 +77,16 @@ public class SnpInteractionAssociationService {
             Collection<RiskAllele> locusRiskAlleles = new ArrayList<>();
 
             // Check for a proxy and if we have one create a proxy snp
-            Collection<String>curatorEnteredProxySnps = col.getProxies();
+            Collection<String> curatorEnteredProxySnps = col.getProxies();
             if (curatorEnteredProxySnps != null && !curatorEnteredProxySnps.isEmpty()) {
-                for (String proxy : curatorEnteredProxySnps){
+                for (String proxy : curatorEnteredProxySnps) {
                     SingleNucleotidePolymorphism proxySnp = lociAttributesService.createSnp(proxy);
 
                     // Add proxy to collection of proxy snps and link to risk allele
                     // ...
 
                 }
-               // TODO NEED TO UPDATE RISK ALLELE MODEL SO IT CAN HOLD MORE THAN ON PROXY
+                // TODO NEED TO UPDATE RISK ALLELE MODEL SO IT CAN HOLD MORE THAN ON PROXY
 
             }
 
@@ -103,5 +106,4 @@ public class SnpInteractionAssociationService {
 
         return association;
     }
-
 }
