@@ -227,7 +227,7 @@ public class SingleSnpMultiSnpAssociationService {
                 snpAssociationForm.setMultiSnpHaplotypeDescr(locus.getDescription());
             }
         }
-
+        // TODO SHOULDNT NEED THIS NOW AS METHOD IS ONLY CALLED FOR MULTI AND SINGLE SNPS
         else {
             throw new RuntimeException(
                     "More than one locus found for association " + association.getId() + ", this is not supported yet"
