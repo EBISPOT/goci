@@ -1,16 +1,14 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.Region;
-
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Created by emma on 20/05/2015.
+ *
+ * @author emma
+ *         <p>
+ *         Model object that creates a view of a studies associations that can easily be rendered in a HTML table.
  */
 public class SnpAssociationTableView {
 
