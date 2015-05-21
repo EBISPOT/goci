@@ -54,7 +54,7 @@
 
 <br/>
 
-<div class="container-fluid" th:object="${study}" th:if="${not #lists.isEmpty(snpAssociationForms)}">
+<div class="container-fluid" th:object="${study}" th:if="${not #lists.isEmpty(snpAssociationTableViews)}">
     <div class="row">
         <div class="col-md-12">
             <a th:href="@{/studies/{studyId}/associations/approve_all(studyId=${study.Id})}"
@@ -138,13 +138,16 @@
     </div>
 </div>
 <br/>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <div class="well well-sm" th:if="${#lists.isEmpty(snpAssociationForms)}">
+            <div class="well well-sm" th:if="${#lists.isEmpty(snpAssociationTableViews)}">
                 <p style="color:grey">No snp associations to display for this study</p>
             </div>
-            <table id="mainTable" class="table table-condensed table-bordered" th:if="${not #lists.isEmpty(snpAssociationForms)}">
+            <table id="mainTable"
+                   class="table table-condensed table-bordered"
+                   th:if="${not #lists.isEmpty(snpAssociationTableViews)}">
                 <br/>
                 <thead>
                 <tr>
@@ -187,106 +190,52 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="snpAssociationForm: ${snpAssociationForms}">
+                <tr th:each="snpAssociationTableView: ${snpAssociationTableViews}">
 
                     <!--Region-->
-                    <td>
-                        <span th:each="region: ${snpAssociationForm.regions}"
-                                   th:if="${#arrays.length(snpAssociationForm.regions) &gt; 1}"
-                                   th:text="${region.name}+', ' ?: ''"></span>
-                        <span th:each="region: ${snpAssociationForm.regions}"
-                              th:if="${#arrays.length(snpAssociationForm.regions) == 1}"
-                              th:text="${region.name} ?: ''"></span>
-                    </td>
+                    <td th:text="${snpAssociationTableView.regions}?: '' "></td>
 
                     <!--Gene-->
-                    <td>
-                <span th:each="gene : ${snpAssociationForm.authorReportedGenes}"
-                      th:text="${gene} ?: ''"></span>
-                    </td>
+                    <td th:text="${snpAssociationTableView.authorReportedGenes}?: '' "></td>
 
                     <!--Strongest risk allele-->
-                    <td>
-                <span th:each="row : ${snpAssociationForm.snpFormRows}"
-                      th:text="${row.strongestRiskAllele} ?: ''"></span>
-                    </td>
+                    <td th:text="${snpAssociationTableView.strongestRiskAlleles}?: '' "></td>
 
                     <!--SNPs-->
-                    <td>
-                     <span th:each="row : ${snpAssociationForm.snpFormRows}"
-                           th:text="${row.snp} ?: ''"></span>
-                    </td>
+                    <td th:text="${snpAssociationTableView.snps}?: '' "></td>
 
                     <!--Proxy SNPs-->
-                    <td>
-                     <span th:each="row : ${snpAssociationForm.snpFormRows}"
-                           th:text="${row.proxySnp} ?: ''"></span>
-                    </td>
+                    <td th:text="${snpAssociationTableView.proxySnps}?: '' "></td>
 
-
-                    <td th:text="${snpAssociationForm.riskFrequency}?: '' "></td>
+                    <!--Risk frequency-->
+                    <td th:text="${snpAssociationTableView.riskFrequency}?: '' "></td>
 
                     <!--P Value-->
-                    <td th:text="${snpAssociationForm.pvalueMantissa} + 'x 10' + ${snpAssociationForm.pvalueExponent} ?: ''"></td>
-                    <td th:text="${snpAssociationForm.pvalueText} ?: ''"></td>
+                    <td th:text="${snpAssociationTableView.pvalueMantissa} + 'x 10' + ${snpAssociationTableView.pvalueExponent} ?: ''"></td>
+                    <td th:text="${snpAssociationTableView.pvalueText} ?: ''"></td>
 
                     <!--EFO traits-->
-                    <td>
-                        <span th:each="efoTrait: ${snpAssociationForm.efoTraits}"
-                              th:if="${#arrays.length(snpAssociationForm.efoTraits) &gt; 1}"
-                              th:text="${efoTrait.trait}+', ' ?: ''"></span>
-                        <span th:each="efoTrait: ${snpAssociationForm.efoTraits}"
-                                  th:if="${#arrays.length(snpAssociationForm.efoTraits) == 1}"
-                                  th:text="${efoTrait.trait} ?: ''"></span>
+                    <td th:text="${snpAssociationTableView.efoTraits} ?: ''"></td>
 
-                    </td>
-
-
-                    <td th:text="${snpAssociationForm.orPerCopyNum} ?: ''"></td>
-                    <td th:text="${snpAssociationForm.orPerCopyRecip} ?: ''"></td>
-                    <td th:switch="${snpAssociationForm.orType}">
-                        <p th:case="'null'"></p>
-
-                        <p th:case="false">No</p>
-
-                        <p th:case="true">Yes</p>
-                    </td>
-
-                    <td th:text="${snpAssociationForm.orPerCopyRange} ?: ''"></td>
-                    <td th:text="${snpAssociationForm.orPerCopyRecipRange} ?: ''"></td>
-                    <td th:text="${snpAssociationForm.orPerCopyUnitDescr} ?: ''"></td>
-                    <td th:text="${snpAssociationForm.orPerCopyStdError} ?: ''"></td>
-                    <td th:text="${snpAssociationForm.snpType} ?: ''"></td>
-                    <td th:switch="${snpAssociationForm.multiSnpHaplotype}">
-                        <p th:case="'null'"></p>
-
-                        <p th:case="false">No</p>
-
-                        <p th:case="true">Yes</p>
-                    </td>
-                    <td th:switch="${snpAssociationForm.snpInteraction}">
-                        <p th:case="'null'"></p>
-
-                        <p th:case="false">No</p>
-
-                        <p th:case="true">Yes</p>
-                    </td>
-
-                    <td th:switch="${snpAssociationForm.snpChecked}">
-                        <p th:case="'null'"></p>
-
-                        <p th:case="false">No</p>
-
-                        <p th:case="true">Yes</p>
-                    </td>
+                    <td th:text="${snpAssociationTableView.orPerCopyNum} ?: ''"></td>
+                    <td th:text="${snpAssociationTableView.orPerCopyRecip} ?: ''"></td>
+                    <td th:text="${snpAssociationTableView.orType} ?:''"></td>
+                    <td th:text="${snpAssociationTableView.orPerCopyRange} ?: ''"></td>
+                    <td th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
+                    <td th:text="${snpAssociationTableView.orPerCopyUnitDescr} ?: ''"></td>
+                    <td th:text="${snpAssociationTableView.orPerCopyStdError} ?: ''"></td>
+                    <td th:text="${snpAssociationTableView.snpType} ?: ''"></td>
+                    <td th:text="${snpAssociationTableView.multiSnpHaplotype} ?:''"></td>
+                    <td th:text="${snpAssociationTableView.snpInteraction} ?:''"></td>
+                    <td th:text="${snpAssociationTableView.snpChecked} ?: '' "></td>
 
                     <td>
                         <div class="btn-group-vertical  btn-group-sm" role="group" aria-label="...">
-                            <a th:href="@{/associations/{associationId}(associationId=${snpAssociationForm.associationId})}"
+                            <a th:href="@{/associations/{associationId}(associationId=${snpAssociationTableView.associationId})}"
                                class="btn btn-default">Edit</a>
-                            <a th:href="@{/associations/{associationId}/approve(associationId=${snpAssociationForm.associationId})}"
+                            <a th:href="@{/associations/{associationId}/approve(associationId=${snpAssociationTableView.associationId})}"
                                class="btn btn-default">Approve</a>
-                            <a th:href="@{/associations/{associationId}/delete(associationId=${snpAssociationForm.associationId})}"
+                            <a th:href="@{/associations/{associationId}/delete(associationId=${snpAssociationTableView.associationId})}"
                                class="btn btn-danger">Delete</a>
                         </div>
                     </td>
@@ -295,14 +244,14 @@
                     <td><input type="checkbox"
                                name="checkboxId"
                                class="association-selector"
-                               th:value="${snpAssociationForm.associationId}"/>
+                               th:value="${snpAssociationTableView.associationId}"/>
                     </td>
 
                     <!-- Errors-->
                     <td>
-                        <span style="color:red" th:each="error: ${snpAssociationForm.associationErrorMap}"
+                        <span style="color:red" th:each="error: ${snpAssociationTableView.associationErrorMap}"
                               th:text="${error.value} ?: ''"
-                              th:if="${not #maps.isEmpty(snpAssociationForm.associationErrorMap)}"></span>
+                              th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}"></span>
                     </td>
 
                 </tr>
