@@ -644,8 +644,11 @@ public class StudyController {
                 }
 
                 else {
-                    java.util.Date publishDate = new java.util.Date();
-                    housekeeping.setPublishDate(publishDate);
+                    // If there is no existing publish date then update
+                    if (housekeeping.getPublishDate() == null) {
+                        java.util.Date publishDate = new java.util.Date();
+                        housekeeping.setPublishDate(publishDate);
+                    }
                 }
             }
 
