@@ -64,7 +64,6 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field private String publicationLink;
 
     @Field private String platform;
-    @Field private Boolean cnv;
 
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
@@ -211,10 +210,6 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     public void addPlatform(String platform) {
         this.platform = platform;
-    }
-
-    public void addCnv(Boolean cnv) {
-        this.cnv = cnv;
     }
 
     public void addInitialSampleDescription(String initialSampleDescription) {

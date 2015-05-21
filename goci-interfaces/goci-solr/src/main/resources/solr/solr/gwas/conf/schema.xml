@@ -137,7 +137,6 @@
     <field name="publicationDate" type="date" indexed="true" stored="true" multiValued="false" />
     <field name="catalogAddedDate" type="date" indexed="true" stored="true" multiValued="false" />
     <field name="platform" type="text_general" indexed="true" stored="true" multiValued="false"/>
-    <field name="cnv" type="boolean" indexed="true" stored="true" multiValued="false"/>
     <field name="initialSampleDescription" type="text_general" indexed="true" stored="true" multiValued="false"/>
     <field name="replicateSampleDescription" type="text_general" indexed="true" stored="true" multiValued="false"/>
     <field name="associationCount" type="int" indexed="true" stored="true" multiValued="false" />
@@ -151,7 +150,6 @@
     <field name="study_publicationDate" type="date" indexed="true" stored="true" multiValued="true" />
     <field name="study_catalogAddedDate" type="date" indexed="true" stored="true" multiValued="true" />
     <field name="study_platform" type="text_general" indexed="true" stored="true" multiValued="true"/>
-    <field name="study_cnv" type="boolean" indexed="true" stored="true" multiValued="true"/>
     <field name="study_initialSampleDescription" type="text_general" indexed="true" stored="true" multiValued="true"/>
     <field name="study_replicateSampleDescription" type="text_general" indexed="true" stored="true" multiValued="true"/>
     <field name="study_publicationLink" type="text_general" indexed="false" stored="true" multiValued="true" />

@@ -480,7 +480,7 @@ public class AssociationController {
         // Save our association information
         associationRepository.save(newAssociation);
 
-        return "redirect:/studies/" + studyId + "/associations";
+        return "redirect:/associations/" + newAssociation.getId();
     }
 
     @RequestMapping(value = "/studies/{studyId}/associations/add_multi",
@@ -500,7 +500,7 @@ public class AssociationController {
         // Save our association information
         associationRepository.save(newAssociation);
 
-        return "redirect:/studies/" + studyId + "/associations";
+        return "redirect:/associations/" + newAssociation.getId();
     }
 
     @RequestMapping(value = "/studies/{studyId}/associations/add_interaction",
@@ -594,7 +594,7 @@ public class AssociationController {
         // Save our association information
         associationRepository.save(editedAssociation);
 
-        return "redirect:/studies/" + editedAssociation.getStudy().getId() + "/associations";
+        return "redirect:/associations/" + associationId;
     }
 
 
