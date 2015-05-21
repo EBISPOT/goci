@@ -9,6 +9,7 @@ import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
+import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,7 +32,7 @@ public class AssociationViewService {
 
         snpAssociationTableView.setAssociationId(association.getId());
 
-        // For each locus get genes and risk alleles
+        // For each locus get genes, risk alleles, snps, proxy snps
         Collection<Locus> loci = association.getLoci();
         Collection<String> locusGenes = new ArrayList<>();
         Collection<String> locusRiskAlleles = new ArrayList<String>();
@@ -40,23 +41,29 @@ public class AssociationViewService {
         Collection<String> regions = new ArrayList<String>();
 
         for (Locus locus : loci) {
+
+            // Store gene names
             for (Gene gene : locus.getAuthorReportedGenes()) {
                 locusGenes.add(gene.getGeneName());
             }
 
             for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
                 locusRiskAlleles.add(riskAllele.getRiskAlleleName());
-                snps.add(riskAllele.getSnp().getRsId());
+                SingleNucleotidePolymorphism snp = riskAllele.getSnp();
+                snps.add(snp.getRsId());
 
-                // TODO CHANGE WHEN WE UPDATE MODEL FOR MULTIPLE SNPS
+                // TODO CHANGE WHEN WE UPDATE MODEL FOR MULTIPLE PROXY SNPS
 
                 // Set proxy if one is present
                 if (riskAllele.getProxySnp() != null) {
                     proxySnps.add(riskAllele.getProxySnp().getRsId());
                 }
 
-                for (Region region : riskAllele.getSnp().getRegions()) {
-                    regions.add(region.getName());
+                // Store region information
+                if (snp.getRegions() != null && !snp.getRegions().isEmpty()) {
+                    for (Region region : snp.getRegions()) {
+                        regions.add(region.getName());
+                    }
                 }
             }
         }
@@ -99,12 +106,14 @@ public class AssociationViewService {
         snpAssociationTableView.setOrPerCopyNum(association.getOrPerCopyNum());
         snpAssociationTableView.setOrPerCopyRecip(association.getOrPerCopyRecip());
 
-        if (association.getOrType()) {
-            snpAssociationTableView.setOrType("Yes");
-        }
+        if (association.getOrType() != null) {
+            if (association.getOrType()) {
+                snpAssociationTableView.setOrType("Yes");
+            }
 
-        if (!association.getOrType()) {
-            snpAssociationTableView.setOrType("No");
+            if (!association.getOrType()) {
+                snpAssociationTableView.setOrType("No");
+            }
         }
 
         snpAssociationTableView.setOrPerCopyRange(association.getOrPerCopyRange());
@@ -114,28 +123,35 @@ public class AssociationViewService {
         snpAssociationTableView.setSnpType(association.getSnpType());
 
 
-        if (association.getMultiSnpHaplotype()) {
-            snpAssociationTableView.setMultiSnpHaplotype("Yes");
+        if (association.getMultiSnpHaplotype() != null) {
+            if (association.getMultiSnpHaplotype()) {
+                snpAssociationTableView.setMultiSnpHaplotype("Yes");
+            }
+
+            if (!association.getMultiSnpHaplotype()) {
+                snpAssociationTableView.setMultiSnpHaplotype("No");
+            }
         }
 
-        if (!association.getMultiSnpHaplotype()) {
-            snpAssociationTableView.setMultiSnpHaplotype("No");
+        if (association.getSnpInteraction() != null) {
+            if (association.getSnpInteraction()) {
+                snpAssociationTableView.setSnpInteraction("Yes");
+            }
+
+            if (!association.getSnpInteraction()) {
+                snpAssociationTableView.setSnpInteraction("No");
+            }
         }
 
-        if (association.getSnpInteraction()) {
-            snpAssociationTableView.setSnpInteraction("Yes");
-        }
+        if (association.getSnpChecked() != null) {
+            if (association.getSnpChecked()) {
+                snpAssociationTableView.setSnpChecked("Yes");
+            }
 
-        if (!association.getSnpInteraction()) {
-            snpAssociationTableView.setSnpInteraction("No");
-        }
 
-        if (association.getSnpChecked()) {
-            snpAssociationTableView.setSnpChecked("Yes");
-        }
-
-        if (!association.getSnpChecked()) {
-            snpAssociationTableView.setSnpChecked("No");
+            if (!association.getSnpChecked()) {
+                snpAssociationTableView.setSnpChecked("No");
+            }
         }
 
         // Set error map
