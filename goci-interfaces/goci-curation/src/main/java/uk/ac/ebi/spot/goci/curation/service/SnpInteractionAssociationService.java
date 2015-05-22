@@ -3,17 +3,16 @@ package uk.ac.ebi.spot.goci.curation.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationInteractionForm;
-import uk.ac.ebi.spot.goci.curation.model.SnpAssociationTableView;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormColumn;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
-import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by emma on 20/05/2015.
@@ -106,4 +105,85 @@ public class SnpInteractionAssociationService {
 
         return association;
     }
+
+    // Create a form to return to view from Association model object
+    public SnpAssociationInteractionForm createSnpAssociationInteractionForm(Association association) {
+
+        // Create form
+        SnpAssociationInteractionForm snpAssociationInteractionForm = new SnpAssociationInteractionForm();
+
+        // Set simple string and boolean values
+        snpAssociationInteractionForm.setAssociationId(association.getId());
+        snpAssociationInteractionForm.setPvalueText(association.getPvalueText());
+        snpAssociationInteractionForm.setOrPerCopyNum(association.getOrPerCopyNum());
+        snpAssociationInteractionForm.setSnpType(association.getSnpType());
+        snpAssociationInteractionForm.setSnpChecked(association.getSnpChecked());
+        snpAssociationInteractionForm.setOrType(association.getOrType());
+        snpAssociationInteractionForm.setPvalueMantissa(association.getPvalueMantissa());
+        snpAssociationInteractionForm.setPvalueExponent(association.getPvalueExponent());
+        snpAssociationInteractionForm.setOrPerCopyRecip(association.getOrPerCopyRecip());
+        snpAssociationInteractionForm.setOrPerCopyStdError(association.getOrPerCopyStdError());
+        snpAssociationInteractionForm.setOrPerCopyRange(association.getOrPerCopyRange());
+        snpAssociationInteractionForm.setOrPerCopyRecipRange(association.getOrPerCopyRecipRange());
+        snpAssociationInteractionForm.setOrPerCopyUnitDescr(association.getOrPerCopyUnitDescr());
+
+        // Add collection of Efo traits
+        snpAssociationInteractionForm.setEfoTraits(association.getEfoTraits());
+
+        // Create form columns
+        List<SnpFormColumn> snpFormColumns = new ArrayList<>();
+
+        // For each locus get genes and risk alleles
+        Collection<Locus> loci = association.getLoci();
+
+        // Create a column per locus
+        if (loci != null && !loci.isEmpty()) {
+            for (Locus locus : loci) {
+
+                SnpFormColumn snpFormColumn = new SnpFormColumn();
+
+                // Set genes
+                Collection<String> authorReportedGenes = new ArrayList<>();
+                for (Gene gene : locus.getAuthorReportedGenes()) {
+                    authorReportedGenes.add(gene.getGeneName());
+                }
+                snpFormColumn.setAuthorReportedGenes(authorReportedGenes);
+
+                // Set risk allele
+                Collection<RiskAllele> locusRiskAlleles = locus.getStrongestRiskAlleles();
+                String strongestRiskAllele = null;
+                String snp = null;
+                Collection<String> proxies = new ArrayList<>();
+
+                // For snp x snp interaction studies should only have one risk allele per locus
+                if (locusRiskAlleles != null && locusRiskAlleles.size() == 1) {
+                    for (RiskAllele riskAllele : locusRiskAlleles) {
+                        strongestRiskAllele = riskAllele.getRiskAlleleName();
+                        snp = riskAllele.getSnp().getRsId();
+
+                        // Set proxy
+                        proxies.add(riskAllele.getProxySnp().getRsId());
+                    }
+                }
+
+                else {
+                    throw new RuntimeException(
+                            "More than one risk allele found for locus " + locus.getId() +
+                                    ", this is not supported yet for SNP interaction associations"
+                    );
+                }
+                snpFormColumn.setStrongestRiskAllele(strongestRiskAllele);
+                snpFormColumn.setSnp(snp);
+                snpFormColumn.setProxies(proxies);
+                snpFormColumns.add(snpFormColumn);
+
+                //TODO RISK FREQUENCY, GENOMEWIDE , LIMITED LIST
+            }
+        }
+
+        snpAssociationInteractionForm.setSnpFormColumns(snpFormColumns);
+        return snpAssociationInteractionForm;
+    }
+
+
 }
