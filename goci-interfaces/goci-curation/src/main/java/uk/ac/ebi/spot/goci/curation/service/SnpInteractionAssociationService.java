@@ -162,7 +162,9 @@ public class SnpInteractionAssociationService {
                         snp = riskAllele.getSnp().getRsId();
 
                         // Set proxy
-                        proxies.add(riskAllele.getProxySnp().getRsId());
+                        if (riskAllele.getProxySnp() != null) {
+                            proxies.add(riskAllele.getProxySnp().getRsId());
+                        }
                     }
                 }
 
@@ -182,6 +184,7 @@ public class SnpInteractionAssociationService {
         }
 
         snpAssociationInteractionForm.setSnpFormColumns(snpFormColumns);
+        snpAssociationInteractionForm.setNumOfInteractions(snpFormColumns.size());
         return snpAssociationInteractionForm;
     }
 
