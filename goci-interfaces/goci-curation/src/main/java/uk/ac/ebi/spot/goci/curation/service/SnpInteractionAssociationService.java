@@ -75,6 +75,11 @@ public class SnpInteractionAssociationService {
             RiskAllele riskAllele = lociAttributesService.createRiskAllele(curatorEnteredRiskAllele, snp);
             Collection<RiskAllele> locusRiskAlleles = new ArrayList<>();
 
+            // Set risk allele attributes
+            riskAllele.setGenomeWide(col.getGenomeWide());
+            riskAllele.setLimitedList(col.getLimitedList());
+            riskAllele.setRiskFrequency(col.getRiskFrequency());
+
             // Check for a proxy and if we have one create a proxy snp
             Collection<String> curatorEnteredProxySnps = col.getProxies();
             if (curatorEnteredProxySnps != null && !curatorEnteredProxySnps.isEmpty()) {
@@ -98,9 +103,6 @@ public class SnpInteractionAssociationService {
 
             // Set locus genes
             locus.setAuthorReportedGenes(locusGenes);
-
-            // TODO WHAT DO WE DO WITH RISK FREQUENCY
-
         }
 
         return association;
@@ -154,6 +156,9 @@ public class SnpInteractionAssociationService {
                 String strongestRiskAllele = null;
                 String snp = null;
                 Collection<String> proxies = new ArrayList<>();
+                Boolean genomeWide = false;
+                Boolean limitedList = false;
+                String riskFrequency = null;
 
                 // For snp x snp interaction studies should only have one risk allele per locus
                 if (locusRiskAlleles != null && locusRiskAlleles.size() == 1) {
@@ -165,6 +170,16 @@ public class SnpInteractionAssociationService {
                         if (riskAllele.getProxySnp() != null) {
                             proxies.add(riskAllele.getProxySnp().getRsId());
                         }
+
+                        if (riskAllele.getGenomeWide()) {
+                            genomeWide = true;
+                        }
+
+                        if (riskAllele.getLimitedList()) {
+                            limitedList = true;
+                        }
+
+                        riskFrequency = riskAllele.getRiskFrequency();
                     }
                 }
 
@@ -174,12 +189,14 @@ public class SnpInteractionAssociationService {
                                     ", this is not supported yet for SNP interaction associations"
                     );
                 }
+
                 snpFormColumn.setStrongestRiskAllele(strongestRiskAllele);
                 snpFormColumn.setSnp(snp);
                 snpFormColumn.setProxies(proxies);
                 snpFormColumns.add(snpFormColumn);
-
-                //TODO RISK FREQUENCY, GENOMEWIDE , LIMITED LIST
+                snpFormColumn.setGenomeWide(genomeWide);
+                snpFormColumn.setLimitedList(limitedList);
+                snpFormColumn.setRiskFrequency(riskFrequency);
             }
         }
 
