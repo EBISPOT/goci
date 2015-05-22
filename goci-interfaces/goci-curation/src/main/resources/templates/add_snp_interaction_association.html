@@ -133,6 +133,20 @@
                                                    th:field="*{snpFormColumns[__${colStat.index}__].riskFrequency}"/>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td>Genome-wide</td>
+                                        <td th:each="col,colStat : *{snpFormColumns}">
+                                            <input type="checkbox"
+                                                   th:field="*{snpFormColumns[__${colStat.index}__].genomeWide}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Limited list</td>
+                                        <td th:each="col,colStat : *{snpFormColumns}">
+                                            <input type="checkbox"
+                                                   th:field="*{snpFormColumns[__${colStat.index}__].limitedList}"/>
+                                        </td>
+                                    </tr>
                                     </tbody>
 
                                 </table>
