@@ -9,6 +9,7 @@ import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.repository.LocusRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,10 +26,15 @@ import java.util.List;
 @Service
 public class SnpInteractionAssociationService {
 
+    // Repositories
+    private LocusRepository locusRepository;
+
     private LociAttributesService lociAttributesService;
 
     @Autowired
-    public SnpInteractionAssociationService(LociAttributesService lociAttributesService) {
+    public SnpInteractionAssociationService(LocusRepository locusRepository,
+                                            LociAttributesService lociAttributesService) {
+        this.locusRepository = locusRepository;
         this.lociAttributesService = lociAttributesService;
     }
 
@@ -66,6 +72,11 @@ public class SnpInteractionAssociationService {
             Locus locus = new Locus();
             locus.setDescription("SNP x SNP interaction");
 
+            // Set locus genes
+            Collection<String> authorReportedGenes = col.getAuthorReportedGenes();
+            Collection<Gene> locusGenes = lociAttributesService.createGene(authorReportedGenes);
+            locus.setAuthorReportedGenes(locusGenes);
+
             // Create SNP
             String curatorEnteredSNP = col.getSnp();
             SingleNucleotidePolymorphism snp = lociAttributesService.createSnp(curatorEnteredSNP);
@@ -81,30 +92,24 @@ public class SnpInteractionAssociationService {
             riskAllele.setRiskFrequency(col.getRiskFrequency());
 
             // Check for a proxy and if we have one create a proxy snp
-            Collection<String> curatorEnteredProxySnps = col.getProxies();
-            if (curatorEnteredProxySnps != null && !curatorEnteredProxySnps.isEmpty()) {
-                for (String proxy : curatorEnteredProxySnps) {
-                    SingleNucleotidePolymorphism proxySnp = lociAttributesService.createSnp(proxy);
-
-                    // Add proxy to collection of proxy snps and link to risk allele
-                    // ...
-
-                }
-                // TODO NEED TO UPDATE RISK ALLELE MODEL SO IT CAN HOLD MORE THAN ON PROXY
-
+            String curatorEnteredProxySnp = col.getProxySnp();
+            if (curatorEnteredProxySnp != null && !curatorEnteredProxySnp.isEmpty()) {
+                SingleNucleotidePolymorphism proxySnp = lociAttributesService.createSnp(curatorEnteredProxySnp);
+                riskAllele.setProxySnp(proxySnp);
             }
 
             // Link risk allele to locus
+            locusRiskAlleles.add(riskAllele);
             locus.setStrongestRiskAlleles(locusRiskAlleles);
 
-            // Create genes
-            Collection<String> authorReportedGenes = col.getAuthorReportedGenes();
-            Collection<Gene> locusGenes = lociAttributesService.createGene(authorReportedGenes);
+            // Save our newly created locus
+            locusRepository.save(locus);
 
-            // Set locus genes
-            locus.setAuthorReportedGenes(locusGenes);
+            // Add locus to collection and link to our association
+            loci.add(locus);
+
         }
-
+        association.setLoci(loci);
         return association;
     }
 
@@ -155,7 +160,7 @@ public class SnpInteractionAssociationService {
                 Collection<RiskAllele> locusRiskAlleles = locus.getStrongestRiskAlleles();
                 String strongestRiskAllele = null;
                 String snp = null;
-                Collection<String> proxies = new ArrayList<>();
+                String proxySnp = null;
                 Boolean genomeWide = false;
                 Boolean limitedList = false;
                 String riskFrequency = null;
@@ -168,7 +173,7 @@ public class SnpInteractionAssociationService {
 
                         // Set proxy
                         if (riskAllele.getProxySnp() != null) {
-                            proxies.add(riskAllele.getProxySnp().getRsId());
+                           proxySnp =  riskAllele.getProxySnp().getRsId();
                         }
 
                         if (riskAllele.getGenomeWide()) {
@@ -192,7 +197,7 @@ public class SnpInteractionAssociationService {
 
                 snpFormColumn.setStrongestRiskAllele(strongestRiskAllele);
                 snpFormColumn.setSnp(snp);
-                snpFormColumn.setProxies(proxies);
+                snpFormColumn.setProxySnp(proxySnp);
                 snpFormColumns.add(snpFormColumn);
                 snpFormColumn.setGenomeWide(genomeWide);
                 snpFormColumn.setLimitedList(limitedList);
