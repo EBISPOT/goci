@@ -19,7 +19,7 @@ public class SnpFormColumn {
 
     private Collection<String> authorReportedGenes;
 
-    private Collection<String> proxies;
+    private String proxySnp;
 
     private Boolean genomeWide = false;
 
@@ -33,18 +33,17 @@ public class SnpFormColumn {
                          String strongestRiskAllele,
                          String riskFrequency,
                          Collection<String> authorReportedGenes,
-                         Collection<String> proxies,
+                         String proxySnp,
                          Boolean genomeWide,
                          Boolean limitedList) {
         this.snp = snp;
         this.strongestRiskAllele = strongestRiskAllele;
         this.riskFrequency = riskFrequency;
         this.authorReportedGenes = authorReportedGenes;
-        this.proxies = proxies;
+        this.proxySnp = proxySnp;
         this.genomeWide = genomeWide;
         this.limitedList = limitedList;
     }
-
 
     public String getSnp() {
         return snp;
@@ -82,13 +81,13 @@ public class SnpFormColumn {
         return this;
     }
 
-    public Collection<String> getProxies() {
-        return proxies;
+
+    public String getProxySnp() {
+        return proxySnp;
     }
 
-    public SnpFormColumn setProxies(Collection<String> proxies) {
-        this.proxies = proxies;
-        return this;
+    public void setProxySnp(String proxySnp) {
+        this.proxySnp = proxySnp;
     }
 
     public Boolean getGenomeWide() {
