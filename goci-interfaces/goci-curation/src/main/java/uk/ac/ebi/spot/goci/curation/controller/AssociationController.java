@@ -521,7 +521,7 @@ public class AssociationController {
         // Save our association information
         associationRepository.save(newAssociation);
 
-        return "redirect:/studies/" + studyId + "/associations";
+        return "redirect:/associations/" + newAssociation.getId();
     }
 
      /* Existing association information */
@@ -537,9 +537,13 @@ public class AssociationController {
 
         // Establish study
         Long studyId = associationToView.getStudy().getId();
+        // Also passes back study object to view so we can create links back to main study page
+        model.addAttribute("study", studyRepository.findOne(studyId));
 
-        // Figure out the number of risk alleles linked to a single association
-        // From this we can decide which view to return
+        // Determine form to return
+        // TODO ONCE WE HAVE MULIT-SNP HAPLOTYPE AND SNP INTERACTION VALUES BACKFILLED WE CAN UPDATE
+        Integer locusCount = associationToView.getLoci().size();
+
         List<RiskAllele> riskAlleles = new ArrayList<>();
         for (Locus locus : associationToView.getLoci()) {
             for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
@@ -547,29 +551,29 @@ public class AssociationController {
             }
         }
 
-        // Create form and return to user
-        SnpAssociationForm snpAssociationForm = singleSnpMultiSnpAssociationService.createSnpAssociationForm(
-                associationToView);
-        model.addAttribute("snpAssociationForm", snpAssociationForm);
-
-        // Also passes back study object to view so we can create links back to main study page
-        model.addAttribute("study", studyRepository.findOne(studyId));
-
-        // TODO MAYBE HAVE THIS COUNT LOCI
-        // Placeholder until we get something working
-        if (associationToView.getSnpInteraction() != null && associationToView.getSnpInteraction()) {
-            model.addAttribute("study", studyRepository.findOne(studyId));
+        // Case where we have SNP interaction
+        if (locusCount > 1) {
+            SnpAssociationInteractionForm snpAssociationInteractionForm =
+                    snpInteractionAssociationService.createSnpAssociationInteractionForm(associationToView);
+            model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
             return "edit_snp_interaction_association";
-
-        }
-        // If editing multi-snp haplotype
-        else if (riskAlleles.size() > 1) {
-            return "edit_multi_snp_association";
         }
         else {
-            return "edit_standard_snp_association";
-        }
 
+            // Create form and return to user
+            SnpAssociationForm snpAssociationForm = singleSnpMultiSnpAssociationService.createSnpAssociationForm(
+                    associationToView);
+            model.addAttribute("snpAssociationForm", snpAssociationForm);
+
+
+            // If editing multi-snp haplotype
+            if (riskAlleles.size() > 1) {
+                return "edit_multi_snp_association";
+            }
+            else {
+                return "edit_standard_snp_association";
+            }
+        }
     }
 
 
