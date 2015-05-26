@@ -70,16 +70,24 @@ public class SnpInteractionAssociationService {
         association.setPvalueMantissa(snpAssociationInteractionForm.getPvalueMantissa());
         association.setPvalueExponent(snpAssociationInteractionForm.getPvalueExponent());
 
-        // Check for existing loci, when editing we delete any existing loci and risk alleles recreate
+        // Check for existing loci, when editing delete any existing loci and risk alleles
+        // They will be recreated in next for loop
         if (snpAssociationInteractionForm.getAssociationId() != null) {
 
             Association associationUserIsEditing =
                     associationRepository.findOne(snpAssociationInteractionForm.getAssociationId());
             Collection<Locus> associationLoci = associationUserIsEditing.getLoci();
+            Collection<RiskAllele> existingRiskAlleles = new ArrayList<>();
 
             if (associationLoci != null) {
                 for (Locus locus : associationLoci) {
-                    lociAttributesService.deleteLocusAndAssociatedRiskAlleles(locus);
+                    existingRiskAlleles.addAll(locus.getStrongestRiskAlleles());
+                }
+                for (Locus locus : associationLoci) {
+                    lociAttributesService.deleteLocus(locus);
+                }
+                for (RiskAllele existingRiskAllele : existingRiskAlleles) {
+                    lociAttributesService.deleteRiskAllele(existingRiskAllele);
                 }
             }
         }
