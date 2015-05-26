@@ -33,14 +33,17 @@ public class SnpInteractionAssociationService {
 
     // Services
     private LociAttributesService lociAttributesService;
+    private AssociationAttributesService associationAttributesService;
 
     @Autowired
     public SnpInteractionAssociationService(LocusRepository locusRepository,
                                             AssociationRepository associationRepository,
-                                            LociAttributesService lociAttributesService) {
+                                            LociAttributesService lociAttributesService,
+                                            AssociationAttributesService associationAttributesService) {
         this.locusRepository = locusRepository;
         this.associationRepository = associationRepository;
         this.lociAttributesService = lociAttributesService;
+        this.associationAttributesService = associationAttributesService;
     }
 
     public Association createAssociation(SnpAssociationInteractionForm snpAssociationInteractionForm) {
@@ -77,18 +80,9 @@ public class SnpInteractionAssociationService {
             Association associationUserIsEditing =
                     associationRepository.findOne(snpAssociationInteractionForm.getAssociationId());
             Collection<Locus> associationLoci = associationUserIsEditing.getLoci();
-            Collection<RiskAllele> existingRiskAlleles = new ArrayList<>();
 
             if (associationLoci != null) {
-                for (Locus locus : associationLoci) {
-                    existingRiskAlleles.addAll(locus.getStrongestRiskAlleles());
-                }
-                for (Locus locus : associationLoci) {
-                    lociAttributesService.deleteLocus(locus);
-                }
-                for (RiskAllele existingRiskAllele : existingRiskAlleles) {
-                    lociAttributesService.deleteRiskAllele(existingRiskAllele);
-                }
+                associationAttributesService.deleteLocusAndLinkedRiskAllele(associationLoci);
             }
         }
 
@@ -145,6 +139,10 @@ public class SnpInteractionAssociationService {
 
         // Create form
         SnpAssociationInteractionForm snpAssociationInteractionForm = new SnpAssociationInteractionForm();
+
+        // Set error map
+        snpAssociationInteractionForm.setAssociationErrorMap(associationAttributesService.createAssociationErrorMap(
+                association.getAssociationReport()));
 
         // Set simple string and boolean values
         snpAssociationInteractionForm.setAssociationId(association.getId());
@@ -222,13 +220,15 @@ public class SnpInteractionAssociationService {
                     );
                 }
 
+                // Set column attributes
                 snpFormColumn.setStrongestRiskAllele(strongestRiskAllele);
                 snpFormColumn.setSnp(snp);
                 snpFormColumn.setProxySnp(proxySnp);
-                snpFormColumns.add(snpFormColumn);
                 snpFormColumn.setGenomeWide(genomeWide);
                 snpFormColumn.setLimitedList(limitedList);
                 snpFormColumn.setRiskFrequency(riskFrequency);
+
+                snpFormColumns.add(snpFormColumn);
             }
         }
 
