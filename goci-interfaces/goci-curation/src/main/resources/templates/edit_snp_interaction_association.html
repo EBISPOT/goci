@@ -58,7 +58,8 @@
                     <form class="form-horizontal"
                           method="post"
                           name="snp-association-form"
-                          th:object="${snpAssociationInteractionForm}">
+                          th:object="${snpAssociationInteractionForm}"
+                          th:action="@{${uri}(associationtype=interaction)}">
                         <div class="form-group">
                             <div class="col-md-10 col-md-offset-2">
 
