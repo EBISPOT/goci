@@ -4,7 +4,9 @@ import uk.ac.ebi.spot.goci.model.EfoTrait;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by emma on 12/02/15.
@@ -48,6 +50,10 @@ public class SnpAssociationInteractionForm {
 
     private Integer numOfInteractions;
 
+    private Map<String, String> associationErrorMap = new HashMap<>();
+
+    private String riskFrequency;
+
 
     // Constructors
     public SnpAssociationInteractionForm() {
@@ -67,7 +73,9 @@ public class SnpAssociationInteractionForm {
                                          String orPerCopyRecipRange,
                                          String orPerCopyUnitDescr,
                                          List<SnpFormColumn> snpFormColumns,
-                                         Collection<EfoTrait> efoTraits, Integer numOfInteractions) {
+                                         Collection<EfoTrait> efoTraits,
+                                         Integer numOfInteractions,
+                                         Map<String, String> associationErrorMap, String riskFrequency) {
         this.associationId = associationId;
         this.pvalueText = pvalueText;
         this.orPerCopyNum = orPerCopyNum;
@@ -84,6 +92,8 @@ public class SnpAssociationInteractionForm {
         this.snpFormColumns = snpFormColumns;
         this.efoTraits = efoTraits;
         this.numOfInteractions = numOfInteractions;
+        this.associationErrorMap = associationErrorMap;
+        this.riskFrequency = riskFrequency;
     }
 
     public Long getAssociationId() {
@@ -212,5 +222,21 @@ public class SnpAssociationInteractionForm {
 
     public void setOrType(Boolean orType) {
         this.orType = orType;
+    }
+
+    public Map<String, String> getAssociationErrorMap() {
+        return associationErrorMap;
+    }
+
+    public void setAssociationErrorMap(Map<String, String> associationErrorMap) {
+        this.associationErrorMap = associationErrorMap;
+    }
+
+    public String getRiskFrequency() {
+        return riskFrequency;
+    }
+
+    public void setRiskFrequency(String riskFrequency) {
+        this.riskFrequency = riskFrequency;
     }
 }
