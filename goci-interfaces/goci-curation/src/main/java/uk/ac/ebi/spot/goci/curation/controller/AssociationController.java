@@ -537,41 +537,58 @@ public class AssociationController {
 
         // Establish study
         Long studyId = associationToView.getStudy().getId();
+
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
 
-        // Determine form to return
-        // TODO ONCE WE HAVE MULIT-SNP HAPLOTYPE AND SNP INTERACTION VALUES BACKFILLED WE CAN UPDATE
-        Integer locusCount = associationToView.getLoci().size();
-
-        List<RiskAllele> riskAlleles = new ArrayList<>();
-        for (Locus locus : associationToView.getLoci()) {
-            for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
-                riskAlleles.add(riskAllele);
-            }
-        }
-
-        // Case where we have SNP interaction
-        if (locusCount > 1) {
+        if (associationToView.getSnpInteraction()) {
             SnpAssociationInteractionForm snpAssociationInteractionForm =
                     snpInteractionAssociationService.createSnpAssociationInteractionForm(associationToView);
             model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
             return "edit_snp_interaction_association";
         }
-        else {
 
+        else if (associationToView.getMultiSnpHaplotype()) {
             // Create form and return to user
             SnpAssociationForm snpAssociationForm = singleSnpMultiSnpAssociationService.createSnpAssociationForm(
                     associationToView);
             model.addAttribute("snpAssociationForm", snpAssociationForm);
+            return "edit_multi_snp_association";
+        }
 
+        // If attributes haven't been set determine based on locus count and risk allele count
+        else {
+            Integer locusCount = associationToView.getLoci().size();
 
-            // If editing multi-snp haplotype
-            if (riskAlleles.size() > 1) {
-                return "edit_multi_snp_association";
+            List<RiskAllele> riskAlleles = new ArrayList<>();
+            for (Locus locus : associationToView.getLoci()) {
+                for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
+                    riskAlleles.add(riskAllele);
+                }
+            }
+
+            // Case where we have SNP interaction
+            if (locusCount > 1) {
+                SnpAssociationInteractionForm snpAssociationInteractionForm =
+                        snpInteractionAssociationService.createSnpAssociationInteractionForm(associationToView);
+                model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
+                return "edit_snp_interaction_association";
             }
             else {
-                return "edit_standard_snp_association";
+
+                // Create form and return to user
+                SnpAssociationForm snpAssociationForm = singleSnpMultiSnpAssociationService.createSnpAssociationForm(
+                        associationToView);
+                model.addAttribute("snpAssociationForm", snpAssociationForm);
+
+
+                // If editing multi-snp haplotype
+                if (riskAlleles.size() > 1) {
+                    return "edit_multi_snp_association";
+                }
+                else {
+                    return "edit_standard_snp_association";
+                }
             }
         }
     }
@@ -581,11 +598,25 @@ public class AssociationController {
     @RequestMapping(value = "/associations/{associationId}",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
-    public String editAssociation(@ModelAttribute SnpAssociationForm snpAssociationForm,
-                                  @PathVariable Long associationId) {
+    public String editAssociation(@ModelAttribute SnpAssociationForm snpAssociationForm, @ModelAttribute SnpAssociationInteractionForm snpAssociationInteractionForm,
+                                  @PathVariable Long associationId, @RequestParam(value = "associationtype", required = true) String associationType) {
 
         //Create association
-        Association editedAssociation = singleSnpMultiSnpAssociationService.createAssociation(snpAssociationForm);
+        Association editedAssociation = null;
+
+        // Request parameter determines how to process form and also which form to process
+        if (associationType.equalsIgnoreCase("interaction")){
+            editedAssociation = snpInteractionAssociationService.createAssociation(snpAssociationInteractionForm);
+        }
+
+        else if (associationType.equalsIgnoreCase("standardormulti")) {
+            editedAssociation = singleSnpMultiSnpAssociationService.createAssociation(snpAssociationForm);
+        }
+
+        // default to standard view
+        else {
+            editedAssociation = singleSnpMultiSnpAssociationService.createAssociation(snpAssociationForm);
+        }
 
         // Set ID of new  association to the ID of the association we're currently editing
         editedAssociation.setId(associationId);
@@ -670,7 +701,7 @@ public class AssociationController {
     }
 
 
-    // View an association to delele
+    // View an association to delete
     @RequestMapping(value = "associations/{associationId}/delete",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
