@@ -87,8 +87,19 @@ public class LociAttributesService {
         riskAlleleRepository.delete(riskAllele);
     }
 
-    public void deleteLocus(Locus locus) {
-       locusRepository.delete(locus);
+    public void deleteLocusAndAssociatedRiskAlleles(Locus locus){
+        Collection<RiskAllele> existingRiskAlleles =  locus.getStrongestRiskAlleles();
+
+        // Delete locus
+        locusRepository.delete(locus);
+
+        // Delete risk alleles previously linked to locus
+        if (existingRiskAlleles != null && !existingRiskAlleles.isEmpty()) {
+            for (RiskAllele existingRiskAllele : existingRiskAlleles) {
+                riskAlleleRepository.delete(existingRiskAllele);
+            }
+        }
+
     }
 
     public SingleNucleotidePolymorphism createSnp(String curatorEnteredSNP) {
