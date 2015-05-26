@@ -124,7 +124,7 @@
                                         <td>Proxy</td>
                                         <td th:each="col,colStat : *{snpFormColumns}">
                                             <input type="text" data-role="tagsinput"
-                                                   th:field="*{snpFormColumns[__${colStat.index}__].proxies}"/>
+                                                   th:field="*{snpFormColumns[__${colStat.index}__].}"/>
                                         </td>
                                     </tr>
 
