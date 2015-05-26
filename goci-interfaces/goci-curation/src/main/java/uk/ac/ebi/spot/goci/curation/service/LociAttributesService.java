@@ -87,7 +87,7 @@ public class LociAttributesService {
         riskAlleleRepository.delete(riskAllele);
     }
 
-    public void deleteLocus (Locus locus){
+    public void deleteLocus(Locus locus) {
         locusRepository.delete(locus);
     }
     
