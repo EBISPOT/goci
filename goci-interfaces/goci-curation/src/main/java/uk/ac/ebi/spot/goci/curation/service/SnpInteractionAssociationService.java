@@ -9,6 +9,7 @@ import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
 
 import java.util.ArrayList;
@@ -28,13 +29,17 @@ public class SnpInteractionAssociationService {
 
     // Repositories
     private LocusRepository locusRepository;
+    private AssociationRepository associationRepository;
 
+    // Services
     private LociAttributesService lociAttributesService;
 
     @Autowired
     public SnpInteractionAssociationService(LocusRepository locusRepository,
+                                            AssociationRepository associationRepository,
                                             LociAttributesService lociAttributesService) {
         this.locusRepository = locusRepository;
+        this.associationRepository = associationRepository;
         this.lociAttributesService = lociAttributesService;
     }
 
@@ -64,6 +69,20 @@ public class SnpInteractionAssociationService {
         // Set mantissa and exponent
         association.setPvalueMantissa(snpAssociationInteractionForm.getPvalueMantissa());
         association.setPvalueExponent(snpAssociationInteractionForm.getPvalueExponent());
+
+        // Check for existing loci, when editing we delete any existing loci and risk alleles recreate
+        if (snpAssociationInteractionForm.getAssociationId() != null) {
+
+            Association associationUserIsEditing =
+                    associationRepository.findOne(snpAssociationInteractionForm.getAssociationId());
+            Collection<Locus> associationLoci = associationUserIsEditing.getLoci();
+
+            if (associationLoci != null) {
+                for (Locus locus : associationLoci) {
+                    lociAttributesService.deleteLocusAndAssociatedRiskAlleles(locus);
+                }
+            }
+        }
 
         // For each column create a loci
         Collection<Locus> loci = new ArrayList<>();
@@ -173,7 +192,7 @@ public class SnpInteractionAssociationService {
 
                         // Set proxy
                         if (riskAllele.getProxySnp() != null) {
-                           proxySnp =  riskAllele.getProxySnp().getRsId();
+                            proxySnp = riskAllele.getProxySnp().getRsId();
                         }
 
                         if (riskAllele.getGenomeWide()) {
