@@ -20,6 +20,7 @@ import java.util.Map;
  * Created by emma on 20/05/2015.
  *
  * @author emma
+ * Service class that creates table view of a studies associations
  */
 @Service
 public class AssociationViewService {
