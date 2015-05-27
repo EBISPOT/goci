@@ -748,62 +748,6 @@ public class AssociationController {
         return "edit_snp_interaction_association";
     }
 
-
-    // View an association to delete
-    @RequestMapping(value = "associations/{associationId}/delete",
-                    produces = MediaType.TEXT_HTML_VALUE,
-                    method = RequestMethod.GET)
-    public String viewAssociationToDelete(Model model, @PathVariable Long associationId) {
-
-        // Return association as a form
-        Association associationToView = associationRepository.findOne(associationId);
-        SnpAssociationForm snpAssociationForm = singleSnpMultiSnpAssociationService.createSnpAssociationForm(
-                associationToView);
-        model.addAttribute("snpAssociationForm", snpAssociationForm);
-
-        // Return study, this will be used to create link back to page containing all studies for that association
-        Study study = studyRepository.findOne(associationToView.getStudy().getId());
-        model.addAttribute("study", study);
-
-        return "delete_standard_or_multisnp_association";
-    }
-
-    // Delete an association
-    @RequestMapping(value = "associations/{associationId}/delete",
-                    produces = MediaType.TEXT_HTML_VALUE,
-                    method = RequestMethod.POST)
-    public String deleteAssociation(Model model, @PathVariable Long associationId) {
-
-
-        // Get association
-        Association associationToDelete = associationRepository.findOne(associationId);
-
-        // Get study Id for redirect
-        Long studyId = associationToDelete.getStudy().getId();
-
-        // Get all loci for association
-        Collection<Locus> loci = associationToDelete.getLoci();
-
-        // Delete each locus and risk allele, which in turn deletes link to genes via author_reported_gene table,
-        // Snps are not deleted as they may be used in other associations
-        for (Locus locus : loci) {
-            Collection<RiskAllele> locusRiskAlleles = locus.getStrongestRiskAlleles();
-            locus.setStrongestRiskAlleles(new ArrayList<>());
-            for (RiskAllele riskAllele : locusRiskAlleles) {
-                lociAttributesService.deleteRiskAllele(riskAllele);
-            }
-            locusRepository.delete(locus);
-        }
-        // Delete association
-        associationRepository.delete(associationToDelete);
-
-        // Get study
-        Study study = studyRepository.findOne(associationToDelete.getStudy().getId());
-
-        return "redirect:/studies/" + studyId + "/associations";
-    }
-
-
     // Delete all associations linked to a study
     @RequestMapping(value = "/studies/{studyId}/associations/delete_all",
                     produces = MediaType.TEXT_HTML_VALUE,
