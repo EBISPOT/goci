@@ -305,8 +305,10 @@ public class AssociationController {
         // Return form object
         SnpAssociationForm emptyForm = new SnpAssociationForm();
 
-        // Add one row by default
+        // Add one row by default and set description
         emptyForm.getSnpFormRows().add(new SnpFormRow());
+        emptyForm.setMultiSnpHaplotypeDescr("Single variant");
+
         model.addAttribute("snpAssociationForm", emptyForm);
 
         // Also passes back study object to view so we can create links back to main study page
@@ -322,6 +324,8 @@ public class AssociationController {
 
         // Return form object
         SnpAssociationForm emptyForm = new SnpAssociationForm();
+        emptyForm.setMultiSnpHaplotype(true);
+
         model.addAttribute("snpAssociationForm", emptyForm);
 
         // Also passes back study object to view so we can create links back to main study page
