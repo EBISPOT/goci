@@ -100,9 +100,7 @@
                                                    th:field="*{snpFormRows[__${rowStat.index}__].proxySnp}"/>
                                         </td>
                                         <td>
-                    <button type="submit" name="removeRow"
-                            th:value="${rowStat.index}">Remove row
-                    </button>
+                                        <button type="submit" name="removeRow" th:value="${rowStat.index}">Remove row</button>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -202,9 +200,7 @@
                             </div>
 
                             <div class="col-md-10">
-        <button type="button"
-                class="btn btn-primary pull-right"
-                id="calculate-or">Calculate OR/HR/RR per copy (Num)</button>
+                                <button type="button" class="btn btn-primary pull-right" id="calculate-or">Calculate OR/HR/RR per copy (Num)</button>
                             </div>
 
                         </div>
@@ -252,9 +248,7 @@
                                        th:field="*{orPerCopyStdError}" name="orPerCopyStdError"/>
                             </div>
                             <div class="col-md-12">
-        <button type="button"
-                class="btn btn-primary pull-right"
-                id="calculate-or-range">Build OR/HR/RR per copy (Range)</button>
+                                <button type="button" class="btn btn-primary pull-right" id="calculate-or-range">Build OR/HR/RR per copy (Range)</button>
                             </div>
                         </div>
 
@@ -275,12 +269,6 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="multiSNPHaplotype" class="control-label col-md-2">Multi-SNP Haplotype</label>
-                            <input id="multiSNPHaplotype" type="checkbox"
-                                   th:field="*{multiSnpHaplotype}"/>
-                        </div>
-
-                        <div class="form-group">
                             <label for="orType" class="control-label col-md-2">ORType</label>
                             <input id="orType" type="checkbox" th:field="*{orType}"/>
                         </div>
@@ -289,14 +277,6 @@
                             <label for="snpChecked" class="control-label col-md-2">SNP checked?</label>
                             <input id="snpChecked" type="checkbox" th:field="*{snpChecked}"/>
                         </div>
-
-                        <!--Hidden field-->
-                        <div class="form-group">
-                            <label for="snpInteraction" class="control-label col-md-2"></label>
-                            <input id="snpInteraction" type="hidden"
-                                   th:field="*{snpInteraction}"/>
-                        </div>
-                        <!--End hidden-->
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-10">
