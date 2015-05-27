@@ -50,8 +50,6 @@ public class SnpAssociationInteractionForm {
 
     private Integer numOfInteractions;
 
-    private Map<String, String> associationErrorMap = new HashMap<>();
-
     private String riskFrequency;
 
 
@@ -75,7 +73,7 @@ public class SnpAssociationInteractionForm {
                                          List<SnpFormColumn> snpFormColumns,
                                          Collection<EfoTrait> efoTraits,
                                          Integer numOfInteractions,
-                                         Map<String, String> associationErrorMap, String riskFrequency) {
+                                         String riskFrequency) {
         this.associationId = associationId;
         this.pvalueText = pvalueText;
         this.orPerCopyNum = orPerCopyNum;
@@ -92,7 +90,6 @@ public class SnpAssociationInteractionForm {
         this.snpFormColumns = snpFormColumns;
         this.efoTraits = efoTraits;
         this.numOfInteractions = numOfInteractions;
-        this.associationErrorMap = associationErrorMap;
         this.riskFrequency = riskFrequency;
     }
 
@@ -222,14 +219,6 @@ public class SnpAssociationInteractionForm {
 
     public void setOrType(Boolean orType) {
         this.orType = orType;
-    }
-
-    public Map<String, String> getAssociationErrorMap() {
-        return associationErrorMap;
-    }
-
-    public void setAssociationErrorMap(Map<String, String> associationErrorMap) {
-        this.associationErrorMap = associationErrorMap;
     }
 
     public String getRiskFrequency() {

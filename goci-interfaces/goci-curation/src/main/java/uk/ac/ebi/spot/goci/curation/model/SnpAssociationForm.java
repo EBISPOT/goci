@@ -64,7 +64,6 @@ public class SnpAssociationForm {
 
     private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
-    private Map<String, String> associationErrorMap = new HashMap<>();
 
     // Constructors
     public SnpAssociationForm() {
@@ -89,8 +88,7 @@ public class SnpAssociationForm {
                               Collection<String> authorReportedGenes,
                               String multiSnpHaplotypeDescr,
                               Integer multiSnpHaplotypeNum,
-                              Collection<EfoTrait> efoTraits,
-                              Map<String, String> associationErrorMap) {
+                              Collection<EfoTrait> efoTraits) {
         this.associationId = associationId;
         this.riskFrequency = riskFrequency;
         this.pvalueText = pvalueText;
@@ -111,7 +109,6 @@ public class SnpAssociationForm {
         this.multiSnpHaplotypeDescr = multiSnpHaplotypeDescr;
         this.multiSnpHaplotypeNum = multiSnpHaplotypeNum;
         this.efoTraits = efoTraits;
-        this.associationErrorMap = associationErrorMap;
     }
 
     // Getters/setters
@@ -275,12 +272,5 @@ public class SnpAssociationForm {
         this.snpChecked = snpChecked;
     }
 
-    public Map<String, String> getAssociationErrorMap() {
-        return associationErrorMap;
-    }
-
-    public void setAssociationErrorMap(Map<String, String> associationErrorMap) {
-        this.associationErrorMap = associationErrorMap;
-    }
 }
 
