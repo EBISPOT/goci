@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.Locus;
@@ -19,21 +20,8 @@ import java.util.Map;
 @Service
 public class AssociationAttributesService {
 
-    // Services
-    private LociAttributesService lociAttributesService;
-
-    // Delete a locus and its risk alleles
-    public void deleteLocusAndLinkedRiskAllele(Collection<Locus> associationLoci) {
-        Collection<RiskAllele> existingRiskAlleles = new ArrayList<>();
-        for (Locus locus : associationLoci) {
-            existingRiskAlleles.addAll(locus.getStrongestRiskAlleles());
-        }
-        for (Locus locus : associationLoci) {
-            lociAttributesService.deleteLocus(locus);
-        }
-        for (RiskAllele existingRiskAllele : existingRiskAlleles) {
-            lociAttributesService.deleteRiskAllele(existingRiskAllele);
-        }
+    @Autowired
+    public AssociationAttributesService() {
     }
 
     // Create map of all errors linked to an association
