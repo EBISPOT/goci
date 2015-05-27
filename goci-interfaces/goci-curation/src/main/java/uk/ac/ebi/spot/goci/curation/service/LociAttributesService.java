@@ -91,7 +91,6 @@ public class LociAttributesService {
         locusRepository.delete(locus);
     }
     
-
     public SingleNucleotidePolymorphism createSnp(String curatorEnteredSNP) {
 
         // Check if SNP already exists database, note database contains duplicates
