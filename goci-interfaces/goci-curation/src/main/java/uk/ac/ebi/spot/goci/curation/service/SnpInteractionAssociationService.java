@@ -205,11 +205,11 @@ public class SnpInteractionAssociationService {
                             proxySnp = riskAllele.getProxySnp().getRsId();
                         }
 
-                        if (riskAllele.getGenomeWide()) {
+                        if (riskAllele.getGenomeWide() != null && riskAllele.getGenomeWide()) {
                             genomeWide = true;
                         }
 
-                        if (riskAllele.getLimitedList()) {
+                        if (riskAllele.getLimitedList() != null && riskAllele.getLimitedList()) {
                             limitedList = true;
                         }
 
