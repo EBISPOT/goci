@@ -65,6 +65,15 @@
                             <div class="col-md-10 col-md-offset-2">
                                 <table class="table table-hover table-bordered">
 
+                                    <div class="form-group">
+                                        <label for="multiSnpHaplotypeDescr" class="control-label col-md-2"></label>
+
+                                        <div class="col-md-10">
+                                            <input type="hidden" class="form-control" id="multiSnpHaplotypeDescr"
+                                                   th:field="*{multiSnpHaplotypeDescr}"/>
+                                        </div>
+                                    </div>
+
                                     <thead>
                                     <tr>
                                         <th></th>
@@ -185,10 +194,9 @@
                                        th:field="*{orPerCopyRecip}" name="orPerCopyRecip"/>
                             </div>
 
-                            <div class="col-md-10">
-        <button type="button"
-                class="btn btn-primary pull-right"
-                id="calculate-or">Calculate OR/HR/RR per copy (Num)</button>
+                            <div class="col-md-10"><button type="button"
+                                                           class="btn btn-primary pull-right"
+                                                           id="calculate-or">Calculate OR/HR/RR per copy (Num)</button>
                             </div>
 
 
