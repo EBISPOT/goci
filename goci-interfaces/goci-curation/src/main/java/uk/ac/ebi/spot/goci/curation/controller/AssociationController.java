@@ -1,5 +1,8 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
@@ -70,6 +73,12 @@ public class AssociationController {
     private AssociationDownloadService associationDownloadService;
     private SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService;
     private LociAttributesService lociAttributesService;
+
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
 
     @Autowired
     public AssociationController(AssociationRepository associationRepository,
@@ -226,7 +235,8 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/upload",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
-    public String uploadStudySnps(@RequestParam("file") MultipartFile file, @PathVariable Long studyId, Model model) {
+    public String uploadStudySnps(@RequestParam("file") MultipartFile file, @PathVariable Long studyId, Model model)
+            throws IOException, InvalidFormatException {
 
         // Establish our study object
         Study study = studyRepository.findOne(studyId);
@@ -243,13 +253,13 @@ public class AssociationController {
             uploadedFile.getParentFile().mkdirs();
 
             // Copy contents of multipart request to newly created file
-            try {
+//            try {
                 file.transferTo(uploadedFile);
-            }
-            catch (IOException e) {
-                throw new RuntimeException(
-                        "Unable to to upload file ", e);
-            }
+//            }
+//            catch (IOException e) {
+//                throw new RuntimeException(
+//                        "Unable to to upload file ", e);
+//            }
 
             String uploadedFilePath = uploadedFile.getAbsolutePath();
 
@@ -258,14 +268,15 @@ public class AssociationController {
             uploadedFile.setReadable(true, false);
             uploadedFile.setWritable(true, false);
 
+
             // Send file, including path, to SNP batch loader process
             Collection<SnpAssociationForm> snpAssociationForms = new ArrayList<>();
-            try {
+//            try {
                 snpAssociationForms = associationBatchLoaderService.processData(uploadedFilePath, efoTraitRepository);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
+//            }
+//            catch (Exception e) {
+//                e.printStackTrace();
+//            }
 
             // Create our associations
             if (!snpAssociationForms.isEmpty()) {
@@ -861,6 +872,14 @@ public class AssociationController {
     @ExceptionHandler(DataIntegrityException.class)
     public String handleDataIntegrityException(DataIntegrityException dataIntegrityException, Model model) {
         return dataIntegrityException.getMessage();
+    }
+
+    @ExceptionHandler(InvalidFormatException.class)
+    public String handleInvalidFormatException(InvalidFormatException invalidFormatException, Model model, Study study){
+        getLog().error("Invalid format exception", invalidFormatException);
+        model.addAttribute("study", study);
+        return "wrong_file_format_warning";
+
     }
 
     /* Model Attributes :
