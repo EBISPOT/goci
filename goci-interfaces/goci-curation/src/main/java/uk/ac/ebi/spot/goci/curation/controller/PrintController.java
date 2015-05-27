@@ -7,7 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
+import uk.ac.ebi.spot.goci.curation.model.SnpAssociationTableView;
+import uk.ac.ebi.spot.goci.curation.service.AssociationViewService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
@@ -34,18 +35,21 @@ public class PrintController {
     private EthnicityRepository ethnicityRepository;
     private AssociationRepository associationRepository;
     private SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService;
+    private AssociationViewService associationViewService;
 
     @Autowired
     public PrintController(StudyRepository studyRepository,
                            HousekeepingRepository housekeepingRepository,
                            EthnicityRepository ethnicityRepository,
                            AssociationRepository associationRepository,
-                           SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService) {
+                           SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService,
+                           AssociationViewService associationViewService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.ethnicityRepository = ethnicityRepository;
         this.associationRepository = associationRepository;
         this.singleSnpMultiSnpAssociationService = singleSnpMultiSnpAssociationService;
+        this.associationViewService = associationViewService;
     }
 
     // View a study
@@ -83,15 +87,15 @@ public class PrintController {
         Collection<Association> associations = new ArrayList<>();
         associations.addAll(associationRepository.findByStudyId(studyId));
 
-        // For our associations create a form object and return
-        Collection<SnpAssociationForm> snpAssociationForms = new ArrayList<SnpAssociationForm>();
+        // For our associations create a table view object and return
+        Collection<SnpAssociationTableView> snpAssociationTableViews = new ArrayList<SnpAssociationTableView>();
         for (Association association : associations) {
-            // TODO WOULD NEED SOME SORT OF CHECK FOR SNP:SNP INTERACTION
-            SnpAssociationForm snpAssociationForm = singleSnpMultiSnpAssociationService.createSnpAssociationForm(
-                    association);
-            snpAssociationForms.add(snpAssociationForm);
+            SnpAssociationTableView snpAssociationTableView =
+                    associationViewService.createSnpAssociationTableView(association);
+            snpAssociationTableViews.add(snpAssociationTableView);
         }
-        model.addAttribute("snpAssociationForms", snpAssociationForms);
+        model.addAttribute("snpAssociationTableViews", snpAssociationTableViews);
+
         return "printview";
     }
 
