@@ -81,10 +81,18 @@ public class SingleSnpMultiSnpAssociationService {
         if (snpAssociationForm.getAssociationId() != null) {
             Association associationUserIsEditing = associationRepository.findOne(snpAssociationForm.getAssociationId());
             Collection<Locus> associationLoci = associationUserIsEditing.getLoci();
+            Collection<RiskAllele> existingRiskAlleles = new ArrayList<>();
 
-            // Based on assumption we have only one locus for standard and multi-snp haplotype
             if (associationLoci != null) {
-                associationAttributesService.deleteLocusAndLinkedRiskAllele(associationLoci);
+                for (Locus locus : associationLoci) {
+                    existingRiskAlleles.addAll(locus.getStrongestRiskAlleles());
+                }
+                for (Locus locus : associationLoci) {
+                    lociAttributesService.deleteLocus(locus);
+                }
+                for (RiskAllele existingRiskAllele : existingRiskAlleles) {
+                    lociAttributesService.deleteRiskAllele(existingRiskAllele);
+                }
             }
 
         }

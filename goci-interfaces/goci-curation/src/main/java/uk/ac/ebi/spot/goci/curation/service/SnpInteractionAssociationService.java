@@ -61,6 +61,7 @@ public class SnpInteractionAssociationService {
         association.setOrPerCopyRecipRange(snpAssociationInteractionForm.getOrPerCopyRecipRange());
         association.setOrPerCopyStdError(snpAssociationInteractionForm.getOrPerCopyStdError());
         association.setOrPerCopyUnitDescr(snpAssociationInteractionForm.getOrPerCopyUnitDescr());
+        association.setRiskFrequency(snpAssociationInteractionForm.getRiskFrequency());
 
         // Set multi-snp and snp interaction checkboxes
         association.setMultiSnpHaplotype(false);
@@ -80,9 +81,18 @@ public class SnpInteractionAssociationService {
             Association associationUserIsEditing =
                     associationRepository.findOne(snpAssociationInteractionForm.getAssociationId());
             Collection<Locus> associationLoci = associationUserIsEditing.getLoci();
+            Collection<RiskAllele> existingRiskAlleles = new ArrayList<>();
 
             if (associationLoci != null) {
-                associationAttributesService.deleteLocusAndLinkedRiskAllele(associationLoci);
+                for (Locus locus : associationLoci) {
+                    existingRiskAlleles.addAll(locus.getStrongestRiskAlleles());
+                }
+                for (Locus locus : associationLoci) {
+                    lociAttributesService.deleteLocus(locus);
+                }
+                for (RiskAllele existingRiskAllele : existingRiskAlleles) {
+                    lociAttributesService.deleteRiskAllele(existingRiskAllele);
+                }
             }
         }
 
@@ -158,6 +168,7 @@ public class SnpInteractionAssociationService {
         snpAssociationInteractionForm.setOrPerCopyRange(association.getOrPerCopyRange());
         snpAssociationInteractionForm.setOrPerCopyRecipRange(association.getOrPerCopyRecipRange());
         snpAssociationInteractionForm.setOrPerCopyUnitDescr(association.getOrPerCopyUnitDescr());
+        snpAssociationInteractionForm.setRiskFrequency(association.getRiskFrequency());
 
         // Add collection of Efo traits
         snpAssociationInteractionForm.setEfoTraits(association.getEfoTraits());
