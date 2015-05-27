@@ -545,14 +545,14 @@ public class AssociationController {
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
 
-        if (associationToView.getSnpInteraction()) {
+        if (associationToView.getSnpInteraction() != null && associationToView.getSnpInteraction()) {
             SnpAssociationInteractionForm snpAssociationInteractionForm =
                     snpInteractionAssociationService.createSnpAssociationInteractionForm(associationToView);
             model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
             return "edit_snp_interaction_association";
         }
 
-        else if (associationToView.getMultiSnpHaplotype()) {
+        else if (associationToView.getMultiSnpHaplotype() != null && associationToView.getMultiSnpHaplotype()) {
             // Create form and return to user
             SnpAssociationForm snpAssociationForm = singleSnpMultiSnpAssociationService.createSnpAssociationForm(
                     associationToView);
