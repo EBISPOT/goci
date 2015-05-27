@@ -33,17 +33,14 @@ public class SnpInteractionAssociationService {
 
     // Services
     private LociAttributesService lociAttributesService;
-    private AssociationAttributesService associationAttributesService;
 
     @Autowired
     public SnpInteractionAssociationService(LocusRepository locusRepository,
                                             AssociationRepository associationRepository,
-                                            LociAttributesService lociAttributesService,
-                                            AssociationAttributesService associationAttributesService) {
+                                            LociAttributesService lociAttributesService) {
         this.locusRepository = locusRepository;
         this.associationRepository = associationRepository;
         this.lociAttributesService = lociAttributesService;
-        this.associationAttributesService = associationAttributesService;
     }
 
     public Association createAssociation(SnpAssociationInteractionForm snpAssociationInteractionForm) {
@@ -149,10 +146,6 @@ public class SnpInteractionAssociationService {
 
         // Create form
         SnpAssociationInteractionForm snpAssociationInteractionForm = new SnpAssociationInteractionForm();
-
-        // Set error map
-        snpAssociationInteractionForm.setAssociationErrorMap(associationAttributesService.createAssociationErrorMap(
-                association.getAssociationReport()));
 
         // Set simple string and boolean values
         snpAssociationInteractionForm.setAssociationId(association.getId());

@@ -33,17 +33,14 @@ public class SingleSnpMultiSnpAssociationService {
 
     // Services
     private LociAttributesService lociAttributesService;
-    private AssociationAttributesService associationAttributesService;
 
     @Autowired
     public SingleSnpMultiSnpAssociationService(AssociationRepository associationRepository,
                                                LocusRepository locusRepository,
-                                               LociAttributesService lociAttributesService,
-                                               AssociationAttributesService associationAttributesService) {
+                                               LociAttributesService lociAttributesService) {
         this.associationRepository = associationRepository;
         this.locusRepository = locusRepository;
         this.lociAttributesService = lociAttributesService;
-        this.associationAttributesService = associationAttributesService;
     }
 
 
@@ -162,9 +159,6 @@ public class SingleSnpMultiSnpAssociationService {
     public SnpAssociationForm createSnpAssociationForm(Association association) {
 
         SnpAssociationForm snpAssociationForm = new SnpAssociationForm();
-
-        // Set error map
-        snpAssociationForm.setAssociationErrorMap(associationAttributesService.createAssociationErrorMap(association.getAssociationReport()));
 
         // Set association ID
         snpAssociationForm.setAssociationId(association.getId());
