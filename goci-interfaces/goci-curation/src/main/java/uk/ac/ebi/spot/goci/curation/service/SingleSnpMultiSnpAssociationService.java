@@ -7,7 +7,6 @@ import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
-import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
@@ -213,10 +212,7 @@ public class SingleSnpMultiSnpAssociationService {
         }
         snpAssociationForm.setAuthorReportedGenes(authorReportedGenes);
 
-        // Handle snp rows and return region details for each snp
-        // Note region is never edited by curator so only appears in table but never in
-        // any edit forms
-        Collection<Region> snpRegions = new ArrayList<Region>();
+        // Handle snp rows
         List<SnpFormRow> snpFormRows = new ArrayList<SnpFormRow>();
         for (RiskAllele riskAllele : locusRiskAlleles) {
             SnpFormRow snpFormRow = new SnpFormRow();
@@ -228,12 +224,9 @@ public class SingleSnpMultiSnpAssociationService {
                 snpFormRow.setProxySnp(riskAllele.getProxySnp().getRsId());
             }
             else { snpFormRow.setProxySnp(null);}
-
-            snpRegions.addAll(riskAllele.getSnp().getRegions());
             snpFormRows.add(snpFormRow);
         }
 
-        snpAssociationForm.setRegions(snpRegions);
         snpAssociationForm.setSnpFormRows(snpFormRows);
         return snpAssociationForm;
     }
