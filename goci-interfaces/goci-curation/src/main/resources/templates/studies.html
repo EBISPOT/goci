@@ -349,12 +349,12 @@
                         </div>
                     </td>
 
-                    <!-- Use an conditional here as a study can have a null attributes-->
+                    <!-- Use a conditional here as a study can have a null attributes-->
                     <!-- Using thymeleaf elvis operator for string, date attributes-->
 
                     <td th:text="${study.author} ?: '' "></td>
                     <td th:text="${study.title} ?: ''"></td>
-                    <td th:text="${#dates.format(study.studyDate,'yyyy-MM-dd')} ?: ''"></td>
+                    <td th:text="${study.studyDate != null } ? ${#dates.format(study.studyDate,'yyyy-MM-dd')} : ''"></td>
                     <td><p th:text="${study.pubmedId} ?: ''"></p>
 
                         <div class="btn-group">
