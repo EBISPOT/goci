@@ -70,23 +70,23 @@ public class AssociationViewService {
         }
 
         String associationRegions = null;
-        associationRegions = String.join(",", regions);
+        associationRegions = String.join(", ", regions);
         snpAssociationTableView.setRegions(associationRegions);
 
         String authorReportedGenes = null;
-        authorReportedGenes = String.join(",", locusGenes);
+        authorReportedGenes = String.join(", ", locusGenes);
         snpAssociationTableView.setAuthorReportedGenes(authorReportedGenes);
 
         String strongestRiskAlleles = null;
-        strongestRiskAlleles = String.join(",", locusRiskAlleles);
+        strongestRiskAlleles = String.join(", ", locusRiskAlleles);
         snpAssociationTableView.setStrongestRiskAlleles(strongestRiskAlleles);
 
         String associationSnps = null;
-        associationSnps = String.join(",", snps);
+        associationSnps = String.join(", ", snps);
         snpAssociationTableView.setSnps(associationSnps);
 
         String associationProxies = null;
-        associationProxies = String.join(",", proxySnps);
+        associationProxies = String.join(", ", proxySnps);
         snpAssociationTableView.setProxySnps(associationProxies);
 
         snpAssociationTableView.setRiskFrequency(association.getRiskFrequency());
@@ -101,7 +101,7 @@ public class AssociationViewService {
 
         }
         String associationEfoTraits = null;
-        associationEfoTraits = String.join(",", efoTraits);
+        associationEfoTraits = String.join(", ", efoTraits);
         snpAssociationTableView.setEfoTraits(associationEfoTraits);
 
         snpAssociationTableView.setOrPerCopyNum(association.getOrPerCopyNum());
