@@ -65,7 +65,7 @@
                   th:action="@{/studies/new}">
 
 
-                <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+                <div class="alert alert-danger col-md-offset-2 col-md-10" th:if="${#fields.hasErrors('*')}">
                     <a href="#" class="close" data-dismiss="alert">&times;</a>
 
                     <p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
