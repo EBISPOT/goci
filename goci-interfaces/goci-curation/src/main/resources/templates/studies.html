@@ -354,7 +354,7 @@
 
                     <td th:text="${study.author} ?: '' "></td>
                     <td th:text="${study.title} ?: ''"></td>
-                    <td th:text="${#calendars.format(study.studyDate,'yyyy-MM-dd')} ?: ''"></td>
+                    <td th:text="${#dates.format(study.studyDate,'yyyy-MM-dd')} ?: ''"></td>
                     <td><p th:text="${study.pubmedId} ?: ''"></p>
 
                         <div class="btn-group">
