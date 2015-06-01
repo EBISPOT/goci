@@ -75,7 +75,7 @@ public class StudyController {
     private DefaultPubMedSearchService defaultPubMedSearchService;
     private MailService mailService;
 
-    public static final int MAX_PAGE_ITEM_DISPLAY = 10;
+    public static final int MAX_PAGE_ITEM_DISPLAY = 25;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -179,7 +179,7 @@ public class StudyController {
 
             // Include the studies with status "NCBI pipeline error"
             // plus the ones that have the box "checked NCBI error" ticked
-            if (studyType.equals("Errors")) {
+            if (studyType.equals("Studies with errors")) {
                 CurationStatus errorStatus = curationStatusRepository.findByStatus("NCBI pipeline error");
                 Long errorStatusId = errorStatus.getId();
                 studyPage = studyRepository.findByHousekeepingCheckedNCBIErrorOrHousekeepingCurationStatusId(true,
@@ -190,7 +190,7 @@ public class StudyController {
                                                                                                                      sort));
             }
 
-            if (studyType.equals("Unpublished")) {
+            if (studyType.equals("Studies in curation queue")) {
                 CurationStatus errorStatus = curationStatusRepository.findByStatus("Publish study");
                 Long errorStatusId = errorStatus.getId();
                 studyPage = studyRepository.findByHousekeepingCurationStatusIdNot(errorStatusId,
@@ -418,7 +418,6 @@ public class StudyController {
 
         // Update and save study
         importedStudy.setHousekeeping(studyHousekeeping);
-        Study newStudy = studyRepository.save(importedStudy);
 
         // Save new study
         studyRepository.save(importedStudy);
@@ -645,8 +644,11 @@ public class StudyController {
                 }
 
                 else {
-                    java.util.Date publishDate = new java.util.Date();
-                    housekeeping.setPublishDate(publishDate);
+                    // If there is no existing publish date then update
+                    if (housekeeping.getPublishDate() == null) {
+                        java.util.Date publishDate = new java.util.Date();
+                        housekeeping.setPublishDate(publishDate);
+                    }
                 }
             }
 
@@ -851,15 +853,15 @@ public class StudyController {
         studyTypesOptions.add("GXE");
         studyTypesOptions.add("GXG");
         studyTypesOptions.add("CNV");
-        studyTypesOptions.add("Errors");
-        studyTypesOptions.add("Unpublished");
+        studyTypesOptions.add("Studies with errors");
+        studyTypesOptions.add("Studies in curation queue");
         return studyTypesOptions;
     }
 
     // Authors
     @ModelAttribute("authors")
     public List<String> populateAuthors(Model model) {
-        return studyRepository.findAllStudyAuthors();
+        return studyRepository.findAllStudyAuthors(sortByAuthorAsc());
     }
 
 
@@ -874,17 +876,17 @@ public class StudyController {
 
     private Sort sortByStudyDateDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "studyDate"));}
 
-    private Sort sortByAuthorAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "author"));}
+    private Sort sortByAuthorAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "author").ignoreCase());}
 
-    private Sort sortByAuthorDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "author"));}
+    private Sort sortByAuthorDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "author").ignoreCase());}
 
-    private Sort sortByTitleAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "title"));}
+    private Sort sortByTitleAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "title").ignoreCase());}
 
-    private Sort sortByTitleDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "title"));}
+    private Sort sortByTitleDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "title").ignoreCase());}
 
-    private Sort sortByPublicationAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "publication"));}
+    private Sort sortByPublicationAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "publication").ignoreCase());}
 
-    private Sort sortByPublicationDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "publication"));}
+    private Sort sortByPublicationDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "publication").ignoreCase());}
 
     private Sort sortByPubmedIdAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "pubmedId"));}
 
@@ -898,9 +900,9 @@ public class StudyController {
 
     private Sort sortByEfoTraitDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "efoTraits.trait").ignoreCase());}
 
-    private Sort sortByCuratorAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "housekeeping.curator.lastName"));}
+    private Sort sortByCuratorAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "housekeeping.curator.lastName").ignoreCase());}
 
-    private Sort sortByCuratorDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "housekeeping.curator.lastName"));}
+    private Sort sortByCuratorDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "housekeeping.curator.lastName").ignoreCase());}
 
     private Sort sortByCurationStatusAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC,

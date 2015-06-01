@@ -76,9 +76,7 @@ OR or BETA: Reported odds ratio or beta-coefficient associated with strongest SN
 
 PLATFORM (SNPS PASSING QC): Genotyping platform manufacturer used in Stage 1; also includes notation of pooled DNA study design or imputation of SNPs, where applicable
 
-CNV: Study of copy number variation (yes/no)
-
-_Updated: 13 January 2015_
+_Updated: 29 May 2015_
 
 '''
 

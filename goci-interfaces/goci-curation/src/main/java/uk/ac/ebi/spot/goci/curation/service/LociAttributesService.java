@@ -3,9 +3,11 @@ package uk.ac.ebi.spot.goci.curation.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Gene;
+import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.GeneRepository;
+import uk.ac.ebi.spot.goci.repository.LocusRepository;
 import uk.ac.ebi.spot.goci.repository.RiskAlleleRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
@@ -26,15 +28,18 @@ public class LociAttributesService {
     private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
     private GeneRepository geneRepository;
     private RiskAlleleRepository riskAlleleRepository;
+    private LocusRepository locusRepository;
 
     // Constructor
     @Autowired
     public LociAttributesService(SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
                                  GeneRepository geneRepository,
-                                 RiskAlleleRepository riskAlleleRepository) {
+                                 RiskAlleleRepository riskAlleleRepository,
+                                 LocusRepository locusRepository) {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.geneRepository = geneRepository;
         this.riskAlleleRepository = riskAlleleRepository;
+        this.locusRepository = locusRepository;
     }
 
     public Collection<Gene> createGene(Collection<String> authorReportedGenes) {
@@ -82,6 +87,10 @@ public class LociAttributesService {
         riskAlleleRepository.delete(riskAllele);
     }
 
+    public void deleteLocus(Locus locus) {
+        locusRepository.delete(locus);
+    }
+    
     public SingleNucleotidePolymorphism createSnp(String curatorEnteredSNP) {
 
         // Check if SNP already exists database, note database contains duplicates

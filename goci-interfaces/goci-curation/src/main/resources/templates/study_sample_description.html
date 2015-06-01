@@ -24,7 +24,8 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
 
     <!--Handles checkbox in table -->
-    <script src="../static/js/goci-study-sample-description.js" th:src="@{../../js/goci-study-sample-description.js}"></script>
+    <script src="../static/js/goci-study-sample-description.js"
+            th:src="@{../../js/goci-study-sample-description.js}"></script>
 
 </head>
 <body>
@@ -39,6 +40,7 @@
             <li class="active"><a href="#">Sample Information</a></li>
             <li><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}">SNP Associations</a></li>
             <li><a th:href="@{/studies/{studyId}/housekeeping(studyId=*{id})}">Curator Information</a></li>
+            <li><a th:href="@{/studies/{studyId}/printview(studyId=*{id})}" target="_blank">Print View</a></li>
         </ul>
     </div>
 </div>
@@ -102,20 +104,29 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
+
             <!--Button-->
-            <input type="button" class="btn btn-default" value="Add ethnicity" data-toggle="collapse"
+            <input type="button" class="btn btn-default" value="Add Ancestry" data-toggle="collapse"
                    data-target="#add_ethnicity_form"/>
 
+            <!--Only show these buttons if there is something to delete-->
             <a href="#DeleteAllModal"
                class="btn btn-default"
                data-toggle="modal"
-               role="button">Delete All Ethnicity information</a>
+               role="button"
+               th:unless="${#lists.isEmpty(initialStudyEthnicityDescriptions) and #lists.isEmpty(replicationStudyEthnicityDescriptions)}">Delete
+                                                                                                                                          All
+                                                                                                                                          Ancestry
+                                                                                                                                          information</a>
 
-            <!--th:value used to send study id to javascript file-->
             <a href="#DeleteSelectedModal"
                class="btn btn-default"
                role="button"
-               data-toggle="modal">Delete Checked Ethnicity information</a>
+               data-toggle="modal"
+               th:unless="${#lists.isEmpty(initialStudyEthnicityDescriptions) and #lists.isEmpty(replicationStudyEthnicityDescriptions)}">Delete
+                                                                                                                                          Checked
+                                                                                                                                          Ancestry
+                                                                                                                                          information</a>
 
         </div>
     </div>
@@ -130,14 +141,14 @@
                 <h4 class="modal-title">Confirmation</h4>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete all ethnicity information associated with this study?</p>
+                <p>Are you sure you want to delete all ancestry information associated with this study?</p>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 
                     <a th:href="@{/studies/{studyId}/sampledescription/delete_all(studyId=${study.id})}"
                        class="btn btn-default"
-                       role="button">Delete All Ethnicity information</a>
+                       role="button">Delete All Ancestry Information</a>
                 </div>
             </div>
         </div>
@@ -152,13 +163,13 @@
                 <h4 class="modal-title">Confirmation</h4>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete selected ethnicity information associated with this study?</p>
+                <p>Are you sure you want to delete selected ancestry information associated with this study?</p>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <a id="delete-button"
                        class="btn btn-default"
-                       role="button">Delete Checked Ethnicity information</a>
+                       role="button">Delete Checked Ancestry Information</a>
                 </div>
             </div>
         </div>
@@ -171,12 +182,17 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
-            <table id="initialTable" class="table table-hover table-bordered">
+            <div class="well well-sm" th:if="${#lists.isEmpty(initialStudyEthnicityDescriptions)}">
+                <p style="color:grey">No initial ancestry details to display</p>
+            </div>
+            <table id="initialTable"
+                   class="table table-hover table-bordered"
+                   th:if="${not #lists.isEmpty(initialStudyEthnicityDescriptions)}">
                 <thead>
                 <tr>
                     <th>Type</th>
                     <th>Number of Individuals</th>
-                    <th>Ethnic Group</th>
+                    <th>Ancestry</th>
                     <th>Country of Origin</th>
                     <th>Country of Recruitment</th>
                     <th>Previously Reported</th>
@@ -221,12 +237,17 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
-            <table id="replicationTable" class="table table-hover table-bordered">
+            <div class="well well-sm" th:if="${#lists.isEmpty(replicationStudyEthnicityDescriptions)}">
+                <p style="color:grey">No replication ancestry details to display</p>
+            </div>
+            <table id="replicationTable"
+                   class="table table-hover table-bordered"
+                   th:if="${not #lists.isEmpty(replicationStudyEthnicityDescriptions)}">
                 <thead>
                 <tr>
                     <th>Type</th>
                     <th>Number of Individuals</th>
-                    <th>Ethnic Group</th>
+                    <th>Ancestry</th>
                     <th>Country of Origin</th>
                     <th>Country of Recruitment</th>
                     <th>Previously Reported</th>
@@ -273,102 +294,111 @@
         <div class="col-md-10 col-md-offset-1">
             <div id="add_ethnicity_form" class="collapse">
                 <div class="well">
-                <form class="form-horizontal" method="post" th:object="${ethnicity}"
-                      name="addEthnicityForm">
+                    <form class="form-horizontal" method="post" th:object="${ethnicity}"
+                          name="addEthnicityForm">
 
-                    <!--Type dropdown-->
-                    <div class="form-group">
-                        <label for="type" class="control-label col-md-2">Type</label>
+                        <!--Type dropdown-->
+                        <div class="form-group">
+                            <label for="type" class="control-label col-md-2">Type</label>
 
-                        <select th:field="*{type}" id="type">
-                            <option th:each="ethnicityType : ${ethnicityTypes}"
-                                    th:value="${ethnicityType}"
-                                    th:text="${ethnicityType}"></option>
-                        </select>
+                            <select th:field="*{type}" id="type">
+                                <option th:each="ethnicityType : ${ethnicityTypes}"
+                                        th:value="${ethnicityType}"
+                                        th:text="${ethnicityType}"></option>
+                            </select>
 
-                    </div>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="numberOfIndividuals" class="control-label col-md-2">Number of Individuals:</label>
-                        <input id="numberOfIndividuals" type="text" th:field="*{numberOfIndividuals}"/>
-                    </div>
+                        <div class="form-group">
+                            <label for="numberOfIndividuals" class="control-label col-md-2">Number of
+                                                                                            Individuals:</label>
+                            <input id="numberOfIndividuals" type="text" th:field="*{numberOfIndividuals}"/>
+                        </div>
 
 
-                    <!--Dropdowns-->
-                    <div class="form-group">
-                        <label for="ethnicGroup" class="control-label col-md-2">Inferred Ethnic/Ancestral Group:</label>
+                        <!--Dropdowns-->
+                        <div class="form-group">
+                            <label for="ethnicGroup" class="control-label col-md-2">Inferred Ancestry:</label>
 
-                        <div class="col-md-10">
-                            <select name="ethnicGroup" class="form-control select2-select"
-                                    multiple="multiple" data-placeholder="Choose ethnic group" th:field="*{ethnicGroup}"
-                                    id="ethnicGroup">
-                                <option th:each="ethnicGroup : ${ethnicGroups}"
-                                        th:value="${ethnicGroup}"
-                                        th:text="${ethnicGroup}"></option>
+                            <div class="col-md-10">
+                                <select name="ethnicGroup"
+                                        class="form-control select2-select"
+                                        multiple="multiple"
+                                        data-placeholder="Choose ancestry"
+                                        th:field="*{ethnicGroup}"
+                                        id="ethnicGroup">
+                                    <option th:each="ethnicGroup : ${ethnicGroups}"
+                                            th:value="${ethnicGroup}"
+                                            th:text="${ethnicGroup}"></option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="countryOfOrigin" class="control-label col-md-2">Country of Origin:</label>
+
+                            <div class="col-md-10">
+                                <select name="countryOfOrigin" class="form-control select2-select"
+                                        multiple="multiple" data-placeholder="Country of Origin"
+                                        th:field="*{countryOfOrigin}"
+                                        id="countryOfOrigin">
+                                    <option th:each="country : ${countries}"
+                                            th:value="${country.name}"
+                                            th:text="${country.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="countryOfRecruitment" class="control-label col-md-2">Country of
+                                                                                             Recruitment:</label>
+
+                            <div class="col-md-10">
+                                <select name="countryOfRecruitment" class="form-control select2-select"
+                                        multiple="multiple" data-placeholder="Country of Recruitment"
+                                        th:field="*{countryOfRecruitment}"
+                                        id="countryOfRecruitment">
+                                    <option th:each="country : ${countries}"
+                                            th:value="${country.name}"
+                                            th:text="${country.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description" class="control-label col-md-2">Additional Description:</label>
+                            <textarea class="col-md-6"
+                                      rows="10"
+                                      id="description"
+                                      th:field="*{description}"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notes" class="control-label col-md-2">Notes</label>
+                            <textarea class="col-md-6" rows="10" id="notes" th:field="*{notes}"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sampleSizesMatch" class="control-label col-md-2">Sample Sizes Match in Catalog
+                                                                                         at
+                                                                                         Study Level?</label>
+
+                            <select th:field="*{sampleSizesMatch}" id="sampleSizesMatch">
+                                <option th:each="match : ${sampleSizesMatchOptions}"
+                                        th:value="${match}"
+                                        th:text="${match}"></option>
                             </select>
                         </div>
-                    </div>
 
-
-                    <div class="form-group">
-                        <label for="countryOfOrigin" class="control-label col-md-2">Country of Origin:</label>
-
-                        <div class="col-md-10">
-                            <select name="countryOfOrigin" class="form-control select2-select"
-                                    multiple="multiple" data-placeholder="Country of Origin"
-                                    th:field="*{countryOfOrigin}"
-                                    id="countryOfOrigin">
-                                <option th:each="country : ${countries}"
-                                        th:value="${country.name}"
-                                        th:text="${country.name}"></option>
-                            </select>
+                        <!--Button -->
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="countryOfRecruitment" class="control-label col-md-2">Country of Recruitment:</label>
-
-                        <div class="col-md-10">
-                            <select name="countryOfRecruitment" class="form-control select2-select"
-                                    multiple="multiple" data-placeholder="Country of Recruitment"
-                                    th:field="*{countryOfRecruitment}"
-                                    id="countryOfRecruitment">
-                                <option th:each="country : ${countries}"
-                                        th:value="${country.name}"
-                                        th:text="${country.name}"></option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="description" class="control-label col-md-2">Additional Description:</label>
-                        <textarea class="col-md-6" rows="10" id="description" type="text" th:field="*{description}"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="notes" class="control-label col-md-2">Notes</label>
-                        <textarea class="col-md-6" rows="10" id="notes" type="text" th:field="*{notes}"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="sampleSizesMatch" class="control-label col-md-2">Sample Sizes Match in Catalog at
-                                                                                     Study Level?</label>
-
-                        <select th:field="*{sampleSizesMatch}" id="sampleSizesMatch">
-                            <option th:each="match : ${sampleSizesMatchOptions}"
-                                    th:value="${match}"
-                                    th:text="${match}"></option>
-                        </select>
-                    </div>
-
-                    <!--Button -->
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-
-                </form>
+                    </form>
                 </div>
             </div>
         </div>

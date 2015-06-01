@@ -13,9 +13,8 @@ import java.util.Collection;
 
 /**
  * Created by dwelter on 09/04/15.
- *
+ * <p>
  * This is a service class to process a set of associations for a given study and output the result to a tsv file
- *
  */
 
 
@@ -32,22 +31,17 @@ public class AssociationDownloadService {
 
         String file = processAssociations(associations);
 
-        InputStream in = new ByteArrayInputStream(file.getBytes("UTF-8"));
-
-        byte[] outputByte = new byte[4096];
-        //copy binary contect to output stream
-        while (in.read(outputByte, 0, 4096) != -1) {
-            outputStream.write(outputByte, 0, 4096);
-        }
-        in.close();
+        // Write file
+        outputStream.write(file.getBytes("UTF-8"));
         outputStream.flush();
+        outputStream.close();
 
     }
 
     private String processAssociations(Collection<Association> associations) {
 
         String header =
-                "Gene\tStrongest SNP-Risk Allele\tSNP\tRisk Allele Frequency in Controls\tP-value mantissa\tP-value exponent\tP-value (Text)\tOR per copy or beta (Num)\tOR entered (reciprocal)\tOR-type? (Y/N)\tMulti-SNP Haplotype?\tConfidence Interval\tReciprocal confidence interval\tBeta unit and direction\tStandard Error\tSNP type (novel/known)\tEFO traits\r\n";
+                "Gene\tStrongest SNP-Risk Allele\tSNP\tRisk Allele Frequency in Controls\tP-value mantissa\tP-value exponent\tP-value (Text)\tOR per copy or beta (Num)\tOR entered (reciprocal)\tOR-type? (Y/N)\tMulti-SNP Haplotype?\tSNP:SNP interaction?\tConfidence Interval\tReciprocal confidence interval\tBeta unit and direction\tStandard Error\tSNP type (novel/known)\tEFO traits\r\n";
 
 
         StringBuilder output = new StringBuilder();
@@ -59,7 +53,7 @@ public class AssociationDownloadService {
 
             extractGeneticData(association, line);
 
-            if(association.getRiskFrequency() == null){
+            if (association.getRiskFrequency() == null) {
                 line.append("");
             }
             else {
@@ -67,7 +61,8 @@ public class AssociationDownloadService {
 
             }
             line.append("\t");
-            if(association.getPvalueMantissa() == null){
+
+            if (association.getPvalueMantissa() == null) {
                 line.append("");
             }
             else {
@@ -75,36 +70,40 @@ public class AssociationDownloadService {
 
             }
             line.append("\t");
-            if(association.getPvalueExponent() == null){
+
+            if (association.getPvalueExponent() == null) {
                 line.append("");
             }
             else {
                 line.append(association.getPvalueExponent());
             }
             line.append("\t");
-            if(association.getPvalueText() == null){
+
+            if (association.getPvalueText() == null) {
                 line.append("");
             }
             else {
                 line.append(association.getPvalueText());
             }
             line.append("\t");
-            if(association.getOrPerCopyNum() == null){
+
+            if (association.getOrPerCopyNum() == null) {
                 line.append("");
             }
             else {
                 line.append(association.getOrPerCopyNum());
             }
             line.append("\t");
-            if(association.getOrPerCopyRecip() == null){
+
+            if (association.getOrPerCopyRecip() == null) {
                 line.append("");
             }
             else {
                 line.append(association.getOrPerCopyRecip());
-             }
+            }
             line.append("\t");
 
-            if(association.getOrType() == null){
+            if (association.getOrType() == null) {
                 line.append("");
 
             }
@@ -116,9 +115,9 @@ public class AssociationDownloadService {
                     line.append("N");
                 }
             }
-
             line.append("\t");
-            if(association.getMultiSnpHaplotype() == null){
+
+            if (association.getMultiSnpHaplotype() == null) {
                 line.append("");
             }
             else {
@@ -130,7 +129,21 @@ public class AssociationDownloadService {
                 }
             }
             line.append("\t");
-            if(association.getOrPerCopyRange() == null){
+
+            if (association.getSnpInteraction() == null) {
+                line.append("");
+            }
+            else {
+                if (association.getSnpInteraction()) {
+                    line.append("Y");
+                }
+                else {
+                    line.append("N");
+                }
+            }
+            line.append("\t");
+
+            if (association.getOrPerCopyRange() == null) {
                 line.append("");
             }
             else {
@@ -138,7 +151,7 @@ public class AssociationDownloadService {
             }
             line.append("\t");
 
-            if(association.getOrPerCopyRecipRange() == null){
+            if (association.getOrPerCopyRecipRange() == null) {
                 line.append("");
             }
             else {
@@ -147,16 +160,16 @@ public class AssociationDownloadService {
             line.append("\t");
 
 
-            if(association.getOrPerCopyUnitDescr() == null){
+            if (association.getOrPerCopyUnitDescr() == null) {
                 line.append("");
             }
             else {
                 line.append(association.getOrPerCopyUnitDescr());
-             }
+            }
 
             line.append("\t");
 
-            if(association.getOrPerCopyStdError() == null){
+            if (association.getOrPerCopyStdError() == null) {
                 line.append("");
             }
             else {
@@ -165,7 +178,7 @@ public class AssociationDownloadService {
 
             line.append("\t");
 
-            if(association.getSnpType() == null){
+            if (association.getSnpType() == null) {
                 line.append("");
             }
             else {
@@ -173,7 +186,7 @@ public class AssociationDownloadService {
             }
             line.append("\t");
 
-            if(association.getEfoTraits() == null){
+            if (association.getEfoTraits() == null) {
                 line.append("");
             }
             else {
@@ -190,11 +203,11 @@ public class AssociationDownloadService {
 
     private void extractEfoTraits(Collection<EfoTrait> efoTraits, StringBuilder line) {
         StringBuilder traits = new StringBuilder();
-        for(EfoTrait efoTrait : efoTraits){
+        for (EfoTrait efoTrait : efoTraits) {
             String uri = efoTrait.getUri();
             String[] elements = uri.split("/");
 
-            String id = elements[elements.length-1];
+            String id = elements[elements.length - 1];
             setOrAppend(traits, id.trim(), ",");
         }
 
@@ -212,7 +225,7 @@ public class AssociationDownloadService {
                     locus -> {
                         locus.getStrongestRiskAlleles().forEach(
                                 riskAllele -> {
-                                            setOrAppend(strongestAllele, riskAllele.getRiskAlleleName(), " x ");
+                                    setOrAppend(strongestAllele, riskAllele.getRiskAlleleName(), " x ");
 
                                     SingleNucleotidePolymorphism snp = riskAllele.getSnp();
                                     setOrAppend(rsId, snp.getRsId(), " x ");
@@ -220,7 +233,7 @@ public class AssociationDownloadService {
                                 }
                         );
                         locus.getAuthorReportedGenes().forEach(gene -> {
-                             setOrAppend(reportedGenes, gene.getGeneName().trim(), ", ");
+                            setOrAppend(reportedGenes, gene.getGeneName().trim(), ", ");
                         });
                     }
             );

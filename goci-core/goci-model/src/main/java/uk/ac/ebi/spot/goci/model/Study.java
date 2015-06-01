@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Date;
 
@@ -27,6 +28,7 @@ public class Study {
     private String author;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "Please enter a study date in format YYYY-MM-DD")
     private Date studyDate;
 
     @NotBlank(message = "Please enter a publication")

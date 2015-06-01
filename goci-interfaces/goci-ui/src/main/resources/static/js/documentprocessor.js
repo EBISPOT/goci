@@ -40,23 +40,11 @@ function processStudy(study, table) {
     hiddenrow.addClass('accordion-body');
     hiddenrow.addClass('hidden-study-row');
 
-    //var innerTable = $("<table>").addClass('table').addClass('sample-info');
     var innerTable = $("<table>").addClass('sample-info');
 
     innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Initial sample description")).append($("<td>").html(study.initialSampleDescription)));
     innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Replication sample description")).append($("<td>").html(study.replicateSampleDescription)));
     innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Platform [SNPs passing QC]")).append($("<td>").html(study.platform)));
-
-    var r4 = $("<tr>");
-    r4.append($("<th>").attr('style', 'width: 30%').html("CNV study?"));
-
-    if (study.cnv) {
-        r4.append($("<td>").html("yes"));
-    }
-    else {
-        r4.append($("<td>").html("no"));
-    }
-    innerTable.append(r4);
 
     hiddenrow.append($('<td>').attr('colspan', 7).attr('style', 'border-top: none').append(innerTable));
 

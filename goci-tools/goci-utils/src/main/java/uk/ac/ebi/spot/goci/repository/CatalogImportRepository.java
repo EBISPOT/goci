@@ -82,6 +82,9 @@ public class CatalogImportRepository {
     private static final String UPDATE_HOUSEKEEPING =
             "UPDATE HOUSEKEEPING SET CURATION_STATUS_ID = ?, LAST_UPDATE_DATE = ? WHERE ID = ?";
 
+    private static final String SELECT_PUBLISH_DATE =
+            "SELECT PUBLISH_DATE FROM HOUSEKEEPING WHERE ID =?";
+
     private static final String UPDATE_PUBLISH_DATE =
             "UPDATE HOUSEKEEPING SET PUBLISH_DATE = ? WHERE ID = ?";
 
@@ -980,6 +983,16 @@ public class CatalogImportRepository {
                         "Caught errors processing data import - cannot find ID for status " + status);
             }
 
+            Date currentPublishDate = null;
+            // Get publish date
+            try {
+                currentPublishDate = jdbcTemplate.queryForObject(SELECT_PUBLISH_DATE, Date.class, housekeepingId);
+            }
+            catch (EmptyResultDataAccessException e) {
+                throw new DataImportException("Caught errors processing data import - " +
+                                                      "trying to update status of study without publish date information found in database");
+            }
+
             // Only update the status if the curators if previous status was "Send to NCBI"
             if (currentStatus.equalsIgnoreCase("Send to NCBI")) {
                 // Set status and last_update_date
@@ -989,11 +1002,13 @@ public class CatalogImportRepository {
                 rows = jdbcTemplate.update(UPDATE_HOUSEKEEPING, statusId, lastUpdateDate, housekeepingId);
 
                 if (status.equals("Publish study")) {
-                    //Also update publish date
-                    Date publishDate = new Date();
-                    jdbcTemplate.update(UPDATE_PUBLISH_DATE, publishDate, housekeepingId);
-                }
 
+                    //Also update publish date if one doesn't exist
+                    if (currentPublishDate == null) {
+                        Date publishDate = new Date();
+                        jdbcTemplate.update(UPDATE_PUBLISH_DATE, publishDate, housekeepingId);
+                    }
+                }
                 getLog().info(
                         "Updated housekeeping information for study: " + studyId + " - Updated " + rows +
                                 " rows");

@@ -14,8 +14,9 @@ import java.util.Map;
  * Created by emma on 28/01/15.
  *
  * @author emma
- *         <p/>
- *         New service class to deal with form used by curators to enter snp/association details
+ *         <p>
+ *         New service class to deal with form used by curators to enter snp/association details. Deals with standard
+ *         and multi-snp haplotype associations
  */
 
 public class SnpAssociationForm {
@@ -36,15 +37,11 @@ public class SnpAssociationForm {
 
     private Boolean multiSnpHaplotype = false;
 
-    private Boolean snpInteraction = false;
-
     private Boolean snpChecked = false;
 
     private Integer pvalueMantissa;
 
     private Integer pvalueExponent;
-
-    private Float pvalueFloat;
 
     private Float orPerCopyRecip;
 
@@ -67,9 +64,6 @@ public class SnpAssociationForm {
 
     private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
-    private Collection<Region> regions = new ArrayList<>();
-
-    private Map<String, String> associationErrorMap = new HashMap<>();
 
     // Constructors
     public SnpAssociationForm() {
@@ -82,11 +76,9 @@ public class SnpAssociationForm {
                               Boolean orType,
                               String snpType,
                               Boolean multiSnpHaplotype,
-                              Boolean snpInteraction,
                               Boolean snpChecked,
                               Integer pvalueMantissa,
                               Integer pvalueExponent,
-                              Float pvalueFloat,
                               Float orPerCopyRecip,
                               Float orPerCopyStdError,
                               String orPerCopyRange,
@@ -96,9 +88,7 @@ public class SnpAssociationForm {
                               Collection<String> authorReportedGenes,
                               String multiSnpHaplotypeDescr,
                               Integer multiSnpHaplotypeNum,
-                              Collection<EfoTrait> efoTraits,
-                              Collection<Region> regions,
-                              Map<String, String> associationErrorMap) {
+                              Collection<EfoTrait> efoTraits) {
         this.associationId = associationId;
         this.riskFrequency = riskFrequency;
         this.pvalueText = pvalueText;
@@ -106,11 +96,9 @@ public class SnpAssociationForm {
         this.orType = orType;
         this.snpType = snpType;
         this.multiSnpHaplotype = multiSnpHaplotype;
-        this.snpInteraction = snpInteraction;
         this.snpChecked = snpChecked;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
-        this.pvalueFloat = pvalueFloat;
         this.orPerCopyRecip = orPerCopyRecip;
         this.orPerCopyStdError = orPerCopyStdError;
         this.orPerCopyRange = orPerCopyRange;
@@ -121,8 +109,6 @@ public class SnpAssociationForm {
         this.multiSnpHaplotypeDescr = multiSnpHaplotypeDescr;
         this.multiSnpHaplotypeNum = multiSnpHaplotypeNum;
         this.efoTraits = efoTraits;
-        this.regions = regions;
-        this.associationErrorMap = associationErrorMap;
     }
 
     // Getters/setters
@@ -198,14 +184,6 @@ public class SnpAssociationForm {
         this.multiSnpHaplotypeNum = multiSnpHaplotypeNum;
     }
 
-    public Boolean getSnpInteraction() {
-        return snpInteraction;
-    }
-
-    public void setSnpInteraction(Boolean snpInteraction) {
-        this.snpInteraction = snpInteraction;
-    }
-
     public Integer getPvalueMantissa() {
         return pvalueMantissa;
     }
@@ -220,14 +198,6 @@ public class SnpAssociationForm {
 
     public void setPvalueExponent(Integer pvalueExponent) {
         this.pvalueExponent = pvalueExponent;
-    }
-
-    public Float getPvalueFloat() {
-        return pvalueFloat;
-    }
-
-    public void setPvalueFloat(Float pvalueFloat) {
-        this.pvalueFloat = pvalueFloat;
     }
 
     public Float getOrPerCopyRecip() {
@@ -302,20 +272,5 @@ public class SnpAssociationForm {
         this.snpChecked = snpChecked;
     }
 
-    public Collection<Region> getRegions() {
-        return regions;
-    }
-
-    public void setRegions(Collection<Region> regions) {
-        this.regions = regions;
-    }
-
-    public Map<String, String> getAssociationErrorMap() {
-        return associationErrorMap;
-    }
-
-    public void setAssociationErrorMap(Map<String, String> associationErrorMap) {
-        this.associationErrorMap = associationErrorMap;
-    }
 }
 

@@ -58,13 +58,12 @@
                     <form class="form-horizontal"
                           method="post"
                           name="snp-association-form"
-                          th:object="${snpAssociationForm}">
-
+                          th:object="${snpAssociationForm}"
+                          th:action="@{${uri}(associationtype=standardormulti)}">
 
                         <div class="form-group">
                             <div class="col-md-10 col-md-offset-2">
                                 <table class="table table-hover table-bordered">
-
 
                                     <div class="form-group">
                                         <label for="multiSnpHaplotypeDescr" class="control-label col-md-2"></label>
@@ -177,6 +176,14 @@
                             </div>
                         </div>
 
+                        <div class="alert alert-warning alert-dismissible col-md-offset-2 col-md-10"
+                             role="alert"
+                             th:if="*{orPerCopyNum &lt; 1 and not #strings.isEmpty(orPerCopyNum)}">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <strong>Warning!</strong> OR value less than one
+                        </div>
+
 
                         <div class="form-group">
                             <label for="orPerCopyRecip" class="control-label col-md-2">OR/HR/RR per copy
@@ -187,10 +194,9 @@
                                        th:field="*{orPerCopyRecip}" name="orPerCopyRecip"/>
                             </div>
 
-                            <div class="col-md-10">
-        <button type="button"
-                class="btn btn-primary pull-right"
-                id="calculate-or">Calculate OR/HR/RR per copy (Num)</button>
+                            <div class="col-md-10"><button type="button"
+                                                           class="btn btn-primary pull-right"
+                                                           id="calculate-or">Calculate OR/HR/RR per copy (Num)</button>
                             </div>
 
 
@@ -207,7 +213,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="orPerCopyRecipRange" class="control-label col-md-2">OR/HR/RR per copy reciprocal (Range)</label>
+                            <label for="orPerCopyRecipRange" class="control-label col-md-2">OR/HR/RR per copy reciprocal
+                                                                                            (Range)</label>
 
                             <div class="col-md-10">
                                 <input type="text" class="form-control" id="orPerCopyRecipRange"
@@ -240,9 +247,7 @@
                             </div>
 
                             <div class="col-md-12">
-        <button type="button"
-                class="btn btn-primary pull-right"
-                id="calculate-or-range">Build OR/HR/RR per copy (Range)</button>
+                                <button type="button" class="btn btn-primary pull-right" id="calculate-or-range">Build OR/HR/RR per copy (Range)</button>
                             </div>
                         </div>
 
@@ -273,21 +278,6 @@
                             <input id="snpChecked" type="checkbox" th:field="*{snpChecked}"/>
                         </div>
 
-                        <!--Hidden field-->
-                        <div class="form-group">
-                            <label for="snpInteraction" class="control-label col-md-2"></label>
-                            <input id="snpInteraction" type="hidden"
-                                   th:field="*{snpInteraction}"/>
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="multiSNPHaplotype" class="control-label col-md-2"></label>
-                            <input id="multiSNPHaplotype" type="hidden"
-                                   th:field="*{multiSnpHaplotype}"/>
-                        </div>
-                        <!--End hidden-->
-
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-10">
                                 <button type="submit" class="btn btn-primary">Save</button>
@@ -299,8 +289,6 @@
 
             </div>
         </div>
-
-
 
 
     </div>

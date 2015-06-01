@@ -4,8 +4,8 @@
     <title>GWAS Curation Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" href="../static/css/bootstrap-theme.min.css" th:href="@{/css/bootstrap-theme.min.css}"/>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
@@ -16,37 +16,71 @@
 <!--Include header-->
 <div th:include="header :: navbar"></div>
 
+<div class="container-fluid" th:if="${!#strings.isEmpty(diseaseTraitUsed)}">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-1">
+            <div class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:text="${diseaseTraitUsed}">Error: </strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-10">
-
-            <div class="alert alert-danger col-md-6">
-                <a href="#" class="close" data-dismiss="alert">&times;</a>
-                <strong>Warning!</strong> Are you sure you want to delete the following disease/trait? If not,
-                <!--Return to disease traits page-->
-                <a th:href="@{/diseasetraits}" class="alert-link">Cancel</a>
-
+        <div class="col-md-6 col-md-offset-1">
+            <div id="deleteDiseaseTraitForm">
+                <form class="form-horizontal" name="deleteDiseaseTraitForm" method="post"
+                      th:object="${diseaseTrait}" role="form">
+                    <div class="form-group">
+                        <label for="trait" class="control-label">Disease/Trait: </label>
+                        <div class="input-group">
+                            <input type="text"
+                                   id="trait"
+                                   class="form-control"
+                                   th:field="*{trait}"/>
+                                    <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                     <a th:href="@{/diseasetraits}" class="btn btn-default" role="button">Cancel</a>
+                                    </span>
+                        </div>
+                    </div>
+                </form>
             </div>
+        </div>
+    </div>
+</div>
 
-            <div class="form-group">
-                <div id="deleteDiseaseTraitForm">
-                    <form class="form-horizontal" name="deleteDiseaseTraitForm" method="post"
-                          th:object="${diseaseTrait}">
-
-                        <div class="form-group col-md-8">
-                            <label for="trait" class="control-label">Disease / Trait:</label>
-
-                            <div>
-                                <input type="text" class="form-control" id="trait" th:field="*{trait}"/>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-offset-8 col-md-2">
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </div>
-                        </div>
-                    </form>
+<div class="container-fluid" th:if="${totalStudies != 0 }">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-1">
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Warning: Disease trait is used in the following studies: </h3>
+                </div>
+                <div class="panel-body">
+                    <table id="mainTable" class="table table-hover table-bordered">
+                        <thead>
+                        <tr>
+                            <th class="col-md-1">ID</th>
+                            <th class="col-md-1">Author</th>
+                            <th class="col-md-1">Title</th>
+                            <th class="col-md-1">Pubmed ID</th>
+                            <th class="col-md-1">Disease/Trait</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="study : ${studies}">
+                            <td th:text="${study.id} ?: '' "></td>
+                            <td th:text="${study.author} ?: '' "></td>
+                            <td th:text="${study.title} ?: ''"></td>
+                            <td th:text="${study.pubmedId} ?: ''"></td>
+                            <td th:text="${study.diseaseTrait != null} ? ${study.diseaseTrait.trait} : ''"></td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -54,6 +88,7 @@
 </div>
 
 
-</body>
 
+
+</body>
 </html>

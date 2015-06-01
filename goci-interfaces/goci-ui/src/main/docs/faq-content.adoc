@@ -15,6 +15,9 @@
 <<Why does the data I just downloaded look different from what I downloaded in the old Catalog?>>
 
 
+<<What happened to the "CNV" annotation in the interface and the downloads?>>
+
+
 <<How do I do a search?>>
 
 
@@ -82,7 +85,9 @@ Please see the link:about[About] page for citation guidance.
 
 A number of link:known-issues[known issues] got into the data during the migration. We are working hard to resolve these. Due to the way we now process the Catalog data for the full download, you may find that your spreadsheet has more rows than it did previously as each association between a SNP and a reported gene now gets its own row, i.e. if an association has several author-reported genes, it will be split across as many rows as there are genes.
 
+==== What happened to the "CNV" annotation in the interface and the downloads?
 
+Studies looking at copy number variations (CNV) are not part of the remit of the GWAS Catalog. Historically, a couple of CNV studies had been included in the Catalog but these have now been removed. As the Catalog no longer contains any CNV studies, the decision was made to also eliminate the CNV flag from the search results for studies and from the downloadable spreadsheets.
 
 == Searching
 

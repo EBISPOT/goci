@@ -69,7 +69,6 @@ Information on the following study-level fields is extracted. Capitalised titles
 * INITIAL SAMPLE DESCRIPTION: Sample size and ancestry description for stage 1 of GWAS (summing across multiple Stage 1 populations, if applicable)
 * REPLICATION SAMPLE DESCRIPTION: Sample size and ancestry description for subsequent replication(s) (summing across multiple populations, if applicable)
 * PLATFORM (SNPS PASSING QC): Manufacturer of genotyping array used in GWAS stage; Number of SNPs passing quality control metrics and included in the GWAS analysis; also includes notation of “imputed” if imputation is used and "pooled" to denote studies of pooled DNA.
-* CNV: Study of copy number variation (yes/no).
 
 For each identified SNP, we extract:
 

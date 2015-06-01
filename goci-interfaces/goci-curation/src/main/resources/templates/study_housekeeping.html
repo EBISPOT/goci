@@ -24,6 +24,7 @@
             <li><a th:href="@{/studies/{studyId}/sampledescription(studyId=*{id})}">Sample Information</a></li>
             <li><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}">SNP Associations</a></li>
             <li class="active"><a href="#">Curator Information</a></li>
+            <li><a th:href="@{/studies/{studyId}/printview(studyId=*{id})}" target="_blank">Print View</a></li>
 
         </ul>
     </div>
@@ -125,7 +126,7 @@
 
                 <div class="form-group">
                     <label for="ethnicityCheckedLevelOne" th:for="${#ids.next('ethnicityCheckedLevelOne')}"
-                           class="control-label col-md-2">Ethnicity checked, first
+                           class="control-label col-md-2">Ancestry checked, first
                         level:</label>
                     <input id="ethnicityCheckedLevelOne" type="checkbox" th:field="*{ethnicityCheckedLevelOne}"
                             />
@@ -133,7 +134,7 @@
 
                 <div class="form-group">
                     <label for="ethnicityCheckedLevelTwo" th:for="${#ids.next('ethnicityCheckedLevelTwo')}"
-                           class="control-label col-md-2">Ethnicity checked, second
+                           class="control-label col-md-2">Ancestry checked, second
                         level:</label>
                     <input id="ethnicityCheckedLevelTwo" type="checkbox" th:field="*{ethnicityCheckedLevelTwo}"
                             />
@@ -141,7 +142,7 @@
 
                 <div class="form-group">
                     <label for="ethnicityBackFilled" th:for="${#ids.next('ethnicityBackFilled')}"
-                           class="control-label col-md-2">Ethnicity backfilled:</label>
+                           class="control-label col-md-2">Ancestry backfilled:</label>
                     <input id="ethnicityBackFilled" type="checkbox" th:field="*{ethnicityBackFilled}"
                             />
                 </div>
