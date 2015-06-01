@@ -115,12 +115,12 @@
             <table id="initialTable"
                    class="table table-hover table-bordered"
                    th:if="${not #lists.isEmpty(initialStudyEthnicityDescriptions)}">
-                <caption>Initial ethnicity details</caption>
+                <caption>Initial ancestry details</caption>
                 <thead>
                 <tr>
                     <th>Type</th>
                     <th>Number of Individuals</th>
-                    <th>Ethnic Group</th>
+                    <th>Ancestry</th>
                     <th>Country of Origin</th>
                     <th>Country of Recruitment</th>
                     <th>Previously Reported</th>
@@ -146,12 +146,12 @@
             <table id="replicationTable"
                    class="table table-hover table-bordered"
                    th:if="${not #lists.isEmpty(replicationStudyEthnicityDescriptions)}">
-                <caption>Replication ethnicity details</caption>
+                <caption>Replication ancestry details</caption>
                 <thead>
                 <tr>
                     <th>Type</th>
                     <th>Number of Individuals</th>
-                    <th>Ethnic Group</th>
+                    <th>Ancestry</th>
                     <th>Country of Origin</th>
                     <th>Country of Recruitment</th>
                     <th>Previously Reported</th>
@@ -288,7 +288,7 @@
                     <td th:text="${housekeeping != null and housekeeping.lastUpdateDate !=null } ? ${#calendars.format(housekeeping.lastUpdateDate, 'dd MMMM yyyy')} : ''"></td>
                 </tr>
                 <tr>
-                    <th>Ethnicity checked, first level</th>
+                    <th>Ancestry checked, first level</th>
                     <td th:switch="${housekeeping.ethnicityCheckedLevelOne}">
                         <p th:case="'null'"></p>
 
@@ -298,7 +298,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>Ethnicity checked, second level</th>
+                    <th>Ancestry checked, second level</th>
                     <td th:switch="${housekeeping.ethnicityCheckedLevelTwo}">
                         <p th:case="'null'"></p>
 
@@ -308,7 +308,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>Ethnicity backfilled</th>
+                    <th>Ancestry backfilled</th>
                     <td th:switch="${housekeeping.ethnicityBackFilled}">
                         <p th:case="'null'"></p>
 

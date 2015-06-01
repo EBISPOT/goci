@@ -106,7 +106,7 @@
         <div class="col-md-10 col-md-offset-1">
 
             <!--Button-->
-            <input type="button" class="btn btn-default" value="Add ethnicity" data-toggle="collapse"
+            <input type="button" class="btn btn-default" value="Add Ancestry" data-toggle="collapse"
                    data-target="#add_ethnicity_form"/>
 
             <!--Only show these buttons if there is something to delete-->
@@ -116,7 +116,7 @@
                role="button"
                th:unless="${#lists.isEmpty(initialStudyEthnicityDescriptions) and #lists.isEmpty(replicationStudyEthnicityDescriptions)}">Delete
                                                                                                                                           All
-                                                                                                                                          Ethnicity
+                                                                                                                                          Ancestry
                                                                                                                                           information</a>
 
             <a href="#DeleteSelectedModal"
@@ -125,7 +125,7 @@
                data-toggle="modal"
                th:unless="${#lists.isEmpty(initialStudyEthnicityDescriptions) and #lists.isEmpty(replicationStudyEthnicityDescriptions)}">Delete
                                                                                                                                           Checked
-                                                                                                                                          Ethnicity
+                                                                                                                                          Ancestry
                                                                                                                                           information</a>
 
         </div>
@@ -141,14 +141,14 @@
                 <h4 class="modal-title">Confirmation</h4>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete all ethnicity information associated with this study?</p>
+                <p>Are you sure you want to delete all ancestry information associated with this study?</p>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 
                     <a th:href="@{/studies/{studyId}/sampledescription/delete_all(studyId=${study.id})}"
                        class="btn btn-default"
-                       role="button">Delete All Ethnicity information</a>
+                       role="button">Delete All Ancestry Information</a>
                 </div>
             </div>
         </div>
@@ -163,13 +163,13 @@
                 <h4 class="modal-title">Confirmation</h4>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete selected ethnicity information associated with this study?</p>
+                <p>Are you sure you want to delete selected ancestry information associated with this study?</p>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <a id="delete-button"
                        class="btn btn-default"
-                       role="button">Delete Checked Ethnicity information</a>
+                       role="button">Delete Checked Ancestry Information</a>
                 </div>
             </div>
         </div>
@@ -183,7 +183,7 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="well well-sm" th:if="${#lists.isEmpty(initialStudyEthnicityDescriptions)}">
-                <p style="color:grey">No initial ethnicity details to display</p>
+                <p style="color:grey">No initial ancestry details to display</p>
             </div>
             <table id="initialTable"
                    class="table table-hover table-bordered"
@@ -192,7 +192,7 @@
                 <tr>
                     <th>Type</th>
                     <th>Number of Individuals</th>
-                    <th>Ethnic Group</th>
+                    <th>Ancestry</th>
                     <th>Country of Origin</th>
                     <th>Country of Recruitment</th>
                     <th>Previously Reported</th>
@@ -238,7 +238,7 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="well well-sm" th:if="${#lists.isEmpty(replicationStudyEthnicityDescriptions)}">
-                <p style="color:grey">No replication ethnicity details to display</p>
+                <p style="color:grey">No replication ancestry details to display</p>
             </div>
             <table id="replicationTable"
                    class="table table-hover table-bordered"
@@ -247,7 +247,7 @@
                 <tr>
                     <th>Type</th>
                     <th>Number of Individuals</th>
-                    <th>Ethnic Group</th>
+                    <th>Ancestry</th>
                     <th>Country of Origin</th>
                     <th>Country of Recruitment</th>
                     <th>Previously Reported</th>
@@ -318,14 +318,13 @@
 
                         <!--Dropdowns-->
                         <div class="form-group">
-                            <label for="ethnicGroup" class="control-label col-md-2">Inferred Ethnic/Ancestral
-                                                                                    Group:</label>
+                            <label for="ethnicGroup" class="control-label col-md-2">Inferred Ancestry:</label>
 
                             <div class="col-md-10">
                                 <select name="ethnicGroup"
                                         class="form-control select2-select"
                                         multiple="multiple"
-                                        data-placeholder="Choose ethnic group"
+                                        data-placeholder="Choose ancestry"
                                         th:field="*{ethnicGroup}"
                                         id="ethnicGroup">
                                     <option th:each="ethnicGroup : ${ethnicGroups}"

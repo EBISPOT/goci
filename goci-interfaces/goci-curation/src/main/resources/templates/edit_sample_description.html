@@ -83,11 +83,11 @@
 
                     <!--Dropdowns-->
                     <div class="form-group">
-                        <label for="ethnicGroup" class="control-label col-md-2">Inferred Ethnic/Ancestral Group:</label>
+                        <label for="ethnicGroup" class="control-label col-md-2">Inferred Ancestry:</label>
 
                         <div class="col-md-10">
                             <select name="ethnicGroup" class="form-control select2-select"
-                                    multiple="multiple" data-placeholder="Choose ethnic group"
+                                    multiple="multiple" data-placeholder="Choose ancestry"
                                     th:field="${ethnicGroup.ethnicGroupValues}"
                                     id="ethnicGroup">
                                 <option th:each="ethnicGroup : ${ethnicGroups}"
