@@ -13,7 +13,7 @@ import java.io.File;
  * @author Tony Burdett
  * Date 24/01/12
  */
-public interface GWASOWLPublisher {
+public interface GwasOwlPublisher {
     /**
      * Fetches data from the GWAS catalog, converts it and writes it to an OWLOntology, and returns all data
      *
