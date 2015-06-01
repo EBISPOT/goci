@@ -7,12 +7,12 @@
 
     <!-- configuration: sets up ontology manager and data factory given mappings to the set resources -->
     <bean name="config" class="uk.ac.ebi.spot.goci.lang.OntologyConfiguration" init-method="init">
-        <property name="efoResource" value="http://www.ebi.ac.uk/efo/efo.owl" />
+        <property name="efoResource" value="file:///Users/catherineleroy/Documents/github_project/ExperimentalFactorOntology/ExFactorInOWL/releasecandidate/my_efo_merged.owl" />
         <property name="gwasDiagramSchemaResource" value="classpath:gwas-diagram.owl" />
     </bean>
 
     <!-- publisher: this does all the work and is the main API point of access -->
-    <bean name="publisher" class="uk.ac.ebi.spot.goci.service.DefaultGWASOWLPublisher">
+    <bean name="publisher" class="uk.ac.ebi.spot.goci.service.DefaultGwasOwlPublisher">
         <property name="configuration" ref="config" />
         <property name="singleNucleotidePolymorphismDAO" ref="snpDAO" />
         <property name="traitAssociationDAO" ref="traitAssociationDAO" />
@@ -23,7 +23,7 @@
     </bean>
 
     <!-- converter: all the hard work of OWL conversion is here -->
-    <bean name="converter" class="uk.ac.ebi.spot.goci.service.DefaultGWASOWLConverter">
+    <bean name="converter" class="uk.ac.ebi.spot.goci.service.DefaultGwasOwlConverter">
         <property name="configuration" ref="config" />
         <property name="ontologyDAO" ref="gwasSchemaDAO" />
     </bean>
