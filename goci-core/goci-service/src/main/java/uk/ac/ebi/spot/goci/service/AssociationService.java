@@ -67,6 +67,14 @@ public class AssociationService {
         return allAssociations;
     }
 
+
+    @Transactional(readOnly = true)
+    public List<Association> findReallyAll() {
+        List<Association> allAssociations = associationRepository.findAll();
+        allAssociations.forEach(this::loadAssociatedDataIncludingHousekeeping);
+        return allAssociations;
+    }
+
     @Transactional(readOnly = true)
     public List<Association> findAll(Sort sort) {
         List<Association> allAssociations = associationRepository.findAll(sort);
@@ -133,6 +141,11 @@ public class AssociationService {
                         efoTraitId);
         associations.forEach(this::loadAssociatedData);
         return associations;
+    }
+
+    public void loadAssociatedDataIncludingHousekeeping(Association association){
+        loadAssociatedData(association);
+        association.getStudy().getHousekeeping().getPublishDate();
     }
 
     public void loadAssociatedData(Association association) {
