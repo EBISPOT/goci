@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import uk.ac.ebi.spot.goci.model.Region;
+import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
@@ -52,6 +54,15 @@ public class StudyService {
         allStudies.forEach(this::loadAssociatedData);
         return allStudies;
     }
+
+    @Transactional(readOnly = true)
+    public List<Study> findReallyAll(){
+        List<Study> allStudies = studyRepository.findAll();
+        allStudies.forEach(this::loadAssociatedDataAndSnp);
+
+        return allStudies;
+    }
+
 
     @Transactional(readOnly = true)
     public List<Study> findAll(Sort sort) {
@@ -149,4 +160,31 @@ public class StudyService {
                             "has " + associationCount + " associations and is not yet published");
         }
     }
+
+    public void loadAssociatedDataAndSnp(Study study) {
+        int efoTraitCount = study.getEfoTraits().size();
+        int associationCount = study.getAssociations().size();
+        int snpCount = study.getSingleNucleotidePolymorphisms().size();
+//        System.out.println("BONJOUR");
+//        getLog().error("BONJOUR");
+        for(SingleNucleotidePolymorphism snp : study.getSingleNucleotidePolymorphisms()){
+            int regionCount = snp.getRegions().size();
+            getLog().trace("Snp '" + snp.getId() + "' is linked to " + regionCount + " regions.");
+//            for(Region region : snp.getRegions()){
+//                region.getId();
+//            }
+        }
+        Date publishDate = study.getHousekeeping().getPublishDate();
+        if (publishDate != null) {
+            getLog().trace(
+                    "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
+                            "has " + associationCount + " associations, " + snpCount + " snps and was published on " + publishDate.toString());
+        }
+        else {
+            getLog().trace(
+                    "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
+                            "has " + associationCount + " associations, " + snpCount + " and is not yet published");
+        }
+    }
+
 }
