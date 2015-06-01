@@ -22,27 +22,35 @@ public class AssociationFormErrorViewService {
 
             // Check SNPs
             if (snpFormRow.getSnp() != null && !snpFormRow.getSnp().isEmpty()) {
-                if (snpFormRow.getSnp().contains(",")) {
-                    snpError = snpError + "SNP " + snpFormRow.getSnp() + " contains a comma\n";
-                }
-                else if (snpFormRow.getSnp().contains("x")) {
-                    snpError = snpError + "SNP " + snpFormRow.getSnp() + " contains an x character\n";
-                }
-                else if (snpFormRow.getSnp().contains("X")) {
-                    snpError = snpError + "SNP " + snpFormRow.getSnp() + " contains an X character\n";
-                }
-
-                else if (snpFormRow.getSnp().contains(":")) {
-                    snpError = snpError + "SNP " + snpFormRow.getSnp() + "contains a :\n";
-                }
-                else {
-                    snpError = snpError + "No errors\n";
-                }
-
+                String error = checkSnpOrRiskAllele(snpFormRow.getSnp());
+                snpError = snpError+error;
             }
 
             associationErrorView.setSnpError(snpError);
         }
         return associationErrorView;
+    }
+
+    public String checkSnpOrRiskAllele(String snpValue) {
+
+        String error = "";
+        if (snpValue.contains(",")) {
+            error = "SNP " + snpValue + " contains a comma\n";
+        }
+        if (snpValue.contains("x")) {
+            error = error + "SNP " + snpValue + " contains an x character\n";
+        }
+        if (snpValue.contains("X")) {
+            error = error + "SNP " + snpValue + " contains an X character\n";
+        }
+
+        if (snpValue.contains(":")) {
+            error = error + "SNP " + snpValue + "contains a :\n";
+        }
+        else {
+            error = "No errors\n";
+        }
+
+        return error;
     }
 }
