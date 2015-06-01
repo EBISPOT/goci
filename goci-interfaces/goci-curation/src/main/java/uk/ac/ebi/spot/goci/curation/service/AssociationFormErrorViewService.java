@@ -46,24 +46,41 @@ public class AssociationFormErrorViewService {
             }
         }
         String error = "";
+
+        // Risk allele errors
         for (String riskAlleleName : associationRiskAlleles) {
             error = error + checkSnpOrRiskAllele(riskAlleleName);
-
         }
-        riskAlleleErrors = riskAlleleErrors + error;
+        if (!error.isEmpty()) {
+            riskAlleleErrors = riskAlleleErrors + error;
+        }
+        else {
+            riskAlleleErrors = riskAlleleErrors + "No errors\n";
+        }
 
+        //SNP errors
         error = "";
         for (String snpName : associationSnps) {
             error = error + checkSnpOrRiskAllele(snpName);
         }
-        snpErrors = snpErrors + error;
+        if (!error.isEmpty()) {
+            snpErrors = snpErrors + error;
+        }
+        else {
+            snpErrors = snpErrors + "No errors\n";
+        }
 
+        // Proxy errors
         error = "";
         for (String proxyName : associationProxies) {
             error = error + checkSnpOrRiskAllele(proxyName);
         }
-        proxyErrors = proxyErrors + error;
+        if (!error.isEmpty()) {
+            proxyErrors = proxyErrors + error;
+        }
+        else { proxyErrors = proxyErrors + "No errors\n";}
 
+        // Set model attributes
         associationErrorView.setRiskAlleleErrors(riskAlleleErrors);
         associationErrorView.setSnpErrors(snpErrors);
         associationErrorView.setProxyErrors(proxyErrors);
@@ -75,7 +92,7 @@ public class AssociationFormErrorViewService {
 
         String error = "";
         if (snpValue.contains(",")) {
-            error = "SNP " + snpValue + " contains a ','\n";
+            error = "SNP " + snpValue + " contains a ',' character\n";
         }
         if (snpValue.contains("x")) {
             error = error + "SNP " + snpValue + " contains an x character\n";
@@ -84,13 +101,13 @@ public class AssociationFormErrorViewService {
             error = error + "SNP " + snpValue + " contains an X character\n";
         }
         if (snpValue.contains(":")) {
-            error = error + "SNP " + snpValue + " contains a ':'\n";
+            error = error + "SNP " + snpValue + " contains a ':' character\n";
         }
         if (snpValue.contains(";")) {
-            error = error + "SNP " + snpValue + " contains a ';'\n";
+            error = error + "SNP " + snpValue + " contains a ';' character\n";
         }
         if (!snpValue.startsWith("rs")) {
-            error = error + "SNP " + snpValue + " does not start with RS :\n";
+            error = error + "SNP " + snpValue + " does not start with rs\n";
         }
 
         return error;
