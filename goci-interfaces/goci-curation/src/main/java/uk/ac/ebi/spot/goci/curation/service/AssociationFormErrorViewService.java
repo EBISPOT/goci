@@ -30,9 +30,9 @@ public class AssociationFormErrorViewService {
         Collection<String> associationSnps = new ArrayList<String>();
         Collection<String> associationProxies = new ArrayList<String>();
 
-        String riskAlleleErrors = "Risk Allele errors: ";
-        String snpErrors = "SNP errors: ";
-        String proxyErrors = "Proxy errors: ";
+        Collection<String> riskAlleleErrors = new ArrayList<String>();
+        Collection<String> snpErrors = new ArrayList<String>();
+        Collection<String> proxyErrors = new ArrayList<String>();
 
         for (Locus locus : association.getLoci()) {
 
@@ -40,50 +40,44 @@ public class AssociationFormErrorViewService {
                 for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
                     associationRiskAlleles.add(riskAllele.getRiskAlleleName());
                     associationSnps.add(riskAllele.getSnp().getRsId());
-                    associationProxies.add(riskAllele.getProxySnp().getRsId());
 
+                    if (riskAllele.getProxySnp() != null) {
+                        associationProxies.add(riskAllele.getProxySnp().getRsId());
+                    }
                 }
             }
         }
+
         String error = "";
 
         // Risk allele errors
         for (String riskAlleleName : associationRiskAlleles) {
-            error = error + checkSnpOrRiskAllele(riskAlleleName);
-        }
-        if (!error.isEmpty()) {
-            riskAlleleErrors = riskAlleleErrors + error;
-        }
-        else {
-            riskAlleleErrors = riskAlleleErrors + "No errors\n";
+            error = checkSnpOrRiskAllele(riskAlleleName);
+            if (!error.isEmpty()) {
+                riskAlleleErrors.add(error);
+            }
         }
 
         //SNP errors
-        error = "";
         for (String snpName : associationSnps) {
-            error = error + checkSnpOrRiskAllele(snpName);
-        }
-        if (!error.isEmpty()) {
-            snpErrors = snpErrors + error;
-        }
-        else {
-            snpErrors = snpErrors + "No errors\n";
+            error = checkSnpOrRiskAllele(snpName);
+            if (!error.isEmpty()) {
+                snpErrors.add(error);
+            }
         }
 
         // Proxy errors
-        error = "";
         for (String proxyName : associationProxies) {
-            error = error + checkSnpOrRiskAllele(proxyName);
+            error = checkSnpOrRiskAllele(proxyName);
+            if (!error.isEmpty()) {
+                proxyErrors.add(error);
+            }
         }
-        if (!error.isEmpty()) {
-            proxyErrors = proxyErrors + error;
-        }
-        else { proxyErrors = proxyErrors + "No errors\n";}
 
         // Set model attributes
-        associationErrorView.setRiskAlleleErrors(riskAlleleErrors);
-        associationErrorView.setSnpErrors(snpErrors);
-        associationErrorView.setProxyErrors(proxyErrors);
+        associationErrorView.setRiskAlleleErrors(formatErrors(riskAlleleErrors));
+        associationErrorView.setSnpErrors(formatErrors(snpErrors));
+        associationErrorView.setProxyErrors(formatErrors(proxyErrors));
         return associationErrorView;
     }
 
@@ -92,24 +86,30 @@ public class AssociationFormErrorViewService {
 
         String error = "";
         if (snpValue.contains(",")) {
-            error = "SNP " + snpValue + " contains a ',' character\n";
+            error = "SNP " + snpValue + " contains a ',' character, ";
         }
         if (snpValue.contains("x")) {
-            error = error + "SNP " + snpValue + " contains an x character\n";
+            error = error + "SNP " + snpValue + " contains an x character, ";
         }
         if (snpValue.contains("X")) {
-            error = error + "SNP " + snpValue + " contains an X character\n";
+            error = error + "SNP " + snpValue + " contains an X character, ";
         }
         if (snpValue.contains(":")) {
-            error = error + "SNP " + snpValue + " contains a ':' character\n";
+            error = error + "SNP " + snpValue + " contains a ':' character, ";
         }
         if (snpValue.contains(";")) {
-            error = error + "SNP " + snpValue + " contains a ';' character\n";
+            error = error + "SNP " + snpValue + " contains a ';' character, " ;
         }
         if (!snpValue.startsWith("rs")) {
-            error = error + "SNP " + snpValue + " does not start with rs\n";
+            error = error + "SNP " + snpValue + " does not start with rs, ";
         }
 
+        return error;
+    }
+
+    public String formatErrors(Collection<String> errors){
+        String error = "";
+        error = String.join(" ", errors);
         return error;
     }
 }
