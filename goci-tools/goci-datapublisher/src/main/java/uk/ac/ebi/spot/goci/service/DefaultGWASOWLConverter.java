@@ -26,13 +26,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * A default implementation of {@link GwasOwlConverter} that fetches data from the GWAS catalog using a {@link
+ * A default implementation of {@link GWASOWLConverter} that fetches data from the GWAS catalog using a {@link
  * uk.ac.ebi.spot.goci.} and converts all obtained {@link Study} objects to OWL.
  *
  * @author Tony Burdett Date 26/01/12
  */
 @Service
-public class DefaultGwasOwlConverter implements GwasOwlConverter {
+public class DefaultGWASOWLConverter implements GWASOWLConverter {
 //    private OntologyConfiguration configuration;
 
     private OntologyLoader ontologyLoader;
@@ -46,7 +46,7 @@ public class DefaultGwasOwlConverter implements GwasOwlConverter {
     }
 
     @Autowired
-    public DefaultGwasOwlConverter(OntologyLoader ontologyLoader) {
+    public DefaultGWASOWLConverter(OntologyLoader ontologyLoader) {
         this.ontologyLoader = ontologyLoader;
         this.minter = new ReflexiveIRIMinter();
     }

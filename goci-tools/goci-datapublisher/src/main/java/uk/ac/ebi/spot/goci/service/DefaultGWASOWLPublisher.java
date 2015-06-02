@@ -35,7 +35,7 @@ import java.util.List;
  * @author Tony Burdett Date 26/01/12
  */
 @Service
-public class DefaultGwasOwlPublisher implements GwasOwlPublisher {
+public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
     private OntologyLoader ontologyLoader;
     private int studiesLimit = -1;
 
@@ -48,14 +48,18 @@ public class DefaultGwasOwlPublisher implements GwasOwlPublisher {
     private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
     private SingleNucleotidePolymorphismService singleNucleotidePolymorphismService;
 
-    private GwasOwlConverter converter;
+    private GWASOWLConverter converter;
 
 
 
 
     @Autowired
 //    public DefaultGwasOwlPublisher (StudyRepository studyRepository, AssociationRepository associationRepository, SingleNucleotidePolymorphismRepository snpRepository, GwasOwlConverter converter){
-    public DefaultGwasOwlPublisher (StudyService studyService, AssociationService associationService, SingleNucleotidePolymorphismService singleNucleotidePolymorphismService, GwasOwlConverter converter, OntologyLoader ontologyLoader){
+    public DefaultGWASOWLPublisher(StudyService studyService,
+                                   AssociationService associationService,
+                                   SingleNucleotidePolymorphismService singleNucleotidePolymorphismService,
+                                   GWASOWLConverter converter,
+                                   OntologyLoader ontologyLoader){
         this.studyService = studyService;
         this.associationService = associationService;
         this.singleNucleotidePolymorphismService = singleNucleotidePolymorphismService;
@@ -108,7 +112,7 @@ public class DefaultGwasOwlPublisher implements GwasOwlPublisher {
 
 
 
-    public GwasOwlConverter getConverter() {
+    public GWASOWLConverter getConverter() {
         return converter;
     }
 

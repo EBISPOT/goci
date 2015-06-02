@@ -12,7 +12,7 @@
     </bean>
 
     <!-- publisher: this does all the work and is the main API point of access -->
-    <bean name="publisher" class="uk.ac.ebi.spot.goci.service.DefaultGwasOwlPublisher">
+    <bean name="publisher" class="uk.ac.ebi.spot.goci.service.DefaultGWASOWLPublisher">
         <property name="configuration" ref="config" />
         <property name="singleNucleotidePolymorphismDAO" ref="snpDAO" />
         <property name="traitAssociationDAO" ref="traitAssociationDAO" />
@@ -23,7 +23,7 @@
     </bean>
 
     <!-- converter: all the hard work of OWL conversion is here -->
-    <bean name="converter" class="uk.ac.ebi.spot.goci.service.DefaultGwasOwlConverter">
+    <bean name="converter" class="uk.ac.ebi.spot.goci.service.DefaultGWASOWLConverter">
         <property name="configuration" ref="config" />
         <property name="ontologyDAO" ref="gwasSchemaDAO" />
     </bean>

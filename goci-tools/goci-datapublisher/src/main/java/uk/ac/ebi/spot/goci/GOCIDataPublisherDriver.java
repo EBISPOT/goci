@@ -11,13 +11,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.exception.OWLConversionException;
 import uk.ac.ebi.spot.goci.owl.ReasonedOntologyLoader;
 import uk.ac.ebi.spot.goci.utils.FilterProperties;
 import uk.ac.ebi.spot.goci.owl.OntologyLoader;
-import uk.ac.ebi.spot.goci.service.GwasOwlPublisher;
+import uk.ac.ebi.spot.goci.service.GWASOWLPublisher;
 
 
 
@@ -37,9 +35,9 @@ public class GOCIDataPublisherDriver {
     private static File inferredOntologyFile;
 
     @Autowired
-    private GwasOwlPublisher gwasOwlPublisher;
+    private GWASOWLPublisher gwasOwlPublisher;
 
-    public GwasOwlPublisher getGwasOwlPublisher(){
+    public GWASOWLPublisher getGwasOwlPublisher(){
         return gwasOwlPublisher;
     }
 

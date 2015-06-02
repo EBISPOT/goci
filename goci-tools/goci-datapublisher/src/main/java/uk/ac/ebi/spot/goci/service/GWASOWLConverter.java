@@ -15,7 +15,7 @@ import java.util.Collection;
  * @author Tony Burdett
  * Date 24/01/12
  */
-public interface GwasOwlConverter {
+public interface GWASOWLConverter {
     /**
      * Creates a new empty ontology that can be used to do the data conversion.  This ontology will import the GWAS
      * diagram ontology that declares the schema.
