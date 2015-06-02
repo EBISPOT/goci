@@ -21,17 +21,17 @@ import java.util.List;
 public interface DiseaseTraitRepository extends JpaRepository<DiseaseTrait, Long> {
     DiseaseTrait findByTraitIgnoreCase(String trait);
 
-    List<DiseaseTrait> findByStudiesIdAndStudiesHousekeepingPublishDateIsNotNull(Long studyId);
+    List<DiseaseTrait> findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNull(Long studyId);
 
-    List<DiseaseTrait> findByStudiesIdAndStudiesHousekeepingPublishDateIsNotNull(Sort sort, Long studyId);
+    List<DiseaseTrait> findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNull(Sort sort, Long studyId);
 
-    Page<DiseaseTrait> findByStudiesIdAndStudiesHousekeepingPublishDateIsNotNull(Pageable pageable, Long studyId);
+    Page<DiseaseTrait> findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNull(Pageable pageable, Long studyId);
 
-    List<DiseaseTrait> findByStudiesAssociationsIdAndStudiesHousekeepingPublishDateIsNotNull(Long associationId);
+    List<DiseaseTrait> findByStudiesAssociationsIdAndStudiesHousekeepingCatalogPublishDateIsNotNull(Long associationId);
 
-    List<DiseaseTrait> findByStudiesAssociationsIdAndStudiesHousekeepingPublishDateIsNotNull(Sort sort,
+    List<DiseaseTrait> findByStudiesAssociationsIdAndStudiesHousekeepingCatalogPublishDateIsNotNull(Sort sort,
                                                                                              Long associationId);
 
-    Page<DiseaseTrait> findByStudiesAssociationsIdAndStudiesHousekeepingPublishDateIsNotNull(Pageable pageable,
+    Page<DiseaseTrait> findByStudiesAssociationsIdAndStudiesHousekeepingCatalogPublishDateIsNotNull(Pageable pageable,
                                                                                              Long associationId);
 }

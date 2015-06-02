@@ -28,15 +28,15 @@ public class TraitService {
     }
 
     public Collection<DiseaseTrait> findReportedTraitByStudyId(Long studyId) {
-        return diseaseTraitRepository.findByStudiesIdAndStudiesHousekeepingPublishDateIsNotNull(studyId);
+        return diseaseTraitRepository.findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNull(studyId);
     }
 
     public Collection<DiseaseTrait> findReportedTraitByAssociationId(Long associationId) {
-        return diseaseTraitRepository.findByStudiesAssociationsIdAndStudiesHousekeepingPublishDateIsNotNull(associationId);
+        return diseaseTraitRepository.findByStudiesAssociationsIdAndStudiesHousekeepingCatalogPublishDateIsNotNull(associationId);
     }
 
     public Collection<EfoTrait> findMappedTraitByStudyId(Long studyId) {
-        return efoTraitRepository.findByStudiesIdAndStudiesHousekeepingPublishDateIsNotNull(studyId);
+        return efoTraitRepository.findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNull(studyId);
     }
 
     public Collection<EfoTrait> findMappedTraitByAssociationId(Long associationId) {

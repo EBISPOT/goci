@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
@@ -90,21 +89,21 @@ public class StudyService {
      */
     @Transactional(readOnly = true)
     public List<Study> findPublishedStudies() {
-        List<Study> studies = studyRepository.findByHousekeepingPublishDateIsNotNull();
+        List<Study> studies = studyRepository.findByHousekeepingCatalogPublishDateIsNotNull();
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
 
     @Transactional(readOnly = true)
     public List<Study> findPublishedStudies(Sort sort) {
-        List<Study> studies = studyRepository.findByHousekeepingPublishDateIsNotNull(sort);
+        List<Study> studies = studyRepository.findByHousekeepingCatalogPublishDateIsNotNull(sort);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
 
     @Transactional(readOnly = true)
     public Page<Study> findPublishedStudies(Pageable pageable) {
-        Page<Study> studies = studyRepository.findByHousekeepingPublishDateIsNotNull(pageable);
+        Page<Study> studies = studyRepository.findByHousekeepingCatalogPublishDateIsNotNull(pageable);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
@@ -124,7 +123,7 @@ public class StudyService {
     @Transactional(readOnly = true)
     public Collection<Study> findBySnpId(Long snpId) {
         Collection<Study> studies =
-                studyRepository.findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingPublishDateIsNotNull(snpId);
+                studyRepository.findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNull(snpId);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
@@ -132,7 +131,7 @@ public class StudyService {
     @Transactional(readOnly = true)
     public Collection<Study> findByAssociationId(Long associationId) {
         Collection<Study> studies =
-                studyRepository.findByAssociationsIdAndHousekeepingPublishDateIsNotNull(associationId);
+                studyRepository.findByAssociationsIdAndHousekeepingCatalogPublishDateIsNotNull(associationId);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
@@ -140,7 +139,7 @@ public class StudyService {
     @Transactional(readOnly = true)
     public Collection<Study> findByDiseaseTraitId(Long diseaseTraitId) {
         Collection<Study> studies =
-                studyRepository.findByDiseaseTraitIdAndHousekeepingPublishDateIsNotNull(diseaseTraitId);
+                studyRepository.findByDiseaseTraitIdAndHousekeepingCatalogPublishDateIsNotNull(diseaseTraitId);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
@@ -148,7 +147,7 @@ public class StudyService {
     public void loadAssociatedData(Study study) {
         int efoTraitCount = study.getEfoTraits().size();
         int associationCount = study.getAssociations().size();
-        Date publishDate = study.getHousekeeping().getPublishDate();
+        Date publishDate = study.getHousekeeping().getCatalogPublishDate();
         if (publishDate != null) {
             getLog().trace(
                     "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
@@ -174,7 +173,7 @@ public class StudyService {
 //                region.getId();
 //            }
         }
-        Date publishDate = study.getHousekeeping().getPublishDate();
+        Date publishDate = study.getHousekeeping().getCatalogPublishDate();
         if (publishDate != null) {
             getLog().trace(
                     "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +

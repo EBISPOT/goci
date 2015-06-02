@@ -1,22 +1,13 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.StudySampleDescription;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Date;
 
 /**
  * Created by emma on 27/04/2015.
@@ -70,13 +61,13 @@ public class StudySampleDescriptionsDownloadService {
             line.append("\t");
 
             // Study Date
-            if (studySampleDescription.getStudyDate() == null) {
+            if (studySampleDescription.getPublicationDate() == null) {
                 line.append("");
             }
 
             else {
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                String studyDate = dateFormat.format(studySampleDescription.getStudyDate());
+                String studyDate = dateFormat.format(studySampleDescription.getPublicationDate());
                 line.append(studyDate);
             }
             line.append("\t");

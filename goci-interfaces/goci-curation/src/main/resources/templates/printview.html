@@ -40,8 +40,8 @@
                 </tr>
 
                 <tr>
-                    <th>Study Date</th>
-                    <td th:text="${#calendars.format(study.studyDate,'yyyy-MM-dd')} ?: ''"></td>
+                    <th>Publication Date</th>
+                    <td th:text="${#calendars.format(study.publicationDate,'yyyy-MM-dd')} ?: ''"></td>
                 </tr>
 
                 <tr>
@@ -269,8 +269,8 @@
                 </tr>
 
                 <tr>
-                    <th>Publish Date</th>
-                    <td th:text="${housekeeping != null and housekeeping.publishDate !=null } ? ${#calendars.format(housekeeping.publishDate, 'dd MMMM yyyy')} : ''"></td>
+                    <th>Catalog Publish Date</th>
+                    <td th:text="${housekeeping != null and housekeeping.catalogPublishDate !=null } ? ${#calendars.format(housekeeping.catalogPublishDate, 'dd MMMM yyyy')} : ''"></td>
                 </tr>
 
                 <tr>

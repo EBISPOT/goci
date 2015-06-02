@@ -21,7 +21,7 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     @Field("study_author") private Collection<String> authors; // combine in one connected field
     @Field("study_publication") private Collection<String> publications;
     @Field("study_publicationDate") private Collection<String> publicationDates; // combine in one connected field
-    @Field("study_catalogAddedDate") private Collection<String> catalogAddedDates;
+    @Field("study_catalogPublishDate") private Collection<String> catalogPublishDates;
     @Field("study_publicationLink") private Collection<String> publicationLinks;
 
     @Field("study_platform") private Collection<String> platforms;
@@ -62,7 +62,7 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.authors = new LinkedHashSet<>();
         this.publications = new LinkedHashSet<>();
         this.publicationDates = new LinkedHashSet<>();
-        this.catalogAddedDates = new LinkedHashSet<>();
+        this.catalogPublishDates = new LinkedHashSet<>();
         this.publicationLinks = new LinkedHashSet<>();
 
         this.platforms = new LinkedHashSet<>();
@@ -117,8 +117,8 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.publicationDates.add(publicationDate);
     }
 
-    public void addCatalogAddedDate(String catalogAddedDate) {
-        this.catalogAddedDates.add(catalogAddedDate);
+    public void addCatalogPublishDate(String catalogPublishDate) {
+        this.catalogPublishDates.add(catalogPublishDate);
     }
 
     public void addPublicationLink(String publicationLink) {

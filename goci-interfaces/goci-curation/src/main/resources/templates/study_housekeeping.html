@@ -38,7 +38,7 @@
             <table id="dateTable" class="table table-hover table-bordered">
                 <thead>
                 <tr>
-                    <th>Publish Date</th>
+                    <th>Catalog Publish Date</th>
                     <th>Send to NCBI Date</th>
                     <th>Study Added Date</th>
                     <th>Last Update Date</th>
@@ -46,7 +46,7 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.publishDate !=null } ? ${#calendars.format(study.housekeeping.publishDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.catalogPublishDate !=null } ? ${#calendars.format(study.housekeeping.catalogPublishDate, 'dd MMMM yyyy')} : ''"></td>
                     <td th:text="${study.housekeeping != null and study.housekeeping.sendToNCBIDate !=null } ? ${#calendars.format(study.housekeeping.sendToNCBIDate, 'dd MMMM yyyy')} : ''"></td>
                     <td th:text="${study.housekeeping != null and study.housekeeping.studyAddedDate !=null } ? ${#calendars.format(study.housekeeping.studyAddedDate, 'dd MMMM yyyy')} : ''"></td>
                     <td th:text="${study.housekeeping != null and study.housekeeping.lastUpdateDate !=null } ? ${#calendars.format(study.housekeeping.lastUpdateDate, 'dd MMMM yyyy')} : ''"></td>
@@ -101,8 +101,8 @@
 
                 <!--Hidden-->
                 <div class="form-group">
-                    <label for="publishDate" class="control-label col-md-2"></label>
-                    <input id="publishDate" type="hidden" th:field="*{publishDate}"/>
+                    <label for="catalogPublishDate" class="control-label col-md-2"></label>
+                    <input id="catalogPublishDate" type="hidden" th:field="*{catalogPublishDate}"/>
                 </div>
 
                 <div class="form-group">

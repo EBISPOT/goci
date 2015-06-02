@@ -154,13 +154,13 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         getManager().applyChange(add_author);
 
         // assert publication_date relation
-        if (study.getStudyDate() != null) {
+        if (study.getPublicationDate() != null) {
             String rfcTimezone =
-                    new SimpleDateFormat("Z").format(study.getStudyDate());
+                    new SimpleDateFormat("Z").format(study.getPublicationDate());
             String xsdTimezone =
                     rfcTimezone.substring(0, 3).concat(":").concat(rfcTimezone.substring(3, rfcTimezone.length()));
             String xmlDatetimeStr =
-                    new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(study.getStudyDate()) + xsdTimezone;
+                    new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(study.getPublicationDate()) + xsdTimezone;
             OWLLiteral publication_date = getDataFactory().getOWLLiteral(xmlDatetimeStr, OWL2Datatype.XSD_DATE_TIME);
             OWLDataPropertyAssertionAxiom publication_date_relation =
                     getDataFactory().getOWLDataPropertyAssertionAxiom(has_publication_date,

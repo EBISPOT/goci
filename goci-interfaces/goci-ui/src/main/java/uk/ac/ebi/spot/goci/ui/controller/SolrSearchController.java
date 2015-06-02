@@ -194,7 +194,7 @@ public class SolrSearchController {
         }
 
         if(dateRange != "") {
-            addFilterQuery(solrSearchBuilder, "catalogAddedDate", "study_catalogAddedDate", dateRange);
+            addFilterQuery(solrSearchBuilder, "catalogPublishDate", "study_catalogPublishDate", dateRange);
         }
         addQuery(solrSearchBuilder, query);
 
@@ -267,7 +267,7 @@ public class SolrSearchController {
         if (addedDateRange != "") {
             getLog().debug(addedDateRange);
 
-            addFilterQuery(solrSearchBuilder, "catalogAddedDate", "study_catalogAddedDate", addedDateRange);
+            addFilterQuery(solrSearchBuilder, "catalogPublishDate", "study_catalogPublishDate", addedDateRange);
 
         }
         if (traits != null && traits.length != 0) {
@@ -418,7 +418,7 @@ public class SolrSearchController {
             addRowsAndPage(solrSearchBuilder, maxResults, page);
         }
 
-        addFilterQuery(solrSearchBuilder, "catalogAddedDate", "study_catalogAddedDate", dateRange);
+        addFilterQuery(solrSearchBuilder, "catalogPublishDate", "study_catalogPublishDate", dateRange);
 
         addSortQuery(solrSearchBuilder, sort);
 
@@ -501,10 +501,10 @@ public class SolrSearchController {
 
             if(dateRange.contains("NOW")){
                 if(facet.equals("diseasetrait")){
-                    addFilterQuery(solrSearchBuilder, "study_catalogAddedDate", dateRange);
+                    addFilterQuery(solrSearchBuilder, "study_catalogPublishDate", dateRange);
                 }
                 else {
-                    addFilterQuery(solrSearchBuilder, "catalogAddedDate", dateRange);
+                    addFilterQuery(solrSearchBuilder, "catalogPublishDate", dateRange);
                 }
             }
             else {
@@ -722,7 +722,7 @@ public class SolrSearchController {
         }
         if(addedDateRange != ""){
             getLog().debug(addedDateRange);
-            addFilterQuery(solrSearchBuilder, "catalogAddedDate", addedDateRange);
+            addFilterQuery(solrSearchBuilder, "catalogPublishDate", addedDateRange);
 
         }
 

@@ -645,9 +645,9 @@ public class StudyController {
 
                 else {
                     // If there is no existing publish date then update
-                    if (housekeeping.getPublishDate() == null) {
+                    if (housekeeping.getCatalogPublishDate() == null) {
                         java.util.Date publishDate = new java.util.Date();
-                        housekeeping.setPublishDate(publishDate);
+                        housekeeping.setCatalogPublishDate(publishDate);
                     }
                 }
             }
@@ -726,7 +726,7 @@ public class StudyController {
 
         Study duplicateStudy = new Study();
         duplicateStudy.setAuthor(studyToDuplicate.getAuthor() + " DUP");
-        duplicateStudy.setStudyDate(studyToDuplicate.getStudyDate());
+        duplicateStudy.setPublicationDate(studyToDuplicate.getPublicationDate());
         duplicateStudy.setPublication(studyToDuplicate.getPublication());
         duplicateStudy.setTitle(studyToDuplicate.getTitle());
         duplicateStudy.setInitialSampleSize(studyToDuplicate.getInitialSampleSize());
@@ -771,15 +771,15 @@ public class StudyController {
     private Sort findSort(String sortType) {
 
         // Default sort by date
-        Sort sort = sortByStudyDateDesc();
+        Sort sort = sortByPublicationDateDesc();
 
         Map<String, Sort> sortTypeMap = new HashMap<>();
         sortTypeMap.put("authorsortasc", sortByAuthorAsc());
         sortTypeMap.put("authorsortdesc", sortByAuthorDesc());
         sortTypeMap.put("titlesortasc", sortByTitleAsc());
         sortTypeMap.put("titlesortdesc", sortByTitleDesc());
-        sortTypeMap.put("studydatesortasc", sortByStudyDateAsc());
-        sortTypeMap.put("studydatesortdesc", sortByStudyDateDesc());
+        sortTypeMap.put("publicationdatesortasc", sortByPublicationDateAsc());
+        sortTypeMap.put("publicationdatesortdesc", sortByPublicationDateDesc());
         sortTypeMap.put("pubmedsortasc", sortByPubmedIdAsc());
         sortTypeMap.put("pubmedsortdesc", sortByPubmedIdDesc());
         sortTypeMap.put("publicationsortasc", sortByPublicationAsc());
@@ -872,9 +872,9 @@ public class StudyController {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "trait").ignoreCase());
     }
 
-    private Sort sortByStudyDateAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "studyDate"));}
+    private Sort sortByPublicationDateAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "publicationDate"));}
 
-    private Sort sortByStudyDateDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "studyDate"));}
+    private Sort sortByPublicationDateDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "publicationDate"));}
 
     private Sort sortByAuthorAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "author").ignoreCase());}
 

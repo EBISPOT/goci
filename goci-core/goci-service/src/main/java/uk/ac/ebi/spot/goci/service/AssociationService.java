@@ -91,21 +91,21 @@ public class AssociationService {
 
     @Transactional(readOnly = true)
     public List<Association> findPublishedAssociations() {
-        List<Association> allAssociations = associationRepository.findByStudyHousekeepingPublishDateIsNotNull();
+        List<Association> allAssociations = associationRepository.findByStudyHousekeepingCatalogPublishDateIsNotNull();
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
 
     @Transactional(readOnly = true)
     public List<Association> findPublishedAssociations(Sort sort) {
-        List<Association> allAssociations = associationRepository.findByStudyHousekeepingPublishDateIsNotNull(sort);
+        List<Association> allAssociations = associationRepository.findByStudyHousekeepingCatalogPublishDateIsNotNull(sort);
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
 
     @Transactional(readOnly = true)
     public Page<Association> findPublishedAssociations(Pageable pageable) {
-        Page<Association> allAssociations = associationRepository.findByStudyHousekeepingPublishDateIsNotNull(pageable);
+        Page<Association> allAssociations = associationRepository.findByStudyHousekeepingCatalogPublishDateIsNotNull(pageable);
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
@@ -120,7 +120,7 @@ public class AssociationService {
     @Transactional(readOnly = true)
     public Collection<Association> findPublishedAssociationsBySnpId(Long snpId) {
         Collection<Association> associations = associationRepository
-                .findByLociStrongestRiskAllelesSnpIdAndStudyHousekeepingPublishDateIsNotNull(snpId);
+                .findByLociStrongestRiskAllelesSnpIdAndStudyHousekeepingCatalogPublishDateIsNotNull(snpId);
         associations.forEach(this::loadAssociatedData);
         return associations;
     }
@@ -128,7 +128,7 @@ public class AssociationService {
     @Transactional(readOnly = true)
     public Collection<Association> findPublishedAssociationsByDiseaseTraitId(Long diseaseTraitId) {
         Collection<Association> associations =
-                associationRepository.findByStudyDiseaseTraitIdAndStudyHousekeepingPublishDateIsNotNull(
+                associationRepository.findByStudyDiseaseTraitIdAndStudyHousekeepingCatalogPublishDateIsNotNull(
                         diseaseTraitId);
         associations.forEach(this::loadAssociatedData);
         return associations;
@@ -137,7 +137,7 @@ public class AssociationService {
     @Transactional(readOnly = true)
     public Collection<Association> findPublishedAssociationsByEfoTraitId(Long efoTraitId) {
         Collection<Association> associations =
-                associationRepository.findByEfoTraitsIdAndStudyHousekeepingPublishDateIsNotNull(
+                associationRepository.findByEfoTraitsIdAndStudyHousekeepingCatalogPublishDateIsNotNull(
                         efoTraitId);
         associations.forEach(this::loadAssociatedData);
         return associations;
@@ -145,7 +145,7 @@ public class AssociationService {
 
     public void loadAssociatedDataIncludingHousekeeping(Association association){
         loadAssociatedData(association);
-        association.getStudy().getHousekeeping().getPublishDate();
+        association.getStudy().getHousekeeping().getCatalogPublishDate();
     }
 
     public void loadAssociatedData(Association association) {

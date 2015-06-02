@@ -31,7 +31,7 @@ public class EmbeddableDocumentTest {
     public void setUp() {
         Housekeeping h = new Housekeeping();
         h.setLastUpdateDate(new Date());
-        h.setPublishDate(new Date());
+        h.setCatalogPublishDate(new Date());
         this.study = new Study("author", new Date(), "publication", "title", "initial sample size", "replicate " +
                 "sample size", "platform", "123456", false, false, false, null, Collections.<EfoTrait>emptyList(),
                                Collections.<SingleNucleotidePolymorphism>emptyList(), h);

@@ -140,7 +140,7 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
             //Remove study which have no diseaseTrait.
             if(study.getDiseaseTrait() == null) {
                 iterator.remove();
-            }else if( study.getHousekeeping().getPublishDate() == null) {
+            }else if( study.getHousekeeping().getCatalogPublishDate() == null) {
                 iterator.remove();
             }
 //            }else {
@@ -188,7 +188,7 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
 //                    //Remove association if it's got no pvalue
 //                    associationIterator.remove();
 
-                }else if(association.getStudy().getHousekeeping().getPublishDate() == null){
+                }else if(association.getStudy().getHousekeeping().getCatalogPublishDate() == null){
                     associationIterator.remove();
 
                 }
@@ -223,7 +223,7 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
             Study study = iterator.next();
             if(study.getDiseaseTrait() == null) {
                 iterator.remove();
-            }else if( study.getHousekeeping().getPublishDate() == null) {
+            }else if( study.getHousekeeping().getCatalogPublishDate() == null) {
                 iterator.remove();
             }
 //            }else {

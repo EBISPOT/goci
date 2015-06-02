@@ -37,7 +37,7 @@ public class Housekeeping {
     private Boolean snpsRechecked = false;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date publishDate;
+    private Date catalogPublishDate;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date sendToNCBIDate;
@@ -62,7 +62,7 @@ public class Housekeeping {
     public Housekeeping() {
     }
 
-    public Housekeeping(Boolean studySnpCheckedLevelOne, Boolean studySnpCheckedLevelTwo, Boolean ethnicityCheckedLevelOne, Boolean ethnicityCheckedLevelTwo, Boolean ethnicityBackFilled, Boolean checkedNCBIError, Boolean snpsRechecked, Date publishDate, Date sendToNCBIDate, Date studyAddedDate, Date lastUpdateDate, String fileName, String notes, Curator curator, CurationStatus curationStatus) {
+    public Housekeeping(Boolean studySnpCheckedLevelOne, Boolean studySnpCheckedLevelTwo, Boolean ethnicityCheckedLevelOne, Boolean ethnicityCheckedLevelTwo, Boolean ethnicityBackFilled, Boolean checkedNCBIError, Boolean snpsRechecked, Date catalogPublishDate, Date sendToNCBIDate, Date studyAddedDate, Date lastUpdateDate, String fileName, String notes, Curator curator, CurationStatus curationStatus) {
         this.studySnpCheckedLevelOne = studySnpCheckedLevelOne;
         this.studySnpCheckedLevelTwo = studySnpCheckedLevelTwo;
         this.ethnicityCheckedLevelOne = ethnicityCheckedLevelOne;
@@ -70,7 +70,7 @@ public class Housekeeping {
         this.ethnicityBackFilled = ethnicityBackFilled;
         this.checkedNCBIError = checkedNCBIError;
         this.snpsRechecked = snpsRechecked;
-        this.publishDate = publishDate;
+        this.catalogPublishDate = catalogPublishDate;
         this.sendToNCBIDate = sendToNCBIDate;
         this.studyAddedDate = studyAddedDate;
         this.lastUpdateDate = lastUpdateDate;
@@ -144,12 +144,12 @@ public class Housekeeping {
         this.snpsRechecked = snpsRechecked;
     }
 
-    public Date getPublishDate() {
-        return publishDate;
+    public Date getCatalogPublishDate() {
+        return catalogPublishDate;
     }
 
-    public void setPublishDate(Date publishDate) {
-        this.publishDate = publishDate;
+    public void setCatalogPublishDate(Date catalogPublishDate) {
+        this.catalogPublishDate = catalogPublishDate;
     }
 
     public Date getSendToNCBIDate() {
@@ -219,7 +219,7 @@ public class Housekeeping {
                 ", ethnicityBackFilled=" + ethnicityBackFilled +
                 ", checkedNCBIError=" + checkedNCBIError +
                 ", snpsRechecked=" + snpsRechecked +
-                ", publishDate=" + publishDate +
+                ", catalogPublishDate=" + catalogPublishDate +
                 ", sendToNCBIDate=" + sendToNCBIDate +
                 ", studyAddedDate=" + studyAddedDate +
                 ", lastUpdateDate=" + lastUpdateDate +
