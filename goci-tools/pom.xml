@@ -20,6 +20,5 @@
         <module>goci-catalog-io</module>
         <module>goci-utils</module>
         <module>goci-datapublisher</module>
-
     </modules>
 </project>
