@@ -47,6 +47,8 @@ public class AssociationViewService {
         Collection<String> snps = new ArrayList<String>();
         Collection<String> proxySnps = new ArrayList<String>();
         Collection<String> regions = new ArrayList<String>();
+        Collection<String> riskAlleleFrequencies = new ArrayList<String>();
+        Collection<String> snpStatuses = new ArrayList<String>();
 
         // By looking at each locus we can keep order in view
         for (Locus locus : loci) {
@@ -70,7 +72,6 @@ public class AssociationViewService {
                 snps.add(snp.getRsId());
 
                 // TODO CHANGE WHEN WE UPDATE MODEL FOR MULTIPLE PROXY SNPS
-
                 // Set proxy if one is present
                 if (riskAllele.getProxySnp() != null) {
                     proxySnps.add(riskAllele.getProxySnp().getRsId());
@@ -81,6 +82,29 @@ public class AssociationViewService {
                     for (Region region : snp.getRegions()) {
                         regions.add(region.getName());
                     }
+                }
+
+                // Allele risk frequency
+                if (riskAllele.getRiskFrequency() != null && !riskAllele.getRiskFrequency().isEmpty()) {
+                    riskAlleleFrequencies.add(riskAllele.getRiskFrequency());
+                }
+
+                // Genome wide Vs Limited List
+                Collection<String> snpStatus = new ArrayList<>();
+                String commaSeparatedSnpStatus = "";
+                if (riskAllele.getLimitedList() != null) {
+                    if (riskAllele.getLimitedList()) {
+                        snpStatus.add("LL");
+                    }
+                }
+                if (riskAllele.getGenomeWide() != null) {
+                    if (riskAllele.getGenomeWide()) {
+                        snpStatus.add("GW");
+                    }
+                }
+                if (!snpStatus.isEmpty()) {
+                    commaSeparatedSnpStatus = String.join(", ", snpStatus);
+                    snpStatuses.add(commaSeparatedSnpStatus);
                 }
             }
         }
@@ -105,7 +129,16 @@ public class AssociationViewService {
         associationProxies = String.join(delimiter, proxySnps);
         snpAssociationTableView.setProxySnps(associationProxies);
 
-        snpAssociationTableView.setRiskFrequency(association.getRiskFrequency());
+        // Set both risk frequencies
+        String associationRiskAlleleFrequencies = null;
+        associationRiskAlleleFrequencies = String.join(delimiter, riskAlleleFrequencies);
+        snpAssociationTableView.setRiskAlleleFrequencies(associationRiskAlleleFrequencies);
+        snpAssociationTableView.setAssociationRiskFrequency(association.getRiskFrequency());
+
+        String associationSnpStatuses = null;
+        associationSnpStatuses = String.join(delimiter, snpStatuses);
+        snpAssociationTableView.setSnpStatuses(associationSnpStatuses);
+
         snpAssociationTableView.setPvalueMantissa(association.getPvalueMantissa());
         snpAssociationTableView.setPvalueExponent(association.getPvalueExponent());
         snpAssociationTableView.setPvalueText(association.getPvalueText());
@@ -137,7 +170,7 @@ public class AssociationViewService {
         snpAssociationTableView.setOrPerCopyRecipRange(association.getOrPerCopyRecipRange());
         snpAssociationTableView.setOrPerCopyUnitDescr(association.getOrPerCopyUnitDescr());
         snpAssociationTableView.setOrPerCopyStdError(association.getOrPerCopyStdError());
-        snpAssociationTableView.setSnpType(association.getSnpType());
+        snpAssociationTableView.setSnpTypes(association.getSnpType());
 
 
         if (association.getMultiSnpHaplotype() != null) {
