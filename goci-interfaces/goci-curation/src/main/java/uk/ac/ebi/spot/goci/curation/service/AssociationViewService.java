@@ -20,7 +20,8 @@ import java.util.Map;
  * Created by emma on 20/05/2015.
  *
  * @author emma
- * Service class that creates table view of a studies associations
+ *         <p>
+ *         Service class that creates table view of a studies associations
  */
 @Service
 public class AssociationViewService {
@@ -30,6 +31,12 @@ public class AssociationViewService {
 
     public SnpAssociationTableView createSnpAssociationTableView(Association association) {
         SnpAssociationTableView snpAssociationTableView = new SnpAssociationTableView();
+
+        // SNP interaction studies should be separated by an 'x'
+        String delimiter = ", ";
+        if (association.getSnpInteraction()) {
+            delimiter = " x ";
+        }
 
         snpAssociationTableView.setAssociationId(association.getId());
 
@@ -41,12 +48,21 @@ public class AssociationViewService {
         Collection<String> proxySnps = new ArrayList<String>();
         Collection<String> regions = new ArrayList<String>();
 
+        // By looking at each locus we can keep order in view
         for (Locus locus : loci) {
 
             // Store gene names
+            // A locus can have a number of genes attached
+            // Per locus create a comma separated list and add to an array
+            // Further processing will then delimit this list
+            // either by comma or 'x' depending on association type
+            Collection<String> currentlocusGenes = new ArrayList<>();
+            String commaSeparatedGenes = "";
             for (Gene gene : locus.getAuthorReportedGenes()) {
-                locusGenes.add(gene.getGeneName());
+                currentlocusGenes.add(gene.getGeneName());
             }
+            commaSeparatedGenes = String.join(", ", currentlocusGenes);
+            locusGenes.add(commaSeparatedGenes);
 
             for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
                 locusRiskAlleles.add(riskAllele.getRiskAlleleName());
@@ -70,23 +86,23 @@ public class AssociationViewService {
         }
 
         String associationRegions = null;
-        associationRegions = String.join(", ", regions);
+        associationRegions = String.join(delimiter, regions);
         snpAssociationTableView.setRegions(associationRegions);
 
         String authorReportedGenes = null;
-        authorReportedGenes = String.join(", ", locusGenes);
+        authorReportedGenes = String.join(delimiter, locusGenes);
         snpAssociationTableView.setAuthorReportedGenes(authorReportedGenes);
 
         String strongestRiskAlleles = null;
-        strongestRiskAlleles = String.join(", ", locusRiskAlleles);
+        strongestRiskAlleles = String.join(delimiter, locusRiskAlleles);
         snpAssociationTableView.setStrongestRiskAlleles(strongestRiskAlleles);
 
         String associationSnps = null;
-        associationSnps = String.join(", ", snps);
+        associationSnps = String.join(delimiter, snps);
         snpAssociationTableView.setSnps(associationSnps);
 
         String associationProxies = null;
-        associationProxies = String.join(", ", proxySnps);
+        associationProxies = String.join(delimiter, proxySnps);
         snpAssociationTableView.setProxySnps(associationProxies);
 
         snpAssociationTableView.setRiskFrequency(association.getRiskFrequency());
