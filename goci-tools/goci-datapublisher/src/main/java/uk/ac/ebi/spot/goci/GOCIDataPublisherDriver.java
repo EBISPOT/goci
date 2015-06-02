@@ -59,50 +59,20 @@ public class GOCIDataPublisherDriver {
             long start_time = System.currentTimeMillis();
             System.out.println("Building indexes with supplied params: " + Arrays.toString(strings));
             int parseArgs = parseArguments(strings);
-                        if (parseArgs == 0) {
-                            // execute publisher
-
-                            this.publishAndSave(assertedOntologyFile, inferredOntologyFile);
-            //                driver.loadAndPrintStats(assertedOntologyFile); // AJCB - This just dumps out some stats about the knowledgebase provided
-                        }
-                        else {
-                            // could not parse arguments, exit with exit code >1 (depending on parsing problem)
-                            System.err.println("Failed to parse supplied arguments");
-                            System.exit(1 + parseArgs);
-                        }
+            if (parseArgs == 0) {
+                // execute publisher
+                this.publishAndSave(assertedOntologyFile, inferredOntologyFile);
+            } else {
+                // could not parse arguments, exit with exit code >1 (depending on parsing problem)
+                System.err.println("Failed to parse supplied arguments");
+                System.exit(1 + parseArgs);
+            }
             long end_time = System.currentTimeMillis();
             String time = String.format("%.1f", ((double) (end_time - start_time)) / 1000);
             System.out.println("Indexing building complete in " + time + " s. - application will now exit");
         };
     }
 
-    // JDBCSingleNucleotidePolymorphsm to be replaced by SingleNucleotidePolymorphismRepository
-//    public static void main(String[] args) {
-//        try {
-//
-////            ApplicationContext context = new ClassPathXmlApplicationContext(new String[] {"SpringBeans.xml"});
-//
-//            // parse arguments
-//            int parseArgs = parseArguments(args);
-//            if (parseArgs == 0) {
-//                // execute publisher
-//
-//                GOCIDataPublisherDriver driver = new GOCIDataPublisherDriver();
-//                driver.publishAndSave(assertedOntologyFile, inferredOntologyFile);
-////                driver.loadAndPrintStats(assertedOntologyFile); // AJCB - This just dumps out some stats about the knowledgebase provided
-//            }
-//            else {
-//                // could not parse arguments, exit with exit code >1 (depending on parsing problem)
-//                System.err.println("Failed to parse supplied arguments");
-//                System.exit(1 + parseArgs);
-//            }
-//        }
-//        catch (Exception e) {
-//            // failed to execute, exit with exit code 1
-//            System.err.println("An unexpected error occurred\n\t(" + e.getMessage() + ")");
-//            System.exit(1);
-//        }
-//    }
 
     private static int parseArguments(String[] args) {
         CommandLineParser parser = new GnuParser();
@@ -169,11 +139,6 @@ public class GOCIDataPublisherDriver {
         outputFileOption.setRequired(true);
         options.addOption(outputFileOption);
 
-//        Option inferredOutputFileOption = new Option("i", "inferred", true,
-//                                                     "The output file to write the inferred version of the published ontology to");
-//        inferredOutputFileOption.setArgName("file");
-//        options.addOption(inferredOutputFileOption);
-
         Option pvalueFilterOption = new Option("p", "pvalue", true, "The minimum p-value on which to filter the knowledge base, in format nE-x, e.g. 5E-8");
         options.addOption(pvalueFilterOption);
 
@@ -182,8 +147,6 @@ public class GOCIDataPublisherDriver {
 
         return options;
     }
-
-
 
     private Logger getLog() {
         return log;
@@ -195,12 +158,6 @@ public class GOCIDataPublisherDriver {
             // publishAndSave the data
             System.out.println("Attempting to convert and publish GWAS data as OWL...");
 
-            if(getGwasOwlPublisher() == null){
-                System.out.println("getGwasOwlPublisher is NULL!!!!!!!!!");
-            }else{
-                System.out.println("getGwasOwlPublisher is NOT NULL!!!!!!!!!");
-
-            }
             OWLOntology ontology = getGwasOwlPublisher().publishGWASData();
 
             // and save the result

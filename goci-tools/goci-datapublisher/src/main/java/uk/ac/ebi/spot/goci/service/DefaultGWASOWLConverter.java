@@ -315,8 +315,6 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
             AddAxiom add_band_label = new AddAxiom(ontology, band_label_annotation);
             getManager().applyChange(add_band_label);
 
-
-
             // assert located_in relation
             OWLObjectPropertyAssertionAxiom located_in_relation =
                     getDataFactory().getOWLObjectPropertyAssertionAxiom(located_in, snpIndiv, bandIndiv);
@@ -332,161 +330,47 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
             // get the appropriate chromosome class given the chromosome name
             OWLClass chrClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.CHROMOSOME_CLASS_IRI));
 
-//            System.out.println("snp.getRsId() = " + snp.getRsId());
-//            System.out.println("snp.getId() = " + snp.getId());
-//            System.out.println("snp.getChromosomeName() = " + snp.getChromosomeName());
-//            System.out.println("snp.getPosition() = " + snp.getChromosomePosition());
-
             // create a new chromosome individual
-            //TODO check with Tony if normal that I had to create an UNKNOWN chromosome? How was it done before?!
-            OWLNamedIndividual chrIndiv;
-            String chromName = "UNKNOWN";
-            if(snp.getChromosomeName() == null){
+            //If a snp has a chromosome name, create the chromosome individual if it doesn't have one (ex : the snp is
+            // no mapped any more) then just don't create it.
+            String chromName = snp.getChromosomeName();
+            if(snp.getChromosomeName() != null){
+                OWLNamedIndividual chrIndiv = getDataFactory().getOWLNamedIndividual(
+                        getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "Chromosome", chromName));
 
-                chrIndiv = getDataFactory().getOWLNamedIndividual(
-                        getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "Chromosome", chromName));
-            }else{
-                chromName =  snp.getChromosomeName();
-                chrIndiv = getDataFactory().getOWLNamedIndividual(
-                        getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "Chromosome", chromName));
+                OWLClassAssertionAxiom chrClassAssertion = getDataFactory().getOWLClassAssertionAxiom(chrClass, chrIndiv);
+                getManager().addAxiom(ontology, chrClassAssertion);
+
+                // assert chr_name relation
+                OWLLiteral chr_name = getDataFactory().getOWLLiteral(chromName);
+                OWLDataPropertyAssertionAxiom chr_name_relation =
+                        getDataFactory().getOWLDataPropertyAssertionAxiom(has_chr_name, chrIndiv, chr_name);
+                AddAxiom add_chr_name = new AddAxiom(ontology, chr_name_relation);
+                getManager().applyChange(add_chr_name);
+
+                // assert label
+                OWLLiteral chr_label = getDataFactory().getOWLLiteral("Chromosome " + chromName);
+                OWLAnnotationAssertionAxiom chr_label_annotation =
+                        getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, chrIndiv.getIRI(), chr_label);
+                AddAxiom add_chr_label = new AddAxiom(ontology, chr_label_annotation);
+                getManager().applyChange(add_chr_label);
+
+                // assert has_part relation
+                OWLObjectPropertyAssertionAxiom has_part_relation =
+                        getDataFactory().getOWLObjectPropertyAssertionAxiom(has_part, chrIndiv, bandIndiv);
+                AddAxiom add_has_part = new AddAxiom(ontology, has_part_relation);
+                getManager().applyChange(add_has_part);
+
+                // assert part_of relation
+                OWLObjectPropertyAssertionAxiom part_of_relation =
+                        getDataFactory().getOWLObjectPropertyAssertionAxiom(part_of, bandIndiv, chrIndiv);
+                AddAxiom add_part_of = new AddAxiom(ontology, part_of_relation);
+                getManager().applyChange(add_part_of);
 
             }
-//            OWLNamedIndividual chrIndiv = getDataFactory().getOWLNamedIndividual(
-//                    getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "Chromosome", snp.getChromosomeName()));
-
-
-            // assert class membership
-            OWLClassAssertionAxiom chrClassAssertion = getDataFactory().getOWLClassAssertionAxiom(chrClass, chrIndiv);
-            getManager().addAxiom(ontology, chrClassAssertion);
-
-
-
-            // assert chr_name relation
-            OWLLiteral chr_name = getDataFactory().getOWLLiteral(chromName);
-            OWLDataPropertyAssertionAxiom chr_name_relation =
-                    getDataFactory().getOWLDataPropertyAssertionAxiom(has_chr_name, chrIndiv, chr_name);
-            AddAxiom add_chr_name = new AddAxiom(ontology, chr_name_relation);
-            getManager().applyChange(add_chr_name);
-
-            // assert label
-            OWLLiteral chr_label = getDataFactory().getOWLLiteral("Chromosome " + chromName);
-            OWLAnnotationAssertionAxiom chr_label_annotation =
-                    getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, chrIndiv.getIRI(), chr_label);
-            AddAxiom add_chr_label = new AddAxiom(ontology, chr_label_annotation);
-            getManager().applyChange(add_chr_label);
-
-
-
-            // assert has_part relation
-            OWLObjectPropertyAssertionAxiom has_part_relation =
-                    getDataFactory().getOWLObjectPropertyAssertionAxiom(has_part, chrIndiv, bandIndiv);
-            AddAxiom add_has_part = new AddAxiom(ontology, has_part_relation);
-            getManager().applyChange(add_has_part);
-
-            // assert part_of relation
-            OWLObjectPropertyAssertionAxiom part_of_relation =
-                    getDataFactory().getOWLObjectPropertyAssertionAxiom(part_of, bandIndiv, chrIndiv);
-            AddAxiom add_part_of = new AddAxiom(ontology, part_of_relation);
-            getManager().applyChange(add_part_of);
-
 
         }
 
-//        // create a new band individual
-//        OWLNamedIndividual bandIndiv = getDataFactory().getOWLNamedIndividual(
-//                getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI,
-//                                 "CytogeneticRegion",
-//                                 snp.getCytogeneticBandName())
-//        );
-
-//        // assert class membership
-//        OWLClassAssertionAxiom bandClassAssertion = getDataFactory().getOWLClassAssertionAxiom(bandClass, bandIndiv);
-//        getManager().addAxiom(ontology, bandClassAssertion);
-
-//        // get datatype relations
-//        OWLDataProperty has_name = getDataFactory().getOWLDataProperty(
-//                IRI.create(OntologyConstants.HAS_NAME_PROPERTY_IRI));
-
-
-
-
-//        // assert name relation
-//        OWLLiteral name = getDataFactory().getOWLLiteral(snp.getCytogeneticBandName());
-//        OWLDataPropertyAssertionAxiom name_relation =
-//                getDataFactory().getOWLDataPropertyAssertionAxiom(has_name, bandIndiv, name);
-//        AddAxiom add_name = new AddAxiom(ontology, name_relation);
-//        getManager().applyChange(add_name);
-
-//        // assert label
-//        OWLAnnotationAssertionAxiom band_label_annotation =
-//                getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, bandIndiv.getIRI(), name);
-//        AddAxiom add_band_label = new AddAxiom(ontology, band_label_annotation);
-//        getManager().applyChange(add_band_label);
-
-//        // get object relations
-//        OWLObjectProperty located_in = getDataFactory().getOWLObjectProperty(
-//                IRI.create(OntologyConstants.LOCATED_IN_PROPERTY_IRI));
-//        OWLObjectProperty location_of = getDataFactory().getOWLObjectProperty(
-//                IRI.create(OntologyConstants.LOCATION_OF_PROPERTY_IRI));
-
-//        // assert located_in relation
-//        OWLObjectPropertyAssertionAxiom located_in_relation =
-//                getDataFactory().getOWLObjectPropertyAssertionAxiom(located_in, snpIndiv, bandIndiv);
-//        AddAxiom add_located_in = new AddAxiom(ontology, located_in_relation);
-//        getManager().applyChange(add_located_in);
-
-//        // assert location_of relation
-//        OWLObjectPropertyAssertionAxiom location_of_relation =
-//                getDataFactory().getOWLObjectPropertyAssertionAxiom(location_of, bandIndiv, snpIndiv);
-//        AddAxiom add_location_of = new AddAxiom(ontology, location_of_relation);
-//        getManager().applyChange(add_location_of);
-
-//        // get the appropriate chromosome class given the chromosome name
-//        OWLClass chrClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.CHROMOSOME_CLASS_IRI));
-//
-//        // create a new chromosome individual
-//        OWLNamedIndividual chrIndiv = getDataFactory().getOWLNamedIndividual(
-//                getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, "Chromosome", snp.getChromosomeName()));
-//
-//        // assert class membership
-//        OWLClassAssertionAxiom chrClassAssertion = getDataFactory().getOWLClassAssertionAxiom(chrClass, chrIndiv);
-//        getManager().addAxiom(ontology, chrClassAssertion);
-//
-//        // get datatype relations
-//        OWLDataProperty has_chr_name = getDataFactory().getOWLDataProperty(
-//                IRI.create(OntologyConstants.HAS_NAME_PROPERTY_IRI));
-//
-//        // assert chr_name relation
-//        OWLLiteral chr_name = getDataFactory().getOWLLiteral(snp.getChromosomeName());
-//        OWLDataPropertyAssertionAxiom chr_name_relation =
-//                getDataFactory().getOWLDataPropertyAssertionAxiom(has_chr_name, chrIndiv, chr_name);
-//        AddAxiom add_chr_name = new AddAxiom(ontology, chr_name_relation);
-//        getManager().applyChange(add_chr_name);
-//
-//        // assert label
-//        OWLLiteral chr_label = getDataFactory().getOWLLiteral("Chromosome " + snp.getChromosomeName());
-//        OWLAnnotationAssertionAxiom chr_label_annotation =
-//                getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, chrIndiv.getIRI(), chr_label);
-//        AddAxiom add_chr_label = new AddAxiom(ontology, chr_label_annotation);
-//        getManager().applyChange(add_chr_label);
-//
-//        // get object properties
-//        OWLObjectProperty has_part = getDataFactory().getOWLObjectProperty(
-//                IRI.create(OntologyConstants.HAS_PART_PROPERTY_IRI));
-//        OWLObjectProperty part_of = getDataFactory().getOWLObjectProperty(
-//                IRI.create(OntologyConstants.PART_OF_PROPERTY_IRI));
-//
-//        // assert has_part relation
-//        OWLObjectPropertyAssertionAxiom has_part_relation =
-//                getDataFactory().getOWLObjectPropertyAssertionAxiom(has_part, chrIndiv, bandIndiv);
-//        AddAxiom add_has_part = new AddAxiom(ontology, has_part_relation);
-//        getManager().applyChange(add_has_part);
-//
-//        // assert part_of relation
-//        OWLObjectPropertyAssertionAxiom part_of_relation =
-//                getDataFactory().getOWLObjectPropertyAssertionAxiom(part_of, bandIndiv, chrIndiv);
-//        AddAxiom add_part_of = new AddAxiom(ontology, part_of_relation);
-//        getManager().applyChange(add_part_of);
     }
 
     protected void convertAssociation(Association association, OWLOntology ontology, Set<String> issuedWarnings) {
@@ -511,9 +395,9 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                 getDataFactory().getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
 
         // assert pValue relation
-        //TODO : check with Tony that it's ok if there's no pvalue text.
+        //Sometimes there won't be any pvalue associated with an association. For example if the author doesn't give the
+        //pvalue but says it was less then 10-6. So if we have no pvalue we just don't add it.
         if(association.getPvalueMantissa() != null && association.getPvalueExponent() != null) {
-            System.out.println("1 pvalue is "  + association.getPvalueMantissa()+"e"+association.getPvalueExponent() );
             OWLLiteral pValue = getDataFactory().getOWLLiteral(association.getPvalueMantissa()+"e"+association.getPvalueExponent());
             OWLDataPropertyAssertionAxiom p_value_relation =
                     getDataFactory().getOWLDataPropertyAssertionAxiom(has_p_value, taIndiv, pValue);
@@ -610,15 +494,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                     // and also add the gwas label to the individual so we don't lose curated data
                     OWLDataProperty has_gwas_trait_name = getDataFactory().getOWLDataProperty(
                             IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
-//                    if(association.getStudy() == null){
-//                        System.out.println("association.getStudy() is null");
-//                    }
-//                    if(association == null){
-//                        System.out.println("association is null");
-//                    }
-//                    if(association.getStudy().getDiseaseTrait() == null){
-//                        System.out.println("association.getStudy().getDiseaseTrait() is null");
-//                    }
+
                     OWLLiteral gwasTrait = getDataFactory().getOWLLiteral(association.getStudy().getDiseaseTrait().getTrait());
 
                     OWLDataPropertyAssertionAxiom gwas_trait_relation =
@@ -659,133 +535,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                     getManager().applyChange(add_band_label);
                 }
 
-
-
-
-
-
-
             }
         }
-//        try {
-//            snpIndiv = getDataFactory().getOWLNamedIndividual(
-//                    getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, association.getAssociatedSNP()));
-//        }
-//        catch (ObjectMappingException e) {
-//            String warning = e.getMessage() + ": a new SNP with the given RSID only will be created";
-//            if (!issuedWarnings.contains(warning)) {
-//                getLog().warn(warning);
-//                issuedWarnings.add(warning);
-//            }
-//            // create a new snp instance
-//            snpIndiv = getDataFactory().getOWLNamedIndividual(
-//                    getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI,
-//                                     "SingleNucleotidePolymorphism",
-//                                     association.getAssociatedSNPReferenceId(),
-//                                     true));
-//
-//            // assert class membership
-//            OWLClass snpClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.SNP_CLASS_IRI));
-//            OWLClassAssertionAxiom snpClassAssertion = getDataFactory().getOWLClassAssertionAxiom(snpClass, snpIndiv);
-//            getManager().addAxiom(ontology, snpClassAssertion);
-//
-//            // assert rsid relation
-//            OWLDataProperty has_snp_rsid = getDataFactory().getOWLDataProperty(
-//                    IRI.create(OntologyConstants.HAS_SNP_REFERENCE_ID_PROPERTY_IRI));
-//            OWLLiteral rsid = getDataFactory().getOWLLiteral(association.getAssociatedSNPReferenceId());
-//            OWLDataPropertyAssertionAxiom rsid_relation =
-//                    getDataFactory().getOWLDataPropertyAssertionAxiom(has_snp_rsid, snpIndiv, rsid);
-//            AddAxiom add_rsid = new AddAxiom(ontology, rsid_relation);
-//            getManager().applyChange(add_rsid);
-//
-//            // assert label
-//            OWLAnnotationAssertionAxiom snp_label_annotation =
-//                    getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, snpIndiv.getIRI(), rsid);
-//            AddAxiom add_snp_label = new AddAxiom(ontology, snp_label_annotation);
-//            getManager().applyChange(add_snp_label);
-//        }
-
-//        // get object properties
-//        OWLObjectProperty has_subject =
-//                getDataFactory().getOWLObjectProperty(IRI.create(OntologyConstants.HAS_SUBJECT_IRI));
-//        OWLObjectProperty is_subject_of =
-//                getDataFactory().getOWLObjectProperty(IRI.create(OntologyConstants.IS_SUBJECT_OF_IRI));
-//
-//        // assert relations
-//        OWLObjectPropertyAssertionAxiom has_subject_snp_relation =
-//                getDataFactory().getOWLObjectPropertyAssertionAxiom(has_subject, taIndiv, snpIndiv);
-//        AddAxiom add_has_subject_snp = new AddAxiom(ontology, has_subject_snp_relation);
-//        getManager().applyChange(add_has_subject_snp);
-//
-//        OWLObjectPropertyAssertionAxiom is_subject_of_snp_relation =
-//                getDataFactory().getOWLObjectPropertyAssertionAxiom(is_subject_of, snpIndiv, taIndiv);
-//        AddAxiom add_is_subject_of_snp = new AddAxiom(ontology, is_subject_of_snp_relation);
-//        getManager().applyChange(add_is_subject_of_snp);
-//
-//        // get the EFO class for the trait
-//        OWLClass traitClass;
-//        try {
-//            traitClass = getDataFactory().getOWLClass(IRI.create(association.getAssociatedTrait()));
-//        }
-//        catch (OntologyTermException e) {
-//            // catch the exception for missing ontology terms, and map to experimental factor plus label
-//            String warning = e.getMessage() + ": this trait will be mapped to Experimental Factor";
-//            if (!issuedWarnings.contains(warning)) {
-//                getLog().warn(warning);
-//                issuedWarnings.add(warning);
-//            }
-//            traitClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI));
-//        }
-//
-//        // create a new trait instance (puns the class)
-//        IRI traitIRI = traitClass.getIRI();
-//        OWLNamedIndividual traitIndiv = getDataFactory().getOWLNamedIndividual(traitIRI);
-//
-//        if (ontology.containsIndividualInSignature(traitIRI)) {
-//            getLog().trace("Trait individual '" + traitIRI.toString() + "' (type: " + traitClass + ") already exists");
-//        }
-//        else {
-//            getLog().trace("Creating trait individual '" + traitIRI.toString() + "' (type: " + traitClass + ")");
-//        }
-//
-//        // and also add the gwas label to the individual so we don't lose curated data
-//        OWLDataProperty has_gwas_trait_name = getDataFactory().getOWLDataProperty(
-//                IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
-//        OWLLiteral gwasTrait = getDataFactory().getOWLLiteral(association.getGWASCuratorLabel());
-//        OWLDataPropertyAssertionAxiom gwas_trait_relation =
-//                getDataFactory().getOWLDataPropertyAssertionAxiom(has_gwas_trait_name, taIndiv, gwasTrait);
-//        AddAxiom add_gwas_trait_name = new AddAxiom(ontology, gwas_trait_relation);
-//        getManager().applyChange(add_gwas_trait_name);
-//
-//        // assert class membership
-//        OWLClassAssertionAxiom traitClassAssertion =
-//                getDataFactory().getOWLClassAssertionAxiom(traitClass, traitIndiv);
-//        getManager().addAxiom(ontology, traitClassAssertion);
-//
-//        // get object properties
-//        OWLObjectProperty has_object =
-//                getDataFactory().getOWLObjectProperty(IRI.create(OntologyConstants.HAS_OBJECT_IRI));
-//        OWLObjectProperty is_object_of =
-//                getDataFactory().getOWLObjectProperty(IRI.create(OntologyConstants.IS_OBJECT_OF_IRI));
-//
-//        // assert relations
-//        OWLObjectPropertyAssertionAxiom has_object_trait_relation =
-//                getDataFactory().getOWLObjectPropertyAssertionAxiom(has_object, taIndiv, traitIndiv);
-//        AddAxiom add_has_object_trait = new AddAxiom(ontology, has_object_trait_relation);
-//        getManager().applyChange(add_has_object_trait);
-//
-//        OWLObjectPropertyAssertionAxiom is_object_of_trait_relation =
-//                getDataFactory().getOWLObjectPropertyAssertionAxiom(is_object_of, traitIndiv, taIndiv);
-//        AddAxiom add_is_object_of_trait = new AddAxiom(ontology, is_object_of_trait_relation);
-//        getManager().applyChange(add_is_object_of_trait);
-//
-//        // finally, assert label for this association
-//        OWLLiteral label = getDataFactory().getOWLLiteral(
-//                "Association between " + association.getAssociatedSNPReferenceId() + " and " +
-//                        association.getGWASCuratorLabel());
-//        OWLAnnotationAssertionAxiom label_annotation =
-//                getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, taIndiv.getIRI(), label);
-//        AddAxiom add_band_label = new AddAxiom(ontology, label_annotation);
-//        getManager().applyChange(add_band_label);
     }
 }
