@@ -34,6 +34,7 @@ public class AssociationFormErrorViewService {
         Collection<String> snpErrors = new ArrayList<String>();
         Collection<String> proxyErrors = new ArrayList<String>();
 
+        // Store attributes of each loci
         for (Locus locus : association.getLoci()) {
 
             if (locus != null) {
@@ -81,27 +82,27 @@ public class AssociationFormErrorViewService {
         return associationErrorView;
     }
 
-    // Check for common errors in sno and risk allele names
+    // Check for common errors in snp and risk allele names
     public String checkSnpOrRiskAllele(String snpValue) {
 
         String error = "";
         if (snpValue.contains(",")) {
-            error = "SNP " + snpValue + " contains a ',' character, ";
+            error = "SNP " + snpValue + " contains a ',' character.";
         }
         if (snpValue.contains("x")) {
-            error = error + "SNP " + snpValue + " contains an x character, ";
+            error = error + "SNP " + snpValue + " contains an 'x' character.";
         }
         if (snpValue.contains("X")) {
-            error = error + "SNP " + snpValue + " contains an X character, ";
+            error = error + "SNP " + snpValue + " contains an 'X' character.";
         }
         if (snpValue.contains(":")) {
-            error = error + "SNP " + snpValue + " contains a ':' character, ";
+            error = error + "SNP " + snpValue + " contains a ':' character.";
         }
         if (snpValue.contains(";")) {
-            error = error + "SNP " + snpValue + " contains a ';' character, " ;
+            error = error + "SNP " + snpValue + " contains a ';' character." ;
         }
         if (!snpValue.startsWith("rs")) {
-            error = error + "SNP " + snpValue + " does not start with rs, ";
+            error = error + "SNP " + snpValue + " does not start with rs.";
         }
 
         return error;
