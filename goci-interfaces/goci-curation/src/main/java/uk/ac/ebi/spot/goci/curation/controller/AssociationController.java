@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
+import uk.ac.ebi.spot.goci.curation.model.AssociationFormErrorView;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationInteractionForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationTableView;
@@ -25,6 +26,7 @@ import uk.ac.ebi.spot.goci.curation.model.SnpFormColumn;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 import uk.ac.ebi.spot.goci.curation.service.AssociationBatchLoaderService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
+import uk.ac.ebi.spot.goci.curation.service.AssociationFormErrorViewService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationViewService;
 import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
@@ -79,6 +81,7 @@ public class AssociationController {
     private SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService;
     private SnpInteractionAssociationService snpInteractionAssociationService;
     private LociAttributesService lociAttributesService;
+    private AssociationFormErrorViewService associationFormErrorViewService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -96,7 +99,8 @@ public class AssociationController {
                                  AssociationViewService associationViewService,
                                  SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService,
                                  SnpInteractionAssociationService snpInteractionAssociationService,
-                                 LociAttributesService lociAttributesService) {
+                                 LociAttributesService lociAttributesService,
+                                 AssociationFormErrorViewService associationFormErrorViewService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -107,6 +111,7 @@ public class AssociationController {
         this.singleSnpMultiSnpAssociationService = singleSnpMultiSnpAssociationService;
         this.snpInteractionAssociationService = snpInteractionAssociationService;
         this.lociAttributesService = lociAttributesService;
+        this.associationFormErrorViewService = associationFormErrorViewService;
     }
 
     /*  Study SNP/Associations */
@@ -567,6 +572,11 @@ public class AssociationController {
 
         // Return association with that ID
         Association associationToView = associationRepository.findOne(associationId);
+
+        // Return any association errors
+        AssociationFormErrorView associationFormErrorView = associationFormErrorViewService.checkAssociationForErrors(
+                associationToView);
+        model.addAttribute("errors", associationFormErrorView);
 
         // Establish study
         Long studyId = associationToView.getStudy().getId();
