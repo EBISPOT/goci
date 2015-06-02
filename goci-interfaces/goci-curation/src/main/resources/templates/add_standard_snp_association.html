@@ -38,8 +38,15 @@
 <!--Include header-->
 <div th:include="header :: navbar"></div>
 
-<!--Include errors-->
-<div th:include="association_error :: association_errors"></div>
+<!--Link back to study page -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10">
+            <a class="btn btn-default" th:href="@{/studies/{studyId}/associations(studyId=${study.id})}">Back</a>
+        </div>
+    </div>
+</div>
+
 
 <div class="container">
 <div class="row">
