@@ -135,7 +135,7 @@
     <field name="pubmedId" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="publication" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="publicationDate" type="date" indexed="true" stored="true" multiValued="false" />
-    <field name="studyAddedDate" type="date" indexed="true" stored="true" multiValued="false" />
+    <field name="catalogPublishDate" type="date" indexed="true" stored="true" multiValued="false" />
     <field name="platform" type="text_general" indexed="true" stored="true" multiValued="false"/>
     <field name="initialSampleDescription" type="text_general" indexed="true" stored="true" multiValued="false"/>
     <field name="replicateSampleDescription" type="text_general" indexed="true" stored="true" multiValued="false"/>
