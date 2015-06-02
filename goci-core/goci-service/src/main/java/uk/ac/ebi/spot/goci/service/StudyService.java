@@ -55,6 +55,11 @@ public class StudyService {
         return allStudies;
     }
 
+    /**
+     * Get in one transaction all the studies, plus associated Associations, plus associated SNPs and their regions,
+     * plus the studies publish date.
+     * @return a List of Studies
+     */
     @Transactional(readOnly = true)
     public List<Study> findReallyAll(){
         List<Study> allStudies = studyRepository.findAll();
