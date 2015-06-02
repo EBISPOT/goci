@@ -26,7 +26,11 @@ public class SnpAssociationTableView {
 
     private String proxySnps;
 
-    private String riskFrequency;
+    // Two different frequencies, one for overall association and
+    // one for each risk allele
+    private String associationRiskFrequency;
+
+    private String riskAlleleFrequencies;
 
     private Integer pvalueMantissa;
 
@@ -50,13 +54,19 @@ public class SnpAssociationTableView {
 
     private Float orPerCopyStdError;
 
-    private String snpType;
+    // Two different types (novel or known), one for overall association and
+    // one for each snp
+    private String snpTypes;
+
+    private String associationType;
 
     private String multiSnpHaplotype;
 
     private String snpInteraction;
 
     private String snpChecked;
+
+    private String snpStatuses;
 
     private Map<String, String> associationErrorMap = new HashMap<>();
 
@@ -70,7 +80,8 @@ public class SnpAssociationTableView {
                                    String strongestRiskAlleles,
                                    String snps,
                                    String proxySnps,
-                                   String riskFrequency,
+                                   String associationRiskFrequency,
+                                   String riskAlleleFrequencies,
                                    Integer pvalueMantissa,
                                    Integer pvalueExponent,
                                    String pvalueText,
@@ -82,10 +93,12 @@ public class SnpAssociationTableView {
                                    String orPerCopyRecipRange,
                                    String orPerCopyUnitDescr,
                                    Float orPerCopyStdError,
-                                   String snpType,
+                                   String snpTypes,
+                                   String associationType,
                                    String multiSnpHaplotype,
                                    String snpInteraction,
                                    String snpChecked,
+                                   String snpStatuses,
                                    Map<String, String> associationErrorMap) {
         this.associationId = associationId;
         this.regions = regions;
@@ -93,7 +106,8 @@ public class SnpAssociationTableView {
         this.strongestRiskAlleles = strongestRiskAlleles;
         this.snps = snps;
         this.proxySnps = proxySnps;
-        this.riskFrequency = riskFrequency;
+        this.associationRiskFrequency = associationRiskFrequency;
+        this.riskAlleleFrequencies = riskAlleleFrequencies;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
         this.pvalueText = pvalueText;
@@ -105,10 +119,12 @@ public class SnpAssociationTableView {
         this.orPerCopyRecipRange = orPerCopyRecipRange;
         this.orPerCopyUnitDescr = orPerCopyUnitDescr;
         this.orPerCopyStdError = orPerCopyStdError;
-        this.snpType = snpType;
+        this.snpTypes = snpTypes;
+        this.associationType = associationType;
         this.multiSnpHaplotype = multiSnpHaplotype;
         this.snpInteraction = snpInteraction;
         this.snpChecked = snpChecked;
+        this.snpStatuses = snpStatuses;
         this.associationErrorMap = associationErrorMap;
     }
 
@@ -160,12 +176,20 @@ public class SnpAssociationTableView {
         this.proxySnps = proxySnps;
     }
 
-    public String getRiskFrequency() {
-        return riskFrequency;
+    public String getAssociationRiskFrequency() {
+        return associationRiskFrequency;
     }
 
-    public void setRiskFrequency(String riskFrequency) {
-        this.riskFrequency = riskFrequency;
+    public void setAssociationRiskFrequency(String associationRiskFrequency) {
+        this.associationRiskFrequency = associationRiskFrequency;
+    }
+
+    public String getRiskAlleleFrequencies() {
+        return riskAlleleFrequencies;
+    }
+
+    public void setRiskAlleleFrequencies(String riskAlleleFrequencies) {
+        this.riskAlleleFrequencies = riskAlleleFrequencies;
     }
 
     public Integer getPvalueMantissa() {
@@ -256,12 +280,20 @@ public class SnpAssociationTableView {
         this.orPerCopyStdError = orPerCopyStdError;
     }
 
-    public String getSnpType() {
-        return snpType;
+    public String getSnpTypes() {
+        return snpTypes;
     }
 
-    public void setSnpType(String snpType) {
-        this.snpType = snpType;
+    public void setSnpTypes(String snpTypes) {
+        this.snpTypes = snpTypes;
+    }
+
+    public String getAssociationType() {
+        return associationType;
+    }
+
+    public void setAssociationType(String associationType) {
+        this.associationType = associationType;
     }
 
     public String getMultiSnpHaplotype() {
@@ -286,6 +318,14 @@ public class SnpAssociationTableView {
 
     public void setSnpChecked(String snpChecked) {
         this.snpChecked = snpChecked;
+    }
+
+    public String getSnpStatuses() {
+        return snpStatuses;
+    }
+
+    public void setSnpStatuses(String snpStatuses) {
+        this.snpStatuses = snpStatuses;
     }
 
     public Map<String, String> getAssociationErrorMap() {
