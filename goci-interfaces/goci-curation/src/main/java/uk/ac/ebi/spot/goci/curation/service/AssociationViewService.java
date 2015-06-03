@@ -66,8 +66,10 @@ public class AssociationViewService {
             for (Gene gene : locus.getAuthorReportedGenes()) {
                 currentlocusGenes.add(gene.getGeneName());
             }
-            commaSeparatedGenes = String.join(", ", currentlocusGenes);
-            allLociGenes.add(commaSeparatedGenes);
+            if (!currentlocusGenes.isEmpty()) {
+                commaSeparatedGenes = String.join(", ", currentlocusGenes);
+                allLociGenes.add(commaSeparatedGenes);
+            }
 
             for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
                 allLociRiskAlleles.add(riskAllele.getRiskAlleleName());
