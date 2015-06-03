@@ -7,6 +7,7 @@ import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -219,8 +220,11 @@ public class AssociationDownloadService {
         final StringBuilder proxySnpRsId = new StringBuilder();
         final StringBuilder riskAlleleFrequency = new StringBuilder();
 
-        if (association.getLoci().size() > 1) {
-            // if this association has multiple loci, this is a SNP x SNP study
+        if (association.getSnpInteraction() != null && association.getSnpInteraction()) {
+
+            // Store all locus genes
+            Collection<String> locusGenes = new ArrayList<>();
+
             association.getLoci().forEach(
                     locus -> {
                         locus.getStrongestRiskAlleles().forEach(
@@ -261,9 +265,22 @@ public class AssociationDownloadService {
                                     }
                                 }
                         );
+
+                        // Handle locus genes for SNP interaction studies
+                        // This is so it clear in teh download which group
+                        // of genes belong to which interaction
+                        Collection<String> currentlocusGenes = new ArrayList<>();
+                        String commaSeparatedGenes = "";
                         locus.getAuthorReportedGenes().forEach(gene -> {
-                            setOrAppend(reportedGenes, gene.getGeneName().trim(), ", ");
+                            currentlocusGenes.add(gene.getGeneName().trim());
                         });
+                        if (!currentlocusGenes.isEmpty()) {
+                            commaSeparatedGenes = String.join(", ", currentlocusGenes);
+                            setOrAppend(reportedGenes, commaSeparatedGenes, " x  ");
+                        }
+                        else {
+                            setOrAppend(reportedGenes, "NA", " x ");
+                        }
                     }
             );
         }
