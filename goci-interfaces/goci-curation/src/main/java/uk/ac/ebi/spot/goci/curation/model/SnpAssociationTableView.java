@@ -54,10 +54,6 @@ public class SnpAssociationTableView {
 
     private Float orPerCopyStdError;
 
-    // Two different types (novel or known), one for overall association and
-    // one for each snp
-    private String snpTypes;
-
     private String associationType;
 
     private String multiSnpHaplotype;
@@ -93,7 +89,6 @@ public class SnpAssociationTableView {
                                    String orPerCopyRecipRange,
                                    String orPerCopyUnitDescr,
                                    Float orPerCopyStdError,
-                                   String snpTypes,
                                    String associationType,
                                    String multiSnpHaplotype,
                                    String snpInteraction,
@@ -119,7 +114,6 @@ public class SnpAssociationTableView {
         this.orPerCopyRecipRange = orPerCopyRecipRange;
         this.orPerCopyUnitDescr = orPerCopyUnitDescr;
         this.orPerCopyStdError = orPerCopyStdError;
-        this.snpTypes = snpTypes;
         this.associationType = associationType;
         this.multiSnpHaplotype = multiSnpHaplotype;
         this.snpInteraction = snpInteraction;
@@ -278,14 +272,6 @@ public class SnpAssociationTableView {
 
     public void setOrPerCopyStdError(Float orPerCopyStdError) {
         this.orPerCopyStdError = orPerCopyStdError;
-    }
-
-    public String getSnpTypes() {
-        return snpTypes;
-    }
-
-    public void setSnpTypes(String snpTypes) {
-        this.snpTypes = snpTypes;
     }
 
     public String getAssociationType() {

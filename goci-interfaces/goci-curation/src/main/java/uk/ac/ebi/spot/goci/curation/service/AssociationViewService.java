@@ -111,8 +111,6 @@ public class AssociationViewService {
                     commaSeparatedSnpStatus = String.join(", ", snpStatus);
                     allLociSnpStatuses.add(commaSeparatedSnpStatus);
                 }
-
-                // TODO CREATE VALUE FOR SNP TYPES
             }
         }
 
@@ -178,8 +176,6 @@ public class AssociationViewService {
         snpAssociationTableView.setOrPerCopyRecipRange(association.getOrPerCopyRecipRange());
         snpAssociationTableView.setOrPerCopyUnitDescr(association.getOrPerCopyUnitDescr());
         snpAssociationTableView.setOrPerCopyStdError(association.getOrPerCopyStdError());
-
-        // Set SNP and association types
         snpAssociationTableView.setAssociationType(association.getSnpType());
 
 
