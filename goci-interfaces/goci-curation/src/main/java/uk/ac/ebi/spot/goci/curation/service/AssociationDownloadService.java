@@ -5,9 +5,7 @@ import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 
@@ -218,6 +216,8 @@ public class AssociationDownloadService {
         final StringBuilder strongestAllele = new StringBuilder();
         final StringBuilder reportedGenes = new StringBuilder();
         final StringBuilder rsId = new StringBuilder();
+        final StringBuilder proxySnpRsId = new StringBuilder();
+        final StringBuilder riskAlleleFrequency = new StringBuilder();
 
         if (association.getLoci().size() > 1) {
             // if this association has multiple loci, this is a SNP x SNP study
@@ -230,6 +230,35 @@ public class AssociationDownloadService {
                                     SingleNucleotidePolymorphism snp = riskAllele.getSnp();
                                     setOrAppend(rsId, snp.getRsId(), " x ");
 
+                                    // Set proxy
+                                    if (riskAllele.getProxySnp() != null) {
+                                        SingleNucleotidePolymorphism proxySnp = riskAllele.getProxySnp();
+                                        if (!proxySnp.getRsId().isEmpty()) {
+                                            setOrAppend(proxySnpRsId, proxySnp.getRsId(), " x ");
+                                        }
+
+                                        else {
+                                            setOrAppend(proxySnpRsId, "NA", " x ");
+                                        }
+                                    }
+                                    else {
+                                        setOrAppend(proxySnpRsId, "NA", " x ");
+                                    }
+
+
+                                    if (association.getSnpInteraction() != null) {
+                                        if (association.getSnpInteraction()) {
+                                            // Set Risk allele frequency
+                                            if (riskAllele.getRiskFrequency() != null &&
+                                                    !riskAllele.getRiskFrequency().isEmpty()) {
+                                                String frequency = riskAllele.getRiskFrequency();
+                                                setOrAppend(riskAlleleFrequency, frequency, " x ");
+                                            }
+                                            else {
+                                                setOrAppend(riskAlleleFrequency, "NA", " x ");
+                                            }
+                                        }
+                                    }
                                 }
                         );
                         locus.getAuthorReportedGenes().forEach(gene -> {
@@ -249,6 +278,35 @@ public class AssociationDownloadService {
                                     SingleNucleotidePolymorphism snp = riskAllele.getSnp();
                                     setOrAppend(rsId, snp.getRsId(), ", ");
 
+                                    // Set proxy
+                                    if (riskAllele.getProxySnp() != null) {
+                                        SingleNucleotidePolymorphism proxySnp = riskAllele.getProxySnp();
+                                        if (!proxySnp.getRsId().isEmpty()) {
+                                            setOrAppend(proxySnpRsId, proxySnp.getRsId(), ", ");
+                                        }
+
+                                        else {
+                                            setOrAppend(proxySnpRsId, "NA", ", ");
+                                        }
+                                    }
+                                    else {
+                                        setOrAppend(proxySnpRsId, "NA", ", ");
+                                    }
+
+                                    if (association.getSnpInteraction() != null) {
+                                        if (association.getSnpInteraction()) {
+                                            // Set Risk allele frequency
+                                            if (riskAllele.getRiskFrequency() != null &&
+                                                    !riskAllele.getRiskFrequency().isEmpty()) {
+                                                String frequency = riskAllele.getRiskFrequency();
+                                                setOrAppend(riskAlleleFrequency, frequency, ", ");
+                                            }
+                                            else {
+                                                setOrAppend(riskAlleleFrequency, "NA", ", ");
+                                            }
+                                        }
+                                    }
+
                                 }
                         );
                         locus.getAuthorReportedGenes().forEach(gene -> {
@@ -263,7 +321,10 @@ public class AssociationDownloadService {
         line.append("\t");
         line.append(rsId.toString());
         line.append("\t");
-
+        line.append(proxySnpRsId.toString());
+        line.append("\t");
+        line.append(riskAlleleFrequency.toString());
+        line.append("\t");
 
     }
 
