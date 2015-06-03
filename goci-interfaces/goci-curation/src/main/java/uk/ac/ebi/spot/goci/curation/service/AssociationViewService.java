@@ -26,13 +26,16 @@ import java.util.Map;
 @Service
 public class AssociationViewService {
 
+    // Constructor
     public AssociationViewService() {
     }
 
+    // Create object that will be returned to view
     public SnpAssociationTableView createSnpAssociationTableView(Association association) {
         SnpAssociationTableView snpAssociationTableView = new SnpAssociationTableView();
 
-        // SNP interaction studies should be separated by an 'x'
+        // For SNP interaction studies snp, proxy snps, risk alleles etc
+        // should be separated by an 'x'
         String delimiter = ", ";
         if (association.getSnpInteraction()) {
             delimiter = " x ";
@@ -40,20 +43,22 @@ public class AssociationViewService {
 
         snpAssociationTableView.setAssociationId(association.getId());
 
-        // For each locus get genes, risk alleles, snps, proxy snps
+        // For each locus relevant attributes
         Collection<Locus> loci = association.getLoci();
-        Collection<String> locusGenes = new ArrayList<>();
-        Collection<String> locusRiskAlleles = new ArrayList<String>();
-        Collection<String> snps = new ArrayList<String>();
-        Collection<String> proxySnps = new ArrayList<String>();
-        Collection<String> regions = new ArrayList<String>();
+        Collection<String> allLociGenes = new ArrayList<>();
+        Collection<String> allLociRiskAlleles = new ArrayList<String>();
+        Collection<String> allLociSnps = new ArrayList<String>();
+        Collection<String> allLociProxySnps = new ArrayList<String>();
+        Collection<String> allLociRegions = new ArrayList<String>();
+        Collection<String> allLociRiskAlleleFrequencies = new ArrayList<String>();
+        Collection<String> allLociSnpStatuses = new ArrayList<String>();
 
-        // By looking at each locus we can keep order in view
+        // By looking at each locus in turn we can keep order in view
         for (Locus locus : loci) {
 
             // Store gene names
             // A locus can have a number of genes attached
-            // Per locus create a comma separated list and add to an array
+            // Per locus create a comma separated list and add to an array.
             // Further processing will then delimit this list
             // either by comma or 'x' depending on association type
             Collection<String> currentlocusGenes = new ArrayList<>();
@@ -61,51 +66,140 @@ public class AssociationViewService {
             for (Gene gene : locus.getAuthorReportedGenes()) {
                 currentlocusGenes.add(gene.getGeneName());
             }
-            commaSeparatedGenes = String.join(", ", currentlocusGenes);
-            locusGenes.add(commaSeparatedGenes);
+            if (!currentlocusGenes.isEmpty()) {
+                commaSeparatedGenes = String.join(", ", currentlocusGenes);
+                allLociGenes.add(commaSeparatedGenes);
+            }
+            else { allLociGenes.add("NA"); }
 
             for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
-                locusRiskAlleles.add(riskAllele.getRiskAlleleName());
+                allLociRiskAlleles.add(riskAllele.getRiskAlleleName());
+
+                // SNPs attached to risk allele
                 SingleNucleotidePolymorphism snp = riskAllele.getSnp();
-                snps.add(snp.getRsId());
+                allLociSnps.add(snp.getRsId());
 
                 // TODO CHANGE WHEN WE UPDATE MODEL FOR MULTIPLE PROXY SNPS
-
                 // Set proxy if one is present
                 if (riskAllele.getProxySnp() != null) {
-                    proxySnps.add(riskAllele.getProxySnp().getRsId());
+                    allLociProxySnps.add(riskAllele.getProxySnp().getRsId());
                 }
+                else { allLociProxySnps.add("NA");}
 
                 // Store region information
+                Collection<String> currentLocusSnpRegions = new ArrayList<>();
+                String commaSeparatedRegions = "";
                 if (snp.getRegions() != null && !snp.getRegions().isEmpty()) {
                     for (Region region : snp.getRegions()) {
-                        regions.add(region.getName());
+                        currentLocusSnpRegions.add(region.getName());
+                    }
+                }
+                if (!currentLocusSnpRegions.isEmpty()) {
+                    commaSeparatedRegions = String.join(", ", currentLocusSnpRegions);
+                    allLociRegions.add(commaSeparatedRegions);
+                }
+
+                // These are only required for SNP interaction studies
+                if (association.getSnpInteraction() != null) {
+                    if (association.getSnpInteraction()) {
+
+                        // Allele risk frequency
+                        if (riskAllele.getRiskFrequency() != null && !riskAllele.getRiskFrequency().isEmpty()) {
+                            allLociRiskAlleleFrequencies.add(riskAllele.getRiskFrequency());
+                        }
+                        else {
+                            allLociRiskAlleleFrequencies.add("NA");
+                        }
+
+                        // Genome wide Vs Limited List
+                        Collection<String> snpStatus = new ArrayList<>();
+                        String commaSeparatedSnpStatus = "";
+                        if (riskAllele.getLimitedList() != null) {
+                            if (riskAllele.getLimitedList()) {
+                                snpStatus.add("LL");
+                            }
+                        }
+                        if (riskAllele.getGenomeWide() != null) {
+                            if (riskAllele.getGenomeWide()) {
+                                snpStatus.add("GW");
+                            }
+                        }
+                        if (!snpStatus.isEmpty()) {
+                            commaSeparatedSnpStatus = String.join(", ", snpStatus);
+                            allLociSnpStatuses.add(commaSeparatedSnpStatus);
+                        }
+                        else { allLociSnpStatuses.add("NA");}
                     }
                 }
             }
         }
 
+        // Create delimited strings for view
         String associationRegions = null;
-        associationRegions = String.join(delimiter, regions);
+        if (allLociRegions.size() > 1) {
+            associationRegions = String.join(delimiter, allLociRegions);
+        }
+        else {
+            associationRegions = String.join("", allLociRegions);
+        }
         snpAssociationTableView.setRegions(associationRegions);
 
         String authorReportedGenes = null;
-        authorReportedGenes = String.join(delimiter, locusGenes);
+        if (allLociGenes.size() > 1) {
+            authorReportedGenes = String.join(delimiter, allLociGenes);
+        }
+        else {
+            authorReportedGenes = String.join("", allLociGenes);
+        }
         snpAssociationTableView.setAuthorReportedGenes(authorReportedGenes);
 
         String strongestRiskAlleles = null;
-        strongestRiskAlleles = String.join(delimiter, locusRiskAlleles);
+        if (allLociRiskAlleles.size() > 1) {
+            strongestRiskAlleles = String.join(delimiter, allLociRiskAlleles);
+        }
+        else {
+            strongestRiskAlleles = String.join("", allLociRiskAlleles);
+        }
         snpAssociationTableView.setStrongestRiskAlleles(strongestRiskAlleles);
 
         String associationSnps = null;
-        associationSnps = String.join(delimiter, snps);
+        if (allLociSnps.size() > 1) {
+            associationSnps = String.join(delimiter, allLociSnps);
+        }
+        else {
+            associationSnps = String.join("", allLociSnps);
+        }
         snpAssociationTableView.setSnps(associationSnps);
 
         String associationProxies = null;
-        associationProxies = String.join(delimiter, proxySnps);
+        if (allLociProxySnps.size() > 1) {
+            associationProxies = String.join(delimiter, allLociProxySnps);
+        }
+        else {
+            associationProxies = String.join("", allLociProxySnps);
+        }
         snpAssociationTableView.setProxySnps(associationProxies);
 
-        snpAssociationTableView.setRiskFrequency(association.getRiskFrequency());
+        // Set both risk frequencies
+        String associationRiskAlleleFrequencies = null;
+        if (allLociRiskAlleleFrequencies.size() > 1) {
+            associationRiskAlleleFrequencies = String.join(delimiter, allLociRiskAlleleFrequencies);
+        }
+        else {
+            associationRiskAlleleFrequencies = String.join("", allLociRiskAlleleFrequencies);
+        }
+        snpAssociationTableView.setRiskAlleleFrequencies(associationRiskAlleleFrequencies);
+        snpAssociationTableView.setAssociationRiskFrequency(association.getRiskFrequency());
+
+        String associationSnpStatuses = null;
+        if (allLociSnpStatuses.size() > 1) {
+            associationSnpStatuses = String.join(delimiter, allLociSnpStatuses);
+        }
+        else {
+            associationSnpStatuses = String.join("", allLociSnpStatuses);
+        }
+        snpAssociationTableView.setSnpStatuses(associationSnpStatuses);
+
         snpAssociationTableView.setPvalueMantissa(association.getPvalueMantissa());
         snpAssociationTableView.setPvalueExponent(association.getPvalueExponent());
         snpAssociationTableView.setPvalueText(association.getPvalueText());
@@ -137,7 +231,7 @@ public class AssociationViewService {
         snpAssociationTableView.setOrPerCopyRecipRange(association.getOrPerCopyRecipRange());
         snpAssociationTableView.setOrPerCopyUnitDescr(association.getOrPerCopyUnitDescr());
         snpAssociationTableView.setOrPerCopyStdError(association.getOrPerCopyStdError());
-        snpAssociationTableView.setSnpType(association.getSnpType());
+        snpAssociationTableView.setAssociationType(association.getSnpType());
 
 
         if (association.getMultiSnpHaplotype() != null) {
@@ -173,7 +267,6 @@ public class AssociationViewService {
 
         // Set error map
         snpAssociationTableView.setAssociationErrorMap(createAssociationErrorMap(association.getAssociationReport()));
-
         return snpAssociationTableView;
     }
 
