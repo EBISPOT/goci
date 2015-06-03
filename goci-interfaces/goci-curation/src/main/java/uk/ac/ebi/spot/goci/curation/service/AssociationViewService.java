@@ -83,10 +83,16 @@ public class AssociationViewService {
                 }
 
                 // Store region information
+                Collection<String> currentLocusSnpRegions = new ArrayList<>();
+                String commaSeparatedRegions = "";
                 if (snp.getRegions() != null && !snp.getRegions().isEmpty()) {
                     for (Region region : snp.getRegions()) {
-                        allLociRegions.add(region.getName());
+                        currentLocusSnpRegions.add(region.getName());
                     }
+                }
+                if (!currentLocusSnpRegions.isEmpty()) {
+                    commaSeparatedRegions = String.join(", ", currentLocusSnpRegions);
+                    allLociRegions.add(commaSeparatedRegions);
                 }
 
                 // Allele risk frequency
@@ -116,33 +122,68 @@ public class AssociationViewService {
 
         // Create delimited strings for view
         String associationRegions = null;
-        associationRegions = String.join(delimiter, allLociRegions);
+        if (allLociRegions.size() > 1) {
+            associationRegions = String.join(delimiter, allLociRegions);
+        }
+        else {
+            associationRegions = String.join("", allLociRegions);
+        }
         snpAssociationTableView.setRegions(associationRegions);
 
         String authorReportedGenes = null;
-        authorReportedGenes = String.join(delimiter, allLociGenes);
+        if (allLociGenes.size() > 1) {
+            authorReportedGenes = String.join(delimiter, allLociGenes);
+        }
+        else {
+            authorReportedGenes = String.join("", allLociGenes);
+        }
         snpAssociationTableView.setAuthorReportedGenes(authorReportedGenes);
 
         String strongestRiskAlleles = null;
-        strongestRiskAlleles = String.join(delimiter, allLociRiskAlleles);
+        if (allLociRiskAlleles.size() > 1) {
+            strongestRiskAlleles = String.join(delimiter, allLociRiskAlleles);
+        }
+        else {
+            strongestRiskAlleles = String.join("", allLociRiskAlleles);
+        }
         snpAssociationTableView.setStrongestRiskAlleles(strongestRiskAlleles);
 
         String associationSnps = null;
-        associationSnps = String.join(delimiter, allLociSnps);
+        if (allLociSnps.size() > 1) {
+            associationSnps = String.join(delimiter, allLociSnps);
+        }
+        else {
+            associationSnps = String.join("", allLociSnps);
+        }
         snpAssociationTableView.setSnps(associationSnps);
 
         String associationProxies = null;
-        associationProxies = String.join(delimiter, allLociProxySnps);
+        if (allLociProxySnps.size() > 1) {
+            associationProxies = String.join(delimiter, allLociProxySnps);
+        }
+        else {
+            associationProxies = String.join("", allLociProxySnps);
+        }
         snpAssociationTableView.setProxySnps(associationProxies);
 
         // Set both risk frequencies
         String associationRiskAlleleFrequencies = null;
-        associationRiskAlleleFrequencies = String.join(delimiter, allLociRiskAlleleFrequencies);
+        if (allLociRiskAlleleFrequencies.size() > 1) {
+            associationRiskAlleleFrequencies = String.join(delimiter, allLociRiskAlleleFrequencies);
+        }
+        else {
+            associationRiskAlleleFrequencies = String.join("", allLociRiskAlleleFrequencies);
+        }
         snpAssociationTableView.setRiskAlleleFrequencies(associationRiskAlleleFrequencies);
         snpAssociationTableView.setAssociationRiskFrequency(association.getRiskFrequency());
 
         String associationSnpStatuses = null;
-        associationSnpStatuses = String.join(delimiter, allLociSnpStatuses);
+        if (allLociSnpStatuses.size() > 1) {
+            associationSnpStatuses = String.join(delimiter, allLociSnpStatuses);
+        }
+        else {
+            associationSnpStatuses = String.join("", allLociSnpStatuses);
+        }
         snpAssociationTableView.setSnpStatuses(associationSnpStatuses);
 
         snpAssociationTableView.setPvalueMantissa(association.getPvalueMantissa());
@@ -212,7 +253,6 @@ public class AssociationViewService {
 
         // Set error map
         snpAssociationTableView.setAssociationErrorMap(createAssociationErrorMap(association.getAssociationReport()));
-
         return snpAssociationTableView;
     }
 
