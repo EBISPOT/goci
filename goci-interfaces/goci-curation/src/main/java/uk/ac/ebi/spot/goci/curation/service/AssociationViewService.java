@@ -26,13 +26,16 @@ import java.util.Map;
 @Service
 public class AssociationViewService {
 
+    // Constructor
     public AssociationViewService() {
     }
 
+    // Create object that will be returned to view
     public SnpAssociationTableView createSnpAssociationTableView(Association association) {
         SnpAssociationTableView snpAssociationTableView = new SnpAssociationTableView();
 
-        // SNP interaction studies should be separated by an 'x'
+        // For SNP interaction studies snp, proxy snps, risk alleles etc
+        // should be separated by an 'x'
         String delimiter = ", ";
         if (association.getSnpInteraction()) {
             delimiter = " x ";
@@ -40,22 +43,22 @@ public class AssociationViewService {
 
         snpAssociationTableView.setAssociationId(association.getId());
 
-        // For each locus get genes, risk alleles, snps, proxy snps
+        // For each locus relevant attributes
         Collection<Locus> loci = association.getLoci();
-        Collection<String> locusGenes = new ArrayList<>();
-        Collection<String> locusRiskAlleles = new ArrayList<String>();
-        Collection<String> snps = new ArrayList<String>();
-        Collection<String> proxySnps = new ArrayList<String>();
-        Collection<String> regions = new ArrayList<String>();
-        Collection<String> riskAlleleFrequencies = new ArrayList<String>();
-        Collection<String> snpStatuses = new ArrayList<String>();
+        Collection<String> allLociGenes = new ArrayList<>();
+        Collection<String> allLociRiskAlleles = new ArrayList<String>();
+        Collection<String> allLociSnps = new ArrayList<String>();
+        Collection<String> allLociProxySnps = new ArrayList<String>();
+        Collection<String> allLociRegions = new ArrayList<String>();
+        Collection<String> allLociRiskAlleleFrequencies = new ArrayList<String>();
+        Collection<String> allLociSnpStatuses = new ArrayList<String>();
 
-        // By looking at each locus we can keep order in view
+        // By looking at each locus in turn we can keep order in view
         for (Locus locus : loci) {
 
             // Store gene names
             // A locus can have a number of genes attached
-            // Per locus create a comma separated list and add to an array
+            // Per locus create a comma separated list and add to an array.
             // Further processing will then delimit this list
             // either by comma or 'x' depending on association type
             Collection<String> currentlocusGenes = new ArrayList<>();
@@ -64,29 +67,31 @@ public class AssociationViewService {
                 currentlocusGenes.add(gene.getGeneName());
             }
             commaSeparatedGenes = String.join(", ", currentlocusGenes);
-            locusGenes.add(commaSeparatedGenes);
+            allLociGenes.add(commaSeparatedGenes);
 
             for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
-                locusRiskAlleles.add(riskAllele.getRiskAlleleName());
+                allLociRiskAlleles.add(riskAllele.getRiskAlleleName());
+
+                // SNPs attached to risk allele
                 SingleNucleotidePolymorphism snp = riskAllele.getSnp();
-                snps.add(snp.getRsId());
+                allLociSnps.add(snp.getRsId());
 
                 // TODO CHANGE WHEN WE UPDATE MODEL FOR MULTIPLE PROXY SNPS
                 // Set proxy if one is present
                 if (riskAllele.getProxySnp() != null) {
-                    proxySnps.add(riskAllele.getProxySnp().getRsId());
+                    allLociProxySnps.add(riskAllele.getProxySnp().getRsId());
                 }
 
                 // Store region information
                 if (snp.getRegions() != null && !snp.getRegions().isEmpty()) {
                     for (Region region : snp.getRegions()) {
-                        regions.add(region.getName());
+                        allLociRegions.add(region.getName());
                     }
                 }
 
                 // Allele risk frequency
                 if (riskAllele.getRiskFrequency() != null && !riskAllele.getRiskFrequency().isEmpty()) {
-                    riskAlleleFrequencies.add(riskAllele.getRiskFrequency());
+                    allLociRiskAlleleFrequencies.add(riskAllele.getRiskFrequency());
                 }
 
                 // Genome wide Vs Limited List
@@ -104,39 +109,40 @@ public class AssociationViewService {
                 }
                 if (!snpStatus.isEmpty()) {
                     commaSeparatedSnpStatus = String.join(", ", snpStatus);
-                    snpStatuses.add(commaSeparatedSnpStatus);
+                    allLociSnpStatuses.add(commaSeparatedSnpStatus);
                 }
             }
         }
 
+        // Create delimited strings for view
         String associationRegions = null;
-        associationRegions = String.join(delimiter, regions);
+        associationRegions = String.join(delimiter, allLociRegions);
         snpAssociationTableView.setRegions(associationRegions);
 
         String authorReportedGenes = null;
-        authorReportedGenes = String.join(delimiter, locusGenes);
+        authorReportedGenes = String.join(delimiter, allLociGenes);
         snpAssociationTableView.setAuthorReportedGenes(authorReportedGenes);
 
         String strongestRiskAlleles = null;
-        strongestRiskAlleles = String.join(delimiter, locusRiskAlleles);
+        strongestRiskAlleles = String.join(delimiter, allLociRiskAlleles);
         snpAssociationTableView.setStrongestRiskAlleles(strongestRiskAlleles);
 
         String associationSnps = null;
-        associationSnps = String.join(delimiter, snps);
+        associationSnps = String.join(delimiter, allLociSnps);
         snpAssociationTableView.setSnps(associationSnps);
 
         String associationProxies = null;
-        associationProxies = String.join(delimiter, proxySnps);
+        associationProxies = String.join(delimiter, allLociProxySnps);
         snpAssociationTableView.setProxySnps(associationProxies);
 
         // Set both risk frequencies
         String associationRiskAlleleFrequencies = null;
-        associationRiskAlleleFrequencies = String.join(delimiter, riskAlleleFrequencies);
+        associationRiskAlleleFrequencies = String.join(delimiter, allLociRiskAlleleFrequencies);
         snpAssociationTableView.setRiskAlleleFrequencies(associationRiskAlleleFrequencies);
         snpAssociationTableView.setAssociationRiskFrequency(association.getRiskFrequency());
 
         String associationSnpStatuses = null;
-        associationSnpStatuses = String.join(delimiter, snpStatuses);
+        associationSnpStatuses = String.join(delimiter, allLociSnpStatuses);
         snpAssociationTableView.setSnpStatuses(associationSnpStatuses);
 
         snpAssociationTableView.setPvalueMantissa(association.getPvalueMantissa());
