@@ -70,6 +70,7 @@ public class AssociationViewService {
                 commaSeparatedGenes = String.join(", ", currentlocusGenes);
                 allLociGenes.add(commaSeparatedGenes);
             }
+            else { allLociGenes.add("NA"); }
 
             for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
                 allLociRiskAlleles.add(riskAllele.getRiskAlleleName());
@@ -83,6 +84,7 @@ public class AssociationViewService {
                 if (riskAllele.getProxySnp() != null) {
                     allLociProxySnps.add(riskAllele.getProxySnp().getRsId());
                 }
+                else { allLociProxySnps.add("NA");}
 
                 // Store region information
                 Collection<String> currentLocusSnpRegions = new ArrayList<>();
@@ -97,27 +99,37 @@ public class AssociationViewService {
                     allLociRegions.add(commaSeparatedRegions);
                 }
 
-                // Allele risk frequency
-                if (riskAllele.getRiskFrequency() != null && !riskAllele.getRiskFrequency().isEmpty()) {
-                    allLociRiskAlleleFrequencies.add(riskAllele.getRiskFrequency());
-                }
+                // These are only required for SNP interaction studies
+                if (association.getSnpInteraction() != null) {
+                    if (association.getSnpInteraction()) {
 
-                // Genome wide Vs Limited List
-                Collection<String> snpStatus = new ArrayList<>();
-                String commaSeparatedSnpStatus = "";
-                if (riskAllele.getLimitedList() != null) {
-                    if (riskAllele.getLimitedList()) {
-                        snpStatus.add("LL");
+                        // Allele risk frequency
+                        if (riskAllele.getRiskFrequency() != null && !riskAllele.getRiskFrequency().isEmpty()) {
+                            allLociRiskAlleleFrequencies.add(riskAllele.getRiskFrequency());
+                        }
+                        else {
+                            allLociRiskAlleleFrequencies.add("NA");
+                        }
+
+                        // Genome wide Vs Limited List
+                        Collection<String> snpStatus = new ArrayList<>();
+                        String commaSeparatedSnpStatus = "";
+                        if (riskAllele.getLimitedList() != null) {
+                            if (riskAllele.getLimitedList()) {
+                                snpStatus.add("LL");
+                            }
+                        }
+                        if (riskAllele.getGenomeWide() != null) {
+                            if (riskAllele.getGenomeWide()) {
+                                snpStatus.add("GW");
+                            }
+                        }
+                        if (!snpStatus.isEmpty()) {
+                            commaSeparatedSnpStatus = String.join(", ", snpStatus);
+                            allLociSnpStatuses.add(commaSeparatedSnpStatus);
+                        }
+                        else { allLociSnpStatuses.add("NA");}
                     }
-                }
-                if (riskAllele.getGenomeWide() != null) {
-                    if (riskAllele.getGenomeWide()) {
-                        snpStatus.add("GW");
-                    }
-                }
-                if (!snpStatus.isEmpty()) {
-                    commaSeparatedSnpStatus = String.join(", ", snpStatus);
-                    allLociSnpStatuses.add(commaSeparatedSnpStatus);
                 }
             }
         }
