@@ -409,8 +409,8 @@ public class AssociationSheetProcessor {
                         Collection<String> efoUris = new ArrayList<>();
 
                         for (String uri : uris) {
-                            uri.trim();
-                            efoUris.add(uri);
+                            String trimmedUri = uri.trim();
+                            efoUris.add(trimmedUri);
                         }
 
                         Collection<EfoTrait> efoTraits = getEfoTraitsFromRepository(efoUris);
@@ -475,7 +475,7 @@ public class AssociationSheetProcessor {
                         newAssociation.setSnpInteraction(false);
                     }
 
-                    String delimiter = "";
+                    String delimiter;
                     Collection<Locus> loci = new ArrayList<>();
 
                     if (newAssociation.getSnpInteraction()) {
