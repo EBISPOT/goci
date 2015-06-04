@@ -70,7 +70,7 @@ public class AssociationViewService {
                 commaSeparatedGenes = String.join(", ", currentlocusGenes);
                 allLociGenes.add(commaSeparatedGenes);
             }
-            else { allLociGenes.add("NA"); }
+            else { allLociGenes.add("NR"); }
 
             for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
                 allLociRiskAlleles.add(riskAllele.getRiskAlleleName());
@@ -84,7 +84,7 @@ public class AssociationViewService {
                 if (riskAllele.getProxySnp() != null) {
                     allLociProxySnps.add(riskAllele.getProxySnp().getRsId());
                 }
-                else { allLociProxySnps.add("NA");}
+                else { allLociProxySnps.add("NR");}
 
                 // Store region information
                 Collection<String> currentLocusSnpRegions = new ArrayList<>();
@@ -99,17 +99,17 @@ public class AssociationViewService {
                     allLociRegions.add(commaSeparatedRegions);
                 }
 
-                // These are only required for SNP interaction studies
+                // Allele risk frequency
+                if (riskAllele.getRiskFrequency() != null && !riskAllele.getRiskFrequency().isEmpty()) {
+                    allLociRiskAlleleFrequencies.add(riskAllele.getRiskFrequency());
+                }
+                else {
+                    allLociRiskAlleleFrequencies.add("NR");
+                }
+
+                // Only required for SNP interaction studies
                 if (association.getSnpInteraction() != null) {
                     if (association.getSnpInteraction()) {
-
-                        // Allele risk frequency
-                        if (riskAllele.getRiskFrequency() != null && !riskAllele.getRiskFrequency().isEmpty()) {
-                            allLociRiskAlleleFrequencies.add(riskAllele.getRiskFrequency());
-                        }
-                        else {
-                            allLociRiskAlleleFrequencies.add("NA");
-                        }
 
                         // Genome wide Vs Limited List
                         Collection<String> snpStatus = new ArrayList<>();
@@ -128,7 +128,7 @@ public class AssociationViewService {
                             commaSeparatedSnpStatus = String.join(", ", snpStatus);
                             allLociSnpStatuses.add(commaSeparatedSnpStatus);
                         }
-                        else { allLociSnpStatuses.add("NA");}
+                        else { allLociSnpStatuses.add("NR");}
                     }
                 }
             }
