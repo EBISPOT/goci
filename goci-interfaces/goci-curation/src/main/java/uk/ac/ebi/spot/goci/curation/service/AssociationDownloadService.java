@@ -220,10 +220,8 @@ public class AssociationDownloadService {
         final StringBuilder proxySnpRsId = new StringBuilder();
         final StringBuilder riskAlleleFrequency = new StringBuilder();
 
+        // Different delimiters for snp interaction and standard/haplotype associations
         if (association.getSnpInteraction() != null && association.getSnpInteraction()) {
-
-            // Store all locus genes
-            Collection<String> locusGenes = new ArrayList<>();
 
             association.getLoci().forEach(
                     locus -> {
@@ -234,7 +232,7 @@ public class AssociationDownloadService {
                                     SingleNucleotidePolymorphism snp = riskAllele.getSnp();
                                     setOrAppend(rsId, snp.getRsId(), " x ");
 
-                                    // Set proxy
+                                    // Set proxy or 'NR' if non available
                                     if (riskAllele.getProxySnp() != null) {
                                         SingleNucleotidePolymorphism proxySnp = riskAllele.getProxySnp();
                                         if (!proxySnp.getRsId().isEmpty()) {
@@ -242,44 +240,41 @@ public class AssociationDownloadService {
                                         }
 
                                         else {
-                                            setOrAppend(proxySnpRsId, "NA", " x ");
+                                            setOrAppend(proxySnpRsId, "NR", " x ");
                                         }
                                     }
                                     else {
-                                        setOrAppend(proxySnpRsId, "NA", " x ");
+                                        setOrAppend(proxySnpRsId, "NR", " x ");
                                     }
 
 
-                                    if (association.getSnpInteraction() != null) {
-                                        if (association.getSnpInteraction()) {
-                                            // Set Risk allele frequency
-                                            if (riskAllele.getRiskFrequency() != null &&
-                                                    !riskAllele.getRiskFrequency().isEmpty()) {
-                                                String frequency = riskAllele.getRiskFrequency();
-                                                setOrAppend(riskAlleleFrequency, frequency, " x ");
-                                            }
-                                            else {
-                                                setOrAppend(riskAlleleFrequency, "NA", " x ");
-                                            }
-                                        }
+                                    // Set Risk allele frequency
+                                    if (riskAllele.getRiskFrequency() != null &&
+                                            !riskAllele.getRiskFrequency().isEmpty()) {
+                                        String frequency = riskAllele.getRiskFrequency();
+                                        setOrAppend(riskAlleleFrequency, frequency, " x ");
                                     }
+                                    else {
+                                        setOrAppend(riskAlleleFrequency, "NR", " x ");
+                                    }
+
                                 }
                         );
 
-                        // Handle locus genes for SNP interaction studies
-                        // This is so it clear in teh download which group
+                        // Handle locus genes for SNP interaction studies.
+                        // This is so it clear in thE download which group
                         // of genes belong to which interaction
-                        Collection<String> currentlocusGenes = new ArrayList<>();
+                        Collection<String> currentLocusGenes = new ArrayList<>();
                         String commaSeparatedGenes = "";
                         locus.getAuthorReportedGenes().forEach(gene -> {
-                            currentlocusGenes.add(gene.getGeneName().trim());
+                            currentLocusGenes.add(gene.getGeneName().trim());
                         });
-                        if (!currentlocusGenes.isEmpty()) {
-                            commaSeparatedGenes = String.join(", ", currentlocusGenes);
-                            setOrAppend(reportedGenes, commaSeparatedGenes, " x  ");
+                        if (!currentLocusGenes.isEmpty()) {
+                            commaSeparatedGenes = String.join(", ", currentLocusGenes);
+                            setOrAppend(reportedGenes, commaSeparatedGenes, " x ");
                         }
                         else {
-                            setOrAppend(reportedGenes, "NA", " x ");
+                            setOrAppend(reportedGenes, "NR", " x ");
                         }
                     }
             );
@@ -303,26 +298,24 @@ public class AssociationDownloadService {
                                         }
 
                                         else {
-                                            setOrAppend(proxySnpRsId, "NA", ", ");
+                                            setOrAppend(proxySnpRsId, "NR", ", ");
                                         }
                                     }
                                     else {
-                                        setOrAppend(proxySnpRsId, "NA", ", ");
+                                        setOrAppend(proxySnpRsId, "NR", ", ");
                                     }
 
-                                    if (association.getSnpInteraction() != null) {
-                                        if (association.getSnpInteraction()) {
-                                            // Set Risk allele frequency
-                                            if (riskAllele.getRiskFrequency() != null &&
-                                                    !riskAllele.getRiskFrequency().isEmpty()) {
-                                                String frequency = riskAllele.getRiskFrequency();
-                                                setOrAppend(riskAlleleFrequency, frequency, ", ");
-                                            }
-                                            else {
-                                                setOrAppend(riskAlleleFrequency, "NA", ", ");
-                                            }
-                                        }
+
+                                    // Set Risk allele frequency
+                                    if (riskAllele.getRiskFrequency() != null &&
+                                            !riskAllele.getRiskFrequency().isEmpty()) {
+                                        String frequency = riskAllele.getRiskFrequency();
+                                        setOrAppend(riskAlleleFrequency, frequency, ", ");
                                     }
+                                    else {
+                                        setOrAppend(riskAlleleFrequency, "NR", ", ");
+                                    }
+
 
                                 }
                         );
@@ -332,6 +325,7 @@ public class AssociationDownloadService {
                     }
             );
         }
+
         line.append(reportedGenes.toString());
         line.append("\t");
         line.append(strongestAllele.toString());
