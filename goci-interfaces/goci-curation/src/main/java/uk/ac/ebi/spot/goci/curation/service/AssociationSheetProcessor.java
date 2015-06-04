@@ -53,12 +53,11 @@ public class AssociationSheetProcessor {
     }
 
     @Autowired
-    public AssociationSheetProcessor(Collection<Association> newAssociations,
-                                     AssociationCalculationService associationCalculationService,
+    public AssociationSheetProcessor(AssociationCalculationService associationCalculationService,
                                      LociAttributesService lociAttributesService,
                                      EfoTraitRepository efoTraitRepository,
                                      LocusRepository locusRepository) {
-        this.newAssociations = newAssociations;
+
         this.associationCalculationService = associationCalculationService;
         this.lociAttributesService = lociAttributesService;
         this.efoTraitRepository = efoTraitRepository;
