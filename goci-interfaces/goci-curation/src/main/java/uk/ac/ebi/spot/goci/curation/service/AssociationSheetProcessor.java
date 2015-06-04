@@ -33,40 +33,34 @@ import java.util.List;
 @Service
 public class AssociationSheetProcessor {
 
-
     private Collection<Association> newAssociations = new ArrayList<>();
-    private XSSFSheet sheet;
-    private Logger log = LoggerFactory.getLogger(getClass());
-    private String logMessage;
 
     // Services
     private AssociationCalculationService associationCalculationService;
     private LociAttributesService lociAttributesService;
 
+    // Repository
+    private EfoTraitRepository efoTraitRepository;
 
+    // Logging
+    private Logger log = LoggerFactory.getLogger(getClass());
+    private String logMessage;
     protected Logger getLog() {
         return log;
     }
 
     @Autowired
     public AssociationSheetProcessor(AssociationCalculationService associationCalculationService,
-                                     LociAttributesService lociAttributesService) {
-
+                                     LociAttributesService lociAttributesService,
+                                     EfoTraitRepository efoTraitRepository) {
         this.associationCalculationService = associationCalculationService;
         this.lociAttributesService = lociAttributesService;
+        this.efoTraitRepository = efoTraitRepository;
     }
 
-    // Constructor
-    public AssociationSheetProcessor(XSSFSheet sheet, EfoTraitRepository efoTraitRepository) {
-        this.sheet = sheet;
-        logMessage = "";
-
-        // Read through sheet and extract values
-        readSnpAssociations(efoTraitRepository);
-    }
 
     // Read and parse uploaded spreadsheet
-    public void readSnpAssociations(EfoTraitRepository efoTraitRepository) {
+    public void readSnpAssociations(XSSFSheet sheet) {
         boolean done = false;
         int rowNum = 1;
 
@@ -413,7 +407,7 @@ public class AssociationSheetProcessor {
                             efoUris.add(uri);
                         }
 
-                        Collection<EfoTrait> efoTraits = getEfoTraitsFromRepository(efoUris, efoTraitRepository);
+                        Collection<EfoTrait> efoTraits = getEfoTraitsFromRepository(efoUris);
 
                         newAssociation.setEfoTraits(efoTraits);
                     }
@@ -637,8 +631,7 @@ public class AssociationSheetProcessor {
         return lociAttributesService.createGene(genesToCreate);
     }
 
-    private Collection<EfoTrait> getEfoTraitsFromRepository(Collection<String> efoUris,
-                                                            EfoTraitRepository efoTraitRepository) {
+    private Collection<EfoTrait> getEfoTraitsFromRepository(Collection<String> efoUris) {
         Collection<EfoTrait> efoTraits = new ArrayList<>();
         for (String uri : efoUris) {
             String fullUri;
