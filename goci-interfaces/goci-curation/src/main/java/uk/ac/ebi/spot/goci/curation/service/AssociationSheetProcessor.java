@@ -15,6 +15,7 @@ import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
+import uk.ac.ebi.spot.goci.repository.LocusRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,6 +42,7 @@ public class AssociationSheetProcessor {
 
     // Repository
     private EfoTraitRepository efoTraitRepository;
+    private LocusRepository locusRepository;
 
     // Logging
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -51,12 +53,16 @@ public class AssociationSheetProcessor {
     }
 
     @Autowired
-    public AssociationSheetProcessor(AssociationCalculationService associationCalculationService,
+    public AssociationSheetProcessor(Collection<Association> newAssociations,
+                                     AssociationCalculationService associationCalculationService,
                                      LociAttributesService lociAttributesService,
-                                     EfoTraitRepository efoTraitRepository) {
+                                     EfoTraitRepository efoTraitRepository,
+                                     LocusRepository locusRepository) {
+        this.newAssociations = newAssociations;
         this.associationCalculationService = associationCalculationService;
         this.lociAttributesService = lociAttributesService;
         this.efoTraitRepository = efoTraitRepository;
+        this.locusRepository = locusRepository;
     }
 
 
@@ -502,9 +508,10 @@ public class AssociationSheetProcessor {
                                 Collection<Gene> locusGenes = createLocusGenes(gene, ",");
                                 locus.setAuthorReportedGenes(locusGenes);
                             }
+                            // Save our newly created locus
+                            locusRepository.save(locus);
                             lociWithAddedGenes.add(locus);
                         }
-
                         loci = lociWithAddedGenes;
                     }
 
@@ -534,6 +541,9 @@ public class AssociationSheetProcessor {
                         else {
                             locus.setDescription("Single variant");
                         }
+
+                        // Save our newly created locus
+                        locusRepository.save(locus);
                         loci.add(locus);
                     }
 
@@ -624,8 +634,8 @@ public class AssociationSheetProcessor {
         Collection<String> genesToCreate = new ArrayList<>();
 
         for (String gene : genes) {
-            gene.trim();
-            genesToCreate.add(gene);
+            String trimmedGene = gene.trim();
+            genesToCreate.add(trimmedGene);
         }
 
         return lociAttributesService.createGene(genesToCreate);
