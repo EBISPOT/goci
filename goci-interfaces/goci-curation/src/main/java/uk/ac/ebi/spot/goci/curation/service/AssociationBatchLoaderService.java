@@ -5,6 +5,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidOperationException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
@@ -27,12 +28,16 @@ import java.util.Collection;
 @Service
 public class AssociationBatchLoaderService {
 
-    public AssociationBatchLoaderService() {
+    private AssociationSheetProcessor associationSheetProcessor;
+
+    @Autowired
+    public AssociationBatchLoaderService(AssociationSheetProcessor associationSheetProcessor) {
+        this.associationSheetProcessor = associationSheetProcessor;
     }
 
     // Returns an array list of new association forms, the controller will turn
     // these into associations and save
-    public Collection<Association> processData(String fileName, EfoTraitRepository efoTraitRepository)
+    public Collection<Association> processData(String fileName)
             throws InvalidFormatException, IOException, InvalidOperationException, RuntimeException {
 
         // Open and parse our spreadsheet file
@@ -42,8 +47,8 @@ public class AssociationBatchLoaderService {
         sheet = current.getSheetAt(0);
         AssociationSheetProcessor processor = null;
         try {
-            processor = new AssociationSheetProcessor(sheet, efoTraitRepository);
-            Collection<Association> associations = processor.getAllAssociations();
+            associationSheetProcessor.readSnpAssociations(sheet);
+            Collection<Association> associations = associationSheetProcessor.getAllAssociations();
             pkg.close();
             return associations;
         }
