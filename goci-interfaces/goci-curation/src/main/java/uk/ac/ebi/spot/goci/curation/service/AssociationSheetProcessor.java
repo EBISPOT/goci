@@ -45,6 +45,7 @@ public class AssociationSheetProcessor {
     // Logging
     private Logger log = LoggerFactory.getLogger(getClass());
     private String logMessage;
+
     protected Logger getLog() {
         return log;
     }
@@ -482,9 +483,13 @@ public class AssociationSheetProcessor {
 
                         for (RiskAllele riskAllele : locusRiskAlleles) {
                             Locus locus = new Locus();
+
+                            // Set risk alleles, assume one locus per risk allele
                             Collection<RiskAllele> currentLocusRiskAlleles = new ArrayList<>();
                             currentLocusRiskAlleles.add(riskAllele);
+                            locus.setStrongestRiskAlleles(currentLocusRiskAlleles);
 
+                            // Set description
                             locus.setDescription("SNP x SNP interaction");
                             loci.add(locus);
                         }
@@ -620,11 +625,6 @@ public class AssociationSheetProcessor {
 
         for (String gene : genes) {
             gene.trim();
-
-            if (gene.contains(",")) {
-
-            }
-
             genesToCreate.add(gene);
         }
 
