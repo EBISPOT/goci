@@ -38,21 +38,35 @@
             <table id="dateTable" class="table table-hover table-bordered">
                 <thead>
                 <tr>
-                    <th>Catalog Publish Date</th>
-                    <th>Send to NCBI Date</th>
                     <th>Study Added Date</th>
+                    <th>Send to NCBI Date</th>
+                    <th>Catalog Publish Date</th>
+                    <th>Catalog Unpublish Date</th>
                     <th>Last Update Date</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.catalogPublishDate !=null } ? ${#calendars.format(study.housekeeping.catalogPublishDate, 'dd MMMM yyyy')} : ''"></td>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.sendToNCBIDate !=null } ? ${#calendars.format(study.housekeeping.sendToNCBIDate, 'dd MMMM yyyy')} : ''"></td>
                     <td th:text="${study.housekeeping != null and study.housekeeping.studyAddedDate !=null } ? ${#calendars.format(study.housekeeping.studyAddedDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.sendToNCBIDate !=null } ? ${#calendars.format(study.housekeeping.sendToNCBIDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.catalogPublishDate !=null } ? ${#calendars.format(study.housekeeping.catalogPublishDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.catalogUnpublishDate !=null } ? ${#calendars.format(study.housekeeping.catalogUnpublishDate, 'dd MMMM yyyy')} : ''"></td>
                     <td th:text="${study.housekeeping != null and study.housekeeping.lastUpdateDate !=null } ? ${#calendars.format(study.housekeeping.lastUpdateDate, 'dd MMMM yyyy')} : ''"></td>
                 </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10" th:object="${study}" th:if="${study.housekeeping != null and study.housekeeping.catalogPublishDate !=null and study.housekeeping.catalogUnpublishDate == null}">
+        <!--<div class="col-md-10" th:object="${study}">-->
+            <a id="unpublish-button"
+               class="btn btn-primary pull-right"
+               role="button"
+               th:value="${study.Id}">Unpublish this study</a>
         </div>
     </div>
 </div>
@@ -219,6 +233,11 @@
                     <label for="lastUpdateDate" class="control-label col-md-2"></label>
                     <input id="lastUpdateDate" type="hidden" th:field="*{lastUpdateDate}"/>
                 </div>
+
+                <div class="form-group">
+                    <label for="catalogUnpublishDate" class="control-label col-md-2"></label>
+                    <input id="catalogUnpublishDate" type="hidden" th:field="*{catalogUnpublishDate}"/>
+                </div>
                 <!--End hidden-->
 
                 <!--Button -->
@@ -230,6 +249,7 @@
 
             </form>
         </div>
+
     </div>
 </div>
 
