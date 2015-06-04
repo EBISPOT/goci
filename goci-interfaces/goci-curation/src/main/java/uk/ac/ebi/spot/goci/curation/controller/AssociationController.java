@@ -282,7 +282,7 @@ public class AssociationController {
             // Send file, including path, to SNP batch loader process
             Collection<Association> newAssociations = new ArrayList<>();
             try {
-                newAssociations = associationBatchLoaderService.processData(uploadedFilePath, efoTraitRepository);
+                newAssociations = associationBatchLoaderService.processData(uploadedFilePath);
             }
             catch (InvalidOperationException e) {
                 e.printStackTrace();
