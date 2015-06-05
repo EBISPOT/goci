@@ -34,8 +34,6 @@ import java.util.List;
 @Service
 public class AssociationSheetProcessor {
 
-    private Collection<Association> newAssociations = new ArrayList<>();
-
     // Services
     private AssociationCalculationService associationCalculationService;
     private LociAttributesService lociAttributesService;
@@ -66,7 +64,11 @@ public class AssociationSheetProcessor {
 
 
     // Read and parse uploaded spreadsheet
-    public void readSnpAssociations(XSSFSheet sheet) {
+    public Collection<Association> readSnpAssociations(XSSFSheet sheet) {
+
+        // Create collection to store all newly created associations
+        Collection<Association> newAssociations = new ArrayList<>();
+
         boolean done = false;
         int rowNum = 1;
 
@@ -557,6 +559,8 @@ public class AssociationSheetProcessor {
             }
             rowNum++;
         }
+
+        return newAssociations;
     }
 
     private Collection<RiskAllele> createLocusRiskAlleles(String strongestAllele,
@@ -666,9 +670,6 @@ public class AssociationSheetProcessor {
         return efoTraits;
     }
 
-    public Collection<Association> getAllAssociations() {
-        return newAssociations;
-    }
 
     public String getLogMessage() {
         return logMessage;
