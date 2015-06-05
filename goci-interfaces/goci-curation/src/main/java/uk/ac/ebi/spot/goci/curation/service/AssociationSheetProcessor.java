@@ -486,6 +486,14 @@ public class AssociationSheetProcessor {
                         Collection<RiskAllele> locusRiskAlleles =
                                 createLocusRiskAlleles(strongestAllele, snp, proxy, riskFrequency, delimiter);
 
+                        // Add genes to relevant loci, split by 'x' delimiter first
+                        Collection<Locus> lociWithAddedGenes = new ArrayList<>();
+
+                        // Deal with genes for each interaction which should be
+                        // separated by 'x'
+                        String[] separatedGenes = authorReportedGene.split(delimiter);
+                        int geneIndex = 0;
+
                         for (RiskAllele riskAllele : locusRiskAlleles) {
                             Locus locus = new Locus();
 
@@ -494,24 +502,19 @@ public class AssociationSheetProcessor {
                             currentLocusRiskAlleles.add(riskAllele);
                             locus.setStrongestRiskAlleles(currentLocusRiskAlleles);
 
+                            // Set gene
+                            String interactionGene = separatedGenes[geneIndex];
+                            Collection<Gene> locusGenes = createLocusGenes(interactionGene, ",");
+                            locus.setAuthorReportedGenes(locusGenes);
+                            geneIndex++;
+
                             // Set description
                             locus.setDescription("SNP x SNP interaction");
-                            loci.add(locus);
-                        }
 
-                        // Add genes to relevant loci, split by 'x' delimiter first
-                        Collection<Locus> lociWithAddedGenes = new ArrayList<>();
-                        String[] genes = authorReportedGene.split(delimiter);
-                        for (Locus locus : loci) {
-                            for (String gene : genes) {
-                                Collection<Gene> locusGenes = createLocusGenes(gene, ",");
-                                locus.setAuthorReportedGenes(locusGenes);
-                            }
                             // Save our newly created locus
                             locusRepository.save(locus);
-                            lociWithAddedGenes.add(locus);
+                            loci.add(locus);
                         }
-                        loci = lociWithAddedGenes;
                     }
 
                     // Handle multi-snp and standard snp
