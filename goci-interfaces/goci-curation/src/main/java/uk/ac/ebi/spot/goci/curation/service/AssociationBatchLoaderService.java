@@ -8,7 +8,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,8 +46,7 @@ public class AssociationBatchLoaderService {
         sheet = current.getSheetAt(0);
         AssociationSheetProcessor processor = null;
         try {
-            associationSheetProcessor.readSnpAssociations(sheet);
-            Collection<Association> associations = associationSheetProcessor.getAllAssociations();
+            Collection<Association> associations = associationSheetProcessor.readSnpAssociations(sheet);
             pkg.close();
             return associations;
         }
