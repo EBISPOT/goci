@@ -2,8 +2,8 @@ Gene - must not be empty!
 Strongest SNP-Risk Allele - must not be empty!
 SNP	- must not be empty!
 Proxy SNP -	must not be empty!
-Risk Allele Frequency in Controls - must not be empty! enter NR is not reported
-Association Risk Frequency - must not be empty! enter NR is not reported
+Risk Allele Frequency in Controls - must not be empty! enter NR if not reported for each allele
+Association Risk Frequency - must not be empty! enter NR if not reported
 P-value mantissa - enter p-value mantissa only
 P-value exponent - enter p-value exponent only
 P-value (Text) - same as in web form
@@ -17,9 +17,15 @@ Reciprocal confidence interval
 Beta unit and direction	 -	must not be empty!
 Standard Error	- must be numeric or empty
 SNP type (novel/known) - must not be empty!
-EFO traits
+EFO traits - EFO trait ID e.g. EFO_0004328
 
-NOTE!
-- "must not be empty" refers to a literally empty cell. "NR" (or similar) is a perfectly valid entry
+NOTE:
 
-- Reciprocal confidence intervals: If OR < 1 and a CI is given, the program will automatically calculate the reciprocal CI, provided that *both ends of the CI are greater than 0*! Program can't handle negative CIs, enter that SNP manually.
+- "must not be empty" refers to a literally empty cell. "NR" is a perfectly valid entry
+
+- Reciprocal confidence intervals: If OR < 1 and a CI is given, the program will automatically calculate the reciprocal
+ CI, provided that *both ends of the CI are greater than 0*! Program can't handle negative CIs, enter that SNP manually.
+
+- Separate SNP interactions using 'x' e.g. rs4784379-A x rs9804128-G
+
+- Separate haplotypes using ',' e.g. rs7839488, rs4395927, rs9331888
