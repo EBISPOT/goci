@@ -32,6 +32,7 @@ import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.UnpublishReason;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
@@ -40,6 +41,7 @@ import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.repository.UnpublishReasonRepository;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
@@ -70,6 +72,7 @@ public class StudyController {
     private CurationStatusRepository curationStatusRepository;
     private AssociationRepository associationRepository;
     private EthnicityRepository ethnicityRepository;
+    private UnpublishReasonRepository unpublishReasonRepository;
 
     // Pubmed ID lookup service
     private DefaultPubMedSearchService defaultPubMedSearchService;
@@ -92,6 +95,7 @@ public class StudyController {
                            CurationStatusRepository curationStatusRepository,
                            AssociationRepository associationRepository,
                            EthnicityRepository ethnicityRepository,
+                           UnpublishReasonRepository unpublishReasonRepository,
                            DefaultPubMedSearchService defaultPubMedSearchService,
                            MailService mailService) {
         this.studyRepository = studyRepository;
@@ -102,6 +106,7 @@ public class StudyController {
         this.curationStatusRepository = curationStatusRepository;
         this.associationRepository = associationRepository;
         this.ethnicityRepository = ethnicityRepository;
+        this.unpublishReasonRepository = unpublishReasonRepository;
         this.defaultPubMedSearchService = defaultPubMedSearchService;
         this.mailService = mailService;
     }
@@ -699,6 +704,61 @@ public class StudyController {
     }
 
 
+    @RequestMapping(value = "/{studyId}/unpublish", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String viewStudyToUnpublish(Model model, @PathVariable Long studyId) {
+
+        Study studyToUnpublish = studyRepository.findOne(studyId);
+
+        // Check if it has any associations
+        Collection<Association> associations = associationRepository.findByStudyId(studyId);
+
+        Collection<Ethnicity> ancestryInfo = ethnicityRepository.findByStudyId(studyId);
+
+
+        // If so warn the curator
+        if (!associations.isEmpty() || !ancestryInfo.isEmpty()) {
+            model.addAttribute("study", studyToUnpublish);
+            return "unpublish_study_with_associations_warning";
+
+        }
+        else {
+//            model.addAttribute("studyHousekeeping", studyToUnpublish.getHousekeeping());
+            model.addAttribute("studyToUnpublish", studyToUnpublish);
+            return "unpublish_study";
+        }
+
+    }
+
+    @RequestMapping(value = "/{studyId}/unpublish", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String unpublishStudy(@ModelAttribute Study studyToUnpublish, Model model, @PathVariable Long studyId) {
+
+
+        // Before we unpublish the study get its associated housekeeping
+        Long housekeepingId = studyToUnpublish.getHousekeeping().getId();
+        Housekeeping housekeepingAttachedToStudy = housekeepingRepository.findOne(housekeepingId);
+
+        //Set the unpublishDate and a new lastUpdateDate in houskeeping
+        java.util.Date unpublishDate = new java.util.Date();
+        housekeepingAttachedToStudy.setCatalogUnpublishDate(unpublishDate);
+        housekeepingAttachedToStudy.setLastUpdateDate(unpublishDate);
+
+        //Set the unpublised status in housekeeping
+        CurationStatus status = curationStatusRepository.findByStatus("Unpublished from catalog");
+        housekeepingAttachedToStudy.setCurationStatus(status);
+
+        //Set the reason for unpublishing
+        UnpublishReason unpublishReason = studyToUnpublish.getHousekeeping().getUnpublishReason();
+        housekeepingAttachedToStudy.setUnpublishReason(unpublishReason);
+
+        // Unpublish housekeeping  by saving the new dates and status info
+        housekeepingRepository.save(housekeepingAttachedToStudy);
+
+        model.addAttribute("studyHousekeeping", housekeepingAttachedToStudy);
+        model.addAttribute("study", studyRepository.findOne(studyId));
+        return "study_housekeeping";
+    }
+
+
     /* General purpose methods */
 
     private Housekeeping createHousekeeping() {
@@ -842,6 +902,12 @@ public class StudyController {
     @ModelAttribute("curationstatuses")
     public List<CurationStatus> populateCurationStatuses(Model model) {
         return curationStatusRepository.findAll();
+    }
+
+    // Unpublish reasons
+    @ModelAttribute("unpublishreasons")
+    public List<UnpublishReason> populateUnpublishReasons(Model model) {
+        return unpublishReasonRepository.findAll();
     }
 
 

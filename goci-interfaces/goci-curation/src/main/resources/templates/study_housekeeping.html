@@ -63,7 +63,7 @@
     <div class="row">
         <div class="col-md-10" th:object="${study}" th:if="${study.housekeeping != null and study.housekeeping.catalogPublishDate !=null and study.housekeeping.catalogUnpublishDate == null}">
         <!--<div class="col-md-10" th:object="${study}">-->
-            <a id="unpublish-button"
+            <a th:href="@{/studies/{studyId}/unpublish(studyId=${study.Id})}"
                class="btn btn-primary pull-right"
                role="button"
                th:value="${study.Id}">Unpublish this study</a>
@@ -219,6 +219,20 @@
                             <option th:each="curationStatus : ${curationstatuses}"
                                     th:value="${curationStatus.id}"
                                     th:text="${curationStatus.status}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" th:if="${study.housekeeping != null and study.housekeeping.catalogPublishDate !=null and study.housekeeping.catalogUnpublishDate != null}">
+                    <label for="unpublishReason" class="control-label col-md-2">Reason for unpublishing:</label>
+
+                    <div class="col-md-4" >
+                        <select th:field="*{unpublishReason}" id="unpublishReason" class="form-control select2-select">
+                            <!-- Empty value for first entry-->
+                            <option value=""></option>
+                            <option th:each="unpublishReason : ${unpublishreasons}"
+                                    th:value="${unpublishReason.id}"
+                                    th:text="${unpublishReason.reason}"></option>
                         </select>
                     </div>
                 </div>

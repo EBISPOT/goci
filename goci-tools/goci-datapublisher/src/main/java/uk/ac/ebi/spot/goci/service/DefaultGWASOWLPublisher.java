@@ -143,6 +143,9 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
             }else if( study.getHousekeeping().getCatalogPublishDate() == null) {
                 iterator.remove();
             }
+            else if(study.getHousekeeping().getCatalogUnpublishDate() != null){
+                iterator.remove();
+            }
 //            }else {
 //
 //                //Remove study which have no associations where pvalue is not null.
@@ -192,6 +195,9 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
                     associationIterator.remove();
 
                 }
+                else if(association.getStudy().getHousekeeping().getCatalogUnpublishDate() != null){
+                    iterator.remove();
+                }
             }
             getLog().debug("Fetching SNPs that require conversion to OWL using SingleNucleotidePolymorphismRepository...");
             Collection<SingleNucleotidePolymorphism> snps = getSingleNucleotidePolymorphismService().findAll();
@@ -224,6 +230,9 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
             if(study.getDiseaseTrait() == null) {
                 iterator.remove();
             }else if( study.getHousekeeping().getCatalogPublishDate() == null) {
+                iterator.remove();
+            }
+            else if(study.getHousekeeping().getCatalogUnpublishDate() != null){
                 iterator.remove();
             }
 //            }else {

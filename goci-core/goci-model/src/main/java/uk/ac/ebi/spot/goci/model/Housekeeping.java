@@ -61,11 +61,14 @@ public class Housekeeping {
     @OneToOne
     private CurationStatus curationStatus;
 
+    @OneToOne
+    private UnpublishReason unpublishReason;
+
     // JPA no-args constructor
     public Housekeeping() {
     }
 
-    public Housekeeping(Boolean studySnpCheckedLevelOne, Boolean studySnpCheckedLevelTwo, Boolean ethnicityCheckedLevelOne, Boolean ethnicityCheckedLevelTwo, Boolean ethnicityBackFilled, Boolean checkedNCBIError, Boolean snpsRechecked, Date catalogPublishDate, Date sendToNCBIDate, Date studyAddedDate, Date catalogUnpublishDate, Date lastUpdateDate, String fileName, String notes, Curator curator, CurationStatus curationStatus) {
+    public Housekeeping(Boolean studySnpCheckedLevelOne, Boolean studySnpCheckedLevelTwo, Boolean ethnicityCheckedLevelOne, Boolean ethnicityCheckedLevelTwo, Boolean ethnicityBackFilled, Boolean checkedNCBIError, Boolean snpsRechecked, Date catalogPublishDate, Date sendToNCBIDate, Date studyAddedDate, Date catalogUnpublishDate, Date lastUpdateDate, String fileName, String notes, Curator curator, CurationStatus curationStatus, UnpublishReason unpublishReason) {
         this.studySnpCheckedLevelOne = studySnpCheckedLevelOne;
         this.studySnpCheckedLevelTwo = studySnpCheckedLevelTwo;
         this.ethnicityCheckedLevelOne = ethnicityCheckedLevelOne;
@@ -82,6 +85,7 @@ public class Housekeeping {
         this.notes = notes;
         this.curator = curator;
         this.curationStatus = curationStatus;
+        this.unpublishReason = unpublishReason;
     }
 
     public Long getId() {
@@ -220,6 +224,14 @@ public class Housekeeping {
         this.curationStatus = curationStatus;
     }
 
+    public UnpublishReason getUnpublishReason() {
+        return unpublishReason;
+    }
+
+    public void setUnpublishReason(UnpublishReason unpublishReason) {
+        this.unpublishReason = unpublishReason;
+    }
+
     @Override
     public String toString() {
         return "Housekeeping{" +
@@ -240,7 +252,9 @@ public class Housekeeping {
                 ", notes='" + notes + '\'' +
                 ", curator=" + curator +
                 ", curationStatus=" + curationStatus +
+                ", unpublishReason=" + unpublishReason +
                 '}';
     }
+
 
 }
