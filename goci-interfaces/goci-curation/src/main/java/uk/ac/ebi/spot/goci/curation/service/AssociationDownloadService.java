@@ -40,7 +40,7 @@ public class AssociationDownloadService {
     private String processAssociations(Collection<Association> associations) {
 
         String header =
-                "Gene\tStrongest SNP-Risk Allele\tSNP\tProxy SNP\tRisk Allele Frequency in Controls\tAssociation Risk Frequency\tP-value mantissa\tP-value exponent\tP-value (Text)\tOR per copy or beta (Num)\tOR entered (reciprocal)\tOR-type? (Y/N)\tMulti-SNP Haplotype?\tSNP:SNP interaction?\tConfidence Interval\tReciprocal confidence interval\tBeta unit and direction\tStandard Error\tSNP type (novel/known)\tSNP Status\tEFO traits\r\n";
+                "Gene\tStrongest SNP-Risk Allele\tSNP\tProxy SNP\tRisk Allele Frequency in Controls\tInteracting SNPs combined frequency\tP-value mantissa\tP-value exponent\tP-value (Text)\tOR per copy or beta (Num)\tOR entered (reciprocal)\tOR-type? (Y/N)\tMulti-SNP Haplotype?\tSNP:SNP interaction?\tConfidence Interval\tReciprocal confidence interval\tBeta unit and direction\tStandard Error\tSNP type (novel/known)\tSNP Status\tEFO traits\r\n";
 
 
         StringBuilder output = new StringBuilder();

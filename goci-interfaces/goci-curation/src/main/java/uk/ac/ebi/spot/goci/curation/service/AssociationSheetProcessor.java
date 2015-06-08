@@ -162,11 +162,11 @@ public class AssociationSheetProcessor {
                     switch (risk.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
                             associationRiskFrequency = risk.getRichStringCellValue().getString();
-                            logMessage = "Error in field 'Association Risk Frequency' in row " + rowNum + 1 + "\n";
+                            logMessage = "Error in field 'Interacting SNPs combined frequency' in row " + rowNum + 1 + "\n";
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             associationRiskFrequency = Double.toString(risk.getNumericCellValue());
-                            logMessage = "Error in field 'Association Risk Frequency' in row " + rowNum + 1 + "\n";
+                            logMessage = "Error in field 'Interacting SNPs combined frequency' in row " + rowNum + 1 + "\n";
 
                             break;
                     }
