@@ -350,17 +350,9 @@ public class AssociationDownloadService {
                                         setOrAppend(proxySnpRsId, "NR", ", ");
                                     }
 
-
-                                    // Set Risk allele frequency
-                                    if (riskAllele.getRiskFrequency() != null &&
-                                            !riskAllele.getRiskFrequency().isEmpty()) {
-                                        String frequency = riskAllele.getRiskFrequency();
-                                        setOrAppend(riskAlleleFrequency, frequency, ", ");
-                                    }
-                                    else {
-                                        setOrAppend(riskAlleleFrequency, "NR", ", ");
-                                    }
-
+                                    // Set Risk allele frequency to blank as its not recorded by curators
+                                    // for standard or multi-SNP haplotypes
+                                    setOrAppend(riskAlleleFrequency, "", "");
 
                                 }
                         );
