@@ -383,9 +383,21 @@ public class AssociationSheetProcessor {
                     logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
                 }
 
-                String efoTrait;
+                // Get SNP Status
+                String snpStatus;
                 if (row.getCell(19, row.RETURN_BLANK_AS_NULL) != null) {
-                    efoTrait = row.getCell(19).getRichStringCellValue().getString();
+                    snpStatus = row.getCell(19).getRichStringCellValue().getString().toLowerCase();
+                    logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
+                }
+                else {
+                    snpStatus = null;
+                    getLog().debug("SNP type is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
+                }
+
+                String efoTrait;
+                if (row.getCell(20, row.RETURN_BLANK_AS_NULL) != null) {
+                    efoTrait = row.getCell(20).getRichStringCellValue().getString();
                     logMessage = "Error in field 'EFO traits' in row " + rowNum + 1 + "\n";
                 }
                 else {
@@ -486,7 +498,12 @@ public class AssociationSheetProcessor {
                         // For SNP interaction studies we need to create a locus per risk allele
                         // Handle curator entered risk allele
                         Collection<RiskAllele> locusRiskAlleles =
-                                createLocusRiskAlleles(strongestAllele, snp, proxy, riskFrequency, delimiter);
+                                createLocusRiskAlleles(strongestAllele,
+                                                       snp,
+                                                       proxy,
+                                                       riskFrequency,
+                                                       snpStatus,
+                                                       delimiter);
 
                         // Add genes to relevant loci, split by 'x' delimiter first
                         Collection<Locus> lociWithAddedGenes = new ArrayList<>();
@@ -532,7 +549,12 @@ public class AssociationSheetProcessor {
 
                         // Handle curator entered risk allele
                         Collection<RiskAllele> locusRiskAlleles =
-                                createLocusRiskAlleles(strongestAllele, snp, proxy, riskFrequency, delimiter);
+                                createLocusRiskAlleles(strongestAllele,
+                                                       snp,
+                                                       proxy,
+                                                       riskFrequency,
+                                                       snpStatus,
+                                                       delimiter);
                         locus.setStrongestRiskAlleles(locusRiskAlleles);
 
                         // Set locus attributes
@@ -565,7 +587,9 @@ public class AssociationSheetProcessor {
 
     private Collection<RiskAllele> createLocusRiskAlleles(String strongestAllele,
                                                           String snp,
-                                                          String proxy, String riskFrequency,
+                                                          String proxy,
+                                                          String riskFrequency,
+                                                          String snpStatus,
                                                           String delimiter) {
 
 
@@ -600,6 +624,17 @@ public class AssociationSheetProcessor {
             riskFrequencyIterator = riskFrequencies.iterator();
         }
 
+        // Snp status
+        List<String> snpStatuses = new ArrayList<>();
+        Iterator<String> snpStatusIterator = null;
+        if (snpStatus != null) {
+            String[] separatedSnpStatuses = snpStatus.split(delimiter);
+            for (String separatedSnpStatus : separatedSnpStatuses) {
+                snpStatuses.add(separatedSnpStatus.trim());
+            }
+            snpStatusIterator = snpStatuses.iterator();
+        }
+
         Iterator<String> riskAlleleIterator = riskAlleles.iterator();
         Iterator<String> snpIterator = snps.iterator();
         Iterator<String> proxyIterator = proxies.iterator();
@@ -629,6 +664,21 @@ public class AssociationSheetProcessor {
                 }
                 if (riskFrequencyValue != null && !riskFrequencyValue.equalsIgnoreCase("NR")) {
                     newRiskAllele.setRiskFrequency(riskFrequencyValue);
+                }
+
+                // Handle snp statuses, these should only apply to SNP interaction associations
+                String snpStatusValue = null;
+                if (snpStatusIterator != null) {
+                    snpStatusValue = snpStatusIterator.next().trim();
+                }
+
+                if (snpStatus != null && !snpStatus.equalsIgnoreCase("NR")) {
+                    if (snpStatusValue.contains("GW") || snpStatusValue.contains("gw")) {
+                        newRiskAllele.setGenomeWide(true);
+                    }
+                    if (snpStatusValue.contains("LL") || snpStatusValue.contains("ll")) {
+                        newRiskAllele.setLimitedList(true);
+                    }
                 }
 
                 locusRiskAlleles.add(newRiskAllele);
