@@ -49,7 +49,6 @@ public class AssociationViewService {
         Collection<String> allLociRiskAlleles = new ArrayList<String>();
         Collection<String> allLociSnps = new ArrayList<String>();
         Collection<String> allLociProxySnps = new ArrayList<String>();
-        Collection<String> allLociRegions = new ArrayList<String>();
         Collection<String> allLociRiskAlleleFrequencies = new ArrayList<String>();
         Collection<String> allLociSnpStatuses = new ArrayList<String>();
 
@@ -85,20 +84,6 @@ public class AssociationViewService {
                     allLociProxySnps.add(riskAllele.getProxySnp().getRsId());
                 }
                 else { allLociProxySnps.add("NR");}
-
-                // Store region information
-                Collection<String> currentLocusSnpRegions = new ArrayList<>();
-                String commaSeparatedRegions = "";
-                if (snp.getRegions() != null && !snp.getRegions().isEmpty()) {
-                    for (Region region : snp.getRegions()) {
-                        currentLocusSnpRegions.add(region.getName());
-                    }
-                }
-                if (!currentLocusSnpRegions.isEmpty()) {
-                    commaSeparatedRegions = String.join(", ", currentLocusSnpRegions);
-                    allLociRegions.add(commaSeparatedRegions);
-                }
-
 
                 // Only required for SNP interaction studies
                 if (association.getSnpInteraction() != null) {
@@ -137,15 +122,6 @@ public class AssociationViewService {
         }
 
         // Create delimited strings for view
-        String associationRegions = null;
-        if (allLociRegions.size() > 1) {
-            associationRegions = String.join(delimiter, allLociRegions);
-        }
-        else {
-            associationRegions = String.join("", allLociRegions);
-        }
-        snpAssociationTableView.setRegions(associationRegions);
-
         String authorReportedGenes = null;
         if (allLociGenes.size() > 1) {
             authorReportedGenes = String.join(delimiter, allLociGenes);
