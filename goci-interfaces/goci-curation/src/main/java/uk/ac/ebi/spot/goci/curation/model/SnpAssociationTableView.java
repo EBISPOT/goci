@@ -16,8 +16,6 @@ public class SnpAssociationTableView {
     // linked association
     private Long associationId;
 
-    private String regions;
-
     private String authorReportedGenes;
 
     private String strongestRiskAlleles;
@@ -71,7 +69,6 @@ public class SnpAssociationTableView {
     }
 
     public SnpAssociationTableView(Long associationId,
-                                   String regions,
                                    String authorReportedGenes,
                                    String strongestRiskAlleles,
                                    String snps,
@@ -96,7 +93,6 @@ public class SnpAssociationTableView {
                                    String snpStatuses,
                                    Map<String, String> associationErrorMap) {
         this.associationId = associationId;
-        this.regions = regions;
         this.authorReportedGenes = authorReportedGenes;
         this.strongestRiskAlleles = strongestRiskAlleles;
         this.snps = snps;
@@ -128,14 +124,6 @@ public class SnpAssociationTableView {
 
     public void setAssociationId(Long associationId) {
         this.associationId = associationId;
-    }
-
-    public String getRegions() {
-        return regions;
-    }
-
-    public void setRegions(String regions) {
-        this.regions = regions;
     }
 
     public String getAuthorReportedGenes() {
