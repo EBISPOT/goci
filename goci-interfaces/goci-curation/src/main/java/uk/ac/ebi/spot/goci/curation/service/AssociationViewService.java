@@ -99,13 +99,6 @@ public class AssociationViewService {
                     allLociRegions.add(commaSeparatedRegions);
                 }
 
-                // Allele risk frequency
-                if (riskAllele.getRiskFrequency() != null && !riskAllele.getRiskFrequency().isEmpty()) {
-                    allLociRiskAlleleFrequencies.add(riskAllele.getRiskFrequency());
-                }
-                else {
-                    allLociRiskAlleleFrequencies.add("NR");
-                }
 
                 // Only required for SNP interaction studies
                 if (association.getSnpInteraction() != null) {
@@ -129,6 +122,15 @@ public class AssociationViewService {
                             allLociSnpStatuses.add(commaSeparatedSnpStatus);
                         }
                         else { allLociSnpStatuses.add("NR");}
+
+
+                        // Allele risk frequency
+                        if (riskAllele.getRiskFrequency() != null && !riskAllele.getRiskFrequency().isEmpty()) {
+                            allLociRiskAlleleFrequencies.add(riskAllele.getRiskFrequency());
+                        }
+                        else {
+                            allLociRiskAlleleFrequencies.add("NR");
+                        }
                     }
                 }
             }
