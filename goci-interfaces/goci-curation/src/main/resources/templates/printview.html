@@ -180,7 +180,6 @@
                 <caption>SNP association details</caption>
                 <thead>
                 <tr>
-                    <th>Region</th>
                     <th>Genes (author reported)</th>
                     <th>Strongest Allele</th>
                     <th>SNP</th>
@@ -206,8 +205,6 @@
                 </thead>
                 <tbody>
                 <tr th:each="snpAssociationTableView: ${snpAssociationTableViews}">
-                    <!--Region-->
-                    <td th:text="${snpAssociationTableView.regions}?: '' "></td>
 
                     <!--Gene-->
                     <td th:text="${snpAssociationTableView.authorReportedGenes}?: '' "></td>
