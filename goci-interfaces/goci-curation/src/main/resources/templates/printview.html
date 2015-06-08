@@ -274,8 +274,8 @@
                 </tr>
 
                 <tr>
-                    <th>Catalog Publish Date</th>
-                    <td th:text="${housekeeping != null and housekeeping.catalogPublishDate !=null } ? ${#calendars.format(housekeeping.catalogPublishDate, 'dd MMMM yyyy')} : ''"></td>
+                    <th>Study Added Date</th>
+                    <td th:text="${housekeeping != null and housekeeping.studyAddedDate !=null } ? ${#calendars.format(housekeeping.studyAddedDate, 'dd MMMM yyyy')} : ''"></td>
                 </tr>
 
                 <tr>
@@ -284,8 +284,13 @@
                 </tr>
 
                 <tr>
-                    <th>Study Added Date</th>
-                    <td th:text="${housekeeping != null and housekeeping.studyAddedDate !=null } ? ${#calendars.format(housekeeping.studyAddedDate, 'dd MMMM yyyy')} : ''"></td>
+                    <th>Catalog Publish Date</th>
+                    <td th:text="${housekeeping != null and housekeeping.catalogPublishDate !=null } ? ${#calendars.format(housekeeping.catalogPublishDate, 'dd MMMM yyyy')} : ''"></td>
+                </tr>
+
+                <tr>
+                    <th>Catalog Unpublish Date</th>
+                    <td th:text="${housekeeping != null and housekeeping.catalogUnpublishDate !=null } ? ${#calendars.format(housekeeping.catalogUnpublishDate, 'dd MMMM yyyy')} : ''"></td>
                 </tr>
 
                 <tr>

@@ -501,10 +501,17 @@ public class StudyController {
         // Check if it has any associations
         Collection<Association> associations = associationRepository.findByStudyId(studyId);
 
+        Long housekeepingId = studyToDelete.getHousekeeping().getId();
+        Housekeeping housekeepingAttachedToStudy = housekeepingRepository.findOne(housekeepingId);
+
         // If so warn the curator
         if (!associations.isEmpty()) {
             return "delete_study_with_associations_warning";
 
+        }
+        else if(housekeepingAttachedToStudy.getCatalogPublishDate() != null){
+            model.addAttribute("studyToDelete", studyToDelete);
+            return "delete_published_study_warning";
         }
         else {
             model.addAttribute("studyToDelete", studyToDelete);
