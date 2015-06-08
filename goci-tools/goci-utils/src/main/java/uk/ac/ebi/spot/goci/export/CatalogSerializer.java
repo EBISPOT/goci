@@ -143,7 +143,7 @@ public class CatalogSerializer {
             if (view.getStudyId() != null) { studyId = view.getStudyId().toString() + "\t";}
 
             String resultPublished;
-            if (view.getCatalogPublishDate() != null) {
+            if (view.getCatalogPublishDate() != null && view.getCatalogUnpublishDate() == null) {
                 resultPublished = "Y" + "\t";
             }
             else {resultPublished = "N" + "\t";}

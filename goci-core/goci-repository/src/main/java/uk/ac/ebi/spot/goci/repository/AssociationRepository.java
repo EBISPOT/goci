@@ -25,27 +25,27 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
 
     Collection<Association> findByLociStrongestRiskAllelesSnpId(long snpId);
 
-    List<Association> findByStudyHousekeepingCatalogPublishDateIsNotNull();
+    List<Association> findByStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull();
 
-    List<Association> findByStudyHousekeepingCatalogPublishDateIsNotNull(Sort sort);
+    List<Association> findByStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(Sort sort);
 
-    Page<Association> findByStudyHousekeepingCatalogPublishDateIsNotNull(Pageable pageable);
+    Page<Association> findByStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(Pageable pageable);
 
-    List<Association> findByLociStrongestRiskAllelesSnpIdAndStudyHousekeepingCatalogPublishDateIsNotNull(Long snpId);
+    List<Association> findByLociStrongestRiskAllelesSnpIdAndStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(Long snpId);
 
-    List<Association> findByLociStrongestRiskAllelesSnpIdAndStudyHousekeepingCatalogPublishDateIsNotNull(Sort sort, Long snpId);
+    List<Association> findByLociStrongestRiskAllelesSnpIdAndStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(Sort sort, Long snpId);
 
-    Page<Association> findByLociStrongestRiskAllelesSnpIdAndStudyHousekeepingCatalogPublishDateIsNotNull(Pageable pageable, Long snpId);
+    Page<Association> findByLociStrongestRiskAllelesSnpIdAndStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(Pageable pageable, Long snpId);
 
-    List<Association> findByStudyDiseaseTraitIdAndStudyHousekeepingCatalogPublishDateIsNotNull(Long diseaseTraitId);
+    List<Association> findByStudyDiseaseTraitIdAndStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(Long diseaseTraitId);
 
-    List<Association> findByStudyDiseaseTraitIdAndStudyHousekeepingCatalogPublishDateIsNotNull(Sort sort, Long diseaseTraitId);
+    List<Association> findByStudyDiseaseTraitIdAndStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(Sort sort, Long diseaseTraitId);
 
-    Page<Association> findByStudyDiseaseTraitIdAndStudyHousekeepingCatalogPublishDateIsNotNull(Pageable pageable, Long diseaseTraitId);
+    Page<Association> findByStudyDiseaseTraitIdAndStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(Pageable pageable, Long diseaseTraitId);
 
-    List<Association> findByEfoTraitsIdAndStudyHousekeepingCatalogPublishDateIsNotNull(Long efoTraitId);
+    List<Association> findByEfoTraitsIdAndStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(Long efoTraitId);
 
-    List<Association> findByEfoTraitsIdAndStudyHousekeepingCatalogPublishDateIsNotNull(Sort sort, Long efoTraitId);
+    List<Association> findByEfoTraitsIdAndStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(Sort sort, Long efoTraitId);
 
-    List<Association> findByEfoTraitsIdAndStudyHousekeepingCatalogPublishDateIsNotNull(Pageable pageable, Long efoTraitId);
+    List<Association> findByEfoTraitsIdAndStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(Pageable pageable, Long efoTraitId);
 }

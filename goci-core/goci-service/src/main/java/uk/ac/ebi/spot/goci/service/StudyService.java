@@ -89,21 +89,23 @@ public class StudyService {
      */
     @Transactional(readOnly = true)
     public List<Study> findPublishedStudies() {
-        List<Study> studies = studyRepository.findByHousekeepingCatalogPublishDateIsNotNull();
+        List<Study> studies = studyRepository.findByHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull();
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
 
     @Transactional(readOnly = true)
     public List<Study> findPublishedStudies(Sort sort) {
-        List<Study> studies = studyRepository.findByHousekeepingCatalogPublishDateIsNotNull(sort);
+        List<Study> studies = studyRepository.findByHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(
+                sort);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
 
     @Transactional(readOnly = true)
     public Page<Study> findPublishedStudies(Pageable pageable) {
-        Page<Study> studies = studyRepository.findByHousekeepingCatalogPublishDateIsNotNull(pageable);
+        Page<Study> studies = studyRepository.findByHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(
+                pageable);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
@@ -123,7 +125,8 @@ public class StudyService {
     @Transactional(readOnly = true)
     public Collection<Study> findBySnpId(Long snpId) {
         Collection<Study> studies =
-                studyRepository.findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNull(snpId);
+                studyRepository.findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(
+                        snpId);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
@@ -131,7 +134,8 @@ public class StudyService {
     @Transactional(readOnly = true)
     public Collection<Study> findByAssociationId(Long associationId) {
         Collection<Study> studies =
-                studyRepository.findByAssociationsIdAndHousekeepingCatalogPublishDateIsNotNull(associationId);
+                studyRepository.findByAssociationsIdAndHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(
+                        associationId);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
@@ -139,7 +143,7 @@ public class StudyService {
     @Transactional(readOnly = true)
     public Collection<Study> findByDiseaseTraitId(Long diseaseTraitId) {
         Collection<Study> studies =
-                studyRepository.findByDiseaseTraitIdAndHousekeepingCatalogPublishDateIsNotNull(diseaseTraitId);
+                studyRepository.findByDiseaseTraitIdAndHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(diseaseTraitId);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
