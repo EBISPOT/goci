@@ -40,7 +40,7 @@ public class AssociationDownloadService {
     private String processAssociations(Collection<Association> associations) {
 
         String header =
-                "Gene\tStrongest SNP-Risk Allele\tSNP\tProxy SNP\tRisk Allele Frequency in Controls\tAssociation Risk Frequency\tP-value mantissa\tP-value exponent\tP-value (Text)\tOR per copy or beta (Num)\tOR entered (reciprocal)\tOR-type? (Y/N)\tMulti-SNP Haplotype?\tSNP:SNP interaction?\tConfidence Interval\tReciprocal confidence interval\tBeta unit and direction\tStandard Error\tSNP type (novel/known)\tEFO traits\r\n";
+                "Gene\tStrongest SNP-Risk Allele\tSNP\tProxy SNP\tRisk Allele Frequency in Controls\tAssociation Risk Frequency\tP-value mantissa\tP-value exponent\tP-value (Text)\tOR per copy or beta (Num)\tOR entered (reciprocal)\tOR-type? (Y/N)\tMulti-SNP Haplotype?\tSNP:SNP interaction?\tConfidence Interval\tReciprocal confidence interval\tBeta unit and direction\tStandard Error\tSNP type (novel/known)\tSNP Status\tEFO traits\r\n";
 
 
         StringBuilder output = new StringBuilder();
@@ -185,6 +185,9 @@ public class AssociationDownloadService {
             }
             line.append("\t");
 
+            // SNP Status
+            extractSNPStatus(association, line);
+
             if (association.getEfoTraits() == null) {
                 line.append("");
             }
@@ -198,6 +201,48 @@ public class AssociationDownloadService {
         }
 
         return output.toString();
+    }
+
+    private void extractSNPStatus(Association association, StringBuilder line) {
+
+        final StringBuilder snpStatuses = new StringBuilder();
+
+        // Only applies to SNP interaction studies
+        if (association.getSnpInteraction() != null && association.getSnpInteraction()) {
+            association.getLoci().forEach(
+                    locus -> {
+                        locus.getStrongestRiskAlleles().forEach(
+                                riskAllele -> {
+
+                                    // Genome wide Vs Limited List,
+                                    // create a comma separated list per
+                                    // risk allele
+                                    Collection<String> snpStatus = new ArrayList<>();
+                                    String commaSeparatedSnpStatus = "";
+                                    if (riskAllele.getLimitedList() != null) {
+                                        if (riskAllele.getLimitedList()) {
+                                            snpStatus.add("LL");
+                                        }
+                                    }
+                                    if (riskAllele.getGenomeWide() != null) {
+                                        if (riskAllele.getGenomeWide()) {
+                                            snpStatus.add("GW");
+                                        }
+                                    }
+                                    if (!snpStatus.isEmpty()) {
+                                        commaSeparatedSnpStatus = String.join(", ", snpStatus);
+                                    }
+                                    else { commaSeparatedSnpStatus = "NR";}
+
+                                    setOrAppend(snpStatuses, commaSeparatedSnpStatus, " x ");
+                                }
+                        );
+                    }
+            );
+        }
+
+        line.append(snpStatuses.toString());
+        line.append("\t");
     }
 
     private void extractEfoTraits(Collection<EfoTrait> efoTraits, StringBuilder line) {

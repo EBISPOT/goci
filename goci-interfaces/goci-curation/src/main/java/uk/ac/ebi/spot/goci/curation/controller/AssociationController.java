@@ -280,9 +280,9 @@ public class AssociationController {
 
 
             // Send file, including path, to SNP batch loader process
-            Collection<SnpAssociationForm> snpAssociationForms = new ArrayList<>();
+            Collection<Association> newAssociations = new ArrayList<>();
             try {
-                snpAssociationForms = associationBatchLoaderService.processData(uploadedFilePath, efoTraitRepository);
+                newAssociations = associationBatchLoaderService.processData(uploadedFilePath);
             }
             catch (InvalidOperationException e) {
                 e.printStackTrace();
@@ -307,15 +307,14 @@ public class AssociationController {
             }
 
             // Create our associations
-            if (!snpAssociationForms.isEmpty()) {
-                for (SnpAssociationForm snpAssociationForm : snpAssociationForms) {
-                    Association association = singleSnpMultiSnpAssociationService.createAssociation(snpAssociationForm);
+            if (!newAssociations.isEmpty()) {
+                for (Association newAssociation : newAssociations) {
 
                     // Set the study ID for our association
-                    association.setStudy(study);
+                    newAssociation.setStudy(study);
 
                     // Save our association information
-                    associationRepository.save(association);
+                    associationRepository.save(newAssociation);
                 }
 
             }
