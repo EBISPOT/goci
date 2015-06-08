@@ -589,16 +589,20 @@ public class AssociationSheetProcessor {
             proxies.add(separatedProxy.trim());
         }
 
+        // Value is only recorded for SNP interaction associations
         List<String> riskFrequencies = new ArrayList<>();
-        String[] separatedRiskFrequencies = riskFrequency.split(delimiter);
-        for (String separatedRiskFrequency : separatedRiskFrequencies) {
-            riskFrequencies.add(separatedRiskFrequency.trim());
+        Iterator<String> riskFrequencyIterator = null;
+        if (riskFrequency != null) {
+            String[] separatedRiskFrequencies = riskFrequency.split(delimiter);
+            for (String separatedRiskFrequency : separatedRiskFrequencies) {
+                riskFrequencies.add(separatedRiskFrequency.trim());
+            }
+            riskFrequencyIterator = riskFrequencies.iterator();
         }
 
         Iterator<String> riskAlleleIterator = riskAlleles.iterator();
         Iterator<String> snpIterator = snps.iterator();
         Iterator<String> proxyIterator = proxies.iterator();
-        Iterator<String> riskFrequencyIterator = riskFrequencies.iterator();
 
         // Loop through our risk alleles
         if (riskAlleles.size() == snps.size()) {
@@ -608,7 +612,6 @@ public class AssociationSheetProcessor {
                 String snpValue = snpIterator.next().trim();
                 String riskAlleleValue = riskAlleleIterator.next().trim();
                 String proxyValue = proxyIterator.next().trim();
-                String riskFrequencyValue = riskFrequencyIterator.next().trim();
 
                 SingleNucleotidePolymorphism newSnp = lociAttributesService.createSnp(snpValue);
 
@@ -619,8 +622,12 @@ public class AssociationSheetProcessor {
                 SingleNucleotidePolymorphism proxySnp = lociAttributesService.createSnp(proxyValue);
                 newRiskAllele.setProxySnp(proxySnp);
 
-                // If there is no curator entered value don't save
-                if (!riskFrequencyValue.equalsIgnoreCase("NR")) {
+                // If there is no curator entered value for risk allele frequency don't save
+                String riskFrequencyValue = null;
+                if (riskFrequencyIterator != null) {
+                    riskFrequencyValue = riskFrequencyIterator.next().trim();
+                }
+                if (riskFrequencyValue != null && !riskFrequencyValue.equalsIgnoreCase("NR")) {
                     newRiskAllele.setRiskFrequency(riskFrequencyValue);
                 }
 
