@@ -130,11 +130,16 @@ public class SingleSnpMultiSnpAssociationService {
             // Create a new risk allele and assign newly created snp
             RiskAllele riskAllele = lociAttributesService.createRiskAllele(curatorEnteredRiskAllele, snp);
 
-            // Check for a proxy and if we have one create a proxy snp
-            if (row.getProxySnp() != null && !row.getProxySnp().isEmpty()) {
-                String curatorEnteredProxySnp = row.getProxySnp();
-                SingleNucleotidePolymorphism proxySnp = lociAttributesService.createSnp(curatorEnteredProxySnp);
-                riskAllele.setProxySnp(proxySnp);
+            // Check for proxies and if we have one create a proxy snps
+            if (row.getProxySnps() != null && !row.getProxySnps().isEmpty()) {
+                Collection<SingleNucleotidePolymorphism> riskAlleleProxySnps = new ArrayList<>();
+
+                for (String curatorEnteredProxySnp : row.getProxySnps()) {
+                    SingleNucleotidePolymorphism proxySnp = lociAttributesService.createSnp(curatorEnteredProxySnp);
+                    riskAlleleProxySnps.add(proxySnp);
+                }
+
+                riskAllele.setProxySnps(riskAlleleProxySnps);
             }
 
             locusRiskAlleles.add(riskAllele);
@@ -214,10 +219,14 @@ public class SingleSnpMultiSnpAssociationService {
             snpFormRow.setSnp(riskAllele.getSnp().getRsId());
 
             // Set proxy if one is present
-            if (riskAllele.getProxySnp() != null) {
-                snpFormRow.setProxySnp(riskAllele.getProxySnp().getRsId());
+            Collection<String> proxySnps = new ArrayList<>();
+            if (riskAllele.getProxySnps() != null) {
+                for (SingleNucleotidePolymorphism riskAlleleProxySnp : riskAllele.getProxySnps()) {
+                    proxySnps.add(riskAlleleProxySnp.getRsId());
+                }
             }
-            else { snpFormRow.setProxySnp(null);}
+            snpFormRow.setProxySnps(proxySnps);
+
             snpFormRows.add(snpFormRow);
         }
 
