@@ -32,21 +32,32 @@
     <script src="../static/js/goci-snp-association-calculations.js"
             th:src="@{../../../js/goci-snp-association-calculations.js}"></script>
 
+    <link rel="stylesheet" href="http://css-spinners.com/css/spinner/spinner.css" type="text/css"/>
+
+
+
 </head>
 <body>
 
 <!--Include header-->
 <div th:include="header :: navbar"></div>
 
-<!--Link back to study page -->
+
 <div class="container-fluid">
+    <!-- Link to the different SNP tabs -->
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#">SNP Associations</a></li>
+            <li><a th:href="@{/studies/{studyId}/associations/mapping/add_standard(studyId=${study.id})}">SNP Mappings</a></li>
+        </ul>
+    </div>
+    <!--Link back to study page -->
     <div class="row">
         <div class="col-md-10">
-            <a class="btn btn-default" th:href="@{/studies/{studyId}/associations(studyId=${study.id})}">Back</a>
+            <a class="btn btn-link btn-lg" th:href="@{/studies/{studyId}/associations(studyId=${study.id})}">Back</a>
         </div>
     </div>
 </div>
-
 
 <div class="container">
 <div class="row">
@@ -63,26 +74,19 @@
                         <div class="col-md-10 col-md-offset-2">
                             <table class="table table-hover table-bordered">
 
-                                <div class="form-group">
-                                    <label for="multiSnpHaplotypeDescr" class="control-label col-md-2"></label>
-
-                                    <div class="col-md-10">
-                                        <input type="hidden" class="form-control" id="multiSnpHaplotypeDescr"
-                                               th:field="*{multiSnpHaplotypeDescr}"/>
-                                    </div>
-                                </div>
-
                                 <thead>
                                 <tr>
                                     <th>SNP</th>
                                     <th>Strongest SNP-Risk Allele</th>
                                     <th>Proxy SNP</th>
+                                    <th>Variant validation</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr th:each="row,rowStat : *{snpFormRows}">
                                     <td>
-                                        <input type="text" th:field="*{snpFormRows[__${rowStat.index}__].snp}"/>
+                                        <input id="snp_id" type="text" th:field="*{snpFormRows[__${rowStat.index}__].snp}"/>
+                                        <input type="hidden" id="snp" name="snp" th:value="*{snpFormRows[__${rowStat.index}__].snp}"/>
                                     </td>
                                     <td>
                                         <input type="text"
@@ -92,11 +96,21 @@
                                         <input type="text"
                                                th:field="*{snpFormRows[__${rowStat.index}__].proxySnp}"/>
                                     </td>
+                                    <td>
+                                        <!--<button type="submit" class="btn btn-primary">Validate</button>-->
+                                        <span class="btn btn-primary" id="validation_button">Validate</span>
+                                        <input type="hidden" id="snpChecked" name="snpChecked" th:value="*{snpChecked}"/>
+                                        <span>
+                                            <span id="snp_check_waiting" class="spinner-loader" style="width:0.8em;height:0.8em;display:none"></span>
+                                            <span style="color:#0A0;font-weight:bold;padding-left:5px" id="validation_status"> </span>
+                                        </span>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
+                    <div id="rest_result"></div>
 
 
                     <div class="form-group">
@@ -168,7 +182,7 @@
 
                         <div class="col-md-10">
                             <input type="text" class="form-control" name="orPerCopyNum" id="orPerCopyNum"
-                                   th:field="*{orPerCopyNum}"/>
+                                   th:filed="*{orPerCopyNum}"/>
                         </div>
                     </div>
 
@@ -261,10 +275,10 @@
                         <input id="orType" type="checkbox" th:field="*{orType}"/>
                     </div>
 
-                    <div class="form-group">
+                    <!--<div class="form-group">
                         <label for="snpChecked" class="control-label col-md-2">SNP checked?</label>
                         <input id="snpChecked" type="checkbox" th:field="*{snpChecked}"/>
-                    </div>
+                    </div>-->
 
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">

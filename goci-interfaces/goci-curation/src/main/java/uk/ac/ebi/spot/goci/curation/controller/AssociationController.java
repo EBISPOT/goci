@@ -208,7 +208,7 @@ public class AssociationController {
             SnpAssociationTableView snpAssociationTableView = associationViewService.createSnpAssociationTableView(
                     association);
 
-           // Cannot sort multi field values
+            // Cannot sort multi field values
             if (snpAssociationTableView.getMultiSnpHaplotype() != null) {
                 if (snpAssociationTableView.getMultiSnpHaplotype().equalsIgnoreCase("Yes")) {
                     sortValues = false;
@@ -350,6 +350,26 @@ public class AssociationController {
         return "add_standard_snp_association";
     }
 
+    // Generate a empty form page to add standard snp mappings
+    @RequestMapping(value = "/studies/{studyId}/associations/mapping/add_standard",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.GET)
+    public String addStandardSnpMappings(Model model, @PathVariable Long studyId) {
+
+        // Return form object
+        SnpAssociationForm emptyForm = new SnpAssociationForm();
+
+        // Add one row by default
+        emptyForm.getSnpFormRows().add(new SnpFormRow());
+        emptyForm.setMultiSnpHaplotypeDescr("Single variant");
+
+        model.addAttribute("snpAssociationForm", emptyForm);
+
+        // Also passes back study object to view so we can create links back to main study page
+        model.addAttribute("study", studyRepository.findOne(studyId));
+        return "add_standard_snp_mapping";
+    }
+
     // Generate a empty form page to add multi-snp haplotype
     @RequestMapping(value = "/studies/{studyId}/associations/add_multi",
                     produces = MediaType.TEXT_HTML_VALUE,
@@ -424,7 +444,6 @@ public class AssociationController {
         return "add_snp_interaction_association";
     }
 
-
     // Add single row to table
     @RequestMapping(value = "/studies/{studyId}/associations/add_multi", params = {"addRow"})
     public String addRow(SnpAssociationForm snpAssociationForm, Model model, @PathVariable Long studyId) {
@@ -477,7 +496,6 @@ public class AssociationController {
         return "add_multi_snp_association";
     }
 
-
     // Remove column from table
     @RequestMapping(value = "/studies/{studyId}/associations/add_interaction", params = {"removeCol"})
     public String removeCol(SnpAssociationInteractionForm snpAssociationInteractionForm,
@@ -499,6 +517,7 @@ public class AssociationController {
 
         return "add_snp_interaction_association";
     }
+
 
     // Add new standard association/snp information to a study
     @RequestMapping(value = "/studies/{studyId}/associations/add_standard",
@@ -633,6 +652,57 @@ public class AssociationController {
                     return "edit_standard_snp_association";
                 }
             }
+        }
+    }
+
+    // View association mapping information
+    @RequestMapping(value = "/associations/mapping/{associationId}",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.GET)
+    public String viewAssociationMapping(Model model, @PathVariable Long associationId) {
+
+        // Return association with that ID
+        Association associationToView = associationRepository.findOne(associationId);
+
+        // Establish study
+        Long studyId = associationToView.getStudy().getId();
+
+        // Figure out the number of risk alleles linked to a single association
+        // From this we can decide which view to return
+        List<RiskAllele> riskAlleles = new ArrayList<>();
+        for (Locus locus : associationToView.getLoci()) {
+            for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
+                riskAlleles.add(riskAllele);
+            }
+        }
+
+        // Create form and return to user
+        SnpAssociationForm snpAssociationForm = singleSnpMultiSnpAssociationService.createSnpAssociationForm(
+                associationToView);
+        model.addAttribute("snpAssociationForm", snpAssociationForm);
+
+        // Also passes back study object to view so we can create links back to main study page
+        model.addAttribute("study", studyRepository.findOne(studyId));
+
+        // TODO MAYBE HAVE THIS COUNT LOCI
+        // Placeholder until we get something working
+        /*if (associationToView.getSnpInteraction() != null && associationToView.getSnpInteraction()) {
+            model.addAttribute("study", studyRepository.findOne(studyId));
+            return "edit_snp_interaction_association";
+
+        }
+        // If editing multi-snp haplotype
+        else if (riskAlleles.size() > 1) {
+            return "edit_multi_snp_association";
+        }
+        else {
+            return "edit_standard_snp_association";
+        }*/
+        if (riskAlleles.size() > 1) {
+            return "edit_multi_snp_mapping";
+        }
+        else {
+            return "edit_standard_snp_mapping";
         }
     }
 
@@ -786,6 +856,7 @@ public class AssociationController {
 
         return "edit_snp_interaction_association";
     }
+
 
     // Delete all associations linked to a study
     @RequestMapping(value = "/studies/{studyId}/associations/delete_all",
@@ -1019,22 +1090,22 @@ public class AssociationController {
         return dataIntegrityException.getMessage();
     }
 
-//    @ExceptionHandler(InvalidFormatException.class)
-//    public String handleInvalidFormatException(InvalidFormatException invalidFormatException, Model model, Study study){
-//        getLog().error("Invalid format exception", invalidFormatException);
-//        model.addAttribute("study", study);
-//        return "wrong_file_format_warning";
-//
-//    }
-//
-//    @ExceptionHandler(InvalidOperationException.class)
-//    public String handleInvalidOperationException(InvalidOperationException invalidOperationException){
-//        getLog().error("Invalid operation exception", invalidOperationException);
-////        model.addAttribute("study", study);
-//        System.out.println("Caught the exception but couldn't quite handle it");
-//        return "wrong_file_format_warning";
-//
-//    }
+    //    @ExceptionHandler(InvalidFormatException.class)
+    //    public String handleInvalidFormatException(InvalidFormatException invalidFormatException, Model model, Study study){
+    //        getLog().error("Invalid format exception", invalidFormatException);
+    //        model.addAttribute("study", study);
+    //        return "wrong_file_format_warning";
+    //
+    //    }
+    //
+    //    @ExceptionHandler(InvalidOperationException.class)
+    //    public String handleInvalidOperationException(InvalidOperationException invalidOperationException){
+    //        getLog().error("Invalid operation exception", invalidOperationException);
+    ////        model.addAttribute("study", study);
+    //        System.out.println("Caught the exception but couldn't quite handle it");
+    //        return "wrong_file_format_warning";
+    //
+    //    }
 
     /* Model Attributes :
     *  Used for dropdowns in HTML forms
