@@ -97,3 +97,54 @@ function calculateOrPerCopyRange(orPerCopyRecipRange) {
     document.getElementById("orPerCopyRange").value = '[' + lowval + '-' + highval + ']';
 
 }
+
+$(document).ready(function() {
+    $("#validation_button").click(function() {
+        if ($("#snpChecked").val() != "true" ||  $("#snp_id").val() != $("#snp").val()) {
+            $("#snp_check_waiting").show();
+            var rest_url = "http://rest.ensembl.org/variation/human/" + $("#snp_id").val();
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: rest_url,
+                error: function (jqXHR, status, errorThrown) {
+                    $("#snp_check_waiting").hide();
+                    $("#validation_status").html(status+" ("+errorThrown+")");
+                    //$("#validation_status").html("Error: can't find the variant "+$("#snp").val()+" in Ensembl");
+                    $("#validation_status").css({color: "#F00"});
+                },
+                success: function(result) {
+                    $("#snpChecked").val("true");
+                    $("#snp").val($("#snp_id").val());
+                    $("#snp_check_waiting").hide();
+                    $("#validation_status").css({color: "#0A0"});
+                    $("#validation_status").html($("#snp_id").val() + " validated");
+                    // E.g.
+                    $("#rest_result").html("Source: " + result.name + " - " +result.source);
+                }
+            });
+            $("#snp_check_waiting").hide();
+        }
+    });
+});
+
+function checkGenes() {
+    var gene_string = $("#authorgenes").val();
+    var genes = str.split(',');
+    var rest_url = "http://rest.ensembl.org/xrefs/symbol/homo_sapiens/";
+    for (gene in genes) {
+        var rest_full_url = rest_url + gene;
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: rest_full_url,
+            error: function(jqXHR, status, errorThrown) {
+                $("#gene_result").html("Gene: " + gene + " NOT found");
+                $("#gene_result").css({color: "#F00"});
+            },
+            success: function(result) {
+                $("#gene_result").html("Gene: " + gene + " found");
+            }
+        });
+    }
+}
