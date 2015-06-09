@@ -36,6 +36,12 @@ public class SingleNucleotidePolymorphism {
             inverseJoinColumns = @JoinColumn(name = "REGION_ID"))
     private Collection<Region> regions;
 
+    @ManyToMany
+    @JoinTable(name = "SNP_LOCATION",
+               joinColumns = @JoinColumn(name = "SNP_ID"),
+               inverseJoinColumns = @JoinColumn(name = "LOCATION_ID"))
+    private Collection<Location> locations;
+
     @OneToMany(mappedBy = "snp")
     private Collection<GenomicContext> genomicContexts;
 
@@ -52,7 +58,8 @@ public class SingleNucleotidePolymorphism {
                                         Long merged,
                                         String functionalClass,
                                         Date lastUpdateDate,
-                                        Collection<Region> regions) {
+                                        Collection<Region> regions,
+                                        Collection<Location> locations) {
         this.rsId = rsId;
         this.chromosomeName = chromosomeName;
         this.chromosomePosition = chromosomePosition;
@@ -60,6 +67,7 @@ public class SingleNucleotidePolymorphism {
         this.functionalClass = functionalClass;
         this.lastUpdateDate = lastUpdateDate;
         this.regions = regions;
+        this.locations = locations;
     }
 
     public Long getId() {
@@ -124,6 +132,14 @@ public class SingleNucleotidePolymorphism {
 
     public void setRegions(Collection<Region> regions) {
         this.regions = regions;
+    }
+
+    public Collection<Location> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(Collection<Location> locations) {
+        this.locations = locations;
     }
 
     public Collection<GenomicContext> getGenomicContexts() {
