@@ -151,34 +151,24 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <!--<tr>
-                                            <td><span th:text="${genomicContexts}">test</span></td>
-                                        </tr>-->
-                                        <!--<tr th:each="row,rowStat : *{genomicContexts}">-->
-                                        <!--<tr th:each="genomicContext : ${genomicContexts}">-->
                                         <tr th:each="row,rowStat : *{genomicContexts}">
                                             <td>
                                                 <span th:text="*{genomicContexts[__${rowStat.index}__].snp.rsId}">SNP</span>
-                                                <!--<input type="text" th:field=="*{genomicContexts[__${rowStat.index}__].snp.rsId}"/>-->
                                             </td>
-                                            <td>#ERROR
-                                                <!--<span th:text="*{genomicContexts[__${rowStat.index}__]}">GC</span>-->
-                                                <!--<span th:text="${genomicContexts[__${rowStat.index}__].isIntergenic} ? 'Yes' : 'No'">No</span>-->
-                                                <!--<input type="checkbox" th:field="*{genomicContexts[__${rowStat.index}__].isIntergenic}"/>-->
+                                            <td>
+                                                <input type="checkbox" th:field="*{genomicContexts[__${rowStat.index}__].isIntergenic}"/>
                                             </td>
                                             <td>
                                                 <span th:text="*{genomicContexts[__${rowStat.index}__].gene.geneName}">Gene</span>
-                                                <!--<input type="text" th:field="*{genomicContexts[__${rowStat.index}__].gene.geneName}"/>-->
                                             </td>
-                                            <td>#ERROR
-                                                <!--<input id="${rowStat.index}_isUpstream" type="checkbox" th:field="*{genomicContexts[__${rowStat.index}__].isUpstream}"/>-->
+                                            <td>
+                                                <input type="checkbox" th:field="*{genomicContexts[__${rowStat.index}__].isUpstream}"/>
                                             </td>
-                                            <td>#ERROR
-                                                <!--<input id="${rowStat.index}_isDownstream" type="checkbox" th:field="*{genomicContexts[__${rowStat.index}__].isDownstream}"/>-->
+                                            <td>
+                                                <input type="checkbox" th:field="*{genomicContexts[__${rowStat.index}__].isDownstream}"/>
                                             </td>
                                             <td>
                                                 <span th:text="*{genomicContexts[__${rowStat.index}__].distance}">dist.</span>
-                                                <!--<input type="text" th:field="*{genomicContexts[__${rowStat.index}__].distance}"/>-->
                                             </td>
                                             <td>
                                                 <!--<button type="submit" class="btn btn-danger">
