@@ -81,7 +81,7 @@
                                         <th></th>
                                         <th>SNP</th>
                                         <th>Strongest SNP-Risk Allele</th>
-                                        <th>Proxy SNP</th>
+                                        <th>Proxy SNPs</th>
                                         <th>
                                             <button type="submit" name="addRow">Add row</button>
                                         </th>
@@ -98,8 +98,8 @@
                                                    th:field="*{snpFormRows[__${rowStat.index}__].strongestRiskAllele}"/>
                                         </td>
                                         <td>
-                                            <input type="text"
-                                                   th:field="*{snpFormRows[__${rowStat.index}__].proxySnp}"/>
+                                            <input type="text" data-role="tagsinput"
+                                                   th:field="*{snpFormRows[__${rowStat.index}__].proxySnps}"/>
                                         </td>
                                         <td><button type="submit" name="removeRow" th:value="${rowStat.index}">Remove row</button>
                                         </td>
@@ -306,6 +306,13 @@
     $(function() {
         // turn the element to select2 select style
         $('#EFOTrait').select2();
+    });
+</script>
+
+<!--Formats tags input -->
+<script>
+    $('input').tagsinput({
+        trimValue: true
     });
 </script>
 
