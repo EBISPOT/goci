@@ -1,10 +1,12 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
+import java.util.Collection;
+
 /**
  * Created by emma on 26/01/15.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Service class that deals with rows on SNP association form
  */
 public class SnpFormRow {
@@ -13,15 +15,15 @@ public class SnpFormRow {
 
     private String strongestRiskAllele;
 
-    private String proxySnp;
+    private Collection<String> proxySnps;
 
     public SnpFormRow() {
     }
 
-    public SnpFormRow(String snp, String strongestRiskAllele, String proxySnp) {
+    public SnpFormRow(String snp, String strongestRiskAllele, Collection<String> proxySnps) {
         this.snp = snp;
         this.strongestRiskAllele = strongestRiskAllele;
-        this.proxySnp = proxySnp;
+        this.proxySnps = proxySnps;
     }
 
     public String getSnp() {
@@ -40,11 +42,11 @@ public class SnpFormRow {
         this.strongestRiskAllele = strongestRiskAllele;
     }
 
-    public String getProxySnp() {
-        return proxySnp;
+    public Collection<String> getProxySnps() {
+        return proxySnps;
     }
 
-    public void setProxySnp(String proxySnp) {
-        this.proxySnp = proxySnp;
+    public void setProxySnps(Collection<String> proxySnps) {
+        this.proxySnps = proxySnps;
     }
 }
