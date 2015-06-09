@@ -4,17 +4,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
+import uk.ac.ebi.spot.goci.curation.model.SnpMappingForm;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.Gene;
+import uk.ac.ebi.spot.goci.model.GenomicContext;
+import uk.ac.ebi.spot.goci.model.Location;
 import uk.ac.ebi.spot.goci.model.Locus;
+import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
+import uk.ac.ebi.spot.goci.repository.GenomicContextRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by emma on 13/04/2015.
@@ -30,19 +38,26 @@ public class SingleSnpMultiSnpAssociationService {
     // Repositories
     private AssociationRepository associationRepository;
     private LocusRepository locusRepository;
+    private GenomicContextRepository genomicContextRepository;
 
     // Services
+    private AssociationCalculationService associationCalculationService;
     private LociAttributesService lociAttributesService;
 
     @Autowired
     public SingleSnpMultiSnpAssociationService(AssociationRepository associationRepository,
                                                LocusRepository locusRepository,
-                                               LociAttributesService lociAttributesService) {
+                                               GenomicContextRepository genomicContextRepository,
+                                               AssociationCalculationService associationCalculationService,
+                                               LociAttributesService lociAttributesService
+                                              ) {
         this.associationRepository = associationRepository;
         this.locusRepository = locusRepository;
+        this.genomicContextRepository = genomicContextRepository;
+        this.associationCalculationService = associationCalculationService;
         this.lociAttributesService = lociAttributesService;
-    }
 
+    }
 
     public Association createAssociation(SnpAssociationForm snpAssociationForm) {
 
@@ -54,6 +69,7 @@ public class SingleSnpMultiSnpAssociationService {
         association.setOrType(snpAssociationForm.getOrType());
         association.setSnpType(snpAssociationForm.getSnpType());
         association.setMultiSnpHaplotype(snpAssociationForm.getMultiSnpHaplotype());
+        association.setSnpInteraction(snpAssociationForm.getSnpInteraction());
         association.setSnpChecked(snpAssociationForm.getSnpChecked());
         association.setOrPerCopyNum(snpAssociationForm.getOrPerCopyNum());
         association.setOrPerCopyRecip(snpAssociationForm.getOrPerCopyRecip());
@@ -114,6 +130,16 @@ public class SingleSnpMultiSnpAssociationService {
         // Set locus genes
         locus.setAuthorReportedGenes(locusGenes);
 
+        // Delete any existing risk alleles as we will re-create in next for loop
+        // This should only occur if we are editing an existing study
+        Collection<RiskAllele> existingRiskAlleles = locus.getStrongestRiskAlleles();
+        if (!existingRiskAlleles.isEmpty()) {
+            locus.setStrongestRiskAlleles(new ArrayList<>());
+            for (RiskAllele riskAllele : existingRiskAlleles) {
+                lociAttributesService.deleteRiskAllele(riskAllele);
+            }
+        }
+
         // Handle rows entered for haplotype by curator
         Collection<SnpFormRow> rows = snpAssociationForm.getSnpFormRows();
         Collection<RiskAllele> locusRiskAlleles = new ArrayList<>();
@@ -171,6 +197,7 @@ public class SingleSnpMultiSnpAssociationService {
         snpAssociationForm.setSnpType(association.getSnpType());
         snpAssociationForm.setMultiSnpHaplotype(association.getMultiSnpHaplotype());
         snpAssociationForm.setSnpChecked(association.getSnpChecked());
+        snpAssociationForm.setSnpInteraction(association.getSnpInteraction());
         snpAssociationForm.setPvalueMantissa(association.getPvalueMantissa());
         snpAssociationForm.setPvalueExponent(association.getPvalueExponent());
         snpAssociationForm.setOrPerCopyRecip(association.getOrPerCopyRecip());
@@ -199,7 +226,6 @@ public class SingleSnpMultiSnpAssociationService {
         }
 
 
-        // Get name of gene and add to form
         Collection<String> authorReportedGenes = new ArrayList<>();
         for (Gene locusGene : locusGenes) {
             authorReportedGenes.add(locusGene.getGeneName());
@@ -207,20 +233,36 @@ public class SingleSnpMultiSnpAssociationService {
         snpAssociationForm.setAuthorReportedGenes(authorReportedGenes);
 
         // Handle snp rows
+        Collection<Location> snpLocations = new ArrayList<Location>();
+        Collection<GenomicContext> snpGenomicContexts = new ArrayList<GenomicContext>();
         List<SnpFormRow> snpFormRows = new ArrayList<SnpFormRow>();
+        List<SnpMappingForm> snpMappingForms = new ArrayList<SnpMappingForm>();
         for (RiskAllele riskAllele : locusRiskAlleles) {
             SnpFormRow snpFormRow = new SnpFormRow();
             snpFormRow.setStrongestRiskAllele(riskAllele.getRiskAlleleName());
+
+            SingleNucleotidePolymorphism snp = riskAllele.getSnp();
+            String rsID = snp.getRsId();
             snpFormRow.setSnp(riskAllele.getSnp().getRsId());
+
+            Collection<Location> locations = snp.getLocations();
+            for (Location location : locations) {
+                SnpMappingForm snpMappingForm = new SnpMappingForm(rsID,location);
+                snpMappingForms.add(snpMappingForm);
+            }
 
             // Set proxy if one is present
             if (riskAllele.getProxySnp() != null) {
                 snpFormRow.setProxySnp(riskAllele.getProxySnp().getRsId());
             }
             else { snpFormRow.setProxySnp(null);}
+
+            snpGenomicContexts.addAll(genomicContextRepository.findBySnpId(snp.getId()));
             snpFormRows.add(snpFormRow);
         }
 
+        snpAssociationForm.setSnpMappingForms(snpMappingForms);
+        snpAssociationForm.setGenomicContexts(snpGenomicContexts);
         snpAssociationForm.setSnpFormRows(snpFormRows);
         return snpAssociationForm;
     }
