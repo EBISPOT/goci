@@ -126,25 +126,32 @@ $(document).ready(function() {
             $("#snp_check_waiting").hide();
         }
     });
-});
+    $("#gene_validation_button").click(function() {
+        var gene_string = $("#authorgenes").val();
+        var genes = gene_string.split(",");
 
-function checkGenes() {
-    var gene_string = $("#authorgenes").val();
-    var genes = str.split(',');
-    var rest_url = "http://rest.ensembl.org/xrefs/symbol/homo_sapiens/";
-    for (gene in genes) {
-        var rest_full_url = rest_url + gene;
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: rest_full_url,
-            error: function(jqXHR, status, errorThrown) {
-                $("#gene_result").html("Gene: " + gene + " NOT found");
-                $("#gene_result").css({color: "#F00"});
-            },
-            success: function(result) {
-                $("#gene_result").html("Gene: " + gene + " found");
-            }
-        });
-    }
-}
+        var rest_url = "http://rest.ensembl.org/xrefs/symbol/homo_sapiens/";
+
+        for (i in genes) {
+            var gene = genes[i];
+            var rest_full_url = rest_url + gene;
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                async: false, // Avoid weird results
+                url: rest_full_url,
+                error: function(jqXHR, status, errorThrown) {
+                    $(".tag:contains('"+gene+"')").css({backgroundColor: "#A00"});
+                },
+                success: function(result) {
+                    if (result.length > 0 && result != []) {
+                        $(".tag:contains('"+gene+"')").css({backgroundColor: "#0A0"});
+                    }
+                    else {
+                        $(".tag:contains('"+gene+"')").css({backgroundColor: "#A00"});
+                    }
+                }
+            });
+        }
+    });
+});

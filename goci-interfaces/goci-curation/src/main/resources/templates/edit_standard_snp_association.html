@@ -104,7 +104,6 @@
                                                    th:field="*{snpFormRows[__${rowStat.index}__].proxySnp}"/>
                                         </td>
                                         <td>
-                                            <!--<button type="submit" class="btn btn-primary">Validate</button>-->
                                             <span class="btn btn-primary" id="validation_button" th:unless="*{snpChecked}">Validate</span>
                                             <input type="hidden" id="snpChecked" name="snpChecked" th:value="*{snpChecked}"/>
                                             <span style="color:#0A0;font-weight:bold;padding-left:5px" th:if="*{snpChecked}">Validated</span>
@@ -126,9 +125,10 @@
                             <div class="col-md-10">
                                 <input type="text" class="form-control" id="authorgenes"
                                        th:field="*{authorReportedGenes}" name="authorReportedGene"
-                                       data-role="tagsinput" onblur="checkGenes(this)" />
-                                <span id="gene_result"></span>
+                                       data-role="tagsinput"/>
+                                <span class="btn btn-primary" id="gene_validation_button">Check gene(s)</span>
                             </div>
+
                         </div>
 
                         <div class="form-group">
