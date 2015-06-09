@@ -7,7 +7,6 @@ import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
-import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
@@ -78,11 +77,19 @@ public class AssociationViewService {
                 SingleNucleotidePolymorphism snp = riskAllele.getSnp();
                 allLociSnps.add(snp.getRsId());
 
-                // TODO CHANGE WHEN WE UPDATE MODEL FOR MULTIPLE PROXY SNPS
-                // Set proxy if one is present
-                if (riskAllele.getProxySnp() != null) {
-                    allLociProxySnps.add(riskAllele.getProxySnp().getRsId());
+                // Set proxies if present
+                Collection <String> currentLocusProxies =  new ArrayList<>();
+                String commaSeparatedProxies = "";
+                if (riskAllele.getProxySnps() != null) {
+                    for (SingleNucleotidePolymorphism proxySnp : riskAllele.getProxySnps()) {
+                        currentLocusProxies.add(proxySnp.getRsId());
+                    }
                 }
+                if (!currentLocusProxies.isEmpty()){
+                    commaSeparatedProxies= String.join(", ", currentLocusProxies);
+                    allLociProxySnps.add(commaSeparatedProxies);
+                }
+
                 else { allLociProxySnps.add("NR");}
 
                 // Only required for SNP interaction studies
