@@ -27,7 +27,7 @@ import java.util.Set;
 
 /**
  * A default implementation of {@link GWASOWLConverter} that fetches data from the GWAS catalog using a {@link
- * uk.ac.ebi.spot.goci.} and converts all obtained {@link Study} objects to OWL.
+ * uk.ac.ebi.spot.goci.owl.OntologyLoader} and converts all obtained {@link Study} objects to OWL.
  *
  * @author Tony Burdett Date 26/01/12
  */

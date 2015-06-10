@@ -6,6 +6,7 @@ import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
+import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -20,6 +21,8 @@ import java.util.stream.Collectors;
  * @author James Malone
  * @date 15/02/12
  */
+
+@Service
 public class AssertedOntologyLoader extends AbstractOntologyLoader {
     protected OWLOntology indexOntology(final OWLOntology ontology) throws OWLOntologyCreationException {
         Set<OWLClass> allClasses = ontology.getClassesInSignature();

@@ -54,7 +54,6 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
 
 
     @Autowired
-//    public DefaultGwasOwlPublisher (StudyRepository studyRepository, AssociationRepository associationRepository, SingleNucleotidePolymorphismRepository snpRepository, GwasOwlConverter converter){
     public DefaultGWASOWLPublisher(StudyService studyService,
                                    AssociationService associationService,
                                    SingleNucleotidePolymorphismService singleNucleotidePolymorphismService,
