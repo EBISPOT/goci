@@ -730,25 +730,27 @@ public class CatalogImportRepository {
 
         // Add region information
         Long regionId;
-        try {
-            regionId = jdbcTemplate.queryForObject(SELECT_REGION, Long.class, region);
-        }
-        catch (EmptyResultDataAccessException e) {
-            // Insert region if its not already in database
-            createRegion(region);
+        if (region != null) {
+            try {
+                regionId = jdbcTemplate.queryForObject(SELECT_REGION, Long.class, region);
+            }
+            catch (EmptyResultDataAccessException e) {
+                // Insert region if its not already in database
+                createRegion(region);
 
-            // Get the ID of the newly created region
-            regionId = jdbcTemplate.queryForObject(SELECT_REGION, Long.class, region);
-        }
+                // Get the ID of the newly created region
+                regionId = jdbcTemplate.queryForObject(SELECT_REGION, Long.class, region);
+            }
 
-        // Create link in SNP_REGION table
-        if (regionId != null) {
-            Collection<Long> snpIdsInSnpRegionTable =
-                    jdbcTemplate.queryForList(SELECT_SNP_REGION, Long.class, regionId);
+            // Create link in SNP_REGION table
+            if (regionId != null) {
+                Collection<Long> snpIdsInSnpRegionTable =
+                        jdbcTemplate.queryForList(SELECT_SNP_REGION, Long.class, regionId);
 
-            // Examine all SNPs linked to region and if no link exists then create
-            if (!snpIdsInSnpRegionTable.contains(snpIdInSnpTable)) {
-                createSnpRegion(snpIdInSnpTable, regionId);
+                // Examine all SNPs linked to region and if no link exists then create
+                if (!snpIdsInSnpRegionTable.contains(snpIdInSnpTable)) {
+                    createSnpRegion(snpIdInSnpTable, regionId);
+                }
             }
         }
 
