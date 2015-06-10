@@ -1043,12 +1043,12 @@ public class CatalogImportRepository {
         snpRegionArgs.put("REGION_ID", regionId);
         int rows = 0;
 
-        Long existingSnpIdInSnpRegionTable = null;
+        List<Long>existingSnpIdsInSnpRegionTable = new ArrayList<>();
 
         // Need to check if a SNP already has a region
         try {
-            existingSnpIdInSnpRegionTable =
-                    jdbcTemplate.queryForObject(SELECT_SNP_ID_FROM_SNP_REGION, Long.class, snpId);
+            existingSnpIdsInSnpRegionTable =
+                    jdbcTemplate.queryForList(SELECT_SNP_ID_FROM_SNP_REGION, Long.class, snpId);
         }
         // If we don't get a result then insert the link between region and snp
         catch (EmptyResultDataAccessException e) {
@@ -1059,7 +1059,7 @@ public class CatalogImportRepository {
                             " rows");
         }
 
-        if(existingSnpIdInSnpRegionTable != null){
+        if(existingSnpIdsInSnpRegionTable!= null && !existingSnpIdsInSnpRegionTable.isEmpty()){
            jdbcTemplate.update(UPDATE_SNP_REGION, regionId, snpId);
             getLog().trace(
                     "Updating SNP: " + snpId + " ,setting region to " + regionId + " - Updated " + rows +
