@@ -53,7 +53,7 @@ public class AssociationFormErrorViewService {
 
         // Risk allele errors
         for (String riskAlleleName : associationRiskAlleles) {
-            error = checkSnpOrRiskAllele(riskAlleleName);
+            error = checkRiskAllele(riskAlleleName);
             if (!error.isEmpty()) {
                 riskAlleleErrors.add(error);
             }
@@ -61,7 +61,7 @@ public class AssociationFormErrorViewService {
 
         //SNP errors
         for (String snpName : associationSnps) {
-            error = checkSnpOrRiskAllele(snpName);
+            error = checkSnpOrProxy(snpName);
             if (!error.isEmpty()) {
                 snpErrors.add(error);
             }
@@ -69,7 +69,7 @@ public class AssociationFormErrorViewService {
 
         // Proxy errors
         for (String proxyName : associationProxies) {
-            error = checkSnpOrRiskAllele(proxyName);
+            error = checkSnpOrProxy(proxyName);
             if (!error.isEmpty()) {
                 proxyErrors.add(error);
             }
@@ -83,7 +83,7 @@ public class AssociationFormErrorViewService {
     }
 
     // Check for common errors in snp and risk allele names
-    public String checkSnpOrRiskAllele(String snpValue) {
+    public String checkSnpOrProxy(String snpValue) {
 
         String error = "";
         if (snpValue.contains(",")) {
@@ -99,7 +99,10 @@ public class AssociationFormErrorViewService {
             error = error + "SNP " + snpValue + " contains a ':' character.";
         }
         if (snpValue.contains(";")) {
-            error = error + "SNP " + snpValue + " contains a ';' character." ;
+            error = error + "SNP " + snpValue + " contains a ';' character.";
+        }
+        if (snpValue.contains("-")) {
+            error = error + "SNP " + snpValue + " contains a '-' character.";
         }
         if (!snpValue.startsWith("rs")) {
             error = error + "SNP " + snpValue + " does not start with rs.";
@@ -108,7 +111,32 @@ public class AssociationFormErrorViewService {
         return error;
     }
 
-    public String formatErrors(Collection<String> errors){
+    public String checkRiskAllele(String riskAllele) {
+
+        String error = "";
+        if (riskAllele.contains(",")) {
+            error = "SNP " + riskAllele + " contains a ',' character.";
+        }
+        if (riskAllele.contains("x")) {
+            error = error + "SNP " + riskAllele + " contains an 'x' character.";
+        }
+        if (riskAllele.contains("X")) {
+            error = error + "SNP " + riskAllele + " contains an 'X' character.";
+        }
+        if (riskAllele.contains(":")) {
+            error = error + "SNP " + riskAllele + " contains a ':' character.";
+        }
+        if (riskAllele.contains(";")) {
+            error = error + "SNP " + riskAllele + " contains a ';' character.";
+        }
+        if (!riskAllele.startsWith("rs")) {
+            error = error + "SNP " + riskAllele + " does not start with rs.";
+        }
+
+        return error;
+    }
+
+    public String formatErrors(Collection<String> errors) {
         String error = "";
         error = String.join(" ", errors);
         return error;
