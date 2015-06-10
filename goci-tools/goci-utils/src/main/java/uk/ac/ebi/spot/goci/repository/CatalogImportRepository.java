@@ -82,11 +82,11 @@ public class CatalogImportRepository {
     private static final String UPDATE_HOUSEKEEPING =
             "UPDATE HOUSEKEEPING SET CURATION_STATUS_ID = ?, LAST_UPDATE_DATE = ? WHERE ID = ?";
 
-    private static final String SELECT_PUBLISH_DATE =
-            "SELECT PUBLISH_DATE FROM HOUSEKEEPING WHERE ID =?";
+    private static final String SELECT_CATALOG_PUBLISH_DATE =
+            "SELECT CATALOG_PUBLISH_DATE FROM HOUSEKEEPING WHERE ID =?";
 
-    private static final String UPDATE_PUBLISH_DATE =
-            "UPDATE HOUSEKEEPING SET PUBLISH_DATE = ? WHERE ID = ?";
+    private static final String UPDATE_CATALOG_PUBLISH_DATE =
+            "UPDATE HOUSEKEEPING SET CATALOG_PUBLISH_DATE = ? WHERE ID = ?";
 
     private static final String SELECT_SNP = "SELECT ID FROM SINGLE_NUCLEOTIDE_POLYMORPHISM WHERE RS_ID = ?";
 
@@ -986,7 +986,7 @@ public class CatalogImportRepository {
             Date currentPublishDate = null;
             // Get publish date
             try {
-                currentPublishDate = jdbcTemplate.queryForObject(SELECT_PUBLISH_DATE, Date.class, housekeepingId);
+                currentPublishDate = jdbcTemplate.queryForObject(SELECT_CATALOG_PUBLISH_DATE, Date.class, housekeepingId);
             }
             catch (EmptyResultDataAccessException e) {
                 throw new DataImportException("Caught errors processing data import - " +
@@ -1006,7 +1006,7 @@ public class CatalogImportRepository {
                     //Also update publish date if one doesn't exist
                     if (currentPublishDate == null) {
                         Date publishDate = new Date();
-                        jdbcTemplate.update(UPDATE_PUBLISH_DATE, publishDate, housekeepingId);
+                        jdbcTemplate.update(UPDATE_CATALOG_PUBLISH_DATE, publishDate, housekeepingId);
                     }
                 }
                 getLog().info(

@@ -10,7 +10,7 @@ import java.util.Optional;
  */
 public enum CatalogHeaderBinding {
     ID("ID", new Inclusion.Excluded(), new Inclusion.Excluded(), new Inclusion.Excluded()),
-    CATALOG_ADDED_DATE("CATALOG_ADDED_DATE",
+    STUDY_ADDED_DATE("STUDY_ADDED_DATE",
                        new Inclusion.FieldIncluded("DATE ADDED TO CATALOG"),
                        new Inclusion.FieldIncluded("DATE ADDED TO CATALOG"),
                        new Inclusion.Excluded(),
@@ -183,11 +183,11 @@ public enum CatalogHeaderBinding {
              new Inclusion.UniqueIncluded("GWASTUDYID"),
              new Inclusion.Excluded(),
              new Inclusion.FieldIncluded("gwas_study_id")),
-    RESULT_PUBLISHED("RESULT_PUBLISHED",
+    CATALOG_PUBLISH_DATE("CATALOG_PUBLISH_DATE",
                      new Inclusion.Extracted(),
                      new Inclusion.Excluded(),
                      new Inclusion.Excluded()),
-    NCBI_RESULT_PUBLISHED(new Inclusion.FieldIncluded("RESULTPUBLISHED"),
+    NCBI_RESULT_PUBLISHED(new Inclusion.FieldIncluded("CATALOG_PUBLISH_DATE"),
                           new Inclusion.Excluded(),
                           new Inclusion.Excluded()),
     CURATION_STATUS("CURATION_STATUS",

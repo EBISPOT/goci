@@ -16,7 +16,6 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -56,7 +55,7 @@ public class StudySampleDesciptionsController {
     public void getStudiesSampleDescriptions(HttpServletResponse response, Model model) {
 
         // Get all ethnicities, this will also find all studies with ethnicity information
-        Collection<Ethnicity> ethnicities = ethnicityRepository.findAll(sortByStudyDateDesc());
+        Collection<Ethnicity> ethnicities = ethnicityRepository.findAll(sortByPublicationDateDesc());
         Collection<StudySampleDescription> studySampleDescriptions = new ArrayList<>();
 
         for (Ethnicity ethnicity : ethnicities) {
@@ -68,7 +67,7 @@ public class StudySampleDesciptionsController {
 
                 // Study attributes
                 String author = study.getAuthor();
-                Date studyDate = study.getStudyDate();
+                Date publicationDate = study.getPublicationDate();
                 String pubmedId = study.getPubmedId();
                 String initialSampleSize = study.getInitialSampleSize();
                 String replicateSampleSize = study.getReplicateSampleSize();
@@ -94,7 +93,7 @@ public class StudySampleDesciptionsController {
                 String notes = ethnicity.getNotes();
 
                 StudySampleDescription studySampleDescription = new StudySampleDescription(author,
-                                                                                           studyDate,
+                                                                                           publicationDate,
                                                                                            pubmedId,
                                                                                            initialSampleSize,
                                                                                            replicateSampleSize,
@@ -136,7 +135,7 @@ public class StudySampleDesciptionsController {
 
 
     // Returns a Sort object which sorts disease traits in ascending order by trait, ignoring case
-    private Sort sortByStudyDateDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "study.studyDate"));
+    private Sort sortByPublicationDateDesc() {
+        return new Sort(new Sort.Order(Sort.Direction.DESC, "study.publicationDate"));
     }
 }

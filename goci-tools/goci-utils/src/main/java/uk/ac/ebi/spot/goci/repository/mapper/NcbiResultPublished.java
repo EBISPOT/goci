@@ -17,7 +17,7 @@ import java.util.Map;
 @Component
 public class NcbiResultPublished implements CatalogDataMapper {
     @Override public List<CatalogHeaderBinding> getRequiredDatabaseFields() {
-        return Collections.singletonList(CatalogHeaderBinding.RESULT_PUBLISHED);
+        return Collections.singletonList(CatalogHeaderBinding.CATALOG_PUBLISH_DATE);
     }
 
     @Override public CatalogHeaderBinding getOutputField() {
@@ -25,6 +25,6 @@ public class NcbiResultPublished implements CatalogDataMapper {
     }
 
     @Override public String produceOutput(Map<CatalogHeaderBinding, String> databaseValues) {
-        return databaseValues.get(CatalogHeaderBinding.RESULT_PUBLISHED).equals("") ? "N" : "Y";
+        return databaseValues.get(CatalogHeaderBinding.CATALOG_PUBLISH_DATE).equals("") ? "N" : "Y";
     }
 }

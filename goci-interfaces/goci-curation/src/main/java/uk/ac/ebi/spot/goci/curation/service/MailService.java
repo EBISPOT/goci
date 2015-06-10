@@ -63,7 +63,7 @@ public class MailService {
         }
 
         // Format date
-        Date studyDate = study.getStudyDate();
+        Date studyDate = study.getPublicationDate();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
         String bodyStudyDate = dateFormat.format(studyDate);
 
@@ -115,8 +115,8 @@ public class MailService {
                 String sendToNCBIDateBody = "Send To NCBI date: " + sendToNCBIDate + "\n";
 
                 String studyDate = "";
-                if (studyWithNcbiError.getStudyDate() != null) {
-                    studyDate = df.format(studyWithNcbiError.getStudyDate());
+                if (studyWithNcbiError.getPublicationDate() != null) {
+                    studyDate = df.format(studyWithNcbiError.getPublicationDate());
                 }
                 String studyDateBody = "Study Date: " + studyDate + "\n";
 

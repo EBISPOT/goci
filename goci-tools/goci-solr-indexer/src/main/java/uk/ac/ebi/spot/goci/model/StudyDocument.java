@@ -22,7 +22,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String author;
     @Field private String publication;
     @Field private String publicationDate;
-    @Field private String catalogAddedDate;
+    @Field private String catalogPublishDate;
     @Field private String publicationLink;
 
     @Field private String platform;
@@ -69,17 +69,17 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
-        if (study.getStudyDate() != null) {
-            this.publicationDate = df.format(study.getStudyDate());
+        if (study.getPublicationDate() != null) {
+            this.publicationDate = df.format(study.getPublicationDate());
         }
-        if (study.getHousekeeping().getPublishDate() != null) {
-            this.catalogAddedDate = df.format(study.getHousekeeping().getPublishDate());
+        if (study.getHousekeeping().getCatalogPublishDate() != null) {
+            this.catalogPublishDate = df.format(study.getHousekeeping().getCatalogPublishDate());
         }
 
         String year;
-        if (study.getStudyDate() != null) {
+        if (study.getPublicationDate() != null) {
             Calendar studyCal = Calendar.getInstance();
-            studyCal.setTime(study.getStudyDate());
+            studyCal.setTime(study.getPublicationDate());
             year = String.valueOf(studyCal.get(Calendar.YEAR));
         }
         else {
@@ -127,8 +127,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         return publicationDate;
     }
 
-    public String getCatalogAddedDate() {
-        return catalogAddedDate;
+    public String getCatalogPublishDate() {
+        return catalogPublishDate;
     }
 
     public String getPublicationLink() {

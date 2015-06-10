@@ -139,7 +139,7 @@ public class DailyAuditTask {
         Long studyId = study.getId();
         String pubmedId = study.getPubmedId();
         String author = study.getAuthor();
-        Date studyDate = study.getStudyDate();
+        Date studyDate = study.getPublicationDate();
 
         // possibility that these may not be set in DB
         Date sendToNCBIDate = null;

@@ -278,11 +278,11 @@
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                         </div>
                     </th>
-                    <th class="col-md-1">Study Date (YYYY-MM-DD)
+                    <th class="col-md-1">Publication Date (YYYY-MM-DD)
                         <div>
-                            <a th:href="@{${uri}(sorttype=studydatesortasc)}"
+                            <a th:href="@{${uri}(sorttype=publicationdatesortasc)}"
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
-                            <a th:href="@{${uri}(sorttype=studydatesortdesc)}"
+                            <a th:href="@{${uri}(sorttype=publicationdatesortdesc)}"
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                         </div>
                     </th>
@@ -354,7 +354,7 @@
 
                     <td th:text="${study.author} ?: '' "></td>
                     <td th:text="${study.title} ?: ''"></td>
-                    <td th:text="${study.studyDate != null } ? ${#dates.format(study.studyDate,'yyyy-MM-dd')} : ''"></td>
+                    <td th:text="${study.publicationDate != null } ? ${#dates.format(study.publicationDate,'yyyy-MM-dd')} : ''"></td>
                     <td><p th:text="${study.pubmedId} ?: ''"></p>
 
                         <div class="btn-group">

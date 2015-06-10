@@ -20,21 +20,41 @@
 <!--Include header-->
 <div th:include="header :: navbar"></div>
 
-<!--Form presents some details of study to be deleted-->
+<!--Form presents some details of study to be unpublished-->
 <div class="container-fluid">
     <div class="row">
 
         <div class="alert alert-danger col-md-offset-1 col-md-7">
             <a href="#" class="close" data-dismiss="alert">&times;</a>
-            <strong>Warning!</strong> All study details and ancestry information will be deleted
-            <!--Return to study page-->
+            <strong>Warning!</strong> All study details will be removed from the public Catalog
+                                      <!--Return to study page-->
             <a th:href="@{/studies}" class="alert-link">Cancel</a>
         </div>
 
         <div class="col-md-8">
             <!--Form-->
-            <form id="deleteStudyForm" class="form-horizontal" method="post" th:object="${studyToDelete}"
-                  name="deleteStudyForm">
+            <form id="unpublishStudyForm" class="form-horizontal" method="post" th:object="${studyToUnpublish}"
+                  name="unpublishStudyForm">
+
+                <!--Hidden fields-->
+                <div class="form-group">
+                    <label for="id" class="control-label col-md-2"></label>
+
+                    <div class="col-md-10">
+                        <input type="hidden" th:field="*{id}" class="form-control" id="id"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="housekeepingId" class="control-label col-md-2"></label>
+
+                    <div class="col-md-10">
+                        <input type="hidden" th:field="*{housekeeping.id}" class="form-control" id="housekeepingId"/>
+                    </div>
+                </div>
+
+                <!--//Hidden fields-->
+
 
                 <div class="form-group">
                     <label for="author" class="control-label col-md-2">Author</label>
@@ -74,9 +94,24 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label for="unpublishReason" class="control-label col-md-2">Reason for unpublishing:</label>
+
+                    <div class="col-md-4">
+                        <select th:field="*{housekeeping.unpublishReason}" id="unpublishReason" class="form-control select2-select">
+                            <!-- Empty value for first entry-->
+                            <option value=""></option>
+                            <option th:each="unpublishReason : ${unpublishreasons}"
+                                    th:value="${unpublishReason.id}"
+                                    th:text="${unpublishReason.reason}"></option>
+                        </select>
+                    </div>
+                </div>
+
+
                 <div class="form-group inline">
                     <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="submit" class="btn btn-danger">Unpublish</button>
                     </div>
                 </div>
 

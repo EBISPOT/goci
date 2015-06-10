@@ -19,11 +19,11 @@ import java.util.List;
 
 @RepositoryRestResource
 public interface EfoTraitRepository extends JpaRepository<EfoTrait, Long> {
-    List<EfoTrait> findByStudiesIdAndStudiesHousekeepingPublishDateIsNotNull(Long studyId);
+    List<EfoTrait> findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull(Long studyId);
 
-    List<EfoTrait> findByStudiesIdAndStudiesHousekeepingPublishDateIsNotNull(Sort sort, Long studyId);
+    List<EfoTrait> findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull(Sort sort, Long studyId);
 
-    Page<EfoTrait> findByStudiesIdAndStudiesHousekeepingPublishDateIsNotNull(Pageable pageable, Long studyId);
+    Page<EfoTrait> findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull(Pageable pageable, Long studyId);
 
     List<EfoTrait> findByAssociationsId(Long associationId);
 

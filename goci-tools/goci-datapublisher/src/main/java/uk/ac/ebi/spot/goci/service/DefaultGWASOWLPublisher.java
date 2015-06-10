@@ -140,9 +140,29 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
             //Remove study which have no diseaseTrait.
             if(study.getDiseaseTrait() == null) {
                 iterator.remove();
-            }else if( study.getHousekeeping().getPublishDate() == null) {
+            }else if( study.getHousekeeping().getCatalogPublishDate() == null) {
                 iterator.remove();
             }
+            else if(study.getHousekeeping().getCatalogUnpublishDate() != null){
+                iterator.remove();
+            }
+//            }else {
+//
+//                //Remove study which have no associations where pvalue is not null.
+//                Collection<Association> associations = study.getAssociations();
+//                Iterator<Association> associationIterator = associations.iterator();
+//                int associationCount = 0;
+//                while (associationIterator.hasNext()) {
+//                    Association association = associationIterator.next();
+//
+//                    if (association.getPvalueExponent() != null && association.getPvalueMantissa() != null) {
+//                        associationCount++;
+//                    }
+//                }
+//                if (associationCount == 0) {
+//                    iterator.remove();
+//                }
+//            }
         }
 
         getLog().debug("Query complete, got " + studies.size() + " studies");
@@ -163,8 +183,12 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
                 Association association = associationIterator.next();
                 if(association.getStudy().getDiseaseTrait() == null) {
                     associationIterator.remove();
-                }else if(association.getStudy().getHousekeeping().getPublishDate() == null){
+                }else if(association.getStudy().getHousekeeping().getCatalogPublishDate() == null){
                     associationIterator.remove();
+
+                }
+                else if(association.getStudy().getHousekeeping().getCatalogUnpublishDate() != null){
+                    iterator.remove();
                 }
             }
             getLog().debug("Fetching SNPs that require conversion to OWL using SingleNucleotidePolymorphismRepository...");
@@ -199,7 +223,10 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
             Study study = iterator.next();
             if(study.getDiseaseTrait() == null) {
                 iterator.remove();
-            }else if( study.getHousekeeping().getPublishDate() == null) {
+            }else if( study.getHousekeeping().getCatalogPublishDate() == null) {
+                iterator.remove();
+            }
+            else if(study.getHousekeeping().getCatalogUnpublishDate() != null){
                 iterator.remove();
             }
         }

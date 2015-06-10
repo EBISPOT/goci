@@ -6,10 +6,16 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
-import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.Gene;
+import uk.ac.ebi.spot.goci.model.Locus;
+import uk.ac.ebi.spot.goci.model.RiskAllele;
+import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
+import uk.ac.ebi.spot.goci.repository.LocusRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,14 +31,18 @@ import java.util.List;
  *         <p>
  *         Created from code originally written by Dani/Tony. Adapted to fit with new curation system.
  */
-
+@Service
 public class AssociationSheetProcessor {
 
-    // Store forms to pass back to controller
-    private Collection<SnpAssociationForm> snpAssociationForms = new ArrayList<>();
-    private AssociationCalculationService associationCalculationService = new AssociationCalculationService();
+    // Services
+    private AssociationCalculationService associationCalculationService;
+    private LociAttributesService lociAttributesService;
 
-    private XSSFSheet sheet;
+    // Repository
+    private EfoTraitRepository efoTraitRepository;
+    private LocusRepository locusRepository;
+
+    // Logging
     private Logger log = LoggerFactory.getLogger(getClass());
     private String logMessage;
 
@@ -40,17 +50,25 @@ public class AssociationSheetProcessor {
         return log;
     }
 
-    // Constructor
-    public AssociationSheetProcessor(XSSFSheet sheet, EfoTraitRepository efoTraitRepository) {
-        this.sheet = sheet;
-        logMessage = "";
+    @Autowired
+    public AssociationSheetProcessor(AssociationCalculationService associationCalculationService,
+                                     LociAttributesService lociAttributesService,
+                                     EfoTraitRepository efoTraitRepository,
+                                     LocusRepository locusRepository) {
 
-        // Read through sheet and extract values
-        readSnpAssociations(efoTraitRepository);
+        this.associationCalculationService = associationCalculationService;
+        this.lociAttributesService = lociAttributesService;
+        this.efoTraitRepository = efoTraitRepository;
+        this.locusRepository = locusRepository;
     }
 
+
     // Read and parse uploaded spreadsheet
-    public void readSnpAssociations(EfoTraitRepository efoTraitRepository) {
+    public Collection<Association> readSnpAssociations(XSSFSheet sheet) {
+
+        // Create collection to store all newly created associations
+        Collection<Association> newAssociations = new ArrayList<>();
+
         boolean done = false;
         int rowNum = 1;
 
@@ -64,54 +82,61 @@ public class AssociationSheetProcessor {
             }
             else {
 
-                // Strings that store first 3 columns
-                String authorReportedGene;
-                String strongestAllele;
-                String snp;
-
                 // Get gene values
+                String authorReportedGene = null;
                 if (row.getCell(0, row.RETURN_BLANK_AS_NULL) != null) {
                     authorReportedGene = row.getCell(0).getRichStringCellValue().getString();
                     logMessage = "Error in field 'Gene' in row " + rowNum + 1 + "\n";
 
                 }
                 else {
-                    authorReportedGene = null;
                     getLog().debug("Gene is null in row " + row.getRowNum());
                     logMessage = "Error in field 'Gene' in row " + rowNum + 1 + "\n";
                 }
 
                 // Get Strongest SNP-Risk Allele
+                String strongestAllele = null;
                 if (row.getCell(1, row.RETURN_BLANK_AS_NULL) != null) {
                     strongestAllele = row.getCell(1).getRichStringCellValue().getString();
                     logMessage = "Error in field 'Risk allele' in row " + rowNum + 1 + "\n";
 
                 }
                 else {
-                    strongestAllele = null;
                     getLog().debug("Risk allele is null in row " + row.getRowNum());
                     logMessage = "Error in field 'Risk allele' in row " + rowNum + 1 + "\n";
                 }
 
 
                 // Get SNP
+                String snp = null;
                 if (row.getCell(2, row.RETURN_BLANK_AS_NULL) != null) {
                     snp = row.getCell(2).getRichStringCellValue().getString();
-
                     logMessage = "Error in field 'SNP' in row " + rowNum + 1 + "\n";
 
                 }
                 else {
-                    snp = null;
                     getLog().debug("SNP is null in row " + row.getRowNum());
                     logMessage = "Error in field 'SNP' in row " + rowNum + 1 + "\n";
 
                 }
 
-                // Get Risk Allele Frequency
-                String riskFrequency = null;
+                // Get Proxy SNP
+                String proxy = null;
                 if (row.getCell(3, row.RETURN_BLANK_AS_NULL) != null) {
-                    XSSFCell risk = row.getCell(3);
+                    proxy = row.getCell(3).getRichStringCellValue().getString();
+                    logMessage = "Error in field 'Proxy SNP' in row " + rowNum + 1 + "\n";
+
+                }
+                else {
+                    getLog().debug("SNP is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'Proxy SNP' in row " + rowNum + 1 + "\n";
+
+                }
+
+                // Get Risk Allele Frequency, will contain multiple values for haplotype or interaction
+                String riskFrequency = null;
+                if (row.getCell(4, row.RETURN_BLANK_AS_NULL) != null) {
+                    XSSFCell risk = row.getCell(4);
                     switch (risk.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
                             riskFrequency = risk.getRichStringCellValue().getString();
@@ -119,7 +144,29 @@ public class AssociationSheetProcessor {
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             riskFrequency = Double.toString(risk.getNumericCellValue());
-                            logMessage = "Error in field 'Risk Frequency' in row " + rowNum + 1 + "\n";
+                            logMessage =
+                                    "Error in field 'Risk Allele Frequency in Controls' in row " + rowNum + 1 + "\n";
+
+                            break;
+                    }
+                }
+                else {
+                    getLog().debug("RF is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'Risk Allele Frequency in Controls' in row " + rowNum + 1 + "\n";
+                }
+
+                // Will be a single value that applies to association
+                String associationRiskFrequency = null;
+                if (row.getCell(5, row.RETURN_BLANK_AS_NULL) != null) {
+                    XSSFCell risk = row.getCell(5);
+                    switch (risk.getCellType()) {
+                        case Cell.CELL_TYPE_STRING:
+                            associationRiskFrequency = risk.getRichStringCellValue().getString();
+                            logMessage = "Error in field 'Interacting SNPs combined frequency' in row " + rowNum + 1 + "\n";
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            associationRiskFrequency = Double.toString(risk.getNumericCellValue());
+                            logMessage = "Error in field 'Interacting SNPs combined frequency' in row " + rowNum + 1 + "\n";
 
                             break;
                     }
@@ -133,8 +180,8 @@ public class AssociationSheetProcessor {
                 Integer pvalueMantissa = null;
                 Integer pvalueExponent = null;
 
-                if (row.getCell(4, row.RETURN_BLANK_AS_NULL) != null) {
-                    XSSFCell mant = row.getCell(4);
+                if (row.getCell(6, row.RETURN_BLANK_AS_NULL) != null) {
+                    XSSFCell mant = row.getCell(6);
                     switch (mant.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
                             pvalueMantissa = null;
@@ -155,8 +202,8 @@ public class AssociationSheetProcessor {
 
                 }
 
-                if (row.getCell(5, row.RETURN_BLANK_AS_NULL) != null) {
-                    XSSFCell expo = row.getCell(5);
+                if (row.getCell(7, row.RETURN_BLANK_AS_NULL) != null) {
+                    XSSFCell expo = row.getCell(7);
                     switch (expo.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
                             pvalueExponent = null;
@@ -178,8 +225,8 @@ public class AssociationSheetProcessor {
 
                 // Get P-value (Text)
                 String pvalueText;
-                if (row.getCell(6, row.RETURN_BLANK_AS_NULL) != null) {
-                    pvalueText = row.getCell(6).getRichStringCellValue().getString();
+                if (row.getCell(8, row.RETURN_BLANK_AS_NULL) != null) {
+                    pvalueText = row.getCell(8).getRichStringCellValue().getString();
                     logMessage = "Error in field 'pvaluetxt' in row " + rowNum + 1 + "\n";
 
                 }
@@ -191,15 +238,15 @@ public class AssociationSheetProcessor {
 
                 // Get OR per copy or beta (Num)
                 Float orPerCopyNum = null;
-                if (row.getCell(7, row.RETURN_BLANK_AS_NULL) != null) {
-                    XSSFCell or = row.getCell(7);
+                if (row.getCell(9, row.RETURN_BLANK_AS_NULL) != null) {
+                    XSSFCell or = row.getCell(9);
                     switch (or.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
                             orPerCopyNum = null;
                             logMessage = "Error in field 'OR' in row " + rowNum + 1 + "\n";
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
-                            orPerCopyNum = Float.valueOf((float) or.getNumericCellValue());
+                            orPerCopyNum = (float) or.getNumericCellValue();
                             logMessage = "Error in field 'OR' in row " + rowNum + 1 + "\n";
                             break;
                     }
@@ -212,15 +259,15 @@ public class AssociationSheetProcessor {
 
                 // Get OR entered (reciprocal)
                 Float orPerCopyRecip = null;
-                if (row.getCell(8, row.RETURN_BLANK_AS_NULL) != null) {
-                    XSSFCell recip = row.getCell(8);
+                if (row.getCell(10, row.RETURN_BLANK_AS_NULL) != null) {
+                    XSSFCell recip = row.getCell(10);
                     switch (recip.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
                             orPerCopyRecip = null;
                             logMessage = "Error in field 'OR recip' in row " + rowNum + 1 + "\n";
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
-                            orPerCopyRecip = Float.valueOf((float) recip.getNumericCellValue());
+                            orPerCopyRecip = (float) recip.getNumericCellValue();
                             logMessage = "Error in field 'OR recip' in row " + rowNum + 1 + "\n";
                             break;
                     }
@@ -234,8 +281,8 @@ public class AssociationSheetProcessor {
 
 
                 String orType;
-                if (row.getCell(9, row.RETURN_BLANK_AS_NULL) != null) {
-                    orType = row.getCell(9).getRichStringCellValue().getString();
+                if (row.getCell(11, row.RETURN_BLANK_AS_NULL) != null) {
+                    orType = row.getCell(11).getRichStringCellValue().getString();
                     logMessage = "Error in field 'OR type' in row " + rowNum + 1 + "\n";
                 }
                 else {
@@ -244,10 +291,10 @@ public class AssociationSheetProcessor {
                     logMessage = "Error in field 'OR type' in row " + rowNum + 1 + "\n";
                 }
 
-                // Get Multi-SNP Haplotype
+                // Get Multi-SNP Haplotype value
                 String multiSnpHaplotype;
-                if (row.getCell(10, row.RETURN_BLANK_AS_NULL) != null) {
-                    multiSnpHaplotype = row.getCell(10).getRichStringCellValue().getString();
+                if (row.getCell(12, row.RETURN_BLANK_AS_NULL) != null) {
+                    multiSnpHaplotype = row.getCell(12).getRichStringCellValue().getString();
                     logMessage = "Error in field 'Multi-SNP Haplotype' in row " + rowNum + 1 + "\n";
                 }
                 else {
@@ -256,10 +303,22 @@ public class AssociationSheetProcessor {
                     logMessage = "Error in field 'Multi-SNP Haplotype' in row " + rowNum + 1 + "\n";
                 }
 
+                // Get SNP interaction value
+                String snpInteraction;
+                if (row.getCell(13, row.RETURN_BLANK_AS_NULL) != null) {
+                    snpInteraction = row.getCell(13).getRichStringCellValue().getString();
+                    logMessage = "Error in field 'SNP:SNP interaction' in row " + rowNum + 1 + "\n";
+                }
+                else {
+                    snpInteraction = null;
+                    getLog().debug("OR type is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'SNP:SNP interaction' in row " + rowNum + 1 + "\n";
+                }
+
                 // Get Confidence Interval/Range
                 String orPerCopyRange;
-                if (row.getCell(11, row.RETURN_BLANK_AS_NULL) != null) {
-                    orPerCopyRange = row.getCell(11).getRichStringCellValue().getString();
+                if (row.getCell(14, row.RETURN_BLANK_AS_NULL) != null) {
+                    orPerCopyRange = row.getCell(14).getRichStringCellValue().getString();
                     logMessage = "Error in field 'CI' in row " + rowNum + 1 + "\n";
                 }
                 else {
@@ -269,8 +328,8 @@ public class AssociationSheetProcessor {
                 }
 
                 String orPerCopyRecipRange;
-                if (row.getCell(12, row.RETURN_BLANK_AS_NULL) != null) {
-                    orPerCopyRecipRange = row.getCell(12).getRichStringCellValue().getString();
+                if (row.getCell(15, row.RETURN_BLANK_AS_NULL) != null) {
+                    orPerCopyRecipRange = row.getCell(15).getRichStringCellValue().getString();
                     logMessage = "Error in field 'Reciprocal CI' in row " + rowNum + 1 + "\n";
                 }
                 else {
@@ -281,8 +340,8 @@ public class AssociationSheetProcessor {
 
                 // Get Beta unit and direction/description
                 String orPerCopyUnitDescr;
-                if (row.getCell(13) != null) {
-                    orPerCopyUnitDescr = row.getCell(13).getRichStringCellValue().getString();
+                if (row.getCell(16) != null) {
+                    orPerCopyUnitDescr = row.getCell(16).getRichStringCellValue().getString();
                     logMessage = "Error in field 'OR direction' in row " + rowNum + 1 + "\n";
                 }
                 else {
@@ -293,15 +352,15 @@ public class AssociationSheetProcessor {
 
                 // Get standard error
                 Float orPerCopyStdError = null;
-                if (row.getCell(14, row.RETURN_BLANK_AS_NULL) != null) {
-                    XSSFCell std = row.getCell(14);
+                if (row.getCell(17, row.RETURN_BLANK_AS_NULL) != null) {
+                    XSSFCell std = row.getCell(17);
                     switch (std.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
                             orPerCopyStdError = null;
                             logMessage = "Error in field 'Standard Error' in row " + rowNum + 1 + "\n";
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
-                            orPerCopyStdError = Float.valueOf((float) std.getNumericCellValue());
+                            orPerCopyStdError = (float) std.getNumericCellValue();
                             logMessage = "Error in field 'Standard Error' in row " + rowNum + 1 + "\n";
                             break;
                     }
@@ -314,8 +373,8 @@ public class AssociationSheetProcessor {
 
                 // Get SNP type (novel / known)
                 String snpType;
-                if (row.getCell(15, row.RETURN_BLANK_AS_NULL) != null) {
-                    snpType = row.getCell(15).getRichStringCellValue().getString().toLowerCase();
+                if (row.getCell(18, row.RETURN_BLANK_AS_NULL) != null) {
+                    snpType = row.getCell(18).getRichStringCellValue().getString().toLowerCase();
                     logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
                 }
                 else {
@@ -324,9 +383,21 @@ public class AssociationSheetProcessor {
                     logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
                 }
 
+                // Get SNP Status
+                String snpStatus;
+                if (row.getCell(19, row.RETURN_BLANK_AS_NULL) != null) {
+                    snpStatus = row.getCell(19).getRichStringCellValue().getString().toLowerCase();
+                    logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
+                }
+                else {
+                    snpStatus = null;
+                    getLog().debug("SNP type is null in row " + row.getRowNum());
+                    logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
+                }
+
                 String efoTrait;
-                if(row.getCell(16, row.RETURN_BLANK_AS_NULL) != null){
-                    efoTrait = row.getCell(16).getRichStringCellValue().getString();
+                if (row.getCell(20, row.RETURN_BLANK_AS_NULL) != null) {
+                    efoTrait = row.getCell(20).getRichStringCellValue().getString();
                     logMessage = "Error in field 'EFO traits' in row " + rowNum + 1 + "\n";
                 }
                 else {
@@ -336,152 +407,311 @@ public class AssociationSheetProcessor {
                 }
 
 
-                if (authorReportedGene == null && strongestAllele == null && snp == null && riskFrequency == null) {
+                // Once we have all the values entered in file process them
+                if (authorReportedGene == null && strongestAllele == null && snp == null && proxy == null &&
+                        riskFrequency == null) {
                     done = true;
                     getLog().debug("Empty row that wasn't caught via 'row = null'");
                 }
                 else {
-                    // Create a new form which will be passed back to controller and handled there
-                    SnpAssociationForm snpAssociationForm = new SnpAssociationForm();
-                    snpAssociationForm.setRiskFrequency(riskFrequency);
-                    snpAssociationForm.setPvalueText(pvalueText);
 
+                    Association newAssociation = new Association();
 
-                    if (orType.equalsIgnoreCase("Y")) {
-                        snpAssociationForm.setOrType(true);
-                    }
-                    else {
-                        snpAssociationForm.setOrType(false);
-                    }
+                    // Set EFO traits
+                    if (efoTrait != null) {
+                        String[] uris = efoTrait.split(",");
+                        Collection<String> efoUris = new ArrayList<>();
 
-                    if (multiSnpHaplotype.equalsIgnoreCase("Y")) {
-                        snpAssociationForm.setMultiSnpHaplotype(true);
-                    }
-                    else {
-                        snpAssociationForm.setMultiSnpHaplotype(false);
+                        for (String uri : uris) {
+                            String trimmedUri = uri.trim();
+                            efoUris.add(trimmedUri);
+                        }
+
+                        Collection<EfoTrait> efoTraits = getEfoTraitsFromRepository(efoUris);
+
+                        newAssociation.setEfoTraits(efoTraits);
                     }
 
-                    snpAssociationForm.setSnpType(snpType);
-                    snpAssociationForm.setPvalueMantissa(pvalueMantissa);
-                    snpAssociationForm.setPvalueExponent(pvalueExponent);
+                    // Set values common to all association types
+                    newAssociation.setRiskFrequency(associationRiskFrequency);
+                    newAssociation.setPvalueMantissa(pvalueMantissa);
+                    newAssociation.setPvalueExponent(pvalueExponent);
+                    newAssociation.setPvalueText(pvalueText);
+                    newAssociation.setOrPerCopyRecip(orPerCopyRecip);
+                    newAssociation.setOrPerCopyStdError(orPerCopyStdError);
+                    newAssociation.setOrPerCopyRecipRange(orPerCopyRecipRange);
+                    newAssociation.setOrPerCopyUnitDescr(orPerCopyUnitDescr);
+                    newAssociation.setSnpType(snpType);
 
                     boolean recipReverse = false;
                     // Calculate OR per copy num
                     if ((orPerCopyRecip != null) && (orPerCopyNum == null)) {
                         orPerCopyNum = ((100 / orPerCopyRecip) / 100);
-                        snpAssociationForm.setOrPerCopyNum(orPerCopyNum);
+                        newAssociation.setOrPerCopyNum(orPerCopyNum);
                         recipReverse = true;
                     }
                     // Otherwise set to whatever is in upload
                     else {
-                        snpAssociationForm.setOrPerCopyNum(orPerCopyNum);
+                        newAssociation.setOrPerCopyNum(orPerCopyNum);
                     }
 
-                    snpAssociationForm.setOrPerCopyRecip(orPerCopyRecip);
-                    snpAssociationForm.setOrPerCopyStdError(orPerCopyStdError);
-
                     // This logic is retained from Dani's original code
-//                    if ((orPerCopyRecip != null) && (orPerCopyRange != null) && recipReverse) {
                     if ((orPerCopyRecipRange != null) && recipReverse) {
                         orPerCopyRange = associationCalculationService.reverseCI(orPerCopyRecipRange);
-                        snpAssociationForm.setOrPerCopyRange(orPerCopyRange);
+                        newAssociation.setOrPerCopyRange(orPerCopyRange);
                     }
                     else if ((orPerCopyRange == null) && (orPerCopyStdError != null)) {
                         orPerCopyRange = associationCalculationService.setRange(orPerCopyStdError, orPerCopyNum);
-                        snpAssociationForm.setOrPerCopyRange(orPerCopyRange);
+                        newAssociation.setOrPerCopyRange(orPerCopyRange);
                     }
                     else {
-                        snpAssociationForm.setOrPerCopyRange(orPerCopyRange);
+                        newAssociation.setOrPerCopyRange(orPerCopyRange);
                     }
 
-                    snpAssociationForm.setOrPerCopyRecipRange(orPerCopyRecipRange);
-
-
-                    snpAssociationForm.setOrPerCopyUnitDescr(orPerCopyUnitDescr);
-
-                    // For our list of snps and risk alleles separate by comma
-                    List<String> snps = new ArrayList<>();
-                    String[] separatedSnps = snp.split(",");
-                    for (String separatedSnp : separatedSnps) {
-                        snps.add(separatedSnp.trim());
-                    }
-
-
-                    List<String> riskAlleles = new ArrayList<>();
-                    String[] separatedRiskAlleles = strongestAllele.split(",");
-                    for (String separatedRiskAllele : separatedRiskAlleles) {
-                        riskAlleles.add(separatedRiskAllele.trim());
-                    }
-
-                    // Create row from each SNP/Risk allele combination
-                    Iterator<String> riskAlleleIterator = riskAlleles.iterator();
-                    Iterator<String> snpIterator = snps.iterator();
-                    List<SnpFormRow> snpFormRows = new ArrayList<>();
-
-                    // Lopp through our risk alleles and snps
-                    if (riskAlleles.size() == snps.size()) {
-
-                        while (riskAlleleIterator.hasNext()) {
-                            // Create a new row
-                            SnpFormRow snpFormRow = new SnpFormRow();
-                            String snpValue = snpIterator.next().trim();
-                            String riskAlleleValue = riskAlleleIterator.next().trim();
-
-                            snpFormRow.setSnp(snpValue);
-                            snpFormRow.setStrongestRiskAllele(riskAlleleValue);
-                            snpFormRows.add(snpFormRow);
-                        }
-
+                    if (orType.equalsIgnoreCase("Y")) {
+                        newAssociation.setOrType(true);
                     }
                     else {
-                        // TODO THIS SHOULD DIE CLEANLY
-                        getLog().error("Mismatched number of snps and risk alleles");
+                        newAssociation.setOrType(false);
                     }
 
-                    // Add rows to our form
-                    snpAssociationForm.setSnpFormRows(snpFormRows);
-
-                    // Handle curator entered genes
-                    String[] genes = authorReportedGene.split(",");
-                    Collection<String> authorReportedGenes = new ArrayList<>();
-
-                    for (String gene : genes) {
-                        gene.trim();
-                        authorReportedGenes.add(gene);
+                    if (multiSnpHaplotype.equalsIgnoreCase("Y")) {
+                        newAssociation.setMultiSnpHaplotype(true);
                     }
-                    snpAssociationForm.setAuthorReportedGenes(authorReportedGenes);
+                    else {
+                        newAssociation.setMultiSnpHaplotype(false);
+                    }
 
-                    if(efoTrait != null) {
-                        String[] uris = efoTrait.split(",");
-                        Collection<String> efoUris = new ArrayList<>();
+                    if (snpInteraction.equalsIgnoreCase("Y")) {
+                        newAssociation.setSnpInteraction(true);
+                    }
+                    else {
+                        newAssociation.setSnpInteraction(false);
+                    }
 
-                        for (String uri : uris) {
-                            uri.trim();
-                            efoUris.add(uri);
+                    String delimiter;
+                    Collection<Locus> loci = new ArrayList<>();
+
+                    if (newAssociation.getSnpInteraction()) {
+                        delimiter = "x";
+
+                        // For SNP interaction studies we need to create a locus per risk allele
+                        // Handle curator entered risk allele
+                        Collection<RiskAllele> locusRiskAlleles =
+                                createLocusRiskAlleles(strongestAllele,
+                                                       snp,
+                                                       proxy,
+                                                       riskFrequency,
+                                                       snpStatus,
+                                                       delimiter);
+
+                        // Add genes to relevant loci, split by 'x' delimiter first
+                        Collection<Locus> lociWithAddedGenes = new ArrayList<>();
+
+                        // Deal with genes for each interaction which should be
+                        // separated by 'x'
+                        String[] separatedGenes = authorReportedGene.split(delimiter);
+                        int geneIndex = 0;
+
+                        for (RiskAllele riskAllele : locusRiskAlleles) {
+                            Locus locus = new Locus();
+
+                            // Set risk alleles, assume one locus per risk allele
+                            Collection<RiskAllele> currentLocusRiskAlleles = new ArrayList<>();
+                            currentLocusRiskAlleles.add(riskAllele);
+                            locus.setStrongestRiskAlleles(currentLocusRiskAlleles);
+
+                            // Set gene
+                            String interactionGene = separatedGenes[geneIndex];
+                            Collection<Gene> locusGenes = createLocusGenes(interactionGene, ",");
+                            locus.setAuthorReportedGenes(locusGenes);
+                            geneIndex++;
+
+                            // Set description
+                            locus.setDescription("SNP x SNP interaction");
+
+                            // Save our newly created locus
+                            locusRepository.save(locus);
+                            loci.add(locus);
+                        }
+                    }
+
+                    // Handle multi-snp and standard snp
+                    else {
+                        delimiter = ",";
+
+                        // For multi-snp and standard snps we assume their is only one locus
+                        Locus locus = new Locus();
+
+                        // Handle curator entered genes
+                        Collection<Gene> locusGenes = createLocusGenes(authorReportedGene, delimiter);
+                        locus.setAuthorReportedGenes(locusGenes);
+
+                        // Handle curator entered risk allele
+                        Collection<RiskAllele> locusRiskAlleles =
+                                createLocusRiskAlleles(strongestAllele,
+                                                       snp,
+                                                       proxy,
+                                                       riskFrequency,
+                                                       snpStatus,
+                                                       delimiter);
+                        locus.setStrongestRiskAlleles(locusRiskAlleles);
+
+                        // Set locus attributes
+                        Integer haplotypeCount = locusRiskAlleles.size();
+                        if (haplotypeCount > 1) {
+                            locus.setHaplotypeSnpCount(haplotypeCount);
+                            locus.setDescription(String.valueOf(haplotypeCount) + "-SNP haplotype");
                         }
 
-                        Collection<EfoTrait> efoTraits = getEfoTraitsFromRepository(efoUris, efoTraitRepository);
+                        else {
+                            locus.setDescription("Single variant");
+                        }
 
-                        snpAssociationForm.setEfoTraits(efoTraits);
+                        // Save our newly created locus
+                        locusRepository.save(locus);
+                        loci.add(locus);
                     }
+
+                    newAssociation.setLoci(loci);
 
                     // Add all newly created associations to collection
-                    snpAssociationForms.add(snpAssociationForm);
+                    newAssociations.add(newAssociation);
                 }
-
             }
             rowNum++;
         }
+
+        return newAssociations;
     }
 
-    private Collection<EfoTrait> getEfoTraitsFromRepository(Collection<String> efoUris, EfoTraitRepository efoTraitRepository) {
-        Collection<EfoTrait> efoTraits = new ArrayList<>();
-        for(String uri : efoUris){
-            String fullUri;
-            if(uri.contains("EFO")){
-               fullUri = "http://www.ebi.ac.uk/efo/".concat(uri);
+    private Collection<RiskAllele> createLocusRiskAlleles(String strongestAllele,
+                                                          String snp,
+                                                          String proxy,
+                                                          String riskFrequency,
+                                                          String snpStatus,
+                                                          String delimiter) {
+
+
+        Collection<RiskAllele> locusRiskAlleles = new ArrayList<>();
+        // For our list of snps, proxies and risk alleles separate by delimiter
+        List<String> snps = new ArrayList<>();
+        String[] separatedSnps = snp.split(delimiter);
+        for (String separatedSnp : separatedSnps) {
+            snps.add(separatedSnp.trim());
+        }
+
+        List<String> riskAlleles = new ArrayList<>();
+        String[] separatedRiskAlleles = strongestAllele.split(delimiter);
+        for (String separatedRiskAllele : separatedRiskAlleles) {
+            riskAlleles.add(separatedRiskAllele.trim());
+        }
+
+        List<String> proxies = new ArrayList<>();
+        String[] separatedProxies = proxy.split(delimiter);
+        for (String separatedProxy : separatedProxies) {
+            proxies.add(separatedProxy.trim());
+        }
+
+        // Value is only recorded for SNP interaction associations
+        List<String> riskFrequencies = new ArrayList<>();
+        Iterator<String> riskFrequencyIterator = null;
+        if (riskFrequency != null) {
+            String[] separatedRiskFrequencies = riskFrequency.split(delimiter);
+            for (String separatedRiskFrequency : separatedRiskFrequencies) {
+                riskFrequencies.add(separatedRiskFrequency.trim());
             }
-            else if(uri.contains("Orphanet")){
+            riskFrequencyIterator = riskFrequencies.iterator();
+        }
+
+        // Snp status
+        List<String> snpStatuses = new ArrayList<>();
+        Iterator<String> snpStatusIterator = null;
+        if (snpStatus != null) {
+            String[] separatedSnpStatuses = snpStatus.split(delimiter);
+            for (String separatedSnpStatus : separatedSnpStatuses) {
+                snpStatuses.add(separatedSnpStatus.trim());
+            }
+            snpStatusIterator = snpStatuses.iterator();
+        }
+
+        Iterator<String> riskAlleleIterator = riskAlleles.iterator();
+        Iterator<String> snpIterator = snps.iterator();
+        Iterator<String> proxyIterator = proxies.iterator();
+
+        // Loop through our risk alleles
+        if (riskAlleles.size() == snps.size()) {
+
+            while (riskAlleleIterator.hasNext()) {
+
+                String snpValue = snpIterator.next().trim();
+                String riskAlleleValue = riskAlleleIterator.next().trim();
+                String proxyValue = proxyIterator.next().trim();
+
+                SingleNucleotidePolymorphism newSnp = lociAttributesService.createSnp(snpValue);
+
+                // Create a new risk allele and assign newly created snp
+                RiskAllele newRiskAllele = lociAttributesService.createRiskAllele(riskAlleleValue, newSnp);
+
+                // Check for a proxy and if we have one create a proxy snp
+                SingleNucleotidePolymorphism proxySnp = lociAttributesService.createSnp(proxyValue);
+                newRiskAllele.setProxySnp(proxySnp);
+
+                // If there is no curator entered value for risk allele frequency don't save
+                String riskFrequencyValue = null;
+                if (riskFrequencyIterator != null) {
+                    riskFrequencyValue = riskFrequencyIterator.next().trim();
+                }
+                if (riskFrequencyValue != null) {
+                    newRiskAllele.setRiskFrequency(riskFrequencyValue);
+                }
+
+                // Handle snp statuses, these should only apply to SNP interaction associations
+                String snpStatusValue = null;
+                if (snpStatusIterator != null) {
+                    snpStatusValue = snpStatusIterator.next().trim();
+                }
+
+                if (snpStatus != null && !snpStatus.equalsIgnoreCase("NR")) {
+                    if (snpStatusValue.contains("GW") || snpStatusValue.contains("gw")) {
+                        newRiskAllele.setGenomeWide(true);
+                    }
+                    if (snpStatusValue.contains("LL") || snpStatusValue.contains("ll")) {
+                        newRiskAllele.setLimitedList(true);
+                    }
+                }
+
+                locusRiskAlleles.add(newRiskAllele);
+            }
+        }
+        else {
+            getLog().error("Mismatched number of snps and risk alleles");
+        }
+
+        return locusRiskAlleles;
+    }
+
+    private Collection<Gene> createLocusGenes(String authorReportedGene, String delimiter) {
+
+        String[] genes = authorReportedGene.split(delimiter);
+        Collection<String> genesToCreate = new ArrayList<>();
+
+        for (String gene : genes) {
+            String trimmedGene = gene.trim();
+            genesToCreate.add(trimmedGene);
+        }
+
+        return lociAttributesService.createGene(genesToCreate);
+    }
+
+    private Collection<EfoTrait> getEfoTraitsFromRepository(Collection<String> efoUris) {
+        Collection<EfoTrait> efoTraits = new ArrayList<>();
+        for (String uri : efoUris) {
+            String fullUri;
+            if (uri.contains("EFO")) {
+                fullUri = "http://www.ebi.ac.uk/efo/".concat(uri);
+            }
+            else if (uri.contains("Orphanet")) {
                 fullUri = "http://www.orpha.net/ORDO/".concat(uri);
             }
             else {
@@ -490,16 +720,13 @@ public class AssociationSheetProcessor {
 
             Collection<EfoTrait> traits = efoTraitRepository.findByUri(fullUri);
 
-            for(EfoTrait trait : traits){
+            for (EfoTrait trait : traits) {
                 efoTraits.add(trait);
             }
         }
         return efoTraits;
     }
 
-    public Collection<SnpAssociationForm> getAllSnpAssociationForms() {
-        return snpAssociationForms;
-    }
 
     public String getLogMessage() {
         return logMessage;

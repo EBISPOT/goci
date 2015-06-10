@@ -140,7 +140,7 @@ public class DefaultPubMedSearchService implements PubMedSearchService {
                         newStudy.setPubmedId(pmid);
                         newStudy.setPublication(publication);
                         newStudy.setTitle(title);
-                        newStudy.setStudyDate(pubDate);
+                        newStudy.setPublicationDate(pubDate);
                     }
                 }
 
