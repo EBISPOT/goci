@@ -96,6 +96,10 @@ public class CatalogImportRepository {
     private static final String SELECT_SNP_REGION =
             "SELECT SNP_ID FROM SNP_REGION WHERE REGION_ID = ?";
 
+    private static final String SELECT_SNP_ID_FROM_SNP_REGION = "SELECT SNP_ID FROM SNP_REGION WHERE SNP_ID = ?";
+
+    private static final String UPDATE_SNP_REGION = "UPDATE SNP_REGION SET REGION_ID =? WHERE SNP_ID = ?";
+
     private static final String UPDATE_SNP =
             "UPDATE SINGLE_NUCLEOTIDE_POLYMORPHISM " +
                     "SET CHROMOSOME_NAME = ?, " +
@@ -1031,15 +1035,34 @@ public class CatalogImportRepository {
     }
 
     private void createSnpRegion(Long snpId, Long regionId) {
+
         Map<String, Object> snpRegionArgs = new HashMap<>();
         snpRegionArgs.put("SNP_ID", snpId);
         snpRegionArgs.put("REGION_ID", regionId);
-
         int rows = 0;
-        rows = insertSnpRegion.execute(snpRegionArgs);
-        getLog().trace(
-                "Adding SNP: " + snpId + " and Region: " + regionId + " - Updated " + rows +
-                        " rows");
+
+        Long existingSnpIdInSnpRegionTable = null;
+
+        // Need to check if a SNP already has a region
+        try {
+            existingSnpIdInSnpRegionTable =
+                    jdbcTemplate.queryForObject(SELECT_SNP_ID_FROM_SNP_REGION, Long.class, snpId);
+        }
+        // If we don't get a result then insert the link between region and snp
+        catch (EmptyResultDataAccessException e) {
+            // Insert if its not already in database
+            rows = insertSnpRegion.execute(snpRegionArgs);
+            getLog().trace(
+                    "Adding SNP: " + snpId + " and Region: " + regionId + " - Updated " + rows +
+                            " rows");
+        }
+
+        if(existingSnpIdInSnpRegionTable != null){
+           jdbcTemplate.update(UPDATE_SNP_REGION, regionId, snpId);
+            getLog().trace(
+                    "Updating SNP: " + snpId + " ,setting region to " + regionId + " - Updated " + rows +
+                            " rows");
+        }
     }
 
     private void createGenomicContext(Long geneId,
