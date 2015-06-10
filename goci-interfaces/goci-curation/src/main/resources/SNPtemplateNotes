@@ -15,7 +15,7 @@ Risk Allele Frequency in Controls - only applies to SNP interaction associations
                                     Value must be present for each risk allele in the interaction, NR can be used if not reported.
                                     e.g. NR x 1.5
 
-Association Risk Frequency - must not be empty! enter NR if not reported
+Interacting SNPs combined risk allele frequency - must not be empty! enter NR if not reported
 P-value mantissa - enter p-value mantissa only
 P-value exponent - enter p-value exponent only
 P-value (Text) - same as in web form
