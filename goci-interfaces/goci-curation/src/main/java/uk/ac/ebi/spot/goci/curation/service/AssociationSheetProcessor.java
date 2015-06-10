@@ -662,7 +662,7 @@ public class AssociationSheetProcessor {
                 if (riskFrequencyIterator != null) {
                     riskFrequencyValue = riskFrequencyIterator.next().trim();
                 }
-                if (riskFrequencyValue != null && !riskFrequencyValue.equalsIgnoreCase("NR")) {
+                if (riskFrequencyValue != null) {
                     newRiskAllele.setRiskFrequency(riskFrequencyValue);
                 }
 
