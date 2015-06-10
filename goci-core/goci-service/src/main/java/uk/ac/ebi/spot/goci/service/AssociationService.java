@@ -68,6 +68,17 @@ public class AssociationService {
     }
 
 
+    /**
+     * Get in one transaction the list of all Association with :
+     *  the attached study and its publish date
+     *  the attached efo traits
+     *  the attached locii, for each loci :
+     *      their strongestRiskAlleles, for each alleles :
+     *          the regions
+     *          the genomic contexts
+     *
+     * @return a List of Associations.
+     */
     @Transactional(readOnly = true)
     public List<Association> findReallyAll() {
         List<Association> allAssociations = associationRepository.findAll();
@@ -150,7 +161,6 @@ public class AssociationService {
         loadAssociatedData(association);
         association.getStudy().getHousekeeping().getCatalogPublishDate();
     }
-
     public void loadAssociatedData(Association association) {
         int traitCount = association.getEfoTraits().size();
         Study study = studyService.fetchOne(association.getStudy());
