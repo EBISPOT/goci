@@ -262,7 +262,7 @@ public class AssociationDownloadService {
         final StringBuilder strongestAllele = new StringBuilder();
         final StringBuilder reportedGenes = new StringBuilder();
         final StringBuilder rsId = new StringBuilder();
-        final StringBuilder proxySnpRsId = new StringBuilder();
+        final StringBuilder proxySnpsRsIds = new StringBuilder();
         final StringBuilder riskAlleleFrequency = new StringBuilder();
 
         // Different delimiters for snp interaction and standard/haplotype associations
@@ -277,19 +277,22 @@ public class AssociationDownloadService {
                                     SingleNucleotidePolymorphism snp = riskAllele.getSnp();
                                     setOrAppend(rsId, snp.getRsId(), " x ");
 
-                                    // Set proxy or 'NR' if non available
-                                    if (riskAllele.getProxySnp() != null) {
-                                        SingleNucleotidePolymorphism proxySnp = riskAllele.getProxySnp();
-                                        if (!proxySnp.getRsId().isEmpty()) {
-                                            setOrAppend(proxySnpRsId, proxySnp.getRsId(), " x ");
-                                        }
-
-                                        else {
-                                            setOrAppend(proxySnpRsId, "NR", " x ");
+                                    // Set proxies or 'NR' if non available
+                                    Collection<String> currentLocusProxies = new ArrayList<>();
+                                    String commaSeparatedProxies = "";
+                                    if (riskAllele.getProxySnps() != null) {
+                                        for (SingleNucleotidePolymorphism proxySnp : riskAllele.getProxySnps()) {
+                                            currentLocusProxies.add(proxySnp.getRsId());
                                         }
                                     }
+
+                                    if (!currentLocusProxies.isEmpty()) {
+                                        commaSeparatedProxies = String.join(", ", currentLocusProxies);
+                                        setOrAppend(proxySnpsRsIds, commaSeparatedProxies, " x ");
+
+                                    }
                                     else {
-                                        setOrAppend(proxySnpRsId, "NR", " x ");
+                                        setOrAppend(proxySnpsRsIds, "NR", " x ");
                                     }
 
 
@@ -335,19 +338,24 @@ public class AssociationDownloadService {
                                     SingleNucleotidePolymorphism snp = riskAllele.getSnp();
                                     setOrAppend(rsId, snp.getRsId(), ", ");
 
-                                    // Set proxy
-                                    if (riskAllele.getProxySnp() != null) {
-                                        SingleNucleotidePolymorphism proxySnp = riskAllele.getProxySnp();
-                                        if (!proxySnp.getRsId().isEmpty()) {
-                                            setOrAppend(proxySnpRsId, proxySnp.getRsId(), ", ");
-                                        }
-
-                                        else {
-                                            setOrAppend(proxySnpRsId, "NR", ", ");
+                                    // Set proxies or 'NR' if non available
+                                    Collection<String> currentLocusProxies = new ArrayList<>();
+                                    String colonSeparatedProxies = "";
+                                    if (riskAllele.getProxySnps() != null) {
+                                        for (SingleNucleotidePolymorphism proxySnp : riskAllele.getProxySnps()) {
+                                            currentLocusProxies.add(proxySnp.getRsId());
                                         }
                                     }
+
+                                    // For haplotypes ":" is used to separate multiple proxies linked to a single
+                                    // risk allele in a haplotype
+                                    if (!currentLocusProxies.isEmpty()) {
+                                        colonSeparatedProxies = String.join(": ", currentLocusProxies);
+                                        setOrAppend(proxySnpsRsIds,  colonSeparatedProxies, ", ");
+
+                                    }
                                     else {
-                                        setOrAppend(proxySnpRsId, "NR", ", ");
+                                        setOrAppend(proxySnpsRsIds, "NR", ", ");
                                     }
 
                                     // Set Risk allele frequency to blank as its not recorded by curators
@@ -369,7 +377,7 @@ public class AssociationDownloadService {
         line.append("\t");
         line.append(rsId.toString());
         line.append("\t");
-        line.append(proxySnpRsId.toString());
+        line.append(proxySnpsRsIds.toString());
         line.append("\t");
         line.append(riskAlleleFrequency.toString());
         line.append("\t");
