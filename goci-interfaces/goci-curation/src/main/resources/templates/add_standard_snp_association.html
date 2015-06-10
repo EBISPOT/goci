@@ -89,8 +89,8 @@
                                                th:field="*{snpFormRows[__${rowStat.index}__].strongestRiskAllele}"/>
                                     </td>
                                     <td>
-                                        <input type="text"
-                                               th:field="*{snpFormRows[__${rowStat.index}__].proxySnp}"/>
+                                        <input type="text" data-role="tagsinput"
+                                               th:field="*{snpFormRows[__${rowStat.index}__].proxySnps}"/>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -284,6 +284,13 @@
     $(function() {
         // turn the element to select2 select style
         $('#EFOTrait').select2();
+    });
+</script>
+
+<!--Formats tags input -->
+<script>
+    $('input').tagsinput({
+        trimValue: true
     });
 </script>
 
