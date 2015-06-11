@@ -8,6 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.Locus;
+import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
@@ -41,7 +44,7 @@ public class StudyService {
      * A facade service around a {@link uk.ac.ebi.spot.goci.repository.StudyRepository} that retrieves all studies, and
      * then within the same datasource transaction additionally loads other objects referenced by this study (traits,
      * associations, housekeeping).
-     * <p>
+     * <p/>
      * Use this when you know you will need deep information about a study and do not have an open session that can be
      * used to lazy load extra data.
      *
@@ -54,16 +57,10 @@ public class StudyService {
         return allStudies;
     }
 
-    /**
-     * Get in one transaction all the studies, plus associated Associations, plus associated SNPs and their regions,
-     * plus the studies publish date.
-     * @return a List of Studies
-     */
     @Transactional(readOnly = true)
-    public List<Study> findReallyAll(){
+    public List<Study> deepFindAll() {
         List<Study> allStudies = studyRepository.findAll();
-        allStudies.forEach(this::loadAssociatedDataAndSnp);
-
+        allStudies.forEach(this::deepLoadAssociatedData);
         return allStudies;
     }
 
@@ -76,9 +73,23 @@ public class StudyService {
     }
 
     @Transactional(readOnly = true)
+    public List<Study> deepFindAll(Sort sort) {
+        List<Study> studies = studyRepository.findAll(sort);
+        studies.forEach(this::deepLoadAssociatedData);
+        return studies;
+    }
+
+    @Transactional(readOnly = true)
     public Page<Study> findAll(Pageable pageable) {
         Page<Study> studies = studyRepository.findAll(pageable);
         studies.forEach(this::loadAssociatedData);
+        return studies;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Study> deepFindAll(Pageable pageable) {
+        Page<Study> studies = studyRepository.findAll(pageable);
+        studies.forEach(this::deepLoadAssociatedData);
         return studies;
     }
 
@@ -86,7 +97,7 @@ public class StudyService {
      * A facade service around a {@link uk.ac.ebi.spot.goci.repository.StudyRepository} that retrieves all studies, and
      * then within the same datasource transaction additionally loads other objects referenced by this study (traits,
      * associations, housekeeping).
-     * <p>
+     * <p/>
      * Use this when you know you will need deep information about a study and do not have an open session that can be
      * used to lazy load extra data.
      *
@@ -94,23 +105,35 @@ public class StudyService {
      */
     @Transactional(readOnly = true)
     public List<Study> findPublishedStudies() {
-        List<Study> studies = studyRepository.findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull();
+        List<Study> studies =
+                studyRepository.findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull();
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
 
     @Transactional(readOnly = true)
+    public List<Study> deepFindPublishedStudies() {
+        List<Study> studies =
+                studyRepository.findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull();
+        studies.forEach(this::deepLoadAssociatedData);
+        return studies;
+    }
+
+
+    @Transactional(readOnly = true)
     public List<Study> findPublishedStudies(Sort sort) {
-        List<Study> studies = studyRepository.findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
-                sort);
+        List<Study> studies =
+                studyRepository.findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
+                        sort);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
 
     @Transactional(readOnly = true)
     public Page<Study> findPublishedStudies(Pageable pageable) {
-        Page<Study> studies = studyRepository.findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
-                pageable);
+        Page<Study> studies =
+                studyRepository.findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
+                        pageable);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
@@ -148,7 +171,8 @@ public class StudyService {
     @Transactional(readOnly = true)
     public Collection<Study> findByDiseaseTraitId(Long diseaseTraitId) {
         Collection<Study> studies =
-                studyRepository.findByDiseaseTraitIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(diseaseTraitId);
+                studyRepository.findByDiseaseTraitIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
+                        diseaseTraitId);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
@@ -169,24 +193,37 @@ public class StudyService {
         }
     }
 
-    public void loadAssociatedDataAndSnp(Study study) {
+    public void deepLoadAssociatedData(Study study) {
         int efoTraitCount = study.getEfoTraits().size();
         int associationCount = study.getAssociations().size();
         int snpCount = study.getSingleNucleotidePolymorphisms().size();
-//        System.out.println("BONJOUR");
-//        getLog().error("BONJOUR");
-        for(SingleNucleotidePolymorphism snp : study.getSingleNucleotidePolymorphisms()){
+
+        for (Association association : study.getAssociations()) {
+            int lociCount = association.getLoci().size();
+            int associationEfoTraitCount = association.getEfoTraits().size();
+            getLog().trace("Association '" + association.getId() + "' is linked to " + lociCount + " loci and " +
+                                   associationEfoTraitCount + "efo traits.");
+            for (Locus locus : association.getLoci()) {
+                int riskAlleleCount = locus.getStrongestRiskAlleles().size();
+                getLog().trace("Locus '" + locus.getId() + "' is linked to " + riskAlleleCount + " risk alleles.");
+                for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
+                    SingleNucleotidePolymorphism riskAlleleSnp = riskAllele.getSnp();
+                    int riskAlleleSnpRegionCount = riskAlleleSnp.getRegions().size();
+                    getLog().trace("Snp '" + riskAlleleSnp.getId() + "' is linked to " + riskAlleleSnpRegionCount +
+                                           " regions.");
+                }
+            }
+        }
+        for (SingleNucleotidePolymorphism snp : study.getSingleNucleotidePolymorphisms()) {
             int regionCount = snp.getRegions().size();
             getLog().trace("Snp '" + snp.getId() + "' is linked to " + regionCount + " regions.");
-//            for(Region region : snp.getRegions()){
-//                region.getId();
-//            }
         }
         Date publishDate = study.getHousekeeping().getCatalogPublishDate();
         if (publishDate != null) {
             getLog().trace(
                     "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
-                            "has " + associationCount + " associations, " + snpCount + " snps and was published on " + publishDate.toString());
+                            "has " + associationCount + " associations, " + snpCount + " snps and was published on " +
+                            publishDate.toString());
         }
         else {
             getLog().trace(
@@ -194,5 +231,4 @@ public class StudyService {
                             "has " + associationCount + " associations, " + snpCount + " and is not yet published");
         }
     }
-
 }

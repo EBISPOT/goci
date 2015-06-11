@@ -128,7 +128,7 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
         // grab all studies from the DAO
         getLog().debug("Fetching studies that require conversion to OWL using StudyRepository...");
 
-        Collection<Study> studies = getStudyService().findReallyAll();
+        Collection<Study> studies = getStudyService().deepFindPublishedStudies();
 
         //TODO : check with Tony probably better to do it at the Repository/Service level
         //Discard studies which are not associated with a disease trait and those which haven't been published yet
@@ -139,8 +139,7 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
             //Remove study which have no diseaseTrait.
             if(study.getDiseaseTrait() == null) {
                 iterator.remove();
-            }else if( study.getHousekeeping().getCatalogPublishDate() == null) {
-                iterator.remove();
+                getLog().error("Study '" + study.getId() + "' has no disease trait");
             }
             else if(study.getHousekeeping().getCatalogUnpublishDate() != null){
                 iterator.remove();
