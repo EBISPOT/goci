@@ -121,7 +121,7 @@
                                     <tr>
                                         <td>Proxy</td>
                                         <td th:each="col,colStat : *{snpFormColumns}">
-                                            <input type="text" data-role="tagsinput"
+                                            <input type="text" data-role="tagsinput" label="proxySnps"
                                                    th:field="*{snpFormColumns[__${colStat.index}__].proxySnps}"/>
                                         </td>
                                     </tr>
@@ -333,7 +333,14 @@
 
 <!--Formats tags input -->
 <script>
-    $('input').tagsinput({
+    $('#proxySnps').tagsinput({
+        trimValue: true
+    });
+</script>
+
+<!--Formats tags input -->
+<script>
+    $('#authorgenes').tagsinput({
         trimValue: true
     });
 </script>

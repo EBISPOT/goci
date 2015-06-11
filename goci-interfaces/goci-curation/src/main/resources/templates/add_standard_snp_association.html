@@ -89,7 +89,7 @@
                                                th:field="*{snpFormRows[__${rowStat.index}__].strongestRiskAllele}"/>
                                     </td>
                                     <td>
-                                        <input type="text" data-role="tagsinput"
+                                        <input type="text" data-role="tagsinput" label="proxySnps"
                                                th:field="*{snpFormRows[__${rowStat.index}__].proxySnps}"/>
                                     </td>
                                 </tr>
@@ -289,7 +289,14 @@
 
 <!--Formats tags input -->
 <script>
-    $('input').tagsinput({
+    $('#proxySnps').tagsinput({
+        trimValue: true
+    });
+</script>
+
+<!--Formats tags input -->
+<script>
+    $('#authorgenes').tagsinput({
         trimValue: true
     });
 </script>
