@@ -222,7 +222,8 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
             Study study = iterator.next();
             if(study.getDiseaseTrait() == null) {
                 iterator.remove();
-            }else if( study.getHousekeeping().getCatalogPublishDate() == null) {
+            }
+            else if( study.getHousekeeping().getCatalogPublishDate() == null) {
                 iterator.remove();
             }
             else if(study.getHousekeeping().getCatalogUnpublishDate() != null){
