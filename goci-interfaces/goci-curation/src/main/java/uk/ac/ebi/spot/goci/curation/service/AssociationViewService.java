@@ -85,8 +85,20 @@ public class AssociationViewService {
                         currentLocusProxies.add(proxySnp.getRsId());
                     }
                 }
+
+                // Delimit proxies in view based on association type
                 if (!currentLocusProxies.isEmpty()){
-                    commaSeparatedProxies= String.join(", ", currentLocusProxies);
+
+                    if (association.getMultiSnpHaplotype()) {
+                        commaSeparatedProxies = String.join(": ", currentLocusProxies);
+                    }
+                    else if (association.getSnpInteraction()) {
+                        commaSeparatedProxies = String.join(", ", currentLocusProxies);
+                    }
+                    else {
+                        commaSeparatedProxies = String.join(", ", currentLocusProxies);
+                    }
+
                     allLociProxySnps.add(commaSeparatedProxies);
                 }
 
