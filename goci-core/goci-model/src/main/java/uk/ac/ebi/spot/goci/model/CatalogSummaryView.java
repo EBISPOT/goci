@@ -99,6 +99,8 @@ public class CatalogSummaryView {
 
     private Date catalogPublishDate;
 
+    private Date catalogUnpublishDate;
+
     private String curationStatus;
 
     // JPA no-args constructor
@@ -149,6 +151,7 @@ public class CatalogSummaryView {
                               Long associationId,
                               Long studyId,
                               Date catalogPublishDate,
+                              Date catalogUnpublishDate,
                               String curationStatus) {
         this.id = id;
         this.studyAddedDate = studyAddedDate;
@@ -193,6 +196,7 @@ public class CatalogSummaryView {
         this.associationId = associationId;
         this.studyId = studyId;
         this.catalogPublishDate = catalogPublishDate;
+        this.catalogUnpublishDate = catalogUnpublishDate;
         this.curationStatus = curationStatus;
     }
 
@@ -552,6 +556,14 @@ public class CatalogSummaryView {
         this.catalogPublishDate = catalogPublishDate;
     }
 
+    public Date getCatalogUnpublishDate() {
+        return catalogUnpublishDate;
+    }
+
+    public void setCatalogUnpublishDate(Date catalogUnpublishDate) {
+        this.catalogUnpublishDate = catalogUnpublishDate;
+    }
+
     public String getCurationStatus() {
         return curationStatus;
     }
@@ -605,6 +617,7 @@ public class CatalogSummaryView {
                 ", associationId=" + associationId +
                 ", studyId=" + studyId +
                 ", catalogPublishDate=" + catalogPublishDate +
+                ", catalogUnpublishDate=" + catalogUnpublishDate +
                 ", curationStatus='" + curationStatus + '\'' +
                 '}';
     }

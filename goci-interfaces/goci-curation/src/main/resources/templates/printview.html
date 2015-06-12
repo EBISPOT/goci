@@ -180,12 +180,12 @@
                 <caption>SNP association details</caption>
                 <thead>
                 <tr>
-                    <th>Region</th>
                     <th>Genes (author reported)</th>
                     <th>Strongest Allele</th>
                     <th>SNP</th>
                     <th>Proxy SNP</th>
-                    <th>Risk Frequency</th>
+                    <th>Risk Allele Frequency</th>
+                    <th>Association Risk Frequency</th>
                     <th>p-Value (mantissa x 10 exponent)</th>
                     <th>p-Value Text</th>
                     <th>EFO trait</th>
@@ -197,6 +197,7 @@
                     <th>OR per Copy Unit Description</th>
                     <th>Std Error</th>
                     <th>SNP Type</th>
+                    <th>SNP Status</th>
                     <th>Multi-SNP haplotype</th>
                     <th>SNP:SNP interaction</th>
                     <th>SNP Checked?</th>
@@ -204,9 +205,6 @@
                 </thead>
                 <tbody>
                 <tr th:each="snpAssociationTableView: ${snpAssociationTableViews}">
-
-                    <!--Region-->
-                    <td th:text="${snpAssociationTableView.regions}?: '' "></td>
 
                     <!--Gene-->
                     <td th:text="${snpAssociationTableView.authorReportedGenes}?: '' "></td>
@@ -220,8 +218,11 @@
                     <!--Proxy SNPs-->
                     <td th:text="${snpAssociationTableView.proxySnps}?: '' "></td>
 
-                    <!--Risk frequency-->
-                    <td th:text="${snpAssociationTableView.riskFrequency}?: '' "></td>
+                    <!--Risk Allele Frequency-->
+                    <td th:text="${snpAssociationTableView.riskAlleleFrequencies}?: '' "></td>
+
+                    <!--Association Risk Frequency-->
+                    <td th:text="${snpAssociationTableView.associationRiskFrequency}?: '' "></td>
 
                     <!--P Value-->
                     <td th:text="${snpAssociationTableView.pvalueMantissa} + 'x 10' + ${snpAssociationTableView.pvalueExponent} ?: ''"></td>
@@ -237,7 +238,8 @@
                     <td th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
                     <td th:text="${snpAssociationTableView.orPerCopyUnitDescr} ?: ''"></td>
                     <td th:text="${snpAssociationTableView.orPerCopyStdError} ?: ''"></td>
-                    <td th:text="${snpAssociationTableView.snpType} ?: ''"></td>
+                    <td th:text="${snpAssociationTableView.associationType} ?: ''"></td>
+                    <td th:text="${snpAssociationTableView.snpStatuses} ?:''"></td>
                     <td th:text="${snpAssociationTableView.multiSnpHaplotype} ?:''"></td>
                     <td th:text="${snpAssociationTableView.snpInteraction} ?:''"></td>
                     <td th:text="${snpAssociationTableView.snpChecked} ?: '' "></td>
@@ -269,8 +271,8 @@
                 </tr>
 
                 <tr>
-                    <th>Catalog Publish Date</th>
-                    <td th:text="${housekeeping != null and housekeeping.catalogPublishDate !=null } ? ${#calendars.format(housekeeping.catalogPublishDate, 'dd MMMM yyyy')} : ''"></td>
+                    <th>Study Added Date</th>
+                    <td th:text="${housekeeping != null and housekeeping.studyAddedDate !=null } ? ${#calendars.format(housekeeping.studyAddedDate, 'dd MMMM yyyy')} : ''"></td>
                 </tr>
 
                 <tr>
@@ -279,8 +281,13 @@
                 </tr>
 
                 <tr>
-                    <th>Study Added Date</th>
-                    <td th:text="${housekeeping != null and housekeeping.studyAddedDate !=null } ? ${#calendars.format(housekeeping.studyAddedDate, 'dd MMMM yyyy')} : ''"></td>
+                    <th>Catalog Publish Date</th>
+                    <td th:text="${housekeeping != null and housekeeping.catalogPublishDate !=null } ? ${#calendars.format(housekeeping.catalogPublishDate, 'dd MMMM yyyy')} : ''"></td>
+                </tr>
+
+                <tr>
+                    <th>Catalog Unpublish Date</th>
+                    <td th:text="${housekeeping != null and housekeeping.catalogUnpublishDate !=null } ? ${#calendars.format(housekeeping.catalogUnpublishDate, 'dd MMMM yyyy')} : ''"></td>
                 </tr>
 
                 <tr>
