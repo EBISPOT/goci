@@ -100,27 +100,22 @@ function calculateOrPerCopyRange(orPerCopyRecipRange) {
 
 $(document).ready(function() {
     $("#validation_button").click(function() {
-        if ($("#snpChecked").val() != "true" ||  $("#snp_id").val() != $("#snp").val()) {
-            $("#snp_check_waiting").show();
+        if ($("#snpValidated").val() != "true" ||  $("#snp_id").val() != $("#snp").val()) {
             var rest_url = "http://rest.ensembl.org/variation/human/" + $("#snp_id").val();
             $.ajax({
                 type: "GET",
                 dataType: "json",
                 url: rest_url,
                 error: function (jqXHR, status, errorThrown) {
-                    $("#snp_check_waiting").hide();
                     $("#validation_status").html(status+" ("+errorThrown+")");
                     //$("#validation_status").html("Error: can't find the variant "+$("#snp").val()+" in Ensembl");
                     $("#validation_status").css({color: "#F00"});
                 },
                 success: function(result) {
-                    $("#snpChecked").val("true");
+                    $("#snpValidated").val("true");
                     $("#snp").val($("#snp_id").val());
-                    $("#snp_check_waiting").hide();
                     $("#validation_status").css({color: "#0A0"});
                     $("#validation_status").html($("#snp_id").val() + " validated");
-                    // E.g.
-                    $("#rest_result").html("Source: " + result.name + " - " +result.source);
                 }
             });
             $("#snp_check_waiting").hide();
@@ -152,6 +147,30 @@ $(document).ready(function() {
                     }
                 }
             });
+        }
+    });
+    $("#mapping_tab").click(function() {
+        var mapping_parent = $("#mapping_tab").parent();
+        var association_parent = $("#association_tab").parent();
+        var active_class = "active";
+        if (association_parent.hasClass(active_class)) {
+            association_parent.removeClass(active_class);
+            mapping_parent.addClass(active_class);
+
+            $("#association_div").hide();
+            $("#mapping_div").show();
+        }
+    });
+    $("#association_tab").click(function() {
+        var association_parent = $("#association_tab").parent();
+        var mapping_parent = $("#mapping_tab").parent();
+        var active_class = "active";
+        if (mapping_parent.hasClass(active_class)) {
+            mapping_parent.removeClass(active_class);
+            association_parent.addClass(active_class);
+
+            $("#mapping_div").hide();
+            $("#association_div").show();
         }
     });
 });
