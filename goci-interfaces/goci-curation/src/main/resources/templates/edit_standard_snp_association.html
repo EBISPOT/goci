@@ -87,6 +87,7 @@
                                         <th>SNP</th>
                                         <th>Strongest SNP-Risk Allele</th>
                                         <th>Proxy SNP</th>
+                                        <th>Merged</th>
                                         <th>Variant validation</th>
                                     </tr>
                                     </thead>
@@ -102,8 +103,10 @@
                                                    th:field="*{snpFormRows[__${rowStat.index}__].strongestRiskAllele}"/>
                                         </td>
                                         <td>
-                                            <input type="text"
-                                                   th:field="*{snpFormRows[__${rowStat.index}__].proxySnp}"/>
+                                            <input type="text" th:field="*{snpFormRows[__${rowStat.index}__].proxySnp}"/>
+                                        </td>
+                                        <td>
+                                            <input id="merged" type="text" th:field="*{snpFormRows[__${rowStat.index}__].merged}"/>
                                         </td>
                                         <td>
                                             <span class="btn btn-primary" id="validation_button">Validate</span>
@@ -205,9 +208,8 @@
                             </div>
 
                             <div class="col-md-10">
-        <button type="button"
-                class="btn btn-primary pull-right"
-                id="calculate-or">Calculate OR/HR/RR per copy (Num)</button>
+                                <button type="button" class="btn btn-primary pull-right"
+                                    id="calculate-or">Calculate OR/HR/RR per copy (Num)</button>
                             </div>
 
 
@@ -317,6 +319,8 @@
             </div>
         </div>
     </div>
+
+    <!-- Mapping div containing the mappings and context forms -->
     <div class="row" id="mapping_div" style="display:none">
         <div class="col-md-10">
             <div class="form-group">
@@ -334,7 +338,7 @@
                             <div class="form-group">
                                 <label class="control-label col-md-2">Region(s)</label>
                                 <div class="col-md-10">
-                                    <table class="table table-hover table-bordered">
+                                    <table class="table table-hover table-bordered" id="mapping_table">
                                         <!--<div class="form-group">
                                             <label for="mappingSnp" class="control-label col-md-2"></label>
 
@@ -345,7 +349,6 @@
                                         </div>-->
                                         <thead>
                                         <tr>
-                                            <th></th>
                                             <th>SNP</th>
                                             <th>Region</th>
                                             <th>Chromosome</th>
@@ -356,8 +359,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="row,rowStat : *{snpMappingForms}">
-                                            <td th:text="${rowStat.count}">1</td>
+                                        <tr th:each="row,rowStat : *{snpMappingForms}" th:id="mapping_tr_+${rowStat.count}">
                                             <td>
                                                 <span th:text="*{snpMappingForms[__${rowStat.index}__].snp}">SNP ID</span>
                                             </td>
@@ -372,10 +374,8 @@
                                                 <input type="text" th:field="*{snpMappingForms[__${rowStat.index}__].location.chromosomePosition}"/>
                                             </td>
                                             <td>
-                                                <!--<button type="submit" class="btn btn-danger">
-                                                    Delete (#<span th:text="*{regions[__${rowStat.index}__].id}">1</span>)
-                                                </button>-->
                                                 <div class="btn btn-danger">Delete (#<span th:text="*{snpMappingForms[__${rowStat.index}__].location.id}">1</span>)</div>
+                                                <!--<div class="btn btn-danger" th:onclick="javascript:delete_row('#mapping_tr_',+${rowStat.count})">Delete (#<span th:text="*{snpMappingForms[__${rowStat.index}__].location.id}">1</span>)</div>-->
                                             </td>
                                         </tr>
                                         </tbody>

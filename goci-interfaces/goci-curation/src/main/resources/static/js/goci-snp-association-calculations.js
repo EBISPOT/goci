@@ -116,6 +116,38 @@ $(document).ready(function() {
                     $("#snp").val($("#snp_id").val());
                     $("#validation_status").css({color: "#0A0"});
                     $("#validation_status").html($("#snp_id").val() + " validated");
+
+                    // SNP has been merged
+                    if (result.name==$("#snp_id").val()) {
+                        $("#merged").val(0);
+                    }
+                    else {
+                        $("#merged").val(1);
+                    }
+
+                    if (result.mappings) {
+                        // Empty the mapping table
+                        $("#mapping_table > tbody").html("");
+                        var row_id = 1;
+                        var row_prefix = "mapping_tr_";
+                        // Populate the mapping table
+                        for (i in result.mappings) {
+                            var location = result.mappings[i].location.split(":");
+                            var chr = location[0];
+                            var position = location[1].split("-")[0];
+
+                            var newrow = "<tr id=\"mapping_tr_"+row_id+"\">";
+                            newrow = newrow + "<td><span>" + $("#snp_id").val() + "</span></td>";           // SNP
+                            newrow = newrow + "<td><input type=\"text\" value=\"\"/></td>";                 // Region
+                            newrow = newrow + "<td><input type=\"text\" value=\"" + chr + "\"\></td>";      // Chromosome
+                            newrow = newrow + "<td><input type=\"text\" value=\"" + position + "\"\></td>"; // Position
+                            newrow = newrow + "<td><div class=\"btn btn-danger\">Delete</div></td>";
+                            //newrow = newrow + "<td><div class=\"btn btn-danger\" onclick=\"javascript:delete_row(\'"+row_prefix+"\',\'"+row_id+"\')\">Delete</div></td>";
+                            newrow = newrow + "</tr>";
+                            $("#mapping_table > tbody").append(newrow);
+                            row_id++;
+                        }
+                    }
                 }
             });
             $("#snp_check_waiting").hide();
@@ -174,3 +206,7 @@ $(document).ready(function() {
         }
     });
 });
+
+function delete_row(prefix,suffix) {
+    $("#"+prefix+suffix).remove();
+}

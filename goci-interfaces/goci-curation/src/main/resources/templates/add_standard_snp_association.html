@@ -58,229 +58,227 @@
 </div>
 
 <div class="container">
-<div class="row">
-    <div class="col-md-10">
-        <div class="form-group">
+    <div class="row">
+        <div class="col-md-10">
             <div id="addSNPForm">
-                <div class="form-horizontal"
-                      method="post"
-                      name="snp-association-form"
-                      th:object="${snpAssociationForm}">
+                <form class="form-horizontal" method="post" name="snp-association-form" th:object="${snpAssociationForm}">
                     <div id="association_div">
-                    <div class="form-group">
-                        <div class="col-md-10 col-md-offset-2">
-                            <table class="table table-hover table-bordered">
-
-                                <thead>
-                                <tr>
-                                    <th>SNP</th>
-                                    <th>Strongest SNP-Risk Allele</th>
-                                    <th>Proxy SNP</th>
-                                    <th>Variant validation</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="row,rowStat : *{snpFormRows}">
-                                    <td>
-                                        <input id="snp_id" type="text" th:field="*{snpFormRows[__${rowStat.index}__].snp}"/>
-                                        <input type="hidden" id="snp" name="snp" th:value="*{snpFormRows[__${rowStat.index}__].snp}"/>
-                                    </td>
-                                    <td>
-                                        <input type="text"
-                                               th:field="*{snpFormRows[__${rowStat.index}__].strongestRiskAllele}"/>
-                                    </td>
-                                    <td>
-                                        <input type="text"
-                                               th:field="*{snpFormRows[__${rowStat.index}__].proxySnp}"/>
-                                    </td>
-                                    <td>
-                                        <span class="btn btn-primary" id="validation_button">Validate</span>
-                                        <input type="hidden" id="snpValidated" name="snpValidated" value="false"/>
-                                        <span style="color:#0A0;font-weight:bold;padding-left:5px" id="validation_status"> </span>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                        <div class="form-group">
+                            <div class="col-md-10 col-md-offset-2">
+                                <table class="table table-hover table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>SNP</th>
+                                            <th>Strongest SNP-Risk Allele</th>
+                                            <th>Proxy SNP</th>
+                                            <th>Merged</th>
+                                            <th>Variant validation</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="row,rowStat : *{snpFormRows}">
+                                            <td>
+                                                <input id="snp_id" type="text" th:field="*{snpFormRows[__${rowStat.index}__].snp}"/>
+                                                <input type="hidden" id="snp" name="snp" th:value="*{snpFormRows[__${rowStat.index}__].snp}"/>
+                                            </td>
+                                            <td>
+                                                <input type="text" th:field="*{snpFormRows[__${rowStat.index}__].strongestRiskAllele}"/>
+                                            </td>
+                                            <td>
+                                                <input type="text" th:field="*{snpFormRows[__${rowStat.index}__].proxySnp}"/>
+                                            </td>
+                                            <td>
+                                                <input id="merged" type="text" th:field="*{snpFormRows[__${rowStat.index}__].merged}"/>
+                                            </td>
+                                            <td>
+                                                <span class="btn btn-primary" id="validation_button">Validate</span>
+                                                <input type="hidden" id="snpValidated" name="snpValidated" value="false"/>
+                                                <span style="color:#0A0;font-weight:bold;padding-left:5px" id="validation_status"> </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                    <div id="rest_result"></div>
+                        <div id="rest_result"></div>
 
 
-                    <div class="form-group">
-                        <label for="authorgenes" class="control-label col-md-2">Gene(s)</label>
+                        <div class="form-group">
+                            <label for="authorgenes" class="control-label col-md-2">Gene(s)</label>
 
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" id="authorgenes"
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="authorgenes"
                                    th:field="*{authorReportedGenes}" name="authorReportedGene"
                                    data-role="tagsinput"/>
-                            <span class="btn btn-primary" id="gene_validation_button">Check gene(s)</span>
+                                <span class="btn btn-primary" id="gene_validation_button">Check gene(s)</span>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="riskFrequency" class="control-label col-md-2">Risk Allele Frequency in
+                        <div class="form-group">
+                            <label for="riskFrequency" class="control-label col-md-2">Risk Allele Frequency in
                                                                                   Controls</label>
 
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" id="riskFrequency"
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="riskFrequency"
                                    th:field="*{riskFrequency}" name="riskFrequency"/>
+                            </div>
                         </div>
-                    </div>
 
 
-                    <div class="form-group">
-                        <label for="pvalueMantissa" class="control-label col-md-2">P-value (mantissa)</label>
+                        <div class="form-group">
+                            <label for="pvalueMantissa" class="control-label col-md-2">P-value (mantissa)</label>
 
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" id="pvalueMantissa"
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="pvalueMantissa"
                                    th:field="*{pvalueMantissa}" name="pvalueMantissa"/>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="pvalueExponent" class="control-label col-md-2">P-value (exponent)</label>
+                        <div class="form-group">
+                            <label for="pvalueExponent" class="control-label col-md-2">P-value (exponent)</label>
 
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" id="pvalueExponent"
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="pvalueExponent"
                                    th:field="*{pvalueExponent}" name="pvalueExponent"/>
+                            </div>
                         </div>
-                    </div>
 
 
-                    <div class="form-group">
-                        <label for="pvalueText" class="control-label col-md-2">P-value (Text)</label>
+                        <div class="form-group">
+                            <label for="pvalueText" class="control-label col-md-2">P-value (Text)</label>
 
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" id="pvalueText"
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="pvalueText"
                                    th:field="*{pvalueText}" name="pvalueText"/>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="EFOTrait" class="control-label col-md-2">EFO Trait:</label>
+                        <div class="form-group">
+                            <label for="EFOTrait" class="control-label col-md-2">EFO Trait:</label>
 
-                        <div class="col-md-10">
-                            <select name="efoTraits" th:field="*{efoTraits}"
-
+                            <div class="col-md-10">
+                                <select name="efoTraits" th:field="*{efoTraits}"
                                     class="form-control select2-select"
                                     multiple="multiple" id="EFOTrait">
-                                <option th:each="efoTrait : ${efoTraits}"
+                                    <option th:each="efoTrait : ${efoTraits}"
                                         th:value="${efoTrait.id}"
                                         th:text="${efoTrait.trait}"></option>
-                            </select>
+                                </select>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="orPerCopyNum" class="control-label col-md-2">OR/HR/RR per copy (Num)</label>
+                        <div class="form-group">
+                            <label for="orPerCopyNum" class="control-label col-md-2">OR/HR/RR per copy (Num)</label>
 
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" name="orPerCopyNum" id="orPerCopyNum"
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" name="orPerCopyNum" id="orPerCopyNum"
                                    th:filed="*{orPerCopyNum}"/>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="orPerCopyRecip" class="control-label col-md-2">OR/HR/RR per copy
+                        <div class="form-group">
+                            <label for="orPerCopyRecip" class="control-label col-md-2">OR/HR/RR per copy
                                                                                    reciprocal</label>
 
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" id="orPerCopyRecip"
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="orPerCopyRecip"
                                    th:field="*{orPerCopyRecip}" name="orPerCopyRecip"/>
-                        </div>
+                            </div>
 
-                        <div class="col-md-10">
-                            <button type="button"
+                            <div class="col-md-10">
+                                <button type="button"
                                     class="btn btn-primary pull-right"
                                     id="calculate-or">Calculate OR/HR/RR per copy (Num)</button>
+                            </div>
+
                         </div>
 
+                        <div class="form-group">
+                            <label for="orPerCopyRange" class="control-label col-md-2">OR/HR/RR per copy (Range)</label>
 
-                    </div>
-
-                    <div class="form-group">
-                        <label for="orPerCopyRange" class="control-label col-md-2">OR/HR/RR per copy (Range)</label>
-
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" id="orPerCopyRange"
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="orPerCopyRange"
                                    th:field="*{orPerCopyRange}" name="orPerCopyRange"/>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="orPerCopyRecipRange" class="control-label col-md-2">OR/HR/RR per copy reciprocal (Range)</label>
+                        <div class="form-group">
+                            <label for="orPerCopyRecipRange" class="control-label col-md-2">OR/HR/RR per copy reciprocal (Range)</label>
 
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" id="orPerCopyRecipRange"
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="orPerCopyRecipRange"
                                    th:field="*{orPerCopyRecipRange}" name="orPerCopyRecipRange"/>
-                        </div>
+                            </div>
 
-                        <div class="col-md-10">
-                            <button type="button"
+                            <div class="col-md-10">
+                                <button type="button"
                                     class="btn btn-primary pull-right"
                                     id="calculate-recip-range">Calculate OR/HR/RR per copy (Range)</button>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="orPerCopyUnitDescr" class="control-label col-md-2">OR/HR/RR per copy (Unit
+                        <div class="form-group">
+                            <label for="orPerCopyUnitDescr" class="control-label col-md-2">OR/HR/RR per copy (Unit
                                                                                        Description)</label>
 
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" id="orPerCopyUnitDescr"
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="orPerCopyUnitDescr"
                                    th:field="*{orPerCopyUnitDescr}" name="orPerCopyUnitDescr"/>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="orPerCopyStdError" class="control-label col-md-2">Standard Error</label>
+                        <div class="form-group">
+                            <label for="orPerCopyStdError" class="control-label col-md-2">Standard Error</label>
 
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" id="orPerCopyStdError"
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="orPerCopyStdError"
                                    th:field="*{orPerCopyStdError}" name="orPerCopyStdError"/>
-                        </div>
+                            </div>
 
-                        <div class="col-md-12">
-                           <button type="button"
+                            <div class="col-md-12">
+                                <button type="button"
                                    class="btn btn-primary pull-right"
                                    id="calculate-or-range">Build OR/HR/RR per copy (Range)</button>
+                            </div>
                         </div>
-                    </div>
 
 
-                    <div class="form-group">
-                        <label for="snpType" class="control-label col-md-2">SNP type</label>
+                        <div class="form-group">
+                            <label for="snpType" class="control-label col-md-2">SNP type</label>
 
-                        <div class="col-md-10" id="snpType">
-                            <label class="radio-inline">
-                                <input type="radio" name="snpType" th:value="'novel'"
+                            <div class="col-md-10" id="snpType">
+                                <label class="radio-inline">
+                                    <input type="radio" name="snpType" th:value="'novel'"
                                        th:field="*{snpType}">novel</input>
-                            </label>
-                            <label class="radio-inline">
-                                <input type="radio" name="snpType" th:value="'known'"
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="snpType" th:value="'known'"
                                        th:field="*{snpType}">known</input>
-                            </label>
+                                </label>
+                            </div>
                         </div>
-                    </div>
 
 
-                    <div class="form-group">
-                        <label for="orType" class="control-label col-md-2">ORType</label>
-                        <input id="orType" type="checkbox" th:field="*{orType}"/>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="snpChecked" class="control-label col-md-2">SNP checked?</label>
-                        <input id="snpChecked" type="checkbox" th:field="*{snpChecked}"/>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <button type="submit" class="btn btn-primary">Save</button>
+                        <div class="form-group">
+                            <label for="orType" class="control-label col-md-2">ORType</label>
+                            <input id="orType" type="checkbox" th:field="*{orType}"/>
                         </div>
+
+                        <div class="form-group">
+                            <label for="snpChecked" class="control-label col-md-2">SNP checked?</label>
+                            <input id="snpChecked" type="checkbox" th:field="*{snpChecked}"/>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+
                     </div>
 
-</div>
+
+                    <!-- Mapping div containing the mappings and context forms -->
                     <div id="mapping_div" style="display:none">
                         <div class="form-group">
                             <div>
@@ -290,10 +288,9 @@
                             <div class="form-group">
                                 <label class="control-label col-md-2">Region(s)</label>
                                 <div class="col-md-10">
-                                    <table class="table table-hover table-bordered">
+                                    <table class="table table-hover table-bordered" id="mapping_table">
                                         <thead>
                                         <tr>
-                                            <th></th>
                                             <th>SNP</th>
                                             <th>Region</th>
                                             <th>Chromosome</th>
@@ -304,8 +301,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="row,rowStat : *{snpMappingForms}">
-                                            <td th:text="${rowStat.count}">1</td>
+                                        <tr th:each="row,rowStat : *{snpMappingForms}" th:id="mapping_tr_+${rowStat.count}">
                                             <td>
                                                 <span th:text="*{snpMappingForms[__${rowStat.index}__].snp}">SNP ID</span>
                                             </td>
@@ -320,10 +316,8 @@
                                                 <input type="text" th:field="*{snpMappingForms[__${rowStat.index}__].location.chromosomePosition}"/>
                                             </td>
                                             <td>
-                                                <!--<button type="submit" class="btn btn-danger">
-                                                    Delete (#<span th:text="*{regions[__${rowStat.index}__].id}">1</span>)
-                                                </button>-->
                                                 <div class="btn btn-danger">Delete (#<span th:text="*{snpMappingForms[__${rowStat.index}__].location.id}">1</span>)</div>
+                                                <!--<div class="btn btn-danger" th:onclick="'javascript:delete_row(\'#mapping_tr_\',\''+${rowStat.count}+'\')">Delete (#<span th:text="*{snpMappingForms[__${rowStat.index}__].location.id}">1</span>)</div>-->
                                             </td>
                                         </tr>
                                         </tbody>
