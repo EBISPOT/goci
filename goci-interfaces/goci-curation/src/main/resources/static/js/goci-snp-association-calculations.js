@@ -99,6 +99,8 @@ function calculateOrPerCopyRange(orPerCopyRecipRange) {
 }
 
 $(document).ready(function() {
+
+    // Variant validation
     $("#validation_button").click(function() {
         if ($("#snpValidated").val() != "true" ||  $("#snp_id").val() != $("#snp").val()) {
             var rest_url = "http://rest.ensembl.org/variation/human/" + $("#snp_id").val();
@@ -130,6 +132,7 @@ $(document).ready(function() {
                         $("#mapping_table > tbody").html("");
                         var row_id = 1;
                         var row_prefix = "mapping_tr_";
+
                         // Populate the mapping table
                         for (i in result.mappings) {
                             var location = result.mappings[i].location.split(":");
@@ -146,6 +149,9 @@ $(document).ready(function() {
                             newrow = newrow + "</tr>";
                             $("#mapping_table > tbody").append(newrow);
                             row_id++;
+
+                            // Populate Genomic context
+                            getGenomicContext(chr,position);
                         }
                     }
                 }
@@ -153,6 +159,8 @@ $(document).ready(function() {
             $("#snp_check_waiting").hide();
         }
     });
+
+    // Gene validation
     $("#gene_validation_button").click(function() {
         var gene_string = $("#authorgenes").val();
         var genes = gene_string.split(",");
@@ -181,6 +189,8 @@ $(document).ready(function() {
             });
         }
     });
+
+    // Switch between variant association form and variant mapping form
     $("#mapping_tab").click(function() {
         var mapping_parent = $("#mapping_tab").parent();
         var association_parent = $("#association_tab").parent();
@@ -207,6 +217,175 @@ $(document).ready(function() {
     });
 });
 
-function delete_row(prefix,suffix) {
+/*function delete_row(prefix,suffix) {
     $("#"+prefix+suffix).remove();
+}*/
+
+
+// Load the genomic context of a variant (overlap, 100kb upstream, 100kb downstream)
+function getGenomicContext(chr,position) {
+
+    var rest_url = "http://rest.ensembl.org/overlap/region/homo_sapiens/";
+    var rest_opt = {"feature" : "gene"};
+
+    // Check if overlap gene
+    var rest_full_url_1 = rest_url + chr + ':'+ position + '-' + position;
+    var overlap_list = [];
+    $("#context_table > tbody").html("");
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        async: false, // Result needs to be get before going further in the method
+        data: rest_opt,
+        url: rest_full_url_1,
+        error: function(jqXHR, status, errorThrown) {
+            //$("#validation_status").html(status + " (" + errorThrown + ")");
+            $("#validation_status").html(status + " (No overlap)");
+            //$("#validation_status").html("Error: can't find the variant "+$("#snp").val()+" in Ensembl");
+            $("#validation_status").css({color: "#F00"});
+        },
+        success: function(result) {
+            if (result.length > 0 && result != []) {
+                overlap_list = addGenomicContextRow(result,position,[]);
+            }
+        }
+    });
+
+    // Upstream
+    var position_up = parseInt(position) - 100000;
+    if (position_up < 0) {
+        position_up = 1;
+    }
+    var rest_full_url_2 = rest_url + chr + ':'+ position_up + '-' + position; // 100kb upstream
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        async: false, // Result needs to be get before going further in the method
+        data: rest_opt,
+        url: rest_full_url_2,
+        error: function(jqXHR, status, errorThrown) {
+            //$("#validation_status").html(status + " (" + errorThrown + ")");
+            $("#validation_status").html(status + " (Upstream)");
+            //$("#validation_status").html("Error: can't find the variant "+$("#snp").val()+" in Ensembl");
+            $("#validation_status").css({color: "#F00"});
+        },
+        success: function(result) {
+            if (result.length > 0 && result != []) {
+                addGenomicContextRow(result,position,overlap_list,"upstream");
+            }
+        }
+    });
+
+    // Downstream
+    var position_down = parseInt(position) + 100000;
+
+    // Check the downstream position to avoid having a position over the 3' end of the chromosome
+    var rest_url_2 = "http://rest.ensembl.org/info/assembly/homo_sapiens/" + chr;
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        async: false, // Result needs to be get before going further in the method
+        url: rest_url_2,
+        error: function(jqXHR, status, errorThrown) {
+            //$("#validation_status").html(status + " (" + errorThrown + ")");
+            $("#validation_status").html(status + " (Can't find chromosome info)");
+            //$("#validation_status").html("Error: can't find the variant "+$("#snp").val()+" in Ensembl");
+            $("#validation_status").css({color: "#F00"});
+        },
+        success: function(result) {
+            if (position_down > result.length) {
+                position_down = result.length;
+            }
+        }
+    });
+
+    var rest_full_url_3 = rest_url + chr + ':'+ position + '-' + position_down; // 100kb downstream
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        async: false, // Result needs to be get before going further in the method
+        data: rest_opt,
+        url: rest_full_url_3,
+        error: function(jqXHR, status, errorThrown) {
+            //$("#validation_status").html(status + " (" + errorThrown + ")");
+            $("#validation_status").html(status + " (Dowstream)");
+            //$("#validation_status").html("Error: can't find the variant "+$("#snp").val()+" in Ensembl");
+            $("#validation_status").css({color: "#F00"});
+        },
+        success: function(result) {
+            if (result.length > 0 && result != []) {
+                addGenomicContextRow(result,position,overlap_list,"downstream");
+            }
+        }
+    });
+}
+
+
+// Generate the genomic context table
+function addGenomicContextRow(json_result,position,overlap,type) {
+
+    var row_id = 0;
+    var intergenic = false;
+    var upstream = false;
+    var downstream = false;
+    var overlap_list = [];
+
+    var checked = " checked";
+    var interchecked = "";
+    var upchecked = "";
+    var downchecked = "";
+
+    if (type) {
+        intergenic = true;
+        interchecked = checked;
+        if (type == 'upstream')   {
+            upstream  = true;
+            upchecked = checked;
+        }
+        if (type == 'downstream') {
+            downstream  = true;
+            downchecked = checked;
+        }
+    }
+
+    for (i in json_result) {
+
+        var gene = json_result[i].external_name;
+        var distance = 0;
+
+
+        if (type) {
+            if (jQuery.inArray(gene,overlap) != -1) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
+                continue;
+            }
+
+            if (type == "upstream") {
+                distance = position - json_result[i].end;
+            }
+            else if (type == 'downstream') {
+                distance = json_result[i].start - position;
+            }
+        }
+        else {
+            overlap_list.push(gene);
+        }
+
+
+        var newrow = "<tr id=\"context_tr_" + row_id + "\">";
+        newrow = newrow + "<td><span>" + $("#snp_id").val() + "</span></td>";                                      // SNP
+        newrow = newrow + "<td><input type=\"checkbox\"  value=\"" + intergenic + "\"" + interchecked + "\></td>"; // Intergenic
+        newrow = newrow + "<td><span>" + gene + "</span></td>";                                                    // Gene
+        newrow = newrow + "<td><input type=\"checkbox\" value=\"" + upstream + "\"" + upchecked + "\></td>";       // Upstream
+        newrow = newrow + "<td><input type=\"checkbox\" value=\"" + downstream + "\"" + downchecked + "\></td>";   // Downstream
+        newrow = newrow + "<td><input type=\"text\" value=\"" + distance + "\"\></td>";                            // Distance
+        newrow = newrow + "<td><div class=\"btn btn-danger\">Delete</div></td>";
+        //newrow = newrow + "<td><div class=\"btn btn-danger\" onclick=\"javascript:delete_row(\'"+row_prefix+"\',\'"+row_id+"\')\">Delete</div></td>";
+        newrow = newrow + "</tr>";
+        $("#context_table > tbody").append(newrow);
+        row_id++;
+    }
+
+    if (!type) {
+        return overlap_list;
+    }
 }
