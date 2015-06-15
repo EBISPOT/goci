@@ -538,13 +538,13 @@ public class AssociationSheetProcessor {
 
                     // Handle multi-snp and standard snp
                     else {
-                        delimiter = ",";
+                        delimiter = ";";
 
                         // For multi-snp and standard snps we assume their is only one locus
                         Locus locus = new Locus();
 
-                        // Handle curator entered genes
-                        Collection<Gene> locusGenes = createLocusGenes(authorReportedGene, delimiter);
+                        // Handle curator entered genes, for haplotype they are separated by a comma
+                        Collection<Gene> locusGenes = createLocusGenes(authorReportedGene, ",");
                         locus.setAuthorReportedGenes(locusGenes);
 
                         // Handle curator entered risk allele
