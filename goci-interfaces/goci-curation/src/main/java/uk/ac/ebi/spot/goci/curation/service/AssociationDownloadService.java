@@ -207,7 +207,7 @@ public class AssociationDownloadService {
 
         final StringBuilder snpStatuses = new StringBuilder();
 
-        // Only applies to SNP interaction studies
+        // Only applies to SNP interaction studies, delimiter used is 'x'
         if (association.getSnpInteraction() != null && association.getSnpInteraction()) {
             association.getLoci().forEach(
                     locus -> {
@@ -265,52 +265,38 @@ public class AssociationDownloadService {
         final StringBuilder proxySnpsRsIds = new StringBuilder();
         final StringBuilder riskAlleleFrequency = new StringBuilder();
 
-        // Different delimiters for snp interaction and standard/haplotype associations
+        // Set our delimiter for download spreadsheet
+        final String delimiter;
+        if (association.getSnpInteraction() != null && association.getSnpInteraction()) {
+            delimiter = " x ";
+        }
+        else {
+            delimiter = "; ";
+        }
+
+        // Interaction specific values
         if (association.getSnpInteraction() != null && association.getSnpInteraction()) {
 
             association.getLoci().forEach(
                     locus -> {
                         locus.getStrongestRiskAlleles().forEach(
                                 riskAllele -> {
-                                    setOrAppend(strongestAllele, riskAllele.getRiskAlleleName(), " x ");
-
-                                    SingleNucleotidePolymorphism snp = riskAllele.getSnp();
-                                    setOrAppend(rsId, snp.getRsId(), " x ");
-
-                                    // Set proxies or 'NR' if non available
-                                    Collection<String> currentLocusProxies = new ArrayList<>();
-                                    String commaSeparatedProxies = "";
-                                    if (riskAllele.getProxySnps() != null) {
-                                        for (SingleNucleotidePolymorphism proxySnp : riskAllele.getProxySnps()) {
-                                            currentLocusProxies.add(proxySnp.getRsId());
-                                        }
-                                    }
-
-                                    if (!currentLocusProxies.isEmpty()) {
-                                        commaSeparatedProxies = String.join(", ", currentLocusProxies);
-                                        setOrAppend(proxySnpsRsIds, commaSeparatedProxies, " x ");
-
-                                    }
-                                    else {
-                                        setOrAppend(proxySnpsRsIds, "NR", " x ");
-                                    }
-
 
                                     // Set Risk allele frequency
                                     if (riskAllele.getRiskFrequency() != null &&
                                             !riskAllele.getRiskFrequency().isEmpty()) {
                                         String frequency = riskAllele.getRiskFrequency();
-                                        setOrAppend(riskAlleleFrequency, frequency, " x ");
+                                        setOrAppend(riskAlleleFrequency, frequency, delimiter);
                                     }
                                     else {
-                                        setOrAppend(riskAlleleFrequency, "NR", " x ");
+                                        setOrAppend(riskAlleleFrequency, "NR", delimiter);
                                     }
 
                                 }
                         );
 
                         // Handle locus genes for SNP interaction studies.
-                        // This is so it clear in thE download which group
+                        // This is so it clear in the download which group
                         // of genes belong to which interaction
                         Collection<String> currentLocusGenes = new ArrayList<>();
                         String commaSeparatedGenes = "";
@@ -319,44 +305,20 @@ public class AssociationDownloadService {
                         });
                         if (!currentLocusGenes.isEmpty()) {
                             commaSeparatedGenes = String.join(", ", currentLocusGenes);
-                            setOrAppend(reportedGenes, commaSeparatedGenes, " x ");
+                            setOrAppend(reportedGenes, commaSeparatedGenes, delimiter);
                         }
                         else {
-                            setOrAppend(reportedGenes, "NR", " x ");
+                            setOrAppend(reportedGenes, "NR", delimiter);
                         }
                     }
             );
         }
         else {
-            // this is a single study or a haplotype
+            // Single study or a haplotype
             association.getLoci().forEach(
                     locus -> {
                         locus.getStrongestRiskAlleles().forEach(
                                 riskAllele -> {
-                                    setOrAppend(strongestAllele, riskAllele.getRiskAlleleName(), ", ");
-
-                                    SingleNucleotidePolymorphism snp = riskAllele.getSnp();
-                                    setOrAppend(rsId, snp.getRsId(), ", ");
-
-                                    // Set proxies or 'NR' if non available
-                                    Collection<String> currentLocusProxies = new ArrayList<>();
-                                    String colonSeparatedProxies = "";
-                                    if (riskAllele.getProxySnps() != null) {
-                                        for (SingleNucleotidePolymorphism proxySnp : riskAllele.getProxySnps()) {
-                                            currentLocusProxies.add(proxySnp.getRsId());
-                                        }
-                                    }
-
-                                    // For haplotypes ":" is used to separate multiple proxies linked to a single
-                                    // risk allele in a haplotype
-                                    if (!currentLocusProxies.isEmpty()) {
-                                        colonSeparatedProxies = String.join(": ", currentLocusProxies);
-                                        setOrAppend(proxySnpsRsIds,  colonSeparatedProxies, ", ");
-
-                                    }
-                                    else {
-                                        setOrAppend(proxySnpsRsIds, "NR", ", ");
-                                    }
 
                                     // Set Risk allele frequency to blank as its not recorded by curators
                                     // for standard or multi-SNP haplotypes
@@ -364,12 +326,50 @@ public class AssociationDownloadService {
 
                                 }
                         );
+                        // For a haplotype all genes are separated by a comma
                         locus.getAuthorReportedGenes().forEach(gene -> {
                             setOrAppend(reportedGenes, gene.getGeneName().trim(), ", ");
                         });
                     }
             );
         }
+
+        // Set attributes common to all associations
+        association.getLoci().forEach(
+                locus -> {
+                    locus.getStrongestRiskAlleles().forEach(
+                            riskAllele -> {
+                                setOrAppend(strongestAllele, riskAllele.getRiskAlleleName(), delimiter);
+
+                                SingleNucleotidePolymorphism snp = riskAllele.getSnp();
+                                setOrAppend(rsId, snp.getRsId(), delimiter);
+
+                                // Set proxies or 'NR' if non available
+                                Collection<String> currentLocusProxies = new ArrayList<>();
+                                String colonSeparatedProxies = "";
+                                if (riskAllele.getProxySnps() != null) {
+                                    for (SingleNucleotidePolymorphism proxySnp : riskAllele.getProxySnps()) {
+                                        currentLocusProxies.add(proxySnp.getRsId());
+                                    }
+                                }
+
+                                // Separate multiple proxies linked by comma
+                                if (!currentLocusProxies.isEmpty()) {
+                                    colonSeparatedProxies = String.join(", ", currentLocusProxies);
+                                    setOrAppend(proxySnpsRsIds, colonSeparatedProxies, delimiter);
+
+                                }
+                                else {
+                                    setOrAppend(proxySnpsRsIds, "NR", delimiter);
+                                }
+
+
+                            }
+                    );
+
+                }
+        );
+
 
         line.append(reportedGenes.toString());
         line.append("\t");
