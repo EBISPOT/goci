@@ -49,7 +49,6 @@ public class SingleSnpMultiSnpAssociationService {
         Association association = new Association();
 
         // Set simple string, boolean and float association attributes
-        association.setRiskFrequency(snpAssociationForm.getRiskFrequency());
         association.setPvalueText(snpAssociationForm.getPvalueText());
         association.setOrType(snpAssociationForm.getOrType());
         association.setSnpType(snpAssociationForm.getSnpType());
@@ -61,6 +60,9 @@ public class SingleSnpMultiSnpAssociationService {
         association.setOrPerCopyRecipRange(snpAssociationForm.getOrPerCopyRecipRange());
         association.setOrPerCopyStdError(snpAssociationForm.getOrPerCopyStdError());
         association.setOrPerCopyUnitDescr(snpAssociationForm.getOrPerCopyUnitDescr());
+
+        // Set risk frequency
+        association.setRiskFrequency(snpAssociationForm.getRiskFrequency());
 
         // Set value by default to false
         association.setSnpInteraction(false);
@@ -129,6 +131,11 @@ public class SingleSnpMultiSnpAssociationService {
 
             // Create a new risk allele and assign newly created snp
             RiskAllele riskAllele = lociAttributesService.createRiskAllele(curatorEnteredRiskAllele, snp);
+
+            // If its not a multi-snp haplotype save frequency to risk allele
+            if (!snpAssociationForm.getMultiSnpHaplotype()) {
+                riskAllele.setRiskFrequency(snpAssociationForm.getRiskFrequency());
+            }
 
             // Check for proxies and if we have one create a proxy snps
             if (row.getProxySnps() != null && !row.getProxySnps().isEmpty()) {
