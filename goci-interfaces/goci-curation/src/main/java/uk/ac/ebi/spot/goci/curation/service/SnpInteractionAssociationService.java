@@ -120,10 +120,17 @@ public class SnpInteractionAssociationService {
             riskAllele.setRiskFrequency(col.getRiskFrequency());
 
             // Check for a proxy and if we have one create a proxy snp
-            String curatorEnteredProxySnp = col.getProxySnp();
-            if (curatorEnteredProxySnp != null && !curatorEnteredProxySnp.isEmpty()) {
-                SingleNucleotidePolymorphism proxySnp = lociAttributesService.createSnp(curatorEnteredProxySnp);
-                riskAllele.setProxySnp(proxySnp);
+            Collection<String> curatorEnteredProxySnps = col.getProxySnps();
+            if (curatorEnteredProxySnps != null && !curatorEnteredProxySnps.isEmpty()) {
+
+                Collection<SingleNucleotidePolymorphism> riskAlleleProxySnps = new ArrayList<>();
+
+                for (String curatorEnteredProxySnp : curatorEnteredProxySnps) {
+                    SingleNucleotidePolymorphism proxySnp = lociAttributesService.createSnp(curatorEnteredProxySnp);
+                    riskAlleleProxySnps.add(proxySnp);
+                }
+
+                riskAllele.setProxySnps(riskAlleleProxySnps);
             }
 
             // Link risk allele to locus
@@ -189,7 +196,7 @@ public class SnpInteractionAssociationService {
                 Collection<RiskAllele> locusRiskAlleles = locus.getStrongestRiskAlleles();
                 String strongestRiskAllele = null;
                 String snp = null;
-                String proxySnp = null;
+                Collection<String> proxySnps = new ArrayList<>();
                 Boolean genomeWide = false;
                 Boolean limitedList = false;
                 String riskFrequency = null;
@@ -201,8 +208,10 @@ public class SnpInteractionAssociationService {
                         snp = riskAllele.getSnp().getRsId();
 
                         // Set proxy
-                        if (riskAllele.getProxySnp() != null) {
-                            proxySnp = riskAllele.getProxySnp().getRsId();
+                        if (riskAllele.getProxySnps() != null) {
+                            for (SingleNucleotidePolymorphism riskAlleleProxySnp : riskAllele.getProxySnps()) {
+                                proxySnps.add(riskAlleleProxySnp.getRsId());
+                            }
                         }
 
                         if (riskAllele.getGenomeWide() != null && riskAllele.getGenomeWide()) {
@@ -227,7 +236,7 @@ public class SnpInteractionAssociationService {
                 // Set column attributes
                 snpFormColumn.setStrongestRiskAllele(strongestRiskAllele);
                 snpFormColumn.setSnp(snp);
-                snpFormColumn.setProxySnp(proxySnp);
+                snpFormColumn.setProxySnps(proxySnps);
                 snpFormColumn.setGenomeWide(genomeWide);
                 snpFormColumn.setLimitedList(limitedList);
                 snpFormColumn.setRiskFrequency(riskFrequency);

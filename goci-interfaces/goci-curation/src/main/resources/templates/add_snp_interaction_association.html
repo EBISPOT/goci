@@ -121,8 +121,8 @@
                                     <tr>
                                         <td>Proxy</td>
                                         <td th:each="col,colStat : *{snpFormColumns}">
-                                            <input type="text" data-role="tagsinput"
-                                                   th:field="*{snpFormColumns[__${colStat.index}__].proxySnp}"/>
+                                            <input type="text" data-role="tagsinput" label="proxySnps"
+                                                   th:field="*{snpFormColumns[__${colStat.index}__].proxySnps}"/>
                                         </td>
                                     </tr>
 
@@ -328,6 +328,20 @@
     $(function() {
         // turn the element to select2 select style
         $('#EFOTrait').select2();
+    });
+</script>
+
+<!--Formats tags input -->
+<script>
+    $('#proxySnps').tagsinput({
+        trimValue: true
+    });
+</script>
+
+<!--Formats tags input -->
+<script>
+    $('#authorgenes').tagsinput({
+        trimValue: true
     });
 </script>
 

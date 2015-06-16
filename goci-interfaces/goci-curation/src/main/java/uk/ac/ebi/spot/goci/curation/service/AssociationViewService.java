@@ -7,7 +7,6 @@ import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
-import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
@@ -21,7 +20,7 @@ import java.util.Map;
  *
  * @author emma
  *         <p>
- *         Service class that creates table view of a studies associations
+ *         Service class that creates table view of a study's associations
  */
 @Service
 public class AssociationViewService {
@@ -36,7 +35,7 @@ public class AssociationViewService {
 
         // For SNP interaction studies snp, proxy snps, risk alleles etc
         // should be separated by an 'x'
-        String delimiter = ", ";
+        String delimiter = "; ";
         if (association.getSnpInteraction()) {
             delimiter = " x ";
         }
@@ -55,11 +54,10 @@ public class AssociationViewService {
         // By looking at each locus in turn we can keep order in view
         for (Locus locus : loci) {
 
-            // Store gene names
-            // A locus can have a number of genes attached
+            // Store gene names, a locus can have a number of genes attached.
             // Per locus create a comma separated list and add to an array.
             // Further processing will then delimit this list
-            // either by comma or 'x' depending on association type
+            // either by ; or 'x' depending on association type
             Collection<String> currentlocusGenes = new ArrayList<>();
             String commaSeparatedGenes = "";
             for (Gene gene : locus.getAuthorReportedGenes()) {
@@ -78,11 +76,21 @@ public class AssociationViewService {
                 SingleNucleotidePolymorphism snp = riskAllele.getSnp();
                 allLociSnps.add(snp.getRsId());
 
-                // TODO CHANGE WHEN WE UPDATE MODEL FOR MULTIPLE PROXY SNPS
-                // Set proxy if one is present
-                if (riskAllele.getProxySnp() != null) {
-                    allLociProxySnps.add(riskAllele.getProxySnp().getRsId());
+                // Set proxies if present
+                Collection <String> currentLocusProxies =  new ArrayList<>();
+                String commaSeparatedProxies = "";
+                if (riskAllele.getProxySnps() != null) {
+                    for (SingleNucleotidePolymorphism proxySnp : riskAllele.getProxySnps()) {
+                        currentLocusProxies.add(proxySnp.getRsId());
+                    }
                 }
+
+                // Comma separate proxies in view
+                if (!currentLocusProxies.isEmpty()) {
+                    commaSeparatedProxies = String.join(", ", currentLocusProxies);
+                    allLociProxySnps.add(commaSeparatedProxies);
+                }
+
                 else { allLociProxySnps.add("NR");}
 
                 // Only required for SNP interaction studies
