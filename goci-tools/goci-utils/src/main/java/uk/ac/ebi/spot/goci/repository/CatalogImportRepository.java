@@ -1052,18 +1052,23 @@ public class CatalogImportRepository {
         }
         // If we don't get a result then insert the link between region and snp
         catch (EmptyResultDataAccessException e) {
-            // Insert if its not already in database
-            rows = insertSnpRegion.execute(snpRegionArgs);
-            getLog().trace(
-                    "Adding SNP: " + snpId + " and Region: " + regionId + " - Updated " + rows +
-                            " rows");
+            getLog().info(
+                    "SNP: " + snpId + " has no existing region");
         }
 
-        if(existingSnpIdsInSnpRegionTable!= null && !existingSnpIdsInSnpRegionTable.isEmpty()){
-           jdbcTemplate.update(UPDATE_SNP_REGION, regionId, snpId);
-            getLog().trace(
-                    "Updating SNP: " + snpId + " ,setting region to " + regionId + " - Updated " + rows +
+        if (existingSnpIdsInSnpRegionTable != null && !existingSnpIdsInSnpRegionTable.isEmpty()) {
+            jdbcTemplate.update(UPDATE_SNP_REGION, regionId, snpId);
+            getLog().info(
+                    "Updating SNP: " + snpId + ", setting region to " + regionId + " - Updated " + rows +
                             " rows");
+        }
+        else{
+            // Insert if its not already in database
+            rows = insertSnpRegion.execute(snpRegionArgs);
+            getLog().info(
+                    "Adding SNP: " + snpId + " and Region: " + regionId + " - Updated " + rows +
+                            " rows");
+
         }
     }
 
