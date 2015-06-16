@@ -555,7 +555,22 @@ public class AssociationSheetProcessor {
                                                        riskFrequency,
                                                        snpStatus,
                                                        delimiter);
-                        locus.setStrongestRiskAlleles(locusRiskAlleles);
+
+
+                        // For standard associations set the risk allele frequency to the
+                        // same value as the overall association frequency
+                        Collection<RiskAllele> locusRiskAllelesWithRiskFrequencyValues = new ArrayList<>();
+                        if (!newAssociation.getMultiSnpHaplotype()) {
+                            for (RiskAllele riskAllele : locusRiskAlleles) {
+                                riskAllele.setRiskFrequency(associationRiskFrequency);
+                                locusRiskAllelesWithRiskFrequencyValues.add(riskAllele);
+                            }
+                            locus.setStrongestRiskAlleles(locusRiskAllelesWithRiskFrequencyValues);
+                        }
+
+                        else {
+                            locus.setStrongestRiskAlleles(locusRiskAlleles);
+                        }
 
                         // Set locus attributes
                         Integer haplotypeCount = locusRiskAlleles.size();
