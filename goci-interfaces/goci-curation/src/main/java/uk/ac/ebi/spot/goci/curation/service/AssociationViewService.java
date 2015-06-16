@@ -72,6 +72,14 @@ public class AssociationViewService {
             for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
                 allLociRiskAlleles.add(riskAllele.getRiskAlleleName());
 
+                // For standard association set the risk allele frequency
+                // Based on assumption we only have one locus with a single risk allele attached
+                if (!association.getMultiSnpHaplotype() && !association.getSnpInteraction()) {
+                    if (riskAllele.getRiskFrequency() != null && !riskAllele.getRiskFrequency().isEmpty()) {
+                        allLociRiskAlleleFrequencies.add(riskAllele.getRiskFrequency());
+                    }
+                }
+
                 // SNPs attached to risk allele
                 SingleNucleotidePolymorphism snp = riskAllele.getSnp();
                 allLociSnps.add(snp.getRsId());
