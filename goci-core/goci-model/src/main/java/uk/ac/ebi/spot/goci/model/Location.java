@@ -22,7 +22,7 @@ public class Location {
 
     private String chromosomeName;
 
-    private Long chromosomePosition;
+    private String chromosomePosition;
 
     @ManyToOne
     private Region region;
@@ -31,7 +31,7 @@ public class Location {
     public Location() {}
 
     public Location( String chromosomeName,
-                     Long chromosomePosition,
+                     String chromosomePosition,
                      Region region) {
         this.chromosomeName = chromosomeName;
         this.chromosomePosition = chromosomePosition;
@@ -55,11 +55,11 @@ public class Location {
         this.chromosomeName = chromosomeName;
     }
 
-    public Long getChromosomePosition() {
+    public String getChromosomePosition() {
         return chromosomePosition;
     }
 
-    public void setChromosomePosition(Long chromosomePosition) {
+    public void setChromosomePosition(String chromosomePosition) {
         this.chromosomePosition = chromosomePosition;
     }
 
