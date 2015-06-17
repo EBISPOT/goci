@@ -52,8 +52,8 @@ public class V1_9_9_060__Populate_locations_and_snp_location implements SpringJd
                             .usingColumns("SNP_ID", "LOCATION_ID");
 
             Map<String, Object> snpLocationArgs = new HashMap<>();
-            locationArgs.put("SNP_ID", snpId);
-            locationArgs.put("LOCATION_ID", locationId.longValue());
+            snpLocationArgs.put("SNP_ID", snpId);
+            snpLocationArgs.put("LOCATION_ID", locationId.longValue());
             insertSnpLocation.execute(snpLocationArgs);
 
             return null;
