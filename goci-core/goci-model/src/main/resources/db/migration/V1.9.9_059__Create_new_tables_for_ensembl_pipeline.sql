@@ -26,12 +26,12 @@ version: 1.9.9.059 (pre 2.0)
      "ID" NUMBER(19,0),
      "REGION_ID" NUMBER(19,0),
      "CHROMOSOME_NAME" VARCHAR2(255 CHAR),
-     "CHROMOSOME_POSITION" VARCHAR2(255 CHAR),);
+     "CHROMOSOME_POSITION" VARCHAR2(255 CHAR));
 
 --------------------------------------------------------
 --  DDL for Index LOCATION_ID_PK
 --------------------------------------------------------
-  CREATE UNIQUE INDEX "LOCATION_ID_PK" ON "LCOATION" ("ID");
+  CREATE UNIQUE INDEX "LOCATION_ID_PK" ON "LOCATION" ("ID");
 
 --------------------------------------------------------
 --  Constraints for Table LOCATION
