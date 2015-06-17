@@ -531,15 +531,17 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                     AddAxiom add_is_object_of_trait = new AddAxiom(ontology, is_object_of_trait_relation);
                     getManager().applyChange(add_is_object_of_trait);
 
-                    // finally, assert label for this association
-                    OWLLiteral label = getDataFactory().getOWLLiteral(
-                            "Association between " + snp.getRsId() + " and " +
-                                    association.getStudy().getHousekeeping().getCurator().getEmail());
-                    OWLAnnotationAssertionAxiom label_annotation =
-                            getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, taIndiv.getIRI(), label);
-                    AddAxiom add_band_label = new AddAxiom(ontology, label_annotation);
-                    getManager().applyChange(add_band_label);
+
                 }
+                // finally, assert label for this association
+                OWLLiteral label = getDataFactory().getOWLLiteral(
+                        "Association between " + snp.getRsId() + " and " +
+                                association.getStudy().getDiseaseTrait().getTrait());
+
+                OWLAnnotationAssertionAxiom label_annotation =
+                        getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, taIndiv.getIRI(), label);
+                AddAxiom add_band_label = new AddAxiom(ontology, label_annotation);
+                getManager().applyChange(add_band_label);
 
             }
         }
