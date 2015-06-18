@@ -98,15 +98,16 @@ function calculateOrPerCopyRange(orPerCopyRecipRange) {
 
 }
 
-$(document).ready(function() {
+var rest_url_root = "http://rest.ensembl.org";
+var success_class = "alert alert-success col-md-offset-2 col-md-10";
+var error_class = "alert alert-danger col-md-offset-2 col-md-10";
 
-    var success_class = "alert alert-success col-md-offset-2 col-md-10";
-    var error_class = "alert alert-danger col-md-offset-2 col-md-10";
+$(document).ready(function() {
 
     // Variant validation
     $("#validation_button").click(function() {
         if ($("#snpValidated").val() != "true" ||  $("#snp_id").val() != $("#snp").val()) {
-            var rest_url = "http://rest.ensembl.org/variation/human/" + $("#snp_id").val();
+            var rest_url = rest_url_root + "/variation/human/" + $("#snp_id").val();
             $("#snpValidationStatus").html("");
             $.ajax({
                 type: "GET",
@@ -156,10 +157,10 @@ $(document).ready(function() {
                             });*/
 
                             var newrow = "<tr id=\""+row_prefix + row_id + "\">";
-                            newrow = newrow + "<td><span>" + $("#snp_id").val() + "</span></td>";           // SNP
-                            newrow = newrow + "<td><input type=\"text\" value=\"" + band + "\"\></td>";     // Region
-                            newrow = newrow + "<td><input type=\"text\" value=\"" + chr + "\"\></td>";      // Chromosome
-                            newrow = newrow + "<td><input type=\"text\" value=\"" + position + "\"\></td>"; // Position
+                            newrow = newrow + "<td><span>" + $("#snp_id").val() + "</span></td>";                                // SNP
+                            newrow = newrow + "<td><input type=\"text\" value=\"" + band + "\"\></td>";                          // Region
+                            newrow = newrow + "<td><input class=\"chromosomeName\" type=\"text\" value=\"" + chr + "\"\></td>";  // Chromosome
+                            newrow = newrow + "<td><input type=\"text\" value=\"" + position + "\"\></td>";                      // Position
                             //newrow = newrow + "<td><div class=\"btn btn-danger\">Delete</div></td>";
                             newrow = newrow + "<td><div class=\"btn btn-danger\" onclick=\"javascript:delete_row(\'"+row_prefix+row_id+"\')\">Delete</div></td>";
                             newrow = newrow + "</tr>";
@@ -178,31 +179,70 @@ $(document).ready(function() {
 
     // Gene validation
     $("#gene_validation_button").click(function() {
-        var gene_string = $("#authorgenes").val();
-        var genes = gene_string.split(",");
 
-        var rest_url = "http://rest.ensembl.org/xrefs/symbol/homo_sapiens/";
+        if ($("#mapping_table > tbody > tr").length > 0) {
 
-        for (i in genes) {
-            var gene = genes[i];
-            var rest_full_url = rest_url + gene;
-            $.ajax({
-                type: "GET",
-                dataType: "json",
-                async: false, // Avoid weird results
-                url: rest_full_url,
-                error: function(jqXHR, status, errorThrown) {
-                    $(".tag:contains('"+gene+"')").css({backgroundColor: "#A00"});
-                },
-                success: function(result) {
-                    if (result.length > 0 && result != []) {
-                        $(".tag:contains('"+gene+"')").css({backgroundColor: "#0A0"});
-                    }
-                    else {
-                        $(".tag:contains('"+gene+"')").css({backgroundColor: "#A00"});
+            $("#geneValidationStatus").html("");
+
+            var genes = [];
+            $("[id^='authorgenes']").each(function() {
+                var gene_string = $(this).val();
+                var genes_list = gene_string.split(",");
+                for (i in genes_list) {
+                    if (jQuery.inArray(genes_list[i], gene) == -1) {
+                        genes.push(genes_list[i]);
                     }
                 }
             });
+
+            //var rest_url = rest_url_root + "/xrefs/symbol/homo_sapiens/";
+            var rest_url = rest_url_root + "/lookup/symbol/homo_sapiens/";
+            for (i in genes) {
+                var gene = genes[i];
+                var rest_full_url = rest_url + gene;
+                $.ajax({
+                    type: "GET",
+                    dataType: "json",
+                    async: false, // Avoid weird results
+                    url: rest_full_url,
+                    error: function(jqXHR, status, errorThrown) {
+                        $(".tag:contains('" + gene + "')").css({backgroundColor: "#A00"});
+                        $("#geneValidationStatus").append("<div>Gene "+ gene.toUpperCase() + " is not valid</div>");
+
+                    },
+                    success: function(result) {
+                        //if (result.length > 0 && result != []) {
+                        var gene_chr = result.seq_region_name;
+                        var same_chr = 0;
+                        $(".chromosomeName").each(function() {
+                            if ($(this).val() == gene_chr) {
+                                same_chr = 1;
+                            }
+                        });
+
+                        if (same_chr == 1) {
+                            $(".tag:contains('" + gene + "')").css({backgroundColor: "#0A0"});
+                        }
+                        else {
+                            $(".tag:contains('" + gene + "')").css({backgroundColor: "#A00"});
+                            $("#geneValidationStatus").append("<div>Gene "+ gene.toUpperCase() + " is on a different chromosome (chr"+gene_chr+")</div>");
+                        }
+
+
+                        //}
+                        //else {
+                        //    $(".tag:contains('"+gene+"')").css({backgroundColor: "#A00"});
+                        //}
+                    }
+                });
+
+                if ($("#geneValidationStatus").html() != "") {
+                    $("#geneValidationStatus").show();
+                }
+            }
+        }
+        else {
+            alert("Please validate the variant(s) before checking the genes (need to compare gene(s) and variant(s) coordinates)");
         }
     });
 
@@ -241,7 +281,7 @@ function delete_row(row_id) {
 // Load the genomic context of a variant (overlap, 100kb upstream, 100kb downstream)
 function getGenomicContext(chr,position) {
 
-    var rest_url = "http://rest.ensembl.org/overlap/region/homo_sapiens/";
+    var rest_url = rest_url_root + "/overlap/region/homo_sapiens/";
     var rest_opt = {"feature" : "gene"};
 
     // Check if overlap gene
@@ -256,7 +296,7 @@ function getGenomicContext(chr,position) {
         data: rest_opt,
         url: rest_full_url_1,
         error: function(jqXHR, status, errorThrown) {
-            $("#contextValidationStatus").append("<div class=\""+error_class+"\">" + status + ": Issue with the gene overlap call ("+errorThrown+")</div>");
+            $("#contextValidationStatus").append("<div>" + status + ": Issue with the gene overlap call ("+errorThrown+")</div>");
         },
         success: function(result) {
             if (result.length > 0 && result != []) {
@@ -278,7 +318,7 @@ function getGenomicContext(chr,position) {
         data: rest_opt,
         url: rest_full_url_2,
         error: function(jqXHR, status, errorThrown) {
-            $("#contextValidationStatus").append("<div class=\""+error_class+"\">" + status + ": Issue with the gene upstream overlap call ("+errorThrown+")</div>");
+            $("#contextValidationStatus").append("<div>" + status + ": Issue with the gene upstream overlap call ("+errorThrown+")</div>");
         },
         success: function(result) {
             if (result.length > 0 && result != []) {
@@ -291,14 +331,14 @@ function getGenomicContext(chr,position) {
     var position_down = parseInt(position) + 100000;
 
     // Check the downstream position to avoid having a position over the 3' end of the chromosome
-    var rest_url_2 = "http://rest.ensembl.org/info/assembly/homo_sapiens/" + chr;
+    var rest_url_2 = rest_url_root + "/info/assembly/homo_sapiens/" + chr;
     $.ajax({
         type: "GET",
         dataType: "json",
         async: false, // Result needs to be get before going further in the method
         url: rest_url_2,
         error: function(jqXHR, status, errorThrown) {
-            $("#contextValidationStatus").append("<div class=\""+error_class+"\">" + status + ": Issue getting the chromosome '"+chr+"' end coordinates ("+errorThrown+")</div>");
+            $("#contextValidationStatus").append("<div>" + status + ": Issue getting the chromosome '"+chr+"' end coordinates ("+errorThrown+")</div>");
 
         },
         success: function(result) {
@@ -316,7 +356,7 @@ function getGenomicContext(chr,position) {
         data: rest_opt,
         url: rest_full_url_3,
         error: function(jqXHR, status, errorThrown) {
-            $("#contextValidationStatus").append("<div class=\""+error_class+"\">" + status + ": Issue with the gene downstream overlap call ("+errorThrown+")</div>");
+            $("#contextValidationStatus").append("<div>" + status + ": Issue with the gene downstream overlap call ("+errorThrown+")</div>");
 
         },
         success: function(result) {

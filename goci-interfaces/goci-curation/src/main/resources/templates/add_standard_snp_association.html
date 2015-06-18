@@ -62,7 +62,7 @@
         <div class="col-md-10">
             <div id="addSNPForm">
                 <div id="snpValidationStatus" style="display:none;"></div>
-                <div id="contextValidationStatus" style="display:none;"></div>
+                <div id="contextValidationStatus" class="alert alert-danger col-md-offset-2 col-md-10" style="display:none;"></div>
                 <form class="form-horizontal" method="post" name="snp-association-form" th:object="${snpAssociationForm}">
                     <div id="association_div">
                         <div class="form-group">
@@ -124,6 +124,7 @@
                                        data-role="tagsinput"/>
                                 <span class="btn btn-primary" id="gene_validation_button">Check gene(s)</span>
                             </div>
+                            <div id="geneValidationStatus" class="alert alert-danger col-md-offset-2 col-md-10" style="display:none;"></div>
                         </div>
 
                         <div class="form-group">
@@ -325,7 +326,7 @@
                                                        th:field="*{snpMappingForms[__${rowStat.index}__].location.region.name}"/>
                                             </td>
                                             <td>
-                                                <input type="text"
+                                                <input class="chromosomeName" type="text"
                                                        th:field="*{snpMappingForms[__${rowStat.index}__].location.chromosomeName}"/>
                                             </td>
                                             <td>
