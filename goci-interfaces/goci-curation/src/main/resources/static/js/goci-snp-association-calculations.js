@@ -155,13 +155,13 @@ $(document).ready(function() {
                                 }
                             });*/
 
-                            var newrow = "<tr id=\"mapping_tr_"+row_id+"\">";
+                            var newrow = "<tr id=\""+row_prefix + row_id + "\">";
                             newrow = newrow + "<td><span>" + $("#snp_id").val() + "</span></td>";           // SNP
                             newrow = newrow + "<td><input type=\"text\" value=\"" + band + "\"\></td>";     // Region
                             newrow = newrow + "<td><input type=\"text\" value=\"" + chr + "\"\></td>";      // Chromosome
                             newrow = newrow + "<td><input type=\"text\" value=\"" + position + "\"\></td>"; // Position
-                            newrow = newrow + "<td><div class=\"btn btn-danger\">Delete</div></td>";
-                            //newrow = newrow + "<td><div class=\"btn btn-danger\" onclick=\"javascript:delete_row(\'"+row_prefix+"\',\'"+row_id+"\')\">Delete</div></td>";
+                            //newrow = newrow + "<td><div class=\"btn btn-danger\">Delete</div></td>";
+                            newrow = newrow + "<td><div class=\"btn btn-danger\" onclick=\"javascript:delete_row(\'"+row_prefix+row_id+"\')\">Delete</div></td>";
                             newrow = newrow + "</tr>";
                             $("#mapping_table > tbody").append(newrow);
                             row_id++;
@@ -233,9 +233,9 @@ $(document).ready(function() {
     });
 });
 
-/*function delete_row(prefix,suffix) {
-    $("#"+prefix+suffix).remove();
-}*/
+function delete_row(row_id) {
+    $("#"+row_id).remove();
+}
 
 
 // Load the genomic context of a variant (overlap, 100kb upstream, 100kb downstream)
@@ -335,7 +335,6 @@ function getGenomicContext(chr,position) {
 // Generate the genomic context table
 function addGenomicContextRow(json_result,position,overlap,type) {
 
-    var row_id = 0;
     var intergenic = false;
     var upstream = false;
     var downstream = false;
@@ -345,6 +344,9 @@ function addGenomicContextRow(json_result,position,overlap,type) {
     var interchecked = "";
     var upchecked = "";
     var downchecked = "";
+
+    var row_id = 1;
+    var row_prefix = "context_tr_";
 
     if (type) {
         intergenic = true;
@@ -381,16 +383,15 @@ function addGenomicContextRow(json_result,position,overlap,type) {
             overlap_list.push(gene);
         }
 
-
-        var newrow = "<tr id=\"context_tr_" + row_id + "\">";
+        var newrow = "<tr id=\""+row_prefix + row_id + "\">";
         newrow = newrow + "<td><span>" + $("#snp_id").val() + "</span></td>";                                      // SNP
         newrow = newrow + "<td><input type=\"checkbox\"  value=\"" + intergenic + "\"" + interchecked + "\></td>"; // Intergenic
         newrow = newrow + "<td><span>" + gene + "</span></td>";                                                    // Gene
         newrow = newrow + "<td><input type=\"checkbox\" value=\"" + upstream + "\"" + upchecked + "\></td>";       // Upstream
         newrow = newrow + "<td><input type=\"checkbox\" value=\"" + downstream + "\"" + downchecked + "\></td>";   // Downstream
         newrow = newrow + "<td><input type=\"text\" value=\"" + distance + "\"\></td>";                            // Distance
-        newrow = newrow + "<td><div class=\"btn btn-danger\">Delete</div></td>";
-        //newrow = newrow + "<td><div class=\"btn btn-danger\" onclick=\"javascript:delete_row(\'"+row_prefix+"\',\'"+row_id+"\')\">Delete</div></td>";
+        //newrow = newrow + "<td><div class=\"btn btn-danger\">Delete</div></td>";
+        newrow = newrow + "<td><div class=\"btn btn-danger\" onclick=\"javascript:delete_row(\'"+row_prefix+row_id+"\')\">Delete</div></td>";
         newrow = newrow + "</tr>";
         $("#context_table > tbody").append(newrow);
         row_id++;

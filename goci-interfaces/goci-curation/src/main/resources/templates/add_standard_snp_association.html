@@ -318,8 +318,8 @@
                                                 <input type="text" th:field="*{snpMappingForms[__${rowStat.index}__].location.chromosomePosition}"/>
                                             </td>
                                             <td>
-                                                <div class="btn btn-danger">Delete (#<span th:text="*{snpMappingForms[__${rowStat.index}__].location.id}">1</span>)</div>
-                                                <!--<div class="btn btn-danger" th:onclick="'javascript:delete_row(\'#mapping_tr_\',\''+${rowStat.count}+'\')">Delete (#<span th:text="*{snpMappingForms[__${rowStat.index}__].location.id}">1</span>)</div>-->
+                                                <!--<div class="btn btn-danger">Delete (#<span th:text="*{snpMappingForms[__${rowStat.index}__].location.id}">1</span>)</div>-->
+                                                <div class="btn btn-danger" th:onclick="'javascript:delete_row(\'mapping_tr_'+${rowStat.count}+'\')'">Delete</div>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -353,7 +353,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="row,rowStat : *{genomicContexts}">
+                                        <tr th:each="row,rowStat : *{genomicContexts}" th:id="context_tr_+${rowStat.count}">
                                             <td>
                                                 <span th:text="*{genomicContexts[__${rowStat.index}__].snp.rsId}">SNP</span>
                                             </td>
@@ -373,10 +373,8 @@
                                                 <span th:text="*{genomicContexts[__${rowStat.index}__].distance}">dist.</span>
                                             </td>
                                             <td>
-                                                <!--<button type="submit" class="btn btn-danger">
-                                                    Delete (#<span th:text="*{genomicContexts[__${rowStat.index}__].id}">1</span>)
-                                                </button>-->
-                                                <div class="btn btn-danger">Delete (#<span th:text="*{genomicContexts[__${rowStat.index}__].id}">1</span>)</div>
+                                                <!--<div class="btn btn-danger">Delete (#<span th:text="*{genomicContexts[__${rowStat.index}__].id}">1</span>)</div>-->
+                                                <div class="btn btn-danger" th:onclick="'javascript:delete_row(\'context_tr_'+${rowStat.count}+'\')'">Delete</div>
                                             </td>
                                         </tr>
                                         </tbody>
