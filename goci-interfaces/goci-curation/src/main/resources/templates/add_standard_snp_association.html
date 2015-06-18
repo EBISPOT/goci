@@ -32,7 +32,6 @@
     <script src="../static/js/goci-snp-association-calculations.js"
             th:src="@{../../../js/goci-snp-association-calculations.js}"></script>
 
-
 </head>
 <body>
 
@@ -117,6 +116,8 @@
                         <div class="form-group">
                             <label for="riskFrequency" class="control-label col-md-2">Risk Allele Frequency in
                                                                                   Controls</label>
+                    <div class="form-group">
+                        <label for="riskFrequency" class="control-label col-md-2">Risk allele frequency in controls</label>
 
                             <div class="col-md-10">
                                 <input type="text" class="form-control" id="riskFrequency"
@@ -393,6 +394,20 @@
     $(function() {
         // turn the element to select2 select style
         $('#EFOTrait').select2();
+    });
+</script>
+
+<!--Formats tags input -->
+<script>
+    $('#proxySnps').tagsinput({
+        trimValue: true
+    });
+</script>
+
+<!--Formats tags input -->
+<script>
+    $('#authorgenes').tagsinput({
+        trimValue: true
     });
 </script>
 

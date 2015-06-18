@@ -34,11 +34,11 @@ public class RiskAllele {
                inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
     private SingleNucleotidePolymorphism snp;
 
-    @ManyToOne
+    @ManyToMany
     @JoinTable(name = "RISK_ALLELE_PROXY_SNP",
                joinColumns = @JoinColumn(name = "RISK_ALLELE_ID"),
                inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
-    private SingleNucleotidePolymorphism proxySnp;
+    private Collection<SingleNucleotidePolymorphism> proxySnps;
 
 
     @ManyToMany(mappedBy = "strongestRiskAlleles")
@@ -54,17 +54,16 @@ public class RiskAllele {
                       Boolean genomeWide,
                       Boolean limitedList,
                       SingleNucleotidePolymorphism snp,
-                      SingleNucleotidePolymorphism proxySnp,
+                      Collection<SingleNucleotidePolymorphism> proxySnps,
                       Collection<Locus> loci) {
         this.riskAlleleName = riskAlleleName;
         this.riskFrequency = riskFrequency;
         this.genomeWide = genomeWide;
         this.limitedList = limitedList;
         this.snp = snp;
-        this.proxySnp = proxySnp;
+        this.proxySnps = proxySnps;
         this.loci = loci;
     }
-
 
     public Long getId() {
         return id;
@@ -90,12 +89,13 @@ public class RiskAllele {
         this.snp = snp;
     }
 
-    public SingleNucleotidePolymorphism getProxySnp() {
-        return proxySnp;
+
+    public Collection<SingleNucleotidePolymorphism> getProxySnps() {
+        return proxySnps;
     }
 
-    public void setProxySnp(SingleNucleotidePolymorphism proxySnp) {
-        this.proxySnp = proxySnp;
+    public void setProxySnps(Collection<SingleNucleotidePolymorphism> proxySnps) {
+        this.proxySnps = proxySnps;
     }
 
     public Collection<Locus> getLoci() {
@@ -138,7 +138,7 @@ public class RiskAllele {
                 ", genomeWide=" + genomeWide +
                 ", limitedList=" + limitedList +
                 ", snp=" + snp +
-                ", proxySnp=" + proxySnp +
+                ", proxySnps=" + proxySnps +
                 ", loci=" + loci +
                 '}';
     }

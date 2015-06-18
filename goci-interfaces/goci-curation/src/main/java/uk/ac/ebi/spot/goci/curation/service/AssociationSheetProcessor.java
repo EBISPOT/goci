@@ -538,13 +538,13 @@ public class AssociationSheetProcessor {
 
                     // Handle multi-snp and standard snp
                     else {
-                        delimiter = ",";
+                        delimiter = ";";
 
                         // For multi-snp and standard snps we assume their is only one locus
                         Locus locus = new Locus();
 
-                        // Handle curator entered genes
-                        Collection<Gene> locusGenes = createLocusGenes(authorReportedGene, delimiter);
+                        // Handle curator entered genes, for haplotype they are separated by a comma
+                        Collection<Gene> locusGenes = createLocusGenes(authorReportedGene, ",");
                         locus.setAuthorReportedGenes(locusGenes);
 
                         // Handle curator entered risk allele
@@ -555,7 +555,22 @@ public class AssociationSheetProcessor {
                                                        riskFrequency,
                                                        snpStatus,
                                                        delimiter);
-                        locus.setStrongestRiskAlleles(locusRiskAlleles);
+
+
+                        // For standard associations set the risk allele frequency to the
+                        // same value as the overall association frequency
+                        Collection<RiskAllele> locusRiskAllelesWithRiskFrequencyValues = new ArrayList<>();
+                        if (!newAssociation.getMultiSnpHaplotype()) {
+                            for (RiskAllele riskAllele : locusRiskAlleles) {
+                                riskAllele.setRiskFrequency(associationRiskFrequency);
+                                locusRiskAllelesWithRiskFrequencyValues.add(riskAllele);
+                            }
+                            locus.setStrongestRiskAlleles(locusRiskAllelesWithRiskFrequencyValues);
+                        }
+
+                        else {
+                            locus.setStrongestRiskAlleles(locusRiskAlleles);
+                        }
 
                         // Set locus attributes
                         Integer haplotypeCount = locusRiskAlleles.size();
@@ -653,9 +668,31 @@ public class AssociationSheetProcessor {
                 // Create a new risk allele and assign newly created snp
                 RiskAllele newRiskAllele = lociAttributesService.createRiskAllele(riskAlleleValue, newSnp);
 
-                // Check for a proxy and if we have one create a proxy snp
-                SingleNucleotidePolymorphism proxySnp = lociAttributesService.createSnp(proxyValue);
-                newRiskAllele.setProxySnp(proxySnp);
+                // Check for proxies and if we have one create a proxy snp
+                Collection<SingleNucleotidePolymorphism> newRiskAlleleProxies = new ArrayList<>();
+                if (proxyValue.contains(":")) {
+                    String[] splitProxyValues = proxyValue.split(":");
+
+                    for (String splitProxyValue : splitProxyValues) {
+                        SingleNucleotidePolymorphism proxySnp = lociAttributesService.createSnp(splitProxyValue.trim());
+                        newRiskAlleleProxies.add(proxySnp);
+                    }
+                }
+
+                else if (proxyValue.contains(",")) {
+                    String[] splitProxyValues = proxyValue.split(",");
+
+                    for (String splitProxyValue : splitProxyValues) {
+                        SingleNucleotidePolymorphism proxySnp = lociAttributesService.createSnp(splitProxyValue.trim());
+                        newRiskAlleleProxies.add(proxySnp);
+                    }
+                }
+
+                else {
+                    SingleNucleotidePolymorphism proxySnp = lociAttributesService.createSnp(proxyValue);
+                    newRiskAlleleProxies.add(proxySnp);
+                }
+                newRiskAllele.setProxySnps(newRiskAlleleProxies);
 
                 // If there is no curator entered value for risk allele frequency don't save
                 String riskFrequencyValue = null;
