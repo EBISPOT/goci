@@ -100,24 +100,25 @@ function calculateOrPerCopyRange(orPerCopyRecipRange) {
 
 $(document).ready(function() {
 
+    var success_class = "alert alert-success col-md-offset-2 col-md-10";
+    var error_class = "alert alert-danger col-md-offset-2 col-md-10";
+
     // Variant validation
     $("#validation_button").click(function() {
         if ($("#snpValidated").val() != "true" ||  $("#snp_id").val() != $("#snp").val()) {
             var rest_url = "http://rest.ensembl.org/variation/human/" + $("#snp_id").val();
+            $("#snpValidationStatus").html("");
             $.ajax({
                 type: "GET",
                 dataType: "json",
                 url: rest_url,
                 error: function (jqXHR, status, errorThrown) {
-                    $("#validation_status").html(status+" ("+errorThrown+")");
-                    //$("#validation_status").html("Error: can't find the variant "+$("#snp").val()+" in Ensembl");
-                    $("#validation_status").css({color: "#F00"});
+                    $("#snpValidationStatus").append("<div class=\""+error_class+"\">"+$("#snp_id").val() + ": " +status+" ("+errorThrown+")"+"</div>");
                 },
                 success: function(result) {
                     $("#snpValidated").val("true");
                     $("#snp").val($("#snp_id").val());
-                    $("#validation_status").css({color: "#0A0"});
-                    $("#validation_status").html($("#snp_id").val() + " validated");
+                    $("#snpValidationStatus").append("<div class=\""+success_class+"\">" + $("#snp_id").val() + ": validated</div>");
 
                     // SNP has been merged
                     if (result.name==$("#snp_id").val()) {
@@ -138,10 +139,25 @@ $(document).ready(function() {
                             var location = result.mappings[i].location.split(":");
                             var chr = location[0];
                             var position = location[1].split("-")[0];
+                            var band = "Unknown";
+                            /*var rest_cytogenytic = "http://rest.ensembl.org/overlap/region/human/"+chr+":"+position+"-"+position;
+                            $.ajax({
+                                type: "GET",
+                                dataType: "json",
+                                async: false, // Result needs to be get before going further in the method
+                                data: {"feature" : "band"},
+                                url: rest_cytogenytic,
+                                error: function(jqXHR, status, errorThrown) {
+                                    $("#snpValidationStatus").append("<div class=\""+error_class+"\">"+$("#snp_id").val() + ": " +status+" - Cytogenetic band not found ("+errorThrown+")"+"</div>");
+                                },
+                                success: function(result_band) {
+                                    band = chr+result_band[0].id;
+                                }
+                            });*/
 
                             var newrow = "<tr id=\"mapping_tr_"+row_id+"\">";
                             newrow = newrow + "<td><span>" + $("#snp_id").val() + "</span></td>";           // SNP
-                            newrow = newrow + "<td><input type=\"text\" value=\"\"/></td>";                 // Region
+                            newrow = newrow + "<td><input type=\"text\" value=\"" + band + "\"\></td>";     // Region
                             newrow = newrow + "<td><input type=\"text\" value=\"" + chr + "\"\></td>";      // Chromosome
                             newrow = newrow + "<td><input type=\"text\" value=\"" + position + "\"\></td>"; // Position
                             newrow = newrow + "<td><div class=\"btn btn-danger\">Delete</div></td>";
@@ -156,7 +172,7 @@ $(document).ready(function() {
                     }
                 }
             });
-            $("#snp_check_waiting").hide();
+            $("#snpValidationStatus").show();
         }
     });
 
@@ -232,6 +248,7 @@ function getGenomicContext(chr,position) {
     var rest_full_url_1 = rest_url + chr + ':'+ position + '-' + position;
     var overlap_list = [];
     $("#context_table > tbody").html("");
+    $("#contextValidationStatus").html("");
     $.ajax({
         type: "GET",
         dataType: "json",
@@ -239,10 +256,7 @@ function getGenomicContext(chr,position) {
         data: rest_opt,
         url: rest_full_url_1,
         error: function(jqXHR, status, errorThrown) {
-            //$("#validation_status").html(status + " (" + errorThrown + ")");
-            $("#validation_status").html(status + " (No overlap)");
-            //$("#validation_status").html("Error: can't find the variant "+$("#snp").val()+" in Ensembl");
-            $("#validation_status").css({color: "#F00"});
+            $("#contextValidationStatus").append("<div class=\""+error_class+"\">" + status + ": Issue with the gene overlap call ("+errorThrown+")</div>");
         },
         success: function(result) {
             if (result.length > 0 && result != []) {
@@ -264,10 +278,7 @@ function getGenomicContext(chr,position) {
         data: rest_opt,
         url: rest_full_url_2,
         error: function(jqXHR, status, errorThrown) {
-            //$("#validation_status").html(status + " (" + errorThrown + ")");
-            $("#validation_status").html(status + " (Upstream)");
-            //$("#validation_status").html("Error: can't find the variant "+$("#snp").val()+" in Ensembl");
-            $("#validation_status").css({color: "#F00"});
+            $("#contextValidationStatus").append("<div class=\""+error_class+"\">" + status + ": Issue with the gene upstream overlap call ("+errorThrown+")</div>");
         },
         success: function(result) {
             if (result.length > 0 && result != []) {
@@ -287,10 +298,8 @@ function getGenomicContext(chr,position) {
         async: false, // Result needs to be get before going further in the method
         url: rest_url_2,
         error: function(jqXHR, status, errorThrown) {
-            //$("#validation_status").html(status + " (" + errorThrown + ")");
-            $("#validation_status").html(status + " (Can't find chromosome info)");
-            //$("#validation_status").html("Error: can't find the variant "+$("#snp").val()+" in Ensembl");
-            $("#validation_status").css({color: "#F00"});
+            $("#contextValidationStatus").append("<div class=\""+error_class+"\">" + status + ": Issue getting the chromosome '"+chr+"' end coordinates ("+errorThrown+")</div>");
+
         },
         success: function(result) {
             if (position_down > result.length) {
@@ -307,10 +316,8 @@ function getGenomicContext(chr,position) {
         data: rest_opt,
         url: rest_full_url_3,
         error: function(jqXHR, status, errorThrown) {
-            //$("#validation_status").html(status + " (" + errorThrown + ")");
-            $("#validation_status").html(status + " (Dowstream)");
-            //$("#validation_status").html("Error: can't find the variant "+$("#snp").val()+" in Ensembl");
-            $("#validation_status").css({color: "#F00"});
+            $("#contextValidationStatus").append("<div class=\""+error_class+"\">" + status + ": Issue with the gene downstream overlap call ("+errorThrown+")</div>");
+
         },
         success: function(result) {
             if (result.length > 0 && result != []) {
@@ -318,6 +325,10 @@ function getGenomicContext(chr,position) {
             }
         }
     });
+
+    if ($("#contextValidationStatus").html() != "") {
+        $("#contextValidationStatus").show();
+    }
 }
 
 
