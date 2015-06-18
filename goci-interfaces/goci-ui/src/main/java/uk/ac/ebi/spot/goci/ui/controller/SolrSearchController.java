@@ -801,17 +801,24 @@ public class SolrSearchController {
             file = "Some error occurred during your request. Please try again or contact the GWAS Catalog team for assistance";
         }
 
-        InputStream in = new ByteArrayInputStream(file.getBytes("UTF-8"));
+        PrintWriter outputWriter = new PrintWriter(outputStream);
 
-        byte[] outputByte = new byte[4096];
-//copy binary contect to output stream
-        while(in.read(outputByte, 0, 4096) != -1)
-        {
-            outputStream.write(outputByte, 0, 4096);
-        }
-        in.close();
-        outputStream.flush();
+        outputWriter.write(file);
 
+//        InputStream in = new ByteArrayInputStream(file.getBytes("UTF-8"));
+//
+//        byte[] outputByte = new byte[4096];
+////copy binary contect to output stream
+//        while(in.read(outputByte, 0, 4096) != -1)
+//        {
+//            outputStream.write(outputByte, 0, 4096);
+//        }
+//        in.close();
+
+
+     //   outputStream.flush();
+
+        outputWriter.flush();
     }
 
 }
