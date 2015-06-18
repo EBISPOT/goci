@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
+import java.util.Collection;
+
 /**
  * Created by emma on 26/01/15.
  *
@@ -13,17 +15,17 @@ public class SnpFormRow {
 
     private String strongestRiskAllele;
 
-    private String proxySnp;
+    private Collection<String> proxySnps;
 
     private Long merged;
 
     public SnpFormRow() {
     }
 
-    public SnpFormRow(String snp, String strongestRiskAllele, String proxySnp, Long merged) {
+    public SnpFormRow(String snp, String strongestRiskAllele, Collection<String> proxySnps) {
         this.snp = snp;
         this.strongestRiskAllele = strongestRiskAllele;
-        this.proxySnp = proxySnp;
+        this.proxySnps = proxySnps;
         this.merged = merged;
     }
 
@@ -43,14 +45,13 @@ public class SnpFormRow {
         this.strongestRiskAllele = strongestRiskAllele;
     }
 
-    public String getProxySnp() {
-        return proxySnp;
+    public Collection<String> getProxySnps() {
+        return proxySnps;
     }
 
-    public void setProxySnp(String proxySnp) {
-        this.proxySnp = proxySnp;
-    }
-
+    public void setProxySnps(Collection<String> proxySnps) {
+        this.proxySnps = proxySnps;}
+    
     public Long getMerged() { return merged; }
 
     public void setMerged(Long merged) {

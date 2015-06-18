@@ -5,6 +5,7 @@ import uk.ac.ebi.spot.goci.curation.model.AssociationFormErrorView;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
+import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,8 +43,10 @@ public class AssociationFormErrorViewService {
                     associationRiskAlleles.add(riskAllele.getRiskAlleleName());
                     associationSnps.add(riskAllele.getSnp().getRsId());
 
-                    if (riskAllele.getProxySnp() != null) {
-                        associationProxies.add(riskAllele.getProxySnp().getRsId());
+                    if (riskAllele.getProxySnps() != null) {
+                        for (SingleNucleotidePolymorphism proxySnp : riskAllele.getProxySnps()) {
+                            associationProxies.add(proxySnp.getRsId());
+                        }
                     }
                 }
             }

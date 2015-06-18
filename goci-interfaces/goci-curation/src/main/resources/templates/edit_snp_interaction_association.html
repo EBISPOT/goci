@@ -118,13 +118,13 @@
                                     <tr>
                                         <td>Proxy</td>
                                         <td th:each="col,colStat : *{snpFormColumns}">
-                                            <input type="text" data-role="tagsinput"
-                                                   th:field="*{snpFormColumns[__${colStat.index}__].proxySnp}"/>
+                                            <input type="text" data-role="tagsinput" label="proxySnps"
+                                                   th:field="*{snpFormColumns[__${colStat.index}__].proxySnps}"/>
                                         </td>
                                     </tr>
 
                                     <tr>
-                                        <td>Risk Frequency</td>
+                                        <td>Independent SNP risk allele frequency in controls</td>
                                         <td th:each="col,colStat : *{snpFormColumns}">
                                             <input type="text"
                                                    th:field="*{snpFormColumns[__${colStat.index}__].riskFrequency}"/>
@@ -151,8 +151,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="riskFrequency" class="control-label col-md-2">Risk Allele Frequency in
-                                                                                      Controls</label>
+                            <label for="riskFrequency" class="control-label col-md-2">Combined interacting risk allele frequency in controls</label>
 
                             <div class="col-md-10">
                                 <input type="text" class="form-control" id="riskFrequency"
@@ -334,6 +333,20 @@
     $(function() {
         // turn the element to select2 select style
         $('#EFOTrait').select2();
+    });
+</script>
+
+<!--Formats tags input -->
+<script>
+    $('#proxySnps').tagsinput({
+        trimValue: true
+    });
+</script>
+
+<!--Formats tags input -->
+<script>
+    $('#authorgenes').tagsinput({
+        trimValue: true
     });
 </script>
 
