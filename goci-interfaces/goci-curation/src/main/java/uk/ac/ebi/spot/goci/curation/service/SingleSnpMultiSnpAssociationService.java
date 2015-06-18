@@ -59,7 +59,6 @@ public class SingleSnpMultiSnpAssociationService {
 
     }
 
-
     public Association createAssociation(SnpAssociationForm snpAssociationForm) {
 
         Association association = new Association();
