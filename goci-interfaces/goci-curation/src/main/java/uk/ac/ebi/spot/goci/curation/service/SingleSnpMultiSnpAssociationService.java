@@ -267,6 +267,7 @@ public class SingleSnpMultiSnpAssociationService {
             }
             snpFormRow.setProxySnps(proxySnps);
 
+            snpGenomicContexts.addAll(genomicContextRepository.findBySnpId(snp.getId()));
             snpFormRows.add(snpFormRow);
         }
 
