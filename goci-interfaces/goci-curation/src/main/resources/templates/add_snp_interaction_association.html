@@ -113,8 +113,9 @@
                                     <tr>
                                         <td>Gene(s)</td>
                                         <td th:each="col,colStat : *{snpFormColumns}">
-                                            <input type="text" data-role="tagsinput"
+                                            <input type="text" data-role="tagsinput" th:id="'authorgenes'+${colStat.index}"
                                                    th:field="*{snpFormColumns[__${colStat.index}__].authorReportedGenes}"/>
+                                            <span class="btn btn-primary" id="gene_validation_button">Check gene(s)</span>
                                         </td>
                                     </tr>
 
