@@ -95,8 +95,7 @@ public class SingleSnpMultiSnpAssociationService {
 
         }
 
-        // Add loci to association or if we are editing an existing one find it
-        // For multi-snp and standard snps we assume their is only one locus
+        // Add loci to association, for multi-snp and standard snps we assume their is only one locus
         Collection<Locus> loci = new ArrayList<>();
         Locus locus = new Locus();
 
