@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
  * @author James Malone
  * @date 15/02/12
  */
+
 public class AssertedOntologyLoader extends AbstractOntologyLoader {
     protected OWLOntology indexOntology(final OWLOntology ontology) throws OWLOntologyCreationException {
         Set<OWLClass> allClasses = ontology.getClassesInSignature();
