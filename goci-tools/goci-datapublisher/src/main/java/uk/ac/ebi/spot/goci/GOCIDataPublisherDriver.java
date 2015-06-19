@@ -1,6 +1,12 @@
 package uk.ac.ebi.spot.goci;
 
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.slf4j.Logger;
@@ -12,12 +18,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import uk.ac.ebi.spot.goci.exception.OWLConversionException;
-import uk.ac.ebi.spot.goci.owl.ReasonedOntologyLoader;
-import uk.ac.ebi.spot.goci.utils.FilterProperties;
 import uk.ac.ebi.spot.goci.owl.OntologyLoader;
 import uk.ac.ebi.spot.goci.service.GWASOWLPublisher;
-
-
+import uk.ac.ebi.spot.goci.utils.FilterProperties;
 
 import java.io.File;
 import java.net.URI;
@@ -44,7 +47,8 @@ public class GOCIDataPublisherDriver {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     //ReasonedOntologyLoader or AssertedOntologyLoader
-    private OntologyLoader ontologyLoader = new ReasonedOntologyLoader();
+    @Autowired
+    private OntologyLoader ontologyLoader;// = new ReasonedOntologyLoader();
 
 
     public static void main(String[] args) {
