@@ -178,8 +178,9 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         getManager().applyChange(add_pubmed_id);
 
         // assert label
+        OWLLiteral study_label = getDataFactory().getOWLLiteral(pubmed_id.toString());
         OWLAnnotationAssertionAxiom label_annotation =
-                getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, studyIndiv.getIRI(), pubmed_id);
+                getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, studyIndiv.getIRI(), study_label);
         AddAxiom add_label = new AddAxiom(ontology, label_annotation);
         getManager().applyChange(add_label);
 
