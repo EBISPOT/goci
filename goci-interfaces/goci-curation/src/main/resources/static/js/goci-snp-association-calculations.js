@@ -98,17 +98,27 @@ function calculateOrPerCopyRange(orPerCopyRecipRange) {
 
 }
 
-var rest_url_root = "http://rest.ensembl.org";
 var success_class = "alert alert-success col-md-offset-2 col-md-10";
 var error_class = "alert alert-danger col-md-offset-2 col-md-10";
+
+// Ensembl REST URLs
+var rest_url_root = "http://rest.ensembl.org";
+var rest_variation = rest_url_root + "/variation/homo_sapiens/";
+var rest_lookup_symbol = rest_url_root + "/lookup/symbol/homo_sapiens/";
+var rest_overlap_region =  rest_url_root + "/overlap/region/homo_sapiens/";
+var rest_info_assembly = rest_url_root + "/info/assembly/homo_sapiens/"; // Get chromosome length
+var rest_xrefs_id = rest_url_root + "/xrefs/id/";
+
+var ncbi_db_type = "otherfeatures";
 
 $(document).ready(function() {
 
     // Variant validation
     $("#validation_button").click(function() {
         if ($("#snpValidated").val() != "true" ||  $("#snp_id").val() != $("#snp").val()) {
-            var rest_url = rest_url_root + "/variation/human/" + $("#snp_id").val();
             $("#snpValidationStatus").html("");
+
+            var rest_url = rest_variation + $("#snp_id").val();
             $.ajax({
                 type: "GET",
                 dataType: "json",
@@ -141,7 +151,7 @@ $(document).ready(function() {
                             var chr = location[0];
                             var position = location[1].split("-")[0];
                             var band = "Unknown";
-                            /*var rest_cytogenytic = "http://rest.ensembl.org/overlap/region/human/"+chr+":"+position+"-"+position;
+                            /*var rest_cytogenytic = rest_overlap_region+chr+":"+position+"-"+position;
                             $.ajax({
                                 type: "GET",
                                 dataType: "json",
@@ -168,7 +178,7 @@ $(document).ready(function() {
                             row_id++;
 
                             // Populate Genomic context
-                            getGenomicContext(chr,position);
+                            getAllGenomicContext(chr,position);
                         }
                     }
                 }
@@ -184,6 +194,7 @@ $(document).ready(function() {
 
             $("#geneValidationStatus").html("");
 
+            // Get the distinct list of reported genes
             var genes = [];
             $("[id^='authorgenes']").each(function() {
                 var gene_string = $(this).val();
@@ -195,11 +206,9 @@ $(document).ready(function() {
                 }
             });
 
-            //var rest_url = rest_url_root + "/xrefs/symbol/homo_sapiens/";
-            var rest_url = rest_url_root + "/lookup/symbol/homo_sapiens/";
             for (i in genes) {
                 var gene = genes[i];
-                var rest_full_url = rest_url + gene;
+                var rest_full_url = rest_lookup_symbol + gene;
                 $.ajax({
                     type: "GET",
                     dataType: "json",
@@ -211,10 +220,9 @@ $(document).ready(function() {
 
                     },
                     success: function(result) {
-                        //if (result.length > 0 && result != []) {
                         var gene_chr = result.seq_region_name;
                         var same_chr = 0;
-                        $(".chromosomeName").each(function() {
+                        $(".chromosomeName").each(function() { // Inputs containing the chromosome name of the variant location
                             if ($(this).val() == gene_chr) {
                                 same_chr = 1;
                             }
@@ -227,12 +235,6 @@ $(document).ready(function() {
                             $(".tag:contains('" + gene + "')").css({backgroundColor: "#A00"});
                             $("#geneValidationStatus").append("<div>Gene "+ gene.toUpperCase() + " is on a different chromosome (chr"+gene_chr+")</div>");
                         }
-
-
-                        //}
-                        //else {
-                        //    $(".tag:contains('"+gene+"')").css({backgroundColor: "#A00"});
-                        //}
                     }
                 });
 
@@ -273,22 +275,40 @@ $(document).ready(function() {
     });
 });
 
+
 function delete_row(row_id) {
     $("#"+row_id).remove();
 }
 
 
 // Load the genomic context of a variant (overlap, 100kb upstream, 100kb downstream)
-function getGenomicContext(chr,position) {
+function getAllGenomicContext(chr,position) {
 
-    var rest_url = rest_url_root + "/overlap/region/homo_sapiens/";
-    var rest_opt = {"feature" : "gene"};
-
-    // Check if overlap gene
-    var rest_full_url_1 = rest_url + chr + ':'+ position + '-' + position;
-    var overlap_list = [];
     $("#context_table > tbody").html("");
     $("#contextValidationStatus").html("");
+
+    getGenomicContext(chr, position, "ensembl", false); // Ensembl genes
+    getGenomicContext(chr, position, "refseq",  false); // NCBI genes
+}
+
+// Load the Ensembl or NCBI genomic context of a variant (overlap, 100kb upstream, 100kb downstream)
+function getGenomicContext(chr,position,source,clear) {
+
+    if (clear) {
+        $("#context_table > tbody").html("");
+        $("#contextValidationStatus").html("");
+    }
+
+    var rest_opt = {"feature" : "gene"}; // By default the db_type is 'core' (i.e. Ensembl)
+
+    if (source != "ensembl") {
+        rest_opt = {"feature" : "gene", "source" : source, "db_type" : ncbi_db_type};
+    }
+
+    // Check if overlap gene
+    var rest_full_url_1 = rest_overlap_region + chr + ':'+ position + '-' + position;
+    var overlap_list = []; // Array to avoid having several occurence of the overlapping genes
+
     $.ajax({
         type: "GET",
         dataType: "json",
@@ -310,7 +330,7 @@ function getGenomicContext(chr,position) {
     if (position_up < 0) {
         position_up = 1;
     }
-    var rest_full_url_2 = rest_url + chr + ':'+ position_up + '-' + position; // 100kb upstream
+    var rest_full_url_2 = rest_overlap_region + chr + ':'+ position_up + '-' + position; // 100kb upstream
     $.ajax({
         type: "GET",
         dataType: "json",
@@ -331,7 +351,7 @@ function getGenomicContext(chr,position) {
     var position_down = parseInt(position) + 100000;
 
     // Check the downstream position to avoid having a position over the 3' end of the chromosome
-    var rest_url_2 = rest_url_root + "/info/assembly/homo_sapiens/" + chr;
+    var rest_url_2 = rest_info_assembly + chr;
     $.ajax({
         type: "GET",
         dataType: "json",
@@ -348,7 +368,7 @@ function getGenomicContext(chr,position) {
         }
     });
 
-    var rest_full_url_3 = rest_url + chr + ':'+ position + '-' + position_down; // 100kb downstream
+    var rest_full_url_3 = rest_overlap_region + chr + ':'+ position + '-' + position_down; // 100kb downstream
     $.ajax({
         type: "GET",
         dataType: "json",
@@ -403,12 +423,39 @@ function addGenomicContextRow(json_result,position,overlap,type) {
 
     for (i in json_result) {
 
-        var gene = json_result[i].external_name;
+        var gene_name = json_result[i].external_name;
+        var gene_id = json_result[i].id;
+
         var distance = 0;
+
+        // NCBI gene
+        if (gene_name == null) {
+            var rest_url = rest_xrefs_id + gene_id;
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                async: false, // Result needs to be get before going further in the method
+                data: {"external_db": "RefSeq_gene_name"},
+                url: rest_url,
+                error: function(jqXHR, status, errorThrown) {
+                    $("#contextValidationStatus").append("<div>" + status +
+                                                         ": Issue to fetch the gene name of the GeneID " + gene_id +
+                                                         " (" + errorThrown + ")</div>");
+                },
+                success: function(result) {
+                    if (result.length > 0 && result != []) {
+                        gene_name = result[0].display_id;
+                    }
+                }
+            });
+            if (gene_name == null) {
+                continue; // Skip gene if no display name found after running the REST call above
+            }
+        }
 
 
         if (type) {
-            if (jQuery.inArray(gene,overlap) != -1) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
+            if (jQuery.inArray(gene_name,overlap) != -1) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
                 continue;
             }
 
@@ -420,13 +467,13 @@ function addGenomicContextRow(json_result,position,overlap,type) {
             }
         }
         else {
-            overlap_list.push(gene);
+            overlap_list.push(gene_name);
         }
 
         var newrow = "<tr id=\""+row_prefix + row_id + "\">";
         newrow = newrow + "<td><span>" + $("#snp_id").val() + "</span></td>";                                      // SNP
         newrow = newrow + "<td><input type=\"checkbox\"  value=\"" + intergenic + "\"" + interchecked + "\></td>"; // Intergenic
-        newrow = newrow + "<td><span>" + gene + "</span></td>";                                                    // Gene
+        newrow = newrow + "<td><span>" + gene_name + " (" + gene_id + ")</span></td>";                             // Gene name
         newrow = newrow + "<td><input type=\"checkbox\" value=\"" + upstream + "\"" + upchecked + "\></td>";       // Upstream
         newrow = newrow + "<td><input type=\"checkbox\" value=\"" + downstream + "\"" + downchecked + "\></td>";   // Downstream
         newrow = newrow + "<td><input type=\"text\" value=\"" + distance + "\"\></td>";                            // Distance
