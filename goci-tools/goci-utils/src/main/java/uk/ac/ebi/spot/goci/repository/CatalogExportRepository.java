@@ -398,7 +398,8 @@ public class CatalogExportRepository {
                                   "P-VALUE (TEXT)",
                                   "OR or BETA",
                                   "95% CI (TEXT)",
-                                  "PLATFORM [SNPS PASSING QC]");
+                                  "PLATFORM [SNPS PASSING QC]",
+                                  "CNV");
         }
         else {
             order = Arrays.asList("DATE ADDED TO CATALOG",
@@ -434,6 +435,7 @@ public class CatalogExportRepository {
                                   "OR or BETA",
                                   "95% CI (TEXT)",
                                   "PLATFORM [SNPS PASSING QC]",
+                                  "CNV",
                                   "MAPPED_TRAIT",
                                   "MAPPED_TRAIT_URI");
         }
