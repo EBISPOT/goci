@@ -82,8 +82,11 @@ public class CatalogImportRepository {
     private static final String UPDATE_HOUSEKEEPING =
             "UPDATE HOUSEKEEPING SET CURATION_STATUS_ID = ?, LAST_UPDATE_DATE = ? WHERE ID = ?";
 
-    private static final String UPDATE_PUBLISH_DATE =
-            "UPDATE HOUSEKEEPING SET PUBLISH_DATE = ? WHERE ID = ?";
+    private static final String SELECT_CATALOG_PUBLISH_DATE =
+            "SELECT CATALOG_PUBLISH_DATE FROM HOUSEKEEPING WHERE ID =?";
+
+    private static final String UPDATE_CATALOG_PUBLISH_DATE =
+            "UPDATE HOUSEKEEPING SET CATALOG_PUBLISH_DATE = ? WHERE ID = ?";
 
     private static final String SELECT_SNP = "SELECT ID FROM SINGLE_NUCLEOTIDE_POLYMORPHISM WHERE RS_ID = ?";
 
@@ -92,6 +95,10 @@ public class CatalogImportRepository {
 
     private static final String SELECT_SNP_REGION =
             "SELECT SNP_ID FROM SNP_REGION WHERE REGION_ID = ?";
+
+    private static final String SELECT_SNP_ID_FROM_SNP_REGION = "SELECT SNP_ID FROM SNP_REGION WHERE SNP_ID = ?";
+
+    private static final String UPDATE_SNP_REGION = "UPDATE SNP_REGION SET REGION_ID =? WHERE SNP_ID = ?";
 
     private static final String UPDATE_SNP =
             "UPDATE SINGLE_NUCLEOTIDE_POLYMORPHISM " +
@@ -723,25 +730,27 @@ public class CatalogImportRepository {
 
         // Add region information
         Long regionId;
-        try {
-            regionId = jdbcTemplate.queryForObject(SELECT_REGION, Long.class, region);
-        }
-        catch (EmptyResultDataAccessException e) {
-            // Insert region if its not already in database
-            createRegion(region);
+        if (region != null) {
+            try {
+                regionId = jdbcTemplate.queryForObject(SELECT_REGION, Long.class, region);
+            }
+            catch (EmptyResultDataAccessException e) {
+                // Insert region if its not already in database
+                createRegion(region);
 
-            // Get the ID of the newly created region
-            regionId = jdbcTemplate.queryForObject(SELECT_REGION, Long.class, region);
-        }
+                // Get the ID of the newly created region
+                regionId = jdbcTemplate.queryForObject(SELECT_REGION, Long.class, region);
+            }
 
-        // Create link in SNP_REGION table
-        if (regionId != null) {
-            Collection<Long> snpIdsInSnpRegionTable =
-                    jdbcTemplate.queryForList(SELECT_SNP_REGION, Long.class, regionId);
+            // Create link in SNP_REGION table
+            if (regionId != null) {
+                Collection<Long> snpIdsInSnpRegionTable =
+                        jdbcTemplate.queryForList(SELECT_SNP_REGION, Long.class, regionId);
 
-            // Examine all SNPs linked to region and if no link exists then create
-            if (!snpIdsInSnpRegionTable.contains(snpIdInSnpTable)) {
-                createSnpRegion(snpIdInSnpTable, regionId);
+                // Examine all SNPs linked to region and if no link exists then create
+                if (!snpIdsInSnpRegionTable.contains(snpIdInSnpTable)) {
+                    createSnpRegion(snpIdInSnpTable, regionId);
+                }
             }
         }
 
@@ -980,6 +989,16 @@ public class CatalogImportRepository {
                         "Caught errors processing data import - cannot find ID for status " + status);
             }
 
+            Date currentPublishDate = null;
+            // Get publish date
+            try {
+                currentPublishDate = jdbcTemplate.queryForObject(SELECT_CATALOG_PUBLISH_DATE, Date.class, housekeepingId);
+            }
+            catch (EmptyResultDataAccessException e) {
+                throw new DataImportException("Caught errors processing data import - " +
+                                                      "trying to update status of study without publish date information found in database");
+            }
+
             // Only update the status if the curators if previous status was "Send to NCBI"
             if (currentStatus.equalsIgnoreCase("Send to NCBI")) {
                 // Set status and last_update_date
@@ -989,11 +1008,13 @@ public class CatalogImportRepository {
                 rows = jdbcTemplate.update(UPDATE_HOUSEKEEPING, statusId, lastUpdateDate, housekeepingId);
 
                 if (status.equals("Publish study")) {
-                    //Also update publish date
-                    Date publishDate = new Date();
-                    jdbcTemplate.update(UPDATE_PUBLISH_DATE, publishDate, housekeepingId);
-                }
 
+                    //Also update publish date if one doesn't exist
+                    if (currentPublishDate == null) {
+                        Date publishDate = new Date();
+                        jdbcTemplate.update(UPDATE_CATALOG_PUBLISH_DATE, publishDate, housekeepingId);
+                    }
+                }
                 getLog().info(
                         "Updated housekeeping information for study: " + studyId + " - Updated " + rows +
                                 " rows");
@@ -1016,15 +1037,39 @@ public class CatalogImportRepository {
     }
 
     private void createSnpRegion(Long snpId, Long regionId) {
+
         Map<String, Object> snpRegionArgs = new HashMap<>();
         snpRegionArgs.put("SNP_ID", snpId);
         snpRegionArgs.put("REGION_ID", regionId);
-
         int rows = 0;
-        rows = insertSnpRegion.execute(snpRegionArgs);
-        getLog().trace(
-                "Adding SNP: " + snpId + " and Region: " + regionId + " - Updated " + rows +
-                        " rows");
+
+        List<Long>existingSnpIdsInSnpRegionTable = new ArrayList<>();
+
+        // Need to check if a SNP already has a region
+        try {
+            existingSnpIdsInSnpRegionTable =
+                    jdbcTemplate.queryForList(SELECT_SNP_ID_FROM_SNP_REGION, Long.class, snpId);
+        }
+        // If we don't get a result then insert the link between region and snp
+        catch (EmptyResultDataAccessException e) {
+            getLog().info(
+                    "SNP: " + snpId + " has no existing region");
+        }
+
+        if (existingSnpIdsInSnpRegionTable != null && !existingSnpIdsInSnpRegionTable.isEmpty()) {
+            jdbcTemplate.update(UPDATE_SNP_REGION, regionId, snpId);
+            getLog().info(
+                    "Updating SNP: " + snpId + ", setting region to " + regionId + " - Updated " + rows +
+                            " rows");
+        }
+        else{
+            // Insert if its not already in database
+            rows = insertSnpRegion.execute(snpRegionArgs);
+            getLog().info(
+                    "Adding SNP: " + snpId + " and Region: " + regionId + " - Updated " + rows +
+                            " rows");
+
+        }
     }
 
     private void createGenomicContext(Long geneId,

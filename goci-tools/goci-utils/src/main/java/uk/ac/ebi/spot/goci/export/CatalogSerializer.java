@@ -47,8 +47,8 @@ public class CatalogSerializer {
             // Also trim strings as the database contains newlines/tabs etc.
 
             String dateAddedToCatalog = "" + "\t";
-            if (view.getCatalogAddedDate() != null) {
-                dateAddedToCatalog = df.format(view.getCatalogAddedDate()) + "\t";
+            if (view.getStudyAddedDate() != null) {
+                dateAddedToCatalog = df.format(view.getStudyAddedDate()) + "\t";
             }
 
             String pubmedId = "" + "\t";
@@ -143,7 +143,7 @@ public class CatalogSerializer {
             if (view.getStudyId() != null) { studyId = view.getStudyId().toString() + "\t";}
 
             String resultPublished;
-            if (view.getResultPublished() != null) {
+            if (view.getCatalogPublishDate() != null && view.getCatalogUnpublishDate() == null) {
                 resultPublished = "Y" + "\t";
             }
             else {resultPublished = "N" + "\t";}

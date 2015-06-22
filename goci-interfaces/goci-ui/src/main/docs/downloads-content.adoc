@@ -14,6 +14,11 @@ For a description of the file's additional column headings, go to link:fileheade
 
 We are working to provide richer, fully customise-able downloads of GWAS data and these will be available soon.
 
+////
+== Old version of the spreadsheet
+
+As of 15/6/2015, all CNV studies that were included in the GWAS Catalog for historical reasons have been removed as they did not meet the Catalog's eligibility criteria. At the same time, the "CNV?" column in the download spreadsheet, used to flag CNV studies, was removed as it was redundant. A version of the old spreadsheet format, including the removed studies and all other data up to 2/5/2015 is link:../api/search/downloads/old[available for download here]
+////
 
 == Citing the GWAS Catalog
 

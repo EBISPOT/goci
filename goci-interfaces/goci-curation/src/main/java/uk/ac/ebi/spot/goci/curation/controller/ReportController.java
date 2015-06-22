@@ -61,7 +61,7 @@ public class ReportController {
             for (DateRange dateRange : dateRanges) {
 
                 // Query database for studies between certain dates curated by current curator
-                List<Study> studies = studyRepository.findByStudyDateAndCurator(curator.getId(),
+                List<Study> studies = studyRepository.findByPublicationDateAndCurator(curator.getId(),
                                                                                 dateRange.getDateFrom(),
                                                                                 dateRange.getDateTo());
 
@@ -115,7 +115,7 @@ public class ReportController {
         for (Curator curator : allCurators) {
             for (DateRange dateRange : dateRanges) {
 
-                List<Study> studies = studyRepository.findByStudyDateAndCurator(curator.getId(),
+                List<Study> studies = studyRepository.findByPublicationDateAndCurator(curator.getId(),
                                                                                 dateRange.getDateFrom(),
                                                                                 dateRange.getDateTo());
 
@@ -179,7 +179,7 @@ public class ReportController {
 
         for (Study study : allStudies) {
             // Get study date
-            Date studyDate = study.getStudyDate();
+            Date studyDate = study.getPublicationDate();
 
             boolean found = false;
 

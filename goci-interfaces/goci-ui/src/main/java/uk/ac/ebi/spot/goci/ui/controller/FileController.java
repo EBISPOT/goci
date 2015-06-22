@@ -41,6 +41,9 @@ public class FileController {
     @Value("${download.alternative}")
     private Resource alternativeFileDownload;
 
+//    @Value("${download.old}")
+//    private Resource oldFileDownload;
+
     @Value("${download.NCBI}")
     private Resource fullFileDownloadNcbi;
 
@@ -129,6 +132,31 @@ public class FileController {
         }
 
     }
+
+//    @RequestMapping(value = "api/search/downloads/old",
+//                    method = RequestMethod.GET)
+//    public void getOldDownload(HttpServletResponse response) throws IOException {
+//        if (oldFileDownload.exists()) {
+//
+//            String fileName = "gwas_catalog_v1.0_data-2015-5-2.tsv";
+//            response.setContentType("text/tsv");
+//            response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
+//
+//            InputStream inputStream = null;
+//            inputStream = oldFileDownload.getInputStream();
+//
+//            OutputStream outputStream;
+//            outputStream = response.getOutputStream();
+//
+//            IOUtils.copy(inputStream, outputStream);
+//            inputStream.close();
+//            outputStream.close();
+//
+//        }
+//        else {
+//            throw new FileNotFoundException();
+//        }
+//    }
 
     @RequestMapping(value = "api/search/stats", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody Map<String, Object> getCatalogStats() {

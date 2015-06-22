@@ -32,6 +32,7 @@ import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.UnpublishReason;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
@@ -40,6 +41,7 @@ import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.repository.UnpublishReasonRepository;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
@@ -70,6 +72,7 @@ public class StudyController {
     private CurationStatusRepository curationStatusRepository;
     private AssociationRepository associationRepository;
     private EthnicityRepository ethnicityRepository;
+    private UnpublishReasonRepository unpublishReasonRepository;
 
     // Pubmed ID lookup service
     private DefaultPubMedSearchService defaultPubMedSearchService;
@@ -92,6 +95,7 @@ public class StudyController {
                            CurationStatusRepository curationStatusRepository,
                            AssociationRepository associationRepository,
                            EthnicityRepository ethnicityRepository,
+                           UnpublishReasonRepository unpublishReasonRepository,
                            DefaultPubMedSearchService defaultPubMedSearchService,
                            MailService mailService) {
         this.studyRepository = studyRepository;
@@ -102,6 +106,7 @@ public class StudyController {
         this.curationStatusRepository = curationStatusRepository;
         this.associationRepository = associationRepository;
         this.ethnicityRepository = ethnicityRepository;
+        this.unpublishReasonRepository = unpublishReasonRepository;
         this.defaultPubMedSearchService = defaultPubMedSearchService;
         this.mailService = mailService;
     }
@@ -496,10 +501,17 @@ public class StudyController {
         // Check if it has any associations
         Collection<Association> associations = associationRepository.findByStudyId(studyId);
 
+        Long housekeepingId = studyToDelete.getHousekeeping().getId();
+        Housekeeping housekeepingAttachedToStudy = housekeepingRepository.findOne(housekeepingId);
+
         // If so warn the curator
         if (!associations.isEmpty()) {
             return "delete_study_with_associations_warning";
 
+        }
+        else if(housekeepingAttachedToStudy.getCatalogPublishDate() != null){
+            model.addAttribute("studyToDelete", studyToDelete);
+            return "delete_published_study_warning";
         }
         else {
             model.addAttribute("studyToDelete", studyToDelete);
@@ -644,8 +656,11 @@ public class StudyController {
                 }
 
                 else {
-                    java.util.Date publishDate = new java.util.Date();
-                    housekeeping.setPublishDate(publishDate);
+                    // If there is no existing publish date then update
+                    if (housekeeping.getCatalogPublishDate() == null) {
+                        java.util.Date publishDate = new java.util.Date();
+                        housekeeping.setCatalogPublishDate(publishDate);
+                    }
                 }
             }
 
@@ -696,6 +711,61 @@ public class StudyController {
     }
 
 
+    @RequestMapping(value = "/{studyId}/unpublish", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String viewStudyToUnpublish(Model model, @PathVariable Long studyId) {
+
+        Study studyToUnpublish = studyRepository.findOne(studyId);
+
+        // Check if it has any associations
+        Collection<Association> associations = associationRepository.findByStudyId(studyId);
+
+        Collection<Ethnicity> ancestryInfo = ethnicityRepository.findByStudyId(studyId);
+
+
+        // If so warn the curator
+        if (!associations.isEmpty() || !ancestryInfo.isEmpty()) {
+            model.addAttribute("study", studyToUnpublish);
+            return "unpublish_study_with_associations_warning";
+
+        }
+        else {
+//            model.addAttribute("studyHousekeeping", studyToUnpublish.getHousekeeping());
+            model.addAttribute("studyToUnpublish", studyToUnpublish);
+            return "unpublish_study";
+        }
+
+    }
+
+    @RequestMapping(value = "/{studyId}/unpublish", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String unpublishStudy(@ModelAttribute Study studyToUnpublish, Model model, @PathVariable Long studyId) {
+
+
+        // Before we unpublish the study get its associated housekeeping
+        Long housekeepingId = studyToUnpublish.getHousekeeping().getId();
+        Housekeeping housekeepingAttachedToStudy = housekeepingRepository.findOne(housekeepingId);
+
+        //Set the unpublishDate and a new lastUpdateDate in houskeeping
+        java.util.Date unpublishDate = new java.util.Date();
+        housekeepingAttachedToStudy.setCatalogUnpublishDate(unpublishDate);
+        housekeepingAttachedToStudy.setLastUpdateDate(unpublishDate);
+
+        //Set the unpublised status in housekeeping
+        CurationStatus status = curationStatusRepository.findByStatus("Unpublished from catalog");
+        housekeepingAttachedToStudy.setCurationStatus(status);
+
+        //Set the reason for unpublishing
+        UnpublishReason unpublishReason = studyToUnpublish.getHousekeeping().getUnpublishReason();
+        housekeepingAttachedToStudy.setUnpublishReason(unpublishReason);
+
+        // Unpublish housekeeping  by saving the new dates and status info
+        housekeepingRepository.save(housekeepingAttachedToStudy);
+
+        model.addAttribute("studyHousekeeping", housekeepingAttachedToStudy);
+        model.addAttribute("study", studyRepository.findOne(studyId));
+        return "study_housekeeping";
+    }
+
+
     /* General purpose methods */
 
     private Housekeeping createHousekeeping() {
@@ -723,7 +793,7 @@ public class StudyController {
 
         Study duplicateStudy = new Study();
         duplicateStudy.setAuthor(studyToDuplicate.getAuthor() + " DUP");
-        duplicateStudy.setStudyDate(studyToDuplicate.getStudyDate());
+        duplicateStudy.setPublicationDate(studyToDuplicate.getPublicationDate());
         duplicateStudy.setPublication(studyToDuplicate.getPublication());
         duplicateStudy.setTitle(studyToDuplicate.getTitle());
         duplicateStudy.setInitialSampleSize(studyToDuplicate.getInitialSampleSize());
@@ -768,15 +838,15 @@ public class StudyController {
     private Sort findSort(String sortType) {
 
         // Default sort by date
-        Sort sort = sortByStudyDateDesc();
+        Sort sort = sortByPublicationDateDesc();
 
         Map<String, Sort> sortTypeMap = new HashMap<>();
         sortTypeMap.put("authorsortasc", sortByAuthorAsc());
         sortTypeMap.put("authorsortdesc", sortByAuthorDesc());
         sortTypeMap.put("titlesortasc", sortByTitleAsc());
         sortTypeMap.put("titlesortdesc", sortByTitleDesc());
-        sortTypeMap.put("studydatesortasc", sortByStudyDateAsc());
-        sortTypeMap.put("studydatesortdesc", sortByStudyDateDesc());
+        sortTypeMap.put("publicationdatesortasc", sortByPublicationDateAsc());
+        sortTypeMap.put("publicationdatesortdesc", sortByPublicationDateDesc());
         sortTypeMap.put("pubmedsortasc", sortByPubmedIdAsc());
         sortTypeMap.put("pubmedsortdesc", sortByPubmedIdDesc());
         sortTypeMap.put("publicationsortasc", sortByPublicationAsc());
@@ -841,6 +911,12 @@ public class StudyController {
         return curationStatusRepository.findAll();
     }
 
+    // Unpublish reasons
+    @ModelAttribute("unpublishreasons")
+    public List<UnpublishReason> populateUnpublishReasons(Model model) {
+        return unpublishReasonRepository.findAll();
+    }
+
 
     // Study types
     @ModelAttribute("studyTypes")
@@ -858,7 +934,7 @@ public class StudyController {
     // Authors
     @ModelAttribute("authors")
     public List<String> populateAuthors(Model model) {
-        return studyRepository.findAllStudyAuthors();
+        return studyRepository.findAllStudyAuthors(sortByAuthorAsc());
     }
 
 
@@ -869,21 +945,21 @@ public class StudyController {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "trait").ignoreCase());
     }
 
-    private Sort sortByStudyDateAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "studyDate"));}
+    private Sort sortByPublicationDateAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "publicationDate"));}
 
-    private Sort sortByStudyDateDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "studyDate"));}
+    private Sort sortByPublicationDateDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "publicationDate"));}
 
-    private Sort sortByAuthorAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "author"));}
+    private Sort sortByAuthorAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "author").ignoreCase());}
 
-    private Sort sortByAuthorDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "author"));}
+    private Sort sortByAuthorDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "author").ignoreCase());}
 
-    private Sort sortByTitleAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "title"));}
+    private Sort sortByTitleAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "title").ignoreCase());}
 
-    private Sort sortByTitleDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "title"));}
+    private Sort sortByTitleDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "title").ignoreCase());}
 
-    private Sort sortByPublicationAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "publication"));}
+    private Sort sortByPublicationAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "publication").ignoreCase());}
 
-    private Sort sortByPublicationDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "publication"));}
+    private Sort sortByPublicationDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "publication").ignoreCase());}
 
     private Sort sortByPubmedIdAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "pubmedId"));}
 
@@ -897,9 +973,9 @@ public class StudyController {
 
     private Sort sortByEfoTraitDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "efoTraits.trait").ignoreCase());}
 
-    private Sort sortByCuratorAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "housekeeping.curator.lastName"));}
+    private Sort sortByCuratorAsc() {return new Sort(new Sort.Order(Sort.Direction.ASC, "housekeeping.curator.lastName").ignoreCase());}
 
-    private Sort sortByCuratorDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "housekeeping.curator.lastName"));}
+    private Sort sortByCuratorDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "housekeeping.curator.lastName").ignoreCase());}
 
     private Sort sortByCurationStatusAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC,

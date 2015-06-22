@@ -14,7 +14,7 @@ public class StudySampleDescription {
 
     private String author;
 
-    private Date studyDate;
+    private Date publicationDate;
 
     private String pubmedId;
 
@@ -43,7 +43,7 @@ public class StudySampleDescription {
     private String notes;
 
     public StudySampleDescription(String author,
-                                  Date studyDate,
+                                  Date publicationDate,
                                   String pubmedId,
                                   String initialSampleSize,
                                   String replicateSampleSize,
@@ -56,7 +56,7 @@ public class StudySampleDescription {
                                   String countryOfRecruitment,
                                   String description, String sampleSizesMatch, String notes) {
         this.author = author;
-        this.studyDate = studyDate;
+        this.publicationDate = publicationDate;
         this.pubmedId = pubmedId;
         this.initialSampleSize = initialSampleSize;
         this.replicateSampleSize = replicateSampleSize;
@@ -81,12 +81,12 @@ public class StudySampleDescription {
         return this;
     }
 
-    public Date getStudyDate() {
-        return studyDate;
+    public Date getPublicationDate() {
+        return publicationDate;
     }
 
-    public StudySampleDescription setStudyDate(Date studyDate) {
-        this.studyDate = studyDate;
+    public StudySampleDescription setPublicationDate(Date publicationDate) {
+        this.publicationDate = publicationDate;
         return this;
     }
 

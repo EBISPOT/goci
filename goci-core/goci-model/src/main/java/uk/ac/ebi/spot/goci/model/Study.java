@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Date;
 
@@ -27,7 +28,8 @@ public class Study {
     private String author;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date studyDate;
+    @NotNull(message = "Please enter a study date in format YYYY-MM-DD")
+    private Date publicationDate;
 
     @NotBlank(message = "Please enter a publication")
     private String publication;
@@ -83,9 +85,9 @@ public class Study {
     }
 
 
-    public Study(String author, Date studyDate, String publication, String title, String initialSampleSize, String replicateSampleSize, String platform, String pubmedId, Boolean cnv, Boolean gxe, Boolean gxg, DiseaseTrait diseaseTrait, Collection<EfoTrait> efoTraits, Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms, Housekeeping housekeeping) {
+    public Study(String author, Date publicationDate, String publication, String title, String initialSampleSize, String replicateSampleSize, String platform, String pubmedId, Boolean cnv, Boolean gxe, Boolean gxg, DiseaseTrait diseaseTrait, Collection<EfoTrait> efoTraits, Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms, Housekeeping housekeeping) {
         this.author = author;
-        this.studyDate = studyDate;
+        this.publicationDate = publicationDate;
         this.publication = publication;
         this.title = title;
         this.initialSampleSize = initialSampleSize;
@@ -117,12 +119,12 @@ public class Study {
         this.author = author;
     }
 
-    public Date getStudyDate() {
-        return studyDate;
+    public Date getPublicationDate() {
+        return publicationDate;
     }
 
-    public void setStudyDate(Date studyDate) {
-        this.studyDate = studyDate;
+    public void setPublicationDate(Date publicationDate) {
+        this.publicationDate = publicationDate;
     }
 
     public String getPublication() {
@@ -249,7 +251,7 @@ public class Study {
         return "Study{" +
                 "id=" + id +
                 ", author='" + author + '\'' +
-                ", studyDate=" + studyDate +
+                ", publicationDate=" + publicationDate +
                 ", publication='" + publication + '\'' +
                 ", title='" + title + '\'' +
                 ", pubmedId='" + pubmedId + '\'' +

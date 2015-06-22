@@ -38,14 +38,8 @@
 <!--Include header-->
 <div th:include="header :: navbar"></div>
 
-<!--Link back to study page -->
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-10">
-            <a class="btn btn-link btn-lg" th:href="@{/studies/{studyId}/associations(studyId=${study.id})}">Back</a>
-        </div>
-    </div>
-</div>
+<!--Include errors-->
+<div th:include="association_error :: association_errors"></div>
 
 <div class="container">
     <div class="row">
@@ -55,8 +49,8 @@
                     <form class="form-horizontal"
                           method="post"
                           name="snp-association-form"
-                          th:object="${snpAssociationForm}">
-
+                          th:object="${snpAssociationForm}"
+                          th:action="@{${uri}(associationtype=standardormulti)}">
 
                         <div class="form-group">
                             <div class="col-md-10 col-md-offset-2">
@@ -96,13 +90,11 @@
                                                    th:field="*{snpFormRows[__${rowStat.index}__].strongestRiskAllele}"/>
                                         </td>
                                         <td>
-                                            <input type="text"
-                                                   th:field="*{snpFormRows[__${rowStat.index}__].proxySnp}"/>
+                                            <input type="text" data-role="tagsinput" label="proxySnps"
+                                                   th:field="*{snpFormRows[__${rowStat.index}__].proxySnps}"/>
                                         </td>
                                         <td>
-                    <button type="submit" name="removeRow"
-                            th:value="${rowStat.index}">Remove row
-                    </button>
+                                            <button type="submit" name="removeRow" th:value="${rowStat.index}">Remove row</button>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -121,8 +113,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="riskFrequency" class="control-label col-md-2">Risk Allele Frequency in
-                                                                                      Controls</label>
+                            <label for="riskFrequency" class="control-label col-md-2">Risk haplotype frequency in controls</label>
 
                             <div class="col-md-10">
                                 <input type="text" class="form-control" id="riskFrequency"
@@ -184,6 +175,13 @@
                             </div>
                         </div>
 
+                        <div class="alert alert-warning alert-dismissible col-md-offset-2 col-md-10"
+                             role="alert"
+                             th:if="*{orPerCopyNum &lt; 1 and not #strings.isEmpty(orPerCopyNum)}">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <strong>Warning!</strong> OR value less than one
+                        </div>
 
                         <div class="form-group">
                             <label for="orPerCopyRecip" class="control-label col-md-2">OR/HR/RR per copy
@@ -195,9 +193,7 @@
                             </div>
 
                             <div class="col-md-10">
-        <button type="button"
-                class="btn btn-primary pull-right"
-                id="calculate-or">Calculate OR/HR/RR per copy (Num)</button>
+                                <button type="button" class="btn btn-primary pull-right" id="calculate-or">Calculate OR/HR/RR per copy (Num)</button>
                             </div>
 
                         </div>
@@ -213,7 +209,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="orPerCopyRecipRange" class="control-label col-md-2">OR/HR/RR per copy reciprocal (Range)</label>
+                            <label for="orPerCopyRecipRange" class="control-label col-md-2">OR/HR/RR per copy reciprocal
+                                                                                            (Range)</label>
 
                             <div class="col-md-10">
                                 <input type="text" class="form-control" id="orPerCopyRecipRange"
@@ -245,9 +242,7 @@
                                        th:field="*{orPerCopyStdError}" name="orPerCopyStdError"/>
                             </div>
                             <div class="col-md-12">
-        <button type="button"
-                class="btn btn-primary pull-right"
-                id="calculate-or-range">Build OR/HR/RR per copy (Range)</button>
+                                <button type="button" class="btn btn-primary pull-right" id="calculate-or-range">Build OR/HR/RR per copy (Range)</button>
                             </div>
                         </div>
 
@@ -268,12 +263,6 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="multiSNPHaplotype" class="control-label col-md-2">Multi-SNP Haplotype</label>
-                            <input id="multiSNPHaplotype" type="checkbox"
-                                   th:field="*{multiSnpHaplotype}"/>
-                        </div>
-
-                        <div class="form-group">
                             <label for="orType" class="control-label col-md-2">ORType</label>
                             <input id="orType" type="checkbox" th:field="*{orType}"/>
                         </div>
@@ -283,13 +272,12 @@
                             <input id="snpChecked" type="checkbox" th:field="*{snpChecked}"/>
                         </div>
 
-                        <!--Hidden field-->
+                        <!-- Hidden-->
                         <div class="form-group">
-                            <label for="snpInteraction" class="control-label col-md-2"></label>
-                            <input id="snpInteraction" type="hidden"
-                                   th:field="*{snpInteraction}"/>
+                            <label for="multiSNPHaplotype" class="control-label col-md-2"></label>
+                            <input id="multiSNPHaplotype" type="hidden"
+                                   th:field="*{multiSnpHaplotype}"/>
                         </div>
-                        <!--End hidden-->
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-10">
@@ -312,6 +300,19 @@
     });
 </script>
 
+<!--Formats tags input -->
+<script>
+    $('#proxySnps').tagsinput({
+        trimValue: true
+    });
+</script>
+
+<!--Formats tags input -->
+<script>
+    $('#authorgenes').tagsinput({
+        trimValue: true
+    });
+</script>
 </body>
 
 </html>

@@ -105,7 +105,7 @@ public class SolrIndexer {
     }
 
     Integer mapStudies() {
-        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "studyDate"));
+        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "publicationDate"));
         Pageable pager = new PageRequest(0, pageSize, sort);
         Page<Study> studyPage = studyService.findPublishedStudies(pager);
         studyMapper.map(studyPage.getContent());

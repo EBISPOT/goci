@@ -35,6 +35,7 @@
             <li><a th:href="@{/studies/{studyId}/sampledescription(studyId=*{id})}">Sample Information</a></li>
             <li><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}">SNP Associations</a></li>
             <li><a th:href="@{/studies/{studyId}/housekeeping(studyId=*{id})}">Curator Information</a></li>
+            <li><a th:href="@{/studies/{studyId}/printview(studyId=*{id})}" target="_blank">Print View</a></li>
         </ul>
     </div>
 </div>
@@ -149,10 +150,10 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="studyDate" class="control-label col-md-2">Study Date</label>
+                    <label for="publicationDate" class="control-label col-md-2">Publication Date</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="studyDate" th:field="*{studyDate}"/>
+                        <input type="text" class="form-control" id="publicationDate" th:field="*{publicationDate}"/>
                     </div>
                 </div>
 

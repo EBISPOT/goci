@@ -5,10 +5,8 @@ import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
-import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
@@ -16,9 +14,7 @@ import uk.ac.ebi.spot.goci.repository.LocusRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by emma on 13/04/2015.
@@ -36,31 +32,27 @@ public class SingleSnpMultiSnpAssociationService {
     private LocusRepository locusRepository;
 
     // Services
-    private AssociationCalculationService associationCalculationService;
     private LociAttributesService lociAttributesService;
 
     @Autowired
     public SingleSnpMultiSnpAssociationService(AssociationRepository associationRepository,
                                                LocusRepository locusRepository,
-                                               AssociationCalculationService associationCalculationService,
                                                LociAttributesService lociAttributesService) {
         this.associationRepository = associationRepository;
         this.locusRepository = locusRepository;
-        this.associationCalculationService = associationCalculationService;
         this.lociAttributesService = lociAttributesService;
     }
+
 
     public Association createAssociation(SnpAssociationForm snpAssociationForm) {
 
         Association association = new Association();
 
         // Set simple string, boolean and float association attributes
-        association.setRiskFrequency(snpAssociationForm.getRiskFrequency());
         association.setPvalueText(snpAssociationForm.getPvalueText());
         association.setOrType(snpAssociationForm.getOrType());
         association.setSnpType(snpAssociationForm.getSnpType());
         association.setMultiSnpHaplotype(snpAssociationForm.getMultiSnpHaplotype());
-        association.setSnpInteraction(snpAssociationForm.getSnpInteraction());
         association.setSnpChecked(snpAssociationForm.getSnpChecked());
         association.setOrPerCopyNum(snpAssociationForm.getOrPerCopyNum());
         association.setOrPerCopyRecip(snpAssociationForm.getOrPerCopyRecip());
@@ -69,6 +61,12 @@ public class SingleSnpMultiSnpAssociationService {
         association.setOrPerCopyStdError(snpAssociationForm.getOrPerCopyStdError());
         association.setOrPerCopyUnitDescr(snpAssociationForm.getOrPerCopyUnitDescr());
 
+        // Set risk frequency
+        association.setRiskFrequency(snpAssociationForm.getRiskFrequency());
+
+        // Set value by default to false
+        association.setSnpInteraction(false);
+
         // Add collection of EFO traits
         association.setEfoTraits(snpAssociationForm.getEfoTraits());
 
@@ -76,30 +74,30 @@ public class SingleSnpMultiSnpAssociationService {
         association.setPvalueMantissa(snpAssociationForm.getPvalueMantissa());
         association.setPvalueExponent(snpAssociationForm.getPvalueExponent());
 
-        // Add loci to association or if we are editing an existing one find it
-        // For multi-snp and standard snps we assume their is only one locus
-        Collection<Locus> loci = new ArrayList<>();
-        Locus locus = new Locus();
-
-        // Check for existing locus
+        // Check for existing loci, when editing delete any existing loci and risk alleles
+        // They will be recreated in next for loop
         if (snpAssociationForm.getAssociationId() != null) {
             Association associationUserIsEditing = associationRepository.findOne(snpAssociationForm.getAssociationId());
             Collection<Locus> associationLoci = associationUserIsEditing.getLoci();
+            Collection<RiskAllele> existingRiskAlleles = new ArrayList<>();
 
-            // Based on assumption we have only one locus for standard and multi-snp haplotype
-            if (associationLoci.size() == 1) {
-                for (Locus associationLocus : associationLoci) {
-                    locus = associationLocus;
+            if (associationLoci != null) {
+                for (Locus locus : associationLoci) {
+                    existingRiskAlleles.addAll(locus.getStrongestRiskAlleles());
+                }
+                for (Locus locus : associationLoci) {
+                    lociAttributesService.deleteLocus(locus);
+                }
+                for (RiskAllele existingRiskAllele : existingRiskAlleles) {
+                    lociAttributesService.deleteRiskAllele(existingRiskAllele);
                 }
             }
 
-            else {
-                throw new RuntimeException(
-                        "More than one locus found for association " + association.getId() +
-                                ", this is not supported yet"
-                );
-            }
         }
+
+        // Add loci to association, for multi-snp and standard snps we assume their is only one locus
+        Collection<Locus> loci = new ArrayList<>();
+        Locus locus = new Locus();
 
         // Set locus description and haplotype count
         // Set this number to the number of rows entered by curator
@@ -117,16 +115,6 @@ public class SingleSnpMultiSnpAssociationService {
         // Set locus genes
         locus.setAuthorReportedGenes(locusGenes);
 
-        // Delete any existing risk alleles as we will re-create in next for loop
-        // This should only occur if we are editing an existing study
-        Collection<RiskAllele> existingRiskAlleles = locus.getStrongestRiskAlleles();
-        if (!existingRiskAlleles.isEmpty()) {
-            locus.setStrongestRiskAlleles(new ArrayList<>());
-            for (RiskAllele riskAllele : existingRiskAlleles) {
-                lociAttributesService.deleteRiskAllele(riskAllele);
-            }
-        }
-
         // Handle rows entered for haplotype by curator
         Collection<SnpFormRow> rows = snpAssociationForm.getSnpFormRows();
         Collection<RiskAllele> locusRiskAlleles = new ArrayList<>();
@@ -143,11 +131,21 @@ public class SingleSnpMultiSnpAssociationService {
             // Create a new risk allele and assign newly created snp
             RiskAllele riskAllele = lociAttributesService.createRiskAllele(curatorEnteredRiskAllele, snp);
 
-            // Check for a proxy and if we have one create a proxy snp
-            if (row.getProxySnp() != null && !row.getProxySnp().isEmpty()) {
-                String curatorEnteredProxySnp = row.getProxySnp();
-                SingleNucleotidePolymorphism proxySnp = lociAttributesService.createSnp(curatorEnteredProxySnp);
-                riskAllele.setProxySnp(proxySnp);
+            // If its not a multi-snp haplotype save frequency to risk allele
+            if (!snpAssociationForm.getMultiSnpHaplotype()) {
+                riskAllele.setRiskFrequency(snpAssociationForm.getRiskFrequency());
+            }
+
+            // Check for proxies and if we have one create a proxy snps
+            if (row.getProxySnps() != null && !row.getProxySnps().isEmpty()) {
+                Collection<SingleNucleotidePolymorphism> riskAlleleProxySnps = new ArrayList<>();
+
+                for (String curatorEnteredProxySnp : row.getProxySnps()) {
+                    SingleNucleotidePolymorphism proxySnp = lociAttributesService.createSnp(curatorEnteredProxySnp);
+                    riskAlleleProxySnps.add(proxySnp);
+                }
+
+                riskAllele.setProxySnps(riskAlleleProxySnps);
             }
 
             locusRiskAlleles.add(riskAllele);
@@ -173,9 +171,6 @@ public class SingleSnpMultiSnpAssociationService {
 
         SnpAssociationForm snpAssociationForm = new SnpAssociationForm();
 
-        // Set error map
-        snpAssociationForm.setAssociationErrorMap(createAssociationErrorMap(association.getAssociationReport()));
-
         // Set association ID
         snpAssociationForm.setAssociationId(association.getId());
 
@@ -187,7 +182,6 @@ public class SingleSnpMultiSnpAssociationService {
         snpAssociationForm.setSnpType(association.getSnpType());
         snpAssociationForm.setMultiSnpHaplotype(association.getMultiSnpHaplotype());
         snpAssociationForm.setSnpChecked(association.getSnpChecked());
-        snpAssociationForm.setSnpInteraction(association.getSnpInteraction());
         snpAssociationForm.setPvalueMantissa(association.getPvalueMantissa());
         snpAssociationForm.setPvalueExponent(association.getPvalueExponent());
         snpAssociationForm.setOrPerCopyRecip(association.getOrPerCopyRecip());
@@ -196,17 +190,6 @@ public class SingleSnpMultiSnpAssociationService {
         snpAssociationForm.setOrPerCopyRecipRange(association.getOrPerCopyRecipRange());
         snpAssociationForm.setOrPerCopyUnitDescr(association.getOrPerCopyUnitDescr());
 
-        // Calculate p-value float, this will appear in table for curators
-        Integer pvalueMantissa = snpAssociationForm.getPvalueMantissa();
-        Integer pvalueExponent = snpAssociationForm.getPvalueExponent();
-
-        if (pvalueMantissa != null && pvalueExponent != null) {
-            snpAssociationForm.setPvalueFloat(associationCalculationService.calculatePvalueFloat(pvalueMantissa,
-                                                                                                 pvalueExponent));
-        }
-        else {
-            snpAssociationForm.setPvalueFloat(Float.valueOf(0));
-        }
 
         // Add collection of Efo traits
         snpAssociationForm.setEfoTraits(association.getEfoTraits());
@@ -217,22 +200,15 @@ public class SingleSnpMultiSnpAssociationService {
         Collection<RiskAllele> locusRiskAlleles = new ArrayList<RiskAllele>();
 
         // For multi-snp and standard snps we assume their is only one locus
-        if (loci.size() == 1) {
-            for (Locus locus : loci) {
-                locusGenes.addAll(locus.getAuthorReportedGenes());
-                locusRiskAlleles.addAll(locus.getStrongestRiskAlleles());
+        for (Locus locus : loci) {
+            locusGenes.addAll(locus.getAuthorReportedGenes());
+            locusRiskAlleles.addAll(locus.getStrongestRiskAlleles());
 
-                // There should only be one locus thus should be safe to set these here
-                snpAssociationForm.setMultiSnpHaplotypeNum(locus.getHaplotypeSnpCount());
-                snpAssociationForm.setMultiSnpHaplotypeDescr(locus.getDescription());
-            }
+            // There should only be one locus thus should be safe to set these here
+            snpAssociationForm.setMultiSnpHaplotypeNum(locus.getHaplotypeSnpCount());
+            snpAssociationForm.setMultiSnpHaplotypeDescr(locus.getDescription());
         }
 
-        else {
-            throw new RuntimeException(
-                    "More than one locus found for association " + association.getId() + ", this is not supported yet"
-            );
-        }
 
         // Get name of gene and add to form
         Collection<String> authorReportedGenes = new ArrayList<>();
@@ -241,10 +217,7 @@ public class SingleSnpMultiSnpAssociationService {
         }
         snpAssociationForm.setAuthorReportedGenes(authorReportedGenes);
 
-        // Handle snp rows and return region details for each snp
-        // Note region is never edited by curator so only appears in table but never in
-        // any edit forms
-        Collection<Region> snpRegions = new ArrayList<Region>();
+        // Handle snp rows
         List<SnpFormRow> snpFormRows = new ArrayList<SnpFormRow>();
         for (RiskAllele riskAllele : locusRiskAlleles) {
             SnpFormRow snpFormRow = new SnpFormRow();
@@ -252,48 +225,18 @@ public class SingleSnpMultiSnpAssociationService {
             snpFormRow.setSnp(riskAllele.getSnp().getRsId());
 
             // Set proxy if one is present
-            if (riskAllele.getProxySnp() != null) {
-                snpFormRow.setProxySnp(riskAllele.getProxySnp().getRsId());
+            Collection<String> proxySnps = new ArrayList<>();
+            if (riskAllele.getProxySnps() != null) {
+                for (SingleNucleotidePolymorphism riskAlleleProxySnp : riskAllele.getProxySnps()) {
+                    proxySnps.add(riskAlleleProxySnp.getRsId());
+                }
             }
-            else { snpFormRow.setProxySnp(null);}
+            snpFormRow.setProxySnps(proxySnps);
 
-            snpRegions.addAll(riskAllele.getSnp().getRegions());
             snpFormRows.add(snpFormRow);
         }
 
-        snpAssociationForm.setRegions(snpRegions);
         snpAssociationForm.setSnpFormRows(snpFormRows);
         return snpAssociationForm;
     }
-
-    private Map<String, String> createAssociationErrorMap(AssociationReport associationReport) {
-
-        Map<String, String> associationErrorMap = new HashMap<>();
-
-        //Create map of errors
-        if (associationReport != null) {
-            if (associationReport.getSnpError() != null && !associationReport.getSnpError().isEmpty()) {
-                associationErrorMap.put("SNP Error: ", associationReport.getSnpError());
-            }
-
-            if (associationReport.getGeneNotOnGenome() != null &&
-                    !associationReport.getGeneNotOnGenome().isEmpty()) {
-                associationErrorMap.put("Gene Not On Genome Error: ", associationReport.getGeneNotOnGenome());
-            }
-
-            if (associationReport.getSnpGeneOnDiffChr() != null &&
-                    !associationReport.getSnpGeneOnDiffChr().isEmpty()) {
-                associationErrorMap.put("Snp Gene On Diff Chr: ", associationReport.getSnpGeneOnDiffChr());
-            }
-
-            if (associationReport.getNoGeneForSymbol() != null &&
-                    !associationReport.getNoGeneForSymbol().isEmpty()) {
-                associationErrorMap.put("No Gene For Symbol: ", associationReport.getNoGeneForSymbol());
-            }
-        }
-
-        return associationErrorMap;
-    }
-
-
 }

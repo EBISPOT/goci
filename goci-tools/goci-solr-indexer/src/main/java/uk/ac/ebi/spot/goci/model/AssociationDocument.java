@@ -60,11 +60,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field private String author;
     @Field private String publication;
     @Field private String publicationDate;
-    @Field private String catalogAddedDate;
+    @Field private String catalogPublishDate;
     @Field private String publicationLink;
 
     @Field private String platform;
-    @Field private Boolean cnv;
 
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
@@ -201,8 +200,8 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         this.publicationDate = publicationDate;
     }
 
-    public void addCatalogAddedDate(String catalogAddedDate) {
-        this.catalogAddedDate = catalogAddedDate;
+    public void addCatalogPublishDate(String catalogPublishDate) {
+        this.catalogPublishDate = catalogPublishDate;
     }
 
     public void addPublicationLink(String publicationLink) {
@@ -211,10 +210,6 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     public void addPlatform(String platform) {
         this.platform = platform;
-    }
-
-    public void addCnv(Boolean cnv) {
-        this.cnv = cnv;
     }
 
     public void addInitialSampleDescription(String initialSampleDescription) {
