@@ -26,6 +26,7 @@
 
     <!-- Additional styling on top of bootstrap -->
     <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{css/goci-ui.css}"/>
+    <link rel="stylesheet" href="../static/css/goci-diagram.css" th:href="@{css/goci-diagram.css}"/>
     <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{css/icons/flaticon.css}"/>
     <link rel="stylesheet" href="../static/css/goci-color-palette-1.css" th:href="@{css/goci-color-palette-1.css}"/>
     <!--<link rel="stylesheet" href="../static/css/science-and-medicine/flaticon.css" th:href="@{css/science-and-medicine/flaticon.css}"/>-->
@@ -136,66 +137,94 @@
 
         -->
 
-        <div class="col-md-2 tight-to-side" id="filter-bar">
+        <div class="col-md-2 tight-to-side" id="legend-bar">
             <div class="panel panel-default">
                 <div class="panel-heading background-color-primary-accent">
                     <h3 class="panel-title">Filter the diagram</h3>
                                 <span class="pull-right clickable"
-                                      onclick="toggleSidebar('.panel-heading span.clickable')">
+                                      onclick="toggleLegend('.panel-heading span.clickable')">
                                     <i class="glyphicon glyphicon-chevron-up"></i>
                                 </span>
                 </div>
                 <div class="panel-body">
-                    <div>
-                        <form id="filter-form">
-                            <div id="filters">
-                                <b>Filter results by</b>
 
-                                <div class="list-group">
+                    <div id="filters">
+                        <b>Filter results by</b>
 
-
-                                    <div class="list-group-item filter-element ">
-                                            <span class="filter-label">Enter trait
-                                                <span class="glyphicon glyphicon-question-sign context-help"
-                                                      data-toggle="tooltip"
-                                                      data-original-title="Odds ratio associated with SNP-disease/trait association"></span>
-                                            </span>
-                                        <input class="filter-value" type="text" id="trait" placeholder="Query by trait"/>
-                                        <!--<input class="filter-value" type="text" id="or-max" placeholder="to"/>-->
-                                    </div>
+                        <div>
+                            <input class="filter-value" type="text" id="trait" placeholder="Query by trait" style="width: 100%"/>
+                        </div>
 
 
-                                </div>
-                            </div>
-
-                            <div>
-                                    <button type="button"
-                                            class="btn btn-default pull-right"
-                                            id="clear-filter">Clear all filters</button>
-                                    <button type="submit"
-                                            class="btn btn-default pull-right"
-                                            style="margin-right: 15px;">Apply filters</button>
-                            </div>
-                        </form>
+                        <div class="row" style="margin-top: 20px">
+                                <button type="button"
+                                        class="btn btn-default pull-right"
+                                        id="clear-filter">Clear filter</button>
+                                <button type="submit"
+                                        class="btn btn-default pull-right"
+                                        style="margin-right: 15px;">Apply filter</button>
+                        </div>
                     </div>
 
-                    <div id="legend">
+                    <div id="legend" class="row" style="margin-top: 20px">
                         <b>Show SNPs for</b>
 
                         <div class="list-group">
                             <!--add an "active" class annotation to each a tag when it's selected-->
-                            <a href="#study" class="list-group-item" id="study-facet">
-                                <span class="badge">0</span>Studies
+                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-digestive"></span>
+                                <span class="badge">309</span>Digestive system disease
                             </a>
-                            <a href="#association" class="list-group-item" id="association-facet">
-                                <span class="badge">0</span>Associations
+                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-cardio"></span>
+                                <span class="badge">174</span>Cardiovascular disease
                             </a>
-                            <a href="#diseasetrait" class="list-group-item" id="diseasetrait-facet">
-                                <span class="badge">0</span>Catalog traits
+                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-metabolic"></span>
+                                <span class="badge">186</span>Metabolic disease
+                            </a>
+                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-immune"></span>
+                                <span class="badge">293</span>Immune system disease
+                            </a>
+                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-neuro"></span>
+                                <span class="badge">192</span>Nervous system disease
+                            </a>
+                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-liver-measure"></span>
+                                <span class="badge">63</span>Liver enzyme measurement
+                            </a>
+                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-lipid-measure"></span>
+                                <span class="badge">297</span>Lipid or lipoprotein measurement
+                            </a>
+                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-inflam-measure"></span>
+                                <span class="badge">44</span>Inflammatory marker measurement
+                            </a>
+                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-haemo-measure"></span>
+                                <span class="badge">295</span>Hematological measurement
+                            </a>
+                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-body-measure"></span>
+                                <span class="badge">283</span>Body weights and measures
+                            </a>
+                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-cardio-measure"></span>
+                                <span class="badge">96</span>Cardiovascular measurement
+                            </a>
+                            <a href="#" class="list-group-item disabled" > <span class="icon-trait icon-trait-measure"></span>
+                                <span class="badge">968</span>Other measurement
+                            </a>
+                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-drug"></span>
+                                <span class="badge">87</span>Response to drug
+                            </a>
+                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-process"></span>
+                                <span class="badge">366</span>Biological process
+                            </a>
+                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-neoplasm"></span>
+                                <span class="badge">504</span>Cancer
+                            </a>
+                            <a href="#" class="list-group-item disabled" >  <span class="icon-trait icon-trait-disease"></span>
+                                <span class="badge">92</span>Other disease
+                            </a>
+                            <a href="#" class="list-group-item disabled" > <span class="icon-trait icon-trait-other"></span>
+                                <span class="badge">0</span>Other trait
                             </a>
                         </div>
                     </div>
-                    <div id="diargram-stats" style="display: none" class="row">
+                    <div id="diagram-stats" style="display: none" class="row">
                         <h4>Diagram stats</h4>
                         <ul>
                             <li id="releasedate-stat" ></li>
@@ -210,21 +239,19 @@
             </div>
         </div>
 
-         <div class="col-md-9" id="diagram-area">
+         <div class="col-md-10" id="diagram-area">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">
                         This diagram shows all SNP-trait associations with p-value &#8804; 5.0 &#215; 10<sup>-8</sup>,
-                                            published in the GWAS catalogue
-                                            (<a href="http://www.genome.gov/gwastudies"  target='_blank'>http://www.genome.gov/gwastudies</a>) up to
-                                            the end of May 2014.
+                                            published in the GWAS catalogue up to the end of May 2014.
                     </h3>
                 </div>
                 <div class="panel-body">
-                    <div >
-                    <img alt="GWAS logo"
-                         src="../static/images/gwas-latest.png"
-                         th:src="@{images/gwas-latest.png}"/>
+                    <div id="diagram-area-content" >
+                    <!--<img alt="GWAS diagram"-->
+                         <!--src="../static/images/gwas-diagram.svg"-->
+                         <!--th:src="@{images/gwas-diagram.svg}"/>-->
                     </div>
                 </div>
             </div>
@@ -235,6 +262,11 @@
     </div>
 
 </div>
+
+<div id="tooltip" class="ui-widget-header tooltip" style="display: none;">
+    <span id="tooltip-text"></span>
+</div>
+
     <!-- /container -->
 
     <footer class="footer background-color-primary-accent">
@@ -263,6 +295,7 @@
     <!-- GOCI JavaScript
     ================================================== -->
     <script src="../static/js/goci-ui.js" th:src="@{js/goci-ui.js}"></script>
+    <script src="../static/js/goci-diagram.js" th:src="@{js/goci-diagram.js}"></script>
 
     <!-- Google analytics
     ================================================== -->
