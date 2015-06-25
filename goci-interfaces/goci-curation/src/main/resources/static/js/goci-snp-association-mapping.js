@@ -309,8 +309,8 @@ function getMappings(mappings,snp_row_id) {
         newrow = newrow + "<td><span>" + band + "</span>"+
                 "<"+hidden_input+" id=\""+snpMappingId+".location.region.name\" name=\""+snpMappingName+".location.region.name\" value=\""+band+"\"></td>";
         // Chromosome
-        newrow = newrow + "<td><span class=\"chromosomeName\">" + chr + "</span>"+
-                "<"+hidden_input+" id=\""+snpMappingId+".location.chromosomeName\" name=\""+snpMappingName+".location.chromosomeName\" value=\""+chr+"\"></td>";
+        newrow = newrow + "<td><span>" + chr + "</span>"+
+                "<"+hidden_input+" class=\"chromosomeName\" id=\""+snpMappingId+".location.chromosomeName\" name=\""+snpMappingName+".location.chromosomeName\" value=\""+chr+"\"></td>";
         // Position
         newrow = newrow + "<td><span>" + position + "</span>"+
                 "<"+hidden_input+" id=\""+snpMappingId+".location.chromosomePosition\" name=\""+snpMappingName+".location.chromosomePosition\" value=\""+position+"\"></td>";

@@ -347,8 +347,8 @@
                                                         <input type="hidden" th:field="*{snpMappingForms[__${rowStat.index}__].location.region.name}"/>
                                                     </td>
                                                     <td>
-                                                        <span class="chromosomeName" th:text="*{snpMappingForms[__${rowStat.index}__].location.chromosomeName}">Chromosome</span>
-                                                        <input type="hidden" th:field="*{snpMappingForms[__${rowStat.index}__].location.chromosomeName}"/>
+                                                        <span th:text="*{snpMappingForms[__${rowStat.index}__].location.chromosomeName}">Chromosome</span>
+                                                        <input class="chromosomeName" type="hidden" th:field="*{snpMappingForms[__${rowStat.index}__].location.chromosomeName}"/>
                                                     </td>
                                                     <td>
                                                         <span th:text="*{snpMappingForms[__${rowStat.index}__].location.chromosomePosition}">Position</span>
