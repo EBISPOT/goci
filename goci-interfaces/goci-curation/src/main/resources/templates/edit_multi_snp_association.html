@@ -338,17 +338,21 @@
                                             <tbody>
                                                 <tr th:each="row,rowStat : *{snpMappingForms}" th:id="mapping_tr_+${rowStat.count}">
                                                     <td>
-                                                        <span th:text="*{snpMappingForms[__${rowStat.index}__].snp}">SNP ID</span>
+                                                        <span th:text="*{snpMappingForms[__${rowStat.index}__].snp}">SNP</span>
+                                                        <input type="hidden" th:field="*{snpMappingForms[__${rowStat.index}__].snp}"/>
                                                     </td>
                                                     <td>
                                                         <!--<input type="text" th:field="*{regions[__${rowStat.index}__].name}"/>-->
-                                                        <input type="text" th:field="*{snpMappingForms[__${rowStat.index}__].location.region.name}"/>
+                                                        <span th:text="*{snpMappingForms[__${rowStat.index}__].location.region.name}">Region</span>
+                                                        <input type="hidden" th:field="*{snpMappingForms[__${rowStat.index}__].location.region.name}"/>
                                                     </td>
                                                     <td>
-                                                        <input class="chromosomeName" type="text" th:field="*{snpMappingForms[__${rowStat.index}__].location.chromosomeName}"/>
+                                                        <span class="chromosomeName" th:text="*{snpMappingForms[__${rowStat.index}__].location.chromosomeName}">Chromosome</span>
+                                                        <input type="hidden" th:field="*{snpMappingForms[__${rowStat.index}__].location.chromosomeName}"/>
                                                     </td>
                                                     <td>
-                                                        <input type="text" th:field="*{snpMappingForms[__${rowStat.index}__].location.chromosomePosition}"/>
+                                                        <span th:text="*{snpMappingForms[__${rowStat.index}__].location.chromosomePosition}">Position</span>
+                                                        <input type="hidden" th:field="*{snpMappingForms[__${rowStat.index}__].location.chromosomePosition}"/>
                                                     </td>
                                                     <!--<td>
                                                         <div class="btn btn-danger" th:onclick="'javascript:delete_row(\'mapping_tr_'+${rowStat.count}+'\')'">Delete</div>
@@ -380,12 +384,14 @@
                                                 <tr th:each="row,rowStat : *{genomicContexts}" th:id="context_tr_+${rowStat.count}">
                                                     <td>
                                                         <span th:text="*{genomicContexts[__${rowStat.index}__].snp.rsId}">SNP</span>
+                                                        <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].snp.rsId}"/>
                                                     </td>
                                                     <td>
                                                         <input type="checkbox" th:field="*{genomicContexts[__${rowStat.index}__].isIntergenic}"/>
                                                     </td>
                                                     <td>
                                                         <span th:text="*{genomicContexts[__${rowStat.index}__].gene.geneName}">Gene</span>
+                                                        <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].gene.geneName}"/>
                                                     </td>
                                                     <td>
                                                         <input type="checkbox" th:field="*{genomicContexts[__${rowStat.index}__].isUpstream}"/>
@@ -395,6 +401,7 @@
                                                     </td>
                                                     <td>
                                                         <span th:text="*{genomicContexts[__${rowStat.index}__].distance}">dist.</span>
+                                                        <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].distance}"/>
                                                     </td>
                                                     <!--<td>
                                                         <div class="btn btn-danger" th:onclick="'javascript:delete_row(\'context_tr_'+${rowStat.count}+'\')'">Delete</div>
