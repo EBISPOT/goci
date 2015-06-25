@@ -20,6 +20,11 @@ var rest_xrefs_id = rest_url_root + "/xrefs/id/";
 var ncbi_db_type = "otherfeatures";
 var genomic_distance = 100000; // 100kb
 
+// Forms
+var snpMappingForms = "snpMappingForms";
+var genomicContextForms = "genomicContexts";
+var hidden_input = "input type=\"hidden\"";
+
 var ok_icon = "<span class=\"glyphicon glyphicon-ok-sign\"></span> ";
 var error_icon = "<span class=\"glyphicon glyphicon-remove-sign\"></span> ";
 
@@ -30,9 +35,11 @@ $(document).ready(function() {
     // Single variant validation (+ variant mapping and genomic context)
     $("#snp_validation_button").click(function() {
         var snp_row_id = 1; // Standard association (only 1 variant association)
-        if ($("#snpValidated_"+snp_row_id).val() != "true" || $("#snp_id_"+snp_row_id).val() != $("#snp_"+snp_row_id).val()) {
+        if (($("#snpValidated_"+snp_row_id).val() != "true" || $("#snp_id_"+snp_row_id).val() != $("#snp_"+snp_row_id).val()) && $("#snp_id_"+snp_row_id).val()) {
             $("#snpValidationStatusOk").html("");
             $("#snpValidationStatusFailed").html("");
+            $("#snpValidationStatusOk").hide();
+            $("#snpValidationStatusFailed").hide();
 
             var btn = $(this).button('loading');
 
@@ -89,7 +96,7 @@ $(document).ready(function() {
         $(".snp_row").each(function() {
             var snp_row_id = $(this).html();
             var snp = $("#snp_id_"+snp_row_id).val();
-            if ($("#snpValidated_" + snp_row_id).val() != "true" || $("#snp_id_" + snp_row_id).val() != $("#snp_" + snp_row_id).val()) {
+            if (($("#snpValidated_" + snp_row_id).val() != "true" || $("#snp_id_" + snp_row_id).val() != $("#snp_" + snp_row_id).val()) && $("#snp_id_"+snp_row_id).val()) {
                 change = 1;
                 variants_ids.push(snp);
             }
@@ -98,59 +105,72 @@ $(document).ready(function() {
         if (change == 1) {
             $("#snpValidationStatusOk").html("");
             $("#snpValidationStatusFailed").html("");
+            $("#snpValidationStatusOk").hide();
+            $("#snpValidationStatusFailed").hide();
         }
 
-        var rest_url = rest_variation_post;
+        if (variants_ids.length > 1) { // Check that there are at least 2 variants provided
 
-        var json_variants_ids =  JSON.stringify({ "ids" : variants_ids });
+            var rest_url = rest_variation_post;
 
-        $.ajax({
-            method: "POST",
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            url: rest_url,
-            data: json_variants_ids,
-            error: function(jqXHR, status, errorThrown) {
-                $("#snpValidationStatusFailed").append("<div>" + error_icon +"Variants validation: " + status + " (" + errorThrown + ")" + "</div>");
-                $("#snpValidationStatusFailed").show();
-                btn.button('reset');
-            },
-            success: function(results) {
+            var json_variants_ids = JSON.stringify({"ids": variants_ids});
 
-                $("#mapping_table > tbody").html(""); // Empty the mapping table
-                $("#context_table > tbody").html(""); // Empty the genomic context table
-                $("#contextValidationStatus").html("");
+            $.ajax({
+                method: "POST",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: rest_url,
+                data: json_variants_ids,
+                error: function(jqXHR, status, errorThrown) {
+                    $("#snpValidationStatusFailed").append("<div>" + error_icon + "Variants validation: " + status +
+                                                           " (" + errorThrown + ")" + "</div>");
+                    $("#snpValidationStatusFailed").show();
+                    btn.button('reset');
+                },
+                success: function(results) {
 
-                var snp_row_id = 1; // Line number starts at 1 and array index starts at 0
-                // TODO: check that the snp_row_id corresponds to the correct SNP
-                $.each(results, function (key, data) {
-                    //var snp_row_id = i + 1; // Line number starts at 1 and array index starts at 0
-                    $("#snpValidated_" + snp_row_id).val("true");
-                    $("#snp_" + snp_row_id).val($("#snp_id_" + snp_row_id).val());
-                    $("#snpValidationStatusOk").append("<div>" + ok_icon + $("#snp_id_"+snp_row_id).val() + ": validated</div>");
-                    $("#snpValidationStatusOk").show();
+                    $("#mapping_table > tbody").html(""); // Empty the mapping table
+                    $("#context_table > tbody").html(""); // Empty the genomic context table
+                    $("#contextValidationStatus").html("");
 
-                    // SNP has been merged
-                    if (key == $("#snp_id_" + snp_row_id).val()) {
-                        $("#merged_" + snp_row_id).val(0);
-                    }
-                    else {
-                        $("#merged_" + snp_row_id).val(1);
-                    }
+                    var snp_row_id = 1; // Line number starts at 1 and array index starts at 0
+                    // TODO: check that the snp_row_id corresponds to the correct SNP
+                    $.each(results, function(key, data) {
+                        //var snp_row_id = i + 1; // Line number starts at 1 and array index starts at 0
+                        $("#snpValidated_" + snp_row_id).val("true");
+                        $("#snp_" + snp_row_id).val($("#snp_id_" + snp_row_id).val());
+                        $("#snpValidationStatusOk").append("<div>" + ok_icon + $("#snp_id_" + snp_row_id).val() +
+                                                           ": validated</div>");
+                        $("#snpValidationStatusOk").show();
 
-                    // Get mapping(s) and genomic context
-                    if (data.mappings) {
-                        getMappings(data.mappings, snp_row_id);
-                    }
-                    else {
-                        $("#snpValidationStatusFailed").append("<div>" + error_icon + $("#snp_id_"+snp_row_id).val() + ": no mapping found</div>");
-                        $("#snpValidationStatusFailed").show();
-                    }
-                    snp_row_id++;
-                });
-                btn.button('reset');
-            }
-        });
+                        // SNP has been merged
+                        if (key == $("#snp_id_" + snp_row_id).val()) {
+                            $("#merged_" + snp_row_id).val(0);
+                        }
+                        else {
+                            $("#merged_" + snp_row_id).val(1);
+                        }
+
+                        // Get mapping(s) and genomic context
+                        if (data.mappings) {
+                            getMappings(data.mappings, snp_row_id);
+                        }
+                        else {
+                            $("#snpValidationStatusFailed").append("<div>" + error_icon +
+                                                                   $("#snp_id_" + snp_row_id).val() +
+                                                                   ": no mapping found</div>");
+                            $("#snpValidationStatusFailed").show();
+                        }
+                        snp_row_id++;
+                    });
+                    btn.button('reset');
+                }
+            });
+        }
+        else {
+            $("#snpValidationStatusFailed").append("<div>Please, provide at least 2 variants</div>");
+            $("#snpValidationStatusFailed").show();
+        }
     });
 
 
@@ -160,6 +180,7 @@ $(document).ready(function() {
         if ($("#mapping_table > tbody > tr").length > 0) {
 
             $("#geneValidationStatus").html("");
+            $("#geneValidationStatus").hide();
 
             var btn = $("#gene_validation_button").button('loading');
 
@@ -276,11 +297,23 @@ function getMappings(mappings,snp_row_id) {
          }
          });*/
 
+
+        var snpMappingId = snpMappingForms+i;
+        var snpMappingName = snpMappingForms+"["+i+"]";
+
         var newrow = "<tr id=\"" + row_prefix + row_id + "\">";
-        newrow = newrow + "<td><span>" + $("#snp_id_"+snp_row_id).val() + "</span></td>";                  // SNP
-        newrow = newrow + "<td><input type=\"text\" value=\"" + band + "\"\></td>";                        // Region
-        newrow = newrow + "<td><input class=\"chromosomeName\" type=\"text\" value=\"" +chr+ "\"\></td>";  // Chromosome
-        newrow = newrow + "<td><input type=\"text\" value=\"" + position + "\"\></td>";                    // Position
+        // SNP
+        newrow = newrow + "<td><span>" + $("#snp_id_"+snp_row_id).val() + "</span>"+
+                 "<"+hidden_input+" id=\""+snpMappingId+".snp\" name=\""+snpMappingName+".snp\" value=\""+$("#snp_id_"+snp_row_id).val()+"\"></td>";
+        // Region
+        newrow = newrow + "<td><span>" + band + "</span>"+
+                "<"+hidden_input+" id=\""+snpMappingId+".location.region.name\" name=\""+snpMappingName+".location.region.name\" value=\""+band+"\"></td>";
+        // Chromosome
+        newrow = newrow + "<td><span class=\"chromosomeName\">" + chr + "</span>"+
+                "<"+hidden_input+" id=\""+snpMappingId+".location.chromosomeName\" name=\""+snpMappingName+".location.chromosomeName\" value=\""+chr+"\"></td>";
+        // Position
+        newrow = newrow + "<td><span>" + position + "</span>"+
+                "<"+hidden_input+" id=\""+snpMappingId+".location.chromosomePosition\" name=\""+snpMappingName+".location.chromosomePosition\" value=\""+position+"\"></td>";
         //newrow = newrow + "<td><div class=\"btn btn-danger\" onclick=\"javascript:delete_row(\'" + row_prefix + row_id + "\')\">Delete</div></td>";
         newrow = newrow + "</tr>";
         $("#mapping_table > tbody").append(newrow);
@@ -409,7 +442,7 @@ function addGenomicContextRow(json_result,position,snp_row_id,overlap,type) {
     var downstream = false;
     var overlap_list = [];
 
-    var checked = " checked";
+    var checked = "checked=\"checked\"";
     var interchecked = "";
     var upchecked = "";
     var downchecked = "";
@@ -478,13 +511,41 @@ function addGenomicContextRow(json_result,position,snp_row_id,overlap,type) {
             overlap_list.push(gene_name);
         }
 
+        var genomicContextId = genomicContextForms+i;
+        var genomicContextName = genomicContextForms+"["+i+"]";
+
+        var hidden_intergenic_val = "";
+        var hidden_upstream_val = "";
+        var hidden_downstream_val = "";
+
         var newrow = "<tr id=\""+row_prefix + row_id + "\">";
-        newrow = newrow + "<td><span>" + $("#snp_id_"+snp_row_id).val() + "</span></td>";                          // SNP
-        newrow = newrow + "<td><input type=\"checkbox\"  value=\"" + intergenic + "\"" + interchecked + "\></td>"; // Intergenic
-        newrow = newrow + "<td><span>" + gene_name + " (" + gene_id + ")</span></td>";                             // Gene name
-        newrow = newrow + "<td><input type=\"checkbox\" value=\"" + upstream + "\"" + upchecked + "\></td>";       // Upstream
-        newrow = newrow + "<td><input type=\"checkbox\" value=\"" + downstream + "\"" + downchecked + "\></td>";   // Downstream
-        newrow = newrow + "<td><input type=\"text\" value=\"" + distance + "\"\></td>";                            // Distance
+        // SNP
+        newrow = newrow + "<td><span>" + $("#snp_id_"+snp_row_id).val() + "</span>"+
+                "<"+hidden_input+" id=\""+genomicContextId+".snp.rsId\" name=\""+genomicContextName+".snp.rsId\" value=\""+$("#snp_id_"+snp_row_id).val()+"\"></td>";
+        // Intergenic
+        if (interchecked != "") {
+            hidden_intergenic_val = "<"+hidden_input+" name=\"_"+genomicContextName+".isIntergenic\" value=\"on\"/>";
+        }
+        newrow = newrow + "<td><input type=\"checkbox\" id=\""+genomicContextId+".isIntergenic1\" name=\""+genomicContextName+".isIntergenic\" value=\"" + intergenic + "\"" + interchecked + "\>"+
+                hidden_intergenic_val+"</td>";
+        // Gene name
+        newrow = newrow + "<td><span>" + gene_name + " (" + gene_id + ")</span>"+
+                "<"+hidden_input+" id=\""+genomicContextId+".gene.geneName\" name=\""+genomicContextName+".gene.geneName\" value=\""+gene_name+"\"></td>";
+        // Upstream
+        if (upchecked != "") {
+            hidden_upstream_val = "<"+hidden_input+" name=\"_"+genomicContextName+".isUpstream\" value=\"on\"/>";
+        }
+        newrow = newrow + "<td><input type=\"checkbox\" id=\""+genomicContextId+".isUpstream1\" name=\""+genomicContextName+".isUpstream\" value=\"" + upstream + "\"" + upchecked + "\>"+
+                hidden_upstream_val+"</td>";
+        // Downstream
+        if (downchecked != "") {
+            hidden_downstream_val = "<"+hidden_input+" name=\"_"+genomicContextName+".isDownstream\" value=\"on\"/>";
+        }
+        newrow = newrow + "<td><input type=\"checkbox\" id=\""+genomicContextId+".isDownstream1\" name=\""+genomicContextName+".isDownstream\" value=\"" + downstream + "\"" + downchecked + "\>"+
+                hidden_downstream_val+"</td>";
+        // Distance
+        newrow = newrow + "<td><span>" + distance + "</span>"+
+                "<"+hidden_input+" id=\""+genomicContextId+".distance\" name=\""+genomicContextName+".distance\" value=\""+distance+"\"></td>";
         //newrow = newrow + "<td><div class=\"btn btn-danger\" onclick=\"javascript:delete_row(\'"+row_prefix+row_id+"\')\">Delete</div></td>";
         newrow = newrow + "</tr>";
         $("#context_table > tbody").append(newrow);
