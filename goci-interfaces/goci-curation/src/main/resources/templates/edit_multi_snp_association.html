@@ -370,11 +370,8 @@
                                             <thead>
                                                 <tr>
                                                     <th>SNP</th>
-                                                    <th>Intergenic</th>
                                                     <th>Gene</th>
-                                                    <th>Upstream</th>
-                                                    <th>Downstream</th>
-                                                    <th>Distance</th>
+                                                    <th>Localisation</th>
                                                     <!--<th>
                                                         <button type="submit" name="addGenomicContextRow">Add row</button>
                                                     </th>-->
@@ -386,21 +383,38 @@
                                                         <span th:text="*{genomicContexts[__${rowStat.index}__].snp.rsId}">SNP</span>
                                                         <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].snp.rsId}"/>
                                                     </td>
-                                                    <td>
-                                                        <input type="checkbox" th:field="*{genomicContexts[__${rowStat.index}__].isIntergenic}"/>
-                                                    </td>
+
                                                     <td>
                                                         <span th:text="*{genomicContexts[__${rowStat.index}__].gene.geneName}">Gene</span>
                                                         <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].gene.geneName}"/>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" th:field="*{genomicContexts[__${rowStat.index}__].isUpstream}"/>
-                                                    </td>
-                                                    <td>
-                                                        <input type="checkbox" th:field="*{genomicContexts[__${rowStat.index}__].isDownstream}"/>
-                                                    </td>
-                                                    <td>
-                                                        <span th:text="*{genomicContexts[__${rowStat.index}__].distance}">dist.</span>
+                                                       <span th:switch="*{genomicContexts[__${rowStat.index}__].isIntergenic}">
+
+                                                            <span th:case="false">
+                                                                <!-- Overlapping gene -->
+                                                                <span data-toggle="tooltip" title="This gene overlaps the variant">
+                                                                    <span class="glyphicon glyphicon-map-marker"></span>
+                                                                </span>
+                                                            </span>
+
+                                                            <span th:case="true">
+                                                                <!-- Non overlapping gene -->
+                                                                <span data-toggle="tooltip" title="This gene is upstream of the variant" th:if="*{genomicContexts[__${rowStat.index}__].isUpstream}">
+                                                                     <!-- Upstream of the variant -->
+                                                                    <span class="glyphicon glyphicon-circle-arrow-up" style="color:#0C0"></span>
+                                                                </span>
+                                                                <span data-toggle="tooltip" title="This gene is downstream of the variant" th:if="*{genomicContexts[__${rowStat.index}__].isDownstream}">
+                                                                    <!-- Downstream of the variant -->
+                                                                    <span class="glyphicon glyphicon-circle-arrow-down" style="color:#00C" ></span>
+                                                                </span>
+                                                            </span>
+                                                        </span>
+
+                                                        <span th:text="*{genomicContexts[__${rowStat.index}__].distance}+' bp'" th:if="*{genomicContexts[__${rowStat.index}__].distance} != 0">dist.</span>
+                                                        <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].isIntergenic}"/>
+                                                        <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].isUpstream}"/>
+                                                        <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].isDownstream}"/>
                                                         <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].distance}"/>
                                                     </td>
                                                     <!--<td>

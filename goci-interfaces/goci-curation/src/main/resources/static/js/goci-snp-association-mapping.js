@@ -32,6 +32,8 @@ var error_icon = "<span class=\"glyphicon glyphicon-remove-sign\"></span> ";
 // Main "function" waiting for a click on one of the button in the form
 $(document).ready(function() {
 
+    displayTooltip();
+
     // Single variant validation (+ variant mapping and genomic context)
     $("#snp_validation_button").click(function() {
         var snp_row_id = 1; // Standard association (only 1 variant association)
@@ -322,6 +324,7 @@ function getMappings(mappings,snp_row_id) {
         // Populate Genomic context
         getAllGenomicContext(chr, position, snp_row_id);
     }
+    displayTooltip();
 }
 
 
@@ -442,24 +445,16 @@ function addGenomicContextRow(json_result,position,snp_row_id,overlap,type) {
     var downstream = false;
     var overlap_list = [];
 
-    var checked = "checked=\"checked\"";
-    var interchecked = "";
-    var upchecked = "";
-    var downchecked = "";
-
     var row_id = 1;
     var row_prefix = "context_tr_";
 
     if (type) {
         intergenic = true;
-        interchecked = checked;
         if (type == 'upstream')   {
             upstream  = true;
-            upchecked = checked;
         }
         if (type == 'downstream') {
             downstream  = true;
-            downchecked = checked;
         }
     }
 
@@ -514,37 +509,38 @@ function addGenomicContextRow(json_result,position,snp_row_id,overlap,type) {
         var genomicContextId = genomicContextForms+i;
         var genomicContextName = genomicContextForms+"["+i+"]";
 
-        var hidden_intergenic_val = "";
-        var hidden_upstream_val = "";
-        var hidden_downstream_val = "";
-
         var newrow = "<tr id=\""+row_prefix + row_id + "\">";
         // SNP
         newrow = newrow + "<td><span>" + $("#snp_id_"+snp_row_id).val() + "</span>"+
                 "<"+hidden_input+" id=\""+genomicContextId+".snp.rsId\" name=\""+genomicContextName+".snp.rsId\" value=\""+$("#snp_id_"+snp_row_id).val()+"\"></td>";
-        // Intergenic
-        if (interchecked != "") {
-            hidden_intergenic_val = "<"+hidden_input+" name=\"_"+genomicContextName+".isIntergenic\" value=\"on\"/>";
-        }
-        newrow = newrow + "<td><input type=\"checkbox\" id=\""+genomicContextId+".isIntergenic1\" name=\""+genomicContextName+".isIntergenic\" value=\"" + intergenic + "\"" + interchecked + "\>"+
-                hidden_intergenic_val+"</td>";
         // Gene name
         newrow = newrow + "<td><span>" + gene_name + " (" + gene_id + ")</span>"+
                 "<"+hidden_input+" id=\""+genomicContextId+".gene.geneName\" name=\""+genomicContextName+".gene.geneName\" value=\""+gene_name+"\"></td>";
-        // Upstream
-        if (upchecked != "") {
-            hidden_upstream_val = "<"+hidden_input+" name=\"_"+genomicContextName+".isUpstream\" value=\"on\"/>";
+        // Localisation
+        var localisation = "<span class=\"glyphicon ";
+        var title = "";
+        if (intergenic == true) {
+            if (upstream == true) {
+                localisation = localisation + "glyphicon-circle-arrow-up\" style=\"color:#0C0\">";
+                title = "This gene is upstream of the variant";
+            }
+            else {
+                localisation = localisation + "glyphicon-circle-arrow-down\" style=\"color:#00C\">";
+                title = "This gene is downstream of the variant";
+            }
+            localisation = localisation + "</span>"+"<span style=\"padding-left:5px\">" + distance + " bp</span>";
         }
-        newrow = newrow + "<td><input type=\"checkbox\" id=\""+genomicContextId+".isUpstream1\" name=\""+genomicContextName+".isUpstream\" value=\"" + upstream + "\"" + upchecked + "\>"+
-                hidden_upstream_val+"</td>";
-        // Downstream
-        if (downchecked != "") {
-            hidden_downstream_val = "<"+hidden_input+" name=\"_"+genomicContextName+".isDownstream\" value=\"on\"/>";
+        else {
+            localisation = localisation + "glyphicon-map-marker\">"+"</span>";
+            title = "This gene overlaps the variant";
         }
-        newrow = newrow + "<td><input type=\"checkbox\" id=\""+genomicContextId+".isDownstream1\" name=\""+genomicContextName+".isDownstream\" value=\"" + downstream + "\"" + downchecked + "\>"+
-                hidden_downstream_val+"</td>";
-        // Distance
-        newrow = newrow + "<td><span>" + distance + "</span>"+
+
+        localisation = "<span data-toggle=\"tooltip\" title=\""+ title +"\" >" + localisation + "</span>";
+
+        newrow = newrow + "<td>" + localisation +
+                "<"+hidden_input+" id=\""+genomicContextId+".isIntergenic\" name=\""+genomicContextName+".isIntergenic\" value=\""+intergenic+"\">"+
+                "<"+hidden_input+" id=\""+genomicContextId+".isUpstream\" name=\""+genomicContextName+".isUpstream\" value=\""+upstream+"\">"+
+                "<"+hidden_input+" id=\""+genomicContextId+".isDownstream\" name=\""+genomicContextName+".isDownstream\" value=\""+downstream+"\">"+
                 "<"+hidden_input+" id=\""+genomicContextId+".distance\" name=\""+genomicContextName+".distance\" value=\""+distance+"\"></td>";
         //newrow = newrow + "<td><div class=\"btn btn-danger\" onclick=\"javascript:delete_row(\'"+row_prefix+row_id+"\')\">Delete</div></td>";
         newrow = newrow + "</tr>";
@@ -555,4 +551,13 @@ function addGenomicContextRow(json_result,position,snp_row_id,overlap,type) {
     if (!type) {
         return overlap_list;
     }
+}
+
+
+function displayTooltip() {
+    $('[data-toggle="tooltip"]').mouseover(
+        function() {
+            $(this).tooltip('show');
+        }
+    );
 }
