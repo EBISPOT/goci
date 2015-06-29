@@ -1,7 +1,7 @@
 package uk.ac.ebi.spot.goci.pussycat.session;
 
-import uk.ac.ebi.spot.goci.lang.Filter;
-import uk.ac.ebi.spot.goci.ui.model.AssociationSummary;
+import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
+//import uk.ac.ebi.spot.goci.ui.model.AssociationSummary;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
@@ -60,11 +60,11 @@ public class SVGLoadingPussycatSession extends AbstractSVGIOPussycatSession {
         }
     }
 
-    @Override public List<AssociationSummary> getAssociationSummaries(List<URI> associationURIs) {
-        // todo - implement this!
-        throw new UnsupportedOperationException("This pussycat instance does not have access to association summary " +
-                                                        "data");
-    }
+//    @Override public List<AssociationSummary> getAssociationSummaries(List<URI> associationURIs) {
+//        // todo - implement this!
+//        throw new UnsupportedOperationException("This pussycat instance does not have access to association summary " +
+//                                                        "data");
+//    }
 
     @Override public Set<URI> getRelatedTraits(String traitName) {
         // todo - implement this!

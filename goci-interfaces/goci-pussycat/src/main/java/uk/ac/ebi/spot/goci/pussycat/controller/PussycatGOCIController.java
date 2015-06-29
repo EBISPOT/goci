@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import uk.ac.ebi.spot.goci.lang.Filter;
-import uk.ac.ebi.spot.goci.lang.OntologyConstants;
-import uk.ac.ebi.spot.goci.ui.model.AssociationSummary;
-import uk.ac.ebi.spot.goci.ui.model.SingleNucleotidePolymorphism;
-import uk.ac.ebi.spot.goci.ui.model.Study;
-import uk.ac.ebi.spot.goci.ui.model.TraitAssociation;
+import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
+import uk.ac.ebi.spot.goci.ontology.OntologyConstants;
+import uk.ac.ebi.spot.goci.pussycat.model.AssociationSummary;
+import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.manager.PussycatManager;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
@@ -34,9 +34,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import static uk.ac.ebi.spot.goci.lang.Filtering.filter;
-import static uk.ac.ebi.spot.goci.lang.Filtering.refine;
-import static uk.ac.ebi.spot.goci.lang.Filtering.template;
+import static uk.ac.ebi.spot.goci.pussycat.lang.Filtering.filter;
+import static uk.ac.ebi.spot.goci.pussycat.lang.Filtering.refine;
+import static uk.ac.ebi.spot.goci.pussycat.lang.Filtering.template;
 
 /**
  * A MVC controller for Pussycat.  This controller can be used to create a new session, load ontology data and create
@@ -126,7 +126,7 @@ public class PussycatGOCIController {
             Date to = df.parse(year + "/" + month);
 
             Study study = template(Study.class);
-            Filter filter = refine(study).on(study.getPublishedDate()).hasRange(from, to);
+            Filter filter = refine(study).on(study.getPublicationDate()).hasRange(from, to);
             return getPussycatSession(session).performRendering(getRenderletNexus(session), filter);
         }
         catch (ParseException e) {
@@ -147,21 +147,21 @@ public class PussycatGOCIController {
     public @ResponseBody String renderSNP(@PathVariable String rsID, HttpSession session)
             throws PussycatSessionNotReadyException {
         SingleNucleotidePolymorphism snp = template(SingleNucleotidePolymorphism.class);
-        Filter filter = refine(snp).on(snp.getRSID()).hasValue(rsID);
+        Filter filter = refine(snp).on(snp.getRsId()).hasValue(rsID);
         return getPussycatSession(session).performRendering(getRenderletNexus(session), filter);
     }
 
     @RequestMapping(value = "/associations")
     public @ResponseBody String renderAssociations(HttpSession session) throws PussycatSessionNotReadyException {
-        TraitAssociation ta = template(TraitAssociation.class);
+        Association ta = template(Association.class);
         return getPussycatSession(session).performRendering(getRenderletNexus(session), filter(ta));
     }
 
     @RequestMapping(value = "/traits/{efoURI}")
     public @ResponseBody String renderTrait(@PathVariable String efoURI, HttpSession session)
             throws PussycatSessionNotReadyException {
-        TraitAssociation ta = template(TraitAssociation.class);
-        Filter filter = refine(ta).on(ta.getAssociatedTrait()).hasValue(URI.create(efoURI));
+        Association ta = template(Association.class);
+        Filter filter = refine(ta).on(ta.getEfoTraits()).hasValue(URI.create(efoURI));
         return getPussycatSession(session).performRendering(getRenderletNexus(session), filter);
     }
 
@@ -201,12 +201,12 @@ public class PussycatGOCIController {
             StringTokenizer tokenizer = new StringTokenizer(associationIds, ",");
             while (tokenizer.hasMoreTokens()) {
                 String next = tokenizer.nextToken();
-                URI nextURI = URI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/TraitAssociation/" + next);
+                URI nextURI = URI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/Association/" + next);
                 uris.add(nextURI);
             }
         }
         else {
-            URI uri = URI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/TraitAssociation/" + associationIds);
+            URI uri = URI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/Association/" + associationIds);
             uris.add(uri);
         }
 

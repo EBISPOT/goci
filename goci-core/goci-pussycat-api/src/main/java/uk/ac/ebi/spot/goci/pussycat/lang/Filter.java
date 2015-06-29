@@ -1,6 +1,4 @@
-package uk.ac.ebi.spot.goci.lang;
-
-import uk.ac.ebi.spot.goci.ui.model.GWASObject;
+package uk.ac.ebi.spot.goci.pussycat.lang;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -13,8 +11,8 @@ import java.util.List;
  * @author Tony Burdett
  * @date 03/06/14
  */
-public class Filter<T extends GWASObject, V> {
-    private Class<? extends GWASObject> filteredType;
+public class Filter<T, V> {
+    private Class<?> filteredType;
     private Method filteredMethod;
     private List<V> filteredValues;
     private Range<V> filteredRange;
@@ -42,7 +40,7 @@ public class Filter<T extends GWASObject, V> {
         }
     }
 
-    public Class<? extends GWASObject> getFilteredType() {
+    public Class<?> getFilteredType() {
         return filteredType;
     }
 
@@ -58,17 +56,12 @@ public class Filter<T extends GWASObject, V> {
         return filteredRange;
     }
 
-    private Class<? extends GWASObject> inferFilteredType(T template) {
+    private Class<?> inferFilteredType(T template) {
         if (Proxy.isProxyClass(template.getClass())) {
             Class<?>[] interfaces = template.getClass().getInterfaces();
             if (interfaces.length == 1) {
                 Class<?> i = interfaces[0];
-                if (GWASObject.class.isAssignableFrom(i)) {
-                    return (Class<? extends GWASObject>) i;
-                }
-                else {
-                    throw new IllegalArgumentException("Template is not a GWAS object");
-                }
+                return (Class<?>) i;
             }
             else {
                 throw new IllegalArgumentException("Not a single filter type");

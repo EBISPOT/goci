@@ -4,8 +4,8 @@ import com.hp.hpl.jena.query.QuerySolution;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import uk.ac.ebi.spot.goci.dao.DefaultOntologyDAO;
-import uk.ac.ebi.spot.goci.lang.Filter;
-import uk.ac.ebi.spot.goci.ui.model.AssociationSummary;
+import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
+//import uk.ac.ebi.spot.goci.ui.model.AssociationSummary;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.Renderlet;
@@ -118,48 +118,48 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
         }
     }
 
-    @Override public List<AssociationSummary> getAssociationSummaries(List<URI> associationURIs) {
-        final String query = "SELECT ?pmid ?author ?date ?rsid ?pval ?gwastrait ?label ?trait WHERE { " +
-                "?association a gt:TraitAssociation ; " +
-                "             gt:has_p_value ?pval ; " +
-                "             gt:has_gwas_trait_name ?gwastrait ; " +
-                "             ro:part_of ?study ; " +
-                "             oban:has_subject ?snp ; " +
-                "             oban:has_object ?trait . " +
-                "?snp gt:has_snp_reference_id ?rsid . " +
-                "?study gt:has_author ?author ; " +
-                "       gt:has_publication_date ?date ; " +
-                "       gt:has_pubmed_id ?pmid . " +
-                "?trait rdfs:label ?label . " +
-                "FILTER (?association = ??)" +
-                "}";
-
-        List<AssociationSummary> results = new ArrayList<AssociationSummary>();
-        for (URI uri : associationURIs) {
-            List<AssociationSummary> summaries =
-                    getSparqlTemplate().query(query, new QuerySolutionMapper<AssociationSummary>() {
-                        @Override public AssociationSummary mapQuerySolution(QuerySolution qs) {
-                            String pubmedID = qs.getLiteral("pmid").getLexicalForm();
-                            String firstAuthor = qs.getLiteral("author").getLexicalForm();
-                            String publicationDate = qs.getLiteral("date").getLexicalForm().substring(0, 4);
-                            String snp = qs.getLiteral("rsid").getLexicalForm();
-                            String pValue = qs.getLiteral("pval").getLexicalForm();
-                            String gwasTraitName = qs.getLiteral("gwastrait").getLexicalForm();
-                            String efoTraitLabel = qs.getLiteral("label").getLexicalForm();
-                            URI efoTraitURI = URI.create(qs.getResource("trait").getURI());
-                            return new SparqlAssociationSummary(pubmedID, firstAuthor, publicationDate, snp, pValue,
-                                                                gwasTraitName, efoTraitLabel, efoTraitURI);
-                        }
-                    }, uri);
-            if (summaries.size() == 0) {
-                results.add(null);
-            }
-            else {
-                results.add(summaries.iterator().next());
-            }
-        }
-        return results;
-    }
+//    @Override public List<AssociationSummary> getAssociationSummaries(List<URI> associationURIs) {
+//        final String query = "SELECT ?pmid ?author ?date ?rsid ?pval ?gwastrait ?label ?trait WHERE { " +
+//                "?association a gt:TraitAssociation ; " +
+//                "             gt:has_p_value ?pval ; " +
+//                "             gt:has_gwas_trait_name ?gwastrait ; " +
+//                "             ro:part_of ?study ; " +
+//                "             oban:has_subject ?snp ; " +
+//                "             oban:has_object ?trait . " +
+//                "?snp gt:has_snp_reference_id ?rsid . " +
+//                "?study gt:has_author ?author ; " +
+//                "       gt:has_publication_date ?date ; " +
+//                "       gt:has_pubmed_id ?pmid . " +
+//                "?trait rdfs:label ?label . " +
+//                "FILTER (?association = ??)" +
+//                "}";
+//
+//        List<AssociationSummary> results = new ArrayList<AssociationSummary>();
+//        for (URI uri : associationURIs) {
+//            List<AssociationSummary> summaries =
+//                    getSparqlTemplate().query(query, new QuerySolutionMapper<AssociationSummary>() {
+//                        @Override public AssociationSummary mapQuerySolution(QuerySolution qs) {
+//                            String pubmedID = qs.getLiteral("pmid").getLexicalForm();
+//                            String firstAuthor = qs.getLiteral("author").getLexicalForm();
+//                            String publicationDate = qs.getLiteral("date").getLexicalForm().substring(0, 4);
+//                            String snp = qs.getLiteral("rsid").getLexicalForm();
+//                            String pValue = qs.getLiteral("pval").getLexicalForm();
+//                            String gwasTraitName = qs.getLiteral("gwastrait").getLexicalForm();
+//                            String efoTraitLabel = qs.getLiteral("label").getLexicalForm();
+//                            URI efoTraitURI = URI.create(qs.getResource("trait").getURI());
+//                            return new SparqlAssociationSummary(pubmedID, firstAuthor, publicationDate, snp, pValue,
+//                                                                gwasTraitName, efoTraitLabel, efoTraitURI);
+//                        }
+//                    }, uri);
+//            if (summaries.size() == 0) {
+//                results.add(null);
+//            }
+//            else {
+//                results.add(summaries.iterator().next());
+//            }
+//        }
+//        return results;
+//    }
 
     @Override public Set<URI> getRelatedTraits(String traitName) {
         // get OWLClasses by name
@@ -234,64 +234,64 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
         }
     }
 
-    private class SparqlAssociationSummary implements AssociationSummary {
-        private final String pubmedID;
-        private final String firstAuthor;
-        private final String publicationDate;
-        private final String snp;
-        private final String pValue;
-        private final String gwasTraitName;
-        private final String efoTraitLabel;
-        private final URI efoTraitURI;
-
-        public SparqlAssociationSummary(String pubmedID,
-                                        String firstAuthor,
-                                        String publicationDate,
-                                        String snp,
-                                        String pValue,
-                                        String gwasTraitName,
-                                        String efoTraitLabel,
-                                        URI efoTraitURI) {
-            this.pubmedID = pubmedID;
-            this.firstAuthor = firstAuthor;
-            this.publicationDate = publicationDate;
-            this.snp = snp;
-            this.pValue = pValue;
-            this.gwasTraitName = gwasTraitName;
-            this.efoTraitLabel = efoTraitLabel;
-            this.efoTraitURI = efoTraitURI;
-        }
-
-        @Override public String getPubMedID() {
-            return pubmedID;
-        }
-
-        @Override public String getFirstAuthor() {
-            return firstAuthor;
-        }
-
-        @Override public String getPublicationDate() {
-            return publicationDate;
-        }
-
-        public String getSNP() {
-            return snp;
-        }
-
-        @Override public String getPvalue() {
-            return pValue;
-        }
-
-        @Override public String getGWASTraitName() {
-            return gwasTraitName;
-        }
-
-        @Override public String getEFOTraitLabel() {
-            return efoTraitLabel;
-        }
-
-        @Override public URI getEFOTraitURI() {
-            return efoTraitURI;
-        }
-    }
+//    private class SparqlAssociationSummary implements AssociationSummary {
+//        private final String pubmedID;
+//        private final String firstAuthor;
+//        private final String publicationDate;
+//        private final String snp;
+//        private final String pValue;
+//        private final String gwasTraitName;
+//        private final String efoTraitLabel;
+//        private final URI efoTraitURI;
+//
+//        public SparqlAssociationSummary(String pubmedID,
+//                                        String firstAuthor,
+//                                        String publicationDate,
+//                                        String snp,
+//                                        String pValue,
+//                                        String gwasTraitName,
+//                                        String efoTraitLabel,
+//                                        URI efoTraitURI) {
+//            this.pubmedID = pubmedID;
+//            this.firstAuthor = firstAuthor;
+//            this.publicationDate = publicationDate;
+//            this.snp = snp;
+//            this.pValue = pValue;
+//            this.gwasTraitName = gwasTraitName;
+//            this.efoTraitLabel = efoTraitLabel;
+//            this.efoTraitURI = efoTraitURI;
+//        }
+//
+//        @Override public String getPubMedID() {
+//            return pubmedID;
+//        }
+//
+//        @Override public String getFirstAuthor() {
+//            return firstAuthor;
+//        }
+//
+//        @Override public String getPublicationDate() {
+//            return publicationDate;
+//        }
+//
+//        public String getSNP() {
+//            return snp;
+//        }
+//
+//        @Override public String getPvalue() {
+//            return pValue;
+//        }
+//
+//        @Override public String getGWASTraitName() {
+//            return gwasTraitName;
+//        }
+//
+//        @Override public String getEFOTraitLabel() {
+//            return efoTraitLabel;
+//        }
+//
+//        @Override public URI getEFOTraitURI() {
+//            return efoTraitURI;
+//        }
+//    }
 }

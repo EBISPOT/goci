@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.utils;
+package uk.ac.ebi.spot.goci.ontology;
 
 /**
  * Created by catherineleroy on 13/05/2015.

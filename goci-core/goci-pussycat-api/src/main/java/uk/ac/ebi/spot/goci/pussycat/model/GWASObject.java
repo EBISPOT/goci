@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.model;
+package uk.ac.ebi.spot.goci.pussycat.model;
 
 /**
  * Marker interface for GWAS model objects

@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.lang;
+package uk.ac.ebi.spot.goci.pussycat.lang;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

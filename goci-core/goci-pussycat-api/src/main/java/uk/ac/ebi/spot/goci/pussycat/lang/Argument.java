@@ -1,6 +1,5 @@
-package uk.ac.ebi.spot.goci.lang;
+package uk.ac.ebi.spot.goci.pussycat.lang;
 
-import uk.ac.ebi.spot.goci.ui.model.GWASObject;
 
 import java.lang.reflect.Method;
 
@@ -10,7 +9,7 @@ import java.lang.reflect.Method;
  * @author Tony Burdett
  * @date 03/06/14
  */
-public class Argument<T extends GWASObject> {
+public class Argument<T> {
     private T template;
     private Method method;
 

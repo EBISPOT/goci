@@ -1,7 +1,7 @@
 package uk.ac.ebi.spot.goci.pussycat.session;
 
-import uk.ac.ebi.spot.goci.lang.Filter;
-import uk.ac.ebi.spot.goci.ui.model.AssociationSummary;
+import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
+//import uk.ac.ebi.spot.goci.ui.model.AssociationSummary;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
@@ -69,10 +69,10 @@ public class SVGCachingPussycatSession extends AbstractSVGIOPussycatSession impl
         }
     }
 
-    @Override public List<AssociationSummary> getAssociationSummaries(List<URI> associationURIs) {
-        // delegates to underlying session to retrieve actual data
-        return getProxiedSession().getAssociationSummaries(associationURIs);
-    }
+//    @Override public List<AssociationSummary> getAssociationSummaries(List<URI> associationURIs) {
+//        // delegates to underlying session to retrieve actual data
+//        return getProxiedSession().getAssociationSummaries(associationURIs);
+//    }
 
     @Override public Set<URI> getRelatedTraits(String traitName) {
         // delegates to underlying session to retrieve actual data

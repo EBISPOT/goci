@@ -1,15 +1,8 @@
-package uk.ac.ebi.spot.goci.utils;
+package uk.ac.ebi.spot.goci.ontology;
 
 /**
  * Created by catherineleroy on 13/05/2015.
  */
-
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URLEncoder;
-
 
 import org.semanticweb.owlapi.model.IRI;
 import org.slf4j.Logger;
@@ -17,8 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.Id;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
 import java.net.URLEncoder;
 
 /**

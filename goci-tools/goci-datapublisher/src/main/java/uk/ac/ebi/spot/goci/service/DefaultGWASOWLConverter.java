@@ -12,12 +12,12 @@ import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
-import uk.ac.ebi.spot.goci.utils.OntologyConstants;
+import uk.ac.ebi.spot.goci.ontology.OntologyConstants;
 import uk.ac.ebi.spot.goci.owl.OntologyLoader;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.utils.ReflexiveIRIMinter;
+import uk.ac.ebi.spot.goci.ontology.ReflexiveIRIMinter;
 
 import java.text.SimpleDateFormat;
 import java.util.Collection;

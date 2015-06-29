@@ -1,6 +1,4 @@
-package uk.ac.ebi.spot.goci.lang;
-
-import uk.ac.ebi.spot.goci.ui.model.GWASObject;
+package uk.ac.ebi.spot.goci.pussycat.lang;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
@@ -21,16 +19,16 @@ public class Filtering {
      * @param <T>
      * @return
      */
-    public static <T extends GWASObject> T template(Class<T> filterType) {
+    public static <T> T template(Class<T> filterType) {
         InvocationHandler handler = new MethodLoggingInvocationHandler();
         return (T) Proxy.newProxyInstance(filterType.getClassLoader(), new Class[]{filterType}, handler);
     }
 
-    public static <T extends GWASObject> CallChain<T> refine(T template) {
+    public static <T> CallChain<T> refine(T template) {
         return new CallChain<T>(template);
     }
 
-    public static <T extends GWASObject> Filter<T, ?> filter(T template) {
+    public static <T> Filter<T, ?> filter(T template) {
         return new Filter<T, Object>(template);
     }
 }

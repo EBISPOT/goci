@@ -117,6 +117,18 @@
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-model</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-pussycat-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-utils</artifactId>
+        </dependency>
 
         <!-- ontology utils -->
         <!--<dependency>-->
