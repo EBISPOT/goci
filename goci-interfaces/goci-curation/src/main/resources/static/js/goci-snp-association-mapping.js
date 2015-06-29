@@ -51,7 +51,7 @@ $(document).ready(function() {
                 dataType: "json",
                 url: rest_url,
                 error: function(jqXHR, status, errorThrown) {
-                    $("#snpValidationStatusFailed").append("<div>" + error_icon + $("#snp_id_"+snp_row_id).val() + ": " + status + " (" + errorThrown + ")" + "</div>");
+                    $("#snpValidationStatusFailed").append("<div><b>" + error_icon + $("#snp_id_"+snp_row_id).val() + "</b>: " + status + " (" + errorThrown + ")" + "</div>");
                     $("#snpValidationStatusFailed").show();
                     btn.button('reset');
                 },
@@ -76,10 +76,10 @@ $(document).ready(function() {
                         getMappings(result.mappings, snp_row_id);
                     }
                     else {
-                        $("#snpValidationStatusFailed").append("<div>" + error_icon + $("#snp_id_" + snp_row_id).val() + ": no mapping found</div>");
+                        $("#snpValidationStatusFailed").append("<div><b>" + error_icon + $("#snp_id_" + snp_row_id).val() + "</b>: no mapping found</div>");
                     }
                     btn.button('reset');
-                    $("#snpValidationStatusOk").append("<div>" + ok_icon + $("#snp_id_" + snp_row_id).val() + ": validated</div>");
+                    $("#snpValidationStatusOk").append("<div><b>" + ok_icon + $("#snp_id_" + snp_row_id).val() + "</b>: validated</div>");
                     $("#snpValidationStatusOk").show();
                 }
             });
@@ -91,27 +91,33 @@ $(document).ready(function() {
     $("#multi_snp_validation_button").click(function() {
         var change = 0;
         var variants_ids = [];
+        var variants_list = [];
 
-        var btn = $(this).button('loading');
+        $("#snpValidationStatusFailed").hide();
+        $("#snpValidationStatusFailed").html("");
 
         // Get the list of variant rsIDs
         $(".snp_row").each(function() {
             var snp_row_id = $(this).html();
-            var snp = $("#snp_id_"+snp_row_id).val();
+            if ($("#snp_id_"+snp_row_id).val()) {
+                var snp = $("#snp_id_"+snp_row_id).val();
+                variants_list[snp] = snp_row_id; // Hash to store the relation "row ID - SNP name"
+                variants_ids.push(snp);
+            }
             if (($("#snpValidated_" + snp_row_id).val() != "true" || $("#snp_id_" + snp_row_id).val() != $("#snp_" + snp_row_id).val()) && $("#snp_id_"+snp_row_id).val()) {
                 change = 1;
-                variants_ids.push(snp);
+                $("#snp_" + snp_row_id).val($("#snp_id_" + snp_row_id).val()); // Replace the hidden input by the new entered value
             }
         });
 
-        if (change == 1) {
-            $("#snpValidationStatusOk").html("");
-            $("#snpValidationStatusFailed").html("");
-            $("#snpValidationStatusOk").hide();
-            $("#snpValidationStatusFailed").hide();
-        }
+        var variants_count = $(".snp_row").length;
 
-        if (variants_ids.length > 1) { // Check that there are at least 2 variants provided
+        if (variants_count > 1 && variants_count == variants_ids.length && change == 1) { // Check that there are at least 2 variants provided
+
+            $("#snpValidationStatusOk").hide();
+            $("#snpValidationStatusOk").html("");
+
+            var btn = $(this).button('loading');
 
             var rest_url = rest_variation_post;
 
@@ -121,6 +127,8 @@ $(document).ready(function() {
                 method: "POST",
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
+                //async: false,
+                //cache: false, // Force to stop caching the results
                 url: rest_url,
                 data: json_variants_ids,
                 error: function(jqXHR, status, errorThrown) {
@@ -130,48 +138,76 @@ $(document).ready(function() {
                     btn.button('reset');
                 },
                 success: function(results) {
-
                     $("#mapping_table > tbody").html(""); // Empty the mapping table
                     $("#context_table > tbody").html(""); // Empty the genomic context table
                     $("#contextValidationStatus").html("");
 
-                    var snp_row_id = 1; // Line number starts at 1 and array index starts at 0
-                    // TODO: check that the snp_row_id corresponds to the correct SNP
                     $.each(results, function(key, data) {
-                        //var snp_row_id = i + 1; // Line number starts at 1 and array index starts at 0
-                        $("#snpValidated_" + snp_row_id).val("true");
-                        $("#snp_" + snp_row_id).val($("#snp_id_" + snp_row_id).val());
-                        $("#snpValidationStatusOk").append("<div>" + ok_icon + $("#snp_id_" + snp_row_id).val() +
-                                                           ": validated</div>");
-                        $("#snpValidationStatusOk").show();
 
-                        // SNP has been merged
-                        if (key == $("#snp_id_" + snp_row_id).val()) {
-                            $("#merged_" + snp_row_id).val(0);
+                        var snp_validated = 0;
+                        var snp_row_id = 0;
+                        // Extra check because the REST call returns a hash of SNP IDs (and their data) instead of an array: the order of the SNPs returned is random.
+
+                        // The ID returned is from the list of variants sent
+                        if (variants_list[key]) {
+                            snp_validated = 1;
+                            snp_row_id = variants_list[key];
+                            if ($("#merged_" + snp_row_id)) {
+                                $("#merged_" + snp_row_id).val(0);
+                            }
+                        }
+                        // Check if the ID returned corresponds to a merged variant from the list of variants sent
+                        else {
+                            for (i in data.synonyms) {
+                                var syn = data.synonyms[i];
+                                // SNP has been merged
+                                if (variants_list[syn]) {
+                                    snp_validated = 1;
+                                    snp_row_id = variants_list[syn];
+                                    if ($("#merged_" + snp_row_id)) {
+                                        $("#merged_" + snp_row_id).val(1);
+                                    };
+                                }
+                            }
+                        }
+
+                        if (snp_validated == 1) {
+                            $("#snpValidated_" + snp_row_id).val("true");
+                            $("#snp_" + snp_row_id).val($("#snp_id_" + snp_row_id).val());
+                            $("#snpValidationStatusOk").append("<div><b>" + ok_icon + $("#snp_id_" + snp_row_id).val() +
+                                                               "</b>: validated</div>");
+                            $("#snpValidationStatusOk").show();
+
+                            // Get mapping(s) and genomic context
+                            if (data.mappings) {
+                                getMappings(data.mappings,snp_row_id);
+                            }
+                            else {
+                                $("#snpValidationStatusFailed").append("<div><b>" + error_icon +
+                                                                       $("#snp_id_" + snp_row_id).val() +
+                                                                       "</b>: no mapping found</div>");
+                                $("#snpValidationStatusFailed").show();
+                            }
                         }
                         else {
-                            $("#merged_" + snp_row_id).val(1);
-                        }
-
-                        // Get mapping(s) and genomic context
-                        if (data.mappings) {
-                            getMappings(data.mappings, snp_row_id);
-                        }
-                        else {
-                            $("#snpValidationStatusFailed").append("<div>" + error_icon +
-                                                                   $("#snp_id_" + snp_row_id).val() +
-                                                                   ": no mapping found</div>");
+                            $("#snpValidationStatusFailed").append("<div>" + error_icon + "The variant <b>" + key +
+                                                                   "</b> can't be found in the list of variants from the form</div>");
                             $("#snpValidationStatusFailed").show();
                         }
-                        snp_row_id++;
                     });
                     btn.button('reset');
                 }
             });
         }
         else {
-            $("#snpValidationStatusFailed").append("<div>Please, provide at least 2 variants</div>");
-            $("#snpValidationStatusFailed").show();
+            if (variants_ids.length < 2 ) {
+                $("#snpValidationStatusFailed").append("<div>Please, provide at least 2 variants</div>");
+                $("#snpValidationStatusFailed").show();
+            }
+            if (variants_count != variants_ids.length) {
+                $("#snpValidationStatusFailed").append("<div>Please, provide a variant name/ID for each row</div>");
+                $("#snpValidationStatusFailed").show();
+            }
         }
     });
 
@@ -208,7 +244,7 @@ $(document).ready(function() {
                     url: rest_full_url,
                     error: function(jqXHR, status, errorThrown) {
                         $(".tag:contains('" + gene + "')").css({backgroundColor: "#A00"});
-                        $("#geneValidationStatus").append("<div>" + error_icon +"Gene "+ gene.toUpperCase() + " is not valid</div>");
+                        $("#geneValidationStatus").append("<div>" + error_icon +"Gene <b>"+ gene.toUpperCase() + "</b> is not valid</div>");
 
                     },
                     success: function(result) {
@@ -225,7 +261,7 @@ $(document).ready(function() {
                         }
                         else {
                             $(".tag:contains('" + gene + "')").css({backgroundColor: "#A00"});
-                            $("#geneValidationStatus").append("<div>" + error_icon + "Gene "+ gene.toUpperCase() + " is on a different chromosome (chr"+gene_chr+")</div>");
+                            $("#geneValidationStatus").append("<div>" + error_icon + "Gene <b>"+ gene.toUpperCase() + "</b> is on a different chromosome (chr"+gene_chr+")</div>");
                         }
                     }
                 });
@@ -239,6 +275,7 @@ $(document).ready(function() {
             alert("Please validate the variant(s) before checking the genes (need to compare gene(s) and variant(s) coordinates)");
         }
     });
+
 
     // Switch between variant association form and variant mapping form
     $("#mapping_tab").click(function() {
@@ -268,21 +305,16 @@ $(document).ready(function() {
 });
 
 
-/*function delete_row(row_id) {
- $("#"+row_id).remove();
- }*/
-
-
 // Get the variant mapping(s) and genomic context
 function getMappings(mappings,snp_row_id) {
     var row_prefix = "mapping_tr_";
-    var row_id = $("[id^=row_prefix]").length + 1;
+    var id = $('[id^="'+row_prefix+'"]').length;
+    var row_id = id + 1;
 
     // Populate the mapping table
     for (i in mappings) {
-        var location = mappings[i].location.split(":");
-        var chr = location[0];
-        var position = location[1].split("-")[0];
+        var chr = mappings[i].seq_region_name;
+        var position = mappings[i].start;
         var band = "Unknown";
         /*var rest_cytogenytic = rest_overlap_region+chr+":"+position+"-"+position;
          $.ajax({
@@ -300,8 +332,8 @@ function getMappings(mappings,snp_row_id) {
          });*/
 
 
-        var snpMappingId = snpMappingForms+i;
-        var snpMappingName = snpMappingForms+"["+i+"]";
+        var snpMappingId = snpMappingForms+id;
+        var snpMappingName = snpMappingForms+"["+id+"]";
 
         var newrow = "<tr id=\"" + row_prefix + row_id + "\">";
         // SNP
@@ -316,9 +348,9 @@ function getMappings(mappings,snp_row_id) {
         // Position
         newrow = newrow + "<td><span>" + position + "</span>"+
                 "<"+hidden_input+" id=\""+snpMappingId+".location.chromosomePosition\" name=\""+snpMappingName+".location.chromosomePosition\" value=\""+position+"\"></td>";
-        //newrow = newrow + "<td><div class=\"btn btn-danger\" onclick=\"javascript:delete_row(\'" + row_prefix + row_id + "\')\">Delete</div></td>";
         newrow = newrow + "</tr>";
         $("#mapping_table > tbody").append(newrow);
+        id++;
         row_id++;
 
         // Populate Genomic context
@@ -464,9 +496,11 @@ function addGenomicContextRow(json_result,position,snp_row_id,overlap,type) {
         var gene_id = json_result[i].id;
 
         var distance = 0;
+        var source = "Ensembl";
 
         // NCBI gene
         if (gene_name == null) {
+            source = "NCBI";
             var rest_url = rest_xrefs_id + gene_id;
             $.ajax({
                 method: "GET",
@@ -513,9 +547,13 @@ function addGenomicContextRow(json_result,position,snp_row_id,overlap,type) {
         // SNP
         newrow = newrow + "<td><span>" + $("#snp_id_"+snp_row_id).val() + "</span>"+
                 "<"+hidden_input+" id=\""+genomicContextId+".snp.rsId\" name=\""+genomicContextName+".snp.rsId\" value=\""+$("#snp_id_"+snp_row_id).val()+"\"></td>";
-        // Gene name
-        newrow = newrow + "<td><span>" + gene_name + " (" + gene_id + ")</span>"+
+        // Gene symbol
+        newrow = newrow + "<td><span>" + gene_name + "</span>"+
                 "<"+hidden_input+" id=\""+genomicContextId+".gene.geneName\" name=\""+genomicContextName+".gene.geneName\" value=\""+gene_name+"\"></td>";
+        // Gene ID
+        newrow = newrow + "<td><span>" + gene_id + "</span></td>";
+        // Source
+        newrow = newrow + "<td><span>" + source + "</span></td>";
         // Localisation
         var localisation = "<span class=\"glyphicon ";
         var title = "";
@@ -542,7 +580,6 @@ function addGenomicContextRow(json_result,position,snp_row_id,overlap,type) {
                 "<"+hidden_input+" id=\""+genomicContextId+".isUpstream\" name=\""+genomicContextName+".isUpstream\" value=\""+upstream+"\">"+
                 "<"+hidden_input+" id=\""+genomicContextId+".isDownstream\" name=\""+genomicContextName+".isDownstream\" value=\""+downstream+"\">"+
                 "<"+hidden_input+" id=\""+genomicContextId+".distance\" name=\""+genomicContextName+".distance\" value=\""+distance+"\"></td>";
-        //newrow = newrow + "<td><div class=\"btn btn-danger\" onclick=\"javascript:delete_row(\'"+row_prefix+row_id+"\')\">Delete</div></td>";
         newrow = newrow + "</tr>";
         $("#context_table > tbody").append(newrow);
         row_id++;
