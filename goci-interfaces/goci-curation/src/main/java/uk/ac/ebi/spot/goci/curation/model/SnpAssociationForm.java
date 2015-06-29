@@ -1,8 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.Location;
-import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
 
 import java.util.ArrayList;
@@ -71,17 +69,9 @@ public class SnpAssociationForm {
 
     private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
-    private Collection<Region> regions = new ArrayList<>();
-
-    //private Collection<Location> locations = new ArrayList<>();
-
     private Collection<GenomicContext> genomicContexts = new ArrayList<>();
 
     private Map<String, String> associationErrorMap = new HashMap<>();
-
-    private String chromosomeName;
-
-    private String chromosomePosition;
 
     // Constructors
     public SnpAssociationForm() {
@@ -110,12 +100,8 @@ public class SnpAssociationForm {
                               String multiSnpHaplotypeDescr,
                               Integer multiSnpHaplotypeNum,
                               Collection<EfoTrait> efoTraits,
-                              Collection<Region> regions,
-                              //Collection<Location> locations,
                               Collection<GenomicContext> genomicContexts,
-                              Map<String, String> associationErrorMap,
-                              String chromosomeName,
-                              String chromosomePosition) {
+                              Map<String, String> associationErrorMap) {
         this.associationId = associationId;
         this.riskFrequency = riskFrequency;
         this.pvalueText = pvalueText;
@@ -139,12 +125,8 @@ public class SnpAssociationForm {
         this.multiSnpHaplotypeDescr = multiSnpHaplotypeDescr;
         this.multiSnpHaplotypeNum = multiSnpHaplotypeNum;
         this.efoTraits = efoTraits;
-        this.regions = regions;
-        //this.locations = locations;
         this.genomicContexts = genomicContexts;
         this.associationErrorMap = associationErrorMap;
-        this.chromosomeName = chromosomeName;
-        this.chromosomePosition = chromosomePosition;
     }
 
     // Getters/setters
@@ -334,22 +316,6 @@ public class SnpAssociationForm {
         this.snpChecked = snpChecked;
     }
 
-    public Collection<Region> getRegions() {
-        return regions;
-    }
-
-    public void setRegions(Collection<Region> regions) {
-        this.regions = regions;
-    }
-
-    /*public Collection<Location> getLocations() {
-        return locations;
-    }
-
-    public void setLocations(Collection<Location> locations) {
-        this.locations = locations;
-    }*/
-
     public Collection<GenomicContext> getGenomicContexts() {
         return genomicContexts;
     }
@@ -363,16 +329,5 @@ public class SnpAssociationForm {
     public void setAssociationErrorMap(Map<String, String> associationErrorMap) {
         this.associationErrorMap = associationErrorMap;
     }
-    // TEST POS - BEGIN
-    public String getChromosomeName() { return chromosomeName; }
-
-    public void setChromosomeName(String chromosomeName) { this.chromosomeName = chromosomeName; }
-
-    public String getChromosomePosition() { return chromosomePosition; }
-
-    public void setChromosomePosition(String chromosomePosition) {
-        this.chromosomePosition = chromosomePosition;
-    }
-    // TEST POS - END
 }
 

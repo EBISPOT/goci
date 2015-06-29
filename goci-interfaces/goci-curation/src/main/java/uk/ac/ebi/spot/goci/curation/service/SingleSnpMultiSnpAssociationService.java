@@ -239,7 +239,6 @@ public class SingleSnpMultiSnpAssociationService {
         snpAssociationForm.setAuthorReportedGenes(authorReportedGenes);
 
         // Handle snp rows
-        Collection<Location> snpLocations = new ArrayList<Location>();
         Collection<GenomicContext> snpGenomicContexts = new ArrayList<GenomicContext>();
         List<SnpFormRow> snpFormRows = new ArrayList<SnpFormRow>();
         List<SnpMappingForm> snpMappingForms = new ArrayList<SnpMappingForm>();
