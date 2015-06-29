@@ -358,7 +358,9 @@
                                         <thead>
                                         <tr>
                                             <th>SNP</th>
-                                            <th>Gene</th>
+                                            <th>Gene symbol</th>
+                                            <th>Gene ID</th>
+                                            <th>Source</th>
                                             <th>Localisation</th>
                                             <!--<th>
                                                 <button type="submit" name="addGenomicContextRow">Add row</button>
@@ -372,9 +374,11 @@
                                                 <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].snp.rsId}"/>
                                             </td>
                                             <td>
-                                                <span th:text="*{genomicContexts[__${rowStat.index}__].gene.geneName}">Gene</span>
+                                                <span th:text="*{genomicContexts[__${rowStat.index}__].gene.geneName}">Gene symbol</span>
                                                 <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].gene.geneName}"/>
                                             </td>
+                                            <td>-</td>
+                                            <td>NCBI</td>
                                             <td>
                                                 <span th:switch="*{genomicContexts[__${rowStat.index}__].isIntergenic}">
 

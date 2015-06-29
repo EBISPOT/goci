@@ -116,7 +116,7 @@
                                                 </td>
                                                 <td>
                                                     <button type="submit" name="removeRow" th:value="${rowStat.index}">Remove row</button>
-                                                    <input type="hidden" th:id="snpValidated_+${rowStat.index}" name="snpValidated" value="false"/>
+                                                    <input type="hidden" th:id="snpValidated_+${rowStat.count}" name="snpValidated" value="false"/>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -370,7 +370,9 @@
                                             <thead>
                                                 <tr>
                                                     <th>SNP</th>
-                                                    <th>Gene</th>
+                                                    <th>Gene symbol</th>
+                                                    <th>Gene ID</th>
+                                                    <th>Source</th>
                                                     <th>Localisation</th>
                                                     <!--<th>
                                                         <button type="submit" name="addGenomicContextRow">Add row</button>
@@ -385,9 +387,11 @@
                                                     </td>
 
                                                     <td>
-                                                        <span th:text="*{genomicContexts[__${rowStat.index}__].gene.geneName}">Gene</span>
+                                                        <span th:text="*{genomicContexts[__${rowStat.index}__].gene.geneName}">Gene symbol</span>
                                                         <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].gene.geneName}"/>
                                                     </td>
+                                                    <td>-</td>
+                                                    <td>NCBI</td>
                                                     <td>
                                                        <span th:switch="*{genomicContexts[__${rowStat.index}__].isIntergenic}">
 
