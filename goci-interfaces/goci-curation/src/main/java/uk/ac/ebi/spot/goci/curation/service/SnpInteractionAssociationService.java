@@ -4,12 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationInteractionForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormColumn;
+import uk.ac.ebi.spot.goci.curation.model.SnpMappingForm;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Gene;
+import uk.ac.ebi.spot.goci.model.GenomicContext;
+import uk.ac.ebi.spot.goci.model.Location;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
+import uk.ac.ebi.spot.goci.repository.GenomicContextRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
 
 import java.util.ArrayList;
@@ -30,6 +34,7 @@ public class SnpInteractionAssociationService {
     // Repositories
     private LocusRepository locusRepository;
     private AssociationRepository associationRepository;
+    private GenomicContextRepository genomicContextRepository;
 
     // Services
     private LociAttributesService lociAttributesService;
@@ -37,9 +42,11 @@ public class SnpInteractionAssociationService {
     @Autowired
     public SnpInteractionAssociationService(LocusRepository locusRepository,
                                             AssociationRepository associationRepository,
+                                            GenomicContextRepository genomicContextRepository,
                                             LociAttributesService lociAttributesService) {
         this.locusRepository = locusRepository;
         this.associationRepository = associationRepository;
+        this.genomicContextRepository = genomicContextRepository;
         this.lociAttributesService = lociAttributesService;
     }
 
@@ -179,6 +186,9 @@ public class SnpInteractionAssociationService {
         // For each locus get genes and risk alleles
         Collection<Locus> loci = association.getLoci();
 
+        Collection<GenomicContext> snpGenomicContexts = new ArrayList<GenomicContext>();
+        List<SnpMappingForm> snpMappingForms = new ArrayList<SnpMappingForm>();
+
         // Create a column per locus
         if (loci != null && !loci.isEmpty()) {
             for (Locus locus : loci) {
@@ -206,6 +216,14 @@ public class SnpInteractionAssociationService {
                     for (RiskAllele riskAllele : locusRiskAlleles) {
                         strongestRiskAllele = riskAllele.getRiskAlleleName();
                         snp = riskAllele.getSnp().getRsId();
+
+                        SingleNucleotidePolymorphism snp_obj = riskAllele.getSnp();
+                        Collection<Location> locations = snp_obj.getLocations();
+                        for (Location location : locations) {
+                            SnpMappingForm snpMappingForm = new SnpMappingForm(snp,location);
+                            snpMappingForms.add(snpMappingForm);
+                        }
+                        snpGenomicContexts.addAll(genomicContextRepository.findBySnpId(snp_obj.getId()));
 
                         // Set proxy
                         if (riskAllele.getProxySnps() != null) {
@@ -241,10 +259,12 @@ public class SnpInteractionAssociationService {
                 snpFormColumn.setLimitedList(limitedList);
                 snpFormColumn.setRiskFrequency(riskFrequency);
 
+
                 snpFormColumns.add(snpFormColumn);
             }
         }
-
+        snpAssociationInteractionForm.setSnpMappingForms(snpMappingForms);
+        snpAssociationInteractionForm.setGenomicContexts(snpGenomicContexts);
         snpAssociationInteractionForm.setSnpFormColumns(snpFormColumns);
         snpAssociationInteractionForm.setNumOfInteractions(snpFormColumns.size());
         return snpAssociationInteractionForm;

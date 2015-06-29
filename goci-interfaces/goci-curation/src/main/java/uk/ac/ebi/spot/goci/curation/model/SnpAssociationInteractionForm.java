@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.GenomicContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,6 +47,10 @@ public class SnpAssociationInteractionForm {
 
     private List<SnpFormColumn> snpFormColumns = new ArrayList<>();
 
+    private List<SnpMappingForm> snpMappingForms = new ArrayList<>();
+
+    private Collection<GenomicContext> genomicContexts = new ArrayList<>();
+
     private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
     private Integer numOfInteractions;
@@ -71,6 +76,8 @@ public class SnpAssociationInteractionForm {
                                          String orPerCopyRecipRange,
                                          String orPerCopyUnitDescr,
                                          List<SnpFormColumn> snpFormColumns,
+                                         List<SnpMappingForm> snpMappingForms,
+                                         Collection<GenomicContext> genomicContexts,
                                          Collection<EfoTrait> efoTraits,
                                          Integer numOfInteractions,
                                          String riskFrequency) {
@@ -88,6 +95,8 @@ public class SnpAssociationInteractionForm {
         this.orPerCopyRecipRange = orPerCopyRecipRange;
         this.orPerCopyUnitDescr = orPerCopyUnitDescr;
         this.snpFormColumns = snpFormColumns;
+        this.snpMappingForms = snpMappingForms;
+        this.genomicContexts = genomicContexts;
         this.efoTraits = efoTraits;
         this.numOfInteractions = numOfInteractions;
         this.riskFrequency = riskFrequency;
@@ -188,6 +197,20 @@ public class SnpAssociationInteractionForm {
     public void setSnpFormColumns(List<SnpFormColumn> snpFormColumns) {
         this.snpFormColumns = snpFormColumns;
     }
+
+    public List<SnpMappingForm> getSnpMappingForms() {
+        return snpMappingForms;
+    }
+
+    public void setSnpMappingForms(List<SnpMappingForm> snpMappingForms) {
+        this.snpMappingForms = snpMappingForms;
+    }
+
+    public Collection<GenomicContext> getGenomicContexts() {
+        return genomicContexts;
+    }
+
+    public void setGenomicContexts(Collection<GenomicContext> genomicContexts) { this.genomicContexts = genomicContexts; }
 
     public Collection<EfoTrait> getEfoTraits() {
         return efoTraits;
