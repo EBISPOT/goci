@@ -10,13 +10,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
-import uk.ac.ebi.spot.goci.ontology.OntologyConstants;
-import uk.ac.ebi.spot.goci.pussycat.model.AssociationSummary;
+import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
+import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
 import uk.ac.ebi.spot.goci.pussycat.manager.PussycatManager;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.spot.goci.pussycat.session.PussycatSession;
@@ -27,12 +25,9 @@ import java.net.URI;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 import static uk.ac.ebi.spot.goci.pussycat.lang.Filtering.filter;
 import static uk.ac.ebi.spot.goci.pussycat.lang.Filtering.refine;
@@ -190,30 +185,30 @@ public class PussycatGOCIController {
         return results;
     }
 
-    @RequestMapping(value = "/associations/{associationIds}")
-    public @ResponseBody List<AssociationSummary> getAssociationSummaries(
-            @PathVariable String associationIds, HttpSession session)
-            throws PussycatSessionNotReadyException {
-        getLog().debug("Received request to display information for associations " + associationIds);
-
-        List<URI> uris = new ArrayList<URI>();
-        if (associationIds.contains(",")) {
-            StringTokenizer tokenizer = new StringTokenizer(associationIds, ",");
-            while (tokenizer.hasMoreTokens()) {
-                String next = tokenizer.nextToken();
-                URI nextURI = URI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/Association/" + next);
-                uris.add(nextURI);
-            }
-        }
-        else {
-            URI uri = URI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/Association/" + associationIds);
-            uris.add(uri);
-        }
-
-        getLog().debug("This trait represents " + uris.size() + " different associations");
-
-        return getPussycatSession(session).getAssociationSummaries(uris);
-    }
+//    @RequestMapping(value = "/associations/{associationIds}")
+//    public @ResponseBody List<AssociationSummary> getAssociationSummaries(
+//            @PathVariable String associationIds, HttpSession session)
+//            throws PussycatSessionNotReadyException {
+//        getLog().debug("Received request to display information for associations " + associationIds);
+//
+//        List<URI> uris = new ArrayList<URI>();
+//        if (associationIds.contains(",")) {
+//            StringTokenizer tokenizer = new StringTokenizer(associationIds, ",");
+//            while (tokenizer.hasMoreTokens()) {
+//                String next = tokenizer.nextToken();
+//                URI nextURI = URI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/Association/" + next);
+//                uris.add(nextURI);
+//            }
+//        }
+//        else {
+//            URI uri = URI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/Association/" + associationIds);
+//            uris.add(uri);
+//        }
+//
+//        getLog().debug("This trait represents " + uris.size() + " different associations");
+//
+//        return getPussycatSession(session).getAssociationSummaries(uris);
+//    }
 
 
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)

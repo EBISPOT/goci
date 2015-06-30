@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.owl;
+package uk.ac.ebi.spot.goci.ontology.owl;
 
 import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.model.IRI;

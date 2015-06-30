@@ -75,10 +75,11 @@
             <artifactId>goci-pussycat-api</artifactId>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>net.sourceforge.owlapi</groupId>-->
-            <!--<artifactId>owlapi-apibinding</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-utils</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>owlapi-distribution</artifactId>
@@ -88,8 +89,8 @@
             <artifactId>org.semanticweb.hermit</artifactId>
         </dependency>
         <dependency>
-            <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-pussycat-api</artifactId>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-core</artifactId>
         </dependency>
     </dependencies>
 

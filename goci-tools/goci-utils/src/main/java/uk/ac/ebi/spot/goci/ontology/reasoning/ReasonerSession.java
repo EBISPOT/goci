@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.reasoning;
+package uk.ac.ebi.spot.goci.ontology.reasoning;
 
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 

@@ -11,7 +11,7 @@ import uk.ac.ebi.spot.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.spot.goci.pussycat.session.AbstractPussycatSession;
-import uk.ac.ebi.spot.goci.reasoning.ReasonerSession;
+import uk.ac.ebi.spot.goci.ontology.reasoning.ReasonerSession;
 import uk.ac.ebi.spot.goci.sparql.exception.SparqlQueryException;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.QuerySolutionMapper;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.SparqlTemplate;

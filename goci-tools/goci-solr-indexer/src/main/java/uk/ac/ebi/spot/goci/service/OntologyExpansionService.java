@@ -6,13 +6,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.OntologyEnabledDocument;
-import uk.ac.ebi.spot.goci.owl.OntologyLoader;
+import uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader;
 
 import java.net.URI;
 
 /**
  * A service that is capable of enriching {@link uk.ac.ebi.spot.goci.model.DiseaseTraitDocument}s with information obtained
- * from a supplied {@link uk.ac.ebi.spot.goci.owl.OntologyLoader}
+ * from a supplied {@link uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader}
  *
  * @author Tony Burdett
  * @date 19/01/15

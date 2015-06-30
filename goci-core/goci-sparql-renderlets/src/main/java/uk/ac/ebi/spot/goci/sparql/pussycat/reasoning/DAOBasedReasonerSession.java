@@ -11,8 +11,8 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
 import org.semanticweb.owlapi.reasoner.SimpleConfiguration;
 import uk.ac.ebi.spot.goci.dao.DefaultOntologyDAO;
-import uk.ac.ebi.spot.goci.lang.Initializable;
-import uk.ac.ebi.spot.goci.reasoning.ReasonerSession;
+import uk.ac.ebi.spot.goci.pussycat.lang.Initializable;
+import uk.ac.ebi.spot.goci.ontology.reasoning.ReasonerSession;
 
 /**
  * A reasoner session that uses loads an OWL ontology from the provided resource, and then uses the GOCI DataPublisher

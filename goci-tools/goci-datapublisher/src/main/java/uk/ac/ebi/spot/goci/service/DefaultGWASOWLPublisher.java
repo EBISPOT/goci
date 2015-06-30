@@ -17,7 +17,7 @@ import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.utils.FilterProperties;
-import uk.ac.ebi.spot.goci.owl.OntologyLoader;
+import uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.model.Association;
