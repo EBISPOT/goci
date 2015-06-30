@@ -34,7 +34,7 @@
 
     <!--Check variants, check reported genes, load variants mappings, load genomic contexts -->
     <script src="../static/js/goci-snp-association-mapping.js"
-            th:src="@{../js/goci-snp-association-mapping.js}"></script>
+            th:src="@{../../../js/goci-snp-association-mapping.js}"></script>
 
 </head>
 <body>
@@ -111,7 +111,9 @@
                                         <tr>
                                             <td>SNP</td>
                                             <td th:each="col,colStat : *{snpFormColumns}">
-                                                <input type="text" th:field="*{snpFormColumns[__${colStat.index}__].snp}"/>
+                                                <span th:text="${colStat.count}" class="snp_row" style="display:none">1</span>
+                                                <input th:id="snp_id_+${colStat.count}" type="text" th:field="*{snpFormColumns[__${colStat.index}__].snp}"/>
+                                                <input type="hidden" th:id="snp_+${colStat.count}" name="snp" th:value="*{snpFormColumns[__${colStat.index}__].snp}"/>
                                             </td>
                                         </tr>
                                         <tr>
@@ -123,11 +125,14 @@
                                         </tr>
 
                                         <tr>
-                                            <td>Gene(s)</td>
+                                            <td>
+                                                <div>Gene(s) <button type="button" id="gene_validation_button" data-loading-text="Checking..." class="btn btn-primary" autocomplete="off">Check gene(s)</button></div>
+                                                <div id="geneValidationStatus" class="alert alert-danger" style="display:none;margin-top:5px"></div>
+                                            </td>
                                             <td th:each="col,colStat : *{snpFormColumns}">
                                                 <input type="text" data-role="tagsinput" th:id="'authorgenes'+${colStat.index}"
                                                        th:field="*{snpFormColumns[__${colStat.index}__].authorReportedGenes}"/>
-                                                <span class="btn btn-primary" id="gene_validation_button">Check gene(s)</span>
+
                                             </td>
                                         </tr>
 
@@ -163,6 +168,7 @@
                                         </tbody>
 
                                     </table>
+                                    <button type="button" th:if="*{numOfInteractions &gt; 0 }" id="multi_snp_validation_button" data-loading-text="Validating..." class="btn btn-primary" autocomplete="off">Validate SNP(s)</button>
                                 </div>
                             </div>
 
