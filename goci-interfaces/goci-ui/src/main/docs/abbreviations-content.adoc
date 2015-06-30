@@ -70,6 +70,9 @@ AFVB: multivariable-adjusted frontal brain volume
 AIMS: Abnormal Involuntary Movements Scale
 
 
+AIRg: Acute insulin response
+
+
 Ala: Alaine
 
 
@@ -80,6 +83,9 @@ ALB/GLB: serum albumin:globulin ratio
 
 
 ALL: all ancestries
+
+
+ALL-dr: combined tests of verbal delayed recall
 
 
 ALLV: adjusted log lateral ventricular volume
@@ -234,6 +240,9 @@ CD40L: Ligand, serum & plasma
 cDAS28: Disease Activity Score
 
 
+CDC: Complicated disease course
+
+
 CE: cholesterol ester
 
 
@@ -241,6 +250,9 @@ CEA: carcinoembryonic antigen
 
 
 Cer: ceramide
+
+
+CERAD-dr: Consortium to Establish a Registry for Alzheimer’s Disease delayed recall
 
 
 CEU: CEPH (Centre d'Etude du Polymorphisme Humain) from Utah
@@ -317,6 +329,9 @@ cTJC: Tender joint count
 
 CVD: cardiovascular disease
 
+
+CVLT-dr: California Verbal Learning Test delayed recall (belongs to WL-dr category)
+
 === D
 
 D: particle diameter
@@ -340,10 +355,16 @@ DGI+FUSION+WTCCC: combined results from the DGI, FUSION, WTCCC analyses
 DHEA-S: dehydroisoandrosterone sulfate
 
 
+DI: Disposition index
+
+
 DM: diabetes mellitus
 
 
 D.p.: Dermatophagoides pteronyssinus
+
+
+DWRT-dr: Delayed Word Recall Test (belongs to WL-dr category)
 
 
 DXA: dual energy X-ray absorptiometry
@@ -369,6 +390,9 @@ eGFRcrea: estimated glomerular filtration rate based on serum creatinine
 
 
 eGFRcys: serum cystatin C
+
+
+EIM: Extraintestinal manifestations
 
 
 EM: Elated mania
@@ -544,6 +568,9 @@ HU: Hounsfield units
 
 HVA: homovanillic acid
 
+
+HVLT-dr: Hopkins Verbal Learning Test delayed recall (belongs to WL-dr category)
+
 === I
 
 ICAIMT: internal cartotid artery internal and common carotid intimal medial thickness
@@ -669,6 +696,9 @@ LYM: Lymphoma subtypes
 
 === M
 
+M: from clamp
+
+
 MA: male athletes
 
 
@@ -700,6 +730,9 @@ MCV: mean corpuscular volume
 
 
 MCP1: monocyte chemoattractant protein-1
+
+
+MDC:  Mild disease course
 
 
 meanFVC: mean forced vital capacity from 2 exams
@@ -843,6 +876,9 @@ PAI-1: plasminogen activator inhibitor
 PAL: paired associates learning
 
 
+PAR-dr: paragraph delayed recall
+
+
 PC: Protein C
 
 
@@ -944,6 +980,9 @@ RA: Rheumatoid arthritis
 RANTES: fasting serum regulated upon activation, normal T-cell expressed and secreted
 
 
+RAVLT-dr: Rey’s Auditory Verbal Learning Test delayed recall (belongs to WL-dr category)
+
+
 RBC: red blood cell
 
 
@@ -996,6 +1035,9 @@ s.d.: standard deviation
 SE: sleep efficiency
 
 
+SG: Glucose effectiveness
+
+
 ShaftW1: Shaft width combined
 
 
@@ -1009,6 +1051,9 @@ ShaftZ1R: shaft section modulus
 
 
 SHBG: sex hormone binding globulin
+
+
+SI: SI from FSIGT
 
 
 sICAM-1: fasting serum soluble intercellular adhesion molecule-1
@@ -1198,6 +1243,9 @@ VO2max: maximum oxygen consumption during treadmill fitness test
 VOS: velocity of sound
 
 
+VPWL-dr: delayed recall for visually presented word list
+
+
 Vrb: verbal
 
 
@@ -1227,6 +1275,9 @@ WHR: waist hip ratio
 
 
 WHRadjBMI: WHR adjustment for BMI
+
+
+WL-dr: word list delayed recall
 
 
 WRAT: Wide-Range Achievement Test
