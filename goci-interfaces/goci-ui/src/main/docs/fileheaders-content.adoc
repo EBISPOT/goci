@@ -86,7 +86,7 @@ _Updated: 13 January 2015_
 
 As for version 1.0 plus
 
-EFOTRAIT: Mapped Experimental Factor Ontology trait for this association
+EFOTRAIT: Mapped Experimental Factor Ontology trait for this study
 
 EFOURI: URI of the EFO trait
 
