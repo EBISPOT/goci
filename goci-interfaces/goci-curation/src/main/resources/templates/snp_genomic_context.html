@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="genomic_context_table">
+<div class="form-group">
+    <label class="control-label col-md-2">Genomic context</label>
+    <div class="col-md-10 ">
+        <table class="table table-hover table-bordered" id="context_table">
+            <!--<div class="form-group">
+                <label for="mappingSnp" class="control-label col-md-2"></label>
+
+                <div class="col-md-10">
+                    <input type="hidden" class="form-control" id="mappingSnp"
+                           th:field="*{mappingSnp}"/>
+                </div>
+            </div>-->
+            <thead>
+            <tr>
+                <th>SNP</th>
+                <th>Gene symbol</th>
+                <th>Gene ID</th>
+                <th>Source</th>
+                <th>Localisation</th>
+                <!--<th>
+                    <button type="submit" name="addGenomicContextRow">Add row</button>
+                </th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="row,rowStat : *{genomicContexts}" th:id="context_tr_+${rowStat.count}">
+                <td>
+                    <span th:text="*{genomicContexts[__${rowStat.index}__].snp.rsId}">SNP</span>
+                    <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].snp.rsId}"/>
+                </td>
+                <td>
+                    <span th:text="*{genomicContexts[__${rowStat.index}__].gene.geneName}">Gene symbol</span>
+                    <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].gene.geneName}"/>
+                </td>
+                <td>-</td>
+                <td>NCBI</td>
+                <td>
+                    <span th:switch="*{genomicContexts[__${rowStat.index}__].isIntergenic}">
+
+                        <span th:case="false">
+                            <!-- Overlapping gene -->
+                            <span data-toggle="tooltip" title="This gene overlaps the variant">
+                                <span class="glyphicon glyphicon-map-marker"></span>
+                            </span>
+                        </span>
+
+                        <span th:case="true">
+                            <!-- Non overlapping gene -->
+                            <span data-toggle="tooltip" title="This gene is upstream of the variant" th:if="*{genomicContexts[__${rowStat.index}__].isUpstream}">
+                                <!-- Upstream of the variant -->
+                                <span class="glyphicon glyphicon-circle-arrow-up" style="color:#0C0"></span>
+                            </span>
+                            <span data-toggle="tooltip" title="This gene is downstream of the variant" th:if="*{genomicContexts[__${rowStat.index}__].isDownstream}">
+                                <!-- Downstream of the variant -->
+                                <span class="glyphicon glyphicon-circle-arrow-down" style="color:#00C" ></span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span th:text="*{genomicContexts[__${rowStat.index}__].distance}+' bp'" th:if="*{genomicContexts[__${rowStat.index}__].distance} != 0">dist.</span>
+                    <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].isIntergenic}"/>
+                    <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].isUpstream}"/>
+                    <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].isDownstream}"/>
+                    <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].distance}"/>
+                </td>
+                <!--<td>
+                    <div class="btn btn-danger" th:onclick="'javascript:delete_row(\'context_tr_'+${rowStat.count}+'\')'">Delete</div>
+                </td>-->
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
