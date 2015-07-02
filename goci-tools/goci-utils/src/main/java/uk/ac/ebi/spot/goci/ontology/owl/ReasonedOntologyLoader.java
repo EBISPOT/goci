@@ -24,12 +24,19 @@ import java.util.stream.Collectors;
  * @date 03/06/13
  */
 public class ReasonedOntologyLoader extends AbstractOntologyLoader {
+
+    private OWLReasoner reasoner;
+
+    public OWLReasoner getOWLReasoner(){
+        return reasoner;
+    }
+
     protected OWLOntology indexOntology(OWLOntology ontology) throws OWLOntologyCreationException {
         getLog().debug("Trying to create a reasoner over ontology '" + getOntologyURI() + "'");
         OWLReasonerFactory factory = new Reasoner.ReasonerFactory();
         ReasonerProgressMonitor progressMonitor = new LoggingReasonerProgressMonitor(getLog());
         OWLReasonerConfiguration config = new SimpleConfiguration(progressMonitor);
-        OWLReasoner reasoner = factory.createReasoner(ontology, config);
+        this.reasoner = factory.createReasoner(ontology, config);
 
         getLog().debug("Precomputing inferences...");
         reasoner.precomputeInferences();

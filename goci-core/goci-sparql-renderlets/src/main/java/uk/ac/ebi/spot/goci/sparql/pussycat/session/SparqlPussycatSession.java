@@ -3,19 +3,16 @@ package uk.ac.ebi.spot.goci.sparql.pussycat.session;
 import com.hp.hpl.jena.query.QuerySolution;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import uk.ac.ebi.spot.goci.dao.DefaultOntologyDAO;
-import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
-//import uk.ac.ebi.spot.goci.ui.model.AssociationSummary;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
+import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
 import uk.ac.ebi.spot.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.spot.goci.pussycat.session.AbstractPussycatSession;
-import uk.ac.ebi.spot.goci.ontology.reasoning.ReasonerSession;
+import uk.ac.ebi.spot.goci.service.OntologyService;
 import uk.ac.ebi.spot.goci.sparql.exception.SparqlQueryException;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.QuerySolutionMapper;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.SparqlTemplate;
-import uk.ac.ebi.spot.goci.sparql.pussycat.reasoning.DAOBasedReasonerSession;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -25,6 +22,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+//import uk.ac.ebi.spot.goci.ui.model.AssociationSummary;
+
 /**
  * Utilises an {@link uk.ac.ebi.spot.goci.sparql.pussycat.query.SparqlTemplate} to load RDF data into session and render
  * it as SVG
@@ -33,31 +32,31 @@ import java.util.Set;
  * @date 21/08/14
  */
 public class SparqlPussycatSession extends AbstractPussycatSession {
-    private DefaultOntologyDAO ontologyDAO;
+    private OntologyService ontologyService;
     private SparqlTemplate sparqlTemplate;
 
-    private ReasonerSession reasonerSession;
+//    private ReasonerSession reasonerSession;
 
     private boolean rendering = false;
 
-    public SparqlPussycatSession(DefaultOntologyDAO ontologyDAO, SparqlTemplate sparqlTemplate) {
-        this.ontologyDAO = ontologyDAO;
+    public SparqlPussycatSession(OntologyService ontologyService, SparqlTemplate sparqlTemplate) {
+        this.ontologyService = ontologyService;
         this.sparqlTemplate = sparqlTemplate;
 
-        reasonerSession = new DAOBasedReasonerSession(getOntologyDAO());
+//        reasonerSession = new DAOBasedReasonerSession(getOntologyService());
     }
 
-    public DefaultOntologyDAO getOntologyDAO() {
-        return ontologyDAO;
+    public OntologyService getOntologyService() {
+        return ontologyService;
     }
 
     public SparqlTemplate getSparqlTemplate() {
         return sparqlTemplate;
     }
 
-    public ReasonerSession getReasonerSession() {
-        return reasonerSession;
-    }
+//    public ReasonerSession getReasonerSession() {
+//        return reasonerSession;
+//    }
 
     public synchronized boolean isRendering() {
         return rendering;
@@ -163,11 +162,12 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
 
     @Override public Set<URI> getRelatedTraits(String traitName) {
         // get OWLClasses by name
-        Collection<OWLClass> traitClasses = getOntologyDAO().getOWLClassesByLabel(traitName);
+        Collection<OWLClass> traitClasses = getOntologyService().getOWLClassesByLabel(traitName);
 
         Set<URI> results = new HashSet<URI>();
         // check reasoner
-        OWLReasoner reasoner = getReasonerSession().getReasoner();
+
+        OWLReasoner reasoner = getOntologyService().getOntologyLoader().getOWLReasoner();
         for (OWLClass traitClass : traitClasses) {
             results.add(traitClass.getIRI().toURI());
             Set<OWLClass> subclasses = reasoner.getSubClasses(traitClass, false).getFlattened();
