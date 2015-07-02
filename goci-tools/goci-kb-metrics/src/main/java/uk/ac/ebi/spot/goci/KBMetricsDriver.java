@@ -5,6 +5,11 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import uk.ac.ebi.spot.goci.exception.MetricsCalculationException;
 import uk.ac.ebi.spot.goci.kb.KBLoader;
 import uk.ac.ebi.spot.goci.checker.IRITreeProcessor;
@@ -16,6 +21,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -24,6 +30,7 @@ import java.util.Map;
  * @author Tony Burdett
  * @date 08/08/12
  */
+@SpringBootApplication
 public class KBMetricsDriver {
     private static URL _efoLocation;
     private static URL _gwasSchemaLocation;
@@ -32,28 +39,55 @@ public class KBMetricsDriver {
 
     private static OutputStream _out;
 
-    public static void main(String[] args) {
-        try {
-            parseArguments(args);
-            KBMetricsDriver driver =
-                    new KBMetricsDriver(_efoLocation, _gwasSchemaLocation, _kbLocation, _watershedCutoff);
-            System.out.println("Generating metrics report...");
-            driver.generateMetricsReport(_out);
-            System.out.println("Metrics report complete!");
 
-            if (_out != System.out) {
-                _out.close();
+    public static void main(String[] args) {
+        System.out.println("Starting Goci data publisher...");
+        ApplicationContext ctx = SpringApplication.run(KBMetricsDriver.class, args);
+        System.out.println("Application executed successfully!");
+        SpringApplication.exit(ctx);
+
+    }
+
+    @Bean CommandLineRunner run() {
+        return strings -> {
+            long start_time = System.currentTimeMillis();
+            System.out.println("Building indexes with supplied params: " + Arrays.toString(strings));
+            int parseArgs = parseArguments(strings);
+            if (parseArgs == 0) {
+                // execute publisher
+//                this.publishAndSave(assertedOntologyFile, inferredOntologyFile);
+            } else {
+                // could not parse arguments, exit with exit code >1 (depending on parsing problem)
+                System.err.println("Failed to parse supplied arguments");
+                System.exit(1 + parseArgs);
             }
-        }
-        catch (MetricsCalculationException e) {
-            System.err.println("Failed to calculate metrics - " + e.getMessage());
-            e.printStackTrace();
-            System.exit(1);
-        }
-        catch (IOException e) {
-            System.err.println("Failed to close output stream - report may not have written correctly");
-            System.exit(-1);
-        }
+            long end_time = System.currentTimeMillis();
+            String time = String.format("%.1f", ((double) (end_time - start_time)) / 1000);
+            System.out.println("Indexing building complete in " + time + " s. - application will now exit");
+        };
+
+//        try {
+//            int parseArgs = parseArguments(args);
+//            KBMetricsDriver driver =
+//                    new KBMetricsDriver(_efoLocation, _gwasSchemaLocation, _kbLocation, _watershedCutoff);
+//            System.out.println("Generating metrics report...");
+//            driver.generateMetricsReport(_out);
+//            System.out.println("Metrics report complete!");
+//
+//            if (_out != System.out) {
+//                _out.close();
+//            }
+//        }
+//        catch (MetricsCalculationException e) {
+//            System.err.println("Failed to calculate metrics - " + e.getMessage());
+//            e.printStackTrace();
+//            System.exit(1);
+//        }
+//        catch (IOException e) {
+//            System.err.println("Failed to close output stream - report may not have written correctly");
+//            System.exit(-1);
+//        }
+
     }
 
     private static int parseArguments(String[] args) {
@@ -197,6 +231,8 @@ public class KBMetricsDriver {
 
         return options;
     }
+
+
 
     private URL efoLocation;
     private URL gwasSchemaLocation;
