@@ -12,7 +12,6 @@
 // Ensembl REST URLs
 var rest_url_root = "http://rest.ensembl.org";
 var rest_variation = rest_url_root + "/variation/homo_sapiens/";
-var rest_variation_post = rest_url_root + "/variation/homo_sapiens";
 var rest_lookup_symbol = rest_url_root + "/lookup/symbol/homo_sapiens/";
 var rest_overlap_region =  rest_url_root + "/overlap/region/homo_sapiens/";
 var rest_info_assembly = rest_url_root + "/info/assembly/homo_sapiens/"; // Get chromosome length
@@ -122,7 +121,7 @@ $(document).ready(function() {
 
             var btn = $(this).button('loading');
 
-            var rest_url = rest_variation_post;
+            var rest_url = rest_variation;
 
             var json_variants_ids = JSON.stringify({"ids": variants_ids});
 
@@ -423,7 +422,7 @@ function getGenomicContext(chr,position,snp_row_id,source,clear) {
                 get_non_overlapping_gene = addGenomicContextRow(result,position,snp_row_id,overlap_list,"upstream");
             }
             if (get_non_overlapping_gene == 0) {
-                if (position_down != chr_end) {
+                if (position_up > 1) {
                     var closest_gene = getNearestGene(chr,position, position_up, 1, overlap_list, rest_opt, "upstream");
                     if (closest_gene && closest_gene != "") {
                         addGenomicContextRow([closest_gene],position,snp_row_id,overlap_list,"upstream");
@@ -700,7 +699,7 @@ function getNearestGene (chr,snp_position,position,boundary,overlap_list,rest_op
                     }
                 }
             }
-            else {
+            if (!closest_gene || closest_gene == "") {
                 if (position2 != boundary) {
                     // Recursive code to find the nearest upstream or downstream gene
                     closest_gene = getNearestGene(chr, snp_position, position2, boundary, overlap_list, rest_opt, type);
