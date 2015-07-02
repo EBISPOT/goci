@@ -18,6 +18,9 @@
         <module>goci-model</module>
         <module>goci-repository</module>
         <module>goci-service</module>
+        <module>goci-pussycat-api</module>
+        <module>goci-sparql-renderlets</module>
+        <module>goci-renderlets-core</module>
         <!--<module>goci-ontology</module>-->
     </modules>
 

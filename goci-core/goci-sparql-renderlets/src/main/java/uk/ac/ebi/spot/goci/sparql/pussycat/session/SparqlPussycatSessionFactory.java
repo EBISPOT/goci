@@ -1,17 +1,15 @@
 package uk.ac.ebi.spot.goci.sparql.pussycat.session;
 
 import net.sourceforge.fluxion.spi.ServiceProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import uk.ac.ebi.spot.goci.dao.DefaultOntologyDAO;
-import uk.ac.ebi.spot.goci.lang.OntologyConfiguration;
+import uk.ac.ebi.fgpt.lode.impl.JenaVirtuosoExecutorService;
 import uk.ac.ebi.spot.goci.pussycat.session.PussycatSession;
 import uk.ac.ebi.spot.goci.pussycat.session.PussycatSessionFactory;
+import uk.ac.ebi.spot.goci.service.OntologyService;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.SparqlTemplate;
-import uk.ac.ebi.fgpt.lode.impl.JenaVirtuosoExecutorService;
-
-import java.io.IOException;
 
 /**
  * Javadocs go here!
@@ -23,11 +21,12 @@ import java.io.IOException;
 public class SparqlPussycatSessionFactory implements PussycatSessionFactory {
     private static final String efoDefaultLocation = "http://www.ebi.ac.uk/efo/efo.owl";
 
-    private DefaultOntologyDAO ontologyDAO;
+    private OntologyService ontologyService;
     private SparqlTemplate sparqlTemplate;
 
-    public SparqlPussycatSessionFactory() {
-        // create ontology DAO using EFO location as environment property
+    @Autowired
+    public SparqlPussycatSessionFactory(OntologyService ontologyService) {
+        // create ontology Service using EFO location as environment property
         ResourceLoader loader = new PathMatchingResourcePatternResolver();
         String efoLocationProperty = System.getenv("EFO.LOCATION");
         Resource efoResource;
@@ -38,20 +37,9 @@ public class SparqlPussycatSessionFactory implements PussycatSessionFactory {
             efoResource = loader.getResource(efoLocationProperty);
         }
 
-        OntologyConfiguration ontologyConfiguration = new OntologyConfiguration();
-        ontologyConfiguration.setEfoResource(efoResource);
-        try {
-            ontologyConfiguration.init();
-        }
-        catch (IOException e) {
-            throw new IllegalStateException("Failed to initialize ontology configuration", e);
-        }
+        // create ontology Service for EFO
+        this.ontologyService = ontologyService;
 
-        // create ontology DAO for EFO
-        ontologyDAO = new DefaultOntologyDAO();
-        ontologyDAO.setOntologyResource(efoResource);
-        ontologyDAO.setOntologyConfiguration(ontologyConfiguration);
-        ontologyDAO.init();
 
         // get SPARQL endpoint location from system properties
         String gwasSparqlUrl = System.getenv("GWAS.SPARQL");
@@ -68,12 +56,12 @@ public class SparqlPussycatSessionFactory implements PussycatSessionFactory {
         }
     }
 
-    public SparqlPussycatSessionFactory(DefaultOntologyDAO ontologyDAO, SparqlTemplate sparqlTemplate) {
-        this.ontologyDAO = ontologyDAO;
+    public SparqlPussycatSessionFactory(OntologyService ontologyService, SparqlTemplate sparqlTemplate) {
+        this.ontologyService = ontologyService;
         this.sparqlTemplate = sparqlTemplate;
     }
 
     @Override public PussycatSession createPussycatSession() {
-        return new SparqlPussycatSession(ontologyDAO, sparqlTemplate);
+        return new SparqlPussycatSession(ontologyService, sparqlTemplate);
     }
 }

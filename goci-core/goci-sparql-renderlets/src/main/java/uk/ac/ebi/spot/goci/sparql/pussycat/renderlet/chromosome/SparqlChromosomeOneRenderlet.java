@@ -2,7 +2,7 @@ package uk.ac.ebi.spot.goci.sparql.pussycat.renderlet.chromosome;
 
 
 import net.sourceforge.fluxion.spi.ServiceProvider;
-import uk.ac.ebi.spot.goci.lang.OntologyConstants;
+import uk.ac.ebi.spot.goci.ontology.OntologyConstants;
 
 import java.net.URI;
 import java.net.URL;

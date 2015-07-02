@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.owl.lang;
+package uk.ac.ebi.spot.goci.ontology.owl.lang;
 
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import uk.ac.ebi.spot.goci.lang.Filter;

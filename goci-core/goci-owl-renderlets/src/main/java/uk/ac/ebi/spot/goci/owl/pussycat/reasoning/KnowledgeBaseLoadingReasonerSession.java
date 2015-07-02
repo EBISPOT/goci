@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.owl.pussycat.reasoning;
+package uk.ac.ebi.spot.goci.ontology.owl.pussycat.reasoning;
 
 import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.model.OWLImportsDeclaration;
