@@ -21,6 +21,7 @@
                 <th>Gene ID</th>
                 <th>Source</th>
                 <th>Localisation</th>
+                <th>Closest gene ?</th>
                 <!--<th>
                     <button type="submit" name="addGenomicContextRow">Add row</button>
                 </th>-->
@@ -67,6 +68,8 @@
                     <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].isDownstream}"/>
                     <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].distance}"/>
                 </td>
+                <!-- Closest gene ? -->
+                <td>?</td>
                 <!--<td>
                     <div class="btn btn-danger" th:onclick="'javascript:delete_row(\'context_tr_'+${rowStat.count}+'\')'">Delete</div>
                 </td>-->

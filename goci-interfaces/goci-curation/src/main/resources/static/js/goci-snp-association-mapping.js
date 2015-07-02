@@ -2,10 +2,11 @@
  * Created by Laurent on 23/06/15.
  *
  * Use the Ensembl REST API to:
- * - Validate the variants
- * - Validate the reported gene(s)
+ * - Validate a single variant (variant exists)
+ * - Validate a list of variants (variants exist)
+ * - Validate the reported gene(s) (symbol exist and the chromosome is the same as the variant)
  * - Load the variants mappings (cytogenetic band, chromosome, position)
- * - Load the variants genomic contexts
+ * - Load the variants genomic contexts (overlapping, upstream and downstream)
  */
 
 // Ensembl REST URLs
@@ -17,16 +18,17 @@ var rest_overlap_region =  rest_url_root + "/overlap/region/homo_sapiens/";
 var rest_info_assembly = rest_url_root + "/info/assembly/homo_sapiens/"; // Get chromosome length
 var rest_xrefs_id = rest_url_root + "/xrefs/id/";
 
+// Global variables
 var ncbi_db_type = "otherfeatures";
 var genomic_distance = 100000; // 100kb
-
 // Forms
 var snpMappingForms = "snpMappingForms";
 var genomicContextForms = "genomicContexts";
 var hidden_input = "input type=\"hidden\"";
-
+// Icons
 var ok_icon = "<span class=\"glyphicon glyphicon-ok-sign\"></span> ";
 var error_icon = "<span class=\"glyphicon glyphicon-remove-sign\"></span> ";
+var ok_icon2 = "<span class=\"glyphicon glyphicon-ok\" style=\"color:#080\"></span> ";
 
 
 // Main "function" waiting for a click on one of the button in the form
@@ -112,6 +114,7 @@ $(document).ready(function() {
 
         var variants_count = $(".snp_row").length;
 
+        // Check variants and load their mappings and genomic contexts
         if (variants_count > 1 && variants_count == variants_ids.length && change == 1) { // Check that there are at least 2 variants provided
 
             $("#snpValidationStatusOk").hide();
@@ -376,11 +379,8 @@ function getGenomicContext(chr,position,snp_row_id,source,clear) {
         $("#contextValidationStatus").html("");
     }
 
-    var rest_opt = {"feature" : "gene"}; // By default the db_type is 'core' (i.e. Ensembl)
-
-    if (source != "ensembl") {
-        rest_opt = {"feature" : "gene", "source" : source, "db_type" : ncbi_db_type};
-    }
+    // By default the db_type is 'core' (i.e. Ensembl)
+    var rest_opt = (source == "ensembl") ? {"feature" : "gene"} :  {"feature" : "gene", "source" : source, "db_type" : ncbi_db_type};
 
     // Check if overlap gene
     var rest_full_url_1 = rest_overlap_region + chr + ':'+ position + '-' + position;
@@ -418,8 +418,17 @@ function getGenomicContext(chr,position,snp_row_id,source,clear) {
             $("#contextValidationStatus").append("<div>" + error_icon + status + ": Issue with the gene upstream overlap call ("+errorThrown+")</div>");
         },
         success: function(result) {
+            var get_non_overlapping_gene = 0;
             if (result.length > 0 && result != []) {
-                addGenomicContextRow(result,position,snp_row_id,overlap_list,"upstream");
+                get_non_overlapping_gene = addGenomicContextRow(result,position,snp_row_id,overlap_list,"upstream");
+            }
+            if (get_non_overlapping_gene == 0) {
+                if (position_down != chr_end) {
+                    var closest_gene = getNearestGene(chr,position, position_up, 1, overlap_list, rest_opt, "upstream");
+                    if (closest_gene && closest_gene != "") {
+                        addGenomicContextRow([closest_gene],position,snp_row_id,overlap_list,"upstream");
+                    }
+                }
             }
         }
     });
@@ -428,22 +437,10 @@ function getGenomicContext(chr,position,snp_row_id,source,clear) {
     var position_down = parseInt(position) + genomic_distance;
 
     // Check the downstream position to avoid having a position over the 3' end of the chromosome
-    var rest_url_2 = rest_info_assembly + chr;
-    $.ajax({
-        method: "GET",
-        dataType: "json",
-        async: false, // Result needs to be get before going further in the method
-        url: rest_url_2,
-        error: function(jqXHR, status, errorThrown) {
-            $("#contextValidationStatus").append("<div>" + error_icon + status + ": Issue getting the chromosome '"+chr+"' end coordinates ("+errorThrown+")</div>");
-
-        },
-        success: function(result) {
-            if (position_down > result.length) {
-                position_down = result.length;
-            }
-        }
-    });
+    var chr_end = getChromosomeEnd(chr);
+    if (chr_end && position_down > chr_end) {
+        position_down = chr_end;
+    }
 
     var rest_full_url_3 = rest_overlap_region + chr + ':'+ position + '-' + position_down; // 100kb downstream
     $.ajax({
@@ -457,8 +454,17 @@ function getGenomicContext(chr,position,snp_row_id,source,clear) {
 
         },
         success: function(result) {
+            var get_non_overlapping_gene = 0;
             if (result.length > 0 && result != []) {
-                addGenomicContextRow(result,position,snp_row_id,overlap_list,"downstream");
+                get_non_overlapping_gene = addGenomicContextRow(result,position,snp_row_id,overlap_list,"downstream");
+            }
+            if (get_non_overlapping_gene == 0) {
+                if (position_down != chr_end) {
+                    var closest_gene = getNearestGene(chr,position, position_down, chr_end, overlap_list, rest_opt, "downstream");
+                    if (closest_gene && closest_gene != "") {
+                        addGenomicContextRow([closest_gene], position, snp_row_id, overlap_list, "downstream");
+                    }
+                }
             }
         }
     });
@@ -477,6 +483,9 @@ function addGenomicContextRow(json_result,position,snp_row_id,overlap,type) {
     var downstream = false;
     var overlap_list = [];
 
+    var closest_distance = 0;
+    var closest_gene = "";
+
     var row_id = 1;
     var row_prefix = "context_tr_";
 
@@ -487,6 +496,26 @@ function addGenomicContextRow(json_result,position,snp_row_id,overlap,type) {
         }
         if (type == 'downstream') {
             downstream  = true;
+        }
+
+        for (i in json_result) {
+            var gene_name = json_result[i].external_name;
+            if (gene_name && jQuery.inArray(gene_name,overlap) != -1) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
+                continue;
+            }
+
+            var distance;
+            if (type == "upstream") {
+                distance = position - json_result[i].end;
+            }
+            else if (type == 'downstream') {
+                distance = json_result[i].start - position;
+            }
+
+            if ((distance < closest_distance && distance > 0) || closest_distance == 0) {
+                closest_gene = json_result[i].id;
+                closest_distance = distance;
+            }
         }
     }
 
@@ -556,30 +585,35 @@ function addGenomicContextRow(json_result,position,snp_row_id,overlap,type) {
         newrow = newrow + "<td><span>" + source + "</span></td>";
         // Localisation
         var localisation = "<span class=\"glyphicon ";
-        var title = "";
-        if (intergenic == true) {
-            if (upstream == true) {
+        var title = "This gene";
+        if (intergenic) {
+            if (upstream) {
                 localisation = localisation + "glyphicon-circle-arrow-up\" style=\"color:#0C0\">";
-                title = "This gene is upstream of the variant";
             }
             else {
                 localisation = localisation + "glyphicon-circle-arrow-down\" style=\"color:#00C\">";
-                title = "This gene is downstream of the variant";
             }
+            title = title + " is " + type + " of the variant";
             localisation = localisation + "</span>"+"<span style=\"padding-left:5px\">" + distance + " bp</span>";
         }
         else {
             localisation = localisation + "glyphicon-map-marker\">"+"</span>";
-            title = "This gene overlaps the variant";
+            title = title + " overlaps the variant";
         }
 
         localisation = "<span data-toggle=\"tooltip\" title=\""+ title +"\" >" + localisation + "</span>";
+
+
 
         newrow = newrow + "<td>" + localisation +
                 "<"+hidden_input+" id=\""+genomicContextId+".isIntergenic\" name=\""+genomicContextName+".isIntergenic\" value=\""+intergenic+"\">"+
                 "<"+hidden_input+" id=\""+genomicContextId+".isUpstream\" name=\""+genomicContextName+".isUpstream\" value=\""+upstream+"\">"+
                 "<"+hidden_input+" id=\""+genomicContextId+".isDownstream\" name=\""+genomicContextName+".isDownstream\" value=\""+downstream+"\">"+
                 "<"+hidden_input+" id=\""+genomicContextId+".distance\" name=\""+genomicContextName+".distance\" value=\""+distance+"\"></td>";
+        // Closest gene
+        var is_closest = (closest_gene == gene_id) ?  ok_icon2 + " " + type : "";
+        newrow = newrow + "<td>" + is_closest + "</td>";
+
         newrow = newrow + "</tr>";
         $("#context_table > tbody").append(newrow);
         row_id++;
@@ -588,9 +622,97 @@ function addGenomicContextRow(json_result,position,snp_row_id,overlap,type) {
     if (!type) {
         return overlap_list;
     }
+    else {
+        // Return 1 if there is at least one non overlapping gene
+        return (closest_gene && closest_gene != "") ? 1 : 0;
+    }
+}
+
+// Get the length of the chromosome (to check the end position of the chromosome)
+function getChromosomeEnd (chr) {
+    var rest_url_2 = rest_info_assembly + chr;
+    var chr_end;
+    $.ajax({
+        method: "GET",
+        dataType: "json",
+        async: false, // Result needs to be get before going further in the method
+        url: rest_url_2,
+        error: function(jqXHR, status, errorThrown) {
+            $("#contextValidationStatus").append("<div>" + error_icon + status + ": Issue getting the chromosome '"+chr+"' end coordinates ("+errorThrown+")</div>");
+        },
+        success: function(result) {
+            chr_end = result.length;
+        }
+    });
+    return chr_end;
 }
 
 
+// Function to find recursively the nearest gene upstream or downstream if no genes have been found within the 100kb range around the variant location
+function getNearestGene (chr,snp_position,position,boundary,overlap_list,rest_opt,type) {
+
+    var position2;
+    var closest_gene = "";
+
+    var rest_full_url = rest_overlap_region + chr + ':';
+    if (type == "upstream") {
+        position2 = parseInt(position) - genomic_distance;
+        position2 = (position2 < 0) ? boundary : position2;
+        rest_full_url = rest_full_url + position2 + '-' + position;
+    }
+    else {
+        if (type == "downstream") {
+            position2 = parseInt(position) + genomic_distance;
+            position2 = (position2 > boundary) ? boundary : position2;
+            rest_full_url = rest_full_url + position + '-' + position2;
+        }
+    }
+
+    $.ajax({
+        method: "GET",
+        dataType: "json",
+        async: false, // Result needs to be get before going further in the method
+        data: rest_opt,
+        url: rest_full_url,
+        error: function(jqXHR, status, errorThrown) {
+            $("#contextValidationStatus").append("<div>" + error_icon + status + ": Issue with the nearest gene "+type+" overlap call ("+errorThrown+")</div>");
+        },
+        success: function(result) {
+            if (result.length > 0 && result != []) {
+                var closest_distance = 0;
+                for (i in result) {
+                    var gene_name = result[i].external_name;
+                    if (gene_name && jQuery.inArray(gene_name,overlap_list) != -1) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
+                        continue;
+                    }
+
+                    var distance;
+                    if (type == "upstream") {
+                        distance = snp_position - result[i].end;
+                    }
+                    else if (type == 'downstream') {
+                        distance = result[i].start - snp_position;
+                    }
+
+                    if ((distance < closest_distance && distance > 0) || closest_distance == 0) {
+                        closest_gene = result[i];
+                        closest_distance = distance;
+                    }
+                }
+            }
+            else {
+                if (position2 != boundary) {
+                    // Recursive code to find the nearest upstream or downstream gene
+                    closest_gene = getNearestGene(chr, snp_position, position2, boundary, overlap_list, rest_opt, type);
+                }
+            }
+        }
+    });
+    return closest_gene;
+}
+
+
+// Display mouseover tooltip from bootstrap
 function displayTooltip() {
     $('[data-toggle="tooltip"]').mouseover(
         function() {
