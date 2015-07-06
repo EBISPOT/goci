@@ -1,16 +1,19 @@
 package uk.ac.ebi.spot.goci.pussycat.session;
 
-import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
-//import uk.ac.ebi.spot.goci.ui.model.AssociationSummary;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
+import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
+
+//import uk.ac.ebi.spot.goci.ui.model.AssociationSummary;
 
 /**
  * A pussycat session that acts as a proxy over a concrete implementation, but caches (to disk) SVG documents that are
@@ -25,7 +28,12 @@ import java.util.Set;
  * @author Tony Burdett
  * @date 02/08/12
  */
-public class SVGCachingPussycatSession extends AbstractSVGIOPussycatSession implements PussycatSession {
+
+@Component(value="cachingSession")
+public class SVGCachingPussycatSession extends AbstractSVGIOPussycatSession {
+
+    @Autowired
+    @Qualifier("proxiedSession")
     private PussycatSession proxiedSession;
 
     public PussycatSession getProxiedSession() {

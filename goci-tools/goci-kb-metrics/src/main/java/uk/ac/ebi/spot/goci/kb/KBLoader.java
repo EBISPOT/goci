@@ -40,6 +40,7 @@ public class KBLoader {
         return log;
     }
 
+
     public Map<IRI, Integer> quantifyKnowledgeBase(URL efoLocation, URL gwasSchemaLocation, URL kbLocation)
             throws OWLOntologyCreationException, URISyntaxException {
         Map<IRI, Integer> results = new HashMap<IRI, Integer>();

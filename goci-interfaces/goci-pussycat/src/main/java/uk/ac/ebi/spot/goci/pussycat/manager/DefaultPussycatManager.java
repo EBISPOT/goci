@@ -2,6 +2,8 @@ package uk.ac.ebi.spot.goci.pussycat.manager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexusFactory;
@@ -58,6 +60,8 @@ public class DefaultPussycatManager implements PussycatManager {
         return sessions;
     }
 
+    @Autowired
+    @Qualifier("cachingSession")
     public void setPussycatSession(PussycatSession session) {
         this.sessions = Collections.singleton(session);
     }

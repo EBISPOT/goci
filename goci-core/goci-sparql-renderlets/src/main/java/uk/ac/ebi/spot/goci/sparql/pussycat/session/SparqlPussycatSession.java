@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.sparql.pussycat.session;
 import com.hp.hpl.jena.query.QuerySolution;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
 import uk.ac.ebi.spot.goci.pussycat.layout.BandInformation;
@@ -31,6 +32,8 @@ import java.util.Set;
  * @author Tony Burdett
  * @date 21/08/14
  */
+
+@Component(value="proxiedSession")
 public class SparqlPussycatSession extends AbstractPussycatSession {
     private OntologyService ontologyService;
     private SparqlTemplate sparqlTemplate;
