@@ -2,13 +2,27 @@ package uk.ac.ebi.spot.goci.tree;
 
 import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.reasoner.*;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.reasoner.ConsoleProgressMonitor;
+import org.semanticweb.owlapi.reasoner.Node;
+import org.semanticweb.owlapi.reasoner.NodeSet;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
+import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
+import org.semanticweb.owlapi.reasoner.SimpleConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.exception.UnexpectedOntologyStructureException;
-import uk.ac.ebi.spot.goci.lang.OntologyConstants;
-import uk.ac.ebi.spot.goci.utils.OntologyUtils;
+import uk.ac.ebi.spot.goci.ontology.OntologyConstants;
+import uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader;
 
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -19,6 +33,9 @@ import java.net.URL;
  * @author Tony Burdett
  * @date 08/08/12
  */
+
+@Service
+@Component
 public class IRITreeBuilder {
     private String owlNothingIRI;
 
@@ -26,6 +43,13 @@ public class IRITreeBuilder {
 
     protected Logger getLog() {
         return log;
+    }
+
+    OntologyLoader ontologyLoader;
+
+    @Autowired
+    public IRITreeBuilder(OntologyLoader ontologyLoader){
+        this.ontologyLoader = ontologyLoader;
     }
 
     public IRITree buildIRITree(URL efoLocation) throws URISyntaxException, OWLOntologyCreationException {
@@ -65,7 +89,7 @@ public class IRITreeBuilder {
 
             if (cls.getIRI().toString().equals(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI)) {
                 efClass = cls;
-                rootNode = new IRINode(cls.getIRI(), OntologyUtils.getClassLabel(efo, cls));
+                rootNode = new IRINode(cls.getIRI(), ontologyLoader.getLabel(cls.getIRI()));
             }
         }
 
@@ -93,7 +117,7 @@ public class IRITreeBuilder {
 
                 String label;
                 try {
-                    label = OntologyUtils.getClassLabel(efo, childClass);
+                    label = ontologyLoader.getLabel(childClass.getIRI());
                 }
                 catch (UnexpectedOntologyStructureException e) {
                     label = "<not exactly 1 label>";

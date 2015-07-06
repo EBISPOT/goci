@@ -39,6 +39,12 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
 
     private boolean rendering = false;
 
+//    private Logger log = LoggerFactory.getLogger(getClass());
+//
+//    protected Logger getLog() {
+//        return log;
+//    }
+
     public SparqlPussycatSession(OntologyService ontologyService, SparqlTemplate sparqlTemplate) {
         this.ontologyService = ontologyService;
         this.sparqlTemplate = sparqlTemplate;
@@ -68,25 +74,25 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
 
     @Override public String performRendering(RenderletNexus renderletNexus, Filter... filters)
             throws PussycatSessionNotReadyException {
-        getLog().debug("Rendering SVG from SPARQL endpoint (filters = '" + filters + "')...");
+//        getLog().debug("Rendering SVG from SPARQL endpoint (filters = '" + filters + "')...");
         try {
             // render
             if (!isRendering()) {
                 setRendering(true);
 
                 try {
-                    getLog().debug("Querying SPARQL endpoint for GWAS data...");
+//                    getLog().debug("Querying SPARQL endpoint for GWAS data...");
                     List<URI> chromosomes = loadChromosomes(getSparqlTemplate());
                     List<URI> individuals = new ArrayList<URI>();
                     individuals.addAll(loadAssociations(getSparqlTemplate()));
                     individuals.addAll(loadTraits(getSparqlTemplate()));
-                    getLog().debug("GWAS data acquired, starting rendering...");
+//                    getLog().debug("GWAS data acquired, starting rendering...");
 
                     // render chromosomes first
                     for (URI chromosome : chromosomes) {
                         for (Renderlet r : getAvailableRenderlets()) {
                             if (r.canRender(renderletNexus, getSparqlTemplate(), chromosome)) {
-                                getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
+//                                getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
                                 r.render(renderletNexus, getSparqlTemplate(), chromosome);
                             }
                         }
@@ -96,12 +102,12 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                     for (URI individual : individuals) {
                         for (Renderlet r : getAvailableRenderlets()) {
                             if (r.canRender(renderletNexus, getSparqlTemplate(), individual)) {
-                                getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
+//                                getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
                                 r.render(renderletNexus, getSparqlTemplate(), individual);
                             }
                         }
                     }
-                    getLog().debug("SVG rendering complete!");
+//                    getLog().debug("SVG rendering complete!");
                     return renderletNexus.getSVG();
                 }
                 finally {

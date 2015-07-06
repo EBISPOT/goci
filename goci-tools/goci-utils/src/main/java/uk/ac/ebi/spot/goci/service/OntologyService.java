@@ -6,11 +6,8 @@ import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.ontology.owl.ReasonedOntologyLoader;
 
 import javax.validation.constraints.NotNull;
@@ -29,8 +26,8 @@ import java.util.Set;
  */
 
 
-@Service
-@Component
+//@Service
+//@Component
 public class OntologyService {
 
     @NotNull
@@ -50,7 +47,7 @@ public class OntologyService {
         return log;
     }
 
-    @Autowired
+//    @Autowired
     public OntologyService(ReasonedOntologyLoader ontologyLoader){
         this.ontologyLoader = ontologyLoader;
         ontologyLoader.setOntologyName("efo");

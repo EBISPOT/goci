@@ -1,11 +1,21 @@
 package uk.ac.ebi.spot.goci.kb;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLIndividual;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.util.SimpleIRIMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.ebi.spot.goci.lang.OntologyConstants;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.ontology.OntologyConstants;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -21,6 +31,8 @@ import java.util.Set;
  * @author Tony Burdett
  * @date 08/08/12
  */
+@Service
+@Component
 public class KBLoader {
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -45,11 +57,20 @@ public class KBLoader {
         manager.addIRIMapper(new SimpleIRIMapper(IRI.create(OntologyConstants.GWAS_ONTOLOGY_SCHEMA_IRI),
                                                  IRI.create(gwasSchemaURI)));
 
+
+        System.out.println("Loading knowledge base " + kbURI);
+        getLog().info("Loading knowledge base " + kbURI);
         // load the knowledgebase
         OWLOntology kb = manager.loadOntology(IRI.create(kbURI));
 
+        System.out.println("Processing knowledge base");
+        getLog().info("Processing knowledge base");
         // retrieve all individuals
         Set<OWLNamedIndividual> inds = kb.getIndividualsInSignature();
+
+        System.out.println("The knowledge base contains " + inds.size() + " individuals");
+        getLog().info("The knowledge base contains " + inds.size() + " individuals");
+
         for (OWLNamedIndividual ind : inds) {
             // for each individual, check if it is an association
             boolean isAssociation = false;
