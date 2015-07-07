@@ -60,11 +60,6 @@ public class SingleSnpMultiSnpAssociationService {
 
         Association association = new Association();
 
-        // Store mapped location data
-        for (SnpMappingForm snpMappingForm : snpAssociationForm.getSnpMappingForms()) {
-            snpLocationMappingService.storeSnpLocation(snpMappingForm);
-        }
-
         // Set simple string, boolean and float association attributes
         association.setPvalueText(snpAssociationForm.getPvalueText());
         association.setOrType(snpAssociationForm.getOrType());
@@ -183,6 +178,11 @@ public class SingleSnpMultiSnpAssociationService {
         // Add locus to collection and link to our association
         loci.add(locus);
         association.setLoci(loci);
+
+        // Store mapped location data, do this after the SNP objects have been created
+        for (SnpMappingForm snpMappingForm : snpAssociationForm.getSnpMappingForms()) {
+            snpLocationMappingService.storeSnpLocation(snpMappingForm);
+        }
 
         return association;
 
