@@ -6,12 +6,10 @@ import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 import uk.ac.ebi.spot.goci.curation.model.SnpMappingForm;
 import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
 import uk.ac.ebi.spot.goci.model.Location;
 import uk.ac.ebi.spot.goci.model.Locus;
-import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
@@ -20,9 +18,7 @@ import uk.ac.ebi.spot.goci.repository.LocusRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by emma on 13/04/2015.
@@ -43,25 +39,31 @@ public class SingleSnpMultiSnpAssociationService {
     // Services
     private AssociationCalculationService associationCalculationService;
     private LociAttributesService lociAttributesService;
+    private SnpLocationMappingService snpLocationMappingService;
 
     @Autowired
     public SingleSnpMultiSnpAssociationService(AssociationRepository associationRepository,
                                                LocusRepository locusRepository,
                                                GenomicContextRepository genomicContextRepository,
                                                AssociationCalculationService associationCalculationService,
-                                               LociAttributesService lociAttributesService
-                                              ) {
+                                               LociAttributesService lociAttributesService,
+                                               SnpLocationMappingService snpLocationMappingService) {
         this.associationRepository = associationRepository;
         this.locusRepository = locusRepository;
         this.genomicContextRepository = genomicContextRepository;
         this.associationCalculationService = associationCalculationService;
         this.lociAttributesService = lociAttributesService;
-
+        this.snpLocationMappingService = snpLocationMappingService;
     }
 
     public Association createAssociation(SnpAssociationForm snpAssociationForm) {
 
         Association association = new Association();
+
+        // Store mapped location data
+        for (SnpMappingForm snpMappingForm : snpAssociationForm.getSnpMappingForms()) {
+            snpLocationMappingService.storeSnpLocation(snpMappingForm);
+        }
 
         // Set simple string, boolean and float association attributes
         association.setPvalueText(snpAssociationForm.getPvalueText());
@@ -168,7 +170,7 @@ public class SingleSnpMultiSnpAssociationService {
             if (row.getMerged() != null) {
                 snp.setMerged(row.getMerged());
             }
-            
+
             locusRiskAlleles.add(riskAllele);
         }
 
@@ -253,7 +255,7 @@ public class SingleSnpMultiSnpAssociationService {
 
             Collection<Location> locations = snp.getLocations();
             for (Location location : locations) {
-                SnpMappingForm snpMappingForm = new SnpMappingForm(rsID,location);
+                SnpMappingForm snpMappingForm = new SnpMappingForm(rsID, location);
                 snpMappingForms.add(snpMappingForm);
             }
 
