@@ -129,8 +129,6 @@ $(document).ready(function() {
                 method: "POST",
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
-                //async: false,
-                //cache: false, // Force to stop caching the results
                 url: rest_url,
                 data: json_variants_ids,
                 error: function(jqXHR, status, errorThrown) {
@@ -317,40 +315,27 @@ function getMappings(mappings,snp_row_id) {
     for (i in mappings) {
         var chr = mappings[i].seq_region_name;
         var position = mappings[i].start;
-        var band = "Unknown";
-        /*var rest_cytogenytic = rest_overlap_region+chr+":"+position+"-"+position;
-         $.ajax({
-         method: "GET",
-         dataType: "json",
-         async: false, // Result needs to be get before going further in the method
-         data: {"feature" : "band"},
-         url: rest_cytogenytic,
-         error: function(jqXHR, status, errorThrown) {
-         $("#snpValidationStatus").append("<div>" + error_icon + $("#snp_id").val() + ": " +status+" - Cytogenetic band not found ("+errorThrown+")"+"</div>");
-         },
-         success: function(result_band) {
-         band = chr+result_band[0].id;
-         }
-         });*/
 
+        // Get the cytogenetic band overlapping the variant ("Region")
+        var band = "Unknown"; //getCytogeneticBand(chr,position,snp_row_id);
 
         var snpMappingId = snpMappingForms+id;
         var snpMappingName = snpMappingForms+"["+id+"]";
 
         var newrow = "<tr id=\"" + row_prefix + row_id + "\">";
         // SNP
-        newrow = newrow + "<td><span>" + $("#snp_id_"+snp_row_id).val() + "</span>"+
+        newrow += "<td><span>" + $("#snp_id_"+snp_row_id).val() + "</span>"+
                  "<"+hidden_input+" id=\""+snpMappingId+".snp\" name=\""+snpMappingName+".snp\" value=\""+$("#snp_id_"+snp_row_id).val()+"\"></td>";
         // Region
-        newrow = newrow + "<td><span>" + band + "</span>"+
+        newrow += "<td><span>" + band + "</span>"+
                 "<"+hidden_input+" id=\""+snpMappingId+".location.region.name\" name=\""+snpMappingName+".location.region.name\" value=\""+band+"\"></td>";
         // Chromosome
-        newrow = newrow + "<td><span>" + chr + "</span>"+
+        newrow += "<td><span>" + chr + "</span>"+
                 "<"+hidden_input+" class=\"chromosomeName\" id=\""+snpMappingId+".location.chromosomeName\" name=\""+snpMappingName+".location.chromosomeName\" value=\""+chr+"\"></td>";
         // Position
-        newrow = newrow + "<td><span>" + position + "</span>"+
+        newrow += "<td><span>" + position + "</span>"+
                 "<"+hidden_input+" id=\""+snpMappingId+".location.chromosomePosition\" name=\""+snpMappingName+".location.chromosomePosition\" value=\""+position+"\"></td>";
-        newrow = newrow + "</tr>";
+        newrow += "</tr>";
         $("#mapping_table > tbody").append(newrow);
         id++;
         row_id++;
@@ -359,6 +344,28 @@ function getMappings(mappings,snp_row_id) {
         getAllGenomicContext(chr, position, snp_row_id);
     }
     displayTooltip();
+}
+
+
+// Retrieve the cytogenetic band overlapping a variant
+function getCytogeneticBand (chr,position,snp_row_id) {
+
+    var band = "Unknown";
+    var rest_cytogenetic = rest_overlap_region+chr+":"+position+"-"+position;
+    $.ajax({
+        method: "GET",
+        dataType: "json",
+        async: false, // Result needs to be get before going further in the method
+        data: {"feature" : "band"},
+        url: rest_cytogenetic,
+        error: function(jqXHR, status, errorThrown) {
+            $("#snpValidationStatus").append("<div>" + error_icon + $("#snp_id_"+snp_row_id).val() + ": " +status+" - Cytogenetic band not found ("+errorThrown+")"+"</div>");
+        },
+        success: function(result_band) {
+            band = chr+result_band[0].id;
+        }
+     });
+    return band;
 }
 
 
@@ -485,7 +492,6 @@ function addGenomicContextRow(json_result,position,snp_row_id,overlap,type) {
     var closest_distance = 0;
     var closest_gene = "";
 
-
     var row_prefix = "context_tr_";
 
     if (type) {
@@ -575,47 +581,45 @@ function addGenomicContextRow(json_result,position,snp_row_id,overlap,type) {
 
         var newrow = "<tr id=\""+row_prefix + row_id + "\">";
         // SNP
-        newrow = newrow + "<td><span>" + $("#snp_id_"+snp_row_id).val() + "</span>"+
+        newrow += "<td><span>" + $("#snp_id_"+snp_row_id).val() + "</span>"+
                 "<"+hidden_input+" id=\""+genomicContextId+".snp.rsId\" name=\""+genomicContextName+".snp.rsId\" value=\""+$("#snp_id_"+snp_row_id).val()+"\"></td>";
         // Gene symbol
-        newrow = newrow + "<td><span>" + gene_name + "</span>"+
+        newrow += "<td><span>" + gene_name + "</span>"+
                 "<"+hidden_input+" id=\""+genomicContextId+".gene.geneName\" name=\""+genomicContextName+".gene.geneName\" value=\""+gene_name+"\"></td>";
         // Gene ID
-        newrow = newrow + "<td><span>" + gene_id + "</span></td>";
+        newrow += "<td><span>" + gene_id + "</span></td>";
         // Source
-        newrow = newrow + "<td><span>" + source + "</span></td>";
+        newrow += "<td><span>" + source + "</span></td>";
         // Localisation
         var localisation = "<span class=\"glyphicon ";
         var title = "This gene";
         if (intergenic) {
             if (upstream) {
-                localisation = localisation + "glyphicon-circle-arrow-up\" style=\"color:#0C0\">";
+                localisation += "glyphicon-circle-arrow-up\" style=\"color:#0C0\">";
             }
             else {
-                localisation = localisation + "glyphicon-circle-arrow-down\" style=\"color:#00C\">";
+                localisation += "glyphicon-circle-arrow-down\" style=\"color:#00C\">";
             }
             title = title + " is " + type + " of the variant";
-            localisation = localisation + "</span>"+"<span style=\"padding-left:5px\">" + distance + " bp</span>";
+            localisation += "</span>"+"<span style=\"padding-left:5px\">" + distance + " bp</span>";
         }
         else {
-            localisation = localisation + "glyphicon-map-marker\">"+"</span>";
-            title = title + " overlaps the variant";
+            localisation += "glyphicon-map-marker\">"+"</span>";
+            title += " overlaps the variant";
         }
-
         localisation = "<span data-toggle=\"tooltip\" title=\""+ title +"\" >" + localisation + "</span>";
 
-
-
-        newrow = newrow + "<td>" + localisation +
+        newrow += "<td>" + localisation +
                 "<"+hidden_input+" id=\""+genomicContextId+".isIntergenic\" name=\""+genomicContextName+".isIntergenic\" value=\""+intergenic+"\">"+
                 "<"+hidden_input+" id=\""+genomicContextId+".isUpstream\" name=\""+genomicContextName+".isUpstream\" value=\""+upstream+"\">"+
                 "<"+hidden_input+" id=\""+genomicContextId+".isDownstream\" name=\""+genomicContextName+".isDownstream\" value=\""+downstream+"\">"+
                 "<"+hidden_input+" id=\""+genomicContextId+".distance\" name=\""+genomicContextName+".distance\" value=\""+distance+"\"></td>";
+
         // Closest gene
         var is_closest = (closest_gene == gene_id) ?  ok_icon2 + " " + type : "";
-        newrow = newrow + "<td>" + is_closest + "</td>";
+        newrow += "<td>" + is_closest + "</td>";
 
-        newrow = newrow + "</tr>";
+        newrow += "</tr>";
         $("#context_table > tbody").append(newrow);
     }
 
@@ -658,13 +662,13 @@ function getNearestGene (chr,snp_position,position,boundary,overlap_list,rest_op
     if (type == "upstream") {
         position2 = parseInt(position) - genomic_distance;
         position2 = (position2 < 0) ? boundary : position2;
-        rest_full_url = rest_full_url + position2 + '-' + position;
+        rest_full_url += position2 + '-' + position;
     }
     else {
         if (type == "downstream") {
             position2 = parseInt(position) + genomic_distance;
             position2 = (position2 > boundary) ? boundary : position2;
-            rest_full_url = rest_full_url + position + '-' + position2;
+            rest_full_url += position + '-' + position2;
         }
     }
 
@@ -690,7 +694,7 @@ function getNearestGene (chr,snp_position,position,boundary,overlap_list,rest_op
                     if (type == "upstream") {
                         distance = snp_position - result[i].end;
                     }
-                    else if (type == 'downstream') {
+                    else if (type == "downstream") {
                         distance = result[i].start - snp_position;
                     }
 
