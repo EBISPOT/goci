@@ -317,22 +317,9 @@ function getMappings(mappings,snp_row_id) {
     for (i in mappings) {
         var chr = mappings[i].seq_region_name;
         var position = mappings[i].start;
-        var band = "Unknown";
-        /*var rest_cytogenytic = rest_overlap_region+chr+":"+position+"-"+position;
-         $.ajax({
-         method: "GET",
-         dataType: "json",
-         async: false, // Result needs to be get before going further in the method
-         data: {"feature" : "band"},
-         url: rest_cytogenytic,
-         error: function(jqXHR, status, errorThrown) {
-         $("#snpValidationStatus").append("<div>" + error_icon + $("#snp_id").val() + ": " +status+" - Cytogenetic band not found ("+errorThrown+")"+"</div>");
-         },
-         success: function(result_band) {
-         band = chr+result_band[0].id;
-         }
-         });*/
 
+        // Get the cytogenetic band overlapping the variant ("Region")
+        var band = "Unknown"; //getCytogeneticBand(chr,position,snp_row_id);
 
         var snpMappingId = snpMappingForms+id;
         var snpMappingName = snpMappingForms+"["+id+"]";
@@ -359,6 +346,27 @@ function getMappings(mappings,snp_row_id) {
         getAllGenomicContext(chr, position, snp_row_id);
     }
     displayTooltip();
+}
+
+
+function getCytogeneticBand (chr,position,snp_row_id) {
+
+    var band = "Unknown";
+    var rest_cytogenetic = rest_overlap_region+chr+":"+position+"-"+position;
+    $.ajax({
+        method: "GET",
+        dataType: "json",
+        async: false, // Result needs to be get before going further in the method
+        data: {"feature" : "band"},
+        url: rest_cytogenetic,
+        error: function(jqXHR, status, errorThrown) {
+            $("#snpValidationStatus").append("<div>" + error_icon + $("#snp_id_"+snp_row_id).val() + ": " +status+" - Cytogenetic band not found ("+errorThrown+")"+"</div>");
+        },
+        success: function(result_band) {
+            band = chr+result_band[0].id;
+        }
+     });
+    return band;
 }
 
 
