@@ -485,7 +485,7 @@ function addGenomicContextRow(json_result,position,snp_row_id,overlap,type) {
     var closest_distance = 0;
     var closest_gene = "";
 
-    var row_id = 1;
+
     var row_prefix = "context_tr_";
 
     if (type) {
@@ -568,8 +568,10 @@ function addGenomicContextRow(json_result,position,snp_row_id,overlap,type) {
             overlap_list.push(gene_name);
         }
 
-        var genomicContextId = genomicContextForms+i;
-        var genomicContextName = genomicContextForms+"["+i+"]";
+        var id = $('[id^="'+row_prefix+'"]').length;
+        var row_id = id + 1;
+        var genomicContextId = genomicContextForms+id;
+        var genomicContextName = genomicContextForms+"["+id+"]";
 
         var newrow = "<tr id=\""+row_prefix + row_id + "\">";
         // SNP
@@ -615,7 +617,6 @@ function addGenomicContextRow(json_result,position,snp_row_id,overlap,type) {
 
         newrow = newrow + "</tr>";
         $("#context_table > tbody").append(newrow);
-        row_id++;
     }
 
     if (!type) {
