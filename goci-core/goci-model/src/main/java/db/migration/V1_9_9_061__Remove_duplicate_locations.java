@@ -40,8 +40,15 @@ public class V1_9_9_061__Remove_duplicate_locations implements SpringJdbcMigrati
         // Query for all duplicates
         jdbcTemplate.query(SELECT_LOCATION_DUPLICATES, (resultSet, i) -> {
             Long regionId = resultSet.getLong(1);
-            String chromosomeName = resultSet.getString(2).trim();
-            String chromosomePosition = resultSet.getString(3).trim();
+            
+            String chromosomeName = resultSet.getString(2);
+            if (chromosomeName != null) {
+                chromosomeName = chromosomeName.trim();
+            }
+            String chromosomePosition = resultSet.getString(3);
+            if (chromosomePosition != null) {
+                chromosomePosition = chromosomePosition.trim();
+            }
 
             // Get a list of all location ids that have duplicate region_id, chromosome name and chromosome positions
             List<Long> duplicateLocationIds =
