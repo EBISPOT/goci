@@ -40,7 +40,7 @@ public class V1_9_9_061__Remove_duplicate_locations implements SpringJdbcMigrati
         // Query for all duplicates
         jdbcTemplate.query(SELECT_LOCATION_DUPLICATES, (resultSet, i) -> {
             Long regionId = resultSet.getLong(1);
-            
+
             String chromosomeName = resultSet.getString(2);
             if (chromosomeName != null) {
                 chromosomeName = chromosomeName.trim();
@@ -59,25 +59,26 @@ public class V1_9_9_061__Remove_duplicate_locations implements SpringJdbcMigrati
                                               chromosomePosition);
 
             // Keep the first id, this will be our only remaining location
-            Long locationIdToKeep = duplicateLocationIds.get(0);
+            if (duplicateLocationIds.size() > 0) {
+                Long locationIdToKeep = duplicateLocationIds.get(0);
 
-            for (Long locationId : duplicateLocationIds) {
-                if (!Objects.equals(locationId, locationIdToKeep)) {
-                    // Get all SNP linked to this location
-                    List<Long> snpIds = jdbcTemplate.queryForList(SELECT_SNPS_LINKED_TO_LOCATION,
-                                                                  Long.class,
-                                                                  locationId);
+                for (Long locationId : duplicateLocationIds) {
+                    if (!Objects.equals(locationId, locationIdToKeep)) {
+                        // Get all SNP linked to this location
+                        List<Long> snpIds = jdbcTemplate.queryForList(SELECT_SNPS_LINKED_TO_LOCATION,
+                                                                      Long.class,
+                                                                      locationId);
 
-                    // Link SNP to remaining location
-                    for (Long snpId : snpIds) {
-                        jdbcTemplate.update(UPDATE_SNP_LOCATION, locationIdToKeep, locationId, snpId);
+                        // Link SNP to remaining location
+                        for (Long snpId : snpIds) {
+                            jdbcTemplate.update(UPDATE_SNP_LOCATION, locationIdToKeep, locationId, snpId);
+                        }
+
+                        // Delete location
+                        jdbcTemplate.update(DELETE_FROM_LOCATION, locationId);
                     }
-
-                    // Delete location
-                    jdbcTemplate.update(DELETE_FROM_LOCATION, locationId);
                 }
             }
-
             return null;
         });
     }
