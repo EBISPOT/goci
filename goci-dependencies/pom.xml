@@ -160,6 +160,11 @@
                  <version>${lode-virtuoso-impl.version}</version>
             </dependency>
             <dependency>
+                <groupId>ebi-lode</groupId>
+                <artifactId>lode-core-api</artifactId>
+                <version>${lode-virtuoso-impl.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>net.sourceforge.fluxion</groupId>
                 <artifactId>fluxion-spi</artifactId>
                 <version>${fluxion-spi.version}</version>
@@ -169,6 +174,12 @@
                 <artifactId>jena-core</artifactId>
                 <version>${jena-core.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.jena</groupId>
+                <artifactId>jena-arq</artifactId>
+                <version>${jena-core.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

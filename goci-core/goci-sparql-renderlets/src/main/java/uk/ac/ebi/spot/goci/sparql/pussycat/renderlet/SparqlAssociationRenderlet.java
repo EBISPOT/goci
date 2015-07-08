@@ -81,10 +81,10 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
 //                    QueryManager.getCachingInstance()
 //                            .getAssociationsLocatedInCytogeneticBand(sparqlTemplate, bandIndividual);
 //            return associations.size();
-            Set<URI> previousBandTraits =
+            Set<URI> currentBandTraits =
                     QueryManager.getCachingInstance().getTraitsLocatedInCytogeneticBand(sparqlTemplate,
                                                                                         bandIndividual);
-            return previousBandTraits.size();
+            return currentBandTraits.size();
         }
         else {
             throw new DataIntegrityViolationException(
