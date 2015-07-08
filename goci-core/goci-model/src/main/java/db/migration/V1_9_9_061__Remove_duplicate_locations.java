@@ -73,7 +73,5 @@ public class V1_9_9_061__Remove_duplicate_locations implements SpringJdbcMigrati
 
             return null;
         });
-
-
     }
 }
