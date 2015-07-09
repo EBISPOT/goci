@@ -180,8 +180,9 @@ public class SingleSnpMultiSnpAssociationService {
         association.setLoci(loci);
 
         // Store mapped location data, do this after the SNP objects have been created
-        snpLocationMappingService.processMappingForms(snpAssociationForm.getSnpMappingForms());
-
+        if (snpAssociationForm.getSnpMappingForms().size() > 0) {
+            snpLocationMappingService.processMappingForms(snpAssociationForm.getSnpMappingForms());
+        }
         return association;
 
     }
