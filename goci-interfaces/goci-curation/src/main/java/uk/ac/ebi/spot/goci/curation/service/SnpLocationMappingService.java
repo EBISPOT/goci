@@ -10,7 +10,13 @@ import uk.ac.ebi.spot.goci.repository.LocationRepository;
 import uk.ac.ebi.spot.goci.repository.RegionRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by emma on 07/07/2015.
@@ -35,68 +41,135 @@ public class SnpLocationMappingService {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
     }
 
-    public void storeSnpLocation(SnpMappingForm snpMappingForm) {
 
-        String snp = snpMappingForm.getSnp();
-        Location location = snpMappingForm.getLocation();
-        Long locationId;
+    public void processMappingForms(List<SnpMappingForm> snpMappingForms) {
 
-        // Check if location already exists
-        // TODO THIS WILL CRASH , WE HAVE DUPLICATE LOCATIONS
-        Location existingLocation =
-                locationRepository.findByChromosomeNameAndChromosomePositionAndRegionName(location.getChromosomeName(),
-                                                                                          location.getChromosomePosition(),
-                                                                                          location.getRegion()
-                                                                                                  .getName());
+        // Need to read through each form and flatten down information
+        // and create structure linking each RS_ID to its location(s)
+        Map<String, Set<Location>> snpToLocationsMap = new HashMap<>();
 
-        if (existingLocation != null) {
-            locationId = existingLocation.getId();
+        for (SnpMappingForm snpMappingForm : snpMappingForms) {
+
+            String snpInForm = snpMappingForm.getSnp();
+            Location locationInForm = snpMappingForm.getLocation();
+
+            // Next time we see SNP, add location to set
+            // This would only occur is SNP has multiple locations
+            if (snpToLocationsMap.containsKey(snpInForm)) {
+                snpToLocationsMap.get(snpInForm).add(locationInForm);
+            }
+
+            // First time we see a SNP store the location
+            else {
+                Set<Location> snpLocation = new HashSet<>();
+                snpLocation.add(locationInForm);
+                snpToLocationsMap.put(snpInForm, snpLocation);
+            }
         }
 
-        // Otherwise create location
-        else {
-            Location newLocation = createLocation(location);
-            locationId = newLocation.getId();
-        }
-
-        // Find ID in database for SNP
-        Long snpId;
-        List<SingleNucleotidePolymorphism> snps = singleNucleotidePolymorphismRepository.findByRsIdIgnoreCase(snp);
-        if (snps.size() > 0) {
-            // TODO HOW DO WE HANDLE DUPLICATES
-            // LINK ALL SNPS WITH THAT RS_ID TO THAT LOCATION
-        }
-
-        // If SNP doesn't exist
-        else {
-            //   TODO WHAT SHOULD WE DO IN THIS CASE
-            // TODO THIS IS CASE WHERE SNP DOESN'T EXIST
-            // COULD THE RS_ID BE FROM THE MERGED SNP
-        }
-
-
+        storeSnpLocation(snpToLocationsMap);
     }
 
-    private Location createLocation(Location location) {
+    public void storeSnpLocation(Map<String, Set<Location>> snpToLocations) {
 
-        // First save the region
+        // Go through each rs_id and its associated locations returning from teh mapping pipeline
+        for (String snpRsId : snpToLocations.keySet()) {
+
+            Set<Location> snpLocationsInForm = snpToLocations.get(snpRsId);
+
+            // Check if the SNP exists
+            List<SingleNucleotidePolymorphism> snpsInDatabase =
+                    singleNucleotidePolymorphismRepository.findByRsIdIgnoreCase(snpRsId);
+
+            if (!snpsInDatabase.isEmpty()) {
+
+                // For each snp with that rs_id link it to the new location(s)
+                for (SingleNucleotidePolymorphism snpInDatabase : snpsInDatabase) {
+
+                    // Store all new location objects
+                    Collection<Location> newSnpLocations = new ArrayList<>();
+
+                    for (Location snpLocationInForm : snpLocationsInForm) {
+
+                        String chromosomeNameInForm = snpLocationInForm.getChromosomeName();
+                        if (chromosomeNameInForm != null) {
+                            chromosomeNameInForm = chromosomeNameInForm.trim();
+                        }
+
+                        String chromosomePositionInForm = snpLocationInForm.getChromosomePosition();
+                        if (chromosomePositionInForm != null) {
+                            chromosomePositionInForm = chromosomePositionInForm.trim();
+                        }
+
+                        Region regionInForm = snpLocationInForm.getRegion();
+                        String regionNameInForm = null;
+                        if (regionInForm != null) {
+                            if (regionInForm.getName() != null) {
+                                regionNameInForm = regionInForm.getName().trim();
+                            }
+                        }
+
+                        // Check if location already exists
+                        Location existingLocation =
+                                locationRepository.findByChromosomeNameAndChromosomePositionAndRegionName(
+                                        chromosomeNameInForm,
+                                        chromosomePositionInForm,
+                                        regionNameInForm);
+
+
+                        if (existingLocation != null) {
+                            newSnpLocations.add(existingLocation);
+                        }
+                        // Create location
+                        else {
+                            Location newLocation = createLocation(chromosomeNameInForm,
+                                                                  chromosomePositionInForm,
+                                                                  regionNameInForm);
+
+                            newSnpLocations.add(newLocation);
+                        }
+                    }
+
+                    // Save new locations
+                    snpInDatabase.setLocations(newSnpLocations);
+                    singleNucleotidePolymorphismRepository.save(snpInDatabase);
+                }
+            }
+
+            // SNP doesn't exist, this should be extremely rare as SNP value is a copy
+            // of the variant entered by the curator which
+            // by the time mapping is started should already have been saved
+            else {
+                // TODO WHAT WILL HAPPEN FOR MERGED SNPS
+                throw new RuntimeException("Mapping SNP not found in database, RS_ID: " + snpRsId);
+            }
+
+        }
+    }
+
+    private Location createLocation(String chromosomeNameInForm,
+                                    String chromosomePositionInForm,
+                                    String regionNameInForm) {
+
+
         Region region = null;
-        String regionName = location.getRegion().getName();
-
-        region = regionRepository.findByName(regionName);
+        region = regionRepository.findByName(regionNameInForm);
 
         // If the region doesn't exist, save it
         if (region == null) {
-            region = regionRepository.save(location.getRegion());
+            Region newRegion = new Region();
+            newRegion.setName(regionNameInForm);
+            region = regionRepository.save(newRegion);
         }
 
-        // Set region on location
-        location.setRegion(region);
+        Location newLocation = new Location();
+        newLocation.setChromosomeName(chromosomeNameInForm);
+        newLocation.setChromosomePosition(chromosomePositionInForm);
+        newLocation.setRegion(region);
 
         // Save location
-        Location newLocation = locationRepository.save(location);
+        locationRepository.save(newLocation);
         return newLocation;
     }
-
 
 }
