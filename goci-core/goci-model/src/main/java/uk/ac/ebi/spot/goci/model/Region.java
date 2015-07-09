@@ -37,12 +37,21 @@ public class Region {
         this.locations = locations;
     }
 
+
     public Long getId() {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Collection<Location> getLocations() {
@@ -53,11 +62,11 @@ public class Region {
         this.locations = locations;
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return "Region{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", locations=" + locations +
                 '}';
     }
 }
