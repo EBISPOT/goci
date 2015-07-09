@@ -41,6 +41,10 @@
             <artifactId>goci-model</artifactId>
         </dependency>
         <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-utils</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
@@ -48,6 +52,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-rest</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.sourceforge.owlapi</groupId>
+            <artifactId>owlapi-distribution</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.hermit-reasoner</groupId>
+            <artifactId>org.semanticweb.hermit</artifactId>
+        </dependency>
+
         <!-- Fluxion implementation of SPI spec -->
         <dependency>
             <groupId>net.sourceforge.fluxion</groupId>

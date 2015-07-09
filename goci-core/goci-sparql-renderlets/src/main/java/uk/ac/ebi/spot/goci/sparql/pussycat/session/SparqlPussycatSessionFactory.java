@@ -8,7 +8,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import uk.ac.ebi.fgpt.lode.impl.JenaVirtuosoExecutorService;
 import uk.ac.ebi.spot.goci.pussycat.session.PussycatSession;
 import uk.ac.ebi.spot.goci.pussycat.session.PussycatSessionFactory;
-import uk.ac.ebi.spot.goci.service.OntologyService;
+import uk.ac.ebi.spot.goci.pussycat.service.OntologyService;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.SparqlTemplate;
 
 /**

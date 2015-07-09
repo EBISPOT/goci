@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.service;
+package uk.ac.ebi.spot.goci.pussycat.service;
 
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;

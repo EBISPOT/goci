@@ -13,7 +13,7 @@ import uk.ac.ebi.spot.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.spot.goci.pussycat.session.AbstractPussycatSession;
-import uk.ac.ebi.spot.goci.service.OntologyService;
+import uk.ac.ebi.spot.goci.pussycat.service.OntologyService;
 import uk.ac.ebi.spot.goci.sparql.exception.SparqlQueryException;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.QuerySolutionMapper;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.SparqlTemplate;
@@ -55,7 +55,6 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
         this.ontologyService = ontologyService;
         this.sparqlTemplate = sparqlTemplate;
 
-//        reasonerSession = new DAOBasedReasonerSession(getOntologyService());
     }
 
     public OntologyService getOntologyService() {
@@ -65,10 +64,6 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
     public SparqlTemplate getSparqlTemplate() {
         return sparqlTemplate;
     }
-
-//    public ReasonerSession getReasonerSession() {
-//        return reasonerSession;
-//    }
 
     public synchronized boolean isRendering() {
         return rendering;

@@ -240,12 +240,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                 getDataFactory().getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
 
         // assert rsid relation
-//        snp.getId()
-//        //TODO : remove, this is just for testing.
-//        if(snp.getRsId() == null){
-//            snp.setRsId("unnullify_for_test");
-//            System.out.println("rsId is NULLLLLLLLLLLLLLLLLLLLLLLLLLLLLL for " + snp.getId() + "!");
-//        }
+
         OWLLiteral rsid = getDataFactory().getOWLLiteral(snp.getRsId());
         OWLDataPropertyAssertionAxiom rsid_relation =
                 getDataFactory().getOWLDataPropertyAssertionAxiom(has_snp_rsid, snpIndiv, rsid);
