@@ -31,21 +31,27 @@ public class GenomicContext {
     @ManyToOne
     private Gene gene;
 
+    private String source;
+
+    private String mappingMethod;
+
     // JPA no-args constructor
     public GenomicContext() {
     }
 
-    public GenomicContext(boolean isIntergenic,
-                          boolean isUpstream,
-                          boolean isDownstream,
+    public GenomicContext(Boolean isIntergenic,
+                          Boolean isUpstream,
+                          Boolean isDownstream,
                           Long distance,
-                          SingleNucleotidePolymorphism snp, Gene gene) {
+                          SingleNucleotidePolymorphism snp, Gene gene, String source, String mappingMethod) {
         this.isIntergenic = isIntergenic;
         this.isUpstream = isUpstream;
         this.isDownstream = isDownstream;
         this.distance = distance;
         this.snp = snp;
         this.gene = gene;
+        this.source = source;
+        this.mappingMethod = mappingMethod;
     }
 
     public Long getId() {
@@ -104,6 +110,22 @@ public class GenomicContext {
         this.gene = gene;
     }
 
+    public String getMappingMethod() {
+        return mappingMethod;
+    }
+
+    public void setMappingMethod(String mappingMethod) {
+        this.mappingMethod = mappingMethod;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
     @Override public String toString() {
         return "GenomicContext{" +
                 "id=" + id +
@@ -113,6 +135,8 @@ public class GenomicContext {
                 ", distance=" + distance +
                 ", snp=" + snp +
                 ", gene=" + gene +
+                ", source='" + source + '\'' +
+                ", mappingMethod='" + mappingMethod + '\'' +
                 '}';
     }
 }

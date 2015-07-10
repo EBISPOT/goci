@@ -25,6 +25,8 @@ public class Gene {
 
     private String entrezGeneId;
 
+    private String ensemblGeneId;
+
     @ManyToMany(mappedBy = "authorReportedGenes")
     private Collection<Locus> authorReportedFromLoci;
 
@@ -33,6 +35,18 @@ public class Gene {
 
     // JPA no-args constructor
     public Gene() {
+    }
+
+    public Gene(String geneName,
+                String entrezGeneId,
+                String ensemblGeneId,
+                Collection<Locus> authorReportedFromLoci,
+                Collection<GenomicContext> genomicContexts) {
+        this.geneName = geneName;
+        this.entrezGeneId = entrezGeneId;
+        this.ensemblGeneId = ensemblGeneId;
+        this.authorReportedFromLoci = authorReportedFromLoci;
+        this.genomicContexts = genomicContexts;
     }
 
     public Gene(String geneName) {
@@ -71,11 +85,30 @@ public class Gene {
         this.authorReportedFromLoci = authorReportedFromLoci;
     }
 
+    public String getEnsemblGeneId() {
+        return ensemblGeneId;
+    }
+
+    public void setEnsemblGeneId(String ensemblGeneId) {
+        this.ensemblGeneId = ensemblGeneId;
+    }
+
+    public Collection<GenomicContext> getGenomicContexts() {
+        return genomicContexts;
+    }
+
+    public void setGenomicContexts(Collection<GenomicContext> genomicContexts) {
+        this.genomicContexts = genomicContexts;
+    }
+
     @Override public String toString() {
         return "Gene{" +
                 "id=" + id +
                 ", geneName='" + geneName + '\'' +
                 ", entrezGeneId='" + entrezGeneId + '\'' +
+                ", ensemblGeneId='" + ensemblGeneId + '\'' +
+                ", authorReportedFromLoci=" + authorReportedFromLoci +
+                ", genomicContexts=" + genomicContexts +
                 '}';
     }
 }
