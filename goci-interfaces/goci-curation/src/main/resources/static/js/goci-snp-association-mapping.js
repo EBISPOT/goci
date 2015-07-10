@@ -10,15 +10,17 @@
  */
 
 // Ensembl REST URLs
-var rest_url_root = "http://rest.ensembl.org";
+var rest_url_root = "http://rest.ensembl.org"; // Main server
+var rest_url_root_test = "http://rest.ensembl.org:8080"; // Test server
 var rest_variation = rest_url_root + "/variation/homo_sapiens/";
 var rest_lookup_symbol = rest_url_root + "/lookup/symbol/homo_sapiens/";
-var rest_overlap_region =  rest_url_root + "/overlap/region/homo_sapiens/";
+var rest_overlap_region = rest_url_root + "/overlap/region/homo_sapiens/";
 var rest_info_assembly = rest_url_root + "/info/assembly/homo_sapiens/"; // Get chromosome length
 var rest_xrefs_id = rest_url_root + "/xrefs/id/";
 
 // Global variables
 var ncbi_db_type = "otherfeatures";
+var ncbi_logic_name = "refseq_import";
 var genomic_distance = 100000; // 100kb
 // Forms
 var snpMappingForms = "snpMappingForms";
@@ -317,7 +319,7 @@ function getMappings(mappings,snp_row_id) {
         var position = mappings[i].start;
 
         // Get the cytogenetic band overlapping the variant ("Region")
-        var band = "Unknown"; //getCytogeneticBand(chr,position,snp_row_id);
+        var band = getCytogeneticBand(chr,position,snp_row_id);
 
         var snpMappingId = snpMappingForms+id;
         var snpMappingName = snpMappingForms+"["+id+"]";
@@ -351,7 +353,8 @@ function getMappings(mappings,snp_row_id) {
 function getCytogeneticBand (chr,position,snp_row_id) {
 
     var band = "Unknown";
-    var rest_cytogenetic = rest_overlap_region+chr+":"+position+"-"+position;
+    //var rest_cytogenetic = rest_overlap_region+chr+":"+position+"-"+position;
+    var rest_cytogenetic =rest_url_root_test+"/overlap/region/homo_sapiens/"+chr+":"+position+"-"+position; // TEST server
     $.ajax({
         method: "GET",
         dataType: "json",
@@ -386,7 +389,7 @@ function getGenomicContext(chr,position,snp_row_id,source,clear) {
     }
 
     // By default the db_type is 'core' (i.e. Ensembl)
-    var rest_opt = (source == "ensembl") ? {"feature" : "gene"} :  {"feature" : "gene", "source" : source, "db_type" : ncbi_db_type};
+    var rest_opt = (source == "ensembl") ? {"feature" : "gene"} :  {"feature" : "gene", "logic_name" : ncbi_logic_name, "db_type" : ncbi_db_type};
 
     // Check if overlap gene
     var rest_full_url_1 = rest_overlap_region + chr + ':'+ position + '-' + position;
