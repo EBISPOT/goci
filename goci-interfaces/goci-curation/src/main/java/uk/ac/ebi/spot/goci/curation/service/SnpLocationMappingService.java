@@ -42,6 +42,7 @@ public class SnpLocationMappingService {
     }
 
 
+    /* Method used to format data returned from view via form so it can be stored in database */
     public void processMappingForms(List<SnpMappingForm> snpMappingForms) {
 
         // Need to read through each form and flatten down information
