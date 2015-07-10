@@ -38,16 +38,19 @@ public class SnpInteractionAssociationService {
 
     // Services
     private LociAttributesService lociAttributesService;
+    private SnpLocationMappingService snpLocationMappingService;
 
     @Autowired
     public SnpInteractionAssociationService(LocusRepository locusRepository,
                                             AssociationRepository associationRepository,
                                             GenomicContextRepository genomicContextRepository,
-                                            LociAttributesService lociAttributesService) {
+                                            LociAttributesService lociAttributesService,
+                                            SnpLocationMappingService snpLocationMappingService) {
         this.locusRepository = locusRepository;
         this.associationRepository = associationRepository;
         this.genomicContextRepository = genomicContextRepository;
         this.lociAttributesService = lociAttributesService;
+        this.snpLocationMappingService = snpLocationMappingService;
     }
 
     public Association createAssociation(SnpAssociationInteractionForm snpAssociationInteractionForm) {
@@ -152,6 +155,12 @@ public class SnpInteractionAssociationService {
 
         }
         association.setLoci(loci);
+
+        // Store mapped location data, do this after the SNP objects have been created
+        if (snpAssociationInteractionForm.getSnpMappingForms().size() > 0) {
+            snpLocationMappingService.processMappingForms(snpAssociationInteractionForm.getSnpMappingForms());
+        }
+
         return association;
     }
 
