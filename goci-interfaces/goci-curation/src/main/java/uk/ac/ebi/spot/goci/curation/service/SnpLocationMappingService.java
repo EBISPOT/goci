@@ -118,7 +118,20 @@ public class SnpLocationMappingService {
 
 
                         if (existingLocation != null) {
-                            newSnpLocations.add(existingLocation);
+
+                            // Check if snp already has that location linked to it
+                            List<SingleNucleotidePolymorphism> snpsLinkedToExistingLocation =
+                                    singleNucleotidePolymorphismRepository.findByLocationsId(existingLocation.getId());
+
+                            List<Long> snpIdsLinkedToExistingLocation = new ArrayList<>();
+                            for (SingleNucleotidePolymorphism snpLinkedToExistingLocation : snpsLinkedToExistingLocation) {
+                                snpIdsLinkedToExistingLocation.add(snpLinkedToExistingLocation.getId());
+                            }
+
+                            // I f snp isn't linked to the existing location add it to the collection of new locations
+                            if (!snpIdsLinkedToExistingLocation.contains(snpInDatabase.getId())) {
+                                newSnpLocations.add(existingLocation);
+                            }
                         }
                         // Create location
                         else {
@@ -130,9 +143,11 @@ public class SnpLocationMappingService {
                         }
                     }
 
-                    // Save new locations
-                    snpInDatabase.setLocations(newSnpLocations);
-                    singleNucleotidePolymorphismRepository.save(snpInDatabase);
+                    // If we have new locations then link to snp and save
+                    if (newSnpLocations.size() > 0) {
+                        snpInDatabase.setLocations(newSnpLocations);
+                        singleNucleotidePolymorphismRepository.save(snpInDatabase);
+                    }
                 }
             }
 
