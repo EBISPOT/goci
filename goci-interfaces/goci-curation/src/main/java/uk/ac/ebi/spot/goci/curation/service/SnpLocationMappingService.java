@@ -169,7 +169,7 @@ public class SnpLocationMappingService {
             // by the time mapping is started should already have been saved
             else {
                 // TODO WHAT WILL HAPPEN FOR MERGED SNPS
-                throw new RuntimeException("Mapping SNP not found in database, RS_ID: " + snpRsId);
+                throw new RuntimeException("Adding location for SNP not found in database, RS_ID: " + snpRsId);
             }
 
         }
