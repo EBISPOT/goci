@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.pussycat.session;
 
+import org.springframework.beans.factory.annotation.Value;
 import uk.ac.ebi.spot.goci.pussycat.utils.StringUtils;
 
 import java.io.BufferedReader;
@@ -25,6 +26,7 @@ import java.util.Map;
 public abstract class AbstractSVGIOPussycatSession extends AbstractPussycatSession {
     private static final String ENCODING = "SHA-1";
 
+    @Value("${cache.directory}")
     private File cacheDirectory;
 
     private Map<String, Object[]> hashArgsMap = new HashMap<String, Object[]>();

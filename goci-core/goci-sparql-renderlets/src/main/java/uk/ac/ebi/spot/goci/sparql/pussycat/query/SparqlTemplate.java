@@ -13,6 +13,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.impl.ResourceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import uk.ac.ebi.spot.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.spot.goci.sparql.exception.SparqlQueryException;
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
@@ -31,9 +32,13 @@ import java.util.Properties;
  * @date 21/08/14
  */
 public class SparqlTemplate {
+
+    @Autowired
     private JenaQueryExecutionService queryService;
 
     private String prefixes;
+
+    @Autowired
     private Properties prefixProperties;
 
     public JenaQueryExecutionService getQueryService() {
