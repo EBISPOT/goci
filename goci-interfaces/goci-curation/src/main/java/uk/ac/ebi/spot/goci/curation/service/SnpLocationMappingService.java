@@ -73,7 +73,7 @@ public class SnpLocationMappingService {
 
     public void storeSnpLocation(Map<String, Set<Location>> snpToLocations) {
 
-        // Go through each rs_id and its associated locations returning from teh mapping pipeline
+        // Go through each rs_id and its associated locations returning from the mapping pipeline
         for (String snpRsId : snpToLocations.keySet()) {
 
             Set<Location> snpLocationsInForm = snpToLocations.get(snpRsId);
@@ -146,8 +146,20 @@ public class SnpLocationMappingService {
 
                     // If we have new locations then link to snp and save
                     if (newSnpLocations.size() > 0) {
+
+                        // Get a list of locations currently linked to our SNP
+                        Collection<Location> oldSnpLocations = snpInDatabase.getLocations();
+
+                        // Set new location details
                         snpInDatabase.setLocations(newSnpLocations);
                         singleNucleotidePolymorphismRepository.save(snpInDatabase);
+
+                        // Clean-up old locations that were linked to SNP
+                        if (oldSnpLocations.size() > 0) {
+                            for (Location oldSnpLocation : oldSnpLocations) {
+                                cleanUpLocations(oldSnpLocation);
+                            }
+                        }
                     }
                 }
             }
@@ -186,6 +198,15 @@ public class SnpLocationMappingService {
         // Save location
         locationRepository.save(newLocation);
         return newLocation;
+    }
+
+    // Method to remove any old locations that no longer have snps linked to them
+    private void cleanUpLocations(Location oldSnpLocation) {
+        List<SingleNucleotidePolymorphism> snps =
+                singleNucleotidePolymorphismRepository.findByLocationsId(oldSnpLocation.getId());
+        if (snps.size() == 0) {
+            locationRepository.delete(oldSnpLocation);
+        }
     }
 
 }
