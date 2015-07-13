@@ -40,6 +40,7 @@ public class SingleSnpMultiSnpAssociationService {
     private AssociationCalculationService associationCalculationService;
     private LociAttributesService lociAttributesService;
     private SnpLocationMappingService snpLocationMappingService;
+    private SnpGenomicContextMappingService snpGenomicContextMappingService;
 
     @Autowired
     public SingleSnpMultiSnpAssociationService(AssociationRepository associationRepository,
@@ -47,14 +48,17 @@ public class SingleSnpMultiSnpAssociationService {
                                                GenomicContextRepository genomicContextRepository,
                                                AssociationCalculationService associationCalculationService,
                                                LociAttributesService lociAttributesService,
-                                               SnpLocationMappingService snpLocationMappingService) {
+                                               SnpLocationMappingService snpLocationMappingService,
+                                               SnpGenomicContextMappingService snpGenomicContextMappingService) {
         this.associationRepository = associationRepository;
         this.locusRepository = locusRepository;
         this.genomicContextRepository = genomicContextRepository;
         this.associationCalculationService = associationCalculationService;
         this.lociAttributesService = lociAttributesService;
         this.snpLocationMappingService = snpLocationMappingService;
+        this.snpGenomicContextMappingService = snpGenomicContextMappingService;
     }
+
 
     public Association createAssociation(SnpAssociationForm snpAssociationForm) {
 
@@ -183,6 +187,12 @@ public class SingleSnpMultiSnpAssociationService {
         if (snpAssociationForm.getSnpMappingForms().size() > 0) {
             snpLocationMappingService.processMappingForms(snpAssociationForm.getSnpMappingForms());
         }
+
+        // Store genomic context information associated with curator entered RS_IDs
+        if (snpAssociationForm.getGenomicContexts().size() > 0) {
+            snpGenomicContextMappingService.processGenomicContext(snpAssociationForm.getGenomicContexts());
+        }
+
         return association;
 
     }
