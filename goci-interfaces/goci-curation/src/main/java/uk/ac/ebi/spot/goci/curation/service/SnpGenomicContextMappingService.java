@@ -47,7 +47,6 @@ public class SnpGenomicContextMappingService {
         for (GenomicContext genomicContext : genomicContexts) {
             String snpIdInGenomicContext = genomicContext.getSnp().getRsId();
 
-
             // Next time we see SNP, add genomic context to set
             if (snpToGenomicContextMap.containsKey(snpIdInGenomicContext)) {
                 snpToGenomicContextMap.get(snpIdInGenomicContext).add(genomicContext);
@@ -128,7 +127,7 @@ public class SnpGenomicContextMappingService {
                                         mappingMethod,
                                         snpIdInDatabase);
 
-                        // No genomic contexts exist that match that values from mapping form
+                        // No genomic contexts exist in database already that match the values from mapping form
                         if (existingGenomicContexts.size() == 0) {
 
 
