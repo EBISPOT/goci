@@ -129,7 +129,7 @@ public class SnpLocationMappingService {
                                 snpIdsLinkedToExistingLocation.add(snpLinkedToExistingLocation.getId());
                             }
 
-                            // I f snp isn't linked to the existing location add it to the collection of new locations
+                            // If snp isn't linked to the existing location add it to the collection of new locations
                             if (!snpIdsLinkedToExistingLocation.contains(snpInDatabase.getId())) {
                                 newSnpLocations.add(existingLocation);
                             }
