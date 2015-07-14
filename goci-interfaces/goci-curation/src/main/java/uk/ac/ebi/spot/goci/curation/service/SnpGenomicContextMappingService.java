@@ -9,6 +9,7 @@ import uk.ac.ebi.spot.goci.repository.GeneRepository;
 import uk.ac.ebi.spot.goci.repository.GenomicContextRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -76,72 +77,68 @@ public class SnpGenomicContextMappingService {
 
             if (!snpsInDatabase.isEmpty()) {
 
-                // For each snp with that rs_id update or add genomic context
+                // For each snp with that rs_id add new genomic context
                 for (SingleNucleotidePolymorphism snpInDatabase : snpsInDatabase) {
+
+                    Collection<GenomicContext> newSnpGenomicContexts = new ArrayList<>();
 
                     for (GenomicContext genomicContextInForm : genomicContextsInForm) {
 
                         // Check gene exists
                         String geneName = genomicContextInForm.getGene().getGeneName().trim();
-                        String entrezGeneId = genomicContextInForm.getGene().getEntrezGeneId();
-                        String ensemblGeneId = genomicContextInForm.getGene().getEnsemblGeneId();
 
-                        List<Gene> existingGenesInDatabase = geneRepository.findByGeneNameIgnoreCase(geneName);
+                        if (!geneName.equalsIgnoreCase("undefined")) {
 
-                        // If gene is not already in database then create one
-                        if (existingGenesInDatabase.size() == 0) {
-                            createGene(geneName, entrezGeneId, ensemblGeneId);
-                        }
+                            String entrezGeneId = genomicContextInForm.getGene().getEntrezGeneId();
+                            String ensemblGeneId = genomicContextInForm.getGene().getEnsemblGeneId();
 
-                        // Update gene
-                        else {
-                            for (Gene existingGeneInDatabase : existingGenesInDatabase) {
-                                if (entrezGeneId != null) {
-                                    existingGeneInDatabase.setEntrezGeneId(entrezGeneId);
-                                }
+                            List<Gene> existingGenesInDatabase = geneRepository.findByGeneNameIgnoreCase(geneName);
 
-                                if (ensemblGeneId != null) {
-                                    existingGeneInDatabase.setEnsemblGeneId(ensemblGeneId);
-                                }
-
-                                geneRepository.save(existingGeneInDatabase);
+                            // If gene is not already in database then create one
+                            if (existingGenesInDatabase.size() == 0) {
+                                createGene(geneName, entrezGeneId, ensemblGeneId);
                             }
-                        }
 
-                        Boolean isIntergenic = genomicContextInForm.getIsIntergenic();
-                        Boolean isUpstream = genomicContextInForm.getIsUpstream();
-                        Boolean isDownstream = genomicContextInForm.getIsDownstream();
-                        Long distance = genomicContextInForm.getDistance();
-                        String source = genomicContextInForm.getSource();
-                        String mappingMethod = genomicContextInForm.getMappingMethod();
-                        Long snpIdInDatabase = snpInDatabase.getId();
-
-                        Collection<GenomicContext> existingGenomicContexts =
-                                genomicContextRepository.findByIsIntergenicAndIsUpstreamAndIsDownstreamAndDistanceAndGeneGeneNameAndSourceAndMappingMethodAndSnpId(
-                                        isIntergenic,
-                                        isUpstream,
-                                        isDownstream,
-                                        distance,
-                                        geneName,
-                                        source,
-                                        mappingMethod,
-                                        snpIdInDatabase);
-
-                        // No genomic contexts exist in database already that match the values from mapping form
-                        if (existingGenomicContexts.size() == 0) {
-
-
-         /*                   // Need to decide in what scenario we would update a genomic context
-                            if () {}
-
-                            // Create genomic context
+                            // Update gene
                             else {
+                                for (Gene existingGeneInDatabase : existingGenesInDatabase) {
+                                    if (entrezGeneId != null) {
+                                        existingGeneInDatabase.setEntrezGeneId(entrezGeneId);
+                                    }
 
-                            }*/
+                                    if (ensemblGeneId != null) {
+                                        existingGeneInDatabase.setEnsemblGeneId(ensemblGeneId);
+                                    }
 
+                                    // Save changes
+                                    geneRepository.save(existingGeneInDatabase);
+                                }
+                            }
+
+                            // Create new genomic context
+                            Boolean isIntergenic = genomicContextInForm.getIsIntergenic();
+                            Boolean isUpstream = genomicContextInForm.getIsUpstream();
+                            Boolean isDownstream = genomicContextInForm.getIsDownstream();
+                            Long distance = genomicContextInForm.getDistance();
+                            String source = genomicContextInForm.getSource();
+                            String mappingMethod = genomicContextInForm.getMappingMethod();
+                            Long snpIdInDatabase = snpInDatabase.getId();
+
+                            GenomicContext newGenomicContext = createGenomicContext(isIntergenic,
+                                                                                    isUpstream,
+                                                                                    isDownstream,
+                                                                                    distance,
+                                                                                    source,
+                                                                                    mappingMethod,
+                                                                                    geneName);
+
+                            newSnpGenomicContexts.add(newGenomicContext);
                         }
-
                     }
+
+                    snpInDatabase.setGenomicContexts(newSnpGenomicContexts);
+                    singleNucleotidePolymorphismRepository.save(snpInDatabase);
+
                 }
             }
 
@@ -150,13 +147,13 @@ public class SnpGenomicContextMappingService {
             // by the time mapping is started should already have been saved
             else {
                 // TODO WHAT WILL HAPPEN FOR MERGED SNPS
-                throw new RuntimeException("Adding genomic context for SNP not found in database, RS_ID: " + snpRsId);
+                throw new RuntimeException(
+                        "Adding genomic context for SNP not found in database, RS_ID: " + snpRsId);
             }
-
-
         }
     }
 
+    // Method to create a gene
     private void createGene(String geneName, String entrezGeneId, String ensemblGeneId) {
         // Create new gene
         Gene newGene = new Gene();
@@ -166,5 +163,31 @@ public class SnpGenomicContextMappingService {
 
         // Save gene
         geneRepository.save(newGene);
+    }
+
+    // Method to create genomic context
+    private GenomicContext createGenomicContext(Boolean isIntergenic,
+                                                Boolean isUpstream,
+                                                Boolean isDownstream,
+                                                Long distance,
+                                                String source, String mappingMethod, String geneName) {
+
+        GenomicContext genomicContext = new GenomicContext();
+
+        // Find gene
+        List<Gene> genesWithMatchingName = geneRepository.findByGeneNameIgnoreCase(geneName);
+
+        // Account for duplicates
+        Gene gene = genesWithMatchingName.get(0);
+
+        genomicContext.setGene(gene);
+        genomicContext.setIntergenic(isIntergenic);
+        genomicContext.setDownstream(isDownstream);
+        genomicContext.setUpstream(isUpstream);
+        genomicContext.setDistance(distance);
+        genomicContext.setSource(source);
+        genomicContext.setMappingMethod(mappingMethod);
+
+        return genomicContext;
     }
 }
