@@ -1150,6 +1150,9 @@ SSP: spatial span
 sTfR: Soluble Transferrin Receptor
 
 
+sTie-2: soluble receptor Tie-2
+
+
 Str: strict
 
 
