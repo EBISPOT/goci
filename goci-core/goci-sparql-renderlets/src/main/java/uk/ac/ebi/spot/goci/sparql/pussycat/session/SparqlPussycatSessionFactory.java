@@ -21,7 +21,10 @@ import uk.ac.ebi.spot.goci.sparql.pussycat.query.SparqlTemplate;
 public class SparqlPussycatSessionFactory implements PussycatSessionFactory {
     private static final String efoDefaultLocation = "http://www.ebi.ac.uk/efo/efo.owl";
 
+    @Autowired
     private OntologyService ontologyService;
+
+    @Autowired
     private SparqlTemplate sparqlTemplate;
 
     @Autowired
@@ -56,6 +59,7 @@ public class SparqlPussycatSessionFactory implements PussycatSessionFactory {
         }
     }
 
+    @Autowired
     public SparqlPussycatSessionFactory(OntologyService ontologyService, SparqlTemplate sparqlTemplate) {
         this.ontologyService = ontologyService;
         this.sparqlTemplate = sparqlTemplate;

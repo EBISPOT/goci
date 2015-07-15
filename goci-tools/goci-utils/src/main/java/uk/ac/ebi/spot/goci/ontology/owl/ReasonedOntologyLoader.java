@@ -11,6 +11,7 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
 import org.semanticweb.owlapi.reasoner.SimpleConfiguration;
 import org.slf4j.Logger;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.Set;
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
  * @author Tony Burdett
  * @date 03/06/13
  */
+
+@Component
 public class ReasonedOntologyLoader extends AbstractOntologyLoader {
 
     private OWLReasoner reasoner;

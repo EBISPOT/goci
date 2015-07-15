@@ -36,9 +36,13 @@ import java.util.Set;
  * @date 21/08/14
  */
 
-@Component(value="proxiedSession")
+@Component("proxiedSession")
 public class SparqlPussycatSession extends AbstractPussycatSession {
+
+    @Autowired
     private OntologyService ontologyService;
+
+    @Autowired
     private SparqlTemplate sparqlTemplate;
 
 

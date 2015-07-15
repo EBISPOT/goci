@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.pussycat.session;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.pussycat.utils.StringUtils;
 
 import java.io.BufferedReader;
@@ -23,6 +24,7 @@ import java.util.Map;
  * @author Tony Burdett
  * @date 02/08/12
  */
+@Component
 public abstract class AbstractSVGIOPussycatSession extends AbstractPussycatSession {
     private static final String ENCODING = "SHA-1";
 

@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.pussycat.session;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.spot.goci.pussycat.utils.StringUtils;
 
@@ -18,6 +19,7 @@ import java.util.ServiceLoader;
  * @author Tony Burdett
  * @date 03/08/12
  */
+@Component
 public abstract class AbstractPussycatSession implements PussycatSession {
     private String sessionID;
     private Collection<Renderlet> renderlets;

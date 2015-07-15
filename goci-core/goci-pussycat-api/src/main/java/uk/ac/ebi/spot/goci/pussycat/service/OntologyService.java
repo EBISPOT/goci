@@ -6,8 +6,11 @@ import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.exception.OntologyIndexingException;
 import uk.ac.ebi.spot.goci.ontology.owl.ReasonedOntologyLoader;
 
 import javax.validation.constraints.NotNull;
@@ -26,15 +29,16 @@ import java.util.Set;
  */
 
 
-//@Service
-//@Component
+@Service
 public class OntologyService {
 
     @NotNull
     @Value("${efo.location}")
     private Resource efoResource;
 
+
     private ReasonedOntologyLoader ontologyLoader;
+
     private Map<String, Set<OWLClass>> labelToClassMap;
     private Map<OWLClass, List<String>> classToLabelMap;
     private Map<IRI, OWLClass> iriToClassMap;
@@ -47,8 +51,10 @@ public class OntologyService {
         return log;
     }
 
-//    @Autowired
+    @Autowired
     public OntologyService(ReasonedOntologyLoader ontologyLoader){
+//    public OntologyService(){
+//        this.ontologyLoader = new ReasonedOntologyLoader();
         this.ontologyLoader = ontologyLoader;
         ontologyLoader.setOntologyName("efo");
         ontologyLoader.setOntologyURI(URI.create("http://www.ebi.ac.uk/efo"));
@@ -56,16 +62,23 @@ public class OntologyService {
         ontologyLoader.setExclusionClassURI(URI.create("http://www.geneontology.org/formats/oboInOwl#ObsoleteClass"));
         ontologyLoader.setExclusionAnnotationURI(URI.create("http://www.ebi.ac.uk/efo/organizational_class"));
         ontologyLoader.setSynonymURIs(Collections.singleton(URI.create("http://www.ebi.ac.uk/efo/alternative_term")));
+        System.out.println("Initialising the loader");
         ontologyLoader.init();
+        System.out.println("Loader ready");
         setObsoleteClass();
+        System.out.println("Obsolete class set... ");
+        System.out.println("... and it is " + obsoleteClass.getIRI().toString());
         this.labelToClassMap = new HashMap<String, Set<OWLClass>>();
         this.classToLabelMap = new HashMap<OWLClass, List<String>>();
         this.iriToClassMap = new HashMap<IRI, OWLClass>();
         populateClassMaps();
+        System.out.println("All done");
 
     }
 
     private void populateClassMaps(){
+        System.out.println("About to build the class maps");
+
         OWLOntology ontology = ontologyLoader.getOntology();
         for (OWLClass owlClass : ontology.getClassesInSignature()) {
             // check this isn't an obsolete class
@@ -75,11 +88,16 @@ public class OntologyService {
 
                 classToLabelMap.put(owlClass, classNames);
                 for (String name : getClassNames(owlClass)) {
-                    name = normalizeSearchString(name);
-                    if (!labelToClassMap.containsKey(name)) {
-                        labelToClassMap.put(name, new HashSet<OWLClass>());
+                    if(name != null) {
+                        name = normalizeSearchString(name);
+                        if (!labelToClassMap.containsKey(name)) {
+                            labelToClassMap.put(name, new HashSet<OWLClass>());
+                        }
+                        labelToClassMap.get(name).add(owlClass);
                     }
-                    labelToClassMap.get(name).add(owlClass);
+                    else {
+                        System.out.println("Class " + owlClass.getIRI().toString() + " doesn't have a label");
+                    }
                 }
 
                 // get IRI, and enter it into the map
@@ -90,7 +108,7 @@ public class OntologyService {
 
     private void setObsoleteClass(){
         for (OWLClass nextClass : ontologyLoader.getOntology().getClassesInSignature()) {
-            if (nextClass.getIRI().toURI().toString().equals(ontologyLoader.getExclusionClassURI())) {
+            if (nextClass.getIRI().toURI().toString().equals(ontologyLoader.getExclusionClassURI().toString())) {
                 obsoleteClass = nextClass;
                 break;
             }
@@ -110,15 +128,15 @@ public class OntologyService {
      * @return the OWL class with this URI, if found, or null if not present
      */
     public synchronized Collection<OWLClass> getOWLClassesByLabel(String label) {
-//        try {
-//            waitUntilReady();
+        try {
+            ontologyLoader.waitUntilReady();
             String searchString = normalizeSearchString(label);
             return matchSearchString(searchString);
-//        }
-//        catch (InterruptedException e) {
-//            throw new OntologyIndexingException(
-//                    "Unexpectedly interrupted whilst waiting for indexing to complete", e);
-//        }
+        }
+        catch (InterruptedException e) {
+            throw new OntologyIndexingException(
+                    "Unexpectedly interrupted whilst waiting for indexing to complete", e);
+        }
     }
 
     /**
@@ -204,19 +222,19 @@ public class OntologyService {
      * @return a set of matching classes.
      */
     private Set<OWLClass> matchSearchString(String searchString) {
-//        try {
-//            waitUntilReady();
+        try {
+            ontologyLoader.waitUntilReady();
             if (labelToClassMap.containsKey(searchString)) {
                 return labelToClassMap.get(searchString);
             }
             else {
                 return Collections.emptySet();
             }
-//        }
-//        catch (InterruptedException e) {
-//            throw new OntologyIndexingException(
-//                    "Unexpectedly interrupted whilst waiting for indexing to complete", e);
-//        }
+        }
+        catch (InterruptedException e) {
+            throw new OntologyIndexingException(
+                    "Unexpectedly interrupted whilst waiting for indexing to complete", e);
+        }
     }
 
     /**
@@ -234,6 +252,7 @@ public class OntologyService {
             for (OWLClassExpression oce : superclasses) {
                 if (!oce.isAnonymous() &&
                         oce.asOWLClass().getIRI().toURI().equals(obsoleteClass.getIRI().toURI())) {
+                    System.out.println(owlClass.getIRI().toString() + " is a child of obsolete class");
                     return true;
                 }
             }

@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.pussycat.session;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
@@ -29,7 +30,7 @@ import java.util.Set;
  * @date 02/08/12
  */
 
-@Component(value="cachingSession")
+@Component("cachingSession")
 public class SVGCachingPussycatSession extends AbstractSVGIOPussycatSession {
 
     @Autowired
@@ -40,6 +41,7 @@ public class SVGCachingPussycatSession extends AbstractSVGIOPussycatSession {
         return proxiedSession;
     }
 
+    @Required
     public void setProxiedSession(PussycatSession proxiedSession) {
         this.proxiedSession = proxiedSession;
     }
