@@ -513,7 +513,7 @@ function addGenomicContextRow(json_result,position,snp_row_id,overlap,source,typ
 
         for (i in json_result) {
             var gene_id   = json_result[i].id;
-            var gene_name = json_result[i].Name;
+            var gene_name = json_result[i].external_name;
 
             if ((gene_name && jQuery.inArray(gene_name,overlap) != -1) || gene_name == null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
                 continue;
@@ -536,7 +536,7 @@ function addGenomicContextRow(json_result,position,snp_row_id,overlap,source,typ
 
     for (i in json_result) {
 
-        var gene_name = json_result[i].Name;
+        var gene_name = json_result[i].external_name;
         var gene_id = json_result[i].id;
 
         var distance = 0;
@@ -673,7 +673,7 @@ function getNearestGene (chr,snp_position,position,boundary,overlap_list,rest_op
             if (result.length > 0 && result != []) {
                 var closest_distance = 0;
                 for (i in result) {
-                    var gene_name = result[i].Name;
+                    var gene_name = result[i].external_name;
                     if ((gene_name && jQuery.inArray(gene_name,overlap_list) != -1) || gene_name == null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
                         continue;
                     }
