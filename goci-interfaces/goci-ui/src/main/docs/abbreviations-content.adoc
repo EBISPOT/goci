@@ -474,6 +474,9 @@ FSG: fasting serum glucose
 FSH: follicle-stimulating hormone
 
 
+FSIGT: frequently sampled intravenous glucose tolerance test
+
+
 Ft3: free thyroxine 3
 
 
