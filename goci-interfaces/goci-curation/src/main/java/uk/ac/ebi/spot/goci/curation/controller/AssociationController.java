@@ -35,10 +35,12 @@ import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
+import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
+import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import javax.servlet.http.HttpServletRequest;
@@ -73,6 +75,7 @@ public class AssociationController {
     private StudyRepository studyRepository;
     private EfoTraitRepository efoTraitRepository;
     private LocusRepository locusRepository;
+    private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
 
     // Services
     private AssociationBatchLoaderService associationBatchLoaderService;
@@ -94,6 +97,7 @@ public class AssociationController {
                                  StudyRepository studyRepository,
                                  EfoTraitRepository efoTraitRepository,
                                  LocusRepository locusRepository,
+                                 SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
                                  AssociationBatchLoaderService associationBatchLoaderService,
                                  AssociationDownloadService associationDownloadService,
                                  AssociationViewService associationViewService,
@@ -105,6 +109,7 @@ public class AssociationController {
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
         this.locusRepository = locusRepository;
+        this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.associationBatchLoaderService = associationBatchLoaderService;
         this.associationDownloadService = associationDownloadService;
         this.associationViewService = associationViewService;
@@ -992,6 +997,29 @@ public class AssociationController {
             association.setSnpChecked(true);
             associationRepository.save(association);
         }
+        return "redirect:/studies/" + studyId + "/associations";
+
+    }
+
+    // Validate all SNPs
+    @RequestMapping(value = "/studies/{studyId}/associations/validate_all",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.GET)
+    public String validateAll(Model model, @PathVariable Long studyId) {
+
+        // Get all snps linked to this study
+        Collection<SingleNucleotidePolymorphism> snpsLinkedToThisStudy =
+                singleNucleotidePolymorphismRepository.findByRiskAllelesLociAssociationStudyId(studyId);
+
+        for (SingleNucleotidePolymorphism snpLinkedToThisStudy: snpsLinkedToThisStudy){
+            String snpRsId = snpLinkedToThisStudy.getRsId();
+
+
+            // TODO Pass rs_id to mapping component
+
+
+        }
+
         return "redirect:/studies/" + studyId + "/associations";
 
     }

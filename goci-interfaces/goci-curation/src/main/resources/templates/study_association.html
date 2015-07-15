@@ -83,6 +83,9 @@
                class="btn btn-default"
                role="button">Apply EFO trait(s) to all SNPs</a>
 
+            <a th:href="@{/studies/{studyId}/associations/validate_all(studyId=${study.Id})}"
+               class="btn btn-default"
+               role="button">Validate All SNPs</a>
 
             <a th:href="@{/studies/{studyId}/associations/download(studyId=${study.Id})}"
                class="btn btn-default pull-right"
