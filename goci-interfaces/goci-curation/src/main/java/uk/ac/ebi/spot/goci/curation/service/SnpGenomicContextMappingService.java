@@ -181,9 +181,9 @@ public class SnpGenomicContextMappingService {
         Gene gene = genesWithMatchingName.get(0);
 
         genomicContext.setGene(gene);
-        genomicContext.setIntergenic(isIntergenic);
-        genomicContext.setDownstream(isDownstream);
-        genomicContext.setUpstream(isUpstream);
+        genomicContext.setIsIntergenic(isIntergenic);
+        genomicContext.setIsDownstream(isDownstream);
+        genomicContext.setIsUpstream(isUpstream);
         genomicContext.setDistance(distance);
         genomicContext.setSource(source);
         genomicContext.setMappingMethod(mappingMethod);
