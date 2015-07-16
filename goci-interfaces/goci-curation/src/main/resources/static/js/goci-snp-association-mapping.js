@@ -12,12 +12,11 @@
 // Ensembl REST URLs
 var rest_url_root_test = "http://rest.ensembl.org:8080"; // Test server
 var rest_url_root_live = "http://rest.ensembl.org"; // Live server
-var rest_url_root = rest_url_root_test;
+var rest_url_root = rest_url_root_live;
 var rest_variation = rest_url_root + "/variation/homo_sapiens/";
 var rest_lookup_symbol = rest_url_root + "/lookup/symbol/homo_sapiens/";
 var rest_overlap_region = rest_url_root + "/overlap/region/homo_sapiens/";
 var rest_info_assembly = rest_url_root + "/info/assembly/homo_sapiens/"; // Get chromosome length
-var rest_xrefs_id = rest_url_root + "/xrefs/id/";
 
 // Global variables
 var source_ens = "Ensembl";
