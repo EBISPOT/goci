@@ -82,6 +82,12 @@ public class SnpGenomicContextMappingService {
                 // For each snp with that rs_id add new genomic context
                 for (SingleNucleotidePolymorphism snpInDatabase : snpsInDatabase) {
 
+                    // Remove old genomic contexts, as these will be updated with latest mapping
+                    Collection<GenomicContext> snpInDatabaseGenomicContexts = snpInDatabase.getGenomicContexts();
+                    for (GenomicContext snpInDatabaseGenomicContext : snpInDatabaseGenomicContexts) {
+                        genomicContextRepository.delete(snpInDatabaseGenomicContext);
+                    }
+
                     Collection<GenomicContext> newSnpGenomicContexts = new ArrayList<>();
 
                     for (GenomicContext genomicContextInForm : genomicContextsInForm) {
@@ -131,17 +137,11 @@ public class SnpGenomicContextMappingService {
                                                                                  source,
                                                                                  mappingMethod,
                                                                                  geneName, snpInDatabase);
-                         
+
                             newSnpGenomicContexts.add(genomicContext);
                         }
                     }
-
-                    // Remove old genomic contexts
-                    Collection<GenomicContext> snpInDatabaseGenomicContexts = snpInDatabase.getGenomicContexts();
-                    for (GenomicContext snpInDatabaseGenomicContext : snpInDatabaseGenomicContexts) {
-                        genomicContextRepository.delete(snpInDatabaseGenomicContext);
-                    }
-
+                    
                     // Save latest mapped information
                     snpInDatabase.setGenomicContexts(newSnpGenomicContexts);
                     singleNucleotidePolymorphismRepository.save(snpInDatabase);
