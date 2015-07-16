@@ -18,7 +18,7 @@ public interface GenomicContextRepository extends JpaRepository<GenomicContext, 
 
     Collection<GenomicContext> findBySnpId(Long snpId);
 
-    Collection<GenomicContext> findByIsIntergenicAndIsUpstreamAndIsDownstreamAndDistanceAndGeneGeneNameAndSourceAndMappingMethodAndSnpId(
+    GenomicContext findByIsIntergenicAndIsUpstreamAndIsDownstreamAndDistanceAndGeneGeneNameAndSourceAndMappingMethodAndSnpId(
             Boolean isIntergenic,
             Boolean isUpstream,
             Boolean isDownstream,
