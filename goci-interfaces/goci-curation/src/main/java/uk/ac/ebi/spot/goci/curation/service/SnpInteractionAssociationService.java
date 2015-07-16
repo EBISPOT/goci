@@ -39,18 +39,21 @@ public class SnpInteractionAssociationService {
     // Services
     private LociAttributesService lociAttributesService;
     private SnpLocationMappingService snpLocationMappingService;
+    private SnpGenomicContextMappingService snpGenomicContextMappingService;
 
     @Autowired
     public SnpInteractionAssociationService(LocusRepository locusRepository,
                                             AssociationRepository associationRepository,
                                             GenomicContextRepository genomicContextRepository,
                                             LociAttributesService lociAttributesService,
-                                            SnpLocationMappingService snpLocationMappingService) {
+                                            SnpLocationMappingService snpLocationMappingService,
+                                            SnpGenomicContextMappingService snpGenomicContextMappingService) {
         this.locusRepository = locusRepository;
         this.associationRepository = associationRepository;
         this.genomicContextRepository = genomicContextRepository;
         this.lociAttributesService = lociAttributesService;
         this.snpLocationMappingService = snpLocationMappingService;
+        this.snpGenomicContextMappingService = snpGenomicContextMappingService;
     }
 
     public Association createAssociation(SnpAssociationInteractionForm snpAssociationInteractionForm) {
@@ -159,6 +162,11 @@ public class SnpInteractionAssociationService {
         // Store mapped location data, do this after the SNP objects have been created
         if (snpAssociationInteractionForm.getSnpMappingForms().size() > 0) {
             snpLocationMappingService.processMappingForms(snpAssociationInteractionForm.getSnpMappingForms());
+        }
+
+        // Store genomic context information associated with curator entered RS_IDs
+        if (snpAssociationInteractionForm.getGenomicContexts().size() > 0) {
+            snpGenomicContextMappingService.processGenomicContext(snpAssociationInteractionForm.getGenomicContexts());
         }
 
         return association;
