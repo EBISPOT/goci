@@ -97,6 +97,9 @@ ALP: alkaline phosphatase
 Alpha-TOH: alpha-tocopherol
 
 
+ALS: amyotrophic lateral sclerosis
+
+
 ALT: alanine aminotransferase
 
 
@@ -481,6 +484,9 @@ Ft3: free thyroxine 3
 
 
 Ft4: free thyroxine
+
+
+FTD: frontotemporal dementia
 
 
 FUC-A: Antennary fucosylated glycans
