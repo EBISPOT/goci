@@ -668,6 +668,9 @@ L-LDL-FC: The free cholesterol content of large LDL
 L-HDL-L: Total lipids in large HDL
 
 
+Lp(a): lipoprotein (a)
+
+
 LS: lumbar spine
 
 
