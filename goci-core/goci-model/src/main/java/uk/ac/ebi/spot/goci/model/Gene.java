@@ -37,6 +37,15 @@ public class Gene {
     public Gene() {
     }
 
+    // Light constructor
+    public Gene(String geneName,
+                String entrezGeneId,
+                String ensemblGeneId) {
+        this.geneName = geneName;
+        this.entrezGeneId = entrezGeneId;
+        this.ensemblGeneId = ensemblGeneId;
+    }
+
     public Gene(String geneName,
                 String entrezGeneId,
                 String ensemblGeneId,
