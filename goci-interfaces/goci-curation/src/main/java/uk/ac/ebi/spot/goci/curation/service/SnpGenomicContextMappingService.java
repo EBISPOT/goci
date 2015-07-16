@@ -6,6 +6,7 @@ import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.GeneRepository;
+import uk.ac.ebi.spot.goci.repository.GenomicContextRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
 import java.util.ArrayList;
@@ -20,19 +21,24 @@ import java.util.Set;
  * Created by emma on 10/07/2015.
  *
  * @author emma
+ *         <p>
+ *         Service class to store genomic context information returned from mapping pipeline.
  */
 @Service
 public class SnpGenomicContextMappingService {
 
     private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
     private GeneRepository geneRepository;
+    private GenomicContextRepository genomicContextRepository;
 
     //Constructor
     @Autowired
     public SnpGenomicContextMappingService(SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
-                                           GeneRepository geneRepository) {
+                                           GeneRepository geneRepository,
+                                           GenomicContextRepository genomicContextRepository) {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.geneRepository = geneRepository;
+        this.genomicContextRepository = genomicContextRepository;
     }
 
     public void processGenomicContext(Collection<GenomicContext> genomicContexts) {
@@ -118,16 +124,38 @@ public class SnpGenomicContextMappingService {
                             Long distance = genomicContextInForm.getDistance();
                             String source = genomicContextInForm.getSource();
                             String mappingMethod = genomicContextInForm.getMappingMethod();
+                            Long snpIdInDatabase = snpInDatabase.getId();
 
-                            GenomicContext newGenomicContext = createGenomicContext(isIntergenic,
-                                                                                    isUpstream,
-                                                                                    isDownstream,
-                                                                                    distance,
-                                                                                    source,
-                                                                                    mappingMethod,
-                                                                                    geneName);
+                            // Determine if the genomic context already exists in database
+                            // TODO THIS MAY NEED A CHANGE WHEN WE ADD CLOSEST FLAG
+                            GenomicContext existingGenomicContext =
+                                    genomicContextRepository.findByIsIntergenicAndIsUpstreamAndIsDownstreamAndDistanceAndGeneGeneNameAndSourceAndMappingMethodAndSnpId(
+                                            isIntergenic,
+                                            isUpstream,
+                                            isDownstream,
+                                            distance,
+                                            geneName,
+                                            source,
+                                            mappingMethod,
+                                            snpIdInDatabase);
 
-                            newSnpGenomicContexts.add(newGenomicContext);
+
+                            GenomicContext genomicContext = new GenomicContext();
+
+                            // If the genomic context doesn't already exist create it
+                            if (existingGenomicContext == null) {
+                                genomicContext = createGenomicContext(isIntergenic, isUpstream,
+                                                                      isDownstream,
+                                                                      distance,
+                                                                      source,
+                                                                      mappingMethod,
+                                                                      geneName, snpInDatabase);
+                            }
+                            else {
+                                genomicContext = existingGenomicContext;
+                            }
+
+                            newSnpGenomicContexts.add(genomicContext);
                         }
                     }
 
@@ -165,7 +193,10 @@ public class SnpGenomicContextMappingService {
                                                 Boolean isUpstream,
                                                 Boolean isDownstream,
                                                 Long distance,
-                                                String source, String mappingMethod, String geneName) {
+                                                String source,
+                                                String mappingMethod,
+                                                String geneName,
+                                                SingleNucleotidePolymorphism snpIdInDatabase) {
 
         GenomicContext genomicContext = new GenomicContext();
 
@@ -182,6 +213,10 @@ public class SnpGenomicContextMappingService {
         genomicContext.setDistance(distance);
         genomicContext.setSource(source);
         genomicContext.setMappingMethod(mappingMethod);
+        genomicContext.setSnp(snpIdInDatabase);
+
+        // Save genomic context
+        genomicContextRepository.save(genomicContext);
 
         return genomicContext;
     }
