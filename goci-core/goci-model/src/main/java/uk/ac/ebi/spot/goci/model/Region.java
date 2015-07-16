@@ -31,6 +31,11 @@ public class Region {
     public Region() {
     }
 
+    // Constructor with only the region name (i.e. cytogenetic band)
+    public Region(String name) {
+        this.name = name;
+    }
+
     public Region(String name,
                   Collection<Location> locations) {
         this.name = name;

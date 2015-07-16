@@ -62,27 +62,27 @@ public class GenomicContext {
         this.id = id;
     }
 
-    public boolean getIsIntergenic() {
+    public Boolean getIsIntergenic() {
         return isIntergenic;
     }
 
-    public void setIntergenic(boolean isIntergenic) {
+    public void setIsIntergenic(Boolean isIntergenic) {
         this.isIntergenic = isIntergenic;
     }
 
-    public boolean getIsUpstream() {
+    public Boolean getIsUpstream() {
         return isUpstream;
     }
 
-    public void setUpstream(boolean isUpstream) {
+    public void setIsUpstream(Boolean isUpstream) {
         this.isUpstream = isUpstream;
     }
 
-    public boolean getIsDownstream() {
+    public Boolean getIsDownstream() {
         return isDownstream;
     }
 
-    public void setDownstream(boolean isDownstream) {
+    public void setIsDownstream(Boolean isDownstream) {
         this.isDownstream = isDownstream;
     }
 
