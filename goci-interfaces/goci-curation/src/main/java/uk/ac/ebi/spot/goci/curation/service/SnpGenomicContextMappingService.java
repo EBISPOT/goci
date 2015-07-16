@@ -6,7 +6,6 @@ import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.GeneRepository;
-import uk.ac.ebi.spot.goci.repository.GenomicContextRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
 import java.util.ArrayList;
@@ -25,16 +24,13 @@ import java.util.Set;
 @Service
 public class SnpGenomicContextMappingService {
 
-    private GenomicContextRepository genomicContextRepository;
     private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
     private GeneRepository geneRepository;
 
     //Constructor
     @Autowired
-    public SnpGenomicContextMappingService(GenomicContextRepository genomicContextRepository,
-                                           SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
+    public SnpGenomicContextMappingService(SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
                                            GeneRepository geneRepository) {
-        this.genomicContextRepository = genomicContextRepository;
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.geneRepository = geneRepository;
     }
@@ -122,7 +118,6 @@ public class SnpGenomicContextMappingService {
                             Long distance = genomicContextInForm.getDistance();
                             String source = genomicContextInForm.getSource();
                             String mappingMethod = genomicContextInForm.getMappingMethod();
-                            Long snpIdInDatabase = snpInDatabase.getId();
 
                             GenomicContext newGenomicContext = createGenomicContext(isIntergenic,
                                                                                     isUpstream,
