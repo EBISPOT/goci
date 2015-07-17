@@ -36,20 +36,20 @@ import java.util.Properties;
 @Component
 public class SparqlTemplate {
 
-    private JenaQueryExecutionService queryService;
+    private JenaQueryExecutionService jenaQueryExecutionService;
 
     private String prefixes;
 
     private Properties prefixProperties;
 
-    public JenaQueryExecutionService getQueryService() {
-        return queryService;
+    public JenaQueryExecutionService getJenaQueryExecutionService() {
+        return jenaQueryExecutionService;
     }
 
     @Autowired
     @Required
-    public void setQueryService(JenaQueryExecutionService queryService) {
-        this.queryService = queryService;
+    public void setJenaQueryExecutionService(JenaQueryExecutionService jenaQueryExecutionService) {
+        this.jenaQueryExecutionService = jenaQueryExecutionService;
     }
 
     public String getPrefixes() {
@@ -97,11 +97,11 @@ public class SparqlTemplate {
 
     public boolean ask(String sparql) {
         sparql = getPrefixString().concat(sparql);
-        Graph g = getQueryService().getDefaultGraph();
+        Graph g = getJenaQueryExecutionService().getDefaultGraph();
         Query q1 = QueryFactory.create(sparql, Syntax.syntaxARQ);
         QueryExecution execute = null;
         try {
-            execute = getQueryService().getQueryExecution(g, q1, false);
+            execute = getJenaQueryExecutionService().getQueryExecution(g, q1, false);
             return execute.execAsk();
         }
         catch (LodeException e) {
@@ -127,11 +127,11 @@ public class SparqlTemplate {
 
     public <T> T query(String sparql, ResultSetMapper<T> rsm) {
         sparql = getPrefixString().concat(sparql);
-        Graph g = getQueryService().getDefaultGraph();
+        Graph g = getJenaQueryExecutionService().getDefaultGraph();
         Query q1 = QueryFactory.create(sparql, Syntax.syntaxARQ);
         QueryExecution execute = null;
         try {
-            execute = getQueryService().getQueryExecution(g, q1, false);
+            execute = getJenaQueryExecutionService().getQueryExecution(g, q1, false);
             ResultSet results = execute.execSelect();
             return rsm.mapResultSet(results);
         }
@@ -158,7 +158,7 @@ public class SparqlTemplate {
 
     public <T> T query(String sparql, ResultSetMapper<T> rsm, Object... args) {
         sparql = getPrefixString().concat(sparql);
-        Graph g = getQueryService().getDefaultGraph();
+        Graph g = getJenaQueryExecutionService().getDefaultGraph();
 
         Map<String, Object> bindingMap = new HashMap<String, Object>();
         int i = 0;
@@ -185,7 +185,7 @@ public class SparqlTemplate {
 
         QueryExecution execute = null;
         try {
-            execute = getQueryService().getQueryExecution(g, queryString.asQuery(), false);
+            execute = getJenaQueryExecutionService().getQueryExecution(g, queryString.asQuery(), false);
             ResultSet results = execute.execSelect();
             return rsm.mapResultSet(results);
         }

@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.pussycat.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,6 +42,9 @@ import static uk.ac.ebi.spot.goci.pussycat.lang.Filtering.template;
  */
 @Controller
 public class PussycatGOCIController {
+
+    @Autowired
+    @Value("JOIN")
     private PussycatSessionStrategy sessionStrategy;
     private PussycatManager pussycatManager;
 
@@ -54,10 +58,10 @@ public class PussycatGOCIController {
         return sessionStrategy;
     }
 
-    @Autowired
-    public void setSessionStrategy(PussycatSessionStrategy sessionStrategy) {
-        this.sessionStrategy = sessionStrategy;
-    }
+//    @Autowired
+//    public void setSessionStrategy(PussycatSessionStrategy sessionStrategy) {
+//        this.sessionStrategy = sessionStrategy;
+//    }
 
     public PussycatManager getPussycatManager() {
         return pussycatManager;

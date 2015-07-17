@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.stereotype.Component;
 import uk.ac.ebi.fgpt.lode.impl.JenaVirtuosoExecutorService;
 import uk.ac.ebi.spot.goci.pussycat.session.PussycatSession;
 import uk.ac.ebi.spot.goci.pussycat.session.PussycatSessionFactory;
@@ -18,13 +19,14 @@ import uk.ac.ebi.spot.goci.sparql.pussycat.query.SparqlTemplate;
  * @date 21/08/14
  */
 @ServiceProvider
+@Component
 public class SparqlPussycatSessionFactory implements PussycatSessionFactory {
     private static final String efoDefaultLocation = "http://www.ebi.ac.uk/efo/efo.owl";
 
-    @Autowired
+//    @Autowired
     private OntologyService ontologyService;
 
-    @Autowired
+//    @Autowired
     private SparqlTemplate sparqlTemplate;
 
     @Autowired
@@ -55,7 +57,7 @@ public class SparqlPussycatSessionFactory implements PussycatSessionFactory {
             JenaVirtuosoExecutorService executorService = new JenaVirtuosoExecutorService();
             executorService.setEndpointURL(gwasSparqlUrl);
             sparqlTemplate = new SparqlTemplate();
-            sparqlTemplate.setQueryService(executorService);
+            sparqlTemplate.setJenaQueryExecutionService(executorService);
         }
     }
 
