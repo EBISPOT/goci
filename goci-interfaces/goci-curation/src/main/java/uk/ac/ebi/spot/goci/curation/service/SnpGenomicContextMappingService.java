@@ -131,13 +131,17 @@ public class SnpGenomicContextMappingService {
                             Long distance = genomicContextInForm.getDistance();
                             String source = genomicContextInForm.getSource();
                             String mappingMethod = genomicContextInForm.getMappingMethod();
+                            Boolean isClosestGene = genomicContextInForm.getIsClosestGene();
 
-                            GenomicContext genomicContext = createGenomicContext(isIntergenic, isUpstream,
+                            GenomicContext genomicContext = createGenomicContext(isIntergenic,
+                                                                                 isUpstream,
                                                                                  isDownstream,
                                                                                  distance,
                                                                                  source,
                                                                                  mappingMethod,
-                                                                                 geneName, snpInDatabase);
+                                                                                 geneName,
+                                                                                 snpInDatabase,
+                                                                                 isClosestGene);
 
                             newSnpGenomicContexts.add(genomicContext);
                         }
@@ -182,7 +186,8 @@ public class SnpGenomicContextMappingService {
                                                 String source,
                                                 String mappingMethod,
                                                 String geneName,
-                                                SingleNucleotidePolymorphism snpIdInDatabase) {
+                                                SingleNucleotidePolymorphism snpIdInDatabase,
+                                                Boolean isClosestGene) {
 
         GenomicContext genomicContext = new GenomicContext();
 
@@ -200,6 +205,7 @@ public class SnpGenomicContextMappingService {
         genomicContext.setSource(source);
         genomicContext.setMappingMethod(mappingMethod);
         genomicContext.setSnp(snpIdInDatabase);
+        genomicContext.setIsClosestGene(isClosestGene);
 
         // Save genomic context
         genomicContextRepository.save(genomicContext);
