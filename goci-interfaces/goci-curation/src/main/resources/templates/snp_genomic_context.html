@@ -83,7 +83,18 @@
 
                 </td>
                 <!-- Closest gene ? -->
-                <td>?</td>
+                <td>
+                    <span th:switch="*{genomicContexts[__${rowStat.index}__].isClosestGene}">
+                        <span th:case="false"></span>
+                        <span th:case="true">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <span th:if="*{genomicContexts[__${rowStat.index}__].isUpstream}"> Upstream</span>
+                            <span th:if="*{genomicContexts[__${rowStat.index}__].isDownstream}"> Downstream</span>
+                        </span>
+                    </span>
+                    <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].isClosestGene}"/>
+                </td>
+
             </tr>
             </tbody>
         </table>

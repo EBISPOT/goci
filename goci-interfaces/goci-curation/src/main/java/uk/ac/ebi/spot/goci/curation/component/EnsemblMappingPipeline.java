@@ -361,10 +361,10 @@ public class EnsemblMappingPipeline {
             Long dist = new Long(distance);
             Gene gene_object = new Gene(gene_name,ncbi_id,ensembl_id);
 
-            // TODO add the closest upstream/downstream info
-            // TODO (Emma) I added this so could get interface to build as I have added isClosestGene to GenomicContext model object
-            Boolean isClosestGene = false;
-            GenomicContext gc = new GenomicContext(intergenic,upstream,downstream,dist,snp_tmp,gene_object,source,mapping_method, isClosestGene);
+            // Check if the gene corresponds to the closest gene
+            boolean is_closest_gene = (closest_gene == gene_id && closest_gene != "") ? true : false;
+
+            GenomicContext gc = new GenomicContext(intergenic, upstream, downstream, dist, snp_tmp, gene_object, source, mapping_method, is_closest_gene);
 
             genomic_contexts.add(gc);
         }
