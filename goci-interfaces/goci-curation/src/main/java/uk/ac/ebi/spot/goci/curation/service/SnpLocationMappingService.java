@@ -155,7 +155,7 @@ public class SnpLocationMappingService {
                         singleNucleotidePolymorphismRepository.save(snpInDatabase);
 
                         // Clean-up old locations that were linked to SNP
-                        if (oldSnpLocations.size() > 0) {
+                        if (oldSnpLocations != null && oldSnpLocations.size() > 0) {
                             for (Location oldSnpLocation : oldSnpLocations) {
                                 cleanUpLocations(oldSnpLocation);
                             }
