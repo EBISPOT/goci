@@ -602,8 +602,11 @@ function addGenomicContextRow(json_result,position,snp_row_id,overlap,source,typ
                 "</td>";
 
         // Closest gene
-        var is_closest = (closest_gene == gene_id) ?  ok_icon2 + " " + type : "";
-        newrow += "<td>" + is_closest + "</td>";
+        var is_closest_label = (closest_gene == gene_id) ?  ok_icon2 + " " + type : "";
+        var is_closest_gene = (closest_gene == gene_id) ?  true : false;
+        newrow += "<td>" + is_closest_label +
+                "<"+hidden_input+" id=\""+genomicContextId+".isClosestGene\" name=\""+genomicContextName+".isClosestGene\" value=\""+is_closest_gene+"+\">"+
+                "</td>";
 
         newrow += "</tr>";
         $("#context_table > tbody").append(newrow);
