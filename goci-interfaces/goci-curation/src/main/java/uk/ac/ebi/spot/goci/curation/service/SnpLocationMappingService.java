@@ -119,22 +119,9 @@ public class SnpLocationMappingService {
 
 
                         if (existingLocation != null) {
-
-                            // Check if snp already has that location linked to it
-                            List<SingleNucleotidePolymorphism> snpsLinkedToExistingLocation =
-                                    singleNucleotidePolymorphismRepository.findByLocationsId(existingLocation.getId());
-
-                            List<Long> snpIdsLinkedToExistingLocation = new ArrayList<>();
-                            for (SingleNucleotidePolymorphism snpLinkedToExistingLocation : snpsLinkedToExistingLocation) {
-                                snpIdsLinkedToExistingLocation.add(snpLinkedToExistingLocation.getId());
-                            }
-
-                            // If snp isn't linked to the existing location add it to the collection of new locations
-                            if (!snpIdsLinkedToExistingLocation.contains(snpInDatabase.getId())) {
                                 newSnpLocations.add(existingLocation);
-                            }
                         }
-                        // Create location
+                        // Create new location
                         else {
                             Location newLocation = createLocation(chromosomeNameInForm,
                                                                   chromosomePositionInForm,
