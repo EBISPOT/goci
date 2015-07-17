@@ -24,6 +24,7 @@ public class EnsemblMappingPipeline {
 
     private String rsId;
     private int merged;
+    private Collection<String> reported_genes = new ArrayList<>();
     private Collection<Location> locations = new ArrayList<>();
     private Collection<GenomicContext> genomic_contexts = new ArrayList<>();
     private ArrayList<String> pipeline_errors = new ArrayList<>();
@@ -44,8 +45,9 @@ public class EnsemblMappingPipeline {
         this.setEndpoints();
     }
 
-    public EnsemblMappingPipeline(String rsId) {
+    public EnsemblMappingPipeline(String rsId, Collection<String> reported_genes) {
         this.rsId = rsId;
+        this.reported_genes = reported_genes;
         this.setEndpoints();
     }
 
@@ -74,13 +76,13 @@ public class EnsemblMappingPipeline {
         this.getMappings(mappings);
 
         // Genomic context (loop over the "locations" object)
-        /*if (locations.size() > 0) {
+        if (locations.size() > 0) {
             for (Location location : locations) {
                 String chromosome = location.getChromosomeName();
                 String position   = location.getChromosomePosition();
                 this.getAllGenomicContexts(chromosome,position);
             }
-        }*/
+        }
 
         // TODO: reported genes checks
 
@@ -115,9 +117,6 @@ public class EnsemblMappingPipeline {
 
             Location location = new Location(chromosome,position,cytogenetic_band);
             locations.add(location);
-
-
-
         }
     }
 
@@ -305,6 +304,7 @@ public class EnsemblMappingPipeline {
             Gene gene_object = new Gene(gene_name,ncbi_id,ensembl_id);
             GenomicContext gc = new GenomicContext(intergenic,upstream,downstream,dist,snp_tmp,gene_object,source,mapping_method);
             // TODO add the closest upstream/downstream info
+            genomic_contexts.add(gc);
         }
         return (closest_gene != "") ? true : false;
     }
