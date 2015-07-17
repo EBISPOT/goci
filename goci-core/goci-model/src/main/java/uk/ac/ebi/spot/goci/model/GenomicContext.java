@@ -35,6 +35,8 @@ public class GenomicContext {
 
     private String mappingMethod;
 
+    private Boolean isClosestGene;
+
     // JPA no-args constructor
     public GenomicContext() {
     }
@@ -43,7 +45,11 @@ public class GenomicContext {
                           Boolean isUpstream,
                           Boolean isDownstream,
                           Long distance,
-                          SingleNucleotidePolymorphism snp, Gene gene, String source, String mappingMethod) {
+                          SingleNucleotidePolymorphism snp,
+                          Gene gene,
+                          String source,
+                          String mappingMethod,
+                          Boolean isClosestGene) {
         this.isIntergenic = isIntergenic;
         this.isUpstream = isUpstream;
         this.isDownstream = isDownstream;
@@ -52,6 +58,7 @@ public class GenomicContext {
         this.gene = gene;
         this.source = source;
         this.mappingMethod = mappingMethod;
+        this.isClosestGene = isClosestGene;
     }
 
     public Long getId() {
@@ -124,6 +131,14 @@ public class GenomicContext {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public Boolean getIsClosestGene() {
+        return isClosestGene;
+    }
+
+    public void setIsClosestGene(Boolean isClosestGene) {
+        this.isClosestGene = isClosestGene;
     }
 
     @Override public String toString() {
