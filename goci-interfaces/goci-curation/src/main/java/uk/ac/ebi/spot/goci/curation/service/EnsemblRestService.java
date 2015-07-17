@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 
 /**
  * Created by Laurent on 15/07/15.
+ * @author Laurent
  * Class running the Ensembl REST API calls
  */
 @Service
@@ -37,9 +38,11 @@ public class EnsemblRestService {
     }
 
 
-    /* Simple constructor with endpoint and data
-     * @params rest_endpoint the endpoint part of the URL
-     * @params rest_data the data/id/symbol we want to query
+    /**
+     * Simple constructor with endpoint and data
+     * 
+     * @param rest_endpoint the endpoint part of the URL
+     * @param rest_data the data/id/symbol we want to query
      */
     public EnsemblRestService (String rest_endpoint, String rest_data) {
         this.rest_endpoint = rest_endpoint;
@@ -47,10 +50,12 @@ public class EnsemblRestService {
     }
 
 
-    /* More complex contructor with extra parameters
-     * @params rest_endpoint the endpoint part of the URL
-     * @params rest_data the data/id/symbol we want to query
-     * @params rest_parameters the extra parameters to add at the end of the REST call url
+    /**
+     * More complex contructor with extra parameters
+     *
+     * @param rest_endpoint the endpoint part of the URL
+     * @param rest_data the data/id/symbol we want to query
+     * @param rest_parameters the extra parameters to add at the end of the REST call url
      */
     public EnsemblRestService (String rest_endpoint, String rest_data, String rest_parameters) {
         this.rest_endpoint = rest_endpoint;
@@ -59,7 +64,9 @@ public class EnsemblRestService {
     }
 
 
-    /* Run the Ensembl REST API call, using the parameters from the constructor */
+    /**
+     * Run the Ensembl REST API call, using the parameters from the constructor
+     */
     public void getRestCall() throws IOException {
 
         URL url = null;
@@ -116,7 +123,8 @@ public class EnsemblRestService {
     }
 
 
-    /* Return the results of the Ensembl REST API call
+    /**
+     * Return the results of the Ensembl REST API call
      * @return JSONObject containing the returned JSON data
      */
     public JSONObject getRestResults () {
@@ -124,7 +132,8 @@ public class EnsemblRestService {
     }
 
 
-    /* Return the list of error messages from the Ensembl REST API call
+    /**
+     * Return the list of error messages from the Ensembl REST API call
      * @return List of error messages
      */
     public ArrayList<String> getErrors() {

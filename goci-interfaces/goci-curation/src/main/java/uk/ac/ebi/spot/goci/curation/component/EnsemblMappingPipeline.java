@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 
 /**
  * Created by Laurent on 15/07/15.
+ * @author Laurent
  * Class containing the Ensembl mapping and checking pipeline
  * The structure of this pipeline is similar to the javascript pipeline developped in the scrip goci-snp-association-mapping.js
  * (goci/goci-interfaces/goci-curation/src/main/resources/static/js/goci-snp-association-mapping.js)
@@ -100,7 +101,8 @@ public class EnsemblMappingPipeline {
     }
 
 
-    /* Variation REST API call
+    /**
+     * Variation REST API call
      * @return JSONObject containing the output of the Ensembl REST API endpoint "variation"
      */
     private JSONObject getVariationData() {
@@ -111,9 +113,11 @@ public class EnsemblMappingPipeline {
     }
 
 
-    /* Get the mappings data ( chromosome, position and cytogenetic band).
+    /**
+     * Get the mappings data ( chromosome, position and cytogenetic band).
      * Store the location information in the class variable "locations" (list of "Location" classes)
-     * @params mappings A JSONArray object containing the list the variant locations
+     *
+     * @param mappings A JSONArray object containing the list the variant locations
      */
     private void getMappings(JSONArray mappings) {
         for (int i = 0; i < mappings.length(); ++i) {
@@ -129,9 +133,11 @@ public class EnsemblMappingPipeline {
     }
 
 
-    /* Get the cytogenetic band from a given location
-     * @params chromosome the chromosome name
-     * @params position the position of the variant
+    /**
+     * Get the cytogenetic band from a given location
+     *
+     * @param chromosome the chromosome name
+     * @param position the position of the variant
      * @return Region object only containing a region name
      */
     private Region getRegion(String chromosome, String position) {
@@ -156,9 +162,11 @@ public class EnsemblMappingPipeline {
     }
 
 
-    /* Run the genomic context pipeline for both sources (Ensembl and NCBI)
-     * @params chromosome the chromosome name
-     * @params position the position of the variant
+    /**
+     * Run the genomic context pipeline for both sources (Ensembl and NCBI)
+     *
+     * @param chromosome the chromosome name
+     * @param position the position of the variant
      */
     private void getAllGenomicContexts(String chromosome, String position) {
         this.getGenomicContext(chromosome, position, this.ensembl_source);
@@ -166,10 +174,12 @@ public class EnsemblMappingPipeline {
     }
 
 
-    /* Get the genomic context in 3 calls: overlap, upstream and downstream genes
-     * @params chromosome the chromosome name
-     * @params position the position of the variant
-     * @params source the source of the data (Ensembl or NCBI)
+    /**
+     * Get the genomic context in 3 calls: overlap, upstream and downstream genes
+     *
+     * @param chromosome the chromosome name
+     * @param position the position of the variant
+     * @param source the source of the data (Ensembl or NCBI)
      */
     private void getGenomicContext(String chromosome, String position, String source) {
         // By default the db_type is 'core' (i.e. Ensembl)
@@ -189,11 +199,13 @@ public class EnsemblMappingPipeline {
     }
 
 
-    /* Get the list of overlapping genes
-     * @params chromosome the chromosome name
-     * @params position the position of the variant
-     * @params source the source of the data (Ensembl or NCBI)
-     * @params rest_opt the extra parameters to add at the end of the REST call url
+    /**
+     * Get the list of overlapping genes
+     *
+     * @param chromosome the chromosome name
+     * @param position the position of the variant
+     * @param source the source of the data (Ensembl or NCBI)
+     * @param rest_opt the extra parameters to add at the end of the REST call url
      */
     private void getOverlappingGenes(String chromosome, String position, String source, String rest_opt) {
 
@@ -210,11 +222,13 @@ public class EnsemblMappingPipeline {
     }
 
 
-    /* Get the list of upstream genes
-     * @params chromosome the chromosome name
-     * @params position the position of the variant
-     * @params source the source of the data (Ensembl or NCBI)
-     * @params rest_opt the extra parameters to add at the end of the REST call url
+    /**
+     * Get the list of upstream genes
+     *
+     * @param chromosome the chromosome name
+     * @param position the position of the variant
+     * @param source the source of the data (Ensembl or NCBI)
+     * @param rest_opt the extra parameters to add at the end of the REST call url
      */
     private void getUpstreamGenes(String chromosome, String position, String source, String rest_opt) {
         String type = "upstream";
@@ -240,11 +254,13 @@ public class EnsemblMappingPipeline {
     }
 
 
-    /* Get the list of downstream genes
-     * @params chromosome the chromosome name
-     * @params position the position of the variant
-     * @params source the source of the data (Ensembl or NCBI)
-     * @params rest_opt the extra parameters to add at the end of the REST call url
+    /**
+     * Get the list of downstream genes
+     *
+     * @param chromosome the chromosome name
+     * @param position the position of the variant
+     * @param source the source of the data (Ensembl or NCBI)
+     * @param rest_opt the extra parameters to add at the end of the REST call url
      */
     private void getDownstreamGenes(String chromosome, String position, String source, String rest_opt) {
         String type = "downstream";
@@ -272,13 +288,15 @@ public class EnsemblMappingPipeline {
         }
     }
 
-    /* Create GenomicContext objects from the JSONObjects and add them to the class variable "genomic_contexts"
+    /**
+     * Create GenomicContext objects from the JSONObjects and add them to the class variable "genomic_contexts"
      * (list of "GenomicContext" classes)
-     * @params json_gene_list the list of overlapping genes in JSONObject format
-     * @params chromosome the chromosome name
-     * @params position the position of the variant
-     * @params source the source of the data (Ensembl or NCBI)
-     * @params type the type of genomic context (i.e. overlap, upstream, downstream)
+     *
+     * @param json_gene_list the list of overlapping genes in JSONObject format
+     * @param chromosome the chromosome name
+     * @param position the position of the variant
+     * @param source the source of the data (Ensembl or NCBI)
+     * @param type the type of genomic context (i.e. overlap, upstream, downstream)
      * @return boolean to indicate whether a closest gene has been found or not (only relevant for upstream and downstream gene)
      */
     private boolean addGenomicContext(JSONArray json_gene_list, String chromosome, String position, String source, String type) {
@@ -350,14 +368,16 @@ public class EnsemblMappingPipeline {
     }
 
 
-    /* Recursive method to get the closest upstream or downstream gene over the 100kb range, jumping 100kb by 100kb
+    /**
+     * Recursive method to get the closest upstream or downstream gene over the 100kb range, jumping 100kb by 100kb
      * until a gene is found or the boundary of the chromosome is reached.
-     * @params chromosome the chromosome name
-     * @params snp_position the position of the variant
-     * @params position the start position for the search (at least 100kb upstream or downstream from the variant)
-     * @params boundary the chromosome boundary (upstream: beginning of the chromosome (position 1), downstream: end of the chromosome)
-     * @params rest_opt the extra parameters to add at the end of the REST call url (inherited from other methods)
-     * @params type the type of genomic context (i.e. overlap, upstream, downstream)
+     *
+     * @param chromosome the chromosome name
+     * @param snp_position the position of the variant
+     * @param position the start position for the search (at least 100kb upstream or downstream from the variant)
+     * @param boundary the chromosome boundary (upstream: beginning of the chromosome (position 1), downstream: end of the chromosome)
+     * @param rest_opt the extra parameters to add at the end of the REST call url (inherited from other methods)
+     * @param type the type of genomic context (i.e. overlap, upstream, downstream)
      * @return A JSONArray object containing a single JSONObject corresponding to the closest gene (upstream or downstream) over the 100kb range
      */
     private JSONArray getNearestGene (String chromosome,String snp_position, String position, int boundary, String rest_opt, String type) {
@@ -422,11 +442,13 @@ public class EnsemblMappingPipeline {
     }
 
 
-    /* Ensembl REST API call for the overlap region endpoint
-     * @params chromosome the chromosome name
-     * @params position1 the 5' position of the region
-     * @params position2 the 3' position of the region
-     * @params rest_opt the extra parameters to add at the end of the REST call url (inherited from other methods)
+    /**
+     * Ensembl REST API call for the overlap region endpoint
+     *
+     * @param chromosome the chromosome name
+     * @param position1 the 5' position of the region
+     * @param position2 the 3' position of the region
+     * @param rest_opt the extra parameters to add at the end of the REST call url (inherited from other methods)
      * @return A JSONArray object containing a list of JSONObjects corresponding to the genes overlapping the region
      */
     private JSONArray getOverlapRegionCalls (String chromosome, String position1, String position2, String rest_opt) {
@@ -447,9 +469,11 @@ public class EnsemblMappingPipeline {
     }
 
 
-    /* Simple generic Ensembl REST API call method.
-     * @params endpoint_type the endpoint name
-     * @params data the data/id/symbol we want to query
+    /**
+     * Simple generic Ensembl REST API call method.
+     *
+     * @param endpoint_type the endpoint name
+     * @param data the data/id/symbol we want to query
      * @return the corresponding JSONObject
      */
     private JSONObject getSimpleRestCall (String endpoint_type, String data) {
@@ -467,8 +491,10 @@ public class EnsemblMappingPipeline {
     }
 
 
-    /* Get the end position of a given chromosome, using an Ensembl REST API call
-     * @params chromosome the chromosome name
+    /**
+     * Get the end position of a given chromosome, using an Ensembl REST API call
+     *
+     * @param chromosome the chromosome name
      * @return the position of the end of the chromosome
      */
     private int getChromosomeEnd (String chromosome) {
@@ -481,7 +507,9 @@ public class EnsemblMappingPipeline {
     }
 
 
-    /* Check that the reported gene symbols exist and that they are located in the same chromosome as the variant */
+    /**
+     * Check that the reported gene symbols exist and that they are located in the same chromosome as the variant
+     */
     private void checkReportedGenes() {
         for (String reported_gene : this.reported_genes) {
 
@@ -506,8 +534,10 @@ public class EnsemblMappingPipeline {
         }
     }
 
-    /* Return the Ensembl REST API endpoint URL corresponding the the endpoint name provided
-     * @params endpoint_name the name of the REST API endpoint
+    /**
+     * Return the Ensembl REST API endpoint URL corresponding the the endpoint name provided
+     *
+     * @param endpoint_name the name of the REST API endpoint
      * @return the URL part specific to the queried endpoint
      */
     private String getEndpoint(String endpoint_name) {
