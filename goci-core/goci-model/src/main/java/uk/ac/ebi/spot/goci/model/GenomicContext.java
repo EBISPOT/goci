@@ -126,17 +126,4 @@ public class GenomicContext {
         this.source = source;
     }
 
-    @Override public String toString() {
-        return "GenomicContext{" +
-                "id=" + id +
-                ", isIntergenic=" + isIntergenic +
-                ", isUpstream=" + isUpstream +
-                ", isDownstream=" + isDownstream +
-                ", distance=" + distance +
-                ", snp=" + snp +
-                ", gene=" + gene +
-                ", source='" + source + '\'' +
-                ", mappingMethod='" + mappingMethod + '\'' +
-                '}';
-    }
 }

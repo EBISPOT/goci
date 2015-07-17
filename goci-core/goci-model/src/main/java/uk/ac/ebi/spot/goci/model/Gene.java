@@ -110,14 +110,4 @@ public class Gene {
         this.genomicContexts = genomicContexts;
     }
 
-    @Override public String toString() {
-        return "Gene{" +
-                "id=" + id +
-                ", geneName='" + geneName + '\'' +
-                ", entrezGeneId='" + entrezGeneId + '\'' +
-                ", ensemblGeneId='" + ensemblGeneId + '\'' +
-                ", authorReportedFromLoci=" + authorReportedFromLoci +
-                ", genomicContexts=" + genomicContexts +
-                '}';
-    }
 }
