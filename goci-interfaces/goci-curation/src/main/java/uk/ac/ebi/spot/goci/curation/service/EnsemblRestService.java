@@ -1,10 +1,8 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.DataOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -20,6 +18,7 @@ import java.util.regex.Pattern;
 
 /**
  * Created by Laurent on 15/07/15.
+ * Class running the Ensembl REST API calls
  */
 @Service
 public class EnsemblRestService {
@@ -37,19 +36,30 @@ public class EnsemblRestService {
     public EnsemblRestService () {
     }
 
-    // Simple case with endpoint and data
+
+    /* Simple constructor with endpoint and data
+     * @params rest_endpoint the endpoint part of the URL
+     * @params rest_data the data/id/symbol we want to query
+     */
     public EnsemblRestService (String rest_endpoint, String rest_data) {
         this.rest_endpoint = rest_endpoint;
         this.rest_data = rest_data;
     }
 
-    // More complex case with extra parameters
+
+    /* More complex contructor with extra parameters
+     * @params rest_endpoint the endpoint part of the URL
+     * @params rest_data the data/id/symbol we want to query
+     * @params rest_parameters the extra parameters to add at the end of the REST call url
+     */
     public EnsemblRestService (String rest_endpoint, String rest_data, String rest_parameters) {
         this.rest_endpoint = rest_endpoint;
         this.rest_data = rest_data;
         this.rest_parameters = rest_parameters;
     }
 
+
+    /* Run the Ensembl REST API call, using the parameters from the constructor */
     public void getRestCall() throws IOException {
 
         URL url = null;
@@ -105,10 +115,18 @@ public class EnsemblRestService {
         }
     }
 
+
+    /* Return the results of the Ensembl REST API call
+     * @return JSONObject containing the returned JSON data
+     */
     public JSONObject getRestResults () {
         return this.rest_results;
     }
 
+
+    /* Return the list of error messages from the Ensembl REST API call
+     * @return List of error messages
+     */
     public ArrayList<String> getErrors() {
         return this.rest_errors;
     }
