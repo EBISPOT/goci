@@ -11,6 +11,7 @@ import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -144,6 +145,8 @@ public class SnpGenomicContextMappingService {
                     
                     // Save latest mapped information
                     snpInDatabase.setGenomicContexts(newSnpGenomicContexts);
+                    // Update the last update date
+                    snpInDatabase.setLastUpdateDate(new Date());
                     singleNucleotidePolymorphismRepository.save(snpInDatabase);
                 }
             }
