@@ -9,6 +9,7 @@
             <thead>
             <tr>
                 <th>SNP</th>
+                <th>SNP location</th>
                 <th>Gene symbol</th>
                 <th>Gene ID</th>
                 <th>Source</th>
@@ -22,6 +23,12 @@
                 <td>
                     <span th:text="*{genomicContexts[__${rowStat.index}__].snp.rsId}">SNP</span>
                     <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].snp.rsId}"/>
+                </td>
+                <!-- SNP location -->
+                <td>
+                    <span th:text="*{genomicContexts[__${rowStat.index}__].location.chromosomeName}+:+*{genomicContexts[__${rowStat.index}__].location.chromosomePosition}">SNP provenance</span>
+                    <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].location.chromosomeName}"/>
+                    <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].location.chromosomePosition}"/>
                 </td>
                 <!-- Gene Symbol -->
                 <td>

@@ -86,10 +86,8 @@ public class EnsemblMappingPipeline {
             if (locations.size() > 0) {
 
                 // Genomic context (loop over the "locations" object)
-                for (Location location : locations) {
-                    String chromosome = location.getChromosomeName();
-                    String position = location.getChromosomePosition();
-                    this.getAllGenomicContexts(chromosome, position);
+                for (Location snp_location : locations) {
+                    this.getAllGenomicContexts(snp_location);
                 }
 
                 // Reported genes checks
@@ -165,23 +163,21 @@ public class EnsemblMappingPipeline {
     /**
      * Run the genomic context pipeline for both sources (Ensembl and NCBI)
      *
-     * @param chromosome the chromosome name
-     * @param position the position of the variant
+     * @param snp_location an instance of the Location class (chromosome name and position)
      */
-    private void getAllGenomicContexts(String chromosome, String position) {
-        this.getGenomicContext(chromosome, position, this.ensembl_source);
-        this.getGenomicContext(chromosome, position, this.ncbi_source);
+    private void getAllGenomicContexts(Location snp_location) {
+        this.getGenomicContext(snp_location, this.ensembl_source);
+        this.getGenomicContext(snp_location, this.ncbi_source);
     }
 
 
     /**
      * Get the genomic context in 3 calls: overlap, upstream and downstream genes
      *
-     * @param chromosome the chromosome name
-     * @param position the position of the variant
+     * @param snp_location an instance of the Location class (chromosome name and position)
      * @param source the source of the data (Ensembl or NCBI)
      */
-    private void getGenomicContext(String chromosome, String position, String source) {
+    private void getGenomicContext(Location snp_location, String source) {
         // By default the db_type is 'core' (i.e. Ensembl)
         String rest_opt = "feature=gene";
         if (source == this.ncbi_source) {
@@ -189,25 +185,27 @@ public class EnsemblMappingPipeline {
             rest_opt += "&db_type="+this.ncbi_db_type;
         }
         // Overlapping genes
-        this.getOverlappingGenes(chromosome, position, source, rest_opt);
+        this.getOverlappingGenes(snp_location, source, rest_opt);
 
         // Upstream genes
-        this.getUpstreamGenes(chromosome, position, source, rest_opt);
+        this.getUpstreamGenes(snp_location, source, rest_opt);
 
         // Downstream genes
-        this.getDownstreamGenes(chromosome, position, source, rest_opt);
+        this.getDownstreamGenes(snp_location, source, rest_opt);
     }
 
 
     /**
      * Get the list of overlapping genes
      *
-     * @param chromosome the chromosome name
-     * @param position the position of the variant
+     * @param snp_location an instance of the Location class (chromosome name and position)
      * @param source the source of the data (Ensembl or NCBI)
      * @param rest_opt the extra parameters to add at the end of the REST call url
      */
-    private void getOverlappingGenes(String chromosome, String position, String source, String rest_opt) {
+    private void getOverlappingGenes(Location snp_location, String source, String rest_opt) {
+
+        String chromosome = snp_location.getChromosomeName();
+        String position   = snp_location.getChromosomePosition();
 
         // Check if there are overlap genes
         JSONArray overlap_gene_result = this.getOverlapRegionCalls(chromosome, position, position, rest_opt);
@@ -218,20 +216,22 @@ public class EnsemblMappingPipeline {
             String gene_name = gene_json_object.getString("external_name");
             overlapping_genes.add(gene_name);
         }
-        this.addGenomicContext(overlap_gene_result, chromosome, position, source, "overlap");
+        this.addGenomicContext(overlap_gene_result, snp_location, source, "overlap");
     }
 
 
     /**
      * Get the list of upstream genes
      *
-     * @param chromosome the chromosome name
-     * @param position the position of the variant
+     * @param snp_location an instance of the Location class (chromosome name and position)
      * @param source the source of the data (Ensembl or NCBI)
      * @param rest_opt the extra parameters to add at the end of the REST call url
      */
-    private void getUpstreamGenes(String chromosome, String position, String source, String rest_opt) {
+    private void getUpstreamGenes(Location snp_location, String source, String rest_opt) {
         String type = "upstream";
+
+        String chromosome = snp_location.getChromosomeName();
+        String position   = snp_location.getChromosomePosition();
 
         int position_up = Integer.parseInt(position) - genomic_distance;
         if (position_up < 0) {
@@ -242,12 +242,12 @@ public class EnsemblMappingPipeline {
         // Check if there are overlap genes
         JSONArray overlap_gene_result = this.getOverlapRegionCalls(chromosome,pos_up,position,rest_opt);
 
-        boolean closest_found = this.addGenomicContext(overlap_gene_result, chromosome, position, source, type);
+        boolean closest_found = this.addGenomicContext(overlap_gene_result, snp_location, source, type);
         if (!closest_found) {
             if (position_up > 1) {
                 JSONArray closest_gene = this.getNearestGene(chromosome,position, pos_up, 1, rest_opt, type);
                 if (closest_gene.length() > 0 ) {
-                    addGenomicContext(closest_gene, chromosome, position, source, type);
+                    addGenomicContext(closest_gene, snp_location, source, type);
                 }
             }
         }
@@ -257,13 +257,15 @@ public class EnsemblMappingPipeline {
     /**
      * Get the list of downstream genes
      *
-     * @param chromosome the chromosome name
-     * @param position the position of the variant
+     * @param snp_location an instance of the Location class (chromosome name and position)
      * @param source the source of the data (Ensembl or NCBI)
      * @param rest_opt the extra parameters to add at the end of the REST call url
      */
-    private void getDownstreamGenes(String chromosome, String position, String source, String rest_opt) {
+    private void getDownstreamGenes(Location snp_location, String source, String rest_opt) {
         String type = "downstream";
+
+        String chromosome = snp_location.getChromosomeName();
+        String position   = snp_location.getChromosomePosition();
 
         int position_down = Integer.parseInt(position) + genomic_distance;
 
@@ -277,12 +279,12 @@ public class EnsemblMappingPipeline {
         // Check if there are overlap genes
         JSONArray overlap_gene_result = this.getOverlapRegionCalls(chromosome,position,pos_down,rest_opt);
 
-        boolean closest_found = this.addGenomicContext(overlap_gene_result, chromosome, position, source, type);
+        boolean closest_found = this.addGenomicContext(overlap_gene_result, snp_location, source, type);
         if (!closest_found) {
             if (position_down != chr_end) {
-                JSONArray closest_gene = this.getNearestGene(chromosome,position, pos_down, chr_end, rest_opt, type);
+                JSONArray closest_gene = this.getNearestGene(chromosome, position, pos_down, chr_end, rest_opt, type);
                 if (closest_gene.length() > 0 ) {
-                    addGenomicContext(closest_gene, chromosome, position, source, type);
+                    addGenomicContext(closest_gene, snp_location, source, type);
                 }
             }
         }
@@ -293,18 +295,19 @@ public class EnsemblMappingPipeline {
      * (list of "GenomicContext" classes)
      *
      * @param json_gene_list the list of overlapping genes in JSONObject format
-     * @param chromosome the chromosome name
-     * @param position the position of the variant
+     * @param snp_location an instance of the Location class (chromosome name and position)
      * @param source the source of the data (Ensembl or NCBI)
      * @param type the type of genomic context (i.e. overlap, upstream, downstream)
      * @return boolean to indicate whether a closest gene has been found or not (only relevant for upstream and downstream gene)
      */
-    private boolean addGenomicContext(JSONArray json_gene_list, String chromosome, String position, String source, String type) {
+    private boolean addGenomicContext(JSONArray json_gene_list, Location snp_location, String source, String type) {
         String closest_gene = "";
         int closest_distance = 0;
         boolean intergenic = (type == "overlap") ? false : true;
         boolean upstream   = (type == "upstream") ? true : false;
         boolean downstream = (type == "downstream") ? true: false;
+
+        String position = snp_location.getChromosomePosition();
 
         SingleNucleotidePolymorphism snp_tmp = new SingleNucleotidePolymorphism(); // TODO Try to use the repository to find existing SNP ?
         snp_tmp.setRsId(this.rsId);
@@ -364,10 +367,7 @@ public class EnsemblMappingPipeline {
             // Check if the gene corresponds to the closest gene
             boolean is_closest_gene = (closest_gene == gene_id && closest_gene != "") ? true : false;
 
-            // TODO (Emma) will also need to return a location object when setting genomic_context
-            // Adding empty location for moment (Emma)
-            Location location = new Location();
-            GenomicContext gc = new GenomicContext(intergenic, upstream, downstream, dist, snp_tmp, gene_object, location,source, mapping_method, is_closest_gene);
+            GenomicContext gc = new GenomicContext(intergenic, upstream, downstream, dist, snp_tmp, gene_object, snp_location, source, mapping_method, is_closest_gene);
 
             genomic_contexts.add(gc);
         }

@@ -408,7 +408,7 @@ function getGenomicContext(chr,position,snp_row_id,source,clear) {
         },
         success: function(result) {
             if (result.length > 0 && result != []) {
-                overlap_list = addGenomicContextRow(result,position,snp_row_id,[],source);
+                overlap_list = addGenomicContextRow(result, chr, position, snp_row_id, [], source);
             }
         }
     });
@@ -431,13 +431,13 @@ function getGenomicContext(chr,position,snp_row_id,source,clear) {
         success: function(result) {
             var get_non_overlapping_gene = 0;
             if (result.length > 0 && result != []) {
-                get_non_overlapping_gene = addGenomicContextRow(result,position,snp_row_id,overlap_list,source,"upstream");
+                get_non_overlapping_gene = addGenomicContextRow(result, chr, position, snp_row_id, overlap_list, source, "upstream");
             }
             if (get_non_overlapping_gene == 0) {
                 if (position_up > 1) {
-                    var closest_gene = getNearestGene(chr,position, position_up, 1, overlap_list, rest_opt, "upstream");
+                    var closest_gene = getNearestGene(chr, position, position_up, 1, overlap_list, rest_opt, "upstream");
                     if (closest_gene && closest_gene != "") {
-                        addGenomicContextRow([closest_gene],position,snp_row_id,overlap_list,source,"upstream");
+                        addGenomicContextRow([closest_gene], chr, position, snp_row_id, overlap_list, source, "upstream");
                     }
                 }
             }
@@ -467,13 +467,13 @@ function getGenomicContext(chr,position,snp_row_id,source,clear) {
         success: function(result) {
             var get_non_overlapping_gene = 0;
             if (result.length > 0 && result != []) {
-                get_non_overlapping_gene = addGenomicContextRow(result,position,snp_row_id,overlap_list,source,"downstream");
+                get_non_overlapping_gene = addGenomicContextRow(result, chr, position, snp_row_id, overlap_list, source, "downstream");
             }
             if (get_non_overlapping_gene == 0) {
                 if (position_down != chr_end) {
-                    var closest_gene = getNearestGene(chr,position, position_down, chr_end, overlap_list, rest_opt, "downstream");
+                    var closest_gene = getNearestGene(chr, position, position_down, chr_end, overlap_list, rest_opt, "downstream");
                     if (closest_gene && closest_gene != "") {
-                        addGenomicContextRow([closest_gene], position, snp_row_id, overlap_list, source, "downstream");
+                        addGenomicContextRow([closest_gene], chr, position, snp_row_id, overlap_list, source, "downstream");
                     }
                 }
             }
@@ -487,7 +487,7 @@ function getGenomicContext(chr,position,snp_row_id,source,clear) {
 
 
 // Generate the genomic context rows
-function addGenomicContextRow(json_result,position,snp_row_id,overlap,source,type) {
+function addGenomicContextRow(json_result,chr,position,snp_row_id,overlap,source,type) {
 
     var intergenic = false;
     var upstream = false;
@@ -565,6 +565,10 @@ function addGenomicContextRow(json_result,position,snp_row_id,overlap,source,typ
         // SNP
         newrow += "<td><span>" + $("#snp_id_"+snp_row_id).val() + "</span>"+
                 "<"+hidden_input+" id=\""+genomicContextId+".snp.rsId\" name=\""+genomicContextName+".snp.rsId\" value=\""+$("#snp_id_"+snp_row_id).val()+"\"></td>";
+        // SNP location
+        newrow += "<td><span>" + chr + ":" + position + "</span>"+
+                "<"+hidden_input+" id=\""+genomicContextId+".location.chromosomeName\" name=\""+genomicContextName+".location.chromosomeName\" value=\""+chr+"\">"+
+                "<"+hidden_input+" id=\""+genomicContextId+".location.chromosomePosition\" name=\""+genomicContextName+".location.chromosomePosition\" value=\""+position+"\"></td>";
         // Gene symbol
         newrow += "<td><span>" + gene_name + "</span>"+
                 "<"+hidden_input+" id=\""+genomicContextId+".gene.geneName\" name=\""+genomicContextName+".gene.geneName\" value=\""+gene_name+"\"></td>";
