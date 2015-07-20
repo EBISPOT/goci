@@ -27,5 +27,7 @@ public interface SingleNucleotidePolymorphismRepository extends JpaRepository<Si
     Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationId(Long associationId);
 
     Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationStudyDiseaseTraitId(Long traitId);
+
+    Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociId (Long locusId);
 }
 

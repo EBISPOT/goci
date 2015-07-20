@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import uk.ac.ebi.spot.goci.curation.component.EnsemblMappingPipeline;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
 import uk.ac.ebi.spot.goci.curation.model.AssociationFormErrorView;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
@@ -33,6 +34,9 @@ import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.Gene;
+import uk.ac.ebi.spot.goci.model.GenomicContext;
+import uk.ac.ebi.spot.goci.model.Location;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
@@ -53,8 +57,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -134,7 +140,8 @@ public class AssociationController {
         // For our associations create a table view object and return
         Collection<SnpAssociationTableView> snpAssociationTableViews = new ArrayList<SnpAssociationTableView>();
         for (Association association : associations) {
-            SnpAssociationTableView snpAssociationTableView = associationViewService.createSnpAssociationTableView(association);
+            SnpAssociationTableView snpAssociationTableView =
+                    associationViewService.createSnpAssociationTableView(association);
             snpAssociationTableViews.add(snpAssociationTableView);
         }
         model.addAttribute("snpAssociationTableViews", snpAssociationTableViews);
@@ -251,7 +258,7 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/upload",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
-    public String uploadStudySnps(@RequestParam("file") MultipartFile file, @PathVariable Long studyId, Model model){
+    public String uploadStudySnps(@RequestParam("file") MultipartFile file, @PathVariable Long studyId, Model model) {
 
         // Establish our study object
         Study study = studyRepository.findOne(studyId);
@@ -304,7 +311,7 @@ public class AssociationController {
                 model.addAttribute("study", studyRepository.findOne(studyId));
                 return "wrong_file_format_warning";
             }
-            catch (RuntimeException e){
+            catch (RuntimeException e) {
                 e.printStackTrace();
                 model.addAttribute("study", studyRepository.findOne(studyId));
                 return "data_upload_problem";
@@ -715,14 +722,16 @@ public class AssociationController {
     @RequestMapping(value = "/associations/{associationId}",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
-    public String editAssociation(@ModelAttribute SnpAssociationForm snpAssociationForm, @ModelAttribute SnpAssociationInteractionForm snpAssociationInteractionForm,
-                                  @PathVariable Long associationId, @RequestParam(value = "associationtype", required = true) String associationType) {
+    public String editAssociation(@ModelAttribute SnpAssociationForm snpAssociationForm,
+                                  @ModelAttribute SnpAssociationInteractionForm snpAssociationInteractionForm,
+                                  @PathVariable Long associationId,
+                                  @RequestParam(value = "associationtype", required = true) String associationType) {
 
         //Create association
         Association editedAssociation = null;
 
         // Request parameter determines how to process form and also which form to process
-        if (associationType.equalsIgnoreCase("interaction")){
+        if (associationType.equalsIgnoreCase("interaction")) {
             editedAssociation = snpInteractionAssociationService.createAssociation(snpAssociationInteractionForm);
         }
 
@@ -1007,17 +1016,80 @@ public class AssociationController {
                     method = RequestMethod.GET)
     public String validateAll(Model model, @PathVariable Long studyId) {
 
-        // Get all snps linked to this study
-        Collection<SingleNucleotidePolymorphism> snpsLinkedToThisStudy =
-                singleNucleotidePolymorphismRepository.findByRiskAllelesLociAssociationStudyId(studyId);
+        // For the study get all associations
+        Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
 
-        for (SingleNucleotidePolymorphism snpLinkedToThisStudy: snpsLinkedToThisStudy){
-            String snpRsId = snpLinkedToThisStudy.getRsId();
+        // Maps to store returned mapped data
+        Map<String, Set<Location>> snpToLocationsMap = new HashMap<>();
+        Map<String, Set<GenomicContext>> snpToGenomicContextMap = new HashMap<>();
+
+        // For each association get the loci
+        for (Association studyAssociation : studyAssociations) {
+            Collection<Locus> studyAssociationLoci = studyAssociation.getLoci();
+
+            // For each loci get the get the SNP and author reported genes
+            for (Locus associationLocus : studyAssociationLoci) {
+                Long locusId = associationLocus.getId();
+
+                Collection<SingleNucleotidePolymorphism> snpsLinkedToLocus =
+                        singleNucleotidePolymorphismRepository.findByRiskAllelesLociId(locusId);
+
+                Collection<Gene> authorReportedGenesLinkedToSnp = associationLocus.getAuthorReportedGenes();
+
+                // Get gene names
+                Collection<String> authorReportedGeneNamesLinkedToSnp = new ArrayList<>();
+                for (Gene authorReportedGeneLinkedToSnp : authorReportedGenesLinkedToSnp) {
+                    authorReportedGeneNamesLinkedToSnp.add(authorReportedGeneLinkedToSnp.getGeneName());
+                }
+
+                // Pass rs_id and author reported genes to mapping component
+                for (SingleNucleotidePolymorphism snpLinkedToLocus : snpsLinkedToLocus) {
+                    String snpRsId = snpLinkedToLocus.getRsId();
+                    EnsemblMappingPipeline ensemblMappingPipeline =
+                            new EnsemblMappingPipeline(snpRsId, authorReportedGeneNamesLinkedToSnp);
+                    ensemblMappingPipeline.run_pipeline();
+/*
+                    // TODO LAURENT NEEDS TO ADD GETTER AND SETTERS TO THIS MAPPING CLASS
+                    Collection<Location> locations = ensemblMappingPipeline.getLocations();
+                    Collection<GenomicContext> genomicContexts = ensemblMappingPipeline.getGenomic_contexts();
 
 
-            // TODO Pass rs_id to mapping component
+                    for (Location location : locations) {
 
+                        // Next time we see SNP, add location to set
+                        // This would only occur is SNP has multiple locations
+                        if (snpToLocationsMap.containsKey(snpRsId)) {
+                            snpToLocationsMap.get(snpRsId).add(location);
+                        }
 
+                        // First time we see a SNP store the location
+                        else {
+                            Set<Location> snpLocation = new HashSet<>();
+                            snpLocation.add(location);
+                            snpToLocationsMap.put(snpRsId, snpLocation);
+                        }
+                    }
+
+                    for (GenomicContext genomicContext : genomicContexts) {
+
+                        // Next time we see SNP, add genomic context to set
+                        if (snpToGenomicContextMap.containsKey(snpRsId)) {
+                            snpToGenomicContextMap.get(snpRsId).add(genomicContext);
+                        }
+
+                        // First time we see a SNP store the genomic context
+                        else {
+                            Set<GenomicContext> snpGenomicContext = new HashSet<>();
+                            snpGenomicContext.add(genomicContext);
+                            snpToGenomicContextMap.put(snpRsId, snpGenomicContext);
+                        }
+                    }
+
+                    // TODO THEN SEND MAP OF RS_ID AND LOCATIONS OR GENOMIC CONTEXT TO CODE THAT SAVES*/
+
+                }
+
+            }
         }
 
         return "redirect:/studies/" + studyId + "/associations";
