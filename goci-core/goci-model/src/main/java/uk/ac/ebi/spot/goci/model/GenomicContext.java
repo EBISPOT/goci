@@ -152,18 +152,4 @@ public class GenomicContext {
     public void setLocation(Location location) {
         this.location = location;
     }
-
-    @Override public String toString() {
-        return "GenomicContext{" +
-                "id=" + id +
-                ", isIntergenic=" + isIntergenic +
-                ", isUpstream=" + isUpstream +
-                ", isDownstream=" + isDownstream +
-                ", distance=" + distance +
-                ", snp=" + snp +
-                ", gene=" + gene +
-                ", source='" + source + '\'' +
-                ", mappingMethod='" + mappingMethod + '\'' +
-                '}';
-    }
 }
