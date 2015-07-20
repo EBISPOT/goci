@@ -31,6 +31,9 @@ public class GenomicContext {
     @ManyToOne
     private Gene gene;
 
+    @ManyToOne
+    private Location location;
+
     private String source;
 
     private String mappingMethod;
@@ -47,15 +50,16 @@ public class GenomicContext {
                           Long distance,
                           SingleNucleotidePolymorphism snp,
                           Gene gene,
+                          Location location,
                           String source,
-                          String mappingMethod,
-                          Boolean isClosestGene) {
+                          String mappingMethod, Boolean isClosestGene) {
         this.isIntergenic = isIntergenic;
         this.isUpstream = isUpstream;
         this.isDownstream = isDownstream;
         this.distance = distance;
         this.snp = snp;
         this.gene = gene;
+        this.location = location;
         this.source = source;
         this.mappingMethod = mappingMethod;
         this.isClosestGene = isClosestGene;
@@ -141,17 +145,11 @@ public class GenomicContext {
         this.isClosestGene = isClosestGene;
     }
 
-    @Override public String toString() {
-        return "GenomicContext{" +
-                "id=" + id +
-                ", isIntergenic=" + isIntergenic +
-                ", isUpstream=" + isUpstream +
-                ", isDownstream=" + isDownstream +
-                ", distance=" + distance +
-                ", snp=" + snp +
-                ", gene=" + gene +
-                ", source='" + source + '\'' +
-                ", mappingMethod='" + mappingMethod + '\'' +
-                '}';
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }
