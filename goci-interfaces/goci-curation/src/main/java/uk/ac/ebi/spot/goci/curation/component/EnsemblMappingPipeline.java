@@ -364,7 +364,10 @@ public class EnsemblMappingPipeline {
             // Check if the gene corresponds to the closest gene
             boolean is_closest_gene = (closest_gene == gene_id && closest_gene != "") ? true : false;
 
-            GenomicContext gc = new GenomicContext(intergenic, upstream, downstream, dist, snp_tmp, gene_object, source, mapping_method, is_closest_gene);
+            // TODO (Emma) will also need to return a location object when setting genomic_context
+            // Adding empty location for moment (Emma)
+            Location location = new Location();
+            GenomicContext gc = new GenomicContext(intergenic, upstream, downstream, dist, snp_tmp, gene_object, location,source, mapping_method, is_closest_gene);
 
             genomic_contexts.add(gc);
         }
