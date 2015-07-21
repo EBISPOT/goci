@@ -3,6 +3,8 @@ package uk.ac.ebi.spot.goci.curation.component;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import uk.ac.ebi.spot.goci.curation.service.EnsemblRestService;
+import uk.ac.ebi.spot.goci.model.EnsemblGene;
+import uk.ac.ebi.spot.goci.model.EntrezGene;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
 import uk.ac.ebi.spot.goci.model.Location;
@@ -362,7 +364,20 @@ public class EnsemblMappingPipeline {
                 }
             }
             Long dist = new Long(distance);
-            Gene gene_object = new Gene(gene_name,ncbi_id,ensembl_id);
+
+            // TODO: (Emma) Updated GENE model object so it can have
+            // TODO:  collection of entrez/ensembl gene IDs
+            EntrezGene entrezGene = new EntrezGene();
+            entrezGene.setEntrezGeneId(ncbi_id);
+            Collection<EntrezGene> entrezGenes = new ArrayList<>();
+            entrezGenes.add(entrezGene);
+
+            EnsemblGene ensemblGene = new EnsemblGene();
+            ensemblGene.setEnsemblGeneId(ensembl_id);
+            Collection<EnsemblGene> ensemblGenes = new ArrayList<>();
+            ensemblGenes.add(ensemblGene);
+
+            Gene gene_object = new Gene(gene_name, entrezGenes, ensemblGenes);
 
             // Check if the gene corresponds to the closest gene
             boolean is_closest_gene = (closest_gene == gene_id && closest_gene != "") ? true : false;
