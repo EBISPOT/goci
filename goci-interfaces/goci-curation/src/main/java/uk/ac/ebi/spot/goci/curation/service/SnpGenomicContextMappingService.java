@@ -2,9 +2,13 @@ package uk.ac.ebi.spot.goci.curation.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.model.EnsemblGene;
+import uk.ac.ebi.spot.goci.model.EntrezGene;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.repository.EnsemblGeneRepository;
+import uk.ac.ebi.spot.goci.repository.EntrezGeneRepository;
 import uk.ac.ebi.spot.goci.repository.GeneRepository;
 import uk.ac.ebi.spot.goci.repository.GenomicContextRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
@@ -33,20 +37,33 @@ public class SnpGenomicContextMappingService {
     private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
     private GeneRepository geneRepository;
     private GenomicContextRepository genomicContextRepository;
+    private EnsemblGeneRepository ensemblGeneRepository;
+    private EntrezGeneRepository entrezGeneRepository;
 
     //Constructor
     @Autowired
     public SnpGenomicContextMappingService(SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
                                            GeneRepository geneRepository,
-                                           GenomicContextRepository genomicContextRepository) {
+                                           GenomicContextRepository genomicContextRepository,
+                                           EnsemblGeneRepository ensemblGeneRepository,
+                                           EntrezGeneRepository entrezGeneRepository) {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.geneRepository = geneRepository;
         this.genomicContextRepository = genomicContextRepository;
+        this.ensemblGeneRepository = ensemblGeneRepository;
+        this.entrezGeneRepository = entrezGeneRepository;
     }
 
+
+    /**
+     * Takes genomic context information returned by mapping pipeline and creates a structure that links an rs_id to all
+     * its genomic context objects. This ensures we can do a single update based on latest mapping information.
+     *
+     * @param genomicContexts object holding gene and snp mapping information
+     */
     public void processGenomicContext(Collection<GenomicContext> genomicContexts) {
 
-        // Process the gene information first so all IDs cna be updated and any new genes created
+        // Process the gene information first so all IDs can be updated and any new genes created
         processGenes(genomicContexts);
 
         // Need flatten down genomic context information
@@ -69,9 +86,16 @@ public class SnpGenomicContextMappingService {
             }
         }
 
+        // Store genomic context information
         storeSnpGenomicContext(snpToGenomicContextMap);
     }
 
+
+    /**
+     * Extract gene information from genomic contexts returned from mapping pipelone
+     *
+     * @param genomicContexts object holding gene and snp mapping information
+     */
     private void processGenes(Collection<GenomicContext> genomicContexts) {
 
         // Need to flatten down genomic context gene information
@@ -79,7 +103,6 @@ public class SnpGenomicContextMappingService {
         // complete set of current Ensembl and Entrez IDs
         Map<String, Set<String>> geneToEnsemblIdMap = new HashMap<>();
         Map<String, Set<String>> geneToEntrezIdMap = new HashMap<>();
-
 
         // Loop over each genomic context and store information on external IDs linked to gene symbol
         for (GenomicContext genomicContext : genomicContexts) {
@@ -89,35 +112,37 @@ public class SnpGenomicContextMappingService {
 
             if (!geneName.equalsIgnoreCase("undefined")) {
 
-                // TODO THIS WILL NEED TO CHANGE AS THIS WILL BE A COLLECTION
-                String entrezGeneId = genomicContext.getGene().getEntrezGeneId();
-                String ensemblGeneId = genomicContext.getGene().getEnsemblGeneId();
+                Collection<EnsemblGene> ensemblGeneIds = genomicContext.getGene().getEnsemblGeneIds();
+                for (EnsemblGene ensemblGene : ensemblGeneIds) {
+                    // Store gene name and Ensembl Id(s)
+                    if (geneToEnsemblIdMap.containsKey(geneName)) {
+                        geneToEnsemblIdMap.get(geneName).add(ensemblGene.getEnsemblGeneId());
+                    }
 
-                // Store gene name and Ensembl Id(s)
-                if (geneToEnsemblIdMap.containsKey(geneName)) {
-                    geneToEnsemblIdMap.get(geneName).add(ensemblGeneId);
+                    else {
+                        Set<String> ensemblGeneIdsSet = new HashSet<>();
+                        ensemblGeneIdsSet.add(ensemblGene.getEnsemblGeneId());
+                        geneToEnsemblIdMap.put(geneName, ensemblGeneIdsSet);
+                    }
                 }
 
-                else {
-                    Set<String> ensemblGeneIds = new HashSet<>();
-                    ensemblGeneIds.add(ensemblGeneId);
-                    geneToEnsemblIdMap.put(geneName, ensemblGeneIds);
-                }
+                Collection<EntrezGene> entrezGeneIds = genomicContext.getGene().getEntrezGeneIds();
+                for (EntrezGene entrezGene : entrezGeneIds) {
+                    // Store gene name and Entrez Id(s)
+                    if (geneToEntrezIdMap.containsKey(geneName)) {
+                        geneToEntrezIdMap.get(geneName).add(entrezGene.getEntrezGeneId());
+                    }
 
-                // Store gene name and Entrez Id(s)
-                if (geneToEntrezIdMap.containsKey(geneName)) {
-                    geneToEntrezIdMap.get(geneName).add(entrezGeneId);
-                }
-
-                else {
-                    Set<String> entrezGeneIds = new HashSet<>();
-                    entrezGeneIds.add(entrezGeneId);
-                    geneToEntrezIdMap.put(geneName, entrezGeneIds);
+                    else {
+                        Set<String> entrezGeneIdsSet = new HashSet<>();
+                        entrezGeneIdsSet.add(entrezGene.getEntrezGeneId());
+                        geneToEntrezIdMap.put(geneName, entrezGeneIdsSet);
+                    }
                 }
             }
         }
 
-        // Store genes
+        // Store genes, source is required so we know what table to add them to
         if (geneToEnsemblIdMap.size() > 0) {
             storeGenes(geneToEnsemblIdMap, "Ensembl");
         }
@@ -127,7 +152,12 @@ public class SnpGenomicContextMappingService {
         }
     }
 
-    // Create/update genes with latest mapping information
+    /**
+     * Create/update genes with latest mapping information
+     *
+     * @param geneToExternalIdMap map of a gene name and all external database IDs from current mapping run
+     * @param source              the source of mapping, either Ensembl or Entrez
+     */
     private void storeGenes(Map<String, Set<String>> geneToExternalIdMap, String source) {
         for (String geneName : geneToExternalIdMap.keySet()) {
 
@@ -141,17 +171,44 @@ public class SnpGenomicContextMappingService {
 
             // Update gene
             else {
-                // TODO PROBABLY NEED TO REMOVE OLD IDS
-                // 1. FIND IDS LINKED TO GENE
-                // 2. MAKE SURE ID IS NOT LINKED TO ANOTHER GENE
-                // 3. DELETE ID
+
                 for (Gene existingGeneInDatabase : existingGenesInDatabase) {
                     if (source.equalsIgnoreCase("Ensembl")) {
-                        // SET ENSEMBL IDS
+
+                        // Get a list of our old Ids
+                        Collection<EnsemblGene> oldEnsemblIdsLinkedToGene = existingGeneInDatabase.getEnsemblGeneIds();
+
+                        Collection<EnsemblGene> newEnsemblGenes = new ArrayList<>();
+                        for (String id : externalIds) {
+                            EnsemblGene ensemblGene = createOrRetrieveEnsemblExternalId(id, geneName);
+                            newEnsemblGenes.add(ensemblGene);
+                        }
+
+                        existingGeneInDatabase.setEnsemblGeneIds(newEnsemblGenes);
+
+                        for (EnsemblGene oldEnsemblIdLinkedToGene : oldEnsemblIdsLinkedToGene) {
+                            cleanUpEnsemblGenes(oldEnsemblIdLinkedToGene);
+                        }
+
                     }
 
                     if (source.equalsIgnoreCase("Entrez")) {
-                        // SET ENTREZ IDS
+
+                        // Get a list of our old Ids
+                        Collection<EntrezGene> oldEntrezGenesLinkedToGene = existingGeneInDatabase.getEntrezGeneIds();
+
+                        Collection<EntrezGene> newEntrezGenes = new ArrayList<>();
+                        for (String id : externalIds) {
+                            EntrezGene entrezGene = createOrRetrieveEntrezExternalId(id, geneName);
+                            newEntrezGenes.add(entrezGene);
+                        }
+
+                        existingGeneInDatabase.setEntrezGeneIds(newEntrezGenes);
+
+                        for (EntrezGene oldEntrezGeneLinkedToGene : oldEntrezGenesLinkedToGene) {
+                            cleanUpEntrezGenes(oldEntrezGeneLinkedToGene);
+                        }
+
                     }
 
                     // Save changes
@@ -159,10 +216,14 @@ public class SnpGenomicContextMappingService {
                 }
             }
 
-
         }
     }
 
+    /**
+     * Saves genomic context information to database
+     *
+     * @param snpToGenomicContextMap map of rs_id and all genomic context details returned from current mapping run
+     */
     private void storeSnpGenomicContext(Map<String, Set<GenomicContext>> snpToGenomicContextMap) {
 
         // Go through each rs_id and its associated genomic contexts returned from the mapping pipeline
@@ -236,24 +297,138 @@ public class SnpGenomicContextMappingService {
         }
     }
 
-    // Method to create a gene
+    /**
+     * Method to create a gene
+     *
+     * @param geneName    gene symbol or name
+     * @param externalIds external gene IDs
+     * @param source      the source of mapping, either Ensembl or Entrez
+     */
     private void createGene(String geneName, Set<String> externalIds, String source) {
         // Create new gene
         Gene newGene = new Gene();
         newGene.setGeneName(geneName);
 
         if (source.equalsIgnoreCase("Ensembl")) {
-            // SET ENSEMBL IDS
+            // Set Ensembl Ids
+            Collection<EnsemblGene> ensemblGeneIds = new ArrayList<>();
+            for (String id : externalIds) {
+                EnsemblGene ensemblGene = createOrRetrieveEnsemblExternalId(id, geneName);
+                ensemblGeneIds.add(ensemblGene);
+            }
+            newGene.setEnsemblGeneIds(ensemblGeneIds);
         }
+
         if (source.equalsIgnoreCase("Entrez")) {
-            // SET ENTREZ IDS
+            // Set Entrez Ids
+            Collection<EntrezGene> entrezGeneIds = new ArrayList<>();
+            for (String id : externalIds) {
+                EntrezGene entrezGene = createOrRetrieveEntrezExternalId(id, geneName);
+                entrezGeneIds.add(entrezGene);
+            }
+            newGene.setEntrezGeneIds(entrezGeneIds);
         }
 
         // Save gene
         geneRepository.save(newGene);
     }
 
-    // Method to create genomic context
+
+    /**
+     * Method to create an Ensembl gene, this database table holds ensembl gene IDs
+     *
+     * @param id       Ensembl gene ID
+     * @param geneName Gene name allows method to check if this id is actually already linked to another gene
+     */
+    private EnsemblGene createOrRetrieveEnsemblExternalId(String id, String geneName) {
+        EnsemblGene ensemblGene = ensemblGeneRepository.findByEnsemblGeneId(id);
+
+        // Create new entry in ENSEMBL_GENE table for this ID
+        if (ensemblGene == null) {
+            ensemblGene = new EnsemblGene();
+            ensemblGene.setEnsemblGeneId(id);
+            ensemblGeneRepository.save(ensemblGene);
+        }
+
+        // Check this ID is mot linked to a gene with a different name
+        else {
+            if (!geneName.equals(ensemblGene.getGene().getGeneName())) {
+                throw new RuntimeException(
+                        "Ensembl ID: " + id + ", is already used in database by gene: " +
+                                ensemblGene.getGene().getGeneName() + ". Cannot link to " + geneName);
+            }
+
+        }
+
+        return ensemblGene;
+    }
+
+    /**
+     * Method to create an Entrez gene, this database table holds entrez gene IDs
+     *
+     * @param id       Entrez gene ID
+     * @param geneName Gene name allows method to check if this id is actually already linked to another gene
+     */
+    private EntrezGene createOrRetrieveEntrezExternalId(String id, String geneName) {
+        EntrezGene entrezGene = entrezGeneRepository.findByEntrezGeneId(id);
+
+        // Create new entry in ENSEMBL_GENE table for this ID
+        if (entrezGene == null) {
+            entrezGene = new EntrezGene();
+            entrezGene.setEntrezGeneId(id);
+            entrezGeneRepository.save(entrezGene);
+        }
+        else {
+            if (!geneName.equals(entrezGene.getGene().getGeneName())) {
+                throw new RuntimeException(
+                        "Entrez ID: " + id + ", is already used in database by gene: " +
+                                entrezGene.getGene().getGeneName() + ". Cannot link to " + geneName);
+            }
+        }
+
+        return entrezGene;
+    }
+
+    /**
+     * Method to clean-up an Ensembl gene ID in database that has no linked gene
+     *
+     * @param ensemblGene Ensembl gene object to delete
+     */
+
+    private void cleanUpEnsemblGenes(EnsemblGene ensemblGene) {
+        List<Gene> genesWithEnsemblId =
+                geneRepository.findByEnsemblGeneIdsEnsemblGeneId(ensemblGene.getEnsemblGeneId());
+        if (genesWithEnsemblId.size() == 0) {
+            ensemblGeneRepository.delete(ensemblGene);
+        }
+    }
+
+    /**
+     * Method to clean-up an Entrez gene ID in database that has no linked gene
+     *
+     * @param entrezGene Entrez gene object to delete
+     */
+    private void cleanUpEntrezGenes(EntrezGene entrezGene) {
+        List<Gene> geneWithEntrezIds =
+                geneRepository.findByEntrezGeneIdsEntrezGeneId(entrezGene.getEntrezGeneId());
+        if (geneWithEntrezIds.size() == 0) {
+            entrezGeneRepository.delete(entrezGene);
+        }
+    }
+
+    /**
+     * Method to create genomic context
+     *
+     * @param isIntergenic
+     * @param isUpstream
+     * @param isDownstream
+     * @param distance
+     * @param source
+     * @param mappingMethod
+     * @param geneName
+     * @param snpIdInDatabase
+     * @param isClosestGene
+     */
     private GenomicContext createGenomicContext(Boolean isIntergenic,
                                                 Boolean isUpstream,
                                                 Boolean isDownstream,
