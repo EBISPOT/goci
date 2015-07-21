@@ -3,6 +3,8 @@ package uk.ac.ebi.spot.goci.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import java.util.Collection;
@@ -11,7 +13,7 @@ import java.util.Collection;
  * Created by emma on 01/12/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         A model object representing a gene and its attributes including associated single nucleotide polymorphisms
  */
 
@@ -23,9 +25,17 @@ public class Gene {
 
     private String geneName;
 
-    private String entrezGeneId;
+    @OneToMany
+    @JoinTable(name = "GENE_ENTREZ_GENE",
+               joinColumns = @JoinColumn(name = "GENE_ID"),
+               inverseJoinColumns = @JoinColumn(name = "ENTREZ_GENE_ID"))
+    private Collection<EntrezGene> entrezGeneIds;
 
-    private String ensemblGeneId;
+    @OneToMany
+    @JoinTable(name = "GENE_ENSEMBL_GENE",
+               joinColumns = @JoinColumn(name = "GENE_ID"),
+               inverseJoinColumns = @JoinColumn(name = "ENSEMBL_GENE_ID"))
+    private Collection<EnsemblGene> ensemblGeneIds;
 
     @ManyToMany(mappedBy = "authorReportedGenes")
     private Collection<Locus> authorReportedFromLoci;
@@ -39,21 +49,21 @@ public class Gene {
 
     // Light constructor
     public Gene(String geneName,
-                String entrezGeneId,
-                String ensemblGeneId) {
+                Collection<EntrezGene> entrezGeneIds,
+                Collection<EnsemblGene> ensemblGeneIds) {
         this.geneName = geneName;
-        this.entrezGeneId = entrezGeneId;
-        this.ensemblGeneId = ensemblGeneId;
+        this.entrezGeneIds = entrezGeneIds;
+        this.ensemblGeneIds = ensemblGeneIds;
     }
 
     public Gene(String geneName,
-                String entrezGeneId,
-                String ensemblGeneId,
+                Collection<EntrezGene> entrezGeneIds,
+                Collection<EnsemblGene> ensemblGeneIds,
                 Collection<Locus> authorReportedFromLoci,
                 Collection<GenomicContext> genomicContexts) {
         this.geneName = geneName;
-        this.entrezGeneId = entrezGeneId;
-        this.ensemblGeneId = ensemblGeneId;
+        this.entrezGeneIds = entrezGeneIds;
+        this.ensemblGeneIds = ensemblGeneIds;
         this.authorReportedFromLoci = authorReportedFromLoci;
         this.genomicContexts = genomicContexts;
     }
@@ -78,12 +88,12 @@ public class Gene {
         this.geneName = geneName;
     }
 
-    public String getEntrezGeneId() {
-        return entrezGeneId;
+    public Collection<EntrezGene> getEntrezGeneIds() {
+        return entrezGeneIds;
     }
 
-    public void setEntrezGeneId(String entrezGeneId) {
-        this.entrezGeneId = entrezGeneId;
+    public void setEntrezGeneIds(Collection<EntrezGene> entrezGeneIds) {
+        this.entrezGeneIds = entrezGeneIds;
     }
 
     public Collection<Locus> getAuthorReportedFromLoci() {
@@ -94,12 +104,12 @@ public class Gene {
         this.authorReportedFromLoci = authorReportedFromLoci;
     }
 
-    public String getEnsemblGeneId() {
-        return ensemblGeneId;
+    public Collection<EnsemblGene> getEnsemblGeneIds() {
+        return ensemblGeneIds;
     }
 
-    public void setEnsemblGeneId(String ensemblGeneId) {
-        this.ensemblGeneId = ensemblGeneId;
+    public void setEnsemblGeneIds(Collection<EnsemblGene> ensemblGeneIds) {
+        this.ensemblGeneIds = ensemblGeneIds;
     }
 
     public Collection<GenomicContext> getGenomicContexts() {
