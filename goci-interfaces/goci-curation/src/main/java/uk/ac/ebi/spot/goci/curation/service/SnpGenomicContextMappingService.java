@@ -23,7 +23,9 @@ import java.util.Set;
  *
  * @author emma
  *         <p>
- *         Service class to store genomic context information returned from mapping pipeline.
+ *         Service class to store genomic context information returned from mapping pipeline. Begins by storing gene
+ *         information and then creating genomic context information. The information from the current run of the
+ *         pipeline is always considered most up-to-date therefore in most cases previous information is deleted.
  */
 @Service
 public class SnpGenomicContextMappingService {
@@ -43,6 +45,9 @@ public class SnpGenomicContextMappingService {
     }
 
     public void processGenomicContext(Collection<GenomicContext> genomicContexts) {
+
+        // Process the gene information first so all IDs cna be updated and any new genes created
+        processGenes(genomicContexts);
 
         // Need flatten down genomic context information
         // and create structure linking each RS_ID to its complete set of new mapped data
@@ -65,6 +70,97 @@ public class SnpGenomicContextMappingService {
         }
 
         storeSnpGenomicContext(snpToGenomicContextMap);
+    }
+
+    private void processGenes(Collection<GenomicContext> genomicContexts) {
+
+        // Need to flatten down genomic context gene information
+        // and create structure linking each gene symbol to its
+        // complete set of current Ensembl and Entrez IDs
+        Map<String, Set<String>> geneToEnsemblIdMap = new HashMap<>();
+        Map<String, Set<String>> geneToEntrezIdMap = new HashMap<>();
+
+
+        // Loop over each genomic context and store information on external IDs linked to gene symbol
+        for (GenomicContext genomicContext : genomicContexts) {
+
+            // Check gene exists
+            String geneName = genomicContext.getGene().getGeneName().trim();
+
+            if (!geneName.equalsIgnoreCase("undefined")) {
+
+                // TODO THIS WILL NEED TO CHANGE AS THIS WILL BE A COLLECTION
+                String entrezGeneId = genomicContext.getGene().getEntrezGeneId();
+                String ensemblGeneId = genomicContext.getGene().getEnsemblGeneId();
+
+                // Store gene name and Ensembl Id(s)
+                if (geneToEnsemblIdMap.containsKey(geneName)) {
+                    geneToEnsemblIdMap.get(geneName).add(ensemblGeneId);
+                }
+
+                else {
+                    Set<String> ensemblGeneIds = new HashSet<>();
+                    ensemblGeneIds.add(ensemblGeneId);
+                    geneToEnsemblIdMap.put(geneName, ensemblGeneIds);
+                }
+
+                // Store gene name and Entrez Id(s)
+                if (geneToEntrezIdMap.containsKey(geneName)) {
+                    geneToEntrezIdMap.get(geneName).add(entrezGeneId);
+                }
+
+                else {
+                    Set<String> entrezGeneIds = new HashSet<>();
+                    entrezGeneIds.add(entrezGeneId);
+                    geneToEntrezIdMap.put(geneName, entrezGeneIds);
+                }
+            }
+        }
+
+        // Store genes
+        if (geneToEnsemblIdMap.size() > 0) {
+            storeGenes(geneToEnsemblIdMap, "Ensembl");
+        }
+
+        if (geneToEntrezIdMap.size() > 0) {
+            storeGenes(geneToEntrezIdMap, "Entrez");
+        }
+    }
+
+    // Create/update genes with latest mapping information
+    private void storeGenes(Map<String, Set<String>> geneToExternalIdMap, String source) {
+        for (String geneName : geneToExternalIdMap.keySet()) {
+
+            Set<String> externalIds = geneToExternalIdMap.get(geneName);
+            List<Gene> existingGenesInDatabase = geneRepository.findByGeneNameIgnoreCase(geneName);
+
+            // If gene is not already in database then create one
+            if (existingGenesInDatabase.size() == 0) {
+                createGene(geneName, externalIds, source);
+            }
+
+            // Update gene
+            else {
+                // TODO PROBABLY NEED TO REMOVE OLD IDS
+                // 1. FIND IDS LINKED TO GENE
+                // 2. MAKE SURE ID IS NOT LINKED TO ANOTHER GENE
+                // 3. DELETE ID
+                for (Gene existingGeneInDatabase : existingGenesInDatabase) {
+                    if (source.equalsIgnoreCase("Ensembl")) {
+                        // SET ENSEMBL IDS
+                    }
+
+                    if (source.equalsIgnoreCase("Entrez")) {
+                        // SET ENTREZ IDS
+                    }
+
+                    // Save changes
+                    geneRepository.save(existingGeneInDatabase);
+                }
+            }
+
+
+        }
     }
 
     private void storeSnpGenomicContext(Map<String, Set<GenomicContext>> snpToGenomicContextMap) {
@@ -93,36 +189,10 @@ public class SnpGenomicContextMappingService {
 
                     for (GenomicContext genomicContextInForm : genomicContextsInForm) {
 
-                        // Check gene exists
+                        // Gene should already have been created
                         String geneName = genomicContextInForm.getGene().getGeneName().trim();
 
                         if (!geneName.equalsIgnoreCase("undefined")) {
-
-                            String entrezGeneId = genomicContextInForm.getGene().getEntrezGeneId();
-                            String ensemblGeneId = genomicContextInForm.getGene().getEnsemblGeneId();
-
-                            List<Gene> existingGenesInDatabase = geneRepository.findByGeneNameIgnoreCase(geneName);
-
-                            // If gene is not already in database then create one
-                            if (existingGenesInDatabase.size() == 0) {
-                                createGene(geneName, entrezGeneId, ensemblGeneId);
-                            }
-
-                            // Update gene
-                            else {
-                                for (Gene existingGeneInDatabase : existingGenesInDatabase) {
-                                    if (entrezGeneId != null) {
-                                        existingGeneInDatabase.setEntrezGeneId(entrezGeneId);
-                                    }
-
-                                    if (ensemblGeneId != null) {
-                                        existingGeneInDatabase.setEnsemblGeneId(ensemblGeneId);
-                                    }
-
-                                    // Save changes
-                                    geneRepository.save(existingGeneInDatabase);
-                                }
-                            }
 
                             // Create new genomic context
                             Boolean isIntergenic = genomicContextInForm.getIsIntergenic();
@@ -146,7 +216,7 @@ public class SnpGenomicContextMappingService {
                             newSnpGenomicContexts.add(genomicContext);
                         }
                     }
-                    
+
                     // Save latest mapped information
                     snpInDatabase.setGenomicContexts(newSnpGenomicContexts);
                     // Update the last update date
@@ -167,12 +237,17 @@ public class SnpGenomicContextMappingService {
     }
 
     // Method to create a gene
-    private void createGene(String geneName, String entrezGeneId, String ensemblGeneId) {
+    private void createGene(String geneName, Set<String> externalIds, String source) {
         // Create new gene
         Gene newGene = new Gene();
         newGene.setGeneName(geneName);
-        newGene.setEntrezGeneId(entrezGeneId);
-        newGene.setEnsemblGeneId(ensemblGeneId);
+
+        if (source.equalsIgnoreCase("Ensembl")) {
+            // SET ENSEMBL IDS
+        }
+        if (source.equalsIgnoreCase("Entrez")) {
+            // SET ENTREZ IDS
+        }
 
         // Save gene
         geneRepository.save(newGene);
