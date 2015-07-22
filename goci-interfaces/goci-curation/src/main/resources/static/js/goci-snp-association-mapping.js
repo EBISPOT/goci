@@ -499,7 +499,8 @@ function addGenomicContextRow(json_result,chr,position,snp_row_id,overlap,source
 
     var row_prefix = "context_tr_";
 
-    var gene_id_source = (source == source_ens) ? "ensemblGeneId" : "entrezGeneId";
+    var gene_id_source_id   = (source == source_ens) ? "ensemblGeneIds0.ensemblGeneId" : "entrezGeneIds0.entrezGeneId";
+    var gene_id_source_name = (source == source_ens) ? "ensemblGeneIds[0].ensemblGeneId" : "entrezGeneIds[0].entrezGeneId";
 
     if (type) {
         intergenic = true;
@@ -574,7 +575,7 @@ function addGenomicContextRow(json_result,chr,position,snp_row_id,overlap,source
                 "<"+hidden_input+" id=\""+genomicContextId+".gene.geneName\" name=\""+genomicContextName+".gene.geneName\" value=\""+gene_name+"\"></td>";
         // Gene ID
         newrow += "<td><span>" + gene_id + "</span>"+
-                "<"+hidden_input+" id=\""+genomicContextId+".gene."+gene_id_source+"\" name=\""+genomicContextName+".gene."+gene_id_source+"\" value=\""+gene_id+"\"></td>";
+                "<"+hidden_input+" id=\""+genomicContextId+".gene."+gene_id_source_id+"\" name=\""+genomicContextName+".gene."+gene_id_source_name+"\" value=\""+gene_id+"\"></td>";
         // Source
         newrow += "<td><span>" + source + "</span>"+
                 "<"+hidden_input+" id=\""+genomicContextId+".source\" name=\""+genomicContextName+".source\" value=\""+source+"\"></td>";
@@ -606,7 +607,7 @@ function addGenomicContextRow(json_result,chr,position,snp_row_id,overlap,source
                 "</td>";
 
         // Closest gene
-        var is_closest_label = (closest_gene == gene_id) ?  ok_icon2 + " " + type : "";
+        var is_closest_label = (closest_gene == gene_id) ?  ok_icon2 + " " + type : "-";
         var is_closest_gene = (closest_gene == gene_id) ?  true : false;
         newrow += "<td>" + is_closest_label +
                 "<"+hidden_input+" id=\""+genomicContextId+".isClosestGene\" name=\""+genomicContextName+".isClosestGene\" value=\""+is_closest_gene+"+\">"+
