@@ -68,6 +68,33 @@ public class EnsemblMappingPipeline {
     }
 
 
+    /**
+     * Getter for the collection of Location instances
+     * @return Collection of Location instances.
+     */
+    public Collection<Location> getLocations() {
+        return locations;
+    }
+
+
+    /**
+     * Getter for the collection of GenomicContext instances
+     * @return Collection of GenomicContext instances.
+     */
+    public Collection<GenomicContext> getGenomicContexts() {
+        return genomic_contexts;
+    }
+
+
+    /**
+     * Getter for the list of pipeline error messages
+     * @return List of strings.
+     */
+    public ArrayList<String> getPipelineErrors() {
+        return pipeline_errors;
+    }
+
+
     // Run the pipeline for a given SNP
     public void run_pipeline() {
         // Variation call
