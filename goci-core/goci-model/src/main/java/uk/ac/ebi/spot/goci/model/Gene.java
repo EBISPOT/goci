@@ -7,6 +7,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -29,13 +30,13 @@ public class Gene {
     @JoinTable(name = "GENE_ENTREZ_GENE",
                joinColumns = @JoinColumn(name = "GENE_ID"),
                inverseJoinColumns = @JoinColumn(name = "ENTREZ_GENE_ID"))
-    private Collection<EntrezGene> entrezGeneIds;
+    private Collection<EntrezGene> entrezGeneIds = new ArrayList<>();
 
     @OneToMany
     @JoinTable(name = "GENE_ENSEMBL_GENE",
                joinColumns = @JoinColumn(name = "GENE_ID"),
                inverseJoinColumns = @JoinColumn(name = "ENSEMBL_GENE_ID"))
-    private Collection<EnsemblGene> ensemblGeneIds;
+    private Collection<EnsemblGene> ensemblGeneIds = new ArrayList<>();
 
     @ManyToMany(mappedBy = "authorReportedGenes")
     private Collection<Locus> authorReportedFromLoci;

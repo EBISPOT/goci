@@ -610,7 +610,7 @@ function addGenomicContextRow(json_result,chr,position,snp_row_id,overlap,source
         var is_closest_label = (closest_gene == gene_id) ?  ok_icon2 + " " + type : "-";
         var is_closest_gene = (closest_gene == gene_id) ?  true : false;
         newrow += "<td>" + is_closest_label +
-                "<"+hidden_input+" id=\""+genomicContextId+".isClosestGene\" name=\""+genomicContextName+".isClosestGene\" value=\""+is_closest_gene+"+\">"+
+                "<"+hidden_input+" id=\""+genomicContextId+".isClosestGene\" name=\""+genomicContextName+".isClosestGene\" value=\""+is_closest_gene+"\">"+
                 "</td>";
 
         newrow += "</tr>";
