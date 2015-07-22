@@ -92,7 +92,7 @@ public class SnpGenomicContextMappingService {
 
 
     /**
-     * Extract gene information from genomic contexts returned from mapping pipelone
+     * Extract gene information from genomic contexts returned from mapping pipeline
      *
      * @param genomicContexts object holding gene and snp mapping information
      */
@@ -112,9 +112,10 @@ public class SnpGenomicContextMappingService {
 
             if (!geneName.equalsIgnoreCase("undefined")) {
 
+                // Retrieve the latest Ensembl/Entrez IDs for the named gene from the latest mapping run
                 Collection<EnsemblGene> ensemblGeneIds = genomicContext.getGene().getEnsemblGeneIds();
                 for (EnsemblGene ensemblGene : ensemblGeneIds) {
-                    // Store gene name and Ensembl Id(s)
+
                     if (geneToEnsemblIdMap.containsKey(geneName)) {
                         geneToEnsemblIdMap.get(geneName).add(ensemblGene.getEnsemblGeneId());
                     }
@@ -128,7 +129,7 @@ public class SnpGenomicContextMappingService {
 
                 Collection<EntrezGene> entrezGeneIds = genomicContext.getGene().getEntrezGeneIds();
                 for (EntrezGene entrezGene : entrezGeneIds) {
-                    // Store gene name and Entrez Id(s)
+
                     if (geneToEntrezIdMap.containsKey(geneName)) {
                         geneToEntrezIdMap.get(geneName).add(entrezGene.getEntrezGeneId());
                     }
@@ -162,9 +163,11 @@ public class SnpGenomicContextMappingService {
         for (String geneName : geneToExternalIdMap.keySet()) {
 
             Set<String> externalIds = geneToExternalIdMap.get(geneName);
+
+            // Find any existing database genes that match the gene name
             List<Gene> existingGenesInDatabase = geneRepository.findByGeneNameIgnoreCase(geneName);
 
-            // If gene is not already in database then create one
+            // If gene is not found in database then create one
             if (existingGenesInDatabase.size() == 0) {
                 createGene(geneName, externalIds, source);
             }
@@ -175,7 +178,7 @@ public class SnpGenomicContextMappingService {
                 for (Gene existingGeneInDatabase : existingGenesInDatabase) {
                     if (source.equalsIgnoreCase("Ensembl")) {
 
-                        // Get a list of our old Ids
+                        // Get a list of current Ensembl IDs linked to existing gene
                         Collection<EnsemblGene> oldEnsemblIdsLinkedToGene = existingGeneInDatabase.getEnsemblGeneIds();
 
                         Collection<EnsemblGene> newEnsemblGenes = new ArrayList<>();
@@ -184,8 +187,10 @@ public class SnpGenomicContextMappingService {
                             newEnsemblGenes.add(ensemblGene);
                         }
 
+                        // Set latest IDs from mapping run
                         existingGeneInDatabase.setEnsemblGeneIds(newEnsemblGenes);
 
+                        // Clean-up any Ensembl IDs that may now be left without a gene linked
                         for (EnsemblGene oldEnsemblIdLinkedToGene : oldEnsemblIdsLinkedToGene) {
                             cleanUpEnsemblGenes(oldEnsemblIdLinkedToGene);
                         }
@@ -194,7 +199,7 @@ public class SnpGenomicContextMappingService {
 
                     if (source.equalsIgnoreCase("Entrez")) {
 
-                        // Get a list of our old Ids
+                        // Get a list of of current Entrez IDs linked to existing gene
                         Collection<EntrezGene> oldEntrezGenesLinkedToGene = existingGeneInDatabase.getEntrezGeneIds();
 
                         Collection<EntrezGene> newEntrezGenes = new ArrayList<>();
@@ -203,8 +208,10 @@ public class SnpGenomicContextMappingService {
                             newEntrezGenes.add(entrezGene);
                         }
 
+                        // Set latest IDs from mapping run
                         existingGeneInDatabase.setEntrezGeneIds(newEntrezGenes);
 
+                        // Clean-up any Entrez IDs that may now be left without a gene linked
                         for (EntrezGene oldEntrezGeneLinkedToGene : oldEntrezGenesLinkedToGene) {
                             cleanUpEntrezGenes(oldEntrezGeneLinkedToGene);
                         }
@@ -254,7 +261,7 @@ public class SnpGenomicContextMappingService {
                         String geneName = genomicContextInForm.getGene().getGeneName().trim();
 
                         if (!geneName.equalsIgnoreCase("undefined")) {
-
+                            //TODO ADD NEW LOCATION LOGIC
                             // Create new genomic context
                             Boolean isIntergenic = genomicContextInForm.getIsIntergenic();
                             Boolean isUpstream = genomicContextInForm.getIsUpstream();
@@ -310,7 +317,7 @@ public class SnpGenomicContextMappingService {
         newGene.setGeneName(geneName);
 
         if (source.equalsIgnoreCase("Ensembl")) {
-            // Set Ensembl Ids
+            // Set Ensembl Ids for new gene
             Collection<EnsemblGene> ensemblGeneIds = new ArrayList<>();
             for (String id : externalIds) {
                 EnsemblGene ensemblGene = createOrRetrieveEnsemblExternalId(id, geneName);
@@ -320,7 +327,7 @@ public class SnpGenomicContextMappingService {
         }
 
         if (source.equalsIgnoreCase("Entrez")) {
-            // Set Entrez Ids
+            // Set Entrez Ids for new gene
             Collection<EntrezGene> entrezGeneIds = new ArrayList<>();
             for (String id : externalIds) {
                 EntrezGene entrezGene = createOrRetrieveEntrezExternalId(id, geneName);
@@ -332,7 +339,6 @@ public class SnpGenomicContextMappingService {
         // Save gene
         geneRepository.save(newGene);
     }
-
 
     /**
      * Method to create an Ensembl gene, this database table holds ensembl gene IDs
@@ -350,7 +356,8 @@ public class SnpGenomicContextMappingService {
             ensemblGeneRepository.save(ensemblGene);
         }
 
-        // Check this ID is mot linked to a gene with a different name
+        // Check this ID is not linked to a gene with a different name,
+        // this case should be extremely rare
         else {
             if (!geneName.equals(ensemblGene.getGene().getGeneName())) {
                 throw new RuntimeException(
@@ -378,6 +385,9 @@ public class SnpGenomicContextMappingService {
             entrezGene.setEntrezGeneId(id);
             entrezGeneRepository.save(entrezGene);
         }
+
+        // Check this ID is not linked to a gene with a different name,
+        // this case should be extremely rare
         else {
             if (!geneName.equals(entrezGene.getGene().getGeneName())) {
                 throw new RuntimeException(
@@ -396,8 +406,12 @@ public class SnpGenomicContextMappingService {
      */
 
     private void cleanUpEnsemblGenes(EnsemblGene ensemblGene) {
+
+        // Find any genes with this Ensembl ID
         List<Gene> genesWithEnsemblId =
                 geneRepository.findByEnsemblGeneIdsEnsemblGeneId(ensemblGene.getEnsemblGeneId());
+
+        // If this ID is not linked to a gene then delete it
         if (genesWithEnsemblId.size() == 0) {
             ensemblGeneRepository.delete(ensemblGene);
         }
@@ -409,8 +423,12 @@ public class SnpGenomicContextMappingService {
      * @param entrezGene Entrez gene object to delete
      */
     private void cleanUpEntrezGenes(EntrezGene entrezGene) {
+
+        // Find any genes with this Entrez ID
         List<Gene> geneWithEntrezIds =
                 geneRepository.findByEntrezGeneIdsEntrezGeneId(entrezGene.getEntrezGeneId());
+
+        // If this ID is not linked to a gene then delete it
         if (geneWithEntrezIds.size() == 0) {
             entrezGeneRepository.delete(entrezGene);
         }
