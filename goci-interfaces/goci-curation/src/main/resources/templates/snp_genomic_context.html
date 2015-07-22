@@ -26,29 +26,39 @@
                 </td>
                 <!-- SNP location -->
                 <td>
-                    <span th:text="*{genomicContexts[__${rowStat.index}__].location.chromosomeName}+:+*{genomicContexts[__${rowStat.index}__].location.chromosomePosition}">SNP provenance</span>
-                    <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].location.chromosomeName}"/>
-                    <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].location.chromosomePosition}"/>
+                    <span th:if="*{genomicContexts[__${rowStat.index}__].location}">
+                        <span th:text="*{genomicContexts[__${rowStat.index}__].location.chromosomeName}"></span>
+                        <span>:</span>
+                        <span th:text="*{genomicContexts[__${rowStat.index}__].location.chromosomePosition}"></span>
+                        <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].location.chromosomeName}"/>
+                        <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].location.chromosomePosition}"/>
+                    </span>
                 </td>
                 <!-- Gene Symbol -->
                 <td>
                     <span th:text="*{genomicContexts[__${rowStat.index}__].gene.geneName}">Gene symbol</span>
                     <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].gene.geneName}"/>
                 </td>
-                <!-- Gene ID -->
+                <!-- Gene ID(s) -->
                 <td>
                     <span th:switch="*{genomicContexts[__${rowStat.index}__].source}">
                         <span th:case="Ensembl">
-                            <span th:text="*{genomicContexts[__${rowStat.index}__].gene.ensemblGeneId}">Gene ID</span>
-                            <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].gene.ensemblGeneId}"/>
+                            <span th:each="geneRow ,geneRowStat : *{genomicContexts[__${rowStat.index}__].gene.ensemblGeneIds}">
+                                <span th:text="*{genomicContexts[__${rowStat.index}__].gene.ensemblGeneIds[__${geneRowStat.index}__].ensemblGeneId}">-</span>
+                                <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].gene.ensemblGeneIds[__${geneRowStat.index}__].ensemblGeneId}"/>
+                            </span>
                         </span>
                         <span th:case="NCBI">
-                            <span th:text="*{genomicContexts[__${rowStat.index}__].gene.entrezGeneId}">Gene ID</span>
-                            <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].gene.entrezGeneId}"/>
+                            <span th:each="geneRow ,geneRowStat : *{genomicContexts[__${rowStat.index}__].gene.entrezGeneIds}">
+                                <span th:text="*{genomicContexts[__${rowStat.index}__].gene.entrezGeneIds[__${geneRowStat.index}__].entrezGeneId}">-</span>
+                                <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].gene.entrezGeneIds[__${geneRowStat.index}__].entrezGeneId}"/>
+                            </span>
                         </span>
                         <span th:case="*">
-                            <span th:text="*{genomicContexts[__${rowStat.index}__].gene.entrezGeneId}">Gene ID</span>
-                            <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].gene.entrezGeneId}"/>
+                            <span th:each="geneRow ,geneRowStat : *{genomicContexts[__${rowStat.index}__].gene.entrezGeneIds}">
+                                <span th:text="*{genomicContexts[__${rowStat.index}__].gene.entrezGeneIds[__${geneRowStat.index}__].entrezGeneId}">-</span>
+                                <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].gene.entrezGeneIds[__${geneRowStat.index}__].entrezGeneId}"/>
+                            </span>
                         </span>
                     </span>
                 </td>
@@ -92,7 +102,7 @@
                 <!-- Closest gene ? -->
                 <td>
                     <span th:switch="*{genomicContexts[__${rowStat.index}__].isClosestGene}">
-                        <span th:case="false"></span>
+                        <span th:case="false">-</span>
                         <span th:case="true">
                             <span class="glyphicon glyphicon-ok-sign"></span>
                             <span th:if="*{genomicContexts[__${rowStat.index}__].isUpstream}"> Upstream</span>
