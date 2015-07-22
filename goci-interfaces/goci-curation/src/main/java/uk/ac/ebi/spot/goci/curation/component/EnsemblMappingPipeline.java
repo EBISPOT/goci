@@ -61,7 +61,7 @@ public class EnsemblMappingPipeline {
     // Set the different Ensembl REST API endpoints used in the pipeline
     protected void setEndpoints() {
         String species = "homo_sapiens";
-        this.endpoints.put("variation", "/variation/"+species+"/");
+        this.endpoints.put("variation", "/variation/" + species + "/");
         this.endpoints.put("lookup_symbol", "/lookup/symbol/" + species + "/");
         this.endpoints.put("overlap_region", "/overlap/region/" + species + "/");
         this.endpoints.put("info_assembly", "/info/assembly/" + species + "/");
@@ -108,7 +108,6 @@ public class EnsemblMappingPipeline {
 
             // Mapping and genomic context calls
             JSONArray mappings = variation_result.getJSONArray("mappings");
-            // TODO: mapping method
             this.getMappings(mappings);
 
             // Genomic context & Reported genes
@@ -149,6 +148,9 @@ public class EnsemblMappingPipeline {
     private void getMappings(JSONArray mappings) {
         for (int i = 0; i < mappings.length(); ++i) {
             JSONObject mapping = mappings.getJSONObject(i);
+            if (!mapping.has("seq_region_name")) {
+                continue;
+            }
             String chromosome = mapping.getString("seq_region_name");
             String position = String.valueOf(mapping.getInt("start"));
 
@@ -562,16 +564,20 @@ public class EnsemblMappingPipeline {
     private void checkReportedGenes() {
         for (String reported_gene : this.reported_genes) {
 
+            reported_gene = reported_gene.replaceAll(" ",""); // Remove extra spaces
+
             JSONObject reported_gene_result = this.getSimpleRestCall("lookup_symbol",reported_gene);
+            // Gene symbol not found in Ensembl
             if (reported_gene_result.has("error")) {
                 pipeline_errors.add("Reported gene "+reported_gene+" is not found in Ensembl");
             }
+            // Gene not in the same chromosome as the variant
             else {
                 String gene_chromosome = reported_gene_result.getString("seq_region_name");
                 int same_chromosome = 0;
                 for (Location location : this.locations) {
                     String snp_chromosome = location.getChromosomeName();
-                    if (gene_chromosome == snp_chromosome) {
+                    if (gene_chromosome.equals(snp_chromosome)) {
                         same_chromosome = 1;
                         break;
                     }

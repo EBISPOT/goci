@@ -78,23 +78,26 @@ public class EnsemblRestService {
                 }
             }
             url = new URL(server + this.rest_endpoint + this.rest_data + this.rest_parameters);
+            //System.out.println(server + this.rest_endpoint + this.rest_data + this.rest_parameters+"\n");
         }
         catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
-        URLConnection connection = (url != null) ? url.openConnection() : null;
-        HttpURLConnection httpConnection = (HttpURLConnection)connection;
+        URLConnection urlConnection = (url != null) ? url.openConnection() : null;
+        HttpURLConnection httpConnection = (HttpURLConnection) urlConnection;
 
         httpConnection.setRequestMethod("GET"); // Method by default
         httpConnection.setRequestProperty("Content-Type", "application/json"); // Default output format
 
+        InputStream response = null;
 
-        InputStream response = connection.getInputStream();
         int responseCode = httpConnection.getResponseCode();
 
-        if(responseCode != 200) {
-            throw new RuntimeException("Response code was not 200. Detected response was "+responseCode);
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            response = httpConnection.getInputStream();
+        } else {
+            response = httpConnection.getErrorStream();
         }
 
         Reader reader = null;
