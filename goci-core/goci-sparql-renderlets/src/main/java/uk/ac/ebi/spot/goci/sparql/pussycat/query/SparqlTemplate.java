@@ -15,7 +15,7 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.impl.ResourceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.service.JenaQueryExecutionService;
 import uk.ac.ebi.spot.goci.pussycat.exception.DataIntegrityViolationException;
@@ -33,7 +33,7 @@ import java.util.Properties;
  * @author Tony Burdett
  * @date 21/08/14
  */
-@Component
+@Service
 public class SparqlTemplate {
 
     private JenaQueryExecutionService jenaQueryExecutionService;

@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.pussycat.renderlet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.pussycat.layout.SVGArea;
 import uk.ac.ebi.spot.goci.pussycat.layout.SVGDocument;
 
@@ -20,6 +21,7 @@ import java.util.Set;
  * @author Tony Burdett
  * @date 25/07/14
  */
+@Component
 public class DefaultRenderletNexus implements RenderletNexus {
     private Set<Renderlet> renderlets;
     private Map<Object, SVGArea> entityLocations;

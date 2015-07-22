@@ -3,7 +3,6 @@ package uk.ac.ebi.spot.goci.pussycat.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,8 +42,7 @@ import static uk.ac.ebi.spot.goci.pussycat.lang.Filtering.template;
 @Controller
 public class PussycatGOCIController {
 
-    @Autowired
-    @Value("JOIN")
+
     private PussycatSessionStrategy sessionStrategy;
     private PussycatManager pussycatManager;
 
@@ -58,10 +56,10 @@ public class PussycatGOCIController {
         return sessionStrategy;
     }
 
-//    @Autowired
-//    public void setSessionStrategy(PussycatSessionStrategy sessionStrategy) {
-//        this.sessionStrategy = sessionStrategy;
-//    }
+    @Autowired
+    public void setSessionStrategy(PussycatSessionStrategy sessionStrategy) {
+        this.sessionStrategy = sessionStrategy;
+    }
 
     public PussycatManager getPussycatManager() {
         return pussycatManager;
@@ -72,14 +70,20 @@ public class PussycatGOCIController {
         this.pussycatManager = pussycatManager;
     }
 
-    @RequestMapping(params = "clear")
+    @RequestMapping
+    public @ResponseBody String testBasicService(HttpSession session) throws PussycatSessionNotReadyException {
+        return "Welcome to the Pussycat server! Your session is " + session.getId()
+                + " and your Pussycat session is " +         getPussycatSession(session).getSessionID();
+    }
+    
+    @RequestMapping(value = "/clear")
     public @ResponseBody boolean clearRendering(HttpSession session) throws PussycatSessionNotReadyException {
         try {
             getRenderletNexus(session).reset();
             return true;
         }
         catch (PussycatSessionNotReadyException e) {
-            getLog().error("Attempting to clear a renderlet nexus with no bound pussycat session, nothing happened");
+       getLog().error("Attempting to clear a renderlet nexus with no bound pussycat session, nothing happened");
             return false;
         }
     }

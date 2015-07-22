@@ -29,7 +29,7 @@ public class SparqlPussycatSessionFactory implements PussycatSessionFactory {
 //    @Autowired
     private SparqlTemplate sparqlTemplate;
 
-    @Autowired
+    @Autowired(required = false)
     public SparqlPussycatSessionFactory(OntologyService ontologyService) {
         // create ontology Service using EFO location as environment property
         ResourceLoader loader = new PathMatchingResourcePatternResolver();
@@ -61,13 +61,14 @@ public class SparqlPussycatSessionFactory implements PussycatSessionFactory {
         }
     }
 
-    @Autowired
+    @Autowired(required = false)
     public SparqlPussycatSessionFactory(OntologyService ontologyService, SparqlTemplate sparqlTemplate) {
         this.ontologyService = ontologyService;
         this.sparqlTemplate = sparqlTemplate;
     }
 
     @Override public PussycatSession createPussycatSession() {
-        return new SparqlPussycatSession(ontologyService, sparqlTemplate);
+//        return new SparqlPussycatSession(ontologyService, sparqlTemplate);
+        return new SparqlPussycatSession();
     }
 }

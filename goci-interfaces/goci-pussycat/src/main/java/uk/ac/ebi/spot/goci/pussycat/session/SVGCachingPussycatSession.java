@@ -30,7 +30,8 @@ import java.util.Set;
  * @date 02/08/12
  */
 
-@Component("cachingSession")
+@Component
+@Qualifier("cachingSession")
 public class SVGCachingPussycatSession extends AbstractSVGIOPussycatSession {
 
     @Autowired
@@ -41,10 +42,10 @@ public class SVGCachingPussycatSession extends AbstractSVGIOPussycatSession {
         return proxiedSession;
     }
 
-    @Required
-    public void setProxiedSession(PussycatSession proxiedSession) {
-        this.proxiedSession = proxiedSession;
-    }
+//    @Required
+//    public void setProxiedSession(PussycatSession proxiedSession) {
+//        this.proxiedSession = proxiedSession;
+//    }
 
     @Override public String getSessionID() {
         return getProxiedSession().getSessionID();

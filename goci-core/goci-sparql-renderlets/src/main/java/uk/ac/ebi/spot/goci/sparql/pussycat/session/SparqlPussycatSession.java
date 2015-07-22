@@ -6,14 +6,15 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
 import uk.ac.ebi.spot.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
-import uk.ac.ebi.spot.goci.pussycat.session.AbstractPussycatSession;
 import uk.ac.ebi.spot.goci.pussycat.service.OntologyService;
+import uk.ac.ebi.spot.goci.pussycat.session.AbstractPussycatSession;
 import uk.ac.ebi.spot.goci.sparql.exception.SparqlQueryException;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.QuerySolutionMapper;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.SparqlTemplate;
@@ -36,7 +37,8 @@ import java.util.Set;
  * @date 21/08/14
  */
 
-@Component("proxiedSession")
+@Component
+@Qualifier("proxiedSession")
 public class SparqlPussycatSession extends AbstractPussycatSession {
 
     @Autowired
@@ -54,10 +56,12 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
         return log;
     }
 
-    @Autowired
-    public SparqlPussycatSession(OntologyService ontologyService, SparqlTemplate sparqlTemplate) {
-        this.ontologyService = ontologyService;
-        this.sparqlTemplate = sparqlTemplate;
+//    @Autowired
+    public SparqlPussycatSession() {
+
+//        public SparqlPussycatSession(OntologyService ontologyService, SparqlTemplate sparqlTemplate) {
+//        this.ontologyService = ontologyService;
+//        this.sparqlTemplate = sparqlTemplate;
 
     }
 
@@ -79,6 +83,7 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
 
     @Override public String performRendering(RenderletNexus renderletNexus, Filter... filters)
             throws PussycatSessionNotReadyException {
+
         getLog().debug("Rendering SVG from SPARQL endpoint (filters = '" + filters + "')...");
         try {
             // render

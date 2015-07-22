@@ -54,6 +54,7 @@ public class DefaultPussycatManager implements PussycatManager {
         return nexusFactory;
     }
 
+    @Autowired
     public void setNexusFactory(RenderletNexusFactory nexusFactory) {
         this.nexusFactory = nexusFactory;
     }

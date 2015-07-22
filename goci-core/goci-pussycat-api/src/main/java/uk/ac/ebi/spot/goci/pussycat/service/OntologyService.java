@@ -95,9 +95,6 @@ public class OntologyService {
                         }
                         labelToClassMap.get(name).add(owlClass);
                     }
-                    else {
-                        System.out.println("Class " + owlClass.getIRI().toString() + " doesn't have a label");
-                    }
                 }
 
                 // get IRI, and enter it into the map
@@ -252,7 +249,6 @@ public class OntologyService {
             for (OWLClassExpression oce : superclasses) {
                 if (!oce.isAnonymous() &&
                         oce.asOWLClass().getIRI().toURI().equals(obsoleteClass.getIRI().toURI())) {
-                    System.out.println(owlClass.getIRI().toString() + " is a child of obsolete class");
                     return true;
                 }
             }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.spot.goci.pussycat.utils.StringUtils;
 
+import javax.annotation.PostConstruct;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -27,8 +28,13 @@ public abstract class AbstractPussycatSession implements PussycatSession {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     protected AbstractPussycatSession() {
-        this.sessionID = generateSessionID();
+//        this.sessionID = generateSessionID();
 //        this.renderlets = getAvailableRenderlets();
+    }
+
+    @PostConstruct
+    public void init(){
+        this.sessionID = generateSessionID();
     }
 
     protected Logger getLog() {

@@ -52,7 +52,7 @@ public class CatalogMetaDataRepository {
                 "WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL AND H.CATALOG_UNPUBLISH_DATE IS NULL)";
 
 
-    @Autowired(required = false)
+    @Autowired//(required = false)
     public CatalogMetaDataRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.df = new SimpleDateFormat("yyyy-MM-dd");
