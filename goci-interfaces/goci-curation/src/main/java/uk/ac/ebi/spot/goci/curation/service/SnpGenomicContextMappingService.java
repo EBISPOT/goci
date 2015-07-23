@@ -166,6 +166,7 @@ public class SnpGenomicContextMappingService {
      * @param source              the source of mapping, either Ensembl or Entrez
      */
     private void storeGenes(Map<String, Set<String>> geneToExternalIdMap, String source) {
+
         for (String geneName : geneToExternalIdMap.keySet()) {
 
             Set<String> externalIds = geneToExternalIdMap.get(geneName);
