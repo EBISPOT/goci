@@ -31,7 +31,9 @@ import uk.ac.ebi.spot.goci.curation.service.AssociationFormErrorViewService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationViewService;
 import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
+import uk.ac.ebi.spot.goci.curation.service.SnpGenomicContextMappingService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
+import uk.ac.ebi.spot.goci.curation.service.SnpLocationMappingService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Gene;
@@ -91,6 +93,8 @@ public class AssociationController {
     private SnpInteractionAssociationService snpInteractionAssociationService;
     private LociAttributesService lociAttributesService;
     private AssociationFormErrorViewService associationFormErrorViewService;
+    private SnpLocationMappingService snpLocationMappingService;
+    private SnpGenomicContextMappingService snpGenomicContextMappingService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -110,7 +114,9 @@ public class AssociationController {
                                  SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService,
                                  SnpInteractionAssociationService snpInteractionAssociationService,
                                  LociAttributesService lociAttributesService,
-                                 AssociationFormErrorViewService associationFormErrorViewService) {
+                                 AssociationFormErrorViewService associationFormErrorViewService,
+                                 SnpLocationMappingService snpLocationMappingService,
+                                 SnpGenomicContextMappingService snpGenomicContextMappingService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -123,7 +129,10 @@ public class AssociationController {
         this.snpInteractionAssociationService = snpInteractionAssociationService;
         this.lociAttributesService = lociAttributesService;
         this.associationFormErrorViewService = associationFormErrorViewService;
+        this.snpLocationMappingService = snpLocationMappingService;
+        this.snpGenomicContextMappingService = snpGenomicContextMappingService;
     }
+
 
     /*  Study SNP/Associations */
 
@@ -1019,9 +1028,14 @@ public class AssociationController {
         // For the study get all associations
         Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
 
-        // Maps to store returned mapped data
+        // Maps to store returned location data, this is used as
+        // snpLocationMappingService process all locations linked to a single snp
+        // in one go
         Map<String, Set<Location>> snpToLocationsMap = new HashMap<>();
-        Map<String, Set<GenomicContext>> snpToGenomicContextMap = new HashMap<>();
+
+        // Collection to store all genomic contexts
+        Collection<GenomicContext> allGenomicContexts = new ArrayList<>();
+
 
         // For each association get the loci
         for (Association studyAssociation : studyAssociations) {
@@ -1048,12 +1062,12 @@ public class AssociationController {
                     EnsemblMappingPipeline ensemblMappingPipeline =
                             new EnsemblMappingPipeline(snpRsId, authorReportedGeneNamesLinkedToSnp);
                     ensemblMappingPipeline.run_pipeline();
-/*
-                    // TODO LAURENT NEEDS TO ADD GETTER AND SETTERS TO THIS MAPPING CLASS
+
                     Collection<Location> locations = ensemblMappingPipeline.getLocations();
-                    Collection<GenomicContext> genomicContexts = ensemblMappingPipeline.getGenomic_contexts();
+                    Collection<GenomicContext> snpGenomicContexts = ensemblMappingPipeline.getGenomicContexts();
+                    ArrayList<String> pipelineErrors = ensemblMappingPipeline.getPipelineErrors();
 
-
+                    // Store location information for SNP
                     for (Location location : locations) {
 
                         // Next time we see SNP, add location to set
@@ -1070,28 +1084,16 @@ public class AssociationController {
                         }
                     }
 
-                    for (GenomicContext genomicContext : genomicContexts) {
-
-                        // Next time we see SNP, add genomic context to set
-                        if (snpToGenomicContextMap.containsKey(snpRsId)) {
-                            snpToGenomicContextMap.get(snpRsId).add(genomicContext);
-                        }
-
-                        // First time we see a SNP store the genomic context
-                        else {
-                            Set<GenomicContext> snpGenomicContext = new HashSet<>();
-                            snpGenomicContext.add(genomicContext);
-                            snpToGenomicContextMap.put(snpRsId, snpGenomicContext);
-                        }
-                    }
-
-                    // TODO THEN SEND MAP OF RS_ID AND LOCATIONS OR GENOMIC CONTEXT TO CODE THAT SAVES*/
-
+                    // Store genomic context data for snp
+                    allGenomicContexts.addAll(snpGenomicContexts);
                 }
 
             }
         }
 
+        // Save data
+        snpLocationMappingService.storeSnpLocation(snpToLocationsMap);
+    //    snpGenomicContextMappingService.processGenomicContext(allGenomicContexts);
         return "redirect:/studies/" + studyId + "/associations";
 
     }
