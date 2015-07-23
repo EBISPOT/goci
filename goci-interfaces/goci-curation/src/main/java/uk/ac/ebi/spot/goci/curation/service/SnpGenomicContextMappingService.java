@@ -252,7 +252,7 @@ public class SnpGenomicContextMappingService {
         // Go through each rs_id and its associated genomic contexts returned from the mapping pipeline
         for (String snpRsId : snpToGenomicContextMap.keySet()) {
 
-            Set<GenomicContext> genomicContextsInForm = snpToGenomicContextMap.get(snpRsId);
+            Set<GenomicContext> genomicContextsFromMapping = snpToGenomicContextMap.get(snpRsId);
 
             // Check if the SNP exists
             List<SingleNucleotidePolymorphism> snpsInDatabase =
@@ -271,26 +271,26 @@ public class SnpGenomicContextMappingService {
 
                     Collection<GenomicContext> newSnpGenomicContexts = new ArrayList<>();
 
-                    for (GenomicContext genomicContextInForm : genomicContextsInForm) {
+                    for (GenomicContext genomicContextFromMapping : genomicContextsFromMapping) {
 
                         // Gene should already have been created
-                        String geneName = genomicContextInForm.getGene().getGeneName().trim();
+                        String geneName = genomicContextFromMapping.getGene().getGeneName().trim();
 
                         if (!geneName.equalsIgnoreCase("undefined")) {
-                            
+
                             // Create new genomic context
-                            Boolean isIntergenic = genomicContextInForm.getIsIntergenic();
-                            Boolean isUpstream = genomicContextInForm.getIsUpstream();
-                            Boolean isDownstream = genomicContextInForm.getIsDownstream();
-                            Long distance = genomicContextInForm.getDistance();
-                            String source = genomicContextInForm.getSource();
-                            String mappingMethod = genomicContextInForm.getMappingMethod();
-                            Boolean isClosestGene = genomicContextInForm.getIsClosestGene();
+                            Boolean isIntergenic = genomicContextFromMapping.getIsIntergenic();
+                            Boolean isUpstream = genomicContextFromMapping.getIsUpstream();
+                            Boolean isDownstream = genomicContextFromMapping.getIsDownstream();
+                            Long distance = genomicContextFromMapping.getDistance();
+                            String source = genomicContextFromMapping.getSource();
+                            String mappingMethod = genomicContextFromMapping.getMappingMethod();
+                            Boolean isClosestGene = genomicContextFromMapping.getIsClosestGene();
 
                             // Location details
-                            String chromosomeName = genomicContextInForm.getLocation().getChromosomeName();
-                            String chromosomePosition = genomicContextInForm.getLocation().getChromosomePosition();
-                            String regionName = genomicContextInForm.getLocation().getRegion().getName();
+                            String chromosomeName = genomicContextFromMapping.getLocation().getChromosomeName();
+                            String chromosomePosition = genomicContextFromMapping.getLocation().getChromosomePosition();
+                            String regionName = genomicContextFromMapping.getLocation().getRegion().getName();
 
                             // Check if location already exists
                             Location location =
