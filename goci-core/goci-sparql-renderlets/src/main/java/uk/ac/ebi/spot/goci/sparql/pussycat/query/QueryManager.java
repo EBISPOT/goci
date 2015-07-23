@@ -87,7 +87,7 @@ public class QueryManager {
     }
 
     private final Map<List<Object>, Object> requestCache;
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger("rendering");
 
     protected Logger getLog() {
         return log;

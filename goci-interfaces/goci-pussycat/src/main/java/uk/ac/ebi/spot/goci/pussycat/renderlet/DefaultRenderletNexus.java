@@ -6,14 +6,7 @@ import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.pussycat.layout.SVGArea;
 import uk.ac.ebi.spot.goci.pussycat.layout.SVGDocument;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Javadocs go here!
@@ -28,7 +21,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
     private Map<Object, RenderingEvent> renderedEntities;
     private SVGDocument svgDocument;
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger("rendering");
 
     public DefaultRenderletNexus() {
         this.renderlets = new HashSet<Renderlet>();
@@ -72,6 +65,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
         // sort (naturally ordered according to priority)
         Collections.sort(events);
         // and add all the SVG required
+        getLog().debug("There are " + events.size() + " stored rendering events");
         for (RenderingEvent re : events) {
             svgBuilder.append(re.getRenderedSVG());
         }

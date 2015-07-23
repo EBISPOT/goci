@@ -50,7 +50,7 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
 
     private boolean rendering = false;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LoggerFactory.getLogger("rendering");
 
     protected Logger getLog() {
         return log;
@@ -93,9 +93,12 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                 try {
                     getLog().debug("Querying SPARQL endpoint for GWAS data...");
                     List<URI> chromosomes = loadChromosomes(getSparqlTemplate());
+                    getLog().debug("Acquired " + chromosomes.size() + " chromosomes to render");
                     List<URI> individuals = new ArrayList<URI>();
                     individuals.addAll(loadAssociations(getSparqlTemplate()));
                     individuals.addAll(loadTraits(getSparqlTemplate()));
+                    getLog().debug("Acquired " + individuals.size() + " individuals to render");
+
                     getLog().debug("GWAS data acquired, starting rendering...");
 
                     // render chromosomes first
@@ -195,7 +198,8 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
     }
 
     private List<URI> loadChromosomes(SparqlTemplate sparqlTemplate) {
-        return sparqlTemplate.query("SELECT DISTINCT ?uri WHERE { ?uri rdfs:subClassOf gt:Chromosome }", "uri");
+//        return sparqlTemplate.query("SELECT DISTINCT ?uri WHERE { ?uri rdfs:subClassOf gt:Chromosome }", "uri");
+        return sparqlTemplate.query("SELECT DISTINCT ?uri WHERE { ?uri a gt:Chromosome }", "uri");
     }
 
     private List<URI> loadAssociations(SparqlTemplate sparqlTemplate) {
@@ -205,7 +209,9 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                                              "  ?association a gt:TraitAssociation ; " +
                                              "               oban:has_subject ?snp . " +
                                              "  ?snp ro:located_in ?bandUri . " +
-                                             "  ?bandUri rdfs:label ?band }",
+                                             "  ?bandUri rdfs:label ?band ." +
+                                             "  FILTER (STR(?band) != 'NR') }",   /*had to add this line in to exclude "NR" bands as they break the AssociationLocation bit below
+                                                                                    and can't be rendered anyway*/
                                      new QuerySolutionMapper<AssociationLocation>() {
                                          @Override public AssociationLocation mapQuerySolution(QuerySolution qs) {
                                              URI association = URI.create(qs.getResource("association").getURI());

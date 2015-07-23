@@ -45,7 +45,7 @@ public class OntologyService {
     private OWLClass obsoleteClass;
 
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LoggerFactory.getLogger("rendering");
 
     protected Logger getLog() {
         return log;

@@ -1,14 +1,7 @@
 package uk.ac.ebi.spot.goci.sparql.pussycat.query;
 
 import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.query.ParameterizedSparqlString;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.QuerySolutionMap;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.query.Syntax;
+import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -21,6 +14,7 @@ import uk.ac.ebi.fgpt.lode.service.JenaQueryExecutionService;
 import uk.ac.ebi.spot.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.spot.goci.sparql.exception.SparqlQueryException;
 
+import javax.annotation.Resource;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +34,7 @@ public class SparqlTemplate {
 
     private String prefixes;
 
+    @Resource(name="prefixProperties")
     private Properties prefixProperties;
 
     public JenaQueryExecutionService getJenaQueryExecutionService() {
@@ -64,11 +59,11 @@ public class SparqlTemplate {
         return prefixProperties;
     }
 
-    @Autowired
-    @Required
-    public void setPrefixProperties(Properties prefixProperties) {
-        this.prefixProperties = prefixProperties;
-    }
+//    @Autowired
+//    @Required
+//    public void setPrefixProperties(Properties prefixProperties) {
+//        this.prefixProperties = prefixProperties;
+//    }
 
     public String getPrefixString() {
         if (getPrefixes() != null) {

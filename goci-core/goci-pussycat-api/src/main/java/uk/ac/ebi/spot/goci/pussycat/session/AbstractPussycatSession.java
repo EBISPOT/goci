@@ -25,7 +25,7 @@ public abstract class AbstractPussycatSession implements PussycatSession {
     private String sessionID;
     private Collection<Renderlet> renderlets;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LoggerFactory.getLogger("rendering");
 
     protected AbstractPussycatSession() {
 //        this.sessionID = generateSessionID();

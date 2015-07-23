@@ -14,7 +14,7 @@ public class BandInformation implements Comparable<BandInformation> {
     private final String bandName;
     private final String chromosome;
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger("rendering");
 
     protected Logger getLog() {
         return log;

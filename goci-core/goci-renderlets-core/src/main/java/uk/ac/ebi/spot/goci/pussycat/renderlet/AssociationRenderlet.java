@@ -20,7 +20,7 @@ public abstract class AssociationRenderlet<C, E> implements Renderlet<C, E> {
     private final Map<BandInformation, SVGArea> renderedBands;
     private Map<C, Map<BandInformation, BandInformation>> previousBandMapByContext;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LoggerFactory.getLogger("rendering");
 
     public AssociationRenderlet() {
         this.previousBandMapByContext = new HashMap<C, Map<BandInformation, BandInformation>>();

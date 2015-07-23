@@ -166,7 +166,7 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
         // use the sparqlTemplate to get all individuals of type "cytogenic region"
         getLog().trace("Retrieving all cytogenetic bands to sort into rendering order...");
         List<BandInformation> bands = sparqlTemplate.query(
-                "SELECT DISTINCT ?band WHERE { ?bandUri a gt:CytogeneticRegion ; rdfs:label ?band . }",
+                "SELECT DISTINCT ?band WHERE { ?bandUri a gt:CytogeneticRegion ; rdfs:label ?band . FILTER (STR(?band) != 'NR') .}",
                 new QuerySolutionMapper<BandInformation>() {
                     @Override public BandInformation mapQuerySolution(QuerySolution qs) {
                         return new BandInformation(qs.getLiteral("band").getLexicalForm());

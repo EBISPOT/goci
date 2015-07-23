@@ -13,20 +13,34 @@
         <file>${LOG_PATH}/gwas_pussycat.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- rollover daily -->
-            <fileNamePattern>${LOG_PATH}/gwas_curation.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/gwas_pussycat.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>10MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
     </appender>
 
-    <logger name="uk.ac.ebi.spot.goci.curation" level="DEBUG" additivity="false">
-        <appender-ref ref="FILE" />
+    <appender name="RENDERING-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <file>${LOG_PATH}/rendering.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOG_PATH}/rendering.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="rendering" level="TRACE" additivity="false">
+        <appender-ref ref="RENDERING-FILE" />
     </logger>
 
     <root level="DEBUG">
-        <appender-ref ref="CONSOLE" />
-        <!--<appender-ref ref="FILE" />-->
+        <!--<appender-ref ref="CONSOLE" />-->
+        <appender-ref ref="FILE" />
     </root>
 
 </configuration> 
