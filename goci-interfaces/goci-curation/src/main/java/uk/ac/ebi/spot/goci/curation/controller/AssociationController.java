@@ -1093,7 +1093,7 @@ public class AssociationController {
 
         // Save data
         snpLocationMappingService.storeSnpLocation(snpToLocationsMap);
-    //    snpGenomicContextMappingService.processGenomicContext(allGenomicContexts);
+        snpGenomicContextMappingService.processGenomicContext(allGenomicContexts);
         return "redirect:/studies/" + studyId + "/associations";
 
     }
