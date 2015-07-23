@@ -6,11 +6,15 @@ import uk.ac.ebi.spot.goci.model.EnsemblGene;
 import uk.ac.ebi.spot.goci.model.EntrezGene;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
+import uk.ac.ebi.spot.goci.model.Location;
+import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.EnsemblGeneRepository;
 import uk.ac.ebi.spot.goci.repository.EntrezGeneRepository;
 import uk.ac.ebi.spot.goci.repository.GeneRepository;
 import uk.ac.ebi.spot.goci.repository.GenomicContextRepository;
+import uk.ac.ebi.spot.goci.repository.LocationRepository;
+import uk.ac.ebi.spot.goci.repository.RegionRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
 import java.util.ArrayList;
@@ -39,6 +43,8 @@ public class SnpGenomicContextMappingService {
     private GenomicContextRepository genomicContextRepository;
     private EnsemblGeneRepository ensemblGeneRepository;
     private EntrezGeneRepository entrezGeneRepository;
+    private LocationRepository locationRepository;
+    private RegionRepository regionRepository;
 
     //Constructor
     @Autowired
@@ -46,14 +52,17 @@ public class SnpGenomicContextMappingService {
                                            GeneRepository geneRepository,
                                            GenomicContextRepository genomicContextRepository,
                                            EnsemblGeneRepository ensemblGeneRepository,
-                                           EntrezGeneRepository entrezGeneRepository) {
+                                           EntrezGeneRepository entrezGeneRepository,
+                                           LocationRepository locationRepository,
+                                           RegionRepository regionRepository) {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.geneRepository = geneRepository;
         this.genomicContextRepository = genomicContextRepository;
         this.ensemblGeneRepository = ensemblGeneRepository;
         this.entrezGeneRepository = entrezGeneRepository;
+        this.locationRepository = locationRepository;
+        this.regionRepository = regionRepository;
     }
-
 
     /**
      * Takes genomic context information returned by mapping pipeline and creates a structure that links an rs_id to all
@@ -268,7 +277,7 @@ public class SnpGenomicContextMappingService {
                         String geneName = genomicContextInForm.getGene().getGeneName().trim();
 
                         if (!geneName.equalsIgnoreCase("undefined")) {
-                            //TODO ADD NEW LOCATION LOGIC
+                            
                             // Create new genomic context
                             Boolean isIntergenic = genomicContextInForm.getIsIntergenic();
                             Boolean isUpstream = genomicContextInForm.getIsUpstream();
@@ -278,6 +287,24 @@ public class SnpGenomicContextMappingService {
                             String mappingMethod = genomicContextInForm.getMappingMethod();
                             Boolean isClosestGene = genomicContextInForm.getIsClosestGene();
 
+                            // Location details
+                            String chromosomeName = genomicContextInForm.getLocation().getChromosomeName();
+                            String chromosomePosition = genomicContextInForm.getLocation().getChromosomePosition();
+                            String regionName = genomicContextInForm.getLocation().getRegion().getName();
+
+                            // Check if location already exists
+                            Location location =
+                                    locationRepository.findByChromosomeNameAndChromosomePositionAndRegionName(
+                                            chromosomeName,
+                                            chromosomePosition,
+                                            regionName);
+
+                            if (location != null){
+                                location = createLocation(chromosomeName,
+                                                          chromosomePosition,
+                                                          regionName);
+                            }
+
                             GenomicContext genomicContext = createGenomicContext(isIntergenic,
                                                                                  isUpstream,
                                                                                  isDownstream,
@@ -286,7 +313,7 @@ public class SnpGenomicContextMappingService {
                                                                                  mappingMethod,
                                                                                  geneName,
                                                                                  snpInDatabase,
-                                                                                 isClosestGene);
+                                                                                 isClosestGene, location);
 
                             newSnpGenomicContexts.add(genomicContext);
                         }
@@ -453,6 +480,7 @@ public class SnpGenomicContextMappingService {
      * @param geneName
      * @param snpIdInDatabase
      * @param isClosestGene
+     * @param location
      */
     private GenomicContext createGenomicContext(Boolean isIntergenic,
                                                 Boolean isUpstream,
@@ -462,7 +490,7 @@ public class SnpGenomicContextMappingService {
                                                 String mappingMethod,
                                                 String geneName,
                                                 SingleNucleotidePolymorphism snpIdInDatabase,
-                                                Boolean isClosestGene) {
+                                                Boolean isClosestGene, Location location) {
 
         GenomicContext genomicContext = new GenomicContext();
 
@@ -481,10 +509,36 @@ public class SnpGenomicContextMappingService {
         genomicContext.setMappingMethod(mappingMethod);
         genomicContext.setSnp(snpIdInDatabase);
         genomicContext.setIsClosestGene(isClosestGene);
+        genomicContext.setLocation(location);
 
         // Save genomic context
         genomicContextRepository.save(genomicContext);
 
         return genomicContext;
+    }
+
+    private Location createLocation(String chromosomeName,
+                                    String chromosomePosition,
+                                    String regionName) {
+
+
+        Region region = null;
+        region = regionRepository.findByName(regionName);
+
+        // If the region doesn't exist, save it
+        if (region == null) {
+            Region newRegion = new Region();
+            newRegion.setName(regionName);
+            region = regionRepository.save(newRegion);
+        }
+
+        Location newLocation = new Location();
+        newLocation.setChromosomeName(chromosomeName);
+        newLocation.setChromosomePosition(chromosomePosition);
+        newLocation.setRegion(region);
+
+        // Save location
+        locationRepository.save(newLocation);
+        return newLocation;
     }
 }
