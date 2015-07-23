@@ -5,6 +5,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by Laurent on 12/05/15.
@@ -18,10 +19,6 @@ public interface GenomicContextRepository extends JpaRepository<GenomicContext, 
 
     Collection<GenomicContext> findBySnpId(Long snpId);
 
-    GenomicContext findByIsIntergenicAndIsUpstreamAndIsDownstreamAndDistanceAndGeneGeneNameAndSourceAndMappingMethodAndSnpId(
-            Boolean isIntergenic,
-            Boolean isUpstream,
-            Boolean isDownstream,
-            Long distance, String geneName, String source, String mappingMethod, Long snpId);
+    List<GenomicContext> findByLocationId(Long locationId);
 
 }
