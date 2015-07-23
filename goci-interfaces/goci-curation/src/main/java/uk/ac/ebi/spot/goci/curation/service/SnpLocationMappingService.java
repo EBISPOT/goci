@@ -3,9 +3,11 @@ package uk.ac.ebi.spot.goci.curation.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.SnpMappingForm;
+import uk.ac.ebi.spot.goci.model.GenomicContext;
 import uk.ac.ebi.spot.goci.model.Location;
 import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.repository.GenomicContextRepository;
 import uk.ac.ebi.spot.goci.repository.LocationRepository;
 import uk.ac.ebi.spot.goci.repository.RegionRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
@@ -31,15 +33,18 @@ public class SnpLocationMappingService {
     private LocationRepository locationRepository;
     private RegionRepository regionRepository;
     private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
+    private GenomicContextRepository genomicContextRepository;
 
     //Constructor
     @Autowired
     public SnpLocationMappingService(LocationRepository locationRepository,
                                      RegionRepository regionRepository,
-                                     SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository) {
+                                     SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
+                                     GenomicContextRepository genomicContextRepository) {
         this.locationRepository = locationRepository;
         this.regionRepository = regionRepository;
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
+        this.genomicContextRepository = genomicContextRepository;
     }
 
     /**
@@ -197,11 +202,14 @@ public class SnpLocationMappingService {
         return newLocation;
     }
 
-    // Method to remove any old locations that no longer have snps linked to them
+    // Method to remove any old locations that no longer have snps or genomic contexts linked to them
     private void cleanUpLocations(Long id) {
         List<SingleNucleotidePolymorphism> snps =
                 singleNucleotidePolymorphismRepository.findByLocationsId(id);
-        if (snps.size() == 0) {
+
+        List<GenomicContext> genomicContexts= genomicContextRepository.findByLocationId(id);
+
+        if (snps.size() == 0 && genomicContexts.size() == 0) {
             locationRepository.delete(id);
         }
     }
