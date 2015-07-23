@@ -94,6 +94,13 @@ public class SnpLocationMappingService {
                     // Store all new location objects
                     Collection<Location> newSnpLocations = new ArrayList<>();
 
+                    // Get a list of locations currently linked to our SNP
+                    Collection<Location> oldSnpLocations = snpInDatabase.getLocations();
+                    Collection<Long> oldSnpLocationIds = new ArrayList<>();
+                    for (Location oldSnpLocation : oldSnpLocations) {
+                        oldSnpLocationIds.add(oldSnpLocation.getId());
+                    }
+
                     for (Location snpLocationFromMapping : snpLocationsFromMapping) {
 
                         String chromosomeNameFromMapping = snpLocationFromMapping.getChromosomeName();
@@ -138,9 +145,6 @@ public class SnpLocationMappingService {
                     // If we have new locations then link to snp and save
                     if (newSnpLocations.size() > 0) {
 
-                        // Get a list of locations currently linked to our SNP
-                        Collection<Location> oldSnpLocations = snpInDatabase.getLocations();
-
                         // Set new location details
                         snpInDatabase.setLocations(newSnpLocations);
                         // Update the last update date
@@ -148,9 +152,9 @@ public class SnpLocationMappingService {
                         singleNucleotidePolymorphismRepository.save(snpInDatabase);
 
                         // Clean-up old locations that were linked to SNP
-                        if (oldSnpLocations != null && oldSnpLocations.size() > 0) {
-                            for (Location oldSnpLocation : oldSnpLocations) {
-                                cleanUpLocations(oldSnpLocation);
+                        if (oldSnpLocationIds != null && oldSnpLocationIds.size() > 0) {
+                            for (Long oldSnpLocationId : oldSnpLocationIds) {
+                                cleanUpLocations(oldSnpLocationId);
                             }
                         }
                     }
@@ -194,11 +198,11 @@ public class SnpLocationMappingService {
     }
 
     // Method to remove any old locations that no longer have snps linked to them
-    private void cleanUpLocations(Location oldSnpLocation) {
+    private void cleanUpLocations(Long id) {
         List<SingleNucleotidePolymorphism> snps =
-                singleNucleotidePolymorphismRepository.findByLocationsId(oldSnpLocation.getId());
+                singleNucleotidePolymorphismRepository.findByLocationsId(id);
         if (snps.size() == 0) {
-            locationRepository.delete(oldSnpLocation);
+            locationRepository.delete(id);
         }
     }
 
