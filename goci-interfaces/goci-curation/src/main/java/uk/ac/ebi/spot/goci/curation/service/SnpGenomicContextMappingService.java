@@ -116,28 +116,34 @@ public class SnpGenomicContextMappingService {
                 Collection<EnsemblGene> ensemblGeneIds = genomicContext.getGene().getEnsemblGeneIds();
                 for (EnsemblGene ensemblGene : ensemblGeneIds) {
 
-                    if (geneToEnsemblIdMap.containsKey(geneName)) {
-                        geneToEnsemblIdMap.get(geneName).add(ensemblGene.getEnsemblGeneId());
-                    }
+                    String ensemblId = ensemblGene.getEnsemblGeneId();
+                    if (ensemblId != null) {
+                        if (geneToEnsemblIdMap.containsKey(geneName)) {
+                            geneToEnsemblIdMap.get(geneName).add(ensemblId);
+                        }
 
-                    else {
-                        Set<String> ensemblGeneIdsSet = new HashSet<>();
-                        ensemblGeneIdsSet.add(ensemblGene.getEnsemblGeneId());
-                        geneToEnsemblIdMap.put(geneName, ensemblGeneIdsSet);
+                        else {
+                            Set<String> ensemblGeneIdsSet = new HashSet<>();
+                            ensemblGeneIdsSet.add(ensemblId);
+                            geneToEnsemblIdMap.put(geneName, ensemblGeneIdsSet);
+                        }
                     }
                 }
 
                 Collection<EntrezGene> entrezGeneIds = genomicContext.getGene().getEntrezGeneIds();
                 for (EntrezGene entrezGene : entrezGeneIds) {
 
-                    if (geneToEntrezIdMap.containsKey(geneName)) {
-                        geneToEntrezIdMap.get(geneName).add(entrezGene.getEntrezGeneId());
-                    }
+                    String entrezId = entrezGene.getEntrezGeneId();
+                    if (entrezId != null) {
+                        if (geneToEntrezIdMap.containsKey(geneName)) {
+                            geneToEntrezIdMap.get(geneName).add(entrezId);
+                        }
 
-                    else {
-                        Set<String> entrezGeneIdsSet = new HashSet<>();
-                        entrezGeneIdsSet.add(entrezGene.getEntrezGeneId());
-                        geneToEntrezIdMap.put(geneName, entrezGeneIdsSet);
+                        else {
+                            Set<String> entrezGeneIdsSet = new HashSet<>();
+                            entrezGeneIdsSet.add(entrezId);
+                            geneToEntrezIdMap.put(geneName, entrezGeneIdsSet);
+                        }
                     }
                 }
             }
