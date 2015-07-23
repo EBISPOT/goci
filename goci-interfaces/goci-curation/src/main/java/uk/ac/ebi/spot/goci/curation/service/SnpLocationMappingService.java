@@ -42,8 +42,11 @@ public class SnpLocationMappingService {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
     }
 
-
-    /* Method used to format data returned from view via form so it can be stored in database */
+    /**
+     * Method used to format data returned from view via form so it can be stored in database
+     *
+     * @param snpMappingForms list of snp maaping forms which contain rs_id and associated location information
+     */
     public void processMappingForms(List<SnpMappingForm> snpMappingForms) {
 
         // Need to read through each form and flatten down information
@@ -77,7 +80,7 @@ public class SnpLocationMappingService {
         // Go through each rs_id and its associated locations returning from the mapping pipeline
         for (String snpRsId : snpToLocations.keySet()) {
 
-            Set<Location> snpLocationsInForm = snpToLocations.get(snpRsId);
+            Set<Location> snpLocationsFromMapping = snpToLocations.get(snpRsId);
 
             // Check if the SNP exists
             List<SingleNucleotidePolymorphism> snpsInDatabase =
@@ -91,32 +94,32 @@ public class SnpLocationMappingService {
                     // Store all new location objects
                     Collection<Location> newSnpLocations = new ArrayList<>();
 
-                    for (Location snpLocationInForm : snpLocationsInForm) {
+                    for (Location snpLocationFromMapping : snpLocationsFromMapping) {
 
-                        String chromosomeNameInForm = snpLocationInForm.getChromosomeName();
-                        if (chromosomeNameInForm != null) {
-                            chromosomeNameInForm = chromosomeNameInForm.trim();
+                        String chromosomeNameFromMapping = snpLocationFromMapping.getChromosomeName();
+                        if (chromosomeNameFromMapping != null) {
+                            chromosomeNameFromMapping = chromosomeNameFromMapping.trim();
                         }
 
-                        String chromosomePositionInForm = snpLocationInForm.getChromosomePosition();
-                        if (chromosomePositionInForm != null) {
-                            chromosomePositionInForm = chromosomePositionInForm.trim();
+                        String chromosomePositionFromMapping = snpLocationFromMapping.getChromosomePosition();
+                        if (chromosomePositionFromMapping != null) {
+                            chromosomePositionFromMapping = chromosomePositionFromMapping.trim();
                         }
 
-                        Region regionInForm = snpLocationInForm.getRegion();
-                        String regionNameInForm = null;
-                        if (regionInForm != null) {
-                            if (regionInForm.getName() != null) {
-                                regionNameInForm = regionInForm.getName().trim();
+                        Region regionFromMapping = snpLocationFromMapping.getRegion();
+                        String regionNameFromMapping = null;
+                        if (regionFromMapping != null) {
+                            if (regionFromMapping.getName() != null) {
+                                regionNameFromMapping = regionFromMapping.getName().trim();
                             }
                         }
 
                         // Check if location already exists
                         Location existingLocation =
                                 locationRepository.findByChromosomeNameAndChromosomePositionAndRegionName(
-                                        chromosomeNameInForm,
-                                        chromosomePositionInForm,
-                                        regionNameInForm);
+                                        chromosomeNameFromMapping,
+                                        chromosomePositionFromMapping,
+                                        regionNameFromMapping);
 
 
                         if (existingLocation != null) {
@@ -124,9 +127,9 @@ public class SnpLocationMappingService {
                         }
                         // Create new location
                         else {
-                            Location newLocation = createLocation(chromosomeNameInForm,
-                                                                  chromosomePositionInForm,
-                                                                  regionNameInForm);
+                            Location newLocation = createLocation(chromosomeNameFromMapping,
+                                                                  chromosomePositionFromMapping,
+                                                                  regionNameFromMapping);
 
                             newSnpLocations.add(newLocation);
                         }
@@ -165,24 +168,24 @@ public class SnpLocationMappingService {
         }
     }
 
-    private Location createLocation(String chromosomeNameInForm,
-                                    String chromosomePositionInForm,
-                                    String regionNameInForm) {
+    private Location createLocation(String chromosomeName,
+                                    String chromosomePosition,
+                                    String regionName) {
 
 
         Region region = null;
-        region = regionRepository.findByName(regionNameInForm);
+        region = regionRepository.findByName(regionName);
 
         // If the region doesn't exist, save it
         if (region == null) {
             Region newRegion = new Region();
-            newRegion.setName(regionNameInForm);
+            newRegion.setName(regionName);
             region = regionRepository.save(newRegion);
         }
 
         Location newLocation = new Location();
-        newLocation.setChromosomeName(chromosomeNameInForm);
-        newLocation.setChromosomePosition(chromosomePositionInForm);
+        newLocation.setChromosomeName(chromosomeName);
+        newLocation.setChromosomePosition(chromosomePosition);
         newLocation.setRegion(region);
 
         // Save location
