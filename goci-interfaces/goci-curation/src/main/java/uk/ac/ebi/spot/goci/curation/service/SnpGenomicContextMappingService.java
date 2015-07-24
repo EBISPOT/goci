@@ -206,6 +206,9 @@ public class SnpGenomicContextMappingService {
                         // Set latest IDs from mapping run
                         existingGeneInDatabase.setEnsemblGeneIds(newEnsemblGenes);
 
+                        // Save changes
+                        geneRepository.save(existingGeneInDatabase);
+
                         // Clean-up any Ensembl IDs that may now be left without a gene linked
                         for (EnsemblGene oldEnsemblIdLinkedToGene : oldEnsemblIdsLinkedToGene) {
                             cleanUpEnsemblGenes(oldEnsemblIdLinkedToGene);
@@ -227,15 +230,15 @@ public class SnpGenomicContextMappingService {
                         // Set latest IDs from mapping run
                         existingGeneInDatabase.setEntrezGeneIds(newEntrezGenes);
 
+                        // Save changes
+                        geneRepository.save(existingGeneInDatabase);
+
                         // Clean-up any Entrez IDs that may now be left without a gene linked
                         for (EntrezGene oldEntrezGeneLinkedToGene : oldEntrezGenesLinkedToGene) {
                             cleanUpEntrezGenes(oldEntrezGeneLinkedToGene);
                         }
 
                     }
-
-                    // Save changes
-                    geneRepository.save(existingGeneInDatabase);
                 }
             }
 
@@ -299,7 +302,7 @@ public class SnpGenomicContextMappingService {
                                             chromosomePosition,
                                             regionName);
 
-                            if (location != null){
+                            if (location != null) {
                                 location = createLocation(chromosomeName,
                                                           chromosomePosition,
                                                           regionName);
