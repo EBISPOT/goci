@@ -37,4 +37,6 @@ public interface GeneRepository extends JpaRepository<Gene, Long> {
    List<Gene> findByEnsemblGeneIdsEnsemblGeneId(String id);
 
    List<Gene> findByEntrezGeneIdsEntrezGeneId(String id);
+
+   List<Gene> findByGeneName(String geneName);
 }
