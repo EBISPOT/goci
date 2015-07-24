@@ -37,26 +37,17 @@ public class SingleSnpMultiSnpAssociationService {
     private GenomicContextRepository genomicContextRepository;
 
     // Services
-    private AssociationCalculationService associationCalculationService;
     private LociAttributesService lociAttributesService;
-    private SnpLocationMappingService snpLocationMappingService;
-    private SnpGenomicContextMappingService snpGenomicContextMappingService;
 
     @Autowired
     public SingleSnpMultiSnpAssociationService(AssociationRepository associationRepository,
                                                LocusRepository locusRepository,
                                                GenomicContextRepository genomicContextRepository,
-                                               AssociationCalculationService associationCalculationService,
-                                               LociAttributesService lociAttributesService,
-                                               SnpLocationMappingService snpLocationMappingService,
-                                               SnpGenomicContextMappingService snpGenomicContextMappingService) {
+                                               LociAttributesService lociAttributesService) {
         this.associationRepository = associationRepository;
         this.locusRepository = locusRepository;
         this.genomicContextRepository = genomicContextRepository;
-        this.associationCalculationService = associationCalculationService;
         this.lociAttributesService = lociAttributesService;
-        this.snpLocationMappingService = snpLocationMappingService;
-        this.snpGenomicContextMappingService = snpGenomicContextMappingService;
     }
 
 
@@ -182,17 +173,6 @@ public class SingleSnpMultiSnpAssociationService {
         // Add locus to collection and link to our association
         loci.add(locus);
         association.setLoci(loci);
-
-        // Store mapped location data, do this after the SNP objects have been created
-        if (snpAssociationForm.getSnpMappingForms().size() > 0) {
-            snpLocationMappingService.processMappingForms(snpAssociationForm.getSnpMappingForms());
-        }
-
-        // Store genomic context information associated with curator entered RS_IDs
-        if (snpAssociationForm.getGenomicContexts().size() > 0) {
-            snpGenomicContextMappingService.processGenomicContext(snpAssociationForm.getGenomicContexts());
-        }
-
         return association;
 
     }
