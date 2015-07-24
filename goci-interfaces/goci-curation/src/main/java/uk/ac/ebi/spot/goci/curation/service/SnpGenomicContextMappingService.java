@@ -197,7 +197,13 @@ public class SnpGenomicContextMappingService {
                     if (source.equalsIgnoreCase("Ensembl")) {
 
                         // Get a list of current Ensembl IDs linked to existing gene
-                        Collection<EnsemblGene> oldEnsemblIdsLinkedToGene = existingGeneInDatabase.getEnsemblGeneIds();
+                        Collection<EnsemblGene> oldEnsemblGenesLinkedToGene =
+                                existingGeneInDatabase.getEnsemblGeneIds();
+                        Collection<Long> oldEnsemblIdsLinkedToGene = new ArrayList<>();
+
+                        for (EnsemblGene oldEnsemblGeneLinkedToGene : oldEnsemblGenesLinkedToGene) {
+                            oldEnsemblIdsLinkedToGene.add(oldEnsemblGeneLinkedToGene.getId());
+                        }
 
                         Collection<EnsemblGene> newEnsemblGenes = new ArrayList<>();
                         for (String id : externalIds) {
@@ -212,7 +218,7 @@ public class SnpGenomicContextMappingService {
                         geneRepository.save(existingGeneInDatabase);
 
                         // Clean-up any Ensembl IDs that may now be left without a gene linked
-                        for (EnsemblGene oldEnsemblIdLinkedToGene : oldEnsemblIdsLinkedToGene) {
+                        for (Long oldEnsemblIdLinkedToGene : oldEnsemblIdsLinkedToGene) {
                             cleanUpEnsemblGenes(oldEnsemblIdLinkedToGene);
                         }
 
@@ -222,6 +228,11 @@ public class SnpGenomicContextMappingService {
 
                         // Get a list of of current Entrez IDs linked to existing gene
                         Collection<EntrezGene> oldEntrezGenesLinkedToGene = existingGeneInDatabase.getEntrezGeneIds();
+                        Collection<Long> oldEntrezGenesIdsLinkedToGene = new ArrayList<>();
+
+                        for (EntrezGene oldEntrezGeneLinkedToGene : oldEntrezGenesLinkedToGene) {
+                            oldEntrezGenesIdsLinkedToGene.add(oldEntrezGeneLinkedToGene.getId());
+                        }
 
                         Collection<EntrezGene> newEntrezGenes = new ArrayList<>();
                         for (String id : externalIds) {
@@ -236,8 +247,8 @@ public class SnpGenomicContextMappingService {
                         geneRepository.save(existingGeneInDatabase);
 
                         // Clean-up any Entrez IDs that may now be left without a gene linked
-                        for (EntrezGene oldEntrezGeneLinkedToGene : oldEntrezGenesLinkedToGene) {
-                            cleanUpEntrezGenes(oldEntrezGeneLinkedToGene);
+                        for (Long oldEntrezGenesIdLinkedToGene : oldEntrezGenesIdsLinkedToGene) {
+                            cleanUpEntrezGenes(oldEntrezGenesIdLinkedToGene);
                         }
 
                     }
@@ -459,35 +470,35 @@ public class SnpGenomicContextMappingService {
     /**
      * Method to clean-up an Ensembl gene ID in database that has no linked gene
      *
-     * @param ensemblGene Ensembl gene object to delete
+     * @param id Ensembl gene ID to delete
      */
 
-    private void cleanUpEnsemblGenes(EnsemblGene ensemblGene) {
+    private void cleanUpEnsemblGenes(Long id) {
 
         // Find any genes with this Ensembl ID
         List<Gene> genesWithEnsemblId =
-                geneRepository.findByEnsemblGeneIdsEnsemblGeneId(ensemblGene.getEnsemblGeneId());
+                geneRepository.findByEnsemblGeneIdsId(id);
 
         // If this ID is not linked to a gene then delete it
         if (genesWithEnsemblId.size() == 0) {
-            ensemblGeneRepository.delete(ensemblGene);
+            ensemblGeneRepository.delete(id);
         }
     }
 
     /**
      * Method to clean-up an Entrez gene ID in database that has no linked gene
      *
-     * @param entrezGene Entrez gene object to delete
+     * @param id Entrez gene ID to delete
      */
-    private void cleanUpEntrezGenes(EntrezGene entrezGene) {
+    private void cleanUpEntrezGenes(Long id) {
 
         // Find any genes with this Entrez ID
         List<Gene> geneWithEntrezIds =
-                geneRepository.findByEntrezGeneIdsEntrezGeneId(entrezGene.getEntrezGeneId());
+                geneRepository.findByEntrezGeneIdsId(id);
 
         // If this ID is not linked to a gene then delete it
         if (geneWithEntrezIds.size() == 0) {
-            entrezGeneRepository.delete(entrezGene);
+            entrezGeneRepository.delete(id);
         }
     }
 
