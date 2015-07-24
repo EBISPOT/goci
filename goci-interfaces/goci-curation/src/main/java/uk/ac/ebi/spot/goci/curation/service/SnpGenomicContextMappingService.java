@@ -306,7 +306,12 @@ public class SnpGenomicContextMappingService {
                             // Location details
                             String chromosomeName = genomicContextFromMapping.getLocation().getChromosomeName();
                             String chromosomePosition = genomicContextFromMapping.getLocation().getChromosomePosition();
-                            String regionName = genomicContextFromMapping.getLocation().getRegion().getName();
+                            Region regionFromMapping = genomicContextFromMapping.getLocation().getRegion();
+                            String regionName = null;
+
+                            if (regionFromMapping.getName() != null) {
+                                regionName = regionFromMapping.getName().trim();
+                            }
 
                             // Check if location already exists
                             Location location =
