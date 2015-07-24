@@ -181,7 +181,9 @@ public class SnpGenomicContextMappingService {
             Set<String> externalIds = geneToExternalIdMap.get(geneName);
 
             // Find any existing database genes that match the gene name
-            List<Gene> existingGenesInDatabase = geneRepository.findByGeneNameIgnoreCase(geneName);
+            // IgnoreCase query is not used here as we want
+            // the exact gene name returned from mapping
+            List<Gene> existingGenesInDatabase = geneRepository.findByGeneName(geneName);
 
             // If gene is not found in database then create one
             if (existingGenesInDatabase.size() == 0) {
@@ -497,8 +499,10 @@ public class SnpGenomicContextMappingService {
 
         GenomicContext genomicContext = new GenomicContext();
 
-        // Find gene
-        List<Gene> genesWithMatchingName = geneRepository.findByGeneNameIgnoreCase(geneName);
+        // Find gene, ignoreCase query is not used here as we want to
+        // only create a genomic context for
+        // the exact gene name returned from mapping
+        List<Gene> genesWithMatchingName = geneRepository.findByGeneName(geneName);
 
         // Account for duplicates
         Gene gene = genesWithMatchingName.get(0);
