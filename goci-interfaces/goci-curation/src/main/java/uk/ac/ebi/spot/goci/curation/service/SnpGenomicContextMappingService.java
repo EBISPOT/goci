@@ -393,7 +393,7 @@ public class SnpGenomicContextMappingService {
         // Check this ID is not linked to a gene with a different name,
         // this case should be extremely rare
         else {
-            if (!geneName.equals(ensemblGene.getGene().getGeneName())) {
+            if (!geneName.equalsIgnoreCase(ensemblGene.getGene().getGeneName())) {
                 throw new RuntimeException(
                         "Ensembl ID: " + id + ", is already used in database by gene: " +
                                 ensemblGene.getGene().getGeneName() + ". Cannot link to " + geneName);
@@ -423,7 +423,7 @@ public class SnpGenomicContextMappingService {
         // Check this ID is not linked to a gene with a different name,
         // this case should be extremely rare
         else {
-            if (!geneName.equals(entrezGene.getGene().getGeneName())) {
+            if (!geneName.equalsIgnoreCase(entrezGene.getGene().getGeneName())) {
                 throw new RuntimeException(
                         "Entrez ID: " + id + ", is already used in database by gene: " +
                                 entrezGene.getGene().getGeneName() + ". Cannot link to " + geneName);
