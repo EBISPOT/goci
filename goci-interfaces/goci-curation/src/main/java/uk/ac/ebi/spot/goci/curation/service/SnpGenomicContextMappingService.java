@@ -398,10 +398,19 @@ public class SnpGenomicContextMappingService {
         // Check this ID is not linked to a gene with a different name,
         // this case should be extremely rare
         else {
-            if (!geneName.equalsIgnoreCase(ensemblGene.getGene().getGeneName())) {
-                throw new RuntimeException(
-                        "Ensembl ID: " + id + ", is already used in database by gene: " +
-                                ensemblGene.getGene().getGeneName() + ". Cannot link to " + geneName);
+            Collection<Gene> existingGenesLinkedToId = ensemblGene.getGene();
+            Collection<String> existingGeneNamesLinkedToId = new ArrayList<>();
+
+            if (existingGenesLinkedToId != null && !existingGenesLinkedToId.isEmpty()) {
+                for (Gene existingGeneLinkedToId : existingGenesLinkedToId) {
+                    existingGeneNamesLinkedToId.add(existingGeneLinkedToId.getGeneName());
+                }
+
+                if (!existingGeneNamesLinkedToId.contains(geneName)) {
+                    throw new RuntimeException(
+                            "Ensembl ID: " + id + ", is already used in database by a different gene. Cannot link to " +
+                                    geneName);
+                }
             }
 
         }
@@ -428,13 +437,22 @@ public class SnpGenomicContextMappingService {
         // Check this ID is not linked to a gene with a different name,
         // this case should be extremely rare
         else {
-            if (!geneName.equalsIgnoreCase(entrezGene.getGene().getGeneName())) {
-                throw new RuntimeException(
-                        "Entrez ID: " + id + ", is already used in database by gene: " +
-                                entrezGene.getGene().getGeneName() + ". Cannot link to " + geneName);
+
+            Collection<Gene> existingGenesLinkedToId = entrezGene.getGene();
+            Collection<String> existingGeneNamesLinkedToId = new ArrayList<>();
+
+            if (existingGenesLinkedToId != null && !existingGenesLinkedToId.isEmpty()) {
+                for (Gene existingGeneLinkedToId : existingGenesLinkedToId) {
+                    existingGeneNamesLinkedToId.add(existingGeneLinkedToId.getGeneName());
+                }
+
+                if (!existingGeneNamesLinkedToId.contains(geneName)) {
+                    throw new RuntimeException(
+                            "Entrez ID: " + id + ", is already used in database by a different gene. Cannot link to " +
+                                    geneName);
+                }
             }
         }
-
         return entrezGene;
     }
 
