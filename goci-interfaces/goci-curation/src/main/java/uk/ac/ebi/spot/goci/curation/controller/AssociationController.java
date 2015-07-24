@@ -557,6 +557,17 @@ public class AssociationController {
         // Save our association information
         associationRepository.save(newAssociation);
 
+        // Store mapped location data, do this after the SNP objects have been created
+        if (snpAssociationForm.getSnpMappingForms().size() > 0) {
+            snpLocationMappingService.processMappingForms(snpAssociationForm.getSnpMappingForms());
+        }
+
+        // Store genomic context information associated with curator entered RS_IDs
+        if (snpAssociationForm.getGenomicContexts().size() > 0) {
+            snpGenomicContextMappingService.processGenomicContext(snpAssociationForm.getGenomicContexts());
+        }
+
+
         return "redirect:/associations/" + newAssociation.getId();
     }
 
@@ -576,6 +587,16 @@ public class AssociationController {
 
         // Save our association information
         associationRepository.save(newAssociation);
+
+        // Store mapped location data, do this after the SNP objects have been created
+        if (snpAssociationForm.getSnpMappingForms().size() > 0) {
+            snpLocationMappingService.processMappingForms(snpAssociationForm.getSnpMappingForms());
+        }
+
+        // Store genomic context information associated with curator entered RS_IDs
+        if (snpAssociationForm.getGenomicContexts().size() > 0) {
+            snpGenomicContextMappingService.processGenomicContext(snpAssociationForm.getGenomicContexts());
+        }
 
         return "redirect:/associations/" + newAssociation.getId();
     }
@@ -597,6 +618,16 @@ public class AssociationController {
 
         // Save our association information
         associationRepository.save(newAssociation);
+
+        // Store mapped location data, do this after the SNP objects have been created
+        if (snpAssociationInteractionForm.getSnpMappingForms().size() > 0) {
+            snpLocationMappingService.processMappingForms(snpAssociationInteractionForm.getSnpMappingForms());
+        }
+
+        // Store genomic context information associated with curator entered RS_IDs
+        if (snpAssociationInteractionForm.getGenomicContexts().size() > 0) {
+            snpGenomicContextMappingService.processGenomicContext(snpAssociationInteractionForm.getGenomicContexts());
+        }
 
         return "redirect:/associations/" + newAssociation.getId();
     }
@@ -763,6 +794,30 @@ public class AssociationController {
 
         // Save our association information
         associationRepository.save(editedAssociation);
+
+        // Store mapped location data, do this after the SNP objects have been created
+        if (snpAssociationForm != null) {
+            if (snpAssociationForm.getSnpMappingForms().size() > 0) {
+                snpLocationMappingService.processMappingForms(snpAssociationForm.getSnpMappingForms());
+            }
+
+            // Store genomic context information associated with curator entered RS_IDs
+            if (snpAssociationForm.getGenomicContexts().size() > 0) {
+                snpGenomicContextMappingService.processGenomicContext(snpAssociationForm.getGenomicContexts());
+            }
+        }
+
+        if (snpAssociationInteractionForm != null) {
+            // Store mapped location data, do this after the SNP objects have been created
+            if (snpAssociationInteractionForm.getSnpMappingForms().size() > 0) {
+                snpLocationMappingService.processMappingForms(snpAssociationInteractionForm.getSnpMappingForms());
+            }
+
+            // Store genomic context information associated with curator entered RS_IDs
+            if (snpAssociationInteractionForm.getGenomicContexts().size() > 0) {
+                snpGenomicContextMappingService.processGenomicContext(snpAssociationInteractionForm.getGenomicContexts());
+            }
+        }
 
         return "redirect:/associations/" + associationId;
     }
