@@ -5,14 +5,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
+import java.util.Collection;
 
 /**
  * Created by emma on 21/07/2015.
  *
  * @author emma
- * <p>
- * A model object representing a gene from Ensembl database
+ *         <p>
+ *         A model object representing a gene from Ensembl database
  */
 @Entity
 public class EnsemblGene {
@@ -23,17 +24,17 @@ public class EnsemblGene {
 
     private String ensemblGeneId;
 
-    @ManyToOne
+    @ManyToMany
     @JoinTable(name = "GENE_ENSEMBL_GENE",
                joinColumns = @JoinColumn(name = "ENSEMBL_GENE_ID"),
                inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
-    private Gene gene;
+    private Collection<Gene> gene;
 
     // JPA no-args constructor
     public EnsemblGene() {
     }
 
-    public EnsemblGene(String ensemblGeneId, Gene gene) {
+    public EnsemblGene(String ensemblGeneId, Collection<Gene> gene) {
         this.ensemblGeneId = ensemblGeneId;
         this.gene = gene;
     }
@@ -54,11 +55,11 @@ public class EnsemblGene {
         this.ensemblGeneId = ensemblGeneId;
     }
 
-    public Gene getGene() {
+    public Collection<Gene> getGene() {
         return gene;
     }
 
-    public void setGene(Gene gene) {
+    public void setGene(Collection<Gene> gene) {
         this.gene = gene;
     }
 }

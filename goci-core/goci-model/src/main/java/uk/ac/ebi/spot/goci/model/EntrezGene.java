@@ -5,7 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
+import java.util.Collection;
 
 /**
  * Created by emma on 21/07/2015.
@@ -23,17 +24,18 @@ public class EntrezGene {
 
     private String entrezGeneId;
 
-    @ManyToOne
+    @ManyToMany
     @JoinTable(name = "GENE_ENTREZ_GENE",
                joinColumns = @JoinColumn(name = "ENTREZ_GENE_ID"),
                inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
-    private Gene gene;
+    private Collection<Gene> gene;
 
     // JPA no-args constructor
     public EntrezGene() {
     }
 
-    public EntrezGene(String entrezGeneId, Gene gene) {
+
+    public EntrezGene(String entrezGeneId, Collection<Gene> gene) {
         this.entrezGeneId = entrezGeneId;
         this.gene = gene;
     }
@@ -54,11 +56,11 @@ public class EntrezGene {
         this.entrezGeneId = entrezGeneId;
     }
 
-    public Gene getGene() {
+    public Collection<Gene> getGene() {
         return gene;
     }
 
-    public void setGene(Gene gene) {
+    public void setGene(Collection<Gene> gene) {
         this.gene = gene;
     }
 }
