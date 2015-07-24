@@ -302,7 +302,7 @@ public class SnpGenomicContextMappingService {
                                             chromosomePosition,
                                             regionName);
 
-                            if (location != null) {
+                            if (location == null) {
                                 location = createLocation(chromosomeName,
                                                           chromosomePosition,
                                                           regionName);
