@@ -1021,7 +1021,6 @@ public class AssociationController {
         // Collection to store all genomic contexts
         Collection<GenomicContext> allGenomicContexts = new ArrayList<>();
 
-
         // For each association get the loci
         for (Association studyAssociation : studyAssociations) {
             Collection<Locus> studyAssociationLoci = studyAssociation.getLoci();
@@ -1053,32 +1052,42 @@ public class AssociationController {
                     ArrayList<String> pipelineErrors = ensemblMappingPipeline.getPipelineErrors();
 
                     // Store location information for SNP
-                    for (Location location : locations) {
+                    if (!locations.isEmpty()) {
+                        for (Location location : locations) {
 
-                        // Next time we see SNP, add location to set
-                        // This would only occur is SNP has multiple locations
-                        if (snpToLocationsMap.containsKey(snpRsId)) {
-                            snpToLocationsMap.get(snpRsId).add(location);
-                        }
+                            // Next time we see SNP, add location to set
+                            // This would only occur is SNP has multiple locations
+                            if (snpToLocationsMap.containsKey(snpRsId)) {
+                                snpToLocationsMap.get(snpRsId).add(location);
+                            }
 
-                        // First time we see a SNP store the location
-                        else {
-                            Set<Location> snpLocation = new HashSet<>();
-                            snpLocation.add(location);
-                            snpToLocationsMap.put(snpRsId, snpLocation);
+                            // First time we see a SNP store the location
+                            else {
+                                Set<Location> snpLocation = new HashSet<>();
+                                snpLocation.add(location);
+                                snpToLocationsMap.put(snpRsId, snpLocation);
+                            }
                         }
                     }
 
                     // Store genomic context data for snp
-                    allGenomicContexts.addAll(snpGenomicContexts);
+                    if (!snpGenomicContexts.isEmpty()) {
+                        allGenomicContexts.addAll(snpGenomicContexts);
+                    }
+
+
                 }
 
             }
         }
 
         // Save data
-        snpLocationMappingService.storeSnpLocation(snpToLocationsMap);
-        snpGenomicContextMappingService.processGenomicContext(allGenomicContexts);
+        if (!snpToLocationsMap.isEmpty()) {
+            snpLocationMappingService.storeSnpLocation(snpToLocationsMap);
+        }
+        if (!allGenomicContexts.isEmpty()) {
+            snpGenomicContextMappingService.processGenomicContext(allGenomicContexts);
+        }
         return "redirect:/studies/" + studyId + "/associations";
 
     }
