@@ -28,6 +28,7 @@ import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 import uk.ac.ebi.spot.goci.curation.service.AssociationBatchLoaderService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationFormErrorViewService;
+import uk.ac.ebi.spot.goci.curation.service.AssociationReportService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationViewService;
 import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
@@ -95,6 +96,7 @@ public class AssociationController {
     private AssociationFormErrorViewService associationFormErrorViewService;
     private SnpLocationMappingService snpLocationMappingService;
     private SnpGenomicContextMappingService snpGenomicContextMappingService;
+    private AssociationReportService associationReportService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -116,7 +118,8 @@ public class AssociationController {
                                  LociAttributesService lociAttributesService,
                                  AssociationFormErrorViewService associationFormErrorViewService,
                                  SnpLocationMappingService snpLocationMappingService,
-                                 SnpGenomicContextMappingService snpGenomicContextMappingService) {
+                                 SnpGenomicContextMappingService snpGenomicContextMappingService,
+                                 AssociationReportService associationReportService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -131,8 +134,8 @@ public class AssociationController {
         this.associationFormErrorViewService = associationFormErrorViewService;
         this.snpLocationMappingService = snpLocationMappingService;
         this.snpGenomicContextMappingService = snpGenomicContextMappingService;
+        this.associationReportService = associationReportService;
     }
-
 
     /*  Study SNP/Associations */
 
@@ -1014,8 +1017,8 @@ public class AssociationController {
         Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
 
         // Maps to store returned location data, this is used as
-        // snpLocationMappingService process all locations linked to a single snp
-        // in one go
+        // snpLocationMappingService process all locations linked
+        // to a single snp in one go
         Map<String, Set<Location>> snpToLocationsMap = new HashMap<>();
 
         // Collection to store all genomic contexts
@@ -1023,6 +1026,10 @@ public class AssociationController {
 
         // For each association get the loci
         for (Association studyAssociation : studyAssociations) {
+
+            // Collection to store all errors for one association
+            Collection<String> associationPipelineErrors = new ArrayList<>();
+
             Collection<Locus> studyAssociationLoci = studyAssociation.getLoci();
 
             // For each loci get the get the SNP and author reported genes
@@ -1075,9 +1082,15 @@ public class AssociationController {
                         allGenomicContexts.addAll(snpGenomicContexts);
                     }
 
-
+                    if (!pipelineErrors.isEmpty()) {
+                        associationPipelineErrors.addAll(pipelineErrors);
+                    }
                 }
+            }
 
+            // Store error information
+            if (!associationPipelineErrors.isEmpty()) {
+                associationReportService.processAssociationErrors(studyAssociation, associationPipelineErrors);
             }
         }
 
@@ -1088,8 +1101,8 @@ public class AssociationController {
         if (!allGenomicContexts.isEmpty()) {
             snpGenomicContextMappingService.processGenomicContext(allGenomicContexts);
         }
-        return "redirect:/studies/" + studyId + "/associations";
 
+        return "redirect:/studies/" + studyId + "/associations";
     }
 
 
