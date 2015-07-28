@@ -25,7 +25,7 @@ public class V1_9_9_074__Remove_locations_with_null_chromosome_details implement
             "AND l.REGION_ID = r.ID";
 
     private static final String SELECT_GENOMIC_CONTEXTS_LINKED_TO_LOCATION =
-            "SELECT ID from GENOMIC_CONTEXT where LOCATION_ID = ?";
+            "SELECT ID from GENOMIC_CONTEXT WHERE LOCATION_ID = ?";
 
     private static final String DELETE_FROM_SNP_LOCATION = "DELETE FROM SNP_LOCATION WHERE SNP_ID =? AND LOCATION_ID=?";
 
