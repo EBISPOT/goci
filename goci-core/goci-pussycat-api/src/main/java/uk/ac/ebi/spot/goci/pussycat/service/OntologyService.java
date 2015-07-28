@@ -62,23 +62,16 @@ public class OntologyService {
         ontologyLoader.setExclusionClassURI(URI.create("http://www.geneontology.org/formats/oboInOwl#ObsoleteClass"));
         ontologyLoader.setExclusionAnnotationURI(URI.create("http://www.ebi.ac.uk/efo/organizational_class"));
         ontologyLoader.setSynonymURIs(Collections.singleton(URI.create("http://www.ebi.ac.uk/efo/alternative_term")));
-        System.out.println("Initialising the loader");
         ontologyLoader.init();
-        System.out.println("Loader ready");
         setObsoleteClass();
-        System.out.println("Obsolete class set... ");
-        System.out.println("... and it is " + obsoleteClass.getIRI().toString());
         this.labelToClassMap = new HashMap<String, Set<OWLClass>>();
         this.classToLabelMap = new HashMap<OWLClass, List<String>>();
         this.iriToClassMap = new HashMap<IRI, OWLClass>();
         populateClassMaps();
-        System.out.println("All done");
 
     }
 
     private void populateClassMaps(){
-        System.out.println("About to build the class maps");
-
         OWLOntology ontology = ontologyLoader.getOntology();
         for (OWLClass owlClass : ontology.getClassesInSignature()) {
             // check this isn't an obsolete class
