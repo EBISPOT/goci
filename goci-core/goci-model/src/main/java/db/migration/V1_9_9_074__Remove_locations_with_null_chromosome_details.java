@@ -3,6 +3,7 @@ package db.migration;
 import org.flywaydb.core.api.migration.spring.SpringJdbcMigration;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,10 +38,16 @@ public class V1_9_9_074__Remove_locations_with_null_chromosome_details implement
 
     @Override public void migrate(JdbcTemplate jdbcTemplate) throws Exception {
 
+        final List<Long> locationIds = new ArrayList<>();
+
         // Query for locations
         jdbcTemplate.query(SELECT_LOCATIONS, (resultSet, i) -> {
             Long locationId = resultSet.getLong(1);
             Long snpId = resultSet.getLong(2);
+
+
+            // Keep record of locations to be deleted
+            locationIds.add(locationId);
 
             // Possibility that genomic context is linked to location
             List<Long> genomicContextIds = jdbcTemplate.queryForList(SELECT_GENOMIC_CONTEXTS_LINKED_TO_LOCATION,
@@ -56,12 +63,13 @@ public class V1_9_9_074__Remove_locations_with_null_chromosome_details implement
                     jdbcTemplate.update(UPDATE_GENOMIC_CONTEXT, genomicContextId);
                 }
             }
-
-            // Delete location
-            jdbcTemplate.update(DELETE_FROM_LOCATION, locationId);
-
             return null;
         });
+
+        for (Long id : locationIds) {
+            // Delete locations after all records referring to it have been removed
+            jdbcTemplate.update(DELETE_FROM_LOCATION, id);
+        }
 
     }
 }
