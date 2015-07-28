@@ -1,6 +1,12 @@
 package uk.ac.ebi.spot.goci.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import java.util.Collection;
 import java.util.Date;
 
@@ -20,10 +26,6 @@ public class SingleNucleotidePolymorphism {
 
     private String rsId;
 
-    private String chromosomeName;
-
-    private String chromosomePosition;
-
     private Long merged;
 
     private String functionalClass;
@@ -32,8 +34,8 @@ public class SingleNucleotidePolymorphism {
 
     @ManyToMany
     @JoinTable(name = "SNP_REGION",
-            joinColumns = @JoinColumn(name = "SNP_ID"),
-            inverseJoinColumns = @JoinColumn(name = "REGION_ID"))
+               joinColumns = @JoinColumn(name = "SNP_ID"),
+               inverseJoinColumns = @JoinColumn(name = "REGION_ID"))
     private Collection<Region> regions;
 
     @ManyToMany
@@ -53,21 +55,21 @@ public class SingleNucleotidePolymorphism {
     }
 
     public SingleNucleotidePolymorphism(String rsId,
-                                        String chromosomeName,
-                                        String chromosomePosition,
                                         Long merged,
                                         String functionalClass,
                                         Date lastUpdateDate,
                                         Collection<Region> regions,
-                                        Collection<Location> locations) {
+                                        Collection<Location> locations,
+                                        Collection<GenomicContext> genomicContexts,
+                                        Collection<RiskAllele> riskAlleles) {
         this.rsId = rsId;
-        this.chromosomeName = chromosomeName;
-        this.chromosomePosition = chromosomePosition;
         this.merged = merged;
         this.functionalClass = functionalClass;
         this.lastUpdateDate = lastUpdateDate;
         this.regions = regions;
         this.locations = locations;
+        this.genomicContexts = genomicContexts;
+        this.riskAlleles = riskAlleles;
     }
 
     public Long getId() {
@@ -84,22 +86,6 @@ public class SingleNucleotidePolymorphism {
 
     public void setRsId(String rsId) {
         this.rsId = rsId;
-    }
-
-    public String getChromosomeName() {
-        return chromosomeName;
-    }
-
-    public void setChromosomeName(String chromosomeName) {
-        this.chromosomeName = chromosomeName;
-    }
-
-    public String getChromosomePosition() {
-        return chromosomePosition;
-    }
-
-    public void setChromosomePosition(String chromosomePosition) {
-        this.chromosomePosition = chromosomePosition;
     }
 
     public Long getMerged() {
@@ -148,19 +134,6 @@ public class SingleNucleotidePolymorphism {
 
     public void setGenomicContexts(Collection<GenomicContext> genomicContexts) {
         this.genomicContexts = genomicContexts;
-    }
-
-    @Override
-    public String toString() {
-        return "SingleNucleotidePolymorphism{" +
-                "id=" + id +
-                ", rsId='" + rsId + '\'' +
-                ", chromosomeName='" + chromosomeName + '\'' +
-                ", chromosomePosition='" + chromosomePosition + '\'' +
-                ", merged=" + merged +
-                ", functionalClass='" + functionalClass + '\'' +
-                ", lastUpdateDate=" + lastUpdateDate +
-                '}';
     }
 
     public Collection<RiskAllele> getRiskAlleles() {
