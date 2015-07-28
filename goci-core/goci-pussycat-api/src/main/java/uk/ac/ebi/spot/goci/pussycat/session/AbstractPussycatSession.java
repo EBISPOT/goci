@@ -2,9 +2,11 @@ package uk.ac.ebi.spot.goci.pussycat.session;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.spot.goci.pussycat.utils.StringUtils;
 
+import javax.annotation.PostConstruct;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -18,15 +20,21 @@ import java.util.ServiceLoader;
  * @author Tony Burdett
  * @date 03/08/12
  */
+@Component
 public abstract class AbstractPussycatSession implements PussycatSession {
     private String sessionID;
     private Collection<Renderlet> renderlets;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LoggerFactory.getLogger("rendering");
 
     protected AbstractPussycatSession() {
-        this.sessionID = generateSessionID();
+//        this.sessionID = generateSessionID();
 //        this.renderlets = getAvailableRenderlets();
+    }
+
+    @PostConstruct
+    public void init(){
+        this.sessionID = generateSessionID();
     }
 
     protected Logger getLog() {

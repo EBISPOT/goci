@@ -2,7 +2,7 @@ package uk.ac.ebi.spot.goci.sparql.pussycat.renderlet;
 
 import com.hp.hpl.jena.query.QuerySolution;
 import net.sourceforge.fluxion.spi.ServiceProvider;
-import uk.ac.ebi.spot.goci.lang.OntologyConstants;
+import uk.ac.ebi.spot.goci.ontology.OntologyConstants;
 import uk.ac.ebi.spot.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.spot.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.spot.goci.pussycat.layout.SVGArea;
@@ -81,10 +81,10 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
 //                    QueryManager.getCachingInstance()
 //                            .getAssociationsLocatedInCytogeneticBand(sparqlTemplate, bandIndividual);
 //            return associations.size();
-            Set<URI> previousBandTraits =
+            Set<URI> currentBandTraits =
                     QueryManager.getCachingInstance().getTraitsLocatedInCytogeneticBand(sparqlTemplate,
                                                                                         bandIndividual);
-            return previousBandTraits.size();
+            return currentBandTraits.size();
         }
         else {
             throw new DataIntegrityViolationException(
@@ -166,7 +166,7 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
         // use the sparqlTemplate to get all individuals of type "cytogenic region"
         getLog().trace("Retrieving all cytogenetic bands to sort into rendering order...");
         List<BandInformation> bands = sparqlTemplate.query(
-                "SELECT DISTINCT ?band WHERE { ?bandUri a gt:CytogeneticRegion ; rdfs:label ?band . }",
+                "SELECT DISTINCT ?band WHERE { ?bandUri a gt:CytogeneticRegion ; rdfs:label ?band . FILTER (STR(?band) != 'NR') .}",
                 new QuerySolutionMapper<BandInformation>() {
                     @Override public BandInformation mapQuerySolution(QuerySolution qs) {
                         return new BandInformation(qs.getLiteral("band").getLexicalForm());

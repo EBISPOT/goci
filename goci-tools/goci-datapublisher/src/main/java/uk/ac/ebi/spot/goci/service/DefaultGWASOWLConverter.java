@@ -12,12 +12,12 @@ import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
-import uk.ac.ebi.spot.goci.utils.OntologyConstants;
-import uk.ac.ebi.spot.goci.owl.OntologyLoader;
+import uk.ac.ebi.spot.goci.ontology.OntologyConstants;
+import uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.utils.ReflexiveIRIMinter;
+import uk.ac.ebi.spot.goci.ontology.ReflexiveIRIMinter;
 
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -27,7 +27,7 @@ import java.util.Set;
 
 /**
  * A default implementation of {@link GWASOWLConverter} that fetches data from the GWAS catalog using a {@link
- * uk.ac.ebi.spot.goci.owl.OntologyLoader} and converts all obtained {@link Study} objects to OWL.
+ * uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader} and converts all obtained {@link Study} objects to OWL.
  *
  * @author Tony Burdett Date 26/01/12
  */
@@ -240,12 +240,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                 getDataFactory().getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
 
         // assert rsid relation
-//        snp.getId()
-//        //TODO : remove, this is just for testing.
-//        if(snp.getRsId() == null){
-//            snp.setRsId("unnullify_for_test");
-//            System.out.println("rsId is NULLLLLLLLLLLLLLLLLLLLLLLLLLLLLL for " + snp.getId() + "!");
-//        }
+
         OWLLiteral rsid = getDataFactory().getOWLLiteral(snp.getRsId());
         OWLDataPropertyAssertionAxiom rsid_relation =
                 getDataFactory().getOWLDataPropertyAssertionAxiom(has_snp_rsid, snpIndiv, rsid);

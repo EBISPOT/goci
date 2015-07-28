@@ -1,177 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
-        <artifactId>goci-interfaces</artifactId>
         <groupId>uk.ac.ebi.spot</groupId>
-        <version>2.0-SNAPSHOT</version>
+        <artifactId>goci-parent</artifactId>
+        <version>2.0.3-SNAPSHOT</version>
+        <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
-    <groupId>uk.ac.ebi.spot</groupId>
     <artifactId>goci-pussycat</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>2.0.3-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>GOCI Pussycat (serves GWAS catalog diagram)</name>
+    <description>The Pussycat server renders the GWAS diagram SVG</description>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <start-class>uk.ac.ebi.spot.goci.PussycatApplication</start-class>
+        <java.version>1.8</java.version>
     </properties>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.1.1</version>
-                <configuration>
-                    <attachClasses>true</attachClasses>
-                    <classesClassifier>classes</classesClassifier>
-                </configuration>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>buildnumber-maven-plugin</artifactId>
-                <version>1.1</version>
-                <executions>
-                    <execution>
-                        <id>generate-buildnumber</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>create</goal>
-                        </goals>
-                        <configuration>
-                            <revisionOnScmFailure>[unknown]</revisionOnScmFailure>
-                            <buildNumberPropertyName>buildRevision</buildNumberPropertyName>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>generate-timestamp</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>create</goal>
-                        </goals>
-                        <configuration>
-                            <format>{0,date,dd-MM-yyyy}</format>
-                            <items>
-                                <item>timestamp</item>
-                            </items>
-                            <buildNumberPropertyName>releaseDate</buildNumberPropertyName>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <doCheck>false</doCheck>
-                    <doUpdate>false</doUpdate>
-                </configuration>
-            </plugin>
+
         </plugins>
-        <finalName>goci-pussycat</finalName>
     </build>
 
     <dependencies>
-        <!-- ontology utils -->
+
         <dependency>
-            <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-ontology</artifactId>
-            <version>2.0-SNAPSHOT</version>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-dao</artifactId>
-            <version>2.0-SNAPSHOT</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
         </dependency>
 
-        <!-- goci datapublisher for obtaining catalog data -->
-        <!--<dependency>-->
-            <!--<groupId>uk.ac.ebi.spot</groupId>-->
-            <!--<artifactId>goci-datapublisher</artifactId>-->
-            <!--<version>2.0-SNAPSHOT</version>-->
-        <!--</dependency>-->
-
-        <!-- renderlet and querying dependencies -->
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-pussycat-api</artifactId>
-            <version>2.0-SNAPSHOT</version>
         </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>uk.ac.ebi.spot</groupId>-->
-            <!--<artifactId>goci-owl-renderlets</artifactId>-->
-            <!--<version>1.0.7-SNAPSHOT</version>-->
-        <!--</dependency>-->
 
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-sparql-renderlets</artifactId>
-            <version>2.0-SNAPSHOT</version>
-        </dependency>
-
-        <!-- spring webmvc framework -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>3.2.2.RELEASE</version>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>3.2.2.RELEASE</version>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc7</artifactId>
         </dependency>
 
-        <!-- jackson json mapping library, describes mappings from java to json for model objects -->
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.5.3</version>
-        </dependency>
 
-        <!-- ehcache, allows us to cache reasoners and queries using spring annotations (requires cglib)-->
-        <dependency>
-            <groupId>com.googlecode.ehcache-spring-annotations</groupId>
-            <artifactId>ehcache-spring-annotations</artifactId>
-            <version>1.1.2</version>
-        </dependency>
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib</artifactId>
-            <version>2.2.2</version>
-        </dependency>
-
-        <!-- servlet - provided by container -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- logging dependencies, versions/scope managed by super-pom -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>3.2.2.RELEASE</version>
-            <scope>test</scope>
-        </dependency>
 
     </dependencies>
 

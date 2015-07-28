@@ -17,5 +17,13 @@ public abstract class SparqlChromosomeRenderlet extends ChromosomeRenderlet<Spar
         return renderingContext instanceof SparqlTemplate &&
                 renderingEntity instanceof URI &&
                 getChromosomeURI().equals(renderingEntity);
+//        if (renderingContext instanceof SparqlTemplate && renderingEntity instanceof URI) {
+//            SparqlTemplate template = (SparqlTemplate) renderingContext;
+//            URI uri = (URI) renderingEntity;
+//            return template.ask(uri, URI.create(OntologyConstants.CHROMOSOME_CLASS_IRI));
+//        }
+//        else {
+//            return false;
+//        }
     }
 }

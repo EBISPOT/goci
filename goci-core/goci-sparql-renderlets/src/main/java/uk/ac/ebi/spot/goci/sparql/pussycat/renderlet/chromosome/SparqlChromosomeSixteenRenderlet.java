@@ -1,7 +1,7 @@
 package uk.ac.ebi.spot.goci.sparql.pussycat.renderlet.chromosome;
 
 import net.sourceforge.fluxion.spi.ServiceProvider;
-import uk.ac.ebi.spot.goci.lang.OntologyConstants;
+import uk.ac.ebi.spot.goci.ontology.OntologyConstants;
 
 import java.net.URI;
 import java.net.URL;
@@ -13,7 +13,7 @@ import java.net.URL;
 
 @ServiceProvider
 public class SparqlChromosomeSixteenRenderlet extends SparqlChromosomeRenderlet {
-    private URI chromosomeURI = URI.create(OntologyConstants.CHROMOSOME_CLASS_IRI + "_16");
+    private URI chromosomeURI = URI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/Chromosome/16");
     private int position = 15;
 
     @Override public String getName() {

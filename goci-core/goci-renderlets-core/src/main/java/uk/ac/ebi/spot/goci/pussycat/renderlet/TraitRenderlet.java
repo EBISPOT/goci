@@ -22,7 +22,7 @@ import java.util.Set;
  * @date 06/03/12
  */
 public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LoggerFactory.getLogger("rendering");
 
     protected Logger getLog() {
         return log;

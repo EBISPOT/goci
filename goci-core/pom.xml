@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>goci-core</artifactId>
-    <version>2.0.2-SNAPSHOT</version>
+    <version>2.0.3-SNAPSHOT</version>
 
     <packaging>pom</packaging>
     <name>GOCI Core</name>
@@ -11,13 +11,16 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci</artifactId>
-        <version>2.0.2-SNAPSHOT</version>
+        <version>2.0.3-SNAPSHOT</version>
     </parent>
 
     <modules>
         <module>goci-model</module>
         <module>goci-repository</module>
         <module>goci-service</module>
+        <module>goci-pussycat-api</module>
+        <module>goci-sparql-renderlets</module>
+        <module>goci-renderlets-core</module>
         <!--<module>goci-ontology</module>-->
     </modules>
 
