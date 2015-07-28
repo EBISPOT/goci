@@ -13,7 +13,7 @@ import java.net.URL;
 
 @ServiceProvider
 public class SparqlChromosomeYRenderlet extends SparqlChromosomeRenderlet {
-    private URI chromosomeURI = URI.create(OntologyConstants.CHROMOSOME_CLASS_IRI + "_Y");
+    private URI chromosomeURI = URI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/Chromosome/Y");
     private int position = 23;
 
     @Override public String getName() {

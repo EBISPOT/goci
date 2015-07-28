@@ -13,7 +13,7 @@ import java.net.URL;
 
 @ServiceProvider
 public class SparqlChromosomeTwoRenderlet extends SparqlChromosomeRenderlet {
-    private URI chromosomeURI = URI.create(OntologyConstants.CHROMOSOME_CLASS_IRI + "_2");
+    private URI chromosomeURI = URI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/Chromosome/2");
     private int position = 1;
 
     @Override public String getName() {

@@ -11,12 +11,7 @@ import uk.ac.ebi.spot.goci.sparql.pussycat.query.SparqlTemplate;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.URIMapper;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Javadocs go here!
