@@ -32,7 +32,7 @@ public class Housekeeping {
 
     private Boolean ethnicityBackFilled  = false;
 
-    private Boolean checkedNCBIError = false;
+    private Boolean checkedMappingError = false;
 
     private Boolean snpsRechecked = false;
 
@@ -68,13 +68,29 @@ public class Housekeeping {
     public Housekeeping() {
     }
 
-    public Housekeeping(Boolean studySnpCheckedLevelOne, Boolean studySnpCheckedLevelTwo, Boolean ethnicityCheckedLevelOne, Boolean ethnicityCheckedLevelTwo, Boolean ethnicityBackFilled, Boolean checkedNCBIError, Boolean snpsRechecked, Date catalogPublishDate, Date sendToNCBIDate, Date studyAddedDate, Date catalogUnpublishDate, Date lastUpdateDate, String fileName, String notes, Curator curator, CurationStatus curationStatus, UnpublishReason unpublishReason) {
+    public Housekeeping(Boolean studySnpCheckedLevelOne,
+                        Boolean studySnpCheckedLevelTwo,
+                        Boolean ethnicityCheckedLevelOne,
+                        Boolean ethnicityCheckedLevelTwo,
+                        Boolean ethnicityBackFilled,
+                        Boolean checkedMappingError,
+                        Boolean snpsRechecked,
+                        Date catalogPublishDate,
+                        Date sendToNCBIDate,
+                        Date studyAddedDate,
+                        Date catalogUnpublishDate,
+                        Date lastUpdateDate,
+                        String fileName,
+                        String notes,
+                        Curator curator,
+                        CurationStatus curationStatus,
+                        UnpublishReason unpublishReason) {
         this.studySnpCheckedLevelOne = studySnpCheckedLevelOne;
         this.studySnpCheckedLevelTwo = studySnpCheckedLevelTwo;
         this.ethnicityCheckedLevelOne = ethnicityCheckedLevelOne;
         this.ethnicityCheckedLevelTwo = ethnicityCheckedLevelTwo;
         this.ethnicityBackFilled = ethnicityBackFilled;
-        this.checkedNCBIError = checkedNCBIError;
+        this.checkedMappingError = checkedMappingError;
         this.snpsRechecked = snpsRechecked;
         this.catalogPublishDate = catalogPublishDate;
         this.sendToNCBIDate = sendToNCBIDate;
@@ -136,12 +152,12 @@ public class Housekeeping {
         this.ethnicityBackFilled = ethnicityBackFilled;
     }
 
-    public Boolean getCheckedNCBIError() {
-        return checkedNCBIError;
+    public Boolean getCheckedMappingError() {
+        return checkedMappingError;
     }
 
-    public void setCheckedNCBIError(Boolean checkedNCBIError) {
-        this.checkedNCBIError = checkedNCBIError;
+    public void setCheckedMappingError(Boolean checkedMappingError) {
+        this.checkedMappingError = checkedMappingError;
     }
 
     public Boolean getSnpsRechecked() {
@@ -241,7 +257,7 @@ public class Housekeeping {
                 ", ethnicityCheckedLevelOne=" + ethnicityCheckedLevelOne +
                 ", ethnicityCheckedLevelTwo=" + ethnicityCheckedLevelTwo +
                 ", ethnicityBackFilled=" + ethnicityBackFilled +
-                ", checkedNCBIError=" + checkedNCBIError +
+                ", checkedMappingError=" + checkedMappingError +
                 ", snpsRechecked=" + snpsRechecked +
                 ", catalogPublishDate=" + catalogPublishDate +
                 ", sendToNCBIDate=" + sendToNCBIDate +
