@@ -54,6 +54,19 @@
 
 <br/>
 
+<!--Alert if data is saved-->
+<div class="container-fluid" th:if="${!#strings.isEmpty(mappingComplete)}">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="alert alert-success">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:text="${mappingComplete}">Success!</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="container-fluid" th:object="${study}" th:if="${not #lists.isEmpty(snpAssociationTableViews)}">
     <div class="row">
         <div class="col-md-12">
