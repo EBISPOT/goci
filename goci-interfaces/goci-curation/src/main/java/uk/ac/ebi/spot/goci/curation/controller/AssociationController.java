@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.component.EnsemblMappingPipeline;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
 import uk.ac.ebi.spot.goci.curation.model.AssociationFormErrorView;
@@ -1011,7 +1012,7 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/validate_all",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String validateAll(Model model, @PathVariable Long studyId) {
+    public String validateAll(Model model, @PathVariable Long studyId, RedirectAttributes redirectAttributes) {
 
         // For the study get all associations
         Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
@@ -1102,6 +1103,8 @@ public class AssociationController {
             snpGenomicContextMappingService.processGenomicContext(allGenomicContexts);
         }
 
+        String message = "Mapping complete, please check for any errors displayed in the 'Errors' column";
+        redirectAttributes.addFlashAttribute("mappingComplete", message);
         return "redirect:/studies/" + studyId + "/associations";
     }
 
