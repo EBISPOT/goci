@@ -33,12 +33,6 @@ public class SingleNucleotidePolymorphism {
     private Date lastUpdateDate;
 
     @ManyToMany
-    @JoinTable(name = "SNP_REGION",
-               joinColumns = @JoinColumn(name = "SNP_ID"),
-               inverseJoinColumns = @JoinColumn(name = "REGION_ID"))
-    private Collection<Region> regions;
-
-    @ManyToMany
     @JoinTable(name = "SNP_LOCATION",
                joinColumns = @JoinColumn(name = "SNP_ID"),
                inverseJoinColumns = @JoinColumn(name = "LOCATION_ID"))
@@ -58,7 +52,6 @@ public class SingleNucleotidePolymorphism {
                                         Long merged,
                                         String functionalClass,
                                         Date lastUpdateDate,
-                                        Collection<Region> regions,
                                         Collection<Location> locations,
                                         Collection<GenomicContext> genomicContexts,
                                         Collection<RiskAllele> riskAlleles) {
@@ -66,7 +59,6 @@ public class SingleNucleotidePolymorphism {
         this.merged = merged;
         this.functionalClass = functionalClass;
         this.lastUpdateDate = lastUpdateDate;
-        this.regions = regions;
         this.locations = locations;
         this.genomicContexts = genomicContexts;
         this.riskAlleles = riskAlleles;
@@ -110,14 +102,6 @@ public class SingleNucleotidePolymorphism {
 
     public void setLastUpdateDate(Date lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
-    }
-
-    public Collection<Region> getRegions() {
-        return regions;
-    }
-
-    public void setRegions(Collection<Region> regions) {
-        this.regions = regions;
     }
 
     public Collection<Location> getLocations() {
