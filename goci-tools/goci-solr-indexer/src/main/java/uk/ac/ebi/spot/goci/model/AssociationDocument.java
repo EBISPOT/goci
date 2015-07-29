@@ -89,7 +89,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         if (association.getPvalueMantissa() != null) {
             this.pValueMantissa = association.getPvalueMantissa();
         }
-        if(association.getPvalueExponent() != null){
+        if (association.getPvalueExponent() != null) {
             this.pValueExponent = association.getPvalueExponent();
         }
 
@@ -162,7 +162,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         return rsId;
     }
 
-    public Long getMerged() { return  merged; }
+    public Long getMerged() { return merged; }
 
     public Set<String> getChromosomeNames() {
         return chromosomeNames;
@@ -267,31 +267,43 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                         Gene gene = context.getGene();
 
                                         String distance = "";
-                                        if(context.getDistance() != null) {
+                                        if (context.getDistance() != null) {
                                             distance = String.valueOf(context.getDistance());
                                         }
-                                        if (gene.getEntrezGeneId() != null) {
-                                            String geneLink =
-                                                    gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
-                                            if(!distance.equals("")) {
-                                                geneLink = geneLink.concat("|").concat(distance);
-                                            }
+                                        if (gene.getEntrezGeneIds() != null) {
+                                            for (EntrezGene entrezGene : gene.getEntrezGeneIds()) {
+                                                String geneLink =
+                                                        gene.getGeneName()
+                                                                .concat("|")
+                                                                .concat(entrezGene.getEntrezGeneId());
+                                                if (!distance.equals("")) {
+                                                    geneLink = geneLink.concat("|").concat(distance);
+                                                }
                                                 mappedGeneLinks.add(geneLink);
+                                            }
                                         }
                                     });
 
                                     context = snp.getFunctionalClass();
-                                    chromosomeNames.add(snp.getChromosomeName());
-                                    if (snp.getChromosomePosition() != null) {
-                                        chromosomePositions.add(Integer.parseInt(snp.getChromosomePosition()));
+                                    Collection<Location> snpLocations = snp.getLocations();
+                                    for (Location snpLocation : snpLocations) {
+                                        chromosomeNames.add(snpLocation.getChromosomeName());
+
+                                        if (snpLocation.getChromosomePosition() != null) {
+                                            chromosomePositions.add(Integer.parseInt(snpLocation.getChromosomePosition()));
+                                        }
                                     }
+
                                 }
                         );
                         locus.getAuthorReportedGenes().forEach(gene -> {
                             reportedGenes.add(gene.getGeneName().trim());
-                            if (gene.getEntrezGeneId() != null) {
-                                String geneLink = gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
-                                reportedGeneLinks.add(geneLink);
+                            if (gene.getEntrezGeneIds() != null) {
+                                for (EntrezGene entrezGene : gene.getEntrezGeneIds()) {
+                                    String geneLink =
+                                            gene.getGeneName().concat("|").concat(entrezGene.getEntrezGeneId());
+                                    reportedGeneLinks.add(geneLink);
+                                }
                             }
                         });
 
@@ -328,32 +340,42 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                             Gene gene = context.getGene();
 
                                             String distance = "";
-                                            if(context.getDistance() != null) {
+                                            if (context.getDistance() != null) {
                                                 distance = String.valueOf(context.getDistance());
                                             }
-                                            if (gene.getEntrezGeneId() != null) {
-                                                String geneLink =
-                                                        gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
-                                                if(!distance.equals("")) {
-                                                    geneLink = geneLink.concat("|").concat(distance);
+                                            if (gene.getEntrezGeneIds() != null) {
+                                                for (EntrezGene entrezGene : gene.getEntrezGeneIds()) {
+                                                    String geneLink =
+                                                            gene.getGeneName()
+                                                                    .concat("|")
+                                                                    .concat(entrezGene.getEntrezGeneId());
+                                                    if (!distance.equals("")) {
+                                                        geneLink = geneLink.concat("|").concat(distance);
+                                                    }
+                                                    mappedGeneLinks.add(geneLink);
                                                 }
-                                                mappedGeneLinks.add(geneLink);
                                             }
                                         }
                                     });
 
                                     context = snp.getFunctionalClass();
-                                    chromosomeNames.add(snp.getChromosomeName());
-                                    if (snp.getChromosomePosition() != null) {
-                                        chromosomePositions.add(Integer.parseInt(snp.getChromosomePosition()));
+                                    Collection<Location> snpLocations = snp.getLocations();
+                                    for (Location snpLocation : snpLocations) {
+                                        chromosomeNames.add(snpLocation.getChromosomeName());
+                                        if (snpLocation.getChromosomePosition() != null) {
+                                            chromosomePositions.add(Integer.parseInt(snpLocation.getChromosomePosition()));
+                                        }
                                     }
                                 }
                         );
                         locus.getAuthorReportedGenes().forEach(gene -> {
                             reportedGenes.add(gene.getGeneName().trim());
-                            if (gene.getEntrezGeneId() != null) {
-                                String geneLink = gene.getGeneName().concat("|").concat(gene.getEntrezGeneId());
-                                reportedGeneLinks.add(geneLink);
+                            if (gene.getEntrezGeneIds() != null) {
+                                for (EntrezGene entrezGene : gene.getEntrezGeneIds()) {
+                                    String geneLink =
+                                            gene.getGeneName().concat("|").concat(entrezGene.getEntrezGeneId());
+                                    reportedGeneLinks.add(geneLink);
+                                }
                             }
                         });
                         locusDescription = locus.getDescription();
@@ -370,12 +392,12 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                     if (context.getGene() != null && context.getGene().getGeneName() != null) {
                         String geneName = context.getGene().getGeneName().trim();
                         if (!genes.contains(geneName)) {
-                            if (context.isUpstream()) {
+                            if (context.getIsUpstream()) {
                                 genes.add(0, geneName);
                                 intragenic.set(true);
                             }
                             else {
-                                if (context.isDownstream()) {
+                                if (context.getIsDownstream()) {
                                     intragenic.set(true);
                                 }
                                 genes.add(geneName);
