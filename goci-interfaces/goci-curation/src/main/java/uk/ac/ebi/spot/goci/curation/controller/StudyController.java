@@ -187,12 +187,12 @@ public class StudyController {
             if (studyType.equals("Studies with errors")) {
                 CurationStatus errorStatus = curationStatusRepository.findByStatus("NCBI pipeline error");
                 Long errorStatusId = errorStatus.getId();
-                studyPage = studyRepository.findByHousekeepingCheckedNCBIErrorOrHousekeepingCurationStatusId(true,
-                                                                                                             errorStatusId,
-                                                                                                             constructPageSpecification(
-                                                                                                                     page -
-                                                                                                                             1,
-                                                                                                                     sort));
+                studyPage = studyRepository.findByHousekeepingCheckedMappingErrorOrHousekeepingCurationStatusId(true,
+                                                                                                                errorStatusId,
+                                                                                                                constructPageSpecification(
+                                                                                                                        page -
+                                                                                                                                1,
+                                                                                                                        sort));
             }
 
             if (studyType.equals("Studies in curation queue")) {
