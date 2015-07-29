@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Gene;
+import uk.ac.ebi.spot.goci.model.Location;
 import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
@@ -172,7 +173,11 @@ public class AssociationService {
                 locus -> {
                     locus.getStrongestRiskAlleles().stream().map(RiskAllele::getSnp).forEach(
                             snp -> {
-                                snp.getRegions().forEach(regions::add);
+                                Collection<Location> snpLocations = snp.getLocations();
+                                for (Location location : snpLocations) {
+                                    regions.add(location.getRegion());
+                                }
+
                                 snp.getGenomicContexts().forEach(context -> mappedGenes.add(context.getGene()));
                                 snps.add(snp);
                             }

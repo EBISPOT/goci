@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import uk.ac.ebi.spot.goci.model.Location;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
@@ -176,8 +177,8 @@ public class StudyService {
 //        System.out.println("BONJOUR");
 //        getLog().error("BONJOUR");
         for(SingleNucleotidePolymorphism snp : study.getSingleNucleotidePolymorphisms()){
-            int regionCount = snp.getRegions().size();
-            getLog().trace("Snp '" + snp.getId() + "' is linked to " + regionCount + " regions.");
+            int locationCount = snp.getLocations().size();
+            getLog().trace("Snp '" + snp.getId() + "' is linked to " + locationCount + " regions.");
 //            for(Region region : snp.getRegions()){
 //                region.getId();
 //            }
