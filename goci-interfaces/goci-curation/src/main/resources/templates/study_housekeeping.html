@@ -61,8 +61,10 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-10" th:object="${study}" th:if="${study.housekeeping != null and study.housekeeping.catalogPublishDate !=null and study.housekeeping.catalogUnpublishDate == null}">
-        <!--<div class="col-md-10" th:object="${study}">-->
+        <div class="col-md-10"
+             th:object="${study}"
+             th:if="${study.housekeeping != null and study.housekeeping.catalogPublishDate !=null and study.housekeeping.catalogUnpublishDate == null}">
+            <!--<div class="col-md-10" th:object="${study}">-->
             <a th:href="@{/studies/{studyId}/unpublish(studyId=${study.Id})}"
                class="btn btn-primary pull-right"
                role="button"
@@ -127,13 +129,13 @@
 
                 <div class="form-group">
                     <label for="fileName" class="control-label col-md-2">File name</label>
-                    <textarea id="fileName" type="text" th:field="*{fileName}" class="col-md-8"/>
+                    <textarea id="fileName" type="text" th:field="*{fileName}" class="col-md-8"></textarea>
                 </div>
 
 
                 <div class="form-group">
                     <label for="notes" class="control-label col-md-2">Notes</label>
-                    <textarea id="notes" type="text" th:field="*{notes}" class="col-md-8" />
+                    <textarea id="notes" type="text" th:field="*{notes}" class="col-md-8"></textarea>
                 </div>
 
                 <!--Checkboxes-->
@@ -141,7 +143,7 @@
                 <div class="form-group">
                     <label for="ethnicityCheckedLevelOne" th:for="${#ids.next('ethnicityCheckedLevelOne')}"
                            class="control-label col-md-2">Ancestry checked, first
-                        level:</label>
+                                                          level:</label>
                     <input id="ethnicityCheckedLevelOne" type="checkbox" th:field="*{ethnicityCheckedLevelOne}"
                             />
                 </div>
@@ -149,7 +151,7 @@
                 <div class="form-group">
                     <label for="ethnicityCheckedLevelTwo" th:for="${#ids.next('ethnicityCheckedLevelTwo')}"
                            class="control-label col-md-2">Ancestry checked, second
-                        level:</label>
+                                                          level:</label>
                     <input id="ethnicityCheckedLevelTwo" type="checkbox" th:field="*{ethnicityCheckedLevelTwo}"
                             />
                 </div>
@@ -165,7 +167,7 @@
                 <div class="form-group">
                     <label for="studySnpCheckedLevelOne" th:for="${#ids.next('studySnpCheckedLevelOne')}"
                            class="control-label col-md-2">Study/SNP checked, first
-                        level:</label>
+                                                          level:</label>
                     <input id="studySnpCheckedLevelOne" type="checkbox" th:field="*{studySnpCheckedLevelOne}"
                             />
                 </div>
@@ -173,16 +175,16 @@
                 <div class="form-group">
                     <label for="studySnpCheckedLevelTwo" th:for="${#ids.next('studySnpCheckedLevelTwo')}"
                            class="control-label col-md-2">Study/SNP checked, second
-                        level:</label>
+                                                          level:</label>
                     <input id="studySnpCheckedLevelTwo" type="checkbox" th:field="*{studySnpCheckedLevelTwo}"
                             />
                 </div>
 
 
                 <div class="form-group">
-                    <label for="checkedNCBIError" th:for="${#ids.next('checkedNCBIError')}"
+                    <label for="checkedMappingError" th:for="${#ids.next('checkedMappingError')}"
                            class="control-label col-md-2">Checked NCBI Error:</label>
-                    <input id="checkedNCBIError" type="checkbox" th:field="*{checkedNCBIError}"/>
+                    <input id="checkedMappingError" type="checkbox" th:field="*{checkedMappingError}"/>
                 </div>
 
 
@@ -223,10 +225,11 @@
                     </div>
                 </div>
 
-                <div class="form-group" th:if="${study.housekeeping != null and study.housekeeping.catalogPublishDate !=null and study.housekeeping.catalogUnpublishDate != null}">
+                <div class="form-group"
+                     th:if="${study.housekeeping != null and study.housekeeping.catalogPublishDate !=null and study.housekeeping.catalogUnpublishDate != null}">
                     <label for="unpublishReason" class="control-label col-md-2">Reason for unpublishing:</label>
 
-                    <div class="col-md-4" >
+                    <div class="col-md-4">
                         <select th:field="*{unpublishReason}" id="unpublishReason" class="form-control select2-select">
                             <!-- Empty value for first entry-->
                             <option value=""></option>
@@ -263,23 +266,26 @@
 
             </form>
         </div>
-
     </div>
 </div>
 
 <script>
-    $(function () {
+    $(function() {
         // turn the element to select2 select style
-        $('#curator').select2({ placeholder: "Select a curator",
-            allowClear: true});
+        $('#curator').select2({
+            placeholder: "Select a curator",
+            allowClear: true
+        });
     });
 </script>
 
 <script>
-    $(function () {
+    $(function() {
         // turn the element to select2 select style
-        $('#curationStatus').select2({ placeholder: "Select a status",
-            allowClear: true});
+        $('#curationStatus').select2({
+            placeholder: "Select a status",
+            allowClear: true
+        });
     });
 </script>
 
