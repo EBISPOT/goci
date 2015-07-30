@@ -1008,11 +1008,17 @@ public class AssociationController {
 
     }
 
-    // Validate all SNPs
+    /**
+     * Run mapping pipeline on all SNPs in a study
+     *
+     * @param studyId            Study ID in database
+     * @param redirectAttributes attributes for a redirect scenario
+     */
+    //
     @RequestMapping(value = "/studies/{studyId}/associations/validate_all",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String validateAll(Model model, @PathVariable Long studyId, RedirectAttributes redirectAttributes) {
+    public String validateAll(@PathVariable Long studyId, RedirectAttributes redirectAttributes) {
 
         // For the study get all associations
         Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
@@ -1097,9 +1103,14 @@ public class AssociationController {
 
         // Save data
         if (!snpToLocationsMap.isEmpty()) {
+            getLog().info("Adding/updating location details for SNPs" + snpToLocationsMap.keySet().toString() +
+                                  ", in study " + studyId);
             snpLocationMappingService.storeSnpLocation(snpToLocationsMap);
         }
         if (!allGenomicContexts.isEmpty()) {
+            getLog().info(
+                    "Adding/updating genomic context for SNPs" + snpToLocationsMap.keySet().toString() + ", in study " +
+                            studyId);
             snpGenomicContextMappingService.processGenomicContext(allGenomicContexts);
         }
 

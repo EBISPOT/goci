@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.SnpMappingForm;
@@ -34,6 +36,12 @@ public class SnpLocationMappingService {
     private RegionRepository regionRepository;
     private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
     private GenomicContextRepository genomicContextRepository;
+
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
 
     //Constructor
     @Autowired
@@ -171,7 +179,9 @@ public class SnpLocationMappingService {
             // by the time mapping is started should already have been saved
             else {
                 // TODO WHAT WILL HAPPEN FOR MERGED SNPS
+                getLog().error("Adding location for SNP not found in database, RS_ID:" + snpRsId);
                 throw new RuntimeException("Adding location for SNP not found in database, RS_ID: " + snpRsId);
+
             }
 
         }

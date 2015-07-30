@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.EnsemblGene;
@@ -45,6 +47,13 @@ public class SnpGenomicContextMappingService {
     private EntrezGeneRepository entrezGeneRepository;
     private LocationRepository locationRepository;
     private RegionRepository regionRepository;
+
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
+
 
     //Constructor
     @Autowired
@@ -353,6 +362,7 @@ public class SnpGenomicContextMappingService {
             // by the time mapping is started should already have been saved
             else {
                 // TODO WHAT WILL HAPPEN FOR MERGED SNPS
+                getLog().error("Adding genomic context for SNP not found in database, RS_ID:" + snpRsId);
                 throw new RuntimeException(
                         "Adding genomic context for SNP not found in database, RS_ID: " + snpRsId);
             }
@@ -423,6 +433,9 @@ public class SnpGenomicContextMappingService {
                 }
 
                 if (!existingGeneNamesLinkedToId.contains(geneName)) {
+                    getLog().error(
+                            "Ensembl ID: " + id + ", is already used in database by a different gene. Cannot link to " +
+                                    geneName);
                     throw new RuntimeException(
                             "Ensembl ID: " + id + ", is already used in database by a different gene. Cannot link to " +
                                     geneName);
@@ -463,6 +476,9 @@ public class SnpGenomicContextMappingService {
                 }
 
                 if (!existingGeneNamesLinkedToId.contains(geneName)) {
+                    getLog().error(
+                            "Entrez ID: " + id + ", is already used in database by a different gene. Cannot link to " +
+                                    geneName);
                     throw new RuntimeException(
                             "Entrez ID: " + id + ", is already used in database by a different gene. Cannot link to " +
                                     geneName);
