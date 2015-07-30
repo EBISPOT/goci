@@ -8,6 +8,14 @@ var renderingComplete = false;
 $(document).ready(function() {
     renderDiagram()
 
+    $(".panzoom-elements").panzoom();
+
+// Pass options
+    $("a.panzoom-elements").panzoom({
+        minScale: 0,
+        $zoomRange: $("input[type='range']")
+    });
+
 });
 
 
@@ -44,7 +52,8 @@ function renderDiagram() {
             // call to api/gwasdiagram to get required svg
             console.log("Rendering GWAS diagram - calling api/gwasdiagram...");
             $.ajax({
-                       url: 'http://www.ebi.ac.uk/fgpt/gwas/api/gwasdiagram',
+                       //url: 'http://www.ebi.ac.uk/fgpt/gwas/api/gwasdiagram',
+                       url: 'http://localhost:8080/pussycat/gwasdiagram',
                        dataType: 'html',
                        beforeSend: showSVGLoadWhirly,
                        success: insertSVG,
