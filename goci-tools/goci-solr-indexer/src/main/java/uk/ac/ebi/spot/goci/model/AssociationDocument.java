@@ -253,13 +253,16 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
                                     final Set<String> regionNames = new HashSet<>();
                                     final StringBuilder regionBuilder = new StringBuilder();
-                                    snp.getRegions().forEach(
-                                            region -> {
-                                                if (!regionNames.contains(region.getName())) {
-                                                    regionNames.add(region.getName());
-                                                    setOrAppend(regionBuilder, region.getName(), " / ");
+
+                                    snp.getLocations().forEach(
+                                            location -> {
+                                                if (!regionNames.contains(location.getRegion().getName())) {
+                                                    regionNames.add(location.getRegion().getName());
+                                                    setOrAppend(regionBuilder, location.getRegion().getName(), " / ");
                                                 }
                                             });
+
+
                                     region = setOrAppend(region, regionBuilder.toString(), " : ");
                                     mappedGene = setOrAppend(mappedGene, getMappedGeneString(association, snp), " : ");
                                     // and add entrez links for each mapped gene
@@ -325,13 +328,15 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
                                     final Set<String> regionNames = new HashSet<>();
                                     final StringBuilder regionBuilder = new StringBuilder();
-                                    snp.getRegions().forEach(
-                                            region -> {
-                                                if (!regionNames.contains(region.getName())) {
-                                                    regionNames.add(region.getName());
-                                                    setOrAppend(regionBuilder, region.getName(), " / ");
+                                    
+                                    snp.getLocations().forEach(
+                                            location -> {
+                                                if (!regionNames.contains(location.getRegion().getName())) {
+                                                    regionNames.add(location.getRegion().getName());
+                                                    setOrAppend(regionBuilder, location.getRegion().getName(), " / ");
                                                 }
                                             });
+
                                     region = setOrAppend(region, regionBuilder.toString(), ", ");
                                     mappedGene = setOrAppend(mappedGene, getMappedGeneString(association, snp), ", ");
                                     // and add entrez links for each mapped gene
