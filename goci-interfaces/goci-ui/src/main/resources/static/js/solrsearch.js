@@ -163,7 +163,7 @@ function getMostRecentStudies() {
 
     var searchTerm = 'text:*';
     var dateRange = "[NOW-3MONTH+TO+*]";
-    var sort = "catalogAddedDate+desc"
+    var sort = "catalogPublishDate+desc"
 
     $.getJSON('api/search/latest', {'q': searchTerm,
         'group': 'true',
@@ -188,7 +188,7 @@ function processData(data) {
         if(data.responseHeader.params.q.indexOf('*') != -1 && data.responseHeader.params.fq != null){
             var fq = data.responseHeader.params.fq;
 
-            if(fq.indexOf("catalogAddedDate") != -1){
+            if(fq.indexOf("catalogPublishDate") != -1){
                 var dateRange = "[NOW-3MONTH+TO+*]";
                 generateTraitDropdown(data.responseHeader.params.q, null, dateRange);
             }
