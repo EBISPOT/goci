@@ -66,6 +66,19 @@
     </div>
 </div>
 
+<!--Alert if errors not checked before approving-->
+<div class="container-fluid" th:if="${!#strings.isEmpty(approvalStopped)}">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="alert alert-warning">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:text="${approvalStopped}">Warning!</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <div class="container-fluid" th:object="${study}" th:if="${not #lists.isEmpty(snpAssociationTableViews)}">
     <div class="row">
