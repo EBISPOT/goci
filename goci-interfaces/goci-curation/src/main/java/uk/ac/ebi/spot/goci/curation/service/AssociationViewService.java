@@ -259,6 +259,19 @@ public class AssociationViewService {
             }
         }
 
+        // Check if the errors in the association report have been checked by a curator
+        if (association.getAssociationReport() != null) {
+            if (association.getAssociationReport().getErrorCheckedByCurator() != null) {
+                if (association.getAssociationReport().getErrorCheckedByCurator()) {
+                    snpAssociationTableView.setAssociationErrorsChecked("Yes");
+                }
+
+                if (!association.getAssociationReport().getErrorCheckedByCurator()) {
+                    snpAssociationTableView.setAssociationErrorsChecked("No");
+                }
+            }
+        }
+
         // Set error map
         snpAssociationTableView.setAssociationErrorMap(createAssociationErrorMap(association.getAssociationReport()));
         return snpAssociationTableView;
