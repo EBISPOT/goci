@@ -91,10 +91,11 @@
                role="button">Validate All SNPs</a>
 
             <!--th:value used to send study id to javascript file-->
-            <a id="errors-checked-button"
+            <a id="errorcheck-button"
                class="btn btn-default"
-               role="button"
-               th:value="${study.Id}">Mark errors as checked</a>
+               th:value="${study.Id}"
+               role="button">Mark errors as checked
+            </a>
 
             <a th:href="@{/studies/{studyId}/associations/approve_all(studyId=${study.Id})}"
                class="btn btn-default"
@@ -272,8 +273,8 @@
 
                     <!--This checkbox is used to indicate checked errors-->
                     <td><input type="checkbox"
-                               name="checkboxId"
-                               class="association-error-selector"
+                               name="errorCheckboxId"
+                               class="error-selector"
                                th:value="${snpAssociationTableView.associationId}"/>
                     </td>
 
