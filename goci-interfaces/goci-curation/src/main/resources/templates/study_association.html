@@ -202,9 +202,9 @@
                     <th>SNP Status</th>
                     <th>Multi-SNP haplotype</th>
                     <th>SNP:SNP interaction</th>
+                    <th>Errors</th>
                     <th>SNP Checked?</th>
                     <th>Approve/ Delete</th>
-                    <th>Errors</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -255,6 +255,14 @@
                     <td th:text="${snpAssociationTableView.snpStatuses} ?:''"></td>
                     <td th:text="${snpAssociationTableView.multiSnpHaplotype} ?:''"></td>
                     <td th:text="${snpAssociationTableView.snpInteraction} ?:''"></td>
+
+                    <!-- Errors-->
+                    <td>
+                        <span style="color:red" th:each="error: ${snpAssociationTableView.associationErrorMap}"
+                              th:text="${error.value} ?: ''"
+                              th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}"></span>
+                    </td>
+
                     <td th:text="${snpAssociationTableView.snpChecked} ?: '' "></td>
 
                     <!--This checkbox is used to approve and delete all SNP associations-->
@@ -262,13 +270,6 @@
                                name="checkboxId"
                                class="association-selector"
                                th:value="${snpAssociationTableView.associationId}"/>
-                    </td>
-
-                    <!-- Errors-->
-                    <td>
-                        <span style="color:red" th:each="error: ${snpAssociationTableView.associationErrorMap}"
-                              th:text="${error.value} ?: ''"
-                              th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}"></span>
                     </td>
 
                 </tr>
