@@ -37,6 +37,7 @@ import uk.ac.ebi.spot.goci.curation.service.SnpGenomicContextMappingService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.SnpLocationMappingService;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
@@ -45,6 +46,7 @@ import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
@@ -86,6 +88,7 @@ public class AssociationController {
     private EfoTraitRepository efoTraitRepository;
     private LocusRepository locusRepository;
     private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
+    private AssociationReportRepository associationReportRepository;
 
     // Services
     private AssociationBatchLoaderService associationBatchLoaderService;
@@ -111,6 +114,7 @@ public class AssociationController {
                                  EfoTraitRepository efoTraitRepository,
                                  LocusRepository locusRepository,
                                  SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
+                                 AssociationReportRepository associationReportRepository,
                                  AssociationBatchLoaderService associationBatchLoaderService,
                                  AssociationDownloadService associationDownloadService,
                                  AssociationViewService associationViewService,
@@ -126,6 +130,7 @@ public class AssociationController {
         this.efoTraitRepository = efoTraitRepository;
         this.locusRepository = locusRepository;
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
+        this.associationReportRepository = associationReportRepository;
         this.associationBatchLoaderService = associationBatchLoaderService;
         this.associationDownloadService = associationDownloadService;
         this.associationViewService = associationViewService;
@@ -137,6 +142,7 @@ public class AssociationController {
         this.snpGenomicContextMappingService = snpGenomicContextMappingService;
         this.associationReportService = associationReportService;
     }
+
 
     /*  Study SNP/Associations */
 
@@ -1117,6 +1123,39 @@ public class AssociationController {
         String message = "Mapping complete, please check for any errors displayed in the 'Errors' column";
         redirectAttributes.addFlashAttribute("mappingComplete", message);
         return "redirect:/studies/" + studyId + "/associations";
+    }
+
+
+    /**
+     * Mark errors for a particular association as checked,
+     * this involves updating the linked association report
+     *
+     * @param associationsIds List of association IDs to mark as errors checked
+     */
+
+    @RequestMapping(value = "/studies/{studyId}/associations/errors_checked",
+                    produces = MediaType.APPLICATION_JSON_VALUE,
+                    method = RequestMethod.GET)
+    public @ResponseBody
+    Map<String, String> associationErrorsChecked(@RequestParam(value = "associationIds[]") String[] associationsIds) {
+
+        String message = "";
+        Integer count = 0;
+
+        // For each one set snpChecked attribute to true
+        for (String associationId : associationsIds) {
+            Association association = associationRepository.findOne(Long.valueOf(associationId));
+            AssociationReport associationReport = association.getAssociationReport();
+            associationReport.setErrorCheckedByCurator(true);
+            associationReportRepository.save(associationReport);
+            count++;
+        }
+        message = "Successfully updated " + count + " associations";
+
+        Map<String, String> result = new HashMap<>();
+        result.put("message", message);
+        return result;
+
     }
 
 
