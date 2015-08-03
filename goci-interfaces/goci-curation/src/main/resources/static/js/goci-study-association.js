@@ -75,15 +75,15 @@ $(document).ready(function() {
 function errorCheckSelectedAssociations(studyId) {
     var associationIds = [];
     //create an array of association ids
-    $('input.error-selector:checked').each(
+    $('input.association-selector:checked').each(
             function() {
                 associationIds.push($(this).attr("value"))
             }
     );
-    updateAssociations(studyId, associationIds);
+    errorCheck(studyId, associationIds);
 }
 
-function updateAssociations(studyId, associationIds) {
+function errorCheck(studyId, associationIds) {
     // Pass details to method in controller which handles database changes
     $.getJSON("associations/errors_checked",
             {"associationIds[]": associationIds},
