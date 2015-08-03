@@ -266,10 +266,28 @@
 
                     <!-- Errors-->
                     <td>
-                        <span style="color:red" th:each="error: ${snpAssociationTableView.associationErrorMap}"
-                              th:text="${error.value} ?: ''"
-                              th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}"></span>
+                         <span th:switch="${snpAssociationTableView.associationErrorsChecked}">
+                             <span th:case="'Yes'">
+                                  <span style="color:darkgrey"
+                                        th:each="error: ${snpAssociationTableView.associationErrorMap}"
+                                        th:text="${error.value} ?: ''"
+                                        th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}">
+
+                                  </span>
+                                  <span class="glyphicon glyphicon-ok pull-right"></span>
+                             </span>
+
+                             <span th:case="'No'">
+                                  <span style="color:red"
+                                        th:each="error: ${snpAssociationTableView.associationErrorMap}"
+                                        th:text="${error.value} ?: ''"
+                                        th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}">
+
+                                  </span>
+                             </span>
+                        </span>
                     </td>
+
 
                     <!--This checkbox is used to indicate checked errors-->
                     <td><input type="checkbox"
