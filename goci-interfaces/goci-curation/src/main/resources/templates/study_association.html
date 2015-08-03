@@ -167,6 +167,7 @@
                 <br/>
                 <thead>
                 <tr>
+                    <th>Edit</th>
                     <th>Genes (author reported)</th>
                     <th>Strongest Allele</th>
                     <th>SNP
@@ -202,13 +203,21 @@
                     <th>Multi-SNP haplotype</th>
                     <th>SNP:SNP interaction</th>
                     <th>SNP Checked?</th>
-                    <th>Edit</th>
                     <th>Approve/ Delete</th>
                     <th>Errors</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="snpAssociationTableView: ${snpAssociationTableViews}">
+
+                    <td>
+                        <div class="btn-group-vertical  btn-group-sm" role="group" aria-label="...">
+                            <a th:href="@{/associations/{associationId}(associationId=${snpAssociationTableView.associationId})}"
+                               class="btn btn-default">Edit</a>
+                            <a th:href="@{/associations/{associationId}/approve(associationId=${snpAssociationTableView.associationId})}"
+                               class="btn btn-default">Approve</a>
+                        </div>
+                    </td>
 
                     <!--Gene-->
                     <td th:text="${snpAssociationTableView.authorReportedGenes}?: '' "></td>
@@ -247,15 +256,6 @@
                     <td th:text="${snpAssociationTableView.multiSnpHaplotype} ?:''"></td>
                     <td th:text="${snpAssociationTableView.snpInteraction} ?:''"></td>
                     <td th:text="${snpAssociationTableView.snpChecked} ?: '' "></td>
-
-                    <td>
-                        <div class="btn-group-vertical  btn-group-sm" role="group" aria-label="...">
-                            <a th:href="@{/associations/{associationId}(associationId=${snpAssociationTableView.associationId})}"
-                               class="btn btn-default">Edit</a>
-                            <a th:href="@{/associations/{associationId}/approve(associationId=${snpAssociationTableView.associationId})}"
-                               class="btn btn-default">Approve</a>
-                        </div>
-                    </td>
 
                     <!--This checkbox is used to approve and delete all SNP associations-->
                     <td><input type="checkbox"
