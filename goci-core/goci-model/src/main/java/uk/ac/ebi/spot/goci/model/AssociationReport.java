@@ -32,6 +32,8 @@ public class AssociationReport {
 
     private String geneNotOnGenome;
 
+    private Boolean errorCheckedByCurator = false;
+
     @OneToOne
     private Association association;
 
@@ -39,14 +41,14 @@ public class AssociationReport {
     public AssociationReport() {
     }
 
-    public AssociationReport(boolean snpPending,
+    public AssociationReport(Boolean snpPending,
                              Date lastUpdateDate,
                              Long geneError,
                              String snpError,
                              String snpGeneOnDiffChr,
                              String noGeneForSymbol,
                              String geneNotOnGenome,
-                             Association association) {
+                             Boolean errorCheckedByCurator, Association association) {
         this.snpPending = snpPending;
         this.lastUpdateDate = lastUpdateDate;
         this.geneError = geneError;
@@ -54,6 +56,7 @@ public class AssociationReport {
         this.snpGeneOnDiffChr = snpGeneOnDiffChr;
         this.noGeneForSymbol = noGeneForSymbol;
         this.geneNotOnGenome = geneNotOnGenome;
+        this.errorCheckedByCurator = errorCheckedByCurator;
         this.association = association;
     }
 
@@ -129,16 +132,12 @@ public class AssociationReport {
         this.association = association;
     }
 
-    @Override public String toString() {
-        return "AssociationReport{" +
-                "id=" + id +
-                ", snpPending=" + snpPending +
-                ", lastUpdateDate=" + lastUpdateDate +
-                ", geneError=" + geneError +
-                ", snpError='" + snpError + '\'' +
-                ", snpGeneOnDiffChr='" + snpGeneOnDiffChr + '\'' +
-                ", noGeneForSymbol='" + noGeneForSymbol + '\'' +
-                ", geneNotOnGenome='" + geneNotOnGenome + '\'' +
-                '}';
+
+    public Boolean getErrorCheckedByCurator() {
+        return errorCheckedByCurator;
+    }
+
+    public void setErrorCheckedByCurator(Boolean errorCheckedByCurator) {
+        this.errorCheckedByCurator = errorCheckedByCurator;
     }
 }
