@@ -64,6 +64,8 @@ public class SnpAssociationTableView {
 
     private Map<String, String> associationErrorMap = new HashMap<>();
 
+    private String associationErrorsChecked;
+
     // Constructors
     public SnpAssociationTableView() {
     }
@@ -91,7 +93,7 @@ public class SnpAssociationTableView {
                                    String snpInteraction,
                                    String snpChecked,
                                    String snpStatuses,
-                                   Map<String, String> associationErrorMap) {
+                                   Map<String, String> associationErrorMap, String associationErrorsChecked) {
         this.associationId = associationId;
         this.authorReportedGenes = authorReportedGenes;
         this.strongestRiskAlleles = strongestRiskAlleles;
@@ -116,6 +118,7 @@ public class SnpAssociationTableView {
         this.snpChecked = snpChecked;
         this.snpStatuses = snpStatuses;
         this.associationErrorMap = associationErrorMap;
+        this.associationErrorsChecked = associationErrorsChecked;
     }
 
     public Long getAssociationId() {
@@ -308,5 +311,13 @@ public class SnpAssociationTableView {
 
     public void setAssociationErrorMap(Map<String, String> associationErrorMap) {
         this.associationErrorMap = associationErrorMap;
+    }
+
+    public String getAssociationErrorsChecked() {
+        return associationErrorsChecked;
+    }
+
+    public void setAssociationErrorsChecked(String associationErrorsChecked) {
+        this.associationErrorsChecked = associationErrorsChecked;
     }
 }
