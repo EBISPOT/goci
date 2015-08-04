@@ -953,13 +953,12 @@ public class AssociationController {
 
     }
 
-    /*  Approve snp associations */
-    // Approve a SNP association
+
+    // Approve a single SNP association
     @RequestMapping(value = "associations/{associationId}/approve",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String approveSnpAssociation(Model model,
-                                        @PathVariable Long associationId,
+    public String approveSnpAssociation(@PathVariable Long associationId,
                                         RedirectAttributes redirectAttributes) {
 
         Association association = associationRepository.findOne(associationId);
@@ -973,9 +972,7 @@ public class AssociationController {
             errorsFound = checkForAssociationErrors(associationReport);
 
             if (associationReport.getErrorCheckedByCurator() != null) {
-                if (!associationReport.getErrorCheckedByCurator()) {
-                    errorsChecked = false;
-                }
+                errorsChecked = associationReport.getErrorCheckedByCurator();
             }
         }
 
@@ -987,7 +984,6 @@ public class AssociationController {
         }
 
         else {
-
             // Errors have not been checked by a curator
             if (!errorsChecked) {
                 String message = "Cannot approve a SNP association until errors are marked as checked";
@@ -1025,9 +1021,7 @@ public class AssociationController {
                 errorsFound = checkForAssociationErrors(associationReport);
 
                 if (associationReport.getErrorCheckedByCurator() != null) {
-                    if (!associationReport.getErrorCheckedByCurator()) {
-                        errorsChecked = false;
-                    }
+                        errorsChecked = associationReport.getErrorCheckedByCurator();
                 }
             }
 
@@ -1040,7 +1034,6 @@ public class AssociationController {
             }
 
             else {
-
                 // Errors have not been checked by a curator
                 if (!errorsChecked) {
                     errorCount++;
@@ -1061,7 +1054,6 @@ public class AssociationController {
         Map<String, String> result = new HashMap<>();
         result.put("message", message);
         return result;
-
     }
 
 
@@ -1069,7 +1061,7 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/approve_all",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String approveAll(Model model, @PathVariable Long studyId, RedirectAttributes redirectAttributes) {
+    public String approveAll(@PathVariable Long studyId, RedirectAttributes redirectAttributes) {
 
         // Get all associations
         Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
@@ -1088,9 +1080,7 @@ public class AssociationController {
                 errorsFound = checkForAssociationErrors(associationReport);
 
                 if (associationReport.getErrorCheckedByCurator() != null) {
-                    if (!associationReport.getErrorCheckedByCurator()) {
-                        errorsChecked = false;
-                    }
+                    errorsChecked = associationReport.getErrorCheckedByCurator();
                 }
             }
 
@@ -1102,14 +1092,11 @@ public class AssociationController {
             }
 
             else {
-
                 // Errors have not been checked by a curator
                 if (!errorsChecked) {
                     errorCount++;
                 }
             }
-
-
         }
 
         if (errorCount > 0) {
@@ -1118,7 +1105,6 @@ public class AssociationController {
         }
 
         return "redirect:/studies/" + studyId + "/associations";
-
     }
 
     /**
@@ -1127,7 +1113,6 @@ public class AssociationController {
      * @param studyId            Study ID in database
      * @param redirectAttributes attributes for a redirect scenario
      */
-    //
     @RequestMapping(value = "/studies/{studyId}/associations/validate_all",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
@@ -1407,7 +1392,11 @@ public class AssociationController {
         return new Sort(new Sort.Order(Sort.Direction.DESC, "loci.strongestRiskAlleles.snp.rsId"));
     }
 
-
+    /**
+     * Review association report for common error types
+     *
+     * @param associationReport Association report to review for errors
+     */
     private Boolean checkForAssociationErrors(AssociationReport associationReport) {
 
         Boolean errorFound = false;
