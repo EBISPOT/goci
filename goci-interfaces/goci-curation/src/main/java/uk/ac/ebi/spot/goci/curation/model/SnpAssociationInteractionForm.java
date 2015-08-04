@@ -5,9 +5,7 @@ import uk.ac.ebi.spot.goci.model.GenomicContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by emma on 12/02/15.
@@ -27,7 +25,7 @@ public class SnpAssociationInteractionForm {
 
     private String snpType;
 
-    private Boolean snpChecked;
+    private Boolean snpApproved;
 
     private Boolean orType;
 
@@ -66,7 +64,7 @@ public class SnpAssociationInteractionForm {
                                          String pvalueText,
                                          Float orPerCopyNum,
                                          String snpType,
-                                         Boolean snpChecked,
+                                         Boolean snpApproved,
                                          Boolean orType,
                                          Integer pvalueMantissa,
                                          Integer pvalueExponent,
@@ -85,7 +83,7 @@ public class SnpAssociationInteractionForm {
         this.pvalueText = pvalueText;
         this.orPerCopyNum = orPerCopyNum;
         this.snpType = snpType;
-        this.snpChecked = snpChecked;
+        this.snpApproved = snpApproved;
         this.orType = orType;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
@@ -228,12 +226,12 @@ public class SnpAssociationInteractionForm {
         this.numOfInteractions = numOfInteractions;
     }
 
-    public Boolean getSnpChecked() {
-        return snpChecked;
+    public Boolean getSnpApproved() {
+        return snpApproved;
     }
 
-    public void setSnpChecked(Boolean snpChecked) {
-        this.snpChecked = snpChecked;
+    public void setSnpApproved(Boolean snpApproved) {
+        this.snpApproved = snpApproved;
     }
 
     public Boolean getOrType() {

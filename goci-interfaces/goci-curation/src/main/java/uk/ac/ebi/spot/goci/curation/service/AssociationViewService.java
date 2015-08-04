@@ -248,14 +248,14 @@ public class AssociationViewService {
             }
         }
 
-        if (association.getSnpChecked() != null) {
-            if (association.getSnpChecked()) {
-                snpAssociationTableView.setSnpChecked("Yes");
+        if (association.getSnpApproved() != null) {
+            if (association.getSnpApproved()) {
+                snpAssociationTableView.setSnpApproved("Yes");
             }
 
 
-            if (!association.getSnpChecked()) {
-                snpAssociationTableView.setSnpChecked("No");
+            if (!association.getSnpApproved()) {
+                snpAssociationTableView.setSnpApproved("No");
             }
         }
 

@@ -58,7 +58,7 @@ public class SnpAssociationTableView {
 
     private String snpInteraction;
 
-    private String snpChecked;
+    private String snpApproved;
 
     private String snpStatuses;
 
@@ -91,7 +91,7 @@ public class SnpAssociationTableView {
                                    String associationType,
                                    String multiSnpHaplotype,
                                    String snpInteraction,
-                                   String snpChecked,
+                                   String snpApproved,
                                    String snpStatuses,
                                    Map<String, String> associationErrorMap, String associationErrorsChecked) {
         this.associationId = associationId;
@@ -115,7 +115,7 @@ public class SnpAssociationTableView {
         this.associationType = associationType;
         this.multiSnpHaplotype = multiSnpHaplotype;
         this.snpInteraction = snpInteraction;
-        this.snpChecked = snpChecked;
+        this.snpApproved = snpApproved;
         this.snpStatuses = snpStatuses;
         this.associationErrorMap = associationErrorMap;
         this.associationErrorsChecked = associationErrorsChecked;
@@ -289,12 +289,12 @@ public class SnpAssociationTableView {
         this.snpInteraction = snpInteraction;
     }
 
-    public String getSnpChecked() {
-        return snpChecked;
+    public String getSnpApproved() {
+        return snpApproved;
     }
 
-    public void setSnpChecked(String snpChecked) {
-        this.snpChecked = snpChecked;
+    public void setSnpApproved(String snpApproved) {
+        this.snpApproved = snpApproved;
     }
 
     public String getSnpStatuses() {

@@ -58,7 +58,7 @@ public class SnpInteractionAssociationService {
         association.setPvalueText(snpAssociationInteractionForm.getPvalueText());
         association.setOrType(snpAssociationInteractionForm.getOrType());
         association.setSnpType(snpAssociationInteractionForm.getSnpType());
-        association.setSnpChecked(snpAssociationInteractionForm.getSnpChecked());
+        association.setSnpApproved(snpAssociationInteractionForm.getSnpApproved());
         association.setOrPerCopyNum(snpAssociationInteractionForm.getOrPerCopyNum());
         association.setOrPerCopyRecip(snpAssociationInteractionForm.getOrPerCopyRecip());
         association.setOrPerCopyRange(snpAssociationInteractionForm.getOrPerCopyRange());
@@ -166,7 +166,7 @@ public class SnpInteractionAssociationService {
         snpAssociationInteractionForm.setPvalueText(association.getPvalueText());
         snpAssociationInteractionForm.setOrPerCopyNum(association.getOrPerCopyNum());
         snpAssociationInteractionForm.setSnpType(association.getSnpType());
-        snpAssociationInteractionForm.setSnpChecked(association.getSnpChecked());
+        snpAssociationInteractionForm.setSnpApproved(association.getSnpApproved());
         snpAssociationInteractionForm.setOrType(association.getOrType());
         snpAssociationInteractionForm.setPvalueMantissa(association.getPvalueMantissa());
         snpAssociationInteractionForm.setPvalueExponent(association.getPvalueExponent());
