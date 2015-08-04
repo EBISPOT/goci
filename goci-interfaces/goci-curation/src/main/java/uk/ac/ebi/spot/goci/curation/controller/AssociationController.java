@@ -1193,9 +1193,12 @@ public class AssociationController {
                 }
             }
 
-            // Store error information
+            // Create association report based on whether there is errors or not
             if (!associationPipelineErrors.isEmpty()) {
                 associationReportService.processAssociationErrors(studyAssociation, associationPipelineErrors);
+            }
+            else {
+                associationReportService.updateAssociationReportDetails(studyAssociation);
             }
         }
 

@@ -32,7 +32,7 @@ public class AssociationReportService {
     /**
      * Method used to format data returned from view via form so it can be stored in database
      *
-     * @param association association, used to create entry association
+     * @param association association, used to create new association report
      * @param errors      collection of errors returned from mapping pipeline
      */
     public void processAssociationErrors(Association association, Collection<String> errors) {
@@ -84,7 +84,7 @@ public class AssociationReportService {
         associationReport.setSnpGeneOnDiffChr(allSnpGeneOnDiffChrErrors);
         associationReport.setNoGeneForSymbol(allNoGeneForSymbolErrors);
 
-        // Before setting link to association remove any existing reports linked to this association
+        // Before setting link to association check for any existing reports linked to this association
         AssociationReport existingReport = associationReportRepository.findByAssociationId(association.getId());
         if (existingReport != null) {
             associationReportRepository.delete(existingReport);
@@ -94,6 +94,29 @@ public class AssociationReportService {
 
         // Save association report
         associationReportRepository.save(associationReport);
+    }
 
+    /**
+     * This method is used when the mapping pipeline returns no errors. It removes any existing association reports and
+     * replaces with a new one with no errors. This ensures errors from previous runs of the mapping pipeline do not
+     * remain in database if they are no longer appearing as mapping pipeline errors.
+     *
+     * @param association association, used to create new association report
+     */
+    public void updateAssociationReportDetails(Association association) {
+
+        // Create association report object
+        AssociationReport associationReport = new AssociationReport();
+        associationReport.setLastUpdateDate(new Date());
+
+        // Before setting link to association remove any existing reports linked to this association
+        AssociationReport existingReport = associationReportRepository.findByAssociationId(association.getId());
+        if (existingReport != null) {
+            associationReportRepository.delete(existingReport);
+        }
+        associationReport.setAssociation(association);
+
+        // Save association report
+        associationReportRepository.save(associationReport);
     }
 }
