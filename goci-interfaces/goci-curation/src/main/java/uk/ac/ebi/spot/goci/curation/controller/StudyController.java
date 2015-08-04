@@ -627,7 +627,7 @@ public class StudyController {
         int snpsNotChecked = 0;
         for (Association association : associations) {
             // If we have one that is not checked set value
-            if (association.getSnpChecked() == false) {
+            if (association.getSnpApproved() == false) {
                 snpsNotChecked = 1;
             }
         }

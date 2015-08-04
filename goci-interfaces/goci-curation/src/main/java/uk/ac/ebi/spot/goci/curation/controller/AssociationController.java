@@ -979,7 +979,7 @@ public class AssociationController {
         // If no errors were recorded for this association
         if (!errorsFound) {
             // Set snpChecked attribute to true
-            association.setSnpChecked(true);
+            association.setSnpApproved(true);
             associationRepository.save(association);
         }
 
@@ -1028,7 +1028,7 @@ public class AssociationController {
             // If no errors were recorded for this association
             if (!errorsFound) {
                 // Set snpChecked attribute to true
-                association.setSnpChecked(true);
+                association.setSnpApproved(true);
                 associationRepository.save(association);
                 count++;
             }
@@ -1087,7 +1087,7 @@ public class AssociationController {
             // If no errors were recorded for this association
             if (!errorsFound) {
                 // Set snpChecked attribute to true
-                association.setSnpChecked(true);
+                association.setSnpApproved(true);
                 associationRepository.save(association);
             }
 
