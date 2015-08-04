@@ -200,7 +200,7 @@
                     <th>SNP Status</th>
                     <th>Multi-SNP haplotype</th>
                     <th>SNP:SNP interaction</th>
-                    <th>SNP Checked?</th>
+                    <th>SNP Approved</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -242,7 +242,7 @@
                     <td th:text="${snpAssociationTableView.snpStatuses} ?:''"></td>
                     <td th:text="${snpAssociationTableView.multiSnpHaplotype} ?:''"></td>
                     <td th:text="${snpAssociationTableView.snpInteraction} ?:''"></td>
-                    <td th:text="${snpAssociationTableView.snpChecked} ?: '' "></td>
+                    <td th:text="${snpAssociationTableView.snpApproved} ?: '' "></td>
                 </tr>
                 </tbody>
             </table>

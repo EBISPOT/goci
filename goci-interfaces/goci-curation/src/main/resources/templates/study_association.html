@@ -307,9 +307,8 @@
                              </span>
                         </span>
                     </td>
-
-                    <!-- Approve associations-->
-                    <td th:text="${snpAssociationTableView.snpChecked} ?: '' "></td>
+                    
+                    <td th:text="${snpAssociationTableView.snpApproved} ?: '' "></td>
 
                     <!--This checkbox is used to check errors, approve and delete all SNP associations-->
                     <td><input type="checkbox"
