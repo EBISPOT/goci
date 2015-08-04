@@ -38,7 +38,7 @@ public class Association {
 
     private Boolean snpInteraction = false;
 
-    private Boolean snpChecked = false;
+    private Boolean snpApproved = false;
 
     private Integer pvalueMantissa;
 
@@ -79,7 +79,7 @@ public class Association {
     public Association() {
     }
 
-    public Association(String riskFrequency, String allele, Float pvalueFloat, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Boolean snpChecked, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyRecipRange, String orPerCopyUnitDescr, Study study, Collection<Locus> loci, Collection<EfoTrait> efoTraits) {
+    public Association(String riskFrequency, String allele, Float pvalueFloat, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Boolean snpApproved, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyRecipRange, String orPerCopyUnitDescr, Study study, Collection<Locus> loci, Collection<EfoTrait> efoTraits) {
         this.riskFrequency = riskFrequency;
         this.allele = allele;
         this.pvalueFloat = pvalueFloat;
@@ -89,7 +89,7 @@ public class Association {
         this.snpType = snpType;
         this.multiSnpHaplotype = multiSnpHaplotype;
         this.snpInteraction = snpInteraction;
-        this.snpChecked = snpChecked;
+        this.snpApproved = snpApproved;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
         this.orPerCopyRecip = orPerCopyRecip;
@@ -268,12 +268,12 @@ public class Association {
         efoTraits.add(efoTrait);
     }
 
-    public Boolean getSnpChecked() {
-        return snpChecked;
+    public Boolean getSnpApproved() {
+        return snpApproved;
     }
 
-    public void setSnpChecked(Boolean snpChecked) {
-        this.snpChecked = snpChecked;
+    public void setSnpApproved(Boolean snpApproved) {
+        this.snpApproved = snpApproved;
     }
 
     public AssociationReport getAssociationReport() {
@@ -283,13 +283,5 @@ public class Association {
     public void setAssociationReport(AssociationReport associationReport) {
         this.associationReport = associationReport;
     }
-
-    @Override public String toString() {
-        return "Association{" +
-                "id=" + id +
-                ", riskFrequency='" + riskFrequency + '\'' +
-                ", allele='" + allele + '\'' +
-                ", pvalueFloat=" + pvalueFloat +
-                '}';
-    }
+    
 }
