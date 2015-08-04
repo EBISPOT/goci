@@ -991,6 +991,11 @@ public class AssociationController {
                 String message = "Cannot approve a SNP association until errors are marked as checked";
                 redirectAttributes.addFlashAttribute("approvalStopped", message);
             }
+            // Errors found have been checked by curator
+            else {
+                association.setSnpApproved(true);
+                associationRepository.save(association);
+            }
         }
 
         return "redirect:/studies/" + association.getStudy().getId() + "/associations";
@@ -1023,7 +1028,7 @@ public class AssociationController {
                 errorsFound = checkForAssociationErrors(associationReport);
 
                 if (associationReport.getErrorCheckedByCurator() != null) {
-                        errorsChecked = associationReport.getErrorCheckedByCurator();
+                    errorsChecked = associationReport.getErrorCheckedByCurator();
                 }
             }
 
@@ -1039,6 +1044,12 @@ public class AssociationController {
                 // Errors have not been checked by a curator
                 if (!errorsChecked) {
                     errorCount++;
+                }
+                // Errors found have been checked by curator
+                else {
+                    association.setSnpApproved(true);
+                    associationRepository.save(association);
+                    count++;
                 }
             }
 
@@ -1098,11 +1109,18 @@ public class AssociationController {
                 if (!errorsChecked) {
                     errorCount++;
                 }
+
+                // Errors found have been checked by curator
+                else {
+                    association.setSnpApproved(true);
+                    associationRepository.save(association);
+                }
+
             }
         }
 
         if (errorCount > 0) {
-            String message = "Some SNP association(s) cannot be approved until errors are marked as checked";
+            String message = "Some SNP association(s) cannot be approved until all errors are marked as checked";
             redirectAttributes.addFlashAttribute("approvalStopped", message);
         }
 
