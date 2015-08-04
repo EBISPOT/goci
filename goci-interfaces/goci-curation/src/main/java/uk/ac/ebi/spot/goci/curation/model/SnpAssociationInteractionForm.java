@@ -9,9 +9,10 @@ import java.util.List;
 
 /**
  * Created by emma on 12/02/15.
- * @author emma
  *
- * Service class to deal with form used by curators to enter snp/association details for interaction studies
+ * @author emma
+ *         <p>
+ *         Service class to deal with form used by curators to enter snp/association details for interaction studies
  */
 public class SnpAssociationInteractionForm {
 
@@ -25,7 +26,9 @@ public class SnpAssociationInteractionForm {
 
     private String snpType;
 
-    private Boolean snpApproved;
+    private Boolean snpApproved = false;
+
+    private Boolean errorCheckedByCurator = false;
 
     private Boolean orType;
 
@@ -65,6 +68,7 @@ public class SnpAssociationInteractionForm {
                                          Float orPerCopyNum,
                                          String snpType,
                                          Boolean snpApproved,
+                                         Boolean errorCheckedByCurator,
                                          Boolean orType,
                                          Integer pvalueMantissa,
                                          Integer pvalueExponent,
@@ -84,6 +88,7 @@ public class SnpAssociationInteractionForm {
         this.orPerCopyNum = orPerCopyNum;
         this.snpType = snpType;
         this.snpApproved = snpApproved;
+        this.errorCheckedByCurator = errorCheckedByCurator;
         this.orType = orType;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
@@ -208,7 +213,9 @@ public class SnpAssociationInteractionForm {
         return genomicContexts;
     }
 
-    public void setGenomicContexts(Collection<GenomicContext> genomicContexts) { this.genomicContexts = genomicContexts; }
+    public void setGenomicContexts(Collection<GenomicContext> genomicContexts) {
+        this.genomicContexts = genomicContexts;
+    }
 
     public Collection<EfoTrait> getEfoTraits() {
         return efoTraits;
@@ -248,5 +255,13 @@ public class SnpAssociationInteractionForm {
 
     public void setRiskFrequency(String riskFrequency) {
         this.riskFrequency = riskFrequency;
+    }
+
+    public Boolean getErrorCheckedByCurator() {
+        return errorCheckedByCurator;
+    }
+
+    public void setErrorCheckedByCurator(Boolean errorCheckedByCurator) {
+        this.errorCheckedByCurator = errorCheckedByCurator;
     }
 }

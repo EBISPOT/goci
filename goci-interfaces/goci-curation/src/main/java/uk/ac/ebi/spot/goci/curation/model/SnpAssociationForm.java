@@ -40,6 +40,8 @@ public class SnpAssociationForm {
 
     private Boolean snpApproved = false;
 
+    private Boolean errorCheckedByCurator = false;
+
     private Integer pvalueMantissa;
 
     private Integer pvalueExponent;
@@ -86,6 +88,7 @@ public class SnpAssociationForm {
                               Boolean multiSnpHaplotype,
                               Boolean snpInteraction,
                               Boolean snpApproved,
+                              Boolean errorCheckedByCurator,
                               Integer pvalueMantissa,
                               Integer pvalueExponent,
                               Float pvalueFloat,
@@ -111,6 +114,7 @@ public class SnpAssociationForm {
         this.multiSnpHaplotype = multiSnpHaplotype;
         this.snpInteraction = snpInteraction;
         this.snpApproved = snpApproved;
+        this.errorCheckedByCurator = errorCheckedByCurator;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
         this.pvalueFloat = pvalueFloat;
@@ -328,6 +332,14 @@ public class SnpAssociationForm {
 
     public void setAssociationErrorMap(Map<String, String> associationErrorMap) {
         this.associationErrorMap = associationErrorMap;
+    }
+
+    public Boolean getErrorCheckedByCurator() {
+        return errorCheckedByCurator;
+    }
+
+    public void setErrorCheckedByCurator(Boolean errorCheckedByCurator) {
+        this.errorCheckedByCurator = errorCheckedByCurator;
     }
 }
 
