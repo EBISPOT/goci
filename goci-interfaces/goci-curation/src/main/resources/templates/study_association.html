@@ -79,7 +79,6 @@
 </div>
 
 
-
 <div class="container-fluid" th:object="${study}" th:if="${not #lists.isEmpty(snpAssociationTableViews)}">
     <div class="row">
         <div class="col-md-12">
@@ -307,7 +306,7 @@
                              </span>
                         </span>
                     </td>
-                    
+
                     <td th:text="${snpAssociationTableView.snpApproved} ?: '' "></td>
 
                     <!--This checkbox is used to check errors, approve and delete all SNP associations-->
