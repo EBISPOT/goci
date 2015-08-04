@@ -735,6 +735,7 @@ public class AssociationController {
         // Save our association information
         associationRepository.save(editedAssociation);
 
+/*
         // Store mapped location data, do this after the SNP objects have been created
         if (snpAssociationForm != null) {
             if (snpAssociationForm.getSnpMappingForms().size() > 0) {
@@ -758,6 +759,7 @@ public class AssociationController {
                 snpGenomicContextMappingService.processGenomicContext(snpAssociationInteractionForm.getGenomicContexts());
             }
         }
+*/
 
         return "redirect:/associations/" + associationId;
     }
