@@ -63,9 +63,7 @@
         <div class="col-md-10">
             <div class="form-group">
                 <div id="addSNPForm">
-                    <div id="snpValidationStatusOk" class="alert alert-success col-md-offset-2 col-md-10" style="display:none"></div>
-                    <div id="snpValidationStatusFailed" class="alert alert-danger col-md-offset-2 col-md-10" style="display:none"></div>
-                    <div id="contextValidationStatus" class="alert alert-danger col-md-offset-2 col-md-10" style="display:none"></div>
+
                     <form class="form-horizontal"
                           method="post"
                           name="snp-association-form"
@@ -93,90 +91,98 @@
                                         </div>
 
                                         <thead th:if="*{numOfInteractions &gt; 0 }">
-                                            <tr>
-                                                <th>
-                                                    <button class="btn btn-default btn-sm" type="submit" name="addCol">Add column</button>
-                                                </th>
-                                            </tr>
+                                        <tr>
+                                            <th>
+                                                <button class="btn btn-default btn-sm" type="submit" name="addCol">Add column</button>
+                                            </th>
+                                        </tr>
                                         </thead>
                                         <tbody th:if="*{numOfInteractions &gt; 0 }">
 
-                                            <tr>
-                                                <td></td>
-                                                <td th:each="col,colStat : *{snpFormColumns}">
-                                                     <button class="btn btn-default btn-sm" type="submit" name="removeCol"
+                                        <tr>
+                                            <td></td>
+                                            <td th:each="col,colStat : *{snpFormColumns}">
+                                                     <button class="btn btn-default btn-sm"
+                                                             type="submit"
+                                                             name="removeCol"
                                                              th:value="${colStat.index}"><span class="glyphicon glyphicon-remove"
                                                                                                aria-hidden="true"></span>
                                                  </button>
-                                                </td>
-                                            </tr>
+                                            </td>
+                                        </tr>
 
-                                            <tr>
-                                                <td>SNP</td>
-                                                <td th:each="col,colStat : *{snpFormColumns}">
-                                                    <span th:text="${colStat.count}" class="snp_row" style="display:none">1</span>
-                                                    <input th:id="snp_id_+${colStat.count}" type="text" th:field="*{snpFormColumns[__${colStat.index}__].snp}"/>
-                                                    <input type="hidden" th:id="snp_+${colStat.count}" name="snp" th:value="*{snpFormColumns[__${colStat.index}__].snp}"/>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Strongest SNP-Risk Allele</td>
-                                                <td th:each="col,colStat : *{snpFormColumns}">
-                                                    <input type="text"
-                                                           th:field="*{snpFormColumns[__${colStat.index}__].strongestRiskAllele}"/>
-                                                </td>
-                                            </tr>
+                                        <tr>
+                                            <td>SNP</td>
+                                            <td th:each="col,colStat : *{snpFormColumns}">
+                                                <span th:text="${colStat.count}"
+                                                      class="snp_row"
+                                                      style="display:none">1</span>
+                                                <input th:id="snp_id_+${colStat.count}"
+                                                       type="text"
+                                                       th:field="*{snpFormColumns[__${colStat.index}__].snp}"/>
 
-                                            <tr>
-                                                <td>
-                                                    <div>Gene(s) <button type="button" id="gene_validation_button" data-loading-text="Checking..." class="btn btn-primary" autocomplete="off">Check gene(s)</button></div>
-                                                    <div id="geneValidationStatus" class="alert alert-danger" style="display:none;margin-top:5px"></div>
-                                                </td>
-                                                <td th:each="col,colStat : *{snpFormColumns}">
-                                                    <input type="text" data-role="tagsinput" th:id="'authorgenes'+${colStat.index}"
-                                                           th:field="*{snpFormColumns[__${colStat.index}__].authorReportedGenes}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Strongest SNP-Risk Allele</td>
+                                            <td th:each="col,colStat : *{snpFormColumns}">
+                                                <input type="text"
+                                                       th:field="*{snpFormColumns[__${colStat.index}__].strongestRiskAllele}"/>
+                                            </td>
+                                        </tr>
 
-                                                </td>
-                                            </tr>
+                                        <tr>
+                                            <td>
+                                                <div>Gene(s)</div>
+                                            </td>
+                                            <td th:each="col,colStat : *{snpFormColumns}">
+                                                <input type="text"
+                                                       data-role="tagsinput"
+                                                       th:id="'authorgenes'+${colStat.index}"
+                                                       th:field="*{snpFormColumns[__${colStat.index}__].authorReportedGenes}"/>
 
-                                            <tr>
-                                                <td>Proxy</td>
-                                                <td th:each="col,colStat : *{snpFormColumns}">
-                                                    <input type="text" data-role="tagsinput" label="proxySnps"
-                                                           th:field="*{snpFormColumns[__${colStat.index}__].proxySnps}"/>
-                                                </td>
-                                            </tr>
+                                            </td>
+                                        </tr>
 
-                                            <tr>
-                                                <td>Independent SNP risk allele frequency in controls</td>
-                                                <td th:each="col,colStat : *{snpFormColumns}">
-                                                    <input type="text"
-                                                           th:field="*{snpFormColumns[__${colStat.index}__].riskFrequency}"/>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Genome-wide</td>
-                                                <td th:each="col,colStat : *{snpFormColumns}">
-                                                    <input type="checkbox"
-                                                           th:field="*{snpFormColumns[__${colStat.index}__].genomeWide}"/>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Limited list</td>
-                                                <td th:each="col,colStat : *{snpFormColumns}">
-                                                    <input type="checkbox"
-                                                           th:field="*{snpFormColumns[__${colStat.index}__].limitedList}"/>
-                                                </td>
+                                        <tr>
+                                            <td>Proxy</td>
+                                            <td th:each="col,colStat : *{snpFormColumns}">
+                                                <input type="text" data-role="tagsinput" label="proxySnps"
+                                                       th:field="*{snpFormColumns[__${colStat.index}__].proxySnps}"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Independent SNP risk allele frequency in controls</td>
+                                            <td th:each="col,colStat : *{snpFormColumns}">
+                                                <input type="text"
+                                                       th:field="*{snpFormColumns[__${colStat.index}__].riskFrequency}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Genome-wide</td>
+                                            <td th:each="col,colStat : *{snpFormColumns}">
+                                                <input type="checkbox"
+                                                       th:field="*{snpFormColumns[__${colStat.index}__].genomeWide}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Limited list</td>
+                                            <td th:each="col,colStat : *{snpFormColumns}">
+                                                <input type="checkbox"
+                                                       th:field="*{snpFormColumns[__${colStat.index}__].limitedList}"/>
+                                            </td>
                                         </tr>
                                         </tbody>
 
                                     </table>
-                                    <button type="button" id="multi_snp_validation_button" data-loading-text="Validating..." class="btn btn-primary" autocomplete="off">Validate SNP(s)</button>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="riskFrequency" class="control-label col-md-2">Combined interacting risk allele frequency in controls</label>
+                                <label for="riskFrequency" class="control-label col-md-2">Combined interacting risk
+                                                                                          allele frequency in
+                                                                                          controls</label>
 
                                 <div class="col-md-10">
                                     <input type="text" class="form-control" id="riskFrequency"
@@ -262,7 +268,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="orPerCopyRange" class="control-label col-md-2">OR/HR/RR per copy (Range)</label>
+                                <label for="orPerCopyRange" class="control-label col-md-2">OR/HR/RR per copy
+                                                                                           (Range)</label>
 
                                 <div class="col-md-10">
                                     <input type="text" class="form-control" id="orPerCopyRange"
@@ -271,7 +278,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="orPerCopyRecipRange" class="control-label col-md-2">OR/HR/RR per copy reciprocal
+                                <label for="orPerCopyRecipRange" class="control-label col-md-2">OR/HR/RR per copy
+                                                                                                reciprocal
                                                                                                 (Range)</label>
 
                                 <div class="col-md-10">

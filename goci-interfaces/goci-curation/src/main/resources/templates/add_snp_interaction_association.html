@@ -56,14 +56,14 @@
     </div>
 </div>
 <br/>
+
 <div class="container">
     <div class="row">
         <div class="col-md-10">
             <div class="form-group">
                 <div id="addSNPForm">
-                    <div id="snpValidationStatusOk" class="alert alert-success col-md-offset-2 col-md-10" style="display:none"></div>
-                    <div id="snpValidationStatusFailed" class="alert alert-danger col-md-offset-2 col-md-10" style="display:none"></div>
-                    <div id="contextValidationStatus" class="alert alert-danger col-md-offset-2 col-md-10" style="display:none"></div>
+
+
                     <form class="form-horizontal"
                           method="post"
                           name="snp-association-form"
@@ -111,9 +111,13 @@
                                         <tr>
                                             <td>SNP</td>
                                             <td th:each="col,colStat : *{snpFormColumns}">
-                                                <span th:text="${colStat.count}" class="snp_row" style="display:none">1</span>
-                                                <input th:id="snp_id_+${colStat.count}" type="text" th:field="*{snpFormColumns[__${colStat.index}__].snp}"/>
-                                                <input type="hidden" th:id="snp_+${colStat.count}" name="snp" th:value="*{snpFormColumns[__${colStat.index}__].snp}"/>
+                                                <span th:text="${colStat.count}"
+                                                      class="snp_row"
+                                                      style="display:none">1</span>
+                                                <input th:id="snp_id_+${colStat.count}"
+                                                       type="text"
+                                                       th:field="*{snpFormColumns[__${colStat.index}__].snp}"/>
+
                                             </td>
                                         </tr>
                                         <tr>
@@ -126,11 +130,12 @@
 
                                         <tr>
                                             <td>
-                                                <div>Gene(s) <button type="button" id="gene_validation_button" data-loading-text="Checking..." class="btn btn-primary" autocomplete="off">Check gene(s)</button></div>
-                                                <div id="geneValidationStatus" class="alert alert-danger" style="display:none;margin-top:5px"></div>
+                                                <div>Gene(s)</div>
                                             </td>
                                             <td th:each="col,colStat : *{snpFormColumns}">
-                                                <input type="text" data-role="tagsinput" th:id="'authorgenes'+${colStat.index}"
+                                                <input type="text"
+                                                       data-role="tagsinput"
+                                                       th:id="'authorgenes'+${colStat.index}"
                                                        th:field="*{snpFormColumns[__${colStat.index}__].authorReportedGenes}"/>
 
                                             </td>
@@ -168,18 +173,19 @@
                                         </tbody>
 
                                     </table>
-                                    <button type="button" th:if="*{numOfInteractions &gt; 0 }" id="multi_snp_validation_button" data-loading-text="Validating..." class="btn btn-primary" autocomplete="off">Validate SNP(s)</button>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                            <label for="riskFrequency" class="control-label col-md-2">Combined interacting risk allele frequency in controls</label>
+                                <label for="riskFrequency" class="control-label col-md-2">Combined interacting risk
+                                                                                          allele frequency in
+                                                                                          controls</label>
 
-                            <div class="col-md-10">
-                                <input type="text" class="form-control" id="riskFrequency"
-                                       th:field="*{riskFrequency}" name="riskFrequency"/>
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control" id="riskFrequency"
+                                           th:field="*{riskFrequency}" name="riskFrequency"/>
+                                </div>
                             </div>
-                        </div>
 
                             <div class="form-group">
                                 <label for="pvalueMantissa" class="control-label col-md-2">P-value (mantissa)</label>
@@ -251,7 +257,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="orPerCopyRange" class="control-label col-md-2">OR/HR/RR per copy (Range)</label>
+                                <label for="orPerCopyRange" class="control-label col-md-2">OR/HR/RR per copy
+                                                                                           (Range)</label>
 
                                 <div class="col-md-10">
                                     <input type="text" class="form-control" id="orPerCopyRange"
@@ -260,7 +267,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="orPerCopyRecipRange" class="control-label col-md-2">OR/HR/RR per copy reciprocal
+                                <label for="orPerCopyRecipRange" class="control-label col-md-2">OR/HR/RR per copy
+                                                                                                reciprocal
                                                                                                 (Range)</label>
 
                                 <div class="col-md-10">

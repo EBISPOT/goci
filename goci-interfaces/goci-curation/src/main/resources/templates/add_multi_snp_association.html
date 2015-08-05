@@ -62,9 +62,8 @@
         <div class="col-md-10">
             <div class="form-group">
                 <div id="addSNPForm">
-                    <div id="snpValidationStatusOk" class="alert alert-success col-md-offset-2 col-md-10" style="display:none"></div>
-                    <div id="snpValidationStatusFailed" class="alert alert-danger col-md-offset-2 col-md-10" style="display:none"></div>
-                    <div id="contextValidationStatus" class="alert alert-danger col-md-offset-2 col-md-10" style="display:none"></div>
+
+
                     <form class="form-horizontal"
                           method="post"
                           name="snp-association-form"
@@ -107,7 +106,6 @@
                                                 <td th:text="${rowStat.count}" class="snp_row">1</td>
                                                 <td>
                                                     <input th:id="snp_id_+${rowStat.count}" type="text" th:field="*{snpFormRows[__${rowStat.index}__].snp}"/>
-                                                    <input type="hidden" th:id="snp_+${rowStat.count}" name="snp" th:value="*{snpFormRows[__${rowStat.index}__].snp}"/>
                                                 </td>
                                                 <td>
                                                     <input type="text" th:field="*{snpFormRows[__${rowStat.index}__].strongestRiskAllele}"/>
@@ -121,12 +119,10 @@
                                                 </td>
                                                 <td>
                                                     <button type="submit" name="removeRow" th:value="${rowStat.index}">Remove row</button>
-                                                    <input type="hidden" th:id="snpValidated_+${rowStat.count}" name="snpValidated" value="false"/>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <button type="button" id="multi_snp_validation_button" data-loading-text="Validating..." class="btn btn-primary" autocomplete="off">Validate SNP(s)</button>
                                 </div>
                             </div>
 
@@ -147,7 +143,6 @@
                                     <input type="text" class="form-control" id="authorgenes"
                                            th:field="*{authorReportedGenes}" name="authorReportedGene"
                                            data-role="tagsinput"/>
-                                    <button type="button" id="gene_validation_button" data-loading-text="Checking..." class="btn btn-primary" autocomplete="off">Check gene(s)</button>
                                 </div>
                             </div>
 

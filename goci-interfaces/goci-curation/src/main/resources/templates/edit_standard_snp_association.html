@@ -38,7 +38,7 @@
     <script src="../static/js/goci-snp-association-mapping.js"
             th:src="@{../js/goci-snp-association-mapping.js}"></script>
 
-    
+
 </head>
 <body>
 
@@ -56,7 +56,7 @@
     </div>
     <!--Include errors-->
     <div class="col-md-10" style="margin-top:10px">
-      <div th:include="association_error :: association_errors"></div>
+        <div th:include="association_error :: association_errors"></div>
     </div>
 </div>
 
@@ -64,9 +64,7 @@
     <div class="row">
         <div class="col-md-10">
             <div id="editSNPForm">
-                <div id="snpValidationStatusOk" class="alert alert-success col-md-offset-2 col-md-10" style="display:none"></div>
-                <div id="snpValidationStatusFailed" class="alert alert-danger col-md-offset-2 col-md-10" style="display:none"></div>
-                <div id="contextValidationStatus" class="alert alert-danger col-md-offset-2 col-md-10" style="display:none"></div>
+
                 <form class="form-horizontal"
                       method="post"
                       name="snp-association-form"
@@ -94,30 +92,31 @@
                                         <th>Strongest SNP-Risk Allele</th>
                                         <th>Proxy SNP</th>
                                         <th>Merged</th>
-                                        <th>Variant validation</th>
+
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr th:each="row,rowStat : *{snpFormRows}">
                                         <td>
-                                            <input th:id="snp_id_+${rowStat.count}" type="text" th:field="*{snpFormRows[__${rowStat.index}__].snp}"/>
-                                            <input type="hidden" th:id="snp_+${rowStat.count}" name="snp" th:value="*{snpFormRows[__${rowStat.index}__].snp}"/>
+                                            <input th:id="snp_id_+${rowStat.count}"
+                                                   type="text"
+                                                   th:field="*{snpFormRows[__${rowStat.index}__].snp}"/>
+
                                         </td>
                                         <td>
-                                            <input type="text" th:field="*{snpFormRows[__${rowStat.index}__].strongestRiskAllele}"/>
+                                            <input type="text"
+                                                   th:field="*{snpFormRows[__${rowStat.index}__].strongestRiskAllele}"/>
                                         </td>
                                         <td>
                                             <input type="text" data-role="tagsinput" label="proxySnps"
                                                    th:field="*{snpFormRows[__${rowStat.index}__].proxySnps}"/>
                                         </td>
                                         <td>
-                                            <input th:id="merged_+${rowStat.count}" type="text" th:field="*{snpFormRows[__${rowStat.index}__].merged}"/>
+                                            <input th:id="merged_+${rowStat.count}"
+                                                   type="text"
+                                                   th:field="*{snpFormRows[__${rowStat.index}__].merged}"/>
                                         </td>
-                                        <td>
-                                            <!--<span class="btn btn-primary" id="validation_button">Validate</span>-->
-                                            <button type="button" id="snp_validation_button" data-loading-text="Validating..." class="btn btn-primary" autocomplete="off">Validate</button>
-                                            <input type="hidden" th:id="snpValidated_+${rowStat.count}" name="snpValidated" value="false"/>
-                                        </td>
+
                                     </tr>
                                     </tbody>
                                 </table>
@@ -131,14 +130,14 @@
                                 <input type="text" class="form-control" id="authorgenes"
                                        th:field="*{authorReportedGenes}" name="authorReportedGene"
                                        data-role="tagsinput"/>
-                                <!--<span class="btn btn-primary" id="gene_validation_button">Check gene(s)</span>-->
-                                <button type="button" id="gene_validation_button" data-loading-text="Checking..." class="btn btn-primary" autocomplete="off">Check gene(s)</button>
+
                             </div>
-                            <div id="geneValidationStatus" class="alert alert-danger col-md-offset-2 col-md-10" style="display:none"></div>
+
                         </div>
 
                         <div class="form-group">
-                            <label for="riskFrequency" class="control-label col-md-2">Risk allele frequency in controls</label>
+                            <label for="riskFrequency" class="control-label col-md-2">Risk allele frequency in
+                                                                                      controls</label>
 
                             <div class="col-md-10">
                                 <input type="text" class="form-control" id="riskFrequency"
