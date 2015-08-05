@@ -1201,10 +1201,16 @@ public class AssociationController {
                             }
                         }
                     }
+                    else {
+                        getLog().warn("Attempt to map SNP: " + snpRsId + " returned no location details");
+                    }
 
                     // Store genomic context data for snp
                     if (!snpGenomicContexts.isEmpty()) {
                         allGenomicContexts.addAll(snpGenomicContexts);
+                    }
+                    else {
+                        getLog().warn("Attempt to map SNP: " + snpRsId + " returned no mapped genes");
                     }
 
                     if (!pipelineErrors.isEmpty()) {
