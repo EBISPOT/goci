@@ -673,8 +673,6 @@ public class SolrSearchController {
     }
 
 //    @RequestMapping(value = "api/search/downloads", produces = MediaType.TEXT_PLAIN_VALUE)
-//    public @ResponseBody String getSearchResults(
-
     @RequestMapping(value = "api/search/downloads")
     public void getSearchResults(
             @RequestParam("q") String query,
