@@ -339,6 +339,7 @@ public class AssociationController {
 
             // Create our associations
             if (!newAssociations.isEmpty()) {
+                Collection<Association> associationsToMap = new ArrayList<>();
                 for (Association newAssociation : newAssociations) {
 
                     // Set the study ID for our association
@@ -346,8 +347,12 @@ public class AssociationController {
 
                     // Save our association information
                     associationRepository.save(newAssociation);
+
+                    // Map RS_ID in association
+                    associationsToMap.add(newAssociation);
                 }
 
+                validateAndMapSnps(associationsToMap);
             }
             return "redirect:/studies/" + studyId + "/associations";
 
@@ -548,16 +553,10 @@ public class AssociationController {
         // Save our association information
         associationRepository.save(newAssociation);
 
-        // Store mapped location data, do this after the SNP objects have been created
-        if (snpAssociationForm.getSnpMappingForms().size() > 0) {
-            snpLocationMappingService.processMappingForms(snpAssociationForm.getSnpMappingForms());
-        }
-
-        // Store genomic context information associated with curator entered RS_IDs
-        if (snpAssociationForm.getGenomicContexts().size() > 0) {
-            snpGenomicContextMappingService.processGenomicContext(snpAssociationForm.getGenomicContexts());
-        }
-
+        // Map RS_ID in association
+        Collection<Association> associationsToMap = new ArrayList<>();
+        associationsToMap.add(newAssociation);
+        validateAndMapSnps(associationsToMap);
 
         return "redirect:/associations/" + newAssociation.getId();
     }
@@ -579,15 +578,10 @@ public class AssociationController {
         // Save our association information
         associationRepository.save(newAssociation);
 
-        // Store mapped location data, do this after the SNP objects have been created
-        if (snpAssociationForm.getSnpMappingForms().size() > 0) {
-            snpLocationMappingService.processMappingForms(snpAssociationForm.getSnpMappingForms());
-        }
-
-        // Store genomic context information associated with curator entered RS_IDs
-        if (snpAssociationForm.getGenomicContexts().size() > 0) {
-            snpGenomicContextMappingService.processGenomicContext(snpAssociationForm.getGenomicContexts());
-        }
+        // Map RS_ID in association
+        Collection<Association> associationsToMap = new ArrayList<>();
+        associationsToMap.add(newAssociation);
+        validateAndMapSnps(associationsToMap);
 
         return "redirect:/associations/" + newAssociation.getId();
     }
@@ -610,15 +604,10 @@ public class AssociationController {
         // Save our association information
         associationRepository.save(newAssociation);
 
-        // Store mapped location data, do this after the SNP objects have been created
-        if (snpAssociationInteractionForm.getSnpMappingForms().size() > 0) {
-            snpLocationMappingService.processMappingForms(snpAssociationInteractionForm.getSnpMappingForms());
-        }
-
-        // Store genomic context information associated with curator entered RS_IDs
-        if (snpAssociationInteractionForm.getGenomicContexts().size() > 0) {
-            snpGenomicContextMappingService.processGenomicContext(snpAssociationInteractionForm.getGenomicContexts());
-        }
+        // Map RS_ID in association
+        Collection<Association> associationsToMap = new ArrayList<>();
+        associationsToMap.add(newAssociation);
+        validateAndMapSnps(associationsToMap);
 
         return "redirect:/associations/" + newAssociation.getId();
     }
@@ -735,31 +724,10 @@ public class AssociationController {
         // Save our association information
         associationRepository.save(editedAssociation);
 
-/*
-        // Store mapped location data, do this after the SNP objects have been created
-        if (snpAssociationForm != null) {
-            if (snpAssociationForm.getSnpMappingForms().size() > 0) {
-                snpLocationMappingService.processMappingForms(snpAssociationForm.getSnpMappingForms());
-            }
-
-            // Store genomic context information associated with curator entered RS_IDs
-            if (snpAssociationForm.getGenomicContexts().size() > 0) {
-                snpGenomicContextMappingService.processGenomicContext(snpAssociationForm.getGenomicContexts());
-            }
-        }
-
-        if (snpAssociationInteractionForm != null) {
-            // Store mapped location data, do this after the SNP objects have been created
-            if (snpAssociationInteractionForm.getSnpMappingForms().size() > 0) {
-                snpLocationMappingService.processMappingForms(snpAssociationInteractionForm.getSnpMappingForms());
-            }
-
-            // Store genomic context information associated with curator entered RS_IDs
-            if (snpAssociationInteractionForm.getGenomicContexts().size() > 0) {
-                snpGenomicContextMappingService.processGenomicContext(snpAssociationInteractionForm.getGenomicContexts());
-            }
-        }
-*/
+        // Map RS_ID in association
+        Collection<Association> associationsToMap = new ArrayList<>();
+        associationsToMap.add(editedAssociation);
+        validateAndMapSnps(associationsToMap);
 
         return "redirect:/associations/" + associationId;
     }
@@ -1141,105 +1109,7 @@ public class AssociationController {
         // For the study get all associations
         Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
 
-        // Maps to store returned location data, this is used as
-        // snpLocationMappingService process all locations linked
-        // to a single snp in one go
-        Map<String, Set<Location>> snpToLocationsMap = new HashMap<>();
-
-        // Collection to store all genomic contexts
-        Collection<GenomicContext> allGenomicContexts = new ArrayList<>();
-
-        // For each association get the loci
-        for (Association studyAssociation : studyAssociations) {
-
-            // Collection to store all errors for one association
-            Collection<String> associationPipelineErrors = new ArrayList<>();
-
-            Collection<Locus> studyAssociationLoci = studyAssociation.getLoci();
-
-            // For each loci get the get the SNP and author reported genes
-            for (Locus associationLocus : studyAssociationLoci) {
-                Long locusId = associationLocus.getId();
-
-                Collection<SingleNucleotidePolymorphism> snpsLinkedToLocus =
-                        singleNucleotidePolymorphismRepository.findByRiskAllelesLociId(locusId);
-
-                Collection<Gene> authorReportedGenesLinkedToSnp = associationLocus.getAuthorReportedGenes();
-
-                // Get gene names
-                Collection<String> authorReportedGeneNamesLinkedToSnp = new ArrayList<>();
-                for (Gene authorReportedGeneLinkedToSnp : authorReportedGenesLinkedToSnp) {
-                    authorReportedGeneNamesLinkedToSnp.add(authorReportedGeneLinkedToSnp.getGeneName());
-                }
-
-                // Pass rs_id and author reported genes to mapping component
-                for (SingleNucleotidePolymorphism snpLinkedToLocus : snpsLinkedToLocus) {
-                    String snpRsId = snpLinkedToLocus.getRsId();
-                    EnsemblMappingPipeline ensemblMappingPipeline =
-                            new EnsemblMappingPipeline(snpRsId, authorReportedGeneNamesLinkedToSnp);
-                    ensemblMappingPipeline.run_pipeline();
-
-                    Collection<Location> locations = ensemblMappingPipeline.getLocations();
-                    Collection<GenomicContext> snpGenomicContexts = ensemblMappingPipeline.getGenomicContexts();
-                    ArrayList<String> pipelineErrors = ensemblMappingPipeline.getPipelineErrors();
-
-                    // Store location information for SNP
-                    if (!locations.isEmpty()) {
-                        for (Location location : locations) {
-
-                            // Next time we see SNP, add location to set
-                            // This would only occur is SNP has multiple locations
-                            if (snpToLocationsMap.containsKey(snpRsId)) {
-                                snpToLocationsMap.get(snpRsId).add(location);
-                            }
-
-                            // First time we see a SNP store the location
-                            else {
-                                Set<Location> snpLocation = new HashSet<>();
-                                snpLocation.add(location);
-                                snpToLocationsMap.put(snpRsId, snpLocation);
-                            }
-                        }
-                    }
-                    else {
-                        getLog().warn("Attempt to map SNP: " + snpRsId + " returned no location details");
-                    }
-
-                    // Store genomic context data for snp
-                    if (!snpGenomicContexts.isEmpty()) {
-                        allGenomicContexts.addAll(snpGenomicContexts);
-                    }
-                    else {
-                        getLog().warn("Attempt to map SNP: " + snpRsId + " returned no mapped genes");
-                    }
-
-                    if (!pipelineErrors.isEmpty()) {
-                        associationPipelineErrors.addAll(pipelineErrors);
-                    }
-                }
-            }
-
-            // Create association report based on whether there is errors or not
-            if (!associationPipelineErrors.isEmpty()) {
-                associationReportService.processAssociationErrors(studyAssociation, associationPipelineErrors);
-            }
-            else {
-                associationReportService.updateAssociationReportDetails(studyAssociation);
-            }
-        }
-
-        // Save data
-        if (!snpToLocationsMap.isEmpty()) {
-            getLog().info("Adding/updating location details for SNPs" + snpToLocationsMap.keySet().toString() +
-                                  ", in study " + studyId);
-            snpLocationMappingService.storeSnpLocation(snpToLocationsMap);
-        }
-        if (!allGenomicContexts.isEmpty()) {
-            getLog().info(
-                    "Adding/updating genomic context for SNPs" + snpToLocationsMap.keySet().toString() + ", in study " +
-                            studyId);
-            snpGenomicContextMappingService.processGenomicContext(allGenomicContexts);
-        }
+        validateAndMapSnps(studyAssociations);
 
         String message = "Mapping complete, please check for any errors displayed in the 'Errors' column";
         redirectAttributes.addFlashAttribute("mappingComplete", message);
@@ -1452,6 +1322,114 @@ public class AssociationController {
         }
 
         return errorFound;
+    }
+
+
+    /**
+     * Perform validation and mapping of association
+     *
+     * @param associations Collection of associations to map
+     */
+    private void validateAndMapSnps(Collection<Association> associations) {
+
+        // Map to store returned location data, this is used as
+        // snpLocationMappingService process all locations linked
+        // to a single snp in one go
+        Map<String, Set<Location>> snpToLocationsMap = new HashMap<>();
+
+        // Collection to store all genomic contexts
+        Collection<GenomicContext> allGenomicContexts = new ArrayList<>();
+
+        // For each association get the loci
+        for (Association association : associations) {
+
+            // Collection to store all errors for one association
+            Collection<String> associationPipelineErrors = new ArrayList<>();
+
+            Collection<Locus> studyAssociationLoci = association.getLoci();
+
+            // For each loci get the get the SNP and author reported genes
+            for (Locus associationLocus : studyAssociationLoci) {
+                Long locusId = associationLocus.getId();
+
+                Collection<SingleNucleotidePolymorphism> snpsLinkedToLocus =
+                        singleNucleotidePolymorphismRepository.findByRiskAllelesLociId(locusId);
+
+                Collection<Gene> authorReportedGenesLinkedToSnp = associationLocus.getAuthorReportedGenes();
+
+                // Get gene names
+                Collection<String> authorReportedGeneNamesLinkedToSnp = new ArrayList<>();
+                for (Gene authorReportedGeneLinkedToSnp : authorReportedGenesLinkedToSnp) {
+                    authorReportedGeneNamesLinkedToSnp.add(authorReportedGeneLinkedToSnp.getGeneName());
+                }
+
+                // Pass rs_id and author reported genes to mapping component
+                for (SingleNucleotidePolymorphism snpLinkedToLocus : snpsLinkedToLocus) {
+                    String snpRsId = snpLinkedToLocus.getRsId();
+                    EnsemblMappingPipeline ensemblMappingPipeline =
+                            new EnsemblMappingPipeline(snpRsId, authorReportedGeneNamesLinkedToSnp);
+                    ensemblMappingPipeline.run_pipeline();
+
+                    Collection<Location> locations = ensemblMappingPipeline.getLocations();
+                    Collection<GenomicContext> snpGenomicContexts = ensemblMappingPipeline.getGenomicContexts();
+                    ArrayList<String> pipelineErrors = ensemblMappingPipeline.getPipelineErrors();
+
+                    // Store location information for SNP
+                    if (!locations.isEmpty()) {
+                        for (Location location : locations) {
+
+                            // Next time we see SNP, add location to set
+                            // This would only occur is SNP has multiple locations
+                            if (snpToLocationsMap.containsKey(snpRsId)) {
+                                snpToLocationsMap.get(snpRsId).add(location);
+                            }
+
+                            // First time we see a SNP store the location
+                            else {
+                                Set<Location> snpLocation = new HashSet<>();
+                                snpLocation.add(location);
+                                snpToLocationsMap.put(snpRsId, snpLocation);
+                            }
+                        }
+                    }
+                    else {
+                        getLog().warn("Attempt to map SNP: " + snpRsId + " returned no location details");
+                    }
+
+                    // Store genomic context data for snp
+                    if (!snpGenomicContexts.isEmpty()) {
+                        allGenomicContexts.addAll(snpGenomicContexts);
+                    }
+                    else {
+                        getLog().warn("Attempt to map SNP: " + snpRsId + " returned no mapped genes");
+                    }
+
+                    if (!pipelineErrors.isEmpty()) {
+                        associationPipelineErrors.addAll(pipelineErrors);
+                    }
+                }
+            }
+
+            // Create association report based on whether there is errors or not
+            if (!associationPipelineErrors.isEmpty()) {
+                associationReportService.processAssociationErrors(association, associationPipelineErrors);
+            }
+            else {
+                associationReportService.updateAssociationReportDetails(association);
+            }
+        }
+
+        // Save data
+        if (!snpToLocationsMap.isEmpty()) {
+            getLog().info("Adding/updating location details for SNPs" + snpToLocationsMap.keySet().toString());
+            snpLocationMappingService.storeSnpLocation(snpToLocationsMap);
+        }
+        if (!allGenomicContexts.isEmpty()) {
+            getLog().info(
+                    "Adding/updating genomic context for SNPs" + snpToLocationsMap.keySet().toString());
+            snpGenomicContextMappingService.processGenomicContext(allGenomicContexts);
+        }
+
     }
 
 }
