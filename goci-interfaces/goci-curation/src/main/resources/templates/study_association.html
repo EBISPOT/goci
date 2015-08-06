@@ -106,7 +106,7 @@
             <a id="errorcheck-button"
                class="btn btn-default"
                th:value="${study.Id}"
-               role="button">Mark errors as checked
+               role="button">Mark mapping errors as checked
             </a>
 
             <a th:href="@{/studies/{studyId}/associations/approve_all(studyId=${study.Id})}"
@@ -223,7 +223,7 @@
                     <th>SNP:SNP interaction</th>
                     <th>Errors</th>
                     <th>SNP Approved</th>
-                    <th>Check Errors/ Approve/ Delete</th>
+                    <th>Check mapping errors/ Approve/ Delete</th>
                 </tr>
                 </thead>
                 <tbody>
