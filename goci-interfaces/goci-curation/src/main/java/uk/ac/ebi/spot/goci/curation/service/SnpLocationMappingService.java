@@ -58,7 +58,7 @@ public class SnpLocationMappingService {
     /**
      * Method used to format data returned from view via form so it can be stored in database
      *
-     * @param snpMappingForms list of snp maaping forms which contain rs_id and associated location information
+     * @param snpMappingForms list of snp mapping forms which contain rs_id and associated location information
      */
     public void processMappingForms(List<SnpMappingForm> snpMappingForms) {
 
