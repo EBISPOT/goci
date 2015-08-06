@@ -42,7 +42,7 @@
 <!--Include header-->
 <div th:include="header :: navbar"></div>
 
-<!--Link back to study page -->
+
 <div class="container-fluid">
     <!-- Link to the different SNP tabs -->
     <div class="row">
@@ -51,9 +51,9 @@
             <li><a id="mapping_tab" href="#">SNP Mappings</a></li>
         </ul>
     </div>
-    <!--Include errors-->
+    <!--Link back to study page -->
     <div class="col-md-10" style="margin-top:10px">
-        <div th:include="association_error :: association_errors"></div>
+        <div th:include="link_to_all_study_associations :: all_associations"></div>
     </div>
 </div>
 <br/>
