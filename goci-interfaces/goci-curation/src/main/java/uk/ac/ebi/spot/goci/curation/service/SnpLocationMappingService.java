@@ -55,39 +55,6 @@ public class SnpLocationMappingService {
         this.genomicContextRepository = genomicContextRepository;
     }
 
-    /**
-     * Method used to format data returned from view via form so it can be stored in database
-     *
-     * @param snpMappingForms list of snp mapping forms which contain rs_id and associated location information
-     */
-    public void processMappingForms(List<SnpMappingForm> snpMappingForms) {
-
-        // Need to read through each form and flatten down information
-        // and create structure linking each RS_ID to its location(s)
-        Map<String, Set<Location>> snpToLocationsMap = new HashMap<>();
-
-        for (SnpMappingForm snpMappingForm : snpMappingForms) {
-
-            String snpInForm = snpMappingForm.getSnp();
-            Location locationInForm = snpMappingForm.getLocation();
-
-            // Next time we see SNP, add location to set
-            // This would only occur is SNP has multiple locations
-            if (snpToLocationsMap.containsKey(snpInForm)) {
-                snpToLocationsMap.get(snpInForm).add(locationInForm);
-            }
-
-            // First time we see a SNP store the location
-            else {
-                Set<Location> snpLocation = new HashSet<>();
-                snpLocation.add(locationInForm);
-                snpToLocationsMap.put(snpInForm, snpLocation);
-            }
-        }
-
-        storeSnpLocation(snpToLocationsMap);
-    }
-
     public void storeSnpLocation(Map<String, Set<Location>> snpToLocations) {
 
         // Go through each rs_id and its associated locations returning from the mapping pipeline
