@@ -175,55 +175,55 @@
 
                         <div class="list-group">
                             <!--add an "active" class annotation to each a tag when it's selected-->
-                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-digestive"></span>
+                            <a href="#" class="list-group-item legend-item" id="Digestive system disease"> <span class="icon-trait icon-trait-digestive"></span>
                                 <span class="badge">309</span>Digestive system disease
                             </a>
-                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-cardio"></span>
+                            <a href="#" class="list-group-item legend-item" id="Cardiovascular disease" > <span class="icon-trait icon-trait-cardio"></span>
                                 <span class="badge">174</span>Cardiovascular disease
                             </a>
-                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-metabolic"></span>
+                            <a href="#" class="list-group-item legend-item" id="Metabolic disease" > <span class="icon-trait icon-trait-metabolic"></span>
                                 <span class="badge">186</span>Metabolic disease
                             </a>
-                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-immune"></span>
+                            <a href="#" class="list-group-item legend-item" id="Immune system disease" > <span class="icon-trait icon-trait-immune"></span>
                                 <span class="badge">293</span>Immune system disease
                             </a>
-                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-neuro"></span>
+                            <a href="#" class="list-group-item legend-item" id="Nervous system disease" > <span class="icon-trait icon-trait-neuro"></span>
                                 <span class="badge">192</span>Nervous system disease
                             </a>
-                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-liver-measure"></span>
+                            <a href="#" class="list-group-item legend-item" id="Liver enzyme measurement" > <span class="icon-trait icon-trait-liver-measure"></span>
                                 <span class="badge">63</span>Liver enzyme measurement
                             </a>
-                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-lipid-measure"></span>
+                            <a href="#" class="list-group-item legend-item" id="Lipid or lipoprotein measurement" > <span class="icon-trait icon-trait-lipid-measure"></span>
                                 <span class="badge">297</span>Lipid or lipoprotein measurement
                             </a>
-                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-inflam-measure"></span>
+                            <a href="#" class="list-group-item legend-item" id="Inflammatory marker measurement" > <span class="icon-trait icon-trait-inflam-measure"></span>
                                 <span class="badge">44</span>Inflammatory marker measurement
                             </a>
-                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-haemo-measure"></span>
+                            <a href="#" class="list-group-item legend-item" id="Hematological measurement" > <span class="icon-trait icon-trait-haemo-measure"></span>
                                 <span class="badge">295</span>Hematological measurement
                             </a>
-                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-body-measure"></span>
+                            <a href="#" class="list-group-item legend-item" id="Body weights and measures" > <span class="icon-trait icon-trait-body-measure"></span>
                                 <span class="badge">283</span>Body weights and measures
                             </a>
-                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-cardio-measure"></span>
+                            <a href="#" class="list-group-item legend-item" id="Cardiovascular measurement" > <span class="icon-trait icon-trait-cardio-measure"></span>
                                 <span class="badge">96</span>Cardiovascular measurement
                             </a>
-                            <a href="#" class="list-group-item disabled" > <span class="icon-trait icon-trait-measure"></span>
+                            <a href="#" class="list-group-item legend-item disabled" id="Other measurement"> <span class="icon-trait icon-trait-measure"></span>
                                 <span class="badge">968</span>Other measurement
                             </a>
-                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-drug"></span>
+                            <a href="#" class="list-group-item legend-item" id="Response to drug" > <span class="icon-trait icon-trait-drug"></span>
                                 <span class="badge">87</span>Response to drug
                             </a>
-                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-process"></span>
+                            <a href="#" class="list-group-item legend-item" id="Biological process" > <span class="icon-trait icon-trait-process"></span>
                                 <span class="badge">366</span>Biological process
                             </a>
-                            <a href="#" class="list-group-item" > <span class="icon-trait icon-trait-neoplasm"></span>
+                            <a href="#" class="list-group-item legend-item" id="Cancer" > <span class="icon-trait icon-trait-neoplasm"></span>
                                 <span class="badge">504</span>Cancer
                             </a>
-                            <a href="#" class="list-group-item disabled" >  <span class="icon-trait icon-trait-disease"></span>
+                            <a href="#" class="list-group-item legend-item disabled" id="Other disease" >  <span class="icon-trait icon-trait-disease"></span>
                                 <span class="badge">92</span>Other disease
                             </a>
-                            <a href="#" class="list-group-item disabled" > <span class="icon-trait icon-trait-other"></span>
+                            <a href="#" class="list-group-item legend-item disabled" id="Other trait"> <span class="icon-trait icon-trait-other"></span>
                                 <span class="badge">0</span>Other trait
                             </a>
                         </div>
@@ -262,7 +262,6 @@
                     </div>
 
                     <div id="diagram-space" >
-                        <!--<span class="col-md-6">-->
                             <span id="zoom-and-pan" class="zoombar pull-right col-md-offset-6 col-md-4" style="display: none;">
 
                                 <div class="buttons">
@@ -272,37 +271,11 @@
                                     <button class="reset">Reset</button>
                                 </div>
                             </span>
-                        <!--</span>-->
                         <div id="diagram-area-content">
 
                         </div>
-                    <!--<img alt="GWAS diagram"-->
-                    <!--src="../static/images/gwas-diagram.svg"-->
-                    <!--th:src="@{images/gwas-diagram.svg}"/>-->
-                    </div>
-                    <!--<section>-->
-                        <!--<div class="parent">-->
-                            <!--<div class="panzoom">-->
-                                <!--<div id="diagram-area-content" >-->
-                                <!--<img alt="GWAS diagram"-->
-                                     <!--src="../static/images/gwas-diagram.svg"-->
-                                     <!--th:src="@{images/gwas-diagram.svg}"/>-->
-                                <!--</div>-->
-                            <!--</div>-->
 
-                            <!--<script>-->
-                                <!--(function() {-->
-                                    <!--var $section = $('section').first();-->
-                                    <!--$section.find('.panzoom').panzoom({-->
-                                        <!--$zoomIn: $section.find(".zoom-in"),-->
-                                        <!--$zoomOut: $section.find(".zoom-out"),-->
-                                        <!--$zoomRange: $section.find(".zoom-range"),-->
-                                        <!--$reset: $section.find(".reset")-->
-                                    <!--});-->
-                                <!--})();-->
-                            <!--</script>-->
-                        <!--</div>-->
-                    <!--</section>-->
+                    </div>
                 </div>
             </div>
          </div>
@@ -313,12 +286,11 @@
 
 </div>
 
-<div id="tooltip" class="tooltip" style="display: none;">
+<div id="tooltip" class="background-color-primary-accent" style="display: none;">
     <span id="tooltip-text"></span>
 </div>
 
-<!--<div id="traitpopup" style="display: none;">-->
-<!--</div>-->
+
 
 <div class="modal fade" id="traitPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg" role="document">

@@ -47,8 +47,6 @@ function hideAllTraits() {
 function showSummary(associations, name) {
     $("#tooltip").hide();
 
-    //$("#traitpopup").html("");
-
     var assocs = associations.split(",");
     console.log(assocs);
 
@@ -117,8 +115,6 @@ function processAssociationSummary(data, name){
         }
 
         $('#traitPopupTitle').html(trait);
-        //$('#traitSummary').empty().append(summaryTable);
-        //$("#traitpopup").append(summaryTable).dialog({"title": trait, /*"draggable":false,*/ "width": 800});
 
         $('#traitPopup').modal('show');
     }

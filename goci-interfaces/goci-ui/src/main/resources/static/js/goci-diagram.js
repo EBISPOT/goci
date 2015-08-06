@@ -15,21 +15,6 @@ var enableSVG = true;
 $(document).ready(function() {
     renderDiagram()
 
-//    $(".panzoom-elements").panzoom();
-//
-//// Pass options
-//    $("a.panzoom-elements").panzoom({
-//        minScale: 0,
-//        $zoomRange: $("input[type='range']")
-//    });
-
-    //var $section = $('section').first();
-    //$section.find('.panzoom').panzoom({
-    //    $zoomIn: $section.find(".zoom-in"),
-    //    $zoomOut: $section.find(".zoom-out"),
-    //    $zoomRange: $section.find(".zoom-range"),
-    //    $reset: $section.find(".reset")
-    //});
 
     // fetch server info
     $.getJSON('pussycat/status', function(data) {
@@ -53,6 +38,9 @@ $(document).ready(function() {
     });
 
 
+    $(".legend-item").click(function() {
+        filterTraits($(this).attr("id"));
+    });
 
     if (enableSVG) {
         // bind mousewheel event handler
@@ -272,16 +260,17 @@ function insertSVG(svg) {
                 var vis = $(this).attr("fading");
                 if (vis == "false") {
                     var trait = $(this).attr("gwasname");
-                    //$("#tooltip-text").html(trait);
-                    //$("#tooltip").show();
-                    $(this).attr('title',trait);
+                    $("#tooltip-text").html(trait);
+                    $("#tooltip").show();
+                    //$(this).attr('data-toggle', 'tooltip');
+                    //$(this).attr('title',trait);
                     //$(this).tooltip({title: trait});
-                    $(this).tooltip('show');
+                    //$(this).tooltip('toggle');
                 }
             },
             function() {
-                //$("#tooltip").hide();
-                $(this).tooltip('hide');
+                $("#tooltip").hide();
+                //$(this).tooltip('toggle');
                 $(this).attr('title','');
             }
     );
