@@ -32,24 +32,30 @@
         <div class="collapse" id="collapseErrors">
             <div class="well col-md-offset-4 col-md-6">
 
-                <div th:if="${not #strings.isEmpty(errors.snpErrors)}">
-                    <strong><span th:utext="'SNP errors: '+${#strings.replace(errors.snpErrors,'.','&lt;br /&gt;')}+ '&lt;br /&gt;' ?: ''"></span></strong>
-                </div>
-
-                <div th:if="${not #strings.isEmpty(errors.riskAlleleErrors)}">
-                    <strong><span th:utext="'Risk allele errors: '+${#strings.replace(errors.riskAlleleErrors,'.','&lt;br /&gt;')}+ '&lt;br /&gt;' ?: ''"></span></strong>
-                </div>
-
-                <div th:if="${not #strings.isEmpty(errors.proxyErrors)}">
-                    <strong><span th:utext="'Proxy SNP errors: '+${#strings.replace(errors.proxyErrors,'.','&lt;br /&gt;')}+ '&lt;br /&gt;' ?: ''"></span></strong>
-                </div>
-
                 <div th:if="${not #maps.isEmpty(errors.associationErrorMap)}">
                     <strong>
                         <span th:utext="'&lt;br /&gt;' + 'Mapping errors : '+'&lt;br /&gt;' ?: ''"></span>
                         <span th:each="error: ${errors.associationErrorMap}"
                               th:utext="${error.value} + '&lt;br /&gt;' ?: ''"></span>
                     </strong>
+                </div>
+
+                <div th:if="${ not #strings.isEmpty(errors.snpErrors)
+                        or not #strings.isEmpty(errors.riskAlleleErrors)
+                        or not #strings.isEmpty(errors.proxyErrors)}">
+                    <span th:utext="'&lt;br /&gt;' +'Note: '+ '&lt;br /&gt;'"></span>
+
+                    <div th:if="${not #strings.isEmpty(errors.snpErrors)}">
+                        <span th:utext="'SNP errors: '+${#strings.replace(errors.snpErrors,'.','&lt;br /&gt;')}+ '&lt;br /&gt;' ?: ''"></span>
+                    </div>
+
+                    <div th:if="${not #strings.isEmpty(errors.riskAlleleErrors)}">
+                        <span th:utext="'Risk allele errors: '+${#strings.replace(errors.riskAlleleErrors,'.','&lt;br /&gt;')}+ '&lt;br /&gt;' ?: ''"></span>
+                    </div>
+
+                    <div th:if="${not #strings.isEmpty(errors.proxyErrors)}">
+                        <span th:utext="'Proxy SNP errors: '+${#strings.replace(errors.proxyErrors,'.','&lt;br /&gt;')}+ '&lt;br /&gt;' ?: ''"></span>
+                    </div>
                 </div>
             </div>
         </div>
