@@ -28,8 +28,6 @@ public class SnpAssociationInteractionForm {
 
     private Boolean snpApproved = false;
 
-    private Boolean errorCheckedByCurator = false;
-
     private Boolean orType;
 
     private Integer pvalueMantissa;
@@ -88,7 +86,6 @@ public class SnpAssociationInteractionForm {
         this.orPerCopyNum = orPerCopyNum;
         this.snpType = snpType;
         this.snpApproved = snpApproved;
-        this.errorCheckedByCurator = errorCheckedByCurator;
         this.orType = orType;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
@@ -257,11 +254,4 @@ public class SnpAssociationInteractionForm {
         this.riskFrequency = riskFrequency;
     }
 
-    public Boolean getErrorCheckedByCurator() {
-        return errorCheckedByCurator;
-    }
-
-    public void setErrorCheckedByCurator(Boolean errorCheckedByCurator) {
-        this.errorCheckedByCurator = errorCheckedByCurator;
-    }
 }
