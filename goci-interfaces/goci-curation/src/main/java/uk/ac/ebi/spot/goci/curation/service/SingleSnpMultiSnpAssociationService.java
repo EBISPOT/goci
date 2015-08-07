@@ -1,7 +1,5 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
@@ -40,11 +38,6 @@ public class SingleSnpMultiSnpAssociationService {
 
     // Services
     private LociAttributesService lociAttributesService;
-
-    private Logger log = LoggerFactory.getLogger(getClass());
-    protected Logger getLog() {
-        return log;
-    }
 
     @Autowired
     public SingleSnpMultiSnpAssociationService(AssociationRepository associationRepository,
@@ -209,10 +202,6 @@ public class SingleSnpMultiSnpAssociationService {
         snpAssociationForm.setOrPerCopyRecipRange(association.getOrPerCopyRecipRange());
         snpAssociationForm.setOrPerCopyUnitDescr(association.getOrPerCopyUnitDescr());
 
-        // Set mapping errors checked attribute
-        if (association.getAssociationReport() != null) {
-            snpAssociationForm.setErrorCheckedByCurator(association.getAssociationReport().getErrorCheckedByCurator());
-        }
 
         // Add collection of Efo traits
         snpAssociationForm.setEfoTraits(association.getEfoTraits());
