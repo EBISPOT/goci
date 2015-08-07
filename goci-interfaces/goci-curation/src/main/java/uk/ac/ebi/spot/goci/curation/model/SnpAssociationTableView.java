@@ -66,6 +66,10 @@ public class SnpAssociationTableView {
 
     private String associationErrorsChecked;
 
+    private String lastMappingPerformedBy;
+
+    private String lastMappingDate;
+
     // Constructors
     public SnpAssociationTableView() {
     }
@@ -93,7 +97,9 @@ public class SnpAssociationTableView {
                                    String snpInteraction,
                                    String snpApproved,
                                    String snpStatuses,
-                                   Map<String, String> associationErrorMap, String associationErrorsChecked) {
+                                   Map<String, String> associationErrorMap,
+                                   String associationErrorsChecked,
+                                   String lastMappingPerfomredBy, String lastMappingDate) {
         this.associationId = associationId;
         this.authorReportedGenes = authorReportedGenes;
         this.strongestRiskAlleles = strongestRiskAlleles;
@@ -119,6 +125,8 @@ public class SnpAssociationTableView {
         this.snpStatuses = snpStatuses;
         this.associationErrorMap = associationErrorMap;
         this.associationErrorsChecked = associationErrorsChecked;
+        this.lastMappingPerformedBy = lastMappingPerfomredBy;
+        this.lastMappingDate = lastMappingDate;
     }
 
     public Long getAssociationId() {
@@ -319,5 +327,21 @@ public class SnpAssociationTableView {
 
     public void setAssociationErrorsChecked(String associationErrorsChecked) {
         this.associationErrorsChecked = associationErrorsChecked;
+    }
+
+    public String getLastMappingPerformedBy() {
+        return lastMappingPerformedBy;
+    }
+
+    public void setLastMappingPerformedBy(String lastMappingPerformedBy) {
+        this.lastMappingPerformedBy = lastMappingPerformedBy;
+    }
+
+    public String getLastMappingDate() {
+        return lastMappingDate;
+    }
+
+    public void setLastMappingDate(String lastMappingDate) {
+        this.lastMappingDate = lastMappingDate;
     }
 }
