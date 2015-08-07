@@ -186,10 +186,10 @@
                 <br/>
                 <thead>
                 <tr>
-                    <th>Edit</th>
-                    <th>Genes (author reported)</th>
-                    <th>Strongest Allele</th>
-                    <th>SNP
+                    <th style="font-size: small">Edit</th>
+                    <th style="font-size: small">Genes (author reported)</th>
+                    <th style="font-size: small">Strongest Allele</th>
+                    <th style="font-size: small">SNP
                         <div>
                             <a th:href="@{/studies/{studyId}/associations/sortrsid(studyId=${study.id},direction='asc')}"
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
@@ -197,10 +197,12 @@
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                         </div>
                     </th>
-                    <th>Proxy SNP</th>
-                    <th>Independent SNP risk allele frequency in controls</th>
-                    <th>Risk element (allele, haplotype or SNPxSNP interaction) frequency in controls</th>
-                    <th>p-Value (mantissa x 10 exponent)
+                    <th style="font-size: small">Proxy SNP</th>
+                    <th style="font-size: small; width: 5%">Independent SNP risk allele frequency in controls</th>
+                    <th style="font-size: small; width: 5%">Risk element (allele, haplotype or SNPxSNP interaction) frequency in
+                                                 controls
+                    </th>
+                    <th style="font-size: small">p-Value (mantissa x 10 exponent)
                         <div>
                             <a th:href="@{/studies/{studyId}/associations/sortpvalue(studyId=${study.id},direction='asc')}"
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
@@ -208,22 +210,22 @@
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                         </div>
                     </th>
-                    <th>p-Value Text</th>
-                    <th>EFO trait</th>
-                    <th>OR per Copy Num</th>
-                    <th>OR entered (reciprocal)</th>
-                    <th>OR-Type</th>
-                    <th>OR per Copy Range</th>
-                    <th>OR per Copy Range (reciprocal)</th>
-                    <th>OR per Copy Unit Description</th>
-                    <th>Std Error</th>
-                    <th>SNP Type</th>
-                    <th>SNP Status</th>
-                    <th>Multi-SNP haplotype</th>
-                    <th>SNP:SNP interaction</th>
-                    <th>Errors</th>
-                    <th>SNP Approved</th>
-                    <th>Check mapping errors/ Approve/ Delete</th>
+                    <th style="font-size: small">p-Value Text</th>
+                    <th style="font-size: small">EFO trait</th>
+                    <th style="font-size: small">OR per Copy Num</th>
+                    <th style="font-size: small">OR entered (reciprocal)</th>
+                    <th style="font-size: small">OR-Type</th>
+                    <th style="font-size: small">OR per Copy Range</th>
+                    <th style="font-size: small">OR per Copy Range (reciprocal)</th>
+                    <th style="font-size: small">OR per Copy Unit Description</th>
+                    <th style="font-size: small">Std Error</th>
+                    <th style="font-size: small">SNP Type</th>
+                    <th style="font-size: small">SNP Status</th>
+                    <th style="font-size: small">Multi-SNP haplotype</th>
+                    <th style="font-size: small">SNP:SNP interaction</th>
+                    <th style="font-size: small">Errors</th>
+                    <th style="font-size: small">SNP Approved</th>
+                    <th style="font-size: small">Check mapping errors/ Approve/ Delete</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -309,8 +311,8 @@
                         <br/>
 
                         <span style="font-style: italic"
-                                th:if="${snpAssociationTableView.lastMappingDate != null}"
-                                th:utext="'&lt;br /&gt;' +'Last mapping ran on: '+${snpAssociationTableView.lastMappingDate} ?: ''"></span>
+                              th:if="${snpAssociationTableView.lastMappingDate != null}"
+                              th:utext="'&lt;br /&gt;' +'Last mapping ran on: '+${snpAssociationTableView.lastMappingDate} ?: ''"></span>
 
                         <span style="font-style: italic"
                               th:if="${snpAssociationTableView.lastMappingPerformedBy != null}"
