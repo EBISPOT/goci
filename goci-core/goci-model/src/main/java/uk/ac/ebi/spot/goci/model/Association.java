@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * Created by emma on 27/11/14.
@@ -84,6 +87,11 @@ public class Association {
     @OneToOne(mappedBy = "association", cascade = CascadeType.REMOVE)
     private AssociationReport associationReport;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date lastMappingDate;
+
+    private String lastMappingPerformedBy;
+
     // JPA no-args constructor
     public Association() {
     }
@@ -107,7 +115,10 @@ public class Association {
                        String orPerCopyUnitDescr,
                        Study study,
                        Collection<Locus> loci,
-                       Collection<EfoTrait> efoTraits) {
+                       Collection<EfoTrait> efoTraits,
+                       AssociationReport associationReport,
+                       Date lastMappingDate,
+                       String lastMappingPerformedBy) {
         this.riskFrequency = riskFrequency;
         this.allele = allele;
         this.pvalueFloat = pvalueFloat;
@@ -128,8 +139,10 @@ public class Association {
         this.study = study;
         this.loci = loci;
         this.efoTraits = efoTraits;
+        this.associationReport = associationReport;
+        this.lastMappingDate = lastMappingDate;
+        this.lastMappingPerformedBy = lastMappingPerformedBy;
     }
-
 
     public Long getId() {
         return id;
@@ -311,4 +324,19 @@ public class Association {
         this.associationReport = associationReport;
     }
 
+    public Date getLastMappingDate() {
+        return lastMappingDate;
+    }
+
+    public void setLastMappingDate(Date lastMappingDate) {
+        this.lastMappingDate = lastMappingDate;
+    }
+
+    public String getLastMappingPerformedBy() {
+        return lastMappingPerformedBy;
+    }
+
+    public void setLastMappingPerformedBy(String lastMappingPerformedBy) {
+        this.lastMappingPerformedBy = lastMappingPerformedBy;
+    }
 }
