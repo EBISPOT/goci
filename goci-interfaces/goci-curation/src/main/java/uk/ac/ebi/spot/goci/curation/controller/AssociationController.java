@@ -729,6 +729,44 @@ public class AssociationController {
         associationsToMap.add(editedAssociation);
         validateAndMapSnps(associationsToMap);
 
+        // Set errorCheckedByCurator attribute of association report,
+        // this is done after mapping to ensure we have an association report
+        if (editedAssociation.getAssociationReport() != null) {
+
+            if (associationType.equalsIgnoreCase("interaction")) {
+                if (snpAssociationInteractionForm.getErrorCheckedByCurator()) {
+                    editedAssociation.getAssociationReport()
+                            .setErrorCheckedByCurator(snpAssociationInteractionForm.getErrorCheckedByCurator());
+                }
+            }
+
+            else if (associationType.equalsIgnoreCase("standardormulti")) {
+                if (snpAssociationForm.getErrorCheckedByCurator()) {
+                    editedAssociation.getAssociationReport()
+                            .setErrorCheckedByCurator(snpAssociationForm.getErrorCheckedByCurator());
+                }
+            }
+
+            // default to standard view
+            else {
+                if (snpAssociationForm.getErrorCheckedByCurator()) {
+                    editedAssociation.getAssociationReport()
+                            .setErrorCheckedByCurator(snpAssociationForm.getErrorCheckedByCurator());
+                }
+
+                getLog().warn(
+                        "Cannot determine type of association for association " + editedAssociation.getId() +
+                                " in study" + editedAssociation.getStudy().getId());
+
+            }
+
+        }
+        else {
+            getLog().warn(
+                    "Association " + editedAssociation.getId() + " in study" + editedAssociation.getStudy().getId() +
+                            " has no association report");
+        }
+
         return "redirect:/associations/" + associationId;
     }
 
