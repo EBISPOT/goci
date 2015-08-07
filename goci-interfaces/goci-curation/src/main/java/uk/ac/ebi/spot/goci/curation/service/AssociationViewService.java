@@ -10,8 +10,11 @@ import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -274,6 +277,18 @@ public class AssociationViewService {
 
         // Set error map
         snpAssociationTableView.setAssociationErrorMap(createAssociationErrorMap(association.getAssociationReport()));
+
+        // Get mapping details
+        if (association.getLastMappingPerformedBy() != null) {
+            snpAssociationTableView.setLastMappingPerformedBy(association.getLastMappingPerformedBy());
+        }
+
+        if (association.getLastMappingDate() != null) {
+            DateFormat df = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+            String dateOfLastMapping = df.format(association.getLastMappingDate());
+            snpAssociationTableView.setLastMappingDate(dateOfLastMapping);
+        }
+
         return snpAssociationTableView;
     }
 
