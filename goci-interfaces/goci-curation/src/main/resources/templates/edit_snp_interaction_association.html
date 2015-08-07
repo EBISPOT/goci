@@ -341,11 +341,6 @@
                                 <input id="orType" type="checkbox" th:field="*{orType}"/>
                             </div>
 
-                            <!--  Only show checkbox if there are errors that need to be checked-->
-                            <div class="form-group" th:if="${not #maps.isEmpty(errors.associationErrorMap)}">
-                                <label for="errorsChecked" class="control-label col-md-2">Mapping errors checked</label>
-                                <input id="errorsChecked" type="checkbox" th:field="*{errorCheckedByCurator}"/>
-                            </div>
 
                             <div class="form-group">
                                 <label for="snpApproved" class="control-label col-md-2">SNP approved</label>
