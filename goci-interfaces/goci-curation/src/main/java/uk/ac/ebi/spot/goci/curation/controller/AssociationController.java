@@ -32,12 +32,14 @@ import uk.ac.ebi.spot.goci.curation.service.AssociationFormErrorViewService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationReportService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationViewService;
 import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
+import uk.ac.ebi.spot.goci.curation.service.MappingRecordService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.SnpGenomicContextMappingService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.SnpLocationMappingService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationReport;
+import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
@@ -101,6 +103,7 @@ public class AssociationController {
     private SnpLocationMappingService snpLocationMappingService;
     private SnpGenomicContextMappingService snpGenomicContextMappingService;
     private AssociationReportService associationReportService;
+    private MappingRecordService mappingRecordService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -124,7 +127,8 @@ public class AssociationController {
                                  AssociationFormErrorViewService associationFormErrorViewService,
                                  SnpLocationMappingService snpLocationMappingService,
                                  SnpGenomicContextMappingService snpGenomicContextMappingService,
-                                 AssociationReportService associationReportService) {
+                                 AssociationReportService associationReportService,
+                                 MappingRecordService mappingRecordService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -141,6 +145,7 @@ public class AssociationController {
         this.snpLocationMappingService = snpLocationMappingService;
         this.snpGenomicContextMappingService = snpGenomicContextMappingService;
         this.associationReportService = associationReportService;
+        this.mappingRecordService = mappingRecordService;
     }
 
 
@@ -1428,6 +1433,17 @@ public class AssociationController {
             getLog().info(
                     "Adding/updating genomic context for SNPs" + snpToLocationsMap.keySet().toString());
             snpGenomicContextMappingService.processGenomicContext(allGenomicContexts);
+        }
+
+        // Once mapping is complete, update mapping record
+        for (Association association : associations) {
+
+            // Get current curator of study
+            Study associationStudy= association.getStudy();
+            Curator curator = associationStudy.getHousekeeping().getCurator();
+            String mappedBy = curator.getLastName();
+
+            mappingRecordService.updateAssociationMappingRecord(association, new Date(), mappedBy);
         }
 
     }
