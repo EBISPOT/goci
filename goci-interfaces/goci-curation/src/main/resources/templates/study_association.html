@@ -305,6 +305,15 @@
                                   </span>
                              </span>
                         </span>
+
+                        <span style="font-style: italic"
+                                th:if="${snpAssociationTableView.lastMappingDate != null}"
+                                th:utext="'&lt;br /&gt;' +'Last mapping ran on: '+${snpAssociationTableView.lastMappingDate} ?: ''"></span>
+
+                        <span style="font-style: italic"
+                              th:if="${snpAssociationTableView.lastMappingPerformedBy != null}"
+                              th:utext="'&lt;br /&gt;' +'Last mapping ran by: '+${snpAssociationTableView.lastMappingPerformedBy} ?: ''"></span>
+
                     </td>
 
                     <td th:text="${snpAssociationTableView.snpApproved} ?: '' "></td>
