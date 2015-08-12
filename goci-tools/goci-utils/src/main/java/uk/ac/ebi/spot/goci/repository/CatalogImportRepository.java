@@ -374,7 +374,7 @@ public class CatalogImportRepository {
                                 chromosomePosition = valueToInsert;
                             }
                             break;
-                        case UPSTREAM_MAPPED_GENE:
+                        case ENTREZ_UPSTREAM_MAPPED_GENE:
                             if (valueToInsert.isEmpty()) {
                                 upstreamMappedGene = null;
                             }
@@ -382,7 +382,7 @@ public class CatalogImportRepository {
                                 upstreamMappedGene = valueToInsert;
                             }
                             break;
-                        case UPSTREAM_ENTREZ_GENE_ID:
+                        case ENTREZ_UPSTREAM_GENE_ID:
                             if (valueToInsert.isEmpty()) {
                                 upstreamEntrezGeneId = null;
                             }
@@ -390,7 +390,7 @@ public class CatalogImportRepository {
                                 upstreamEntrezGeneId = valueToInsert;
                             }
                             break;
-                        case UPSTREAM_GENE_DISTANCE:
+                        case ENTREZ_UPSTREAM_GENE_DISTANCE:
                             if (valueToInsert.isEmpty()) {
                                 upstreamGeneDistance = null;
                             }
@@ -398,7 +398,7 @@ public class CatalogImportRepository {
                                 upstreamGeneDistance = Integer.valueOf(valueToInsert);
                             }
                             break;
-                        case DOWNSTREAM_MAPPED_GENE:
+                        case ENTREZ_DOWNSTREAM_MAPPED_GENE:
                             if (valueToInsert.isEmpty()) {
                                 downstreamMappedGene = null;
                             }
@@ -406,7 +406,7 @@ public class CatalogImportRepository {
                                 downstreamMappedGene = valueToInsert;
                             }
                             break;
-                        case DOWNSTREAM_ENTREZ_GENE_ID:
+                        case ENSEMBL_DOWNSTREAM_GENE_ID:
                             if (valueToInsert.isEmpty()) {
                                 downstreamEntrezGeneId = null;
                             }
@@ -414,7 +414,7 @@ public class CatalogImportRepository {
                                 downstreamEntrezGeneId = valueToInsert;
                             }
                             break;
-                        case DOWNSTREAM_GENE_DISTANCE:
+                        case ENTREZ_DOWNSTREAM_GENE_DISTANCE:
                             if (valueToInsert.isEmpty()) {
                                 downstreamGeneDistance = null;
                             }
@@ -422,7 +422,7 @@ public class CatalogImportRepository {
                                 downstreamGeneDistance = Integer.valueOf(valueToInsert);
                             }
                             break;
-                        case IS_INTERGENIC:
+                        case IS_INTERGENIC_ENTREZ:
                             if (valueToInsert.isEmpty()) {
                                 isIntergenic = null;
                             }
@@ -446,7 +446,7 @@ public class CatalogImportRepository {
                                 merged = Integer.valueOf(valueToInsert);
                             }
                             break;
-                        case MAPPED_GENE:
+                        case ENTREZ_MAPPED_GENE:
                             if (valueToInsert.isEmpty()) {
                                 mappedGene = null;
                             }
@@ -454,7 +454,7 @@ public class CatalogImportRepository {
                                 mappedGene = valueToInsert;
                             }
                             break;
-                        case ENTREZ_GENE_ID:
+                        case ENTREZ_MAPPED_GENE_ID:
                             if (valueToInsert.isEmpty()) {
                                 entrezGeneId = null;
                             }
