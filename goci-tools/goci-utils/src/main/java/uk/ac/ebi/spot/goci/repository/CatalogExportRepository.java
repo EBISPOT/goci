@@ -173,8 +173,8 @@ public class CatalogExportRepository {
 
                     if (val != null) {
                         if (!val.isEmpty()) {
-                            if(!StringUtils.isNumeric(val)){
-                               identifiers.add((long) val.hashCode());
+                            if (!StringUtils.isNumeric(val)) {
+                                identifiers.add((long) val.hashCode());
                             }
                             else {
                                 try {
@@ -195,7 +195,7 @@ public class CatalogExportRepository {
             }
             long id = generateUniqueID(identifiers);
 
-            if(bindings.contains(CatalogHeaderBinding.UNIQUE_KEY)){
+            if (bindings.contains(CatalogHeaderBinding.UNIQUE_KEY)) {
                 rowMap.put(CatalogHeaderBinding.UNIQUE_KEY, Long.toString(id));
             }
 
@@ -214,7 +214,7 @@ public class CatalogExportRepository {
                                 // update existing values with this new combined value
                                 existingValues.put(binding, combinedValue);
                             }
-                            else if(binding.getDatabaseName().isPresent()) {
+                            else if (binding.getDatabaseName().isPresent()) {
                                 throw new RuntimeException(
                                         "Non-concatenatable values for " + binding.getDatabaseName().get() + " " +
                                                 "differ in row ID '" + id + "': " +
@@ -222,7 +222,36 @@ public class CatalogExportRepository {
                                                 "This would result in a new row, causing duplicated unique IDs");
 
                             }
-                            else{
+                            else {
+                                throw new RuntimeException(
+                                        "Non-concatenatable values for " + binding.toString() + " " +
+                                                "differ in row ID '" + id + "': " +
+                                                "existing = " + existingValue + ", new = " + newValue + ".\n" +
+                                                "This would result in a new row, causing duplicated unique IDs");
+
+
+                            }
+                        }
+                        // Need to include a special case for chromosome name
+                        // as multiple chromosome names can contain similar characters
+                        // e.g. 'CHR_HSCHR6_MHC_COX_CTG1' and '6'
+                        else if (binding.name().equalsIgnoreCase("CHROMOSOME_NAME") &&
+                                !existingValue.contains(" ".concat(newValue)) && !existingValue.equals(newValue)) {
+                            if (extractor.extract(binding).isConcatenatable()) {
+                                // existing value does not already contain new value, comma separate and append
+                                String combinedValue = existingValue.concat(", ").concat(newValue);
+                                // update existing values with this new combined value
+                                existingValues.put(binding, combinedValue);
+                            }
+                            else if (binding.getDatabaseName().isPresent()) {
+                                throw new RuntimeException(
+                                        "Non-concatenatable values for " + binding.getDatabaseName().get() + " " +
+                                                "differ in row ID '" + id + "': " +
+                                                "existing = " + existingValue + ", new = " + newValue + ".\n" +
+                                                "This would result in a new row, causing duplicated unique IDs");
+
+                            }
+                            else {
                                 throw new RuntimeException(
                                         "Non-concatenatable values for " + binding.toString() + " " +
                                                 "differ in row ID '" + id + "': " +
