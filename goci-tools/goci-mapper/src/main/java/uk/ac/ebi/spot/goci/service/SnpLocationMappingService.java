@@ -29,10 +29,14 @@ import java.util.Set;
 @Service
 public class SnpLocationMappingService {
 
+    // Repositories
     private LocationRepository locationRepository;
     private RegionRepository regionRepository;
     private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
     private GenomicContextRepository genomicContextRepository;
+
+    // Services
+    private SingleNucleotidePolymorphismService singleNucleotidePolymorphismService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -45,23 +49,25 @@ public class SnpLocationMappingService {
     public SnpLocationMappingService(LocationRepository locationRepository,
                                      RegionRepository regionRepository,
                                      SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
-                                     GenomicContextRepository genomicContextRepository) {
+                                     GenomicContextRepository genomicContextRepository,
+                                     SingleNucleotidePolymorphismService singleNucleotidePolymorphismService) {
         this.locationRepository = locationRepository;
         this.regionRepository = regionRepository;
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.genomicContextRepository = genomicContextRepository;
+        this.singleNucleotidePolymorphismService = singleNucleotidePolymorphismService;
     }
 
     public void storeSnpLocation(Map<String, Set<Location>> snpToLocations) {
 
-        // Go through each rs_id and its associated locations returning from the mapping pipeline
+        // Go through each rs_id and its associated locations returned from the mapping pipeline
         for (String snpRsId : snpToLocations.keySet()) {
 
             Set<Location> snpLocationsFromMapping = snpToLocations.get(snpRsId);
 
             // Check if the SNP exists
-            List<SingleNucleotidePolymorphism> snpsInDatabase =
-                    singleNucleotidePolymorphismRepository.findByRsIdIgnoreCase(snpRsId);
+            Collection<SingleNucleotidePolymorphism> snpsInDatabase =
+                    singleNucleotidePolymorphismService.findByRsIdIgnoreCase(snpRsId);
 
             if (!snpsInDatabase.isEmpty()) {
 
@@ -71,7 +77,7 @@ public class SnpLocationMappingService {
                     // Store all new location objects
                     Collection<Location> newSnpLocations = new ArrayList<>();
 
-                    // Get a list of locations currently linked to our SNP
+                    // Get a list of locations currently linked to SNP
                     Collection<Location> oldSnpLocations = snpInDatabase.getLocations();
                     Collection<Long> oldSnpLocationIds = new ArrayList<>();
                     for (Location oldSnpLocation : oldSnpLocations) {
@@ -135,6 +141,7 @@ public class SnpLocationMappingService {
                             }
                         }
                     }
+                    else {getLog().warn("No new locations to add to " + snpRsId);}
                 }
             }
 
