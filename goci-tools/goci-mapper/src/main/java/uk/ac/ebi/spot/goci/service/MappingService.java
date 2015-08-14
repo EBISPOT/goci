@@ -68,18 +68,19 @@ public class MappingService {
     /**
      * Get all associations in database
      */
-    public void mapCatalogContents() {
+    public void mapCatalogContents(String performer) {
 
         // Get all associations via service
 
-  /*      Long id = Long.valueOf("10101111");
+        Long id = Long.valueOf("10103638");
         Association association = associationService.findOneAssociation(id);
         Collection<Association> associations = new ArrayList<>();
-        associations.add(association);*/
+        associations.add(association);
 
-        Collection<Association> associations = associationService.findAllAssociations();
+        //  Collection<Association> associations = associationService.findAllAssociations();
         getLog().info("Total number of associations to map: " + associations.size());
-        validateAndMapSnps(associations);
+
+        validateAndMapSnps(associations,performer);
     }
 
     /**
@@ -87,7 +88,7 @@ public class MappingService {
      *
      * @param associations Collection of associations to map
      */
-    public void validateAndMapSnps(Collection<Association> associations) {
+    public void validateAndMapSnps(Collection<Association> associations, String performer) {
 
         // Map to store returned location data, this is used as
         // snpLocationMappingService process all locations linked
@@ -194,10 +195,7 @@ public class MappingService {
 
             // Get current curator of study
             Study associationStudy = association.getStudy();
-            Curator curator = associationStudy.getHousekeeping().getCurator();
-            String mappedBy = curator.getLastName();
-
-            mappingRecordService.updateAssociationMappingRecord(association, new Date(), mappedBy);
+            mappingRecordService.updateAssociationMappingRecord(association, new Date(), performer);
         }
 
     }
