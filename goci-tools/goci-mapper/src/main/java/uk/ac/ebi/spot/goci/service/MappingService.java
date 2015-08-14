@@ -62,7 +62,7 @@ public class MappingService {
         this.mappingRecordService = mappingRecordService;
         this.associationService = associationService;
     }
-    
+
     /**
      * Get all associations in database
      */
