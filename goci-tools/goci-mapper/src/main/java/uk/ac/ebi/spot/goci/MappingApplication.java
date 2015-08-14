@@ -23,7 +23,8 @@ import uk.ac.ebi.spot.goci.service.MappingService;
  *
  * @author emma
  *         <p>
- *         Application to map all associations in the GWAS database.
+ *         Application to map all associations in the GWAS database. Mapping pipeline will map SNPs in database and also
+ *         validate the author reported gene linked to that SNP via the associations.
  */
 @SpringBootApplication
 public class MappingApplication {
@@ -49,7 +50,6 @@ public class MappingApplication {
             System.exit(code);
         }
     }
-
 
     @Bean CommandLineRunner run() {
         return strings -> {
@@ -77,6 +77,7 @@ public class MappingApplication {
     }
 
     private void doMapping() {
+        getLog().info("Starting mapping of all associations...");
         mappingService.mapCatalogContents();
     }
 
@@ -96,7 +97,8 @@ public class MappingApplication {
                 "m",
                 "mapping",
                 false,
-                "Map current association data in database");
+                "Maps all associations in the GWAS database. Mapping pipeline will map SNPs " +
+                        "in database and also validate the author reported gene linked to that SNP via the associations");
         mappingOption.setRequired(true);
         modeGroup.addOption(mappingOption);
         options.addOptionGroup(modeGroup);
@@ -127,9 +129,7 @@ public class MappingApplication {
                                                " (" + opt.getArgName() + ")");
                 }
 
-                // options are...
-                // -m do mapping
-                // required options
+                // options: -m do mapping
                 if (cl.hasOption("m")) {
                     this.opMode = OperationMode.MAPPING;
                 }
