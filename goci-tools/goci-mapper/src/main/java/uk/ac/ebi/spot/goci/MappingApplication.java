@@ -79,8 +79,8 @@ public class MappingApplication {
     }
 
     private void doMapping() {
-        getLog().info("Starting mapping of all associations...");
-        mappingService.mapCatalogContents(performer);
+        getLog().info("Starting mapping of all associations with performer: " + this.performer);
+        mappingService.mapCatalogContents(this.performer);
     }
 
     private Options bindOptions() {
@@ -101,6 +101,7 @@ public class MappingApplication {
                 false,
                 "Maps all associations in the GWAS database. Mapping pipeline will map SNPs " +
                         "in database and also validate the author reported gene linked to that SNP via the associations");
+        mappingOption.setArgName("performer");
         mappingOption.setRequired(true);
         modeGroup.addOption(mappingOption);
         options.addOptionGroup(modeGroup);
@@ -134,7 +135,7 @@ public class MappingApplication {
                 // options: -m do mapping
                 if (cl.hasOption("m")) {
                     this.opMode = OperationMode.MAPPING;
-                    this.performer = cl.getOptionValue("m");
+                    this.performer = cl.getArgList().get(0).toString();
                 }
 
             }
