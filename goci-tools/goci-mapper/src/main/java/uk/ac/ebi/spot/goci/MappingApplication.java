@@ -42,7 +42,7 @@ public class MappingApplication {
     }
 
     public static void main(String... args) {
-        System.out.println("Starting catalog I/O service...");
+        System.out.println("Starting mapping service...");
         ApplicationContext ctx = SpringApplication.run(MappingApplication.class, args);
         int code = SpringApplication.exit(ctx, () -> exitCode);
         if (code > 0) {
@@ -84,12 +84,11 @@ public class MappingApplication {
         Options options = new Options();
 
         // help
-        Option helpOption = new Option("h", "help", false, "Print the help");
+        Option helpOption = new Option("h", "help", false, "Use -m option to run mapping on contents of GWAS catalog");
         options.addOption(helpOption);
 
         // options are...
         // -m do mapping
-
         OptionGroup modeGroup = new OptionGroup();
         modeGroup.setRequired(true);
 
