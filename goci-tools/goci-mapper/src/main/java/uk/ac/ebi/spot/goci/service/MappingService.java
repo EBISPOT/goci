@@ -13,7 +13,6 @@ import uk.ac.ebi.spot.goci.model.Location;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
 import java.util.ArrayList;
@@ -28,12 +27,13 @@ import java.util.Set;
  * Created by emma on 13/08/2015.
  *
  * @author emma
+ *         <p>
+ *         Service that runs mapping pipeline over all associations in database.
  */
 @Service
 public class MappingService {
 
     // Repositories
-    private AssociationRepository associationRepository;
     private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
 
     // Services
@@ -41,7 +41,7 @@ public class MappingService {
     private SnpGenomicContextMappingService snpGenomicContextMappingService;
     private AssociationReportService associationReportService;
     private MappingRecordService mappingRecordService;
-
+    private AssociationService associationService;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -50,27 +50,35 @@ public class MappingService {
     }
 
     @Autowired
-    public MappingService(AssociationRepository associationRepository,
-                          SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
+    public MappingService(SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
                           SnpLocationMappingService snpLocationMappingService,
                           SnpGenomicContextMappingService snpGenomicContextMappingService,
                           AssociationReportService associationReportService,
-                          MappingRecordService mappingRecordService) {
-        this.associationRepository = associationRepository;
+                          MappingRecordService mappingRecordService,
+                          AssociationService associationService) {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.snpLocationMappingService = snpLocationMappingService;
         this.snpGenomicContextMappingService = snpGenomicContextMappingService;
         this.associationReportService = associationReportService;
         this.mappingRecordService = mappingRecordService;
+        this.associationService = associationService;
     }
 
+
     /**
-     * Perform validation and mapping of association
+     * Get all associations in database
      */
     public void mapCatalogContents() {
 
-        // Get all associations
-        Collection<Association> associations = associationRepository.findAll();
+        // Get all associations via service
+
+  /*      Long id = Long.valueOf("10101111");
+        Association association = associationService.findOneAssociation(id);
+        Collection<Association> associations = new ArrayList<>();
+        associations.add(association);*/
+
+        Collection<Association> associations = associationService.findAllAssociations();
+        getLog().info("Total number of associations to map: " + associations.size());
         validateAndMapSnps(associations);
     }
 
@@ -97,7 +105,7 @@ public class MappingService {
 
             Collection<Locus> studyAssociationLoci = association.getLoci();
 
-            // For each loci get the get the SNP and author reported genes
+            // For each loci get the SNP and author reported genes
             for (Locus associationLocus : studyAssociationLoci) {
                 Long locusId = associationLocus.getId();
 
