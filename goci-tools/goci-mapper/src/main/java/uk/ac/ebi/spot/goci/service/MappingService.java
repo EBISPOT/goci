@@ -100,6 +100,8 @@ public class MappingService {
         // For each association get the loci
         for (Association association : associations) {
 
+            getLog().debug("Mapping association: " + association.getId());
+
             // Collection to store all errors for one association
             Collection<String> associationPipelineErrors = new ArrayList<>();
 
