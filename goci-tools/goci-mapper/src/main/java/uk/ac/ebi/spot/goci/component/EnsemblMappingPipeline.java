@@ -2,7 +2,7 @@ package uk.ac.ebi.spot.goci.component;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import uk.ac.ebi.spot.goci.curation.service.EnsemblRestService;
+import uk.ac.ebi.spot.goci.service.EnsemblRestService;
 import uk.ac.ebi.spot.goci.model.EnsemblGene;
 import uk.ac.ebi.spot.goci.model.EntrezGene;
 import uk.ac.ebi.spot.goci.model.Gene;
