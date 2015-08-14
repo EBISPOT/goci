@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.curation.service;
+package uk.ac.ebi.spot.goci.service;
 
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;

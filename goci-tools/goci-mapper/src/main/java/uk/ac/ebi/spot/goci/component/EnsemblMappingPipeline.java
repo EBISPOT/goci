@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.curation.component;
+package uk.ac.ebi.spot.goci.component;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
