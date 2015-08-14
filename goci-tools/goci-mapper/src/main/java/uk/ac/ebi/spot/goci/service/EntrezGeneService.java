@@ -33,7 +33,9 @@ public class EntrezGeneService {
     @Transactional(readOnly = true)
     public EntrezGene findByEntrezGeneId(String id) {
         EntrezGene entrezGene = entrezGeneRepository.findByEntrezGeneId(id);
-        loadAssociatedData(entrezGene);
+        if (entrezGene != null) {
+            loadAssociatedData(entrezGene);
+        }
         return entrezGene;
     }
 

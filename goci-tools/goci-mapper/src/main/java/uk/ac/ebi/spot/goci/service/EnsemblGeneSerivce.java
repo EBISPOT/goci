@@ -33,7 +33,10 @@ public class EnsemblGeneSerivce {
     @Transactional(readOnly = true)
     public EnsemblGene findByEnsemblGeneId(String id) {
         EnsemblGene ensemblGene = ensemblGeneRepository.findByEnsemblGeneId(id);
-        loadAssociatedData(ensemblGene);
+
+        if (ensemblGene != null) {
+            loadAssociatedData(ensemblGene);
+        }
         return ensemblGene;
     }
 
