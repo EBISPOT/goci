@@ -32,6 +32,8 @@ public class MappingApplication {
     @Autowired
     private MappingService mappingService;
 
+    private String performer;
+
     private OperationMode opMode;
 
     private static int exitCode;
@@ -78,7 +80,7 @@ public class MappingApplication {
 
     private void doMapping() {
         getLog().info("Starting mapping of all associations...");
-        mappingService.mapCatalogContents();
+        mappingService.mapCatalogContents(performer);
     }
 
     private Options bindOptions() {
@@ -132,6 +134,7 @@ public class MappingApplication {
                 // options: -m do mapping
                 if (cl.hasOption("m")) {
                     this.opMode = OperationMode.MAPPING;
+                    this.performer = cl.getOptionValue("m");
                 }
 
             }
