@@ -16,10 +16,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import uk.ac.ebi.spot.goci.repository.CatalogExportRepository;
-import uk.ac.ebi.spot.goci.repository.CatalogImportRepository;
-import uk.ac.ebi.spot.goci.repository.CatalogMetaDataRepository;
 import uk.ac.ebi.spot.goci.export.CatalogSpreadsheetExporter;
+import uk.ac.ebi.spot.goci.repository.CatalogExportRepository;
+import uk.ac.ebi.spot.goci.repository.CatalogMetaDataRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,10 +34,10 @@ import java.io.IOException;
 public class ImportExportApplication {
     @Autowired
     private CatalogExportRepository catalogExportRepository;
-    @Autowired
-    private CatalogImportRepository catalogImportRepository;
+
     @Autowired
     private CatalogMetaDataRepository catalogMetaDataRepository;
+
     @Autowired
     private CatalogSpreadsheetExporter catalogSpreadsheetExporter;
 
@@ -58,7 +57,7 @@ public class ImportExportApplication {
         System.out.println("Starting catalog I/O service...");
         ApplicationContext ctx = SpringApplication.run(ImportExportApplication.class, args);
         int code = SpringApplication.exit(ctx, () -> exitCode);
-        if(code > 0){
+        if (code > 0) {
             System.exit(code);
         }
     }
@@ -110,16 +109,6 @@ public class ImportExportApplication {
                             exitCode += 6;
                         }
                         break;
-                    case LOAD:
-                        try {
-                            doLoad(inputFile);
-                        }
-                        catch (Exception e) {
-                            System.err.println("Loading NCBI data failed (" + e.getMessage() + ")");
-                            getLog().error("Loading NCBI data failed", e);
-                            exitCode += 4;
-                        }
-                        break;
                     default:
                         System.err.println("No operation mode specified");
                         exitCode += 1;
@@ -134,15 +123,15 @@ public class ImportExportApplication {
     }
 
     void doDownloadExport(File outFile) throws IOException {
-//        String[][] allData = catalogExportRepository.getDownloadSpreadsheet("d");
-//
-//        String[][] data = new String[allData.length][allData[0].length-2];
-//
-//        for(int i =0; i< allData.length; i++){
-//            for(int j =0; j< allData[0].length-2; j++){
-//                data[i][j] = allData[i][j];
-//            }
-//        }
+        //        String[][] allData = catalogExportRepository.getDownloadSpreadsheet("d");
+        //
+        //        String[][] data = new String[allData.length][allData[0].length-2];
+        //
+        //        for(int i =0; i< allData.length; i++){
+        //            for(int j =0; j< allData[0].length-2; j++){
+        //                data[i][j] = allData[i][j];
+        //            }
+        //        }
         String[][] data = catalogExportRepository.getDownloadSpreadsheet("d");
         catalogSpreadsheetExporter.writeToFile(data, outFile);
     }
@@ -152,15 +141,10 @@ public class ImportExportApplication {
         catalogSpreadsheetExporter.writeToFile(data, outFile);
     }
 
-    void doStatsExport(File statsFile) throws IOException{
-         catalogMetaDataRepository.getMetaData(statsFile);
+    void doStatsExport(File statsFile) throws IOException {
+        catalogMetaDataRepository.getMetaData(statsFile);
     }
 
-
-    void doLoad(File inFile) throws IOException {
-        String[][] data = catalogSpreadsheetExporter.readFromFile(inFile);
-        catalogImportRepository.loadNCBIMappedData(data);
-    }
 
     private int parseArguments(String[] arguments) {
         CommandLineParser parser = new GnuParser();
@@ -188,8 +172,6 @@ public class ImportExportApplication {
                 // options are...
                 // -n --ncbi        (write out NCBI export file)
                 // -d --download    (write out downloads file)
-                // -l --load        (load in NCBI mapped file)
-                // -f --file        (file to load in)
                 // -o --out         (file to write out to)
 
                 // required options
@@ -202,16 +184,8 @@ public class ImportExportApplication {
                 if (cl.hasOption("a")) {
                     this.opMode = OperationMode.DOWNLOAD_ALTERNATIVE;
                 }
-                if (cl.hasOption("l")) {
-                    this.opMode = OperationMode.LOAD;
-                }
                 if (cl.hasOption("s")) {
                     this.opMode = OperationMode.STATS;
-                }
-
-                // file options
-                if (cl.hasOption("f")) {
-                    this.inputFile = new File(cl.getOptionValue("f"));
                 }
                 if (cl.hasOption("o")) {
                     this.outputFile = new File(cl.getOptionValue("o"));
@@ -236,8 +210,6 @@ public class ImportExportApplication {
         // options are...
         // -n --ncbi        (write out NCBI export file)
         // -d --download    (write out downloads file)
-        // -l --load        (load in NCBI mapped file)
-        // -f --file        (file to load in)
         // -o --out         (file to write out to)
         // -a --download_alt  (write out alternative downloads file)
         // -s --stats       (write out catalog meta data)
@@ -270,14 +242,6 @@ public class ImportExportApplication {
         downloadAltOption.setRequired(false);
         modeGroup.addOption(downloadAltOption);
 
-        Option loadOption = new Option(
-                "l",
-                "load",
-                false,
-                "Load - take a spreadsheet file mapped by the NCBI and load into the database");
-        loadOption.setRequired(false);
-        modeGroup.addOption(loadOption);
-
         Option statsOption = new Option(
                 "s",
                 "stats",
@@ -291,15 +255,6 @@ public class ImportExportApplication {
         // add input file arguments
         OptionGroup fileGroup = new OptionGroup();
         fileGroup.setRequired(true);
-
-        Option inOption = new Option(
-                "f",
-                "file",
-                true,
-                "Input file - file where the NCBI mapped data can be found");
-        inOption.setArgName("file");
-        inOption.setRequired(false);
-        fileGroup.addOption(inOption);
 
         // add output file arguments
         Option outOption = new Option(
@@ -320,7 +275,6 @@ public class ImportExportApplication {
         NCBI,
         DOWNLOAD,
         DOWNLOAD_ALTERNATIVE,
-        STATS,
-        LOAD
+        STATS
     }
 }
