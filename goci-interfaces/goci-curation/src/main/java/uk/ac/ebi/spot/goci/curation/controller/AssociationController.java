@@ -34,6 +34,7 @@ import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationReport;
+import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
@@ -338,7 +339,9 @@ public class AssociationController {
                     associationsToMap.add(newAssociation);
                 }
 
-                mappingService.validateAndMapSnps(associationsToMap);
+                Curator curator = study.getHousekeeping().getCurator();
+                String mappedBy = curator.getLastName();
+                mappingService.validateAndMapSnps(associationsToMap, mappedBy);
             }
             return "redirect:/studies/" + studyId + "/associations";
 
@@ -542,7 +545,9 @@ public class AssociationController {
         // Map RS_ID in association
         Collection<Association> associationsToMap = new ArrayList<>();
         associationsToMap.add(newAssociation);
-        mappingService.validateAndMapSnps(associationsToMap);
+        Curator curator = study.getHousekeeping().getCurator();
+        String mappedBy = curator.getLastName();
+        mappingService.validateAndMapSnps(associationsToMap, mappedBy);
 
         return "redirect:/associations/" + newAssociation.getId();
     }
@@ -567,7 +572,9 @@ public class AssociationController {
         // Map RS_ID in association
         Collection<Association> associationsToMap = new ArrayList<>();
         associationsToMap.add(newAssociation);
-        mappingService.validateAndMapSnps(associationsToMap);
+        Curator curator = study.getHousekeeping().getCurator();
+        String mappedBy = curator.getLastName();
+        mappingService.validateAndMapSnps(associationsToMap, mappedBy);
 
         return "redirect:/associations/" + newAssociation.getId();
     }
@@ -593,7 +600,9 @@ public class AssociationController {
         // Map RS_ID in association
         Collection<Association> associationsToMap = new ArrayList<>();
         associationsToMap.add(newAssociation);
-        mappingService.validateAndMapSnps(associationsToMap);
+        Curator curator = study.getHousekeeping().getCurator();
+        String mappedBy = curator.getLastName();
+        mappingService.validateAndMapSnps(associationsToMap, mappedBy);
 
         return "redirect:/associations/" + newAssociation.getId();
     }
@@ -713,7 +722,9 @@ public class AssociationController {
         // Map RS_ID in association
         Collection<Association> associationsToMap = new ArrayList<>();
         associationsToMap.add(editedAssociation);
-        mappingService.validateAndMapSnps(associationsToMap);
+        Curator curator = associationStudy.getHousekeeping().getCurator();
+        String mappedBy = curator.getLastName();
+        mappingService.validateAndMapSnps(associationsToMap, mappedBy);
 
         return "redirect:/associations/" + associationId;
     }
@@ -1095,7 +1106,10 @@ public class AssociationController {
         // For the study get all associations
         Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
 
-        mappingService.validateAndMapSnps(studyAssociations);
+        Study study = studyRepository.findOne(studyId);
+        Curator curator = study.getHousekeeping().getCurator();
+        String mappedBy = curator.getLastName();
+        mappingService.validateAndMapSnps(studyAssociations, mappedBy);
 
         String message = "Mapping complete, please check for any errors displayed in the 'Errors' column";
         redirectAttributes.addFlashAttribute("mappingComplete", message);
