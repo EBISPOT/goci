@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.curation.model.SnpMappingForm;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
 import uk.ac.ebi.spot.goci.model.Location;
 import uk.ac.ebi.spot.goci.model.Region;
@@ -17,8 +16,6 @@ import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -110,7 +107,7 @@ public class SnpLocationMappingService {
 
 
                         if (existingLocation != null) {
-                                newSnpLocations.add(existingLocation);
+                            newSnpLocations.add(existingLocation);
                         }
                         // Create new location
                         else {
@@ -184,7 +181,7 @@ public class SnpLocationMappingService {
         List<SingleNucleotidePolymorphism> snps =
                 singleNucleotidePolymorphismRepository.findByLocationsId(id);
 
-        List<GenomicContext> genomicContexts= genomicContextRepository.findByLocationId(id);
+        List<GenomicContext> genomicContexts = genomicContextRepository.findByLocationId(id);
 
         if (snps.size() == 0 && genomicContexts.size() == 0) {
             locationRepository.delete(id);
