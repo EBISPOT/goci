@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.component.EnsemblMappingPipeline;
 import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
 import uk.ac.ebi.spot.goci.model.Location;
@@ -63,24 +62,16 @@ public class MappingService {
         this.mappingRecordService = mappingRecordService;
         this.associationService = associationService;
     }
-
-
+    
     /**
      * Get all associations in database
      */
     public void mapCatalogContents(String performer) {
 
         // Get all associations via service
-
-        Long id = Long.valueOf("10103638");
-        Association association = associationService.findOneAssociation(id);
-        Collection<Association> associations = new ArrayList<>();
-        associations.add(association);
-
-        //  Collection<Association> associations = associationService.findAllAssociations();
+        Collection<Association> associations = associationService.findAllAssociations();
         getLog().info("Total number of associations to map: " + associations.size());
-
-        validateAndMapSnps(associations,performer);
+        validateAndMapSnps(associations, performer);
     }
 
     /**

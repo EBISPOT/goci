@@ -7,7 +7,6 @@ import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by emma on 14/08/2015.
