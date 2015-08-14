@@ -27,7 +27,12 @@
 
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-utils</artifactId>
+            <artifactId>goci-model</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-repository</artifactId>
         </dependency>
 
         <dependency>
