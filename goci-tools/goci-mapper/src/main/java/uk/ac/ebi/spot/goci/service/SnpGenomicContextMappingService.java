@@ -440,8 +440,7 @@ public class SnpGenomicContextMappingService {
             ensemblGeneRepository.save(ensemblGene);
         }
 
-        // Check this ID is not linked to a gene with a different name,
-        // this case should be extremely rare
+        // Check this ID is not linked to a gene with a different name
         else {
             Collection<Gene> existingGenesLinkedToId = ensemblGene.getGene();
             Collection<String> existingGeneNamesLinkedToId = new ArrayList<>();
@@ -452,17 +451,18 @@ public class SnpGenomicContextMappingService {
                 }
 
                 if (!existingGeneNamesLinkedToId.contains(geneName)) {
-                    getLog().error(
-                            "Ensembl ID: " + id + ", is already used in database by a different gene. Cannot link to " +
-                                    geneName);
-                    throw new RuntimeException(
-                            "Ensembl ID: " + id + ", is already used in database by a different gene. Cannot link to " +
-                                    geneName);
+                    getLog().warn(
+                            "Ensembl ID: " + id + ", is already used in database by a different gene(s): " +
+                                    existingGeneNamesLinkedToId.toString() + ". Will update so links to " + geneName);
+
+                    // For each of the genes already linked to this ensembl ID remove the ensembl ID
+                    for (Gene existingGene : existingGenesLinkedToId) {
+                        existingGene.setEnsemblGeneIds(new ArrayList<>());
+                        geneRepository.save(existingGene);
+                    }
                 }
             }
-
         }
-
         return ensemblGene;
     }
 
@@ -475,15 +475,14 @@ public class SnpGenomicContextMappingService {
     private EntrezGene createOrRetrieveEntrezExternalId(String id, String geneName) {
         EntrezGene entrezGene = entrezGeneService.findByEntrezGeneId(id);
 
-        // Create new entry in ENSEMBL_GENE table for this ID
+        // Create new entry in ENTREZ_GENE table for this ID
         if (entrezGene == null) {
             entrezGene = new EntrezGene();
             entrezGene.setEntrezGeneId(id);
             entrezGeneRepository.save(entrezGene);
         }
 
-        // Check this ID is not linked to a gene with a different name,
-        // this case should be extremely rare
+        // Check this ID is not linked to a gene with a different name
         else {
 
             Collection<Gene> existingGenesLinkedToId = entrezGene.getGene();
@@ -495,12 +494,15 @@ public class SnpGenomicContextMappingService {
                 }
 
                 if (!existingGeneNamesLinkedToId.contains(geneName)) {
-                    getLog().error(
-                            "Entrez ID: " + id + ", is already used in database by a different gene. Cannot link to " +
-                                    geneName);
-                    throw new RuntimeException(
-                            "Entrez ID: " + id + ", is already used in database by a different gene. Cannot link to " +
-                                    geneName);
+                    getLog().warn(
+                            "Entrez ID: " + id + ", is already used in database by a different gene(s): " +
+                                    existingGeneNamesLinkedToId.toString() + ". Will update so links to " + geneName);
+
+                    // For each of the genes already linked to this entrez ID remove the entrez ID
+                    for (Gene existingGene : existingGenesLinkedToId) {
+                        existingGene.setEntrezGeneIds(new ArrayList<>());
+                        geneRepository.save(existingGene);
+                    }
                 }
             }
         }
