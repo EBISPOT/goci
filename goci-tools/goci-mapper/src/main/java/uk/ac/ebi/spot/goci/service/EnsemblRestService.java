@@ -97,6 +97,9 @@ public class EnsemblRestService {
         if (responseCode == HttpURLConnection.HTTP_OK) {
             response = httpConnection.getInputStream();
         } else {
+            if (responseCode == 503) {
+                this.addErrors("No server is available to handle this request (Error 503: service unavailable)");
+            }
             response = httpConnection.getErrorStream();
         }
 
@@ -141,5 +144,14 @@ public class EnsemblRestService {
      */
     public ArrayList<String> getErrors() {
         return this.rest_errors;
+    }
+
+
+    /**
+     * Add error messages to the array of REST error messages
+     * @param error_msg the error message
+     */
+    private void addErrors (String error_msg) {
+        this.rest_errors.add(error_msg);
     }
 }
