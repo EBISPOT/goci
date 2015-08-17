@@ -92,7 +92,7 @@ public class MappingService {
         // For each association get the loci
         for (Association association : associations) {
 
-            getLog().debug("Mapping association: " + association.getId());
+            getLog().info("Mapping association: " + association.getId());
 
             // Collection to store all errors for one association
             Collection<String> associationPipelineErrors = new ArrayList<>();
@@ -117,6 +117,16 @@ public class MappingService {
                 // Pass rs_id and author reported genes to mapping component
                 for (SingleNucleotidePolymorphism snpLinkedToLocus : snpsLinkedToLocus) {
                     String snpRsId = snpLinkedToLocus.getRsId();
+
+                    // Ensembl can only cope with 15 requests per second
+                    // thus sleep for 2 secs
+                    try {
+                        Thread.sleep(2000);
+                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
                     EnsemblMappingPipeline ensemblMappingPipeline =
                             new EnsemblMappingPipeline(snpRsId, authorReportedGeneNamesLinkedToSnp);
                     ensemblMappingPipeline.run_pipeline();
