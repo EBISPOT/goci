@@ -154,6 +154,11 @@ public class EnsemblMappingPipeline {
             String chromosome = mapping.getString("seq_region_name");
             String position = String.valueOf(mapping.getInt("start"));
 
+            // Mapping errors
+            if (mapping.has("failed")) {
+              pipeline_errors.add(mapping.getString("failed"));
+            }
+
             Region cytogenetic_band = this.getRegion(chromosome, position);
 
             Location location = new Location(chromosome,position,cytogenetic_band);
