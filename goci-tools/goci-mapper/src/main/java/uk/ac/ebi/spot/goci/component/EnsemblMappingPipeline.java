@@ -106,6 +106,11 @@ public class EnsemblMappingPipeline {
             // Merged SNP
             this.merged = (variation_result.getString("name") == this.rsId) ? 0 : 1;
 
+            // Mapping errors
+            if (variation_result.has("failed")) {
+                pipeline_errors.add(variation_result.getString("failed"));
+            }
+
             // Mapping and genomic context calls
             JSONArray mappings = variation_result.getJSONArray("mappings");
             this.getMappings(mappings);
@@ -153,11 +158,6 @@ public class EnsemblMappingPipeline {
             }
             String chromosome = mapping.getString("seq_region_name");
             String position = String.valueOf(mapping.getInt("start"));
-
-            // Mapping errors
-            if (mapping.has("failed")) {
-              pipeline_errors.add(mapping.getString("failed"));
-            }
 
             Region cytogenetic_band = this.getRegion(chromosome, position);
 
