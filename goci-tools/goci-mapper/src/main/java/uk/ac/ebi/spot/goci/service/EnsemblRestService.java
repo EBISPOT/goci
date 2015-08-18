@@ -112,11 +112,11 @@ public class EnsemblRestService {
             while ((read = reader.read(buffer, 0, buffer.length)) > 0) {
                 builder.append(buffer, 0, read);
             }
+            String json_string = builder.toString();
             // JSONObject issue id the JSON string doesn't start with the "{" character (pb with overlap_region REST endpoint)
             if (!json_string.substring(0, 1).matches("\\{")) {
                 json_string = "{ \"array\" : " + json_string + "}";
             }
-            System.out.println(json_string);
             this.rest_results = new JSONObject(json_string);
         }
         finally {
