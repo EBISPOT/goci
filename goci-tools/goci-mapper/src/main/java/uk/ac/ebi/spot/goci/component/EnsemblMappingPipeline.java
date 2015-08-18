@@ -129,6 +129,7 @@ public class EnsemblMappingPipeline {
                 }
             }
         }
+        this.have_a_rest(500); // Pause the code for 0.5 second
     }
 
 
@@ -475,6 +476,8 @@ public class EnsemblMappingPipeline {
 
         JSONArray json_gene_list = this.getOverlapRegionCalls(chromosome,pos1,pos2,rest_opt);
 
+        this.have_a_rest(1000); // Pause the code for 1 second
+
         for (int i = 0; i < json_gene_list.length(); ++i) {
             JSONObject json_gene = json_gene_list.getJSONObject(i);
             String gene_id = json_gene.getString("id");
@@ -649,5 +652,18 @@ public class EnsemblMappingPipeline {
      */
     private String getEndpoint(String endpoint_name) {
         return this.endpoints.get(endpoint_name);
+    }
+
+
+    /**
+     * Pause between the web service calls, because Ensembl REST only allows 15 requests per second
+     * @param millisecond Pausing time in millisecond
+     */
+    private void have_a_rest(int millisecond) {
+        try {
+            Thread.sleep(millisecond); //e.g. 1000 milliseconds is one second.
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
     }
 }
