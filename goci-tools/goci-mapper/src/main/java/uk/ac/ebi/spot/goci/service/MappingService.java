@@ -81,25 +81,24 @@ public class MappingService {
      */
     public void validateAndMapSnps(Collection<Association> associations, String performer) {
 
-        // Map to store returned location data, this is used as
-        // snpLocationMappingService process all locations linked
-        // to a single snp in one go
-        Map<String, Set<Location>> snpToLocationsMap = new HashMap<>();
-
-        // Collection to store all genomic contexts
-        Collection<GenomicContext> allGenomicContexts = new ArrayList<>();
-
         // For each association get the loci
         for (Association association : associations) {
 
             getLog().info("Mapping association: " + association.getId());
 
+            // Map to store returned location data, this is used as
+            // snpLocationMappingService process all locations linked
+            // to a single snp in one go
+            Map<String, Set<Location>> snpToLocationsMap = new HashMap<>();
+
+            // Collection to store all genomic contexts
+            Collection<GenomicContext> allGenomicContexts = new ArrayList<>();
+
             // Collection to store all errors for one association
             Collection<String> associationPipelineErrors = new ArrayList<>();
 
-            Collection<Locus> studyAssociationLoci = association.getLoci();
-
             // For each loci get the SNP and author reported genes
+            Collection<Locus> studyAssociationLoci = association.getLoci();
             for (Locus associationLocus : studyAssociationLoci) {
                 Long locusId = associationLocus.getId();
 
@@ -117,15 +116,6 @@ public class MappingService {
                 // Pass rs_id and author reported genes to mapping component
                 for (SingleNucleotidePolymorphism snpLinkedToLocus : snpsLinkedToLocus) {
                     String snpRsId = snpLinkedToLocus.getRsId();
-
-                    // Ensembl can only cope with 15 requests per second
-                    // thus sleep for 2 secs
-                    try {
-                        Thread.sleep(2000);
-                    }
-                    catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
 
                     EnsemblMappingPipeline ensemblMappingPipeline =
                             new EnsemblMappingPipeline(snpRsId, authorReportedGeneNamesLinkedToSnp);
@@ -178,27 +168,22 @@ public class MappingService {
             else {
                 associationReportService.updateAssociationReportDetails(association);
             }
-        }
 
-        // Save data
-        if (!snpToLocationsMap.isEmpty()) {
-            getLog().info("Adding/updating location details for SNPs" + snpToLocationsMap.keySet().toString());
-            snpLocationMappingService.storeSnpLocation(snpToLocationsMap);
-        }
-        if (!allGenomicContexts.isEmpty()) {
-            getLog().info(
-                    "Adding/updating genomic context for SNPs" + snpToLocationsMap.keySet().toString());
-            snpGenomicContextMappingService.processGenomicContext(allGenomicContexts);
-        }
+            // Save data
+            if (!snpToLocationsMap.isEmpty()) {
+                getLog().info("Adding/updating location details for SNPs" + snpToLocationsMap.keySet().toString());
+                snpLocationMappingService.storeSnpLocation(snpToLocationsMap);
+            }
+            if (!allGenomicContexts.isEmpty()) {
+                getLog().info(
+                        "Adding/updating genomic context for SNPs" + snpToLocationsMap.keySet().toString());
+                snpGenomicContextMappingService.processGenomicContext(allGenomicContexts);
+            }
 
-        // Once mapping is complete, update mapping record
-        for (Association association : associations) {
-
-            // Get current curator of study
+            // Once mapping is complete, update mapping record
             Study associationStudy = association.getStudy();
             mappingRecordService.updateAssociationMappingRecord(association, new Date(), performer);
         }
-
     }
 
 }
