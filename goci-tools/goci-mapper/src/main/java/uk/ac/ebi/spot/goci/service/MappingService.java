@@ -110,7 +110,7 @@ public class MappingService {
                 // Get gene names
                 Collection<String> authorReportedGeneNamesLinkedToSnp = new ArrayList<>();
                 for (Gene authorReportedGeneLinkedToSnp : authorReportedGenesLinkedToSnp) {
-                    authorReportedGeneNamesLinkedToSnp.add(authorReportedGeneLinkedToSnp.getGeneName());
+                    authorReportedGeneNamesLinkedToSnp.add(authorReportedGeneLinkedToSnp.getGeneName().trim());
                 }
 
                 // Pass rs_id and author reported genes to mapping component
