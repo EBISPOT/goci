@@ -117,6 +117,7 @@ public class EnsemblRestService {
             if (!json_string.substring(0, 1).matches("\\{")) {
                 json_string = "{ \"array\" : " + json_string + "}";
             }
+            System.out.println(json_string);
             this.rest_results = new JSONObject(json_string);
         }
         finally {
