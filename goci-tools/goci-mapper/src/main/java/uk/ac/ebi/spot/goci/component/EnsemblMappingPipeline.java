@@ -604,19 +604,25 @@ public class EnsemblMappingPipeline {
             if (reported_gene_result.has("error")) {
                 this.checkError(reported_gene_result, webservice, "Reported gene "+reported_gene+" is not found in Ensembl");
             }
-            // Gene not in the same chromosome as the variant
+            // Check if the gene is in the same chromosome as the variant
             else {
-                String gene_chromosome = reported_gene_result.getString("seq_region_name");
-                int same_chromosome = 0;
-                for (Location location : this.locations) {
-                    String snp_chromosome = location.getChromosomeName();
-                    if (gene_chromosome.equals(snp_chromosome)) {
-                        same_chromosome = 1;
-                        break;
+                if (reported_gene_result.has("seq_region_name")) {
+                    String gene_chromosome = reported_gene_result.getString("seq_region_name");
+                    int same_chromosome = 0;
+                    for (Location location : this.locations) {
+                        String snp_chromosome = location.getChromosomeName();
+                        if (gene_chromosome.equals(snp_chromosome)) {
+                            same_chromosome = 1;
+                            break;
+                        }
+                    }
+                    if (same_chromosome == 0) {
+                        pipeline_errors.add("Reported gene " + reported_gene + " is on a different chromosome (chr" + gene_chromosome + ")");
                     }
                 }
-                if (same_chromosome == 0) {
-                    pipeline_errors.add("Reported gene "+reported_gene+" is on a different chromosome (chr"+gene_chromosome+")");
+                // No gene location found
+                else {
+                    pipeline_errors.add("Can't find a location in Ensembl for the reported gene " + reported_gene);
                 }
             }
         }
