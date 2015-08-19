@@ -1,20 +1,19 @@
 package uk.ac.ebi.spot.goci.service;
 
-import org.json.JSONObject;
-import org.springframework.stereotype.Service;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Laurent on 15/07/15.
@@ -36,6 +35,12 @@ public class EnsemblRestService {
 
     private JsonNode rest_results;
     private ArrayList<String> rest_errors = new ArrayList<String>();
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
 
     // Default constructor
     public EnsemblRestService() {
@@ -70,6 +75,7 @@ public class EnsemblRestService {
 
     /**
      * Run the Ensembl REST API call, using the parameters from the constructor
+     *
      * @throws IOException
      * @throws UnirestException
      * @throws InterruptedException
@@ -104,6 +110,7 @@ public class EnsemblRestService {
 
     /**
      * Return the results of the Ensembl REST API call
+     *
      * @return JSONObject containing the returned JSON data
      */
     public JsonNode getRestResults() {
@@ -113,6 +120,7 @@ public class EnsemblRestService {
 
     /**
      * Return the list of error messages from the Ensembl REST API call
+     *
      * @return List of error messages
      */
     public ArrayList<String> getErrors() {
@@ -122,6 +130,7 @@ public class EnsemblRestService {
 
     /**
      * Add error messages to the array of REST error messages
+     *
      * @param error_msg the error message
      */
     private void addErrors(String error_msg) {
@@ -147,16 +156,20 @@ public class EnsemblRestService {
             }
             else if (response.getStatus() == 503) { // Service unavailable
                 this.addErrors("No server is available to handle this request (Error 503: service unavailable)");
+                getLog().error("No server is available to handle this request (Error 503: service unavailable)");
             }
             else if (response.getStatus() == 400) { // Bad request
                 this.addErrors(url + " is generating an invalid request. (Error 400: bad request)");
+                getLog().error(url + " is generating an invalid request. (Error 400: bad request)");
                 throw new IllegalArgumentException(url + " is generating an invalid request. (Error 400: bad request)");
             }
             else { // Other issue
                 this.addErrors("No data available");
+                getLog().error("No data at " + url);
                 throw new IllegalArgumentException("No data at " + url);
             }
-        } catch (InterruptedException e) {
+        }
+        catch (InterruptedException e) {
             throw new RuntimeException();
         }
     }
@@ -164,6 +177,7 @@ public class EnsemblRestService {
 
     /**
      * Check if the program reached the rate limit of calls per second
+     *
      * @throws InterruptedException
      */
     private void rateLimit() throws InterruptedException {
