@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.Association;
@@ -35,7 +36,7 @@ public class AssociationService {
 
     @Transactional(readOnly = true)
     public Collection<Association> findAllAssociations() {
-        Collection<Association> allAssociations = associationRepository.findAll();
+        Collection<Association> allAssociations = associationRepository.findAll(sortByIdDesc());
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
@@ -55,5 +56,10 @@ public class AssociationService {
                     locus.getAuthorReportedGenes().size();
                     locus.getStrongestRiskAlleles().size();
                 });
+    }
+
+    // Sort options
+    private Sort sortByIdDesc() {
+        return new Sort(new Sort.Order(Sort.Direction.DESC, "id"));
     }
 }
