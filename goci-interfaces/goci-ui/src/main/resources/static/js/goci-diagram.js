@@ -32,7 +32,13 @@ $(document).ready(function() {
 
     });
 
-    $("#filter-button").click(doFilter);
+
+    $('#search-box').change(function(){
+        doFilter();
+    });
+    $("#filter-button").click(function(){
+        doFilter();
+    });
     $("#clear-filter-button").click(function () {
         showAllTraits();
     });

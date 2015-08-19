@@ -5,7 +5,7 @@
 
 function doFilter() {
     console.log("Detected bioportal widget filtering event - " + $("#trait-filter").val());
-    filterTraits($("#trait").val());
+    filterTraits($("#trait-filter").val());
 }
 
 
