@@ -1,7 +1,9 @@
 package uk.ac.ebi.spot.goci.component;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import com.mashape.unirest.http.JsonNode;
 import uk.ac.ebi.spot.goci.service.EnsemblRestService;
 import uk.ac.ebi.spot.goci.model.EnsemblGene;
 import uk.ac.ebi.spot.goci.model.EntrezGene;
@@ -97,6 +99,7 @@ public class EnsemblMappingPipeline {
 
     // Run the pipeline for a given SNP
     public void run_pipeline() {
+
         // Variation call
         JSONObject variation_result = this.getVariationData();
         if (variation_result.has("error")) {
@@ -129,13 +132,14 @@ public class EnsemblMappingPipeline {
                 }
             }
         }
-        this.have_a_rest(500); // Pause the code for 0.5 second
     }
 
 
     /**
      * Variation REST API call
      * @return JSONObject containing the output of the Ensembl REST API endpoint "variation"
+     * @throws UnirestException
+     * @throws InterruptedException
      */
     private JSONObject getVariationData() {
 
@@ -150,8 +154,10 @@ public class EnsemblMappingPipeline {
      * Store the location information in the class variable "locations" (list of "Location" classes)
      *
      * @param mappings A JSONArray object containing the list the variant locations
+     * @throws UnirestException
+     * @throws InterruptedException
      */
-    private void getMappings(JSONArray mappings) {
+    private void getMappings(JSONArray mappings)  {
         for (int i = 0; i < mappings.length(); ++i) {
             JSONObject mapping = mappings.getJSONObject(i);
             if (!mapping.has("seq_region_name")) {
@@ -174,6 +180,8 @@ public class EnsemblMappingPipeline {
      * @param chromosome the chromosome name
      * @param position the position of the variant
      * @return Region object only containing a region name
+     * @throws UnirestException
+     * @throws InterruptedException
      */
     private Region getRegion(String chromosome, String position) {
 
@@ -203,10 +211,16 @@ public class EnsemblMappingPipeline {
      * Run the genomic context pipeline for both sources (Ensembl and NCBI)
      *
      * @param snp_location an instance of the Location class (chromosome name and position)
+     * @throws UnirestException
+     * @throws InterruptedException
      */
     private void getAllGenomicContexts(Location snp_location) {
-        this.getGenomicContext(snp_location, this.ensembl_source);
-        this.getGenomicContext(snp_location, this.ncbi_source);
+
+        int chr_start = 1;
+        int chr_end = this.getChromosomeEnd(snp_location.getChromosomeName());
+
+        this.getGenomicContext(snp_location, chr_start, chr_end, this.ensembl_source);
+        this.getGenomicContext(snp_location, chr_start, chr_end, this.ncbi_source);
     }
 
 
@@ -214,9 +228,11 @@ public class EnsemblMappingPipeline {
      * Get the genomic context in 3 calls: overlap, upstream and downstream genes
      *
      * @param snp_location an instance of the Location class (chromosome name and position)
+     * @param chr_start 5' start position of the chromosome
+     * @param chr_end 3' end position of the chromosome
      * @param source the source of the data (Ensembl or NCBI)
      */
-    private void getGenomicContext(Location snp_location, String source) {
+    private void getGenomicContext(Location snp_location, int chr_start, int chr_end, String source) {
         // By default the db_type is 'core' (i.e. Ensembl)
         String rest_opt = "feature=gene";
         if (source == this.ncbi_source) {
@@ -227,10 +243,10 @@ public class EnsemblMappingPipeline {
         this.getOverlappingGenes(snp_location, source, rest_opt);
 
         // Upstream genes
-        this.getUpstreamGenes(snp_location, source, rest_opt);
+        this.getUpstreamGenes(snp_location, source, chr_start, rest_opt);
 
         // Downstream genes
-        this.getDownstreamGenes(snp_location, source, rest_opt);
+        this.getDownstreamGenes(snp_location, source, chr_end, rest_opt);
     }
 
 
@@ -267,17 +283,18 @@ public class EnsemblMappingPipeline {
      *
      * @param snp_location an instance of the Location class (chromosome name and position)
      * @param source the source of the data (Ensembl or NCBI)
+     * @param chr_start 5' start position of the chromosome
      * @param rest_opt the extra parameters to add at the end of the REST call url
      */
-    private void getUpstreamGenes(Location snp_location, String source, String rest_opt) {
+    private void getUpstreamGenes(Location snp_location, String source, int chr_start, String rest_opt) {
         String type = "upstream";
 
         String chromosome = snp_location.getChromosomeName();
         String position   = snp_location.getChromosomePosition();
 
-        int position_up = Integer.parseInt(position) - genomic_distance;
+        int position_up = Integer.parseInt(snp_location.getChromosomePosition()) - genomic_distance;
         if (position_up < 0) {
-            position_up = 1;
+            position_up = chr_start;
         }
         String pos_up = String.valueOf(position_up);
 
@@ -287,7 +304,7 @@ public class EnsemblMappingPipeline {
         if ((overlap_gene_result.length() != 0 && !overlap_gene_result.getJSONObject(0).has("error")) || overlap_gene_result.length() == 0) {
             boolean closest_found = this.addGenomicContext(overlap_gene_result, snp_location, source, type);
             if (!closest_found) {
-                if (position_up > 1) {
+                if (position_up > chr_start) {
                     JSONArray closest_gene = this.getNearestGene(chromosome, position, pos_up, 1, rest_opt, type);
                     if (closest_gene.length() > 0) {
                         addGenomicContext(closest_gene, snp_location, source, type);
@@ -303,18 +320,17 @@ public class EnsemblMappingPipeline {
      *
      * @param snp_location an instance of the Location class (chromosome name and position)
      * @param source the source of the data (Ensembl or NCBI)
+     * @param chr_end 3' end position of the chromosome
      * @param rest_opt the extra parameters to add at the end of the REST call url
      */
-    private void getDownstreamGenes(Location snp_location, String source, String rest_opt) {
+    private void getDownstreamGenes(Location snp_location, String source, int chr_end, String rest_opt) {
         String type = "downstream";
 
         String chromosome = snp_location.getChromosomeName();
         String position   = snp_location.getChromosomePosition();
 
-        int position_down = Integer.parseInt(position) + genomic_distance;
-
+        int position_down = Integer.parseInt(snp_location.getChromosomePosition()) + genomic_distance;
         // Check the downstream position to avoid having a position over the 3' end of the chromosome
-        int chr_end = this.getChromosomeEnd(chromosome);
         if (chr_end != 0 && position_down > chr_end) {
             position_down = chr_end;
         }
@@ -392,7 +408,6 @@ public class EnsemblMappingPipeline {
             String gene_name  = json_gene.getString("external_name");
             String ncbi_id    = (source == "NCBI") ? gene_id : null;
             String ensembl_id = (source == "Ensembl") ? gene_id : null;
-
             int distance = 0;
 
             if (intergenic) {
@@ -476,8 +491,6 @@ public class EnsemblMappingPipeline {
 
         JSONArray json_gene_list = this.getOverlapRegionCalls(chromosome,pos1,pos2,rest_opt);
 
-        this.have_a_rest(1000); // Pause the code for 1 second
-
         for (int i = 0; i < json_gene_list.length(); ++i) {
             JSONObject json_gene = json_gene_list.getJSONObject(i);
             String gene_id = json_gene.getString("id");
@@ -529,17 +542,25 @@ public class EnsemblMappingPipeline {
         JSONArray overlap_result = new JSONArray();
         try {
             rest_overlap.getRestCall();
-            JSONObject result = rest_overlap.getRestResults();
+            JsonNode result = rest_overlap.getRestResults();
 
-            if (result.has("error")) {
-                this.checkError(result,webservice,"");
-                overlap_result.put(0,result); // Add error in the result
-            }
+            if (result.isArray())
+                overlap_result = result.getArray();
             else {
-                overlap_result = result.getJSONArray("array");
+                JSONObject res_obj = result.getObject();
+                if (res_obj.has("error")) {
+                    this.checkError(res_obj,webservice,"");
+                    overlap_result.put(0,result); // Add error in the result
+                }
             }
         }
         catch (IOException e) {
+            e.printStackTrace();
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        catch (UnirestException e) {
             e.printStackTrace();
         }
         return overlap_result;
@@ -559,9 +580,15 @@ public class EnsemblMappingPipeline {
         JSONObject json_result = new JSONObject();
         try {
             ens_rest_call.getRestCall();
-            json_result = ens_rest_call.getRestResults();
+            json_result = ens_rest_call.getRestResults().getObject();
         }
         catch (IOException e) {
+            e.printStackTrace();
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        catch (UnirestException e) {
             e.printStackTrace();
         }
         return json_result;
@@ -658,18 +685,5 @@ public class EnsemblMappingPipeline {
      */
     private String getEndpoint(String endpoint_name) {
         return this.endpoints.get(endpoint_name);
-    }
-
-
-    /**
-     * Pause between the web service calls, because Ensembl REST only allows 15 requests per second
-     * @param millisecond Pausing time in millisecond
-     */
-    private void have_a_rest(int millisecond) {
-        try {
-            Thread.sleep(millisecond); //e.g. 1000 milliseconds is one second.
-        } catch(InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
     }
 }
