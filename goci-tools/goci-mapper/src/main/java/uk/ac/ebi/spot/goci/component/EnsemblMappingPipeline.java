@@ -105,7 +105,7 @@ public class EnsemblMappingPipeline {
         if (variation_result.has("error")) {
             this.checkError(variation_result, "variation", "Variant " + this.rsId + " is not found in Ensembl");
         }
-        else {
+        else if (variation_result.length() > 0) {
             // Merged SNP
             this.merged = (variation_result.getString("name") == this.rsId) ? 0 : 1;
 
