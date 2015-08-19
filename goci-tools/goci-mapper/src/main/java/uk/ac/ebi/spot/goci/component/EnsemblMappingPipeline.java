@@ -553,6 +553,14 @@ public class EnsemblMappingPipeline {
                     overlap_result.put(0,result); // Add error in the result
                 }
             }
+
+            // Errors
+            ArrayList rest_errors = rest_overlap.getErrors();
+            if (rest_errors.size() > 0) {
+                for (int i = 0; i < rest_errors.size(); ++i) {
+                    this.pipeline_errors.add(rest_errors.get(i).toString());
+                }
+            }
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -581,6 +589,14 @@ public class EnsemblMappingPipeline {
         try {
             ens_rest_call.getRestCall();
             json_result = ens_rest_call.getRestResults().getObject();
+
+            // Errors
+            ArrayList rest_errors = ens_rest_call.getErrors();
+            if (rest_errors.size() > 0) {
+                for (int i = 0; i < rest_errors.size(); ++i) {
+                    this.pipeline_errors.add(rest_errors.get(i).toString());
+                }
+            }
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -648,7 +664,7 @@ public class EnsemblMappingPipeline {
                     }
                 }
                 // No gene location found
-                else {
+                else if (reported_gene_result.length() > 0) {
                     pipeline_errors.add("Can't find a location in Ensembl for the reported gene " + reported_gene);
                 }
             }
