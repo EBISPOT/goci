@@ -4,6 +4,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -146,6 +147,8 @@ public class EnsemblRestService {
                     .asJson();
             String retryHeader = response.getHeaders().getFirst("Retry-After");
 
+            this.rest_results = new JsonNode(""); // Default empty result
+
             if (response.getStatus() == 200) { // Success
                 this.rest_results = response.getBody();
             }
@@ -158,10 +161,12 @@ public class EnsemblRestService {
                 this.addErrors("No server is available to handle this request (Error 503: service unavailable)");
                 getLog().error("No server is available to handle this request (Error 503: service unavailable)");
             }
-            else if (response.getStatus() == 400) { // Bad request
-                this.addErrors(url + " is generating an invalid request. (Error 400: bad request)");
+            else if (response.getStatus() == 400) { // Bad request (no result found)
+                JSONObject json_obj = response.getBody().getObject();
+                if (json_obj.has("error")) {
+                    this.addErrors(json_obj.getString("error"));
+                }
                 getLog().error(url + " is generating an invalid request. (Error 400: bad request)");
-                throw new IllegalArgumentException(url + " is generating an invalid request. (Error 400: bad request)");
             }
             else { // Other issue
                 this.addErrors("No data available");
