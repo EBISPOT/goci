@@ -36,7 +36,7 @@ public class SnpLocationMappingService {
     private GenomicContextRepository genomicContextRepository;
 
     // Services
-    private SingleNucleotidePolymorphismService singleNucleotidePolymorphismService;
+    private SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -50,12 +50,12 @@ public class SnpLocationMappingService {
                                      RegionRepository regionRepository,
                                      SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
                                      GenomicContextRepository genomicContextRepository,
-                                     SingleNucleotidePolymorphismService singleNucleotidePolymorphismService) {
+                                     SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService) {
         this.locationRepository = locationRepository;
         this.regionRepository = regionRepository;
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.genomicContextRepository = genomicContextRepository;
-        this.singleNucleotidePolymorphismService = singleNucleotidePolymorphismService;
+        this.singleNucleotidePolymorphismQueryService = singleNucleotidePolymorphismQueryService;
     }
 
     public void storeSnpLocation(Map<String, Set<Location>> snpToLocations) {
@@ -67,7 +67,7 @@ public class SnpLocationMappingService {
 
             // Check if the SNP exists
             Collection<SingleNucleotidePolymorphism> snpsInDatabase =
-                    singleNucleotidePolymorphismService.findByRsIdIgnoreCase(snpRsId);
+                    singleNucleotidePolymorphismQueryService.findByRsIdIgnoreCase(snpRsId);
 
             if (!snpsInDatabase.isEmpty()) {
 

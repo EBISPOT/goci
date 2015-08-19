@@ -23,13 +23,13 @@ import java.util.List;
  *         that can be used to lazy load extra data.
  */
 @Service
-public class SingleNucleotidePolymorphismService {
+public class SingleNucleotidePolymorphismQueryService {
 
     // Repositories
     private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
 
     @Autowired
-    public SingleNucleotidePolymorphismService(SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository) {
+    public SingleNucleotidePolymorphismQueryService(SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository) {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
     }
 

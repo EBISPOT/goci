@@ -40,7 +40,7 @@ public class MappingService {
     private SnpGenomicContextMappingService snpGenomicContextMappingService;
     private AssociationReportService associationReportService;
     private MappingRecordService mappingRecordService;
-    private AssociationService associationService;
+    private AssociationQueryService associationService;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -54,7 +54,7 @@ public class MappingService {
                           SnpGenomicContextMappingService snpGenomicContextMappingService,
                           AssociationReportService associationReportService,
                           MappingRecordService mappingRecordService,
-                          AssociationService associationService) {
+                          AssociationQueryService associationService) {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.snpLocationMappingService = snpLocationMappingService;
         this.snpGenomicContextMappingService = snpGenomicContextMappingService;

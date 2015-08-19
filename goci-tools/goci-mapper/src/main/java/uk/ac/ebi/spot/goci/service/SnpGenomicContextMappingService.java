@@ -49,10 +49,10 @@ public class SnpGenomicContextMappingService {
     private RegionRepository regionRepository;
 
     // Service
-    private GeneService geneService;
-    private EnsemblGeneSerivce ensemblGeneSerivce;
-    private EntrezGeneService entrezGeneService;
-    private SingleNucleotidePolymorphismService singleNucleotidePolymorphismService;
+    private GeneQueryService geneQueryService;
+    private EnsemblGeneQuerySerivce ensemblGeneQuerySerivce;
+    private EntrezGeneQueryService entrezGeneQueryService;
+    private SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -69,10 +69,10 @@ public class SnpGenomicContextMappingService {
                                            EntrezGeneRepository entrezGeneRepository,
                                            LocationRepository locationRepository,
                                            RegionRepository regionRepository,
-                                           GeneService geneService,
-                                           EnsemblGeneSerivce ensemblGeneSerivce,
-                                           EntrezGeneService entrezGeneService,
-                                           SingleNucleotidePolymorphismService singleNucleotidePolymorphismService) {
+                                           GeneQueryService geneQueryService,
+                                           EnsemblGeneQuerySerivce ensemblGeneQuerySerivce,
+                                           EntrezGeneQueryService entrezGeneQueryService,
+                                           SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService) {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.geneRepository = geneRepository;
         this.genomicContextRepository = genomicContextRepository;
@@ -80,10 +80,10 @@ public class SnpGenomicContextMappingService {
         this.entrezGeneRepository = entrezGeneRepository;
         this.locationRepository = locationRepository;
         this.regionRepository = regionRepository;
-        this.geneService = geneService;
-        this.ensemblGeneSerivce = ensemblGeneSerivce;
-        this.entrezGeneService = entrezGeneService;
-        this.singleNucleotidePolymorphismService = singleNucleotidePolymorphismService;
+        this.geneQueryService = geneQueryService;
+        this.ensemblGeneQuerySerivce = ensemblGeneQuerySerivce;
+        this.entrezGeneQueryService = entrezGeneQueryService;
+        this.singleNucleotidePolymorphismQueryService = singleNucleotidePolymorphismQueryService;
     }
 
 
@@ -206,7 +206,7 @@ public class SnpGenomicContextMappingService {
             // Find any existing database genes that match the gene name
             // IgnoreCase query is not used here as we want
             // the exact gene name returned from mapping
-            List<Gene> existingGenesInDatabase = geneService.findByGeneName(geneName);
+            List<Gene> existingGenesInDatabase = geneQueryService.findByGeneName(geneName);
 
             // If gene is not found in database then create one
             if (existingGenesInDatabase.size() == 0) {
@@ -295,7 +295,7 @@ public class SnpGenomicContextMappingService {
 
             // Check if the SNP exists
             List<SingleNucleotidePolymorphism> snpsInDatabase =
-                    singleNucleotidePolymorphismService.findByRsIdIgnoreCase(snpRsId);
+                    singleNucleotidePolymorphismQueryService.findByRsIdIgnoreCase(snpRsId);
 
             if (!snpsInDatabase.isEmpty()) {
 
@@ -431,7 +431,7 @@ public class SnpGenomicContextMappingService {
      * @param geneName Gene name allows method to check if this id is actually already linked to another gene
      */
     private EnsemblGene createOrRetrieveEnsemblExternalId(String id, String geneName) {
-        EnsemblGene ensemblGene = ensemblGeneSerivce.findByEnsemblGeneId(id);
+        EnsemblGene ensemblGene = ensemblGeneQuerySerivce.findByEnsemblGeneId(id);
 
         // Create new entry in ENSEMBL_GENE table for this ID
         if (ensemblGene == null) {
@@ -473,7 +473,7 @@ public class SnpGenomicContextMappingService {
      * @param geneName Gene name allows method to check if this id is actually already linked to another gene
      */
     private EntrezGene createOrRetrieveEntrezExternalId(String id, String geneName) {
-        EntrezGene entrezGene = entrezGeneService.findByEntrezGeneId(id);
+        EntrezGene entrezGene = entrezGeneQueryService.findByEntrezGeneId(id);
 
         // Create new entry in ENTREZ_GENE table for this ID
         if (entrezGene == null) {
