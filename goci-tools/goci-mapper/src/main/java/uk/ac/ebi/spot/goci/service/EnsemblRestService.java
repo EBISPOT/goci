@@ -1,22 +1,20 @@
 package uk.ac.ebi.spot.goci.service;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.net.URL;
-import java.net.URLConnection;
+import java.net.MalformedURLException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 /**
  * Created by Laurent on 15/07/15.
@@ -32,14 +30,12 @@ public class EnsemblRestService {
     private String rest_data;
     private String rest_parameters = "";
 
-    private JSONObject rest_results;
+    private final int requestPerSecond = 15;
+    private int requestCount = 0;
+    private long limitStartTime = System.currentTimeMillis();
+
+    private JsonNode rest_results;
     private ArrayList<String> rest_errors = new ArrayList<String>();
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
-    protected Logger getLog() {
-        return log;
-    }
 
     // Default constructor
     public EnsemblRestService() {
@@ -74,9 +70,13 @@ public class EnsemblRestService {
 
     /**
      * Run the Ensembl REST API call, using the parameters from the constructor
+     * @throws IOException
+     * @throws UnirestException
+     * @throws InterruptedException
      */
-    public void getRestCall() throws IOException {
+    public void getRestCall() throws IOException, UnirestException, InterruptedException {
 
+        // Build URL
         URL url = null;
         try {
             if (this.rest_parameters != "") {
@@ -92,72 +92,27 @@ public class EnsemblRestService {
             e.printStackTrace();
         }
 
-        URLConnection urlConnection = (url != null) ? url.openConnection() : null;
-        HttpURLConnection httpConnection = (HttpURLConnection) urlConnection;
-
-        httpConnection.setRequestMethod("GET"); // Method by default
-        httpConnection.setRequestProperty("Content-Type", "application/json"); // Default output format
-
-        InputStream response = null;
-
-        int responseCode = httpConnection.getResponseCode();
-
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            response = httpConnection.getInputStream();
-        }
-        else {
-            if (responseCode == 503) {
-                this.addErrors("No server is available to handle this request (Error 503: service unavailable)");
-            }
-            response = httpConnection.getErrorStream();
-        }
-
-        Reader reader = null;
+        // Call REST API
         try {
-            reader = new BufferedReader(new InputStreamReader(response, "UTF-8"));
-            StringBuilder builder = new StringBuilder();
-            char[] buffer = new char[8192];
-            int read;
-            while ((read = reader.read(buffer, 0, buffer.length)) > 0) {
-                builder.append(buffer, 0, read);
-            }
-            String json_string = builder.toString();
-            // JSONObject issue id the JSON string doesn't start with the "{" character (pb with overlap_region REST endpoint)
-            if (!json_string.substring(0, 1).matches("\\{")) {
-                json_string = "{ \"array\" : " + json_string + "}";
-            }
-            if (json_string.contains("Your browser sent an invalid request")) {
-                getLog().warn(url + " is generating an invalid request.");
-            }
-
-            this.rest_results = new JSONObject(json_string);
+            this.fetchJson(url.toString());
         }
-        finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                }
-                catch (IOException logOrIgnore) {
-                    logOrIgnore.printStackTrace();
-                }
-            }
+        catch (UnirestException e) {
+            e.printStackTrace();
         }
     }
 
 
     /**
      * Return the results of the Ensembl REST API call
-     *
      * @return JSONObject containing the returned JSON data
      */
-    public JSONObject getRestResults() {
+    public JsonNode getRestResults() {
         return this.rest_results;
     }
 
 
     /**
      * Return the list of error messages from the Ensembl REST API call
-     *
      * @return List of error messages
      */
     public ArrayList<String> getErrors() {
@@ -167,10 +122,62 @@ public class EnsemblRestService {
 
     /**
      * Add error messages to the array of REST error messages
-     *
      * @param error_msg the error message
      */
     private void addErrors(String error_msg) {
         this.rest_errors.add(error_msg);
+    }
+
+
+    private void fetchJson(String url) throws UnirestException, InterruptedException {
+        try {
+            rateLimit();
+            HttpResponse<JsonNode> response = Unirest.get(url)
+                    .header("Content-Type", "application/json")
+                    .asJson();
+            String retryHeader = response.getHeaders().getFirst("Retry-After");
+
+            if (response.getStatus() == 200) { // Success
+                this.rest_results = response.getBody();
+            }
+            else if (response.getStatus() == 429 && retryHeader != null) { // Too Many Requests
+                Long waitSeconds = Long.valueOf(retryHeader);
+                Thread.sleep(waitSeconds * 1000);
+                fetchJson(url);
+            }
+            else if (response.getStatus() == 503) { // Service unavailable
+                this.addErrors("No server is available to handle this request (Error 503: service unavailable)");
+            }
+            else if (response.getStatus() == 400) { // Bad request
+                this.addErrors(url + " is generating an invalid request. (Error 400: bad request)");
+                throw new IllegalArgumentException(url + " is generating an invalid request. (Error 400: bad request)");
+            }
+            else { // Other issue
+                this.addErrors("No data available");
+                throw new IllegalArgumentException("No data at " + url);
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException();
+        }
+    }
+
+
+    /**
+     * Check if the program reached the rate limit of calls per second
+     * @throws InterruptedException
+     */
+    private void rateLimit() throws InterruptedException {
+        requestCount++;
+        if (requestCount == requestPerSecond) {
+            long currentTime = System.currentTimeMillis();
+            long diff = currentTime - limitStartTime;
+            //if less than a second has passed then sleep for the remainder of the second
+            if (diff < 1000) {
+                Thread.sleep(1000 - diff);
+            }
+            //reset
+            limitStartTime = System.currentTimeMillis();
+            requestCount = 0;
+        }
     }
 }
