@@ -50,7 +50,7 @@ public class SnpGenomicContextMappingService {
 
     // Service
     private GeneQueryService geneQueryService;
-    private EnsemblGeneQuerySerivce ensemblGeneQuerySerivce;
+    private EnsemblGeneQueryService ensemblGeneQueryService;
     private EntrezGeneQueryService entrezGeneQueryService;
     private SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService;
 
@@ -70,7 +70,7 @@ public class SnpGenomicContextMappingService {
                                            LocationRepository locationRepository,
                                            RegionRepository regionRepository,
                                            GeneQueryService geneQueryService,
-                                           EnsemblGeneQuerySerivce ensemblGeneQuerySerivce,
+                                           EnsemblGeneQueryService ensemblGeneQueryService,
                                            EntrezGeneQueryService entrezGeneQueryService,
                                            SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService) {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
@@ -81,7 +81,7 @@ public class SnpGenomicContextMappingService {
         this.locationRepository = locationRepository;
         this.regionRepository = regionRepository;
         this.geneQueryService = geneQueryService;
-        this.ensemblGeneQuerySerivce = ensemblGeneQuerySerivce;
+        this.ensemblGeneQueryService = ensemblGeneQueryService;
         this.entrezGeneQueryService = entrezGeneQueryService;
         this.singleNucleotidePolymorphismQueryService = singleNucleotidePolymorphismQueryService;
     }
@@ -431,7 +431,7 @@ public class SnpGenomicContextMappingService {
      * @param geneName Gene name allows method to check if this id is actually already linked to another gene
      */
     private EnsemblGene createOrRetrieveEnsemblExternalId(String id, String geneName) {
-        EnsemblGene ensemblGene = ensemblGeneQuerySerivce.findByEnsemblGeneId(id);
+        EnsemblGene ensemblGene = ensemblGeneQueryService.findByEnsemblGeneId(id);
 
         // Create new entry in ENSEMBL_GENE table for this ID
         if (ensemblGene == null) {
