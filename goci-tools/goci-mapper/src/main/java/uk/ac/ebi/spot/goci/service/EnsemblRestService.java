@@ -1,25 +1,27 @@
 package uk.ac.ebi.spot.goci.service;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.HttpURLConnection;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Created by Laurent on 15/07/15.
- * @author Laurent
- * Class running the Ensembl REST API calls
+ *
+ * @author Laurent Class running the Ensembl REST API calls
  */
 @Service
 public class EnsemblRestService {
@@ -33,18 +35,24 @@ public class EnsemblRestService {
     private JSONObject rest_results;
     private ArrayList<String> rest_errors = new ArrayList<String>();
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
+
     // Default constructor
-    public EnsemblRestService () {
+    public EnsemblRestService() {
     }
 
 
     /**
      * Simple constructor with endpoint and data
-     * 
+     *
      * @param rest_endpoint the endpoint part of the URL
-     * @param rest_data the data/id/symbol we want to query
+     * @param rest_data     the data/id/symbol we want to query
      */
-    public EnsemblRestService (String rest_endpoint, String rest_data) {
+    public EnsemblRestService(String rest_endpoint, String rest_data) {
         this.rest_endpoint = rest_endpoint;
         this.rest_data = rest_data;
     }
@@ -53,11 +61,11 @@ public class EnsemblRestService {
     /**
      * More complex contructor with extra parameters
      *
-     * @param rest_endpoint the endpoint part of the URL
-     * @param rest_data the data/id/symbol we want to query
+     * @param rest_endpoint   the endpoint part of the URL
+     * @param rest_data       the data/id/symbol we want to query
      * @param rest_parameters the extra parameters to add at the end of the REST call url
      */
-    public EnsemblRestService (String rest_endpoint, String rest_data, String rest_parameters) {
+    public EnsemblRestService(String rest_endpoint, String rest_data, String rest_parameters) {
         this.rest_endpoint = rest_endpoint;
         this.rest_data = rest_data;
         this.rest_parameters = rest_parameters;
@@ -96,7 +104,8 @@ public class EnsemblRestService {
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
             response = httpConnection.getInputStream();
-        } else {
+        }
+        else {
             if (responseCode == 503) {
                 this.addErrors("No server is available to handle this request (Error 503: service unavailable)");
             }
@@ -117,13 +126,20 @@ public class EnsemblRestService {
             if (!json_string.substring(0, 1).matches("\\{")) {
                 json_string = "{ \"array\" : " + json_string + "}";
             }
+            if (json_string.contains("Your browser sent an invalid request")) {
+                getLog().warn(url + " is generating an invalid request.");
+            }
+
             this.rest_results = new JSONObject(json_string);
         }
         finally {
-            if (reader != null) try {
-                reader.close();
-            } catch (IOException logOrIgnore) {
-                logOrIgnore.printStackTrace();
+            if (reader != null) {
+                try {
+                    reader.close();
+                }
+                catch (IOException logOrIgnore) {
+                    logOrIgnore.printStackTrace();
+                }
             }
         }
     }
@@ -131,15 +147,17 @@ public class EnsemblRestService {
 
     /**
      * Return the results of the Ensembl REST API call
+     *
      * @return JSONObject containing the returned JSON data
      */
-    public JSONObject getRestResults () {
+    public JSONObject getRestResults() {
         return this.rest_results;
     }
 
 
     /**
      * Return the list of error messages from the Ensembl REST API call
+     *
      * @return List of error messages
      */
     public ArrayList<String> getErrors() {
@@ -149,9 +167,10 @@ public class EnsemblRestService {
 
     /**
      * Add error messages to the array of REST error messages
+     *
      * @param error_msg the error message
      */
-    private void addErrors (String error_msg) {
+    private void addErrors(String error_msg) {
         this.rest_errors.add(error_msg);
     }
 }
