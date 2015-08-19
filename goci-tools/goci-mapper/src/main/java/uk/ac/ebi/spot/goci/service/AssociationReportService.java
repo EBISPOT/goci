@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Association;
@@ -22,6 +24,12 @@ public class AssociationReportService {
 
     // Repositories
     private AssociationReportRepository associationReportRepository;
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
 
     //Constructor
     @Autowired
@@ -48,7 +56,7 @@ public class AssociationReportService {
                 snpGeneOnDiffChrErrors.add(error);
             }
 
-            if (error.contains("not found in Ensembl")) {
+            else if (error.contains("not found in Ensembl")) {
 
                 // Gene not in the same chromosome as the variant
                 if (error.contains("Variant")) {
@@ -56,7 +64,13 @@ public class AssociationReportService {
                 }
 
                 // Gene symbol not found in Ensembl
-                else {noGeneForSymbolErrors.add(error);}
+                if (error.contains("Reported gene")) {
+                    noGeneForSymbolErrors.add(error);
+                }
+            }
+
+            else {
+                getLog().warn("Association error: Association ID: " + association.getId() + " " + error);
             }
         }
 
