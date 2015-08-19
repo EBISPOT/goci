@@ -23,12 +23,12 @@ import java.util.List;
  *         that can be used to lazy load extra data.
  */
 @Service
-public class GeneService {
+public class GeneQueryService {
 
     private GeneRepository geneRepository;
 
     @Autowired
-    public GeneService(GeneRepository geneRepository) {
+    public GeneQueryService(GeneRepository geneRepository) {
         this.geneRepository = geneRepository;
     }
 

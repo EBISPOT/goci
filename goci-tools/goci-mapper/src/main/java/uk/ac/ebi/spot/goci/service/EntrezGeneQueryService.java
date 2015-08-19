@@ -21,12 +21,12 @@ import uk.ac.ebi.spot.goci.repository.EntrezGeneRepository;
  *         that can be used to lazy load extra data.
  */
 @Service
-public class EntrezGeneService {
+public class EntrezGeneQueryService {
 
     private EntrezGeneRepository entrezGeneRepository;
 
     @Autowired
-    public EntrezGeneService(EntrezGeneRepository entrezGeneRepository) {
+    public EntrezGeneQueryService(EntrezGeneRepository entrezGeneRepository) {
         this.entrezGeneRepository = entrezGeneRepository;
     }
 

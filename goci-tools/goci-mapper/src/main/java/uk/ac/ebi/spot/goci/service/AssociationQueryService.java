@@ -24,13 +24,13 @@ import java.util.Collection;
  *         that can be used to lazy load extra data.
  */
 @Service
-public class AssociationService {
+public class AssociationQueryService {
 
     // Repositories
     private AssociationRepository associationRepository;
 
     @Autowired
-    public AssociationService(AssociationRepository associationRepository) {
+    public AssociationQueryService(AssociationRepository associationRepository) {
         this.associationRepository = associationRepository;
     }
 
