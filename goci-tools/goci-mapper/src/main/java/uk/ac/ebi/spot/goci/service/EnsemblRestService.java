@@ -175,7 +175,10 @@ public class EnsemblRestService {
             }
         }
         catch (InterruptedException e) {
-            throw new RuntimeException();
+            e.printStackTrace();
+        }
+        catch (UnirestException e) {
+            e.printStackTrace();
         }
     }
 
