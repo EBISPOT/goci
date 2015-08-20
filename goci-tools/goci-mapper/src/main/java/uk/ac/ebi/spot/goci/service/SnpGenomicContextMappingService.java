@@ -619,13 +619,17 @@ public class SnpGenomicContextMappingService {
      *
      * @param snp SNP from which to remove the associated genomic contexts
      */
-    public void removeExistingGenomicContexts(SingleNucleotidePolymorphism snp){
+    public void removeExistingGenomicContexts(SingleNucleotidePolymorphism snp) {
 
         // Get a list of locations currently genomic context
-        Collection<Long> oldSnpLocationIds = new ArrayList<>();
+        Set<Long> oldSnpLocationIds = new HashSet<>();
 
         // Remove old genomic contexts, as these will be updated with latest mapping
         Collection<GenomicContext> snpGenomicContexts = snp.getGenomicContexts();
+
+        snp.setGenomicContexts(new ArrayList<>());
+        singleNucleotidePolymorphismRepository.save(snp);
+
         for (GenomicContext snpGenomicContext : snpGenomicContexts) {
             oldSnpLocationIds.add(snpGenomicContext.getLocation().getId());
             genomicContextRepository.delete(snpGenomicContext);
