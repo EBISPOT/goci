@@ -15,14 +15,7 @@ import uk.ac.ebi.spot.goci.ontology.owl.ReasonedOntologyLoader;
 
 import javax.validation.constraints.NotNull;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by dwelter on 30/06/15.
@@ -180,6 +173,9 @@ public class OntologyService {
 
         List<String> results = new ArrayList<String>();
         results.add(getOntologyLoader().getLabel(owlClass.getIRI()));
+        for(String syn : getOntologyLoader().getSynonyms(owlClass.getIRI())) {
+            results.add(syn);
+        }
         results.addAll(getOntologyLoader().getChildLabels(owlClass.getIRI()));
         return results;
     }
