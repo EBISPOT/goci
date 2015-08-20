@@ -4,6 +4,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,7 @@ public class EnsemblRestService {
     private int requestCount = 0;
     private long limitStartTime = System.currentTimeMillis();
 
-    private JsonNode rest_results;
+    private JsonNode rest_results  = new JsonNode(""); // Default empty result;
     private ArrayList<String> rest_errors = new ArrayList<String>();
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -100,11 +101,8 @@ public class EnsemblRestService {
         }
 
         // Call REST API
-        try {
+        if (url!=null) {
             this.fetchJson(url.toString());
-        }
-        catch (UnirestException e) {
-            e.printStackTrace();
         }
     }
 
@@ -139,15 +137,13 @@ public class EnsemblRestService {
     }
 
 
-    private void fetchJson(String url) throws UnirestException, InterruptedException {
+    private void fetchJson(String url) {
         try {
             rateLimit();
             HttpResponse<JsonNode> response = Unirest.get(url)
                     .header("Content-Type", "application/json")
                     .asJson();
             String retryHeader = response.getHeaders().getFirst("Retry-After");
-
-            this.rest_results = new JsonNode(""); // Default empty result
 
             if (response.getStatus() == 200) { // Success
                 this.rest_results = response.getBody();
@@ -173,6 +169,9 @@ public class EnsemblRestService {
                 getLog().error("No data at " + url);
                 throw new IllegalArgumentException("No data at " + url);
             }
+        }
+        catch (RuntimeException e) {
+            e.printStackTrace();
         }
         catch (InterruptedException e) {
             e.printStackTrace();
