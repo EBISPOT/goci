@@ -16,6 +16,7 @@ import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -178,7 +179,7 @@ public class SnpLocationMappingService {
 
         // Get a list of locations currently linked to SNP
         Collection<Location> oldSnpLocations = snp.getLocations();
-        Collection<Long> oldSnpLocationIds = new ArrayList<>();
+        Set<Long> oldSnpLocationIds = new HashSet<>();
         for (Location oldSnpLocation : oldSnpLocations) {
             oldSnpLocationIds.add(oldSnpLocation.getId());
         }
