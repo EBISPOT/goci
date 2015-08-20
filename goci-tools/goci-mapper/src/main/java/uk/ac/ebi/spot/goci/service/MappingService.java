@@ -115,6 +115,11 @@ public class MappingService {
 
                 // Pass rs_id and author reported genes to mapping component
                 for (SingleNucleotidePolymorphism snpLinkedToLocus : snpsLinkedToLocus) {
+
+                    // First remove old locations and genomic contexts
+                    snpLocationMappingService.removeExistingSnpLocations(snpLinkedToLocus);
+                    snpGenomicContextMappingService.removeExistingGenomicContexts(snpLinkedToLocus);
+
                     String snpRsId = snpLinkedToLocus.getRsId();
 
                     EnsemblMappingPipeline ensemblMappingPipeline =
