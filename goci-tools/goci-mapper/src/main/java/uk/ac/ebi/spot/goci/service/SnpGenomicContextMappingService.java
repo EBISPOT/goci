@@ -622,21 +622,22 @@ public class SnpGenomicContextMappingService {
     public void removeExistingGenomicContexts(SingleNucleotidePolymorphism snp) {
 
         // Get a list of locations currently genomic context
-        Set<Long> oldSnpLocationIds = new HashSet<>();
-
-        // Remove old genomic contexts, as these will be updated with latest mapping
         Collection<GenomicContext> snpGenomicContexts = snp.getGenomicContexts();
 
+        // Remove old genomic contexts, as these will be updated with latest mapping
         snp.setGenomicContexts(new ArrayList<>());
         singleNucleotidePolymorphismRepository.save(snp);
 
-        for (GenomicContext snpGenomicContext : snpGenomicContexts) {
-            oldSnpLocationIds.add(snpGenomicContext.getLocation().getId());
-            genomicContextRepository.delete(snpGenomicContext);
-        }
+        Set<Long> oldSnpLocationIds = new HashSet<>();
+        if (!snpGenomicContexts.isEmpty()) {
+            for (GenomicContext snpGenomicContext : snpGenomicContexts) {
+                oldSnpLocationIds.add(snpGenomicContext.getLocation().getId());
+                genomicContextRepository.delete(snpGenomicContext);
+            }
 
-        for (Long oldSnpLocationId : oldSnpLocationIds) {
-            cleanUpLocations(oldSnpLocationId);
+            for (Long oldSnpLocationId : oldSnpLocationIds) {
+                cleanUpLocations(oldSnpLocationId);
+            }
         }
 
     }
