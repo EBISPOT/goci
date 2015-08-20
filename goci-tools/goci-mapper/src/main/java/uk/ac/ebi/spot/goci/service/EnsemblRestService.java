@@ -102,7 +102,15 @@ public class EnsemblRestService {
 
         // Call REST API
         if (url!=null) {
-            this.fetchJson(url.toString());
+            try {
+                this.fetchJson(url.toString());
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            catch (UnirestException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -137,7 +145,7 @@ public class EnsemblRestService {
     }
 
 
-    private void fetchJson(String url) {
+    private void fetchJson(String url) throws UnirestException, InterruptedException {
         try {
             rateLimit();
             HttpResponse<JsonNode> response = Unirest.get(url)
@@ -172,12 +180,7 @@ public class EnsemblRestService {
         }
         catch (RuntimeException e) {
             e.printStackTrace();
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        catch (UnirestException e) {
-            e.printStackTrace();
+            System.out.println("URL: "+url); // Temporary (for debug)
         }
     }
 
