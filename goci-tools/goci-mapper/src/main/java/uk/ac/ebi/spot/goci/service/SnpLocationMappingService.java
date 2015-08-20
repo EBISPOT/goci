@@ -77,13 +77,6 @@ public class SnpLocationMappingService {
                     // Store all new location objects
                     Collection<Location> newSnpLocations = new ArrayList<>();
 
-                    // Get a list of locations currently linked to SNP
-                    Collection<Location> oldSnpLocations = snpInDatabase.getLocations();
-                    Collection<Long> oldSnpLocationIds = new ArrayList<>();
-                    for (Location oldSnpLocation : oldSnpLocations) {
-                        oldSnpLocationIds.add(oldSnpLocation.getId());
-                    }
-
                     for (Location snpLocationFromMapping : snpLocationsFromMapping) {
 
                         String chromosomeNameFromMapping = snpLocationFromMapping.getChromosomeName();
@@ -133,13 +126,6 @@ public class SnpLocationMappingService {
                         // Update the last update date
                         snpInDatabase.setLastUpdateDate(new Date());
                         singleNucleotidePolymorphismRepository.save(snpInDatabase);
-
-                        // Clean-up old locations that were linked to SNP
-                        if (oldSnpLocationIds.size() > 0) {
-                            for (Long oldSnpLocationId : oldSnpLocationIds) {
-                                cleanUpLocations(oldSnpLocationId);
-                            }
-                        }
                     }
                     else {getLog().warn("No new locations to add to " + snpRsId);}
                 }
@@ -183,11 +169,41 @@ public class SnpLocationMappingService {
         return newLocation;
     }
 
-    // Method to remove any old locations that no longer have snps or genomic contexts linked to them
+    /**
+     * Method to remove the existing locations linked to a SNP
+     *
+     * @param snp SNP from which to remove the associated locations
+     */
+    public void removeExistingSnpLocations(SingleNucleotidePolymorphism snp){
+
+        // Get a list of locations currently linked to SNP
+        Collection<Location> oldSnpLocations = snp.getLocations();
+        Collection<Long> oldSnpLocationIds = new ArrayList<>();
+        for (Location oldSnpLocation : oldSnpLocations) {
+            oldSnpLocationIds.add(oldSnpLocation.getId());
+        }
+
+        // Remove old locations
+        snp.setLocations(new ArrayList<>());
+        singleNucleotidePolymorphismRepository.save(snp);
+
+        // Clean-up old locations that were linked to SNP
+        if (oldSnpLocationIds.size() > 0) {
+            for (Long oldSnpLocationId : oldSnpLocationIds) {
+                cleanUpLocations(oldSnpLocationId);
+            }
+        }
+
+    }
+
+    /**
+     * Method to remove any old locations that no longer have snps or genomic contexts linked to them
+     *
+     * @param id Id of location object
+     */
     private void cleanUpLocations(Long id) {
         List<SingleNucleotidePolymorphism> snps =
                 singleNucleotidePolymorphismRepository.findByLocationsId(id);
-
         List<GenomicContext> genomicContexts = genomicContextRepository.findByLocationId(id);
 
         if (snps.size() == 0 && genomicContexts.size() == 0) {
