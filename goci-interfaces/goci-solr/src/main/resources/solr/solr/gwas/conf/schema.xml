@@ -184,8 +184,10 @@
     <field name="strongestAllele" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="context" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="region" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="mappedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="mappedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
+    <field name="entrezMappedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="entrezMappedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
+    <field name="ensemblMappedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="ensemblMappedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="reportedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="reportedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="studyId" type="text_general" indexed="true" stored="true" multiValued="false" />
