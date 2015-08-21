@@ -464,13 +464,18 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
                             // else get the closest upstream and downstream
                             else {
-                                if (context.getIsClosestGene()) {
+                                if (context.getIsClosestGene() != null && context.getIsClosestGene()) {
                                     if (context.getIsUpstream()) {
                                         {
                                             closestUpstreamDownstreamGenes.add(0, geneName);
                                         }
                                     }
                                     else {closestUpstreamDownstreamGenes.add(geneName);}
+                                }
+
+                                else {
+                                    getLog().warn("No closest upstream and downstream gene for association: " +
+                                                          association.getId() + ", snp: " + snp.getRsId());
                                 }
                             }
                         }
