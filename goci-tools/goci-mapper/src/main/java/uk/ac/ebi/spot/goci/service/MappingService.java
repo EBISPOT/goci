@@ -12,7 +12,6 @@ import uk.ac.ebi.spot.goci.model.Location;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,15 +31,13 @@ import java.util.Set;
 @Service
 public class MappingService {
 
-    // Repositories
-    private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
-
     // Services
     private SnpLocationMappingService snpLocationMappingService;
     private SnpGenomicContextMappingService snpGenomicContextMappingService;
     private AssociationReportService associationReportService;
     private MappingRecordService mappingRecordService;
     private AssociationQueryService associationService;
+    private SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -49,18 +46,18 @@ public class MappingService {
     }
 
     @Autowired
-    public MappingService(SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
-                          SnpLocationMappingService snpLocationMappingService,
+    public MappingService(SnpLocationMappingService snpLocationMappingService,
                           SnpGenomicContextMappingService snpGenomicContextMappingService,
                           AssociationReportService associationReportService,
                           MappingRecordService mappingRecordService,
-                          AssociationQueryService associationService) {
-        this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
+                          AssociationQueryService associationService,
+                          SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService) {
         this.snpLocationMappingService = snpLocationMappingService;
         this.snpGenomicContextMappingService = snpGenomicContextMappingService;
         this.associationReportService = associationReportService;
         this.mappingRecordService = mappingRecordService;
         this.associationService = associationService;
+        this.singleNucleotidePolymorphismQueryService = singleNucleotidePolymorphismQueryService;
     }
 
     /**
@@ -103,7 +100,7 @@ public class MappingService {
                 Long locusId = associationLocus.getId();
 
                 Collection<SingleNucleotidePolymorphism> snpsLinkedToLocus =
-                        singleNucleotidePolymorphismRepository.findByRiskAllelesLociId(locusId);
+                        singleNucleotidePolymorphismQueryService.findByRiskAllelesLociId(locusId);
 
                 Collection<Gene> authorReportedGenesLinkedToSnp = associationLocus.getAuthorReportedGenes();
 
