@@ -125,11 +125,11 @@ public class EnsemblMappingPipeline {
                 for (Location snp_location : locations) {
                     this.getAllGenomicContexts(snp_location);
                 }
+            }
 
-                // Reported genes checks
-                if (reported_genes.size() > 0) {
-                    this.checkReportedGenes();
-                }
+            // Reported genes checks
+            if (reported_genes.size() > 0) {
+                this.checkReportedGenes();
             }
         }
     }
@@ -191,7 +191,7 @@ public class EnsemblMappingPipeline {
         // REST Call
         JSONArray cytogenetic_band_result = this.getOverlapRegionCalls(chromosome, position, position, rest_opt);
 
-        if (cytogenetic_band_result.length() != 0 && !cytogenetic_band_result.getJSONObject(0).has("error")) {
+        if (cytogenetic_band_result.length() != 0 && !cytogenetic_band_result.getJSONObject(0).has("overlap_error")) {
             String cytogenetic_band = cytogenetic_band_result.getJSONObject(0).getString("id");
 
             Matcher matcher1 = Pattern.compile("^[0-9]+|[XY]$").matcher(chromosome); // Chromosomes
@@ -265,7 +265,7 @@ public class EnsemblMappingPipeline {
         // Check if there are overlap genes
         JSONArray overlap_gene_result = this.getOverlapRegionCalls(chromosome, position, position, rest_opt);
 
-        if (overlap_gene_result.length() != 0 && !overlap_gene_result.getJSONObject(0).has("error")) {
+        if (overlap_gene_result.length() != 0 && !overlap_gene_result.getJSONObject(0).has("overlap_error")) {
             for (int i = 0; i < overlap_gene_result.length(); ++i) {
                 JSONObject gene_json_object = overlap_gene_result.getJSONObject(i);
 
@@ -301,7 +301,7 @@ public class EnsemblMappingPipeline {
         // Check if there are overlap genes
         JSONArray overlap_gene_result = this.getOverlapRegionCalls(chromosome,pos_up,position,rest_opt);
 
-        if ((overlap_gene_result.length() != 0 && !overlap_gene_result.getJSONObject(0).has("error")) || overlap_gene_result.length() == 0) {
+        if ((overlap_gene_result.length() != 0 && !overlap_gene_result.getJSONObject(0).has("overlap_error")) || overlap_gene_result.length() == 0) {
             boolean closest_found = this.addGenomicContext(overlap_gene_result, snp_location, source, type);
             if (!closest_found) {
                 if (position_up > chr_start) {
@@ -331,22 +331,25 @@ public class EnsemblMappingPipeline {
 
         int position_down = Integer.parseInt(snp_location.getChromosomePosition()) + genomic_distance;
         // Check the downstream position to avoid having a position over the 3' end of the chromosome
-        if (chr_end != 0 && position_down > chr_end) {
-            position_down = chr_end;
-        }
-        String pos_down = String.valueOf(position_down);
+        if (chr_end != 0) {
+            if (position_down > chr_end) {
+                position_down = chr_end;
+            }
+            String pos_down = String.valueOf(position_down);
 
-        // Check if there are overlap genes
-        JSONArray overlap_gene_result = this.getOverlapRegionCalls(chromosome,position,pos_down,rest_opt);
+            // Check if there are overlap genes
+            JSONArray overlap_gene_result = this.getOverlapRegionCalls(chromosome, position, pos_down, rest_opt);
 
-        if ((overlap_gene_result.length() != 0 && !overlap_gene_result.getJSONObject(0).has("error")) || overlap_gene_result.length() == 0) {
-            boolean closest_found = this.addGenomicContext(overlap_gene_result, snp_location, source, type);
-            if (!closest_found) {
-                if (position_down != chr_end) {
-                    JSONArray closest_gene =
-                            this.getNearestGene(chromosome, position, pos_down, chr_end, rest_opt, type);
-                    if (closest_gene.length() > 0) {
-                        addGenomicContext(closest_gene, snp_location, source, type);
+            if ((overlap_gene_result.length() != 0 && !overlap_gene_result.getJSONObject(0).has("overlap_error")) ||
+                    overlap_gene_result.length() == 0) {
+                boolean closest_found = this.addGenomicContext(overlap_gene_result, snp_location, source, type);
+                if (!closest_found) {
+                    if (position_down != chr_end) {
+                        JSONArray closest_gene =
+                                this.getNearestGene(chromosome, position, pos_down, chr_end, rest_opt, type);
+                        if (closest_gene.length() > 0) {
+                            addGenomicContext(closest_gene, snp_location, source, type);
+                        }
                     }
                 }
             }
@@ -378,9 +381,10 @@ public class EnsemblMappingPipeline {
         // Get closest gene
         if (intergenic) {
             int pos = Integer.parseInt(position);
+
             for (int i = 0; i < json_gene_list.length(); ++i) {
                 JSONObject json_gene = json_gene_list.getJSONObject(i);
-                String gene_id   = json_gene.getString("id");
+                String gene_id = json_gene.getString("id");
                 String gene_name = json_gene.getString("external_name");
 
                 if ((gene_name != null && overlapping_genes.contains(gene_name)) || gene_name == null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
@@ -404,15 +408,14 @@ public class EnsemblMappingPipeline {
 
         for (int i = 0; i < json_gene_list.length(); ++i) {
             JSONObject json_gene = json_gene_list.getJSONObject(i);
-            String gene_id    = json_gene.getString("id");
-            String gene_name  = json_gene.getString("external_name");
-            String ncbi_id    = (source == "NCBI") ? gene_id : null;
+            String gene_id = json_gene.getString("id");
+            String gene_name = json_gene.getString("external_name");
+            String ncbi_id = (source == "NCBI") ? gene_id : null;
             String ensembl_id = (source == "Ensembl") ? gene_id : null;
             int distance = 0;
 
             if (intergenic) {
-                if ((gene_name != null && overlapping_genes.contains(gene_name)) || gene_name ==
-                        null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
+                if ((gene_name != null && overlapping_genes.contains(gene_name)) || gene_name == null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
                     continue;
                 }
                 int pos = Integer.parseInt(position);
@@ -489,32 +492,41 @@ public class EnsemblMappingPipeline {
         String pos1 = String.valueOf(position1);
         String pos2 = String.valueOf(position2);
 
-        JSONArray json_gene_list = this.getOverlapRegionCalls(chromosome,pos1,pos2,rest_opt);
+        JSONArray json_gene_list = this.getOverlapRegionCalls(chromosome, pos1, pos2, rest_opt);
 
-        for (int i = 0; i < json_gene_list.length(); ++i) {
-            JSONObject json_gene = json_gene_list.getJSONObject(i);
-            String gene_id = json_gene.getString("id");
-            String gene_name = json_gene.getString("external_name");
+        boolean gene_error = false;
 
-            if ((gene_name != null && overlapping_genes.contains(gene_name)) || gene_name ==
-                    null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
-                continue;
+        if (json_gene_list.length() > 0) {
+            if (json_gene_list.getJSONObject(0).has("overlap_error")) {
+                gene_error = true;
             }
+            else {
+                for (int i = 0; i < json_gene_list.length(); ++i) {
+                    JSONObject json_gene = json_gene_list.getJSONObject(i);
+                    String gene_id = json_gene.getString("id");
+                    String gene_name = json_gene.getString("external_name");
 
-            int distance = 0;
-            if (type == "upstream") {
-                distance = snp_pos - json_gene.getInt("end");
-            }
-            else if (type == "downstream") {
-                distance = json_gene.getInt("start") - snp_pos;
-            }
+                    if ((gene_name != null && overlapping_genes.contains(gene_name)) || gene_name ==
+                            null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
+                        continue;
+                    }
 
-            if ((distance < closest_distance && distance > 0) || closest_distance == 0) {
-                closest_gene = new JSONArray("["+json_gene.toString()+"]");
-                closest_distance = distance;
+                    int distance = 0;
+                    if (type == "upstream") {
+                        distance = snp_pos - json_gene.getInt("end");
+                    }
+                    else if (type == "downstream") {
+                        distance = json_gene.getInt("start") - snp_pos;
+                    }
+
+                    if ((distance < closest_distance && distance > 0) || closest_distance == 0) {
+                        closest_gene = new JSONArray("[" + json_gene.toString() + "]");
+                        closest_distance = distance;
+                    }
+                }
             }
         }
-        if (closest_gene.length() == 0) {
+        if (closest_gene.length() == 0 && !gene_error) {
             if (position2 != boundary) {
                 // Recursive code to find the nearest upstream or downstream gene
                 closest_gene = this.getNearestGene(chromosome, snp_position, new_pos, boundary, rest_opt, type);
@@ -544,21 +556,17 @@ public class EnsemblMappingPipeline {
             rest_overlap.getRestCall();
             JsonNode result = rest_overlap.getRestResults();
 
-            if (result.isArray())
+            if (result.isArray()) {
                 overlap_result = result.getArray();
-            else {
-                JSONObject res_obj = result.getObject();
-                if (res_obj.has("error")) {
-                    this.checkError(res_obj,webservice,"");
-                    overlap_result.put(0,result); // Add error in the result
-                }
             }
-
-            // Errors
-            ArrayList rest_errors = rest_overlap.getErrors();
-            if (rest_errors.size() > 0) {
-                for (int i = 0; i < rest_errors.size(); ++i) {
-                    this.pipeline_errors.add(rest_errors.get(i).toString());
+            else {
+                // Errors
+                ArrayList rest_errors = rest_overlap.getErrors();
+                if (rest_errors.size() > 0) {
+                    overlap_result = new JSONArray("[{\"overlap_error\":\"1\"}]");
+                    for (int i = 0; i < rest_errors.size(); ++i) {
+                        this.pipeline_errors.add(rest_errors.get(i).toString());
+                    }
                 }
             }
         }
@@ -622,11 +630,10 @@ public class EnsemblMappingPipeline {
         String webservice = "info_assembly";
         JSONObject info_result = this.getSimpleRestCall(webservice, chromosome);
 
-        if (info_result.has("error")) {
-            this.checkError(info_result, webservice, "Chromosome end not found");
-        }
-        else {
-            chr_end = info_result.getInt("length");
+        if (info_result.length() > 0) {
+            if (info_result.has("length")) {
+                chr_end = info_result.getInt("length");
+            }
         }
 
         return chr_end;
@@ -643,28 +650,31 @@ public class EnsemblMappingPipeline {
 
             String webservice = "lookup_symbol";
             JSONObject reported_gene_result = this.getSimpleRestCall(webservice, reported_gene);
-            // Gene symbol not found in Ensembl
-            if (reported_gene_result.has("error")) {
-                this.checkError(reported_gene_result, webservice, "Reported gene "+reported_gene+" is not found in Ensembl");
-            }
-            // Check if the gene is in the same chromosome as the variant
-            else {
+
+            // Gene symbol found in Ensembl
+            if (reported_gene_result.length() > 0) {
+                // Check if the gene is in the same chromosome as the variant
                 if (reported_gene_result.has("seq_region_name")) {
-                    String gene_chromosome = reported_gene_result.getString("seq_region_name");
-                    int same_chromosome = 0;
-                    for (Location location : this.locations) {
-                        String snp_chromosome = location.getChromosomeName();
-                        if (gene_chromosome.equals(snp_chromosome)) {
-                            same_chromosome = 1;
-                            break;
+                    if (this.locations.size() > 0) {
+                        String gene_chromosome = reported_gene_result.getString("seq_region_name");
+                        int same_chromosome = 0;
+                        for (Location location : this.locations) {
+                            String snp_chromosome = location.getChromosomeName();
+                            if (gene_chromosome.equals(snp_chromosome)) {
+                                same_chromosome = 1;
+                                break;
+                            }
+                        }
+                        if (same_chromosome == 0) {
+                            pipeline_errors.add( "Reported gene " + reported_gene + " is on a different chromosome (chr" + gene_chromosome + ")");
                         }
                     }
-                    if (same_chromosome == 0) {
-                        pipeline_errors.add("Reported gene " + reported_gene + " is on a different chromosome (chr" + gene_chromosome + ")");
+                    else {
+                        pipeline_errors.add("Can't compare the "+reported_gene+" location in Ensembl: no mapping available for the variant");
                     }
                 }
                 // No gene location found
-                else if (reported_gene_result.length() > 0) {
+                else  {
                     pipeline_errors.add("Can't find a location in Ensembl for the reported gene " + reported_gene);
                 }
             }
