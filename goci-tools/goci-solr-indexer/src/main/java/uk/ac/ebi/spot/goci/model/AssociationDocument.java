@@ -5,7 +5,6 @@ import org.apache.solr.client.solrj.beans.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -497,9 +496,28 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         else {
 
             if (!closestUpstreamDownstreamGenes.isEmpty()) {
-                geneString =
-                        closestUpstreamDownstreamGenes.get(0).concat(" - ").concat(closestUpstreamDownstreamGenes.get(
-                                1));
+                if (closestUpstreamDownstreamGenes.size() == 2) {
+                    geneString =
+                            closestUpstreamDownstreamGenes.get(0)
+                                    .concat(" - ")
+                                    .concat(closestUpstreamDownstreamGenes.get(
+                                            1));
+                }
+
+                else if (closestUpstreamDownstreamGenes.size() == 1) {
+                    geneString = closestUpstreamDownstreamGenes.get(0);
+                    getLog().warn("Indexing bad genetic data for association " +
+                                          "'" + association.getId() +
+                                          "': wrong number of closest upstream and downstream gene, expected 2, got 1");
+                }
+
+                else {
+                    getLog().warn("Indexing bad genetic data for association " +
+                                          "'" + association.getId() +
+                                          "': wrong number of closest upstream and downstream gene, expected 2, got" +
+                                          closestUpstreamDownstreamGenes.size());
+                }
+
             }
 
             else {
