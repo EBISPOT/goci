@@ -288,7 +288,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                                                     " : ");
 
                                     // add ensembl links for each ensembl mapped gene
-                                    entrezMappedGeneLinks = createMappedGeneLinks(snp, "Ensembl");
+                                    ensemblMappedGeneLinks = createMappedGeneLinks(snp, "Ensembl");
 
                                     context = snp.getFunctionalClass();
                                     Collection<Location> snpLocations = snp.getLocations();
@@ -354,7 +354,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                                                     ", ");
 
                                     // add ensembl links for each ensembl mapped gene
-                                    entrezMappedGeneLinks = createMappedGeneLinks(snp, "Ensembl");
+                                    ensemblMappedGeneLinks = createMappedGeneLinks(snp, "Ensembl");
 
                                     context = snp.getFunctionalClass();
                                     Collection<Location> snpLocations = snp.getLocations();
