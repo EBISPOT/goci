@@ -41,8 +41,10 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     @Field("association_strongestAllele") private Collection<String> strongestAlleles;
     @Field("association_context") private Collection<String> contexts;
     @Field("association_region") private Collection<String> regions;
-    @Field("association_mappedGene") private Collection<String> mappedGenes;
-    @Field("association_mappedGeneLinks") private Collection<String> mappedGeneLinks;
+    @Field("association_entrezMappedGene") private Collection<String> entrezMappedGenes;
+    @Field("association_entrezMappedGeneLinks") private Collection<String> entrezMappedGeneLinks;
+    @Field("association_ensemblMappedGene") private Collection<String> ensemblMappedGenes;
+    @Field("association_ensemblMappedGeneLinks") private Collection<String> ensemblMappedGeneLinks;
     @Field("association_reportedGene") private Collection<String> reportedGenes;
     @Field("association_reportedGeneLinks") private Collection<String> reportedGeneLinks;
     @Field("association_chromosomeName") private Collection<String> chromosomeNames;
@@ -81,8 +83,10 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.strongestAlleles = new LinkedHashSet<>();
         this.contexts = new LinkedHashSet<>();
         this.regions = new LinkedHashSet<>();
-        this.mappedGenes = new LinkedHashSet<>();
-        this.mappedGeneLinks = new LinkedHashSet<>();
+        this.entrezMappedGenes = new LinkedHashSet<>();
+        this.entrezMappedGeneLinks = new LinkedHashSet<>();
+        this.ensemblMappedGenes = new LinkedHashSet<>();
+        this.ensemblMappedGeneLinks = new LinkedHashSet<>();
         this.reportedGenes = new LinkedHashSet<>();
         this.reportedGeneLinks = new LinkedHashSet<>();
         this.chromosomeNames = new LinkedHashSet<>();
@@ -182,13 +186,22 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.regions.add(region);
     }
 
-    public void addMappedGene(String mappedGene) {
-        this.mappedGenes.add(mappedGene);
+    public void addEntrezMappedGene(String mappedGene) {
+        this.entrezMappedGenes.add(mappedGene);
     }
 
-    public void addMappedGeneLinks(Collection<String> mappedGeneLinks) {
-        this.mappedGeneLinks.addAll(mappedGeneLinks);
+    public void addEntrezMappedGeneLinks(Collection<String> mappedGeneLinks) {
+        this.entrezMappedGeneLinks.addAll(mappedGeneLinks);
     }
+
+    public void addEnsemblMappedGene(String mappedGene) {
+        this.ensemblMappedGenes.add(mappedGene);
+    }
+
+    public void addEnsemblMappedGeneLinks(Collection<String> mappedGeneLinks) {
+        this.ensemblMappedGeneLinks.addAll(mappedGeneLinks);
+    }
+
 
     public void addReportedGenes(Collection<String> reportedGenes) {
         this.reportedGenes.addAll(reportedGenes);
