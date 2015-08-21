@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -39,6 +40,14 @@ public class SingleNucleotidePolymorphismQueryService {
                 singleNucleotidePolymorphismRepository.findByRsIdIgnoreCase(rsId);
         singleNucleotidePolymorphisms.forEach(this::loadAssociatedData);
         return singleNucleotidePolymorphisms;
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociId(Long locusId) {
+        Collection<SingleNucleotidePolymorphism> snpsLinkedToLocus =
+                singleNucleotidePolymorphismRepository.findByRiskAllelesLociId(locusId);
+        snpsLinkedToLocus.forEach(this::loadAssociatedData);
+        return snpsLinkedToLocus;
     }
 
     public void loadAssociatedData(SingleNucleotidePolymorphism snp) {
