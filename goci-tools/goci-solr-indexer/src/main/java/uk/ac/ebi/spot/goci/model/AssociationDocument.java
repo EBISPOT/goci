@@ -397,8 +397,13 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                 }
 
                 String location = "";
-                if (context.getLocation().getChromosomeName() != null) {
-                    location = context.getLocation().getChromosomeName();
+                if (context.getLocation() != null) {
+                    if (context.getLocation().getChromosomeName() != null) {
+                        location = context.getLocation().getChromosomeName();
+                    }
+                }
+                else {
+                    getLog().warn("SNP: " + snp.getRsId() + " has no location for genomic context: " + context.getId());
                 }
 
 
