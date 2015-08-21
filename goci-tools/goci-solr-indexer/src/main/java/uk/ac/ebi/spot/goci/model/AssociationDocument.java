@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Javadocs go here!
@@ -344,7 +343,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
                                     region = setOrAppend(region, regionBuilder.toString(), ", ");
 
-                                    entrezMappedGene = setOrAppend(entrezMappedGene, getMappedGeneString(association, snp, "NCBI" ), ", ");
+                                    entrezMappedGene = setOrAppend(entrezMappedGene,
+                                                                   getMappedGeneString(association, snp, "NCBI"),
+                                                                   ", ");
                                     // and add entrez links for each entrez mapped gene
                                     entrezMappedGeneLinks = createMappedGeneLinks(snp, "NCBI");
 
@@ -446,62 +447,66 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     }
 
     private String getMappedGeneString(Association association, SingleNucleotidePolymorphism snp, String source) {
-        AtomicBoolean intragenic = new AtomicBoolean(false);
-        List<String> genes = new ArrayList<>();
+
+        List<String> mappedGenes = new ArrayList<>();
+        List<String> closestUpstreamDownstreamGenes = new ArrayList<>();
         snp.getGenomicContexts().forEach(
                 context -> {
                     if (context.getGene() != null && context.getGene().getGeneName() != null &&
                             context.getSource() != null) {
+
                         if (source.equalsIgnoreCase(context.getSource())) {
                             String geneName = context.getGene().getGeneName().trim();
-                            if (!genes.contains(geneName)) {
-                                if (context.getIsUpstream()) {
-                                    genes.add(0, geneName);
-                                    intragenic.set(true);
-                                }
-                                else {
-                                    if (context.getIsDownstream()) {
-                                        intragenic.set(true);
+
+                            // Get any overlapping genes
+                            if (context.getDistance() == 0) {
+                                mappedGenes.add(geneName);
+                            }
+
+                            // else get the closest upstream and downstream
+                            else {
+                                if (context.getIsClosestGene()) {
+                                    if (context.getIsUpstream()) {
+                                        {
+                                            closestUpstreamDownstreamGenes.add(0, geneName);
+                                        }
                                     }
-                                    genes.add(geneName);
+                                    else {closestUpstreamDownstreamGenes.add(geneName);}
                                 }
                             }
                         }
                     }
                 });
+
         String geneString = "";
-        if (intragenic.get()) {
-            // should only be 2 genes - one upstream and one downstream
-            if (genes.size() == 2) {
-                // todo - in this case, also add upstream and downstream distances
-                geneString = genes.get(0).concat(" - ").concat(genes.get(1));
+        if (!mappedGenes.isEmpty()) {
+
+            if (mappedGenes.size() == 1) {
+                geneString = mappedGenes.get(0);
             }
+
+            else if (mappedGenes.size() > 1) {
+                String.join(",", mappedGenes);
+            }
+
             else {
-                // this should probably be an exception, but just logging error to enable indexes to build
-                getLog().warn("Indexing bad genetic data for association " +
-                                      "'" + association.getId() + "': wrong number of mapped genes " +
-                                      "(expected 2, got " + genes.size() + ": " + genes + ")");
-                if (genes.size() == 1) {
-                    geneString = genes.get(0);
-                }
-                else {
-                    geneString = "N/A";
-                }
+                geneString = "N/A";
             }
         }
+
         else {
-            if (!genes.isEmpty()) {
-                StringBuilder gsBuilder = new StringBuilder();
-                Iterator<String> genesIt = genes.iterator();
-                while (genesIt.hasNext()) {
-                    gsBuilder.append(genesIt.next());
-                    if (genesIt.hasNext()) {
-                        gsBuilder.append(", ");
-                    }
-                }
-                geneString = gsBuilder.toString();
+
+            if (!closestUpstreamDownstreamGenes.isEmpty()) {
+                geneString =
+                        closestUpstreamDownstreamGenes.get(0).concat(" - ").concat(closestUpstreamDownstreamGenes.get(
+                                1));
+            }
+
+            else {
+                geneString = "N/A";
             }
         }
+
         return geneString;
     }
 
