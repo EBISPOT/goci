@@ -631,7 +631,9 @@ public class SnpGenomicContextMappingService {
         Set<Long> oldSnpLocationIds = new HashSet<>();
         if (!snpGenomicContexts.isEmpty()) {
             for (GenomicContext snpGenomicContext : snpGenomicContexts) {
-                oldSnpLocationIds.add(snpGenomicContext.getLocation().getId());
+                if (snpGenomicContext.getLocation() != null) {
+                    oldSnpLocationIds.add(snpGenomicContext.getLocation().getId());
+                }
                 genomicContextRepository.delete(snpGenomicContext);
             }
 
