@@ -191,7 +191,7 @@ public class EnsemblMappingPipeline {
         // REST Call
         JSONArray cytogenetic_band_result = this.getOverlapRegionCalls(chromosome, position, position, rest_opt);
 
-        if (cytogenetic_band_result.length() != 0 && !cytogenetic_band_result.getJSONObject(0).has("error")) {
+        if (cytogenetic_band_result.length() != 0 && !cytogenetic_band_result.getJSONObject(0).has("overlap_error")) {
             String cytogenetic_band = cytogenetic_band_result.getJSONObject(0).getString("id");
 
             Matcher matcher1 = Pattern.compile("^[0-9]+|[XY]$").matcher(chromosome); // Chromosomes
@@ -331,22 +331,25 @@ public class EnsemblMappingPipeline {
 
         int position_down = Integer.parseInt(snp_location.getChromosomePosition()) + genomic_distance;
         // Check the downstream position to avoid having a position over the 3' end of the chromosome
-        if (chr_end != 0 && position_down > chr_end) {
-            position_down = chr_end;
-        }
-        String pos_down = String.valueOf(position_down);
+        if (chr_end != 0) {
+            if (position_down > chr_end) {
+                position_down = chr_end;
+            }
+            String pos_down = String.valueOf(position_down);
 
-        // Check if there are overlap genes
-        JSONArray overlap_gene_result = this.getOverlapRegionCalls(chromosome,position,pos_down,rest_opt);
+            // Check if there are overlap genes
+            JSONArray overlap_gene_result = this.getOverlapRegionCalls(chromosome, position, pos_down, rest_opt);
 
-        if ((overlap_gene_result.length() != 0 && !overlap_gene_result.getJSONObject(0).has("overlap_error")) || overlap_gene_result.length() == 0) {
-            boolean closest_found = this.addGenomicContext(overlap_gene_result, snp_location, source, type);
-            if (!closest_found) {
-                if (position_down != chr_end) {
-                    JSONArray closest_gene =
-                            this.getNearestGene(chromosome, position, pos_down, chr_end, rest_opt, type);
-                    if (closest_gene.length() > 0) {
-                        addGenomicContext(closest_gene, snp_location, source, type);
+            if ((overlap_gene_result.length() != 0 && !overlap_gene_result.getJSONObject(0).has("overlap_error")) ||
+                    overlap_gene_result.length() == 0) {
+                boolean closest_found = this.addGenomicContext(overlap_gene_result, snp_location, source, type);
+                if (!closest_found) {
+                    if (position_down != chr_end) {
+                        JSONArray closest_gene =
+                                this.getNearestGene(chromosome, position, pos_down, chr_end, rest_opt, type);
+                        if (closest_gene.length() > 0) {
+                            addGenomicContext(closest_gene, snp_location, source, type);
+                        }
                     }
                 }
             }
@@ -627,11 +630,10 @@ public class EnsemblMappingPipeline {
         String webservice = "info_assembly";
         JSONObject info_result = this.getSimpleRestCall(webservice, chromosome);
 
-        if (info_result.has("error")) {
-            this.checkError(info_result, webservice, "Chromosome end not found");
-        }
-        else {
-            chr_end = info_result.getInt("length");
+        if (info_result.length() > 0) {
+            if (info_result.has("length")) {
+                chr_end = info_result.getInt("length");
+            }
         }
 
         return chr_end;
