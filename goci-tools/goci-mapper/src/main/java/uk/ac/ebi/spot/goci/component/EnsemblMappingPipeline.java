@@ -14,6 +14,8 @@ import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
@@ -47,6 +49,8 @@ public class EnsemblMappingPipeline {
     private final String ncbi_logic_name = "refseq_import";
     private final String mapping_method  = "Ensembl pipeline";
     private final int genomic_distance   = 100000; // 100kb
+    private final List<String> reported_genes_to_ignore = Arrays.asList("NR","intergenic");
+
 
     // JPA no-args constructor
     public EnsemblMappingPipeline() {
@@ -647,6 +651,11 @@ public class EnsemblMappingPipeline {
         for (String reported_gene : this.reported_genes) {
 
             reported_gene = reported_gene.replaceAll(" ",""); // Remove extra spaces
+
+            // Skip the iteration if the gene name is in the "gene-to-ignore" list
+            if (this.reported_genes_to_ignore.contains(reported_gene)) {
+                continue;
+            }
 
             String webservice = "lookup_symbol";
             JSONObject reported_gene_result = this.getSimpleRestCall(webservice, reported_gene);
