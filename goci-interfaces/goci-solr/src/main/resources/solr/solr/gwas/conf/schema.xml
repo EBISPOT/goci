@@ -236,7 +236,7 @@
    <dynamicField name="*_i"  type="int"    indexed="true"  stored="true"/>
    <dynamicField name="*_is" type="int"    indexed="true"  stored="true"  multiValued="true"/>
    <dynamicField name="*_s"  type="string"  indexed="true"  stored="true" />
-   <dynamicField name="*_ss" type="string"  indexed="true"  stored="true" multiValued="true"/>
+   <!--<dynamicField name="*_ss" type="string"  indexed="true"  stored="true" multiValued="true"/>-->
    <dynamicField name="*_l"  type="long"   indexed="true"  stored="true"/>
    <dynamicField name="*_ls" type="long"   indexed="true"  stored="true"  multiValued="true"/>
    <dynamicField name="*_t"  type="text_general"    indexed="true"  stored="true"/>
@@ -311,7 +311,81 @@
 
     <copyField source="*" dest="text"/>
     <!--<copyField source="*_t" dest="*_t_facet" />-->
-  
+
+    <dynamicField name="*_ss" type="string" indexed="true" stored="false" multiValued="true"/>
+    <copyField source="label" dest="label_ss"/>;
+    <copyField source="synonym" dest="synonym_ss"/>;
+    <copyField source="shortForm" dest="shortform_ss"/>;
+    <copyField source="traitUri" dest="traitUri_ss"/>;
+
+
+    <copyField source="label" dest="label_autosuggest"/>;
+    <copyField source="label" dest="label_autosuggest_ws"/>;
+    <copyField source="label" dest="label_autosuggest_e"/>;
+
+    <copyField source="synonym" dest="synonym_autosuggest"/>;
+    <copyField source="synonym" dest="synonym_autosuggest_ws"/>;
+    <copyField source="synonym" dest="synonym_autosuggest_e"/>;
+
+    <!--<copyField source="obo_id" dest="shortform_autosuggest"/>-->
+    <copyField source="shortForm" dest="shortform_autosuggest"/>
+
+    <field name="label_autosuggest_ws" type="textWhitespace" indexed="true" stored="true" multiValued="true"/>
+    <field name="label_autosuggest_e" type="textEdge" indexed="true" stored="true" multiValued="true" />
+    <field name="label_autosuggest" type="textWhitespaceEdge" indexed="true" stored="true" multiValued="true" />
+
+    <field name="synonym_autosuggest_ws" type="textWhitespace" indexed="true" stored="true" multiValued="true"/>
+    <field name="synonym_autosuggest_e" type="textEdge" indexed="true" stored="true" multiValued="true" />
+    <field name="synonym_autosuggest" type="textWhitespaceEdge" indexed="true" stored="true" multiValued="true" />
+
+    <field name="shortform_autosuggest" type="textEdge" indexed="true" stored="true" multiValued="true" />
+
+    <fieldType name="textWhitespaceEdge" class="solr.TextField">
+        <analyzer type="index">
+            <filter class="solr.LowerCaseFilterFactory"/>
+            <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+            <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+            <filter class="solr.EdgeNGramFilterFactory" minGramSize="1" maxGramSize="35"  />
+            <!--<filter class="solr.EdgeNGramFilterFactory" minGramSize="1" maxGramSize="35" side="front" />-->
+        </analyzer>
+        <analyzer type="query">
+            <filter class="solr.LowerCaseFilterFactory"/>
+            <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+            <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+            <!-- filter class="solr.EdgeNGramFilterFactory" minGramSize="1" maxGramSize="35" side="front" /-->
+        </analyzer>
+    </fieldType>
+    <fieldType name="textEdge" class="solr.TextField">
+        <analyzer type="index">
+            <tokenizer class="solr.PatternTokenizerFactory" pattern="______" />
+            <filter class="solr.LowerCaseFilterFactory"/>
+            <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+            <filter class="solr.EdgeNGramFilterFactory" minGramSize="1" maxGramSize="35"  />
+
+            <!--<filter class="solr.EdgeNGramFilterFactory" minGramSize="1" maxGramSize="35" side="front" />-->
+        </analyzer>
+        <analyzer type="query">
+            <tokenizer class="solr.PatternTokenizerFactory" pattern="_______" />
+            <filter class="solr.LowerCaseFilterFactory"/>
+            <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+            <!-- filter class="solr.EdgeNGramFilterFactory" minGramSize="1" maxGramSize="35" side="front" /-->
+        </analyzer>
+    </fieldType>
+    <fieldType name="textWhitespace" class="solr.TextField">
+        <analyzer type="index">
+            <filter class="solr.LowerCaseFilterFactory"/>
+            <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+            <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+        </analyzer>
+        <analyzer type="query">
+            <filter class="solr.LowerCaseFilterFactory"/>
+            <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+            <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+            <!-- filter class="solr.EdgeNGramFilterFactory" minGramSize="1" maxGramSize="35" side="front" /-->
+        </analyzer>
+    </fieldType>
+
+
     <!-- field type definitions. The "name" attribute is
        just a label to be used by field definitions.  The "class"
        attribute and any other attributes determine the real

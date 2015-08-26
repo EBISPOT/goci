@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import uk.ac.ebi.spot.goci.ui.SearchConfiguration;
 import uk.ac.ebi.spot.goci.ui.exception.IllegalParameterCombinationException;
 import uk.ac.ebi.spot.goci.ui.service.JsonProcessingService;
@@ -27,7 +24,9 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 
 
 /**
@@ -79,6 +78,64 @@ public class SolrSearchController {
         // dispatch search
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
+
+    @RequestMapping(value = "/api/select", produces = {MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.GET)
+    public void select(
+            @RequestParam("q") String query,
+            @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+            @RequestParam(value = "callback", required = false) String callbackFunction,
+            @RequestParam(value = "fieldList", required = false) Collection<String> fieldList,
+//            @RequestParam(value = "childrenOf", required = false) Collection<String> childrenOf,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            HttpServletResponse response
+    ) throws IOException {
+
+        StringBuilder solrSearchBuilder = buildBaseSearchRequest();
+
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+        addRowsAndPage(solrSearchBuilder, maxResults, page);
+        addSelectFields(solrSearchBuilder, query);
+        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "EfoTrait");
+
+
+        if (fieldList == null) {
+            fieldList = new HashSet<>();
+        }
+
+        //this is the FL parameter
+        if (fieldList.isEmpty()) {
+            fieldList.add("label");
+            fieldList.add("traitUri");
+            fieldList.add("id");
+//            fieldList.add("type");
+            fieldList.add("shortForm");
+            fieldList.add("parent");
+
+//            fieldList.add("ontology_name");
+//            fieldList.add("ontology_prefix");
+        }
+
+        addReturnFields(solrSearchBuilder, fieldList);
+
+        Collection<String> highlights = new HashSet<>();
+
+        highlights.add("label_autosuggest");
+        highlights.add("label");
+        highlights.add("synonym_autosuggest");
+        highlights.add("synonym");
+
+        addHighlights(solrSearchBuilder, highlights);
+
+        addQuery(solrSearchBuilder, query);
+        dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
+
+    }
+
+
+
 
     @RequestMapping(value = "api/search/study", produces = MediaType.APPLICATION_JSON_VALUE)
     public void doStudySolrSearch(
@@ -540,6 +597,14 @@ public class SolrSearchController {
         }
     }
 
+    private void addSelectFields(StringBuilder solrSearchBuilder, String query) {
+        solrSearchBuilder.append("defType=edismax" +
+                        "&qf=label synonym label_autosuggest_ws label_autosuggest_e label_autosuggest synonym_autosuggest_ws synonym_autosuggest_e synonym_autosuggest shortform_autosuggest" +
+                        "&bq=is_defining_ontology:true label_s:\"" + query + "\"^2 synonym_s:\"" + query + "\"");
+
+
+    }
+
     private void addFacet(StringBuilder solrSearchBuilder, String facet) {
         // add configuration
         solrSearchBuilder.append("&facet=true&facet.field=").append(facet);
@@ -556,6 +621,30 @@ public class SolrSearchController {
     private void addFacetSort(StringBuilder solrSearchBuilder, String sort){
         solrSearchBuilder.append("&facet.sort=").append(sort);
     }
+
+    private void addReturnFields(StringBuilder solrSearchBuilder, Collection<String> fieldList) {
+        String list = "";
+        for(String field : fieldList){
+            list.concat(field).concat("+");
+        }
+        solrSearchBuilder.append("&fl=").append(list);
+    }
+
+    private void addHighlights(StringBuilder solrSearchBuilder, Collection<String> highlights) {
+        solrSearchBuilder.append("&hl=true")
+                .append("&hl.simple.pre=<br>")
+                .append("&hl.simple.post=</br>")
+                .append("&hl.fl=");
+
+        String hlfs = "";
+
+        for(String highlight : highlights){
+            hlfs.concat(highlight).concat("+");
+        }
+
+        solrSearchBuilder.append(hlfs);
+    }
+
 
     private void addJsonpCallback(StringBuilder solrSearchBuilder, String callbackFunction) {
         if (callbackFunction == null) {
