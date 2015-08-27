@@ -11,7 +11,7 @@ import java.util.Map;
  * @author Tony Burdett
  * @date 22/07/14
  */
-public class MethodLoggingInvocationHandler implements InvocationHandler {
+public class MethodLoggingInvocationHandler implements MethodLogger, InvocationHandler {
     private boolean captured = false;
     private Method invokedMethod;
 

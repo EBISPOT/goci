@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.pussycat.lang;
 
+import org.mockito.Mockito;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 
@@ -20,8 +22,13 @@ public class Filtering {
      * @return
      */
     public static <T> T template(Class<T> filterType) {
-        InvocationHandler handler = new MethodLoggingInvocationHandler();
-        return (T) Proxy.newProxyInstance(filterType.getClassLoader(), new Class[]{filterType}, handler);
+        if (filterType.isInterface()) {
+            InvocationHandler handler = new MethodLoggingInvocationHandler();
+            return (T) Proxy.newProxyInstance(filterType.getClassLoader(), new Class[]{filterType}, handler);
+        }
+        else {
+            return Mockito.mock(filterType);
+        }
     }
 
     public static <T> CallChain<T> refine(T template) {

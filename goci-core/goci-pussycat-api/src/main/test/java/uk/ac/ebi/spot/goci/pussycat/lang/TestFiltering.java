@@ -1,11 +1,12 @@
-package uk.ac.ebi.spot.goci.lang;
+package uk.ac.ebi.spot.goci.pussycat.lang;
 
 import org.junit.Test;
-import uk.ac.ebi.spot.goci.ui.model.SingleNucleotidePolymorphism;
-import uk.ac.ebi.spot.goci.ui.model.TraitAssociation;
+import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
 import static org.junit.Assert.assertEquals;
-import static uk.ac.ebi.spot.goci.lang.Filtering.*;
+import static uk.ac.ebi.spot.goci.pussycat.lang.Filtering.refine;
+import static uk.ac.ebi.spot.goci.pussycat.lang.Filtering.template;
 
 /**
  * Javadocs go here!
@@ -20,33 +21,33 @@ public class TestFiltering {
     public void testFilter() {
         SingleNucleotidePolymorphism template = template(SingleNucleotidePolymorphism.class);
         Filter<SingleNucleotidePolymorphism, String> filter =
-                refine(template).on(template.getRSID()).hasValue("rs123456");
+                refine(template).on(template.getRsId()).hasValue("rs123456");
 
         assertEquals("Filter type does not match expected",
                      SingleNucleotidePolymorphism.class,
                      filter.getFilteredType());
 
         assertEquals("Filtered method does not match expected",
-                     "getRSID",
+                     "getRsId",
                      filter.getFilteredMethod().getName());
 
         assertEquals("Filtered value does not match expected",
                      "rs123456",
                      filter.getFilteredValues().get(0));
 
-        TraitAssociation template2 = template(TraitAssociation.class);
-        Filter<TraitAssociation, Float> filter2 =
-                refine(template2).on(template2.getPValue()).hasValue(Float.valueOf("10E-8"));
+        Association template2 = template(Association.class);
+        Filter<Association, Float> filter2 =
+                refine(template2).on(template2.getPvalueMantissa()).hasValue(Float.valueOf("10"));
 
         assertEquals("Filter type does not match expected",
-                     TraitAssociation.class,
+                     Association.class,
                      filter2.getFilteredType());
 
         assertEquals("Filtered method does not match expected",
-                     "getPValue",
+                     "getPvalueMantissa",
                      filter2.getFilteredMethod().getName());
 
-        assertEquals(Float.valueOf("10E-8"),
+        assertEquals(Float.valueOf("10"),
                      filter2.getFilteredValues().get(0),
                      0.0d);
     }
