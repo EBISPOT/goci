@@ -9,10 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by emma on 27/08/2015. * @author emma
- * <p>
- * Mapper component to handle scenario where a mapped Ensembl gene is present. In this case the download should not
- * include details of upstream gene IDs.
+ * Created by emma on 27/08/2015.
+ *
+ * @author emma
+ *         <p>
+ *         Mapper component to handle scenario where a mapped Ensembl gene is present. In this case the download should
+ *         not include details of upstream gene IDs.
  */
 @Component
 public class DownloadEnsemblUpstreamGeneId implements CatalogDataMapper {
