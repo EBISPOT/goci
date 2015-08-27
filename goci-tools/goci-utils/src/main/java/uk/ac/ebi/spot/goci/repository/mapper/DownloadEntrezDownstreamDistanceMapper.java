@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.repository.mapper;
 
+import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.model.CatalogDataMapper;
 import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
 
@@ -15,6 +16,7 @@ import java.util.Map;
  *         Mapper component to handle scenario where a mapped Entrez gene is present. In this case the download should
  *         not include details of downstream gene distance.
  */
+@Component
 public class DownloadEntrezDownstreamDistanceMapper implements CatalogDataMapper {
 
     @Override public List<CatalogHeaderBinding> getRequiredDatabaseFields() {
