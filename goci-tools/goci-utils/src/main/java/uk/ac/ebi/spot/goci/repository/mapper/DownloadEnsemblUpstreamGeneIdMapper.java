@@ -17,7 +17,7 @@ import java.util.Map;
  *         not include details of upstream gene IDs.
  */
 @Component
-public class DownloadEnsemblUpstreamGeneId implements CatalogDataMapper {
+public class DownloadEnsemblUpstreamGeneIdMapper implements CatalogDataMapper {
     @Override public List<CatalogHeaderBinding> getRequiredDatabaseFields() {
         return Arrays.asList(CatalogHeaderBinding.ENSEMBL_MAPPED_GENE,
                              CatalogHeaderBinding.ENSEMBL_UPSTREAM_GENE_ID);
