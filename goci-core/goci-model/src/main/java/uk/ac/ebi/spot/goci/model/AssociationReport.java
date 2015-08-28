@@ -112,7 +112,7 @@ public class AssociationReport {
         this.suspectVariationError = suspectVariationError;
     }
 
-    public Boolean isErrorCheckedByCurator() {
+    public Boolean getErrorCheckedByCurator() {
         return errorCheckedByCurator;
     }
 
