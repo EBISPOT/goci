@@ -215,7 +215,7 @@ function renderDiagram() {
             console.log("Rendering GWAS diagram - calling api/gwasdiagram...");
             $.ajax({
                        //url: 'http://www.ebi.ac.uk/fgpt/gwas/api/gwasdiagram',
-                       url: 'http://localhost:8080/pussycat/gwasdiagram',
+                       url: 'pussycat/gwasdiagram',
                        dataType: 'html',
                        beforeSend: showSVGLoadWhirly,
                        success: insertSVG,

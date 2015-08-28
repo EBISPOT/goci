@@ -13,7 +13,7 @@ function filterTraits(traitName) {
     hideAllTraits();
 
     // expand query to get all filtered sets
-    $.getJSON('http://localhost:8080/pussycat/filter/' + traitName, function(data) {
+    $.getJSON('pussycat/filter/' + traitName, function(data) {
         $.each(data, function(index, val) {
             try {
                 var trait = val.replace(":", "\\:");
@@ -52,8 +52,8 @@ function showSummary(associations, name) {
 
     var searchTerm = '';
     for(var i = 0; i < assocs.length; i++){
-        var id = assocs[i].split("_")[1];
-        console.log(assocs[i].split("_")[1]);
+        var id = assocs[i]//.split("_")[1];
+     //   console.log(assocs[i].split("_")[1]);
         searchTerm = searchTerm.concat('id:"association:').concat(id).concat('"');
     }
 

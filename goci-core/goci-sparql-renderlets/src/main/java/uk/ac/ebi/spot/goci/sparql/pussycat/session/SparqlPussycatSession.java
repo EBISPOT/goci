@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
 import uk.ac.ebi.spot.goci.pussycat.layout.BandInformation;
@@ -20,12 +22,7 @@ import uk.ac.ebi.spot.goci.sparql.pussycat.query.QuerySolutionMapper;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.SparqlTemplate;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 //import uk.ac.ebi.spot.goci.ui.model.AssociationSummary;
 
@@ -46,6 +43,15 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
 
     @Autowired
     private SparqlTemplate sparqlTemplate;
+
+    private String associationQuery = "SELECT ?association ?band " +
+                                        "WHERE { " +
+                                        "  ?association a gt:TraitAssociation ; " +
+                                        "               oban:has_subject ?snp . " +
+                                        "  ?snp ro:located_in ?bandUri . " +
+                                        "  ?bandUri rdfs:label ?band .";
+
+    private String associationQueryBandFilter = "  FILTER (STR(?band) != 'NR') }";
 
 
     private boolean rendering = false;
@@ -84,7 +90,40 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
     @Override public String performRendering(RenderletNexus renderletNexus, Filter... filters)
             throws PussycatSessionNotReadyException {
 
+        String queryString = associationQuery;
+
         getLog().debug("Rendering SVG from SPARQL endpoint (filters = '" + filters + "')...");
+
+        for(Filter filter : filters){
+            if(filter.getFilteredType().equals(Association.class)){
+                List<Double> values = filter.getFilteredValues();
+
+                queryString = queryString.concat("?association gt:has_p_value ?pvalue .");
+                double from = 0;
+                double to = 0;
+
+                if(values.size() == 1){
+                    to = values.get(0);
+                }
+                else if(values.size() == 2){
+                    from = values.get(0);
+                    to = values.get(1);
+                }
+
+                queryString = queryString.concat(associationQueryBandFilter)
+                                        .concat("  FILTER ( ?pvalue < " + to +  ")")
+                                        .concat("  FILTER ( ?pvalue > " + from +  ")");
+
+
+            }
+            else if(filter.getFilteredType().equals(Study.class)){
+
+            }
+            else {
+                queryString = queryString.concat(associationQueryBandFilter);
+            }
+        }
+
         try {
             // render
             if (!isRendering()) {
@@ -95,7 +134,7 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                     List<URI> chromosomes = loadChromosomes(getSparqlTemplate());
                     getLog().debug("Acquired " + chromosomes.size() + " chromosomes to render");
                     List<URI> individuals = new ArrayList<URI>();
-                    individuals.addAll(loadAssociations(getSparqlTemplate()));
+                    individuals.addAll(loadAssociations(getSparqlTemplate(), queryString));
                     individuals.addAll(loadTraits(getSparqlTemplate()));
                     getLog().debug("Acquired " + individuals.size() + " individuals to render");
 
@@ -198,19 +237,13 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
     }
 
     private List<URI> loadChromosomes(SparqlTemplate sparqlTemplate) {
-//        return sparqlTemplate.query("SELECT DISTINCT ?uri WHERE { ?uri rdfs:subClassOf gt:Chromosome }", "uri");
-        return sparqlTemplate.query("SELECT DISTINCT ?uri WHERE { ?uri a gt:Chromosome }", "uri");
+        return sparqlTemplate.query("SELECT DISTINCT ?uri WHERE { ?uri rdfs:subClassOf gt:Chromosome }", "uri");
+//        return sparqlTemplate.query("SELECT DISTINCT ?uri WHERE { ?uri a gt:Chromosome }", "uri");
     }
 
-    private List<URI> loadAssociations(SparqlTemplate sparqlTemplate) {
+    private List<URI> loadAssociations(SparqlTemplate sparqlTemplate, String queryString) {
         List<AssociationLocation> associationLocations =
-                sparqlTemplate.query("SELECT ?association ?band " +
-                                             "WHERE { " +
-                                             "  ?association a gt:TraitAssociation ; " +
-                                             "               oban:has_subject ?snp . " +
-                                             "  ?snp ro:located_in ?bandUri . " +
-                                             "  ?bandUri rdfs:label ?band ." +
-                                             "  FILTER (STR(?band) != 'NR') }",   /*had to add this line in to exclude "NR" bands as they break the AssociationLocation bit below
+                sparqlTemplate.query(queryString,   /*had to add this line in to exclude "NR" bands as they break the AssociationLocation bit below
                                                                                     and can't be rendered anyway*/
                                      new QuerySolutionMapper<AssociationLocation>() {
                                          @Override public AssociationLocation mapQuerySolution(QuerySolution qs) {

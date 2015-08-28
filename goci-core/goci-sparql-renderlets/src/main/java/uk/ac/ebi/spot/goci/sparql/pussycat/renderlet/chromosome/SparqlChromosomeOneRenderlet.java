@@ -14,7 +14,7 @@ import java.net.URL;
 
 @ServiceProvider
 public class SparqlChromosomeOneRenderlet extends SparqlChromosomeRenderlet {
-    private URI chromosomeURI = URI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/Chromosome/1");
+    private URI chromosomeURI = URI.create(OntologyConstants.GWAS_ONTOLOGY_SCHEMA_IRI + "/Chromosome_1");
     private int position = 0;
 
     @Override public String getName() {

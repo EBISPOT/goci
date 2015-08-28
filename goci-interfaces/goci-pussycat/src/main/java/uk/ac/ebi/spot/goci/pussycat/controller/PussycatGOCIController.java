@@ -94,6 +94,26 @@ public class PussycatGOCIController {
         return getPussycatSession(session).performRendering(getRenderletNexus(session));
     }
 
+    @RequestMapping(value = "/gwasdiagram/associations/{mantissa}/{exponent}")
+    public @ResponseBody String renderAssociations(@PathVariable String mantissa,
+                                                   @PathVariable String exponent,
+                                                   HttpSession session)
+            throws PussycatSessionNotReadyException {
+        // get the subset of associations with pvalue smaller than the one supplied
+        /*trait association'  and (has_p_value < " ")*/
+        getLog().debug("Received a new rendering request - " +
+                "putting together the query for mantissa '" + mantissa + "' and exponent '" + exponent + "'");
+
+        int exponentNum = Integer.parseInt(exponent);
+        int mantissaNum = Integer.parseInt(mantissa);
+        double pvalue = mantissaNum*Math.pow(10, exponentNum);
+
+        Association association = template(Association.class);
+        Filter filter = refine(association).on(association.getPvalue()).hasValue(pvalue);
+        return getPussycatSession(session).performRendering(getRenderletNexus(session), filter);
+
+    }
+
     @RequestMapping(value = "/gwasdiagram/timeseries/{year}/{month}")
     public @ResponseBody String renderGWASDiagramTimeSeries(@PathVariable String year,
                                                             @PathVariable String month,
@@ -155,7 +175,7 @@ public class PussycatGOCIController {
     }
 
     @RequestMapping(value = "/associations")
-    public @ResponseBody String renderAssociations(HttpSession session) throws PussycatSessionNotReadyException {
+    public @ResponseBody String renderAllAssociations(HttpSession session) throws PussycatSessionNotReadyException {
         Association ta = template(Association.class);
         return getPussycatSession(session).performRendering(getRenderletNexus(session), filter(ta));
     }

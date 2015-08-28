@@ -68,8 +68,9 @@ public class Filter<T, V> {
             }
         }
         else {
-            throw new IllegalArgumentException("Cannot workout the supplied template template- " +
-                                                       "did you first call Filtering.template()?");
+            return template.getClass();
+//            throw new IllegalArgumentException("Cannot workout the supplied template template- " +
+//                                                       "did you first call Filtering.template()?");
         }
     }
 
@@ -83,11 +84,13 @@ public class Filter<T, V> {
         }
 
         public W from() {
-            return null;
+//            return null;
+            return fromValue;
         }
 
         public W to() {
-            return null;
+//            return null;
+            return toValue;
         }
     }
 }

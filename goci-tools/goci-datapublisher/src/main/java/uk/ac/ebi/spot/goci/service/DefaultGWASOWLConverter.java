@@ -400,7 +400,10 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         //Sometimes there won't be any pvalue associated with an association. For example if the author doesn't give the
         //pvalue but says it was less then 10-6. So if we have no pvalue we just don't add it.
         if(association.getPvalueMantissa() != null && association.getPvalueExponent() != null) {
-            OWLLiteral pValue = getDataFactory().getOWLLiteral(association.getPvalueMantissa()+"e"+association.getPvalueExponent());
+            double pval = association.getPvalueMantissa() * Math.pow(10, association.getPvalueExponent());
+            OWLLiteral pValue = getDataFactory().getOWLLiteral(pval);
+
+//            OWLLiteral pValue = getDataFactory().getOWLLiteral(association.getPvalueMantissa()+"e"+association.getPvalueExponent());
             OWLDataPropertyAssertionAxiom p_value_relation =
                     getDataFactory().getOWLDataPropertyAssertionAxiom(has_p_value, taIndiv, pValue);
             AddAxiom add_p_value = new AddAxiom(ontology, p_value_relation);

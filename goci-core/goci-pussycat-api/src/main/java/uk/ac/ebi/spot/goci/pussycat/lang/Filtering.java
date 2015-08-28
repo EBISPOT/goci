@@ -20,8 +20,20 @@ public class Filtering {
      * @return
      */
     public static <T> T template(Class<T> filterType) {
-        InvocationHandler handler = new MethodLoggingInvocationHandler();
-        return (T) Proxy.newProxyInstance(filterType.getClassLoader(), new Class[]{filterType}, handler);
+//        if(filterType.isInterface()){
+            InvocationHandler handler = new MethodLoggingInvocationHandler();
+            return (T) Proxy.newProxyInstance(filterType.getClassLoader(), new Class[]{filterType}, handler);
+//        }
+//        else{
+//            try {
+//                return filterType.newInstance();
+//            } catch (InstantiationException e) {
+//                throw new RuntimeException(e);
+//            } catch (IllegalAccessException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+
     }
 
     public static <T> CallChain<T> refine(T template) {
