@@ -157,7 +157,7 @@ public class AssociationReportService {
         errorMap.putIfAbsent("Variation maps to more than one genomic location", "suspectVariationError");
         errorMap.putIfAbsent("Variation has more than 3 different alleles", "suspectVariationError");
         errorMap.putIfAbsent(
-                "None of the variant alleles match the reference allele;Mapped position is not compatible with reported alleles,",
+                "None of the variant alleles match the reference allele",
                 "suspectVariationError");
         errorMap.putIfAbsent("no mapping available for the variant", "suspectVariationError");
 
