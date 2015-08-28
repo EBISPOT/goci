@@ -1305,11 +1305,6 @@ public class AssociationController {
                 errorFound = true;
             }
 
-            if (associationReport.getGeneNotOnGenome() != null &&
-                    !associationReport.getGeneNotOnGenome().isEmpty()) {
-                errorFound = true;
-            }
-
             if (associationReport.getSnpGeneOnDiffChr() != null &&
                     !associationReport.getSnpGeneOnDiffChr().isEmpty()) {
                 errorFound = true;
@@ -1317,6 +1312,14 @@ public class AssociationController {
 
             if (associationReport.getNoGeneForSymbol() != null &&
                     !associationReport.getNoGeneForSymbol().isEmpty()) {
+                errorFound = true;
+            }
+            if (associationReport.getRestServiceError() != null &&
+                    !associationReport.getRestServiceError().isEmpty()) {
+                errorFound = true;
+            }
+            if (associationReport.getSuspectVariationError() != null &&
+                    !associationReport.getSuspectVariationError().isEmpty()) {
                 errorFound = true;
             }
         }
