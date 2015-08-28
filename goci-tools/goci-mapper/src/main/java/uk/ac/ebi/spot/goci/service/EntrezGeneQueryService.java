@@ -42,6 +42,8 @@ public class EntrezGeneQueryService {
     public void loadAssociatedData(EntrezGene entrezGene) {
         entrezGene.getEntrezGeneId();
         entrezGene.getId();
-        entrezGene.getGene().size();
+        if (entrezGene.getGene() != null) {
+            entrezGene.getGene().size();
+        }
     }
 }
