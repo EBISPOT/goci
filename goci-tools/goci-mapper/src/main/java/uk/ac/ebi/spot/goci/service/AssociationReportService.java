@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,7 +48,28 @@ public class AssociationReportService {
      */
     public void processAssociationErrors(Association association, Collection<String> errors) {
 
-        Map<String, String> errorToErrorType = createErrorMap();
+        // Lists and maps use to translate errors
+        List<String> listOfStandardEnsemblErrors = createStandardErrorList();
+        Map<String, String> standardEnsemblErrorToErrorType = createErrorMap();
+        Map<String, String> errorToErrorTypeMap = new HashMap<>();
+
+        // Check list of standard errors to see if error returned from pipeline matches standard list
+        for (String error : errors) {
+            for (String standardEnsemblError : listOfStandardEnsemblErrors) {
+                if (error.contains(standardEnsemblError)) {
+                    String errorType = standardEnsemblErrorToErrorType.get(standardEnsemblError);
+                    errorToErrorTypeMap.put(error, errorType);
+                }
+                else {
+                    // Check error message isn't already in list
+                    if (!errorToErrorTypeMap.containsKey(error)) {
+                        errorToErrorTypeMap.put(error, "unknown type");
+                    }
+                }
+            }
+        }
+
+        // Populate arrays that will hold various errors
 
         Collection<String> snpErrors = new ArrayList<>();
         Collection<String> snpGeneOnDiffChrErrors = new ArrayList<>();
@@ -55,41 +77,29 @@ public class AssociationReportService {
         Collection<String> restServiceErrors = new ArrayList<>();
         Collection<String> suspectVariationErrors = new ArrayList<>();
 
-        // Look for standard format error messages returned from mapping pipeline
-        for (String error : errors) {
+        for (Map.Entry<String, String> entry : errorToErrorTypeMap.entrySet()) {
+            String errorMessage = entry.getKey();
+            String errorType = entry.getValue();
 
-            for (Map.Entry<String, String> entry : errorToErrorType.entrySet()) {
-                String errorMessage = entry.getKey();
-                String errorType = entry.getValue();
-
-                // rsID is not valid
-                if (error.contains(errorMessage)) {
-                    if (errorType.equals("restServiceError")) {
-                        restServiceErrors.add(error);
-                    }
-                    if (errorType.equals("suspectVariationError")) {
-                        suspectVariationErrors.add(error);
-                    }
-                    if (errorType.equals("snpError")) {
-                        snpErrors.add(error);
-                    }
-                    if (errorType.equals("snpGeneOnDiffChrError")) {
-                        snpGeneOnDiffChrErrors.add(error);
-                    }
-                    if (errorType.equals("noGeneForSymbolError")) {
-                        noGeneForSymbolErrors.add(error);
-                    }
-                    else {
-                        getLog().warn("For association ID: " + association.getId() +
-                                              ", cannot determine error type for error " + error);
-                    }
-                }
-
-                else {
-                    getLog().warn("Association error: Association ID: " + association.getId() + " " + error);
-                }
+            if (errorType.equals("restServiceError")) {
+                restServiceErrors.add(errorMessage);
             }
-
+            else if (errorType.equals("suspectVariationError")) {
+                suspectVariationErrors.add(errorMessage);
+            }
+            else if (errorType.equals("snpError")) {
+                snpErrors.add(errorMessage);
+            }
+            else if (errorType.equals("snpGeneOnDiffChrError")) {
+                snpGeneOnDiffChrErrors.add(errorMessage);
+            }
+            else if (errorType.equals("noGeneForSymbolError")) {
+                noGeneForSymbolErrors.add(errorMessage);
+            }
+            else {
+                getLog().warn("For association ID: " + association.getId() +
+                                      ", cannot determine error type for error " + errorMessage);
+            }
         }
 
         // Format errors into string so they can be stored in database
@@ -138,6 +148,25 @@ public class AssociationReportService {
 
         // Save association report
         associationReportRepository.save(associationReport);
+    }
+
+    /**
+     * Creates a list of common errors
+     */
+    private List<String> createStandardErrorList() {
+        List<String> standardErrorList = new ArrayList<>();
+        standardErrorList.add("No server is available to handle this request");
+        standardErrorList.add("is generating an invalid request");
+        standardErrorList.add("No data available");
+        standardErrorList.add("Variation does not map to the genome");
+        standardErrorList.add("Variation maps to more than one genomic location");
+        standardErrorList.add("Variation has more than 3 different alleles");
+        standardErrorList.add("None of the variant alleles match the reference allele");
+        standardErrorList.add("no mapping available for the variant");
+        standardErrorList.add("not found for homo_sapiens");
+        standardErrorList.add("is on a different chromosome");
+        standardErrorList.add("No valid lookup found for symbol");
+        return standardErrorList;
     }
 
     /**
