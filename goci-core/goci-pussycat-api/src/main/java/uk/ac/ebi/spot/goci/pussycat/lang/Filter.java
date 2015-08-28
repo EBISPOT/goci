@@ -1,5 +1,8 @@
 package uk.ac.ebi.spot.goci.pussycat.lang;
 
+import org.mockito.MockingDetails;
+import org.mockito.Mockito;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
@@ -68,9 +71,17 @@ public class Filter<T, V> {
             }
         }
         else {
-            return template.getClass();
-//            throw new IllegalArgumentException("Cannot workout the supplied template template- " +
-//                                                       "did you first call Filtering.template()?");
+            MockingDetails mockingDetails = Mockito.mockingDetails(template);
+            if (mockingDetails.isMock()) {
+                // return the superclass of the mock -
+                // note that this *ONLY* works because we only use Mockito when templating concrete classes
+                // if we were templating an interface or classes with many parents this would fail
+                return template.getClass().getSuperclass();
+            }
+            else {
+                throw new IllegalArgumentException("Cannot workout the supplied template template - " +
+                                                           "did you first call Filtering.template()?");
+            }
         }
     }
 

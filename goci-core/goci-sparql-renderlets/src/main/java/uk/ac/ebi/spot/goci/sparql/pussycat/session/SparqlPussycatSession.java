@@ -44,7 +44,7 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
     @Autowired
     private SparqlTemplate sparqlTemplate;
 
-    private String associationQuery = "SELECT ?association ?band " +
+    private String associationQueryMain = "SELECT ?association ?band " +
                                         "WHERE { " +
                                         "  ?association a gt:TraitAssociation ; " +
                                         "               oban:has_subject ?snp . " +
@@ -52,6 +52,11 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                                         "  ?bandUri rdfs:label ?band .";
 
     private String associationQueryBandFilter = "  FILTER (STR(?band) != 'NR') }";
+
+    private String traitQueryMain = "SELECT DISTINCT ?trait " +
+                                    "WHERE { " +
+                                    "  ?association a gt:TraitAssociation ; " +
+                                    "               oban:has_object ?trait . ";
 
 
     private boolean rendering = false;
@@ -90,7 +95,8 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
     @Override public String performRendering(RenderletNexus renderletNexus, Filter... filters)
             throws PussycatSessionNotReadyException {
 
-        String queryString = associationQuery;
+        String associationQueryString = associationQueryMain;
+        String traitQueryString = traitQueryMain;
 
         getLog().debug("Rendering SVG from SPARQL endpoint (filters = '" + filters + "')...");
 
@@ -98,7 +104,9 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
             if(filter.getFilteredType().equals(Association.class)){
                 List<Double> values = filter.getFilteredValues();
 
-                queryString = queryString.concat("?association gt:has_p_value ?pvalue .");
+                associationQueryString = associationQueryString.concat("?association gt:has_p_value ?pvalue .");
+                traitQueryString = traitQueryString.concat("?association gt:has_p_value ?pvalue .");
+
                 double from = 0;
                 double to = 0;
 
@@ -110,18 +118,24 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                     to = values.get(1);
                 }
 
-                queryString = queryString.concat(associationQueryBandFilter)
-                                        .concat("  FILTER ( ?pvalue < " + to +  ")")
-                                        .concat("  FILTER ( ?pvalue > " + from +  ")");
+                associationQueryString = associationQueryString.concat("  FILTER ( ?pvalue < " + to + ")")
+                                            .concat("  FILTER ( ?pvalue >= " + from + ")")
+                                            .concat(associationQueryBandFilter);
 
+                traitQueryString = traitQueryString.concat("  FILTER ( ?pvalue < " + to + ")")
+                                                    .concat("  FILTER ( ?pvalue >= " + from +  ")")
+                                                    .concat(" }");
 
             }
             else if(filter.getFilteredType().equals(Study.class)){
 
             }
             else {
-                queryString = queryString.concat(associationQueryBandFilter);
+                associationQueryString = associationQueryString.concat(associationQueryBandFilter);
+                traitQueryString = traitQueryString.concat(" }");
             }
+            System.out.println(associationQueryString);
+            System.out.println(traitQueryString);
         }
 
         try {
@@ -134,8 +148,8 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                     List<URI> chromosomes = loadChromosomes(getSparqlTemplate());
                     getLog().debug("Acquired " + chromosomes.size() + " chromosomes to render");
                     List<URI> individuals = new ArrayList<URI>();
-                    individuals.addAll(loadAssociations(getSparqlTemplate(), queryString));
-                    individuals.addAll(loadTraits(getSparqlTemplate()));
+                    individuals.addAll(loadAssociations(getSparqlTemplate(), associationQueryString));
+                    individuals.addAll(loadTraits(getSparqlTemplate(), traitQueryString));
                     getLog().debug("Acquired " + individuals.size() + " individuals to render");
 
                     getLog().debug("GWAS data acquired, starting rendering...");
@@ -260,11 +274,8 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
         return associations;
     }
 
-    private List<URI> loadTraits(SparqlTemplate sparqlTemplate) {
-        return sparqlTemplate.query("SELECT DISTINCT ?trait " +
-                                            "WHERE { " +
-                                            "  ?association a gt:TraitAssociation ; " +
-                                            "               oban:has_object ?trait . }", "trait");
+    private List<URI> loadTraits(SparqlTemplate sparqlTemplate, String queryString) {
+        return sparqlTemplate.query(queryString, "trait");
     }
 
     private class AssociationLocation implements Comparable<AssociationLocation> {
