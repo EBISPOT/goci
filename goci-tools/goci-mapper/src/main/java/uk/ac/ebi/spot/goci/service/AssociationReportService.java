@@ -125,6 +125,8 @@ public class AssociationReportService {
         associationReport.setSnpError(allSnpErrors);
         associationReport.setSnpGeneOnDiffChr(allSnpGeneOnDiffChrErrors);
         associationReport.setNoGeneForSymbol(allNoGeneForSymbolErrors);
+        associationReport.setRestServiceError(allRestServiceErrors);
+        associationReport.setSuspectVariationError(allSuspectVariationErrors);
 
         // Before setting link to association check for any existing reports linked to this association
         AssociationReport existingReport = associationReportRepository.findByAssociationId(association.getId());
