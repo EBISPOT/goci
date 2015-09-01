@@ -43,9 +43,13 @@ public class AssociationFormErrorViewService {
 
             if (locus != null) {
                 for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
-                    associationRiskAlleles.add(riskAllele.getRiskAlleleName());
-                    associationSnps.add(riskAllele.getSnp().getRsId());
 
+                    if (riskAllele.getRiskAlleleName() != null) {
+                        associationRiskAlleles.add(riskAllele.getRiskAlleleName());
+                    }
+                    if (riskAllele.getSnp().getRsId() != null) {
+                        associationSnps.add(riskAllele.getSnp().getRsId());
+                    }
                     if (riskAllele.getProxySnps() != null) {
                         for (SingleNucleotidePolymorphism proxySnp : riskAllele.getProxySnps()) {
                             associationProxies.add(proxySnp.getRsId());
