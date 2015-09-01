@@ -199,8 +199,9 @@
                     </th>
                     <th style="font-size: small">Proxy SNP</th>
                     <th style="font-size: small; width: 5%">Independent SNP risk allele frequency in controls</th>
-                    <th style="font-size: small; width: 5%">Risk element (allele, haplotype or SNPxSNP interaction) frequency in
-                                                 controls
+                    <th style="font-size: small; width: 5%">Risk element (allele, haplotype or SNPxSNP interaction)
+                                                            frequency in
+                                                            controls
                     </th>
                     <th style="font-size: small">p-Value (mantissa x 10 exponent)
                         <div>
@@ -283,7 +284,7 @@
                              <span th:case="'Yes'">
                                   <span style="color:darkgrey"
                                         th:each="error: ${snpAssociationTableView.associationErrorMap}"
-                                        th:text="${error.value} ?: ''"
+                                        th:utext="${error.value} + '&lt;br /&gt;'?: ''"
                                         th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}">
 
                                   </span>
@@ -293,7 +294,7 @@
                              <span th:case="'No'">
                                   <span style="color:red"
                                         th:each="error: ${snpAssociationTableView.associationErrorMap}"
-                                        th:text="${error.value} ?: ''"
+                                        th:utext="${error.value} + '&lt;br /&gt;' ?: ''"
                                         th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}">
 
                                   </span>
@@ -302,7 +303,7 @@
                              <span th:case="null">
                                   <span style="color:red"
                                         th:each="error: ${snpAssociationTableView.associationErrorMap}"
-                                        th:text="${error.value} ?: ''"
+                                        th:utext="${error.value} + '&lt;br /&gt;'?: ''"
                                         th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}">
                                   </span>
                              </span>
@@ -312,11 +313,11 @@
 
                         <span style="font-style: italic"
                               th:if="${snpAssociationTableView.lastMappingDate != null}"
-                              th:utext="'&lt;br /&gt;' +'Last mapping ran on: '+${snpAssociationTableView.lastMappingDate} ?: ''"></span>
+                              th:utext="'Mapping date: '+${snpAssociationTableView.lastMappingDate} ?: ''"></span>
 
                         <span style="font-style: italic"
                               th:if="${snpAssociationTableView.lastMappingPerformedBy != null}"
-                              th:utext="'&lt;br /&gt;' +'Last mapping ran by: '+${snpAssociationTableView.lastMappingPerformedBy} ?: ''"></span>
+                              th:utext="'&lt;br /&gt;' +'Performer: '+${snpAssociationTableView.lastMappingPerformedBy} ?: ''"></span>
 
                     </td>
 

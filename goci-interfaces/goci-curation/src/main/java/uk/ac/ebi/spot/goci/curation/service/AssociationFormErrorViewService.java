@@ -43,9 +43,13 @@ public class AssociationFormErrorViewService {
 
             if (locus != null) {
                 for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
-                    associationRiskAlleles.add(riskAllele.getRiskAlleleName());
-                    associationSnps.add(riskAllele.getSnp().getRsId());
 
+                    if (riskAllele.getRiskAlleleName() != null) {
+                        associationRiskAlleles.add(riskAllele.getRiskAlleleName());
+                    }
+                    if (riskAllele.getSnp().getRsId() != null) {
+                        associationSnps.add(riskAllele.getSnp().getRsId());
+                    }
                     if (riskAllele.getProxySnps() != null) {
                         for (SingleNucleotidePolymorphism proxySnp : riskAllele.getProxySnps()) {
                             associationProxies.add(proxySnp.getRsId());
@@ -162,11 +166,6 @@ public class AssociationFormErrorViewService {
                 associationErrorMap.put("SNP Error: ", associationReport.getSnpError());
             }
 
-            if (associationReport.getGeneNotOnGenome() != null &&
-                    !associationReport.getGeneNotOnGenome().isEmpty()) {
-                associationErrorMap.put("Gene Not On Genome Error: ", associationReport.getGeneNotOnGenome());
-            }
-
             if (associationReport.getSnpGeneOnDiffChr() != null &&
                     !associationReport.getSnpGeneOnDiffChr().isEmpty()) {
                 associationErrorMap.put("Snp Gene On Diff Chr: ", associationReport.getSnpGeneOnDiffChr());
@@ -175,6 +174,16 @@ public class AssociationFormErrorViewService {
             if (associationReport.getNoGeneForSymbol() != null &&
                     !associationReport.getNoGeneForSymbol().isEmpty()) {
                 associationErrorMap.put("No Gene For Symbol: ", associationReport.getNoGeneForSymbol());
+            }
+
+            if (associationReport.getRestServiceError() != null &&
+                    !associationReport.getRestServiceError().isEmpty()) {
+                associationErrorMap.put("Rest Service Error: ", associationReport.getRestServiceError());
+            }
+
+            if (associationReport.getSuspectVariationError() != null &&
+                    !associationReport.getSuspectVariationError().isEmpty()) {
+                associationErrorMap.put("SNP does not map: ", associationReport.getSuspectVariationError());
             }
         }
 

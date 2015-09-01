@@ -187,6 +187,11 @@ public class ImportExportApplication {
                 if (cl.hasOption("s")) {
                     this.opMode = OperationMode.STATS;
                 }
+
+                // file options
+                if (cl.hasOption("f")) {
+                    this.inputFile = new File(cl.getOptionValue("f"));
+                }
                 if (cl.hasOption("o")) {
                     this.outputFile = new File(cl.getOptionValue("o"));
                 }
@@ -210,6 +215,7 @@ public class ImportExportApplication {
         // options are...
         // -n --ncbi        (write out NCBI export file)
         // -d --download    (write out downloads file)
+        // -f --file        (file to load in)
         // -o --out         (file to write out to)
         // -a --download_alt  (write out alternative downloads file)
         // -s --stats       (write out catalog meta data)
@@ -255,6 +261,15 @@ public class ImportExportApplication {
         // add input file arguments
         OptionGroup fileGroup = new OptionGroup();
         fileGroup.setRequired(true);
+
+        Option inOption = new Option(
+                "f",
+                "file",
+                true,
+                "Input file - file where the NCBI mapped data can be found");
+        inOption.setArgName("file");
+        inOption.setRequired(false);
+        fileGroup.addOption(inOption);
 
         // add output file arguments
         Option outOption = new Option(

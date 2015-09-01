@@ -43,6 +43,8 @@ public class EnsemblGeneQueryService {
     public void loadAssociatedData(EnsemblGene ensemblGene) {
         ensemblGene.getEnsemblGeneId();
         ensemblGene.getId();
-        ensemblGene.getGene().size();
+        if (ensemblGene.getGene() != null) {
+            ensemblGene.getGene().size();
+        }
     }
 }
