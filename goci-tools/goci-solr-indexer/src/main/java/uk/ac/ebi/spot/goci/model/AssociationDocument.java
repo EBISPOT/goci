@@ -304,12 +304,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                         );
                         locus.getAuthorReportedGenes().forEach(gene -> {
                             reportedGenes.add(gene.getGeneName().trim());
-                            if (gene.getEntrezGeneIds() != null) {
-                                for (EntrezGene entrezGene : gene.getEntrezGeneIds()) {
-                                    String geneLink =
-                                            gene.getGeneName().concat("|").concat(entrezGene.getEntrezGeneId());
-                                    reportedGeneLinks.add(geneLink);
-                                }
+                            String reportedGeneLink = createReportedGeneLink(gene);
+                            if (reportedGeneLink != null) {
+                                reportedGeneLinks.add(reportedGeneLink);
                             }
                         });
 
@@ -368,18 +365,63 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                         );
                         locus.getAuthorReportedGenes().forEach(gene -> {
                             reportedGenes.add(gene.getGeneName().trim());
-                            if (gene.getEntrezGeneIds() != null) {
-                                for (EntrezGene entrezGene : gene.getEntrezGeneIds()) {
-                                    String geneLink =
-                                            gene.getGeneName().concat("|").concat(entrezGene.getEntrezGeneId());
-                                    reportedGeneLinks.add(geneLink);
-                                }
+                            String reportedGeneLink = createReportedGeneLink(gene);
+                            if (reportedGeneLink != null) {
+                                reportedGeneLinks.add(reportedGeneLink);
                             }
                         });
                         locusDescription = locus.getDescription();
                     }
             );
         }
+    }
+
+    /**
+     * @param gene
+     * @return reported gene link or null if one could not be created
+     */
+    private String createReportedGeneLink(Gene gene) {
+
+        // Create link information for reported gene
+        String geneLink = gene.getGeneName();
+        List<String> entrezIds = new ArrayList<String>();
+        String entrezLinks = "";
+        List<String> ensemblIds = new ArrayList<String>();
+        String ensemblLinks = "";
+
+        if (gene.getEntrezGeneIds() != null) {
+            for (EntrezGene entrezGene : gene.getEntrezGeneIds()) {
+                entrezIds.add(entrezGene.getEntrezGeneId());
+            }
+            entrezLinks = String.join("|", entrezIds);
+        }
+        if (gene.getEnsemblGeneIds() != null) {
+            for (EnsemblGene ensemblGene : gene.getEnsemblGeneIds()) {
+                ensemblIds.add(ensemblGene.getEnsemblGeneId());
+            }
+            ensemblLinks = String.join("|", ensemblIds);
+        }
+
+        // Construct link with Ensembl and Entrez IDs for reported gene
+        if (!entrezLinks.isEmpty()) {
+
+            if (!ensemblLinks.isEmpty()) {
+                geneLink = geneLink.concat("|").concat(entrezLinks).concat("|").concat(ensemblLinks);
+            }
+            else {
+                geneLink = geneLink.concat("|").concat(entrezLinks);
+            }
+            geneLink = geneLink.concat("|").concat(entrezLinks).concat("|").concat(ensemblLinks);
+            return geneLink;
+        }
+        else if (!ensemblLinks.isEmpty()) {
+            geneLink = geneLink.concat("|").concat(ensemblLinks);
+            return geneLink;
+        }
+        else {
+            return null;
+        }
+
     }
 
     private Collection<String> createMappedGeneLinks(SingleNucleotidePolymorphism snp, String source) {
@@ -495,7 +537,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             }
 
             else if (mappedGenes.size() > 1) {
-               geneString =  String.join("|", mappedGenes);
+                geneString = String.join("|", mappedGenes);
             }
 
             else {
