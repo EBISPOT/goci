@@ -495,7 +495,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             }
 
             else if (mappedGenes.size() > 1) {
-                String.join(",", mappedGenes);
+               geneString =  String.join("|", mappedGenes);
             }
 
             else {
