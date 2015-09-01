@@ -151,3 +151,4 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
         return "magenta";
     }
 }
+

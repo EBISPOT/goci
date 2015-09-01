@@ -4,12 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.Renderlet;
-import uk.ac.ebi.spot.goci.pussycat.utils.StringUtils;
 
-import javax.annotation.PostConstruct;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.ServiceLoader;
@@ -22,7 +17,6 @@ import java.util.ServiceLoader;
  */
 @Component
 public abstract class AbstractPussycatSession implements PussycatSession {
-    private String sessionID;
     private Collection<Renderlet> renderlets;
 
     private Logger log = LoggerFactory.getLogger("rendering");
@@ -32,18 +26,13 @@ public abstract class AbstractPussycatSession implements PussycatSession {
 //        this.renderlets = getAvailableRenderlets();
     }
 
-    @PostConstruct
-    public void init(){
-        this.sessionID = generateSessionID();
-    }
+
 
     protected Logger getLog() {
         return log;
     }
 
-    @Override public String getSessionID() {
-        return sessionID;
-    }
+
 
     public Collection<Renderlet> getAvailableRenderlets() {
         if (renderlets == null) {
@@ -58,24 +47,4 @@ public abstract class AbstractPussycatSession implements PussycatSession {
         return renderlets;
     }
 
-    private String generateSessionID() {
-        String timestamp = Long.toString(System.currentTimeMillis());
-        getLog().debug("Generating new session ID for session created at " + timestamp);
-        try {
-            // encode the email using SHA-1
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
-            byte[] digest = messageDigest.digest(timestamp.getBytes("UTF-8"));
-
-            // now translate the resulting byte array to hex
-            String restKey = StringUtils.getHexRepresentation(digest);
-            getLog().debug("Session ID was generated: " + restKey);
-            return restKey;
-        }
-        catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException("UTF-8 not supported!");
-        }
-        catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("SHA-1 algorithm not available, required to generate session ID");
-        }
-    }
 }

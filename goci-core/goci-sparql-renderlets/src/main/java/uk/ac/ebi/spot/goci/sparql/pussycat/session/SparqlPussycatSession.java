@@ -17,11 +17,15 @@ import uk.ac.ebi.spot.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.spot.goci.pussycat.service.OntologyService;
 import uk.ac.ebi.spot.goci.pussycat.session.AbstractPussycatSession;
+import uk.ac.ebi.spot.goci.pussycat.utils.StringUtils;
 import uk.ac.ebi.spot.goci.sparql.exception.SparqlQueryException;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.QuerySolutionMapper;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.SparqlTemplate;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 //import uk.ac.ebi.spot.goci.ui.model.AssociationSummary;
@@ -38,22 +42,24 @@ import java.util.*;
 @Qualifier("proxiedSession")
 public class SparqlPussycatSession extends AbstractPussycatSession {
 
+    private String sessionID;
+
     @Autowired
     private OntologyService ontologyService;
 
     @Autowired
     private SparqlTemplate sparqlTemplate;
 
-    private String associationQueryMain = "SELECT ?association ?band " +
+    private static final String associationQueryMain = "SELECT ?association ?band " +
                                         "WHERE { " +
                                         "  ?association a gt:TraitAssociation ; " +
                                         "               oban:has_subject ?snp . " +
                                         "  ?snp ro:located_in ?bandUri . " +
                                         "  ?bandUri rdfs:label ?band .";
 
-    private String associationQueryBandFilter = "  FILTER (STR(?band) != 'NR') }";
+    private static final String associationQueryBandFilter = "  FILTER (STR(?band) != 'NR') }";
 
-    private String traitQueryMain = "SELECT DISTINCT ?trait " +
+    private static final String traitQueryMain = "SELECT DISTINCT ?trait " +
                                     "WHERE { " +
                                     "  ?association a gt:TraitAssociation ; " +
                                     "               oban:has_object ?trait . ";
@@ -67,13 +73,14 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
         return log;
     }
 
-//    @Autowired
     public SparqlPussycatSession() {
+        this.sessionID = generateSessionID();
 
-//        public SparqlPussycatSession(OntologyService ontologyService, SparqlTemplate sparqlTemplate) {
-//        this.ontologyService = ontologyService;
-//        this.sparqlTemplate = sparqlTemplate;
+    }
 
+
+    @Override public String getSessionID() {
+        return sessionID;
     }
 
     public OntologyService getOntologyService() {
@@ -181,6 +188,7 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                 }
             }
             else {
+                getLog().debug("The GWAS diagram is already being rendered");
                 throw new PussycatSessionNotReadyException("The GWAS diagram is currently being rendered");
             }
         }
@@ -300,64 +308,30 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
         }
     }
 
-//    private class SparqlAssociationSummary implements AssociationSummary {
-//        private final String pubmedID;
-//        private final String firstAuthor;
-//        private final String publicationDate;
-//        private final String snp;
-//        private final String pValue;
-//        private final String gwasTraitName;
-//        private final String efoTraitLabel;
-//        private final URI efoTraitURI;
-//
-//        public SparqlAssociationSummary(String pubmedID,
-//                                        String firstAuthor,
-//                                        String publicationDate,
-//                                        String snp,
-//                                        String pValue,
-//                                        String gwasTraitName,
-//                                        String efoTraitLabel,
-//                                        URI efoTraitURI) {
-//            this.pubmedID = pubmedID;
-//            this.firstAuthor = firstAuthor;
-//            this.publicationDate = publicationDate;
-//            this.snp = snp;
-//            this.pValue = pValue;
-//            this.gwasTraitName = gwasTraitName;
-//            this.efoTraitLabel = efoTraitLabel;
-//            this.efoTraitURI = efoTraitURI;
-//        }
-//
-//        @Override public String getPubMedID() {
-//            return pubmedID;
-//        }
-//
-//        @Override public String getFirstAuthor() {
-//            return firstAuthor;
-//        }
-//
-//        @Override public String getPublicationDate() {
-//            return publicationDate;
-//        }
-//
-//        public String getSNP() {
-//            return snp;
-//        }
-//
-//        @Override public String getPvalue() {
-//            return pValue;
-//        }
-//
-//        @Override public String getGWASTraitName() {
-//            return gwasTraitName;
-//        }
-//
-//        @Override public String getEFOTraitLabel() {
-//            return efoTraitLabel;
-//        }
-//
-//        @Override public URI getEFOTraitURI() {
-//            return efoTraitURI;
-//        }
-//    }
+
+    private String generateSessionID() {
+        if(this.sessionID == null) {
+            String timestamp = Long.toString(System.currentTimeMillis());
+            getLog().debug("Generating new session ID for session created at " + timestamp);
+            try {
+                // encode the email using SHA-1
+                MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
+                byte[] digest = messageDigest.digest(timestamp.getBytes("UTF-8"));
+
+                // now translate the resulting byte array to hex
+                String restKey = StringUtils.getHexRepresentation(digest);
+                getLog().debug("Session ID was generated: " + restKey);
+                return restKey;
+            } catch (UnsupportedEncodingException e) {
+                throw new IllegalStateException("UTF-8 not supported!");
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException("SHA-1 algorithm not available, required to generate session ID");
+            }
+        }
+        else{
+            getLog().debug("Session ID already exists " + this.sessionID);
+            return this.sessionID;
+        }
+    }
+
 }

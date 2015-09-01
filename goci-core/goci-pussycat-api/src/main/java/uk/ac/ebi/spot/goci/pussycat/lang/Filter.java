@@ -104,4 +104,31 @@ public class Filter<T, V> {
             return toValue;
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Filter filter = (Filter) o;
+
+        if (filteredMethod != null ? !filteredMethod.equals(filter.filteredMethod) : filter.filteredMethod != null)
+            return false;
+        if (filteredRange != null ? !filteredRange.equals(filter.filteredRange) : filter.filteredRange != null)
+            return false;
+        if (!filteredType.equals(filter.filteredType)) return false;
+        if (filteredValues != null ? !filteredValues.equals(filter.filteredValues) : filter.filteredValues != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = filteredType.hashCode();
+        result = 31 * result + (filteredMethod != null ? filteredMethod.hashCode() : 0);
+        result = 31 * result + (filteredValues != null ? filteredValues.hashCode() : 0);
+        result = 31 * result + (filteredRange != null ? filteredRange.hashCode() : 0);
+        return result;
+    }
 }
