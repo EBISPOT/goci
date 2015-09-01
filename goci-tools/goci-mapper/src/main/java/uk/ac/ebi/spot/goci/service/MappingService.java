@@ -121,7 +121,17 @@ public class MappingService {
 
                     EnsemblMappingPipeline ensemblMappingPipeline =
                             new EnsemblMappingPipeline(snpRsId, authorReportedGeneNamesLinkedToSnp);
-                    ensemblMappingPipeline.run_pipeline();
+
+                    // Try to map supplied data
+                    try {
+                        ensemblMappingPipeline.run_pipeline();
+                    }
+                    catch (Exception e) {
+                        getLog().error("Encountered a " + e.getClass().getSimpleName() +
+                                               " whilst trying to run mapping of SNP" + snpRsId, e);
+                        e.printStackTrace();
+                        throw e;
+                    }
 
                     Collection<Location> locations = ensemblMappingPipeline.getLocations();
                     Collection<GenomicContext> snpGenomicContexts = ensemblMappingPipeline.getGenomicContexts();
