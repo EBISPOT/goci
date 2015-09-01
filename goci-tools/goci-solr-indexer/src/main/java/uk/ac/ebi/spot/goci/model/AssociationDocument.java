@@ -411,7 +411,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             else {
                 geneLink = geneLink.concat("|").concat(entrezLinks);
             }
-          
+
             return geneLink;
         }
         else if (!ensemblLinks.isEmpty()) {
