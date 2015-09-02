@@ -420,17 +420,16 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             else {
                 geneLink = geneLink.concat("|").concat(entrezLinks);
             }
-
-            return geneLink;
         }
         else if (!ensemblLinks.isEmpty()) {
             geneLink = geneLink.concat("|").concat(ensemblLinks);
-            return geneLink;
+
         }
         else {
-            return null;
+            geneLink = null;
         }
 
+        return geneLink;
     }
 
     private Collection<String> createMappedGeneLinks(SingleNucleotidePolymorphism snp, String source) {
