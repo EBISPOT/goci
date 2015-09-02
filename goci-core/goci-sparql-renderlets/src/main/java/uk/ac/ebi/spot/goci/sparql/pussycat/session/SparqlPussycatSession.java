@@ -107,6 +107,7 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
 
         getLog().debug("Rendering SVG from SPARQL endpoint (filters = '" + filters + "')...");
 
+
         for(Filter filter : filters){
             if(filter.getFilteredType().equals(Association.class)){
                 List<Double> values = filter.getFilteredValues();
@@ -114,16 +115,8 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                 associationQueryString = associationQueryString.concat("?association gt:has_p_value ?pvalue .");
                 traitQueryString = traitQueryString.concat("?association gt:has_p_value ?pvalue .");
 
-                double from = 0;
-                double to = 0;
-
-                if(values.size() == 1){
-                    to = values.get(0);
-                }
-                else if(values.size() == 2){
-                    from = values.get(0);
-                    to = values.get(1);
-                }
+                double from = values.get(0);
+                double to = values.get(1);
 
                 associationQueryString = associationQueryString.concat("  FILTER ( ?pvalue < " + to + ")")
                                             .concat("  FILTER ( ?pvalue >= " + from + ")")
@@ -144,6 +137,8 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
             System.out.println(associationQueryString);
             System.out.println(traitQueryString);
         }
+
+
 
         try {
             // render

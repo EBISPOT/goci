@@ -8,7 +8,6 @@ import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.TraitRenderlet;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.QueryManager;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.SparqlTemplate;
-import uk.ac.ebi.spot.goci.sparql.pussycat.query.URIMapper;
 
 import java.net.URI;
 import java.util.*;
@@ -127,15 +126,17 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
     }
 
     protected String getTraitColour(SparqlTemplate sparqlTemplate, URI trait) {
-        List<URI> allTypes = sparqlTemplate.query("SELECT ?type (count(DISTINCT ?ancestor) as ?count) " +
-                                                          "WHERE { " +
-                                                          "<" + trait.toString() + "> rdf:type ?trait . " +
-                                                          "?trait rdfs:subClassOf* ?type . " +
-                                                          "?type rdfs:subClassOf* ?ancestor . " +
-                                                          "FILTER ( ?trait != owl:Class ) .  " +
-                                                          "FILTER ( ?trait != owl:NamedIndividual ) . } " +
-                                                          "GROUP BY ?type " +
-                                                          "ORDER BY desc(?count) ", new URIMapper("type"));
+        List<URI> allTypes = QueryManager.getCachingInstance().getOrderedTraitTypes(sparqlTemplate, trait);
+
+//sparqlTemplate.query("SELECT ?type (count(DISTINCT ?ancestor) as ?count) " +
+//                                                          "WHERE { " +
+//                                                          "<" + trait.toString() + "> rdf:type ?trait . " +
+//                                                          "?trait rdfs:subClassOf* ?type . " +
+//                                                          "?type rdfs:subClassOf* ?ancestor . " +
+//                                                          "FILTER ( ?trait != owl:Class ) .  " +
+//                                                          "FILTER ( ?trait != owl:NamedIndividual ) . } " +
+//                                                          "GROUP BY ?type " +
+//                                                          "ORDER BY desc(?count) ", new URIMapper("type"));
         Set<String> available = ColourMapper.COLOUR_MAP.keySet();
         for (URI type : allTypes) {
             if (type != null) {

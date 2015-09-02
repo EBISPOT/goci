@@ -1,6 +1,9 @@
 package uk.ac.ebi.spot.goci.pussycat.renderlet;
 
+import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
 import uk.ac.ebi.spot.goci.pussycat.layout.SVGArea;
+
+import java.util.List;
 
 /**
  * A RenderletNexus represents the intersection between Renderlets, allowing Renderlets that are dependent on each
@@ -51,4 +54,8 @@ public interface RenderletNexus {
      * produced.
      */
     void reset();
+
+    void setRenderingContext(Filter filter);
+
+    List<Filter> getRenderingContext();
 }

@@ -2,83 +2,19 @@ package uk.ac.ebi.spot.goci.sparql.pussycat.query;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.pussycat.exception.DataIntegrityViolationException;
+import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
 import uk.ac.ebi.spot.goci.pussycat.layout.BandInformation;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Convenience singleton class to access common SPARQL queries required in rendering and to cache the results for
  * subsequent lookup.
  */
 public class QueryManager {
-    private static final String BAND_FOR_ASSOCIATION =
-            "SELECT ?band " +
-                    "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp . " +
-                    "?snp ro:located_in ?band . " +
-                    "FILTER (?association = ??) }";
-    private static final String ASSOCIATIONS_IN_BAND =
-            "SELECT ?association " +
-                    "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp . " +
-                    "?snp ro:located_in ?band . " +
-                    "FILTER (?band = ??) }";
-    private static final String ASSOCIATIONS_IN_BAND_NAME =
-            "SELECT ?association " +
-                    "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp . " +
-                    "?snp ro:located_in ?bandUri . " +
-                    "?bandUri rdfs:label ?band . " +
-                    "FILTER ( ?band = ?? ) }";
-    private static final String TRAITS_IN_BAND =
-            "SELECT ?trait ?band " +
-                    "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait . " +
-                    "?snp ro:located_in ?band ; " +
-                    "FILTER (?band = ??) }";
-    private static final String TRAITS_IN_BAND_NAME =
-            "SELECT ?trait ?band " +
-                    "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait . " +
-                    "?snp ro:located_in ?bandUri . " +
-                    "?bandUri rdfs:label ?band . " +
-                    "FILTER (?band = ??) }";
-    private static final String DATE_OF_TRAIT_ID_FOR_BAND =
-            "SELECT DISTINCT ?trait (min(?date) as ?first) " +
-                    "WHERE { " +
-                    "?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait ; ro:part_of ?study . " +
-                    "?study gt:has_publication_date ?date . " +
-                    "?snp ro:located_in ?band . " +
-                    "FILTER ( ?band = ?? ) } " +
-                    "GROUP BY ?trait " +
-                    "ORDER BY ?first";
-    private static final String ASSOCIATIONS_FOR_TRAIT =
-            "SELECT ?association " +
-                    "WHERE { ?association a gt:TraitAssociation ; oban:has_object ?trait . " +
-                    "FILTER (?trait = ??) }";
-    private static final String TRAITS_BY_NAME =
-            "SELECT DISTINCT ?trait " +
-                    "WHERE {{ " +
-                    "  ?trait rdfs:label ?label ." +
-                    "  FILTER (?label = ??) " +
-                    "} " +
-                    "UNION { " +
-                    "  ?trait efo:alternative_term ?synonym . " +
-                    "  FILTER (?synonym = ??) " +
-                    "}}";
-    private static final String PARENTS_AND_DISTANCE_BY_TRAIT =
-            "SELECT ?type (count(DISTINCT ?ancestor) as ?count) " +
-                    "WHERE { " +
-                    "?? rdf:type ?trait . " +
-                    "?trait rdfs:subClassOf* ?type . " +
-                    "?type rdfs:subClassOf* ?ancestor . " +
-                    "FILTER ( ?trait != owl:Class ) .  " +
-                    "FILTER ( ?trait != owl:NamedIndividual ) . } " +
-                    "GROUP BY ?type " +
-                    "ORDER BY desc(?count)";
 
     private static final QueryManager instance = new QueryManager();
 
@@ -104,7 +40,7 @@ public class QueryManager {
             return (URI) retrieved;
         }
 
-        List<URI> results = sparqlTemplate.query(BAND_FOR_ASSOCIATION, new URIMapper("band"), association);
+        List<URI> results = sparqlTemplate.query(SparqlQueries.BAND_FOR_ASSOCIATION, new URIMapper("band"), association);
         if (results.size() == 1) {
             return cache(results.get(0), "getCytogeneticBandForAssociation", sparqlTemplate, association);
         }
@@ -119,75 +55,203 @@ public class QueryManager {
     }
 
     public Set<URI> getAssociationsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, URI bandIndividual) {
-        Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual);
-        if (retrieved != null) {
-            return (Set<URI>) retrieved;
-        }
 
         Set<URI> results = new HashSet<URI>();
-        results.addAll(sparqlTemplate.query(ASSOCIATIONS_IN_BAND, new URIMapper("association"), bandIndividual));
+
+        if(sparqlTemplate.getFilters().size() == 0){
+            Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual);
+            if (retrieved != null) {
+                return (Set<URI>) retrieved;
+            }
+
+            results.addAll(sparqlTemplate.query(SparqlQueries.ASSOCIATIONS_IN_BAND, new URIMapper("association"), bandIndividual));
+            return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual);
+
+        }
+        else {
+            for(Filter filter : sparqlTemplate.getFilters()){
+                if(filter.getFilteredType().equals(Association.class)){
+                    Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual,filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+                    if (retrieved != null) {
+                        return (Set<URI>) retrieved;
+                    }
+
+                    results.addAll(sparqlTemplate.query(SparqlQueries.ASSOCIATIONS_IN_BAND_PVALUE_FILTER, new URIMapper("association"),
+                            bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0)));
+                    return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate,
+                            bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+
+                }
+            }
+        }
+
         return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual);
+
     }
 
     public Set<URI> getAssociationsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, String bandName) {
-        Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandName);
-        if (retrieved != null) {
-            return (Set<URI>) retrieved;
-        }
 
         Set<URI> results = new HashSet<URI>();
-        results.addAll(sparqlTemplate.query(ASSOCIATIONS_IN_BAND_NAME, new URIMapper("association"), bandName));
+
+        if(sparqlTemplate.getFilters().size() == 0){
+            Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandName);
+            if (retrieved != null) {
+                return (Set<URI>) retrieved;
+            }
+
+            results.addAll(sparqlTemplate.query(SparqlQueries.ASSOCIATIONS_IN_BAND_NAME, new URIMapper("association"), bandName));
+            return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandName);
+
+        }
+        else {
+            for(Filter filter : sparqlTemplate.getFilters()){
+                if(filter.getFilteredType().equals(Association.class)){
+                    Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandName, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+                    if (retrieved != null) {
+                        return (Set<URI>) retrieved;
+                    }
+                    results.addAll(sparqlTemplate.query(SparqlQueries.ASSOCIATIONS_IN_BAND_NAME_PVALUE_FILTER, new URIMapper("association"),
+                            bandName, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0)));
+                    return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate,
+                            bandName, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+
+                }
+            }
+        }
         return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandName);
     }
 
     public Set<URI> getTraitsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, URI bandIndividual) {
-        Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual);
-        if (retrieved != null) {
-            return (Set<URI>) retrieved;
-        }
 
         Set<URI> results = new HashSet<URI>();
-        results.addAll(sparqlTemplate.query(TRAITS_IN_BAND, new URIMapper("trait"), bandIndividual));
+
+        if(sparqlTemplate.getFilters().size() == 0){
+            Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual);
+            if (retrieved != null) {
+                return (Set<URI>) retrieved;
+            }
+            results.addAll(sparqlTemplate.query(SparqlQueries.TRAITS_IN_BAND, new URIMapper("trait"), bandIndividual));
+            return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual);
+
+        }
+        else {
+            for(Filter filter : sparqlTemplate.getFilters()){
+                if(filter.getFilteredType().equals(Association.class)){
+                    Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+                    if (retrieved != null) {
+                        return (Set<URI>) retrieved;
+                    }
+                    results.addAll(sparqlTemplate.query(SparqlQueries.TRAITS_IN_BAND_PVALUE_FILTER, new URIMapper("trait"),
+                            bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0)));
+                    return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate,
+                            bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+
+                }
+            }
+        }
+
         return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual);
     }
 
     public Set<URI> getTraitsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, String bandName) {
-        Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandName);
-        if (retrieved != null) {
-            return (Set<URI>) retrieved;
-        }
-
         Set<URI> results = new HashSet<URI>();
-        results.addAll(sparqlTemplate.query(TRAITS_IN_BAND_NAME, new URIMapper("trait"), bandName));
+
+        if(sparqlTemplate.getFilters().size() == 0){
+            Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandName);
+            if (retrieved != null) {
+                return (Set<URI>) retrieved;
+            }
+
+            results.addAll(sparqlTemplate.query(SparqlQueries.TRAITS_IN_BAND_NAME, new URIMapper("trait"), bandName));
+            return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandName);
+
+        }
+        else {
+            for(Filter filter : sparqlTemplate.getFilters()){
+                if(filter.getFilteredType().equals(Association.class)){
+                    Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandName, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+                    if (retrieved != null) {
+                        return (Set<URI>) retrieved;
+                    }
+
+                    results.addAll(sparqlTemplate.query(SparqlQueries.TRAITS_IN_BAND_NAME_PVALUE_FILTER, new URIMapper("trait"),
+                            bandName, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0)));
+                    return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate,
+                            bandName, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+
+                }
+            }
+        }
         return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandName);
     }
 
     public List<URI> getTraitsOrderedByIdentificationDateForBand(SparqlTemplate sparqlTemplate, URI bandIndividual) {
-        Object retrieved = checkCache("getTraitsOrderedByIdentificationDateForBand", sparqlTemplate, bandIndividual);
-        if (retrieved != null) {
-            return (List<URI>) retrieved;
-        }
-
-        List<URI> queryResults =
-                sparqlTemplate.query(DATE_OF_TRAIT_ID_FOR_BAND, new URIMapper("trait"), bandIndividual);
-        // de-duplicate results; should be handled by the query but just in case...
         List<URI> results = new ArrayList<URI>();
-        for (URI queryResult : queryResults) {
-            if (!results.contains(queryResult)) {
-                results.add(queryResult);
+
+        if(sparqlTemplate.getFilters().size() == 0) {
+            Object retrieved = checkCache("getTraitsOrderedByIdentificationDateForBand", sparqlTemplate, bandIndividual);
+            if (retrieved != null) {
+                return (List<URI>) retrieved;
+            }
+
+            List<URI> queryResults =
+                    sparqlTemplate.query(SparqlQueries.DATE_OF_TRAIT_ID_FOR_BAND, new URIMapper("trait"), bandIndividual);
+            // de-duplicate results; should be handled by        List<URI> results = new ArrayList<URI>();
+            for (URI queryResult : queryResults) {
+                if (!results.contains(queryResult)) {
+                    results.add(queryResult);
+                }
+            }
+            return cache(results, "getTraitsOrderedByIdentificationDateForBand", sparqlTemplate, bandIndividual);
+        }
+        else {
+            for(Filter filter : sparqlTemplate.getFilters()){
+                if(filter.getFilteredType().equals(Association.class)){
+                    Object retrieved = checkCache("getTraitsOrderedByIdentificationDateForBand", sparqlTemplate, bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+                    if (retrieved != null) {
+                        return (List<URI>) retrieved;
+                    }
+                    results.addAll(sparqlTemplate.query(SparqlQueries.DATE_OF_TRAIT_ID_FOR_BAND_PVALUE_FILTER, new URIMapper("trait"),
+                            bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0)));
+                    return cache(results, "getTraitsOrderedByIdentificationDateForBand", sparqlTemplate,
+                            bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+
+                }
             }
         }
+
         return cache(results, "getTraitsOrderedByIdentificationDateForBand", sparqlTemplate, bandIndividual);
     }
 
     public Set<URI> getAssociationsForTrait(SparqlTemplate sparqlTemplate, URI trait) {
-        Object retrieved = checkCache("getAssociationsForTrait", sparqlTemplate, trait);
-        if (retrieved != null) {
-            return (Set<URI>) retrieved;
-        }
 
         Set<URI> results = new HashSet<URI>();
-        results.addAll(sparqlTemplate.query(ASSOCIATIONS_FOR_TRAIT, new URIMapper("association"), trait));
+
+        if(sparqlTemplate.getFilters().size() == 0){
+            Object retrieved = checkCache("getAssociationsForTrait", sparqlTemplate, trait);
+            if (retrieved != null) {
+                return (Set<URI>) retrieved;
+            }
+            results.addAll(sparqlTemplate.query(SparqlQueries.ASSOCIATIONS_FOR_TRAIT, new URIMapper("association"), trait));
+            return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate, trait);
+
+        }
+        else {
+            for(Filter filter : sparqlTemplate.getFilters()){
+                if(filter.getFilteredType().equals(Association.class)){
+                    Object retrieved = checkCache("getAssociationsForTrait", sparqlTemplate, trait, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+                    if (retrieved != null) {
+                        return (Set<URI>) retrieved;
+                    }
+                    results.addAll(sparqlTemplate.query(SparqlQueries.ASSOCIATIONS_FOR_TRAIT_PVALUE_FILTER, new URIMapper("association"),
+                            trait, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0)));
+                    return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate,
+                            trait, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+
+                }
+            }
+        }
+
         return cache(results, "getAssociationsForTrait", sparqlTemplate, trait);
     }
 
@@ -198,7 +262,7 @@ public class QueryManager {
         }
 
         // todo - lowercase here?
-        List<URI> results = sparqlTemplate.query(TRAITS_BY_NAME, new URIMapper("trait"), name, name);
+        List<URI> results = sparqlTemplate.query(SparqlQueries.TRAITS_BY_NAME, new URIMapper("trait"), name, name);
         if (results.size() == 1) {
             return cache(results.get(0), "getTraitByName", sparqlTemplate, name);
         }
@@ -227,16 +291,17 @@ public class QueryManager {
             return (List<URI>) retrieved;
         }
 
-        List<URI> results = sparqlTemplate.query("SELECT ?type (count(DISTINCT ?ancestor) as ?count) " +
-                                                         "WHERE { " +
-                                                         "<" + trait.toString() + "> rdf:type ?trait . " +
-                                                         "?trait rdfs:subClassOf* ?type . " +
-                                                         "?type rdfs:subClassOf* ?ancestor . " +
-                                                         "FILTER ( ?trait != owl:Class ) .  " +
-                                                         "FILTER ( ?trait != owl:NamedIndividual ) . } " +
-                                                         "GROUP BY ?type " +
-                                                         "ORDER BY desc(?count) ", new URIMapper("type"));
+//        List<URI> results = sparqlTemplate.query("SELECT ?type (count(DISTINCT ?ancestor) as ?count) " +
+//                                                         "WHERE { " +
+//                                                         "<" + trait.toString() + "> rdf:type ?trait . " +
+//                                                         "?trait rdfs:subClassOf* ?type . " +
+//                                                         "?type rdfs:subClassOf* ?ancestor . " +
+//                                                         "FILTER ( ?trait != owl:Class ) .  " +
+//                                                         "FILTER ( ?trait != owl:NamedIndividual ) . } " +
+//                                                         "GROUP BY ?type " +
+//                                                         "ORDER BY desc(?count) ", new URIMapper("type"));
 
+        List<URI> results = sparqlTemplate.query(SparqlQueries.PARENTS_AND_DISTANCE_BY_TRAIT, new URIMapper("type"), trait);
         return cache(results, "getAllTraitTypes", sparqlTemplate, trait);
     }
 

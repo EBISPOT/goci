@@ -109,7 +109,8 @@ public class PussycatGOCIController {
         double pvalue = mantissaNum*Math.pow(10, exponentNum);
 
         Association association = template(Association.class);
-        Filter filter = refine(association).on(association.getPvalue()).hasValue(pvalue);
+        Filter filter = refine(association).on(association.getPvalue()).hasValues(0.0, pvalue);
+        getRenderletNexus(session).setRenderingContext(filter);
         return getPussycatSession(session).performRendering(getRenderletNexus(session), filter);
 
     }

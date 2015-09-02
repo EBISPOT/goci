@@ -269,4 +269,5 @@ public class SparqlTemplate {
         Model m = ModelFactory.createDefaultModel();
         return m.createTypedLiteral(o);
     }
+
 }
