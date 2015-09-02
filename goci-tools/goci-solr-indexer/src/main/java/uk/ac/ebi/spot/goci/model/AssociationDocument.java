@@ -512,6 +512,8 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                             }
 
                             // else get the closest upstream and downstream
+                            // logic here is to create an array with 2 elements, upstream
+                            // at first index and downstream at second
                             else {
                                 if (context.getIsClosestGene() != null && context.getIsClosestGene()) {
                                     if (context.getIsUpstream()) {
@@ -520,7 +522,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                         }
                                     }
                                     else if (context.getIsDownstream()) {
-                                        closestUpstreamDownstreamGenes.add(1, geneName);
+                                        if (!closestUpstreamDownstreamGenes.contains(geneName)) {
+                                            closestUpstreamDownstreamGenes.add(geneName);
+                                        }
                                     }
                                     else {
                                         getLog().warn("No closest upstream and downstream gene for association: " +
