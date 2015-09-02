@@ -274,18 +274,24 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
                                     region = setOrAppend(region, regionBuilder.toString(), " : ");
 
-
-                                    entrezMappedGene = setOrAppend(entrezMappedGene,
-                                                                   getMappedGeneString(association, snp, "NCBI"),
-                                                                   " : ");
-
+                                    // Get the mapped gene for each location
+                                    for (Location snpLocation : snp.getLocations()) {
+                                        entrezMappedGene = setOrAppend(entrezMappedGene,
+                                                                       getMappedGeneString(association, snp, "NCBI"),
+                                                                       " : ");
+                                    }
                                     // and add entrez links for each entrez mapped gene
                                     entrezMappedGeneLinks = createMappedGeneLinks(snp, "NCBI");
 
 
-                                    ensemblMappedGene = setOrAppend(ensemblMappedGene,
-                                                                    getMappedGeneString(association, snp, "Ensembl"),
-                                                                    " : ");
+                                    // Get the mapped gene for each location
+                                    for (Location snpLocation : snp.getLocations()) {
+                                        ensemblMappedGene = setOrAppend(ensemblMappedGene,
+                                                                        getMappedGeneString(association,
+                                                                                            snp,
+                                                                                            "Ensembl"),
+                                                                        " : ");
+                                    }
 
                                     // add ensembl links for each ensembl mapped gene
                                     ensemblMappedGeneLinks = createMappedGeneLinks(snp, "Ensembl");
@@ -339,16 +345,24 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
                                     region = setOrAppend(region, regionBuilder.toString(), ", ");
 
-                                    entrezMappedGene = setOrAppend(entrezMappedGene,
-                                                                   getMappedGeneString(association, snp, "NCBI"),
-                                                                   ", ");
+                                    // Get the mapped gene for each location
+                                    for (Location snpLocation : snp.getLocations()) {
+                                        entrezMappedGene = setOrAppend(entrezMappedGene,
+                                                                       getMappedGeneString(association, snp, "NCBI"),
+                                                                       ", ");
+                                    }
+
                                     // and add entrez links for each entrez mapped gene
                                     entrezMappedGeneLinks = createMappedGeneLinks(snp, "NCBI");
 
-
-                                    ensemblMappedGene = setOrAppend(ensemblMappedGene,
-                                                                    getMappedGeneString(association, snp, "Ensembl"),
-                                                                    ", ");
+                                    // Get the mapped gene for each location
+                                    for (Location snpLocation : snp.getLocations()) {
+                                        ensemblMappedGene = setOrAppend(ensemblMappedGene,
+                                                                        getMappedGeneString(association,
+                                                                                            snp,
+                                                                                            "Ensembl"),
+                                                                        ", ");
+                                    }
 
                                     // add ensembl links for each ensembl mapped gene
                                     ensemblMappedGeneLinks = createMappedGeneLinks(snp, "Ensembl");
@@ -542,7 +556,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         if (!mappedGenes.isEmpty()) {
 
             if (mappedGenes.size() == 1) {
-                geneString = mappedGenes.iterator().next().toString();
+                geneString = mappedGenes.iterator().next();
             }
 
             else if (mappedGenes.size() > 1) {
