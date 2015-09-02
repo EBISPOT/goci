@@ -543,7 +543,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                         }
 
                                         else if (context.getIsDownstream()) {
-                                            closestUpstreamDownstreamGenesToLocation.get(locationId).add(1, geneName);
+                                            closestUpstreamDownstreamGenesToLocation.get(locationId).add(geneName);
                                         }
 
                                         else {
@@ -560,7 +560,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                         }
 
                                         else if (context.getIsDownstream()) {
-                                            closestUpstreamDownstreamGenes.add(1, geneName);
+                                            closestUpstreamDownstreamGenes.add(geneName);
                                         }
                                         else {
                                             getLog().warn("No closest upstream and downstream gene for association: " +
@@ -620,15 +620,14 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         String geneString = "";
 
         if (!allUpstreamAndDownstreamGenes.isEmpty() && !allMappedGenes.isEmpty()) {
-
             geneString = String.join("|", allMappedGenes)
                     .concat("|")
                     .concat(String.join("|", allUpstreamAndDownstreamGenes));
         }
-        else if (allUpstreamAndDownstreamGenes.isEmpty()) {
+        else if (allUpstreamAndDownstreamGenes.isEmpty() && !allMappedGenes.isEmpty()) {
             geneString = String.join("|", allMappedGenes);
         }
-        else if (allMappedGenes.isEmpty()) {
+        else if (!allUpstreamAndDownstreamGenes.isEmpty()) {
             geneString = String.join("|", allUpstreamAndDownstreamGenes);
         }
         else {
