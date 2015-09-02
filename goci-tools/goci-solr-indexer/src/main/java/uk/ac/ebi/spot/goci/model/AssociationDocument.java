@@ -392,7 +392,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     private String createReportedGeneLink(Gene gene) {
 
         // Create link information for reported gene
-        String geneLink = gene.getGeneName();
+        String geneLink = gene.getGeneName().trim();
         List<String> entrezIds = new ArrayList<String>();
         String entrezLinks = "";
         List<String> ensemblIds = new ArrayList<String>();
