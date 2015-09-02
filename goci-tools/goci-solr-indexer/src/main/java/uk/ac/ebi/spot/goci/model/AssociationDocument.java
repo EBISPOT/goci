@@ -494,8 +494,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     private String getMappedGeneString(Association association, SingleNucleotidePolymorphism snp, String source) {
 
-        List<String> mappedGenes = new ArrayList<>();
+        // Use set here so we don't get duplicates
+        Set<String> mappedGenes = new HashSet<>();
         List<String> closestUpstreamDownstreamGenes = new ArrayList<>();
+
         snp.getGenomicContexts().forEach(
                 context -> {
                     if (context.getGene() != null && context.getGene().getGeneName() != null &&
@@ -517,23 +519,26 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                             closestUpstreamDownstreamGenes.add(0, geneName);
                                         }
                                     }
-                                    else {closestUpstreamDownstreamGenes.add(geneName);}
-                                }
-
-                                else {
-                                    getLog().warn("No closest upstream and downstream gene for association: " +
-                                                          association.getId() + ", snp: " + snp.getRsId());
+                                    else if (context.getIsDownstream()) {
+                                        closestUpstreamDownstreamGenes.add(1, geneName);
+                                    }
+                                    else {
+                                        getLog().warn("No closest upstream and downstream gene for association: " +
+                                                              association.getId() + ", snp: " + snp.getRsId() +
+                                                              ", for source " + source);
+                                    }
                                 }
                             }
                         }
                     }
                 });
 
+
         String geneString = "";
         if (!mappedGenes.isEmpty()) {
 
             if (mappedGenes.size() == 1) {
-                geneString = mappedGenes.get(0);
+                geneString = mappedGenes.iterator().next().toString();
             }
 
             else if (mappedGenes.size() > 1) {
