@@ -610,8 +610,8 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             else {
                 getLog().warn("Indexing bad genetic data for association " +
                                       "'" + association.getId() +
-                                      "': wrong number of closest upstream and downstream gene, expected 2, got" +
-                                      closestUpstreamDownstreamGenes.size());
+                                      "': wrong number of closest upstream and downstream gene, expected 2, got " +
+                                      closestUpstreamDownstreamGenes.size()+ " for source "+ source);
             }
 
         }
