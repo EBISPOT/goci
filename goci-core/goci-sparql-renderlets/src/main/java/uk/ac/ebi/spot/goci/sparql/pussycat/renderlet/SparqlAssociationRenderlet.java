@@ -72,7 +72,7 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
      * @return the number of traits in the same cytogenetic region as this association
      * @throws DataIntegrityViolationException
      */
-    protected int getNumberOfTraitsInSameBand(SparqlTemplate sparqlTemplate, URI association)
+    protected int getNumberOfTraitsInSameBand(RenderletNexus nexus, SparqlTemplate sparqlTemplate, URI association)
             throws DataIntegrityViolationException {
         URI bandIndividual =
                 QueryManager.getCachingInstance().getCytogeneticBandForAssociation(sparqlTemplate, association);
@@ -83,7 +83,8 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
 //            return associations.size();
             Set<URI> currentBandTraits =
                     QueryManager.getCachingInstance().getTraitsLocatedInCytogeneticBand(sparqlTemplate,
-                                                                                        bandIndividual);
+                                                                                        bandIndividual,
+                                                                                        nexus.getRenderingContext());
             return currentBandTraits.size();
         }
         else {
@@ -101,11 +102,11 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
      * @return the number of traits in the same cytogenetic region as this association
      * @throws DataIntegrityViolationException
      */
-    protected int getNumberOfTraitsInPreviousBand(SparqlTemplate sparqlTemplate, URI association)
+    protected int getNumberOfTraitsInPreviousBand(RenderletNexus nexus, SparqlTemplate sparqlTemplate, URI association)
             throws DataIntegrityViolationException {
         BandInformation band = getBandInformation(sparqlTemplate, association);
         if (band != null) {
-            BandInformation previousBand = getPreviousBandMap(sparqlTemplate).get(band);
+            BandInformation previousBand = getPreviousBandMap(nexus, sparqlTemplate).get(band);
 
             // now find the traits in the previous band
 //            Set<URI> previousBandAssociations =
@@ -115,7 +116,8 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
 //            return previousBandAssociations.size();
             Set<URI> previousBandTraits =
                     QueryManager.getCachingInstance().getTraitsLocatedInCytogeneticBand(sparqlTemplate,
-                                                                                        previousBand.getBandName());
+                                                                                        previousBand.getBandName(),
+                                                                                        nexus.getRenderingContext());
             return previousBandTraits.size();
         }
         else {
@@ -130,7 +132,7 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
             throws DataIntegrityViolationException {
         BandInformation band = getBandInformation(sparqlTemplate, association);
         if (band != null) {
-            BandInformation previousBand = getPreviousBandMap(sparqlTemplate).get(band);
+            BandInformation previousBand = getPreviousBandMap(nexus, sparqlTemplate).get(band);
             if (previousBand == null) {
                 return null;
             }
@@ -139,7 +141,8 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
             Set<URI> previousBandAssociations =
                     QueryManager.getCachingInstance().getAssociationsLocatedInCytogeneticBand(
                             sparqlTemplate,
-                            previousBand.getBandName());
+                            previousBand.getBandName(),
+                            nexus.getRenderingContext());
 
             // get first not-null location for an association in the previous band
             for (URI previousBandAssociation : previousBandAssociations) {

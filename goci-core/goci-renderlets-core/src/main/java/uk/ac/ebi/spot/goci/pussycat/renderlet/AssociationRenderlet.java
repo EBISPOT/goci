@@ -7,7 +7,6 @@ import uk.ac.ebi.spot.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.spot.goci.pussycat.layout.SVGArea;
 import uk.ac.ebi.spot.goci.pussycat.layout.SVGCanvas;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -17,15 +16,8 @@ import java.util.Map;
  * @date 18/04/12
  */
 public abstract class AssociationRenderlet<C, E> implements Renderlet<C, E> {
-    private final Map<BandInformation, SVGArea> renderedBands;
-    private Map<C, Map<BandInformation, BandInformation>> previousBandMapByContext;
 
     private Logger log = LoggerFactory.getLogger("rendering");
-
-    public AssociationRenderlet() {
-        this.previousBandMapByContext = new HashMap<C, Map<BandInformation, BandInformation>>();
-        this.renderedBands = new HashMap<BandInformation, SVGArea>();
-    }
 
     protected Logger getLog() {
         return log;
@@ -49,13 +41,13 @@ public abstract class AssociationRenderlet<C, E> implements Renderlet<C, E> {
     @Override
     public void render(RenderletNexus nexus, C context, E associationEntity) {
         getLog().trace("Association: " + associationEntity);
-        if (!previousBandMapByContext.containsKey(context)) {
-            previousBandMapByContext.put(context, sortBandsWithData(context));
+        if (!nexus.bandContextExists(context)) {
+            nexus.setBandContext(context, sortBandsWithData(context));
         }
 
         try {
             BandInformation band = getBandInformation(context, associationEntity);
-            if (!renderedBands.containsKey(band)) {
+            if (!nexus.alreadyRendered(band)) {
                 // there is no other association in this chromosomal band yet - render
                 getLog().trace("This is the first association for band '" + band.getBandName() + "', " +
                                        "rendering new line");
@@ -85,7 +77,7 @@ public abstract class AssociationRenderlet<C, E> implements Renderlet<C, E> {
                     double y3;
 
                     // fanning algorithm - calculate diagonal part of the line, if necessary
-                    Map<BandInformation, BandInformation> previousBandMap = previousBandMapByContext.get(context);
+                    Map<BandInformation, BandInformation> previousBandMap = nexus.getBandContext(context);
                     BandInformation previousBand = previousBandMap.get(band);
                     if (previousBand != null && band.getChromosome().equals(previousBand.getChromosome())) {
                         SVGArea previousLocation = getLocationOfPreviousAssociation(nexus, context, associationEntity);
@@ -95,7 +87,7 @@ public abstract class AssociationRenderlet<C, E> implements Renderlet<C, E> {
                             // fan up or down?
                             if (band.getBandName().contains("p")) {
                                 // p arm - we need to know how many traits are in this band
-                                int traitCount = getNumberOfTraitsInSameBand(context, associationEntity);
+                                int traitCount = getNumberOfTraitsInSameBand(nexus, context, associationEntity);
                                 int rowCount = ((traitCount - 1) / 6) + 2;
                                 double blockSize = rowCount * dotRadius;
 
@@ -110,7 +102,7 @@ public abstract class AssociationRenderlet<C, E> implements Renderlet<C, E> {
                             }
                             else {
                                 // q arm - we need to know how many traits were in the previous band (ie. the one above)
-                                int traitCount = getNumberOfTraitsInPreviousBand(context, associationEntity);
+                                int traitCount = getNumberOfTraitsInPreviousBand(nexus, context, associationEntity);
                                 int rowCount = ((traitCount - 1) / 6) + 2;
                                 double blockSize = rowCount * dotRadius;
 
@@ -157,7 +149,7 @@ public abstract class AssociationRenderlet<C, E> implements Renderlet<C, E> {
                     nexus.renderingEventOccurred(event);
 
                     // add band to renderedBands set
-                    renderedBands.put(band, currentArea);
+                    nexus.setRenderedBand(band, currentArea);
                 }
                 else {
                     getLog().error("Unable to render association '" + associationEntity + "' - " +
@@ -169,7 +161,7 @@ public abstract class AssociationRenderlet<C, E> implements Renderlet<C, E> {
                 // but we do need to log the rendering event for this association individual
                 getLog().trace("Already rendered an association line to band '" + band.getBandName() + "', " +
                                        "logging secondary event for association '" + associationEntity + "'");
-                SVGArea area = renderedBands.get(band);
+                SVGArea area = nexus.getRenderedBand(band);
                 nexus.renderingEventOccurred(new RenderingEvent<E>(associationEntity, "", area, this));
             }
         }
@@ -178,8 +170,8 @@ public abstract class AssociationRenderlet<C, E> implements Renderlet<C, E> {
         }
     }
 
-    protected Map<BandInformation, BandInformation> getPreviousBandMap(C context) {
-        return previousBandMapByContext.get(context);
+    protected Map<BandInformation, BandInformation> getPreviousBandMap(RenderletNexus nexus, C context) {
+        return nexus.getBandContext(context);
     }
 
     /**
@@ -211,7 +203,7 @@ public abstract class AssociationRenderlet<C, E> implements Renderlet<C, E> {
      * @return the number of traits in the same cytogenetic region as this association
      * @throws DataIntegrityViolationException
      */
-    protected abstract int getNumberOfTraitsInSameBand(C context, E association)
+    protected abstract int getNumberOfTraitsInSameBand(RenderletNexus nexus, C context, E association)
             throws DataIntegrityViolationException;
 
     /**
@@ -223,7 +215,7 @@ public abstract class AssociationRenderlet<C, E> implements Renderlet<C, E> {
      * @return the number of traits in the same cytogenetic region as this association
      * @throws DataIntegrityViolationException
      */
-    protected abstract int getNumberOfTraitsInPreviousBand(C context, E association)
+    protected abstract int getNumberOfTraitsInPreviousBand(RenderletNexus nexus, C context, E association)
             throws DataIntegrityViolationException;
 
     protected abstract SVGArea getLocationOfPreviousAssociation(RenderletNexus nexus, C context, E association)

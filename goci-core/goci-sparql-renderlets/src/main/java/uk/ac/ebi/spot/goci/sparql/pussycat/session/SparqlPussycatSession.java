@@ -180,6 +180,7 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                 }
                 finally {
                     setRendering(false);
+                    renderletNexus.reset();
                 }
             }
             else {

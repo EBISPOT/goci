@@ -1,9 +1,11 @@
 package uk.ac.ebi.spot.goci.pussycat.renderlet;
 
 import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
+import uk.ac.ebi.spot.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.spot.goci.pussycat.layout.SVGArea;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * A RenderletNexus represents the intersection between Renderlets, allowing Renderlets that are dependent on each
@@ -58,4 +60,16 @@ public interface RenderletNexus {
     void setRenderingContext(Filter filter);
 
     List<Filter> getRenderingContext();
+
+    void setRenderedBand(BandInformation bandInformation, SVGArea svgArea);
+
+    SVGArea getRenderedBand(BandInformation bandInformation);
+
+    boolean alreadyRendered(BandInformation bandInformation);
+
+    <C> void setBandContext(C context, Map<BandInformation, BandInformation> bandMap);
+
+    <C> Map<BandInformation, BandInformation> getBandContext(C context);
+
+    <C> boolean bandContextExists(C context);
 }

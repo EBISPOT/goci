@@ -54,11 +54,11 @@ public class QueryManager {
         }
     }
 
-    public Set<URI> getAssociationsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, URI bandIndividual) {
+    public Set<URI> getAssociationsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, URI bandIndividual, List<Filter> filters) {
 
         Set<URI> results = new HashSet<URI>();
 
-        if(sparqlTemplate.getFilters().size() == 0){
+        if(filters.size() == 0){
             Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual);
             if (retrieved != null) {
                 return (Set<URI>) retrieved;
@@ -69,7 +69,7 @@ public class QueryManager {
 
         }
         else {
-            for(Filter filter : sparqlTemplate.getFilters()){
+            for(Filter filter : filters){
                 if(filter.getFilteredType().equals(Association.class)){
                     Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual,filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
                     if (retrieved != null) {
@@ -89,11 +89,11 @@ public class QueryManager {
 
     }
 
-    public Set<URI> getAssociationsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, String bandName) {
+    public Set<URI> getAssociationsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, String bandName, List<Filter> filters) {
 
         Set<URI> results = new HashSet<URI>();
 
-        if(sparqlTemplate.getFilters().size() == 0){
+        if(filters.size() == 0){
             Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandName);
             if (retrieved != null) {
                 return (Set<URI>) retrieved;
@@ -104,7 +104,7 @@ public class QueryManager {
 
         }
         else {
-            for(Filter filter : sparqlTemplate.getFilters()){
+            for(Filter filter : filters){
                 if(filter.getFilteredType().equals(Association.class)){
                     Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandName, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
                     if (retrieved != null) {
@@ -121,11 +121,11 @@ public class QueryManager {
         return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandName);
     }
 
-    public Set<URI> getTraitsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, URI bandIndividual) {
+    public Set<URI> getTraitsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, URI bandIndividual, List<Filter> filters) {
 
         Set<URI> results = new HashSet<URI>();
 
-        if(sparqlTemplate.getFilters().size() == 0){
+        if(filters.size() == 0){
             Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual);
             if (retrieved != null) {
                 return (Set<URI>) retrieved;
@@ -135,7 +135,7 @@ public class QueryManager {
 
         }
         else {
-            for(Filter filter : sparqlTemplate.getFilters()){
+            for(Filter filter : filters){
                 if(filter.getFilteredType().equals(Association.class)){
                     Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
                     if (retrieved != null) {
@@ -153,10 +153,10 @@ public class QueryManager {
         return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual);
     }
 
-    public Set<URI> getTraitsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, String bandName) {
+    public Set<URI> getTraitsLocatedInCytogeneticBand(SparqlTemplate sparqlTemplate, String bandName, List<Filter> filters) {
         Set<URI> results = new HashSet<URI>();
 
-        if(sparqlTemplate.getFilters().size() == 0){
+        if(filters.size() == 0){
             Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandName);
             if (retrieved != null) {
                 return (Set<URI>) retrieved;
@@ -167,7 +167,7 @@ public class QueryManager {
 
         }
         else {
-            for(Filter filter : sparqlTemplate.getFilters()){
+            for(Filter filter : filters){
                 if(filter.getFilteredType().equals(Association.class)){
                     Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandName, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
                     if (retrieved != null) {
@@ -185,10 +185,10 @@ public class QueryManager {
         return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandName);
     }
 
-    public List<URI> getTraitsOrderedByIdentificationDateForBand(SparqlTemplate sparqlTemplate, URI bandIndividual) {
+    public List<URI> getTraitsOrderedByIdentificationDateForBand(SparqlTemplate sparqlTemplate, URI bandIndividual, List<Filter> filters) {
         List<URI> results = new ArrayList<URI>();
 
-        if(sparqlTemplate.getFilters().size() == 0) {
+        if(filters.size() == 0) {
             Object retrieved = checkCache("getTraitsOrderedByIdentificationDateForBand", sparqlTemplate, bandIndividual);
             if (retrieved != null) {
                 return (List<URI>) retrieved;
@@ -205,7 +205,7 @@ public class QueryManager {
             return cache(results, "getTraitsOrderedByIdentificationDateForBand", sparqlTemplate, bandIndividual);
         }
         else {
-            for(Filter filter : sparqlTemplate.getFilters()){
+            for(Filter filter : filters){
                 if(filter.getFilteredType().equals(Association.class)){
                     Object retrieved = checkCache("getTraitsOrderedByIdentificationDateForBand", sparqlTemplate, bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
                     if (retrieved != null) {
@@ -223,11 +223,11 @@ public class QueryManager {
         return cache(results, "getTraitsOrderedByIdentificationDateForBand", sparqlTemplate, bandIndividual);
     }
 
-    public Set<URI> getAssociationsForTrait(SparqlTemplate sparqlTemplate, URI trait) {
+    public Set<URI> getAssociationsForTrait(SparqlTemplate sparqlTemplate, URI trait, List<Filter> filters) {
 
         Set<URI> results = new HashSet<URI>();
 
-        if(sparqlTemplate.getFilters().size() == 0){
+        if(filters.size() == 0){
             Object retrieved = checkCache("getAssociationsForTrait", sparqlTemplate, trait);
             if (retrieved != null) {
                 return (Set<URI>) retrieved;
@@ -237,7 +237,7 @@ public class QueryManager {
 
         }
         else {
-            for(Filter filter : sparqlTemplate.getFilters()){
+            for(Filter filter : filters){
                 if(filter.getFilteredType().equals(Association.class)){
                     Object retrieved = checkCache("getAssociationsForTrait", sparqlTemplate, trait, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
                     if (retrieved != null) {

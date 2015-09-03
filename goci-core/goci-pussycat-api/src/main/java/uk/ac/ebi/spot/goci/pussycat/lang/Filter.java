@@ -112,11 +112,11 @@ public class Filter<T, V> {
 
         Filter filter = (Filter) o;
 
-        if (filteredMethod != null ? !filteredMethod.equals(filter.filteredMethod) : filter.filteredMethod != null)
+        if (filteredMethod != null ? !filteredMethod.getName().equals(filter.filteredMethod.getName()) : filter.filteredMethod != null)
             return false;
         if (filteredRange != null ? !filteredRange.equals(filter.filteredRange) : filter.filteredRange != null)
             return false;
-        if (!filteredType.equals(filter.filteredType)) return false;
+        if (!filteredType.getName().equals(filter.filteredType.getName())) return false;
         if (filteredValues != null ? !filteredValues.equals(filter.filteredValues) : filter.filteredValues != null)
             return false;
 
@@ -125,8 +125,8 @@ public class Filter<T, V> {
 
     @Override
     public int hashCode() {
-        int result = filteredType.hashCode();
-        result = 31 * result + (filteredMethod != null ? filteredMethod.hashCode() : 0);
+        int result = filteredType.getName().hashCode();
+        result = 31 * result + (filteredMethod != null ? filteredMethod.getName().hashCode() : 0);
         result = 31 * result + (filteredValues != null ? filteredValues.hashCode() : 0);
         result = 31 * result + (filteredRange != null ? filteredRange.hashCode() : 0);
         return result;

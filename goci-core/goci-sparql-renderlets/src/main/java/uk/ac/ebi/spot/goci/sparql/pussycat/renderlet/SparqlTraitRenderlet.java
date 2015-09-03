@@ -33,9 +33,9 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
         }
     }
 
-    protected Set<URI> getAssociationsForTrait(SparqlTemplate sparqlTemplate, URI trait)
+    protected Set<URI> getAssociationsForTrait(RenderletNexus nexus, SparqlTemplate sparqlTemplate, URI trait)
             throws DataIntegrityViolationException {
-        return QueryManager.getCachingInstance().getAssociationsForTrait(sparqlTemplate, trait);
+        return QueryManager.getCachingInstance().getAssociationsForTrait(sparqlTemplate, trait, nexus.getRenderingContext());
     }
 
     protected URI getBandForAssociation(SparqlTemplate sparqlTemplate, URI association)
@@ -52,7 +52,7 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
             throws DataIntegrityViolationException {
         Set<URI> allTraits =
                 QueryManager.getCachingInstance()
-                            .getTraitsLocatedInCytogeneticBand(sparqlTemplate, band);
+                            .getTraitsLocatedInCytogeneticBand(sparqlTemplate, band, nexus.getRenderingContext());
         getLog().trace("Identified " + allTraits.size() + " traits in band '" + band + "'");
 
         List<SVGArea> locations = new ArrayList<SVGArea>();
@@ -87,12 +87,13 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
         return locations;
     }
 
-    @Override protected int getTraitPosition(SparqlTemplate sparqlTemplate,
+    @Override protected int getTraitPosition(RenderletNexus nexus,
+                                             SparqlTemplate sparqlTemplate,
                                              URI trait,
                                              URI band,
                                              List<SVGArea> locations) {
         List<URI> dateOrderedTraits =
-                QueryManager.getCachingInstance().getTraitsOrderedByIdentificationDateForBand(sparqlTemplate, band);
+                QueryManager.getCachingInstance().getTraitsOrderedByIdentificationDateForBand(sparqlTemplate, band, nexus.getRenderingContext());
         if (dateOrderedTraits.contains(trait)) {
             return dateOrderedTraits.indexOf(trait);
         }
