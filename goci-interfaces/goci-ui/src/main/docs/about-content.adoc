@@ -22,6 +22,7 @@ The NHGRI-EBI GWAS Catalog is funded in part by http://projectreporter.nih.gov/p
 _Burdett T (EBI), Hall PN (NHGRI), Hasting E (EBI) Hindorff LA (NHGRI), Junkins HA (NHGRI), Klemm AK (NHGRI), MacArthur J (EBI), Manolio TA (NHGRI), Morales J (EBI), Parkinson H (EBI) and Welter D (EBI)._ +
 The NHGRI-EBI Catalog of published genome-wide association studies. +
 Available at: www.ebi.ac.uk/gwas. Accessed [date of access], version [version number]. +
+_version number only applies to the download spreadsheet - v1.0 for the traditional version of the spreadsheet, v1.0.1 for the version with added EFO terms_  +
 
 === How to cite the NHGRI-EBI GWAS Catalog:
 
