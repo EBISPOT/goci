@@ -113,4 +113,21 @@ public class SparqlQueries {
                     "GROUP BY ?type " +
                     "ORDER BY desc(?count)";
 
+        public static final String ASSOCIATIONS_FOR_TRAIT_AND_BAND=
+                "SELECT ?association " +
+                        "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait . " +
+                        "?snp ro:located_in ?bandUri . " +
+                        "FILTER (?trait = ??) " +
+                        "FILTER (?bandUri = ??) }" ;
+
+        public static final String ASSOCIATIONS_FOR_TRAIT_AND_BAND_PVALUE_FILTER =
+             "SELECT ?association " +
+                     "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait; gt:has_p_value ?pvalue . " +
+                     "?snp ro:located_in ?bandUri . " +
+                     "FILTER (?trait = ??) " +
+                     "FILTER (?bandUri = ??) " +
+                     "FILTER ( ?pvalue < ??) " +
+                     "FILTER ( ?pvalue >= ??) }" ;
+
+
 }

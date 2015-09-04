@@ -93,6 +93,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
         filters.clear();
         previousBandMapByContext.clear();
         renderedBands.clear();
+        getLog().debug("All states cleared, ready for a new rendering request");
     }
 
     @Override

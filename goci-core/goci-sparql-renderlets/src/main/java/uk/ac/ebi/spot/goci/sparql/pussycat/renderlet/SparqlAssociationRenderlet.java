@@ -132,29 +132,44 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
             throws DataIntegrityViolationException {
         BandInformation band = getBandInformation(sparqlTemplate, association);
         if (band != null) {
-            BandInformation previousBand = getPreviousBandMap(nexus, sparqlTemplate).get(band);
-            if (previousBand == null) {
-                return null;
-            }
+            BandInformation current = band;
+            boolean done = false;
 
-            // now find the traits in the previous band
-            Set<URI> previousBandAssociations =
-                    QueryManager.getCachingInstance().getAssociationsLocatedInCytogeneticBand(
-                            sparqlTemplate,
-                            previousBand.getBandName(),
-                            nexus.getRenderingContext());
-
-            // get first not-null location for an association in the previous band
-            for (URI previousBandAssociation : previousBandAssociations) {
-                SVGArea prevLocation = nexus.getLocationOfRenderedEntity(previousBandAssociation);
-                if (prevLocation != null) {
-                    return prevLocation;
+            while (!done) {
+                BandInformation previousBand = getPreviousBandMap(nexus, sparqlTemplate).get(current);
+                if (previousBand == null) {
+                    done = true;
+                    return null;
                 }
+
+                if(!previousBand.getChromosome().equals(current.getChromosome())){
+                    done = true;
+                    return null;
+                }
+
+                // now find the traits in the previous band
+                Set<URI> previousBandAssociations =
+                        QueryManager.getCachingInstance().getAssociationsLocatedInCytogeneticBand(
+                                sparqlTemplate,
+                                previousBand.getBandName(),
+                                nexus.getRenderingContext());
+
+                // get first not-null location for an association in the previous band
+                for (URI previousBandAssociation : previousBandAssociations) {
+                    SVGArea prevLocation = nexus.getLocationOfRenderedEntity(previousBandAssociation);
+                    if (prevLocation != null) {
+                        done = true;
+                        return prevLocation;
+                    }
+                }
+
+                // if we get to here, no associations are located in the previous region so return null
+                getLog().trace(
+                        "Unable to identify any associations in the previous cytogenetic region '" +
+                                previousBand.getBandName() + "'");
+                current = previousBand;
+
             }
-            // if we get to here, no associations are located in the previous region so return null
-            getLog().trace(
-                    "Unable to identify any associations in the previous cytogenetic region '" +
-                            previousBand.getBandName() + "'");
             return null;
         }
         else {

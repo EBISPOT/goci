@@ -233,7 +233,7 @@ public class QueryManager {
                 return (Set<URI>) retrieved;
             }
             results.addAll(sparqlTemplate.query(SparqlQueries.ASSOCIATIONS_FOR_TRAIT, new URIMapper("association"), trait));
-            return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate, trait);
+            return cache(results, "getAssociationsForTrait", sparqlTemplate, trait);
 
         }
         else {
@@ -245,7 +245,7 @@ public class QueryManager {
                     }
                     results.addAll(sparqlTemplate.query(SparqlQueries.ASSOCIATIONS_FOR_TRAIT_PVALUE_FILTER, new URIMapper("association"),
                             trait, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0)));
-                    return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate,
+                    return cache(results, "getAssociationsForTrait", sparqlTemplate,
                             trait, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
 
                 }
@@ -253,6 +253,44 @@ public class QueryManager {
         }
 
         return cache(results, "getAssociationsForTrait", sparqlTemplate, trait);
+    }
+
+    public List<URI> getAssociationForTraitAndBand(SparqlTemplate sparqlTemplate, URI trait, URI bandIndividual, List<Filter> filters){
+        List<URI> results = new ArrayList<URI>();
+
+        if(filters.size() == 0) {
+            Object retrieved = checkCache("getAssociationsForTraitInBand", sparqlTemplate, trait, bandIndividual);
+            if (retrieved != null) {
+                return (List<URI>) retrieved;
+            }
+
+            List<URI> queryResults =
+                    sparqlTemplate.query(SparqlQueries.ASSOCIATIONS_FOR_TRAIT_AND_BAND, new URIMapper("association"), trait, bandIndividual);
+            // de-duplicate results; should be handled by        List<URI> results = new ArrayList<URI>();
+            for (URI queryResult : queryResults) {
+                if (!results.contains(queryResult)) {
+                    results.add(queryResult);
+                }
+            }
+            return cache(results, "getAssociationsForTraitInBand", sparqlTemplate, trait, bandIndividual);
+        }
+        else {
+            for(Filter filter : filters){
+                if(filter.getFilteredType().equals(Association.class)){
+                    Object retrieved = checkCache("getAssociationsForTraitInBand", sparqlTemplate, trait, bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+                    if (retrieved != null) {
+                        return (List<URI>) retrieved;
+                    }
+                    results.addAll(sparqlTemplate.query(SparqlQueries.ASSOCIATIONS_FOR_TRAIT_AND_BAND_PVALUE_FILTER, new URIMapper("association"),
+                                                        trait, bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0)));
+                    return cache(results, "getAssociationsForTraitInBand", sparqlTemplate,
+                                 trait, bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+
+                }
+            }
+        }
+
+        return cache(results, "getAssociationsForTraitInBand", sparqlTemplate, trait, bandIndividual);
     }
 
     public URI getTraitByName(SparqlTemplate sparqlTemplate, String name) throws DataIntegrityViolationException {

@@ -94,8 +94,21 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
                                              List<SVGArea> locations) {
         List<URI> dateOrderedTraits =
                 QueryManager.getCachingInstance().getTraitsOrderedByIdentificationDateForBand(sparqlTemplate, band, nexus.getRenderingContext());
-        if (dateOrderedTraits.contains(trait)) {
-            return dateOrderedTraits.indexOf(trait);
+
+//        if(dateOrderedTraits.contains(trait)){
+//            return dateOrderedTraits.indexOf(trait);
+//        }
+        List<URI> renderableDateOrderedTraits = new ArrayList<URI>();
+        for(URI t : dateOrderedTraits){
+            List<URI> associations = QueryManager.getCachingInstance().getAssociationForTraitAndBand(sparqlTemplate, t, band, nexus.getRenderingContext());
+            for(URI a : associations){
+                if(nexus.getLocationOfRenderedEntity(a) != null && !renderableDateOrderedTraits.contains(t)){
+                    renderableDateOrderedTraits.add(t);
+                }
+            }
+        }
+        if (renderableDateOrderedTraits.contains(trait)) {
+            return renderableDateOrderedTraits.indexOf(trait);
         }
         else {
             throw new RuntimeException(
