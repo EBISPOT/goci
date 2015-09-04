@@ -51,6 +51,11 @@ public class EnsemblMappingPipeline {
     private final int genomic_distance   = 100000; // 100kb
     private final List<String> reported_genes_to_ignore = Arrays.asList("NR","intergenic");
 
+    // Request rate variables
+    private final int requestPerSecond = 15;
+    private int requestCount = 0;
+    private long limitStartTime = System.currentTimeMillis();
+    private final int maxSleepTime = 1000;
 
     // JPA no-args constructor
     public EnsemblMappingPipeline() {
@@ -528,12 +533,10 @@ public class EnsemblMappingPipeline {
                         closest_distance = distance;
                     }
                 }
-            }
-        }
-        if (closest_gene.length() == 0 && !gene_error) {
-            if (position2 != boundary) {
-                // Recursive code to find the nearest upstream or downstream gene
-                closest_gene = this.getNearestGene(chromosome, snp_position, new_pos, boundary, rest_opt, type);
+                if (closest_gene.length() == 0 && position2 != boundary) {
+                    // Recursive code to find the nearest upstream or downstream gene
+                    closest_gene = this.getNearestGene(chromosome, snp_position, new_pos, boundary, rest_opt, type);
+                }
             }
         }
         return closest_gene;
@@ -557,6 +560,7 @@ public class EnsemblMappingPipeline {
         EnsemblRestService rest_overlap = new EnsemblRestService(endpoint, data, rest_opt);
         JSONArray overlap_result = new JSONArray();
         try {
+            rateLimit();
             rest_overlap.getRestCall();
             JsonNode result = rest_overlap.getRestResults();
 
@@ -599,6 +603,7 @@ public class EnsemblMappingPipeline {
         EnsemblRestService ens_rest_call = new EnsemblRestService(endpoint, data);
         JSONObject json_result = new JSONObject();
         try {
+            rateLimit();
             ens_rest_call.getRestCall();
             json_result = ens_rest_call.getRestResults().getObject();
 
@@ -711,6 +716,25 @@ public class EnsemblMappingPipeline {
         }
     }
 
+    /**
+     * Check if the program reached the rate limit of calls per second
+     *
+     * @throws InterruptedException
+     */
+    private void rateLimit() throws InterruptedException {
+        requestCount++;
+        if (requestCount == requestPerSecond) {
+            long currentTime = System.currentTimeMillis();
+            long diff = currentTime - limitStartTime;
+            //if less than a second has passed then sleep for the remainder of the second
+            if (diff < maxSleepTime) {
+                Thread.sleep(maxSleepTime - diff);
+            }
+            //reset
+            limitStartTime = System.currentTimeMillis();
+            requestCount = 0;
+        }
+    }
 
     /**
      * Return the Ensembl REST API endpoint URL corresponding the the endpoint name provided

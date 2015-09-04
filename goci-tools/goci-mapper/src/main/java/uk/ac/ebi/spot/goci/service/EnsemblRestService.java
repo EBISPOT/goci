@@ -4,7 +4,6 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,11 +30,7 @@ public class EnsemblRestService {
     private String rest_data;
     private String rest_parameters = "";
 
-    private final int requestPerSecond = 15;
-    private int requestCount = 0;
-    private long limitStartTime = System.currentTimeMillis();
-
-    private JsonNode rest_results  = new JsonNode(""); // Default empty result;
+    private JsonNode rest_results = new JsonNode(""); // Default empty result;
     private ArrayList<String> rest_errors = new ArrayList<String>();
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -147,7 +142,6 @@ public class EnsemblRestService {
 
     private void fetchJson(String url) throws UnirestException, InterruptedException {
         try {
-            rateLimit();
             HttpResponse<JsonNode> response = Unirest.get(url)
                     .header("Content-Type", "application/json")
                     .asJson();
@@ -181,27 +175,6 @@ public class EnsemblRestService {
         catch (RuntimeException e) {
             e.printStackTrace();
             System.out.println("URL: "+url); // Temporary (for debug)
-        }
-    }
-
-
-    /**
-     * Check if the program reached the rate limit of calls per second
-     *
-     * @throws InterruptedException
-     */
-    private void rateLimit() throws InterruptedException {
-        requestCount++;
-        if (requestCount == requestPerSecond) {
-            long currentTime = System.currentTimeMillis();
-            long diff = currentTime - limitStartTime;
-            //if less than a second has passed then sleep for the remainder of the second
-            if (diff < 1000) {
-                Thread.sleep(1000 - diff);
-            }
-            //reset
-            limitStartTime = System.currentTimeMillis();
-            requestCount = 0;
         }
     }
 }
