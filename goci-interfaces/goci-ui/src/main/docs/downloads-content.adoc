@@ -14,10 +14,15 @@ For a description of the file's additional column headings, go to link:fileheade
 
 We are working to provide richer, fully customise-able downloads of GWAS data and these will be available soon.
 
-=== Try our new spreadsheet download [big red yellow-background]*BETA*
+=== Try our new spreadsheet download
 
-The GWAS Catalog with added mapping information is link:../api/search/downloads/ensembl_mapping[available for download here]
-We'd love to hear any feedback about this new download, contact the GWAS Catalog team on mailto:gwas-info@ebi.ac.uk[gwas-info@ebi.ac.uk]
+#Beta Feature#
+
+As part of further improvements to the GWAS Catalog mapping information will be added for all GWAS Catalog SNPs to Ensembl genes, in addition to NCBI genes.
+
+We are in the process of testing and developing this feature and in order to gather feedback the GWAS Catalog with added mapping information is link:../api/search/downloads/ensembl_mapping[available for download here]
+
+We'd love to hear what you think of this new feature, contact the GWAS Catalog team on mailto:gwas-info@ebi.ac.uk[gwas-info@ebi.ac.uk]
 
 ////
 == Old version of the spreadsheet
