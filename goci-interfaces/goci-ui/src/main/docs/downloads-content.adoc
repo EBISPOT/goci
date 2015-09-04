@@ -31,7 +31,7 @@ We are working to provide richer, fully customise-able downloads of GWAS data an
 === Try our new spreadsheet download
 
 
-image::../static/images/Beta.png[Beta Feature, align="left"]
+image::Beta.png[Beta Feature, align="left"]
 
 As part of ongoing improvements mapping information will be added for all GWAS Catalog SNPs to Ensembl genes, in addition to NCBI genes.
 
