@@ -2,14 +2,28 @@
 
 == Downloading the GWAS Catalog
 
-The most recent edition of the GWAS Catalog is link:../api/search/downloads/full[available for download here]
 
-For a description of the file's column headings, go to link:fileheaders[this page].
+[width="95%",options="header",cols="2,1,1"]
+|===
+|Description | Download Link |Format
 
+|The most recent edition of the GWAS Catalog
+|link:../api/search/downloads/full[file]
+|tab separated file
 
-The most recent edition of the GWAS Catalog with added ontology annotations is link:../api/search/downloads/alternative[available for download here]
+|A description of the file's column headings
+|link:fileheaders[file]
+|tab separated file
 
-For a description of the file's additional column headings, go to link:fileheaders#_file_headers_for_catalog_version_1_0_1[this page].
+|The most recent edition of the GWAS Catalog with added ontology annotations
+|link:../api/search/downloads/alternative[file]
+|tab separated file
+
+|A description of the file's additional column headings
+|link:fileheaders#_file_headers_for_catalog_version_1_0_1[file]
+|tab separated file
+|===
+
 
 
 We are working to provide richer, fully customise-able downloads of GWAS data and these will be available soon.
