@@ -44,6 +44,12 @@ public class DownloadEntrezMappedGeneMapper implements CatalogDataMapper {
             if (!up.isEmpty() && !down.isEmpty()) {
                 output = up + " - " + down;
             }
+            else if (!up.isEmpty()) {
+                output = " - " + down;
+            }
+            else if (!down.isEmpty()) {
+                output = up + " - ";
+            }
             else {
                 getLog().warn("Unable to extract mapped data correctly from catalog: " +
                                       CatalogHeaderBinding.ENTREZ_MAPPED_GENE.getDatabaseName() + " is empty, " +
