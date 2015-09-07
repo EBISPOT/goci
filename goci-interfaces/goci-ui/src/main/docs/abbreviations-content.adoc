@@ -144,6 +144,9 @@ ATCBV: total cerebral brain volume
 
 ATVB: multivariable-adjusted temporal brain volume
 
+
+AUC: area under the curve
+
 === B
 
 BABF: baseline brachial artery flow velocity
