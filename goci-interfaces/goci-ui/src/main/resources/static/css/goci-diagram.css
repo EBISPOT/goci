@@ -140,3 +140,47 @@ circle[fading="true"]{
 /*#traitpopup td.center {*/
     /*text-align: center;*/
 /*}*/
+
+
+/**
+  * autocomplete css
+*/
+
+.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+.autocomplete-group { padding: 2px 5px; }
+.autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
+
+
+
+.ontology-suggest{
+    padding:2px;
+    font-size: larger;
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.suggestion-value {
+    text-overflow: ellipsis;
+}
+
+a.nounderline {
+    border-bottom-style: none;
+}
+
+a:hover.nounderline {
+    border-bottom-style: none;
+}
+
+.sub-text {
+    color: #999;
+    font-size: x-small;
+    font-weight: normal;
+}
+
+.jstree-proton {
+    font-family: Verdana,sans-serif;
+}

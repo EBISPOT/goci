@@ -91,6 +91,7 @@ public class SolrSearchController {
             HttpServletResponse response
     ) throws IOException {
 
+        query = query.replace(" ", "%20");
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
         if (useJsonp) {
@@ -600,7 +601,7 @@ public class SolrSearchController {
     private void addSelectFields(StringBuilder solrSearchBuilder, String query) {
         solrSearchBuilder.append("&defType=edismax" +
                         "&qf=label%20synonym%20label_autosuggest_ws%20label_autosuggest_e%20label_autosuggest%20synonym_autosuggest_ws%20synonym_autosuggest_e%20synonym_autosuggest%20shortform_autosuggest" +
-                        "&bq=label_s:\"" + query + "\"^2%20synonym_s:\"" + query + "\"");
+                        "&bq=label_s%3A%22" + query + "%22%5E2%20synonym_s%3A%22" + query + "%22");
 
 
     }
@@ -632,8 +633,8 @@ public class SolrSearchController {
 
     private void addHighlights(StringBuilder solrSearchBuilder, Collection<String> highlights) {
         solrSearchBuilder.append("&hl=true")
-                .append("&hl.simple.pre=<br>")
-                .append("&hl.simple.post=</br>")
+                .append("&hl.simple.pre=%3Cb%3E")
+                .append("&hl.simple.post=%3C%2Fb%3E")
                 .append("&hl.fl=");
 
         String hlfs = "";

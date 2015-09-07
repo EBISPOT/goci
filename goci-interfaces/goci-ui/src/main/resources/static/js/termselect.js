@@ -14,16 +14,16 @@ $(document).ready(function() {
               paramName: 'q',
               //params: {ontology : ontology},
               onSelect : function (suggestion)  {
-                  var type = getUrlType(suggestion.data.type);
+                  //var type = getUrlType(suggestion.data.type);
                   var encoded = encodeURIComponent(suggestion.data.iri);
-                  window.location.href = relativePath + 'ontology/' + suggestion.data.ontology + "/" + type + '?iri=' + encoded;
+                  doFilter();
               },
               transformResult: function(response) {
                   return {
                       suggestions: $.map(response.response.docs, function(dataItem) {
                           var id =   dataItem.id;
 
-                          var label = dataItem.label;
+                          var label = dataItem.label[0];
                           var synonym = "";
                           var cantHighlight = true;
                           if (response.highlighting[id].label_autosuggest != undefined) {
@@ -44,16 +44,16 @@ $(document).ready(function() {
                               }
                           }
 
-                          return { value: dataItem.label, data: {ontology: dataItem.ontology_name, prefix: dataItem.ontology_prefix, iri : dataItem.iri, label: label, synonym: synonym, type: dataItem.type}};
+                          return { value: dataItem.label[0], data: {iri : dataItem.traitUri, label: label, synonym: synonym}};
                       })
                   };
               },
               formatResult: function (suggestion, currentValue) {
-
                   var label = suggestion.data.label ;
                   var extra = "";
                   if (suggestion.data.synonym != "") {
                       label =  suggestion.data.synonym;
+
                       extra = "<div class='sub-text'>synonym for " + suggestion.value + "</div>"
                   }
 

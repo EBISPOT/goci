@@ -4,7 +4,7 @@
 
 
 function doFilter() {
-    console.log("Detected bioportal widget filtering event - " + $("#trait-filter").val());
+    //console.log("Detected bioportal widget filtering event - " + $("#trait-filter").val());
     filterTraits($("#trait-filter").val());
 }
 
@@ -74,12 +74,17 @@ function processAssociationSummary(data, name){
 
     var summaryTable = $('#summary-table-body').empty();
 
+    var cytoLoc = '';
 
     try {
         var index = documents.length;
         for (var i = 0; i < index; i++) {
             var row = $("<tr>");
             var summary = documents[i];
+
+            if(cytoLoc == '' && summary.region != null && summary.region.length == 1){
+                cytoLoc = summary.region[0];
+            }
             var snp = "http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(summary.rsId[0]);
             var snpurl = "<a href='".concat(snp).concat("' target='_blank'>").concat(summary.rsId[0]).concat("</a>");
             row.append($("<td>").html(snpurl));
@@ -98,7 +103,6 @@ function processAssociationSummary(data, name){
             else {
                 var link = efoterms[0];
             }
-            console.log(link);
 
             var efourl = "<a href='".concat(link.split("|")[2]).concat("' target='_blank'>").concat(name).concat("</a>");
             row.append($("<td class='center'>").html(efourl));
@@ -107,13 +111,15 @@ function processAssociationSummary(data, name){
             var studyurl = "http://www.ukpmc.ac.uk/abstract/MED/".concat(summary.pubmedId);
             var studyentry = "<a href='".concat(studyurl).concat("' target='_blank'>").concat(study).concat("</a>");
             row.append($("<td>").html(studyentry));
-            //var gwasurl = "http://www.genome.gov/gwastudies/index.cfm?snp=".concat(summary.snp).concat("#result_table");
-            //var gwaslink = "<a href='".concat(gwasurl).concat("' target='_blank'>More information</a>");
-            var gwaslink = "Link to association page goes here";
+            var gwaslink = "<a href='search?query=".concat(summary.rsId[0]).concat("' target='_blank'>More information</a>");
+            //var gwaslink = "Link to association page goes here";
             row.append($("<td>").html(gwaslink));
             summaryTable.append(row);
         }
 
+        if(cytoLoc != ''){
+            trait = trait.concat(" in region ").concat(cytoLoc);
+        }
         $('#traitPopupTitle').html(trait);
 
         $('#traitPopup').modal('show');
