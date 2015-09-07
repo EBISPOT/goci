@@ -83,12 +83,13 @@
     background-position: -7px -389px;
 }
 
-/*.zoombar {*/
-    /*position: absolute;*/
+.zoombar {
+    position: absolute;
+    background-color: #ffffff;
     /*top: 100px;*/
     /*left: 55px;*/
     /*z-index: 100;*/
-/*}*/
+}
 
 #tooltip {
     position: absolute;

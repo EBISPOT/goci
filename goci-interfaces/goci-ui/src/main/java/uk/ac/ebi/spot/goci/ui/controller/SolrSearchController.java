@@ -98,7 +98,7 @@ public class SolrSearchController {
         }
         addRowsAndPage(solrSearchBuilder, maxResults, page);
         addSelectFields(solrSearchBuilder, query);
-        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "EfoTrait");
+        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "efoTrait");
 
 
         if (fieldList == null) {
@@ -598,9 +598,9 @@ public class SolrSearchController {
     }
 
     private void addSelectFields(StringBuilder solrSearchBuilder, String query) {
-        solrSearchBuilder.append("defType=edismax" +
-                        "&qf=label synonym label_autosuggest_ws label_autosuggest_e label_autosuggest synonym_autosuggest_ws synonym_autosuggest_e synonym_autosuggest shortform_autosuggest" +
-                        "&bq=is_defining_ontology:true label_s:\"" + query + "\"^2 synonym_s:\"" + query + "\"");
+        solrSearchBuilder.append("&defType=edismax" +
+                        "&qf=label%20synonym%20label_autosuggest_ws%20label_autosuggest_e%20label_autosuggest%20synonym_autosuggest_ws%20synonym_autosuggest_e%20synonym_autosuggest%20shortform_autosuggest" +
+                        "&bq=label_s:\"" + query + "\"^2%20synonym_s:\"" + query + "\"");
 
 
     }

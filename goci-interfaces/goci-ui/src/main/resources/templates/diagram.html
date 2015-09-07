@@ -280,13 +280,13 @@
                     </div>
 
                     <div id="diagram-space" >
-                            <span id="zoom-and-pan" class="zoombar pull-right col-md-offset-6 col-md-4" style="display: none;">
+                            <span id="zoom-and-pan" class="zoombar col-md-offset-6 col-md-4" style="display: none;">
 
                                 <div class="buttons">
                                     <button class="zoom-in">Zoom In</button>
-                                    <input type="range" class="zoom-range" />
+                                    <!--<button class="reset">Reset</button>-->
                                     <button class="zoom-out">Zoom Out</button>
-                                    <button class="reset">Reset</button>
+                                    <input type="range" class="zoom-range" />
                                 </div>
                             </span>
                         <div id="diagram-area-content">
@@ -364,6 +364,8 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+    <script src="../static/js/jquery.autocomplete.min.js" th:src="@{js/jquery.autocomplete.min.js}"></script>
+
     <!--<script src="../static/js/plugins/jquery.panzoom.js"></script>-->
     <script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
     <script src="../static/js/jquery.mousewheel.min.js" th:src="@{js/jquery.mousewheel.min.js}"></script>
