@@ -11,7 +11,7 @@
 |link:../api/search/downloads/full[file]
 |tab separated file
 
-|A description of the file's column headings
+|A description of the column headings in the most recent edition of the GWAS Catalog file
 |link:fileheaders[file]
 |tab separated file
 
@@ -19,7 +19,7 @@
 |link:../api/search/downloads/alternative[file]
 |tab separated file
 
-|A description of the file's additional column headings
+|A description of the additional column headings in the most recent edition of the GWAS Catalog with added ontology annotations
 |link:fileheaders#_file_headers_for_catalog_version_1_0_1[file]
 |tab separated file
 |===
@@ -35,7 +35,7 @@ image::Beta.png[Beta Feature, align="left"]
 
 As part of ongoing improvements mapping information will be added for all GWAS Catalog SNPs to Ensembl genes, in addition to NCBI genes.
 
-We are in the process of testing and developing this feature and in order to gather feedback the GWAS Catalog with added mapping information is link:../api/search/downloads/ensembl_mapping[available for download here]
+We are in the process of testing and developing this feature and in order to gather feedback the GWAS Catalog with added mapping information is link:../api/search/downloads/ensembl_mapping[available for download here]. A description of the headers in this file can be found link:mappingfileheaders[here]. The information in this file is generated using the link:http://www.ensembl.org/info/docs/api/index.html[Ensembl API] and the source of the data is both Ensembl and NCBI.
 
 We'd love to hear what you think of this new feature, contact the GWAS Catalog team on mailto:gwas-info@ebi.ac.uk[gwas-info@ebi.ac.uk]
 
