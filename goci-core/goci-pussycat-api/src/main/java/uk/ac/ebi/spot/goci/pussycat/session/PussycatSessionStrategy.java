@@ -10,5 +10,6 @@ package uk.ac.ebi.spot.goci.pussycat.session;
  */
 public enum PussycatSessionStrategy {
     JOIN,
-    CREATE
+    CREATE;
+
 }
