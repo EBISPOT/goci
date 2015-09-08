@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 public class EnsemblMappingPipeline {
 
     private String rsId;
+    private String functionalClass = "";
     private int merged;
     private Collection<String> reported_genes = new ArrayList<>();
     private Collection<Location> locations = new ArrayList<>();
@@ -78,6 +79,13 @@ public class EnsemblMappingPipeline {
         this.endpoints.put("info_assembly", "/info/assembly/" + species + "/");
     }
 
+    /**
+     * Getter for the variant functional class
+     * @return The variant functional class.
+     */
+    public String getFunctionalClass() {
+        return functionalClass;
+    }
 
     /**
      * Getter for the collection of Location instances
@@ -112,11 +120,11 @@ public class EnsemblMappingPipeline {
         // Variation call
         JSONObject variation_result = this.getVariationData();
         if (variation_result.has("error")) {
-            this.checkError(variation_result, "variation", "Variant " + this.rsId + " is not found in Ensembl");
+           checkError(variation_result, "variation", "Variant " + this.rsId + " is not found in Ensembl");
         }
         else if (variation_result.length() > 0) {
             // Merged SNP
-            this.merged = (variation_result.getString("name") == this.rsId) ? 0 : 1;
+            merged = (variation_result.getString("name") == this.rsId) ? 0 : 1;
 
             // Mapping errors
             if (variation_result.has("failed")) {
@@ -125,20 +133,26 @@ public class EnsemblMappingPipeline {
 
             // Mapping and genomic context calls
             JSONArray mappings = variation_result.getJSONArray("mappings");
-            this.getMappings(mappings);
+            getMappings(mappings);
 
             // Genomic context & Reported genes
             if (locations.size() > 0) {
 
+                // Functional class (most severe consequence).
+                // This implies there is at least one variant location.
+                if (variation_result.has("most_severe_consequence")) {
+                    functionalClass = variation_result.getString("most_severe_consequence");
+                }
+
                 // Genomic context (loop over the "locations" object)
                 for (Location snp_location : locations) {
-                    this.getAllGenomicContexts(snp_location);
+                    getAllGenomicContexts(snp_location);
                 }
             }
 
             // Reported genes checks
             if (reported_genes.size() > 0) {
-                this.checkReportedGenes();
+                checkReportedGenes();
             }
         }
     }
