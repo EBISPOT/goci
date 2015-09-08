@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="LOG_PATH" value="/home/dwelter/CodeCellar/GWAS/goci" />
-    <!--<property name="LOG_PATH" value="/Users/dani/Development/goci" />-->
+    <property name="LOG_PATH" value="${catalina.home}/logs" />
 
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
-    <!--<include resource="org/springframework/boot/logging/logback/file-appender.xml"/>-->
     <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
