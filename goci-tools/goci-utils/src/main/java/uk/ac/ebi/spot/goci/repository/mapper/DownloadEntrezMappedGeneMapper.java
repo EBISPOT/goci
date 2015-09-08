@@ -45,10 +45,10 @@ public class DownloadEntrezMappedGeneMapper implements CatalogDataMapper {
                 output = up + " - " + down;
             }
             else if (!up.isEmpty()) {
-                output = " - " + down;
+                output = up + " - ";
             }
             else if (!down.isEmpty()) {
-                output = up + " - ";
+                output = " - " + down;
             }
             else {
                 getLog().warn("Unable to extract mapped data correctly from catalog: " +
