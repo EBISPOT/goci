@@ -292,4 +292,8 @@ public class Association {
                 ", pvalueFloat=" + pvalueFloat +
                 '}';
     }
+
+    public double getPvalue() {
+        return (pvalueMantissa*Math.pow(10, pvalueExponent));
+    }
 }

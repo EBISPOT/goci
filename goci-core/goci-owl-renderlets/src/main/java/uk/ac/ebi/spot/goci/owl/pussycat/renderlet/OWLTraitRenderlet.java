@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.owl.pussycat.renderlet;
+package uk.ac.ebi.spot.goci.ontology.owl.pussycat.renderlet;
 
 import net.sourceforge.fluxion.spi.ServiceProvider;
 import org.semanticweb.owlapi.model.IRI;
@@ -12,7 +12,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import uk.ac.ebi.spot.goci.lang.OntologyConstants;
-import uk.ac.ebi.spot.goci.owl.pussycat.layout.LayoutUtils;
+import uk.ac.ebi.spot.goci.ontology.owl.pussycat.layout.LayoutUtils;
 import uk.ac.ebi.spot.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.spot.goci.pussycat.layout.ColourMapper;
 import uk.ac.ebi.spot.goci.pussycat.layout.SVGArea;

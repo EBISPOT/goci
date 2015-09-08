@@ -208,47 +208,7 @@ function processAssociation(association, table) {
 
     var repgene = '';
 
-    //if (association.reportedGeneLinks != null) {
-    //    ////what happens with NR genes?
-    //    //if(association.reportedGeneLinks[0].indexOf("NR") != -1){
-    //    //    repgene = association.reportedGeneLinks[0].split("|")[0];
-    //    //}
-    //    //else{
-    //
-    //    for (var j = 0; j < association.reportedGeneLinks.length; j++) {
-    //        var gene = association.reportedGeneLinks[j].split("|")[0];
-    //        var geneId = association.reportedGeneLinks[j].split("|")[1];
-    //
-    //        var repgenesearch = "<span><a href='search?query=".concat(gene).concat("'>").concat(gene).concat("</a></span>");
-    //        var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=".concat(geneId).concat("'  target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
-    //
-    //        if (repgene == '') {
-    //            repgene = repgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);
-    //        }
-    //
-    //        else {
-    //            repgene = repgene.concat(", ").concat(repgenesearch).concat('&nbsp;&nbsp;').concat(ensembl);
-    //        }
-    //    }
-    //    //}
-    //}
-    //else if (association.reportedGene != null) {
-    //    if(association.reportedGene[0] == "NR"){
-    //        repgene = association.reportedGene[0];
-    //    }
-    //    else{
-    //        for (var j = 0; j < association.reportedGene.length; j++) {
-    //            var repgenesearch = "<span><a href='search?query=".concat(association.reportedGene[j]).concat("'>").concat(association.reportedGene[j]).concat("</a></span>");
-    //            if (repgene == '') {
-    //                repgene = repgenesearch;
-    //            }
-    //
-    //            else {
-    //                repgene = repgene.concat(", ").concat(repgenesearch);
-    //            }
-    //        }
-    //    }
-    //}
+
     if (association.reportedGene != null) {
         if (association.reportedGeneLinks != null) {
             if(association.reportedGeneLinks.length == association.reportedGene.length){

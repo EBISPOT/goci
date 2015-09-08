@@ -2,7 +2,7 @@ package uk.ac.ebi.spot.goci.pussycat.renderlet.chromosome;
 
 import junit.framework.TestCase;
 import org.junit.Test;
-import uk.ac.ebi.spot.goci.owl.pussycat.renderlet.chromosome.*;
+import uk.ac.ebi.spot.goci.ontology.owl.pussycat.renderlet.chromosome.*;
 
 import java.util.ArrayList;
 

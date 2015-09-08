@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>goci-interfaces</artifactId>
-    <version>2.0.4-SNAPSHOT</version>
+    <version>2.0.5-SNAPSHOT</version>
 
     <packaging>pom</packaging>
     <name>GOCI Interfaces</name>
@@ -13,7 +13,7 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci</artifactId>
-        <version>2.0.4-SNAPSHOT</version>
+        <version>2.0.5-SNAPSHOT</version>
     </parent>
 
     <modules>
@@ -21,5 +21,6 @@
         <module>goci-curation</module>
         <module>goci-ui</module>
         <module>goci-cttv-rest</module>
+        <module>goci-pussycat</module>
     </modules>
 </project>

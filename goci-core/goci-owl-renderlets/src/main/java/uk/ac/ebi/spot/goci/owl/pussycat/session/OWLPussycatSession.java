@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.owl.pussycat.session;
+package uk.ac.ebi.spot.goci.ontology.owl.pussycat.session;
 
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -17,8 +17,8 @@ import uk.ac.ebi.spot.goci.lang.Filter;
 import uk.ac.ebi.spot.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.spot.goci.lang.OntologyConstants;
 import uk.ac.ebi.spot.goci.ui.model.AssociationSummary;
-import uk.ac.ebi.spot.goci.owl.lang.OWLAPIFilterInterpreter;
-import uk.ac.ebi.spot.goci.owl.pussycat.layout.LayoutUtils;
+import uk.ac.ebi.spot.goci.ontology.owl.lang.OWLAPIFilterInterpreter;
+import uk.ac.ebi.spot.goci.ontology.owl.pussycat.layout.LayoutUtils;
 import uk.ac.ebi.spot.goci.reasoning.ReasonerSession;
 import uk.ac.ebi.spot.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;

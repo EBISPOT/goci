@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.owl.pussycat.renderlet.chromosome;
+package uk.ac.ebi.spot.goci.ontology.owl.pussycat.renderlet.chromosome;
 
 import net.sourceforge.fluxion.spi.ServiceProvider;
 import uk.ac.ebi.spot.goci.lang.OntologyConstants;
