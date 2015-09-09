@@ -256,10 +256,13 @@ function insertSVG(svg) {
     $(".zoombar").show();
     resizeDisplay();
 
+
     renderingComplete = true;
     console.log("Diagram area div updated with SVG content OK");
 
     /*TO DO: add selector to ensure that only circles that are traits get mouse-overs, not any potential future circles*/
+
+    updateLegendBadges();
 
     $("circle").hover(
             function() {
@@ -308,6 +311,103 @@ function showTooltip(tooltipText) {
 
 function hideTooltip() {
     $("#tooltip").hide();
+}
+
+function updateLegendBadges() {
+    //declare a bunch of variables for each colour
+    var digestive = 0;
+    var cardio = 0;
+    var metabolic = 0;
+    var immune = 0;
+    var neuro = 0;
+    var liver = 0;
+    var lipid = 0;
+    var inflam = 0;
+    var haemo = 0;
+    var body = 0;
+    var cardioMeas = 0;
+    var measure = 0;
+    var drug = 0;
+    var process = 0;
+    var cancer = 0;
+    var disease = 0;
+    var other = 0;
+
+
+    $("circle").each(function(){
+        switch($(this).attr("fill")){
+            case '#B33232':
+                cardio++;
+                break;
+            case '#8DD3C7':
+                haemo++;
+                break;
+            case '#FFFFB3':
+                neuro++;
+                break;
+            case '#BEBADA':
+                process++;
+                break;
+            case '#80B1D3':
+                cardioMeas++;
+                break;
+            case '#FB8072':
+                other++;
+                break;
+            case '#FDB462':
+                metabolic++;
+                break;
+            case '#FCCDE5':
+                drug++;
+                break;
+            case '#B3DE69':
+                lipid++;
+                break;
+            case '#66CCFF':
+                body++;
+                break;
+            case '#BC80BD':
+                cancer++;
+                break;
+            case '#CCEBC5':
+                inflam++;
+                break;
+            case '#FFED6F':
+                immune++;
+                break;
+            case '#006699':
+                measure++;
+                break;
+            case '#669900':
+                liver++;
+                break;
+            case '#FF3399':
+                disease++;
+                break;
+            case '#B7704C':
+                digestive++;
+                break;
+        }
+    })
+
+    $(".icon-trait-digestive").next().empty().append(digestive);
+    $(".icon-trait-cardio").next().empty().append(cardio);
+    $(".icon-trait-metabolic").next().empty().append(metabolic);
+    $(".icon-trait-immune").next().empty().append(immune);
+    $(".icon-trait-neuro").next().empty().append(neuro);
+    $(".icon-trait-liver-measure").next().empty().append(liver);
+    $(".icon-trait-lipid-measure").next().empty().append(lipid);
+    $(".icon-trait-inflam-measure").next().empty().append(inflam);
+    $(".icon-trait-haemo-measure").next().empty().append(haemo);
+    $(".icon-trait-body-measure").next().empty().append(body);
+    $(".icon-trait-cardio-measure").next().empty().append(cardioMeas);
+    $(".icon-trait-measure").next().empty().append(measure);
+    $(".icon-trait-drug").next().empty().append(drug);
+    $(".icon-trait-process").next().empty().append(process);
+    $(".icon-trait-neoplasm").next().empty().append(cancer);
+    $(".icon-trait-disease").next().empty().append(disease);
+    $(".icon-trait-other").next().empty().append(other);
+
 }
 
 
