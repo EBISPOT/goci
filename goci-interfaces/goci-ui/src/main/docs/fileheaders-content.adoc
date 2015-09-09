@@ -28,9 +28,9 @@ STUDY: Title of paper (linked to PubMed abstract)
 
 DISEASE/TRAIT: Disease or trait examined in study
 
-INITIAL SAMPLE SIZE: Sample size for Stage 1 of GWAS
+INITIAL SAMPLE DESCRIPTION: Sample size for Stage 1 of GWAS
 
-REPLICATION SAMPLE SIZE: Sample size for subsequent replication(s)
+REPLICATION SAMPLE DESCRIPTION: Sample size for subsequent replication(s)
 
 REGION: Cytogenetic region associated with rs number (NCBI)
 
