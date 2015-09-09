@@ -30,6 +30,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
 
+//    @Field private String
+
     @Field @NonEmbeddableField private int associationCount;
 
     // embedded Association info
