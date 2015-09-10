@@ -30,6 +30,11 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
 
+    @Field private Collection<String> ancestralGroups;
+    @Field private Collection<String> countriesOfRecruitment;
+    @Field private Collection<Integer> numberOfIndividuals;
+    @Field private Collection<String> ancestryLinks;
+
     @Field @NonEmbeddableField private int associationCount;
 
     // embedded Association info
@@ -86,6 +91,12 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
             year = "N/A";
         }
         this.publicationLink = author.concat("|").concat(year).concat("|").concat(pubmedId);
+
+        this.ancestralGroups = new LinkedHashSet<>();
+        this.countriesOfRecruitment = new LinkedHashSet<>();
+        this.numberOfIndividuals = new LinkedHashSet<>();
+        this.ancestryLinks = new LinkedHashSet<>();
+        embedAncestryData(study);
 
         this.qualifiers = new LinkedHashSet<>();
         this.rsIds = new LinkedHashSet<>();
@@ -219,7 +230,71 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.mappedUris.add(mappedUri);
     }
 
-//    public void addLocusDescription(String locusDescription){
+    public Collection<String> getAncestralGroups() {
+        return ancestralGroups;
+    }
+
+    public Collection<String> getCountriesOfRecruitment() {
+        return countriesOfRecruitment;
+    }
+
+
+    public Collection<Integer> getNumberOfIndividuals() {
+        return numberOfIndividuals;
+    }
+
+
+    public Collection<String> getAncestryLinks() {
+        return ancestryLinks;
+    }
+
+
+    private void embedAncestryData(Study study) {
+        study.getEthnicities().forEach(
+               ethnicity -> {
+                   String ancestryLink = "";
+
+                   String type = ethnicity.getType();
+
+                   ancestryLink = type;
+
+                   String cor;
+
+                   if(ethnicity.getCountryOfRecruitment() != null){
+                       cor = ethnicity.getCountryOfRecruitment();
+                   }
+                   else {
+                       cor = "NR";
+                   }
+                   countriesOfRecruitment.add(cor);
+                   ancestryLink = ancestryLink.concat("|").concat(cor);
+
+                   String ancestry = "";
+
+                   if(ethnicity.getEthnicGroup() != null){
+                       ancestry = ethnicity.getEthnicGroup();
+                   }
+
+                   ancestralGroups.add(ancestry);
+                   ancestryLink = ancestryLink.concat("|").concat(ancestry);
+
+                   String noInds = "";
+
+                   if(ethnicity.getNumberOfIndividuals() != null){
+                       numberOfIndividuals.add(ethnicity.getNumberOfIndividuals());
+                       noInds = String.valueOf(ethnicity.getNumberOfIndividuals());
+                   }
+
+                   ancestryLink = ancestryLink.concat("|").concat(noInds);
+
+                   ancestryLinks.add(ancestryLink);
+
+               }
+        );
+    }
+
+
+    //    public void addLocusDescription(String locusDescription){
 //        this.locusDescriptions.add(locusDescription);
 //    }
 }

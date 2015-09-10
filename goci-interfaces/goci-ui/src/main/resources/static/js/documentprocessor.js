@@ -18,8 +18,9 @@ function processStudy(study, table) {
     var authorsearch = "<span><a href='search?query=".concat(study.author).concat("'>").concat(study.author).concat("</a></span>");
     var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
 
+    var pubdate = study.publicationDate.substring(0, 10);
     row.append($("<td>").html(authorsearch.concat(' (PMID: ').concat(study.pubmedId).concat(') &nbsp;&nbsp;').concat(epmclink)));
-    row.append($("<td>").html(study.publicationDate.substring(0, 10)));
+    row.append($("<td>").html(pubdate));
     row.append($("<td>").html(study.publication));
     row.append($("<td>").html(study.title));
     var traitsearch = "<span><a href='search?query=".concat(study.traitName).concat("'>").concat(study.traitName).concat("</a></span>");
@@ -44,6 +45,38 @@ function processStudy(study, table) {
 
     innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Initial sample description")).append($("<td>").html(study.initialSampleDescription)));
     innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Replication sample description")).append($("<td>").html(study.replicateSampleDescription)));
+
+    if($.datepicker.parseDate("yy-mm-dd", pubdate) > $.datepicker.parseDate("yy-mm-dd", "2010-12-31") && study.ancestryLinks != null){
+        var ancestries = '';
+        var countries = '';
+        for(var j = 0; j < study.ancestryLinks.length; j++){
+            var link = study.ancestryLinks[j].split("|");
+            var cor = link[1];
+            var ancestry = link[2];
+            var num = link[3];
+
+            if(ancestries == ''){
+                ancestries = ancestries.concat(num).concat(' ').concat(ancestry);
+            }
+            else{
+                ancestries = ancestries.concat(', ').concat(num).concat(' ').concat(ancestry);
+            }
+            if(countries == ''){
+                countries = countries.concat(cor);
+            }
+            else{
+                countries = countries.concat(', ').concat(cor);
+            }
+
+        }
+        innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Ancestry")).append($("<td>").html(ancestries)));
+        innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Country of recruitment")).append($("<td>").html(countries)));
+    }
+    else{
+        innerTable.append($("<tr>").attr('style', 'display: none'));
+        innerTable.append($("<tr>").attr('style', 'display: none'));
+    }
+
     innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Platform [SNPs passing QC]")).append($("<td>").html(study.platform)));
 
     hiddenrow.append($('<td>').attr('colspan', 7).attr('style', 'border-top: none').append(innerTable));
