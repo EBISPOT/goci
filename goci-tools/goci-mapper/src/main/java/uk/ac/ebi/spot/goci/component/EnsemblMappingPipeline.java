@@ -69,6 +69,13 @@ public class EnsemblMappingPipeline {
         this.setEndpoints();
     }
 
+    public EnsemblMappingPipeline(String rsId, Collection<String> reported_genes, int requestCount, long limitStartTime ) {
+        this.rsId = rsId;
+        this.reported_genes = reported_genes;
+        this.requestCount = requestCount;
+        this.limitStartTime = limitStartTime;
+        this.setEndpoints();
+    }
 
     // Set the different Ensembl REST API endpoints used in the pipeline
     protected void setEndpoints() {
@@ -95,7 +102,6 @@ public class EnsemblMappingPipeline {
         return locations;
     }
 
-
     /**
      * Getter for the collection of GenomicContext instances
      * @return Collection of GenomicContext instances.
@@ -104,6 +110,21 @@ public class EnsemblMappingPipeline {
         return genomic_contexts;
     }
 
+    /**
+     * Getter for the request count
+     * @return The request count.
+     */
+    public int getRequestCount() {
+        return requestCount;
+    }
+
+    /**
+     * Getter for the start time of the request count
+     * @return The start time of the request count.
+     */
+    public long getLimitStartTime() {
+        return limitStartTime;
+    }
 
     /**
      * Getter for the list of pipeline error messages

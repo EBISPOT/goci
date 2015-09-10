@@ -78,6 +78,10 @@ public class MappingService {
      */
     public void validateAndMapSnps(Collection<Association> associations, String performer) {
 
+        // Variables set to comply with the maximum of requests per second allowed by the Ensembl REST server.
+        int ensemblRequestCount = 0;
+        long ensemblLimitStartTime = System.currentTimeMillis();
+
         // For each association get the loci
         for (Association association : associations) {
 
@@ -120,7 +124,7 @@ public class MappingService {
                     String snpRsId = snpLinkedToLocus.getRsId();
 
                     EnsemblMappingPipeline ensemblMappingPipeline =
-                            new EnsemblMappingPipeline(snpRsId, authorReportedGeneNamesLinkedToSnp);
+                            new EnsemblMappingPipeline(snpRsId, authorReportedGeneNamesLinkedToSnp, ensemblRequestCount, ensemblLimitStartTime);
 
                     // Try to map supplied data
                     try {
@@ -131,6 +135,10 @@ public class MappingService {
                                                " whilst trying to run mapping of SNP" + snpRsId, e);
                         e.printStackTrace();
                         throw e;
+                    }
+                    finally {
+                        ensemblRequestCount   = ensemblMappingPipeline.getRequestCount();
+                        ensemblLimitStartTime = ensemblMappingPipeline.getLimitStartTime();
                     }
 
                     Collection<Location> locations = ensemblMappingPipeline.getLocations();
