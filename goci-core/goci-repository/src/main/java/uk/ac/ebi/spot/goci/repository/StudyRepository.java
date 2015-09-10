@@ -66,6 +66,9 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     // EFO trait query
     Page<Study> findByEfoTraitsId(Long efoTraitId, Pageable pageable);
 
+    // Ethnicity query
+//    Page<Study> findByEthnicityId(Long ethnicityId, Pageable pageable);
+
     // Query housekeeping notes field
     Page<Study> findByHousekeepingNotesContainingIgnoreCase(String query, Pageable pageable);
 

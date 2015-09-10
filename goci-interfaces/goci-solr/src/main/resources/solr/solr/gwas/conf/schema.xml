@@ -141,6 +141,11 @@
     <field name="replicateSampleDescription" type="text_general" indexed="true" stored="true" multiValued="false"/>
     <field name="associationCount" type="int" indexed="true" stored="true" multiValued="false" />
     <field name="publicationLink" type="text_general" indexed="false" stored="true" multiValued="true" />
+    <field name="ancestralGroups" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="countriesOfRecruitment" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="numberOfIndividuals" type="int" indexed="true" stored="true" multiValued="true" />
+    <field name="ancestryLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
+
 
     <!-- embedded study -->
     <field name="study_author" type="text_general" indexed="true" stored="true" multiValued="true"/>
@@ -153,6 +158,10 @@
     <field name="study_initialSampleDescription" type="text_general" indexed="true" stored="true" multiValued="true"/>
     <field name="study_replicateSampleDescription" type="text_general" indexed="true" stored="true" multiValued="true"/>
     <field name="study_publicationLink" type="text_general" indexed="false" stored="true" multiValued="true" />
+    <field name="study_ancestralGroups" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="study_countriesOfRecruitment" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="study_numberOfIndividuals" type="int" indexed="false" stored="true" multiValued="true" />
+    <field name="study_ancestryLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
 
     <!-- diseasetrait -->
     <field name="traitName" type="text_general" indexed="true" stored="true" multiValued="true" />

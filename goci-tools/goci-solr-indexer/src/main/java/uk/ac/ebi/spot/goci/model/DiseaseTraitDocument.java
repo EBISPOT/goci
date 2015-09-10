@@ -28,6 +28,10 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
 
     @Field("study_initialSampleDescription") private Collection<String> initialSampleDescriptions;
     @Field("study_replicateSampleDescription") private Collection<String> replicateSampleDescriptions;
+    @Field("study_ancestralGroups") private Collection<String> ancestralGroups;
+    @Field("study_countriesOfRecruitment") private Collection<String> countriesOfRecruitment;
+    @Field("study_numberOfIndividuals") private Collection<Integer> numberOfIndividuals;
+    @Field("study_ancestryLinks") private Collection<String> ancestryLinks;
 
     // embedded Association info
     @Field("association_qualifier") private Collection<String> qualifiers;
@@ -69,6 +73,11 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
 
         this.initialSampleDescriptions = new LinkedHashSet<>();
         this.replicateSampleDescriptions = new LinkedHashSet<>();
+
+        this.ancestralGroups = new LinkedHashSet<>();
+        this.countriesOfRecruitment = new LinkedHashSet<>();
+        this.numberOfIndividuals = new LinkedHashSet<>();
+        this.ancestryLinks = new LinkedHashSet<>();
 
         this.qualifiers = new LinkedHashSet<>();
 //        this.pValueMantissas = new LinkedHashSet<>();
@@ -136,6 +145,36 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
 
     public void addReplicateSampleDescription(String replicateSampleDescription) {
         this.replicateSampleDescriptions.add(replicateSampleDescription);
+    }
+
+    public void addAncestralGroups(Collection<String> ancestralGroups){
+        this.ancestralGroups.addAll(ancestralGroups);
+    }
+
+    public void addCountriesOfRecruitment(Collection<String> countriesOfRecruitment){
+        this.countriesOfRecruitment.addAll(countriesOfRecruitment);
+    }
+
+    public void addNumberOfIndividuals(Collection<Integer> numberOfIndividuals){
+        this.numberOfIndividuals.addAll(numberOfIndividuals);
+    }
+
+    public void addAncestryLinks(Collection<String> ancestryLinks){
+        this.ancestryLinks.addAll(ancestryLinks);
+    }
+
+    public void addAncestralGroup(String ancestralGroup){
+        this.ancestralGroups.add(ancestralGroup);
+    }
+    public void addCountryOfRecruitment(String countryOfRecruitment){
+        this.countriesOfRecruitment.add(countryOfRecruitment);
+    }
+
+    public void addNumberOfIndiviuals(int numberOfIndividuals){
+        this.numberOfIndividuals.add(numberOfIndividuals);
+    }
+    public void addAncestryLink(String ancestryLink){
+        this.ancestryLinks.add(ancestryLink);
     }
 
     public void addQualifier(String qualifier) {

@@ -68,6 +68,12 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
 
+    @Field private Collection<String> ancestralGroups;
+    @Field private Collection<String> countriesOfRecruitment;
+    @Field private Collection<Integer> numberOfIndividuals;
+    @Field private Collection<String> ancestryLinks;
+
+
     // embedded DiseaseTrait info
     @Field("traitName") private Collection<String> traitNames;
 
@@ -106,6 +112,11 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
         this.mappedLabels = new LinkedHashSet<>();
         this.mappedUris = new LinkedHashSet<>();
+
+        this.ancestralGroups = new LinkedHashSet<>();
+        this.countriesOfRecruitment = new LinkedHashSet<>();
+        this.numberOfIndividuals = new LinkedHashSet<>();
+        this.ancestryLinks = new LinkedHashSet<>();
     }
 
     public String getRegion() {
@@ -218,6 +229,36 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     public void addReplicateSampleDescription(String replicateSampleDescription) {
         this.replicateSampleDescription = replicateSampleDescription;
+    }
+
+    public void addAncestralGroups(Collection<String> ancestralGroups){
+        this.ancestralGroups.addAll(ancestralGroups);
+    }
+
+    public void addCountriesOfRecruitment(Collection<String> countriesOfRecruitment){
+        this.countriesOfRecruitment.addAll(countriesOfRecruitment);
+    }
+
+    public void addNumberOfIndividuals(Collection<Integer> numberOfIndividuals){
+        this.numberOfIndividuals.addAll(numberOfIndividuals);
+    }
+
+    public void addAncestryLinks(Collection<String> ancestryLinks){
+        this.ancestryLinks.addAll(ancestryLinks);
+    }
+
+    public void addAncestralGroup(String ancestralGroup){
+        this.ancestralGroups.add(ancestralGroup);
+    }
+    public void addCountryOfRecruitment(String countryOfRecruitment){
+        this.countriesOfRecruitment.add(countryOfRecruitment);
+    }
+
+    public void addNumberOfIndiviuals(int numberOfIndividuals){
+        this.numberOfIndividuals.add(numberOfIndividuals);
+    }
+    public void addAncestryLink(String ancestryLink){
+        this.ancestryLinks.add(ancestryLink);
     }
 
     public void addTraitName(String traitName) {

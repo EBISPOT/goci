@@ -97,7 +97,7 @@ public class Study {
     }
 
 
-    public Study(String author, Date publicationDate, String publication, String title, String initialSampleSize, String replicateSampleSize, String platform, String pubmedId, Boolean cnv, Boolean gxe, Boolean gxg, DiseaseTrait diseaseTrait, Collection<EfoTrait> efoTraits, Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms, Housekeeping housekeeping) {
+    public Study(String author, Date publicationDate, String publication, String title, String initialSampleSize, String replicateSampleSize, String platform, String pubmedId, Boolean cnv, Boolean gxe, Boolean gxg, DiseaseTrait diseaseTrait, Collection<EfoTrait> efoTraits, Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms, Collection<Ethnicity> ethnicities, Housekeeping housekeeping) {
         this.author = author;
         this.publicationDate = publicationDate;
         this.publication = publication;
@@ -112,6 +112,7 @@ public class Study {
         this.diseaseTrait = diseaseTrait;
         this.efoTraits = efoTraits;
         this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
+        this.ethnicities = ethnicities;
         this.housekeeping = housekeeping;
     }
 
