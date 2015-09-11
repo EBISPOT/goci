@@ -237,6 +237,10 @@ function processData(data) {
                     $('#study-summaries').addClass("more-results");
                     $('.study-toggle').empty().text("Show more results");
 
+                    if($('#expand-table').hasClass('table-expanded')){
+                        $('#expand-table').addClass('table-collapsed');
+                        $('#expand-table').empty().text("Expand all studies");
+                    }
                 }
             }
             else if (group.groupValue == "association") {

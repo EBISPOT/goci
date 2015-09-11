@@ -54,7 +54,6 @@ function processStudy(study, table) {
         var replancestries = {};
         var replcountries = [];
 
-        console.log("Processing ancestry links");
         for(var j = 0; j < study.ancestryLinks.length; j++){
             var link = study.ancestryLinks[j].split("|");
 
@@ -74,9 +73,14 @@ function processStudy(study, table) {
                 }
                 if(cor.indexOf(',') != -1){
                     cor = cor.split(",");
+                    for(var i = 0; i < cor.length; i++){
+                        if(inicountries.indexOf(cor[i]) == -1){
+                            inicountries.push(cor[i]);
+                        }
+                    }
                 }
-                for(var i = 0; i < cor.length; i++){
-                    if(inicountries.indexOf(cor[i]) == -1){
+                else{
+                    if(inicountries.indexOf(cor) == -1){
                          inicountries.push(cor);
                     }
                 }
@@ -89,13 +93,18 @@ function processStudy(study, table) {
 
                 }
                 else{
-                    replancestries[ancestry] = parseInt(num);
+                    replancestries[ancestry] = num;
                 }
                 if(cor.indexOf(',') != -1){
                     cor = cor.split(",");
+                    for(var k = 0; k < cor.length; k++){
+                        if(replcountries.indexOf(cor[k]) == -1){
+                            replcountries.push(cor[k]);
+                        }
+                    }
                 }
-                for(var i = 0; i < cor.length; i++){
-                    if(replcountries.indexOf(cor[i]) == -1){
+                else{
+                    if(replcountries.indexOf(cor) == -1){
                         replcountries.push(cor);
                     }
                 }
@@ -106,44 +115,51 @@ function processStudy(study, table) {
         var inikeys = Object.keys(iniancestries);
         var replkeys = Object.keys(replancestries);
 
-        console.log("Finished the processing, about the build the output string");
         for(var n =0; n <inikeys.length; n++){
-           if(n = 0){
-               initial = iniancestries[inikeys[n]].concat(' ').concat(inikeys[n]);
+           if(n == 0){
+               initial = initial.concat(iniancestries[inikeys[n]]).concat(' ').concat(inikeys[n]);
            }
             else{
                initial = initial.concat(', ').concat(iniancestries[inikeys[n]]).concat(' ').concat(inikeys[n]);
            }
         }
         for(var m = 0; m < inicountries.length; m++){
-            if(m = 0){
+            if(m == 0){
                 initial = initial.concat(' (').concat(inicountries[m]);
             }
             else{
                 initial = initial.concat(', ').concat(inicountries[m]);
             }
         }
-        initial = initial.concat(')');
-        console.log(initial);
+        if(initial == ''){
+            initial = initial.concat("NR");
+        }
+        else{
+            initial = initial.concat(')');
+        }
 
         for(var p =0; p <replkeys.length; p++){
-            if(p = 0){
-                replication = replancestries[replkeys[p]].concat(' ').concat(replkeys[p]);
+            if(p == 0){
+                replication = replication.concat(replancestries[replkeys[p]]).concat(' ').concat(replkeys[p]);
             }
             else{
                 replication = replication.concat(', ').concat(replancestries[replkeys[p]]).concat(' ').concat(replkeys[p]);
             }
         }
         for(var q = 0; q < replcountries.length; q++){
-            if(q = 0){
+            if(q == 0){
                 replication = replication.concat(' (').concat(replcountries[q]);
             }
             else{
                 replication = replication.concat(', ').concat(replcountries[q]);
             }
         }
-        replication = replication.concat(')');
-        console.log(replication);
+        if(replication == ''){
+            replication = replication.concat("NR");
+        }
+        else{
+            replication = replication.concat(')');
+        }
 
         innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Initial ancestry (country of recruitment)")).append($("<td>").html(initial)));
         innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Replication ancestry (country of recruitment)")).append($("<td>").html(replication)));
