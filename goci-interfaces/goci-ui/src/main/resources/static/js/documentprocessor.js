@@ -47,30 +47,122 @@ function processStudy(study, table) {
     innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Replication sample description")).append($("<td>").html(study.replicateSampleDescription)));
 
     if($.datepicker.parseDate("yy-mm-dd", pubdate) > $.datepicker.parseDate("yy-mm-dd", "2010-12-31") && study.ancestryLinks != null){
-        var ancestries = '';
-        var countries = '';
+        var initial = '';
+        var replication = '';
+        var iniancestries = {};
+        var inicountries = [];
+        var replancestries = {};
+        var replcountries = [];
+
         for(var j = 0; j < study.ancestryLinks.length; j++){
             var link = study.ancestryLinks[j].split("|");
+
             var cor = link[1];
             var ancestry = link[2];
             var num = link[3];
 
-            if(ancestries == ''){
-                ancestries = ancestries.concat(num).concat(' ').concat(ancestry);
-            }
-            else{
-                ancestries = ancestries.concat(', ').concat(num).concat(' ').concat(ancestry);
-            }
-            if(countries == ''){
-                countries = countries.concat(cor);
-            }
-            else{
-                countries = countries.concat(', ').concat(cor);
-            }
+            if(link[0] == 'initial'){
+                if(Object.keys(iniancestries).indexOf(ancestry) != -1){
+                    var current = iniancestries[ancestry];
+                    var total = parseInt(current)+parseInt(num);
+                    iniancestries[ancestry] = total;
 
+                }
+                else{
+                    iniancestries[ancestry] = num;
+                }
+                if(cor.indexOf(',') != -1){
+                    cor = cor.split(",");
+                    for(var i = 0; i < cor.length; i++){
+                        if(inicountries.indexOf(cor[i]) == -1){
+                            inicountries.push(cor[i]);
+                        }
+                    }
+                }
+                else{
+                    if(inicountries.indexOf(cor) == -1){
+                         inicountries.push(cor);
+                    }
+                }
+            }
+            else{
+                if(Object.keys(replancestries).indexOf(ancestry) != -1){
+                    var current = replancestries[ancestry];
+                    var total = parseInt(current)+parseInt(num);
+                    replancestries[ancestry] = total;
+
+                }
+                else{
+                    replancestries[ancestry] = num;
+                }
+                if(cor.indexOf(',') != -1){
+                    cor = cor.split(",");
+                    for(var k = 0; k < cor.length; k++){
+                        if(replcountries.indexOf(cor[k]) == -1){
+                            replcountries.push(cor[k]);
+                        }
+                    }
+                }
+                else{
+                    if(replcountries.indexOf(cor) == -1){
+                        replcountries.push(cor);
+                    }
+                }
+
+            }
         }
-        innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Ancestry")).append($("<td>").html(ancestries)));
-        innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Country of recruitment")).append($("<td>").html(countries)));
+
+        var inikeys = Object.keys(iniancestries);
+        var replkeys = Object.keys(replancestries);
+
+        for(var n =0; n <inikeys.length; n++){
+           if(n == 0){
+               initial = initial.concat(iniancestries[inikeys[n]]).concat(' ').concat(inikeys[n]);
+           }
+            else{
+               initial = initial.concat(', ').concat(iniancestries[inikeys[n]]).concat(' ').concat(inikeys[n]);
+           }
+        }
+        for(var m = 0; m < inicountries.length; m++){
+            if(m == 0){
+                initial = initial.concat(' (').concat(inicountries[m]);
+            }
+            else{
+                initial = initial.concat(', ').concat(inicountries[m]);
+            }
+        }
+        if(initial == ''){
+            initial = initial.concat("NR");
+        }
+        else{
+            initial = initial.concat(')');
+        }
+
+        for(var p =0; p <replkeys.length; p++){
+            if(p == 0){
+                replication = replication.concat(replancestries[replkeys[p]]).concat(' ').concat(replkeys[p]);
+            }
+            else{
+                replication = replication.concat(', ').concat(replancestries[replkeys[p]]).concat(' ').concat(replkeys[p]);
+            }
+        }
+        for(var q = 0; q < replcountries.length; q++){
+            if(q == 0){
+                replication = replication.concat(' (').concat(replcountries[q]);
+            }
+            else{
+                replication = replication.concat(', ').concat(replcountries[q]);
+            }
+        }
+        if(replication == ''){
+            replication = replication.concat("NR");
+        }
+        else{
+            replication = replication.concat(')');
+        }
+
+        innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Initial ancestry (country of recruitment)")).append($("<td>").html(initial)));
+        innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Replication ancestry (country of recruitment)")).append($("<td>").html(replication)));
     }
     else{
         innerTable.append($("<tr>").attr('style', 'display: none'));
