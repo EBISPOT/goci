@@ -32,10 +32,6 @@ $(document).ready(function() {
 
     });
 
-
-    //$('#search-box').change(function(){
-    //    doFilter();
-    //});
     $("#filter-button").click(function(){
         doFilter();
     });
