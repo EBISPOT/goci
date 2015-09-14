@@ -32,7 +32,7 @@ We are working to provide richer, fully customise-able downloads of GWAS data an
 image::http://www.ebi.ac.uk/web_guidelines/images/icons/EBI-Generic/Generic%20icons/Beta.png[BETA]
 
 
-As part of ongoing improvements mapping information will be added for all GWAS Catalog SNPs to Ensembl genes, in addition to NCBI genes.
+As part of ongoing improvements mapping information will be added for all GWAS Catalog SNPs to Ensembl genes, in addition to NCBI genes. Multiple genomic locations for SNPs that map to multiple locations within the primary assembly will also be included.
 
 We are in the process of testing and developing this feature and in order to gather feedback the GWAS Catalog with added mapping information is link:../api/search/downloads/ensembl_mapping[available for download here].
 

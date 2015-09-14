@@ -22,11 +22,11 @@ INITIAL SAMPLE DESCRIPTION: Sample size for Stage 1 of GWAS
 
 REPLICATION SAMPLE DESCRIPTION: Sample size for subsequent replication(s)
 
-REGION: Cytogenetic region associated with rs number (Ensembl)
+REGION: Cytogenetic region(s) associated with rs number (Ensembl). A comma separated list is included if the rs number maps to multiple locations.
 
-CHR_ID: Chromosome number associated with rs number (Ensembl)
+CHR_ID: Chromosome number(s) associated with rs number (Ensembl). A comma separated list is included if the rs number maps to multiple locations.
 
-CHR_POS: Chromosomal position associated with rs number (Ensembl)
+CHR_POS: Chromosomal position(s) associated with rs number (Ensembl). A comma separated list is included if the rs number maps to multiple locations.
 
 REPORTED GENE (S): Gene(s) reported by author
 
