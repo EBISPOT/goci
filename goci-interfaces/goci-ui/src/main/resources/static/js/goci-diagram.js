@@ -13,8 +13,15 @@ var enableSVG = true;
 
 
 $(document).ready(function() {
-    renderDiagram()
 
+
+    renderDiagram();
+
+    resizeDisplay();
+
+    $(window).resize(function() {
+        resizeDisplay();
+    });
 
     // fetch server info
     $.getJSON('pussycat/status', function(data) {
@@ -114,10 +121,42 @@ $(document).ready(function() {
 function resizeDisplay() {
 // update the svg size to fill the space available in the diagram area
 
+    var topstuff = parseInt($('.navbar').height()) + parseInt($('.container-fluid').css('padding-top'));
+    var breadcrumb = parseInt($('.breadcrumb').css('padding-top')) + parseInt($('.breadcrumb').css('padding-bottom'))
+            + parseInt($('.breadcrumb').height()) + parseInt($('.breadcrumb').css('margin-bottom'));
+    var offset = topstuff + breadcrumb;
+
+    var footer = parseInt($('.footer').height());
+
+    var mainHeight = $(window).height() - offset - footer;
+
+    $('#diagram-area').height(mainHeight);
+
+    $("#diagram-space").height(mainHeight);
+    $("#diagram-area-content").height(mainHeight);
+
+    if(!$('#legend-toggle').hasClass('panel-collapsed')){
+        console.log("The legend isn't collapsed and can be resized");
+        $('#legend-bar').height(mainHeight);
+        $('#legend-panel').height(mainHeight);
+
+        var lengedbarheader = parseInt($('#legend-bar-header').height()) + parseInt($('#legend-bar-header').css('padding-top')) + parseInt($('#legend-bar-header').css('padding-bottom')) ;
+        $('#legend-bar-body').css('max-height', mainHeight - lengedbarheader - 10);
+        //$('#legend').height($('#legend-bar-body').height() - $('#filters').height() - parseInt($('#legend').css('margin-top')));
+        //$('#legend-items').height($('#legend').height() - $('#legend > b').height());
+    }
+    else{
+        console.log("The legend is collapsed and must not be resized");
+
+    }
+
     var width = $("#diagram-area-content").width();
     var height = $("#diagram-area-content").height();
     $("#goci-svg").attr("width", width);
     $("#goci-svg").attr("height", height);
+    //var viewBox =  "-50 -25 " + width + " " + height;
+    //document.getElementById('goci-svg').setAttribute("viewBox", viewBox);
+
 }
 //    if (enableSVG) {
 //        // get sizes of borders around body and page_wrapper element
@@ -185,19 +224,20 @@ function toggleLegend(ts){
         $(ts).parents('.panel').find('.panel-title').text("Filter the diagram");
         $(ts).removeClass('panel-collapsed');
         $(ts).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-        $(ts).parents('#legend-bar').removeClass('col-md-1').addClass('col-md-2');
-        $(ts).parents('#legend-bar').siblings('#diagram-area').removeClass('col-md-11').addClass('col-md-10');
+        $(ts).parents('#legend-bar').removeClass('col-8').addClass('col-16');
+        $(ts).parents('#legend-bar').siblings('#diagram-area').removeClass('col-8-rest').addClass('col-16-rest');
         resizeDisplay();
 
     }
     else {
         // collapse the panel
         $(ts).parents('.panel').find('.panel-body').slideUp();
+        $('#legend-panel').removeAttr('style');
         $(ts).parents('.panel').find('.panel-title').text("Filter...");
         $(ts).addClass('panel-collapsed');
         $(ts).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-        $(ts).parents('#legend-bar').removeClass('col-md-2').addClass('col-md-1');
-        $(ts).parents('#legend-bar').siblings('#diagram-area').removeClass('col-md-10').addClass('col-md-11');
+        $(ts).parents('#legend-bar').removeClass('col-16').addClass('col-8');
+        $(ts).parents('#legend-bar').siblings('#diagram-area').removeClass('col-16-rest').addClass('col-8-rest');
         resizeDisplay();
     }
 }
@@ -252,7 +292,15 @@ function insertSVG(svg) {
     $("#diagram-area-content").html(svg);
     //log("Displaying zoombar...");
     $(".zoombar").show();
-    resizeDisplay();
+
+    var width = $("#diagram-area-content").width();
+    var height = $("#diagram-area-content").height();
+    $("#goci-svg").attr("width", width);
+    $("#goci-svg").attr("height", height);
+    var viewBox =  "-50 -25 " + width + " " + height;
+    document.getElementById('goci-svg').setAttribute("viewBox", viewBox);
+
+    //resizeDisplay();
 
 
     renderingComplete = true;
@@ -540,3 +588,6 @@ function updateOffset() {
     dragOffsetX = elements[0];
     dragOffsetY = elements[1];
 }
+
+
+
