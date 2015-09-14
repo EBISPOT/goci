@@ -49,10 +49,8 @@ function processStudy(study, table) {
     if($.datepicker.parseDate("yy-mm-dd", pubdate) > $.datepicker.parseDate("yy-mm-dd", "2010-12-31") && study.ancestryLinks != null){
         var initial = '';
         var replication = '';
-        var iniancestries = {};
-        var inicountries = [];
-        var replancestries = {};
-        var replcountries = [];
+        var iniancestries = [];
+        var replancestries = [];
 
         for(var j = 0; j < study.ancestryLinks.length; j++){
             var link = study.ancestryLinks[j].split("|");
@@ -62,103 +60,144 @@ function processStudy(study, table) {
             var num = link[3];
 
             if(link[0] == 'initial'){
-                if(Object.keys(iniancestries).indexOf(ancestry) != -1){
-                    var current = iniancestries[ancestry];
-                    var total = parseInt(current)+parseInt(num);
-                    iniancestries[ancestry] = total;
+                var existing = false;
+                var index;
 
+                for (var s = 0; s < iniancestries.length; s++) {
+                    if (iniancestries[s]["ancestry"] == ancestry) {
+                        existing = true;
+                        index = s;
+                        break;
+                    }
                 }
-                else{
-                    iniancestries[ancestry] = num;
-                }
-                if(cor.indexOf(',') != -1){
-                    cor = cor.split(",");
-                    for(var i = 0; i < cor.length; i++){
-                        if(inicountries.indexOf(cor[i]) == -1){
-                            inicountries.push(cor[i]);
+
+                if(existing){
+                    var current = iniancestries[index]["number"];
+                    var total = parseInt(current) + parseInt(num);
+                    iniancestries[index]["number"] = total;
+
+                    if (cor.indexOf(',') != -1) {
+                        cor = cor.split(",");
+                        for (var i = 0; i < cor.length; i++) {
+                            if (iniancestries[index]["country"].indexOf(cor[i]) == -1) {
+                                iniancestries[index]["country"].push(cor[i]);
+                            }
+                        }
+                    }
+                    else {
+                        if (iniancestries[index]["country"].indexOf(cor) == -1) {
+                            iniancestries[index]["country"].push(cor);
                         }
                     }
                 }
-                else{
-                    if(inicountries.indexOf(cor) == -1){
-                         inicountries.push(cor);
+                else {
+                    var corar = [];
+                    if (cor.indexOf(',') != -1) {
+                        corar = cor.split(",");
                     }
+                    else {
+                        corar[0] = cor;
+                    }
+
+                    var ances = {"ancestry": ancestry, "number": num, "country": corar};
+                    iniancestries.push(ances);
                 }
+
             }
-            else{
-                if(Object.keys(replancestries).indexOf(ancestry) != -1){
-                    var current = replancestries[ancestry];
-                    var total = parseInt(current)+parseInt(num);
-                    replancestries[ancestry] = total;
 
+            else{
+               var existing = false;
+                var index;
+
+                for (var t = 0; t < replancestries.length; t++) {
+                    if (replancestries[t]["ancestry"] == ancestry) {
+                        existing = true;
+                        index = t;
+                        break
+                    }
                 }
-                else{
-                    replancestries[ancestry] = num;
-                }
-                if(cor.indexOf(',') != -1){
-                    cor = cor.split(",");
-                    for(var k = 0; k < cor.length; k++){
-                        if(replcountries.indexOf(cor[k]) == -1){
-                            replcountries.push(cor[k]);
+
+                 if(existing){
+                    var current = replancestries[t]["number"];
+                    var total = parseInt(current) + parseInt(num);
+                    replancestries[t]["number"] = total;
+
+                    if (cor.indexOf(',') != -1) {
+                        cor = cor.split(",");
+                        for (var j = 0; j < cor.length; j++) {
+                            if (replancestries[t]["country"].indexOf(cor[j]) == -1) {
+                                replancestries[t]["country"].push(cor[j]);
+                            }
+                        }
+                    }
+                    else {
+                        if (replancestries[t]["country"].indexOf(cor) == -1) {
+                            replancestries[t]["country"].push(cor);
                         }
                     }
                 }
-                else{
-                    if(replcountries.indexOf(cor) == -1){
-                        replcountries.push(cor);
+                else {
+                    var corar = [];
+                    if (cor.indexOf(',') != -1) {
+                        corar = cor.split(",");
                     }
-                }
+                    else {
+                        corar[0] = cor;
+                    }
 
+                    var ances = {"ancestry": ancestry, "number": num, "country": corar};
+                    replancestries.push(ances);
+                }
             }
         }
 
-        var inikeys = Object.keys(iniancestries);
-        var replkeys = Object.keys(replancestries);
 
-        for(var n =0; n <inikeys.length; n++){
+        for(var n =0; n <iniancestries.length; n++){
            if(n == 0){
-               initial = initial.concat(iniancestries[inikeys[n]]).concat(' ').concat(inikeys[n]);
+               initial = initial.concat(iniancestries[n]["number"]).concat(' ').concat(iniancestries[n]["ancestry"]);
            }
             else{
-               initial = initial.concat(', ').concat(iniancestries[inikeys[n]]).concat(' ').concat(inikeys[n]);
+               initial = initial.concat(', ').concat(iniancestries[n]["number"]).concat(' ').concat(iniancestries[n]["ancestry"]);
            }
-        }
-        for(var m = 0; m < inicountries.length; m++){
-            if(m == 0){
-                initial = initial.concat(' (').concat(inicountries[m]);
+
+            for(var m = 0; m < iniancestries[n]["country"].length; m++){
+                if(m == 0){
+                    initial = initial.concat(' (').concat(iniancestries[n]["country"][m]);
+                }
+                else{
+                    initial = initial.concat(', ').concat(iniancestries[n]["country"][m]);
+                }
             }
-            else{
-                initial = initial.concat(', ').concat(inicountries[m]);
-            }
-        }
-        if(initial == ''){
-            initial = initial.concat("NR");
-        }
-        else{
             initial = initial.concat(')');
         }
 
-        for(var p =0; p <replkeys.length; p++){
+        if(initial == ''){
+            initial = initial.concat("NR");
+        }
+
+
+        for(var p =0; p <replancestries.length; p++){
             if(p == 0){
-                replication = replication.concat(replancestries[replkeys[p]]).concat(' ').concat(replkeys[p]);
+                replication = replication.concat(replancestries[p]["number"]).concat(' ').concat(replancestries[p]["ancestry"]);
             }
             else{
-                replication = replication.concat(', ').concat(replancestries[replkeys[p]]).concat(' ').concat(replkeys[p]);
+                replication = replication.concat(', ').concat(replancestries[p]["number"]).concat(' ').concat(replancestries[p]["ancestry"]);
             }
+
+            for(var q = 0; q < replancestries[p]["country"].length; q++){
+                if(q == 0){
+                    replication = replication.concat(' (').concat(replancestries[p]["country"][q]);
+                }
+                else{
+                    replication = replication.concat(', ').concat(replancestries[p]["country"][q]);
+                }
+            }
+            replication = replication.concat(')');
+
         }
-        for(var q = 0; q < replcountries.length; q++){
-            if(q == 0){
-                replication = replication.concat(' (').concat(replcountries[q]);
-            }
-            else{
-                replication = replication.concat(', ').concat(replcountries[q]);
-            }
-        }
+
         if(replication == ''){
             replication = replication.concat("NR");
-        }
-        else{
-            replication = replication.concat(')');
         }
 
         innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Initial ancestry (country of recruitment)")).append($("<td>").html(initial)));

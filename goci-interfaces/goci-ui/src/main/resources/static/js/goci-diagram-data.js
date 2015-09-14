@@ -48,12 +48,10 @@ function showSummary(associations, name) {
     $("#tooltip").hide();
 
     var assocs = associations.split(",");
-    console.log(assocs);
 
     var searchTerm = '';
     for(var i = 0; i < assocs.length; i++){
-        var id = assocs[i]//.split("_")[1];
-     //   console.log(assocs[i].split("_")[1]);
+        var id = assocs[i];
         searchTerm = searchTerm.concat('id:"association:').concat(id).concat('"');
     }
 

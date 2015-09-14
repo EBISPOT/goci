@@ -184,3 +184,12 @@ a:hover.nounderline {
 .jstree-proton {
     font-family: Verdana,sans-serif;
 }
+
+.legend-item.disabled {
+    color: #555 !important;
+    /*background-color: #FFF !important;*/
+}
+
+.legend-item.disabled > .badge {
+    background-color: #398A96 !important;
+}

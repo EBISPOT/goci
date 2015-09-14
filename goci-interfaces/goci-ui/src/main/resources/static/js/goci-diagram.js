@@ -41,7 +41,9 @@ $(document).ready(function() {
 
 
     $(".legend-item").click(function() {
-        filterTraits($(this).attr("id"));
+        if(!$(this).hasClass("disabled")){
+            filterTraits($(this).attr("id"));
+        }
     });
 
     if (enableSVG) {
@@ -285,7 +287,9 @@ function insertSVG(svg) {
                           if (vis == "false") {
                               var associations = $(this).attr("gwasassociation");
                               var name = $(this).attr("gwasname");
-                              showSummary(associations, name);
+                              if(associations != null){
+                                  showSummary(associations, name);
+                              }
                           }
                       }
     );
