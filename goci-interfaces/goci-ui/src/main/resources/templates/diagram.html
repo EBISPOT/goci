@@ -97,38 +97,40 @@
 </nav>
 
 <!-- Main jumbotron for a primary marketing message or call to action -->
-<div class="jumbotron background-color-primary-accent" style="margin: 0%; padding-bottom: 25px; padding-top: 25px">
-    <div class="container">
-         <div class="row" style="margin-top:0;">
-             <div class="col-md-8">
-                 <h2>GWAS Diagram Browser</h2>
-                 <h4>Exploring Genome-wide Association Studies</h4>
+<!--<div class="jumbotron background-color-primary-accent" style="margin: 0%; padding-bottom: 25px; padding-top: 25px">-->
+    <!--<div class="container">-->
+         <!--<div class="row" style="margin-top:0;">-->
+             <!--<div class="col-md-8">-->
+                 <!--<h2>GWAS Diagram Browser</h2>-->
+                 <!--<h4>Exploring Genome-wide Association Studies</h4>-->
 
-             </div>
-        <!-- search box goes here -->
-             <div class="col-md-4" style="margin-top: 2%;">
-                <div class="input-group" style="width: 250px; float: right;">
-                    <input type="text" class="form-control" placeholder="Search the catalog" id="search-box"/>
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" id="search-button">
-                                <span class="glyphicon glyphicon-search"></span>
-                            </button>
-                        </span>
-                </div>
-             </div>
-         </div>
+             <!--</div>-->
+        <!--&lt;!&ndash; search box goes here &ndash;&gt;-->
+             <!--<div class="col-md-4" style="margin-top: 2%;">-->
+                <!--<div class="input-group" style="width: 250px; float: right;">-->
+                    <!--<input type="text" class="form-control" placeholder="Search the catalog" id="search-box"/>-->
+                        <!--<span class="input-group-btn">-->
+                            <!--<button class="btn btn-default" type="button" id="search-button">-->
+                                <!--<span class="glyphicon glyphicon-search"></span>-->
+                            <!--</button>-->
+                        <!--</span>-->
+                <!--</div>-->
+             <!--</div>-->
+         <!--</div>-->
 
-    </div>
-</div>
+    <!--</div>-->
+<!--</div>-->
 
 
 <div class="container-fluid" style="padding-top: 30px">
     <!--Breadcrumbs-->
-    <ol class="breadcrumb background-color-complementary-accent">
-        <li><a href="home">GWAS</a></li>
-        <li><a href="diagram">Diagram</a></li>
 
-    </ol>
+      <ol class="breadcrumb background-color-complementary-accent">
+          <li><a href="home">GWAS</a></li>
+          <li><a href="diagram">Diagram</a></li>
+          <span class="pull-right"><b>This diagram shows all SNP-trait associations with p-value &#8804; 5.0 &#215; 10<sup>-8</sup>,
+                                            published in the GWAS Catalog</b></span>
+      </ol>
 
     <div>
 
@@ -140,16 +142,17 @@
 
         -->
 
-        <div class="col-md-2 tight-to-side" id="legend-bar">
-            <div class="panel panel-default">
-                <div class="panel-heading background-color-primary-accent">
+        <div class="col-16 tight-to-side" id="legend-bar">
+            <div class="panel panel-default" id="legend-panel">
+                <div class="panel-heading background-color-primary-accent" id ="legend-bar-header">
                     <h3 class="panel-title">Filter the diagram</h3>
                                 <span class="pull-right clickable"
+                                      id="legend-toggle"
                                       onclick="toggleLegend('.panel-heading span.clickable')">
                                     <i class="glyphicon glyphicon-chevron-up"></i>
                                 </span>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body" id="legend-bar-body">
 
                     <div id="filters">
                         <b>Filter results by</b>
@@ -167,18 +170,16 @@
                                 </label>
 
                             </div>
-                                <!--<div class="right">-->
-                                    <!--<input type="submit" value="Search" class="submit">-->
-                                    <!--</input>-->
-                            <!--<span class="adv">-->
-                                <!--<a href="search" id="adv-search" title="Advanced">Advanced</a>-->
-                            <!--</span>-->
-                                    <div class="row" style="margin-top: 20px">
+
+                                    <div class="row" style="margin-top: 10px">
                                 <button type="button"
-                                        class="btn btn-default pull-right"
+                                        class="btn btn-default"
                                         id="clear-filter-button">Clear filter</button>
+                                        <!--</div>-->
+                                <!--<div class="row" style="margin-top: 10px">-->
+
                                 <button type="submit"
-                                        class="btn btn-default pull-right submit"
+                                        class="btn btn-default submit pull-right"
                                         id = "filter-button"
                                         style="margin-right: 15px;">Apply filter</button>
                                     </div>
@@ -191,7 +192,7 @@
                     <div id="legend" class="row" style="margin-top: 20px">
                         <b>Show SNPs for</b>
 
-                        <div class="list-group">
+                        <div class="list-group" id="legend-items">
                             <!--add an "active" class annotation to each a tag when it's selected-->
                             <a href="#" class="list-group-item legend-item" id="Digestive system disease"> <span class="icon-trait icon-trait-digestive"></span>
                                 <span class="badge">0</span>Digestive system disease
@@ -261,17 +262,17 @@
             </div>
         </div>
 
-         <div class="col-md-10" id="diagram-area">
+         <div class="col-16-rest" id="diagram-area">
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">
-                        This diagram shows all SNP-trait associations with p-value &#8804; 5.0 &#215; 10<sup>-8</sup>,
-                                            published in the GWAS Catalog.
-                    </h3>
-                </div>
-                <div class="panel-body">
+                <!--<div class="panel-heading">-->
+                    <!--<h3 class="panel-title">-->
+                        <!--This diagram shows all SNP-trait associations with p-value &#8804; 5.0 &#215; 10<sup>-8</sup>,-->
+                                            <!--published in the GWAS Catalog.-->
+                    <!--</h3>-->
+                <!--</div>-->
+                <div class="panel-body diagram-panel">
 
-                    <div id="loadingResults" class="col-md-offset-4" style="display: none">
+                    <div id="loadingResults"  class="col-16-middle" style="display: none">
                         <button class="btn btn-lg">
                             <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"
                                   style="margin-right: 1em;"></span>Getting GWAS Diagram from server...
@@ -280,7 +281,7 @@
                     </div>
 
                     <div id="diagram-space" >
-                            <span id="zoom-and-pan" class="zoombar col-md-offset-6 col-md-4" style="display: none;">
+                        <span id="zoom-and-pan" class="zoombar col-16-right" style="display: none;">
 
                                 <div class="buttons">
                                     <button class="zoom-in">Zoom In</button>
@@ -297,9 +298,6 @@
                 </div>
             </div>
          </div>
-
-
-
     </div>
 
 </div>
