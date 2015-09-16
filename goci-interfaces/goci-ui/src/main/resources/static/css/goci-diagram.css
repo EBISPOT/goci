@@ -195,7 +195,6 @@ a:hover.nounderline {
     float: right;
     display: inline-block;
     margin-left: 80%;
-    padding-right: 10px;
     padding-left: 10px;
     padding-top: 10px;
     min-height: 1px;
@@ -226,6 +225,7 @@ a:hover.nounderline {
 
 .col-16-rest {
     width: 87.5%;
+    display: inline-block;
     float: left;
     margin: 0;
     padding-right: 10px;
@@ -251,4 +251,16 @@ a:hover.nounderline {
 #filter-button, #clear-filter-button {
     padding-left: 8px;
     padding-right: 8px;
+}
+
+#filter-counter {
+    display: inline-block;
+    /*width: 17%;*/
+    /*margin-left: 75%;*/
+    /*padding-right: 5px;*/
+    padding-left: 10px;
+    padding-top: 10px;
+    min-height: 1px;
+    position: absolute;
+    font-style: italic;
 }

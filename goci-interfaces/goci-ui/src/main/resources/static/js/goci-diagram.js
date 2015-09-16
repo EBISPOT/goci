@@ -58,10 +58,12 @@ $(document).ready(function() {
         $('#diagram-area-content').mousewheel(function(ev, delta, deltaX, deltaY) {
             if (delta > 0) {
                 currentScale++;
+                $(".zoom-range").val(currentScale).trigger('change');
                 zoomIn();
             }
             else if (delta < 0) {
                 currentScale--;
+                $(".zoom-range").val(currentScale).trigger('change');
                 zoomOut();
             }
 
@@ -81,40 +83,29 @@ $(document).ready(function() {
     }
 
     // initialize slider
-    //var zoombarPos = $("#diagram-area").offset().top + 25;
-    //$(".zoombar").css({"top": zoombarPos});
-    //console.log("Setting navigation bar offset to " + zoombarPos);
-    //$(".zoom-range").slider({
-    //    orientation: "horizontal",
-    //    max: maxScale,
-    //    value: currentScale,
-    //    slide: function(event, ui) {
-    //        slideZoom(ui.value);
-    //    }
-    //});
-    //$("#zoomInButton").button();
-    //$("#zoomInButton").click(function() {
-    //    currentScale++;
-    //    zoomIn();
-    //});
-    //$("#zoomOutButton").button();
-    //$("#zoomOutButton").click(function() {
-    //    currentScale--;
-    //    zoomOut();
-    //});
+
     $(".zoom-range").attr("value", currentScale);
     $(".zoom-range").attr("max", maxScale);
     $(".zoom-range").attr("min", 0);
+    $(".zoom-range").attr("step", 1);
+
+    //$('.zoom-range').change();
+
+    $('.zoom-range').change(function(){
+        console.log("Somebody clicked the slider. New value is " + $(this).val());
+        slideZoom($(this).val());
+    });
+
     $(".zoom-in").click(function() {
         currentScale++;
+        $(".zoom-range").val(currentScale).trigger('change');
         zoomIn();
     });
     $(".zoom-out").click(function() {
         currentScale--;
+        $(".zoom-range").val(currentScale).trigger('change');
         zoomOut();
     });
-    //
-    //resizeDisplay();
 
 });
 
@@ -158,63 +149,6 @@ function resizeDisplay() {
     //document.getElementById('goci-svg').setAttribute("viewBox", viewBox);
 
 }
-//    if (enableSVG) {
-//        // get sizes of borders around body and page_wrapper element
-//        //var bodyMargin = parseInt($('body').css('margin-top')) + parseInt($('body').css('margin-bottom'));
-//        //var pageMargin = parseInt($("#page_wrapper").css('margin-top')) +
-//        //    parseInt($("#page_wrapper").css('margin-bottom'));
-//        //var pageBorder = parseInt($("#page_wrapper").css('border-top-width')) +
-//        //    parseInt($("#page_wrapper").css('border-bottom-width'));
-//        //var offset = bodyMargin + pageMargin + pageBorder;
-//        //
-//        //// update the size of the page_wrapper to fill document
-//        //$("#page_wrapper").height($(window).height() - offset);
-//        //
-//        //// update the size of divtable to fill the available space
-//        //$("#divtable").height($("#page_wrapper").height() - $("#divtable").offset().top);
-//        //
-//        //// update the size of tabs to fill the available space
-//        //$("#tabs").height($("#page_wrapper").height() - $("#tabs").offset().top);
-//
-//        //// update the size of tabcontent to match the size of max tabs child
-//        //var maxPadding = 0;
-//        //$('.tabcontent').each(function(i) {
-//        //    var padding = parseFloat($(this).css("padding-top")) + parseFloat($(this).css("padding-bottom"));
-//        //    if (padding > maxPadding) {
-//        //        maxPadding = padding;
-//        //    }
-//        //});
-//        //$(".tabcontent").height($("#tabs").height() - maxPadding);
-//
-//        // update the diagramarea to fill the available space
-//        var availableHeight = $("#diagram-area").height() -
-//            ($("#diagram-area-content").position().top - $(".panel-heading").position().top);
-//        $("#diagram-area-content").height(availableHeight);
-//        //log("Window resized: new size = " + $("#page_wrapper").height() + ", " + $("#page_wrapper").width());
-//
-//        //// resize the navbar to match
-//        //$(".navbar").height(availableHeight - 50);
-//        //log("navbar resized: new size = " + $(".navbar").height());
-//
-//        // update the svg size to fill the space available in the diagram area
-//        if (enableSVG) {
-//            try {
-//                var width = $("#diagram-area-content").width();
-//                var height = $("#diagram-area-content").height();
-//                $("#goci-svg").attr("width", width);
-//                $("#goci-svg").attr("height", height);
-//                console.log("Adjusted SVG dimensions - SVG now width = " + width + ", height = " + height);
-//            }
-//            catch (ex) {
-//                console.log("Failed to adjust SVG dimensions: " + ex);
-//            }
-//        }
-//    }
-//    else {
-//        // if no SVG enabled, there is no need for any dynamic resize - all content is static
-//        // so don't even bother attempting a resize
-//    }
-//}
 
 
 function toggleLegend(ts){
@@ -300,8 +234,6 @@ function insertSVG(svg) {
     var viewBox =  "-50 -25 " + width + " " + height;
     document.getElementById('goci-svg').setAttribute("viewBox", viewBox);
 
-    //resizeDisplay();
-
 
     renderingComplete = true;
     console.log("Diagram area div updated with SVG content OK");
@@ -317,15 +249,10 @@ function insertSVG(svg) {
                     var trait = $(this).attr("gwasname");
                     $("#tooltip-text").html(trait);
                     $("#tooltip").show();
-                    //$(this).attr('data-toggle', 'tooltip');
-                    //$(this).attr('title',trait);
-                    //$(this).tooltip({title: trait});
-                    //$(this).tooltip('toggle');
                 }
             },
             function() {
                 $("#tooltip").hide();
-                //$(this).tooltip('toggle');
                 $(this).attr('title','');
             }
     );
@@ -529,7 +456,7 @@ function zoomIn() {
     console.log("Zoom in over SVG event.  New zoom level: " + scalingFactor + ", viewBox now set to " + newViewBox);
     // make sure zoom bar matches currentScale
     if (currentScale > 0 && currentScale < maxScale) {
-        $(".zoom-range").slider("option", "value", currentScale);
+        //$(".zoom-range").attr("value", currentScale);
         console.log("Set zoom bar value to " + currentScale);
     }
 }
@@ -564,7 +491,7 @@ function zoomOut() {
     console.log("Zoom out over SVG event.  New zoom level: " + scalingFactor + ", viewBox now set to " + newViewBox);
     // make sure zoom bar matches currentScale (between min and max)
     if (currentScale > 0 && currentScale < maxScale) {
-        $(".zoom-range").slider("option", "value", currentScale);
+        //$(".zoom-range").attr("value", currentScale);
         console.log("Set zoom bar value to " + currentScale);
     }
 }

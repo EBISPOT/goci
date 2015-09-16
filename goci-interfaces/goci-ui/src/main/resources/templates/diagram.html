@@ -259,12 +259,7 @@
 
          <div class="col-16-rest" id="diagram-area">
             <div class="panel panel-default">
-                <!--<div class="panel-heading">-->
-                    <!--<h3 class="panel-title">-->
-                        <!--This diagram shows all SNP-trait associations with p-value &#8804; 5.0 &#215; 10<sup>-8</sup>,-->
-                                            <!--published in the GWAS Catalog.-->
-                    <!--</h3>-->
-                <!--</div>-->
+
                 <div class="panel-body diagram-panel">
 
                     <div id="loadingResults"  class="col-16-middle" style="display: none">
@@ -276,12 +271,13 @@
                     </div>
 
                     <div id="diagram-space" >
+                        <span id="filter-counter" style="display: none;">
+                        </span>
                         <span id="zoom-and-pan" class="zoombar col-16-right" style="display: none;">
 
                                 <div class="buttons">
-                                    <button class="zoom-in">Zoom In</button>
-                                    <!--<button class="reset">Reset</button>-->
-                                    <button class="zoom-out pull-right">Zoom Out</button>
+                                    <button class="zoom-out">Zoom Out</button>
+                                    <button class="zoom-in pull-right">Zoom In</button>
                                     <input type="range" class="zoom-range" />
                                 </div>
                             </span>
@@ -334,22 +330,22 @@
     </div>
 </div>
 
-<div class="modal fade" id="noFilterPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Warning</h4>
-            </div>
-            <div class="modal-body" id="noFilter">
+<!--<div class="modal fade" id="noFilterPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">-->
+    <!--<div class="modal-dialog modal-sm" role="document">-->
+        <!--<div class="modal-content">-->
+            <!--<div class="modal-header">-->
+                <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                <!--<h4 class="modal-title">Warning</h4>-->
+            <!--</div>-->
+            <!--<div class="modal-body" id="noFilter">-->
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+            <!--</div>-->
+            <!--<div class="modal-footer">-->
+                <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
 
     <!-- /container -->
 

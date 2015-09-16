@@ -12,7 +12,7 @@ function doFilter() {
 function filterTraits(traitName) {
     hideAllTraits();
 
-    //var existing = false;
+    var existing = 0;
 
     // expand query to get all filtered sets
     $.getJSON('pussycat/filter/' + traitName, function(data) {
@@ -23,23 +23,19 @@ function filterTraits(traitName) {
                 $("." + trait).attr("mask", "");
                 $("circle." + trait).attr("fading", "false");
 
-                //if($("circle").classList.contains(trait)){
-                //    existing = true;
-                //    console.log("The trait exists");
-                //}
+                existing = existing + $("." + trait).length;
             }
             catch (ex) {
                 console.log("Failed to show element '" + val + "'");
             }
         });
         console.log("All filtered traits should now be shown");
-        //if(!existing){
-        //    console.log("Trait doesn't exist, trigger alert");
-        //    var alert = '<p>The diagram does not contain any associations for "' + traitName + '". Please try a different trait.</p>';
-        //    $('#noFilter').empty().append(alert);
-        //    $('#noFilterPopup').modal('show');
-        //    showAllTraits();
-        //}
+
+        var traitCount = '<p>SNP-trait associations for "' + traitName + '" on the diagram: ' + existing + '</p>';
+
+        $('#filter-counter').empty().append(traitCount);
+        $('#filter-counter').show();
+
     });
 }
 
@@ -48,6 +44,7 @@ function showAllTraits() {
     $(".gwas-trait").attr("mask", "");
     $("#trait-filter").val("");
     $("circle.gwas-trait").attr("fading", "false");
+    $('#filter-counter').hide();
 }
 
 function hideAllTraits() {
