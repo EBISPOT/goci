@@ -44,7 +44,6 @@ function processStudy(study, table) {
     var innerTable = $("<table>").addClass('sample-info');
 
     innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Initial sample description")).append($("<td>").html(study.initialSampleDescription)));
-    innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Replication sample description")).append($("<td>").html(study.replicateSampleDescription)));
 
     if($.datepicker.parseDate("yy-mm-dd", pubdate) > $.datepicker.parseDate("yy-mm-dd", "2010-12-31") && study.ancestryLinks != null){
         var initial = '';
@@ -201,11 +200,12 @@ function processStudy(study, table) {
         }
 
         innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Initial ancestry (country of recruitment)")).append($("<td>").html(initial)));
+        innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Replication sample description")).append($("<td>").html(study.replicateSampleDescription)));
         innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Replication ancestry (country of recruitment)")).append($("<td>").html(replication)));
     }
     else{
-        innerTable.append($("<tr>").attr('style', 'display: none'));
-        innerTable.append($("<tr>").attr('style', 'display: none'));
+        innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Replication sample description")).append($("<td>").html(study.replicateSampleDescription)));
+
     }
 
     innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Platform [SNPs passing QC]")).append($("<td>").html(study.platform)));
