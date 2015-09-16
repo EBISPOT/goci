@@ -12,6 +12,8 @@ function doFilter() {
 function filterTraits(traitName) {
     hideAllTraits();
 
+    //var existing = false;
+
     // expand query to get all filtered sets
     $.getJSON('pussycat/filter/' + traitName, function(data) {
         $.each(data, function(index, val) {
@@ -20,12 +22,24 @@ function filterTraits(traitName) {
                 console.log("Showing trait '" + trait + "' element");
                 $("." + trait).attr("mask", "");
                 $("circle." + trait).attr("fading", "false");
+
+                //if($("circle").classList.contains(trait)){
+                //    existing = true;
+                //    console.log("The trait exists");
+                //}
             }
             catch (ex) {
                 console.log("Failed to show element '" + val + "'");
             }
         });
         console.log("All filtered traits should now be shown");
+        //if(!existing){
+        //    console.log("Trait doesn't exist, trigger alert");
+        //    var alert = '<p>The diagram does not contain any associations for "' + traitName + '". Please try a different trait.</p>';
+        //    $('#noFilter').empty().append(alert);
+        //    $('#noFilterPopup').modal('show');
+        //    showAllTraits();
+        //}
     });
 }
 

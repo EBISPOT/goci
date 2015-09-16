@@ -86,9 +86,6 @@
 .zoombar {
     position: absolute;
     background-color: #ffffff;
-    /*top: 100px;*/
-    /*left: 55px;*/
-    /*z-index: 100;*/
 }
 
 #tooltip {
@@ -117,37 +114,13 @@ circle[fading="true"]{
     cursor: default;
 }
 
-/*#traitpopup table {*/
-    /*table-layout: fixed;*/
-    /*border-collapse: collapse;*/
-    /*border-style: hidden;*/
-    /*width: 100%;*/
-/*}*/
-
-/*#traitpopup th {*/
-    /*border-style: solid;*/
-    /*border-width: 1px;*/
-    /*padding: 8px;*/
-
-/*}*/
-
-/*#traitpopup td {*/
-    /*border-style: solid;*/
-    /*border-width: 1px;*/
-    /*padding: 5px;*/
-/*}*/
-
-/*#traitpopup td.center {*/
-    /*text-align: center;*/
-/*}*/
-
 
 /**
   * autocomplete css
 */
 
 .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
-.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+.autocomplete-suggestion { padding: 2px 5px; overflow: hidden; }
 .autocomplete-selected { background: #F0F0F0; }
 .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
 .autocomplete-group { padding: 2px 5px; }
@@ -165,6 +138,7 @@ circle[fading="true"]{
 
 .suggestion-value {
     text-overflow: ellipsis;
+    font-size: smaller;
 }
 
 a.nounderline {

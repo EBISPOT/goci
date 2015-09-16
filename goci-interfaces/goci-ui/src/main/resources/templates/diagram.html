@@ -128,8 +128,8 @@
       <ol class="breadcrumb background-color-complementary-accent">
           <li><a href="home">GWAS</a></li>
           <li><a href="diagram">Diagram</a></li>
-          <span class="pull-right"><b>This diagram shows all SNP-trait associations with p-value &#8804; 5.0 &#215; 10<sup>-8</sup>,
-                                            published in the GWAS Catalog</b></span>
+          <span class="pull-right">This diagram shows all SNP-trait associations with p-value &#8804; 5.0 &#215; 10<sup>-8</sup>,
+                                            published in the GWAS Catalog</span>
       </ol>
 
     <div>
@@ -155,38 +155,33 @@
                 <div class="panel-body" id="legend-bar-body">
 
                     <div id="filters">
-                        <b>Filter results by</b>
 
-                        <!--<div>-->
-                            <!--<input class="filter-value" type="text" id="trait-filter" placeholder="Query by trait" style="width: 100%"/>-->
-                        <!--</div>-->
-
-
-                        <form id="local-search" name="local-search" action="search" method="get">
-                            <fieldset><div class="left">
+                            <div class="left">
                                 <label>
-                                    <input class="filter-value ac_input" type="text" name="q" data-widget="select" data-ontology="" id="trait-filter" placeholder="Query by trait" style="width: 100%">
+                                    <input class="filter-value ac_input form-control"
+                                           type="text"
+                                           name="q"
+                                           data-widget="select"
+                                           data-ontology=""
+                                           id="trait-filter"
+                                           placeholder="Filter by trait"
+                                           style="width: 100%">
                                     </input>
                                 </label>
 
                             </div>
 
-                                    <div class="row" style="margin-top: 10px">
+                            <div class="row" style="margin-top: 10px">
                                 <button type="button"
                                         class="btn btn-default"
-                                        id="clear-filter-button">Clear filter</button>
-                                        <!--</div>-->
-                                <!--<div class="row" style="margin-top: 10px">-->
+                                        id="clear-filter-button">Clear</button>
 
-                                <button type="submit"
-                                        class="btn btn-default submit pull-right"
+                                <button type="button"
+                                        class="btn btn-default pull-right"
                                         id = "filter-button"
-                                        style="margin-right: 15px;">Apply filter</button>
-                                    </div>
+                                        style="margin-right: 15px;">Apply</button>
+                            </div>
 
-                                <!--</div>-->
-                            </fieldset>
-                        </form>
                     </div>
 
                     <div id="legend" class="row" style="margin-top: 20px">
@@ -339,7 +334,22 @@
     </div>
 </div>
 
+<div class="modal fade" id="noFilterPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Warning</h4>
+            </div>
+            <div class="modal-body" id="noFilter">
 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
     <!-- /container -->
 
