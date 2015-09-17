@@ -94,11 +94,17 @@ function processAssociationSummary(data, name){
             if(cytoLoc == '' && summary.region != null && summary.region.length == 1){
                 cytoLoc = summary.region[0];
             }
-            var snp = "http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(summary.rsId[0]);
-            var snpurl = "<a href='".concat(snp).concat("' target='_blank'>").concat(summary.rsId[0]).concat("</a>");
-            row.append($("<td>").html(snpurl));
+
+            //build SNP search and Ensembl link
+            var rsidsearch = "<span><a href='search?query=".concat(summary.rsId[0]).concat("'  target='_blank'>").concat(summary.rsId[0]).concat("</a></span>");
+            var dbsnp = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(summary.rsId[0]).concat("'  target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
+            row.append($("<td>").html(rsidsearch.concat('&nbsp;&nbsp;').concat(dbsnp)));
+
+
             var pval = "".concat(summary.pValueMantissa).concat(" x10").concat("<sup>").concat(summary.pValueExponent).concat("</sup>");
             row.append($("<td class='center'>").html(pval));
+
+            //build EFO term search and link
             var efoterms = summary.efoLink;
 
             if(efoterms.length > 1){
@@ -113,16 +119,28 @@ function processAssociationSummary(data, name){
                 var link = efoterms[0];
             }
 
-            var efourl = "<a href='".concat(link.split("|")[2]).concat("' target='_blank'>").concat(name).concat("</a>");
-            row.append($("<td class='center'>").html(efourl));
-            row.append($("<td class='center'>").html(summary.traitName_s));
+            var efosearch = "<span><a href='search?query=".concat(name).concat("'  target='_blank'>").concat(name).concat("</a></span>");
+            var link = "<a href='".concat(link.split("|")[2]).concat("' target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
+
+            row.append($("<td class='center'>").html(efosearch.concat('&nbsp;&nbsp;').concat(link)));
+
+            //build disease trait search link
+            var traitsearch = "<span><a href='search?query=".concat(summary.traitName_s).concat("'  target='_blank'>").concat(summary.traitName_s).concat("</a></span>");
+            row.append($("<td class='center'>").html(traitsearch));
+
+            //build study search and EuropePMC links
             var study = summary.author_s.concat(" et al., ").concat(summary.publicationDate.substring(0, 4));
-            var studyurl = "http://www.ukpmc.ac.uk/abstract/MED/".concat(summary.pubmedId);
-            var studyentry = "<a href='".concat(studyurl).concat("' target='_blank'>").concat(study).concat("</a>");
+            var europepmc = "http://www.europepmc.org/abstract/MED/".concat(summary.pubmedId);
+            var authorsearch = "<span><a href='search?query=".concat(summary.author_s).concat("'  target='_blank'>").concat(study).concat("</a></span>");
+            var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
+
+            var studyentry = authorsearch.concat('&nbsp;&nbsp;').concat(epmclink);
+
             row.append($("<td>").html(studyentry));
-            var gwaslink = "<a href='search?query=".concat(summary.rsId[0]).concat("' target='_blank'>More information</a>");
-            //var gwaslink = "Link to association page goes here";
-            row.append($("<td>").html(gwaslink));
+
+            //var gwaslink = "<a href='search?query=".concat(summary.rsId[0]).concat("' target='_blank'>More information</a>");
+            //row.append($("<td>").html(gwaslink));
+
             summaryTable.append(row);
         }
 

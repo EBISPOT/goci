@@ -454,7 +454,8 @@ function processAssociation(association, table) {
     }
     row.append($("<td>").html(mapgene));
 
-    if(association.traitName != null){var traitsearch = "<span><a href='search?query=".concat(association.traitName).concat("'>").concat(association.traitName).concat("</a></span>");
+    if(association.traitName != null){
+        var traitsearch = "<span><a href='search?query=".concat(association.traitName).concat("'>").concat(association.traitName).concat("</a></span>");
         row.append($("<td>").html(traitsearch));
     }
     else {

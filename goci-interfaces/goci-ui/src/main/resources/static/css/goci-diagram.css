@@ -85,7 +85,12 @@
 
 .zoombar {
     position: absolute;
-    background-color: #ffffff;
+    background-color: transparent;
+}
+
+.zoom-compontent {
+    display: inline-block !important;
+    vertical-align: middle;
 }
 
 #tooltip {
@@ -255,12 +260,10 @@ a:hover.nounderline {
 
 #filter-counter {
     display: inline-block;
-    /*width: 17%;*/
-    /*margin-left: 75%;*/
-    /*padding-right: 5px;*/
     padding-left: 10px;
     padding-top: 10px;
     min-height: 1px;
     position: absolute;
     font-style: italic;
+    background-color: transparent;
 }
