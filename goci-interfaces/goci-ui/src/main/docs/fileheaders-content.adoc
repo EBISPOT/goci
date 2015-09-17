@@ -36,7 +36,7 @@ REGION: Cytogenetic region associated with rs number (NCBI)
 
 CHR_ID: Chromosome number associated with rs number (NCBI)
 
-CHR_POS: Chromosomal position associated with rs number (dbSNP Build 142, NCBI)
+CHR_POS: Chromosomal position associated with rs number (dbSNP Build 142, Genome Assembly GRCh38.p1, NCBI)
 
 REPORTED GENE (S): Gene(s) reported by author
 
