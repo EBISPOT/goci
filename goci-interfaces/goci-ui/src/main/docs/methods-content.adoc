@@ -90,7 +90,7 @@ Additional information added by NCBI pipeline. Capitalised titles correspond to 
 
 * REGION: Cytogenetic region associated with rs number.
 * CHR_ID: Chromosome number associated with rs number.
-* CHR_POS: Chromosomal position, in base pairs, associated with rs number.
+* CHR_POS: Chromosomal position, in base pairs, associated with rs number (dbSNP Build 142, Genome Assembly GRCh38.p1, NCBI).
 * MAPPED GENE(S): Gene(s) mapped to the strongest SNP. If the SNP is located within a gene, that gene is listed, with multiple overlapping genes separated by “;”. If the SNP is intergenic, the upstream and downstream genes are listed, separated by “-”.
 * UPSTREAM_GENE_ID: Entrez Gene ID for nearest upstream gene to rs number, if not within gene.
 * DOWNSTREAM_GENE_ID: Entrez Gene ID for nearest downstream gene to rs number, if not within gene.
