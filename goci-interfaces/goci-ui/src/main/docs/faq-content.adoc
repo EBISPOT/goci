@@ -222,7 +222,15 @@ Chromosomes and traits (coloured circles) have labels that display when hovering
 ==== [[faq-32]]32. How do I zoom and move the diagram?
 The diagram was designed to have a GoogleMaps-style interactivity. There are two ways to zoom in and out. The easiest option is to use the scroll wheel on the mouse or touch pad on a laptop. Scrolling up zooms in and scrolling down zooms out. This feature may not work with all touch pads. Alternatively, the top right-hand corner of the diagram features a zoom bar which can be used to generate exactly the same effect, by dragging the little square left or right along the bar with the mouse pointer or clicking the plus and minus buttons.
 The diagram can be moved around the viewing area by clicking on any part of the diagram with the left mouse button and, holding the mouse button down, dragging the diagram around the screen until the desired part is visible. This feature is particularly useful for centering the diagram on a specific location at higher zoom levels.
+
+
 '''
+
 
 ==== Got a question that isn't answered here?
 Email us at gwas-info@ebi.ac.uk.
+
+
+'''
+
+_Last updated: 21 September 2015_
