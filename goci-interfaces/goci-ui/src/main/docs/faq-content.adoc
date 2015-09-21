@@ -3,152 +3,225 @@
 == Frequently Asked Questions
 
 
-<<Why has the Catalog moved to the EBI?>>
+1. <<anchor-1,Why has the Catalog moved to the EBI?>>
 
 
-<<Is there any way I can stay informed about new search features and developments?>>
+2. <<anchor-2,Is there any way I can stay informed about new search features and developments?>>
 
 
-<<How should I cite the GWAS Catalog?>>
+3. <<anchor-3,How should I cite the GWAS Catalog?>>
 
 
-<<Why does the data I just downloaded look different from what I downloaded in the old Catalog?>>
+4. <<anchor-4,What are the terms and conditions for accessing the GWAS Catalog data and code?>>
 
 
-<<What happened to the "CNV" annotation in the interface?>>
+5. <<anchor-5,Which genome build is the Catalog on?>>
 
 
-<<How do I do a search?>>
+6. <<anchor-6,How can I access the GWAS Catalog data on alternative genome builds?>>
 
 
-<<What can I type into the search bar?>>
+7. <<anchor-7,How often are the GWAS Catalog and diagram updated?>>
 
 
-<<What is the difference between a reported trait and a mapped trait?>>
+8. <<anchor-8,Why does the data I just downloaded look different from what I downloaded in the old Catalog?>>
 
 
-<<Can I limit my search to a specific type of field such as author?>>
+9. <<anchor-9,What happened to the "CNV" annotation in the interface?>>
 
 
-<<What is the difference between the blue links and the brown links?>>
+10. <<anchor-10,How is the ancestry data in the GWAS Catalog provided?>>
 
 
-<<When I search for a certain trait why are other traits returned?>>
+11. <<anchor-11,How do I do a search?>>
 
 
-<<Can I search for multiple or compound traits?>>
+12. <<anchor-12,What can I type into the search bar?>>
 
 
-<<Why did my search return no results even though I am sure there used to be a trait like this in the Catalog?>>
+13. <<anchor-13,What is the difference between a reported trait and a mapped trait?>>
 
 
-<<How do I filter my results by p-value?>>
+14. <<anchor-14,Can I limit my search to a specific type of field such as author?>>
 
 
-<<How do I filter my results by odds ratio?>>
+15. <<anchor-15,What is the difference between the blue links and the brown links?>>
 
 
-<<How do I filter my results by beta coefficient?>>
+16. <<anchor-16,When I search for a certain trait why are other traits returned?>>
 
 
-<<How do I filter my results by date?>>
+17. <<anchor-17,Can I search for multiple or compound traits?>>
 
 
-<<What happens to the count values for my search if I apply a filter?>>
+18. <<anchor-18,Why did my search return no results even though I am sure there used to be a trait like this in the Catalog?>>
 
 
-<<What is the difference between filtering by a trait via the trait dropdown and doing a search by clicking on that trait in the results?>>
+19. <<anchor-19,How do I search for ancestry data in the GWAS Catalog?>>
 
 
-<<Why are some columns sortable and other are not?>>
+20. <<anchor-20,How do I filter my results by p-value?>>
 
 
-<<Why did nothing happen when I tried sorting a column?>>
+21. <<anchor-21,How do I filter my results by odds ratio?>>
 
+
+22. <<anchor-22,How do I filter my results by beta coefficient?>>
+
+
+23. <<anchor-23,How do I filter my results by date?>>
+
+
+24. <<anchor-24,What happens to the count values for my search if I apply a filter?>>
+
+
+25. <<anchor-25,What is the difference between filtering by a trait via the trait dropdown and doing a search by clicking on that trait in the results?>>
+
+
+26. <<anchor-26,Why are some columns sortable and other are not?>>
+
+
+27. <<anchor-27,Why did nothing happen when I tried sorting a column?>>
+
+28. <<anchor-28,How do I display SNP information for a given dot?>>
+
+29. <<anchor-29,How do I filter the diagram?>>
+
+30. <<anchor-30,How do I display the legend?>>
+
+31. <<anchor-31,How do I display labels?>>
+
+32. <<anchor-32,How do I zoom and move the diagram?>>
 
 '''
 == General
 
 
-==== Why has the Catalog moved to the EBI?
+==== [[anchor-1]]1. Why has the Catalog moved to the EBI?
 
 From September 2010 to the present delivery and development of the Catalog has been a collaborative project between EMBL-EBI and NHGRI. In March 2015 the Catalog infrastructure moved to EMBL-EBI to enable delivery of an improved user interface, including ontology driven Catalog searching, and new curatorial infrastructure, supporting improved QC processes. Content available from www.genome.gov/gwastudies/ was last updated 20 Februry 2015 and is now frozen, no further updated content will be available at the NHGRI site. Updated content is available from www.ebi.ac.uk/GWAS/ and will be updated. The download file is now available from link:../api/search/downloads/full[here] and has updated content.
 
-==== Is there any way I can stay informed about new search features and developments?
+==== [[anchor-2]]2. Is there any way I can stay informed about new search features and developments?
 
 You can subscribe to our announcement list by sending an e-mail to gwas-announce-join@ebi.ac.uk with subject heading "subscribe". Traffic on this list will be limited to important announcements only so you don't need to worry about getting bombarded with loads of emails. For queries and user discussion, we have separate mailing lists, gwas-info@ebi.ac.uk to contact the Catalog team and gwas-users@ebi.ac.uk for user discussion (subscribe by emailing gwas-users-join@ebi.ac.uk with subject heading "subscribe").
 
-==== How should I cite the GWAS Catalog?
+==== [[anchor-3]]3. How should I cite the GWAS Catalog?
+
 Please see the link:about[About] page for citation guidance.
 
-==== Why does the data I just downloaded look different from what I downloaded in the old Catalog?
+==== [[anchor-4]]4. What are the terms and conditions for accessing the GWAS Catalog data and code?
+
+The GWAS Catalog data can be used under the standard terms of use for EBI services which can be found at http://www.ebi.ac.uk/about/terms-of-use
+
+==== [[anchor-5]]5. Which genome build is the Catalog on?
+
+Data in the GWAS Catalog is currently mapped to genome assembly GRCh38.p1 and dbSNP Build 142.
+
+==== [[anchor-6]]6. How can I access the GWAS Catalog data on alternative genome builds?
+
+You can use the Ensembl REST API to map the SNP rsIDs in the GWAS Catalog to previous genome builds. For GRCh37 this is available at http://grch37.rest.ensembl.org/. The variation call http://grch37.rest.ensembl.org/documentation/info/variation_id can be used to retrieve the dbSNP mapping of all SNPs on GRCh37. Information on using the Ensembl REST API can be found at https://github.com/Ensembl/ensembl-rest/wiki.
+
+==== [[anchor-7]]7. How often are the GWAS Catalog and diagram updated?
+
+New data is currently added to the GWAS Catalog and diagram on a nightly basis.
+
+==== [[anchor-8]]8. Why does the data I just downloaded look different from what I downloaded in the old Catalog?
 
 A number of link:known-issues[known issues] got into the data during the migration. We are working hard to resolve these. Due to the way we now process the Catalog data for the full download, you may find that your spreadsheet has more rows than it did previously as each association between a SNP and a reported gene now gets its own row, i.e. if an association has several author-reported genes, it will be split across as many rows as there are genes.
 
-==== What happened to the "CNV" annotation in the interface?
+==== [[anchor-9]]9. What happened to the "CNV" annotation in the interface?
 
 Studies looking at copy number variations (CNV) are not part of the remit of the GWAS Catalog. Historically, a couple of CNV studies had been included in the Catalog but these have now been removed. As the Catalog no longer contains any CNV studies, the decision was made to also eliminate the CNV flag from the search results for studies. The corresponding column is still available in the downloadable full Catalog spreadsheet to preserve backwards compatibility with previous spreadsheet versions.
 
+==== [[anchor-10]]10. How is the ancestry data in the GWAS Catalog provided?
+
+Ancestry data is provided in two forms: a free text sample description and structured ancestry and recruitment information. The free text descriptions of the initial and replication stages of the GWAS provide summary ancestry descriptions of the samples analysed in each stage, based on the language used in the paper. The structured information is designed to represent data using controlled terms and includes ancestry, chosen from a list of 15 ancestral categories, and country of recruitment. For more information please view our link:methods[Methods] page.
+
 == Searching
 
-==== How do I do a search?
+==== [[anchor-11]]11. How do I do a search?
 Type the thing you are interested in e.g. “breast cancer” into the search box and hit return or click the search icon.
 
-==== What can I type into the search bar?
+==== [[anchor-12]]12. What can I type into the search bar?
 You can type any text you wish into the search bar. This will then return any exact string matches within a number of data fields in the Catalog, including title, author, journal, reported trait, mapped (ontology) trait, mapped trait's synonyms, mapped trait's parents, sample descriptions, genes and SNPs. 
 
-==== What is the difference between a reported trait and a mapped trait?
+==== [[anchor-13]]13. What is the difference between a reported trait and a mapped trait?
 Each study is assigned a trait description that best represents the phenotype under investigation. This is known as the reported trait as it is taken from the study publication. All reported traits are mapped to terms from the http://www.ebi.ac.uk/efo[Experimental Factor Ontology] resulting in one or more mapped traits. For more information about how ontologies are used in the catalog see our link:ontology[ontology] page.
 
-==== Can I limit my search to a specific type of field such as author?
+==== [[anchor-14]]14. Can I limit my search to a specific type of field such as author?
 At the moment, the main search only supports searching across all fields, so if your search term is for example "Parkinson", you will see results for Parkinson's disease as well as studies with a first author named Parkinson. We are working on an "advanced search" mode where you can limit your search to certain fields or search for specific combinations of fields. To be alerted as soon as this functionality becomes available, subscribe to our announcement list (see above for subscription instructions).
 
 For now, if you would like to search for a specific study, you can search by Pubmed ID. To limit your search to a specific trait or set of traits, we would suggest doing a general search for that trait first, then filtering your results using the trait filter dropdown to the left of the search results. For example, following a search for "lupus", you can limit your search results to "Systemic lupus erythematosus" via the dropdown.
 
-==== What is the difference between the blue links and the brown links?
+==== [[anchor-15]]15. What is the difference between the blue links and the brown links?
 Clicking on a term highlighted in blue (e.g. author, trait or rsID) performs a full new search for this term. Clicking on a little brown link icon next to a term takes you to an external page related to this term, e.g. Pubmed Central for studies or Ensembl for SNPs or genes.
 
-==== When I search for a certain trait why are other traits returned?
+==== [[anchor-16]]16. When I search for a certain trait why are other traits returned?
 The search algorithm searches across a number of fields including study titles, sample descriptions, reported traits, mapped (ontology) traits, mapped traits' synonyms and mapped traits' parents. If your search term is a match to any of these categories, that result will be returned. If you search for "metabolic disease" for example, you will see a number of reported traits mapped to ontology traits such as "type II diabetes mellitus" because metabolic disease is a parent of diabetes in the ontology. Equally, searching for "diabetes" will return some potentially unexpected results as the search returns studies that were carried out in a sample population of diabetics, so the term "diabetes" is matched in the sample description. Filtering via the trait dropdown allows you to exclude unwanted traits for now and a more refined "advanced search" mode is under development.
 
-==== Can I search for multiple or compound traits?
+==== [[anchor-17]]17. Can I search for multiple or compound traits?
 Currently the search bar searches for the exact text match of the search term entered within a range of  Catalog fields and any related traits through the mapped ontology fields. For example if you type “Schizophrenia and bipolar disorder” in the search bar this will return the compound reported trait "Schizophrenia and bipolar disorder" and "schizophrenia" but not "bipolar disorder". True multiple trait searching is currently not possible but we are working hard to include this feature as soon as possible. For now, we would recommend searching by a more general trait, eg "schizophrenia", then selecting any desired compound traits from the trait filter dropdown.
 
-==== Why did my search return no results even though I am sure there used to be a trait like this in the Catalog?
+==== [[anchor-18]]18. Why did my search return no results even though I am sure there used to be a trait like this in the Catalog?
 Our search functionality is currently unable to allow for typos or term variations, so if you accidentally type "beast cancer" instead of "breast cancer", you will not get any results. Equally, "metabolic disorder" won't return any results while "metabolic disease" will return loads. A browseable list of all reported traits as well as autocomplete functionality for the search box are coming soon. In the mean time, if you get stuck, we recommend varying your search term or searching for your term in http://www.ebi.ac.uk/efo[EFO] to get an idea of what other terms might be available.
 
+==== [[anchor-19]]19. How do I search for ancestry data in the GWAS Catalog?
+
+Ancestry data can be searched by entering relevant text in the search bar, including ancestry category, country or ancestry identifier (e.g. “European”, “South Africa”, “Ashkenazi Jewish”). Any exact string match to the entered text will be returned. Ancestry data can be found in the expanded information in the “Studies” table.
 
 
 == Filters
 
-
-==== How do I filter my results by p-value?
+==== [[anchor-20]]20. How do I filter my results by p-value?
 To filter association results by p-value, enter a maximum p-value into the appropriate filter box. The input format is "mantissa"x 10^"exponent"^, e.g. 5 x 10^-8^.
 
-==== How do I filter my results by odds ratio?
+==== [[anchor-21]]21. How do I filter my results by odds ratio?
 To filter association results by odds ratio, enter a minimum and/or maximum value into the to and/or from box. You do not need to enter values in both boxes, so if you want values greater than your threshold, only enter a number into the from box or if you want values smaller than your threshold, only enter a number into the to box. The default minimum is 1 and you cannot search for values smaller than this.
 
-==== How do I filter my results by beta coefficient?
+==== [[anchor-22]]22. How do I filter my results by beta coefficient?
 Filtering by beta coefficient works exactly the same as filtering by odds ratio, although you can also search for values between 0 and 1.
 
-==== How do I filter my results by date?
+==== [[anchor-23]]23. How do I filter my results by date?
 Filtering by date follows the same pattern as following by OR or beta coefficient. You can enter from and to dates to create a range or just a from date for all studies published since that day or just a to date for all studies published prior to that date.
 
-==== What happens to the count values for my search if I apply a filter?
+==== [[anchor-24]]24. What happens to the count values for my search if I apply a filter?
 If you apply a filter to search results the count values will change to reflect the impact of applying the filter. Applying a filter will return a smaller subset of results. For example, at present, if I run a search for the term "asthma" it returns 223 associations. If I apply a p-value filter of 6e-8 the number of associations is now shown as 74.
 
-==== What is the difference between filtering by a trait via the trait dropdown and doing a search by clicking on that trait in the results?
+==== [[anchor-25]]25. What is the difference between filtering by a trait via the trait dropdown and doing a search by clicking on that trait in the results?
 Filtering via the trait dropdown limits the search results to studies that have the selected trait(s) as their reported trait, as well as any associations identified in those studies. Clicking on a trait link does a complete new search for that term, searching across all fields, including title and sample descriptions, so you may get additional results, not just studies annotated with the search trait.
 
 
 == Sorting
 
-==== Why are some columns sortable and other are not?
+==== [[anchor-26]]26. Why are some columns sortable and other are not?
 Because of the way our search algorithm works, some fields can't be sorted at the moment. We are trying to find a workaround for this. For now, if you really need to sort by an unsortable column, we would recommend downloading the results into a spreadsheet and sorting them that way.
 
-==== Why did nothing happen when I tried sorting a column?
+==== [[anchor-27]]27. Why did nothing happen when I tried sorting a column?
 Some fields contains results that don't work well with our sorting algorithm. When this happens, rather than introduce a glitch into your results, the table will simply refuse the sort. This is a known issue and we are looking for a way to fix it.
 
+
+== Diagram
+
+==== [[anchor-28]]28. How do I display SNP information for a given dot?
+
+To view all the SNPs associated with any trait in a given location, simply click on the trait you are interested in. An interactive pop-up will display the SNPs for that trait, the p-value for each SNP-trait association, the study in which the association was identified, the trait assigned by the GWAS catalog curators and the EFO term the SNP-trait association is mapped to. The SNP, disease trait, EFO term and study fields are interactive, linking to a search of the full Catalog for that particular field. SNP, EFO term and study also link out via the external link icon to Ensembl, EFO and UKPMC, respectively. Clicking outside the pop-up automatically closes the current pop-up. Alternatively, close the pop-up by clicking on the cross in its top right corner or on the "Close" button.
+
+==== [[anchor-29]]29. How do I filter the diagram?
+The full diagram can be filtered by typing a trait into the search box to the left the diagram and hitting "Enter" or clicking the "Apply" button. Once you have typed 3 to 4 characters, the text box will offer auto-completed suggestions for your search based on EFO terms mapped to GWAS Catalog disease traits. You can navigate the suggestion list using your mouse or the up and down keys. More advanced filtering capabilities, such as disease location, p-value and time, are under development, so check back regularly for updates.
+
+If your selected trait is available in the diagram, all other traits will be faded to a lower visibility to highlight the desired trait. A counter in the top left corner of the diagram will indicate how many dots on the diagram correspond to your search term. Searchable traits are based on EFO categories and may not coincide with curator-assigned trait names, e.g. a search for "hair color" will highlight SNP-trait associations labelled hair color as well as "black vs blond hair" and "red vs non-red hair".
+
+
+
+==== [[anchor-30]]30. How do I display the legend?
+A legend of the colour scheme is available to the left of the diagram. The legend includes a count of the number of dots of each colour in the diagram. You can hide the sidebar of increase the amount of screen space for the diagram by clicking on the little shevron icon at the top of the sidebar. Click on any item in the legend to filter the diagram by that category. This does not work for any of the "other"-type categories (other measurement, other disease and other trait). Please note that some traits, in particular some diseases, belong to multiple categories, eg Crohn's disease is both a digestive system disease and an immune system disease. Each dot on the diagram can only be assigned one colour and colour assignment is determined by a term's most specific ancestor (ancestor that has itself the most number of ancestors) in EFO so it is possible to find dots of a different colour when searching for example for "digestive system disease".
+
+==== [[anchor-31]]31. How do I display labels?
+Chromosomes and traits (coloured circles) have labels that display when hovering the mouse pointer over a given element. The displayed labels correspond to the EFO term mapped this SNP.
+
+==== [[anchor-32]]32. How do I zoom and move the diagram?
+The diagram was designed to have a GoogleMaps-style interactivity. There are two ways to zoom in and out. The easiest option is to use the scroll wheel on the mouse or touch pad on a laptop. Scrolling up zooms in and scrolling down zooms out. This feature may not work with all touch pads. Alternatively, the top right-hand corner of the diagram features a zoom bar which can be used to generate exactly the same effect, by dragging the little square left or right along the bar with the mouse pointer or clicking the plus and minus buttons.
+The diagram can be moved around the viewing area by clicking on any part of the diagram with the left mouse button and, holding the mouse button down, dragging the diagram around the screen until the desired part is visible. This feature is particularly useful for centering the diagram on a specific location at higher zoom levels.
 '''
 
 ==== Got a question that isn't answered here?
