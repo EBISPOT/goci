@@ -22,7 +22,7 @@ import java.util.Set;
  * @date 06/03/12
  */
 public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LoggerFactory.getLogger("rendering");
 
     protected Logger getLog() {
         return log;
@@ -50,7 +50,7 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
             // collect all the bands for which we need to render this trait, and list all associations in that band
             Map<E, Set<E>> bandToAssociationMap = new HashMap<E, Set<E>>();
 
-            for (E association : getAssociationsForTrait(context, trait)) {
+            for (E association : getAssociationsForTrait(nexus, context, trait)) {
                 try {
                     // get the band for this association
                     E band = getBandForAssociation(context, association);
@@ -87,7 +87,7 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
                         double ay = associationLocation.getY();
                         double displacement = associationLocation.getHeight();
                         double cx, cy;
-                        int position = getTraitPosition(context, trait, band, locations);
+                        int position = getTraitPosition(nexus, context, trait, band, locations);
 
                         int horizontal = position % 6;
                         int vertical = position / 6;
@@ -165,14 +165,14 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
         }
     }
 
-    protected abstract Set<E> getAssociationsForTrait(C context, E trait) throws DataIntegrityViolationException;
+    protected abstract Set<E> getAssociationsForTrait(RenderletNexus nexus, C context, E trait) throws DataIntegrityViolationException;
 
     protected abstract E getBandForAssociation(C context, E association) throws DataIntegrityViolationException;
 
     protected abstract List<SVGArea> getLocationsOfOtherTraitsinBand(RenderletNexus nexus, C context, E band)
             throws DataIntegrityViolationException;
 
-    protected abstract int getTraitPosition(C context, E trait, E band, List<SVGArea> locations);
+    protected abstract int getTraitPosition(RenderletNexus nexus, C context, E trait, E band, List<SVGArea> locations);
 
     protected abstract String getTraitAttribute(C context, E trait) throws DataIntegrityViolationException;
 

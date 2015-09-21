@@ -6,7 +6,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import uk.ac.ebi.spot.goci.owl.pussycat.renderlet.chromosome.*;
+import uk.ac.ebi.spot.goci.ontology.owl.pussycat.renderlet.chromosome.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;

@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import uk.ac.ebi.spot.goci.ui.SearchConfiguration;
 import uk.ac.ebi.spot.goci.ui.exception.IllegalParameterCombinationException;
 import uk.ac.ebi.spot.goci.ui.service.JsonProcessingService;
@@ -27,7 +24,9 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 
 
 /**
@@ -79,6 +78,65 @@ public class SolrSearchController {
         // dispatch search
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
+
+    @RequestMapping(value = "/api/select", produces = {MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.GET)
+    public void select(
+            @RequestParam("q") String query,
+            @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+            @RequestParam(value = "callback", required = false) String callbackFunction,
+            @RequestParam(value = "fieldList", required = false) Collection<String> fieldList,
+//            @RequestParam(value = "childrenOf", required = false) Collection<String> childrenOf,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            HttpServletResponse response
+    ) throws IOException {
+
+        query = query.replace(" ", "%20");
+        StringBuilder solrSearchBuilder = buildBaseSearchRequest();
+
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+        addRowsAndPage(solrSearchBuilder, maxResults, page);
+        addSelectFields(solrSearchBuilder, query);
+        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "efoTrait");
+
+
+        if (fieldList == null) {
+            fieldList = new HashSet<>();
+        }
+
+        //this is the FL parameter
+        if (fieldList.isEmpty()) {
+            fieldList.add("label");
+            fieldList.add("traitUri");
+            fieldList.add("id");
+//            fieldList.add("type");
+            fieldList.add("shortForm");
+            fieldList.add("parent");
+
+//            fieldList.add("ontology_name");
+//            fieldList.add("ontology_prefix");
+        }
+
+        addReturnFields(solrSearchBuilder, fieldList);
+
+        Collection<String> highlights = new HashSet<>();
+
+        highlights.add("label_autosuggest");
+        highlights.add("label");
+        highlights.add("synonym_autosuggest");
+        highlights.add("synonym");
+
+        addHighlights(solrSearchBuilder, highlights);
+
+        addQuery(solrSearchBuilder, query);
+        dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
+
+    }
+
+
+
 
     @RequestMapping(value = "api/search/study", produces = MediaType.APPLICATION_JSON_VALUE)
     public void doStudySolrSearch(
@@ -194,7 +252,7 @@ public class SolrSearchController {
         }
 
         if(dateRange != "") {
-            addFilterQuery(solrSearchBuilder, "catalogAddedDate", "study_catalogAddedDate", dateRange);
+            addFilterQuery(solrSearchBuilder, "catalogPublishDate", "study_catalogPublishDate", dateRange);
         }
         addQuery(solrSearchBuilder, query);
 
@@ -267,7 +325,7 @@ public class SolrSearchController {
         if (addedDateRange != "") {
             getLog().debug(addedDateRange);
 
-            addFilterQuery(solrSearchBuilder, "catalogAddedDate", "study_catalogAddedDate", addedDateRange);
+            addFilterQuery(solrSearchBuilder, "catalogPublishDate", "study_catalogPublishDate", addedDateRange);
 
         }
         if (traits != null && traits.length != 0) {
@@ -418,7 +476,7 @@ public class SolrSearchController {
             addRowsAndPage(solrSearchBuilder, maxResults, page);
         }
 
-        addFilterQuery(solrSearchBuilder, "catalogAddedDate", "study_catalogAddedDate", dateRange);
+        addFilterQuery(solrSearchBuilder, "catalogPublishDate", "study_catalogPublishDate", dateRange);
 
         addSortQuery(solrSearchBuilder, sort);
 
@@ -501,10 +559,10 @@ public class SolrSearchController {
 
             if(dateRange.contains("NOW")){
                 if(facet.equals("diseasetrait")){
-                    addFilterQuery(solrSearchBuilder, "study_catalogAddedDate", dateRange);
+                    addFilterQuery(solrSearchBuilder, "study_catalogPublishDate", dateRange);
                 }
                 else {
-                    addFilterQuery(solrSearchBuilder, "catalogAddedDate", dateRange);
+                    addFilterQuery(solrSearchBuilder, "catalogPublishDate", dateRange);
                 }
             }
             else {
@@ -540,6 +598,14 @@ public class SolrSearchController {
         }
     }
 
+    private void addSelectFields(StringBuilder solrSearchBuilder, String query) {
+        solrSearchBuilder.append("&defType=edismax" +
+                        "&qf=label%20synonym%20label_autosuggest_ws%20label_autosuggest_e%20label_autosuggest%20synonym_autosuggest_ws%20synonym_autosuggest_e%20synonym_autosuggest%20shortform_autosuggest" +
+                        "&bq=label_s%3A%22" + query + "%22%5E2%20synonym_s%3A%22" + query + "%22");
+
+
+    }
+
     private void addFacet(StringBuilder solrSearchBuilder, String facet) {
         // add configuration
         solrSearchBuilder.append("&facet=true&facet.field=").append(facet);
@@ -556,6 +622,30 @@ public class SolrSearchController {
     private void addFacetSort(StringBuilder solrSearchBuilder, String sort){
         solrSearchBuilder.append("&facet.sort=").append(sort);
     }
+
+    private void addReturnFields(StringBuilder solrSearchBuilder, Collection<String> fieldList) {
+        String list = "";
+        for(String field : fieldList){
+            list.concat(field).concat("+");
+        }
+        solrSearchBuilder.append("&fl=").append(list);
+    }
+
+    private void addHighlights(StringBuilder solrSearchBuilder, Collection<String> highlights) {
+        solrSearchBuilder.append("&hl=true")
+                .append("&hl.simple.pre=%3Cb%3E")
+                .append("&hl.simple.post=%3C%2Fb%3E")
+                .append("&hl.fl=");
+
+        String hlfs = "";
+
+        for(String highlight : highlights){
+            hlfs.concat(highlight).concat("+");
+        }
+
+        solrSearchBuilder.append(hlfs);
+    }
+
 
     private void addJsonpCallback(StringBuilder solrSearchBuilder, String callbackFunction) {
         if (callbackFunction == null) {
@@ -673,8 +763,6 @@ public class SolrSearchController {
     }
 
 //    @RequestMapping(value = "api/search/downloads", produces = MediaType.TEXT_PLAIN_VALUE)
-//    public @ResponseBody String getSearchResults(
-
     @RequestMapping(value = "api/search/downloads")
     public void getSearchResults(
             @RequestParam("q") String query,
@@ -722,7 +810,7 @@ public class SolrSearchController {
         }
         if(addedDateRange != ""){
             getLog().debug(addedDateRange);
-            addFilterQuery(solrSearchBuilder, "catalogAddedDate", addedDateRange);
+            addFilterQuery(solrSearchBuilder, "catalogPublishDate", addedDateRange);
 
         }
 
@@ -801,17 +889,24 @@ public class SolrSearchController {
             file = "Some error occurred during your request. Please try again or contact the GWAS Catalog team for assistance";
         }
 
-        InputStream in = new ByteArrayInputStream(file.getBytes("UTF-8"));
+        PrintWriter outputWriter = new PrintWriter(outputStream);
 
-        byte[] outputByte = new byte[4096];
-//copy binary contect to output stream
-        while(in.read(outputByte, 0, 4096) != -1)
-        {
-            outputStream.write(outputByte, 0, 4096);
-        }
-        in.close();
-        outputStream.flush();
+        outputWriter.write(file);
 
+//        InputStream in = new ByteArrayInputStream(file.getBytes("UTF-8"));
+//
+//        byte[] outputByte = new byte[4096];
+////copy binary contect to output stream
+//        while(in.read(outputByte, 0, 4096) != -1)
+//        {
+//            outputStream.write(outputByte, 0, 4096);
+//        }
+//        in.close();
+
+
+     //   outputStream.flush();
+
+        outputWriter.flush();
     }
 
 }

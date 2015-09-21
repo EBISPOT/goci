@@ -20,6 +20,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/").setViewName("index");
         registry.addViewController("/home").setViewName("index");
         registry.addViewController("/search").setViewName("search");
+        registry.addViewController("/diagram").setViewName("diagram");
         registry.addViewController("/downloads").setViewName("downloads");
         registry.addViewController("/search/traits").setViewName("traitlist");
 
@@ -35,6 +36,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/docs/related-resources").setViewName("docs-template");
         registry.addViewController("/docs/programmatic-access").setViewName("docs-template");
         registry.addViewController("/docs/known-issues").setViewName("docs-template");
+        registry.addViewController("/docs/mappingfileheaders").setViewName("docs-template");
 
     }
 }

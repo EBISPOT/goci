@@ -23,7 +23,7 @@ public class StudyAuditView {
 
     private Date sendToNCBIDate;
 
-    private Date studyDate;
+    private Date publicationDate;
 
     private Long pubmedIdError;
 
@@ -40,7 +40,7 @@ public class StudyAuditView {
                           Long studyId,
                           String author,
                           Date sendToNCBIDate,
-                          Date studyDate,
+                          Date publicationDate,
                           Long pubmedIdError,
                           List<String> snpErrors,
                           List<String> geneNotOnGenomeErrors,
@@ -51,7 +51,7 @@ public class StudyAuditView {
         this.studyId = studyId;
         this.author = author;
         this.sendToNCBIDate = sendToNCBIDate;
-        this.studyDate = studyDate;
+        this.publicationDate = publicationDate;
         this.pubmedIdError = pubmedIdError;
         this.snpErrors = snpErrors;
         this.geneNotOnGenomeErrors = geneNotOnGenomeErrors;
@@ -99,12 +99,12 @@ public class StudyAuditView {
         this.sendToNCBIDate = sendToNCBIDate;
     }
 
-    public Date getStudyDate() {
-        return studyDate;
+    public Date getPublicationDate() {
+        return publicationDate;
     }
 
-    public void setStudyDate(Date studyDate) {
-        this.studyDate = studyDate;
+    public void setPublicationDate(Date publicationDate) {
+        this.publicationDate = publicationDate;
     }
 
     public Long getPubmedIdError() {

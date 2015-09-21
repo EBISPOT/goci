@@ -19,19 +19,19 @@ import java.util.List;
 
 @RepositoryRestResource
 public interface DiseaseTraitRepository extends JpaRepository<DiseaseTrait, Long> {
-    String findByTraitIgnoreCase(String trait);
+    DiseaseTrait findByTraitIgnoreCase(String trait);
 
-    List<DiseaseTrait> findByStudiesIdAndStudiesHousekeepingPublishDateIsNotNull(Long studyId);
+    List<DiseaseTrait> findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull(Long studyId);
 
-    List<DiseaseTrait> findByStudiesIdAndStudiesHousekeepingPublishDateIsNotNull(Sort sort, Long studyId);
+    List<DiseaseTrait> findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull(Sort sort, Long studyId);
 
-    Page<DiseaseTrait> findByStudiesIdAndStudiesHousekeepingPublishDateIsNotNull(Pageable pageable, Long studyId);
+    Page<DiseaseTrait> findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull(Pageable pageable, Long studyId);
 
-    List<DiseaseTrait> findByStudiesAssociationsIdAndStudiesHousekeepingPublishDateIsNotNull(Long associationId);
+    List<DiseaseTrait> findByStudiesAssociationsIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull(Long associationId);
 
-    List<DiseaseTrait> findByStudiesAssociationsIdAndStudiesHousekeepingPublishDateIsNotNull(Sort sort,
+    List<DiseaseTrait> findByStudiesAssociationsIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull(Sort sort,
                                                                                              Long associationId);
 
-    Page<DiseaseTrait> findByStudiesAssociationsIdAndStudiesHousekeepingPublishDateIsNotNull(Pageable pageable,
+    Page<DiseaseTrait> findByStudiesAssociationsIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull(Pageable pageable,
                                                                                              Long associationId);
 }

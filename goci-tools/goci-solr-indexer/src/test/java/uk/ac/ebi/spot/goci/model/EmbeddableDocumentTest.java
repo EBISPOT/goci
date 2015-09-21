@@ -31,10 +31,10 @@ public class EmbeddableDocumentTest {
     public void setUp() {
         Housekeeping h = new Housekeeping();
         h.setLastUpdateDate(new Date());
-        h.setPublishDate(new Date());
+        h.setCatalogPublishDate(new Date());
         this.study = new Study("author", new Date(), "publication", "title", "initial sample size", "replicate " +
                 "sample size", "platform", "123456", false, false, false, null, Collections.<EfoTrait>emptyList(),
-                               Collections.<SingleNucleotidePolymorphism>emptyList(), h);
+                               Collections.<SingleNucleotidePolymorphism>emptyList(), Collections.<Ethnicity>emptyList(), h);
         study.setId(1l);
         this.studyDoc = new StudyDocument(study);
 
@@ -53,6 +53,7 @@ public class EmbeddableDocumentTest {
                                            1.0f,
                                            1.0f,
                                            "orPerCopyRange",
+                                           "orPerCopyRecipRange",
                                            "orPerCopyDescr",
                                            study,
                                            Collections.emptyList(),

@@ -21,7 +21,7 @@ public class JsonProcessingService {
 
     public String processJson() throws IOException {
 
-        String header = "Date Added to Catalog\tPUBMEDID\tFirst Author\tDate\tJournal\tLink\tStudy\tDisease/Trait\tInitial Sample Size\tReplication Sample Size\tRegion\tChr_id\tChr_pos\tReported Gene(s)\tMapped_gene\tUpstream_gene_id\tDownstream_gene_id\tSnp_gene_ids\tUpstream_gene_distance\tDownstream_gene_distance\tStrongest SNP-Risk Allele\tSNPs\tMerged\tSnp_id_current\tContext\tIntergenic\tRisk Allele Frequency\tp-Value\tPvalue_mlog\tp-Value (text)\tOR or beta\t95% CI (text)\tPlatform [SNPs passing QC]\tCNV\r\n";
+        String header = "Date Added to Catalog\tPUBMEDID\tFirst Author\tDate\tJournal\tLink\tStudy\tDisease/Trait\tInitial Sample Size\tReplication Sample Size\tRegion\tChr_id\tChr_pos\tReported Gene(s)\tMapped_gene\tUpstream_gene_id\tDownstream_gene_id\tSnp_gene_ids\tUpstream_gene_distance\tDownstream_gene_distance\tStrongest SNP-Risk Allele\tSNPs\tMerged\tSnp_id_current\tContext\tIntergenic\tRisk Allele Frequency\tp-Value\tPvalue_mlog\tp-Value (text)\tOR or beta\t95% CI (text)\tPlatform [SNPs passing QC]\r\n";
 
         StringBuilder result = new StringBuilder();
         result.append(header);
@@ -167,9 +167,7 @@ public class JsonProcessingService {
             }
 
             line.append(platform);
-            line.append("\t");
 
-             line.append(getCNV(doc));
             line.append("\r\n");
 
             result.append(line.toString());
@@ -479,20 +477,6 @@ public class JsonProcessingService {
 
 
             return geneIds;
-    }
-
-
-    private String getCNV(JsonNode doc) {
-        String cnvVal = doc.get("cnv").asText().trim();
-        String cnv;
-
-        if(cnvVal.equals("1"))  {
-            cnv = "Y";
-        }
-        else{
-            cnv = "N";
-        }
-        return cnv;
     }
 
     private Map<String,String> getGeneDistances(JsonNode doc) {

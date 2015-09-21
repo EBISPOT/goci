@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -53,20 +52,27 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field("chromosomeName") private Set<String> chromosomeNames;
     @Field("chromosomePosition") private Set<Integer> chromosomePositions;
 
+    @Field("locusDescription") @NonEmbeddableField private String locusDescription;
+
     // embedded study info
     @Field private String pubmedId;
     @Field private String title;
     @Field private String author;
     @Field private String publication;
     @Field private String publicationDate;
-    @Field private String catalogAddedDate;
+    @Field private String catalogPublishDate;
     @Field private String publicationLink;
 
     @Field private String platform;
-    @Field private Boolean cnv;
 
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
+
+    @Field private Collection<String> ancestralGroups;
+    @Field private Collection<String> countriesOfRecruitment;
+    @Field private Collection<Integer> numberOfIndividuals;
+    @Field private Collection<String> ancestryLinks;
+
 
     // embedded DiseaseTrait info
     @Field("traitName") private Collection<String> traitNames;
@@ -106,6 +112,11 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
         this.mappedLabels = new LinkedHashSet<>();
         this.mappedUris = new LinkedHashSet<>();
+
+        this.ancestralGroups = new LinkedHashSet<>();
+        this.countriesOfRecruitment = new LinkedHashSet<>();
+        this.numberOfIndividuals = new LinkedHashSet<>();
+        this.ancestryLinks = new LinkedHashSet<>();
     }
 
     public String getRegion() {
@@ -200,8 +211,8 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         this.publicationDate = publicationDate;
     }
 
-    public void addCatalogAddedDate(String catalogAddedDate) {
-        this.catalogAddedDate = catalogAddedDate;
+    public void addCatalogPublishDate(String catalogPublishDate) {
+        this.catalogPublishDate = catalogPublishDate;
     }
 
     public void addPublicationLink(String publicationLink) {
@@ -212,16 +223,42 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         this.platform = platform;
     }
 
-    public void addCnv(Boolean cnv) {
-        this.cnv = cnv;
-    }
-
     public void addInitialSampleDescription(String initialSampleDescription) {
         this.initialSampleDescription = initialSampleDescription;
     }
 
     public void addReplicateSampleDescription(String replicateSampleDescription) {
         this.replicateSampleDescription = replicateSampleDescription;
+    }
+
+    public void addAncestralGroups(Collection<String> ancestralGroups){
+        this.ancestralGroups.addAll(ancestralGroups);
+    }
+
+    public void addCountriesOfRecruitment(Collection<String> countriesOfRecruitment){
+        this.countriesOfRecruitment.addAll(countriesOfRecruitment);
+    }
+
+    public void addNumberOfIndividuals(Collection<Integer> numberOfIndividuals){
+        this.numberOfIndividuals.addAll(numberOfIndividuals);
+    }
+
+    public void addAncestryLinks(Collection<String> ancestryLinks){
+        this.ancestryLinks.addAll(ancestryLinks);
+    }
+
+    public void addAncestralGroup(String ancestralGroup){
+        this.ancestralGroups.add(ancestralGroup);
+    }
+    public void addCountryOfRecruitment(String countryOfRecruitment){
+        this.countriesOfRecruitment.add(countryOfRecruitment);
+    }
+
+    public void addNumberOfIndiviuals(int numberOfIndividuals){
+        this.numberOfIndividuals.add(numberOfIndividuals);
+    }
+    public void addAncestryLink(String ancestryLink){
+        this.ancestryLinks.add(ancestryLink);
     }
 
     public void addTraitName(String traitName) {
@@ -298,6 +335,8 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                 reportedGeneLinks.add(geneLink);
                             }
                         });
+
+                        locusDescription = locus.getDescription();
                     }
             );
         }
@@ -358,6 +397,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                 reportedGeneLinks.add(geneLink);
                             }
                         });
+                        locusDescription = locus.getDescription();
                     }
             );
         }
@@ -442,5 +482,13 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             }
         }
         return current;
+    }
+
+    public String getLocusDescription() {
+        return locusDescription;
+    }
+
+    public void setLocusDescription(String locusDescription) {
+        this.locusDescription = locusDescription;
     }
 }

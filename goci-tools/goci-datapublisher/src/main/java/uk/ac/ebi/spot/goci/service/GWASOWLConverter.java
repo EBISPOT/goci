@@ -2,9 +2,10 @@ package uk.ac.ebi.spot.goci.service;
 
 import org.semanticweb.owlapi.model.OWLOntology;
 import uk.ac.ebi.spot.goci.exception.OWLConversionException;
-import uk.ac.ebi.spot.goci.ui.model.SingleNucleotidePolymorphism;
-import uk.ac.ebi.spot.goci.ui.model.Study;
-import uk.ac.ebi.spot.goci.ui.model.TraitAssociation;
+import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.model.Study;
+
+import uk.ac.ebi.spot.goci.model.Association;
 
 import java.util.Collection;
 
@@ -54,6 +55,6 @@ public interface GWASOWLConverter {
      * @throws uk.ac.ebi.spot.goci.exception.OWLConversionException
      *          if something went wrong whilst adding data to the ontology
      */
-    void addAssociationsToOntology(Collection<TraitAssociation> associations, OWLOntology ontology)
+    void addAssociationsToOntology(Collection<Association> associations, OWLOntology ontology)
             throws OWLConversionException;
 }

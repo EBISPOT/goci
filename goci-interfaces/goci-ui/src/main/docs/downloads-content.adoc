@@ -2,20 +2,44 @@
 
 == Downloading the GWAS Catalog
 
-The most recent edition of the GWAS Catalog is link:../api/search/downloads/full[available for download here]
 
-For a description of the file's column headings, go to link:fileheaders[this page].
+[width="60%",options="header",cols="2,1,1", frame="all", grid="cols", halign = "center"]
+|===
+|Description | Download Link |Format
 
+|The most recent edition of the GWAS Catalog
+|link:../api/search/downloads/full[ file]
+|tab separated file
 
-The most recent edition of the GWAS Catalog with added ontology annotations is link:../api/search/downloads/alternative[available for download here]
+|A description of the column headings in the most recent edition of the GWAS Catalog file
+|link:fileheaders[ file]
+|tab separated file
 
-For a description of the file's additional column headings, go to link:fileheaders#_file_headers_for_catalog_version_1_0_1[this page].
+|The most recent edition of the GWAS Catalog with added ontology annotations
+|link:../api/search/downloads/alternative[ file]
+|tab separated file
+
+|A description of the additional column headings in the most recent edition of the GWAS Catalog with added ontology annotations
+|link:fileheaders#_file_headers_for_catalog_version_1_0_1[ file]
+|tab separated file
+|===
+
 
 
 We are working to provide richer, fully customise-able downloads of GWAS data and these will be available soon.
 
+=== Try our new spreadsheet download
+image::http://www.ebi.ac.uk/web_guidelines/images/icons/EBI-Generic/Generic%20icons/Beta.png[BETA]
+
+
+As part of ongoing improvements mapping information will be added for all GWAS Catalog SNPs to Ensembl genes, in addition to NCBI genes. Multiple genomic locations for SNPs that map to multiple locations within the primary assembly will also be included.
+
+We are in the process of testing and developing this feature and in order to gather feedback the GWAS Catalog with added mapping information is link:../api/search/downloads/ensembl_mapping[available for download here].
+
+A description of the headers in this file can be found link:mappingfileheaders[here]. The information in this file is generated using the link:http://www.ensembl.org/info/docs/api/index.html[Ensembl API] and the source of the data is both Ensembl and NCBI. The data was produced using a snapshot of our database as of the 9th of September 2015 and includes studies with a date added to catalog up to July 2015.
+
+We'd love to hear what you think of this new feature, contact the GWAS Catalog team on mailto:gwas-info@ebi.ac.uk[gwas-info@ebi.ac.uk]
 
 == Citing the GWAS Catalog
 
 Please see the link:about[About] page for citation guidance.
-

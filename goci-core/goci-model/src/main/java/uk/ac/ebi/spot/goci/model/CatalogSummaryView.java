@@ -15,7 +15,7 @@ public class CatalogSummaryView {
     @Id
     private Long id;
 
-    private Date catalogAddedDate;
+    private Date studyAddedDate;
 
     private String pubmedId;
 
@@ -97,7 +97,9 @@ public class CatalogSummaryView {
 
     private Long studyId;
 
-    private Date resultPublished;
+    private Date catalogPublishDate;
+
+    private Date catalogUnpublishDate;
 
     private String curationStatus;
 
@@ -107,7 +109,7 @@ public class CatalogSummaryView {
     }
 
     public CatalogSummaryView(Long id,
-                              Date catalogAddedDate,
+                              Date studyAddedDate,
                               String pubmedId,
                               String author,
                               Date publicationDate,
@@ -148,10 +150,11 @@ public class CatalogSummaryView {
                               Boolean cnv,
                               Long associationId,
                               Long studyId,
-                              Date resultPublished,
+                              Date catalogPublishDate,
+                              Date catalogUnpublishDate,
                               String curationStatus) {
         this.id = id;
-        this.catalogAddedDate = catalogAddedDate;
+        this.studyAddedDate = studyAddedDate;
         this.pubmedId = pubmedId;
         this.author = author;
         this.publicationDate = publicationDate;
@@ -192,7 +195,8 @@ public class CatalogSummaryView {
         this.cnv = cnv;
         this.associationId = associationId;
         this.studyId = studyId;
-        this.resultPublished = resultPublished;
+        this.catalogPublishDate = catalogPublishDate;
+        this.catalogUnpublishDate = catalogUnpublishDate;
         this.curationStatus = curationStatus;
     }
 
@@ -204,12 +208,12 @@ public class CatalogSummaryView {
         this.id = id;
     }
 
-    public Date getCatalogAddedDate() {
-        return catalogAddedDate;
+    public Date getStudyAddedDate() {
+        return studyAddedDate;
     }
 
-    public void setCatalogAddedDate(Date catalogAddedDate) {
-        this.catalogAddedDate = catalogAddedDate;
+    public void setStudyAddedDate(Date studyAddedDate) {
+        this.studyAddedDate = studyAddedDate;
     }
 
     public String getPubmedId() {
@@ -544,12 +548,20 @@ public class CatalogSummaryView {
         this.studyId = studyId;
     }
 
-    public Date getResultPublished() {
-        return resultPublished;
+    public Date getCatalogPublishDate() {
+        return catalogPublishDate;
     }
 
-    public void setResultPublished(Date resultPublished) {
-        this.resultPublished = resultPublished;
+    public void setCatalogPublishDate(Date catalogPublishDate) {
+        this.catalogPublishDate = catalogPublishDate;
+    }
+
+    public Date getCatalogUnpublishDate() {
+        return catalogUnpublishDate;
+    }
+
+    public void setCatalogUnpublishDate(Date catalogUnpublishDate) {
+        this.catalogUnpublishDate = catalogUnpublishDate;
     }
 
     public String getCurationStatus() {
@@ -563,7 +575,7 @@ public class CatalogSummaryView {
     @Override public String toString() {
         return "CatalogSummaryView{" +
                 "id=" + id +
-                ", catalogAddedDate=" + catalogAddedDate +
+                ", studyAddedDate=" + studyAddedDate +
                 ", pubmedId='" + pubmedId + '\'' +
                 ", author='" + author + '\'' +
                 ", publicationDate=" + publicationDate +
@@ -604,7 +616,8 @@ public class CatalogSummaryView {
                 ", cnv=" + cnv +
                 ", associationId=" + associationId +
                 ", studyId=" + studyId +
-                ", resultPublished=" + resultPublished +
+                ", catalogPublishDate=" + catalogPublishDate +
+                ", catalogUnpublishDate=" + catalogUnpublishDate +
                 ", curationStatus='" + curationStatus + '\'' +
                 '}';
     }

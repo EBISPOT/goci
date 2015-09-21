@@ -18,8 +18,9 @@ function processStudy(study, table) {
     var authorsearch = "<span><a href='search?query=".concat(study.author).concat("'>").concat(study.author).concat("</a></span>");
     var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
 
-    row.append($("<td>").html(authorsearch.concat('&nbsp;&nbsp;').concat(epmclink)));
-    row.append($("<td>").html(study.publicationDate.substring(0, 10)));
+    var pubdate = study.publicationDate.substring(0, 10);
+    row.append($("<td>").html(authorsearch.concat(' (PMID: ').concat(study.pubmedId).concat(') &nbsp;&nbsp;').concat(epmclink)));
+    row.append($("<td>").html(pubdate));
     row.append($("<td>").html(study.publication));
     row.append($("<td>").html(study.title));
     var traitsearch = "<span><a href='search?query=".concat(study.traitName).concat("'>").concat(study.traitName).concat("</a></span>");
@@ -40,23 +41,174 @@ function processStudy(study, table) {
     hiddenrow.addClass('accordion-body');
     hiddenrow.addClass('hidden-study-row');
 
-    //var innerTable = $("<table>").addClass('table').addClass('sample-info');
     var innerTable = $("<table>").addClass('sample-info');
 
     innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Initial sample description")).append($("<td>").html(study.initialSampleDescription)));
-    innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Replication sample description")).append($("<td>").html(study.replicateSampleDescription)));
+
+    if($.datepicker.parseDate("yy-mm-dd", pubdate) > $.datepicker.parseDate("yy-mm-dd", "2010-12-31") && study.ancestryLinks != null){
+        var initial = '';
+        var replication = '';
+        var iniancestries = [];
+        var replancestries = [];
+
+        for(var j = 0; j < study.ancestryLinks.length; j++){
+            var link = study.ancestryLinks[j].split("|");
+
+            var cor = link[1];
+            var ancestry = link[2];
+            var num = link[3];
+
+            if(link[0] == 'initial'){
+                var existing = false;
+                var index;
+
+                for (var s = 0; s < iniancestries.length; s++) {
+                    if (iniancestries[s]["ancestry"] == ancestry) {
+                        existing = true;
+                        index = s;
+                        break;
+                    }
+                }
+
+                if(existing){
+                    var current = iniancestries[index]["number"];
+                    var total = parseInt(current) + parseInt(num);
+                    iniancestries[index]["number"] = total;
+
+                    if (cor.indexOf(',') != -1) {
+                        cor = cor.split(",");
+                        for (var i = 0; i < cor.length; i++) {
+                            if (iniancestries[index]["country"].indexOf(cor[i]) == -1) {
+                                iniancestries[index]["country"].push(cor[i]);
+                            }
+                        }
+                    }
+                    else {
+                        if (iniancestries[index]["country"].indexOf(cor) == -1) {
+                            iniancestries[index]["country"].push(cor);
+                        }
+                    }
+                }
+                else {
+                    var corar = [];
+                    if (cor.indexOf(',') != -1) {
+                        corar = cor.split(",");
+                    }
+                    else {
+                        corar[0] = cor;
+                    }
+
+                    var ances = {"ancestry": ancestry, "number": num, "country": corar};
+                    iniancestries.push(ances);
+                }
+
+            }
+
+            else{
+               var existing = false;
+                var index;
+
+                for (var t = 0; t < replancestries.length; t++) {
+                    if (replancestries[t]["ancestry"] == ancestry) {
+                        existing = true;
+                        index = t;
+                        break
+                    }
+                }
+
+                 if(existing){
+                    var current = replancestries[t]["number"];
+                    var total = parseInt(current) + parseInt(num);
+                    replancestries[t]["number"] = total;
+
+                    if (cor.indexOf(',') != -1) {
+                        cor = cor.split(",");
+                        for (var j = 0; j < cor.length; j++) {
+                            if (replancestries[t]["country"].indexOf(cor[j]) == -1) {
+                                replancestries[t]["country"].push(cor[j]);
+                            }
+                        }
+                    }
+                    else {
+                        if (replancestries[t]["country"].indexOf(cor) == -1) {
+                            replancestries[t]["country"].push(cor);
+                        }
+                    }
+                }
+                else {
+                    var corar = [];
+                    if (cor.indexOf(',') != -1) {
+                        corar = cor.split(",");
+                    }
+                    else {
+                        corar[0] = cor;
+                    }
+
+                    var ances = {"ancestry": ancestry, "number": num, "country": corar};
+                    replancestries.push(ances);
+                }
+            }
+        }
+
+
+        for(var n =0; n <iniancestries.length; n++){
+           if(n == 0){
+               initial = initial.concat(iniancestries[n]["number"]).concat(' ').concat(iniancestries[n]["ancestry"]);
+           }
+            else{
+               initial = initial.concat(', ').concat(iniancestries[n]["number"]).concat(' ').concat(iniancestries[n]["ancestry"]);
+           }
+
+            for(var m = 0; m < iniancestries[n]["country"].length; m++){
+                if(m == 0){
+                    initial = initial.concat(' (').concat(iniancestries[n]["country"][m]);
+                }
+                else{
+                    initial = initial.concat(', ').concat(iniancestries[n]["country"][m]);
+                }
+            }
+            initial = initial.concat(')');
+        }
+
+        if(initial == ''){
+            initial = initial.concat("NR");
+        }
+
+
+        for(var p =0; p <replancestries.length; p++){
+            if(p == 0){
+                replication = replication.concat(replancestries[p]["number"]).concat(' ').concat(replancestries[p]["ancestry"]);
+            }
+            else{
+                replication = replication.concat(', ').concat(replancestries[p]["number"]).concat(' ').concat(replancestries[p]["ancestry"]);
+            }
+
+            for(var q = 0; q < replancestries[p]["country"].length; q++){
+                if(q == 0){
+                    replication = replication.concat(' (').concat(replancestries[p]["country"][q]);
+                }
+                else{
+                    replication = replication.concat(', ').concat(replancestries[p]["country"][q]);
+                }
+            }
+            replication = replication.concat(')');
+
+        }
+
+        if(replication == ''){
+            replication = replication.concat("NR");
+        }
+
+        innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Initial ancestry (country of recruitment)")).append($("<td>").html(initial)));
+        innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Replication sample description")).append($("<td>").html(study.replicateSampleDescription)));
+        innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Replication ancestry (country of recruitment)")).append($("<td>").html(replication)));
+    }
+    else{
+        innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Replication sample description")).append($("<td>").html(study.replicateSampleDescription)));
+
+    }
+
     innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Platform [SNPs passing QC]")).append($("<td>").html(study.platform)));
-
-    var r4 = $("<tr>");
-    r4.append($("<th>").attr('style', 'width: 30%').html("CNV study?"));
-
-    if (study.cnv) {
-        r4.append($("<td>").html("yes"));
-    }
-    else {
-        r4.append($("<td>").html("no"));
-    }
-    innerTable.append(r4);
 
     hiddenrow.append($('<td>').attr('colspan', 7).attr('style', 'border-top: none').append(innerTable));
 
@@ -82,10 +234,16 @@ function processAssociation(association, table) {
             var rsIds = '';
             var alleles = '';
             var type = '';
+            var description = '';
+
             if(association.rsId[0].indexOf(',') != -1) {
                 rsIds = association.rsId[0].split(',');
                 alleles = association.strongestAllele[0].split(',');
                 type = ',';
+
+                if(association.locusDescription != null && association.locusDescription.indexOf('aplotype') != -1){
+                    description = association.locusDescription;
+                }
             }
             else if(association.rsId[0].indexOf('x') != -1){
                 rsIds = association.rsId[0].split('x');
@@ -111,6 +269,9 @@ function processAssociation(association, table) {
                         }
                     }
                 }
+            }
+            if(description != ''){
+                content = content.concat('&nbsp;&nbsp;(').concat(description).concat(')');
             }
             row.append($("<td>").html(content));
 
@@ -211,47 +372,7 @@ function processAssociation(association, table) {
 
     var repgene = '';
 
-    //if (association.reportedGeneLinks != null) {
-    //    ////what happens with NR genes?
-    //    //if(association.reportedGeneLinks[0].indexOf("NR") != -1){
-    //    //    repgene = association.reportedGeneLinks[0].split("|")[0];
-    //    //}
-    //    //else{
-    //
-    //    for (var j = 0; j < association.reportedGeneLinks.length; j++) {
-    //        var gene = association.reportedGeneLinks[j].split("|")[0];
-    //        var geneId = association.reportedGeneLinks[j].split("|")[1];
-    //
-    //        var repgenesearch = "<span><a href='search?query=".concat(gene).concat("'>").concat(gene).concat("</a></span>");
-    //        var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=".concat(geneId).concat("'  target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
-    //
-    //        if (repgene == '') {
-    //            repgene = repgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);
-    //        }
-    //
-    //        else {
-    //            repgene = repgene.concat(", ").concat(repgenesearch).concat('&nbsp;&nbsp;').concat(ensembl);
-    //        }
-    //    }
-    //    //}
-    //}
-    //else if (association.reportedGene != null) {
-    //    if(association.reportedGene[0] == "NR"){
-    //        repgene = association.reportedGene[0];
-    //    }
-    //    else{
-    //        for (var j = 0; j < association.reportedGene.length; j++) {
-    //            var repgenesearch = "<span><a href='search?query=".concat(association.reportedGene[j]).concat("'>").concat(association.reportedGene[j]).concat("</a></span>");
-    //            if (repgene == '') {
-    //                repgene = repgenesearch;
-    //            }
-    //
-    //            else {
-    //                repgene = repgene.concat(", ").concat(repgenesearch);
-    //            }
-    //        }
-    //    }
-    //}
+
     if (association.reportedGene != null) {
         if (association.reportedGeneLinks != null) {
             if(association.reportedGeneLinks.length == association.reportedGene.length){
@@ -333,7 +454,8 @@ function processAssociation(association, table) {
     }
     row.append($("<td>").html(mapgene));
 
-    if(association.traitName != null){var traitsearch = "<span><a href='search?query=".concat(association.traitName).concat("'>").concat(association.traitName).concat("</a></span>");
+    if(association.traitName != null){
+        var traitsearch = "<span><a href='search?query=".concat(association.traitName).concat("'>").concat(association.traitName).concat("</a></span>");
         row.append($("<td>").html(traitsearch));
     }
     else {
@@ -341,7 +463,7 @@ function processAssociation(association, table) {
     }
 
     var studydate = association.publicationDate.substring(0, 4);
-    var author = association.author[0].concat(", ").concat(studydate);
+    var author = association.author[0].concat(' (PMID: ').concat(association.pubmedId).concat("), ").concat(studydate);
 
     var europepmc = "http://www.europepmc.org/abstract/MED/".concat(association.pubmedId);
     var searchlink = "<span><a href='search?query=".concat(association.author).concat("'>").concat(author).concat("</a></span>");

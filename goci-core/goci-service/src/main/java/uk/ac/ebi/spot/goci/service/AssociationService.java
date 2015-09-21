@@ -67,6 +67,25 @@ public class AssociationService {
         return allAssociations;
     }
 
+
+    /**
+     * Get in one transaction the list of all Association with :
+     *  the attached study and its publish date
+     *  the attached efo traits
+     *  the attached locii, for each loci :
+     *      their strongestRiskAlleles, for each alleles :
+     *          the regions
+     *          the genomic contexts
+     *
+     * @return a List of Associations.
+     */
+    @Transactional(readOnly = true)
+    public List<Association> findReallyAll() {
+        List<Association> allAssociations = associationRepository.findAll();
+        allAssociations.forEach(this::loadAssociatedDataIncludingHousekeeping);
+        return allAssociations;
+    }
+
     @Transactional(readOnly = true)
     public List<Association> findAll(Sort sort) {
         List<Association> allAssociations = associationRepository.findAll(sort);
@@ -83,21 +102,23 @@ public class AssociationService {
 
     @Transactional(readOnly = true)
     public List<Association> findPublishedAssociations() {
-        List<Association> allAssociations = associationRepository.findByStudyHousekeepingPublishDateIsNotNull();
+        List<Association> allAssociations = associationRepository.findByStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull();
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
 
     @Transactional(readOnly = true)
     public List<Association> findPublishedAssociations(Sort sort) {
-        List<Association> allAssociations = associationRepository.findByStudyHousekeepingPublishDateIsNotNull(sort);
+        List<Association> allAssociations = associationRepository.findByStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(
+                sort);
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
 
     @Transactional(readOnly = true)
     public Page<Association> findPublishedAssociations(Pageable pageable) {
-        Page<Association> allAssociations = associationRepository.findByStudyHousekeepingPublishDateIsNotNull(pageable);
+        Page<Association> allAssociations = associationRepository.findByStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(
+                pageable);
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
@@ -112,7 +133,8 @@ public class AssociationService {
     @Transactional(readOnly = true)
     public Collection<Association> findPublishedAssociationsBySnpId(Long snpId) {
         Collection<Association> associations = associationRepository
-                .findByLociStrongestRiskAllelesSnpIdAndStudyHousekeepingPublishDateIsNotNull(snpId);
+                .findByLociStrongestRiskAllelesSnpIdAndStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(
+                        snpId);
         associations.forEach(this::loadAssociatedData);
         return associations;
     }
@@ -120,7 +142,7 @@ public class AssociationService {
     @Transactional(readOnly = true)
     public Collection<Association> findPublishedAssociationsByDiseaseTraitId(Long diseaseTraitId) {
         Collection<Association> associations =
-                associationRepository.findByStudyDiseaseTraitIdAndStudyHousekeepingPublishDateIsNotNull(
+                associationRepository.findByStudyDiseaseTraitIdAndStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(
                         diseaseTraitId);
         associations.forEach(this::loadAssociatedData);
         return associations;
@@ -129,12 +151,16 @@ public class AssociationService {
     @Transactional(readOnly = true)
     public Collection<Association> findPublishedAssociationsByEfoTraitId(Long efoTraitId) {
         Collection<Association> associations =
-                associationRepository.findByEfoTraitsIdAndStudyHousekeepingPublishDateIsNotNull(
+                associationRepository.findByEfoTraitsIdAndStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(
                         efoTraitId);
         associations.forEach(this::loadAssociatedData);
         return associations;
     }
 
+    public void loadAssociatedDataIncludingHousekeeping(Association association){
+        loadAssociatedData(association);
+        association.getStudy().getHousekeeping().getCatalogPublishDate();
+    }
     public void loadAssociatedData(Association association) {
         int traitCount = association.getEfoTraits().size();
         Study study = studyService.fetchOne(association.getStudy());

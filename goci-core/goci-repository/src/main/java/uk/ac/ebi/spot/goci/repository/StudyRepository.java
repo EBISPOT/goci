@@ -27,55 +27,88 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Collection<Study> findByDiseaseTraitId(Long diseaseTraitId);
 
+    Page<Study> findByDiseaseTraitId(Long diseaseTraitId, Pageable pageable);
+
     Collection<Study> findByPubmedId(String pubmedId);
 
-    // Custom queries
-    @Query("select s from Study s where s.housekeeping.curationStatus.id = :status")
+    Page<Study> findByPubmedId(String pubmedId, Pageable pageable);
+
+    // Custom query
+    @Query("select s from Study s where s.housekeeping.curationStatus.id = :status order by s.publicationDate desc")
     Collection<Study> findByCurationStatusIgnoreCase(@Param("status") Long status);
 
-    @Query("select s from Study s where s.housekeeping.curator.id = :curator")
-    Collection<Study> findByCuratorIgnoreCase(@Param("curator") Long curator);
+    // Pageable queries for filtering main page
+    Page<Study> findByHousekeepingCurationStatusIdAndHousekeepingCuratorId(Long status,
+                                                                           Long curator,
+                                                                           Pageable pageable);
 
-    @Query("select s from Study s where s.housekeeping.curationStatus.id = :status and s.housekeeping.curator.id = :curator")
-    Collection<Study> findByCurationStatusAndCuratorAllIgnoreCase(@Param("status") Long status,
-                                                                  @Param("curator") Long curator);
+    Page<Study> findByHousekeepingCurationStatusId(Long status, Pageable pageable);
 
-    @Query("select s from Study s where s.housekeeping.curator.id = :curator")
-    Collection<Study> findByCuratorOrderByStudyDateDesc(@Param("curator") Long curator);
+    Page<Study> findByHousekeepingCurationStatusIdNot(Long status, Pageable pageable);
+
+    Page<Study> findByHousekeepingCuratorId(Long curator, Pageable pageable);
 
     // Custom query to calculate curator totals
-    @Query("select s from Study s where s.housekeeping.curator.id = :curator and s.studyDate between :dateFrom and :dateTo")
-    List<Study> findByStudyDateAndCurator(@Param("curator") Long curator,
+    @Query("select s from Study s where s.housekeeping.curator.id = :curator and s.publicationDate between :dateFrom and :dateTo")
+    List<Study> findByPublicationDateAndCurator(@Param("curator") Long curator,
                                           @Param("dateFrom") Date dateFrom,
                                           @Param("dateTo") Date dateTo);
 
-    // Custom query for daily audit emails
+    // Queries for study types
+    Page<Study>findByGxe(Boolean gxe ,Pageable pageable);
+
+    Page<Study>findByGxg(Boolean gxg ,Pageable pageable);
+
+    Page<Study>findByCnv(Boolean cnv ,Pageable pageable);
+
+    Page<Study>findByHousekeepingCheckedNCBIErrorOrHousekeepingCurationStatusId(Boolean checkedNCBIError,Long status ,Pageable pageable);
+
+    // EFO trait query
+    Page<Study> findByEfoTraitsId(Long efoTraitId, Pageable pageable);
+
+    // Ethnicity query
+//    Page<Study> findByEthnicityId(Long ethnicityId, Pageable pageable);
+
+    // Query housekeeping notes field
+    Page<Study> findByHousekeepingNotesContainingIgnoreCase(String query, Pageable pageable);
+
+    // Custom query to get list of study authors
+    @Query("select distinct s.author from Study s")
+    List<String> findAllStudyAuthors(Sort sort);
+
     List<Study> findByHousekeepingSendToNCBIDate(Date date);
 
-    List<Study> findByHousekeepingPublishDateIsNotNull();
+    List<Study> findByAuthorContainingIgnoreCase(String author);
 
-    List<Study> findByHousekeepingPublishDateIsNotNull(Sort sort);
+    List<Study> findByAuthorContainingIgnoreCase(String author , Sort sort);
 
-    Page<Study> findByHousekeepingPublishDateIsNotNull(Pageable pageable);
+    Page<Study>  findByAuthorContainingIgnoreCase(String author , Pageable pageable);
 
-    List<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingPublishDateIsNotNull(Long snpId);
+    List<Study> findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull();
 
-    List<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingPublishDateIsNotNull(Sort sort,
+    List<Study> findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Sort sort);
+
+    Page<Study> findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Pageable pageable);
+
+    List<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Long snpId);
+
+    List<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Sort sort,
                                                                                                    Long snpId);
 
-    Page<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingPublishDateIsNotNull(Pageable pageable,
+    Page<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Pageable pageable,
                                                                                                    Long snpId);
 
-    List<Study> findByAssociationsIdAndHousekeepingPublishDateIsNotNull(Long associationId);
+    List<Study> findByAssociationsIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Long associationId);
 
-    List<Study> findByAssociationsIdAndHousekeepingPublishDateIsNotNull(Sort sort, Long associationId);
+    List<Study> findByAssociationsIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Sort sort, Long associationId);
 
-    Page<Study> findByAssociationsIdAndHousekeepingPublishDateIsNotNull(Pageable pageable, Long associationId);
+    Page<Study> findByAssociationsIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Pageable pageable, Long associationId);
 
-    List<Study> findByDiseaseTraitIdAndHousekeepingPublishDateIsNotNull(Long diseaseTraitId);
+    List<Study> findByDiseaseTraitIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Long diseaseTraitId);
 
-    List<Study> findByDiseaseTraitIdAndHousekeepingPublishDateIsNotNull(Sort sort, Long diseaseTraitId);
+    List<Study> findByDiseaseTraitIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Sort sort, Long diseaseTraitId);
 
-    Page<Study> findByDiseaseTraitIdAndHousekeepingPublishDateIsNotNull(Pageable pageable, Long diseaseTraitId);
+    Page<Study> findByDiseaseTraitIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Pageable pageable, Long diseaseTraitId);
+
 }
 

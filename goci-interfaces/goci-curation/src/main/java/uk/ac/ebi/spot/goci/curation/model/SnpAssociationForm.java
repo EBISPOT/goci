@@ -5,15 +5,18 @@ import uk.ac.ebi.spot.goci.model.Region;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
  * Created by emma on 28/01/15.
  *
  * @author emma
- *         <p/>
- *         New service class to deal with form used by curators to enter snp/association details
+ *         <p>
+ *         New service class to deal with form used by curators to enter snp/association details. Deals with standard
+ *         and multi-snp haplotype associations
  */
 
 public class SnpAssociationForm {
@@ -34,21 +37,19 @@ public class SnpAssociationForm {
 
     private Boolean multiSnpHaplotype = false;
 
-    private Boolean snpInteraction = false;
-
     private Boolean snpChecked = false;
 
     private Integer pvalueMantissa;
 
     private Integer pvalueExponent;
 
-    private Float pvalueFloat;
-
     private Float orPerCopyRecip;
 
     private Float orPerCopyStdError;
 
     private String orPerCopyRange;
+
+    private String orPerCopyRecipRange;
 
     private String orPerCopyUnitDescr;
 
@@ -63,13 +64,31 @@ public class SnpAssociationForm {
 
     private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
-    private Collection<Region> regions = new ArrayList<>();
 
     // Constructors
     public SnpAssociationForm() {
     }
 
-    public SnpAssociationForm(Long associationId, String riskFrequency, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Boolean snpChecked, Integer pvalueMantissa, Integer pvalueExponent, Float pvalueFloat, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyUnitDescr, List<SnpFormRow> snpFormRows, Collection<String> authorReportedGenes, String multiSnpHaplotypeDescr, Integer multiSnpHaplotypeNum, Collection<EfoTrait> efoTraits, Collection<Region> regions) {
+    public SnpAssociationForm(Long associationId,
+                              String riskFrequency,
+                              String pvalueText,
+                              Float orPerCopyNum,
+                              Boolean orType,
+                              String snpType,
+                              Boolean multiSnpHaplotype,
+                              Boolean snpChecked,
+                              Integer pvalueMantissa,
+                              Integer pvalueExponent,
+                              Float orPerCopyRecip,
+                              Float orPerCopyStdError,
+                              String orPerCopyRange,
+                              String orPerCopyRecipRange,
+                              String orPerCopyUnitDescr,
+                              List<SnpFormRow> snpFormRows,
+                              Collection<String> authorReportedGenes,
+                              String multiSnpHaplotypeDescr,
+                              Integer multiSnpHaplotypeNum,
+                              Collection<EfoTrait> efoTraits) {
         this.associationId = associationId;
         this.riskFrequency = riskFrequency;
         this.pvalueText = pvalueText;
@@ -77,21 +96,19 @@ public class SnpAssociationForm {
         this.orType = orType;
         this.snpType = snpType;
         this.multiSnpHaplotype = multiSnpHaplotype;
-        this.snpInteraction = snpInteraction;
         this.snpChecked = snpChecked;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
-        this.pvalueFloat = pvalueFloat;
         this.orPerCopyRecip = orPerCopyRecip;
         this.orPerCopyStdError = orPerCopyStdError;
         this.orPerCopyRange = orPerCopyRange;
+        this.orPerCopyRecipRange = orPerCopyRecipRange;
         this.orPerCopyUnitDescr = orPerCopyUnitDescr;
         this.snpFormRows = snpFormRows;
         this.authorReportedGenes = authorReportedGenes;
         this.multiSnpHaplotypeDescr = multiSnpHaplotypeDescr;
         this.multiSnpHaplotypeNum = multiSnpHaplotypeNum;
         this.efoTraits = efoTraits;
-        this.regions = regions;
     }
 
     // Getters/setters
@@ -167,14 +184,6 @@ public class SnpAssociationForm {
         this.multiSnpHaplotypeNum = multiSnpHaplotypeNum;
     }
 
-    public Boolean getSnpInteraction() {
-        return snpInteraction;
-    }
-
-    public void setSnpInteraction(Boolean snpInteraction) {
-        this.snpInteraction = snpInteraction;
-    }
-
     public Integer getPvalueMantissa() {
         return pvalueMantissa;
     }
@@ -189,14 +198,6 @@ public class SnpAssociationForm {
 
     public void setPvalueExponent(Integer pvalueExponent) {
         this.pvalueExponent = pvalueExponent;
-    }
-
-    public Float getPvalueFloat() {
-        return pvalueFloat;
-    }
-
-    public void setPvalueFloat(Float pvalueFloat) {
-        this.pvalueFloat = pvalueFloat;
     }
 
     public Float getOrPerCopyRecip() {
@@ -221,6 +222,14 @@ public class SnpAssociationForm {
 
     public void setOrPerCopyRange(String orPerCopyRange) {
         this.orPerCopyRange = orPerCopyRange;
+    }
+
+    public String getOrPerCopyRecipRange() {
+        return orPerCopyRecipRange;
+    }
+
+    public void setOrPerCopyRecipRange(String orPerCopyRecipRange) {
+        this.orPerCopyRecipRange = orPerCopyRecipRange;
     }
 
     public String getOrPerCopyUnitDescr() {
@@ -263,12 +272,5 @@ public class SnpAssociationForm {
         this.snpChecked = snpChecked;
     }
 
-    public Collection<Region> getRegions() {
-        return regions;
-    }
-
-    public void setRegions(Collection<Region> regions) {
-        this.regions = regions;
-    }
 }
 

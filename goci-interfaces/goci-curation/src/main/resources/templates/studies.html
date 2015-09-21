@@ -7,10 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="../static/css/table_padding.css" th:href="@{css/table_padding.css}"/>
-    <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}"/>
-    <link rel="stylesheet" href="../static/css/bootstrap-theme.min.css" th:href="@{css/bootstrap-theme.min.css}"/>
-
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" href="../static/css/bootstrap-theme.min.css" th:href="@{/css/bootstrap-theme.min.css}"/>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
@@ -26,84 +24,222 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
 
 
-    <!--Bootstrap table: http://bootstrap-table.wenzhixin.net.cn/-->
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.6.0/bootstrap-table.min.css"/>
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.6.0/bootstrap-table.min.js"></script>
-
 </head>
 <body>
 
+<!--Include header-->
+<div th:include="header :: navbar"></div>
 
-<nav role="navigation" class="navbar navbar-default">
-    <div class="navbar-header">
-        <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <a href="http://www.ebi.ac.uk/gwas" class="navbar-brand">GWAS</a>
+<div class="panel panel-default col-md-11" >
+    <div class="panel-heading">Refine studies table
+        <button class="btn btn-default"
+                type="button"
+                data-toggle="collapse"
+                data-target="#collapseOptions"
+                aria-expanded="false"
+                aria-controls="collapseOptions">
+                  <span class="glyphicon glyphicon-collapse-up pull-right"></span></button>
     </div>
+    <div class="panel-body collapse in" id="collapseOptions">
+        <div id="studyTypesFilterParametersForm">
 
-    <div id="navbarCollapse" class="collapse navbar-collapse">
-        <ul class="nav navbar-nav">
-            <li><a th:href="@{/studies}">Home</a></li>
-            <li><a th:href="@{/studies/new}">Add Study</a></li>
-            <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
-            <li><a th:href="@{/reports}">Reports</a></li>
-        </ul>
+            <form class="form-inline" name="studyTypesFilterParametersForm" role="form" method="post"
+                  th:action="@{/studies(filters=true)}"
+                  th:object="${studySearchFilter} ">
 
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <form th:action="@{/logout}" method="post">
-                    <input type="submit" value="Sign Out"/>
-                </form>
-            </li>
-        </ul>
-    </div>
-</nav>
+                <div class="form-group">
+                    <label for="studyTypes" class="control-label"></label>
+                    <select name="studyTypes" class="form-control  select2-select"
+                            th:field="*{studyType}" id="studyTypes">
+                        <!-- Empty value for first entry-->
+                        <option value=""></option>
+                        <option th:each="studyType : ${studyTypes}"
+                                th:value="${studyType}"
+                                th:text="${studyType}"></option>
+                    </select>
+                </div>
 
-<br/>
+                <div class="form-group">
+                    <div>
+                                <button type="submit"
+                                        class="btn btn-primary btn-sm"
+                                        data-toggle="tooltip"
+                                        data-placement="right"
+                                        title="Filter for GXE studies, GXG studies, CNV studies, studies in curation queue,
+                                        studies with errors">Filter by study type</button>
+                    </div>
+                </div>
+            </form>
+        </div>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="pull-right">
-            <div id="filterParametersForm">
+        <br/>
 
-                <form class="form-inline" name="filterParametersForm" role="form" method="post"
+        <div id="curatorFilterParametersForm">
+
+            <form class="form-inline" name="curatorFilterParametersForm" role="form" method="post"
+                  th:action="@{/studies(filters=true)}"
+                  th:object="${studySearchFilter} ">
+
+                <div class="form-group">
+                    <label for="curationStatus" class="control-label"></label>
+                    <select name="curationStatus" class="form-control select2-select"
+                            th:field="*{statusSearchFilterId}" id="curationStatus">
+                        <!-- Empty value for first entry-->
+                        <option value=""></option>
+                        <option th:each="curationStatus : ${curationstatuses}"
+                                th:value="${curationStatus.id}"
+                                th:text="${curationStatus.status}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="curator" class="control-label"></label>
+                    <select name="curator" th:field="*{curatorSearchFilterId}"
+                            class="form-control select2-select" id="curator">
+                        <!-- Empty value for first entry-->
+                        <option value=""></option>
+                        <option th:each="curator : ${curators}"
+                                th:value="${curator.id}"
+                                th:text="${curator.lastName}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <div>
+                                    <button type="submit"
+                                            class="btn btn-primary btn-sm">Filter by curator and/or status</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <br/>
+
+        <div id="authorFilterParametersForm">
+
+            <form class="form-inline" name="efoTraitsFilterParametersForm" role="form" method="post"
+                  th:action="@{/studies(filters=true)}"
+                  th:object="${studySearchFilter} ">
+
+                <div class="form-group">
+                    <label for="authors" class="control-label"></label>
+                    <select name="authors" class="form-control select2-select"
+                            th:field="*{author}" id="authors">
+                        <!-- Empty value for first entry-->
+                        <option value=""></option>
+                        <option th:each="author : ${authors}"
+                                th:value="${author}"
+                                th:text="${author}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <div>
+                        <button type="submit" class="btn btn-primary btn-sm">Filter by author</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <br/>
+
+
+        <div id="efoTraitsFilterParametersForm">
+
+            <form class="form-inline" name="efoTraitsFilterParametersForm" role="form" method="post"
+                  th:action="@{/studies(filters=true)}"
+                  th:object="${studySearchFilter} ">
+
+                <div class="form-group">
+                    <label for="efoTraits" class="control-label"></label>
+                    <select name="efoTraits" class="form-control select2-select"
+                            th:field="*{efoTraitSearchFilterId}" id="efoTraits">
+                        <!-- Empty value for first entry-->
+                        <option value=""></option>
+                        <option th:each="efoTrait : ${efoTraits}"
+                                th:value="${efoTrait.id}"
+                                th:text="${efoTrait.trait}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <div>
+                        <button type="submit" class="btn btn-primary btn-sm">Filter by EFO trait</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <br/>
+
+
+        <div id="diseaseTraitsFilterParametersForm">
+
+            <form class="form-inline" name="diseaseTraitsFilterParametersForm" role="form" method="post"
+                  th:action="@{/studies(filters=true)}"
+                  th:object="${studySearchFilter} ">
+
+                <div class="form-group">
+                    <label for="diseaseTraits" class="control-label"></label>
+                    <select name="diseaseTraits" class="form-control select2-select"
+                            th:field="*{diseaseTraitSearchFilterId}" id="diseaseTraits">
+                        <!-- Empty value for first entry-->
+                        <option value=""></option>
+                        <option th:each="diseaseTrait : ${diseaseTraits}"
+                                th:value="${diseaseTrait.id}"
+                                th:text="${diseaseTrait.trait}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <div>
+                        <button type="submit" class="btn btn-primary btn-sm">Filter by disease trait</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+        <br/>
+
+        <div class="row">
+            <div id="pubmedFilterParametersForm">
+
+                <form class="form-inline" name="pubmedFilterParametersForm" role="form" method="post"
                       th:action="@{/studies(filters=true)}"
-                      th:object="${studySearchFilter} ">
+                      th:object="${studySearchFilter}">
 
-                    <div class="form-group">
-                        <label for="curationStatus" class="control-label">Curator Status:</label>
-                        <select name="curationStatus" class="form-control select2-select"
-                                th:field="*{statusSearchFilterId}" id="curationStatus">
-                            <!-- Empty value for first entry-->
-                            <option value=""></option>
-                            <option th:each="curationStatus : ${curationstatuses}"
-                                    th:value="${curationStatus.id}"
-                                    th:text="${curationStatus.status}"></option>
-                        </select>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="text"
+                                   class="form-control"
+                                   th:field="*{pubmedId}"
+                                   placeholder="Search for..."/>
+                                    <span class="input-group-btn">
+                                    <button class="btn btn-primary btn-sm"
+                                            type="submit">Search by pubmed ID</button></span>
+                        </div>
                     </div>
+                </form>
+            </div>
+        </div>
 
-                    <div class="form-group">
-                        <label for="curator" class="control-label">Curator:</label>
-                        <select name="curator" th:field="*{curatorSearchFilterId}"
-                                class="form-control select2-select" id="curator">
-                            <!-- Empty value for first entry-->
-                            <option value=""></option>
-                            <option th:each="curator : ${curators}"
-                                    th:value="${curator.id}"
-                                    th:text="${curator.lastName}"></option>
-                        </select>
-                    </div>
+        <br/>
 
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <button type="submit" class="btn btn-primary">Filter</button>
+        <div class="row">
+            <div id="notesFilterParametersForm">
+                <form class="form-inline" name="notesFilterParametersForm" role="form" method="post"
+                      th:action="@{/studies(filters=true)}"
+                      th:object="${studySearchFilter}">
+
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="text"
+                                   class="form-control"
+                                   th:field="*{notesQuery}"
+                                   placeholder="Search for..."/>
+                                    <span class="input-group-btn">
+                                    <button class="btn btn-primary btn-sm" type="submit">Search notes</button></span>
                         </div>
                     </div>
                 </form>
@@ -117,100 +253,225 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <div id="filter-bar"></div>
-            <div class="main-table-wrapper">
-                <table id="mainTable" class="table table-hover table-bordered"
-                       data-toggle="table"
-                       data-show-pagination-switch="true"
-                       data-show-columns="true"
-                       data-search="true"
-                       data-sort-order="asc"
-                       data-pagination="true">
-                    <caption id="total"></caption>
-                    <thead>
-                    <tr>
-                        <th class="col-md-1" data-field="action" data-switchable="false"></th>
-                        <th class="col-md-1" data-field="author" data-sortable="true">Author</th>
-                        <th class="col-md-2" data-field="title" data-sortable="true">Title</th>
-                        <th class="col-md-1" data-field="studydate" data-sortable="true">Study Date (YYYY-MM-DD)</th>
-                        <th class="col-md-1" data-field="pubmedid" data-sortable="true">Pubmed ID</th>
-                        <th class="col-md-1" data-field="publication" data-sortable="true">Publication</th>
-                        <th class="col-md-1" data-field="diseasetrait" data-sortable="true">Disease/Trait</th>
-                        <th class="col-md-1" data-field="curator" data-sortable="true">Curator</th>
-                        <th class="col-md-1" data-field="curationstatus" data-sortable="true">Curator Status</th>
-                        <th class="col-md-2" data-field="notes">Notes</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="study : ${studies}">
-                        <td>
-                            <div class="btn-group">
+            <div class="well well-sm" th:if="${totalStudies == 0 }">
+                <p style="color:grey">No studies to display</p>
+            </div>
+
+            <table id="mainTable" class="table table-hover table-bordered" th:if="${totalStudies &gt; 0 }">
+                <caption id="total" th:text="'Total: '+ ${totalStudies}"></caption>
+                <thead>
+                <tr>
+                    <th class="col-md-1"></th>
+                    <th class="col-md-1">Author
+                        <div>
+                            <a th:href="@{${uri}(sorttype=authorsortasc)}"
+                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
+                            <a th:href="@{${uri}(sorttype=authorsortdesc)}"
+                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+                        </div>
+                    </th>
+                    <th class="col-md-1">Title
+                        <div>
+                            <a th:href="@{${uri}(sorttype=titlesortasc)}"
+                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
+                            <a th:href="@{${uri}(sorttype=titlesortdesc)}"
+                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+                        </div>
+                    </th>
+                    <th class="col-md-1">Publication Date (YYYY-MM-DD)
+                        <div>
+                            <a th:href="@{${uri}(sorttype=publicationdatesortasc)}"
+                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
+                            <a th:href="@{${uri}(sorttype=publicationdatesortdesc)}"
+                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+                        </div>
+                    </th>
+                    <th class="col-md-1">Pubmed ID
+                        <div>
+                            <a th:href="@{${uri}(sorttype=pubmedsortasc)}"
+                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
+                            <a th:href="@{${uri}(sorttype=pubmedsortdesc)}"
+                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+                        </div>
+                    </th>
+                    <th class="col-md-1">Publication
+                        <div>
+                            <a th:href="@{${uri}(sorttype=publicationsortasc)}"
+                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
+                            <a th:href="@{${uri}(sorttype=publicationsortdesc)}"
+                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+                        </div>
+                    </th>
+
+                    <th class="col-md-1">Disease/Trait
+                        <div>
+                            <a th:href="@{${uri}(sorttype=diseasetraitsortasc)}"
+                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
+                            <a th:href="@{${uri}(sorttype=diseasetraitsortdesc)}"
+                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+                        </div>
+                    </th>
+                    <th class="col-md-1">EFO Trait</th>
+                    <th class="col-md-1">Curator
+                        <div>
+                            <a th:href="@{${uri}(sorttype=curatorsortasc)}"
+                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
+                            <a th:href="@{${uri}(sorttype=curatorsortdesc)}"
+                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+                        </div>
+                    </th>
+                    <th class="col-md-1">Curation Status
+                        <div>
+                            <a th:href="@{${uri}(sorttype=curationstatussortasc)}"
+                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
+                            <a th:href="@{${uri}(sorttype=curationstatussortdesc)}"
+                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+                        </div>
+                    </th>
+                    <th class="col-md-3">Notes</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="study : ${studies}">
+                    <td>
+                        <div class="btn-group">
                             <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">
                                 Action<span class="caret"></span></button>
 
-                                <ul class="dropdown-menu">
-                                    <li><a th:href="@{/studies/{studyId}(studyId=${study.id})}">Edit</a></li>
-                                    <li><a th:href="@{/studies/{studyId}/delete(studyId=${study.id})}">Delete</a></li>
-                                    <li><a th:href="@{/studies/{studyId}/duplicate(studyId=${study.id})}">Duplicate</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </td>
+                            <ul class="dropdown-menu">
+                                <li><a th:href="@{/studies/{studyId}(studyId=${study.id})}">Edit</a></li>
+                                <li><a th:href="@{/studies/{studyId}/delete(studyId=${study.id})}">Delete</a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/studies/{studyId}/duplicate(studyId=${study.id})}">Duplicate</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
 
-                        <!-- Use an conditional here as a study can have a null attributes-->
-                        <!-- Using thymeleaf elvis operator for string, date attributes-->
+                    <!-- Use a conditional here as a study can have a null attributes-->
+                    <!-- Using thymeleaf elvis operator for string, date attributes-->
 
-                        <td th:text="${study.author} ?: '' "></td>
-                        <td th:text="${study.title} ?: ''"></td>
-                        <td th:text="${#calendars.format(study.studyDate,'yyyy-MM-dd')} ?: ''"></td>
-                        <td><a th:href="@{http://europepmc.org/abstract/MED/{pubmedId}(pubmedId=${study.pubmedId})}"
-                               th:text="${study.pubmedId} ?: ''" target="_blank"></a></td>
-                        <td th:text="${study.publication} ?: ''"></td>
+                    <td th:text="${study.author} ?: '' "></td>
+                    <td th:text="${study.title} ?: ''"></td>
+                    <td th:text="${study.publicationDate != null } ? ${#dates.format(study.publicationDate,'yyyy-MM-dd')} : ''"></td>
+                    <td><p th:text="${study.pubmedId} ?: ''"></p>
 
-                        <!--If study has associated disease trait return traits name-->
-                        <td th:text="${study.diseaseTrait != null} ? ${study.diseaseTrait.trait} : ''"></td>
+                        <div class="btn-group">
+                                <button type="button"
+                                        data-toggle="dropdown"
+                                        class="btn btn-sm btn-default dropdown-toggle">
+                                View paper<span class="caret"></span></button>
 
-                        <!--If study has associated housekeeping object then get the following attributes -->
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a th:href="@{http://europepmc.org/abstract/MED/{pubmedId}(pubmedId=${study.pubmedId})}"
+                                       target="_blank">View in Europe PMC</a></li>
+                                <li>
+                                    <a th:href="@{http://www.ncbi.nlm.nih.gov/pubmed/?term={pubmedId}(pubmedId=${study.pubmedId})}"
+                                       target="_blank">View in PubMed</a></li>
 
-                        <td th:text="${study.housekeeping != null and study.housekeeping.curator !=null } ? ${study.housekeeping.curator.lastName} : ''"></td>
-                        <td th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : ''"></td>
-                        <td th:text="${study.housekeeping !=null} ? ${study.housekeeping.notes} : ''"></td>
+                            </ul>
+                        </div>
+                    </td>
 
 
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+                    <td th:text="${study.publication} ?: ''"></td>
+
+                    <!--If study has associated disease trait or EFO trait return traits name-->
+                    <td th:text="${study.diseaseTrait != null} ? ${study.diseaseTrait.trait} : ''"></td>
+                    <td><span th:each="efoTrait: ${study.efoTraits}"
+                              th:if="${#arrays.length(study.efoTraits) &gt; 1}"
+                              th:text="${efoTrait.trait}+', ' ?: ''"></span>
+                            <span th:each="efoTrait: ${study.efoTraits}"
+                                  th:if="${#arrays.length(study.efoTraits) == 1}"
+                                  th:text="${efoTrait.trait} ?: ''"></span>
+                    </td>
+
+                    <!--If study has associated housekeeping object then get the following attributes -->
+
+                    <td th:text="${study.housekeeping != null and study.housekeeping.curator !=null } ? ${study.housekeeping.curator.lastName} : ''"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : ''"></td>
+                    <td th:text="${study.housekeeping !=null} ? ${study.housekeeping.notes} : ''"></td>
+
+
+                </tr>
+                </tbody>
+            </table>
         </div>
+
+        <!--Only show bar if more that one study available-->
+        <div th:if="${totalStudies &gt; 1 }" th:include="pagination_bar :: pagination_bar"></div>
     </div>
 </div>
 
 <script>
     $(function() {
         // turn the element to select2 select style
-        $('#curationStatus').select2({ placeholder: "Select a status",
-                                         allowClear: true});
+        $('#curationStatus').select2({
+            placeholder: "Select a status",
+            allowClear: true,
+            width: 'resolve'
+        });
     });
 </script>
 
 <script>
     $(function() {
         // turn the element to select2 select style
-        $('#curator').select2({ placeholder: "Select a curator",
-                                  allowClear: true});
+        $('#curator').select2({
+            placeholder: "Select a curator",
+            allowClear: true,
+            width: 'resolve'
+        });
+    });
+</script>
+<script>
+    $(function() {
+        // turn the element to select2 select style
+        $('#studyTypes').select2({
+            placeholder: "Select GXE, studies with errors...",
+            allowClear: true
+        });
     });
 </script>
 
+<script>
+    $(function() {
+        // turn the element to select2 select style
+        $('#efoTraits').select2({
+            placeholder: "Select EFO trait..",
+            allowClear: true,
+            width: 'resolve'
+        });
+    });
+</script>
 
 <script>
-    //    Count our table rows
-    function myFunction() {
-        // Minus 1 to account for heading
-        var x = document.getElementById("mainTable").rows.length - 1;
-        return "Total Studies: " + x;
-    }
-    document.getElementById("total").innerHTML = myFunction();
+    $(function() {
+        // turn the element to select2 select style
+        $('#diseaseTraits').select2({
+            placeholder: "Select disease trait..",
+            allowClear: true,
+            width: 'resolve'
+        });
+    });
 </script>
+
+<script>
+    $(function() {
+        // turn the element to select2 select style
+        $('#authors').select2({
+            placeholder: "Select author..",
+            allowClear: true,
+            width: 'resolve'
+        });
+    });
+</script>
+
+<script>$(function() {
+    $('[data-toggle="tooltip"]').tooltip()
+})</script>
 
 </body>
 </html>

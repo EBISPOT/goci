@@ -22,14 +22,18 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String author;
     @Field private String publication;
     @Field private String publicationDate;
-    @Field private String catalogAddedDate;
+    @Field private String catalogPublishDate;
     @Field private String publicationLink;
 
     @Field private String platform;
-    @Field private Boolean cnv;
 
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
+
+    @Field private Collection<String> ancestralGroups;
+    @Field private Collection<String> countriesOfRecruitment;
+    @Field private Collection<Integer> numberOfIndividuals;
+    @Field private Collection<String> ancestryLinks;
 
     @Field @NonEmbeddableField private int associationCount;
 
@@ -46,6 +50,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field("association_chromosomeName") private Collection<String> chromosomeNames;
     @Field("association_chromosomePosition") private Collection<Integer> chromosomePositions;
     @Field("association_last_modified") private Collection<String> lastModifiedDates;
+//    @Field("association_locusDescription") private Collection<String> locusDescriptions;
 //    @Field("association_merged") private Long merged;
 
     // embedded DiseaseTrait info
@@ -63,30 +68,35 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.publication = study.getPublication();
 
         this.platform = study.getPlatform();
-        this.cnv = study.getCnv();
 
         this.initialSampleDescription = study.getInitialSampleSize();
         this.replicateSampleDescription = study.getReplicateSampleSize();
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
-        if (study.getStudyDate() != null) {
-            this.publicationDate = df.format(study.getStudyDate());
+        if (study.getPublicationDate() != null) {
+            this.publicationDate = df.format(study.getPublicationDate());
         }
-        if (study.getHousekeeping().getPublishDate() != null) {
-            this.catalogAddedDate = df.format(study.getHousekeeping().getPublishDate());
+        if (study.getHousekeeping().getCatalogPublishDate() != null) {
+            this.catalogPublishDate = df.format(study.getHousekeeping().getCatalogPublishDate());
         }
 
         String year;
-        if (study.getStudyDate() != null) {
+        if (study.getPublicationDate() != null) {
             Calendar studyCal = Calendar.getInstance();
-            studyCal.setTime(study.getStudyDate());
+            studyCal.setTime(study.getPublicationDate());
             year = String.valueOf(studyCal.get(Calendar.YEAR));
         }
         else {
             year = "N/A";
         }
         this.publicationLink = author.concat("|").concat(year).concat("|").concat(pubmedId);
+
+        this.ancestralGroups = new LinkedHashSet<>();
+        this.countriesOfRecruitment = new LinkedHashSet<>();
+        this.numberOfIndividuals = new LinkedHashSet<>();
+        this.ancestryLinks = new LinkedHashSet<>();
+        embedAncestryData(study);
 
         this.qualifiers = new LinkedHashSet<>();
         this.rsIds = new LinkedHashSet<>();
@@ -100,6 +110,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.chromosomeNames = new LinkedHashSet<>();
         this.chromosomePositions = new LinkedHashSet<>();
         this.lastModifiedDates = new LinkedHashSet<>();
+//        this.locusDescriptions = new LinkedHashSet<>();
 
         this.traitNames = new LinkedHashSet<>();
 
@@ -127,8 +138,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         return publicationDate;
     }
 
-    public String getCatalogAddedDate() {
-        return catalogAddedDate;
+    public String getCatalogPublishDate() {
+        return catalogPublishDate;
     }
 
     public String getPublicationLink() {
@@ -137,10 +148,6 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
     public String getPlatform() {
         return platform;
-    }
-
-    public Boolean getCnv() {
-        return cnv;
     }
 
     public String getInitialSampleDescription() {
@@ -222,4 +229,72 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     public void addMappedUri(String mappedUri) {
         this.mappedUris.add(mappedUri);
     }
+
+    public Collection<String> getAncestralGroups() {
+        return ancestralGroups;
+    }
+
+    public Collection<String> getCountriesOfRecruitment() {
+        return countriesOfRecruitment;
+    }
+
+
+    public Collection<Integer> getNumberOfIndividuals() {
+        return numberOfIndividuals;
+    }
+
+
+    public Collection<String> getAncestryLinks() {
+        return ancestryLinks;
+    }
+
+
+    private void embedAncestryData(Study study) {
+        study.getEthnicities().forEach(
+               ethnicity -> {
+                   String ancestryLink = "";
+
+                   String type = ethnicity.getType();
+
+                   ancestryLink = type;
+
+                   String cor;
+
+                   if(ethnicity.getCountryOfRecruitment() != null){
+                       cor = ethnicity.getCountryOfRecruitment();
+                   }
+                   else {
+                       cor = "NR";
+                   }
+                   countriesOfRecruitment.add(cor);
+                   ancestryLink = ancestryLink.concat("|").concat(cor);
+
+                   String ancestry = "";
+
+                   if(ethnicity.getEthnicGroup() != null){
+                       ancestry = ethnicity.getEthnicGroup();
+                   }
+
+                   ancestralGroups.add(ancestry);
+                   ancestryLink = ancestryLink.concat("|").concat(ancestry);
+
+                   String noInds = "";
+
+                   if(ethnicity.getNumberOfIndividuals() != null){
+                       numberOfIndividuals.add(ethnicity.getNumberOfIndividuals());
+                       noInds = String.valueOf(ethnicity.getNumberOfIndividuals());
+                   }
+
+                   ancestryLink = ancestryLink.concat("|").concat(noInds);
+
+                   ancestryLinks.add(ancestryLink);
+
+               }
+        );
+    }
+
+
+    //    public void addLocusDescription(String locusDescription){
+//        this.locusDescriptions.add(locusDescription);
+//    }
 }

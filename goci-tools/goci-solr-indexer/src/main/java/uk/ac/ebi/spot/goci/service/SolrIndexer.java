@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.exception.SolrIndexingException;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
+import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
+import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -31,10 +33,12 @@ public class SolrIndexer {
     private StudyService studyService;
     private DiseaseTraitRepository diseaseTraitRepository;
     private AssociationService associationService;
+    private EfoTraitRepository efoTraitRepository;
 
     private StudyMapper studyMapper;
     private TraitMapper traitMapper;
     private AssociationMapper associationMapper;
+    private EfoMapper efoMapper;
 
     private int pageSize = 1000;
     private int maxPages = -1;
@@ -49,16 +53,20 @@ public class SolrIndexer {
     @Autowired
     public SolrIndexer(StudyService studyService,
                        DiseaseTraitRepository diseaseTraitRepository,
+                       EfoTraitRepository efoTraitRepository,
                        AssociationService associationService,
                        StudyMapper studyMapper,
                        TraitMapper traitMapper,
-                       AssociationMapper associationMapper) {
+                       AssociationMapper associationMapper,
+                       EfoMapper efoMapper) {
         this.studyService = studyService;
         this.diseaseTraitRepository = diseaseTraitRepository;
+        this.efoTraitRepository = efoTraitRepository;
         this.associationService = associationService;
         this.studyMapper = studyMapper;
         this.traitMapper = traitMapper;
         this.associationMapper = associationMapper;
+        this.efoMapper = efoMapper;
     }
 
     public int getPageSize() {
@@ -83,11 +91,14 @@ public class SolrIndexer {
         Future<Integer> studyCountFuture = taskExecutor.submit(this::mapStudies);
         Future<Integer> associationCountFuture = taskExecutor.submit(this::mapAssociations);
         Future<Integer> traitCountFuture = taskExecutor.submit(this::mapTraits);
+        Future<Integer> efoCountFuture = taskExecutor.submit(this::mapEfo);
+
         try {
             int studyCount = studyCountFuture.get();
             int associationCount = associationCountFuture.get();
             int traitCount = traitCountFuture.get();
-            return studyCount + traitCount + associationCount;
+            int efoCount = efoCountFuture.get();
+            return studyCount + traitCount + associationCount + efoCount;
         }
         catch (InterruptedException | ExecutionException e) {
             throw new SolrIndexingException("Failed to map one or more documents into Solr", e);
@@ -105,7 +116,7 @@ public class SolrIndexer {
     }
 
     Integer mapStudies() {
-        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "studyDate"));
+        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "publicationDate"));
         Pageable pager = new PageRequest(0, pageSize, sort);
         Page<Study> studyPage = studyService.findPublishedStudies(pager);
         studyMapper.map(studyPage.getContent());
@@ -159,5 +170,24 @@ public class SolrIndexer {
             }
         }
         return (int) diseaseTraitPage.getTotalElements();
+    }
+
+    Integer mapEfo(){
+        Sort sort = new Sort(new Sort.Order("id"));
+        Pageable pager = new PageRequest(0, pageSize, sort);
+        Page<EfoTrait> efoTraitPage = efoTraitRepository.findAll(pager);
+        efoMapper.map(efoTraitPage.getContent());
+        while (efoTraitPage.hasNext()) {
+            if (maxPages != -1 && efoTraitPage.getNumber() >= maxPages - 1) {
+                break;
+            }
+            pager = pager.next();
+            efoTraitPage = efoTraitRepository.findAll(pager);
+            efoMapper.map(efoTraitPage.getContent());
+            if (sysOutLogging) {
+                System.out.print(".");
+            }
+        }
+        return (int) efoTraitPage.getTotalElements();
     }
 }

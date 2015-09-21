@@ -28,7 +28,7 @@ public class CatalogMetaDataRepository {
                 "SELECT DISTINCT S.PUBMED_ID " +
                 "FROM STUDY S " +
                 "JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
-                "WHERE H.PUBLISH_DATE IS NOT NULL)";
+                "WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL AND H.CATALOG_UNPUBLISH_DATE IS NULL)";
 
     private static final String SNP_COUNT = "" +
             "SELECT COUNT(*) FROM(" +
@@ -37,7 +37,7 @@ public class CatalogMetaDataRepository {
                 "JOIN STUDY_SNP SN ON SN.SNP_ID = SNP.ID " +
                 "JOIN STUDY S ON S.ID = SN.STUDY_ID " +
                 "JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
-                "WHERE H.PUBLISH_DATE IS NOT NULL)";
+                "WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL AND H.CATALOG_UNPUBLISH_DATE IS NULL)";
     
     
     private static final String ASSOCIATION_COUNT =
@@ -49,10 +49,10 @@ public class CatalogMetaDataRepository {
                 "JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
                 "JOIN STUDY_DISEASE_TRAIT SD ON SD.STUDY_ID = S.ID " +
                 "JOIN DISEASE_TRAIT D ON D.ID = SD.DISEASE_TRAIT_ID " +
-                "WHERE H.PUBLISH_DATE IS NOT NULL)";
+                "WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL AND H.CATALOG_UNPUBLISH_DATE IS NULL)";
 
 
-    @Autowired(required = false)
+    @Autowired//(required = false)
     public CatalogMetaDataRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.df = new SimpleDateFormat("yyyy-MM-dd");
