@@ -1,7 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.model.Curator;
 
 /**
  * Created by emma on 29/01/15.
@@ -17,14 +16,12 @@ public class CuratorTotalsTableRow {
     private Integer curatorTotalStudies;
     private Integer curatorTotalEntries;
     private Integer outstandingQueries;
-    private String period;
 
     public CuratorTotalsTableRow() {
     }
 
 
-    public CuratorTotalsTableRow(String period, String curator, String month, String year, Integer monthlyTotalStudies, Integer monthlyTotalEntries, Integer curatorTotalStudies, Integer curatorTotalEntries, Integer outstandingQueries) {
-        this.period = period;
+    public CuratorTotalsTableRow(String curator, String month, String year, Integer monthlyTotalStudies, Integer monthlyTotalEntries, Integer curatorTotalStudies, Integer curatorTotalEntries, Integer outstandingQueries) {
         this.curator = curator;
         this.month = month;
         this.year = year;
@@ -99,11 +96,4 @@ public class CuratorTotalsTableRow {
         this.outstandingQueries = outstandingQueries;
     }
 
-    public String getPeriod() {
-        return period;
-    }
-
-    public void setPeriod(String period) {
-        this.period = period;
-    }
 }

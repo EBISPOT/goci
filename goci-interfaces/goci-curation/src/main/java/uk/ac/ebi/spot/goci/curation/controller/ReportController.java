@@ -16,16 +16,14 @@ import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by emma on 29/01/15.
  *
- * @author emma Report controller, used to reurn curator monthly totals to view
+ * @author emma
+ *         <p>
+ *         Report controller, used to return curator monthly totals to view
  */
 @Controller
 @RequestMapping("/reports")
@@ -62,8 +60,8 @@ public class ReportController {
 
                 // Query database for studies between certain dates curated by current curator
                 List<Study> studies = studyRepository.findByPublicationDateAndCurator(curator.getId(),
-                                                                                dateRange.getDateFrom(),
-                                                                                dateRange.getDateTo());
+                        dateRange.getDateFrom(),
+                        dateRange.getDateTo());
 
                 if (studies.size() != 0) {
 
@@ -75,15 +73,12 @@ public class ReportController {
                     cal.setTime(dateRange.getDateTo());
                     cal.set(Calendar.MONTH, cal.get(Calendar.MONTH));
 
-                    // Create year and month to add as period
-                    String monthInt = new SimpleDateFormat("MM").format(cal.getTime());
                     String monthName = new SimpleDateFormat("MMM").format(cal.getTime());
                     row.setMonth(monthName);
 
                     String year = new SimpleDateFormat("yyyy").format(cal.getTime());
                     row.setYear(year);
 
-                    row.setPeriod(year + " " + monthInt);
                     curatorTotalsTableRows.add(row);
                 }
             }
@@ -116,8 +111,8 @@ public class ReportController {
             for (DateRange dateRange : dateRanges) {
 
                 List<Study> studies = studyRepository.findByPublicationDateAndCurator(curator.getId(),
-                                                                                dateRange.getDateFrom(),
-                                                                                dateRange.getDateTo());
+                        dateRange.getDateFrom(),
+                        dateRange.getDateTo());
 
                 if (studies.size() != 0) {
 
@@ -129,15 +124,11 @@ public class ReportController {
                     cal.setTime(dateRange.getDateTo());
                     cal.set(Calendar.MONTH, cal.get(Calendar.MONTH));
 
-                    // Create year and month to add as period
-                    String monthInt = new SimpleDateFormat("MM").format(cal.getTime());
                     String monthName = new SimpleDateFormat("MMM").format(cal.getTime());
                     row.setMonth(monthName);
 
                     String year = new SimpleDateFormat("yyyy").format(cal.getTime());
                     row.setYear(year);
-
-                    row.setPeriod(year + " " + monthInt);
 
                     // Organise the results according to filter option
                     if (filterYear != null && !filterYear.isEmpty()) {
@@ -147,8 +138,7 @@ public class ReportController {
                             if (filterMonth.equalsIgnoreCase(monthName) && filterYear.equalsIgnoreCase(year)) {
                                 curatorTotalsTableRows.add(row);
                             }
-                        }
-                        else {
+                        } else {
                             // return just year
                             if (filterYear.equals(year)) {
                                 curatorTotalsTableRows.add(row);
@@ -170,7 +160,11 @@ public class ReportController {
         model.addAttribute("curatorTotalsTableRows", curatorTotalsTableRows);
         return "reports";
     }
-/*General purpose methods*/
+
+
+/*
+    General purpose methods
+*/
 
     private List<DateRange> createDateList() {
 
@@ -217,8 +211,7 @@ public class ReportController {
             calDateFrom.set(Calendar.SECOND, 59);
 
 
-        }
-        else {
+        } else {
             calDateFrom.set(Calendar.MONTH, calDateFrom.get(Calendar.MONTH) - 1);
             calDateFrom.set(Calendar.DAY_OF_MONTH, calDateFrom.getActualMaximum(Calendar.DAY_OF_MONTH));
             calDateFrom.set(Calendar.HOUR_OF_DAY, 23);
