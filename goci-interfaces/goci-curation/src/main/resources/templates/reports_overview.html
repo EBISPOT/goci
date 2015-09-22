@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="reports_overview">
+<br/>
+<div class="container-fluid">
+    <div class="row">
+        <div class="pull-right">
+            <div id="filterParametersForm">
+
+                <form class="form-inline" name="filterParametersForm" role="form" method="post"
+                      th:action="@{/reports(filters=true)}"
+                      th:object="${studySearchFilter} ">
+
+                    <div class="form-group">
+                        <label for="year" class="control-label">Year:</label>
+                        <select name="year" class="form-control select2-select"
+                                th:field="*{yearFilter}" id="year">
+                            <!-- Empty value for first entry-->
+                            <option value=""></option>
+                            <option th:each="year : ${years}"
+                                    th:value="${year}"
+                                    th:text="${year}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="month" class="control-label">Month:</label>
+                        <select name="month" th:field="*{monthFilter}"
+                                class="form-control select2-select" id="month">
+                            <!-- Empty value for first entry-->
+                            <option value=""></option>
+                            <option th:each="month : ${months}"
+                                    th:value="${month}"
+                                    th:text="${month}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br/>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <table id="mainTable" class="table table-hover table-bordered">
+                <thead>
+                <tr>
+                    <th class="col-md-1">Year</th>
+                    <th class="col-md-2">Month</th>
+                    <th class="col-md-3">Curator</th>
+                    <th class="col-md-3">Curator Total Entries</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="curatorTotalsTableRow: ${curatorTotalsTableRows}">
+                    <td th:text="${curatorTotalsTableRow.year} ?: 'null'"></td>
+                    <td th:text="${curatorTotalsTableRow.month} ?: 'null'"></td>
+                    <td th:text="${curatorTotalsTableRow.curator} ?: 'null'"></td>
+                    <td th:text="${curatorTotalsTableRow.curatorTotalEntries} ?: 'null'"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
