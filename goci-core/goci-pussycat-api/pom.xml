@@ -7,12 +7,12 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
-        <version>2.0.5</version>
+        <version>2.0.5-SNAPSHOT</version>
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>goci-pussycat-api</artifactId>
-    <version>2.0.5</version>
+    <version>2.0.5-SNAPSHOT</version>
 
     <name>GOCI Pussycat API</name>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
@@ -38,19 +38,12 @@
         </dependency>
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-model</artifactId>
+            <artifactId>goci-ontology</artifactId>
         </dependency>
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-utils</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-rest</artifactId>
+            <artifactId>goci-model</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
@@ -87,6 +80,16 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-rest</artifactId>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.hibernate.javax.persistence</groupId>-->
+            <!--<artifactId>hibernate-jpa-2.1-api</artifactId>-->
+        <!--</dependency>-->
+
 
         <!-- servlet - provided by container -->
         <!--<dependency>-->

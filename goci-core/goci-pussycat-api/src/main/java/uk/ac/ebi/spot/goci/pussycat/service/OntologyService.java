@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.exception.OntologyIndexingException;
+import uk.ac.ebi.spot.goci.ontology.exception.OntologyIndexingException;
 import uk.ac.ebi.spot.goci.ontology.owl.ReasonedOntologyLoader;
 
 import javax.validation.constraints.NotNull;

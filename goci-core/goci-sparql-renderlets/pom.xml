@@ -7,12 +7,12 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
-        <version>2.0.5</version>
+        <version>2.0.5-SNAPSHOT</version>
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>goci-sparql-renderlets</artifactId>
-    <version>2.0.5</version>
+    <version>2.0.5-SNAPSHOT</version>
 
     <name>GOCI Pussycat SPARQL renderlets</name>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
@@ -82,9 +82,13 @@
 
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-utils</artifactId>
+            <artifactId>goci-ontology</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-model</artifactId>
+        </dependency>
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>owlapi-distribution</artifactId>

@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.exception;
+package uk.ac.ebi.spot.goci.ontology.exception;
 
 /**
  * Thrown to indicate that an assumption made about the structure or of an ontology was violated.
