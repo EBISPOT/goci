@@ -2,37 +2,38 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>goci-model</artifactId>
-    <version>2.0.5-SNAPSHOT</version>
-
-    <name>GOCI Object Model</name>
-    <description>Classes representing the core, modelled objects in the GWAS Catalog</description>
 
     <parent>
-        <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
+        <groupId>uk.ac.ebi.spot</groupId>
         <version>2.0.5-SNAPSHOT</version>
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>goci-db-binding</artifactId>
+    <version>2.0.5-SNAPSHOT</version>
+
+
+    <name>GOCI Database Binding Classes</name>
+    <description>Flyway migration scripts</description>
 
     <dependencies>
-
         <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.1-api</artifactId>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
+            <artifactId>spring-jdbc</artifactId>
         </dependency>
-
     </dependencies>
+
+
 
 </project>

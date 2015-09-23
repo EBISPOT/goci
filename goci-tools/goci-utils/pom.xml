@@ -34,6 +34,10 @@
       <groupId>com.hermit-reasoner</groupId>
       <artifactId>org.semanticweb.hermit</artifactId>
     </dependency>
+      <dependency>
+          <groupId>org.flywaydb</groupId>
+          <artifactId>flyway-core</artifactId>
+      </dependency>
 
   </dependencies>
 
