@@ -4,8 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import uk.ac.ebi.spot.goci.model.MonthlyCuratorTotalsSummaryView;
 
-import java.util.List;
-
 /**
  * Created by emma on 22/09/2015.
  *
@@ -15,6 +13,6 @@ import java.util.List;
  */
 @RepositoryRestResource
 public interface MonthlyCuratorTotalsSummaryViewRepository extends JpaRepository<MonthlyCuratorTotalsSummaryView, Long> {
-    
+
 
 }
