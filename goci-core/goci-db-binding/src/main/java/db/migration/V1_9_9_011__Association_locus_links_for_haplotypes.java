@@ -1,4 +1,4 @@
-package db.migration.migration;
+package db.migration;
 
 import org.flywaydb.core.api.migration.spring.SpringJdbcMigration;
 import org.slf4j.Logger;
@@ -22,9 +22,9 @@ import java.util.Set;
  * Javadocs go here!
  *
  * @author Tony Burdett
- * @date 30/01/15
+ * @date 29/01/15
  */
-public class V1_9_9_012__Association_locus_links_for_interaction_studies extends FieldSplitter
+public class V1_9_9_011__Association_locus_links_for_haplotypes extends FieldSplitter
         implements SpringJdbcMigration {
     private static final String SELECT_GENES =
             "SELECT ID, GENE FROM GWASGENE";
@@ -35,12 +35,8 @@ public class V1_9_9_012__Association_locus_links_for_interaction_studies extends
     private static final String SELECT_ASSOCIATIONS_AND_SNPS =
             "SELECT DISTINCT ID, STRONGESTALLELE, GENE, SNP " +
                     "FROM GWASSTUDIESSNP " +
-                    "WHERE SNP NOT LIKE '%,%' " +
-                    "AND SNP LIKE '%:%' " +
-                    "AND SNP NOT LIKE 'chr%:%' " +
-                    "AND SNP NOT LIKE 'HLA-%:%' " +
-                    "AND SNP NOT LIKE 'DRB%:%' " +
-                    "AND SNP NOT IN ('hg18_chr11:27369242','B*38:02','A*11:01','B*55:02','ch2:211694960','A*02:01')";
+                    "WHERE SNP LIKE '%,%' " +
+                    "AND SNP NOT LIKE '%:%'";
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -63,6 +59,7 @@ public class V1_9_9_012__Association_locus_links_for_interaction_studies extends
         final Map<Long, Set<Long>> associationIdToGeneIds = new HashMap<>();
         final Map<Long, List<Long>> associationIdToSnpIds = new HashMap<>();
         final Map<Long, List<String>> associationIdToRiskAlleleNames = new HashMap<>();
+        final Map<Long, String> associationIdToMigratedDescription = new HashMap<>();
         jdbcTemplate.query(SELECT_ASSOCIATIONS_AND_SNPS, (resultSet, i) -> {
             long associationID = resultSet.getLong(1);
 
@@ -72,11 +69,12 @@ public class V1_9_9_012__Association_locus_links_for_interaction_studies extends
 
             String riskAlleleStr = resultSet.getString(2);
             if (riskAlleleStr != null) {
-                riskAlleles = split(resultSet.getString(2).trim(), "x", ":");
+                riskAlleles = split(resultSet.getString(2).trim(), "\\+");
             }
             else {
                 riskAlleles = new ArrayList<>();
             }
+            associationIdToMigratedDescription.put(associationID, riskAlleleStr);
 
             String genesStr = resultSet.getString(3);
             if (genesStr != null) {
@@ -88,7 +86,7 @@ public class V1_9_9_012__Association_locus_links_for_interaction_studies extends
 
             String snpsStr = resultSet.getString(4);
             if (snpsStr != null) {
-                rsIds = split(snpsStr.trim(), "x", ":");
+                rsIds = split(snpsStr.trim());
             }
             else {
                 rsIds = new ArrayList<>();
@@ -175,13 +173,12 @@ public class V1_9_9_012__Association_locus_links_for_interaction_studies extends
                         snpIdToRsIdMap.put(snpID, rsId);
                         if (!associationIdToSnpIds.containsKey(associationID)) {
                             associationIdToSnpIds.put(associationID, new ArrayList<>());
-                            associationIdToRiskAlleleNames.put(associationID, new ArrayList<>());
                         }
                         if (!associationIdToSnpIds.get(associationID).contains(snpID)) {
                             // add the new associated gene
                             associationIdToSnpIds.get(associationID).add(snpID);
-                            associationIdToRiskAlleleNames.get(associationID).add(riskAllele);
                         }
+
                     }
                 }
             }
@@ -245,7 +242,7 @@ public class V1_9_9_012__Association_locus_links_for_interaction_studies extends
         SimpleJdbcInsert insertLocus =
                 new SimpleJdbcInsert(jdbcTemplate)
                         .withTableName("LOCUS")
-                        .usingColumns("HAPLOTYPE_SNP_COUNT", "DESCRIPTION")
+                        .usingColumns("HAPLOTYPE_SNP_COUNT", "DESCRIPTION", "MIGRATED_DESCRIPTION")
                         .usingGeneratedKeyColumns("ID");
 
         SimpleJdbcInsert insertAssociationLocus =
@@ -285,24 +282,23 @@ public class V1_9_9_012__Association_locus_links_for_interaction_studies extends
                                                    ")");
             }
             else {
-                // iterate over each SNP and risk allele
+                // create a single LOCUS and get the locus ID
+                Map<String, Object> locusArgs = new HashMap<>();
+                locusArgs.put("HAPLOTYPE_SNP_COUNT", snps.size());
+                locusArgs.put("DESCRIPTION", String.valueOf(snps.size()) + " SNP haplotype");
+                locusArgs.put("MIGRATED_DESCRIPTION", associationIdToMigratedDescription.get(associationID));
+                Number locusID = insertLocus.executeAndReturnKey(locusArgs);
+
+                // now create the ASSOCIATION_LOCUS link
+                Map<String, Object> associationLocusArgs = new HashMap<>();
+                associationLocusArgs.put("ASSOCIATION_ID", associationID);
+                associationLocusArgs.put("LOCUS_ID", locusID);
+                insertAssociationLocus.execute(associationLocusArgs);
+
                 Iterator<Long> snpIterator = snps.iterator();
                 Iterator<String> riskAlleleIterator = riskAlleles.iterator();
 
                 while (riskAlleleIterator.hasNext()) {
-                    // create multiple LOCI, one per SNP/risk allele pair, and get the locus ID
-                    Map<String, Object> locusArgs = new HashMap<>();
-                    locusArgs.put("HAPLOTYPE_SNP_COUNT", null);
-                    String description = snps.size() == 2 ? "SNP x SNP interaction" : "SNP x SNP x SNP interaction";
-                    locusArgs.put("DESCRIPTION", description);
-                    Number locusID = insertLocus.executeAndReturnKey(locusArgs);
-
-                    // now create the ASSOCIATION_LOCUS link
-                    Map<String, Object> associationLocusArgs = new HashMap<>();
-                    associationLocusArgs.put("ASSOCIATION_ID", associationID);
-                    associationLocusArgs.put("LOCUS_ID", locusID);
-                    insertAssociationLocus.execute(associationLocusArgs);
-
                     Long snpID = snpIterator.next();
                     String riskAlleleName = riskAlleleIterator.next();
 
@@ -329,22 +325,22 @@ public class V1_9_9_012__Association_locus_links_for_interaction_studies extends
                                 "Failed to insert link between snp = " + snpID + " and risk allele = " + riskAlleleID,
                                 e);
                     }
+                }
 
-                    // finally create the AUTHOR_REPORTED_GENE link
-                    if (associationIdToGeneIds.containsKey(associationID)) {
-                        for (Long geneID : associationIdToGeneIds.get(associationID)) {
-                            try {
-                                Map<String, Object> authorReportedGeneArgs = new HashMap<>();
-                                authorReportedGeneArgs.put("LOCUS_ID", locusID.longValue());
-                                authorReportedGeneArgs.put("REPORTED_GENE_ID", geneID);
-                                insertAuthorReportedGene.execute(authorReportedGeneArgs);
-                            }
-                            catch (DataIntegrityViolationException e) {
-                                throw new RuntimeException(
-                                        "Failed to insert link between locus = " + locusID + " and reported gene  = " +
-                                                geneID,
-                                        e);
-                            }
+                // finally create the AUTHOR_REPORTED_GENE link
+                if (associationIdToGeneIds.containsKey(associationID)) {
+                    for (Long geneID : associationIdToGeneIds.get(associationID)) {
+                        try {
+                            Map<String, Object> authorReportedGeneArgs = new HashMap<>();
+                            authorReportedGeneArgs.put("LOCUS_ID", locusID.longValue());
+                            authorReportedGeneArgs.put("REPORTED_GENE_ID", geneID);
+                            insertAuthorReportedGene.execute(authorReportedGeneArgs);
+                        }
+                        catch (DataIntegrityViolationException e) {
+                            throw new RuntimeException(
+                                    "Failed to insert link between locus = " + locusID + " and reported gene  = " +
+                                            geneID,
+                                    e);
                         }
                     }
                 }
@@ -367,5 +363,5 @@ public class V1_9_9_012__Association_locus_links_for_interaction_studies extends
             return idToStringMap;
         }
     }
-}
 
+}

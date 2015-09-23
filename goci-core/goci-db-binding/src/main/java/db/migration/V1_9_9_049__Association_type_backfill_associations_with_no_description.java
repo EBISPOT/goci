@@ -1,4 +1,4 @@
-package db.migration.migration;
+package db.migration;
 
 /**
  * Created by emma on 28/05/2015.

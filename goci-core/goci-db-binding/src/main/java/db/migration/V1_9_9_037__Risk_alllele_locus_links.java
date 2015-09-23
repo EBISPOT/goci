@@ -1,4 +1,4 @@
-package db.migration.migration;
+package db.migration;
 
 import org.flywaydb.core.api.migration.spring.SpringJdbcMigration;
 import org.springframework.dao.DataIntegrityViolationException;
