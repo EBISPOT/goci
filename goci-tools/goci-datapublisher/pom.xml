@@ -88,10 +88,10 @@
         </dependency>
 
         <!-- oracle JDBC drivers for db comms -->
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>ojdbc7</artifactId>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.oracle</groupId>-->
+            <!--<artifactId>ojdbc7</artifactId>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
