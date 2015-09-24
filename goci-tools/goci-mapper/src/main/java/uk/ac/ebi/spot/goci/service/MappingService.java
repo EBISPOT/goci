@@ -5,21 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.component.EnsemblMappingPipeline;
-import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.Gene;
-import uk.ac.ebi.spot.goci.model.GenomicContext;
-import uk.ac.ebi.spot.goci.model.Location;
-import uk.ac.ebi.spot.goci.model.Locus;
-import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
-import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by emma on 13/08/2015.
@@ -129,21 +117,24 @@ public class MappingService {
                     // Try to map supplied data
                     try {
                         ensemblMappingPipeline.run_pipeline();
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         getLog().error("Encountered a " + e.getClass().getSimpleName() +
-                                               " whilst trying to run mapping of SNP" + snpRsId, e);
+                                " whilst trying to run mapping of SNP" + snpRsId, e);
                         e.printStackTrace();
                         throw e;
-                    }
-                    finally {
-                        ensemblRequestCount   = ensemblMappingPipeline.getRequestCount();
+                    } finally {
+                        ensemblRequestCount = ensemblMappingPipeline.getRequestCount();
                         ensemblLimitStartTime = ensemblMappingPipeline.getLimitStartTime();
                     }
 
                     Collection<Location> locations = ensemblMappingPipeline.getLocations();
                     Collection<GenomicContext> snpGenomicContexts = ensemblMappingPipeline.getGenomicContexts();
                     ArrayList<String> pipelineErrors = ensemblMappingPipeline.getPipelineErrors();
+                    String functionalClass = ensemblMappingPipeline.getFunctionalClass();
+
+                    // Update functional class
+                    snpLinkedToLocus.setFunctionalClass(functionalClass);
+                    snpLinkedToLocus.setLastUpdateDate(new Date());
 
                     // Store location information for SNP
                     if (!locations.isEmpty()) {
@@ -162,16 +153,14 @@ public class MappingService {
                                 snpToLocationsMap.put(snpRsId, snpLocation);
                             }
                         }
-                    }
-                    else {
+                    } else {
                         getLog().warn("Attempt to map SNP: " + snpRsId + " returned no location details");
                     }
 
                     // Store genomic context data for snp
                     if (!snpGenomicContexts.isEmpty()) {
                         allGenomicContexts.addAll(snpGenomicContexts);
-                    }
-                    else {
+                    } else {
                         getLog().warn("Attempt to map SNP: " + snpRsId + " returned no mapped genes");
                     }
 
@@ -184,8 +173,7 @@ public class MappingService {
             // Create association report based on whether there is errors or not
             if (!associationPipelineErrors.isEmpty()) {
                 associationReportService.processAssociationErrors(association, associationPipelineErrors);
-            }
-            else {
+            } else {
                 associationReportService.updateAssociationReportDetails(association);
             }
 
