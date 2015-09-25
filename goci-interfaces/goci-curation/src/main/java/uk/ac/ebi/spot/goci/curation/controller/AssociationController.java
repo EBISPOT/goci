@@ -732,33 +732,7 @@ public class AssociationController {
 
         return "redirect:/associations/" + associationId;
     }
-
-
-    // Add multiple rows to table
-    @RequestMapping(value = "/associations/{associationId}", params = {"addRows"})
-    public String addRowsEditMode(SnpAssociationForm snpAssociationForm,
-                                  Model model,
-                                  @PathVariable Long associationId) {
-        Integer numberOfRows = snpAssociationForm.getMultiSnpHaplotypeNum();
-
-        // Add number of rows curator selected
-        while (numberOfRows != 0) {
-            snpAssociationForm.getSnpFormRows().add(new SnpFormRow());
-            numberOfRows--;
-        }
-
-        // Pass back updated form
-        model.addAttribute("snpAssociationForm", snpAssociationForm);
-
-        // Also passes back study object to view so we can create links back to main study page
-        Association currentAssociation = associationRepository.findOne(associationId);
-        Study associationStudy = currentAssociation.getStudy();
-        Long studyId = associationStudy.getId();
-        model.addAttribute("study", studyRepository.findOne(studyId));
-
-        return "edit_multi_snp_association";
-    }
-
+    
     // Add single row to table
     @RequestMapping(value = "/associations/{associationId}", params = {"addRow"})
     public String addRowEditMode(SnpAssociationForm snpAssociationForm, Model model, @PathVariable Long associationId) {
