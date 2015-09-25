@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
 import uk.ac.ebi.spot.goci.curation.model.AssociationFormErrorView;
+import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationInteractionForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationTableView;
@@ -618,6 +619,10 @@ public class AssociationController {
         // Return association with that ID
         Association associationToView = associationRepository.findOne(associationId);
 
+        // Get mapping details
+        MappingDetails mappingDetails = createMappingDetails(associationToView);
+        model.addAttribute("mappingDetails",mappingDetails);
+
         // Return any association errors
         AssociationFormErrorView associationFormErrorView = associationFormErrorViewService.checkAssociationForErrors(
                 associationToView);
@@ -680,7 +685,6 @@ public class AssociationController {
             }
         }
     }
-
 
     //Edit existing association
     @RequestMapping(value = "/associations/{associationId}",
@@ -1326,6 +1330,19 @@ public class AssociationController {
 
         return errorFound;
     }
+
+    /**
+     * Gather mapping details for an association
+     *
+     * @param association Association with mapping details
+     */
+    private MappingDetails createMappingDetails(Association association) {
+        MappingDetails mappingDetails = new MappingDetails();
+        mappingDetails.setPerformer(association.getLastMappingPerformedBy());
+        mappingDetails.setMappingDate(association.getLastMappingDate());
+        return mappingDetails;
+    }
+
 
 }
 
