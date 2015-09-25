@@ -621,7 +621,7 @@ public class AssociationController {
 
         // Get mapping details
         MappingDetails mappingDetails = createMappingDetails(associationToView);
-        model.addAttribute("mappingDetails",mappingDetails);
+        model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
         AssociationFormErrorView associationFormErrorView = associationFormErrorViewService.checkAssociationForErrors(
@@ -732,7 +732,7 @@ public class AssociationController {
 
         return "redirect:/associations/" + associationId;
     }
-    
+
     // Add single row to table
     @RequestMapping(value = "/associations/{associationId}", params = {"addRow"})
     public String addRowEditMode(SnpAssociationForm snpAssociationForm, Model model, @PathVariable Long associationId) {
@@ -746,6 +746,15 @@ public class AssociationController {
         Study associationStudy = currentAssociation.getStudy();
         Long studyId = associationStudy.getId();
         model.addAttribute("study", studyRepository.findOne(studyId));
+
+        // Get mapping details
+        MappingDetails mappingDetails = createMappingDetails(currentAssociation);
+        model.addAttribute("mappingDetails",mappingDetails);
+
+        // Return any association errors
+        AssociationFormErrorView associationFormErrorView = associationFormErrorViewService.checkAssociationForErrors(
+                currentAssociation);
+        model.addAttribute("errors", associationFormErrorView);
 
         return "edit_multi_snp_association";
     }
@@ -765,6 +774,15 @@ public class AssociationController {
         Study associationStudy = currentAssociation.getStudy();
         Long studyId = associationStudy.getId();
         model.addAttribute("study", studyRepository.findOne(studyId));
+
+        // Get mapping details
+        MappingDetails mappingDetails = createMappingDetails(currentAssociation);
+        model.addAttribute("mappingDetails",mappingDetails);
+
+        // Return any association errors
+        AssociationFormErrorView associationFormErrorView = associationFormErrorViewService.checkAssociationForErrors(
+                currentAssociation);
+        model.addAttribute("errors", associationFormErrorView);
 
         return "edit_snp_interaction_association";
     }
@@ -791,6 +809,15 @@ public class AssociationController {
         Long studyId = associationStudy.getId();
         model.addAttribute("study", studyRepository.findOne(studyId));
 
+        // Get mapping details
+        MappingDetails mappingDetails = createMappingDetails(currentAssociation);
+        model.addAttribute("mappingDetails",mappingDetails);
+
+        // Return any association errors
+        AssociationFormErrorView associationFormErrorView = associationFormErrorViewService.checkAssociationForErrors(
+                currentAssociation);
+        model.addAttribute("errors", associationFormErrorView);
+
         return "edit_multi_snp_association";
     }
 
@@ -815,6 +842,15 @@ public class AssociationController {
         Study associationStudy = currentAssociation.getStudy();
         Long studyId = associationStudy.getId();
         model.addAttribute("study", studyRepository.findOne(studyId));
+
+        // Get mapping details
+        MappingDetails mappingDetails = createMappingDetails(currentAssociation);
+        model.addAttribute("mappingDetails",mappingDetails);
+
+        // Return any association errors
+        AssociationFormErrorView associationFormErrorView = associationFormErrorViewService.checkAssociationForErrors(
+                currentAssociation);
+        model.addAttribute("errors", associationFormErrorView);
 
         return "edit_snp_interaction_association";
     }
