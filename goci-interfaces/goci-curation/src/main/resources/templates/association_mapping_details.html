@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="mapping_details">
+<div class="col-md-2 pull-right">
+    <div class="well" th:object="${mappingDetails}">
+        <p style="font-style: italic; word-wrap: break-word;"
+              th:if="${mappingDetails.mappingDate != null}"
+              th:utext="'Mapping date: '+  ${#dates.format(mappingDetails.mappingDate, 'dd-MMM-yyyy HH:mm')} ?: ''"></p>
+
+        <p style="font-style: italic; word-wrap: break-word;"
+              th:if="${mappingDetails.performer != null}"
+              th:utext="'&lt;br /&gt;' +'Performer: '+ ${mappingDetails.performer} ?: ''"></p>
+    </div>
+</div>
+</body>
+</html>
