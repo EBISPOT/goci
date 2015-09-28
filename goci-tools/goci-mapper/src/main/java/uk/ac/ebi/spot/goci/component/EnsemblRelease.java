@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.component;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.service.EnsemblRestService;
 
 import java.io.IOException;
@@ -10,9 +11,12 @@ import java.util.ArrayList;
 
 /**
  * Created by Laurent on 22/09/15.
+ *
  * @author Laurent
- * Class getting the Ensembl Release version from the Ensembl REST API
+ *         <p>
+ *         Class getting the Ensembl Release version from the Ensembl REST API
  */
+@Service
 public class EnsemblRelease {
 
     private int releaseVersion;
@@ -44,6 +48,7 @@ public class EnsemblRelease {
 
     /**
      * Getter for the release version
+     *
      * @return the numeric release version
      */
     public int getReleaseVersion() {
@@ -53,6 +58,7 @@ public class EnsemblRelease {
 
     /**
      * Getter for the list of REST API error messages
+     *
      * @return List of strings.
      */
     public ArrayList<String> getRestErrors() {
@@ -62,6 +68,7 @@ public class EnsemblRelease {
 
     /**
      * Check the type of error returned by the REST web service JSON output
+     *
      * @param result The JSONObject result
      */
     private void checkError(JSONObject result) {
@@ -76,9 +83,10 @@ public class EnsemblRelease {
 
     /**
      * Simple generic Ensembl REST API call method.
+     *
      * @return the corresponding JSONObject
      */
-    private JSONObject getSimpleRestCall () {
+    private JSONObject getSimpleRestCall() {
         EnsemblRestService ens_rest_call = new EnsemblRestService(endpoint, "");
         JSONObject json_result = new JSONObject();
         try {

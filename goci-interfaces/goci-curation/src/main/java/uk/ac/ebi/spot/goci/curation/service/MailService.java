@@ -84,6 +84,24 @@ public class MailService {
 
     }
 
+    public void sendReleaseChangeEmail(Integer currentEnsemblReleaseNumberInDatabase, int latestEnsemblReleaseNumber) {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(getTo());
+        mailMessage.setFrom(getFrom());
+        mailMessage.setSubject("New Ensembl Release");
+        mailMessage.setText(
+                "The latest Ensembl release is "
+                        + latestEnsemblReleaseNumber
+                        + "."
+                        + "\n"
+                        + "The GWAS catalog is mapped to release"
+                        + currentEnsemblReleaseNumberInDatabase
+                        + "."
+                        + "\n"
+                        + "All associations will now be remapped.");
+        javaMailSender.send(mailMessage);
+    }
+
 
     // Getter and setters
     public String getFrom() {
