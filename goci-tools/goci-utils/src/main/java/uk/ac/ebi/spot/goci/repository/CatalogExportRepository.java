@@ -35,8 +35,10 @@ import java.util.stream.Collectors;
 public class CatalogExportRepository {
     private static final String FROM_CLAUSE =
             " FROM CATALOG_SUMMARY_VIEW ";
+    private static final String FROM_NCBI_CLAUSE =
+            " FROM NCBI_CATALOG_SUMMARY_VIEW ";
     private static final String NCBI_WHERE_CLAUSE =
-            " WHERE CURATION_STATUS = 'Send to NCBI' OR (CATALOG_PUBLISH_DATE IS NOT NULL AND CATALOG_UNPUBLISH_DATE IS NULL) ORDER BY STUDY_ID DESC ";
+            " WHERE CATALOG_PUBLISH_DATE IS NOT NULL AND CATALOG_UNPUBLISH_DATE IS NULL ORDER BY STUDY_ID DESC ";
     private static final String DOWNLOAD_WHERE_CLAUSE =
             " WHERE (REGEXP_LIKE (CHROMOSOME_NAME,'^[[:digit:]]+$') OR CHROMOSOME_NAME = 'X' OR CHROMOSOME_NAME = 'Y') " +
                     "AND CATALOG_PUBLISH_DATE IS NOT NULL AND CATALOG_UNPUBLISH_DATE IS NULL ORDER BY PUBMED_ID DESC ";
@@ -82,7 +84,7 @@ public class CatalogExportRepository {
                 .collect(Collectors.toList());
 
         // export data and return
-        return extractData(buildSelectClause(ncbiQueryHeaders) + FROM_CLAUSE + NCBI_WHERE_CLAUSE,
+        return extractData(buildSelectClause(ncbiQueryHeaders) + FROM_NCBI_CLAUSE + NCBI_WHERE_CLAUSE,
                            CatalogHeaderBindings.getNcbiHeaders(),
                            ncbiOutputHeaders,
                            CatalogHeaderBinding::getNcbiInclusion);
