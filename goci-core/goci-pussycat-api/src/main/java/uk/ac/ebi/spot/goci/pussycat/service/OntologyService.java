@@ -53,8 +53,6 @@ public class OntologyService {
 
     @Autowired
     public OntologyService(ReasonedOntologyLoader ontologyLoader){
-//    public OntologyService(){
-//        this.ontologyLoader = new ReasonedOntologyLoader();
         this.ontologyLoader = ontologyLoader;
         ontologyLoader.setOntologyName("efo");
         ontologyLoader.setOntologyURI(URI.create("http://www.ebi.ac.uk/efo"));

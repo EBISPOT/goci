@@ -33,7 +33,6 @@ import java.util.Set;
  */
 @Service
 public class DefaultGWASOWLConverter implements GWASOWLConverter {
-//    private OntologyConfiguration configuration;
 
     private OntologyLoader ontologyLoader;
 
@@ -50,18 +49,6 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         this.ontologyLoader = ontologyLoader;
         this.minter = new ReflexiveIRIMinter();
     }
-
-//    public void setConfiguration(OntologyConfiguration configuration) {
-//        this.configuration = configuration;
-//    }
-
-//    public OntologyLoader getOntologyLoader() {
-//        return ontologyLoader;
-//    }
-//
-//    public void setOntologyLoader(OntologyLoader ontologyLoader) {
-//        this.ontologyLoader = ontologyLoader;
-//    }
 
     public OWLOntologyManager getManager() {
         return this.ontologyLoader.getOntology().getOWLOntologyManager();

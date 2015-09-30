@@ -21,5 +21,6 @@
         <module>goci-utils</module>
         <module>goci-datapublisher</module>
         <module>goci-kb-metrics</module>
+        <module>goci-urilabelchecker</module>
     </modules>
 </project>
