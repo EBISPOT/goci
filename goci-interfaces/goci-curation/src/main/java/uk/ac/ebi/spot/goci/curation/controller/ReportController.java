@@ -11,8 +11,11 @@ import uk.ac.ebi.spot.goci.curation.model.CuratorTotalsTableRow;
 import uk.ac.ebi.spot.goci.curation.model.DateRange;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 import uk.ac.ebi.spot.goci.model.Curator;
+import uk.ac.ebi.spot.goci.model.MonthlyTotalsSummaryView;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.YearlyTotalsSummaryView;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
+import uk.ac.ebi.spot.goci.repository.MonthlyTotalsSummaryViewRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.text.SimpleDateFormat;
@@ -29,6 +32,10 @@ import java.util.*;
 @RequestMapping("/reports")
 public class ReportController {
 
+
+    private MonthlyTotalsSummaryViewRepository monthlyTotalsSummaryViewRepository;
+    private YearlyTotalsSummaryView yearlyTotalsSummaryView;
+/*
     // Repositories allowing access to database objects associated with a study
     private StudyRepository studyRepository;
     private CuratorRepository curatorRepository;
@@ -43,8 +50,26 @@ public class ReportController {
         this.studyRepository = studyRepository;
         this.curatorRepository = curatorRepository;
         this.curatorTotalsTableRow = curatorTotalsTableRow;
+    }*/
+
+    @Autowired
+    public ReportController(MonthlyTotalsSummaryViewRepository monthlyTotalsSummaryViewRepository, YearlyTotalsSummaryView yearlyTotalsSummaryView) {
+        this.monthlyTotalsSummaryViewRepository = monthlyTotalsSummaryViewRepository;
+        this.yearlyTotalsSummaryView = yearlyTotalsSummaryView;
     }
 
+    // Return overview
+    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String getOverview(Model model) {
+
+        // Add a studySearchFilter to model in case user want to filter table
+        model.addAttribute("studySearchFilter", new StudySearchFilter());
+
+        List<MonthlyTotalsSummaryView> monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findAll();
+        return "reports";
+    }
+
+/*
     // Return counts
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String getCountsTable(Model model) {
@@ -160,13 +185,14 @@ public class ReportController {
         model.addAttribute("curatorTotalsTableRows", curatorTotalsTableRows);
         return "reports";
     }
+*/
 
 
 /*
     General purpose methods
 */
 
-    private List<DateRange> createDateList() {
+/*    private List<DateRange> createDateList() {
 
         List<DateRange> dateRanges = new ArrayList<>();
         Collection<Study> allStudies = studyRepository.findAll();
@@ -192,7 +218,7 @@ public class ReportController {
             }
         }
         return dateRanges;
-    }
+    }*/
 
     // Creates a range from a supplied date, range should be from the very end of the previous month
     // to end of current month of study date
