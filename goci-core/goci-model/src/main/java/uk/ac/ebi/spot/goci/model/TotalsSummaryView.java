@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 /**
@@ -8,6 +9,9 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public class TotalsSummaryView {
 
+    @Id
+    private Long id;
+    
     private String year;
 
     private String curator;
