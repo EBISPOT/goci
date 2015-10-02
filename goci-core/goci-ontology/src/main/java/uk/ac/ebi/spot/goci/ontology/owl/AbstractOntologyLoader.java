@@ -14,7 +14,7 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.util.SimpleIRIMapper;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.springframework.core.io.Resource;
-import uk.ac.ebi.spot.goci.Initializable;
+import uk.ac.ebi.spot.goci.ontology.Initializable;
 
 import java.net.URI;
 import java.util.Collection;

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="LOG_PATH" value="${catalina.base}/logs/${tomcat.hostname}" />
 
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
     <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
@@ -9,7 +8,7 @@
         <encoder>
             <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
-        <file>${LOG_PATH}/gwas_pussycat.log</file>
+        <file>gwas.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- rollover daily -->
             <fileNamePattern>${LOG_PATH}/gwas_pussycat.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
@@ -19,22 +18,22 @@
         </rollingPolicy>
     </appender>
 
-    <appender name="RENDERING-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="CHECKING-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
             <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
-        <file>${LOG_PATH}/rendering.log</file>
+        <file>efo-checker.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- rollover daily -->
-            <fileNamePattern>${LOG_PATH}/rendering.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/efo-checker.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>10MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
     </appender>
 
-    <logger name="rendering" level="TRACE" additivity="false">
-        <appender-ref ref="RENDERING-FILE" />
+    <logger name="checking" level="TRACE" additivity="false">
+        <appender-ref ref="CHECKING-FILE" />
     </logger>
 
     <root level="INFO">
@@ -42,4 +41,4 @@
         <appender-ref ref="FILE" />
     </root>
 
-</configuration> 
+</configuration>

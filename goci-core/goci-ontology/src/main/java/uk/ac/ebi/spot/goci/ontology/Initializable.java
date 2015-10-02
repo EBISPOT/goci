@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci;
+package uk.ac.ebi.spot.goci.ontology;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

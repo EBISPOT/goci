@@ -7,12 +7,12 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
-        <version>2.0.5-SNAPSHOT</version>
+        <version>2.0.7-SNAPSHOT</version>
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>goci-kb-metrics</artifactId>
-    <version>2.0.5-SNAPSHOT</version>
+    <version>2.0.7-SNAPSHOT</version>
     <packaging>jar</packaging>
 
 
@@ -65,6 +65,16 @@
             <artifactId>goci-utils</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-ontology</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-db-binding</artifactId>
+        </dependency>
+
         <!--<dependency>-->
             <!--<groupId>uk.ac.ebi.spot</groupId>-->
             <!--<artifactId>goci-dao</artifactId>-->
@@ -99,10 +109,10 @@
             <!--<artifactId>log4j</artifactId>-->
         <!--</dependency>-->
 
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>ojdbc7</artifactId>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.oracle</groupId>-->
+            <!--<artifactId>ojdbc7</artifactId>-->
+        <!--</dependency>-->
 
         <!--<dependency>-->
             <!--<groupId>org.mockito</groupId>-->

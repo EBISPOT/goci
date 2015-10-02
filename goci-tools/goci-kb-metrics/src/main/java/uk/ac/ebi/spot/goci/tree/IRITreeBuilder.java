@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.exception.UnexpectedOntologyStructureException;
+import uk.ac.ebi.spot.goci.ontology.exception.UnexpectedOntologyStructureException;
 import uk.ac.ebi.spot.goci.ontology.OntologyConstants;
 
 import java.net.URISyntaxException;

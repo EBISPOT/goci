@@ -12,16 +12,16 @@
 |tab separated file
 
 |A description of the column headings in the most recent edition of the GWAS Catalog file
-|link:fileheaders[ file]
-|tab separated file
+|link:fileheaders[ link]
+|
 
 |The most recent edition of the GWAS Catalog with added ontology annotations
 |link:../api/search/downloads/alternative[ file]
 |tab separated file
 
 |A description of the additional column headings in the most recent edition of the GWAS Catalog with added ontology annotations
-|link:fileheaders#_file_headers_for_catalog_version_1_0_1[ file]
-|tab separated file
+|link:fileheaders#_file_headers_for_catalog_version_1_0_1[ link]
+|
 |===
 
 
