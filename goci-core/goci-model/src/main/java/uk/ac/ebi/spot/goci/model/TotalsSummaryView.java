@@ -11,7 +11,7 @@ public class TotalsSummaryView {
 
     @Id
     private Long id;
-    
+
     private String year;
 
     private String curator;
