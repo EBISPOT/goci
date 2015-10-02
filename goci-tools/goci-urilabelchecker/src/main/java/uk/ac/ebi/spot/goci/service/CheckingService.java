@@ -76,25 +76,31 @@ public class CheckingService {
         if(cls != null){
             String label = ontologyLoader.getLabel(cls.getIRI());
 
-            boolean found = false;
+            if(label != null){
+                boolean found = false;
 
-            if(label.equalsIgnoreCase(traitLabel)){
-                found = true;
-            }
+                if(label.equalsIgnoreCase(traitLabel)){
+                    found = true;
+                }
 
-            if(!found){
-                Set<String> syns = ontologyLoader.getSynonyms(cls.getIRI());
+                if(!found){
+                    Set<String> syns = ontologyLoader.getSynonyms(cls.getIRI());
 
-                for(String syn : syns){
-                    if(syn.equalsIgnoreCase(traitLabel)){
-                        found = true;
+                    for(String syn : syns){
+                        if(syn.equalsIgnoreCase(traitLabel)){
+                            found = true;
+                        }
+                    }
+                    if(!found){
+                        getLog().info("Class " + uri + " (label: " + label + ") does not have a label or synonym of " + traitLabel + ". DB ID is " + trait.getId());
                     }
                 }
-                if(!found){
-                    getLog().info("Class " + uri + " does not have a label or synonym of " + traitLabel + ". DB ID is " + trait.getId());
-                    getLog().info("Label for class " + uri + " is " + label);
-                }
             }
+            else {
+                getLog().info("Class " + uri + " does not have a label");
+            }
+
+
         }
         else{
             getLog().info(uri + " is not a valid EFO URI");
