@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -17,9 +18,8 @@ import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.MonthlyTotalsSummaryViewRepository;
 import uk.ac.ebi.spot.goci.repository.YearlyTotalsSummaryViewRepository;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
+
 
 /**
  * Created by emma on 29/01/15.
@@ -71,41 +71,74 @@ public class ReportController {
         return "reports_yearly";
     }
 
-
+/*
     // Studies by curator and/or status
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, params = "filters=true", method = RequestMethod.POST)
-    public String filteredSearch(@ModelAttribute StudySearchFilter studySearchFilter, Model model) {
+    public String monthlyTotalsFilteredSearch(@ModelAttribute StudySearchFilter studySearchFilter, Model model) {
 
         // Get filter text
         String filterYear = studySearchFilter.getYearFilter();
         String filterMonth = studySearchFilter.getMonthFilter();
+        Long status = studySearchFilter.getStatusSearchFilterId();
+        Long curator = studySearchFilter.getCuratorSearchFilterId();
+
+        List<MonthlyTotalsSummaryView> monthlyTotalsSummaryViews = new ArrayList<>();
+        Integer year = Integer.valueOf(filterYear);
+        Integer month = 0;
+        if (filterMonth! = null  && !filterMonth.isEmpty()){
+            month = convertMonthToNumberForm(filterMonth);
+        }
+
+        // Handle filtering by year or month
+        if (filterYear != null && !filterYear.isEmpty()) {
+            // If year and month find by both
+            if (filterMonth != null && !filterMonth.isEmpty()) {
+               monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByYearAndMonthOrderByYearDesc(year, month);
+
+            }
+            else {
+                // return just year
+
+            }
+        }
+        // If user entered a month
+        else {
+            if (filterMonth != null && !filterMonth.isEmpty()) {
 
 
+            }
+        }
+
+        model.addAttribute("monthlyTotalsSummaryViews", monthlyTotalsSummaryViews);
         return "reports";
     }
+
+    private Integer convertMonthToNumberForm(String filterMonth) {
+        Date date = new SimpleDateFormat("MMM", Locale.ENGLISH).parse(filterMonth);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int month = cal.get(Calendar.MONTH);
+        System.out.println(month == Calendar.FEBRUARY);
+
+
+    }*/
+
+
+
 
 /* General purpose methods used to populate drop downs */
 
     // Months used in dropdown
     @ModelAttribute("months")
-    public String[] populateMonths(Model model) {
-        String[] shortMonths = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-        return shortMonths;
+    private List<Integer> populateMonths(Model model) {
+        return monthlyTotalsSummaryViewRepository.getAllMonths();
     }
+
 
     // Years used in dropdown
     @ModelAttribute("years")
-    public List<String> populateYears(Model model) {
-        List<String> years = new ArrayList<>();
-        int year = Calendar.getInstance().get(Calendar.YEAR);
-        // Only have studies with dates up as far as 2005
-        int endYear = 2005;
-        while (year >= endYear) {
-            String stringYear = String.valueOf(year);
-            years.add(stringYear);
-            year--;
-        }
-        return years;
+    public List<Integer> populateYears(Model model) {
+        return monthlyTotalsSummaryViewRepository.getAllYears();
     }
 
     // Curators
