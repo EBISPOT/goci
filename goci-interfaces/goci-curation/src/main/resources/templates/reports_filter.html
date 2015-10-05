@@ -19,7 +19,7 @@
                   th:object="${studySearchFilter} ">
 
                 <div class="form-group">
-                    <label for="curationStatus" class="control-label"></label>
+                    <label for="curationStatus" class="control-label">Curation status</label>
                     <select name="curationStatus" class="form-control select2-select"
                             th:field="*{statusSearchFilterId}" id="curationStatus">
                         <!-- Empty value for first entry-->
@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="curator" class="control-label"></label>
+                    <label for="curator" class="control-label">Curator</label>
                     <select name="curator" th:field="*{curatorSearchFilterId}"
                             class="form-control select2-select" id="curator">
                         <!-- Empty value for first entry-->
@@ -41,24 +41,6 @@
                                 th:text="${curator.lastName}"></option>
                     </select>
                 </div>
-
-                <div class="form-group">
-                    <div>
-                        <button type="submit"
-                                class="btn btn-primary btn-sm">Filter by curator and/or status
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <br/>
-
-        <div id="yearMonthFilterParametersForm">
-
-            <form class="form-inline" name="yearMonthFilterParametersForm" role="form" method="post"
-                  th:action="@{/reports(filters=true)}"
-                  th:object="${studySearchFilter} ">
 
                 <div class="form-group">
                     <label for="year" class="control-label">Year:</label>
@@ -90,13 +72,15 @@
 
                 <div class="form-group">
                     <div>
-                        <button type="submit" class="btn btn-primary btn-sm">Filter by year and/or month</button>
+                        <button type="submit"
+                                class="btn btn-primary btn-sm">Filter
+                        </button>
                     </div>
                 </div>
             </form>
         </div>
+        <br/>
     </div>
 </div>
-<br/>
 </body>
 </html>
