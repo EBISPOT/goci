@@ -6,11 +6,12 @@
 
 <br/>
 <br/>
+
 <div class="panel panel-info col-md-10 col-md-offset-1">
     <div class="panel-heading">
         <h3 class="panel-title">Filter options</h3>
     </div>
-    <div class="panel-body" >
+    <div class="panel-body">
         <div id="curatorFilterParametersForm">
 
             <form class="form-inline" name="curatorFilterParametersForm" role="form" method="post"
@@ -67,7 +68,8 @@
                         <option value=""></option>
                         <option th:each="year : ${years}"
                                 th:value="${year}"
-                                th:text="${year}"></option>
+                                th:text="${year}"
+                                ></option>
                     </select>
                 </div>
 
@@ -76,10 +78,12 @@
                     <select name="month" th:field="*{monthFilter}"
                             class="form-control select2-select" id="month">
                         <!-- Empty value for first entry-->
+                        <!-- Some thymeleaf wrangling is used to get the month name
+                        or the number value, essentially a false date is created and then the month name displayed-->
                         <option value=""></option>
                         <option th:each="month : ${months}"
                                 th:value="${month}"
-                                th:text="${month}"></option>
+                                th:text="${#dates.monthName(#dates.create('2015',month, '01'))} ?: 'null'"></option>
                     </select>
                 </div>
 
