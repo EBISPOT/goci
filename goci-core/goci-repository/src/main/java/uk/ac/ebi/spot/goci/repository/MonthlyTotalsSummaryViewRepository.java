@@ -21,6 +21,8 @@ public interface MonthlyTotalsSummaryViewRepository extends JpaRepository<Monthl
 
     List<MonthlyTotalsSummaryView> findByYearAndMonthOrderByYearDesc(Integer year, Integer month);
 
+    List<MonthlyTotalsSummaryView> findByMonthOrderByYearDesc(Integer month);
+
     List<MonthlyTotalsSummaryView> findByCurator(String curator);
 
     List<MonthlyTotalsSummaryView> findByCurationStatus(String curationStatus);
