@@ -12,7 +12,7 @@ public class TotalsSummaryView {
     @Id
     private Long id;
 
-    private String year;
+    private Integer year;
 
     private String curator;
 
@@ -24,18 +24,18 @@ public class TotalsSummaryView {
     public TotalsSummaryView() {
     }
 
-    public TotalsSummaryView(String year, String curator, Integer curatorTotal, String curationStatus) {
+    public TotalsSummaryView(Integer year, String curator, Integer curatorTotal, String curationStatus) {
         this.year = year;
         this.curator = curator;
         this.curatorTotal = curatorTotal;
         this.curationStatus = curationStatus;
     }
 
-    public String getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 

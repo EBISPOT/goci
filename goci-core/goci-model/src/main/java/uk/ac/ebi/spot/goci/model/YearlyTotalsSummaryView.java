@@ -16,7 +16,7 @@ public class YearlyTotalsSummaryView extends TotalsSummaryView {
     public YearlyTotalsSummaryView() {
     }
 
-    public YearlyTotalsSummaryView(String year, String curator, Integer curatorTotal, String curationStatus) {
+    public YearlyTotalsSummaryView(Integer year, String curator, Integer curatorTotal, String curationStatus) {
         super(year, curator, curatorTotal, curationStatus);
     }
 }
