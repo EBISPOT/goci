@@ -7,16 +7,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import uk.ac.ebi.spot.goci.curation.model.DateRange;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
+import uk.ac.ebi.spot.goci.model.CurationStatus;
+import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.MonthlyTotalsSummaryView;
 import uk.ac.ebi.spot.goci.model.YearlyTotalsSummaryView;
+import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
+import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.MonthlyTotalsSummaryViewRepository;
 import uk.ac.ebi.spot.goci.repository.YearlyTotalsSummaryViewRepository;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,11 +35,15 @@ public class ReportController {
     // Repositories allowing access to database objects associated with
     private MonthlyTotalsSummaryViewRepository monthlyTotalsSummaryViewRepository;
     private YearlyTotalsSummaryViewRepository yearlyTotalsSummaryViewRepository;
+    private CuratorRepository curatorRepository;
+    private CurationStatusRepository curationStatusRepository;
 
     @Autowired
-    public ReportController(MonthlyTotalsSummaryViewRepository monthlyTotalsSummaryViewRepository, YearlyTotalsSummaryViewRepository yearlyTotalsSummaryViewRepository) {
+    public ReportController(MonthlyTotalsSummaryViewRepository monthlyTotalsSummaryViewRepository, YearlyTotalsSummaryViewRepository yearlyTotalsSummaryViewRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository) {
         this.monthlyTotalsSummaryViewRepository = monthlyTotalsSummaryViewRepository;
         this.yearlyTotalsSummaryViewRepository = yearlyTotalsSummaryViewRepository;
+        this.curatorRepository = curatorRepository;
+        this.curationStatusRepository = curationStatusRepository;
     }
 
     // Return overview
@@ -66,8 +72,6 @@ public class ReportController {
     }
 
 
-
-
     // Studies by curator and/or status
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, params = "filters=true", method = RequestMethod.POST)
     public String filteredSearch(@ModelAttribute StudySearchFilter studySearchFilter, Model model) {
@@ -80,7 +84,7 @@ public class ReportController {
         return "reports";
     }
 
-/* General purpose methods */
+/* General purpose methods used to populate drop downs */
 
     // Months used in dropdown
     @ModelAttribute("months")
@@ -102,6 +106,18 @@ public class ReportController {
             year--;
         }
         return years;
+    }
+
+    // Curators
+    @ModelAttribute("curators")
+    public List<Curator> populateCurators(Model model) {
+        return curatorRepository.findAll();
+    }
+
+    // Curation statuses
+    @ModelAttribute("curationstatuses")
+    public List<CurationStatus> populateCurationStatuses(Model model) {
+        return curationStatusRepository.findAll();
     }
 
 }
