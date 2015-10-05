@@ -57,16 +57,17 @@
                 <tr>
                     <th class="col-md-1">Year</th>
                     <th class="col-md-2">Month</th>
-                    <th class="col-md-3">Curator</th>
-                    <th class="col-md-3">Total number per curator</th>
+                    <th class="col-md-2">Curator</th>
+                    <th class="col-md-2">Total number per curator</th>
                     <th class="col-md-3">Curation Status</th>
-                    <th class="col-md-3">Total number of entries</th>
+                    <th class="col-md-2">Total number of entries</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="monthlyTotalsSummaryView: ${monthlyTotalsSummaryViews}">
                     <td th:text="${monthlyTotalsSummaryView.year} ?: 'null'"></td>
-                    <td th:text="${monthlyTotalsSummaryView.month} ?: 'null'"></td>
+                    <!--Some thymeleaf wrangling to get the monthname for a date-->
+                    <td th:text="${#dates.monthName(#dates.create(monthlyTotalsSummaryView.year,monthlyTotalsSummaryView.month, '01'))} ?: 'null'"></td>
                     <td th:text="${monthlyTotalsSummaryView.curator} ?: 'null'"></td>
                     <td th:text="${monthlyTotalsSummaryView.curatorTotal} ?: 'null'"></td>
                     <td th:text="${monthlyTotalsSummaryView.curationStatus} ?: 'null'"></td>
