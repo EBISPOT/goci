@@ -50,19 +50,18 @@
                 <tbody>
                 <tr th:each="monthlyTotalsSummaryView: ${monthlyTotalsSummaryViews}">
                     <td th:text="${monthlyTotalsSummaryView.year} ?: 'null'"></td>
-                    <!--Some thymeleaf wrangling to get the monthname for a date-->
+                    <!--Some thymeleaf wrangling to get the month name for a date-->
                     <td th:text="${#dates.monthName(#dates.create(monthlyTotalsSummaryView.year,monthlyTotalsSummaryView.month, '01'))} ?: 'null'"></td>
                     <td th:text="${monthlyTotalsSummaryView.curator} ?: 'null'"></td>
                     <td th:text="${monthlyTotalsSummaryView.curatorTotal} ?: 'null'"></td>
                     <td th:text="${monthlyTotalsSummaryView.curationStatus} ?: 'null'"></td>
                     <td th:text="${monthlyTotalsSummaryView.monthlyTotal} ?: 'null'"></td>
+                    <td th:href="@{/reports/{id}(id=${monthlyTotalsSummaryView.id})}">Show all studies</td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
-
-
 </body>
 </html>
