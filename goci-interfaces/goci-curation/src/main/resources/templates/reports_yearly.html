@@ -1,9 +1,36 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<body th:fragment="reports_overview">
-<br/>
+    <script href="webjars/bootstrap/3.3.5/css/bootstrap.min.js"
+            th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.js}"></script>
+    <script src="webjars/jquery/2.1.4/jquery.min.js" th:href="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+
+    <!-- CSS -->
+    <link href="webjars/bootstrap/3.3.5/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.css}"
+          rel="stylesheet"/>
+
+</head>
+<body>
+
+<!--Include header-->
+<div th:include="header :: navbar"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li><a th:href="@{/reports}">Full overview</a></li>
+            <li class="active"><a href="#">Yearly Curator Totals</a></li>
+        </ul>
+    </div>
+</div>
+
+
 <div class="container-fluid">
     <div class="row">
         <div class="pull-right">
@@ -56,22 +83,17 @@
                 <thead>
                 <tr>
                     <th class="col-md-1">Year</th>
-                    <th class="col-md-2">Month</th>
                     <th class="col-md-2">Curator</th>
                     <th class="col-md-2">Total number per curator</th>
                     <th class="col-md-3">Curation Status</th>
-                    <th class="col-md-2">Total number of entries</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="monthlyTotalsSummaryView: ${monthlyTotalsSummaryViews}">
-                    <td th:text="${monthlyTotalsSummaryView.year} ?: 'null'"></td>
-                    <!--Some thymeleaf wrangling to get the monthname for a date-->
-                    <td th:text="${#dates.monthName(#dates.create(monthlyTotalsSummaryView.year,monthlyTotalsSummaryView.month, '01'))} ?: 'null'"></td>
-                    <td th:text="${monthlyTotalsSummaryView.curator} ?: 'null'"></td>
-                    <td th:text="${monthlyTotalsSummaryView.curatorTotal} ?: 'null'"></td>
-                    <td th:text="${monthlyTotalsSummaryView.curationStatus} ?: 'null'"></td>
-                    <td th:text="${monthlyTotalsSummaryView.monthlyTotal} ?: 'null'"></td>
+                <tr th:each="yearlyTotalsSummaryView: ${yearlyTotalsSummaryViews}">
+                    <td th:text="${yearlyTotalsSummaryView.year} ?: 'null'"></td>
+                    <td th:text="${yearlyTotalsSummaryView.curator} ?: 'null'"></td>
+                    <td th:text="${yearlyTotalsSummaryView.curatorTotal} ?: 'null'"></td>
+                    <td th:text="${yearlyTotalsSummaryView.curationStatus} ?: 'null'"></td>
                 </tr>
                 </tbody>
             </table>
