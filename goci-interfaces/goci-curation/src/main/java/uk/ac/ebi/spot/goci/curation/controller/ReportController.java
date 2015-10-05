@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
@@ -18,6 +19,7 @@ import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.MonthlyTotalsSummaryViewRepository;
 import uk.ac.ebi.spot.goci.repository.YearlyTotalsSummaryViewRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -46,14 +48,77 @@ public class ReportController {
         this.curationStatusRepository = curationStatusRepository;
     }
 
-    // Return overview
+    // Returns overview
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String getOverview(Model model) {
+    public String getOverview(Model model,
+                              @RequestParam(required = false) Long status,
+                              @RequestParam(required = false) Long curator,
+                              @RequestParam(required = false) Integer year,
+                              @RequestParam(required = false) Integer month) {
 
-        // Add a studySearchFilter to model in case user want to filter table
-        model.addAttribute("studySearchFilter", new StudySearchFilter());
 
-        List<MonthlyTotalsSummaryView> monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findAll();
+        List<MonthlyTotalsSummaryView> monthlyTotalsSummaryViews = new ArrayList<>();
+
+        // This will be returned to view and store what curator has searched for
+        StudySearchFilter studySearchFilter = new StudySearchFilter();
+
+        // Need to convert status and curator to a string
+        String curatorName = null;
+        String statusName = null;
+        if (curator != null) {
+            curatorName = curatorRepository.findOne(curator).getLastName();
+        }
+        if (status != null) {
+            statusName = curationStatusRepository.findOne(status).getStatus();
+        }
+
+        // If user entered a status
+        if (status != null) {
+            // If we have curator and status find by both
+            if (curator != null) {
+                monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCuratorAndCurationStatus(curatorName, statusName);
+
+                // Return these values so they appear in filter results
+                studySearchFilter.setCuratorSearchFilterId(curator);
+                studySearchFilter.setStatusSearchFilterId(status);
+
+            } else {
+                monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCurationStatus(statusName);
+
+                // Return this value so it appears in filter result
+                studySearchFilter.setStatusSearchFilterId(status);
+
+            }
+        }
+        // If user entered curator
+        else if (curator != null) {
+            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCurator(curatorName);
+
+            // Return this value so it appears in filter result
+            studySearchFilter.setCuratorSearchFilterId(curator);
+        } else if (year != null) {
+
+            // Handle filtering by year or month
+
+            // If year and month find by both
+            if (month != null) {
+                monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByYearAndMonthOrderByYearDesc(year, month);
+            } else {
+                // return just year
+                monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByYearOrderByYearDesc(year);
+            }
+        }
+
+        // If user entered a month
+        else if (month != null) {
+            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByMonthOrderByYearDesc(month);
+        } else {
+            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findAll();
+        }
+
+
+        // Add studySearchFilter to model so user can filter table
+        model.addAttribute("studySearchFilter", studySearchFilter);
         model.addAttribute("monthlyTotalsSummaryViews", monthlyTotalsSummaryViews);
         return "reports";
     }
@@ -71,60 +136,51 @@ public class ReportController {
         return "reports_yearly";
     }
 
-/*
-    // Studies by curator and/or status
-    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, params = "filters=true", method = RequestMethod.POST)
-    public String monthlyTotalsFilteredSearch(@ModelAttribute StudySearchFilter studySearchFilter, Model model) {
 
-        // Get filter text
-        String filterYear = studySearchFilter.getYearFilter();
-        String filterMonth = studySearchFilter.getMonthFilter();
+    // Redirects from landing page and main page
+    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String searchByFilter(@ModelAttribute StudySearchFilter studySearchFilter,
+                                 Model model,
+                                 @RequestParam(required = true) String filters) {
+
+        // Get ids of objects searched for
         Long status = studySearchFilter.getStatusSearchFilterId();
         Long curator = studySearchFilter.getCuratorSearchFilterId();
+        Integer year = studySearchFilter.getYearFilter();
+        Integer month = studySearchFilter.getMonthFilter();
 
-        List<MonthlyTotalsSummaryView> monthlyTotalsSummaryViews = new ArrayList<>();
-        Integer year = Integer.valueOf(filterYear);
-        Integer month = 0;
-        if (filterMonth! = null  && !filterMonth.isEmpty()){
-            month = convertMonthToNumberForm(filterMonth);
-        }
 
-        // Handle filtering by year or month
-        if (filterYear != null && !filterYear.isEmpty()) {
-            // If year and month find by both
-            if (filterMonth != null && !filterMonth.isEmpty()) {
-               monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByYearAndMonthOrderByYearDesc(year, month);
-
+        // If user entered a status
+        if (status != null) {
+            // If we have curator and status find by both
+            if (curator != null) {
+                return "redirect:/reports?status=" + status + "&curator=" + curator;
+            } else {
+                return "redirect:/reports?status=" + status;
             }
-            else {
-                // return just year
-
+        }
+        // If user entered curator
+        else if (curator != null) {
+            return "redirect:/reports?curator=" + curator;
+        }
+        // For year and moth searches
+        else if (year != null) {
+            if (month != null) {
+                return "redirect:/reports?year=" + year + "&month=" + month;
+            } else {
+                return "redirect:/reports?year=" + year;
             }
         }
         // If user entered a month
+        else if (month != null) {
+            return "redirect:/reports?month=" + month;
+        }
+        // If all else fails
         else {
-            if (filterMonth != null && !filterMonth.isEmpty()) {
-
-
-            }
+            return "redirect:/reports";
         }
 
-        model.addAttribute("monthlyTotalsSummaryViews", monthlyTotalsSummaryViews);
-        return "reports";
     }
-
-    private Integer convertMonthToNumberForm(String filterMonth) {
-        Date date = new SimpleDateFormat("MMM", Locale.ENGLISH).parse(filterMonth);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        int month = cal.get(Calendar.MONTH);
-        System.out.println(month == Calendar.FEBRUARY);
-
-
-    }*/
-
-
-
 
 /* General purpose methods used to populate drop downs */
 
