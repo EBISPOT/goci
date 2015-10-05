@@ -17,6 +17,12 @@ import java.util.List;
 @RepositoryRestResource
 public interface MonthlyTotalsSummaryViewRepository extends JpaRepository<MonthlyTotalsSummaryView, Long> {
 
+    @Query("select distinct month from MonthlyTotalsSummaryView order by month desc")
+    List<Integer> getAllMonths();
+
+    @Query("select distinct year from MonthlyTotalsSummaryView order by year desc")
+    List<Integer> getAllYears();
+
     List<MonthlyTotalsSummaryView> findByYearOrderByYearDesc(Integer year);
 
     List<MonthlyTotalsSummaryView> findByYearAndMonthOrderByYearDesc(Integer year, Integer month);
@@ -29,11 +35,21 @@ public interface MonthlyTotalsSummaryViewRepository extends JpaRepository<Monthl
 
     List<MonthlyTotalsSummaryView> findByCuratorAndCurationStatus(String curator, String curationStatus);
 
-    @Query("select distinct month from MonthlyTotalsSummaryView order by month desc")
-    List<Integer> getAllMonths();
+    List<MonthlyTotalsSummaryView> findByCuratorAndCurationStatusAndYearAndMonthOrderByYearDesc(String curator, String curationStatus, Integer year, Integer month);
 
-    @Query("select distinct year from MonthlyTotalsSummaryView order by year desc")
-    List<Integer> getAllYears();
+    List<MonthlyTotalsSummaryView> findByCurationStatusAndYearAndMonthOrderByYearDesc(String statusName, Integer year, Integer month);
 
+    List<MonthlyTotalsSummaryView> findByCuratorAndCurationStatusAndYearOrderByYearDesc(String curatorName, String statusName, Integer year);
 
+    List<MonthlyTotalsSummaryView> findByCuratorAndCurationStatusAndMonthOrderByYearDesc(String curatorName, String statusName, Integer month);
+
+    List<MonthlyTotalsSummaryView> findByCuratorAndYearAndMonthOrderByYearDesc(String curatorName, Integer year, Integer month);
+
+    List<MonthlyTotalsSummaryView> findByCuratorAndYearOrderByYearDesc(String curatorName, Integer year);
+
+    List<MonthlyTotalsSummaryView> findByCuratorAndMonthOrderByYearDesc(String curatorName, Integer month);
+
+    List<MonthlyTotalsSummaryView> findByCurationStatusAndYearOrderByYearDesc(String statusName, Integer year);
+
+    List<MonthlyTotalsSummaryView> findByCurationStatusAndMonthOrderByYearDesc(String statusName, Integer month);
 }

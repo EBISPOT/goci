@@ -19,8 +19,7 @@ import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.MonthlyTotalsSummaryViewRepository;
 import uk.ac.ebi.spot.goci.repository.YearlyTotalsSummaryViewRepository;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -72,50 +71,45 @@ public class ReportController {
             statusName = curationStatusRepository.findOne(status).getStatus();
         }
 
-        // If user entered a status
-        if (status != null) {
-            // If we have curator and status find by both
-            if (curator != null) {
-                monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCuratorAndCurationStatus(curatorName, statusName);
-
-                // Return these values so they appear in filter results
-                studySearchFilter.setCuratorSearchFilterId(curator);
-                studySearchFilter.setStatusSearchFilterId(status);
-
-            } else {
-                monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCurationStatus(statusName);
-
-                // Return this value so it appears in filter result
-                studySearchFilter.setStatusSearchFilterId(status);
-
-            }
-        }
-        // If user entered curator
-        else if (curator != null) {
+        //Search database for various filter options
+        if (status != null && curator != null && year != null && month != null) { // all filter options
+            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCuratorAndCurationStatusAndYearAndMonthOrderByYearDesc(curatorName, statusName, year, month);
+        } else if (status != null && curator != null && year != null) { // status, curator and year
+            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCuratorAndCurationStatusAndYearOrderByYearDesc(curatorName, statusName, year);
+        } else if (status != null && curator != null && month != null) { // status, curator and month
+            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCuratorAndCurationStatusAndMonthOrderByYearDesc(curatorName, statusName, month);
+        } else if (status != null && year != null && month != null) { // status, year, month
+            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCurationStatusAndYearAndMonthOrderByYearDesc(statusName, year, month);
+        } else if (status != null && curator != null) { // status and curator
+            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCuratorAndCurationStatus(curatorName, statusName);
+        } else if (status != null && year != null) { // status and year
+            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCurationStatusAndYearOrderByYearDesc(statusName, year);
+        } else if (status != null && month != null) { // status and year
+            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCurationStatusAndMonthOrderByYearDesc(statusName, month);
+        } else if (status != null) {
+            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCurationStatus(statusName);
+        } else if (curator != null && year != null && month != null) { // curator, year and month
+            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCuratorAndYearAndMonthOrderByYearDesc(curatorName, year, month);
+        } else if (curator != null && year != null) { // curator and year
+            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCuratorAndYearOrderByYearDesc(curatorName, year);
+        } else if (curator != null && month != null) { // curator and month
+            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCuratorAndMonthOrderByYearDesc(curatorName, month);
+        } else if (curator != null) {
             monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCurator(curatorName);
-
-            // Return this value so it appears in filter result
-            studySearchFilter.setCuratorSearchFilterId(curator);
+        } else if (year != null && month != null) { // year and month
+            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByYearAndMonthOrderByYearDesc(year, month);
         } else if (year != null) {
-
-            // Handle filtering by year or month
-
-            // If year and month find by both
-            if (month != null) {
-                monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByYearAndMonthOrderByYearDesc(year, month);
-            } else {
-                // return just year
-                monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByYearOrderByYearDesc(year);
-            }
-        }
-
-        // If user entered a month
-        else if (month != null) {
+            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByYearOrderByYearDesc(year);
+        } else if (month != null) {
             monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByMonthOrderByYearDesc(month);
-        } else {
+        } else { // no filters
             monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findAll();
         }
 
+        studySearchFilter.setCuratorSearchFilterId(curator);
+        studySearchFilter.setStatusSearchFilterId(status);
+        studySearchFilter.setYearFilter(year);
+        studySearchFilter.setMonthFilter(month);
 
         // Add studySearchFilter to model so user can filter table
         model.addAttribute("studySearchFilter", studySearchFilter);
@@ -149,37 +143,42 @@ public class ReportController {
         Integer year = studySearchFilter.getYearFilter();
         Integer month = studySearchFilter.getMonthFilter();
 
+        // To handle various filters create a map to store type and value
+        Map<String, Object> filterMap = new HashMap<>();
 
-        // If user entered a status
+        if (curator != null) {
+            filterMap.putIfAbsent("curator", curator);
+        }
         if (status != null) {
-            // If we have curator and status find by both
-            if (curator != null) {
-                return "redirect:/reports?status=" + status + "&curator=" + curator;
-            } else {
-                return "redirect:/reports?status=" + status;
-            }
+            filterMap.putIfAbsent("status", status);
         }
-        // If user entered curator
-        else if (curator != null) {
-            return "redirect:/reports?curator=" + curator;
+        if (year != null) {
+            filterMap.putIfAbsent("year", year);
         }
-        // For year and moth searches
-        else if (year != null) {
-            if (month != null) {
-                return "redirect:/reports?year=" + year + "&month=" + month;
-            } else {
-                return "redirect:/reports?year=" + year;
-            }
-        }
-        // If user entered a month
-        else if (month != null) {
-            return "redirect:/reports?month=" + month;
-        }
-        // If all else fails
-        else {
-            return "redirect:/reports";
+        if (month != null) {
+            filterMap.putIfAbsent("month", month);
         }
 
+        String redirectPrefix = "redirect:/reports";
+
+        // Build redirect
+        Collection<String> redirectBuilder = new ArrayList<>();
+        String redirect = "";
+
+        if (!filterMap.isEmpty()) {
+            for (String key : filterMap.keySet()) {
+                redirectBuilder.add(key + "=" + filterMap.get(key));
+            }
+        }
+        if (!redirectBuilder.isEmpty()) {
+            redirect = String.join("&", redirectBuilder);
+        }
+
+        if (redirect.isEmpty()) {
+            return redirectPrefix;
+        } else {
+            return redirectPrefix + "?" + redirect;
+        }
     }
 
 /* General purpose methods used to populate drop downs */
