@@ -205,10 +205,10 @@
                     </div>
                 </div>
 
+               <!-- CNV information in no longer captured but is still stored in database, thus field is left as
+               hidden to preserve existing values in database -->
                 <div class="form-group">
-                    <label for="cnv" class="control-label col-md-2">CNV</label>
-
-                    <input id="cnv" type="checkbox" th:field="*{cnv}"/>
+                    <input id="cnv" type="hidden" th:field="*{cnv}"/>
                 </div>
 
                 <div class="form-group">
