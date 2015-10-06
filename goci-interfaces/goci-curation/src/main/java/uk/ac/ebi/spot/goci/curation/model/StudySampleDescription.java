@@ -7,7 +7,7 @@ import java.util.Date;
  *
  * @author emma
  *         <p>
- *         Object used to store study, ethnicity and relevant housekeeyping information. Designed to allow curators ability to
+ *         DTO used to store study, ethnicity and relevant housekeeyping information. Designed to allow curators ability to
  *         download a spreadsheet of the sample description, detailed ancestry and country information for all studies.
  */
 public class StudySampleDescription {
