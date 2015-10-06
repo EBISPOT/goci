@@ -2,13 +2,15 @@ package uk.ac.ebi.spot.goci.curation.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
-import uk.ac.ebi.spot.goci.model.*;
+import uk.ac.ebi.spot.goci.model.CurationStatus;
+import uk.ac.ebi.spot.goci.model.Curator;
+import uk.ac.ebi.spot.goci.model.MonthlyTotalsSummaryView;
+import uk.ac.ebi.spot.goci.model.YearlyTotalsSummaryView;
 import uk.ac.ebi.spot.goci.repository.*;
 
 import java.util.*;
@@ -138,11 +140,10 @@ public class ReportController {
         Integer month = monthlyTotalsSummaryView.getMonth();
 
 
-
 //        Page<Study> studyPage =
 //                studyRepository.find
 
-   //     model.addAttribute("studies", studyPage);
+        //     model.addAttribute("studies", studyPage);
         return "studies";
     }
 
@@ -196,10 +197,7 @@ public class ReportController {
             return redirectPrefix + "?" + redirect;
         }
     }
-
-
-
-
+    
 /* General purpose methods used to populate drop downs */
 
     // Months used in dropdown
