@@ -6,14 +6,20 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-    <script href="webjars/bootstrap/3.3.5/css/bootstrap.min.js"
-            th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.js}"></script>
-    <script src="webjars/jquery/2.1.4/jquery.min.js" th:href="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+    <script src="/webjars/jquery/2.1.4/jquery.min.js"
+            th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
 
-    <!-- CSS -->
-    <link href="webjars/bootstrap/3.3.5/css/bootstrap.min.css"
+  <script src="/webjars/bootstrap/3.3.5/js/bootstrap.min.js"
+            th:src="@{/webjars/bootstrap/3.3.5/js/bootstrap.min.js}"></script>
+
+    <link href="/webjars/bootstrap/3.3.5/css/bootstrap.min.css"
           th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.css}"
           rel="stylesheet"/>
+
+    <link href="/webjars/bootstrap/3.3.5/css/bootstrap-theme.min.css"
+          th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap-theme.min.css}"
+          rel="stylesheet"/>
+
 
 </head>
 <body>
@@ -57,7 +63,7 @@
                     <td th:text="${monthlyTotalsSummaryView.curatorTotal} ?: 'null'"></td>
                     <td th:text="${monthlyTotalsSummaryView.curationStatus} ?: 'null'"></td>
                     <td><a th:href="@{/reports/{reportId}(reportId=${monthlyTotalsSummaryView.id})}"
-                            class="btn btn-link">Show studies</a></td>
+                           class="btn btn-link">Show studies</a></td>
                     <td th:text="${monthlyTotalsSummaryView.monthlyTotal} ?: 'null'"></td>
                 </tr>
                 </tbody>
