@@ -49,10 +49,10 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     Page<Study> findByHousekeepingCuratorId(Long curator, Pageable pageable);
 
     // Custom query to find studies in reports table
-    @Query("select s from Study s where s.housekeeping.curator.lastName like :curator and s.housekeeping.curationStatus.status like :status and EXTRACT(YEAR FROM (TRUNC(TO_DATE(s.publicationDate), 'YEAR'))) = :year and EXTRACT(MONTH FROM (TRUNC(TO_DATE(s.publicationDate), 'MONTH'))) = :month")
-    List<Study> findByPublicationDateAndCuratorAndStatus(@Param("curator") String curator, @Param("status") String status,
+    @Query("select s from Study s where s.housekeeping.curator.id like :curator and s.housekeeping.curationStatus.id like :status and EXTRACT(YEAR FROM (TRUNC(TO_DATE(s.publicationDate), 'YEAR'))) = :year and EXTRACT(MONTH FROM (TRUNC(TO_DATE(s.publicationDate), 'MONTH'))) = :month")
+    Page<Study> findByPublicationDateAndCuratorAndStatus(@Param("curator") Long curator, @Param("status") Long status,
                                                          @Param("year") Integer year,
-                                                         @Param("month") Integer month);
+                                                         @Param("month") Integer month, Pageable pageable);
 
     // Queries for study types
     Page<Study> findByGxe(Boolean gxe, Pageable pageable);
