@@ -21,11 +21,6 @@ public class Association {
 
     private String riskFrequency;
 
-    // This is no longer used in form but exists in database for some older studies
-    private String allele;
-
-    private Float pvalueFloat;
-
     private String pvalueText;
 
     private Float orPerCopyNum;
@@ -79,10 +74,8 @@ public class Association {
     public Association() {
     }
 
-    public Association(String riskFrequency, String allele, Float pvalueFloat, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Boolean snpChecked, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyRecipRange, String orPerCopyUnitDescr, Study study, Collection<Locus> loci, Collection<EfoTrait> efoTraits) {
+    public Association(String riskFrequency, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Boolean snpChecked, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyRecipRange, String orPerCopyUnitDescr, Study study, Collection<Locus> loci, Collection<EfoTrait> efoTraits, AssociationReport associationReport) {
         this.riskFrequency = riskFrequency;
-        this.allele = allele;
-        this.pvalueFloat = pvalueFloat;
         this.pvalueText = pvalueText;
         this.orPerCopyNum = orPerCopyNum;
         this.orType = orType;
@@ -100,9 +93,8 @@ public class Association {
         this.study = study;
         this.loci = loci;
         this.efoTraits = efoTraits;
+        this.associationReport = associationReport;
     }
-
-
 
     public Long getId() {
         return id;
@@ -118,22 +110,6 @@ public class Association {
 
     public void setRiskFrequency(String riskFrequency) {
         this.riskFrequency = riskFrequency;
-    }
-
-    public String getAllele() {
-        return allele;
-    }
-
-    public void setAllele(String allele) {
-        this.allele = allele;
-    }
-
-    public Float getPvalueFloat() {
-        return pvalueFloat;
-    }
-
-    public void setPvalueFloat(Float pvalueFloat) {
-        this.pvalueFloat = pvalueFloat;
     }
 
     public String getPvalueText() {
@@ -282,15 +258,6 @@ public class Association {
 
     public void setAssociationReport(AssociationReport associationReport) {
         this.associationReport = associationReport;
-    }
-
-    @Override public String toString() {
-        return "Association{" +
-                "id=" + id +
-                ", riskFrequency='" + riskFrequency + '\'' +
-                ", allele='" + allele + '\'' +
-                ", pvalueFloat=" + pvalueFloat +
-                '}';
     }
 
     public double getPvalue() {
