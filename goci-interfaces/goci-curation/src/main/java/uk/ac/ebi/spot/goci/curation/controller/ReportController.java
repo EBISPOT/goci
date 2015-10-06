@@ -6,12 +6,16 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.MonthlyTotalsSummaryView;
 import uk.ac.ebi.spot.goci.model.YearlyTotalsSummaryView;
-import uk.ac.ebi.spot.goci.repository.*;
+import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
+import uk.ac.ebi.spot.goci.repository.CuratorRepository;
+import uk.ac.ebi.spot.goci.repository.MonthlyTotalsSummaryViewRepository;
+import uk.ac.ebi.spot.goci.repository.YearlyTotalsSummaryViewRepository;
 
 import java.util.*;
 
@@ -32,15 +36,13 @@ public class ReportController {
     private YearlyTotalsSummaryViewRepository yearlyTotalsSummaryViewRepository;
     private CuratorRepository curatorRepository;
     private CurationStatusRepository curationStatusRepository;
-    private StudyRepository studyRepository;
 
     @Autowired
-    public ReportController(MonthlyTotalsSummaryViewRepository monthlyTotalsSummaryViewRepository, YearlyTotalsSummaryViewRepository yearlyTotalsSummaryViewRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, StudyRepository studyRepository) {
+    public ReportController(MonthlyTotalsSummaryViewRepository monthlyTotalsSummaryViewRepository, YearlyTotalsSummaryViewRepository yearlyTotalsSummaryViewRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository) {
         this.monthlyTotalsSummaryViewRepository = monthlyTotalsSummaryViewRepository;
         this.yearlyTotalsSummaryViewRepository = yearlyTotalsSummaryViewRepository;
         this.curatorRepository = curatorRepository;
         this.curationStatusRepository = curationStatusRepository;
-        this.studyRepository = studyRepository;
     }
 
     // Returns overview
@@ -126,25 +128,22 @@ public class ReportController {
         return "reports_yearly";
     }
 
-    // Return yearly overview
+    // Redirect to studies page
     @RequestMapping(value = "/{id}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String getStudies(Model model, @PathVariable Long id) {
+    public String getStudies(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes) {
 
-        // Add a studySearchFilter to model in case user want to filter table
-        model.addAttribute("studySearchFilter", new StudySearchFilter());
-
+        // Get redirect variables
         MonthlyTotalsSummaryView monthlyTotalsSummaryView = monthlyTotalsSummaryViewRepository.findOne(id);
         String curator = monthlyTotalsSummaryView.getCurator();
+        Long curatorId = curatorRepository.findByLastName(curator).getId();
+
         String status = monthlyTotalsSummaryView.getCurationStatus();
+        Long statusId = curationStatusRepository.findByStatus(status).getId();
+
         Integer year = monthlyTotalsSummaryView.getYear();
         Integer month = monthlyTotalsSummaryView.getMonth();
 
-
-//        Page<Study> studyPage =
-//                studyRepository.find
-
-        //     model.addAttribute("studies", studyPage);
-        return "studies";
+        return "redirect:/studies?page=1&status=" + statusId + "&curator=" + curatorId + "&year=" + year + "&month=" + month;
     }
 
 
@@ -197,7 +196,7 @@ public class ReportController {
             return redirectPrefix + "?" + redirect;
         }
     }
-    
+
 /* General purpose methods used to populate drop downs */
 
     // Months used in dropdown
