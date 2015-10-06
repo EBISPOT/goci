@@ -40,10 +40,11 @@
                 <thead>
                 <tr>
                     <th class="col-md-1">Year</th>
-                    <th class="col-md-2">Month</th>
+                    <th class="col-md-1">Month</th>
                     <th class="col-md-2">Curator</th>
                     <th class="col-md-2">Total number per curator</th>
-                    <th class="col-md-3">Curation Status</th>
+                    <th class="col-md-2">Curation Status</th>
+                    <th class="col-md-2">Link to studies</th>
                     <th class="col-md-2">Total number of entries for month</th>
                 </tr>
                 </thead>
@@ -55,8 +56,9 @@
                     <td th:text="${monthlyTotalsSummaryView.curator} ?: 'null'"></td>
                     <td th:text="${monthlyTotalsSummaryView.curatorTotal} ?: 'null'"></td>
                     <td th:text="${monthlyTotalsSummaryView.curationStatus} ?: 'null'"></td>
+                    <td><a th:href="@{/reports/{reportId}(reportId=${monthlyTotalsSummaryView.id})}"
+                            class="btn btn-link">Show studies</a></td>
                     <td th:text="${monthlyTotalsSummaryView.monthlyTotal} ?: 'null'"></td>
-               <!--     <td th:href="@{/reports/{id}(id=${monthlyTotalsSummaryView.id})}">Show all studies</td>-->
                 </tr>
                 </tbody>
             </table>
