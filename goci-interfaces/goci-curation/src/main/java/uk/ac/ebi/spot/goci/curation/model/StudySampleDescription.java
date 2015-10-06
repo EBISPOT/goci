@@ -12,6 +12,8 @@ import java.util.Date;
  */
 public class StudySampleDescription {
 
+    private Long studyId;
+
     private String author;
 
     private Date publicationDate;
@@ -42,19 +44,8 @@ public class StudySampleDescription {
 
     private String notes;
 
-    public StudySampleDescription(String author,
-                                  Date publicationDate,
-                                  String pubmedId,
-                                  String initialSampleSize,
-                                  String replicateSampleSize,
-                                  Boolean ethnicityCheckedLevelOne,
-                                  Boolean ethnicityCheckedLevelTwo,
-                                  String type,
-                                  Integer numberOfIndividuals,
-                                  String ethnicGroup,
-                                  String countryOfOrigin,
-                                  String countryOfRecruitment,
-                                  String description, String sampleSizesMatch, String notes) {
+    public StudySampleDescription(Long studyId, String author, Date publicationDate, String pubmedId, String initialSampleSize, String replicateSampleSize, Boolean ethnicityCheckedLevelOne, Boolean ethnicityCheckedLevelTwo, String type, Integer numberOfIndividuals, String ethnicGroup, String countryOfOrigin, String countryOfRecruitment, String description, String sampleSizesMatch, String notes) {
+        this.studyId = studyId;
         this.author = author;
         this.publicationDate = publicationDate;
         this.pubmedId = pubmedId;
@@ -70,6 +61,14 @@ public class StudySampleDescription {
         this.description = description;
         this.sampleSizesMatch = sampleSizesMatch;
         this.notes = notes;
+    }
+
+    public Long getStudyId() {
+        return studyId;
+    }
+
+    public void setStudyId(Long studyId) {
+        this.studyId = studyId;
     }
 
     public String getAuthor() {
