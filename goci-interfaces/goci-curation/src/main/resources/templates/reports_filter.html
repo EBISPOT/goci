@@ -16,7 +16,7 @@
             <div id="monthlyFilterParametersForm">
 
                 <form class="form-inline" name="curatorFilterParametersForm" role="form" method="post"
-                      th:action="@{/reports(filters=true)}"
+                      th:action="@{/reports/monthly(filters=true)}"
                       th:object="${studySearchFilter} ">
 
                     <div class="form-group">
@@ -96,7 +96,7 @@
             <div id="yearlyFilterParametersForm">
 
                 <form class="form-inline" name="curatorFilterParametersForm" role="form" method="post"
-                      th:action="@{/reports(filters=true)}"
+                      th:action="@{/reports/yearly(filters=true)}"
                       th:object="${studySearchFilter} ">
 
                     <div class="form-group">
