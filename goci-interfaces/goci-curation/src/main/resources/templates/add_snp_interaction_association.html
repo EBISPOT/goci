@@ -120,8 +120,7 @@
                                         <td>Gene(s)</td>
                                         <td th:each="col,colStat : *{snpFormColumns}">
                                             <input type="text" data-role="tagsinput"
-                                                   th:field="*{snpFormColumns[__${colStat.index}__].authorReportedGenes}"
-                                                   placeholder="Enter author reported genes..."/>
+                                                   th:field="*{snpFormColumns[__${colStat.index}__].authorReportedGenes}"/>
                                         </td>
                                     </tr>
 
