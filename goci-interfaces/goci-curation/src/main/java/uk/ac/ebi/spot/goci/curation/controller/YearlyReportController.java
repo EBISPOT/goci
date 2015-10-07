@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 import uk.ac.ebi.spot.goci.curation.service.ReportService;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
@@ -17,7 +18,9 @@ import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.YearlyTotalsSummaryViewRepository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -49,17 +52,73 @@ public class YearlyReportController {
 
     // Return yearly overview
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String getYearlyOverview(Model model) {
+    public String getYearlyOverview(Model model, @RequestParam(required = false) Long status,
+                                    @RequestParam(required = false) Long curator,
+                                    @RequestParam(required = false) Integer year) {
 
-        // Add a studySearchFilter to model in case user want to filter table
-        model.addAttribute("studySearchFilter", new StudySearchFilter());
+        List<YearlyTotalsSummaryView> yearlyTotalsSummaryViews = new ArrayList<>();
 
-        List<YearlyTotalsSummaryView> yearlyTotalsSummaryViews = yearlyTotalsSummaryViewRepository.findAll();
+        // This will be returned to view and store what curator has searched for
+        StudySearchFilter studySearchFilter = new StudySearchFilter();
+
+        // Need to convert status and curator to a string
+        String curatorName = null;
+        String statusName = null;
+        if (curator != null) {
+            curatorName = curatorRepository.findOne(curator).getLastName();
+        }
+        if (status != null) {
+            statusName = curationStatusRepository.findOne(status).getStatus();
+        }
+
+        //Search database for various filter options
+        if (status != null && curator != null && year != null) { // all filter options supplied
+            yearlyTotalsSummaryViews = yearlyTotalsSummaryViewRepository.findByCuratorAndCurationStatusAndYearOrderByYearDesc(curatorName, statusName, year);
+        } else if (status != null && curator != null) { // status and curator
+            yearlyTotalsSummaryViews = yearlyTotalsSummaryViewRepository.findByCuratorAndCurationStatus(curatorName, statusName);
+        } else if (status != null && year != null) { // status and year
+            yearlyTotalsSummaryViews = yearlyTotalsSummaryViewRepository.findByCurationStatusAndYearOrderByYearDesc(statusName, year);
+        } else if (status != null) {
+            yearlyTotalsSummaryViews = yearlyTotalsSummaryViewRepository.findByCurationStatus(statusName);
+        } else if (curator != null && year != null) { // curator and year
+            yearlyTotalsSummaryViews = yearlyTotalsSummaryViewRepository.findByCuratorAndYearOrderByYearDesc(curatorName, year);
+        } else if (curator != null) {
+            yearlyTotalsSummaryViews = yearlyTotalsSummaryViewRepository.findByCurator(curatorName);
+        } else if (year != null) {
+            yearlyTotalsSummaryViews = yearlyTotalsSummaryViewRepository.findByYearOrderByYearDesc(year);
+        } else { // no filters
+            yearlyTotalsSummaryViews = yearlyTotalsSummaryViewRepository.findAll();
+        }
+
+        studySearchFilter.setCuratorSearchFilterId(curator);
+        studySearchFilter.setStatusSearchFilterId(status);
+        studySearchFilter.setYearFilter(year);
+
+        // Add studySearchFilter to model so user can filter table
+        model.addAttribute("studySearchFilter", studySearchFilter);
         model.addAttribute("yearlyTotalsSummaryViews", yearlyTotalsSummaryViews);
 
         return "reports_yearly";
     }
 
+    // Handles filter options for yearly page
+    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String searchByFilter(@ModelAttribute StudySearchFilter studySearchFilter,
+                                 Model model,
+                                 @RequestParam(required = true) String filters) {
+
+        // Get ids of objects searched for
+        Long status = studySearchFilter.getStatusSearchFilterId();
+        Long curator = studySearchFilter.getCuratorSearchFilterId();
+        Integer year = studySearchFilter.getYearFilter();
+        Integer month = studySearchFilter.getMonthFilter();
+
+        // To handle various filters create a map to store type and value
+        Map<String, Object> filterMap = reportService.buildRedirectMap(status, curator, year, null);
+
+        String redirectPrefix = "redirect:/reports/yearly";
+        return reportService.buildRedirect(redirectPrefix, filterMap);
+    }
 
 /* General purpose methods used to populate drop downs */
 
