@@ -20,18 +20,6 @@
                       th:object="${studySearchFilter} ">
 
                     <div class="form-group">
-                        <label for="curationStatus" class="control-label">Curation status</label>
-                        <select name="curationStatus" class="form-control select2-select"
-                                th:field="*{statusSearchFilterId}" id="curationStatus">
-                            <!-- Empty value for first entry-->
-                            <option value=""></option>
-                            <option th:each="curationStatus : ${curationstatuses}"
-                                    th:value="${curationStatus.id}"
-                                    th:text="${curationStatus.status}"></option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
                         <label for="curator" class="control-label">Curator</label>
                         <select name="curator" th:field="*{curatorSearchFilterId}"
                                 class="form-control select2-select" id="curator">
@@ -40,6 +28,19 @@
                             <option th:each="curator : ${curators}"
                                     th:value="${curator.id}"
                                     th:text="${curator.lastName}"></option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="curationStatus" class="control-label">Curation status</label>
+                        <select name="curationStatus" class="form-control select2-select"
+                                th:field="*{statusSearchFilterId}" id="curationStatus">
+                            <!-- Empty value for first entry-->
+                            <option value=""></option>
+                            <option th:each="curationStatus : ${curationstatuses}"
+                                    th:value="${curationStatus.id}"
+                                    th:text="${curationStatus.status}"></option>
                         </select>
                     </div>
 
@@ -100,18 +101,6 @@
                       th:object="${studySearchFilter} ">
 
                     <div class="form-group">
-                        <label for="curationStatus" class="control-label">Curation status</label>
-                        <select name="curationStatus" class="form-control select2-select"
-                                th:field="*{statusSearchFilterId}" id="curationStatus">
-                            <!-- Empty value for first entry-->
-                            <option value=""></option>
-                            <option th:each="curationStatus : ${curationstatuses}"
-                                    th:value="${curationStatus.id}"
-                                    th:text="${curationStatus.status}"></option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
                         <label for="curator" class="control-label">Curator</label>
                         <select name="curator" th:field="*{curatorSearchFilterId}"
                                 class="form-control select2-select" id="curator">
@@ -120,6 +109,18 @@
                             <option th:each="curator : ${curators}"
                                     th:value="${curator.id}"
                                     th:text="${curator.lastName}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="curationStatus" class="control-label">Curation status</label>
+                        <select name="curationStatus" class="form-control select2-select"
+                                th:field="*{statusSearchFilterId}" id="curationStatus">
+                            <!-- Empty value for first entry-->
+                            <option value=""></option>
+                            <option th:each="curationStatus : ${curationstatuses}"
+                                    th:value="${curationStatus.id}"
+                                    th:text="${curationStatus.status}"></option>
                         </select>
                     </div>
 
