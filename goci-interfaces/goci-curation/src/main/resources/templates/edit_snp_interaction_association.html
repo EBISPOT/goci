@@ -10,9 +10,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"/>
-    <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
+    <!--Tags input http://timschlechter.github.io/bootstrap-tagsinput/examples/-->
+    <link href="/webjars/bootstrap-tagsinput/0.4.2/dist/bootstrap-tagsinput.css"
+          th:href="@{/webjars/bootstrap-tagsinput/0.4.2/dist/bootstrap-tagsinput.css}" rel="stylesheet" />
 
+    <script src="/webjars/bootstrap-tagsinput/0.4.2/dist/bootstrap-tagsinput.min.js"
+            th:src="@{/webjars/bootstrap-tagsinput/0.4.2/dist/bootstrap-tagsinput.min.js}"></script>
 
     <!--Select2: http://ivaynberg.github.io/select2/-->
     <!-- Include Select2 CSS -->
@@ -23,12 +26,6 @@
 
     <!-- Include Select2 JS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
-
-
-    <!--Tags input http://timschlechter.github.io/bootstrap-tagsinput/examples/-->
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"/>
-    <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
-
 
     <!--Handles calculations in form -->
     <script src="../static/js/goci-snp-association-calculations.js"
@@ -111,7 +108,8 @@
                                         <td>Gene(s)</td>
                                         <td th:each="col,colStat : *{snpFormColumns}">
                                             <input type="text" data-role="tagsinput"
-                                                   th:field="*{snpFormColumns[__${colStat.index}__].authorReportedGenes}"/>
+                                                   th:field="*{snpFormColumns[__${colStat.index}__].authorReportedGenes}"
+                                                   placeholder="Enter author reported genes..."/>
                                         </td>
                                     </tr>
 
