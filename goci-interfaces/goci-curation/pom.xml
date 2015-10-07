@@ -86,6 +86,13 @@
             <version>2.1.4</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>bootstrap-tagsinput</artifactId>
+            <version>0.4.2</version>
+        </dependency>
+
     </dependencies>
 
     <properties>
