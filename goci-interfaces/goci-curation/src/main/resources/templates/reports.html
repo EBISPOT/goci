@@ -9,8 +9,11 @@
     <script src="/webjars/jquery/2.1.4/jquery.min.js"
             th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
 
-  <script src="/webjars/bootstrap/3.3.5/js/bootstrap.min.js"
+    <script src="/webjars/bootstrap/3.3.5/js/bootstrap.min.js"
             th:src="@{/webjars/bootstrap/3.3.5/js/bootstrap.min.js}"></script>
+
+    <script src="/webjars/bootstrap-table/1.9.0/src/bootstrap-table.js"
+            th:src="@{/webjars/bootstrap-table/1.9.0/src/bootstrap-table.js}"></script>
 
     <link href="/webjars/bootstrap/3.3.5/css/bootstrap.min.css"
           th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.css}"
@@ -20,6 +23,9 @@
           th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap-theme.min.css}"
           rel="stylesheet"/>
 
+    <link href="/webjars/bootstrap-table/1.9.0/src/bootstrap-table.css"
+          th:href="@{/webjars/bootstrap-table/1.9.0/src/bootstrap-table.css}"
+          rel="stylesheet"/>
 
 </head>
 <body>
@@ -42,16 +48,17 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <table id="mainTable" class="table table-hover table-bordered">
+            <table id="mainTable" class="table table-hover table-bordered"
+                   data-toggle="table" data-show-columns="true">
                 <thead>
                 <tr>
-                    <th class="col-md-1">Year</th>
-                    <th class="col-md-1">Month</th>
-                    <th class="col-md-2">Curator</th>
-                    <th class="col-md-2">Total number per curator</th>
-                    <th class="col-md-2">Curation Status</th>
+                    <th class="col-md-1" data-sortable="true">Year</th>
+                    <th class="col-md-1" data-sortable="true">Month</th>
+                    <th class="col-md-2" data-sortable="true">Curator</th>
+                    <th class="col-md-2" data-sortable="true">Total number per curator</th>
+                    <th class="col-md-2" data-sortable="true">Curation Status</th>
                     <th class="col-md-2">Link to studies</th>
-                    <th class="col-md-2">Total number of entries for month</th>
+                    <th class="col-md-2" data-sortable="true">Total number of entries for month</th>
                 </tr>
                 </thead>
                 <tbody>
