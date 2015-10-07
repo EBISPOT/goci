@@ -18,4 +18,18 @@ import java.util.List;
 public interface YearlyTotalsSummaryViewRepository extends JpaRepository<YearlyTotalsSummaryView, Long> {
     @Query("select distinct year from YearlyTotalsSummaryView order by year desc")
     List<Integer> getAllYears();
+
+    List<YearlyTotalsSummaryView> findByCuratorAndCurationStatusAndYearOrderByYearDesc(String curatorName, String statusName, Integer year);
+
+    List<YearlyTotalsSummaryView> findByCuratorAndCurationStatus(String curatorName, String statusName);
+
+    List<YearlyTotalsSummaryView> findByCurationStatusAndYearOrderByYearDesc(String statusName, Integer year);
+
+    List<YearlyTotalsSummaryView> findByCurationStatus(String statusName);
+
+    List<YearlyTotalsSummaryView> findByCuratorAndYearOrderByYearDesc(String curatorName, Integer year);
+
+    List<YearlyTotalsSummaryView> findByCurator(String curatorName);
+
+    List<YearlyTotalsSummaryView> findByYearOrderByYearDesc(Integer year);
 }
