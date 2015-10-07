@@ -282,7 +282,7 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
         getLog().debug("Converting " + filteredTraitAssociations.size() + " filtered Trait Associations...");
         getConverter().addAssociationsToOntology(filteredTraitAssociations, conversion);
         getLog().debug("Converting " + filteredStudies.size() + " filtered Studies...");
-        getConverter().addStudiesToOntology(filteredStudies, conversion);
+        getConverter(). addStudiesToOntology(filteredStudies, conversion);
         getLog().debug("All conversion done!");
 
         return conversion;
