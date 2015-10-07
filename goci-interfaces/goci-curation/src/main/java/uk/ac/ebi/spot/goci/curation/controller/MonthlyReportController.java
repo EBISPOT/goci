@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
+import uk.ac.ebi.spot.goci.curation.service.ReportService;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.MonthlyTotalsSummaryView;
@@ -14,7 +15,9 @@ import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.MonthlyTotalsSummaryViewRepository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -22,7 +25,7 @@ import java.util.*;
  *
  * @author emma
  *         <p>
- *         Report controller, used to return curator monthly totals to view
+ *         Controller used to return curator monthly totals to view
  */
 @Controller
 @RequestMapping("/reports/monthly")
@@ -33,11 +36,15 @@ public class MonthlyReportController {
     private CuratorRepository curatorRepository;
     private CurationStatusRepository curationStatusRepository;
 
+    // Service class
+    private ReportService reportService;
+
     @Autowired
-    public MonthlyReportController(MonthlyTotalsSummaryViewRepository monthlyTotalsSummaryViewRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository) {
+    public MonthlyReportController(MonthlyTotalsSummaryViewRepository monthlyTotalsSummaryViewRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, ReportService reportService) {
         this.monthlyTotalsSummaryViewRepository = monthlyTotalsSummaryViewRepository;
         this.curatorRepository = curatorRepository;
         this.curationStatusRepository = curationStatusRepository;
+        this.reportService = reportService;
     }
 
     // Returns overview
@@ -123,55 +130,12 @@ public class MonthlyReportController {
         Integer month = studySearchFilter.getMonthFilter();
 
         // To handle various filters create a map to store type and value
-        Map<String, Object> filterMap = buildRedirectMap(status, curator, year, month);
+        Map<String, Object> filterMap = reportService.buildRedirectMap(status, curator, year, month);
 
         String redirectPrefix = "redirect:/reports/monthly";
-        return buildRedirect(redirectPrefix, filterMap);
+        return reportService.buildRedirect(redirectPrefix, filterMap);
     }
 
-    // Creates redirect statement
-    private String buildRedirect(String redirectPrefix, Map<String, Object> filterMap) {
-
-        // Build redirect
-        Collection<String> redirectBuilder = new ArrayList<>();
-        String redirect = "";
-
-        if (!filterMap.isEmpty()) {
-            for (String key : filterMap.keySet()) {
-                redirectBuilder.add(key + "=" + filterMap.get(key));
-            }
-        }
-        if (!redirectBuilder.isEmpty()) {
-            redirect = String.join("&", redirectBuilder);
-        }
-
-        if (redirect.isEmpty()) {
-            return redirectPrefix;
-        } else {
-            return redirectPrefix + "?" + redirect;
-        }
-    }
-
-    // Builds a map that can be used to create a redirect
-    private Map<String, Object> buildRedirectMap(Long status, Long curator, Integer year, Integer month) {
-
-        Map<String, Object> filterMap = new HashMap<>();
-
-        if (curator != null) {
-            filterMap.putIfAbsent("curator", curator);
-        }
-        if (status != null) {
-            filterMap.putIfAbsent("status", status);
-        }
-        if (year != null) {
-            filterMap.putIfAbsent("year", year);
-        }
-        if (month != null) {
-            filterMap.putIfAbsent("month", month);
-        }
-
-        return filterMap;
-    }
 
     // Redirect to studies page
     @RequestMapping(value = "/{id}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
