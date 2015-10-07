@@ -69,7 +69,7 @@
                     <td th:text="${monthlyTotalsSummaryView.curator} ?: 'null'"></td>
                     <td th:text="${monthlyTotalsSummaryView.curatorTotal} ?: 'null'"></td>
                     <td th:text="${monthlyTotalsSummaryView.curationStatus} ?: 'null'"></td>
-                    <td><a th:href="@{/reports/{reportId}(reportId=${monthlyTotalsSummaryView.id})}"
+                    <td><a th:href="@{/reports/monthly/{reportId}(reportId=${monthlyTotalsSummaryView.id})}"
                            class="btn btn-link">Show studies</a></td>
                     <td th:text="${monthlyTotalsSummaryView.monthlyTotal} ?: 'null'"></td>
                 </tr>
