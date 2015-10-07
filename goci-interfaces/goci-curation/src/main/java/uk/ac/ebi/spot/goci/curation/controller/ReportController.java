@@ -6,7 +6,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
@@ -128,25 +127,6 @@ public class ReportController {
         return "reports_yearly";
     }
 
-    // Redirect to studies page
-    @RequestMapping(value = "/{id}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String getStudies(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes) {
-
-        // Get redirect variables
-        MonthlyTotalsSummaryView monthlyTotalsSummaryView = monthlyTotalsSummaryViewRepository.findOne(id);
-        String curator = monthlyTotalsSummaryView.getCurator();
-        Long curatorId = curatorRepository.findByLastName(curator).getId();
-
-        String status = monthlyTotalsSummaryView.getCurationStatus();
-        Long statusId = curationStatusRepository.findByStatus(status).getId();
-
-        Integer year = monthlyTotalsSummaryView.getYear();
-        Integer month = monthlyTotalsSummaryView.getMonth();
-
-        return "redirect:/studies?page=1&status=" + statusId + "&curator=" + curatorId + "&year=" + year + "&month=" + month;
-    }
-
-
     // Redirects from landing page and main page
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String searchByFilter(@ModelAttribute StudySearchFilter studySearchFilter,
@@ -160,22 +140,14 @@ public class ReportController {
         Integer month = studySearchFilter.getMonthFilter();
 
         // To handle various filters create a map to store type and value
-        Map<String, Object> filterMap = new HashMap<>();
-
-        if (curator != null) {
-            filterMap.putIfAbsent("curator", curator);
-        }
-        if (status != null) {
-            filterMap.putIfAbsent("status", status);
-        }
-        if (year != null) {
-            filterMap.putIfAbsent("year", year);
-        }
-        if (month != null) {
-            filterMap.putIfAbsent("month", month);
-        }
+        Map<String, Object> filterMap = buildRedirectMap(status, curator, year, month);
 
         String redirectPrefix = "redirect:/reports";
+        return buildRedirect(redirectPrefix, filterMap);
+    }
+
+    // Creates redirect statement
+    private String buildRedirect(String redirectPrefix, Map<String, Object> filterMap) {
 
         // Build redirect
         Collection<String> redirectBuilder = new ArrayList<>();
@@ -195,6 +167,45 @@ public class ReportController {
         } else {
             return redirectPrefix + "?" + redirect;
         }
+    }
+
+    // Builds a map that can be used to create a redirect
+    private Map<String, Object> buildRedirectMap(Long status, Long curator, Integer year, Integer month) {
+
+        Map<String, Object> filterMap = new HashMap<>();
+
+        if (curator != null) {
+            filterMap.putIfAbsent("curator", curator);
+        }
+        if (status != null) {
+            filterMap.putIfAbsent("status", status);
+        }
+        if (year != null) {
+            filterMap.putIfAbsent("year", year);
+        }
+        if (month != null) {
+            filterMap.putIfAbsent("month", month);
+        }
+
+        return filterMap;
+    }
+
+    // Redirect to studies page
+    @RequestMapping(value = "/{id}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String getStudies(Model model, @PathVariable Long id) {
+
+        // Get redirect variables
+        MonthlyTotalsSummaryView monthlyTotalsSummaryView = monthlyTotalsSummaryViewRepository.findOne(id);
+        String curator = monthlyTotalsSummaryView.getCurator();
+        Long curatorId = curatorRepository.findByLastName(curator).getId();
+
+        String status = monthlyTotalsSummaryView.getCurationStatus();
+        Long statusId = curationStatusRepository.findByStatus(status).getId();
+
+        Integer year = monthlyTotalsSummaryView.getYear();
+        Integer month = monthlyTotalsSummaryView.getMonth();
+
+        return "redirect:/studies?page=1&status=" + statusId + "&curator=" + curatorId + "&year=" + year + "&month=" + month;
     }
 
 /* General purpose methods used to populate drop downs */
