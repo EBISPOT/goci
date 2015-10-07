@@ -10,11 +10,9 @@ import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.MonthlyTotalsSummaryView;
-import uk.ac.ebi.spot.goci.model.YearlyTotalsSummaryView;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.MonthlyTotalsSummaryViewRepository;
-import uk.ac.ebi.spot.goci.repository.YearlyTotalsSummaryViewRepository;
 
 import java.util.*;
 
@@ -27,19 +25,17 @@ import java.util.*;
  *         Report controller, used to return curator monthly totals to view
  */
 @Controller
-@RequestMapping("/reports")
-public class ReportController {
+@RequestMapping("/reports/monthly")
+public class MonthlyReportController {
 
     // Repositories allowing access to database objects associated with
     private MonthlyTotalsSummaryViewRepository monthlyTotalsSummaryViewRepository;
-    private YearlyTotalsSummaryViewRepository yearlyTotalsSummaryViewRepository;
     private CuratorRepository curatorRepository;
     private CurationStatusRepository curationStatusRepository;
 
     @Autowired
-    public ReportController(MonthlyTotalsSummaryViewRepository monthlyTotalsSummaryViewRepository, YearlyTotalsSummaryViewRepository yearlyTotalsSummaryViewRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository) {
+    public MonthlyReportController(MonthlyTotalsSummaryViewRepository monthlyTotalsSummaryViewRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository) {
         this.monthlyTotalsSummaryViewRepository = monthlyTotalsSummaryViewRepository;
-        this.yearlyTotalsSummaryViewRepository = yearlyTotalsSummaryViewRepository;
         this.curatorRepository = curatorRepository;
         this.curationStatusRepository = curationStatusRepository;
     }
@@ -114,20 +110,7 @@ public class ReportController {
         return "reports";
     }
 
-    // Return yearly overview
-    @RequestMapping(value = "/yearly", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String getYearlyOverview(Model model) {
-
-        // Add a studySearchFilter to model in case user want to filter table
-        model.addAttribute("studySearchFilter", new StudySearchFilter());
-
-        List<YearlyTotalsSummaryView> yearlyTotalsSummaryViews = yearlyTotalsSummaryViewRepository.findAll();
-        model.addAttribute("yearlyTotalsSummaryViews", yearlyTotalsSummaryViews);
-
-        return "reports_yearly";
-    }
-
-    // Redirects from landing page and main page
+    // Handles filter options for monthly page
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String searchByFilter(@ModelAttribute StudySearchFilter studySearchFilter,
                                  Model model,
@@ -142,7 +125,7 @@ public class ReportController {
         // To handle various filters create a map to store type and value
         Map<String, Object> filterMap = buildRedirectMap(status, curator, year, month);
 
-        String redirectPrefix = "redirect:/reports";
+        String redirectPrefix = "redirect:/reports/monthly";
         return buildRedirect(redirectPrefix, filterMap);
     }
 
