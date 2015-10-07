@@ -2,7 +2,6 @@ package uk.ac.ebi.spot.goci.service;
 
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +42,6 @@ public class OntologyExtractionService {
 
 
     public void preLoadMaps() {
-        OWLOntology ontology = ontologyLoader.getOntology();
 
         OWLClass country = ontologyLoader.getFactory().getOWLClass(IRI.create(countryURI));
         OWLClass ancestralGroup = ontologyLoader.getFactory().getOWLClass(IRI.create(ancestralURI));

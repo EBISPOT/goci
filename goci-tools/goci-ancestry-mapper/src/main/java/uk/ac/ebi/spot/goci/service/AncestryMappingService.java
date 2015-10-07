@@ -64,37 +64,40 @@ public class AncestryMappingService {
             String coo = ancestry.getCountryOfOrigin();
             String cor = ancestry.getCountryOfRecruitment();
 
-            if(ancestralGroup.contains(",")){
-                String[] groups = ancestralGroup.split(",");
+            if(ancestralGroup != null) {
+                if (ancestralGroup.contains(",")) {
+                    String[] groups = ancestralGroup.split(",");
 
-                for(String group : groups){
-                    mapAncestralGroup(id, group);
+                    for (String group : groups) {
+                        mapAncestralGroup(id, group);
+                    }
+                } else {
+                    mapAncestralGroup(id, ancestralGroup);
                 }
             }
-            else{
-                mapAncestralGroup(id, ancestralGroup);
-            }
 
-            if(coo.contains(",")){
-                String[] countries = coo.split(",");
+            if(coo != null ) {
+                if (coo.contains(",")) {
+                    String[] countries = coo.split(",");
 
-                for(String country : countries){
-                    mapCoO(id, country);
+                    for (String country : countries) {
+                        mapCoO(id, country);
+                    }
+                } else {
+                    mapCoO(id, coo);
                 }
             }
-            else{
-                mapCoO(id, coo);
-            }
 
-            if(cor.contains(",")){
-                String[] countries = cor.split(",");
+            if(cor != null) {
+                if (cor.contains(",")) {
+                    String[] countries = cor.split(",");
 
-                for(String country : countries){
-                    mapCoR(id, country);
+                    for (String country : countries) {
+                        mapCoR(id, country);
+                    }
+                } else {
+                    mapCoR(id, cor);
                 }
-            }
-            else{
-                mapCoR(id, cor);
             }
 
         }
