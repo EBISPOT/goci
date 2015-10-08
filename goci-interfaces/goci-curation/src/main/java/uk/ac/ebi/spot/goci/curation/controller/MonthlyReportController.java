@@ -25,7 +25,7 @@ import java.util.Map;
  *
  * @author emma
  *         <p>
- *         Controller used to return curator monthly totals to view
+ *         Controller used to return curator monthly totals to view.
  */
 @Controller
 @RequestMapping("/reports/monthly")
@@ -117,7 +117,7 @@ public class MonthlyReportController {
         return "reports";
     }
 
-    // Handles filter options for monthly page
+    // Takes filters supplied and creates appropriate redirect
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String searchByFilter(@ModelAttribute StudySearchFilter studySearchFilter,
                                  Model model,
@@ -163,7 +163,6 @@ public class MonthlyReportController {
         return monthlyTotalsSummaryViewRepository.getAllMonths();
     }
 
-
     // Years used in dropdown
     @ModelAttribute("years")
     public List<Integer> populateYears(Model model) {
@@ -181,5 +180,4 @@ public class MonthlyReportController {
     public List<CurationStatus> populateCurationStatuses(Model model) {
         return curationStatusRepository.findAll();
     }
-
 }

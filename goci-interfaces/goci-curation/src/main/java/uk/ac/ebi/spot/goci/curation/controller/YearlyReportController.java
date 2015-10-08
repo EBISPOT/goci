@@ -28,7 +28,7 @@ import java.util.Map;
  *
  * @author emma
  *         <p>
- *         Report controller, used to return curator monthly totals to view
+ *         Report controller, used to return curator yearly totals to view.
  */
 @Controller
 @RequestMapping("/reports/yearly")
@@ -101,7 +101,7 @@ public class YearlyReportController {
         return "reports_yearly";
     }
 
-    // Handles filter options for yearly page
+    // Takes filters supplied and creates appropriate redirect
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String searchByFilter(@ModelAttribute StudySearchFilter studySearchFilter,
                                  Model model,
