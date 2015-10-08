@@ -61,6 +61,10 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Page<Study> findByCnv(Boolean cnv, Pageable pageable);
 
+    List<Study> findStudyDistinctByAssociationsMultiSnpHaplotypeTrue();
+
+    List<Study> findStudyDistinctByAssociationsSnpInteractionTrue();
+
     Page<Study> findByHousekeepingCheckedNCBIErrorOrHousekeepingCurationStatusId(Boolean checkedNCBIError, Long status, Pageable pageable);
 
     // EFO trait query
