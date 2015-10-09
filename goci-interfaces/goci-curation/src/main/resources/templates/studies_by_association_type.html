@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <script src="/webjars/jquery/2.1.4/jquery.min.js"
+            th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+
+    <script src="/webjars/bootstrap/3.3.5/js/bootstrap.min.js"
+            th:src="@{/webjars/bootstrap/3.3.5/js/bootstrap.min.js}"></script>
+
+    <script src="/webjars/bootstrap-table/1.9.0/src/bootstrap-table.js"
+            th:src="@{/webjars/bootstrap-table/1.9.0/src/bootstrap-table.js}"></script>
+
+    <link href="/webjars/bootstrap/3.3.5/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.css}"
+          rel="stylesheet"/>
+
+    <link href="/webjars/bootstrap/3.3.5/css/bootstrap-theme.min.css"
+          th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap-theme.min.css}"
+          rel="stylesheet"/>
+
+    <link href="/webjars/bootstrap-table/1.9.0/src/bootstrap-table.css"
+          th:href="@{/webjars/bootstrap-table/1.9.0/src/bootstrap-table.css}"
+          rel="stylesheet"/>
+
+</head>
+<body>
+
+<!--Include header-->
+<div th:include="header :: navbar"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+
+            <table style="font-size: small"
+                   id="mainTable" class="table table-hover table-bordered" th:if="${totalStudies &gt; 0 }"
+                   data-toggle="table" data-show-columns="true">
+                <caption id="total" th:text="'Total: '+ ${totalStudies}"></caption>
+                <thead>
+                <tr>
+                    <th>View study</th>
+                    <th>Author</th>
+                    <th>Title</th>
+                    <th>Publication Date (YYYY-MM-DD)</th>
+                    <th>Pubmed ID</th>
+                    <th>Publication</th>
+                    <th>Study Disease/Trait</th>
+                    <th>EFO Trait</th>
+                    <th>Curator</th>
+                    <th>Curation Status</th>
+                    <th>Association Details</th>
+                    <th>Notes</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="study : ${studies}">
+                    <td>
+                        <a th:href="@{/studies/{studyId}(studyId=${study.studyId})}">View</a>
+                    </td>
+
+                    <!-- Use a conditional here as a study can have a null attributes-->
+                    <!-- Using thymeleaf elvis operator for string, date attributes-->
+
+                    <td th:text="${study.author} ?: '' "></td>
+                    <td th:text="${study.title} ?: ''"></td>
+                    <td th:text="${study.publicationDate != null } ? ${#dates.format(study.publicationDate,'yyyy-MM-dd')} : ''"></td>
+                    <td><p th:text="${study.pubmedId} ?: ''"></p>
+
+                        <div class="btn-group">
+                            <button type="button"
+                                    data-toggle="dropdown"
+                                    class="btn btn-sm btn-default dropdown-toggle">
+                                View paper<span class="caret"></span></button>
+
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a th:href="@{http://europepmc.org/abstract/MED/{pubmedId}(pubmedId=${study.pubmedId})}"
+                                       target="_blank">View in Europe PMC</a></li>
+                                <li>
+                                    <a th:href="@{http://www.ncbi.nlm.nih.gov/pubmed/?term={pubmedId}(pubmedId=${study.pubmedId})}"
+                                       target="_blank">View in PubMed</a></li>
+
+                            </ul>
+                        </div>
+                    </td>
+
+                    <td th:text="${study.publication} ?: ''"></td>
+                    <td th:text="${study.studyDiseaseTrait} ?: ''"></td>
+                    <td>
+                        <span th:utext="'Study: '+ ${study.studyEfoTrait} ?: ''"></span>
+                        <span th:utext=" '&lt;br /&gt;' + '&lt;br /&gt;'+'Association: '+ ${study.associationEfoTraits} ?: ''"></span>
+
+                    </td>
+                    <td th:text="${study.curator} ?: ''"></td>
+                    <td th:text="${study.curationStatus} ?: ''"></td>
+                    <td>
+                        <span th:utext="'Total: '+ ${study.totalNumberOfAssociations} ?: ''"></span>
+                        <span th:if="${study.numberOfMultiSnpHaplotypeAssociations &gt; 0}"
+                              th:utext=" '&lt;br /&gt;' + '&lt;br /&gt;'+'No. of Multi-SNP Haplotype Associations: '+ ${study.numberOfMultiSnpHaplotypeAssociations} ?: ''"></span>
+                        <span th:if="${study.numberOfSnpInteractiionAssociations &gt; 0}"
+                              th:utext=" '&lt;br /&gt;' + '&lt;br /&gt;'+'No. of SNP Interaction Associations: '+ ${study.numberOfSnpInteractiionAssociations} ?: ''"></span>
+                    </td>
+                    <td th:text="${study.notes} ?: ''"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+
+</body>
+</html>
