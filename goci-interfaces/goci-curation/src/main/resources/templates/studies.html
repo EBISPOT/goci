@@ -61,13 +61,12 @@
 
                 <div class="form-group">
                     <div>
-                        <button type="submit"
-                                class="btn btn-primary btn-sm"
-                                data-toggle="tooltip"
-                                data-placement="right"
-                                title="Filter for multi-snp haplotype studies, snp interaction studies, GXE studies, GXG studies, CNV studies, studies in curation queue,
-                                        studies with errors">Filter by study type
-                        </button>
+                                <button type="submit"
+                                        class="btn btn-primary btn-sm"
+                                        data-toggle="tooltip"
+                                        data-placement="right"
+                                        title="Filter for GXE studies, GXG studies, CNV studies, studies in curation queue,
+                                        studies with errors">Filter by study type</button>
                     </div>
                 </div>
             </form>
@@ -431,7 +430,7 @@
     $(function() {
         // turn the element to select2 select style
         $('#studyTypes').select2({
-            placeholder: "Select Multi-SNP haplotype, SNP interaction, GXE, studies with errors...",
+            placeholder: "Select GXE, studies with errors...",
             allowClear: true
         });
     });
