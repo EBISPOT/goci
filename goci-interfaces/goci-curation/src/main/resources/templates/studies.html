@@ -250,12 +250,19 @@
 
 <br/>
 
+
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
             <div class="well well-sm" th:if="${totalStudies == 0 }">
                 <p style="color:grey">No studies to display</p>
             </div>
+
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#">All studies</a></li>
+                <li><a th:href="@{/studies/haplotype}">Multi-SNP haplotype studies</a></li>
+            </ul>
 
             <table id="mainTable" class="table table-hover table-bordered" th:if="${totalStudies &gt; 0 }">
                 <caption id="total" th:text="'Total: '+ ${totalStudies}"></caption>
