@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
 import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
+import uk.ac.ebi.spot.goci.curation.model.StudyAssociationTableView;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 import uk.ac.ebi.spot.goci.curation.service.MailService;
+import uk.ac.ebi.spot.goci.curation.service.StudyAssociationTableViewService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
@@ -51,6 +53,7 @@ public class StudyController {
     // Pubmed ID lookup service
     private DefaultPubMedSearchService defaultPubMedSearchService;
     private MailService mailService;
+    private StudyAssociationTableViewService studyAssociationTableViewService;
 
     public static final int MAX_PAGE_ITEM_DISPLAY = 25;
 
@@ -61,17 +64,7 @@ public class StudyController {
     }
 
     @Autowired
-    public StudyController(StudyRepository studyRepository,
-                           HousekeepingRepository housekeepingRepository,
-                           DiseaseTraitRepository diseaseTraitRepository,
-                           EfoTraitRepository efoTraitRepository,
-                           CuratorRepository curatorRepository,
-                           CurationStatusRepository curationStatusRepository,
-                           AssociationRepository associationRepository,
-                           EthnicityRepository ethnicityRepository,
-                           UnpublishReasonRepository unpublishReasonRepository,
-                           DefaultPubMedSearchService defaultPubMedSearchService,
-                           MailService mailService) {
+    public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, AssociationRepository associationRepository, EthnicityRepository ethnicityRepository, UnpublishReasonRepository unpublishReasonRepository, DefaultPubMedSearchService defaultPubMedSearchService, MailService mailService, StudyAssociationTableViewService studyAssociationTableViewService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
@@ -83,7 +76,9 @@ public class StudyController {
         this.unpublishReasonRepository = unpublishReasonRepository;
         this.defaultPubMedSearchService = defaultPubMedSearchService;
         this.mailService = mailService;
+        this.studyAssociationTableViewService = studyAssociationTableViewService;
     }
+
 
     /* All studies and various filtered lists */
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
@@ -375,6 +370,31 @@ public class StudyController {
 
     }
 
+
+
+    // View all studies with associations annotated as multi-SNP haplotype
+    @RequestMapping(value = "/haplotype", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String getHaplotypeStudies(Model model) {
+
+        List<Study> haplotypeStudies = studyRepository.findStudyDistinctByAssociationsMultiSnpHaplotypeTrue();
+
+        List<StudyAssociationTableView> studies = studyAssociationTableViewService.createViews(haplotypeStudies);
+        model.addAttribute("studies", studies);
+        model.addAttribute("totalStudies", haplotypeStudies.size());
+        return "studies_by_association_type";
+    }
+
+    // View all studies with associations annotated as SNP interaction
+    @RequestMapping(value = "/snp_interaction", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String getSnpInteractionStudies(Model model) {
+
+        List<Study> interactionStudies = studyRepository.findStudyDistinctByAssociationsSnpInteractionTrue();
+
+        List<StudyAssociationTableView> studies = studyAssociationTableViewService.createViews(interactionStudies);
+        model.addAttribute("studies", studies);
+        model.addAttribute("totalStudies", interactionStudies.size());
+        return "studies_by_association_type";
+    }
 
    /* New Study*/
 
