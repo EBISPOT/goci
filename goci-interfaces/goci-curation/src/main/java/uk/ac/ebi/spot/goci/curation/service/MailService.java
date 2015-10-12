@@ -94,11 +94,11 @@ public class MailService {
                         + latestEnsemblReleaseNumber
                         + "."
                         + "\n"
-                        + "The GWAS catalog is mapped to release"
+                        + "The GWAS catalog is mapped to Ensembl release "
                         + currentEnsemblReleaseNumberInDatabase
                         + "."
-                        + "\n"
-                        + "All associations will now be remapped.");
+                        + "\n\n"
+                        + "All associations will now be remapped to the latest Ensembl release.");
         javaMailSender.send(mailMessage);
     }
 
