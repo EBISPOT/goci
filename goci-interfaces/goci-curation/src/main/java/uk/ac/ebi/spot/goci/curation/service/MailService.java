@@ -88,9 +88,9 @@ public class MailService {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(getTo());
         mailMessage.setFrom(getFrom());
-        mailMessage.setSubject("New Ensembl Release");
+        mailMessage.setSubject("New Ensembl Release Identified");
         mailMessage.setText(
-                "The latest Ensembl release is "
+                "The latest Ensembl release is number "
                         + latestEnsemblReleaseNumber
                         + "."
                         + "\n"
