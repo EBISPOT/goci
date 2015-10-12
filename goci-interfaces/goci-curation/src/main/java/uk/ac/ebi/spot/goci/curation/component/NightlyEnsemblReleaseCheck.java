@@ -49,11 +49,11 @@ public class NightlyEnsemblReleaseCheck {
         return log;
     }
 
-    // Scheduled for weekdays 19:30
-    @Scheduled(cron = "0 24 09 ? * MON-FRI")
+    // Scheduled for weekdays 22.00
+    @Scheduled(cron = "0 00 22 ? * MON-FRI")
     public void checkRelease() {
         int latestEnsemblReleaseNumber = ensemblRelease.getReleaseVersion();
-        String performer = "Release " + latestEnsemblReleaseNumber + "mapping";
+        String performer = "Release " + latestEnsemblReleaseNumber + " mapping";
 
         List<MappingMetadata> mappingMetadataList = mappingMetadataRepository.findAll(sortByUsageStartDateDesc());
 
@@ -62,6 +62,12 @@ public class NightlyEnsemblReleaseCheck {
             getLog().info("No mapping metadata found, adding information to database and mapping data to release " +
                                   latestEnsemblReleaseNumber);
             createMappingMetaData(latestEnsemblReleaseNumber);
+
+            // Send email
+            mailService.sendReleaseChangeEmail(null,
+                                               latestEnsemblReleaseNumber);
+
+            // Map database contents
             mappingService.mapCatalogContents(performer);
         }
         else {
@@ -111,6 +117,10 @@ public class NightlyEnsemblReleaseCheck {
         mappingMetadataRepository.save(newMappingMetadata);
     }
 
-    // Sort option
+    /**
+     * Method used to create a sorting option for a database query
+     *
+     * @return Sort object used by database query
+     */
     private Sort sortByUsageStartDateDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "usageStartDate"));}
 }
