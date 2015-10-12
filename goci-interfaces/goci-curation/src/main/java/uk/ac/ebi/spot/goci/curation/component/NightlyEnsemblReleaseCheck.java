@@ -50,16 +50,19 @@ public class NightlyEnsemblReleaseCheck {
     }
 
     // Scheduled for weekdays 19:30
-    @Scheduled(cron = "0 30 19 ? * MON-FRI")
+    @Scheduled(cron = "0 24 09 ? * MON-FRI")
     public void checkRelease() {
         int latestEnsemblReleaseNumber = ensemblRelease.getReleaseVersion();
+        String performer = "Release " + latestEnsemblReleaseNumber + "mapping";
 
         List<MappingMetadata> mappingMetadataList = mappingMetadataRepository.findAll(sortByUsageStartDateDesc());
 
         // If there are no details in table then add them
         if (mappingMetadataList.isEmpty()) {
-            getLog().info("No mapping metadata found, adding...");
+            getLog().info("No mapping metadata found, adding information to database and mapping data to release " +
+                                  latestEnsemblReleaseNumber);
             createMappingMetaData(latestEnsemblReleaseNumber);
+            mappingService.mapCatalogContents(performer);
         }
         else {
             Integer currentEnsemblReleaseNumberInDatabase = mappingMetadataList.get(0).getEnsemblReleaseNumber();
@@ -77,15 +80,21 @@ public class NightlyEnsemblReleaseCheck {
                                                        latestEnsemblReleaseNumber);
 
                     // Perform remapping and set performer
-                    getLog().info("New release identified: " + latestEnsemblReleaseNumber);
+                    getLog().info("New Ensembl release identified: " + latestEnsemblReleaseNumber);
                     getLog().info("Remapping all database contents");
-                    mappingService.mapCatalogContents("automatic_mapping_process");
+                    mappingService.mapCatalogContents(performer);
                 }
                 else {
-                    getLog().error("Current Ensembl release is " + latestEnsemblReleaseNumber +
+                    getLog().error("Ensembl Release Integrity Issue: Current Ensembl release is " +
+                                           latestEnsemblReleaseNumber +
                                            ". Database release number is set to " +
                                            currentEnsemblReleaseNumberInDatabase);
                 }
+            }
+            else {
+                getLog().info("Current Ensembl release is " + latestEnsemblReleaseNumber +
+                                      ", the current release used to map database is " +
+                                      currentEnsemblReleaseNumberInDatabase);
             }
         }
     }
