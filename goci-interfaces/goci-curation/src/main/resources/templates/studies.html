@@ -30,7 +30,7 @@
 <!--Include header-->
 <div th:include="header :: navbar"></div>
 
-<div class="panel panel-default col-md-11" >
+<div class="panel panel-default col-md-11">
     <div class="panel-heading">Refine studies table
         <button class="btn btn-default"
                 type="button"
@@ -251,7 +251,6 @@
 <br/>
 
 
-
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
@@ -259,9 +258,10 @@
                 <p style="color:grey">No studies to display</p>
             </div>
 
-            <ul class="nav nav-tabs">
+            <ul class="nav nav-pills">
                 <li class="active"><a href="#">All studies</a></li>
                 <li><a th:href="@{/studies/haplotype}">Multi-SNP haplotype studies</a></li>
+                <li><a th:href="@{/studies/snp_interaction}">SNP Interaction studies</a></li>
             </ul>
 
             <table id="mainTable" class="table table-hover table-bordered" th:if="${totalStudies &gt; 0 }">
