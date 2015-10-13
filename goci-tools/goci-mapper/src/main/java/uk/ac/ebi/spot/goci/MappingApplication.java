@@ -1,13 +1,6 @@
 package uk.ac.ebi.spot.goci;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionGroup;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +74,7 @@ public class MappingApplication {
     private void doMapping() {
         getLog().info("Starting mapping of all associations with performer: " + this.performer);
         mappingService.mapCatalogContents(this.performer);
+        getLog().info("Finished mapping by performer:  " + this.performer);
     }
 
     private Options bindOptions() {
