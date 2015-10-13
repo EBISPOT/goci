@@ -180,12 +180,9 @@ public class MappingService {
 
             // Save data
             if (!snpToLocationsMap.isEmpty()) {
-                getLog().info("Adding/updating location details for SNPs" + snpToLocationsMap.keySet().toString());
                 snpLocationMappingService.storeSnpLocation(snpToLocationsMap);
             }
             if (!allGenomicContexts.isEmpty()) {
-                getLog().info(
-                        "Adding/updating genomic context for SNPs" + snpToLocationsMap.keySet().toString());
                 snpGenomicContextMappingService.processGenomicContext(allGenomicContexts);
             }
 
