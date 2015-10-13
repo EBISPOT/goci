@@ -810,7 +810,7 @@ public class CatalogImportRepository {
                     geneIdsFromDatabase = jdbcTemplate.query(SELECT_GENE,
                                                              (resultSet, i) -> resultSet.getLong("ID"), geneNameItr);
                     geneId = geneIdsFromDatabase.get(0);
-
+                    jdbcTemplate.update(UPDATE_GENE, entrezGeneIdItr, geneId);
                 }
 
 
@@ -854,7 +854,7 @@ public class CatalogImportRepository {
                 geneIdsFromDatabase = jdbcTemplate.query(SELECT_GENE,
                                                          (resultSet, i) -> resultSet.getLong("ID"), upstreamMappedGene);
                 geneId = geneIdsFromDatabase.get(0);
-
+                jdbcTemplate.update(UPDATE_GENE, upstreamEntrezGeneId, geneId);
             }
 
             // Check GENOMIC_CONTEXT table to see if SNP has entry in this table for this gene
@@ -899,6 +899,7 @@ public class CatalogImportRepository {
                                                          (resultSet, i) -> resultSet.getLong("ID"),
                                                          downstreamMappedGene);
                 geneId = geneIdsFromDatabase.get(0);
+                jdbcTemplate.update(UPDATE_GENE, downstreamEntrezGeneId, geneId);
             }
             // Check GENOMIC_CONTEXT table to see if SNP has entry in this table for this gene
             List snpIdsInGenomicContextTable =
