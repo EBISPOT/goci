@@ -15,14 +15,7 @@ import uk.ac.ebi.spot.goci.repository.exception.DataImportException;
 import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Javadocs go here!
@@ -110,6 +103,8 @@ public class CatalogImportRepository {
                     "WHERE ID =?";
 
     private static final String SELECT_GENE = "SELECT ID FROM GENE WHERE GENE_NAME = ?";
+
+    private static final String UPDATE_GENE = "UPDATE GENE SET ENTREZ_GENE_ID = ? WHERE ID = ?";
 
     private static final String SELECT_SNP_ID_FROM_GENOMIC_CONTEXT =
             "SELECT SNP_ID FROM GENOMIC_CONTEXT WHERE GENE_ID = ?";
@@ -803,6 +798,7 @@ public class CatalogImportRepository {
 
                 try {
                     geneId = jdbcTemplate.queryForObject(SELECT_GENE, Long.class, geneNameItr);
+                    jdbcTemplate.update(UPDATE_GENE, entrezGeneIdItr, geneId);
                 }
                 catch (EmptyResultDataAccessException e) {
                     // Insert gene if its not already in database
@@ -848,6 +844,7 @@ public class CatalogImportRepository {
         if (upstreamMappedGene != null && !upstreamMappedGene.isEmpty()) {
             try {
                 geneId = jdbcTemplate.queryForObject(SELECT_GENE, Long.class, upstreamMappedGene);
+                jdbcTemplate.update(UPDATE_GENE, upstreamEntrezGeneId, geneId);
             }
             catch (EmptyResultDataAccessException e) {
                 createGene(upstreamMappedGene, upstreamEntrezGeneId);
@@ -891,6 +888,7 @@ public class CatalogImportRepository {
         if (downstreamMappedGene != null && !downstreamMappedGene.isEmpty()) {
             try {
                 geneId = jdbcTemplate.queryForObject(SELECT_GENE, Long.class, downstreamMappedGene);
+                jdbcTemplate.update(UPDATE_GENE, downstreamEntrezGeneId, geneId);
             }
             catch (EmptyResultDataAccessException e) {
                 createGene(downstreamMappedGene, downstreamEntrezGeneId);
