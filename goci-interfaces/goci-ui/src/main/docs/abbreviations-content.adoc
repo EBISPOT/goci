@@ -918,6 +918,9 @@ PCS: Physical Component Summary
 PCV: packed cell volume
 
 
+PD: Parkinson’s disease
+
+
 P gingi: Porphyromonas gingivalis
 
 
