@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.component.EnsemblMappingPipeline;
 import uk.ac.ebi.spot.goci.model.*;
+import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
 import java.util.*;
 
@@ -18,6 +19,8 @@ import java.util.*;
  */
 @Service
 public class MappingService {
+
+    private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
 
     // Services
     private SnpLocationMappingService snpLocationMappingService;
@@ -34,12 +37,14 @@ public class MappingService {
     }
 
     @Autowired
-    public MappingService(SnpLocationMappingService snpLocationMappingService,
+    public MappingService(SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
+                          SnpLocationMappingService snpLocationMappingService,
                           SnpGenomicContextMappingService snpGenomicContextMappingService,
                           AssociationReportService associationReportService,
                           MappingRecordService mappingRecordService,
                           AssociationQueryService associationService,
                           SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService) {
+        this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.snpLocationMappingService = snpLocationMappingService;
         this.snpGenomicContextMappingService = snpGenomicContextMappingService;
         this.associationReportService = associationReportService;
@@ -136,6 +141,7 @@ public class MappingService {
                     getLog().info("Updating " + snpRsId + " setting functional class to: " + functionalClass);
                     snpLinkedToLocus.setFunctionalClass(functionalClass);
                     snpLinkedToLocus.setLastUpdateDate(new Date());
+                    singleNucleotidePolymorphismRepository.save(snpLinkedToLocus);
 
                     // Store location information for SNP
                     if (!locations.isEmpty()) {
