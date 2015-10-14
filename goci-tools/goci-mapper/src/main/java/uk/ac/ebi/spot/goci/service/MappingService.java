@@ -138,7 +138,6 @@ public class MappingService {
                     String functionalClass = ensemblMappingPipeline.getFunctionalClass();
 
                     // Update functional class
-                    getLog().info("Updating " + snpRsId + " setting functional class to: " + functionalClass);
                     snpLinkedToLocus.setFunctionalClass(functionalClass);
                     snpLinkedToLocus.setLastUpdateDate(new Date());
                     singleNucleotidePolymorphismRepository.save(snpLinkedToLocus);
