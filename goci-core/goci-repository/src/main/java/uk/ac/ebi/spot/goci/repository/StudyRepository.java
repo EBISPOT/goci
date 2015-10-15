@@ -48,20 +48,24 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Page<Study> findByHousekeepingCuratorId(Long curator, Pageable pageable);
 
-    // Custom query to calculate curator totals
-    @Query("select s from Study s where s.housekeeping.curator.id = :curator and s.publicationDate between :dateFrom and :dateTo")
-    List<Study> findByPublicationDateAndCurator(@Param("curator") Long curator,
-                                          @Param("dateFrom") Date dateFrom,
-                                          @Param("dateTo") Date dateTo);
+    // Custom query to find studies in reports table
+    @Query("select s from Study s where s.housekeeping.curator.id like :curator and s.housekeeping.curationStatus.id like :status and EXTRACT(YEAR FROM (TRUNC(TO_DATE(s.publicationDate), 'YEAR'))) = :year and EXTRACT(MONTH FROM (TRUNC(TO_DATE(s.publicationDate), 'MONTH'))) = :month")
+    Page<Study> findByPublicationDateAndCuratorAndStatus(@Param("curator") Long curator, @Param("status") Long status,
+                                                         @Param("year") Integer year,
+                                                         @Param("month") Integer month, Pageable pageable);
 
     // Queries for study types
-    Page<Study>findByGxe(Boolean gxe ,Pageable pageable);
+    Page<Study> findByGxe(Boolean gxe, Pageable pageable);
 
-    Page<Study>findByGxg(Boolean gxg ,Pageable pageable);
+    Page<Study> findByGxg(Boolean gxg, Pageable pageable);
 
-    Page<Study>findByCnv(Boolean cnv ,Pageable pageable);
+    Page<Study> findByCnv(Boolean cnv, Pageable pageable);
 
-    Page<Study>findByHousekeepingCheckedNCBIErrorOrHousekeepingCurationStatusId(Boolean checkedNCBIError,Long status ,Pageable pageable);
+    List<Study> findStudyDistinctByAssociationsMultiSnpHaplotypeTrue();
+
+    List<Study> findStudyDistinctByAssociationsSnpInteractionTrue();
+
+    Page<Study> findByHousekeepingCheckedNCBIErrorOrHousekeepingCurationStatusId(Boolean checkedNCBIError, Long status, Pageable pageable);
 
     // EFO trait query
     Page<Study> findByEfoTraitsId(Long efoTraitId, Pageable pageable);
@@ -80,9 +84,9 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     List<Study> findByAuthorContainingIgnoreCase(String author);
 
-    List<Study> findByAuthorContainingIgnoreCase(String author , Sort sort);
+    List<Study> findByAuthorContainingIgnoreCase(String author, Sort sort);
 
-    Page<Study>  findByAuthorContainingIgnoreCase(String author , Pageable pageable);
+    Page<Study> findByAuthorContainingIgnoreCase(String author, Pageable pageable);
 
     List<Study> findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull();
 
@@ -93,10 +97,10 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     List<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Long snpId);
 
     List<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Sort sort,
-                                                                                                   Long snpId);
+                                                                                                                                                   Long snpId);
 
     Page<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Pageable pageable,
-                                                                                                   Long snpId);
+                                                                                                                                                   Long snpId);
 
     List<Study> findByAssociationsIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Long associationId);
 

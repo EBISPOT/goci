@@ -36,47 +36,39 @@
 <div class="container-fluid">
     <div class="row">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#">Monthly Curator Totals</a></li>
-            <li><a th:href="@{/reports/yearly}">Yearly Curator Totals</a></li>
+            <li><a th:href="@{/reports/monthly}">Monthly Curator Totals</a></li>
+            <li class="active"><a href="#">Yearly Curator Totals</a></li>
         </ul>
     </div>
 </div>
 
 <!--Include filter options-->
-<div th:include="reports_filter :: monthly_search_filter"></div>
+<div th:include="reports_filter :: yearly_search_filter"></div>
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <table id="mainTable" class="table table-hover table-bordered"
-                   data-toggle="table" data-show-columns="true">
+            <table id="mainTable" class="table table-hover table-bordered" data-toggle="table" data-show-columns="true">
                 <thead>
                 <tr>
                     <th class="col-md-1" data-sortable="true">Year</th>
-                    <th class="col-md-1" data-sortable="true">Month</th>
                     <th class="col-md-2" data-sortable="true">Curator</th>
                     <th class="col-md-2" data-sortable="true">Total number per curator</th>
-                    <th class="col-md-2" data-sortable="true">Curation Status</th>
-                    <th class="col-md-2">Link to studies</th>
-                    <th class="col-md-2" data-sortable="true">Total number of entries for month</th>
+                    <th class="col-md-3" data-sortable="true">Curation Status</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="monthlyTotalsSummaryView: ${monthlyTotalsSummaryViews}">
-                    <td th:text="${monthlyTotalsSummaryView.year} ?: 'null'"></td>
-                    <!--Some thymeleaf wrangling to get the month name for a date-->
-                    <td th:text="${#dates.monthName(#dates.create(monthlyTotalsSummaryView.year,monthlyTotalsSummaryView.month, '01'))} ?: 'null'"></td>
-                    <td th:text="${monthlyTotalsSummaryView.curator} ?: 'null'"></td>
-                    <td th:text="${monthlyTotalsSummaryView.curatorTotal} ?: 'null'"></td>
-                    <td th:text="${monthlyTotalsSummaryView.curationStatus} ?: 'null'"></td>
-                    <td><a th:href="@{/reports/monthly/{reportId}(reportId=${monthlyTotalsSummaryView.id})}"
-                           class="btn btn-link">Show studies</a></td>
-                    <td th:text="${monthlyTotalsSummaryView.monthlyTotal} ?: 'null'"></td>
+                <tr th:each="yearlyTotalsSummaryView: ${yearlyTotalsSummaryViews}">
+                    <td th:text="${yearlyTotalsSummaryView.year} ?: 'null'"></td>
+                    <td th:text="${yearlyTotalsSummaryView.curator} ?: 'null'"></td>
+                    <td th:text="${yearlyTotalsSummaryView.curatorTotal} ?: 'null'"></td>
+                    <td th:text="${yearlyTotalsSummaryView.curationStatus} ?: 'null'"></td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
 </body>
 </html>

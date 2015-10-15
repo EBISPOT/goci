@@ -6,12 +6,12 @@
 <div>
     <nav role="navigation" class="navbar navbar-default">
         <div class="navbar-header">
-        <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
+            <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
             <a href="http://www.ebi.ac.uk/gwas" class="navbar-brand">GWAS</a>
         </div>
 
@@ -20,13 +20,13 @@
                 <li><a th:href="@{/studies}">Home</a></li>
                 <li><a th:href="@{/studies/new}">Add Study</a></li>
                 <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
-                <li><a th:href="@{/reports}">Reports</a></li>
+                <li><a th:href="@{/reports/monthly}">Reports</a></li>
                 <li>
                     <div class="btn-group">
-                            <button type="button"
-                                    data-toggle="dropdown"
-                                    class="btn btn-default dropdown-toggle navbar-btn">
-                                Download files<span class="caret"></span></button>
+                        <button type="button"
+                                data-toggle="dropdown"
+                                class="btn btn-default dropdown-toggle navbar-btn">
+                            Download files<span class="caret"></span></button>
                         <ul class="dropdown-menu">
                             <li><a th:href="@{/sampledescriptions}">Studies with ancestry information</a></li>
                         </ul>
