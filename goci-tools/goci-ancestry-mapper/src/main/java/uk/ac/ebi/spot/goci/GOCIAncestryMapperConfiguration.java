@@ -24,7 +24,7 @@ public class GOCIAncestryMapperConfiguration {
     @Bean
     OntologyLoader ontologyLoader() {
         ReasonedOntologyLoader loader = new ReasonedOntologyLoader();
-        loader.setOntologyName("efo");
+        loader.setOntologyName("ancestro");
         loader.setOntologyURI(URI.create("http://www.ebi.ac.uk/ancestro"));
         loader.setOntologyResource(ancestroResource);
 //        loader.setExclusionClassURI(URI.create("http://www.geneontology.org/formats/oboInOwl#ObsoleteClass"));

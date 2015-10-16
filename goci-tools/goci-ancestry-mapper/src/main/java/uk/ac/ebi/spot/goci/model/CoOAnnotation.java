@@ -28,4 +28,6 @@ public class CoOAnnotation {
     public Long getId() {
         return id;
     }
+
+
 }

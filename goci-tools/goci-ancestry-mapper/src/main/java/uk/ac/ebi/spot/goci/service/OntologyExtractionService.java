@@ -42,24 +42,59 @@ public class OntologyExtractionService {
 
 
     public void preLoadMaps() {
+        if(ontologyLoader.isReady()) {
 
-        OWLClass country = ontologyLoader.getFactory().getOWLClass(IRI.create(countryURI));
-        OWLClass ancestralGroup = ontologyLoader.getFactory().getOWLClass(IRI.create(ancestralURI));
+            OWLClass country = ontologyLoader.getFactory().getOWLClass(IRI.create(countryURI));
+            OWLClass ancestralGroup = ontologyLoader.getFactory().getOWLClass(IRI.create(ancestralURI));
 
 
-        Set<OWLClass> allCountries = ontologyLoader.getOWLReasoner().getSubClasses(country, false).getFlattened();
-        Set<OWLClass> allGroups = ontologyLoader.getOWLReasoner().getSubClasses(ancestralGroup, false).getFlattened();
+            Set<OWLClass> allCountries = ontologyLoader.getOWLReasoner().getSubClasses(country, false).getFlattened();
+            Set<OWLClass> allGroups = ontologyLoader.getOWLReasoner().getSubClasses(ancestralGroup, false).getFlattened();
 
-         for(OWLClass cls : allCountries){
-             String label = ontologyLoader.getLabel(cls.getIRI());
+            for (OWLClass cls : allCountries) {
+                String label = ontologyLoader.getLabel(cls.getIRI());
+                Set<String> synonyms = ontologyLoader.getSynonyms(cls.getIRI());
 
-             countries.put(label, cls.getIRI().toString());
-         }
 
-        for(OWLClass cls : allGroups){
-            String label = ontologyLoader.getLabel(cls.getIRI());
+                if(label != null) {
+                    label = label.toLowerCase();
+                }
 
-            ancestralGroups.put(label, cls.getIRI().toString());
+                countries.put(label, cls.getIRI().toString());
+
+                if(synonyms != null){
+                    for(String syn : synonyms){
+                        countries.put(syn, cls.getIRI().toString());
+                    }
+                }
+            }
+
+            for (OWLClass cls : allGroups) {
+                String label = ontologyLoader.getLabel(cls.getIRI());
+
+                Set<String> synonyms = ontologyLoader.getSynonyms(cls.getIRI());
+
+                if(label != null) {
+                    label = label.toLowerCase();
+                }
+                ancestralGroups.put(label, cls.getIRI().toString());
+
+                if(synonyms != null){
+                    for(String syn : synonyms){
+                        ancestralGroups.put(syn, cls.getIRI().toString());
+                    }
+                }
+
+            }
+        }
+        else{
+            try {
+                ontologyLoader.waitUntilReady();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            preLoadMaps();
+
         }
     }
 

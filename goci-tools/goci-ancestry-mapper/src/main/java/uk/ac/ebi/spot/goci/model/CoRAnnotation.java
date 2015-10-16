@@ -28,4 +28,5 @@ public class CoRAnnotation {
     public String getOntologyURI() {
         return ontologyURI;
     }
+
 }
