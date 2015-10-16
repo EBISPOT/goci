@@ -35,10 +35,14 @@ public class StudyAssociationTableViewService {
             view.setPublication(study.getPublication());
             view.setTitle(study.getTitle());
             view.setPubmedId(study.getPubmedId());
-            view.setStudyDiseaseTrait(study.getDiseaseTrait().getTrait());
             view.setCurator(study.getHousekeeping().getCurator().getLastName());
             view.setCurationStatus(study.getHousekeeping().getCurationStatus().getStatus());
             view.setNotes(study.getHousekeeping().getNotes());
+
+            // Study disease trait, which could potentially be null
+            if (study.getDiseaseTrait() != null) {
+                view.setStudyDiseaseTrait(study.getDiseaseTrait().getTrait());
+            }
 
             // Study EFO traits
             Collection<String> traitNames = new ArrayList<>();
