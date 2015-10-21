@@ -29,7 +29,7 @@ public class GOCIAncestryMapperConfiguration {
         loader.setOntologyResource(ancestroResource);
 //        loader.setExclusionClassURI(URI.create("http://www.geneontology.org/formats/oboInOwl#ObsoleteClass"));
 //        loader.setExclusionAnnotationURI(URI.create("http://www.ebi.ac.uk/efo/organizational_class"));
-        loader.setSynonymURIs(Collections.singleton(URI.create("http://www.ebi.ac.uk/ancestro/ancestro_0331")));
+        loader.setSynonymURIs(Collections.singleton(URI.create("http://www.ebi.ac.uk/ancestro/ancestro_0121")));
         loader.init();
         return loader;
     }

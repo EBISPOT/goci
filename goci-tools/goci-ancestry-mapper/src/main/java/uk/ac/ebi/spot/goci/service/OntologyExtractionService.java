@@ -64,6 +64,7 @@ public class OntologyExtractionService {
 
                 if(synonyms != null){
                     for(String syn : synonyms){
+                        System.out.println("Synonym for " + label + " is " + syn);
                         countries.put(syn, cls.getIRI().toString());
                     }
                 }
@@ -81,6 +82,7 @@ public class OntologyExtractionService {
 
                 if(synonyms != null){
                     for(String syn : synonyms){
+                        System.out.println("Synonym for " + label + " is " + syn);
                         ancestralGroups.put(syn, cls.getIRI().toString());
                     }
                 }
