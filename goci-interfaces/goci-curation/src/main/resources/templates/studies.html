@@ -32,6 +32,7 @@
 <div th:include="study_filter :: filter"></div>
 
 <br/>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
@@ -46,7 +47,7 @@
                 <p style="color:grey">No studies to display</p>
             </div>
 
-            <table id="mainTable" class="table table-hover table-bordered" th:if="${totalStudies &gt; 0 }">
+            <table id="mainTable" class="table table-hover table-bordered" style="font-size: small" th:if="${totalStudies &gt; 0 }">
                 <caption id="total" th:text="'Total: '+ ${totalStudies}"></caption>
                 <thead>
                 <tr>
@@ -101,7 +102,7 @@
                         </div>
                     </th>
                     <th class="col-md-1">EFO Trait</th>
-                    <th class="col-md-1">Curator
+                    <th class="col-md-2">Curator
                         <div>
                             <a th:href="@{${uri}(sorttype=curatorsortasc)}"
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
@@ -117,7 +118,7 @@
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                         </div>
                     </th>
-                    <th class="col-md-3">Notes</th>
+                    <th class="col-md-2">Notes</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -179,7 +180,31 @@
 
                     <!--If study has associated housekeeping object then get the following attributes -->
 
-                    <td th:text="${study.housekeeping != null and study.housekeeping.curator !=null } ? ${study.housekeeping.curator.lastName} : ''"></td>
+                    <td>
+                        <p th:text="${study.housekeeping != null and study.housekeeping.curator !=null } ? ${study.housekeeping.curator.lastName} : ''"></p>
+
+                        <div id="assignCuratorForm">
+
+                            <form class="form-inline" name="curatorFilterParametersForm" role="form" method="post"
+                                  th:action="@{/studies/{studyId}/assign(studyId=${study.id})}"
+                                  th:object="${assignee}">
+
+                                <div class="form-group">
+                                    <label for="curator" class="control-label"></label>
+                                    <select name="curator" th:field="*{curatorId}"
+                                            class="form-control select2-select" id="curator">
+                                        <!-- Empty value for first entry-->
+                                        <option value=""></option>
+                                        <option th:each="curator : ${curators}"
+                                                th:value="${curator.id}"
+                                                th:text="${curator.lastName}"></option>
+                                    </select>
+                                    <button type="submit"
+                                            class="btn btn-primary btn-sm">Assign to</button>
+                                </div>
+                            </form>
+                        </div>
+                    </td>
                     <td th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : ''"></td>
                     <td th:text="${study.housekeeping !=null} ? ${study.housekeeping.notes} : ''"></td>
 

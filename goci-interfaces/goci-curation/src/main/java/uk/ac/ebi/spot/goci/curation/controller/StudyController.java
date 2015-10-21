@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
+import uk.ac.ebi.spot.goci.curation.model.Assignee;
 import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
 import uk.ac.ebi.spot.goci.curation.model.StudyAssociationTableView;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
@@ -298,6 +299,9 @@ public class StudyController {
 
         // Add studySearchFilter to model so user can filter table
         model.addAttribute("studySearchFilter", studySearchFilter);
+
+        // Add assignee so user can assign study to curator
+        model.addAttribute("assignee", new Assignee());
 
         return "studies";
     }
@@ -585,6 +589,20 @@ public class StudyController {
         redirectAttributes.addFlashAttribute("duplicateMessage", message);
 
         return "redirect:/studies/" + duplicateStudy.getId();
+    }
+
+    // Duplicate a study
+    @RequestMapping(value = "/{studyId}/assign", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String assignStudy(@PathVariable Long studyId, @ModelAttribute Assignee assignee) {
+
+        Study study = studyRepository.findOne(studyId);
+        Long curatorId = assignee.getCuratorId();
+
+        Curator curator = curatorRepository.findOne(curatorId);
+        study.getHousekeeping().setCurator(curator);
+        studyRepository.save(study);
+
+        return "redirect:/studies/";
     }
 
 
