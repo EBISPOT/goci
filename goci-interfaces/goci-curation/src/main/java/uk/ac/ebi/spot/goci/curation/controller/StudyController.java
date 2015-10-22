@@ -591,14 +591,16 @@ public class StudyController {
         return "redirect:/studies/" + duplicateStudy.getId();
     }
 
-    // Duplicate a study
+    // Assign a study
     @RequestMapping(value = "/{studyId}/assign", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String assignStudy(@PathVariable Long studyId, @ModelAttribute Assignee assignee) {
 
+        // Find the study and the curator user wishes to assign
         Study study = studyRepository.findOne(studyId);
         Long curatorId = assignee.getCuratorId();
-
         Curator curator = curatorRepository.findOne(curatorId);
+
+        // Set new curator
         study.getHousekeeping().setCurator(curator);
         studyRepository.save(study);
 
