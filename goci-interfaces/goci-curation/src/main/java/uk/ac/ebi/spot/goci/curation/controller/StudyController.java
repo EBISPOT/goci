@@ -15,10 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
-import uk.ac.ebi.spot.goci.curation.model.Assignee;
-import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
-import uk.ac.ebi.spot.goci.curation.model.StudyAssociationTableView;
-import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
+import uk.ac.ebi.spot.goci.curation.model.*;
 import uk.ac.ebi.spot.goci.curation.service.MailService;
 import uk.ac.ebi.spot.goci.curation.service.StudyAssociationTableViewService;
 import uk.ac.ebi.spot.goci.model.*;
@@ -26,7 +23,6 @@ import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -301,11 +297,15 @@ public class StudyController {
         // Add studySearchFilter to model so user can filter table
         model.addAttribute("studySearchFilter", studySearchFilter);
 
-        // Add assignee so user can assign study to curator
+        // Add assignee and status assignment so user can assign
+        // study to curator or assign a status
         // Also set uri so we can redirect to page user was on
         Assignee assignee = new Assignee();
-        assignee.setUri("/studies?page="+current+filters);
+        StatusAssignment statusAssignment = new StatusAssignment();
+        assignee.setUri("/studies?page=" + current + filters);
+        statusAssignment.setUri("/studies?page=" + current + filters);
         model.addAttribute("assignee", assignee);
+        model.addAttribute("statusAssignment", statusAssignment);
 
         return "studies";
     }
@@ -595,9 +595,9 @@ public class StudyController {
         return "redirect:/studies/" + duplicateStudy.getId();
     }
 
-    // Assign a study
+    // Assign a curator to a study
     @RequestMapping(value = "/{studyId}/assign", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String assignStudy(@PathVariable Long studyId, @ModelAttribute Assignee assignee) {
+    public String assignStudyCurator(@PathVariable Long studyId, @ModelAttribute Assignee assignee) {
 
         // Find the study and the curator user wishes to assign
         Study study = studyRepository.findOne(studyId);
@@ -609,6 +609,22 @@ public class StudyController {
         studyRepository.save(study);
 
         return "redirect:"+assignee.getUri();
+    }
+
+    // Assign a status to a study
+    @RequestMapping(value = "/{studyId}/status_update", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String assignStudyStatus(@PathVariable Long studyId, @ModelAttribute StatusAssignment statusAssignment) {
+
+        // Find the study and the curator user wishes to assign
+        Study study = studyRepository.findOne(studyId);
+        Long statusId = statusAssignment.getStatusId();
+        CurationStatus status = curationStatusRepository.findOne(statusId);
+
+        // Set new curator
+        study.getHousekeeping().setCurationStatus(status);
+        studyRepository.save(study);
+
+        return "redirect:" + statusAssignment.getUri();
     }
 
 
