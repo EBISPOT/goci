@@ -301,7 +301,10 @@ public class StudyController {
         model.addAttribute("studySearchFilter", studySearchFilter);
 
         // Add assignee so user can assign study to curator
-        model.addAttribute("assignee", new Assignee());
+        // Also set uri so we can redirect to page user was on
+        Assignee assignee = new Assignee();
+        assignee.setUri(uri);
+        model.addAttribute("assignee", assignee);
 
         return "studies";
     }
@@ -604,7 +607,7 @@ public class StudyController {
         study.getHousekeeping().setCurator(curator);
         studyRepository.save(study);
 
-        return "redirect:/studies/";
+        return "redirect:"+assignee.getUri();
     }
 
 
