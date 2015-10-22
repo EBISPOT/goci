@@ -18,6 +18,7 @@ import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
 import uk.ac.ebi.spot.goci.curation.model.*;
 import uk.ac.ebi.spot.goci.curation.service.MailService;
 import uk.ac.ebi.spot.goci.curation.service.StudyAssociationTableViewService;
+import uk.ac.ebi.spot.goci.curation.service.StudyService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
@@ -52,6 +53,7 @@ public class StudyController {
     private DefaultPubMedSearchService defaultPubMedSearchService;
     private MailService mailService;
     private StudyAssociationTableViewService studyAssociationTableViewService;
+    private StudyService studyService;
 
     public static final int MAX_PAGE_ITEM_DISPLAY = 25;
 
@@ -62,21 +64,21 @@ public class StudyController {
     }
 
     @Autowired
-    public StudyController(StudyRepository studyRepository, HousekeepingRepository housekeepingRepository, DiseaseTraitRepository diseaseTraitRepository, EfoTraitRepository efoTraitRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, AssociationRepository associationRepository, EthnicityRepository ethnicityRepository, UnpublishReasonRepository unpublishReasonRepository, DefaultPubMedSearchService defaultPubMedSearchService, MailService mailService, StudyAssociationTableViewService studyAssociationTableViewService) {
+    public StudyController(StudyRepository studyRepository, StudyService studyService, StudyAssociationTableViewService studyAssociationTableViewService, MailService mailService, DefaultPubMedSearchService defaultPubMedSearchService, UnpublishReasonRepository unpublishReasonRepository, EthnicityRepository ethnicityRepository, AssociationRepository associationRepository, CurationStatusRepository curationStatusRepository, CuratorRepository curatorRepository, EfoTraitRepository efoTraitRepository, DiseaseTraitRepository diseaseTraitRepository, HousekeepingRepository housekeepingRepository) {
         this.studyRepository = studyRepository;
-        this.housekeepingRepository = housekeepingRepository;
-        this.diseaseTraitRepository = diseaseTraitRepository;
-        this.efoTraitRepository = efoTraitRepository;
-        this.curatorRepository = curatorRepository;
-        this.curationStatusRepository = curationStatusRepository;
-        this.associationRepository = associationRepository;
-        this.ethnicityRepository = ethnicityRepository;
-        this.unpublishReasonRepository = unpublishReasonRepository;
-        this.defaultPubMedSearchService = defaultPubMedSearchService;
-        this.mailService = mailService;
+        this.studyService = studyService;
         this.studyAssociationTableViewService = studyAssociationTableViewService;
+        this.mailService = mailService;
+        this.defaultPubMedSearchService = defaultPubMedSearchService;
+        this.unpublishReasonRepository = unpublishReasonRepository;
+        this.ethnicityRepository = ethnicityRepository;
+        this.associationRepository = associationRepository;
+        this.curationStatusRepository = curationStatusRepository;
+        this.curatorRepository = curatorRepository;
+        this.efoTraitRepository = efoTraitRepository;
+        this.diseaseTraitRepository = diseaseTraitRepository;
+        this.housekeepingRepository = housekeepingRepository;
     }
-
 
     /* All studies and various filtered lists */
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
@@ -379,7 +381,6 @@ public class StudyController {
     }
 
 
-
     // View all studies with associations annotated as multi-SNP haplotype
     @RequestMapping(value = "/haplotype", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String getHaplotypeStudies(Model model) {
@@ -608,7 +609,7 @@ public class StudyController {
         study.getHousekeeping().setCurator(curator);
         studyRepository.save(study);
 
-        return "redirect:"+assignee.getUri();
+        return "redirect:" + assignee.getUri();
     }
 
     // Assign a status to a study
@@ -620,10 +621,8 @@ public class StudyController {
         Long statusId = statusAssignment.getStatusId();
         CurationStatus status = curationStatusRepository.findOne(statusId);
 
-        // Set new curator
-        study.getHousekeeping().setCurationStatus(status);
-        studyRepository.save(study);
-
+        // Handles status change
+        studyService.updateStatus(status, study);
         return "redirect:" + statusAssignment.getUri();
     }
 
