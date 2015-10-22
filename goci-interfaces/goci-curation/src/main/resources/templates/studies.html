@@ -46,7 +46,8 @@
                 <p style="color:grey">No studies to display</p>
             </div>
 
-            <table id="mainTable" class="table table-hover table-bordered" style="font-size: small" th:if="${totalStudies &gt; 0 }">
+            <table id="mainTable" class="table table-hover table-bordered" style="font-size: small"
+                   th:if="${totalStudies &gt; 0 }">
                 <caption id="total" th:text="'Total: '+ ${totalStudies}"></caption>
                 <thead>
                 <tr>
@@ -56,7 +57,8 @@
                             <a th:href="@{${uri}(sorttype=authorsortasc)}"
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                             <a th:href="@{${uri}(sorttype=authorsortdesc)}"
-                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+                               class="btn btn-default btn-xs"><span
+                                    class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                         </div>
                     </th>
                     <th class="col-md-1">Title
@@ -64,7 +66,8 @@
                             <a th:href="@{${uri}(sorttype=titlesortasc)}"
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                             <a th:href="@{${uri}(sorttype=titlesortdesc)}"
-                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+                               class="btn btn-default btn-xs"><span
+                                    class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                         </div>
                     </th>
                     <th class="col-md-1">Publication Date (YYYY-MM-DD)
@@ -72,7 +75,8 @@
                             <a th:href="@{${uri}(sorttype=publicationdatesortasc)}"
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                             <a th:href="@{${uri}(sorttype=publicationdatesortdesc)}"
-                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+                               class="btn btn-default btn-xs"><span
+                                    class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                         </div>
                     </th>
                     <th class="col-md-1">Pubmed ID
@@ -80,7 +84,8 @@
                             <a th:href="@{${uri}(sorttype=pubmedsortasc)}"
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                             <a th:href="@{${uri}(sorttype=pubmedsortdesc)}"
-                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+                               class="btn btn-default btn-xs"><span
+                                    class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                         </div>
                     </th>
                     <th class="col-md-1">Publication
@@ -88,7 +93,8 @@
                             <a th:href="@{${uri}(sorttype=publicationsortasc)}"
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                             <a th:href="@{${uri}(sorttype=publicationsortdesc)}"
-                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+                               class="btn btn-default btn-xs"><span
+                                    class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                         </div>
                     </th>
 
@@ -97,7 +103,8 @@
                             <a th:href="@{${uri}(sorttype=diseasetraitsortasc)}"
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                             <a th:href="@{${uri}(sorttype=diseasetraitsortdesc)}"
-                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+                               class="btn btn-default btn-xs"><span
+                                    class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                         </div>
                     </th>
                     <th class="col-md-1">EFO Trait</th>
@@ -106,7 +113,8 @@
                             <a th:href="@{${uri}(sorttype=curatorsortasc)}"
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                             <a th:href="@{${uri}(sorttype=curatorsortdesc)}"
-                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+                               class="btn btn-default btn-xs"><span
+                                    class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                         </div>
                     </th>
                     <th class="col-md-1">Curation Status
@@ -114,7 +122,8 @@
                             <a th:href="@{${uri}(sorttype=curationstatussortasc)}"
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                             <a th:href="@{${uri}(sorttype=curationstatussortdesc)}"
-                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+                               class="btn btn-default btn-xs"><span
+                                    class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                         </div>
                     </th>
                     <th class="col-md-2">Notes</th>
@@ -147,9 +156,9 @@
                     <td><p th:text="${study.pubmedId} ?: ''"></p>
 
                         <div class="btn-group">
-                                <button type="button"
-                                        data-toggle="dropdown"
-                                        class="btn btn-sm btn-default dropdown-toggle">
+                            <button type="button"
+                                    data-toggle="dropdown"
+                                    class="btn btn-sm btn-default dropdown-toggle">
                                 View paper<span class="caret"></span></button>
 
                             <ul class="dropdown-menu">
@@ -178,7 +187,6 @@
                     </td>
 
                     <!--If study has associated housekeeping object then get the following attributes -->
-
                     <td>
                         <p th:text="${study.housekeeping != null and study.housekeeping.curator !=null } ? ${study.housekeeping.curator.lastName} : ''"></p>
 
@@ -187,6 +195,10 @@
                             <form class="form-inline" name="curatorFilterParametersForm" role="form" method="post"
                                   th:action="@{/studies/{studyId}/assign(studyId=${study.id})}"
                                   th:object="${assignee}">
+                                <div class="form-group">
+                                    <input type="hidden" class="form-control" id="uri"
+                                           th:field="*{uri}"/>
+                                </div>
 
                                 <div class="form-group">
                                     <label for="curator" class="control-label"></label>
@@ -199,15 +211,14 @@
                                                 th:text="${curator.lastName}"></option>
                                     </select>
                                     <button type="submit"
-                                            class="btn btn-primary btn-sm">Assign to</button>
+                                            class="btn btn-primary btn-sm">Assign to
+                                    </button>
                                 </div>
                             </form>
                         </div>
                     </td>
                     <td th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : ''"></td>
                     <td th:text="${study.housekeeping !=null} ? ${study.housekeeping.notes} : ''"></td>
-
-
                 </tr>
                 </tbody>
             </table>
