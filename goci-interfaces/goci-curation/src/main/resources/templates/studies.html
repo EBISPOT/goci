@@ -51,7 +51,7 @@
                 <caption id="total" th:text="'Total: '+ ${totalStudies}"></caption>
                 <thead>
                 <tr>
-                    <th class="col-md-1"></th>
+                    <th></th>
                     <th class="col-md-1">Author
                         <div>
                             <a th:href="@{${uri}(sorttype=authorsortasc)}"
@@ -117,7 +117,7 @@
                                     class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                         </div>
                     </th>
-                    <th class="col-md-1">Curation Status
+                    <th class="col-md-2">Curation Status
                         <div>
                             <a th:href="@{${uri}(sorttype=curationstatussortasc)}"
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
@@ -126,14 +126,14 @@
                                     class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                         </div>
                     </th>
-                    <th class="col-md-2">Notes</th>
+                    <th class="col-md-1">Notes</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="study : ${studies}">
                     <td>
                         <div class="btn-group">
-                            <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+                            <button type="button" data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle">
                                 Action<span class="caret"></span></button>
 
                             <ul class="dropdown-menu">
@@ -192,7 +192,7 @@
 
                         <div id="assignCuratorForm">
 
-                            <form class="form-inline" name="curatorFilterParametersForm" role="form" method="post"
+                            <form class="form-inline" name="assignCuratorForm" role="form" method="post"
                                   th:action="@{/studies/{studyId}/assign(studyId=${study.id})}"
                                   th:object="${assignee}">
                                 <div class="form-group">
@@ -217,7 +217,41 @@
                             </form>
                         </div>
                     </td>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : ''"></td>
+
+                    <td>
+                        <p th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : ''"></p>
+                        <div id="assignStatusForm">
+
+                            <form class="form-inline" name="assignStatusForm" role="form" method="post"
+                                  th:action="@{/studies/{studyId}/status_update(studyId=${study.id})}"
+                                  th:object="${statusAssignment}">
+                                <div class="form-group">
+                                    <input type="hidden" class="form-control" id="uri"
+                                           th:field="*{uri}"/>
+                                </div>
+
+                                <div class="form-group">
+
+                                    <div class="form-group">
+                                        <label for="curationStatus" class="control-label"></label>
+                                        <select name="curationStatus" class="form-control select2-select"
+                                                th:field="*{statusId}" id="curationStatus">
+                                            <!-- Empty value for first entry-->
+                                            <option value=""></option>
+                                            <option th:each="curationStatus : ${curationstatuses}"
+                                                    th:value="${curationStatus.id}"
+                                                    th:text="${curationStatus.status}"></option>
+                                        </select>
+                                    </div>
+
+                                    <button type="submit"
+                                            class="btn btn-primary btn-sm">Set to
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </td>
+
                     <td th:text="${study.housekeeping !=null} ? ${study.housekeeping.notes} : ''"></td>
                 </tr>
                 </tbody>
