@@ -26,6 +26,7 @@ import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -303,7 +304,7 @@ public class StudyController {
         // Add assignee so user can assign study to curator
         // Also set uri so we can redirect to page user was on
         Assignee assignee = new Assignee();
-        assignee.setUri(uri);
+        assignee.setUri("/studies?page="+current+filters);
         model.addAttribute("assignee", assignee);
 
         return "studies";
