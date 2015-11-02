@@ -614,7 +614,7 @@ public class StudyController {
 
     // Assign a status to a study
     @RequestMapping(value = "/{studyId}/status_update", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String assignStudyStatus(@PathVariable Long studyId, @ModelAttribute StatusAssignment statusAssignment) {
+    public String assignStudyStatus(@PathVariable Long studyId, @ModelAttribute StatusAssignment statusAssignment, RedirectAttributes redirectAttributes) {
 
         // Find the study and the curator user wishes to assign
         Study study = studyRepository.findOne(studyId);
@@ -622,7 +622,8 @@ public class StudyController {
         CurationStatus status = curationStatusRepository.findOne(statusId);
 
         // Handles status change
-        studyService.updateStatus(status, study);
+        String studySnpsNotApproved =  studyService.updateStatus(status, study);
+        redirectAttributes.addFlashAttribute("studySnpsNotApproved", studySnpsNotApproved);
         return "redirect:" + statusAssignment.getUri();
     }
 
