@@ -86,7 +86,7 @@ public class StudyOperationsService {
         }
 
         // Save our study if no errors
-        if (message != null) {
+        if (message == null) {
             studyRepository.save(study);
         }
 
