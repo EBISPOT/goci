@@ -777,7 +777,7 @@ public class SolrSearchController {
 
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
-        int maxResults = 10000;
+        int maxResults = 1000000;
         int page = 1;
         String facet = "association";
         addFilterQuery(solrSearchBuilder, "resourcename", facet);

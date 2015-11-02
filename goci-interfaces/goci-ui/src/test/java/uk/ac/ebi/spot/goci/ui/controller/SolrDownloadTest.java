@@ -35,7 +35,7 @@ public class SolrDownloadTest {
     @Test
     public void TestDownloadController(){
 
-        String searchString = "http://www.ebi.ac.uk/gwas/api/search/downloads?q=text:*&pvalfilter=&orfilter=&betafilter=&datefilter=&traitfilter[]=&dateaddedfilter=";
+            String searchString = "http://www.ebi.ac.uk/gwas/api/search/downloads?q=text:*&pvalfilter=&orfilter=&betafilter=&datefilter=&traitfilter[]=&dateaddedfilter=";
 
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(searchString);
