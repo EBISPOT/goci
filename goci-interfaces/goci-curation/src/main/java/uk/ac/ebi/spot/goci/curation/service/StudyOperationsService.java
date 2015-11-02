@@ -19,14 +19,14 @@ import java.util.Date;
  *         Service class that handles common operations performed on study
  */
 @Service
-public class StudyService {
+public class StudyOperationsService {
 
     private StudyRepository studyRepository;
     private AssociationRepository associationRepository;
     private MailService mailService;
 
     @Autowired
-    public StudyService(StudyRepository studyRepository, AssociationRepository associationRepository, MailService mailService) {
+    public StudyOperationsService(StudyRepository studyRepository, AssociationRepository associationRepository, MailService mailService) {
         this.studyRepository = studyRepository;
         this.associationRepository = associationRepository;
         this.mailService = mailService;

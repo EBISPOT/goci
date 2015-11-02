@@ -18,7 +18,7 @@ import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
 import uk.ac.ebi.spot.goci.curation.model.*;
 import uk.ac.ebi.spot.goci.curation.service.MailService;
 import uk.ac.ebi.spot.goci.curation.service.StudyAssociationTableViewService;
-import uk.ac.ebi.spot.goci.curation.service.StudyService;
+import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
@@ -53,7 +53,7 @@ public class StudyController {
     private DefaultPubMedSearchService defaultPubMedSearchService;
     private MailService mailService;
     private StudyAssociationTableViewService studyAssociationTableViewService;
-    private StudyService studyService;
+    private StudyOperationsService studyService;
 
     public static final int MAX_PAGE_ITEM_DISPLAY = 25;
 
@@ -64,7 +64,7 @@ public class StudyController {
     }
 
     @Autowired
-    public StudyController(StudyRepository studyRepository, StudyService studyService, StudyAssociationTableViewService studyAssociationTableViewService, MailService mailService, DefaultPubMedSearchService defaultPubMedSearchService, UnpublishReasonRepository unpublishReasonRepository, EthnicityRepository ethnicityRepository, AssociationRepository associationRepository, CurationStatusRepository curationStatusRepository, CuratorRepository curatorRepository, EfoTraitRepository efoTraitRepository, DiseaseTraitRepository diseaseTraitRepository, HousekeepingRepository housekeepingRepository) {
+    public StudyController(StudyRepository studyRepository, StudyOperationsService studyService, StudyAssociationTableViewService studyAssociationTableViewService, MailService mailService, DefaultPubMedSearchService defaultPubMedSearchService, UnpublishReasonRepository unpublishReasonRepository, EthnicityRepository ethnicityRepository, AssociationRepository associationRepository, CurationStatusRepository curationStatusRepository, CuratorRepository curatorRepository, EfoTraitRepository efoTraitRepository, DiseaseTraitRepository diseaseTraitRepository, HousekeepingRepository housekeepingRepository) {
         this.studyRepository = studyRepository;
         this.studyService = studyService;
         this.studyAssociationTableViewService = studyAssociationTableViewService;
