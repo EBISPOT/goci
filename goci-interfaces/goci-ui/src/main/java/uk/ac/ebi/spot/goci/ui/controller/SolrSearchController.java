@@ -46,6 +46,7 @@ public class SolrSearchController {
         this.searchConfiguration = searchConfiguration;
     }
 
+
     protected Logger getLog() {
         return log;
     }
@@ -776,7 +777,7 @@ public class SolrSearchController {
 
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
-        int maxResults = 10000;
+        int maxResults = 1000000;
         int page = 1;
         String facet = "association";
         addFilterQuery(solrSearchBuilder, "resourcename", facet);
@@ -892,20 +893,6 @@ public class SolrSearchController {
         PrintWriter outputWriter = new PrintWriter(outputStream);
 
         outputWriter.write(file);
-
-//        InputStream in = new ByteArrayInputStream(file.getBytes("UTF-8"));
-//
-//        byte[] outputByte = new byte[4096];
-////copy binary contect to output stream
-//        while(in.read(outputByte, 0, 4096) != -1)
-//        {
-//            outputStream.write(outputByte, 0, 4096);
-//        }
-//        in.close();
-
-
-     //   outputStream.flush();
-
         outputWriter.flush();
     }
 
