@@ -598,17 +598,22 @@ public class StudyController {
 
     // Assign a curator to a study
     @RequestMapping(value = "/{studyId}/assign", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String assignStudyCurator(@PathVariable Long studyId, @ModelAttribute Assignee assignee) {
+    public String assignStudyCurator(@PathVariable Long studyId, @ModelAttribute Assignee assignee, RedirectAttributes redirectAttributes) {
 
         // Find the study and the curator user wishes to assign
         Study study = studyRepository.findOne(studyId);
-        Long curatorId = assignee.getCuratorId();
-        Curator curator = curatorRepository.findOne(curatorId);
 
-        // Set new curator
-        study.getHousekeeping().setCurator(curator);
-        studyRepository.save(study);
+        if (assignee.getCuratorId() == null) {
+            String blankAssignee = "Cannot assign a blank value as a curator for study: " + study.getAuthor() + ", " + " pubmed = " + study.getPubmedId();
+            redirectAttributes.addFlashAttribute("blankAssignee", blankAssignee);
+        } else {
+            Long curatorId = assignee.getCuratorId();
+            Curator curator = curatorRepository.findOne(curatorId);
 
+            // Set new curator
+            study.getHousekeeping().setCurator(curator);
+            studyRepository.save(study);
+        }
         return "redirect:" + assignee.getUri();
     }
 
@@ -618,12 +623,18 @@ public class StudyController {
 
         // Find the study and the curator user wishes to assign
         Study study = studyRepository.findOne(studyId);
-        Long statusId = statusAssignment.getStatusId();
-        CurationStatus status = curationStatusRepository.findOne(statusId);
 
-        // Handles status change
-        String studySnpsNotApproved =  studyService.updateStatus(status, study);
-        redirectAttributes.addFlashAttribute("studySnpsNotApproved", studySnpsNotApproved);
+        if (statusAssignment.getStatusId() == null) {
+            String blankStatus = "Cannot assign a blank value as a status for study: " + study.getAuthor() + ", " + " pubmed = " + study.getPubmedId();
+            redirectAttributes.addFlashAttribute("blankStatus", blankStatus);
+        } else {
+            Long statusId = statusAssignment.getStatusId();
+            CurationStatus status = curationStatusRepository.findOne(statusId);
+
+            // Handles status change
+            String studySnpsNotApproved = studyService.updateStatus(status, study);
+            redirectAttributes.addFlashAttribute("studySnpsNotApproved", studySnpsNotApproved);
+        }
         return "redirect:" + statusAssignment.getUri();
     }
 

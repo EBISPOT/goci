@@ -47,7 +47,7 @@
             </div>
 
             <br/>
-            <!--Alert if data is saved-->
+            <!--Alerts-->
             <div class="container-fluid" th:if="${!#strings.isEmpty(studySnpsNotApproved)}">
                 <div class="row">
                     <div class="col-md-8">
@@ -58,7 +58,32 @@
                     </div>
                 </div>
             </div>
+
+            <div class="container-fluid" th:if="${!#strings.isEmpty(blankAssignee)}">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="alert alert-danger">
+                            <a href="#" class="close" data-dismiss="alert">&times;</a>
+                            <strong th:text="${blankAssignee}">Note:</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid" th:if="${!#strings.isEmpty(blankStatus)}">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="alert alert-danger">
+                            <a href="#" class="close" data-dismiss="alert">&times;</a>
+                            <strong th:text="${blankStatus}">Note:</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <br/>
+
+
+            <!--Table-->
 
             <table id="mainTable" class="table table-hover table-bordered" style="font-size: small"
                    th:if="${totalStudies &gt; 0 }">
