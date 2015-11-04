@@ -220,7 +220,12 @@
                     <td th:text="${snpAssociationTableView.efoTraits} ?: ''"></td>
 
                     <td th:text="${snpAssociationTableView.orPerCopyNum} ?: ''"></td>
-                    <td th:text="${snpAssociationTableView.orPerCopyRecip} ?: ''"></td>
+                    <td>
+                        <p th:text="${snpAssociationTableView.orPerCopyRecip} ?: ''"></p>
+                        <span style="font-style: italic; color:red; font-size: small"
+                              th:if="*{not #strings.isEmpty(snpAssociationTableView.orPerCopyRecip) and #strings.isEmpty(snpAssociationTableView.orPerCopyNum)}"
+                              th:text="'Warning: OR per Copy Num is blank but there is a reciprocal'"></span>
+                    </td>
                     <td th:text="${snpAssociationTableView.orType} ?:''"></td>
                     <td th:text="${snpAssociationTableView.orPerCopyRange} ?: ''"></td>
                     <td th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
