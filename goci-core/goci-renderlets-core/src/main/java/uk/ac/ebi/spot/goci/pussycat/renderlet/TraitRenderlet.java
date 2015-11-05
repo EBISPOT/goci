@@ -82,15 +82,15 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
                         }
 
                         double alength = associationLocation.getWidth();
-                        double radius = 0.2 * alength;
+                        double radius = 0.14 * alength; //0.2 * alength;
                         double ax = associationLocation.getX();
                         double ay = associationLocation.getY();
                         double displacement = associationLocation.getHeight();
                         double cx, cy;
                         int position = getTraitPosition(nexus, context, trait, band, locations);
 
-                        int horizontal = position % 6;
-                        int vertical = position / 6;
+                        int horizontal = position % 10;
+                        int vertical = position / 10;
 
                         if (position == 0) {
                             cx = ax + alength + radius;

@@ -73,7 +73,7 @@ public abstract class AssociationRenderlet<C, E> implements Renderlet<C, E> {
                     double y2 = 0;
 
                     // x3 and y3 mark the end of the line - may be fanned to avoid overlaps
-                    double x3 = 0.75 * location.getWidth();
+                    double x3 = 1.5 * location.getWidth(); //0.75 * location.getWidth();
                     double y3;
 
                     // fanning algorithm - calculate diagonal part of the line, if necessary
@@ -88,7 +88,7 @@ public abstract class AssociationRenderlet<C, E> implements Renderlet<C, E> {
                             if (band.getBandName().contains("p")) {
                                 // p arm - we need to know how many traits are in this band
                                 int traitCount = getNumberOfTraitsInSameBand(nexus, context, associationEntity);
-                                int rowCount = ((traitCount - 1) / 6) + 2;
+                                int rowCount = ((traitCount - 1) / 10) + 2;
                                 double blockSize = rowCount * dotRadius;
 
                                 if (y1 + blockSize > previousY) {
@@ -103,7 +103,7 @@ public abstract class AssociationRenderlet<C, E> implements Renderlet<C, E> {
                             else {
                                 // q arm - we need to know how many traits were in the previous band (ie. the one above)
                                 int traitCount = getNumberOfTraitsInPreviousBand(nexus, context, associationEntity);
-                                int rowCount = ((traitCount - 1) / 6) + 2;
+                                int rowCount = ((traitCount - 1) / 10) + 2;
                                 double blockSize = rowCount * dotRadius;
 
                                 if (previousY + blockSize > y1) {
