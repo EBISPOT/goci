@@ -120,7 +120,7 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
 
                         String traitAttribute = getTraitAttribute(context, trait);
                         getLog().trace("Setting CSS class for trait '" + trait + "' to " + traitAttribute);
-                        svg.append("class='gwas-trait ").append(traitAttribute).append("'");
+                        svg.append("class='gwas-trait ").append(traitAttribute).append("' ");
                         svg.append("fading='false' ");
 
                         StringBuilder associationAttribute = new StringBuilder();
