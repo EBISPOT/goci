@@ -73,7 +73,7 @@ public abstract class AssociationRenderlet<C, E> implements Renderlet<C, E> {
                     double y2 = 0;
 
                     // x3 and y3 mark the end of the line - may be fanned to avoid overlaps
-                    double x3 = 1.5 * location.getWidth(); //0.75 * location.getWidth();
+                    double x3 = 2 * location.getWidth(); //0.75 * location.getWidth();
                     double y3;
 
                     // fanning algorithm - calculate diagonal part of the line, if necessary

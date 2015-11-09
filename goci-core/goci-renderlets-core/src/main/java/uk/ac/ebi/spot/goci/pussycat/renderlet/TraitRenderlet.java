@@ -82,7 +82,7 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
                         }
 
                         double alength = associationLocation.getWidth();
-                        double radius = 0.14 * alength; //0.2 * alength;
+                        double radius = 0.12 * alength; //0.2 * alength;
                         double ax = associationLocation.getX();
                         double ay = associationLocation.getY();
                         double displacement = associationLocation.getHeight();
