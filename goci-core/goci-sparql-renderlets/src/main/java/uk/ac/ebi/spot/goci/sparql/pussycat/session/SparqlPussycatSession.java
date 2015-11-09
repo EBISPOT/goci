@@ -18,6 +18,7 @@ import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.spot.goci.pussycat.service.OntologyService;
 import uk.ac.ebi.spot.goci.pussycat.session.AbstractPussycatSession;
 import uk.ac.ebi.spot.goci.pussycat.utils.StringUtils;
+import uk.ac.ebi.spot.goci.pussycat.exception.NoRenderableDataException;
 import uk.ac.ebi.spot.goci.sparql.exception.SparqlQueryException;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.QuerySolutionMapper;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.SparqlTemplate;
@@ -100,7 +101,7 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
     }
 
     @Override public String performRendering(RenderletNexus renderletNexus, Filter... filters)
-            throws PussycatSessionNotReadyException {
+            throws PussycatSessionNotReadyException, NoRenderableDataException {
 
         String associationQueryString = associationQueryMain;
         String traitQueryString = traitQueryMain;
@@ -154,26 +155,20 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                     individuals.addAll(loadTraits(getSparqlTemplate(), traitQueryString));
                     getLog().debug("Acquired " + individuals.size() + " individuals to render");
 
+                    if(individuals.size() == 0){
+                        throw new NoRenderableDataException("No individuals available for rendering");
+                    }
+
                     getLog().debug("GWAS data acquired, starting rendering...");
 
                     // render chromosomes first
                     for (URI chromosome : chromosomes) {
-                        for (Renderlet r : getAvailableRenderlets()) {
-                            if (r.canRender(renderletNexus, getSparqlTemplate(), chromosome)) {
-                                getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
-                                r.render(renderletNexus, getSparqlTemplate(), chromosome);
-                            }
-                        }
+                        dispatchRenderlet(renderletNexus, chromosome);
                     }
 
                     // then render individuals
                     for (URI individual : individuals) {
-                        for (Renderlet r : getAvailableRenderlets()) {
-                            if (r.canRender(renderletNexus, getSparqlTemplate(), individual)) {
-                                getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
-                                r.render(renderletNexus, getSparqlTemplate(), individual);
-                            }
-                        }
+                       dispatchRenderlet(renderletNexus, individual);
                     }
                     getLog().debug("SVG rendering complete!");
                     return renderletNexus.getSVG();
@@ -192,49 +187,6 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
             throw new RuntimeException("Failed to load data - cannot render SVG", e);
         }
     }
-
-//    @Override public List<AssociationSummary> getAssociationSummaries(List<URI> associationURIs) {
-//        final String query = "SELECT ?pmid ?author ?date ?rsid ?pval ?gwastrait ?label ?trait WHERE { " +
-//                "?association a gt:TraitAssociation ; " +
-//                "             gt:has_p_value ?pval ; " +
-//                "             gt:has_gwas_trait_name ?gwastrait ; " +
-//                "             ro:part_of ?study ; " +
-//                "             oban:has_subject ?snp ; " +
-//                "             oban:has_object ?trait . " +
-//                "?snp gt:has_snp_reference_id ?rsid . " +
-//                "?study gt:has_author ?author ; " +
-//                "       gt:has_publication_date ?date ; " +
-//                "       gt:has_pubmed_id ?pmid . " +
-//                "?trait rdfs:label ?label . " +
-//                "FILTER (?association = ??)" +
-//                "}";
-//
-//        List<AssociationSummary> results = new ArrayList<AssociationSummary>();
-//        for (URI uri : associationURIs) {
-//            List<AssociationSummary> summaries =
-//                    getSparqlTemplate().query(query, new QuerySolutionMapper<AssociationSummary>() {
-//                        @Override public AssociationSummary mapQuerySolution(QuerySolution qs) {
-//                            String pubmedID = qs.getLiteral("pmid").getLexicalForm();
-//                            String firstAuthor = qs.getLiteral("author").getLexicalForm();
-//                            String publicationDate = qs.getLiteral("date").getLexicalForm().substring(0, 4);
-//                            String snp = qs.getLiteral("rsid").getLexicalForm();
-//                            String pValue = qs.getLiteral("pval").getLexicalForm();
-//                            String gwasTraitName = qs.getLiteral("gwastrait").getLexicalForm();
-//                            String efoTraitLabel = qs.getLiteral("label").getLexicalForm();
-//                            URI efoTraitURI = URI.create(qs.getResource("trait").getURI());
-//                            return new SparqlAssociationSummary(pubmedID, firstAuthor, publicationDate, snp, pValue,
-//                                                                gwasTraitName, efoTraitLabel, efoTraitURI);
-//                        }
-//                    }, uri);
-//            if (summaries.size() == 0) {
-//                results.add(null);
-//            }
-//            else {
-//                results.add(summaries.iterator().next());
-//            }
-//        }
-//        return results;
-//    }
 
     @Override public Set<URI> getRelatedTraits(String traitName) {
         // get OWLClasses by name
@@ -327,6 +279,15 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
         else{
             getLog().debug("Session ID already exists " + this.sessionID);
             return this.sessionID;
+        }
+    }
+
+    private void dispatchRenderlet(RenderletNexus renderletNexus, URI individual){
+        for (Renderlet r : getAvailableRenderlets()) {
+            if (r.canRender(renderletNexus, getSparqlTemplate(), individual)) {
+                getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
+                r.render(renderletNexus, getSparqlTemplate(), individual);
+            }
         }
     }
 

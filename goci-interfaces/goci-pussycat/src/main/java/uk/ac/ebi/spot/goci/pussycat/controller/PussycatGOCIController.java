@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.pussycat.exception.NoRenderableDataException;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
 import uk.ac.ebi.spot.goci.pussycat.manager.PussycatManager;
@@ -89,7 +90,7 @@ public class PussycatGOCIController {
     }
 
     @RequestMapping(value = "/gwasdiagram")
-    public @ResponseBody String renderGWASDiagram(HttpSession session) throws PussycatSessionNotReadyException {
+    public @ResponseBody String renderGWASDiagram(HttpSession session) throws PussycatSessionNotReadyException, NoRenderableDataException {
         // render all data using the pussycat session for this http session
         return getPussycatSession(session).performRendering(getRenderletNexus(session));
     }
@@ -98,7 +99,7 @@ public class PussycatGOCIController {
     public @ResponseBody String renderAssociations(@PathVariable String mantissa,
                                                    @PathVariable String exponent,
                                                    HttpSession session)
-            throws PussycatSessionNotReadyException {
+            throws PussycatSessionNotReadyException, NoRenderableDataException {
         // get the subset of associations with pvalue smaller than the one supplied
         /*trait association'  and (has_p_value < " ")*/
         getLog().debug("Received a new rendering request - " +
@@ -119,7 +120,7 @@ public class PussycatGOCIController {
     public @ResponseBody String renderGWASDiagramTimeSeries(@PathVariable String year,
                                                             @PathVariable String month,
                                                             HttpSession session)
-            throws PussycatSessionNotReadyException {
+            throws PussycatSessionNotReadyException, NoRenderableDataException {
         // get the subset of studies published before the supplied date
         /*trait association'  and part_of some ('GWAS study' and has_publication_date some dateTime[< "  "^^dateTime])*/
         getLog().debug("Received a new rendering request - " +
@@ -161,29 +162,87 @@ public class PussycatGOCIController {
         }
     }
 
+    @RequestMapping(value = "/gwasdiagram/timeseries/{year}/{month}/{mantissa}/{exponent}")
+    public @ResponseBody String renderGWASDiagramFilteredTimeSeries(@PathVariable String year,
+                                                            @PathVariable String month,
+                                                            @PathVariable String mantissa,
+                                                            @PathVariable String exponent,
+                                                            HttpSession session)
+            throws PussycatSessionNotReadyException, NoRenderableDataException {
+        // get the subset of studies published before the supplied date
+        /*trait association'  and part_of some ('GWAS study' and has_publication_date some dateTime[< "  "^^dateTime])*/
+        getLog().debug("Received a new rendering request - " +
+                "putting together the query for year '" + year + "' and month '" + month + "'");
+
+        int monthVar = Integer.parseInt(month);
+        int yearVar = Integer.parseInt(year);
+
+        //API call provides date for "up to and including the end of" - must increment month for query
+        if (monthVar == 12) {
+            month = "01";
+            yearVar++;
+            year = Integer.toString(yearVar);
+        }
+        else {
+            monthVar++;
+            if (monthVar > 9) {
+                month = Integer.toString(monthVar);
+            }
+            else {
+                month = "0".concat(Integer.toString(monthVar));
+            }
+        }
+
+        int exponentNum = Integer.parseInt(exponent);
+        int mantissaNum = Integer.parseInt(mantissa);
+        double pvalue = mantissaNum*Math.pow(10, exponentNum);
+
+        try {
+            DateFormat df = new SimpleDateFormat("YYYY/MM");
+            Date from = df.parse("2005/01");
+            Date to = df.parse(year + "/" + month);
+
+            Study study = template(Study.class);
+            Filter dateFilter = refine(study).on(study.getPublicationDate()).hasRange(from, to);
+            getRenderletNexus(session).setRenderingContext(dateFilter);
+
+            Association association = template(Association.class);
+            Filter pvalueFilter = refine(association).on(association.getPvalue()).hasValues(0.0, pvalue);
+            getRenderletNexus(session).setRenderingContext(pvalueFilter);
+
+            return getPussycatSession(session).performRendering(getRenderletNexus(session), dateFilter, pvalueFilter);
+        }
+        catch (ParseException e) {
+            getLog().error("Bad date in URL /gwasdiagram/timeseries/" + year + "/" + month + " - " +
+                    "use /gwasdiagram/timeseries/YYYY/MM", e);
+            throw new RuntimeException("Bad date in URL /gwasdiagram/timeseries/" + year + "/" + month + " - " +
+                    "use /gwasdiagram/timeseries/YYYY/MM", e);
+        }
+    }
+
     @RequestMapping(value = "/snps")
-    public @ResponseBody String renderSNPs(HttpSession session) throws PussycatSessionNotReadyException {
+    public @ResponseBody String renderSNPs(HttpSession session) throws PussycatSessionNotReadyException, NoRenderableDataException {
         SingleNucleotidePolymorphism snp = template(SingleNucleotidePolymorphism.class);
         return getPussycatSession(session).performRendering(getRenderletNexus(session), filter(snp));
     }
 
     @RequestMapping(value = "/snps/{rsID}")
     public @ResponseBody String renderSNP(@PathVariable String rsID, HttpSession session)
-            throws PussycatSessionNotReadyException {
+            throws PussycatSessionNotReadyException, NoRenderableDataException {
         SingleNucleotidePolymorphism snp = template(SingleNucleotidePolymorphism.class);
         Filter filter = refine(snp).on(snp.getRsId()).hasValue(rsID);
         return getPussycatSession(session).performRendering(getRenderletNexus(session), filter);
     }
 
     @RequestMapping(value = "/associations")
-    public @ResponseBody String renderAllAssociations(HttpSession session) throws PussycatSessionNotReadyException {
+    public @ResponseBody String renderAllAssociations(HttpSession session) throws PussycatSessionNotReadyException, NoRenderableDataException {
         Association ta = template(Association.class);
         return getPussycatSession(session).performRendering(getRenderletNexus(session), filter(ta));
     }
 
     @RequestMapping(value = "/traits/{efoURI}")
     public @ResponseBody String renderTrait(@PathVariable String efoURI, HttpSession session)
-            throws PussycatSessionNotReadyException {
+            throws PussycatSessionNotReadyException, NoRenderableDataException {
         Association ta = template(Association.class);
         Filter filter = refine(ta).on(ta.getEfoTraits()).hasValue(URI.create(efoURI));
         return getPussycatSession(session).performRendering(getRenderletNexus(session), filter);
@@ -213,31 +272,6 @@ public class PussycatGOCIController {
         }
         return results;
     }
-
-//    @RequestMapping(value = "/associations/{associationIds}")
-//    public @ResponseBody List<AssociationSummary> getAssociationSummaries(
-//            @PathVariable String associationIds, HttpSession session)
-//            throws PussycatSessionNotReadyException {
-//        getLog().debug("Received request to display information for associations " + associationIds);
-//
-//        List<URI> uris = new ArrayList<URI>();
-//        if (associationIds.contains(",")) {
-//            StringTokenizer tokenizer = new StringTokenizer(associationIds, ",");
-//            while (tokenizer.hasMoreTokens()) {
-//                String next = tokenizer.nextToken();
-//                URI nextURI = URI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/Association/" + next);
-//                uris.add(nextURI);
-//            }
-//        }
-//        else {
-//            URI uri = URI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/Association/" + associationIds);
-//            uris.add(uri);
-//        }
-//
-//        getLog().debug("This trait represents " + uris.size() + " different associations");
-//
-//        return getPussycatSession(session).getAssociationSummaries(uris);
-//    }
 
 
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)

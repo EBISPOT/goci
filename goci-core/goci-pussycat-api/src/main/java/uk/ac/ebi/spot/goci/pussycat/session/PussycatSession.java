@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.pussycat.session;
 
+import uk.ac.ebi.spot.goci.pussycat.exception.NoRenderableDataException;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.Renderlet;
@@ -43,7 +44,7 @@ public interface PussycatSession {
      *                                                                                 yet initialized and therefore
      *                                                                                 unable to perform any rendering
      */
-    String performRendering(RenderletNexus renderletNexus, Filter... filters) throws PussycatSessionNotReadyException;
+    String performRendering(RenderletNexus renderletNexus, Filter... filters) throws PussycatSessionNotReadyException, NoRenderableDataException;
 
     /**
      * Fetches a list of lightweight association summary objects that encapsulates an overview of the salient
