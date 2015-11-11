@@ -76,6 +76,7 @@ public class AssociationReportService {
         Collection<String> noGeneForSymbolErrors = new ArrayList<>();
         Collection<String> restServiceErrors = new ArrayList<>();
         Collection<String> suspectVariationErrors = new ArrayList<>();
+        Collection<String> geneErrors = new ArrayList<>();
 
         for (Map.Entry<String, String> entry : errorToErrorTypeMap.entrySet()) {
             String errorMessage = entry.getKey();
@@ -96,6 +97,9 @@ public class AssociationReportService {
             else if (errorType.equals("noGeneForSymbolError")) {
                 noGeneForSymbolErrors.add(errorMessage);
             }
+            else if (errorType.equals("geneError")) {
+                geneErrors.add(errorMessage);
+            }
             else {
                 getLog().warn("For association ID: " + association.getId() +
                                       ", cannot determine error type for error " + errorMessage);
@@ -108,6 +112,7 @@ public class AssociationReportService {
         String allNoGeneForSymbolErrors = null;
         String allRestServiceErrors = null;
         String allSuspectVariationErrors = null;
+        String allGeneErrors = null;
 
         if (!snpErrors.isEmpty()) {
             allSnpErrors = String.join(", ", snpErrors);
@@ -129,6 +134,10 @@ public class AssociationReportService {
             allSuspectVariationErrors = String.join(", ", suspectVariationErrors);
         }
 
+        if (!geneErrors.isEmpty()) {
+            allGeneErrors = String.join(", ", geneErrors);
+        }
+
         // Create association report object
         AssociationReport associationReport = new AssociationReport();
         associationReport.setLastUpdateDate(new Date());
@@ -137,6 +146,7 @@ public class AssociationReportService {
         associationReport.setNoGeneForSymbol(allNoGeneForSymbolErrors);
         associationReport.setRestServiceError(allRestServiceErrors);
         associationReport.setSuspectVariationError(allSuspectVariationErrors);
+        associationReport.setGeneError(allGeneErrors);
 
         // Before setting link to association check for any existing reports linked to this association
         AssociationReport existingReport = associationReportRepository.findByAssociationId(association.getId());
@@ -155,17 +165,34 @@ public class AssociationReportService {
      */
     private List<String> createStandardErrorList() {
         List<String> standardErrorList = new ArrayList<>();
+
+        // REST service error
         standardErrorList.add("No server is available to handle this request");
-        standardErrorList.add("is generating an invalid request");
+        standardErrorList.add("Web service");
         standardErrorList.add("No data available");
-        standardErrorList.add("Variation does not map to the genome");
-        standardErrorList.add("Variation maps to more than one genomic location");
-        standardErrorList.add("Variation has more than 3 different alleles");
-        standardErrorList.add("None of the variant alleles match the reference allele");
-        standardErrorList.add("no mapping available for the variant");
+
+        // SNP Error
         standardErrorList.add("not found for homo_sapiens");
+        standardErrorList.add("is not found in Ensembl");
+
+        // Suspect variation errors
+        standardErrorList.add("Variation does not map to the genome");
+        standardErrorList.add("Variant maps to more than 1 location");
+        standardErrorList.add("None of the variant alleles match the reference allele");
+        standardErrorList.add("Variation has more than 3 different alleles");
+        standardErrorList.add("Flagged as suspect by dbSNP");
+        standardErrorList.add("Variant can not be re-mapped to the current assembly");
+
+        // Gene error
+        standardErrorList.add("Can't find a location in Ensembl for the reported gene");
+        standardErrorList.add("no mapping available for the variant");
+
+        // Snp Gene on different chromosome error
         standardErrorList.add("is on a different chromosome");
+
+        // No gene for symbol error
         standardErrorList.add("No valid lookup found for symbol");
+
         return standardErrorList;
     }
 
@@ -178,24 +205,28 @@ public class AssociationReportService {
 
         // REST service error
         errorMap.putIfAbsent("No server is available to handle this request", "restServiceError");
-        errorMap.putIfAbsent("is generating an invalid request", "restServiceError");
+        errorMap.putIfAbsent("Web service", "restServiceError");
         errorMap.putIfAbsent("No data available", "restServiceError");
 
         // Add suspect variation errors that usually result from a snp not mapping
         errorMap.putIfAbsent("Variation does not map to the genome", "suspectVariationError");
-        errorMap.putIfAbsent("Variation maps to more than one genomic location", "suspectVariationError");
+        errorMap.putIfAbsent("Variant maps to more than 1 location", "suspectVariationError");
+        errorMap.putIfAbsent("None of the variant alleles match the reference allele", "suspectVariationError");
         errorMap.putIfAbsent("Variation has more than 3 different alleles", "suspectVariationError");
-        errorMap.putIfAbsent(
-                "None of the variant alleles match the reference allele",
-                "suspectVariationError");
-        errorMap.putIfAbsent("no mapping available for the variant", "suspectVariationError");
+        errorMap.putIfAbsent("Flagged as suspect by dbSNP", "suspectVariationError");
+        errorMap.putIfAbsent("Variant can not be re-mapped to the current assembly", "suspectVariationError");
 
         // Catch other common errors
+        errorMap.putIfAbsent("Can't find a location in Ensembl for the reported gene", "geneError");
+        errorMap.putIfAbsent("no mapping available for the variant", "geneError");
+
         errorMap.putIfAbsent("not found for homo_sapiens", "snpError");
+        errorMap.putIfAbsent("is not found in Ensembl", "snpError");
+
         errorMap.putIfAbsent("is on a different chromosome", "snpGeneOnDiffChrError");
+
         errorMap.putIfAbsent("No valid lookup found for symbol", "noGeneForSymbolError");
-
-
+        
         return errorMap;
     }
 
