@@ -36,7 +36,7 @@
                     <strong>
                         <span th:utext="'&lt;br /&gt;' + 'Mapping errors : '+'&lt;br /&gt;' ?: ''"></span>
                         <span th:each="error: ${errors.associationErrorMap}"
-                              th:utext="${error.value} + '&lt;br /&gt;' ?: ''"></span>
+                              th:utext="${error.value} +' ('+ ${error.key} +') ' +'&lt;br /&gt;' ?: ''"></span>
                     </strong>
                 </div>
 

@@ -18,7 +18,8 @@ import java.util.Map;
  *
  * @author emma
  *         <p>
- *         Service class that determines possible errors in curator entered fields
+ *         Service class that determines possible errors in curator entered fields. Also generates list of errors and
+ *         their types from mapping pipeline.
  */
 @Service
 public class AssociationFormErrorViewService {
@@ -26,7 +27,11 @@ public class AssociationFormErrorViewService {
     public AssociationFormErrorViewService() {
     }
 
-    // Determine error prone attributes of association and then return them via controller to view
+    /**
+     * Determine error prone attributes of association and then return them via controller to view
+     *
+     * @param association Association object
+     */
     public AssociationFormErrorView checkAssociationForErrors(Association association) {
 
         AssociationFormErrorView associationErrorView = new AssociationFormErrorView();
@@ -156,7 +161,12 @@ public class AssociationFormErrorViewService {
         return error;
     }
 
-    private Map<String, String> createAssociationErrorMap(AssociationReport associationReport) {
+    /**
+     * Create object, from Association Report, that will be returned to view
+     *
+     * @param associationReport Association Report object containing mapping errors
+     */
+    public Map<String, String> createAssociationErrorMap(AssociationReport associationReport) {
 
         Map<String, String> associationErrorMap = new HashMap<>();
 
@@ -168,22 +178,27 @@ public class AssociationFormErrorViewService {
 
             if (associationReport.getSnpGeneOnDiffChr() != null &&
                     !associationReport.getSnpGeneOnDiffChr().isEmpty()) {
-                associationErrorMap.put("Snp Gene On Diff Chr: ", associationReport.getSnpGeneOnDiffChr());
+                associationErrorMap.put("Snp Gene On Diff Chr", associationReport.getSnpGeneOnDiffChr());
             }
 
             if (associationReport.getNoGeneForSymbol() != null &&
                     !associationReport.getNoGeneForSymbol().isEmpty()) {
-                associationErrorMap.put("No Gene For Symbol: ", associationReport.getNoGeneForSymbol());
+                associationErrorMap.put("No Gene For Symbol", associationReport.getNoGeneForSymbol());
             }
 
             if (associationReport.getRestServiceError() != null &&
                     !associationReport.getRestServiceError().isEmpty()) {
-                associationErrorMap.put("Rest Service Error: ", associationReport.getRestServiceError());
+                associationErrorMap.put("Rest Service Error", associationReport.getRestServiceError());
             }
 
             if (associationReport.getSuspectVariationError() != null &&
                     !associationReport.getSuspectVariationError().isEmpty()) {
-                associationErrorMap.put("SNP does not map: ", associationReport.getSuspectVariationError());
+                associationErrorMap.put("Suspect variation", associationReport.getSuspectVariationError());
+            }
+
+            if (associationReport.getGeneError() != null &&
+                    !associationReport.getGeneError().isEmpty()) {
+                associationErrorMap.put("Gene Error", associationReport.getGeneError());
             }
         }
 

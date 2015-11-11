@@ -1,9 +1,9 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationTableView;
 import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
@@ -14,9 +14,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by emma on 20/05/2015.
@@ -28,11 +25,18 @@ import java.util.Map;
 @Service
 public class AssociationViewService {
 
-    // Constructor
-    public AssociationViewService() {
+    private AssociationFormErrorViewService associationFormErrorViewService;
+
+    @Autowired
+    public AssociationViewService(AssociationFormErrorViewService associationFormErrorViewService) {
+        this.associationFormErrorViewService = associationFormErrorViewService;
     }
 
-    // Create object that will be returned to view
+    /**
+     * Create object, from Association, that will be returned to view
+     *
+     * @param association Association object
+     */
     public SnpAssociationTableView createSnpAssociationTableView(Association association) {
         SnpAssociationTableView snpAssociationTableView = new SnpAssociationTableView();
 
@@ -88,7 +92,7 @@ public class AssociationViewService {
                 allLociSnps.add(snp.getRsId());
 
                 // Set proxies if present
-                Collection <String> currentLocusProxies =  new ArrayList<>();
+                Collection<String> currentLocusProxies = new ArrayList<>();
                 String commaSeparatedProxies = "";
                 if (riskAllele.getProxySnps() != null) {
                     for (SingleNucleotidePolymorphism proxySnp : riskAllele.getProxySnps()) {
@@ -276,7 +280,8 @@ public class AssociationViewService {
         }
 
         // Set error map
-        snpAssociationTableView.setAssociationErrorMap(createAssociationErrorMap(association.getAssociationReport()));
+        snpAssociationTableView.setAssociationErrorMap(associationFormErrorViewService.createAssociationErrorMap(
+                association.getAssociationReport()));
 
         // Get mapping details
         if (association.getLastMappingPerformedBy() != null) {
@@ -290,40 +295,5 @@ public class AssociationViewService {
         }
 
         return snpAssociationTableView;
-    }
-
-
-    private Map<String, String> createAssociationErrorMap(AssociationReport associationReport) {
-
-        Map<String, String> associationErrorMap = new HashMap<>();
-
-        //Create map of errors
-        if (associationReport != null) {
-            if (associationReport.getSnpError() != null && !associationReport.getSnpError().isEmpty()) {
-                associationErrorMap.put("SNP Error: ", associationReport.getSnpError());
-            }
-
-            if (associationReport.getSnpGeneOnDiffChr() != null &&
-                    !associationReport.getSnpGeneOnDiffChr().isEmpty()) {
-                associationErrorMap.put("Snp Gene On Diff Chr: ", associationReport.getSnpGeneOnDiffChr());
-            }
-
-            if (associationReport.getNoGeneForSymbol() != null &&
-                    !associationReport.getNoGeneForSymbol().isEmpty()) {
-                associationErrorMap.put("No Gene For Symbol: ", associationReport.getNoGeneForSymbol());
-            }
-
-            if (associationReport.getRestServiceError() != null &&
-                    !associationReport.getRestServiceError().isEmpty()) {
-                associationErrorMap.put("Rest Service Error: ", associationReport.getRestServiceError());
-            }
-
-            if (associationReport.getSuspectVariationError() != null &&
-                    !associationReport.getSuspectVariationError().isEmpty()) {
-                associationErrorMap.put("SNP does not map: ", associationReport.getSuspectVariationError());
-            }
-        }
-
-        return associationErrorMap;
     }
 }
