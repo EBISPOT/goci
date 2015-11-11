@@ -30,6 +30,8 @@ public class AssociationReport {
 
     private String suspectVariationError;
 
+    private String geneError;
+
     private Boolean errorCheckedByCurator = false;
 
     @OneToOne
@@ -45,13 +47,16 @@ public class AssociationReport {
                              String noGeneForSymbol,
                              String restServiceError,
                              String suspectVariationError,
-                             Boolean errorCheckedByCurator, Association association) {
+                             String geneError,
+                             Boolean errorCheckedByCurator,
+                             Association association) {
         this.lastUpdateDate = lastUpdateDate;
         this.snpError = snpError;
         this.snpGeneOnDiffChr = snpGeneOnDiffChr;
         this.noGeneForSymbol = noGeneForSymbol;
         this.restServiceError = restServiceError;
         this.suspectVariationError = suspectVariationError;
+        this.geneError = geneError;
         this.errorCheckedByCurator = errorCheckedByCurator;
         this.association = association;
     }
@@ -126,5 +131,13 @@ public class AssociationReport {
 
     public void setAssociation(Association association) {
         this.association = association;
+    }
+
+    public String getGeneError() {
+        return geneError;
+    }
+
+    public void setGeneError(String geneError) {
+        this.geneError = geneError;
     }
 }
