@@ -226,7 +226,7 @@ public class AssociationReportService {
         errorMap.putIfAbsent("is on a different chromosome", "snpGeneOnDiffChrError");
 
         errorMap.putIfAbsent("No valid lookup found for symbol", "noGeneForSymbolError");
-        
+
         return errorMap;
     }
 
