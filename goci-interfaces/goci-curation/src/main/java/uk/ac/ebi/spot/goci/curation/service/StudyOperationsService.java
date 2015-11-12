@@ -54,7 +54,11 @@ public class StudyOperationsService {
 
                 // If not checked redirect back to page and make no changes
                 if (snpsNotChecked == 1) {
-                    message = "Some SNP associations have not been checked for study: " + study.getAuthor() + ", " + " pubmed = " + study.getPubmedId() + ", please review before changing the status to " + status.getStatus();
+                    message = "Some SNP associations have not been checked for study: "
+                            + study.getAuthor() + ", "
+                            + " pubmed = " + study.getPubmedId()
+                            + ", please review before changing the status to "
+                            + status.getStatus();
                 } else {
                     // If there is no existing publish date then update
                     if (study.getHousekeeping().getCatalogPublishDate() == null) {
@@ -69,7 +73,12 @@ public class StudyOperationsService {
             if (status != null && status.getStatus().equals("Send to NCBI")) {
                 // If not checked redirect back to page and make no changes
                 if (snpsNotChecked == 1) {
-                    message = "Some SNP associations have not been checked for study: " + study.getAuthor() + ", " + " pubmed = " + study.getPubmedId() + ", please review before changing the status to " + status.getStatus();
+                    message = "Some SNP associations have not been checked for study: "
+                            + study.getAuthor()
+                            + ", " + " pubmed = "
+                            + study.getPubmedId()
+                            + ", please review before changing the status to "
+                            + status.getStatus();
                 } else {
                     Date sendToNCBIDate = new Date();
                     study.getHousekeeping().setSendToNCBIDate(sendToNCBIDate);
