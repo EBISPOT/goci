@@ -103,6 +103,26 @@ public class Filter<T, V> {
 //            return null;
             return toValue;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Range range = (Range) o;
+
+            if (fromValue != null ? !fromValue.equals(range.fromValue) : range.fromValue != null) return false;
+            if (toValue != null ? !toValue.equals(range.toValue) : range.toValue != null) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = fromValue != null ? fromValue.hashCode() : 0;
+            result = 31 * result + (toValue != null ? toValue.hashCode() : 0);
+            return result;
+        }
     }
 
     @Override

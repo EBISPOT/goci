@@ -208,6 +208,8 @@ public class PussycatGOCIController {
             Date from = df.parse("2005-01-01");
             Date to = df.parse(year + "-" + month + "-01");
 
+            System.out.println(df.format(from));
+
             String fromValue = new java.sql.Timestamp(from.getTime()).toString();
             String toValue = new java.sql.Timestamp(to.getTime()).toString();
 
