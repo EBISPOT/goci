@@ -142,15 +142,6 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
     protected String getTraitColour(SparqlTemplate sparqlTemplate, URI trait) {
         List<URI> allTypes = QueryManager.getCachingInstance().getOrderedTraitTypes(sparqlTemplate, trait);
 
-//sparqlTemplate.query("SELECT ?type (count(DISTINCT ?ancestor) as ?count) " +
-//                                                          "WHERE { " +
-//                                                          "<" + trait.toString() + "> rdf:type ?trait . " +
-//                                                          "?trait rdfs:subClassOf* ?type . " +
-//                                                          "?type rdfs:subClassOf* ?ancestor . " +
-//                                                          "FILTER ( ?trait != owl:Class ) .  " +
-//                                                          "FILTER ( ?trait != owl:NamedIndividual ) . } " +
-//                                                          "GROUP BY ?type " +
-//                                                          "ORDER BY desc(?count) ", new URIMapper("type"));
         Set<String> available = ColourMapper.COLOUR_MAP.keySet();
         for (URI type : allTypes) {
             if (type != null) {
@@ -163,7 +154,7 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
 
         // if we got to here, no color available
         getLog().error("Could not identify a suitable colour category for trait " + trait);
-        return "magenta";
+        return ColourMapper.COLOUR_MAP.get(ColourMapper.OTHER);
     }
 }
 
