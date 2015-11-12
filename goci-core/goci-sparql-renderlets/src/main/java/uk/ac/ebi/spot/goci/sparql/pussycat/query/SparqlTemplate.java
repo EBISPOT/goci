@@ -221,6 +221,9 @@ public class SparqlTemplate {
                                  QuerySolution qs = rs.next();
                                  result = qs.getLiteral("label").getLexicalForm();
                              }
+                             if(result == null){
+                                 result = "Annotation tbc";
+                             }
                              return result;
                          }
                      });
