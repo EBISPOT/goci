@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.pussycat.exception.NoRenderableDataException;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
 import uk.ac.ebi.spot.goci.pussycat.layout.BandInformation;
@@ -18,7 +19,6 @@ import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.spot.goci.pussycat.service.OntologyService;
 import uk.ac.ebi.spot.goci.pussycat.session.AbstractPussycatSession;
 import uk.ac.ebi.spot.goci.pussycat.utils.StringUtils;
-import uk.ac.ebi.spot.goci.pussycat.exception.NoRenderableDataException;
 import uk.ac.ebi.spot.goci.sparql.exception.SparqlQueryException;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.QuerySolutionMapper;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.SparqlTemplate;
@@ -51,7 +51,7 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
     @Autowired
     private SparqlTemplate sparqlTemplate;
 
-    private static final String associationQueryMain = "SELECT ?association ?band " +
+    private static final String associationQueryMain = "SELECT DISTINCT ?association ?band " +
                                         "WHERE { " +
                                         "  ?association a gt:TraitAssociation ; " +
                                         "               oban:has_subject ?snp . " +
@@ -108,6 +108,8 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
 
         getLog().debug("Rendering SVG from SPARQL endpoint (filters = '" + filters + "')...");
 
+        String associationFilters = "";
+        String traitFilters = "";
 
         for(Filter filter : filters){
             if(filter.getFilteredType().equals(Association.class)){
@@ -119,26 +121,35 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                 double from = values.get(0);
                 double to = values.get(1);
 
-                associationQueryString = associationQueryString.concat("  FILTER ( ?pvalue < " + to + ")")
-                                            .concat("  FILTER ( ?pvalue >= " + from + ")")
-                                            .concat(associationQueryBandFilter);
+                associationFilters = associationFilters.concat("  FILTER ( ?pvalue < " + to + ")")
+                                            .concat("  FILTER ( ?pvalue >= " + from + ")");
 
-                traitQueryString = traitQueryString.concat("  FILTER ( ?pvalue < " + to + ")")
-                                                    .concat("  FILTER ( ?pvalue >= " + from +  ")")
-                                                    .concat(" }");
+                traitFilters = traitFilters.concat("  FILTER ( ?pvalue < " + to + ")")
+                                                    .concat("  FILTER ( ?pvalue >= " + from +  ")");
 
             }
-            else if(filter.getFilteredType().equals(Study.class)){
+            if(filter.getFilteredType().equals(Study.class)){
+                Filter.Range values = filter.getFilteredRange();
+
+                Object from = values.from();
+                Object to = values.to();
+
+                associationQueryString = associationQueryString.concat("?association ro:part_of ?study . ?study gt:has_publication_date ?date .");
+                traitQueryString = traitQueryString.concat("?association ro:part_of ?study . ?study gt:has_publication_date ?date . ");
+
+                associationFilters = associationFilters.concat("  FILTER ( ?date < '" + to + "'^^xsd:dateTime)")
+                        .concat("  FILTER ( ?date >= '" + from + "'^^xsd:dateTime)");
+
+                traitFilters = traitFilters.concat("  FILTER ( ?date < '" + to + "'^^xsd:dateTime)")
+                        .concat("  FILTER ( ?date >= '" + from +  "'^^xsd:dateTime)");
 
             }
-            else {
-                associationQueryString = associationQueryString.concat(associationQueryBandFilter);
-                traitQueryString = traitQueryString.concat(" }");
-            }
-            System.out.println(associationQueryString);
-            System.out.println(traitQueryString);
         }
+        associationQueryString = associationQueryString.concat(associationFilters).concat(associationQueryBandFilter);
+        traitQueryString = traitQueryString.concat(traitFilters).concat(" }");
 
+        System.out.println(associationQueryString);
+        System.out.println(traitQueryString);
 
 
         try {

@@ -150,8 +150,14 @@ public class PussycatGOCIController {
             Date from = df.parse("2005/01");
             Date to = df.parse(year + "/" + month);
 
+            String fromValue = new java.sql.Timestamp(from.getTime()).toString();
+            String toValue = new java.sql.Timestamp(to.getTime()).toString();
+
+            fromValue = fromValue.replace(" ", "T");
+            toValue = toValue.replace(" ", "T");
+
             Study study = template(Study.class);
-            Filter filter = refine(study).on(study.getPublicationDate()).hasRange(from, to);
+            Filter filter = refine(study).on(study.getPublicationDate()).hasRange(fromValue, toValue);
             return getPussycatSession(session).performRendering(getRenderletNexus(session), filter);
         }
         catch (ParseException e) {
@@ -198,12 +204,18 @@ public class PussycatGOCIController {
         double pvalue = mantissaNum*Math.pow(10, exponentNum);
 
         try {
-            DateFormat df = new SimpleDateFormat("YYYY/MM");
-            Date from = df.parse("2005/01");
-            Date to = df.parse(year + "/" + month);
+            DateFormat df = new SimpleDateFormat("YYYY-MM-DD");
+            Date from = df.parse("2005-01-01");
+            Date to = df.parse(year + "-" + month + "-01");
+
+            String fromValue = new java.sql.Timestamp(from.getTime()).toString();
+            String toValue = new java.sql.Timestamp(to.getTime()).toString();
+
+            fromValue = fromValue.replace(" ", "T");
+            toValue = toValue.replace(" ", "T");
 
             Study study = template(Study.class);
-            Filter dateFilter = refine(study).on(study.getPublicationDate()).hasRange(from, to);
+            Filter dateFilter = refine(study).on(study.getPublicationDate()).hasRange(fromValue, toValue);
             getRenderletNexus(session).setRenderingContext(dateFilter);
 
             Association association = template(Association.class);

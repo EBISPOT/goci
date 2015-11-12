@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.sparql.pussycat.query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
 import uk.ac.ebi.spot.goci.pussycat.layout.BandInformation;
@@ -68,7 +69,7 @@ public class QueryManager {
             return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual);
 
         }
-        else {
+        else if(filters.size() == 1){
             for(Filter filter : filters){
                 if(filter.getFilteredType().equals(Association.class)){
                     Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual,filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
@@ -82,7 +83,41 @@ public class QueryManager {
                             bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
 
                 }
+                else if(filter.getFilteredType().equals(Study.class)){
+                    Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual,filter.getFilteredRange().to(), filter.getFilteredRange().from());
+                    if (retrieved != null) {
+                        return (Set<URI>) retrieved;
+                    }
+
+                    results.addAll(sparqlTemplate.query(SparqlQueries.ASSOCIATIONS_IN_BAND_DATE_FILTER, new URIMapper("association"),
+                            bandIndividual, filter.getFilteredRange().to(), filter.getFilteredRange().from()));
+                    return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate,
+                            bandIndividual, filter.getFilteredRange().to(), filter.getFilteredRange().from());
+
+                }
             }
+        }
+        else{
+            Object pval_min = null, pval_max = null, date_min = null, date_max = null;
+            for (Filter filter : filters) {
+                if (filter.getFilteredType().equals(Association.class)) {
+                    pval_min = filter.getFilteredValues().get(0);
+                    pval_max = filter.getFilteredValues().get(1);
+                }
+                else if(filter.getFilteredType().equals(Study.class)){
+                    date_min = filter.getFilteredRange().from();
+                    date_max = filter.getFilteredRange().to();
+                }
+            }
+            Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual, pval_max, pval_min, date_max, date_min);
+            if (retrieved != null) {
+                return (Set<URI>) retrieved;
+            }
+
+            results.addAll(sparqlTemplate.query(SparqlQueries.ASSOCIATIONS_IN_BAND_PVALUE_DATE_FILTER, new URIMapper("association"),
+                    bandIndividual, pval_max, pval_min, date_max, date_min));
+            return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate,
+                    bandIndividual, pval_max, pval_min, date_max, date_min);
         }
 
         return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual);
@@ -103,21 +138,57 @@ public class QueryManager {
             return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandName);
 
         }
-        else {
+        else if(filters.size() == 1){
             for(Filter filter : filters){
                 if(filter.getFilteredType().equals(Association.class)){
-                    Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandName, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+                    Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandName,filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
                     if (retrieved != null) {
                         return (Set<URI>) retrieved;
                     }
+
                     results.addAll(sparqlTemplate.query(SparqlQueries.ASSOCIATIONS_IN_BAND_NAME_PVALUE_FILTER, new URIMapper("association"),
                             bandName, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0)));
                     return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate,
                             bandName, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
 
                 }
+                else if(filter.getFilteredType().equals(Study.class)){
+                    Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandName,filter.getFilteredRange().to(), filter.getFilteredRange().from());
+                    if (retrieved != null) {
+                        return (Set<URI>) retrieved;
+                    }
+
+                    results.addAll(sparqlTemplate.query(SparqlQueries.ASSOCIATIONS_IN_BAND_NAME_DATE_FILTER, new URIMapper("association"),
+                            bandName, filter.getFilteredRange().to(), filter.getFilteredRange().from()));
+                    return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate,
+                            bandName, filter.getFilteredRange().to(), filter.getFilteredRange().from());
+
+                }
             }
         }
+        else{
+            Object pval_min = null, pval_max = null, date_min = null, date_max = null;
+            for (Filter filter : filters) {
+                if (filter.getFilteredType().equals(Association.class)) {
+                    pval_min = filter.getFilteredValues().get(0);
+                    pval_max = filter.getFilteredValues().get(1);
+                }
+                else if(filter.getFilteredType().equals(Study.class)){
+                    date_min = filter.getFilteredRange().from();
+                    date_max = filter.getFilteredRange().to();
+                }
+            }
+            Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandName, pval_max, pval_min, date_max, date_min);
+            if (retrieved != null) {
+                return (Set<URI>) retrieved;
+            }
+
+            results.addAll(sparqlTemplate.query(SparqlQueries.ASSOCIATIONS_IN_BAND_NAME_PVALUE_DATE_FILTER, new URIMapper("association"),
+                    bandName, pval_max, pval_min, date_max, date_min));
+            return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate,
+                    bandName, pval_max, pval_min, date_max, date_min);
+        }
+
         return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate, bandName);
     }
 
@@ -134,21 +205,57 @@ public class QueryManager {
             return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual);
 
         }
-        else {
+        else if(filters.size() == 1){
             for(Filter filter : filters){
                 if(filter.getFilteredType().equals(Association.class)){
-                    Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+                    Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual,filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
                     if (retrieved != null) {
                         return (Set<URI>) retrieved;
                     }
-                    results.addAll(sparqlTemplate.query(SparqlQueries.TRAITS_IN_BAND_PVALUE_FILTER, new URIMapper("trait"),
+
+                    results.addAll(sparqlTemplate.query(SparqlQueries.TRAITS_IN_BAND_NAME_PVALUE_FILTER, new URIMapper("trait"),
                             bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0)));
                     return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate,
                             bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
 
                 }
+                else if(filter.getFilteredType().equals(Study.class)){
+                    Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual,filter.getFilteredRange().to(), filter.getFilteredRange().from());
+                    if (retrieved != null) {
+                        return (Set<URI>) retrieved;
+                    }
+
+                    results.addAll(sparqlTemplate.query(SparqlQueries.TRAITS_IN_BAND_DATE_FILTER, new URIMapper("trait"),
+                            bandIndividual, filter.getFilteredRange().to(), filter.getFilteredRange().from()));
+                    return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate,
+                            bandIndividual, filter.getFilteredRange().to(), filter.getFilteredRange().from());
+
+                }
             }
         }
+        else{
+            Object pval_min = null, pval_max = null, date_min = null, date_max = null;
+            for (Filter filter : filters) {
+                if (filter.getFilteredType().equals(Association.class)) {
+                    pval_min = filter.getFilteredValues().get(0);
+                    pval_max = filter.getFilteredValues().get(1);
+                }
+                else if(filter.getFilteredType().equals(Study.class)){
+                    date_min = filter.getFilteredRange().from();
+                    date_max = filter.getFilteredRange().to();
+                }
+            }
+            Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual, pval_max, pval_min, date_max, date_min);
+            if (retrieved != null) {
+                return (Set<URI>) retrieved;
+            }
+
+            results.addAll(sparqlTemplate.query(SparqlQueries.TRAITS_IN_BAND_PVALUE_DATE_FILTER, new URIMapper("trait"),
+                    bandIndividual, pval_max, pval_min, date_max, date_min));
+            return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate,
+                    bandIndividual, pval_max, pval_min, date_max, date_min);
+        }
+
 
         return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandIndividual);
     }
@@ -166,10 +273,10 @@ public class QueryManager {
             return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandName);
 
         }
-        else {
+        else if(filters.size() == 1){
             for(Filter filter : filters){
                 if(filter.getFilteredType().equals(Association.class)){
-                    Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandName, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+                    Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandName,filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
                     if (retrieved != null) {
                         return (Set<URI>) retrieved;
                     }
@@ -180,7 +287,41 @@ public class QueryManager {
                             bandName, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
 
                 }
+                else if(filter.getFilteredType().equals(Study.class)){
+                    Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandName,filter.getFilteredRange().to(), filter.getFilteredRange().from());
+                    if (retrieved != null) {
+                        return (Set<URI>) retrieved;
+                    }
+
+                    results.addAll(sparqlTemplate.query(SparqlQueries.TRAITS_IN_BAND_NAME_DATE_FILTER, new URIMapper("trait"),
+                            bandName, filter.getFilteredRange().to(), filter.getFilteredRange().from()));
+                    return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate,
+                            bandName, filter.getFilteredRange().to(), filter.getFilteredRange().from());
+
+                }
             }
+        }
+        else{
+            Object pval_min = null, pval_max = null, date_min = null, date_max = null;
+            for (Filter filter : filters) {
+                if (filter.getFilteredType().equals(Association.class)) {
+                    pval_min = filter.getFilteredValues().get(0);
+                    pval_max = filter.getFilteredValues().get(1);
+                }
+                else if(filter.getFilteredType().equals(Study.class)){
+                    date_min = filter.getFilteredRange().from();
+                    date_max = filter.getFilteredRange().to();
+                }
+            }
+            Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandName, pval_max, pval_min, date_max, date_min);
+            if (retrieved != null) {
+                return (Set<URI>) retrieved;
+            }
+
+            results.addAll(sparqlTemplate.query(SparqlQueries.TRAITS_IN_BAND_NAME_PVALUE_DATE_FILTER, new URIMapper("trait"),
+                    bandName, pval_max, pval_min, date_max, date_min));
+            return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate,
+                    bandName, pval_max, pval_min, date_max, date_min);
         }
         return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate, bandName);
     }
@@ -204,20 +345,55 @@ public class QueryManager {
             }
             return cache(results, "getTraitsOrderedByIdentificationDateForBand", sparqlTemplate, bandIndividual);
         }
-        else {
+        else if(filters.size() == 1){
             for(Filter filter : filters){
                 if(filter.getFilteredType().equals(Association.class)){
-                    Object retrieved = checkCache("getTraitsOrderedByIdentificationDateForBand", sparqlTemplate, bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+                    Object retrieved = checkCache("getTraitsOrderedByIdentificationDateForBand", sparqlTemplate, bandIndividual,filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
                     if (retrieved != null) {
                         return (List<URI>) retrieved;
                     }
+
                     results.addAll(sparqlTemplate.query(SparqlQueries.DATE_OF_TRAIT_ID_FOR_BAND_PVALUE_FILTER, new URIMapper("trait"),
                             bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0)));
                     return cache(results, "getTraitsOrderedByIdentificationDateForBand", sparqlTemplate,
                             bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
 
                 }
+                else if(filter.getFilteredType().equals(Study.class)){
+                    Object retrieved = checkCache("getTraitsOrderedByIdentificationDateForBand", sparqlTemplate, bandIndividual,filter.getFilteredRange().to(), filter.getFilteredRange().from());
+                    if (retrieved != null) {
+                        return (List<URI>) retrieved;
+                    }
+
+                    results.addAll(sparqlTemplate.query(SparqlQueries.DATE_OF_TRAIT_ID_FOR_BAND_DATE_FILTER, new URIMapper("trait"),
+                            bandIndividual, filter.getFilteredRange().to(), filter.getFilteredRange().from()));
+                    return cache(results, "getTraitsOrderedByIdentificationDateForBand", sparqlTemplate,
+                            bandIndividual, filter.getFilteredRange().to(), filter.getFilteredRange().from());
+
+                }
             }
+        }
+        else{
+            Object pval_min = null, pval_max = null, date_min = null, date_max = null;
+            for (Filter filter : filters) {
+                if (filter.getFilteredType().equals(Association.class)) {
+                    pval_min = filter.getFilteredValues().get(0);
+                    pval_max = filter.getFilteredValues().get(1);
+                }
+                else if(filter.getFilteredType().equals(Study.class)){
+                    date_min = filter.getFilteredRange().from();
+                    date_max = filter.getFilteredRange().to();
+                }
+            }
+            Object retrieved = checkCache("getTraitsOrderedByIdentificationDateForBand", sparqlTemplate, bandIndividual, pval_max, pval_min, date_max, date_min);
+            if (retrieved != null) {
+                return (List<URI>) retrieved;
+            }
+
+            results.addAll(sparqlTemplate.query(SparqlQueries.DATE_OF_TRAIT_ID_FOR_BAND_PVALUE_DATE_FILTER, new URIMapper("trait"),
+                    bandIndividual, pval_max, pval_min, date_max, date_min));
+            return cache(results, "getTraitsOrderedByIdentificationDateForBand", sparqlTemplate,
+                    bandIndividual, pval_max, pval_min, date_max, date_min);
         }
 
         return cache(results, "getTraitsOrderedByIdentificationDateForBand", sparqlTemplate, bandIndividual);
@@ -236,22 +412,56 @@ public class QueryManager {
             return cache(results, "getAssociationsForTrait", sparqlTemplate, trait);
 
         }
-        else {
+        else if(filters.size() == 1){
             for(Filter filter : filters){
                 if(filter.getFilteredType().equals(Association.class)){
-                    Object retrieved = checkCache("getAssociationsForTrait", sparqlTemplate, trait, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+                    Object retrieved = checkCache("getAssociationsForTrait", sparqlTemplate, trait ,filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
                     if (retrieved != null) {
                         return (Set<URI>) retrieved;
                     }
+
                     results.addAll(sparqlTemplate.query(SparqlQueries.ASSOCIATIONS_FOR_TRAIT_PVALUE_FILTER, new URIMapper("association"),
                             trait, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0)));
                     return cache(results, "getAssociationsForTrait", sparqlTemplate,
                             trait, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
 
                 }
+                else if(filter.getFilteredType().equals(Study.class)){
+                    Object retrieved = checkCache("getAssociationsForTrait", sparqlTemplate, trait,filter.getFilteredRange().to(), filter.getFilteredRange().from());
+                    if (retrieved != null) {
+                        return (Set<URI>) retrieved;
+                    }
+
+                    results.addAll(sparqlTemplate.query(SparqlQueries.ASSOCIATIONS_FOR_TRAIT_DATE_FILTER, new URIMapper("association"),
+                            trait, filter.getFilteredRange().to(), filter.getFilteredRange().from()));
+                    return cache(results, "getAssociationsForTrait", sparqlTemplate,
+                            trait, filter.getFilteredRange().to(), filter.getFilteredRange().from());
+
+                }
             }
         }
+        else{
+            Object pval_min = null, pval_max = null, date_min = null, date_max = null;
+            for (Filter filter : filters) {
+                if (filter.getFilteredType().equals(Association.class)) {
+                    pval_min = filter.getFilteredValues().get(0);
+                    pval_max = filter.getFilteredValues().get(1);
+                }
+                else if(filter.getFilteredType().equals(Study.class)){
+                    date_min = filter.getFilteredRange().from();
+                    date_max = filter.getFilteredRange().to();
+                }
+            }
+            Object retrieved = checkCache("getAssociationsForTrait", sparqlTemplate, trait, pval_max, pval_min, date_max, date_min);
+            if (retrieved != null) {
+                return (Set<URI>) retrieved;
+            }
 
+            results.addAll(sparqlTemplate.query(SparqlQueries.ASSOCIATIONS_FOR_TRAIT_PVALUE_DATE_FILTER, new URIMapper("association"),
+                    trait, pval_max, pval_min, date_max, date_min));
+            return cache(results, "getAssociationsForTrait", sparqlTemplate,
+                    trait, pval_max, pval_min, date_max, date_min);
+        }
         return cache(results, "getAssociationsForTrait", sparqlTemplate, trait);
     }
 
@@ -274,20 +484,55 @@ public class QueryManager {
             }
             return cache(results, "getAssociationsForTraitInBand", sparqlTemplate, trait, bandIndividual);
         }
-        else {
+        else if(filters.size() == 1){
             for(Filter filter : filters){
                 if(filter.getFilteredType().equals(Association.class)){
-                    Object retrieved = checkCache("getAssociationsForTraitInBand", sparqlTemplate, trait, bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+                    Object retrieved = checkCache("getAssociationsForTraitInBand", sparqlTemplate, bandIndividual,filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
                     if (retrieved != null) {
                         return (List<URI>) retrieved;
                     }
+
                     results.addAll(sparqlTemplate.query(SparqlQueries.ASSOCIATIONS_FOR_TRAIT_AND_BAND_PVALUE_FILTER, new URIMapper("association"),
-                                                        trait, bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0)));
+                            bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0)));
                     return cache(results, "getAssociationsForTraitInBand", sparqlTemplate,
-                                 trait, bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+                            bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+
+                }
+                else if(filter.getFilteredType().equals(Study.class)){
+                    Object retrieved = checkCache("getAssociationsForTraitInBand", sparqlTemplate, bandIndividual,filter.getFilteredRange().to(), filter.getFilteredRange().from());
+                    if (retrieved != null) {
+                        return (List<URI>) retrieved;
+                    }
+
+                    results.addAll(sparqlTemplate.query(SparqlQueries.ASSOCIATIONS_FOR_TRAIT_AND_BAND_DATE_FILTER, new URIMapper("association"),
+                            bandIndividual, filter.getFilteredRange().to(), filter.getFilteredRange().from()));
+                    return cache(results, "getAssociationsForTraitInBand", sparqlTemplate,
+                            bandIndividual, filter.getFilteredRange().to(), filter.getFilteredRange().from());
 
                 }
             }
+        }
+        else{
+            Object pval_min = null, pval_max = null, date_min = null, date_max = null;
+            for (Filter filter : filters) {
+                if (filter.getFilteredType().equals(Association.class)) {
+                    pval_min = filter.getFilteredValues().get(0);
+                    pval_max = filter.getFilteredValues().get(1);
+                }
+                else if(filter.getFilteredType().equals(Study.class)){
+                    date_min = filter.getFilteredRange().from();
+                    date_max = filter.getFilteredRange().to();
+                }
+            }
+            Object retrieved = checkCache("getAssociationsForTraitInBand", sparqlTemplate, bandIndividual, pval_max, pval_min, date_max, date_min);
+            if (retrieved != null) {
+                return (List<URI>) retrieved;
+            }
+
+            results.addAll(sparqlTemplate.query(SparqlQueries.ASSOCIATIONS_FOR_TRAIT_AND_BAND_PVALUE_DATE_FILTER, new URIMapper("association"),
+                    bandIndividual, pval_max, pval_min, date_max, date_min));
+            return cache(results, "getAssociationsForTraitInBand", sparqlTemplate,
+                    bandIndividual, pval_max, pval_min, date_max, date_min);
         }
 
         return cache(results, "getAssociationsForTraitInBand", sparqlTemplate, trait, bandIndividual);
