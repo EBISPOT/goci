@@ -38,13 +38,7 @@ public class StudyOperationsService {
 
         // For the study check all SNPs have been checked
         Collection<Association> associations = associationRepository.findByStudyId(study.getId());
-        int snpsNotChecked = 0;
-        for (Association association : associations) {
-            // If we have one that is not checked set value
-            if (!association.getSnpChecked()) {
-                snpsNotChecked = 1;
-            }
-        }
+        int snpsNotChecked = studyAssociationCheck(associations);
 
         CurationStatus currentStudyStatus = study.getHousekeeping().getCurationStatus();
 
@@ -100,5 +94,18 @@ public class StudyOperationsService {
         }
 
         return message;
+    }
+
+
+    public int studyAssociationCheck(Collection<Association> associations){
+        int snpsNotChecked = 0;
+        for (Association association : associations) {
+            // If we have one that is not checked set value
+            if (!association.getSnpChecked()) {
+                snpsNotChecked = 1;
+            }
+        }
+
+        return snpsNotChecked;
     }
 }
