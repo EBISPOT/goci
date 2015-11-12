@@ -34,7 +34,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
         this.renderlets = new HashSet<Renderlet>();
         this.entityLocations = new HashMap<Object, SVGArea>();
         this.renderedEntities = new LinkedHashMap<Object, RenderingEvent>();
-        this.svgDocument = new SVGDocument(0, 150);
+        this.svgDocument = new SVGDocument(0, 200);
         this.filters = new ArrayList<Filter>();
         this.previousBandMapByContext = new HashMap<Object, Map<BandInformation, BandInformation>>();
         this.renderedBands = new HashMap<BandInformation, SVGArea>();
