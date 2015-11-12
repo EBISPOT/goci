@@ -204,17 +204,20 @@ public class PussycatGOCIController {
         double pvalue = mantissaNum*Math.pow(10, exponentNum);
 
         try {
-            DateFormat df = new SimpleDateFormat("YYYY-MM-DD");
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
             Date from = df.parse("2005-01-01");
             Date to = df.parse(year + "-" + month + "-01");
 
-            System.out.println(df.format(from));
+//            System.out.println(df.format(from));
 
-            String fromValue = new java.sql.Timestamp(from.getTime()).toString();
-            String toValue = new java.sql.Timestamp(to.getTime()).toString();
+            String fromValue = df.format(from).toString();
+            String toValue = df.format(to).toString();
 
-            fromValue = fromValue.replace(" ", "T");
-            toValue = toValue.replace(" ", "T");
+            System.out.println(fromValue);
+            System.out.println(toValue);
+
+//            fromValue = fromValue.replace(" ", "T");
+//            toValue = toValue.replace(" ", "T");
 
             Study study = template(Study.class);
             Filter dateFilter = refine(study).on(study.getPublicationDate()).hasRange(fromValue, toValue);
