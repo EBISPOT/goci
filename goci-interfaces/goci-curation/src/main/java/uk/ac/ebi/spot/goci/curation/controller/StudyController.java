@@ -635,6 +635,9 @@ public class StudyController {
 
             // Handles status change
             String studySnpsNotApproved = studyService.updateStatus(status, study, currentStudyStatus);
+            study.getHousekeeping().setLastUpdateDate(new Date());
+            studyRepository.save(study);
+            
             redirectAttributes.addFlashAttribute("studySnpsNotApproved", studySnpsNotApproved);
         }
         return "redirect:" + statusAssignment.getUri();
