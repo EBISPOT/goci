@@ -12,20 +12,51 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
-import uk.ac.ebi.spot.goci.curation.model.*;
+import uk.ac.ebi.spot.goci.curation.model.Assignee;
+import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
+import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
+import uk.ac.ebi.spot.goci.curation.model.StudyAssociationTableView;
+import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 import uk.ac.ebi.spot.goci.curation.service.MailService;
 import uk.ac.ebi.spot.goci.curation.service.StudyAssociationTableViewService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
-import uk.ac.ebi.spot.goci.model.*;
-import uk.ac.ebi.spot.goci.repository.*;
+import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.CurationStatus;
+import uk.ac.ebi.spot.goci.model.Curator;
+import uk.ac.ebi.spot.goci.model.DiseaseTrait;
+import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.Ethnicity;
+import uk.ac.ebi.spot.goci.model.Housekeeping;
+import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.UnpublishReason;
+import uk.ac.ebi.spot.goci.repository.AssociationRepository;
+import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
+import uk.ac.ebi.spot.goci.repository.CuratorRepository;
+import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
+import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
+import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
+import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
+import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.repository.UnpublishReasonRepository;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by emma on 20/11/14.
@@ -637,7 +668,7 @@ public class StudyController {
             String studySnpsNotApproved = studyService.updateStatus(status, study, currentStudyStatus);
             study.getHousekeeping().setLastUpdateDate(new Date());
             studyRepository.save(study);
-            
+
             redirectAttributes.addFlashAttribute("studySnpsNotApproved", studySnpsNotApproved);
         }
         return "redirect:" + statusAssignment.getUri();
@@ -888,13 +919,14 @@ public class StudyController {
     // Curators
     @ModelAttribute("curators")
     public List<Curator> populateCurators(Model model) {
-        return curatorRepository.findAll();
+        return curatorRepository.findAll(sortByLastNameAsc());
     }
+
 
     // Curation statuses
     @ModelAttribute("curationstatuses")
     public List<CurationStatus> populateCurationStatuses(Model model) {
-        return curationStatusRepository.findAll();
+        return curationStatusRepository.findAll(sortByStatusAsc());
     }
 
     // Unpublish reasons
@@ -925,6 +957,14 @@ public class StudyController {
 
 
     /* Sorting options */
+
+    private Sort sortByLastNameAsc() {
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "lastName").ignoreCase());
+    }
+
+    private Sort sortByStatusAsc() {
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "status").ignoreCase());
+    }
 
     // Returns a Sort object which sorts disease traits in ascending order by trait, ignoring case
     private Sort sortByTraitAsc() {
