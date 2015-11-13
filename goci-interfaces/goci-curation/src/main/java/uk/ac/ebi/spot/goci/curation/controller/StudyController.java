@@ -678,16 +678,11 @@ public class StudyController {
         CurationStatus currentStudyStatus = study.getHousekeeping().getCurationStatus();
 
         // Save housekeeping returned from form straight away to save any curator entered details like notes etc
+        housekeeping.setLastUpdateDate(new Date());
         housekeepingRepository.save(housekeeping);
-        study.setHousekeeping(housekeeping);
-        studyRepository.save(study);
 
         // Update status
         String message = studyService.updateStatus(housekeeping.getCurationStatus(), study, currentStudyStatus);
-
-        // Establish whether user has set status to "Publish study" and "Send to NCBI"
-        // as corresponding dates will be set in housekeeping table
-        CurationStatus currentStatus = housekeeping.getCurationStatus();
 
         // Add save message
         if (message == null) {
