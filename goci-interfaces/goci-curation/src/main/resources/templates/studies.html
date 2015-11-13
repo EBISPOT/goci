@@ -32,6 +32,7 @@
 <div th:include="study_filter :: filter"></div>
 
 <br/>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
@@ -229,7 +230,7 @@
                     <td>
                         <p th:text="${study.housekeeping != null and study.housekeeping.curator !=null } ? ${study.housekeeping.curator.lastName} : ''"></p>
 
-         <!--               <div id="assignCuratorForm">
+                        <div id="assignCuratorForm">
 
                             <form class="form-inline" name="assignCuratorForm" role="form" method="post"
                                   th:action="@{/studies/{studyId}/assign(studyId=${study.id})}"
@@ -254,12 +255,13 @@
                                     </button>
                                 </div>
                             </form>
-                        </div>-->
+                        </div>
                     </td>
 
                     <td>
                         <p th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : ''"></p>
-                       <!-- <div id="assignStatusForm">
+
+                        <div id="assignStatusForm">
 
                             <form class="form-inline" name="assignStatusForm" role="form" method="post"
                                   th:action="@{/studies/{studyId}/status_update(studyId=${study.id})}"
@@ -288,7 +290,7 @@
                                     </button>
                                 </div>
                             </form>
-                        </div>-->
+                        </div>
                     </td>
 
                     <td th:text="${study.housekeeping !=null} ? ${study.housekeeping.notes} : ''"></td>
