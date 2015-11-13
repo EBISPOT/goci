@@ -32,7 +32,7 @@ public class StudyOperationsService {
         this.mailService = mailService;
     }
 
-    public String updateStatus(CurationStatus status, Study study) {
+    public String updateStatus(CurationStatus newStatus, Study study, CurationStatus currentStudyStatus) {
 
         String message = null;
 
@@ -40,11 +40,9 @@ public class StudyOperationsService {
         Collection<Association> associations = associationRepository.findByStudyId(study.getId());
         int snpsNotChecked = studyAssociationCheck(associations);
 
-        CurationStatus currentStudyStatus = study.getHousekeeping().getCurationStatus();
-
         // If the status has changed
-        if (status != currentStudyStatus) {
-            if (status != null && status.getStatus().equals("Publish study")) {
+        if (newStatus != null && newStatus != currentStudyStatus) {
+            if (newStatus.getStatus().equals("Publish study")) {
 
                 // If not checked redirect back to page and make no changes
                 if (snpsNotChecked == 1) {
@@ -52,19 +50,19 @@ public class StudyOperationsService {
                             + study.getAuthor() + ", "
                             + " pubmed = " + study.getPubmedId()
                             + ", please review before changing the status to "
-                            + status.getStatus();
+                            + newStatus.getStatus();
                 } else {
                     // If there is no existing publish date then update
                     if (study.getHousekeeping().getCatalogPublishDate() == null) {
                         Date publishDate = new Date();
                         study.getHousekeeping().setCatalogPublishDate(publishDate);
                     }
-                    study.getHousekeeping().setCurationStatus(status);
+                    study.getHousekeeping().setCurationStatus(newStatus);
                 }
             }
 
             //Set date and send email notification
-            if (status != null && status.getStatus().equals("Send to NCBI")) {
+            else if (newStatus.getStatus().equals("Send to NCBI")) {
                 // If not checked redirect back to page and make no changes
                 if (snpsNotChecked == 1) {
                     message = "Some SNP associations have not been checked for study: "
@@ -72,32 +70,38 @@ public class StudyOperationsService {
                             + ", " + " pubmed = "
                             + study.getPubmedId()
                             + ", please review before changing the status to "
-                            + status.getStatus();
+                            + newStatus.getStatus();
                 } else {
                     Date sendToNCBIDate = new Date();
                     study.getHousekeeping().setSendToNCBIDate(sendToNCBIDate);
-                    mailService.sendEmailNotification(study, status.getStatus());
-                    study.getHousekeeping().setCurationStatus(status);
+                    mailService.sendEmailNotification(study, newStatus.getStatus());
+                    study.getHousekeeping().setCurationStatus(newStatus);
                 }
             }
 
             // Send notification email to curators
-            if (status != null && status.getStatus().equals("Level 1 curation done")) {
-                mailService.sendEmailNotification(study, status.getStatus());
-                study.getHousekeeping().setCurationStatus(status);
+            else if (newStatus.getStatus().equals("Level 1 curation done")) {
+                mailService.sendEmailNotification(study, newStatus.getStatus());
+                study.getHousekeeping().setCurationStatus(newStatus);
+            } else {
+                study.getHousekeeping().setCurationStatus(newStatus);
             }
         }
 
         // Save our study if no errors
-        if (message == null) {
-            studyRepository.save(study);
+        if (message != null) {
+            study.getHousekeeping().setCurationStatus(currentStudyStatus);
         }
+
+        // Update last update date
+        study.getHousekeeping().setLastUpdateDate(new Date());
+        studyRepository.save(study);
 
         return message;
     }
 
 
-    public int studyAssociationCheck(Collection<Association> associations){
+    public int studyAssociationCheck(Collection<Association> associations) {
         int snpsNotChecked = 0;
         for (Association association : associations) {
             // If we have one that is not checked set value
