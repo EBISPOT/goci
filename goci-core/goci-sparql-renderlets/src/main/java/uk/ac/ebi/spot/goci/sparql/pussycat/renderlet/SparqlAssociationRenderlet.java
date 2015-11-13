@@ -106,14 +106,32 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
             throws DataIntegrityViolationException {
         BandInformation band = getBandInformation(sparqlTemplate, association);
         if (band != null) {
-            BandInformation previousBand = getPreviousBandMap(nexus, sparqlTemplate).get(band);
+            BandInformation current = band;
+            BandInformation previousBand = null;
+            boolean done = false;
 
-            // now find the traits in the previous band
-//            Set<URI> previousBandAssociations =
-//                    QueryManager.getCachingInstance().getAssociationsLocatedInCytogeneticBand(
-//                            sparqlTemplate,
-//                            previousBand.getBandName());
-//            return previousBandAssociations.size();
+            while (!done) {
+                previousBand = getPreviousBandMap(nexus, sparqlTemplate).get(current);
+
+                // now find the traits in the previous band
+                Set<URI> previousBandAssociations =
+                        QueryManager.getCachingInstance().getAssociationsLocatedInCytogeneticBand(
+                                sparqlTemplate,
+                                previousBand.getBandName(),
+                                nexus.getRenderingContext());
+
+                // get first not-null location for an association in the previous band
+                for (URI previousBandAssociation : previousBandAssociations) {
+                    SVGArea prevLocation = nexus.getLocationOfRenderedEntity(previousBandAssociation);
+                    if (prevLocation != null) {
+                        done = true;
+                    }
+                }
+                current = previousBand;
+
+            }
+
+
             Set<URI> previousBandTraits =
                     QueryManager.getCachingInstance().getTraitsLocatedInCytogeneticBand(sparqlTemplate,
                                                                                         previousBand.getBandName(),
