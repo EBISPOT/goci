@@ -281,7 +281,8 @@
                                             <option value=""></option>
                                             <option th:each="curationStatus : ${curationstatuses}"
                                                     th:value="${curationStatus.id}"
-                                                    th:text="${curationStatus.status}"></option>
+                                                    th:text="${curationStatus.status}"
+                                                    th:unless="${curationStatus.status} == 'Unpublished from catalog'"></option>
                                         </select>
                                     </div>
 
