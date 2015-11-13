@@ -612,6 +612,7 @@ public class StudyController {
 
             // Set new curator
             study.getHousekeeping().setCurator(curator);
+            study.getHousekeeping().setLastUpdateDate(new Date());
             studyRepository.save(study);
         }
         return "redirect:" + assignee.getUri();
