@@ -107,7 +107,6 @@ function processAssociationSummary(data, name){
             //build EFO term search and link
 
             var link = null;
-            
             if(summary.efoLink != null){
                 var efoterms = summary.efoLink;
 
