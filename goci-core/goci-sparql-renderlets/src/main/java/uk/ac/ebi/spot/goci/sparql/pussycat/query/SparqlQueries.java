@@ -89,7 +89,7 @@ public class SparqlQueries {
         public static final String TRAITS_IN_BAND_DATE_FILTER =
                 "SELECT ?trait ?band " +
                         "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait ; ro:part_of ?study . " +
-                        "?snp ro:located_in ?band ; " +
+                        "?snp ro:located_in ?band . " +
                         "?study gt:has_publication_date ?date . " +
                         "FILTER (?band = ??)" +
                         "FILTER (?date < ??) " +
@@ -97,7 +97,7 @@ public class SparqlQueries {
         public static final String TRAITS_IN_BAND_PVALUE_DATE_FILTER =
                 "SELECT ?trait ?band " +
                         "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait ; gt:has_p_value ?pvalue ; ro:part_of ?study . " +
-                        "?snp ro:located_in ?band ; " +
+                        "?snp ro:located_in ?band . " +
                         "?study gt:has_publication_date ?date . " +
                         "FILTER (?band = ??)" +
                         "FILTER (?pvalue < ??) " +
