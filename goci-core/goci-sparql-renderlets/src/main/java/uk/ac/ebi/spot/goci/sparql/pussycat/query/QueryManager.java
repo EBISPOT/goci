@@ -213,7 +213,7 @@ public class QueryManager {
                         return (Set<URI>) retrieved;
                     }
 
-                    results.addAll(sparqlTemplate.query(SparqlQueries.TRAITS_IN_BAND_NAME_PVALUE_FILTER, new URIMapper("trait"),
+                    results.addAll(sparqlTemplate.query(SparqlQueries.TRAITS_IN_BAND_PVALUE_FILTER, new URIMapper("trait"),
                             bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0)));
                     return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate,
                             bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));

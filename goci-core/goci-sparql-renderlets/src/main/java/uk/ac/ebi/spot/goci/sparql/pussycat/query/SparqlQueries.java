@@ -90,6 +90,7 @@ public class SparqlQueries {
                 "SELECT ?trait ?band " +
                         "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait ; ro:part_of ?study . " +
                         "?snp ro:located_in ?band ; " +
+                        "?study gt:has_publication_date ?date . " +
                         "FILTER (?band = ??)" +
                         "FILTER (?date < ??) " +
                         "FILTER (?date >= ??) }";
@@ -97,6 +98,7 @@ public class SparqlQueries {
                 "SELECT ?trait ?band " +
                         "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait ; gt:has_p_value ?pvalue ; ro:part_of ?study . " +
                         "?snp ro:located_in ?band ; " +
+                        "?study gt:has_publication_date ?date . " +
                         "FILTER (?band = ??)" +
                         "FILTER (?pvalue < ??) " +
                         "FILTER (?pvalue >= ??) " +
@@ -121,6 +123,7 @@ public class SparqlQueries {
                         "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait ; ro:part_of ?study . " +
                         "?snp ro:located_in ?bandUri . " +
                         "?bandUri rdfs:label ?band . " +
+                        "?study gt:has_publication_date ?date . " +
                         "FILTER (?band = ??) " +
                         "FILTER (?date < ??) " +
                         "FILTER (?date >= ??) }";
@@ -129,6 +132,7 @@ public class SparqlQueries {
                         "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait ; gt:has_p_value ?pvalue ; ro:part_of ?study . " +
                         "?snp ro:located_in ?bandUri . " +
                         "?bandUri rdfs:label ?band . " +
+                        "?study gt:has_publication_date ?date . " +
                         "FILTER (?band = ??) " +
                         "FILTER (?pvalue < ??) " +
                         "FILTER (?pvalue >= ??) " +
@@ -157,12 +161,10 @@ public class SparqlQueries {
         public static final String DATE_OF_TRAIT_ID_FOR_BAND_DATE_FILTER  =
                 "SELECT DISTINCT ?trait (min(?date) as ?first) " +
                         "WHERE { " +
-                        "?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait ; ro:part_of ?study ; gt:has_p_value ?pvalue. " +
+                        "?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait ; ro:part_of ?study. " +
                         "?study gt:has_publication_date ?date . " +
                         "?snp ro:located_in ?band . " +
                         "FILTER ( ?band = ?? ) " +
-                        "FILTER (?pvalue < ??) " +
-                        "FILTER (?pvalue >= ??)} " +
                         "FILTER (?date < ??) " +
                         "FILTER (?date >= ??) " +
                         "GROUP BY ?trait " +
