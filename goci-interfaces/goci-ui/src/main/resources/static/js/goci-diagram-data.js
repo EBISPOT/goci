@@ -105,22 +105,27 @@ function processAssociationSummary(data, name){
             row.append($("<td class='center'>").html(pval));
 
             //build EFO term search and link
-            var efoterms = summary.efoLink;
 
-            if(efoterms.length > 1){
-                for(var j = 0; j < efoterms.length; j++){
-                    console.log(efoterms[j]);
-                    if(efoterms[j].indexOf(name) != -1){
-                        var link = efoterms[j];
+            var link = null;
+            
+            if(summary.efoLink != null){
+                var efoterms = summary.efoLink;
+
+                if(efoterms.length > 1){
+                    for(var j = 0; j < efoterms.length; j++){
+                        console.log(efoterms[j]);
+                        if(efoterms[j].indexOf(name) != -1){
+                            var efoLink = efoterms[j];
+                        }
                     }
                 }
-            }
-            else {
-                var link = efoterms[0];
+                else {
+                    var efoLink = efoterms[0];
+                }
+                link = "<a href='".concat(efoLink.split("|")[2]).concat("' target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
             }
 
             var efosearch = "<span><a href='search?query=".concat(name).concat("'  target='_blank'>").concat(name).concat("</a></span>");
-            var link = "<a href='".concat(link.split("|")[2]).concat("' target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
 
             row.append($("<td class='center'>").html(efosearch.concat('&nbsp;&nbsp;').concat(link)));
 
