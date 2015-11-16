@@ -404,6 +404,12 @@ EIM: Extraintestinal manifestations
 EM: Elated mania
 
 
+ER +ve: Estrogen receptor positive
+
+
+ER -ve: Estrogen receptor negative
+
+
 ET-1: Endothelin-1
 
 
