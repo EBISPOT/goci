@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import uk.ac.ebi.spot.goci.component.EnsemblDbsnpVersion;
+import uk.ac.ebi.spot.goci.component.EnsemblGenomeBuildVersion;
 import uk.ac.ebi.spot.goci.component.EnsemblRelease;
 import uk.ac.ebi.spot.goci.curation.service.MailService;
 import uk.ac.ebi.spot.goci.model.MappingMetadata;
@@ -27,6 +29,10 @@ public class NightlyEnsemblReleaseCheck {
 
     private EnsemblRelease ensemblRelease;
 
+    private EnsemblGenomeBuildVersion ensemblGenomeBuildVersion;
+
+    private EnsemblDbsnpVersion ensemblDbsnpVersion;
+
     private MappingMetadataRepository mappingMetadataRepository;
 
     private MailService mailService;
@@ -35,12 +41,17 @@ public class NightlyEnsemblReleaseCheck {
 
     @Autowired
     public NightlyEnsemblReleaseCheck(EnsemblRelease ensemblRelease,
-                                      MappingMetadataRepository mappingMetadataRepository,
-                                      MailService mailService, MappingService mappingService) {
+                                      EnsemblGenomeBuildVersion ensemblGenomeBuildVersion,
+                                      EnsemblDbsnpVersion ensemblDbsnpVersion,
+                                      MailService mailService,
+                                      MappingService mappingService,
+                                      MappingMetadataRepository mappingMetadataRepository) {
         this.ensemblRelease = ensemblRelease;
-        this.mappingMetadataRepository = mappingMetadataRepository;
+        this.ensemblGenomeBuildVersion = ensemblGenomeBuildVersion;
+        this.ensemblDbsnpVersion = ensemblDbsnpVersion;
         this.mailService = mailService;
         this.mappingService = mappingService;
+        this.mappingMetadataRepository = mappingMetadataRepository;
     }
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -49,10 +60,17 @@ public class NightlyEnsemblReleaseCheck {
         return log;
     }
 
-    // Scheduled for weekdays 22.00
+    /**
+     * Method used to determine if there has been a new Ensembl release
+     */
     @Scheduled(cron = "0 00 22 ? * MON-FRI")
     public void checkRelease() {
+
+        // Get relevant metadata
         int latestEnsemblReleaseNumber = ensemblRelease.getReleaseVersion();
+        String genomeBuildVersion = ensemblGenomeBuildVersion.getGenomeBuildVersion();
+        int dbsnpVersion = ensemblDbsnpVersion.getDbsnpVersion();
+
         String performer = "Release " + latestEnsemblReleaseNumber + " mapping";
 
         List<MappingMetadata> mappingMetadataList = mappingMetadataRepository.findAll(sortByUsageStartDateDesc());
@@ -61,7 +79,7 @@ public class NightlyEnsemblReleaseCheck {
         if (mappingMetadataList.isEmpty()) {
             getLog().info("No mapping metadata found, adding information to database and mapping data to release " +
                                   latestEnsemblReleaseNumber);
-            createMappingMetaData(latestEnsemblReleaseNumber);
+            createMappingMetaData(latestEnsemblReleaseNumber, genomeBuildVersion, dbsnpVersion);
 
             // Send email
             mailService.sendReleaseChangeEmail(null,
@@ -79,7 +97,7 @@ public class NightlyEnsemblReleaseCheck {
                 if (currentEnsemblReleaseNumberInDatabase < latestEnsemblReleaseNumber) {
 
                     // Create new entry in mapping_metadata table
-                    createMappingMetaData(latestEnsemblReleaseNumber);
+                    createMappingMetaData(latestEnsemblReleaseNumber, genomeBuildVersion, dbsnpVersion);
 
                     // Send email
                     mailService.sendReleaseChangeEmail(currentEnsemblReleaseNumberInDatabase,
@@ -108,11 +126,17 @@ public class NightlyEnsemblReleaseCheck {
     /**
      * Method used to create and save new Ensembl release details in the database
      *
-     * @param latestEnsemblReleaseNumber the latest Ensembl release number returned from Ensembl API
+     * @param ensemblReleaseNumber the latest Ensembl release number returned from Ensembl API
+     * @param genomeBuildVersion   the latest Genome build version returned from Ensembl API
+     * @param dbsnpVersion         the latest dbSNP version returned from Ensembl API
      */
-    private void createMappingMetaData(int latestEnsemblReleaseNumber) {
+    private void createMappingMetaData(int ensemblReleaseNumber,
+                                       String genomeBuildVersion,
+                                       int dbsnpVersion) {
         MappingMetadata newMappingMetadata = new MappingMetadata();
-        newMappingMetadata.setEnsemblReleaseNumber(latestEnsemblReleaseNumber);
+        newMappingMetadata.setEnsemblReleaseNumber(ensemblReleaseNumber);
+        newMappingMetadata.setGenomeBuildVersion(genomeBuildVersion);
+        newMappingMetadata.setDbsnpVersion(dbsnpVersion);
         newMappingMetadata.setUsageStartDate(new Date());
         mappingMetadataRepository.save(newMappingMetadata);
     }
