@@ -13,7 +13,7 @@
 
 === A
 
-AA: African-American
+AA: African ancestry
 
 
 AAM-BR: Age at menarche and buckling ratio
