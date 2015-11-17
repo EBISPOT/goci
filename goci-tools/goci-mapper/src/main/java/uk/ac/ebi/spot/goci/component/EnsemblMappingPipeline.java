@@ -229,7 +229,7 @@ public class EnsemblMappingPipeline {
      */
     private Region getRegion(String chromosome, String position) {
 
-        String band = "NA"; // Default value
+        String band = null; // Default value
         String rest_opt = "feature=band";
 
         // REST Call
