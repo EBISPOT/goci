@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.component;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONObject;
+import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.service.EnsemblRestService;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
  * @author Laurent
  * Class getting the Ensembl Genome build version from the Ensembl REST API
  */
+@Service
 public class EnsemblGenomeBuildVersion {
 
     private String genomeBuildVersion;

@@ -4,6 +4,7 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.service.EnsemblRestService;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
  * @author Laurent
  * Class getting the dbSNP version from the Ensembl REST API
  */
+@Service
 public class EnsemblDbsnpVersion {
 
     private int dbsnpVersion = 0;
