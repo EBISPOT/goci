@@ -134,14 +134,20 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                 Object from = values.from();
                 Object to = values.to();
 
+
+//            DateFormat df_output = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S");
+
+            String fromValue = from.toString();
+            String toValue = to.toString();
+
                 associationQueryString = associationQueryString.concat("?association ro:part_of ?study . ?study gt:has_publication_date ?date .");
                 traitQueryString = traitQueryString.concat("?association ro:part_of ?study . ?study gt:has_publication_date ?date . ");
 
-                associationFilters = associationFilters.concat("  FILTER ( ?date < '" + to + "'^^xsd:dateTime)")
-                        .concat("  FILTER ( ?date >= '" + from + "'^^xsd:dateTime)");
+                associationFilters = associationFilters.concat("  FILTER ( ?date < '" + toValue + "'^^xsd:dateTime)")
+                        .concat("  FILTER ( ?date >= '" + fromValue + "'^^xsd:dateTime)");
 
-                traitFilters = traitFilters.concat("  FILTER ( ?date < '" + to + "'^^xsd:dateTime)")
-                        .concat("  FILTER ( ?date >= '" + from +  "'^^xsd:dateTime)");
+                traitFilters = traitFilters.concat("  FILTER ( ?date < '" + toValue + "'^^xsd:dateTime)")
+                        .concat("  FILTER ( ?date >= '" + fromValue +  "'^^xsd:dateTime)");
 
             }
         }

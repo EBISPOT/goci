@@ -5,11 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -26,13 +22,12 @@ import java.net.URI;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import static uk.ac.ebi.spot.goci.pussycat.lang.Filtering.filter;
-import static uk.ac.ebi.spot.goci.pussycat.lang.Filtering.refine;
-import static uk.ac.ebi.spot.goci.pussycat.lang.Filtering.template;
+import static uk.ac.ebi.spot.goci.pussycat.lang.Filtering.*;
 
 /**
  * A MVC controller for Pussycat.  This controller can be used to create a new session, load ontology data and create
@@ -208,13 +203,21 @@ public class PussycatGOCIController {
             Date from = df_input.parse("2005-01-01");
             Date to = df_input.parse(year + "-" + month + "-01");
 
-            DateFormat df_output = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S");
+//            DateFormat df_output = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S");
+//
+//            String fromValue = df_output.format(from).toString();
+//            String toValue = df_output.format(to).toString();
 
-            String fromValue = df_output.format(from).toString();
-            String toValue = df_output.format(to).toString();
+            Calendar fromValue = Calendar.getInstance();
+            fromValue.setTime(from);
+
+            Calendar toValue = Calendar.getInstance();
+            toValue.setTime(to);
 
             Study study = template(Study.class);
             Filter dateFilter = refine(study).on(study.getPublicationDate()).hasRange(fromValue, toValue);
+//            Filter dateFilter = refine(study).on(study.getPublicationDate()).hasRange(from, to);
+
             getRenderletNexus(session).setRenderingContext(dateFilter);
 
             Association association = template(Association.class);
