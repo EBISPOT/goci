@@ -115,7 +115,7 @@ The GWAS Catalog data can be used under the standard terms of use for EBI servic
 
 ==== [[faq-5]]5. Which genome build is the Catalog on?
 
-Data in the GWAS Catalog is currently mapped to genome assembly GRCh38.p1 and dbSNP Build 142.
+Data in the GWAS Catalog is currently mapped to genome assembly GRCh38.p2 and dbSNP Build 144.
 
 ==== [[faq-6]]6. How can I access the GWAS Catalog data on alternative genome builds?
 
