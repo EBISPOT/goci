@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>goci-catalog-io</artifactId>
+    <artifactId>goci-ancestry-mapper</artifactId>
     <version>2.0.8-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>GOCI Catalog Import/Export</name>
-    <description>Generates various files from views of the database</description>
+    <name>GOCI Ancestry Mapper</name>
+    <description>Maps ancestry data in the GWAS Catalog to the ancestry ontology</description>
 
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
@@ -28,6 +28,10 @@
         </dependency>
 
         <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-ontology</artifactId>
+        </dependency>
+        <dependency>
             <groupId>commons-cli</groupId>
             <artifactId>commons-cli</artifactId>
         </dependency>
@@ -35,7 +39,7 @@
 
 
     <build>
-        <finalName>gwas-catalog-io</finalName>
+        <finalName>gwas-ancestry-mapper</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -46,7 +50,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <start-class>uk.ac.ebi.spot.goci.ImportExportApplication</start-class>
+        <start-class>uk.ac.ebi.spot.goci.GOCIAncestryMapperDriver</start-class>
         <java.version>1.8</java.version>
     </properties>
 

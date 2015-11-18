@@ -33,7 +33,7 @@ Nucleic Acids Research, 2014, Vol. 42 (Database issue): D1001-D1006. +
 
 == Licensing information
 
-The NHGRI-EBI GWAS Catalog and all its content are available under the general http://www.ebi.ac.uk/about/terms-of-use[Terms of Use for EMBL-EBI Services].
+The NHGRI-EBI GWAS Catalog and all its contents are available under the general http://www.ebi.ac.uk/about/terms-of-use[Terms of Use for EMBL-EBI Services].
 
 
 == Publications
