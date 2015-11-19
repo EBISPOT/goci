@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -436,24 +437,17 @@ public class SnpGenomicContextMappingService {
 
         // Check this ID is not linked to a gene with a different name
         else {
-            Collection<Gene> existingGenesLinkedToId = ensemblGene.getGene();
-            Collection<String> existingGeneNamesLinkedToId = new ArrayList<>();
+            Gene existingGeneLinkedToId = ensemblGene.getGene();
 
-            if (existingGenesLinkedToId != null && !existingGenesLinkedToId.isEmpty()) {
-                for (Gene existingGeneLinkedToId : existingGenesLinkedToId) {
-                    existingGeneNamesLinkedToId.add(existingGeneLinkedToId.getGeneName());
-                }
-
-                if (!existingGeneNamesLinkedToId.contains(geneName)) {
+            if (existingGeneLinkedToId != null) {
+                if (!Objects.equals(existingGeneLinkedToId.getGeneName(), geneName)) {
                     getLog().warn(
                             "Ensembl ID: " + id + ", is already used in database by a different gene(s): " +
-                                    existingGeneNamesLinkedToId.toString() + ". Will update so links to " + geneName);
+                                    existingGeneLinkedToId.getGeneName() + ". Will update so links to " + geneName);
 
-                    // For each of the genes already linked to this ensembl ID remove the ensembl ID
-                    for (Gene existingGene : existingGenesLinkedToId) {
-                        existingGene.setEnsemblGeneIds(new ArrayList<>());
-                        geneRepository.save(existingGene);
-                    }
+                    // For gene already linked to this ensembl ID remove the ensembl ID
+                    existingGeneLinkedToId.setEnsemblGeneIds(new ArrayList<>());
+                    geneRepository.save(existingGeneLinkedToId);
                 }
             }
         }
@@ -478,25 +472,17 @@ public class SnpGenomicContextMappingService {
 
         // Check this ID is not linked to a gene with a different name
         else {
+            Gene existingGeneLinkedToId = entrezGene.getGene();
 
-            Collection<Gene> existingGenesLinkedToId = entrezGene.getGene();
-            Collection<String> existingGeneNamesLinkedToId = new ArrayList<>();
-
-            if (existingGenesLinkedToId != null && !existingGenesLinkedToId.isEmpty()) {
-                for (Gene existingGeneLinkedToId : existingGenesLinkedToId) {
-                    existingGeneNamesLinkedToId.add(existingGeneLinkedToId.getGeneName());
-                }
-
-                if (!existingGeneNamesLinkedToId.contains(geneName)) {
+            if (existingGeneLinkedToId != null) {
+                if (!Objects.equals(existingGeneLinkedToId.getGeneName(), geneName)) {
                     getLog().warn(
                             "Entrez ID: " + id + ", is already used in database by a different gene(s): " +
-                                    existingGeneNamesLinkedToId.toString() + ". Will update so links to " + geneName);
+                                    existingGeneLinkedToId.getGeneName() + ". Will update so links to " + geneName);
 
-                    // For each of the genes already linked to this entrez ID remove the entrez ID
-                    for (Gene existingGene : existingGenesLinkedToId) {
-                        existingGene.setEntrezGeneIds(new ArrayList<>());
-                        geneRepository.save(existingGene);
-                    }
+                    // For gene already linked to this entrez ID remove the entrez ID
+                    existingGeneLinkedToId.setEntrezGeneIds(new ArrayList<>());
+                    geneRepository.save(existingGeneLinkedToId);
                 }
             }
         }
