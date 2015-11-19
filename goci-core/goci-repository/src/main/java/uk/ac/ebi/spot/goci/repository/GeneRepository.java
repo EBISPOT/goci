@@ -11,36 +11,34 @@ import java.util.List;
  * Created by emma on 01/12/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Repository accessing Gene entity object
  */
 @RepositoryRestResource
 public interface GeneRepository extends JpaRepository<Gene, Long> {
-   List<Gene> findByGeneNameIgnoreCase(String geneName);
+    List<Gene> findByGeneNameIgnoreCase(String geneName);
 
-   Collection<Gene> findByAuthorReportedFromLociAssociationStudyId(Long studyId);
+    Collection<Gene> findByAuthorReportedFromLociAssociationStudyId(Long studyId);
 
-   Collection<Gene> findByGenomicContextsSnpRiskAllelesLociAssociationStudyId(Long studyId);
+    Collection<Gene> findByGenomicContextsSnpRiskAllelesLociAssociationStudyId(Long studyId);
 
-   Collection<Gene> findByAuthorReportedFromLociStrongestRiskAllelesSnpId(Long snpId);
+    Collection<Gene> findByAuthorReportedFromLociStrongestRiskAllelesSnpId(Long snpId);
 
-   Collection<Gene> findByGenomicContextsSnpId(Long snpId);
+    Collection<Gene> findByGenomicContextsSnpId(Long snpId);
 
-   Collection<Gene> findByAuthorReportedFromLociAssociationId(Long associationId);
+    Collection<Gene> findByAuthorReportedFromLociAssociationId(Long associationId);
 
-   Collection<Gene> findByGenomicContextsSnpRiskAllelesLociAssociationId(Long associationId);
+    Collection<Gene> findByGenomicContextsSnpRiskAllelesLociAssociationId(Long associationId);
 
-   Collection<Gene> findByGenomicContextsSnpRiskAllelesLociAssociationStudyDiseaseTraitId(Long traitId);
+    Collection<Gene> findByGenomicContextsSnpRiskAllelesLociAssociationStudyDiseaseTraitId(Long traitId);
 
-   Collection<Gene> findByGenomicContextsSnpRiskAllelesLociAssociationEfoTraitsId(Long traitId);
+    Collection<Gene> findByGenomicContextsSnpRiskAllelesLociAssociationEfoTraitsId(Long traitId);
 
-   List<Gene> findByEnsemblGeneIdsEnsemblGeneId(String ensemblId);
+    ;
 
-   List<Gene> findByEntrezGeneIdsEntrezGeneId(String entrezId);
+    List<Gene> findByEnsemblGeneIdsId(Long id);
 
-   List<Gene> findByEnsemblGeneIdsId(Long id);
+    List<Gene> findByEntrezGeneIdsId(Long id);
 
-   List<Gene> findByEntrezGeneIdsId(Long id);
-
-   List<Gene> findByGeneName(String geneName);
+    List<Gene> findByGeneName(String geneName);
 }
