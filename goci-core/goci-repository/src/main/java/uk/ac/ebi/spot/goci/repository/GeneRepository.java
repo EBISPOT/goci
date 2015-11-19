@@ -34,8 +34,6 @@ public interface GeneRepository extends JpaRepository<Gene, Long> {
 
     Collection<Gene> findByGenomicContextsSnpRiskAllelesLociAssociationEfoTraitsId(Long traitId);
 
-    ;
-
     List<Gene> findByEnsemblGeneIdsId(Long id);
 
     List<Gene> findByEntrezGeneIdsId(Long id);
