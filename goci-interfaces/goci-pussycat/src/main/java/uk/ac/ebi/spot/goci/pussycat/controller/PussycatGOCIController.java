@@ -141,18 +141,21 @@ public class PussycatGOCIController {
         }
 
         try {
-            DateFormat df = new SimpleDateFormat("YYYY/MM");
-            Date from = df.parse("2005/01");
-            Date to = df.parse(year + "/" + month);
+            DateFormat df_input = new SimpleDateFormat("yyyy-MM-dd");
+            Date from = df_input.parse("2005-01-01");
+            Date to = df_input.parse(year + "-" + month + "-01");
 
-            String fromValue = new java.sql.Timestamp(from.getTime()).toString();
-            String toValue = new java.sql.Timestamp(to.getTime()).toString();
+            Calendar fromValue = Calendar.getInstance();
+            fromValue.setTime(from);
 
-            fromValue = fromValue.replace(" ", "T");
-            toValue = toValue.replace(" ", "T");
+            Calendar toValue = Calendar.getInstance();
+            toValue.setTime(to);
 
             Study study = template(Study.class);
             Filter filter = refine(study).on(study.getPublicationDate()).hasRange(fromValue, toValue);
+
+            getRenderletNexus(session).setRenderingContext(filter);
+
             return getPussycatSession(session).performRendering(getRenderletNexus(session), filter);
         }
         catch (ParseException e) {
@@ -203,11 +206,6 @@ public class PussycatGOCIController {
             Date from = df_input.parse("2005-01-01");
             Date to = df_input.parse(year + "-" + month + "-01");
 
-//            DateFormat df_output = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S");
-//
-//            String fromValue = df_output.format(from).toString();
-//            String toValue = df_output.format(to).toString();
-
             Calendar fromValue = Calendar.getInstance();
             fromValue.setTime(from);
 
@@ -216,7 +214,6 @@ public class PussycatGOCIController {
 
             Study study = template(Study.class);
             Filter dateFilter = refine(study).on(study.getPublicationDate()).hasRange(fromValue, toValue);
-//            Filter dateFilter = refine(study).on(study.getPublicationDate()).hasRange(from, to);
 
             getRenderletNexus(session).setRenderingContext(dateFilter);
 
@@ -231,6 +228,76 @@ public class PussycatGOCIController {
                     "use /gwasdiagram/timeseries/YYYY/MM", e);
             throw new RuntimeException("Bad date in URL /gwasdiagram/timeseries/" + year + "/" + month + " - " +
                     "use /gwasdiagram/timeseries/YYYY/MM", e);
+        }
+    }
+
+    @RequestMapping(value = "/gwasdiagram/timeseries/{start_year}/{start_month}/{end_year}/{end_mont}/{mantissa}/{exponent}")
+    public @ResponseBody String renderGWASDiagramFilteredDateRange(@PathVariable String start_year,
+                                                                    @PathVariable String start_month,
+                                                                    @PathVariable String end_year,
+                                                                    @PathVariable String end_month,
+                                                                    @PathVariable String mantissa,
+                                                                    @PathVariable String exponent,
+                                                                    HttpSession session)
+            throws PussycatSessionNotReadyException, NoRenderableDataException {
+        // get the subset of studies published before the supplied date
+        /*trait association'  and part_of some ('GWAS study' and has_publication_date some dateTime[< "  "^^dateTime])*/
+        getLog().debug("Received a new rendering request - " +
+                "putting together the query from year '" + start_year + "' and month '" + start_month + "' to year '" + end_year + "' and month '" + end_month + "'");
+
+        int startMonthVar = Integer.parseInt(start_month);
+        int startYearVar = Integer.parseInt(start_year);
+
+        int endMonthVar = Integer.parseInt(end_month);
+        int endYearVar = Integer.parseInt(end_year);
+
+        //API call provides date for "up to and including the end of" - must increment month for query
+        if (endMonthVar == 12) {
+            end_month = "01";
+            endYearVar++;
+            end_year = Integer.toString(endYearVar);
+        }
+        else {
+            endMonthVar++;
+            if (endMonthVar > 9) {
+               end_month = Integer.toString(endMonthVar);
+            }
+            else {
+                end_month = "0".concat(Integer.toString(endMonthVar));
+            }
+        }
+
+        int exponentNum = Integer.parseInt(exponent);
+        int mantissaNum = Integer.parseInt(mantissa);
+        double pvalue = mantissaNum*Math.pow(10, exponentNum);
+
+        try {
+            DateFormat df_input = new SimpleDateFormat("yyyy-MM-dd");
+            Date from = df_input.parse(start_year + "-" + start_month + "-01");
+            Date to = df_input.parse(end_year + "-" + end_month + "-01");
+
+            Calendar fromValue = Calendar.getInstance();
+            fromValue.setTime(from);
+
+            Calendar toValue = Calendar.getInstance();
+            toValue.setTime(to);
+
+            Study study = template(Study.class);
+            Filter dateFilter = refine(study).on(study.getPublicationDate()).hasRange(fromValue, toValue);
+
+            getRenderletNexus(session).setRenderingContext(dateFilter);
+
+            Association association = template(Association.class);
+            Filter pvalueFilter = refine(association).on(association.getPvalue()).hasValues(0.0, pvalue);
+            getRenderletNexus(session).setRenderingContext(pvalueFilter);
+
+            return getPussycatSession(session).performRendering(getRenderletNexus(session), dateFilter, pvalueFilter);
+        }
+        catch (ParseException e) {
+            getLog().error("Bad date in URL /gwasdiagram/timeseries/" + start_year + "/" + start_month + "/" + end_year + "/" + end_month +" - " +
+                    "use /gwasdiagram/timeseries/YYYY/MM/YYYY/MM", e);
+            throw new RuntimeException("Bad date in URL /gwasdiagram/timeseries/" + start_year + "/" + start_month + "/" + end_year + "/" + end_month +" - " +
+                    "use /gwasdiagram/timeseries/YYYY/MM/YYYY/MM", e);
         }
     }
 

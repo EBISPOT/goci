@@ -166,7 +166,7 @@ public class SparqlQueries {
                         "?snp ro:located_in ?band . " +
                         "FILTER ( ?band = ?? ) " +
                         "FILTER (?date < ??) " +
-                        "FILTER (?date >= ??) " +
+                        "FILTER (?date >= ??)} " +
                         "GROUP BY ?trait " +
                         "ORDER BY ?first";
         public static final String DATE_OF_TRAIT_ID_FOR_BAND_PVALUE_DATE_FILTER  =
@@ -177,9 +177,9 @@ public class SparqlQueries {
                         "?snp ro:located_in ?band . " +
                         "FILTER ( ?band = ?? ) " +
                         "FILTER (?pvalue < ??) " +
-                        "FILTER (?pvalue >= ??)} " +
+                        "FILTER (?pvalue >= ??) " +
                         "FILTER (?date < ??) " +
-                        "FILTER (?date >= ??) " +
+                        "FILTER (?date >= ??)} " +
                         "GROUP BY ?trait " +
                         "ORDER BY ?first";
     public static final String ASSOCIATIONS_FOR_TRAIT =

@@ -108,8 +108,11 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
 
         getLog().debug("Rendering SVG from SPARQL endpoint (filters = '" + filters + "')...");
 
-        String associationFilters = "";
-        String traitFilters = "";
+        String associationPvalueFilters = "";
+        String traitPvalueFilters = "";
+
+        String associationDateFilters = "";
+        String traitDateFilters = "";
 
         for(Filter filter : filters){
             if(filter.getFilteredType().equals(Association.class)){
@@ -127,24 +130,24 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
 //                traitFilters = traitFilters.concat("  FILTER ( ?pvalue < " + to + ")")
 //                                                    .concat("  FILTER ( ?pvalue >= " + from +  ")");
 
-                associationFilters = associationFilters.concat("  FILTER ( ?pvalue < ?? )")
+                associationPvalueFilters = associationPvalueFilters.concat("  FILTER ( ?pvalue < ?? )")
                         .concat("  FILTER ( ?pvalue >= ?? )");
 
-                traitFilters = traitFilters.concat("  FILTER ( ?pvalue < ?? )")
+                traitPvalueFilters = traitPvalueFilters.concat("  FILTER ( ?pvalue < ?? )")
                         .concat("  FILTER ( ?pvalue >= ?? )");
 
             }
             if(filter.getFilteredType().equals(Study.class)){
                 Filter.Range values = filter.getFilteredRange();
 
-                Object from = values.from();
-                Object to = values.to();
+//                Object from = values.from();
+//                Object to = values.to();
 
 
 //            DateFormat df_output = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S");
 
-            String fromValue = from.toString();
-            String toValue = to.toString();
+//            String fromValue = from.toString();
+//            String toValue = to.toString();
 
                 associationQueryString = associationQueryString.concat("?association ro:part_of ?study . ?study gt:has_publication_date ?date .");
                 traitQueryString = traitQueryString.concat("?association ro:part_of ?study . ?study gt:has_publication_date ?date . ");
@@ -155,15 +158,15 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
 //                traitFilters = traitFilters.concat("  FILTER ( ?date < '" + toValue + "'^^xsd:dateTime)")
 //                        .concat("  FILTER ( ?date >= '" + fromValue +  "'^^xsd:dateTime)");
 
-                associationFilters = associationFilters.concat("  FILTER ( ?date < ?? )")
-                        .concat("  FILTER ( ?date >= ?? )");
+                associationDateFilters = associationDateFilters.concat("  FILTER ( ?date < ?? ) ")
+                        .concat("  FILTER ( ?date >= ?? ) ");
 
-                traitFilters = traitFilters.concat("  FILTER ( ?date < ?? ")
-                        .concat("  FILTER ( ?date >= ?? ");
+                traitDateFilters = traitDateFilters.concat("  FILTER ( ?date < ?? ) ")
+                        .concat("  FILTER ( ?date >= ?? ) ");
             }
         }
-        associationQueryString = associationQueryString.concat(associationFilters).concat(associationQueryBandFilter);
-        traitQueryString = traitQueryString.concat(traitFilters).concat(" }");
+        associationQueryString = associationQueryString.concat(associationPvalueFilters).concat(associationDateFilters).concat(associationQueryBandFilter);
+        traitQueryString = traitQueryString.concat(traitPvalueFilters).concat(traitDateFilters).concat(" }");
 
         System.out.println(associationQueryString);
         System.out.println(traitQueryString);
