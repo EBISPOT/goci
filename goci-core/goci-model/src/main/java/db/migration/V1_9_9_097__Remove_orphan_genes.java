@@ -30,6 +30,10 @@ public class V1_9_9_097__Remove_orphan_genes implements SpringJdbcMigration {
     private static final String SELECT_AUTHOR_REPORTED_GENE =
             "SELECT REPORTED_GENE_ID FROM AUTHOR_REPORTED_GENE WHERE REPORTED_GENE_ID = ?";
 
+    private static final String DELETE_FROM_GENE_ENSEMBL_GENE = "DELETE FROM GENE_ENSEMBL_GENE WHERE GENE_ID = ?";
+
+    private static final String DELETE_FROM_GENE_ENTREZ_GENE = "DELETE FROM GENE_ENTREZ_GENE WHERE GENE_ID = ?";
+
     private static final String DELETE_FROM_GENE =
             "DELETE FROM GENE WHERE ID= ?";
 
@@ -46,6 +50,13 @@ public class V1_9_9_097__Remove_orphan_genes implements SpringJdbcMigration {
             List<Long> reportedGeneIds = jdbcTemplate.queryForList(SELECT_AUTHOR_REPORTED_GENE, Long.class, geneId);
 
             if (genomicContexts.isEmpty() && reportedGeneIds.isEmpty()) {
+
+                // Delete from GENE_ENSEMBL_GENE
+                jdbcTemplate.update(DELETE_FROM_GENE_ENSEMBL_GENE, geneId);
+
+                // Delete from GENE_ENTREZ_GENE
+                jdbcTemplate.update(DELETE_FROM_GENE_ENTREZ_GENE, geneId);
+
                 // Delete gene from table
                 jdbcTemplate.update(DELETE_FROM_GENE, geneId);
             }
