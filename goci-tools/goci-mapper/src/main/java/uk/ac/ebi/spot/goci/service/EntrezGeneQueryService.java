@@ -43,7 +43,7 @@ public class EntrezGeneQueryService {
         entrezGene.getEntrezGeneId();
         entrezGene.getId();
         if (entrezGene.getGene() != null) {
-            entrezGene.getGene().size();
+            entrezGene.getGene();
         }
     }
 }

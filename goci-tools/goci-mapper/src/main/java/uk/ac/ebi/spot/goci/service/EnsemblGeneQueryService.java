@@ -44,7 +44,7 @@ public class EnsemblGeneQueryService {
         ensemblGene.getEnsemblGeneId();
         ensemblGene.getId();
         if (ensemblGene.getGene() != null) {
-            ensemblGene.getGene().size();
+            ensemblGene.getGene();
         }
     }
 }
