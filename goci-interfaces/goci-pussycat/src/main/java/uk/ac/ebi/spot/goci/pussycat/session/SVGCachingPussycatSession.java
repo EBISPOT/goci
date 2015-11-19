@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Component;
+import uk.ac.ebi.spot.goci.pussycat.exception.NoRenderableDataException;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.Renderlet;
@@ -56,7 +57,7 @@ public class SVGCachingPussycatSession extends AbstractSVGIOPussycatSession {
     }
 
     @Override public String performRendering(RenderletNexus renderletNexus, Filter... filters)
-            throws PussycatSessionNotReadyException {
+            throws PussycatSessionNotReadyException, NoRenderableDataException {
         String filename = generateFilename(filters);
         String svg;
         try {

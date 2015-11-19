@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.pussycat.exception.NoRenderableDataException;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
 import uk.ac.ebi.spot.goci.pussycat.layout.BandInformation;
@@ -50,7 +51,7 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
     @Autowired
     private SparqlTemplate sparqlTemplate;
 
-    private static final String associationQueryMain = "SELECT ?association ?band " +
+    private static final String associationQueryMain = "SELECT DISTINCT ?association ?band " +
                                         "WHERE { " +
                                         "  ?association a gt:TraitAssociation ; " +
                                         "               oban:has_subject ?snp . " +
@@ -100,13 +101,18 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
     }
 
     @Override public String performRendering(RenderletNexus renderletNexus, Filter... filters)
-            throws PussycatSessionNotReadyException {
+            throws PussycatSessionNotReadyException, NoRenderableDataException {
 
         String associationQueryString = associationQueryMain;
         String traitQueryString = traitQueryMain;
 
         getLog().debug("Rendering SVG from SPARQL endpoint (filters = '" + filters + "')...");
 
+        String associationPvalueFilters = "";
+        String traitPvalueFilters = "";
+
+        String associationDateFilters = "";
+        String traitDateFilters = "";
 
         for(Filter filter : filters){
             if(filter.getFilteredType().equals(Association.class)){
@@ -118,26 +124,52 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                 double from = values.get(0);
                 double to = values.get(1);
 
-                associationQueryString = associationQueryString.concat("  FILTER ( ?pvalue < " + to + ")")
-                                            .concat("  FILTER ( ?pvalue >= " + from + ")")
-                                            .concat(associationQueryBandFilter);
+//                associationFilters = associationFilters.concat("  FILTER ( ?pvalue < " + to + ")")
+//                                            .concat("  FILTER ( ?pvalue >= " + from + ")");
+//
+//                traitFilters = traitFilters.concat("  FILTER ( ?pvalue < " + to + ")")
+//                                                    .concat("  FILTER ( ?pvalue >= " + from +  ")");
 
-                traitQueryString = traitQueryString.concat("  FILTER ( ?pvalue < " + to + ")")
-                                                    .concat("  FILTER ( ?pvalue >= " + from +  ")")
-                                                    .concat(" }");
+                associationPvalueFilters = associationPvalueFilters.concat("  FILTER ( ?pvalue < ?? )")
+                        .concat("  FILTER ( ?pvalue >= ?? )");
+
+                traitPvalueFilters = traitPvalueFilters.concat("  FILTER ( ?pvalue < ?? )")
+                        .concat("  FILTER ( ?pvalue >= ?? )");
 
             }
-            else if(filter.getFilteredType().equals(Study.class)){
+            if(filter.getFilteredType().equals(Study.class)){
+                Filter.Range values = filter.getFilteredRange();
 
+//                Object from = values.from();
+//                Object to = values.to();
+
+
+//            DateFormat df_output = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S");
+
+//            String fromValue = from.toString();
+//            String toValue = to.toString();
+
+                associationQueryString = associationQueryString.concat("?association ro:part_of ?study . ?study gt:has_publication_date ?date .");
+                traitQueryString = traitQueryString.concat("?association ro:part_of ?study . ?study gt:has_publication_date ?date . ");
+
+//                associationFilters = associationFilters.concat("  FILTER ( ?date < '" + toValue + "'^^xsd:dateTime)")
+//                        .concat("  FILTER ( ?date >= '" + fromValue + "'^^xsd:dateTime)");
+//
+//                traitFilters = traitFilters.concat("  FILTER ( ?date < '" + toValue + "'^^xsd:dateTime)")
+//                        .concat("  FILTER ( ?date >= '" + fromValue +  "'^^xsd:dateTime)");
+
+                associationDateFilters = associationDateFilters.concat("  FILTER ( ?date < ?? ) ")
+                        .concat("  FILTER ( ?date >= ?? ) ");
+
+                traitDateFilters = traitDateFilters.concat("  FILTER ( ?date < ?? ) ")
+                        .concat("  FILTER ( ?date >= ?? ) ");
             }
-            else {
-                associationQueryString = associationQueryString.concat(associationQueryBandFilter);
-                traitQueryString = traitQueryString.concat(" }");
-            }
-            System.out.println(associationQueryString);
-            System.out.println(traitQueryString);
         }
+        associationQueryString = associationQueryString.concat(associationPvalueFilters).concat(associationDateFilters).concat(associationQueryBandFilter);
+        traitQueryString = traitQueryString.concat(traitPvalueFilters).concat(traitDateFilters).concat(" }");
 
+        System.out.println(associationQueryString);
+        System.out.println(traitQueryString);
 
 
         try {
@@ -150,30 +182,24 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                     List<URI> chromosomes = loadChromosomes(getSparqlTemplate());
                     getLog().debug("Acquired " + chromosomes.size() + " chromosomes to render");
                     List<URI> individuals = new ArrayList<URI>();
-                    individuals.addAll(loadAssociations(getSparqlTemplate(), associationQueryString));
-                    individuals.addAll(loadTraits(getSparqlTemplate(), traitQueryString));
+                    individuals.addAll(loadAssociations(getSparqlTemplate(), associationQueryString, renderletNexus.getRenderingContext()));
+                    individuals.addAll(loadTraits(getSparqlTemplate(), traitQueryString, renderletNexus.getRenderingContext()));
                     getLog().debug("Acquired " + individuals.size() + " individuals to render");
+
+                    if(individuals.size() == 0){
+                        throw new NoRenderableDataException("No individuals available for rendering");
+                    }
 
                     getLog().debug("GWAS data acquired, starting rendering...");
 
                     // render chromosomes first
                     for (URI chromosome : chromosomes) {
-                        for (Renderlet r : getAvailableRenderlets()) {
-                            if (r.canRender(renderletNexus, getSparqlTemplate(), chromosome)) {
-                                getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
-                                r.render(renderletNexus, getSparqlTemplate(), chromosome);
-                            }
-                        }
+                        dispatchRenderlet(renderletNexus, chromosome);
                     }
 
                     // then render individuals
                     for (URI individual : individuals) {
-                        for (Renderlet r : getAvailableRenderlets()) {
-                            if (r.canRender(renderletNexus, getSparqlTemplate(), individual)) {
-                                getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
-                                r.render(renderletNexus, getSparqlTemplate(), individual);
-                            }
-                        }
+                       dispatchRenderlet(renderletNexus, individual);
                     }
                     getLog().debug("SVG rendering complete!");
                     return renderletNexus.getSVG();
@@ -192,49 +218,6 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
             throw new RuntimeException("Failed to load data - cannot render SVG", e);
         }
     }
-
-//    @Override public List<AssociationSummary> getAssociationSummaries(List<URI> associationURIs) {
-//        final String query = "SELECT ?pmid ?author ?date ?rsid ?pval ?gwastrait ?label ?trait WHERE { " +
-//                "?association a gt:TraitAssociation ; " +
-//                "             gt:has_p_value ?pval ; " +
-//                "             gt:has_gwas_trait_name ?gwastrait ; " +
-//                "             ro:part_of ?study ; " +
-//                "             oban:has_subject ?snp ; " +
-//                "             oban:has_object ?trait . " +
-//                "?snp gt:has_snp_reference_id ?rsid . " +
-//                "?study gt:has_author ?author ; " +
-//                "       gt:has_publication_date ?date ; " +
-//                "       gt:has_pubmed_id ?pmid . " +
-//                "?trait rdfs:label ?label . " +
-//                "FILTER (?association = ??)" +
-//                "}";
-//
-//        List<AssociationSummary> results = new ArrayList<AssociationSummary>();
-//        for (URI uri : associationURIs) {
-//            List<AssociationSummary> summaries =
-//                    getSparqlTemplate().query(query, new QuerySolutionMapper<AssociationSummary>() {
-//                        @Override public AssociationSummary mapQuerySolution(QuerySolution qs) {
-//                            String pubmedID = qs.getLiteral("pmid").getLexicalForm();
-//                            String firstAuthor = qs.getLiteral("author").getLexicalForm();
-//                            String publicationDate = qs.getLiteral("date").getLexicalForm().substring(0, 4);
-//                            String snp = qs.getLiteral("rsid").getLexicalForm();
-//                            String pValue = qs.getLiteral("pval").getLexicalForm();
-//                            String gwasTraitName = qs.getLiteral("gwastrait").getLexicalForm();
-//                            String efoTraitLabel = qs.getLiteral("label").getLexicalForm();
-//                            URI efoTraitURI = URI.create(qs.getResource("trait").getURI());
-//                            return new SparqlAssociationSummary(pubmedID, firstAuthor, publicationDate, snp, pValue,
-//                                                                gwasTraitName, efoTraitLabel, efoTraitURI);
-//                        }
-//                    }, uri);
-//            if (summaries.size() == 0) {
-//                results.add(null);
-//            }
-//            else {
-//                results.add(summaries.iterator().next());
-//            }
-//        }
-//        return results;
-//    }
 
     @Override public Set<URI> getRelatedTraits(String traitName) {
         // get OWLClasses by name
@@ -259,17 +242,76 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
 //        return sparqlTemplate.query("SELECT DISTINCT ?uri WHERE { ?uri a gt:Chromosome }", "uri");
     }
 
-    private List<URI> loadAssociations(SparqlTemplate sparqlTemplate, String queryString) {
-        List<AssociationLocation> associationLocations =
-                sparqlTemplate.query(queryString,   /*had to add this line in to exclude "NR" bands as they break the AssociationLocation bit below
+    private List<URI> loadAssociations(SparqlTemplate sparqlTemplate, String queryString, List<Filter> filters) {
+        List<AssociationLocation> associationLocations = null;
+        if(filters.size() == 0){
+            associationLocations =
+                    sparqlTemplate.query(queryString,   /*had to add this line in to exclude "NR" bands as they break the AssociationLocation bit below
                                                                                     and can't be rendered anyway*/
-                                     new QuerySolutionMapper<AssociationLocation>() {
-                                         @Override public AssociationLocation mapQuerySolution(QuerySolution qs) {
-                                             URI association = URI.create(qs.getResource("association").getURI());
-                                             String bandName = qs.getLiteral("band").getLexicalForm();
-                                             return new AssociationLocation(association, bandName);
-                                         }
-                                     });
+                            new QuerySolutionMapper<AssociationLocation>() {
+                                @Override public AssociationLocation mapQuerySolution(QuerySolution qs) {
+                                    URI association = URI.create(qs.getResource("association").getURI());
+                                    String bandName = qs.getLiteral("band").getLexicalForm();
+                                    return new AssociationLocation(association, bandName);
+                                }
+                            });
+        }
+        else if(filters.size() == 1){
+            for(Filter filter : filters){
+                if(filter.getFilteredType().equals(Association.class)){
+                    associationLocations =
+                            sparqlTemplate.query(queryString,   /*had to add this line in to exclude "NR" bands as they break the AssociationLocation bit below
+                                                                                    and can't be rendered anyway*/
+                                    new QuerySolutionMapper<AssociationLocation>() {
+                                        @Override public AssociationLocation mapQuerySolution(QuerySolution qs) {
+                                            URI association = URI.create(qs.getResource("association").getURI());
+                                            String bandName = qs.getLiteral("band").getLexicalForm();
+                                            return new AssociationLocation(association, bandName);
+                                        }
+                                    },
+                                    filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+
+                }
+                else if(filter.getFilteredType().equals(Study.class)){
+                    associationLocations =
+                            sparqlTemplate.query(queryString,   /*had to add this line in to exclude "NR" bands as they break the AssociationLocation bit below
+                                                                                    and can't be rendered anyway*/
+                                    new QuerySolutionMapper<AssociationLocation>() {
+                                        @Override public AssociationLocation mapQuerySolution(QuerySolution qs) {
+                                            URI association = URI.create(qs.getResource("association").getURI());
+                                            String bandName = qs.getLiteral("band").getLexicalForm();
+                                            return new AssociationLocation(association, bandName);
+                                        }
+                                    },
+                                    filter.getFilteredRange().to(), filter.getFilteredRange().from());
+                }
+            }
+        }
+        else{
+            Object pval_min = null, pval_max = null, date_min = null, date_max = null;
+            for (Filter filter : filters) {
+                if (filter.getFilteredType().equals(Association.class)) {
+                    pval_min = filter.getFilteredValues().get(0);
+                    pval_max = filter.getFilteredValues().get(1);
+                }
+                else if(filter.getFilteredType().equals(Study.class)){
+                    date_min = filter.getFilteredRange().from();
+                    date_max = filter.getFilteredRange().to();
+                }
+            }
+            associationLocations =
+                    sparqlTemplate.query(queryString,   /*had to add this line in to exclude "NR" bands as they break the AssociationLocation bit below
+                                                                                    and can't be rendered anyway*/
+                            new QuerySolutionMapper<AssociationLocation>() {
+                                @Override public AssociationLocation mapQuerySolution(QuerySolution qs) {
+                                    URI association = URI.create(qs.getResource("association").getURI());
+                                    String bandName = qs.getLiteral("band").getLexicalForm();
+                                    return new AssociationLocation(association, bandName);
+                                }
+                            },
+                            pval_max, pval_min, date_max, date_min);
+        }
+
         Collections.sort(associationLocations);
         List<URI> associations = new ArrayList<URI>();
         for (AssociationLocation al : associationLocations) {
@@ -278,8 +320,40 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
         return associations;
     }
 
-    private List<URI> loadTraits(SparqlTemplate sparqlTemplate, String queryString) {
-        return sparqlTemplate.query(queryString, "trait");
+    private List<URI> loadTraits(SparqlTemplate sparqlTemplate, String queryString, List<Filter> filters) {
+        if(filters.size() == 0){
+            return sparqlTemplate.query(queryString, "trait");
+
+        }
+        else if(filters.size() == 1){
+            for(Filter filter : filters){
+                if(filter.getFilteredType().equals(Association.class)){
+                    return sparqlTemplate.query(queryString, "trait",
+                        filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
+
+                }
+                else if(filter.getFilteredType().equals(Study.class)){
+                    return sparqlTemplate.query(queryString, "trait",
+                        filter.getFilteredRange().to(), filter.getFilteredRange().from());
+                }
+            }
+        }
+        else{
+            Object pval_min = null, pval_max = null, date_min = null, date_max = null;
+            for (Filter filter : filters) {
+                if (filter.getFilteredType().equals(Association.class)) {
+                    pval_min = filter.getFilteredValues().get(0);
+                    pval_max = filter.getFilteredValues().get(1);
+                }
+                else if(filter.getFilteredType().equals(Study.class)){
+                    date_min = filter.getFilteredRange().from();
+                    date_max = filter.getFilteredRange().to();
+                }
+            }
+            return sparqlTemplate.query(queryString, "trait",
+                pval_max, pval_min, date_max, date_min);
+        }
+        return null;
     }
 
     private class AssociationLocation implements Comparable<AssociationLocation> {
@@ -327,6 +401,15 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
         else{
             getLog().debug("Session ID already exists " + this.sessionID);
             return this.sessionID;
+        }
+    }
+
+    private void dispatchRenderlet(RenderletNexus renderletNexus, URI individual){
+        for (Renderlet r : getAvailableRenderlets()) {
+            if (r.canRender(renderletNexus, getSparqlTemplate(), individual)) {
+                getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
+                r.render(renderletNexus, getSparqlTemplate(), individual);
+            }
         }
     }
 
