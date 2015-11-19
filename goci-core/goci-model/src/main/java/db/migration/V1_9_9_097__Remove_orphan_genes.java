@@ -34,8 +34,7 @@ public class V1_9_9_097__Remove_orphan_genes implements SpringJdbcMigration {
 
     private static final String DELETE_FROM_GENE_ENTREZ_GENE = "DELETE FROM GENE_ENTREZ_GENE WHERE GENE_ID = ?";
 
-    private static final String DELETE_FROM_GENE =
-            "DELETE FROM GENE WHERE ID= ?";
+    private static final String DELETE_FROM_GENE = "DELETE FROM GENE WHERE ID= ?";
 
 
     @Override
