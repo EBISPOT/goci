@@ -498,11 +498,10 @@ public class SnpGenomicContextMappingService {
     private void cleanUpEnsemblGenes(Long id) {
 
         // Find any genes with this Ensembl ID
-        List<Gene> genesWithEnsemblId =
-                geneRepository.findByEnsemblGeneIdsId(id);
+        Gene geneWithEnsemblId = geneRepository.findByEnsemblGeneIdsId(id);
 
         // If this ID is not linked to a gene then delete it
-        if (genesWithEnsemblId.size() == 0) {
+        if (geneWithEnsemblId == null) {
             ensemblGeneRepository.delete(id);
         }
     }
@@ -515,11 +514,10 @@ public class SnpGenomicContextMappingService {
     private void cleanUpEntrezGenes(Long id) {
 
         // Find any genes with this Entrez ID
-        List<Gene> geneWithEntrezIds =
-                geneRepository.findByEntrezGeneIdsId(id);
+        Gene geneWithEntrezIds = geneRepository.findByEntrezGeneIdsId(id);
 
         // If this ID is not linked to a gene then delete it
-        if (geneWithEntrezIds.size() == 0) {
+        if (geneWithEntrezIds == null) {
             entrezGeneRepository.delete(id);
         }
     }
