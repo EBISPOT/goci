@@ -445,7 +445,7 @@ public class SnpGenomicContextMappingService {
                                     existingGeneLinkedToId.getGeneName() + ". Will update so links to " + geneName);
 
                     // For gene already linked to this ensembl ID remove the ensembl ID
-                    existingGeneLinkedToId.setEnsemblGeneIds(new ArrayList<>());
+                    existingGeneLinkedToId.getEnsemblGeneIds().remove(ensemblGene);
                     geneRepository.save(existingGeneLinkedToId);
                 }
             }
@@ -480,7 +480,7 @@ public class SnpGenomicContextMappingService {
                                     existingGeneLinkedToId.getGeneName() + ". Will update so links to " + geneName);
 
                     // For gene already linked to this entrez ID remove the entrez ID
-                    existingGeneLinkedToId.setEntrezGeneIds(new ArrayList<>());
+                    existingGeneLinkedToId.getEntrezGeneIds().remove(entrezGene);
                     geneRepository.save(existingGeneLinkedToId);
                 }
             }
