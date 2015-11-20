@@ -160,7 +160,7 @@ public class PussycatGOCIController {
         }
         catch (ParseException e) {
             getLog().error("Bad date in URL /gwasdiagram/timeseries/" + year + "/" + month + " - " +
-                                   "use /gwasdiagram/timeseries/YYYY/MM", e);
+                    "use /gwasdiagram/timeseries/YYYY/MM", e);
             throw new RuntimeException("Bad date in URL /gwasdiagram/timeseries/" + year + "/" + month + " - " +
                                                "use /gwasdiagram/timeseries/YYYY/MM", e);
         }
@@ -366,6 +366,15 @@ public class PussycatGOCIController {
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     @ExceptionHandler(RuntimeException.class)
     public @ResponseBody String handleRuntimeException(RuntimeException e) {
+        String responseMsg = "There has been a problem generating the GWAS diagram.  " +
+                "We've been notified, and are working to fix this problem as soon as we can.<br/>" + e.getMessage();
+        getLog().error(responseMsg, e);
+        return responseMsg;
+    }
+
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    @ExceptionHandler(NoRenderableDataException.class)
+    public @ResponseBody String handleNoRenderableDataException(RuntimeException e) {
         String responseMsg = "There has been a problem generating the GWAS diagram.  " +
                 "We've been notified, and are working to fix this problem as soon as we can.<br/>" + e.getMessage();
         getLog().error(responseMsg, e);
