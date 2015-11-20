@@ -33,10 +33,10 @@ public class GeneQueryService {
     }
 
     @Transactional(readOnly = true)
-    public List<Gene> findByGeneName(String geneName) {
-        List<Gene> genes = geneRepository.findByGeneName(geneName);
-        genes.forEach(this::loadAssociatedData);
-        return genes;
+    public Gene findByGeneName(String geneName) {
+        Gene gene = geneRepository.findByGeneName(geneName);
+        loadAssociatedData(gene);
+        return gene;
     }
 
     public void loadAssociatedData(Gene gene) {
