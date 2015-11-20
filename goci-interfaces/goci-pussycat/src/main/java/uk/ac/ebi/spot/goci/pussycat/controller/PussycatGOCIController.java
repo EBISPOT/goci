@@ -374,7 +374,7 @@ public class PussycatGOCIController {
 
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     @ExceptionHandler(NoRenderableDataException.class)
-    public @ResponseBody String handleNoRenderableDataException(RuntimeException e) {
+    public @ResponseBody String handleNoRenderableDataException(NoRenderableDataException e) {
         String responseMsg = "There has been a problem generating the GWAS diagram.  " +
                 "We've been notified, and are working to fix this problem as soon as we can.<br/>" + e.getMessage();
         getLog().error(responseMsg, e);
