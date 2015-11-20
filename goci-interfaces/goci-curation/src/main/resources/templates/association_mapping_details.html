@@ -9,7 +9,7 @@
         <p style="font-style: italic; word-wrap: break-word;"
            th:if="${mappingDetails.mappingDate == null and mappingDetails.performer == null}"
            th:utext="'&lt;br /&gt;' +'No mapping details available '"></p>
-        
+
         <p style="font-style: italic; word-wrap: break-word;"
            th:if="${mappingDetails.mappingDate != null}"
            th:utext="'Mapping date: '+  ${#dates.format(mappingDetails.mappingDate, 'dd-MMM-yyyy HH:mm')} ?: ''"></p>
