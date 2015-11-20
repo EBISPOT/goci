@@ -207,80 +207,79 @@ public class SnpGenomicContextMappingService {
             // Find any existing database genes that match the gene name
             // IgnoreCase query is not used here as we want
             // the exact gene name returned from mapping
-            List<Gene> existingGenesInDatabase = geneQueryService.findByGeneName(geneName);
+            Gene existingGeneInDatabase = geneQueryService.findByGeneName(geneName);
 
             // If gene is not found in database then create one
-            if (existingGenesInDatabase.size() == 0) {
+            if (existingGeneInDatabase == null) {
                 createGene(geneName, externalIds, source);
             }
 
             // Update gene
             else {
 
-                for (Gene existingGeneInDatabase : existingGenesInDatabase) {
-                    if (source.equalsIgnoreCase("Ensembl")) {
+                if (source.equalsIgnoreCase("Ensembl")) {
 
-                        // Get a list of current Ensembl IDs linked to existing gene
-                        Collection<EnsemblGene> oldEnsemblGenesLinkedToGene =
-                                existingGeneInDatabase.getEnsemblGeneIds();
-                        Collection<Long> oldEnsemblIdsLinkedToGene = new ArrayList<>();
+                    // Get a list of current Ensembl IDs linked to existing gene
+                    Collection<EnsemblGene> oldEnsemblGenesLinkedToGene =
+                            existingGeneInDatabase.getEnsemblGeneIds();
+                    Collection<Long> oldEnsemblIdsLinkedToGene = new ArrayList<>();
 
-                        for (EnsemblGene oldEnsemblGeneLinkedToGene : oldEnsemblGenesLinkedToGene) {
-                            oldEnsemblIdsLinkedToGene.add(oldEnsemblGeneLinkedToGene.getId());
-                        }
-
-                        Collection<EnsemblGene> newEnsemblGenes = new ArrayList<>();
-                        for (String id : externalIds) {
-                            EnsemblGene ensemblGene = createOrRetrieveEnsemblExternalId(id, geneName);
-                            newEnsemblGenes.add(ensemblGene);
-                        }
-
-                        // Set latest IDs from mapping run
-                        existingGeneInDatabase.setEnsemblGeneIds(newEnsemblGenes);
-
-                        // Save changes
-                        geneRepository.save(existingGeneInDatabase);
-
-                        // Clean-up any Ensembl IDs that may now be left without a gene linked
-                        for (Long oldEnsemblIdLinkedToGene : oldEnsemblIdsLinkedToGene) {
-                            cleanUpEnsemblGenes(oldEnsemblIdLinkedToGene);
-                        }
-
+                    for (EnsemblGene oldEnsemblGeneLinkedToGene : oldEnsemblGenesLinkedToGene) {
+                        oldEnsemblIdsLinkedToGene.add(oldEnsemblGeneLinkedToGene.getId());
                     }
 
-                    if (source.equalsIgnoreCase("Entrez")) {
-
-                        // Get a list of of current Entrez IDs linked to existing gene
-                        Collection<EntrezGene> oldEntrezGenesLinkedToGene = existingGeneInDatabase.getEntrezGeneIds();
-                        Collection<Long> oldEntrezGenesIdsLinkedToGene = new ArrayList<>();
-
-                        for (EntrezGene oldEntrezGeneLinkedToGene : oldEntrezGenesLinkedToGene) {
-                            oldEntrezGenesIdsLinkedToGene.add(oldEntrezGeneLinkedToGene.getId());
-                        }
-
-                        Collection<EntrezGene> newEntrezGenes = new ArrayList<>();
-                        for (String id : externalIds) {
-                            EntrezGene entrezGene = createOrRetrieveEntrezExternalId(id, geneName);
-                            newEntrezGenes.add(entrezGene);
-                        }
-
-                        // Set latest IDs from mapping run
-                        existingGeneInDatabase.setEntrezGeneIds(newEntrezGenes);
-
-                        // Save changes
-                        geneRepository.save(existingGeneInDatabase);
-
-                        // Clean-up any Entrez IDs that may now be left without a gene linked
-                        for (Long oldEntrezGenesIdLinkedToGene : oldEntrezGenesIdsLinkedToGene) {
-                            cleanUpEntrezGenes(oldEntrezGenesIdLinkedToGene);
-                        }
-
+                    Collection<EnsemblGene> newEnsemblGenes = new ArrayList<>();
+                    for (String id : externalIds) {
+                        EnsemblGene ensemblGene = createOrRetrieveEnsemblExternalId(id, geneName);
+                        newEnsemblGenes.add(ensemblGene);
                     }
+
+                    // Set latest IDs from mapping run
+                    existingGeneInDatabase.setEnsemblGeneIds(newEnsemblGenes);
+
+                    // Save changes
+                    geneRepository.save(existingGeneInDatabase);
+
+                    // Clean-up any Ensembl IDs that may now be left without a gene linked
+                    for (Long oldEnsemblIdLinkedToGene : oldEnsemblIdsLinkedToGene) {
+                        cleanUpEnsemblGenes(oldEnsemblIdLinkedToGene);
+                    }
+
+                }
+
+                if (source.equalsIgnoreCase("Entrez")) {
+
+                    // Get a list of of current Entrez IDs linked to existing gene
+                    Collection<EntrezGene> oldEntrezGenesLinkedToGene = existingGeneInDatabase.getEntrezGeneIds();
+                    Collection<Long> oldEntrezGenesIdsLinkedToGene = new ArrayList<>();
+
+                    for (EntrezGene oldEntrezGeneLinkedToGene : oldEntrezGenesLinkedToGene) {
+                        oldEntrezGenesIdsLinkedToGene.add(oldEntrezGeneLinkedToGene.getId());
+                    }
+
+                    Collection<EntrezGene> newEntrezGenes = new ArrayList<>();
+                    for (String id : externalIds) {
+                        EntrezGene entrezGene = createOrRetrieveEntrezExternalId(id, geneName);
+                        newEntrezGenes.add(entrezGene);
+                    }
+
+                    // Set latest IDs from mapping run
+                    existingGeneInDatabase.setEntrezGeneIds(newEntrezGenes);
+
+                    // Save changes
+                    geneRepository.save(existingGeneInDatabase);
+
+                    // Clean-up any Entrez IDs that may now be left without a gene linked
+                    for (Long oldEntrezGenesIdLinkedToGene : oldEntrezGenesIdsLinkedToGene) {
+                        cleanUpEntrezGenes(oldEntrezGenesIdLinkedToGene);
+                    }
+
                 }
             }
-
         }
+
     }
+
 
     /**
      * Saves genomic context information to database
@@ -551,10 +550,7 @@ public class SnpGenomicContextMappingService {
         // Find gene, ignoreCase query is not used here as we want to
         // only create a genomic context for
         // the exact gene name returned from mapping
-        List<Gene> genesWithMatchingName = geneRepository.findByGeneName(geneName);
-
-        // Account for duplicates
-        Gene gene = genesWithMatchingName.get(0);
+        Gene gene = geneRepository.findByGeneName(geneName);
 
         genomicContext.setGene(gene);
         genomicContext.setIsIntergenic(isIntergenic);
