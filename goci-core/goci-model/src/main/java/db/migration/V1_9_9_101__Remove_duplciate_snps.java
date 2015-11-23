@@ -77,8 +77,6 @@ public class V1_9_9_101__Remove_duplciate_snps implements SpringJdbcMigration {
 
                     }
                 }
-
-
             }
             return null;
         });
