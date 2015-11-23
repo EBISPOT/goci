@@ -91,25 +91,37 @@ public class PussycatGOCIController {
     }
 
     @RequestMapping(value = "/gwasdiagram/associations")
-    public @ResponseBody String renderAssociations(@RequestParam(value = "pvalueMin", required = false) String pvalueMin,
-                                                   @RequestParam(value = "pvalueMax", required = false) String pvalueMax,
-                                                   @RequestParam(value = "dateMin", required = false) String dateMin,
-                                                   @RequestParam(value = "dateMax", required = false) String dateMax,
+    public @ResponseBody String renderAssociations(@RequestParam(value = "pvaluemin", required = false) String pvalueMin,
+                                                   @RequestParam(value = "pvaluemax", required = false) String pvalueMax,
+                                                   @RequestParam(value = "datemin", required = false) String dateMin,
+                                                   @RequestParam(value = "datemax", required = false) String dateMax,
                                                    HttpSession session)
             throws PussycatSessionNotReadyException, NoRenderableDataException {
 
         getLog().debug("Received a new rendering request - " +
                 "putting together the query from date '" + dateMin + "' to '" + dateMax + "' and from pvalue '" + pvalueMin + "' to '" + pvalueMax + "'");
 
+        if(pvalueMin == ""){
+            pvalueMin = null;
+        }
+        if(pvalueMax == ""){
+            pvalueMax = null;
+        }
+        if(dateMin == ""){
+            dateMin = null;
+        }
+        if(dateMax == ""){
+            dateMax = null;
+        }
         Filter pvalueFilter = null;
         Filter dateFilter = null;
 
-        if(pvalueMin != "" || pvalueMax != ""){
+        if(pvalueMin != null || pvalueMax != null){
             pvalueFilter = setPvalueFilter(pvalueMin, pvalueMax);
             getRenderletNexus(session).setRenderingContext(pvalueFilter);
         }
 
-        if(dateMin != "" || dateMax != ""){
+        if(dateMin != null || dateMax != null){
             dateFilter = setDateFilter(dateMin, dateMax);
             getRenderletNexus(session).setRenderingContext(dateFilter);
         }
@@ -140,9 +152,9 @@ public class PussycatGOCIController {
 
         try {
 
-             if(dateMax != ""){
-                int endMonthVar = Integer.parseInt(dateMax.split("-")[0]);
-                int endYearVar = Integer.parseInt(dateMax.split("-")[1]);
+             if(dateMax != null){
+                int endYearVar = Integer.parseInt(dateMax.split("-")[0]);
+                int endMonthVar = Integer.parseInt(dateMax.split("-")[1]);
 
                 String end_month, end_year;
 
@@ -170,7 +182,7 @@ public class PussycatGOCIController {
                 to = df_input.parse(df_input.format(new Date()));
             }
 
-            if(dateMin != ""){
+            if(dateMin != null){
                 from = df_input.parse(dateMin + "-01");
             }
             else{
@@ -198,18 +210,18 @@ public class PussycatGOCIController {
     private Filter setPvalueFilter(String pvalueMin, String pvalueMax) {
 
         double start_pvalue, end_pvalue;
-        if(pvalueMin != "") {
-            int startExponentNum = Integer.parseInt(pvalueMin.split("e")[0]);
-            int startMantissaNum = Integer.parseInt(pvalueMin.split("e")[1]);
+        if(pvalueMin != null) {
+            int startMantissaNum = Integer.parseInt(pvalueMin.split("e")[0]);
+            int startExponentNum = Integer.parseInt(pvalueMin.split("e")[1]);
             start_pvalue = startMantissaNum * Math.pow(10, startExponentNum);
         }
         else{
            start_pvalue = 0.0;
         }
 
-        if(pvalueMax != "") {
-            int endExponentNum = Integer.parseInt(pvalueMax.split("e")[0]);
-            int endMantissaNum = Integer.parseInt(pvalueMax.split("e")[1]);
+        if(pvalueMax != null) {
+            int endMantissaNum = Integer.parseInt(pvalueMax.split("e")[0]);
+            int endExponentNum = Integer.parseInt(pvalueMax.split("e")[1]);
             end_pvalue = endMantissaNum * Math.pow(10, endExponentNum);
         }
         else {

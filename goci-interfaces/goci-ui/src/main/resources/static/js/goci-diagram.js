@@ -186,8 +186,8 @@ function renderDiagram() {
             // call to api/gwasdiagram to get required svg
             console.log("Rendering GWAS diagram - calling api/gwasdiagram...");
             $.ajax({
-                       //url: 'http://www.ebi.ac.uk/fgpt/gwas/api/gwasdiagram',
-                       url: 'pussycat/gwasdiagram/associations/5/-8',
+                       //url: 'pussycat/gwasdiagram/associations/5/-8',
+                        url: 'pussycat/gwasdiagram/associations?pvaluemax=5e-8',
                        dataType: 'html',
                        beforeSend: showSVGLoadWhirly,
                        success: insertSVG,
