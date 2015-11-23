@@ -41,37 +41,43 @@ public class V1_9_9_101__Remove_duplciate_snps implements SpringJdbcMigration {
 
     @Override public void migrate(JdbcTemplate jdbcTemplate) throws Exception {
 
-
         // Get list of duplicate genes
         jdbcTemplate.query(SELECT_DUPLICATE_SNPS, (resultSet, i) -> {
             String rsId = resultSet.getString(1);
 
-            List<Long> snpsWithRsId = jdbcTemplate.queryForList(SELECT_SNPS_WITH_RSID, Long.class, rsId);
+            if (rsId != null) {
 
-            // Save the first ID and then remove it from list
-            Long snpIdToKeep = snpsWithRsId.get(0);
-            snpsWithRsId.remove(0);
+                List<Long> snpsWithRsId = jdbcTemplate.queryForList(SELECT_SNPS_WITH_RSID, Long.class, rsId);
 
-            // Remove everything else in list
-            for (Long idToRemove : snpsWithRsId) {
+                if (!snpsWithRsId.isEmpty()) {
+                    // Save the first ID and then remove it from list
+                    Long snpIdToKeep = snpsWithRsId.get(0);
+                    snpsWithRsId.remove(0);
 
-                // Delete from GENOMIC_CONTEXT
-                jdbcTemplate.update(DELETE_FROM_GENOMIC_CONTEXT, idToRemove);
+                    // Remove everything else in list
+                    for (Long idToRemove : snpsWithRsId) {
 
-                // Delete from SNP_LOCATION
-                jdbcTemplate.update(DELETE_FROM_LOCATION, idToRemove);
+                        // Delete from GENOMIC_CONTEXT
+                        jdbcTemplate.update(DELETE_FROM_GENOMIC_CONTEXT, idToRemove);
 
-                // Update STUDY_SNP
-                jdbcTemplate.update(UPDATE_STUDY_SNP, snpIdToKeep, idToRemove);
+                        // Delete from SNP_LOCATION
+                        jdbcTemplate.update(DELETE_FROM_LOCATION, idToRemove);
 
-                // Update RISK_ALLELE_PROXY_SNP
-                jdbcTemplate.update(UPDATE_RISK_ALLELE_PROXY_SNP, snpIdToKeep, idToRemove);
+                        // Update STUDY_SNP
+                        jdbcTemplate.update(UPDATE_STUDY_SNP, snpIdToKeep, idToRemove);
 
-                // Update RISK_ALLELE_SNP
-                jdbcTemplate.update(UPDATE_RISK_ALLELE_SNP, snpIdToKeep, idToRemove);
+                        // Update RISK_ALLELE_PROXY_SNP
+                        jdbcTemplate.update(UPDATE_RISK_ALLELE_PROXY_SNP, snpIdToKeep, idToRemove);
 
-                // Finally delete from SNP table
-                jdbcTemplate.update(DELETE_FROM_SNP, idToRemove);
+                        // Update RISK_ALLELE_SNP
+                        jdbcTemplate.update(UPDATE_RISK_ALLELE_SNP, snpIdToKeep, idToRemove);
+
+                        // Finally delete from SNP table
+                        jdbcTemplate.update(DELETE_FROM_SNP, idToRemove);
+
+                    }
+                }
+
 
             }
             return null;
