@@ -67,69 +67,66 @@ public class SnpLocationMappingService {
             Set<Location> snpLocationsFromMapping = snpToLocations.get(snpRsId);
 
             // Check if the SNP exists
-            Collection<SingleNucleotidePolymorphism> snpsInDatabase =
+            SingleNucleotidePolymorphism snpInDatabase =
                     singleNucleotidePolymorphismQueryService.findByRsIdIgnoreCase(snpRsId);
 
-            if (!snpsInDatabase.isEmpty()) {
+            if (snpInDatabase != null) {
 
-                // For each snp with that rs_id link it to the new location(s)
-                for (SingleNucleotidePolymorphism snpInDatabase : snpsInDatabase) {
+                // Store all new location objects
+                Collection<Location> newSnpLocations = new ArrayList<>();
 
-                    // Store all new location objects
-                    Collection<Location> newSnpLocations = new ArrayList<>();
+                for (Location snpLocationFromMapping : snpLocationsFromMapping) {
 
-                    for (Location snpLocationFromMapping : snpLocationsFromMapping) {
+                    String chromosomeNameFromMapping = snpLocationFromMapping.getChromosomeName();
+                    if (chromosomeNameFromMapping != null) {
+                        chromosomeNameFromMapping = chromosomeNameFromMapping.trim();
+                    }
 
-                        String chromosomeNameFromMapping = snpLocationFromMapping.getChromosomeName();
-                        if (chromosomeNameFromMapping != null) {
-                            chromosomeNameFromMapping = chromosomeNameFromMapping.trim();
-                        }
+                    String chromosomePositionFromMapping = snpLocationFromMapping.getChromosomePosition();
+                    if (chromosomePositionFromMapping != null) {
+                        chromosomePositionFromMapping = chromosomePositionFromMapping.trim();
+                    }
 
-                        String chromosomePositionFromMapping = snpLocationFromMapping.getChromosomePosition();
-                        if (chromosomePositionFromMapping != null) {
-                            chromosomePositionFromMapping = chromosomePositionFromMapping.trim();
-                        }
-
-                        Region regionFromMapping = snpLocationFromMapping.getRegion();
-                        String regionNameFromMapping = null;
-                        if (regionFromMapping != null) {
-                            if (regionFromMapping.getName() != null) {
-                                regionNameFromMapping = regionFromMapping.getName().trim();
-                            }
-                        }
-
-                        // Check if location already exists
-                        Location existingLocation =
-                                locationRepository.findByChromosomeNameAndChromosomePositionAndRegionName(
-                                        chromosomeNameFromMapping,
-                                        chromosomePositionFromMapping,
-                                        regionNameFromMapping);
-
-
-                        if (existingLocation != null) {
-                            newSnpLocations.add(existingLocation);
-                        }
-                        // Create new location
-                        else {
-                            Location newLocation = createLocation(chromosomeNameFromMapping,
-                                                                  chromosomePositionFromMapping,
-                                                                  regionNameFromMapping);
-
-                            newSnpLocations.add(newLocation);
+                    Region regionFromMapping = snpLocationFromMapping.getRegion();
+                    String regionNameFromMapping = null;
+                    if (regionFromMapping != null) {
+                        if (regionFromMapping.getName() != null) {
+                            regionNameFromMapping = regionFromMapping.getName().trim();
                         }
                     }
 
-                    // If we have new locations then link to snp and save
-                    if (newSnpLocations.size() > 0) {
+                    // Check if location already exists
+                    Location existingLocation =
+                            locationRepository.findByChromosomeNameAndChromosomePositionAndRegionName(
+                                    chromosomeNameFromMapping,
+                                    chromosomePositionFromMapping,
+                                    regionNameFromMapping);
 
-                        // Set new location details
-                        snpInDatabase.setLocations(newSnpLocations);
-                        // Update the last update date
-                        snpInDatabase.setLastUpdateDate(new Date());
-                        singleNucleotidePolymorphismRepository.save(snpInDatabase);
+
+                    if (existingLocation != null) {
+                        newSnpLocations.add(existingLocation);
                     }
-                    else {getLog().warn("No new locations to add to " + snpRsId);}
+                    // Create new location
+                    else {
+                        Location newLocation = createLocation(chromosomeNameFromMapping,
+                                                              chromosomePositionFromMapping,
+                                                              regionNameFromMapping);
+
+                        newSnpLocations.add(newLocation);
+                    }
                 }
+
+                // If we have new locations then link to snp and save
+                if (newSnpLocations.size() > 0) {
+
+                    // Set new location details
+                    snpInDatabase.setLocations(newSnpLocations);
+                    // Update the last update date
+                    snpInDatabase.setLastUpdateDate(new Date());
+                    singleNucleotidePolymorphismRepository.save(snpInDatabase);
+                }
+                else {getLog().warn("No new locations to add to " + snpRsId);}
+
             }
 
             // SNP doesn't exist, this should be extremely rare as SNP value is a copy
@@ -175,7 +172,7 @@ public class SnpLocationMappingService {
      *
      * @param snp SNP from which to remove the associated locations
      */
-    public void removeExistingSnpLocations(SingleNucleotidePolymorphism snp){
+    public void removeExistingSnpLocations(SingleNucleotidePolymorphism snp) {
 
         // Get a list of locations currently linked to SNP
         Collection<Location> oldSnpLocations = snp.getLocations();

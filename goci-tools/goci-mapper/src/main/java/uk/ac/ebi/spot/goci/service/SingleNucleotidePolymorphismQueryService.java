@@ -35,11 +35,10 @@ public class SingleNucleotidePolymorphismQueryService {
     }
 
     @Transactional(readOnly = true)
-    public List<SingleNucleotidePolymorphism> findByRsIdIgnoreCase(String rsId) {
-        List<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms =
-                singleNucleotidePolymorphismRepository.findByRsIdIgnoreCase(rsId);
-        singleNucleotidePolymorphisms.forEach(this::loadAssociatedData);
-        return singleNucleotidePolymorphisms;
+    public SingleNucleotidePolymorphism findByRsIdIgnoreCase(String rsId) {
+        SingleNucleotidePolymorphism singleNucleotidePolymorphism = singleNucleotidePolymorphismRepository.findByRsIdIgnoreCase(rsId);
+        loadAssociatedData(singleNucleotidePolymorphism);
+        return singleNucleotidePolymorphism;
     }
 
     @Transactional(readOnly = true)

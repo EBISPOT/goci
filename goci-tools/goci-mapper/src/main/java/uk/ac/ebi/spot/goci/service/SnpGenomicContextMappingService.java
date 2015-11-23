@@ -294,13 +294,9 @@ public class SnpGenomicContextMappingService {
             Set<GenomicContext> genomicContextsFromMapping = snpToGenomicContextMap.get(snpRsId);
 
             // Check if the SNP exists
-            List<SingleNucleotidePolymorphism> snpsInDatabase =
-                    singleNucleotidePolymorphismQueryService.findByRsIdIgnoreCase(snpRsId);
+            SingleNucleotidePolymorphism snpInDatabase = singleNucleotidePolymorphismQueryService.findByRsIdIgnoreCase(snpRsId);
 
-            if (!snpsInDatabase.isEmpty()) {
-
-                // For each snp with that rs_id add new genomic context
-                for (SingleNucleotidePolymorphism snpInDatabase : snpsInDatabase) {
+            if (snpInDatabase != null) {
 
                     Collection<GenomicContext> newSnpGenomicContexts = new ArrayList<>();
 
@@ -367,7 +363,7 @@ public class SnpGenomicContextMappingService {
                     // Update the last update date
                     snpInDatabase.setLastUpdateDate(new Date());
                     singleNucleotidePolymorphismRepository.save(snpInDatabase);
-                }
+
             }
 
             // SNP doesn't exist, this should be extremely rare as SNP value is a copy
