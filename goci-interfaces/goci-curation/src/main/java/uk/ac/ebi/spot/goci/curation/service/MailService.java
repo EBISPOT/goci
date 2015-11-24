@@ -120,10 +120,14 @@ public class MailService {
                         associationMappingErrorService.createAssociationErrorMap(report);
                 String errors = formatErrors(associationErrorMap);
 
-                mappingDetails = mappingDetails + "Association: " + associationLink + "\n"
-                        + "Last Mapping Date: " + mappingDate + "\n"
-                        + "Last Mapping Performed By: " + association.getLastMappingPerformedBy() + "\n"
-                        + "Mapping errors: " + errors + "\n";
+                // Only include details of associations with errors
+                // In future we may want to include all association details can remove this if condition
+                if (!errors.contains("No mapping errors found")) {
+                    mappingDetails = mappingDetails + "Association: " + associationLink + "\n"
+                            + "Last Mapping Date: " + mappingDate + "\n"
+                            + "Last Mapping Performed By: " + association.getLastMappingPerformedBy() + "\n"
+                            + "Mapping errors: " + errors + "\n";
+                }
             }
         }
 
@@ -131,6 +135,7 @@ public class MailService {
         return mappingDetails;
     }
 
+    // Format the errors to include in the email
     private String formatErrors(Map<String, String> map) {
 
         String errors = "";
@@ -142,7 +147,7 @@ public class MailService {
             }
         }
         else {
-            errors = "No mapping errors found"+"\n";
+            errors = "No mapping errors found" + "\n";
         }
 
         return errors;
