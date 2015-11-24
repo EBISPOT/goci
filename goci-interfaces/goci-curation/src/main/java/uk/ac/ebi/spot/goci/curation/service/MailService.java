@@ -35,6 +35,8 @@ public class MailService {
     private String from;
     @Value("${mail.to}")
     private String to;
+    @Value("${mail.link}")
+    private String link;
 
     @Autowired
     public MailService(JavaMailSender javaMailSender,
@@ -72,8 +74,7 @@ public class MailService {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
         String bodyStudyDate = dateFormat.format(studyDate);
 
-        String editStudyLink = "http://garfield.ebi.ac.uk:8080/gwas/curation/studies/" + study.getId();
-
+        String editStudyLink = getLink() + "studies/" + study.getId();
 
         String mappingDetails = getMappingDetails(study);
 
@@ -113,7 +114,7 @@ public class MailService {
                 String mappingDate = dateFormat.format(association.getLastMappingDate());
 
                 String associationLink =
-                        "http://garfield.ebi.ac.uk:8080/gwas/curation/associations/" + association.getId();
+                        getLink() + "associations/" + association.getId();
 
                 AssociationReport report = association.getAssociationReport();
                 Map<String, String> associationErrorMap =
@@ -187,5 +188,13 @@ public class MailService {
 
     public void setTo(String to) {
         this.to = to;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 }
