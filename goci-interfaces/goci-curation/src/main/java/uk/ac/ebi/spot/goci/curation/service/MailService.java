@@ -90,7 +90,7 @@ public class MailService {
                         + "\n" + "Pubmed link: " + pubmedLink
                         + "\n" + "Edit link: " + editStudyLink
                         + "\n" + "Current curator: " + currentCurator
-                        + "\n" + "Notes: " + notes + "\n\n" + "The following mapping errors detected:" + "\n\n" +
+                        + "\n" + "Notes: " + notes + "\n\n" +
                         mappingDetails);
         javaMailSender.send(mailMessage);
 
