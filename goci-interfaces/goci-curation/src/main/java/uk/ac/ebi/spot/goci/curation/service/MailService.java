@@ -12,7 +12,6 @@ import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.Study;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -91,7 +90,7 @@ public class MailService {
                         + "\n" + "Pubmed link: " + pubmedLink
                         + "\n" + "Edit link: " + editStudyLink
                         + "\n" + "Current curator: " + currentCurator
-                        + "\n" + "Notes: " + notes + "\n\n" + "Mapping details for study associations:" + "\n\n" +
+                        + "\n" + "Notes: " + notes + "\n\n" + "The following mapping errors detected:" + "\n\n" +
                         mappingDetails);
         javaMailSender.send(mailMessage);
 
@@ -110,39 +109,43 @@ public class MailService {
 
             for (Association association : associations) {
 
-                AssociationReport report = association.getAssociationReport();
-                Map<String, String> associationErrorMap =
-                        associationMappingErrorService.createAssociationErrorMap(report);
-
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
                 String mappingDate = dateFormat.format(association.getLastMappingDate());
 
                 String associationLink =
                         "http://garfield.ebi.ac.uk:8080/gwas/curation/associations/" + association.getId();
 
-                String errors = Arrays.toString(associationErrorMap.entrySet().toArray());
-
-                // Format errors
-                if (errors.contentEquals("[]")){
-                    errors = "No mapping errors found";
-                }
-
-                else{
-                    errors = errors.replace("[","");
-                    errors = errors.replace("]","");
-                    errors = errors.replace("=",": ");
-                }
+                AssociationReport report = association.getAssociationReport();
+                Map<String, String> associationErrorMap =
+                        associationMappingErrorService.createAssociationErrorMap(report);
+                String errors = formatErrors(associationErrorMap);
 
                 mappingDetails = mappingDetails + "Association: " + associationLink + "\n"
-                        + "Last Mapping Date: " + mappingDate+ "\n"
+                        + "Last Mapping Date: " + mappingDate + "\n"
                         + "Last Mapping Performed By: " + association.getLastMappingPerformedBy() + "\n"
-                        + "Mapping errors: " + errors + "\n\n";
-
+                        + "Mapping errors: " + errors + "\n";
             }
         }
 
 
         return mappingDetails;
+    }
+
+    private String formatErrors(Map<String, String> map) {
+
+        String errors = "";
+
+        // Format errors
+        if (!map.isEmpty()) {
+            for (String key : map.keySet()) {
+                errors = errors + map.get(key) + "\n";
+            }
+        }
+        else {
+            errors = "No mapping errors found"+"\n";
+        }
+
+        return errors;
     }
 
     public void sendReleaseChangeEmail(Integer currentEnsemblReleaseNumberInDatabase, int latestEnsemblReleaseNumber) {
