@@ -7,10 +7,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.Study;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by emma on 10/02/15.
@@ -24,6 +29,8 @@ public class MailService {
 
     private final JavaMailSender javaMailSender;
 
+    private AssociationMappingErrorService associationMappingErrorService;
+
     // Reading these from application.properties
     @Value("${mail.from}")
     private String from;
@@ -31,8 +38,10 @@ public class MailService {
     private String to;
 
     @Autowired
-    public MailService(JavaMailSender javaMailSender) {
+    public MailService(JavaMailSender javaMailSender,
+                       AssociationMappingErrorService associationMappingErrorService) {
         this.javaMailSender = javaMailSender;
+        this.associationMappingErrorService = associationMappingErrorService;
     }
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -66,6 +75,9 @@ public class MailService {
 
         String editStudyLink = "http://garfield.ebi.ac.uk:8080/gwas/curation/studies/" + study.getId();
 
+
+        String mappingDetails = getMappingDetails(study);
+
         // Format mail message
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(getTo());
@@ -79,9 +91,58 @@ public class MailService {
                         + "\n" + "Pubmed link: " + pubmedLink
                         + "\n" + "Edit link: " + editStudyLink
                         + "\n" + "Current curator: " + currentCurator
-                        + "\n" + "Notes: " + notes);
+                        + "\n" + "Notes: " + notes + "\n\n" + "Mapping details for study associations:" + "\n\n" +
+                        mappingDetails);
         javaMailSender.send(mailMessage);
 
+    }
+
+    private String getMappingDetails(Study study) {
+
+        String mappingDetails = "";
+
+        Collection<Association> associations = study.getAssociations();
+
+        if (associations.isEmpty()) {
+            mappingDetails = "No associations for this study";
+        }
+        else {
+
+            for (Association association : associations) {
+
+                AssociationReport report = association.getAssociationReport();
+                Map<String, String> associationErrorMap =
+                        associationMappingErrorService.createAssociationErrorMap(report);
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+                String mappingDate = dateFormat.format(association.getLastMappingDate());
+
+                String associationLink =
+                        "http://garfield.ebi.ac.uk:8080/gwas/curation/associations/" + association.getId();
+
+                String errors = Arrays.toString(associationErrorMap.entrySet().toArray());
+
+                // Format errors
+                if (errors.contentEquals("[]")){
+                    errors = "No mapping errors found";
+                }
+
+                else{
+                    errors = errors.replace("[","");
+                    errors = errors.replace("]","");
+                    errors = errors.replace("=",": ");
+                }
+
+                mappingDetails = mappingDetails + "Association: " + associationLink + "\n"
+                        + "Last Mapping Date: " + mappingDate+ "\n"
+                        + "Last Mapping Performed By: " + association.getLastMappingPerformedBy() + "\n"
+                        + "Mapping errors: " + errors + "\n\n";
+
+            }
+        }
+
+
+        return mappingDetails;
     }
 
     public void sendReleaseChangeEmail(Integer currentEnsemblReleaseNumberInDatabase, int latestEnsemblReleaseNumber) {
