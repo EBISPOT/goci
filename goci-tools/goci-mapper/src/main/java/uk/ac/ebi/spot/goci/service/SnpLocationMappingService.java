@@ -176,22 +176,24 @@ public class SnpLocationMappingService {
 
         // Get a list of locations currently linked to SNP
         Collection<Location> oldSnpLocations = snp.getLocations();
-        Set<Long> oldSnpLocationIds = new HashSet<>();
-        for (Location oldSnpLocation : oldSnpLocations) {
-            oldSnpLocationIds.add(oldSnpLocation.getId());
-        }
 
-        // Remove old locations
-        snp.setLocations(new ArrayList<>());
-        singleNucleotidePolymorphismRepository.save(snp);
+        if (oldSnpLocations != null && !oldSnpLocations.isEmpty()) {
+            Set<Long> oldSnpLocationIds = new HashSet<>();
+            for (Location oldSnpLocation : oldSnpLocations) {
+                oldSnpLocationIds.add(oldSnpLocation.getId());
+            }
 
-        // Clean-up old locations that were linked to SNP
-        if (oldSnpLocationIds.size() > 0) {
-            for (Long oldSnpLocationId : oldSnpLocationIds) {
-                cleanUpLocations(oldSnpLocationId);
+            // Remove old locations
+            snp.setLocations(new ArrayList<>());
+            singleNucleotidePolymorphismRepository.save(snp);
+
+            // Clean-up old locations that were linked to SNP
+            if (oldSnpLocationIds.size() > 0) {
+                for (Long oldSnpLocationId : oldSnpLocationIds) {
+                    cleanUpLocations(oldSnpLocationId);
+                }
             }
         }
-
     }
 
     /**
