@@ -14,6 +14,7 @@ import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
 import uk.ac.ebi.spot.goci.pussycat.manager.PussycatManager;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
+import uk.ac.ebi.spot.goci.pussycat.service.DiagramConversionService;
 import uk.ac.ebi.spot.goci.pussycat.session.PussycatSession;
 import uk.ac.ebi.spot.goci.pussycat.session.PussycatSessionStrategy;
 
@@ -354,5 +355,66 @@ public class PussycatGOCIController {
         }
 
         return renderletNexus;
+    }
+
+    @RequestMapping(value = "/gwasdiagram/download")
+    public void downloadDiagram(@RequestParam(value = "pvaluemin", required = false) String pvalueMin,
+                                                   @RequestParam(value = "pvaluemax", required = false) String pvalueMax,
+                                                   @RequestParam(value = "datemin", required = false) String dateMin,
+                                                   @RequestParam(value = "datemax", required = false) String dateMax,
+                                                   HttpSession session)
+            throws PussycatSessionNotReadyException, NoRenderableDataException {
+
+        getLog().debug("Received a new rendering request - " +
+                "putting together the query from date '" + dateMin + "' to '" + dateMax + "' and from pvalue '" + pvalueMin + "' to '" + pvalueMax + "'");
+
+        if(pvalueMin == ""){
+            pvalueMin = null;
+        }
+        if(pvalueMax == ""){
+            pvalueMax = null;
+        }
+        if(dateMin == ""){
+            dateMin = null;
+        }
+        if(dateMax == ""){
+            dateMax = null;
+        }
+        Filter pvalueFilter = null;
+        Filter dateFilter = null;
+
+        if(pvalueMin != null || pvalueMax != null){
+            pvalueFilter = setPvalueFilter(pvalueMin, pvalueMax);
+            getRenderletNexus(session).setRenderingContext(pvalueFilter);
+        }
+
+        if(dateMin != null || dateMax != null){
+            dateFilter = setDateFilter(dateMin, dateMax);
+            getRenderletNexus(session).setRenderingContext(dateFilter);
+        }
+
+        String svg;
+
+        if(dateFilter == null && pvalueFilter == null){
+            svg = getPussycatSession(session).performRendering(getRenderletNexus(session));
+        }
+        else if(dateFilter == null && pvalueFilter != null){
+            svg = getPussycatSession(session).performRendering(getRenderletNexus(session), pvalueFilter);
+
+        }
+        else if(pvalueFilter == null && dateFilter != null){
+            svg = getPussycatSession(session).performRendering(getRenderletNexus(session), dateFilter);
+
+        }
+        else {
+           svg = getPussycatSession(session).performRendering(getRenderletNexus(session), dateFilter, pvalueFilter);
+        }
+
+        DiagramConversionService conversionService = new DiagramConversionService(svg);
+        try {
+            conversionService.save();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
