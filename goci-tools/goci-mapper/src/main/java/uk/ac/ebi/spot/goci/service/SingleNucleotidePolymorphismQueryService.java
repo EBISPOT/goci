@@ -7,7 +7,6 @@ import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by emma on 14/08/2015.
@@ -36,7 +35,8 @@ public class SingleNucleotidePolymorphismQueryService {
 
     @Transactional(readOnly = true)
     public SingleNucleotidePolymorphism findByRsIdIgnoreCase(String rsId) {
-        SingleNucleotidePolymorphism singleNucleotidePolymorphism = singleNucleotidePolymorphismRepository.findByRsIdIgnoreCase(rsId);
+        SingleNucleotidePolymorphism singleNucleotidePolymorphism =
+                singleNucleotidePolymorphismRepository.findByRsIdIgnoreCase(rsId);
         loadAssociatedData(singleNucleotidePolymorphism);
         return singleNucleotidePolymorphism;
     }
@@ -50,7 +50,12 @@ public class SingleNucleotidePolymorphismQueryService {
     }
 
     public void loadAssociatedData(SingleNucleotidePolymorphism snp) {
-        snp.getLocations().size();
-        snp.getGenomicContexts().size();
+
+        if (snp.getLocations() != null) {
+            snp.getLocations().size();
+        }
+        if (snp.getGenomicContexts() != null) {
+            snp.getGenomicContexts().size();
+        }
     }
 }

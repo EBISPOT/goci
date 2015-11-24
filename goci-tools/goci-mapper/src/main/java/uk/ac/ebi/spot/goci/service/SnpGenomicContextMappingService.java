@@ -294,75 +294,76 @@ public class SnpGenomicContextMappingService {
             Set<GenomicContext> genomicContextsFromMapping = snpToGenomicContextMap.get(snpRsId);
 
             // Check if the SNP exists
-            SingleNucleotidePolymorphism snpInDatabase = singleNucleotidePolymorphismQueryService.findByRsIdIgnoreCase(snpRsId);
+            SingleNucleotidePolymorphism snpInDatabase =
+                    singleNucleotidePolymorphismQueryService.findByRsIdIgnoreCase(snpRsId);
 
             if (snpInDatabase != null) {
 
-                    Collection<GenomicContext> newSnpGenomicContexts = new ArrayList<>();
+                Collection<GenomicContext> newSnpGenomicContexts = new ArrayList<>();
 
-                    for (GenomicContext genomicContextFromMapping : genomicContextsFromMapping) {
+                for (GenomicContext genomicContextFromMapping : genomicContextsFromMapping) {
 
-                        // Gene should already have been created
-                        String geneName = genomicContextFromMapping.getGene().getGeneName().trim();
+                    // Gene should already have been created
+                    String geneName = genomicContextFromMapping.getGene().getGeneName().trim();
 
-                        if (!geneName.equalsIgnoreCase("undefined")) {
+                    if (!geneName.equalsIgnoreCase("undefined")) {
 
-                            // Create new genomic context
-                            Boolean isIntergenic = genomicContextFromMapping.getIsIntergenic();
-                            Boolean isUpstream = genomicContextFromMapping.getIsUpstream();
-                            Boolean isDownstream = genomicContextFromMapping.getIsDownstream();
-                            Long distance = genomicContextFromMapping.getDistance();
-                            String source = genomicContextFromMapping.getSource();
-                            String mappingMethod = genomicContextFromMapping.getMappingMethod();
-                            Boolean isClosestGene = genomicContextFromMapping.getIsClosestGene();
+                        // Create new genomic context
+                        Boolean isIntergenic = genomicContextFromMapping.getIsIntergenic();
+                        Boolean isUpstream = genomicContextFromMapping.getIsUpstream();
+                        Boolean isDownstream = genomicContextFromMapping.getIsDownstream();
+                        Long distance = genomicContextFromMapping.getDistance();
+                        String source = genomicContextFromMapping.getSource();
+                        String mappingMethod = genomicContextFromMapping.getMappingMethod();
+                        Boolean isClosestGene = genomicContextFromMapping.getIsClosestGene();
 
-                            // Location details
-                            String chromosomeName = genomicContextFromMapping.getLocation().getChromosomeName();
-                            String chromosomePosition = genomicContextFromMapping.getLocation().getChromosomePosition();
-                            Region regionFromMapping = genomicContextFromMapping.getLocation().getRegion();
-                            String regionName = null;
+                        // Location details
+                        String chromosomeName = genomicContextFromMapping.getLocation().getChromosomeName();
+                        String chromosomePosition = genomicContextFromMapping.getLocation().getChromosomePosition();
+                        Region regionFromMapping = genomicContextFromMapping.getLocation().getRegion();
+                        String regionName = null;
 
-                            if (regionFromMapping.getName() != null) {
-                                regionName = regionFromMapping.getName().trim();
-                            }
-
-                            // Check if location already exists
-                            Location location =
-                                    locationRepository.findByChromosomeNameAndChromosomePositionAndRegionName(
-                                            chromosomeName,
-                                            chromosomePosition,
-                                            regionName);
-
-                            if (location == null) {
-                                location = createLocation(chromosomeName,
-                                                          chromosomePosition,
-                                                          regionName);
-                            }
-
-                            GenomicContext genomicContext = createGenomicContext(isIntergenic,
-                                                                                 isUpstream,
-                                                                                 isDownstream,
-                                                                                 distance,
-                                                                                 source,
-                                                                                 mappingMethod,
-                                                                                 geneName,
-                                                                                 snpInDatabase,
-                                                                                 isClosestGene, location);
-
-                            newSnpGenomicContexts.add(genomicContext);
+                        if (regionFromMapping.getName() != null) {
+                            regionName = regionFromMapping.getName().trim();
                         }
 
-                        else {
-                            getLog().warn("Gene name returned from mapping pipeline is 'undefined' for SNP" +
-                                                  snpInDatabase.getRsId());
+                        // Check if location already exists
+                        Location location =
+                                locationRepository.findByChromosomeNameAndChromosomePositionAndRegionName(
+                                        chromosomeName,
+                                        chromosomePosition,
+                                        regionName);
+
+                        if (location == null) {
+                            location = createLocation(chromosomeName,
+                                                      chromosomePosition,
+                                                      regionName);
                         }
+
+                        GenomicContext genomicContext = createGenomicContext(isIntergenic,
+                                                                             isUpstream,
+                                                                             isDownstream,
+                                                                             distance,
+                                                                             source,
+                                                                             mappingMethod,
+                                                                             geneName,
+                                                                             snpInDatabase,
+                                                                             isClosestGene, location);
+
+                        newSnpGenomicContexts.add(genomicContext);
                     }
 
-                    // Save latest mapped information
-                    snpInDatabase.setGenomicContexts(newSnpGenomicContexts);
-                    // Update the last update date
-                    snpInDatabase.setLastUpdateDate(new Date());
-                    singleNucleotidePolymorphismRepository.save(snpInDatabase);
+                    else {
+                        getLog().warn("Gene name returned from mapping pipeline is 'undefined' for SNP" +
+                                              snpInDatabase.getRsId());
+                    }
+                }
+
+                // Save latest mapped information
+                snpInDatabase.setGenomicContexts(newSnpGenomicContexts);
+                // Update the last update date
+                snpInDatabase.setLastUpdateDate(new Date());
+                singleNucleotidePolymorphismRepository.save(snpInDatabase);
 
             }
 
@@ -600,12 +601,12 @@ public class SnpGenomicContextMappingService {
         // Get a list of locations currently genomic context
         Collection<GenomicContext> snpGenomicContexts = snp.getGenomicContexts();
 
-        // Remove old genomic contexts, as these will be updated with latest mapping
-        snp.setGenomicContexts(new ArrayList<>());
-        singleNucleotidePolymorphismRepository.save(snp);
+        if (snpGenomicContexts != null && !snpGenomicContexts.isEmpty()) {
+            // Remove old genomic contexts, as these will be updated with latest mapping
+            snp.setGenomicContexts(new ArrayList<>());
+            singleNucleotidePolymorphismRepository.save(snp);
+            Set<Long> oldSnpLocationIds = new HashSet<>();
 
-        Set<Long> oldSnpLocationIds = new HashSet<>();
-        if (!snpGenomicContexts.isEmpty()) {
             for (GenomicContext snpGenomicContext : snpGenomicContexts) {
                 if (snpGenomicContext.getLocation() != null) {
                     oldSnpLocationIds.add(snpGenomicContext.getLocation().getId());
@@ -616,8 +617,8 @@ public class SnpGenomicContextMappingService {
             for (Long oldSnpLocationId : oldSnpLocationIds) {
                 cleanUpLocations(oldSnpLocationId);
             }
-        }
 
+        }
     }
 
     /**
