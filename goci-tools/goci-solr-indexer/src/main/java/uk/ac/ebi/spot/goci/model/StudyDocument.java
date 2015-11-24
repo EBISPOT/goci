@@ -175,8 +175,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.contexts.add(context);
     }
 
-    public void addRegion(String region) {
-        this.regions.add(region);
+    public void addRegions(Collection<String> regions) {
+        this.regions.addAll(regions);
     }
 
     public void addEntrezMappedGene(String mappedGene) {

@@ -36,7 +36,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field private String rsId;
     @Field private String strongestAllele;
     @Field private String context;
-    @Field private String region;
+//    @Field private String region;
+    @Field("region") private Set<String> region;
+
     // mapped genes and reported genes must be per snp -
     // if multiple, separate mapped genes with a hyphen (downstream-upstream) and reported genes with a slash,
     // and then include 'x' or ',' as designated by multiple loci/risk alleles
@@ -53,6 +55,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     // pluralise all other information, but retain order
     @Field("chromosomeName") private Set<String> chromosomeNames;
     @Field("chromosomePosition") private Set<Integer> chromosomePositions;
+    @Field("positionLinks") private Set<String> positionLinks;
 
     @Field("locusDescription") @NonEmbeddableField private String locusDescription;
 
@@ -95,8 +98,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             this.pValueExponent = association.getPvalueExponent();
         }
 
+        this.region = new LinkedHashSet<>();
         this.chromosomeNames = new LinkedHashSet<>();
         this.chromosomePositions = new LinkedHashSet<>();
+        this.positionLinks = new LinkedHashSet<>();
 
         this.entrezMappedGeneLinks = new LinkedHashSet<>();
         this.ensemblMappedGeneLinks = new LinkedHashSet<>();
@@ -111,7 +116,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         this.mappedUris = new LinkedHashSet<>();
     }
 
-    public String getRegion() {
+    public Collection<String> getRegion() {
         return region;
     }
 
@@ -262,19 +267,27 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
                                     merged = snp.getMerged();
 
-                                    final Set<String> regionNames = new HashSet<>();
-                                    final StringBuilder regionBuilder = new StringBuilder();
+//                                    final Set<String> regionNames = new HashSet<>();
+//                                    final StringBuilder regionBuilder = new StringBuilder();
+
+//                                    snp.getLocations().forEach(
+//                                            location -> {
+//                                                if (!regionNames.contains(location.getRegion().getName())) {
+//                                                    regionNames.add(location.getRegion().getName());
+//                                                    setOrAppend(regionBuilder, location.getRegion().getName(), " / ");
+//                                                }
+//                                            });
+//
+//
+//                                    region = setOrAppend(region, regionBuilder.toString(), " : ");
 
                                     snp.getLocations().forEach(
                                             location -> {
-                                                if (!regionNames.contains(location.getRegion().getName())) {
-                                                    regionNames.add(location.getRegion().getName());
-                                                    setOrAppend(regionBuilder, location.getRegion().getName(), " / ");
+                                                if (!region.contains(location.getRegion().getName())) {
+                                                    region.add(location.getRegion().getName());
                                                 }
                                             });
 
-
-                                    region = setOrAppend(region, regionBuilder.toString(), " : ");
 
 
                                     entrezMappedGene = setOrAppend(entrezMappedGene,
@@ -331,18 +344,25 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     SingleNucleotidePolymorphism snp = riskAllele.getSnp();
                                     rsId = setOrAppend(rsId, snp.getRsId(), ", ");
 
-                                    final Set<String> regionNames = new HashSet<>();
-                                    final StringBuilder regionBuilder = new StringBuilder();
+//                                    final Set<String> regionNames = new HashSet<>();
+//                                    final StringBuilder regionBuilder = new StringBuilder();
+
+//                                    snp.getLocations().forEach(
+//                                            location -> {
+//                                                if (!regionNames.contains(location.getRegion().getName())) {
+//                                                    regionNames.add(location.getRegion().getName());
+//                                                    setOrAppend(regionBuilder, location.getRegion().getName(), " / ");
+//                                                }
+//                                            });
+//
+//                                    region = setOrAppend(region, regionBuilder.toString(), ", ");
 
                                     snp.getLocations().forEach(
                                             location -> {
-                                                if (!regionNames.contains(location.getRegion().getName())) {
-                                                    regionNames.add(location.getRegion().getName());
-                                                    setOrAppend(regionBuilder, location.getRegion().getName(), " / ");
+                                                if (!region.contains(location.getRegion().getName())) {
+                                                    region.add(location.getRegion().getName());
                                                 }
                                             });
-
-                                    region = setOrAppend(region, regionBuilder.toString(), ", ");
 
                                     entrezMappedGene = setOrAppend(entrezMappedGene,
                                                                    getMappedGeneString(association, snp, "NCBI"),
@@ -369,6 +389,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                         if (snpLocation.getChromosomePosition() != null) {
                                             chromosomePositions.add(Integer.parseInt(snpLocation.getChromosomePosition()));
                                         }
+                                        positionLinks.add(createPositionLink(snpLocation));
                                     }
                                 }
                         );
@@ -383,6 +404,30 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                     }
             );
         }
+    }
+    private String createPositionLink(Location snpLocation) {
+
+        String positionLink;
+
+        if(snpLocation.getChromosomeName() != null){
+            positionLink = snpLocation.getChromosomeName();
+        }
+        else{
+            positionLink = "NA";
+        }
+        if(snpLocation.getChromosomePosition() != null){
+            positionLink = positionLink.concat("|").concat(snpLocation.getChromosomePosition());
+        }
+        else{
+            positionLink = positionLink.concat("|NA");
+        }
+        if(snpLocation.getRegion().getName() != null){
+            positionLink = positionLink.concat("|").concat(snpLocation.getRegion().getName());
+        }
+        else{
+            positionLink = positionLink.concat("|NA");
+        }
+        return positionLink;
     }
 
     /**
