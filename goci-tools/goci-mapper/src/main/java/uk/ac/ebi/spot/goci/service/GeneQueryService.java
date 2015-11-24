@@ -6,8 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.repository.GeneRepository;
 
-import java.util.List;
-
 /**
  * Created by emma on 14/08/2015.
  *
@@ -35,12 +33,20 @@ public class GeneQueryService {
     @Transactional(readOnly = true)
     public Gene findByGeneName(String geneName) {
         Gene gene = geneRepository.findByGeneName(geneName);
-        loadAssociatedData(gene);
+        if (gene != null) {
+            loadAssociatedData(gene);
+        }
         return gene;
     }
 
     public void loadAssociatedData(Gene gene) {
-        gene.getEntrezGeneIds().size();
-        gene.getEnsemblGeneIds().size();
+
+        if (gene.getEntrezGeneIds() != null) {
+            gene.getEntrezGeneIds().size();
+        }
+
+        if (gene.getEnsemblGeneIds() != null) {
+            gene.getEnsemblGeneIds().size();
+        }
     }
 }
