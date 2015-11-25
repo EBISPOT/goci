@@ -661,6 +661,7 @@ public class StudyController {
                         java.util.Date publishDate = new java.util.Date();
                         housekeeping.setCatalogPublishDate(publishDate);
                     }
+                    mailService.sendEmailNotification(study, currentStatus.getStatus());
                 }
             }
 

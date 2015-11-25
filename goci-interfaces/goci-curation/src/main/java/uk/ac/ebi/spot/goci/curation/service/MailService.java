@@ -7,10 +7,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.Study;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by emma on 10/02/15.
@@ -24,15 +28,21 @@ public class MailService {
 
     private final JavaMailSender javaMailSender;
 
+    private AssociationMappingErrorService associationMappingErrorService;
+
     // Reading these from application.properties
     @Value("${mail.from}")
     private String from;
     @Value("${mail.to}")
     private String to;
+    @Value("${mail.link}")
+    private String link;
 
     @Autowired
-    public MailService(JavaMailSender javaMailSender) {
+    public MailService(JavaMailSender javaMailSender,
+                       AssociationMappingErrorService associationMappingErrorService) {
         this.javaMailSender = javaMailSender;
+        this.associationMappingErrorService = associationMappingErrorService;
     }
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -64,7 +74,9 @@ public class MailService {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
         String bodyStudyDate = dateFormat.format(studyDate);
 
-        String editStudyLink = "http://garfield.ebi.ac.uk:8080/gwas/curation/studies/" + study.getId();
+        String editStudyLink = getLink() + "studies/" + study.getId();
+
+        String mappingDetails = getMappingDetails(study);
 
         // Format mail message
         SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -79,9 +91,67 @@ public class MailService {
                         + "\n" + "Pubmed link: " + pubmedLink
                         + "\n" + "Edit link: " + editStudyLink
                         + "\n" + "Current curator: " + currentCurator
-                        + "\n" + "Notes: " + notes);
+                        + "\n" + "Notes: " + notes + "\n\n" +
+                        mappingDetails);
         javaMailSender.send(mailMessage);
 
+    }
+
+    private String getMappingDetails(Study study) {
+
+        String mappingDetails = "";
+
+        Collection<Association> associations = study.getAssociations();
+
+        if (associations.isEmpty()) {
+            mappingDetails = "No associations for this study";
+        }
+        else {
+
+            for (Association association : associations) {
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+                String mappingDate = dateFormat.format(association.getLastMappingDate());
+
+                String associationLink =
+                        getLink() + "associations/" + association.getId();
+
+                AssociationReport report = association.getAssociationReport();
+                Map<String, String> associationErrorMap =
+                        associationMappingErrorService.createAssociationErrorMap(report);
+                String errors = formatErrors(associationErrorMap);
+
+                // Only include details of associations with errors
+                // In future we may want to include all association details can remove this if condition
+                if (!errors.contains("No mapping errors found")) {
+                    mappingDetails = mappingDetails + "Association: " + associationLink + "\n"
+                            + "Last Mapping Date: " + mappingDate + "\n"
+                            + "Last Mapping Performed By: " + association.getLastMappingPerformedBy() + "\n"
+                            + "Mapping errors: " + errors + "\n";
+                }
+            }
+        }
+
+
+        return mappingDetails;
+    }
+
+    // Format the errors to include in the email
+    private String formatErrors(Map<String, String> map) {
+
+        String errors = "";
+
+        // Format errors
+        if (!map.isEmpty()) {
+            for (String key : map.keySet()) {
+                errors = errors + map.get(key) + "\n";
+            }
+        }
+        else {
+            errors = "No mapping errors found" + "\n";
+        }
+
+        return errors;
     }
 
     public void sendReleaseChangeEmail(Integer currentEnsemblReleaseNumberInDatabase, int latestEnsemblReleaseNumber) {
@@ -118,5 +188,13 @@ public class MailService {
 
     public void setTo(String to) {
         this.to = to;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 }

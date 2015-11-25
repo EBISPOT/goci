@@ -1,16 +1,15 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.AssociationFormErrorView;
 import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -24,7 +23,11 @@ import java.util.Map;
 @Service
 public class AssociationFormErrorViewService {
 
-    public AssociationFormErrorViewService() {
+    private AssociationMappingErrorService associationMappingErrorService;
+
+    @Autowired
+    public AssociationFormErrorViewService(AssociationMappingErrorService associationMappingErrorService) {
+        this.associationMappingErrorService = associationMappingErrorService;
     }
 
     /**
@@ -91,7 +94,8 @@ public class AssociationFormErrorViewService {
         }
 
         // Check association report for errors from mapping pipeline
-        Map<String, String> associationErrorMap = createAssociationErrorMap(association.getAssociationReport());
+        Map<String, String> associationErrorMap =
+                associationMappingErrorService.createAssociationErrorMap(association.getAssociationReport());
 
         // Set model attributes
         associationErrorView.setRiskAlleleErrors(formatErrors(riskAlleleErrors));
@@ -159,49 +163,5 @@ public class AssociationFormErrorViewService {
         String error = "";
         error = String.join(" ", errors);
         return error;
-    }
-
-    /**
-     * Create object, from Association Report, that will be returned to view
-     *
-     * @param associationReport Association Report object containing mapping errors
-     */
-    public Map<String, String> createAssociationErrorMap(AssociationReport associationReport) {
-
-        Map<String, String> associationErrorMap = new HashMap<>();
-
-        //Create map of errors
-        if (associationReport != null) {
-            if (associationReport.getSnpError() != null && !associationReport.getSnpError().isEmpty()) {
-                associationErrorMap.put("SNP Error: ", associationReport.getSnpError());
-            }
-
-            if (associationReport.getSnpGeneOnDiffChr() != null &&
-                    !associationReport.getSnpGeneOnDiffChr().isEmpty()) {
-                associationErrorMap.put("Snp Gene On Diff Chr", associationReport.getSnpGeneOnDiffChr());
-            }
-
-            if (associationReport.getNoGeneForSymbol() != null &&
-                    !associationReport.getNoGeneForSymbol().isEmpty()) {
-                associationErrorMap.put("No Gene For Symbol", associationReport.getNoGeneForSymbol());
-            }
-
-            if (associationReport.getRestServiceError() != null &&
-                    !associationReport.getRestServiceError().isEmpty()) {
-                associationErrorMap.put("Rest Service Error", associationReport.getRestServiceError());
-            }
-
-            if (associationReport.getSuspectVariationError() != null &&
-                    !associationReport.getSuspectVariationError().isEmpty()) {
-                associationErrorMap.put("Suspect variation", associationReport.getSuspectVariationError());
-            }
-
-            if (associationReport.getGeneError() != null &&
-                    !associationReport.getGeneError().isEmpty()) {
-                associationErrorMap.put("Gene Error", associationReport.getGeneError());
-            }
-        }
-
-        return associationErrorMap;
     }
 }

@@ -25,11 +25,11 @@ import java.util.Collection;
 @Service
 public class AssociationViewService {
 
-    private AssociationFormErrorViewService associationFormErrorViewService;
+    private AssociationMappingErrorService associationMappingErrorService;
 
     @Autowired
-    public AssociationViewService(AssociationFormErrorViewService associationFormErrorViewService) {
-        this.associationFormErrorViewService = associationFormErrorViewService;
+    public AssociationViewService(AssociationMappingErrorService associationMappingErrorService) {
+        this.associationMappingErrorService = associationMappingErrorService;
     }
 
     /**
@@ -280,7 +280,7 @@ public class AssociationViewService {
         }
 
         // Set error map
-        snpAssociationTableView.setAssociationErrorMap(associationFormErrorViewService.createAssociationErrorMap(
+        snpAssociationTableView.setAssociationErrorMap(associationMappingErrorService.createAssociationErrorMap(
                 association.getAssociationReport()));
 
         // Get mapping details
