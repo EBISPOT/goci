@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.validator;
 
+import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
@@ -11,6 +12,7 @@ import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
  *         <p>
  *         Custom validator for SnpFormRow object, that checks for fields left blank by curators
  */
+@Service
 public class SnpFormRowValidator implements Validator {
 
     public boolean supports(Class clazz) {
