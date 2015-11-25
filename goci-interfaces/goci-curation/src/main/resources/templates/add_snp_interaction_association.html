@@ -68,6 +68,9 @@
                           method="post"
                           name="snp-association-form"
                           th:object="${snpAssociationInteractionForm}">
+
+                        <div th:include="field_errors :: field_errors"></div>
+
                         <div id="association_div">
                             <div class="form-group">
                                 <div class="col-md-10 col-md-offset-2">

@@ -138,22 +138,22 @@ public class AssociationFormErrorViewService {
 
         String error = "";
         if (riskAllele.contains(",")) {
-            error = "SNP " + riskAllele + " contains a ',' character.";
+            error = "Risk Allele " + riskAllele + " contains a ',' character.";
         }
         if (riskAllele.contains("x")) {
-            error = error + "SNP " + riskAllele + " contains an 'x' character.";
+            error = error + "Risk Allele " + riskAllele + " contains an 'x' character.";
         }
         if (riskAllele.contains("X")) {
-            error = error + "SNP " + riskAllele + " contains an 'X' character.";
+            error = error + "Risk Allele " + riskAllele + " contains an 'X' character.";
         }
         if (riskAllele.contains(":")) {
-            error = error + "SNP " + riskAllele + " contains a ':' character.";
+            error = error + "Risk Allele " + riskAllele + " contains a ':' character.";
         }
         if (riskAllele.contains(";")) {
-            error = error + "SNP " + riskAllele + " contains a ';' character.";
+            error = error + "Risk Allele " + riskAllele + " contains a ';' character.";
         }
         if (!riskAllele.startsWith("rs")) {
-            error = error + "SNP " + riskAllele + " does not start with rs.";
+            error = error + "Risk Allele " + riskAllele + " does not start with rs.";
         }
 
         return error;
