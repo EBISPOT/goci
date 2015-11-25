@@ -37,7 +37,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field("association_rsId") private Collection<String> rsIds;
     @Field("association_strongestAllele") private Collection<String> strongestAlleles;
     @Field("association_context") private Collection<String> contexts;
-    @Field("association_region") private Collection<String> regions;
+    @Field("association_regions") private Collection<String> regions;
     @Field("association_entrezMappedGene") private Collection<String> entrezMappedGenes;
     @Field("association_entrezMappedGeneLinks") private Collection<String> entrezMappedGeneLinks;
     @Field("association_ensemblMappedGene") private Collection<String> ensemblMappedGenes;
@@ -47,7 +47,9 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field("association_chromosomeName") private Collection<String> chromosomeNames;
     @Field("association_chromosomePosition") private Collection<Integer> chromosomePositions;
     @Field("association_last_modified") private Collection<String> lastModifiedDates;
-//    @Field("association_locusDescription") private Collection<String> locusDescriptions;
+    @Field("association_positionLinks") private Collection<String> positionLinks;
+
+    //    @Field("association_locusDescription") private Collection<String> locusDescriptions;
 //    @Field("association_merged") private Long merged;
 
     // embedded DiseaseTrait info
@@ -102,6 +104,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.reportedGeneLinks = new LinkedHashSet<>();
         this.chromosomeNames = new LinkedHashSet<>();
         this.chromosomePositions = new LinkedHashSet<>();
+        this.positionLinks = new LinkedHashSet<>();
         this.lastModifiedDates = new LinkedHashSet<>();
 //        this.locusDescriptions = new LinkedHashSet<>();
 
@@ -175,7 +178,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.contexts.add(context);
     }
 
-    public void addRegions(Collection<String> regions) {
+    public void addRegion(Collection<String> regions) {
         this.regions.addAll(regions);
     }
 
@@ -210,6 +213,10 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
     public void addChromosomePositions(Collection<Integer> chromosomePositions) {
         this.chromosomePositions.addAll(chromosomePositions);
+    }
+
+    public void addPositionLinks(Collection<String> positionLinks){
+        this.positionLinks.addAll(positionLinks);
     }
 
     public void addLastModifiedDates(Collection<String> lastModifiedDates) {

@@ -55,7 +55,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     // pluralise all other information, but retain order
     @Field("chromosomeName") private Set<String> chromosomeNames;
     @Field("chromosomePosition") private Set<Integer> chromosomePositions;
-    @Field("positionLinks") private Set<String> positionLinks;
+    @Field("positionLinks") private Collection<String> positionLinks;
 
     @Field("locusDescription") @NonEmbeddableField private String locusDescription;
 
@@ -186,6 +186,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     public Set<Integer> getChromosomePositions() {
         return chromosomePositions;
+    }
+
+    public Collection<String> getPositionLinks(){
+        return positionLinks;
     }
 
     public float getOrPerCopyNum() {

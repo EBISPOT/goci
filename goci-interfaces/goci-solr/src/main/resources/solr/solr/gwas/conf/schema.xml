@@ -203,7 +203,7 @@
     <field name="association_rsId" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="association_strongestAllele" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="association_context" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="association_region" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="association_regions" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="association_entrezMappedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="association_entrezMappedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="association_ensemblMappedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
@@ -212,6 +212,7 @@
     <field name="association_reportedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="association_chromosomeName" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="association_chromosomePosition" type="int" indexed="true" stored="true" multiValued="true" />
+    <field name="association_positionLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="association_last_modified" type="date" indexed="true" stored="true" multiValued="true" />
     <!--<field name="association_locusDescription" type="text_general" indexed="true" stored="true" multiValued="true" />-->
     
