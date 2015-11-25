@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,8 @@ import uk.ac.ebi.spot.goci.curation.service.AssociationViewService;
 import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
+import uk.ac.ebi.spot.goci.curation.validator.SnpFormColumnValidator;
+import uk.ac.ebi.spot.goci.curation.validator.SnpFormRowValidator;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.Curator;
@@ -92,6 +95,10 @@ public class AssociationController {
     private LociAttributesService lociAttributesService;
     private AssociationFormErrorViewService associationFormErrorViewService;
 
+    // Validators
+    private SnpFormRowValidator snpFormRowValidator;
+    private SnpFormColumnValidator snpFormColumnValidator;
+
     // Uses goci-mapper service to run mapping
     private MappingService mappingService;
 
@@ -115,6 +122,8 @@ public class AssociationController {
                                  SnpInteractionAssociationService snpInteractionAssociationService,
                                  LociAttributesService lociAttributesService,
                                  AssociationFormErrorViewService associationFormErrorViewService,
+                                 SnpFormRowValidator snpFormRowValidator,
+                                 SnpFormColumnValidator snpFormColumnValidator,
                                  MappingService mappingService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
@@ -129,6 +138,8 @@ public class AssociationController {
         this.snpInteractionAssociationService = snpInteractionAssociationService;
         this.lociAttributesService = lociAttributesService;
         this.associationFormErrorViewService = associationFormErrorViewService;
+        this.snpFormRowValidator = snpFormRowValidator;
+        this.snpFormColumnValidator = snpFormColumnValidator;
         this.mappingService = mappingService;
     }
 
@@ -529,83 +540,130 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/add_standard",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
-    public String addStandardSnps(@ModelAttribute SnpAssociationForm snpAssociationForm, @PathVariable Long studyId) {
+    public String addStandardSnps(@ModelAttribute SnpAssociationForm snpAssociationForm,
+                                  @PathVariable Long studyId,
+                                  BindingResult result,
+                                  Model model) {
 
-        // Get our study object
-        Study study = studyRepository.findOne(studyId);
+        for (SnpFormRow row : snpAssociationForm.getSnpFormRows()) {
+            snpFormRowValidator.validate(row, result);
+        }
 
-        // Create an association object from details in returned form
-        Association newAssociation = singleSnpMultiSnpAssociationService.createAssociation(snpAssociationForm);
+        if (result.hasErrors()) {
+            model.addAttribute("snpAssociationForm", snpAssociationForm);
 
-        // Set the study ID for our association
-        newAssociation.setStudy(study);
+            // Also passes back study object to view so we can create links back to main study page
+            model.addAttribute("study", studyRepository.findOne(studyId));
+            return "add_standard_snp_association";
+        }
+        else {
+            // Get our study object
+            Study study = studyRepository.findOne(studyId);
 
-        // Save our association information
-        associationRepository.save(newAssociation);
+            // Create an association object from details in returned form
+            Association newAssociation = singleSnpMultiSnpAssociationService.createAssociation(snpAssociationForm);
 
-        // Map RS_ID in association
-        Collection<Association> associationsToMap = new ArrayList<>();
-        associationsToMap.add(newAssociation);
-        Curator curator = study.getHousekeeping().getCurator();
-        String mappedBy = curator.getLastName();
-        mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+            // Set the study ID for our association
+            newAssociation.setStudy(study);
 
-        return "redirect:/associations/" + newAssociation.getId();
+            // Save our association information
+            associationRepository.save(newAssociation);
+
+            // Map RS_ID in association
+            Collection<Association> associationsToMap = new ArrayList<>();
+            associationsToMap.add(newAssociation);
+            Curator curator = study.getHousekeeping().getCurator();
+            String mappedBy = curator.getLastName();
+            mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+
+            return "redirect:/associations/" + newAssociation.getId();
+        }
     }
 
     @RequestMapping(value = "/studies/{studyId}/associations/add_multi",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
-    public String addMultiSnps(@ModelAttribute SnpAssociationForm snpAssociationForm, @PathVariable Long studyId) {
+    public String addMultiSnps(@ModelAttribute SnpAssociationForm snpAssociationForm,
+                               @PathVariable Long studyId,
+                               BindingResult result,
+                               Model model) {
 
-        // Get our study object
-        Study study = studyRepository.findOne(studyId);
+        for (SnpFormRow row : snpAssociationForm.getSnpFormRows()) {
+            snpFormRowValidator.validate(row, result);
+        }
 
-        // Create an association object from details in returned form
-        Association newAssociation = singleSnpMultiSnpAssociationService.createAssociation(snpAssociationForm);
+        if (result.hasErrors()) {
+            model.addAttribute("snpAssociationForm", snpAssociationForm);
 
-        // Set the study ID for our association
-        newAssociation.setStudy(study);
+            // Also passes back study object to view so we can create links back to main study page
+            model.addAttribute("study", studyRepository.findOne(studyId));
+            return "add_multi_snp_association";
+        }
+        else {
 
-        // Save our association information
-        associationRepository.save(newAssociation);
+            // Get our study object
+            Study study = studyRepository.findOne(studyId);
 
-        // Map RS_ID in association
-        Collection<Association> associationsToMap = new ArrayList<>();
-        associationsToMap.add(newAssociation);
-        Curator curator = study.getHousekeeping().getCurator();
-        String mappedBy = curator.getLastName();
-        mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+            // Create an association object from details in returned form
+            Association newAssociation = singleSnpMultiSnpAssociationService.createAssociation(snpAssociationForm);
 
-        return "redirect:/associations/" + newAssociation.getId();
+            // Set the study ID for our association
+            newAssociation.setStudy(study);
+
+            // Save our association information
+            associationRepository.save(newAssociation);
+
+            // Map RS_ID in association
+            Collection<Association> associationsToMap = new ArrayList<>();
+            associationsToMap.add(newAssociation);
+            Curator curator = study.getHousekeeping().getCurator();
+            String mappedBy = curator.getLastName();
+            mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+
+            return "redirect:/associations/" + newAssociation.getId();
+        }
     }
 
     @RequestMapping(value = "/studies/{studyId}/associations/add_interaction",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
     public String addSnpInteraction(@ModelAttribute SnpAssociationInteractionForm snpAssociationInteractionForm,
-                                    @PathVariable Long studyId) {
+                                    @PathVariable Long studyId, BindingResult result, Model model) {
 
-        // Get our study object
-        Study study = studyRepository.findOne(studyId);
+        for (SnpFormColumn column : snpAssociationInteractionForm.getSnpFormColumns()) {
+            snpFormColumnValidator.validate(column, result);
+        }
 
-        // Create an association object from details in returned form
-        Association newAssociation = snpInteractionAssociationService.createAssociation(snpAssociationInteractionForm);
+        if (result.hasErrors()) {
+            model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
 
-        // Set the study ID for our association
-        newAssociation.setStudy(study);
+            // Also passes back study object to view so we can create links back to main study page
+            model.addAttribute("study", studyRepository.findOne(studyId));
+            return "add_snp_interaction_association";
+        }
+        else {
+            // Get our study object
+            Study study = studyRepository.findOne(studyId);
 
-        // Save our association information
-        associationRepository.save(newAssociation);
+            // Create an association object from details in returned form
+            Association newAssociation =
+                    snpInteractionAssociationService.createAssociation(snpAssociationInteractionForm);
 
-        // Map RS_ID in association
-        Collection<Association> associationsToMap = new ArrayList<>();
-        associationsToMap.add(newAssociation);
-        Curator curator = study.getHousekeeping().getCurator();
-        String mappedBy = curator.getLastName();
-        mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+            // Set the study ID for our association
+            newAssociation.setStudy(study);
 
-        return "redirect:/associations/" + newAssociation.getId();
+            // Save our association information
+            associationRepository.save(newAssociation);
+
+            // Map RS_ID in association
+            Collection<Association> associationsToMap = new ArrayList<>();
+            associationsToMap.add(newAssociation);
+            Curator curator = study.getHousekeeping().getCurator();
+            String mappedBy = curator.getLastName();
+            mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+
+            return "redirect:/associations/" + newAssociation.getId();
+        }
     }
 
      /* Existing association information */
