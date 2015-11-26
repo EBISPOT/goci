@@ -72,6 +72,7 @@ function processAssociation(association, table) {
             var type = '';
             var description = '';
 
+            //this is for a multi-SNP haplotype
             if(association.rsId[0].indexOf(',') != -1) {
                 rsIds = association.rsId[0].split(',');
                 alleles = association.strongestAllele[0].split(',');
@@ -81,6 +82,7 @@ function processAssociation(association, table) {
                     description = association.locusDescription;
                 }
             }
+            //this is for an interaction
             else if(association.rsId[0].indexOf('x') != -1){
                 rsIds = association.rsId[0].split('x');
                 alleles = association.strongestAllele[0].split('x');
@@ -176,31 +178,42 @@ function processAssociation(association, table) {
     }
 
     var location = "chr";
-    if(association.chromosomeName != null){
-        location = location.concat(association.chromosomeName[0]);
-    }
-    else{
-        location = location.concat("?");
-    }
-    if(association.chromosomePosition != null){
-        var position = association.chromosomePosition[0];
-        location = location.concat(":").concat(position);
+    if(association.positionLinks != null) {
+        for (var k = 0; k < association.positionLinks.length; k++) {
+            var chromName = association.positionLinks[k].split("|")[0];
+            var posiition = association.positionLinks[k].split("|")[1];
 
-        var min = parseInt(position)-500;
-        var max = parseInt(position)+500;
-        var locationsearch = min.toString().concat("-").concat(max.toString());
+            var pattern = new RegExp("^[[:digit:]]+$");
 
-        if(association.chromosomeName != null){
-            locationsearch = association.chromosomeName[0].concat(':').concat(locationsearch);
+            if (pattern.test(chromName) || chromName == 'X' || chromName == 'Y') {
+
+                location = location.concat(chromName);
+            }
+            else {
+                location = location.concat("?");
+            }
+            //if (association.chromosomePosition != null) {
+            //    var position = association.chromosomePosition[0];
+            location = location.concat(":").concat(position);
+
+            var min = parseInt(position) - 500;
+            var max = parseInt(position) + 500;
+            var locationsearch = min.toString().concat("-").concat(max.toString());
+
+            if (chromName != null) {
+                locationsearch = chromName.concat(':').concat(locationsearch);
+            }
+
+            var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Location/View?r=".concat(locationsearch).concat("'  target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
+
+            location = location.concat('&nbsp;&nbsp;').concat(ensembl);
         }
-
-        var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Location/View?r=".concat(locationsearch).concat("'  target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
-
-        location = location.concat('&nbsp;&nbsp;').concat(ensembl);
     }
-    else{
+    else {
         location = location.concat(":").concat("?");
     }
+
+
     row.append($("<td>").html(location));
 
     //row.append($("<td>"));

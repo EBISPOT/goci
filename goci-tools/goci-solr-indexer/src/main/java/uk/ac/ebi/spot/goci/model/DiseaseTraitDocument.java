@@ -40,11 +40,11 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     @Field("association_rsId") private Collection<String> rsIds;
     @Field("association_strongestAllele") private Collection<String> strongestAlleles;
     @Field("association_context") private Collection<String> contexts;
-    @Field("association_region") private Collection<String> regions;
+    @Field("association_regions") private Collection<String> regions;
     @Field("association_entrezMappedGenes") private Collection<String> entrezMappedGenes;
     @Field("association_entrezMappedGeneLinks") private Collection<String> entrezMappedGeneLinks;
-    @Field("association_ensemblMappedGenes") private Collection<String> ensemblMappedGenes;
-    @Field("association_ensemblMappedGeneLinks") private Collection<String> ensemblMappedGeneLinks;
+//    @Field("association_ensemblMappedGenes") private Collection<String> ensemblMappedGenes;
+//    @Field("association_ensemblMappedGeneLinks") private Collection<String> ensemblMappedGeneLinks;
     @Field("association_reportedGene") private Collection<String> reportedGenes;
     @Field("association_reportedGeneLinks") private Collection<String> reportedGeneLinks;
     @Field("association_chromosomeName") private Collection<String> chromosomeNames;
@@ -86,8 +86,8 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.regions = new LinkedHashSet<>();
         this.entrezMappedGenes = new LinkedHashSet<>();
         this.entrezMappedGeneLinks = new LinkedHashSet<>();
-        this.ensemblMappedGenes = new LinkedHashSet<>();
-        this.ensemblMappedGeneLinks = new LinkedHashSet<>();
+//        this.ensemblMappedGenes = new LinkedHashSet<>();
+//        this.ensemblMappedGeneLinks = new LinkedHashSet<>();
         this.reportedGenes = new LinkedHashSet<>();
         this.reportedGeneLinks = new LinkedHashSet<>();
         this.chromosomeNames = new LinkedHashSet<>();
@@ -196,13 +196,13 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.entrezMappedGeneLinks.addAll(mappedGeneLinks);
     }
 
-    public void addEnsemblMappedGenes(Collection<String> mappedGenes) {
-        this.ensemblMappedGenes.addAll(mappedGenes);
-    }
-
-    public void addEnsemblMappedGeneLinks(Collection<String> mappedGeneLinks) {
-        this.ensemblMappedGeneLinks.addAll(mappedGeneLinks);
-    }
+//    public void addEnsemblMappedGenes(Collection<String> mappedGenes) {
+//        this.ensemblMappedGenes.addAll(mappedGenes);
+//    }
+//
+//    public void addEnsemblMappedGeneLinks(Collection<String> mappedGeneLinks) {
+//        this.ensemblMappedGeneLinks.addAll(mappedGeneLinks);
+//    }
 
 
     public void addReportedGenes(Collection<String> reportedGenes) {

@@ -186,8 +186,8 @@
     <field name="region" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="entrezMappedGenes" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="entrezMappedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
-    <field name="ensemblMappedGenes" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="ensemblMappedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
+    <!--<field name="ensemblMappedGenes" type="text_general" indexed="true" stored="true" multiValued="true" />-->
+    <!--<field name="ensemblMappedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />-->
     <field name="reportedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="reportedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="studyId" type="text_general" indexed="true" stored="true" multiValued="false" />
@@ -206,8 +206,8 @@
     <field name="association_regions" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="association_entrezMappedGenes" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="association_entrezMappedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
-    <field name="association_ensemblMappedGenes" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="association_ensemblMappedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
+    <!--<field name="association_ensemblMappedGenes" type="text_general" indexed="true" stored="true" multiValued="true" />-->
+    <!--<field name="association_ensemblMappedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />-->
     <field name="association_reportedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="association_reportedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="association_chromosomeName" type="text_general" indexed="true" stored="true" multiValued="true" />
