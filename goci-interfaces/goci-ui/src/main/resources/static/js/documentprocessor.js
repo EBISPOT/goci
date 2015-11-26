@@ -262,22 +262,31 @@ function processAssociation(association, table) {
     row.append($("<td>").html(repgene));
 
     var mapgene = '';
-    if (association.entrezMappedGeneLinks != null && association.entrezMappedGene != null) {
-        mapgene = association.mappedGene[0];
-        for (var j = 0; j < association.mappedGeneLinks.length; j++) {
-            var gene = association.mappedGeneLinks[j].split("|")[0];
-            var geneId = association.mappedGeneLinks[j].split("|")[1];
+    if (association.entrezMappedGeneLinks != null && association.entrezMappedGenes != null) {
+        for(var k = 0; k < association.entrezMappedGenes.length; k++){
+            var emg = association.entrezMappedGenes[k];
+            for (var j = 0; j < association.entrezMappedGeneLinks.length; j++) {
+                var gene = association.entrezMappedGeneLinks[j].split("|")[0];
+                var geneId = association.entrezMappedGeneLinks[j].split("|")[1];
 
-            var mapgenesearch = "<span><a href='search?query=".concat(gene).concat("'>").concat(gene).concat("</a></span>");
-            var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=".concat(geneId).concat("'  target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
+                var mapgenesearch = "<span><a href='search?query=".concat(gene).concat("'>").concat(gene).concat("</a></span>");
+                var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=".concat(geneId).concat("'  target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
 
-            mapgene = mapgene.replace(gene, mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl));
+                emg = emg.replace(gene, mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl));
+                if (mapgene == '') {
+                    mapgene = emg;
+                }
+
+                else {
+                    mapgene = mapgene.concat(",").concat(emg);
+                }
+            }
 
         }
     }
-    else if (association.mappedGene != null) {
-        for (var j = 0; j < association.mappedGene.length; j++) {
-            var mapgenesearch = "<span><a href='search?query=".concat(association.mappedGene[j]).concat("'>").concat(association.mappedGene[j]).concat("</a></span>");
+    else if (association.entrezMappedGene != null) {
+        for (var j = 0; j < association.entrezMappedGenes.length; j++) {
+            var mapgenesearch = "<span><a href='search?query=".concat(association.entrezMappedGenes[j]).concat("'>").concat(association.entrezMappedGenes[j]).concat("</a></span>");
             if (mapgene == '') {
                 mapgene = mapgenesearch;
             }
