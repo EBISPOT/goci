@@ -49,6 +49,7 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     @Field("association_reportedGeneLinks") private Collection<String> reportedGeneLinks;
     @Field("association_chromosomeName") private Collection<String> chromosomeNames;
     @Field("association_chromosomePosition") private Collection<Integer> chromosomePositions;
+    @Field("association_positionLinks") private Collection<String> positionLinks;
     @Field("association_last_modified") private Collection<String> lastModifiedDates;
 
     // embedded EfoTrait info
@@ -91,6 +92,7 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.reportedGeneLinks = new LinkedHashSet<>();
         this.chromosomeNames = new LinkedHashSet<>();
         this.chromosomePositions = new LinkedHashSet<>();
+        this.positionLinks = new LinkedHashSet<>();
         this.lastModifiedDates = new LinkedHashSet<>();
 
         this.mappedLabels = new LinkedHashSet<>();
@@ -182,8 +184,8 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.contexts.add(context);
     }
 
-    public void addRegion(String region) {
-        this.regions.add(region);
+    public void addRegion(Collection<String> regions) {
+        this.regions.addAll(regions);
     }
 
     public void addEntrezMappedGenes(Collection<String> mappedGenes) {
@@ -217,6 +219,10 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
 
     public void addChromosomePositions(Collection<Integer> chromosomePositions) {
         this.chromosomePositions.addAll(chromosomePositions);
+    }
+
+    public void addPositionLinks(Collection<String> positionLinks){
+        this.positionLinks.addAll(positionLinks);
     }
 
     public void addLastModifiedDates(Collection<String> lastModifiedDates) {

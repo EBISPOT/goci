@@ -23,9 +23,11 @@ import static org.junit.Assert.fail;
 public class EmbeddableDocumentTest {
     private Study study;
     private Association association;
+    private DiseaseTrait diseaseTrait;
 
     private StudyDocument studyDoc;
     private AssociationDocument associationDoc;
+    private DiseaseTraitDocument traitDoc;
 
     @Before
     public void setUp() {
@@ -60,6 +62,9 @@ public class EmbeddableDocumentTest {
                                            Collections.emptyList(), null, null, null);
         association.setId(2l);
         this.associationDoc = new AssociationDocument(association);
+
+        this.diseaseTrait = new DiseaseTrait((long) 870, "Breast cancer");
+        this.traitDoc = new DiseaseTraitDocument(diseaseTrait);
     }
 
     @Test
@@ -74,9 +79,38 @@ public class EmbeddableDocumentTest {
     }
 
     @Test
+    public void testEmbedTrait() {
+        try {
+            traitDoc.embed(associationDoc);
+        }
+        catch (DocumentEmbeddingException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
     public void testIntrospection() {
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo(studyDoc.getClass());
+            for (PropertyDescriptor pd : beanInfo.getPropertyDescriptors()) {
+                System.out.println("Display name: " + pd.getDisplayName());
+                System.out.println("Name: " + pd.getName());
+                System.out.println("Read method: " + pd.getReadMethod());
+                System.out.println("\t" + pd);
+            }
+
+        }
+        catch (IntrospectionException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testTraitIntrospection() {
+        try {
+            BeanInfo beanInfo = Introspector.getBeanInfo(traitDoc.getClass());
             for (PropertyDescriptor pd : beanInfo.getPropertyDescriptors()) {
                 System.out.println("Display name: " + pd.getDisplayName());
                 System.out.println("Name: " + pd.getName());
