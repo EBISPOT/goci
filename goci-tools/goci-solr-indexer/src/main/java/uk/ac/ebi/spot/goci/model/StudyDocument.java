@@ -38,9 +38,9 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field("association_strongestAllele") private Collection<String> strongestAlleles;
     @Field("association_context") private Collection<String> contexts;
     @Field("association_regions") private Collection<String> regions;
-    @Field("association_entrezMappedGene") private Collection<String> entrezMappedGenes;
+    @Field("association_entrezMappedGenes") private Collection<String> entrezMappedGenes;
     @Field("association_entrezMappedGeneLinks") private Collection<String> entrezMappedGeneLinks;
-    @Field("association_ensemblMappedGene") private Collection<String> ensemblMappedGenes;
+    @Field("association_ensemblMappedGenes") private Collection<String> ensemblMappedGenes;
     @Field("association_ensemblMappedGeneLinks") private Collection<String> ensemblMappedGeneLinks;
     @Field("association_reportedGene") private Collection<String> reportedGenes;
     @Field("association_reportedGeneLinks") private Collection<String> reportedGeneLinks;
@@ -182,16 +182,16 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.regions.addAll(regions);
     }
 
-    public void addEntrezMappedGene(String mappedGene) {
-        this.entrezMappedGenes.add(mappedGene);
+    public void addEntrezMappedGenes(Collection<String> mappedGenes) {
+        this.entrezMappedGenes.addAll(mappedGenes);
     }
 
     public void addEntrezMappedGeneLinks(Collection<String> mappedGeneLinks) {
         this.entrezMappedGeneLinks.addAll(mappedGeneLinks);
     }
 
-    public void addEnsemblMappedGene(String mappedGene) {
-        this.ensemblMappedGenes.add(mappedGene);
+    public void addEnsemblMappedGenes(Collection<String> mappedGenes) {
+        this.ensemblMappedGenes.addAll(mappedGenes);
     }
 
     public void addEnsemblMappedGeneLinks(Collection<String> mappedGeneLinks) {
