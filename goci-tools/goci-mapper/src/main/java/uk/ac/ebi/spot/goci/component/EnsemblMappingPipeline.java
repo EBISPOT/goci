@@ -170,11 +170,10 @@ public class EnsemblMappingPipeline {
                     getAllGenomicContexts(snp_location);
                 }
             }
-
-            // Reported genes checks
-            if (reported_genes.size() > 0) {
-                checkReportedGenes();
-            }
+        }
+        // Reported genes checks
+        if (reported_genes.size() > 0) {
+            checkReportedGenes();
         }
     }
 
