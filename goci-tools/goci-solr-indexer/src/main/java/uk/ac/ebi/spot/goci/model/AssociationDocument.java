@@ -526,7 +526,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                         else if  (closestUpstream != null && closestDownstream == null){
                             closestUpstreamDownstreamGenes.add(closestUpstream.concat(" - ?"));
                         }
-                        else {
+                        else if (closestUpstream == null && closestDownstream != null){
                             closestUpstreamDownstreamGenes.add(("? - ").concat(closestDownstream));
                         }
                     }
