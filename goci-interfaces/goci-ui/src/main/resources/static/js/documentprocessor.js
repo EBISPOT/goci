@@ -181,9 +181,9 @@ function processAssociation(association, table) {
     if(association.positionLinks != null) {
         for (var k = 0; k < association.positionLinks.length; k++) {
             var chromName = association.positionLinks[k].split("|")[0];
-            var posiition = association.positionLinks[k].split("|")[1];
+            var position = association.positionLinks[k].split("|")[1];
 
-            var pattern = new RegExp("^[[:digit:]]+$");
+            var pattern = new RegExp("^\\d+$");
 
             if (pattern.test(chromName) || chromName == 'X' || chromName == 'Y') {
 
@@ -278,21 +278,27 @@ function processAssociation(association, table) {
     if (association.entrezMappedGeneLinks != null && association.entrezMappedGenes != null) {
         for(var k = 0; k < association.entrezMappedGenes.length; k++){
             var emg = association.entrezMappedGenes[k];
+
+            if(emg != "No mapped genes"){
             for (var j = 0; j < association.entrezMappedGeneLinks.length; j++) {
                 var gene = association.entrezMappedGeneLinks[j].split("|")[0];
                 var geneId = association.entrezMappedGeneLinks[j].split("|")[1];
 
-                var mapgenesearch = "<span><a href='search?query=".concat(gene).concat("'>").concat(gene).concat("</a></span>");
-                var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=".concat(geneId).concat("'  target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
+                if(gene == emg) {
 
-                emg = emg.replace(gene, mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl));
-                if (mapgene == '') {
-                    mapgene = emg;
-                }
+                    var mapgenesearch = "<span><a href='search?query=".concat(gene).concat("'>").concat(gene).concat("</a></span>");
+                    var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=".concat(geneId).concat("'  target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
 
-                else {
-                    mapgene = mapgene.concat(",").concat(emg);
+                    emg = emg.replace(gene, mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl));
+                    if (mapgene == '') {
+                        mapgene = emg;
+                    }
+
+                    else {
+                        mapgene = mapgene.concat(",").concat(emg);
+                    }
                 }
+            }
             }
 
         }
@@ -308,6 +314,9 @@ function processAssociation(association, table) {
                 mapgene = mapgene.concat("-").concat(mapgenesearch);
             }
         }
+    }
+    else {
+        mapgene = "No mapped genes";
     }
     row.append($("<td>").html(mapgene));
 

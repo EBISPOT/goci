@@ -464,7 +464,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
                                     String location = context.getLocation().getChromosomeName();
 
-                                    String pattern = "^[[:digit:]]+$";
+                                    String pattern = "^\\d+$";
 
                                     Pattern p = Pattern.compile(pattern);
 
@@ -592,9 +592,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         else if (!closestUpstreamDownstreamGenes.isEmpty()) {
             mappedGenes.addAll(closestUpstreamDownstreamGenes);
         }
-        else {
-            mappedGenes.add("No mapped genes");
-        }
+//        else {
+//            mappedGenes.add("No mapped genes");
+//        }
 
         return mappedGenes;
     }
@@ -683,7 +683,12 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
                 String distance = "";
                 if (context.getDistance() != null) {
-                    distance = String.valueOf(context.getDistance());
+                    if(context.getDistance() == 0 || context.getIsUpstream()) {
+                        distance = String.valueOf(context.getDistance());
+                    }
+                    else {
+                        distance = "-".concat(String.valueOf(context.getDistance()));
+                    }
                 }
 
                 String location = "";
@@ -708,8 +713,14 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                             if (!distance.equals("")) {
                                 geneLink = geneLink.concat("|").concat(distance);
                             }
+                            else {
+                                geneLink = geneLink.concat("|N/A");
+                            }
                             if (!location.equals("")) {
                                 geneLink = geneLink.concat("|".concat(location));
+                            }
+                            else {
+                                geneLink = geneLink.concat("|N/A");
                             }
                             mappedGeneLinks.add(geneLink);
                         }

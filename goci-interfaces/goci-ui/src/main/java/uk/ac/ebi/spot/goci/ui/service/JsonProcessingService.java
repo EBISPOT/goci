@@ -4,8 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by dwelter on 24/02/15.
@@ -75,11 +79,13 @@ public class JsonProcessingService {
             line.append(rep);
             line.append("\t");
 
-            line.append(getRegion(doc));
+            List<String> chromLocation = getChromName(doc);
+
+            line.append(chromLocation.get(3));
             line.append("\t");
-            line.append(getChromName(doc));
+            line.append(chromLocation.get(0));
             line.append("\t");
-            line.append(getChromPos(doc));
+            line.append(chromLocation.get(1));
             line.append("\t");
 
             line.append(getRepGene(doc));
@@ -294,26 +300,58 @@ public class JsonProcessingService {
         return genes;
     }
 
-    private String getChromPos(JsonNode doc) {
-        String chromPos;
-        if(doc.get("chromosomePosition") != null) {
-           chromPos = doc.get("chromosomePosition").get(0).asText().trim();
-        }
-        else{
-           chromPos = "";
-        }
-        return chromPos;
-    }
+//    private String getChromPos(JsonNode doc) {
+//        String chromPos;
+//        if(doc.get("chromosomePosition") != null) {
+//           chromPos = doc.get("chromosomePosition").get(0).asText().trim();
+//        }
+//        else{
+//           chromPos = "";
+//        }
+//        return chromPos;
+//    }
 
-    private String getChromName(JsonNode doc) {
-        String chromName;
-        if(doc.get("chromosomeName") != null) {
-            chromName = doc.get("chromosomeName").get(0).asText().trim();
+    private List<String> getChromName(JsonNode doc) {
+        String chromName = null;
+        String chromPos = null;
+        String region = null;
+        List<String> location = new ArrayList<>();
+
+        if(doc.get("positionLinks") != null) {
+//            if(doc.get("positionLinks").size() > 1){
+                for(int i =0; i < doc.get("positionLinks").size(); i++) {
+                    String loc = doc.get("positionLinks").get(i).asText().trim();
+
+                    chromName = loc.split("|")[0];
+                    chromPos = loc.split("|")[1];
+                    region = loc.split("|")[2];
+
+                    String pattern = "^\\d+$";
+
+                    Pattern p = Pattern.compile(pattern);
+                    Matcher m = p.matcher(chromName);
+
+                    if (m.find() || location.equals("X") || location.equals("Y")) {
+                        location.add(chromName);
+                        location.add(chromPos);
+                        location.add(region);
+                    }
+                }
+//            }
+//            else {
+//                chromName = doc.get("chromosomeName").get(0).asText().trim();
+//            }
         }
         else{
             chromName = "";
+            chromPos = "";
+            region = "";
+
+            location.add(chromName);
+            location.add(chromPos);
+            location.add(region);
         }
-        return chromName;
+        return location;
     }
 
     private String getRegion(JsonNode doc) {
@@ -435,17 +473,17 @@ public class JsonProcessingService {
         String downstream ="";
         String ingene ="";
 
-        if(doc.get("mappedGeneLinks") != null) {
-            if(doc.get("mappedGeneLinks").size() == 1){
-                String geneLink = doc.get("mappedGeneLinks").get(0).asText().trim();
+        if(doc.get("entrezMappedGeneLinks") != null) {
+            if(doc.get("entrezMappedGeneLinks").size() == 1){
+                String geneLink = doc.get("entrezMappedGeneLinks").get(0).asText().trim();
                 int index = geneLink.indexOf("|");
                 ingene = geneLink.substring(index+1);
             }
             else {
-                if (doc.get("mappedGene") != null) {
-                    String mapped = doc.get("mappedGene").get(0).asText().trim();
+                if (doc.get("entrezMappedGenes") != null) {
+                    String mapped = doc.get("entrezMappedGenes").get(0).asText().trim();
 
-                    for (JsonNode geneLink : doc.get("mappedGeneLinks")) {
+                    for (JsonNode geneLink : doc.get("entrezMappedGeneLinks")) {
                         int first = geneLink.asText().trim().indexOf("|");
                         int last = geneLink.asText().trim().lastIndexOf("|");
 
@@ -484,12 +522,12 @@ public class JsonProcessingService {
         String upstream = "";
         String downstream ="";
 
-        if(doc.get("mappedGeneLinks") != null) {
-            if(doc.get("mappedGeneLinks").size() > 1){
-                if (doc.get("mappedGene") != null) {
-                    String mapped = doc.get("mappedGene").get(0).asText().trim();
+        if(doc.get("entrezMappedGeneLinks") != null) {
+            if(doc.get("entrezMappedGeneLinks").size() > 1){
+                if (doc.get("entrezMappedGenes") != null) {
+                    String mapped = doc.get("entrezMappedGenes").get(0).asText().trim();
 
-                    for (JsonNode geneLink : doc.get("mappedGeneLinks")) {
+                    for (JsonNode geneLink : doc.get("entrezMappedGeneLinks")) {
                         int first = geneLink.asText().trim().indexOf("|");
                         int last = geneLink.asText().trim().lastIndexOf("|");
                         String gene = geneLink.asText().trim().substring(0, first - 1);
