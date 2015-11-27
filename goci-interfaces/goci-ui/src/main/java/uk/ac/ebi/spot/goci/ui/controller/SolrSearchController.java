@@ -896,4 +896,5 @@ public class SolrSearchController {
         outputWriter.flush();
     }
 
+
 }

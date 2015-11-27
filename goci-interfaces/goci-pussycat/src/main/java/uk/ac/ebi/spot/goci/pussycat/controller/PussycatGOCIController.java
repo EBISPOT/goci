@@ -17,7 +17,11 @@ import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.spot.goci.pussycat.session.PussycatSession;
 import uk.ac.ebi.spot.goci.pussycat.session.PussycatSessionStrategy;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.URI;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -354,5 +358,87 @@ public class PussycatGOCIController {
         }
 
         return renderletNexus;
+    }
+
+    @RequestMapping(value = "/gwasdiagram/download")
+    public void downloadAssociations(@RequestParam(value = "pvaluemin", required = false) String pvalueMin,
+                                                   @RequestParam(value = "pvaluemax", required = false) String pvalueMax,
+                                                   @RequestParam(value = "datemin", required = false) String dateMin,
+                                                   @RequestParam(value = "datemax", required = false) String dateMax,
+                                                   HttpSession session,
+                                                   HttpServletResponse response)
+            throws PussycatSessionNotReadyException, NoRenderableDataException, IOException {
+
+        getLog().debug("Received a new rendering request - " +
+                "putting together the query from date '" + dateMin + "' to '" + dateMax + "' and from pvalue '" + pvalueMin + "' to '" + pvalueMax + "'");
+
+        if(pvalueMin == ""){
+            pvalueMin = null;
+        }
+        if(pvalueMax == ""){
+            pvalueMax = null;
+        }
+        if(dateMin == ""){
+            dateMin = null;
+        }
+        if(dateMax == ""){
+            dateMax = null;
+        }
+        Filter pvalueFilter = null;
+        Filter dateFilter = null;
+
+        if(pvalueMin != null || pvalueMax != null){
+            pvalueFilter = setPvalueFilter(pvalueMin, pvalueMax);
+            getRenderletNexus(session).setRenderingContext(pvalueFilter);
+        }
+
+        if(dateMin != null || dateMax != null){
+            dateFilter = setDateFilter(dateMin, dateMax);
+            getRenderletNexus(session).setRenderingContext(dateFilter);
+        }
+
+        String svg;
+        String fileName = "gwas-diagram";
+
+
+        if(dateFilter == null && pvalueFilter == null){
+            svg = getPussycatSession(session).performRendering(getRenderletNexus(session));
+            fileName = fileName.concat("_all.svg");
+        }
+        else if(dateFilter == null && pvalueFilter != null){
+            svg =  getPussycatSession(session).performRendering(getRenderletNexus(session), pvalueFilter);
+            fileName = fileName.concat("_latest.svg");
+        }
+        else if(pvalueFilter == null && dateFilter != null){
+            svg = getPussycatSession(session).performRendering(getRenderletNexus(session), dateFilter);
+            if(dateMax != null){
+                fileName = fileName.concat("_all-").concat(dateMax).concat(".svg");
+            }
+            else{
+                fileName = fileName.concat("_all_from-").concat(dateMax).concat(".svg");
+            }
+        }
+        else {
+            svg = getPussycatSession(session).performRendering(getRenderletNexus(session), dateFilter, pvalueFilter);
+            if(dateMax != null){
+                fileName = fileName.concat("_").concat(dateMax).concat(".svg");
+            }
+            else{
+                fileName = fileName.concat("_").concat(dateMax).concat(".svg");
+            }
+        }
+
+
+
+
+        response.setContentType("image/svg+xml");
+        response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
+        OutputStream outputStream = response.getOutputStream();
+
+
+        PrintWriter outputWriter = new PrintWriter(outputStream);
+
+        outputWriter.write(svg);
+        outputWriter.flush();
     }
 }
