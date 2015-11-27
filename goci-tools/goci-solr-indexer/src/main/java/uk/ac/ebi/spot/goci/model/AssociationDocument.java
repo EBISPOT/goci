@@ -565,7 +565,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             else {
                 up = "?" ;
             }
-            if(closest.get(1) != null) {
+            if(closest.size() == 2) {
                 down = closest.get(1);
             }
             else {
