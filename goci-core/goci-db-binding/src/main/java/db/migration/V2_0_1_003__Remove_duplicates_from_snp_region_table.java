@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
  * @author emma
  *         <p>
  *         Script related to JIRA ticket: https://www.ebi.ac.uk/panda/jira/browse/GOCI-529. After
- *         V1_9_9_056__Region_table_cleanup script and V1_9_9_057__Remove_duplicates_from_snp_region_table SNPs with
+ *         V2_0_1_001__Region_table_cleanup script and V2_0_1_002__Remove_duplicates_from_snp_region_table SNPs with
  *         more than one region exist and it cannot be consistently determined which is the most up-to-date region. Thus
  *         delete duplicates and assume NCBI pipeline will remap.
  */

@@ -12,8 +12,8 @@ import java.util.Objects;
  * @author emma
  *         <p>
  *         Script related to JIRA ticket:https://www.ebi.ac.uk/panda/jira/browse/GOCI-924. Aim is to remove duplicates
- *         from the LOCATION table that were created as a result of V1_9_9_060__Populate_locations_and_snp_location. The
- *         SQL query in V1_9_9_060__Populate_locations_and_snp_location did not take account of duplicate SNPs.
+ *         from the LOCATION table that were created as a result of V2_0_1_005__Populate_locations_and_snp_location. The
+ *         SQL query in V2_0_1_005__Populate_locations_and_snp_location did not take account of duplicate SNPs.
  */
 public class V2_0_1_006__Remove_duplicate_locations implements SpringJdbcMigration {
 
