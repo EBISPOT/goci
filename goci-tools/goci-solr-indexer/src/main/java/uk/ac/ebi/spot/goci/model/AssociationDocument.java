@@ -423,7 +423,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     private Collection<String> getMappedGenes(Association association, SingleNucleotidePolymorphism snp, String source) {
 //        Map<Long, Set<String>> mappedGenesToLocation = new HashMap<>();
-//        Map<Long, List<String>> closestUpstreamDownstreamGenesToLocation = new HashMap<>();
+        Map<Long, List<String>> closestUpstreamDownstreamGenesToLocation = new HashMap<>();
         Set<String> closestUpstreamDownstreamGenes = new LinkedHashSet<>();
         Set<String> mappedGeneList = new LinkedHashSet<>();
         Collection<String> mappedGenes = new LinkedHashSet<>();
@@ -471,11 +471,15 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     Matcher m = p.matcher(location);
 
                                     if(m.find() || location.equals("X") || location.equals("Y")){
+                                        if(closestUpstreamDownstreamGenesToLocation.get(locationId) == null){
+                                            closestUpstreamDownstreamGenesToLocation.put(locationId,
+                                                                                         new ArrayList<>());
+                                        }
                                         if(context.getIsUpstream()){
-                                              closestUpstream = geneName;
+                                            closestUpstreamDownstreamGenesToLocation.get(locationId).add(0, geneName);
                                         }
                                         else if (context.getIsDownstream()){
-                                               closestDownstream = geneName;
+                                            closestUpstreamDownstreamGenesToLocation.get(locationId).add(1, geneName);
                                         }
                                     }
 
@@ -519,16 +523,16 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                 }
                             }
                         }
-                        if (closestUpstream != null && closestDownstream != null){
-                            closestUpstreamDownstreamGenes.add(closestUpstream.concat(" - ").concat(closestDownstream));
-
-                        }
-                        else if  (closestUpstream != null && closestDownstream == null){
-                            closestUpstreamDownstreamGenes.add(closestUpstream.concat(" - ?"));
-                        }
-                        else if (closestUpstream == null && closestDownstream != null){
-                            closestUpstreamDownstreamGenes.add(("? - ").concat(closestDownstream));
-                        }
+//                        if (closestUpstream != null && closestDownstream != null){
+//                            closestUpstreamDownstreamGenes.add(closestUpstream.concat(" - ").concat(closestDownstream));
+//
+//                        }
+//                        else if  (closestUpstream != null && closestDownstream == null){
+//                            closestUpstreamDownstreamGenes.add(closestUpstream.concat(" - ?"));
+//                        }
+//                        else if (closestUpstream == null && closestDownstream != null){
+//                            closestUpstreamDownstreamGenes.add(("? - ").concat(closestDownstream));
+//                        }
                     }
                 });
 
@@ -546,29 +550,34 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 //            closestUpstreamDownstreamGenesToLocation.remove(locationId);
 //        }
 //
-//        // Map should only contain location where there are no mapped genes
-//        List<String> allUpstreamAndDownstreamGenes = new ArrayList<String>();
-//        for (Long locationId : closestUpstreamDownstreamGenesToLocation.keySet()) {
-//
-//            List<String> closestUpstreamDownstreamGenes = closestUpstreamDownstreamGenesToLocation.get(locationId);
-//
-//            if (closestUpstreamDownstreamGenes.size() == 2) {
-//
-//                // Create gene string in format "upstream - downstream"
-//                String upstreamDownstreamGeneString =
-//                        closestUpstreamDownstreamGenes.get(0)
-//                                .concat(" - ")
-//                                .concat(closestUpstreamDownstreamGenes.get(1));
-//                allUpstreamAndDownstreamGenes.add(upstreamDownstreamGeneString);
-//            }
+        // Map should only contain location where there are no mapped genes
+        for (Long locationId : closestUpstreamDownstreamGenesToLocation.keySet()) {
+
+            List<String> closest = closestUpstreamDownstreamGenesToLocation.get(locationId);
+
+            String up, down;
+            if (closest.get(0) != null) {
+                up = closest.get(0);
+            }
+            else {
+                up = "?" ;
+            }
+            if(closest.get(1) != null) {
+                down = closest.get(1);
+            }
+            else {
+                down = "?";
+            }
+
+            closestUpstreamDownstreamGenes.add(up.concat(" - ").concat(down));
 //            else {
 //                getLog().warn("Indexing bad genetic data for association " +
 //                                      "'" + association.getId() +
 //                                      "': wrong number of closest upstream and downstream gene, expected 2, got " +
 //                                      closestUpstreamDownstreamGenes.size()+ " for source "+ source);
 //            }
-//
-//        }
+
+        }
 
 
 //        if (!allUpstreamAndDownstreamGenes.isEmpty() && !allMappedGenes.isEmpty()) {
