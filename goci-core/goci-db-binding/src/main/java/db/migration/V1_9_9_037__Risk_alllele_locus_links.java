@@ -3,7 +3,6 @@ package db.migration;
 import org.flywaydb.core.api.migration.spring.SpringJdbcMigration;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import java.util.HashMap;
