@@ -9,7 +9,7 @@ https://github.com/tburdett/goci/tree/2.x-dev/goci-core/goci-model for more).
 
 author:  Emma Hastings
 date:    Nov 24th 2015
-version: 1.9.9.103(pre 2.0)
+version: 2.0.1.048
 ################################################################################
 */
 
