@@ -12,14 +12,15 @@ import java.util.List;
  * @author emma
  *         <p>
  *         Script related to JIRA ticket: https://www.ebi.ac.uk/panda/jira/browse/GOCI-927. Aim is to remove locations
- *         from the LOCATION table that have a null chromosome position.
+ *         from the LOCATION table that have a null chromosome name and position.
  */
-public class V1_9_9_075__Remove_locations_with_null_position implements SpringJdbcMigration {
+public class V2_0_1_019__Remove_locations_with_null_chromosome_details implements SpringJdbcMigration {
+
 
     private static final String SELECT_LOCATIONS = "SELECT l.id, s.id\n" +
             "FROM LOCATION l, SINGLE_NUCLEOTIDE_POLYMORPHISM s, SNP_LOCATION sl, REGION r\n" +
-            "WHERE (l.CHROMOSOME_NAME IS NULL\n" +
-            "OR l.CHROMOSOME_POSITION IS NULL)\n" +
+            "WHERE l.CHROMOSOME_NAME IS NULL\n" +
+            "AND l.CHROMOSOME_POSITION IS NULL\n" +
             "AND l.ID = sl.LOCATION_ID\n" +
             "AND s.ID = sl.SNP_ID\n" +
             "AND l.REGION_ID = r.ID";
@@ -36,13 +37,15 @@ public class V1_9_9_075__Remove_locations_with_null_position implements SpringJd
     private static final String DELETE_FROM_LOCATION = "DELETE FROM LOCATION WHERE ID =?";
 
     @Override public void migrate(JdbcTemplate jdbcTemplate) throws Exception {
+
         final List<Long> locationIds = new ArrayList<>();
 
         // Query for locations
         jdbcTemplate.query(SELECT_LOCATIONS, (resultSet, i) -> {
             Long locationId = resultSet.getLong(1);
             Long snpId = resultSet.getLong(2);
-            
+
+
             // Keep record of locations to be deleted
             locationIds.add(locationId);
 
@@ -67,5 +70,6 @@ public class V1_9_9_075__Remove_locations_with_null_position implements SpringJd
             // Delete locations after all records referring to it have been removed
             jdbcTemplate.update(DELETE_FROM_LOCATION, id);
         }
+
     }
 }

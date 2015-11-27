@@ -15,7 +15,7 @@ import java.util.Map;
  *         Jira ticket: https://www.ebi.ac.uk/panda/jira/browse/GOCI-951. Populate GENE_ENTREZ_GENE table with details
  *         from GENE table.
  */
-public class V1_9_9_071__Populate_gene_entrez_gene_table implements SpringJdbcMigration {
+public class V2_0_1_016__Populate_gene_entrez_gene_table implements SpringJdbcMigration {
 
     private static final String SELECT_GENE_ID_AND_ENTREZ_ID = "SELECT ID, ENTREZ_GENE_ID FROM GENE\n" +
             "WHERE ENTREZ_GENE_ID IS NOT NULL\n" +

@@ -8,15 +8,18 @@ import org.springframework.jdbc.core.JdbcTemplate;
  *
  * @author emma
  *         <p>
- *         Remove new lines from GENE_NAME in GENE table.
+ *         Remove whitespace from GENE_NAME in GENE table.
  *         <p>
  *         https://www.ebi.ac.uk/panda/jira/browse/GOCI-1020
  */
-public class V1_9_9_095__Remove_new_lines_from_gene_names implements SpringJdbcMigration {
+public class V2_0_1_039__Trim_gene_names implements SpringJdbcMigration {
 
-    // Query to find gene names with new lines
+    // Query to find gene names with leading or trailing whitespace
     private static final String SELECT_GENES =
-            "SELECT * FROM GENE WHERE INSTR(GENE_NAME, CHR(10)) > 0";
+            "SELECT * FROM GENE \n" +
+                    "WHERE REGEXP_LIKE(GENE_NAME, '^[ ]+.*')\n" +
+                    "OR REGEXP_LIKE(GENE_NAME, '.*[ ]+$')\n" +
+                    "ORDER BY ID";
 
     private static final String UPDATE_GENE = "UPDATE GENE \n" +
             "SET GENE_NAME = ?" +
@@ -29,12 +32,10 @@ public class V1_9_9_095__Remove_new_lines_from_gene_names implements SpringJdbcM
             Long geneId = resultSet.getLong(1);
             String geneName = resultSet.getString(2);
 
-            String newline = System.getProperty("line.separator");
+            if (!geneName.isEmpty()) {
 
-            if (geneName.contains(newline)) {
-
-                // Remove new line
-                String updatedGeneName = geneName.replace(newline, "");
+                // Trim name
+                String updatedGeneName = geneName.trim();
 
                 // Update gene name
                 jdbcTemplate.update(UPDATE_GENE, updatedGeneName, geneId);

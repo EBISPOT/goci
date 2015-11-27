@@ -15,7 +15,7 @@ import java.util.Map;
  *         Jira ticket: https://www.ebi.ac.uk/panda/jira/browse/GOCI-951.
  *         Migrate Entrez gene IDs from GENE table to new ENTREZ_GENE table
  */
-public class V1_9_9_069__Migrate_entrez_ids implements SpringJdbcMigration {
+public class V2_0_1_014__Migrate_entrez_ids implements SpringJdbcMigration {
 
     private static final String SELECT_ENTREZ_GENE_IDS = "SELECT DISTINCT ENTREZ_GENE_ID \n" +
             "FROM GENE\n" +

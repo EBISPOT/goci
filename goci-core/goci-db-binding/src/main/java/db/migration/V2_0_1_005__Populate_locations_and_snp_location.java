@@ -15,7 +15,7 @@ import java.util.Map;
  *         Script related to JIRA ticket: https://www.ebi.ac.uk/panda/jira/browse/GOCI-848. Aim is populate LOCATION and
  *         SNP_LOCATION tables
  */
-public class V1_9_9_060__Populate_locations_and_snp_location implements SpringJdbcMigration {
+public class V2_0_1_005__Populate_locations_and_snp_location implements SpringJdbcMigration {
 
     private static final String SELECT_LOCATION_DETAILS =
             "SELECT s.ID, s.CHROMOSOME_NAME, s.CHROMOSOME_POSITION, r.ID " +

@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
  *         Script related to JIRA ticket: https://www.ebi.ac.uk/panda/jira/browse/GOCI-941. Aim is to remove orphan
  *         locations from  the LOCATION table. This ensures locations only exist that link to a SNP.
  */
-public class V1_9_9_064__Remove_orphan_locations implements SpringJdbcMigration {
+public class V2_0_1_009__Remove_orphan_locations implements SpringJdbcMigration {
 
     // Query for locations not found in SNP_LOCATION table
     private static final String SELECT_ORPHAN_LOCATIONS =

@@ -14,7 +14,7 @@ import java.util.List;
  *         <p>
  *         https://www.ebi.ac.uk/panda/jira/browse/GOCI-1020
  */
-public class V1_9_9_096__Remove_duplicate_genes implements SpringJdbcMigration {
+public class V2_0_1_041__Remove_duplicate_genes implements SpringJdbcMigration {
 
     // Query to find gene names with new lines
     private static final String SELECT_DUPLICATE_GENES =

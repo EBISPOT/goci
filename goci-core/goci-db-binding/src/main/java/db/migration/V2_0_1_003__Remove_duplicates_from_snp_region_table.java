@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
  *         more than one region exist and it cannot be consistently determined which is the most up-to-date region. Thus
  *         delete duplicates and assume NCBI pipeline will remap.
  */
-public class V1_9_9_058__Remove_duplicates_from_snp_region_table implements SpringJdbcMigration {
+public class V2_0_1_003__Remove_duplicates_from_snp_region_table implements SpringJdbcMigration {
 
     private static final String SELECT_DUPLICATES = "SELECT\n" +
             "SNP_ID , count(*)\n" +

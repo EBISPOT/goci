@@ -15,7 +15,7 @@ import java.util.Objects;
  *         from the LOCATION table that were created as a result of V1_9_9_060__Populate_locations_and_snp_location. The
  *         SQL query in V1_9_9_060__Populate_locations_and_snp_location did not take account of duplicate SNPs.
  */
-public class V1_9_9_061__Remove_duplicate_locations implements SpringJdbcMigration {
+public class V2_0_1_006__Remove_duplicate_locations implements SpringJdbcMigration {
 
     private static final String SELECT_LOCATION_DUPLICATES =
             "SELECT REGION_ID, CHROMOSOME_NAME, CHROMOSOME_POSITION, COUNT(1) as CNT\n" +

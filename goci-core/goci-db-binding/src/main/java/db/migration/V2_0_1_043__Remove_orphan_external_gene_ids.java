@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
  *         <p>
  *         https://www.ebi.ac.uk/panda/jira/browse/GOCI-1020
  */
-public class V1_9_9_098__Remove_orphan_external_gene_ids implements SpringJdbcMigration {
+public class V2_0_1_043__Remove_orphan_external_gene_ids implements SpringJdbcMigration {
 
     // Query to find gene names with new lines
     private static final String SELECT_ENSEMBL_GENES =

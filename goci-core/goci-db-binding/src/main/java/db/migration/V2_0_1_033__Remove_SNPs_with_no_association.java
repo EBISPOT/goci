@@ -14,7 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
  *         <p>
  *         JIRA: https://www.ebi.ac.uk/panda/jira/browse/GOCI-1037
  */
-public class V1_9_9_088__Remove_SNPs_with_no_association implements SpringJdbcMigration {
+public class V2_0_1_033__Remove_SNPs_with_no_association implements SpringJdbcMigration {
 
     // Query for SNPs not used in any associations
     private static final String SELECT_SNPS = "SELECT DISTINCT SNP_ID FROM GENOMIC_CONTEXT\n" +

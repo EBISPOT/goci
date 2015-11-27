@@ -16,7 +16,7 @@ import java.util.Objects;
  *         SQL query in V1_9_9_060__Populate_locations_and_snp_location did not take account of duplicate SNPs. This
  *         script is to specifically deal witH locations that have null chromosome names and positions.
  */
-public class V1_9_9_062__Remove_duplicate_locations_where_chromosome_name_and_position_null implements
+public class V2_0_1_007__Remove_duplicate_locations_where_chromosome_name_and_position_null implements
         SpringJdbcMigration {
 
     private static final String SELECT_LOCATION_DUPLICATES =

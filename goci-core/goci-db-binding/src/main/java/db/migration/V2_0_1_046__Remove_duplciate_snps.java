@@ -12,7 +12,7 @@ import java.util.List;
  *         <p>
  *         Remove duplicate SNPs from database https://www.ebi.ac.uk/panda/jira/browse/GOCI-493
  */
-public class V1_9_9_101__Remove_duplciate_snps implements SpringJdbcMigration {
+public class V2_0_1_046__Remove_duplciate_snps implements SpringJdbcMigration {
 
     private static final String SELECT_DUPLICATE_SNPS = "SELECT RS_ID \n" +
             "FROM SINGLE_NUCLEOTIDE_POLYMORPHISM\n" +

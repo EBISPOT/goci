@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
  *         <p>
  *         https://www.ebi.ac.uk/panda/jira/browse/GOCI-493
  */
-public class V1_9_9_100__Remove_newlines_from_RSID implements SpringJdbcMigration {
+public class V2_0_1_045__Remove_newlines_from_RSID implements SpringJdbcMigration {
 
     // Query to find SNPs
     private static final String SELECT_SNPS =

@@ -16,7 +16,7 @@ import java.util.Map;
  *         V1_9_9_056__Region_table_cleanup script exact duplicates exist in SNP_REGION table. These will be deleted and
  *         a single value recreated.
  */
-public class V1_9_9_057__Remove_duplicates_from_snp_region_table implements SpringJdbcMigration {
+public class V2_0_1_002__Remove_duplicates_from_snp_region_table implements SpringJdbcMigration {
 
     private static final String SELECT_DUPLICATES = "SELECT SNP_ID, REGION_ID, count(*)\n" +
             "FROM SNP_REGION\n" +

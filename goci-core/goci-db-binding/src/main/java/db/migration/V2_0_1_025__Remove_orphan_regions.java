@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
  *         Related to JIRA ticket: https://www.ebi.ac.uk/panda/jira/browse/GOCI-940. This will remove orphan regions with
  *         no locations linked.
  */
-public class V1_9_9_080__Remove_orphan_regions implements SpringJdbcMigration {
+public class V2_0_1_025__Remove_orphan_regions implements SpringJdbcMigration {
 
 
     // Query for regions not found in LOCATION table

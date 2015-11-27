@@ -14,7 +14,7 @@ import java.util.List;
  *         <p>
  *         https://www.ebi.ac.uk/panda/jira/browse/GOCI-956
  */
-public class V1_9_9_099__Tidy_entrez_ids_linked_to_genes implements SpringJdbcMigration {
+public class V2_0_1_044__Tidy_entrez_ids_linked_to_genes implements SpringJdbcMigration {
 
     // Query to find entrez gene ids linked to more than one gene
     private static final String SELECT_ENTREZ_GENES = "SELECT ENTREZ_GENE_ID FROM GENE_ENTREZ_GENE\n" +

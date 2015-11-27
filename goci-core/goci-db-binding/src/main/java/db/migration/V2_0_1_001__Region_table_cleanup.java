@@ -14,7 +14,7 @@ import java.util.Collection;
  *         region table by removing semi-colon separated regions and null values e.g. 15q21.3[rs3204689];
  *         15q21.3[rs4238326].
  */
-public class V1_9_9_056__Region_table_cleanup implements SpringJdbcMigration {
+public class V2_0_1_001__Region_table_cleanup implements SpringJdbcMigration {
 
     private static final String SELECT_REGIONS_FOR_UPDATE = "SELECT ID, NAME FROM REGION WHERE NAME LIKE '%;%'";
 

@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
  *         <p>
  *         Remove SNPs from database not used in any associations: https://www.ebi.ac.uk/panda/jira/browse/GOCI-1055
  */
-public class V1_9_9_102__Remove_snps_not_used_in_association implements SpringJdbcMigration {
+public class V2_0_1_047__Remove_snps_not_used_in_association implements SpringJdbcMigration {
 
     private static final String SELECT_SNPS = "SELECT ID FROM\n" +
             "SINGLE_NUCLEOTIDE_POLYMORPHISM\n" +
