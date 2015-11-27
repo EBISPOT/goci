@@ -479,6 +479,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                             closestUpstreamDownstreamGenesToLocation.get(locationId).add(0, geneName);
                                         }
                                         else if (context.getIsDownstream()){
+                                            if(closestUpstreamDownstreamGenesToLocation.get(locationId).isEmpty()){
+                                                closestUpstreamDownstreamGenesToLocation.get(locationId).add(0, "");
+                                            }
                                             closestUpstreamDownstreamGenesToLocation.get(locationId).add(1, geneName);
                                         }
                                     }
@@ -556,7 +559,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             List<String> closest = closestUpstreamDownstreamGenesToLocation.get(locationId);
 
             String up, down;
-            if (closest.get(0) != null) {
+            if (closest.get(0) != "") {
                 up = closest.get(0);
             }
             else {
