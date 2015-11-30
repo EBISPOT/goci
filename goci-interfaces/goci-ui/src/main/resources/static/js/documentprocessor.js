@@ -128,20 +128,6 @@ function processAssociation(association, table) {
 
     var pval = "".concat(mantissa).concat(" x10").concat("<sup>").concat(exponent).concat("</sup>");
 
-
-    //var pval = association.pValue;
-    //if(pval >= 1e-6){
-    //    pval = pval.toExponential(0);
-    //}
-    //else{
-    //    pval = pval.toString();
-    //}
-    //if(pval != "0") {
-    //    var mant = pval.substr(0, 1);
-    //    var exp = pval.substr(2);
-    //    pval = mant.concat(" x10").concat("<sup>").concat(exp).concat("</sup>");
-    //}
-
     if (association.qualifier != null && association.qualifier != '') {
         pval = pval.toString().concat(" ").concat(association.qualifier[0]);
     }
@@ -188,9 +174,13 @@ function processAssociation(association, table) {
             if (pattern.test(chromName) || chromName == 'X' || chromName == 'Y') {
 
                 location = location.concat(chromName);
+                console.log(chromName);
             }
             else {
                 location = location.concat("?");
+            }
+            if(position == ''){
+                position = "?";
             }
             //if (association.chromosomePosition != null) {
             //    var position = association.chromosomePosition[0];
@@ -200,7 +190,7 @@ function processAssociation(association, table) {
             var max = parseInt(position) + 500;
             var locationsearch = min.toString().concat("-").concat(max.toString());
 
-            if (chromName != null) {
+            if (chromName != null && chromName != '') {
                 locationsearch = chromName.concat(':').concat(locationsearch);
             }
 
@@ -210,7 +200,7 @@ function processAssociation(association, table) {
         }
     }
     else {
-        location = location.concat(":").concat("?");
+        location = location.concat("?:?");
     }
 
 
@@ -280,25 +270,26 @@ function processAssociation(association, table) {
             var emg = association.entrezMappedGenes[k];
 
             if(emg != "No mapped genes"){
-            for (var j = 0; j < association.entrezMappedGeneLinks.length; j++) {
-                var gene = association.entrezMappedGeneLinks[j].split("|")[0];
-                var geneId = association.entrezMappedGeneLinks[j].split("|")[1];
+                for (var j = 0; j < association.entrezMappedGeneLinks.length; j++) {
+                    var gene = association.entrezMappedGeneLinks[j].split("|")[0];
+                    var geneId = association.entrezMappedGeneLinks[j].split("|")[1];
 
-                if(gene == emg) {
+                    if(emg.indexOf(gene) > -1) {
 
-                    var mapgenesearch = "<span><a href='search?query=".concat(gene).concat("'>").concat(gene).concat("</a></span>");
-                    var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=".concat(geneId).concat("'  target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
+                        var mapgenesearch = "<span><a href='search?query=".concat(gene).concat("'>").concat(gene).concat("</a></span>");
+                        var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=".concat(geneId).concat("'  target='_blank'>").concat("<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
 
-                    emg = emg.replace(gene, mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl));
-                    if (mapgene == '') {
-                        mapgene = emg;
-                    }
+                        emg = emg.replace(gene, mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl));
 
-                    else {
-                        mapgene = mapgene.concat(",").concat(emg);
                     }
                 }
-            }
+                if (mapgene == '') {
+                    mapgene = emg;
+                }
+
+                else {
+                    mapgene = mapgene.concat(",").concat(emg);
+                }
             }
 
         }

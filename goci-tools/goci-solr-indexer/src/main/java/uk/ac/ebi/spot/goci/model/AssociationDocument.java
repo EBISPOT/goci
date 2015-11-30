@@ -433,8 +433,6 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                     if (context.getGene() != null && context.getGene().getGeneName() != null &&
                             context.getSource() != null) {
 
-                        String closestUpstream = null, closestDownstream = null;
-
                         if (source.equalsIgnoreCase(context.getSource())) {
                             String geneName = context.getGene().getGeneName().trim();
                             Long locationId = context.getLocation().getId();
@@ -565,7 +563,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             else {
                 up = "?" ;
             }
-            if(closest.size() == 2) {
+            if(closest.size() > 1 && closest.get(1) != null && closest.get(1) != "") {
                 down = closest.get(1);
             }
             else {
