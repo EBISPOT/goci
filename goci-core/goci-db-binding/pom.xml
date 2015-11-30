@@ -7,13 +7,13 @@
     <parent>
         <artifactId>goci-parent</artifactId>
         <groupId>uk.ac.ebi.spot</groupId>
-        <version>2.0.8-SNAPSHOT</version>
+        <version>2.0.8</version>
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>goci-db-binding</artifactId>
-    <version>2.0.8-SNAPSHOT</version>
+    <version>2.0.8</version>
 
 
     <name>GOCI Database Binding Classes</name>
