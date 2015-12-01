@@ -10,7 +10,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import uk.ac.ebi.spot.goci.model.Study;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,10 +31,6 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     Collection<Study> findByPubmedId(String pubmedId);
 
     Page<Study> findByPubmedId(String pubmedId, Pageable pageable);
-
-    // Custom query
-    @Query("select s from Study s where s.housekeeping.curationStatus.id = :status order by s.publicationDate desc")
-    Collection<Study> findByCurationStatusIgnoreCase(@Param("status") Long status);
 
     // Pageable queries for filtering main page
     Page<Study> findByHousekeepingCurationStatusIdAndHousekeepingCuratorId(Long status,
@@ -64,17 +59,13 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     Page<Study> findByHousekeepingCheckedMappingErrorOrHousekeepingCurationStatusId(Boolean checkedMappingError,
                                                                                     Long status,
                                                                                     Pageable pageable);
+
     List<Study> findStudyDistinctByAssociationsMultiSnpHaplotypeTrue();
 
     List<Study> findStudyDistinctByAssociationsSnpInteractionTrue();
 
-    Page<Study> findByHousekeepingCheckedNCBIErrorOrHousekeepingCurationStatusId(Boolean checkedNCBIError, Long status, Pageable pageable);
-
     // EFO trait query
     Page<Study> findByEfoTraitsId(Long efoTraitId, Pageable pageable);
-
-    // Ethnicity query
-//    Page<Study> findByEthnicityId(Long ethnicityId, Pageable pageable);
 
     // Query housekeeping notes field
     Page<Study> findByHousekeepingNotesContainingIgnoreCase(String query, Pageable pageable);
@@ -82,12 +73,6 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     // Custom query to get list of study authors
     @Query("select distinct s.author from Study s")
     List<String> findAllStudyAuthors(Sort sort);
-
-    List<Study> findByHousekeepingSendToNCBIDate(Date date);
-
-    List<Study> findByAuthorContainingIgnoreCase(String author);
-
-    List<Study> findByAuthorContainingIgnoreCase(String author, Sort sort);
 
     Page<Study> findByAuthorContainingIgnoreCase(String author, Pageable pageable);
 
@@ -99,23 +84,9 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     List<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Long snpId);
 
-    List<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Sort sort,
-                                                                                                                                                   Long snpId);
-
-    Page<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Pageable pageable,
-                                                                                                                                                   Long snpId);
-
     List<Study> findByAssociationsIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Long associationId);
 
-    List<Study> findByAssociationsIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Sort sort, Long associationId);
-
-    Page<Study> findByAssociationsIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Pageable pageable, Long associationId);
-
     List<Study> findByDiseaseTraitIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Long diseaseTraitId);
-
-    List<Study> findByDiseaseTraitIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Sort sort, Long diseaseTraitId);
-
-    Page<Study> findByDiseaseTraitIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Pageable pageable, Long diseaseTraitId);
-
+    
 }
 
