@@ -44,14 +44,14 @@ public class StudyOperationsService {
 
         // For the study check all SNPs have been checked
         Collection<Association> associations = associationRepository.findByStudyId(study.getId());
-        int snpsNotChecked = studyAssociationCheck(associations);
+        int snpsNotApproved = studyAssociationCheck(associations);
 
         // If the status has changed
         if (newStatus != null && newStatus != currentStudyStatus) {
             switch (newStatus.getStatus()) {
                 case "Publish study":
 
-                    if (snpsNotChecked == 1) {
+                    if (snpsNotApproved == 1) {
                         message = "Some SNP associations have not been checked for study: "
                                 + study.getAuthor() + ", "
                                 + " pubmed = " + study.getPubmedId()
@@ -70,7 +70,7 @@ public class StudyOperationsService {
 
                 //Set date and send email notification
                 case "Send to NCBI":
-                    if (snpsNotChecked == 1) {
+                    if (snpsNotApproved == 1) {
                         message = "Some SNP associations have not been checked for study: "
                                 + study.getAuthor()
                                 + ", " + " pubmed = "
@@ -110,14 +110,14 @@ public class StudyOperationsService {
 
 
     public int studyAssociationCheck(Collection<Association> associations) {
-        int snpsNotChecked = 0;
+        int snpsNotApproved = 0;
         for (Association association : associations) {
             // If we have one that is not checked set value
-            if (!association.getSnpChecked()) {
-                snpsNotChecked = 1;
+            if (!association.getSnpApproved()) {
+                snpsNotApproved = 1;
             }
         }
 
-        return snpsNotChecked;
+        return snpsNotApproved;
     }
 }
