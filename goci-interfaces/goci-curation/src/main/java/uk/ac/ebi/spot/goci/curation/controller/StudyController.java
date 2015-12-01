@@ -681,7 +681,7 @@ public class StudyController {
         Study study = studyRepository.findOne(studyId);
 
         // Before we save housekeeping get the status in database so we can check for a change
-        CurationStatus statusInDatabase = housekeepingRepository.findOne(housekeeping.getId()).getCurationStatus();
+         CurationStatus currentStudyStatus = study.getHousekeeping().getCurationStatus();
 
         // Save housekeeping returned from form straight away to save any curator entered details like notes etc
         housekeeping.setLastUpdateDate(new Date());
