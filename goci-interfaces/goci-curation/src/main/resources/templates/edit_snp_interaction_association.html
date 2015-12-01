@@ -375,16 +375,16 @@
                                     <button type="submit" class="btn btn-primary">Save</button>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Mapping div containing the mappings and context forms -->
-                            <div class="row" id="mapping_div" style="display:none">
-                                <div class="form-group">
-                                    <div>
-                                        <label class="control-label">Mapping data:</label>
-                                    </div>
-                                    <div th:include="snp_mapping :: mapping_table"></div>
-                                    <div th:include="snp_genomic_context :: genomic_context_table"></div>
+                        <!-- Mapping div containing the mappings and context forms -->
+                        <div class="row" id="mapping_div" style="display:none">
+                            <div class="form-group">
+                                <div>
+                                    <label class="control-label">Mapping data:</label>
                                 </div>
+                                <div th:include="snp_mapping :: mapping_table"></div>
+                                <div th:include="snp_genomic_context :: genomic_context_table"></div>
                             </div>
                         </div>
                     </form>
