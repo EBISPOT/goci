@@ -1,13 +1,13 @@
-package uk.ac.ebi.spot.goci.owl.pussycat.session;
+package uk.ac.ebi.spot.goci.ontology.owl.pussycat.session;
 
 import net.sourceforge.fluxion.spi.ServiceProvider;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import uk.ac.ebi.spot.goci.dao.DefaultOntologyDAO;
-import uk.ac.ebi.spot.goci.owl.lang.OWLAPIFilterInterpreter;
+import uk.ac.ebi.spot.goci.ontology.owl.lang.OWLAPIFilterInterpreter;
 import uk.ac.ebi.spot.goci.lang.OntologyConfiguration;
-import uk.ac.ebi.spot.goci.owl.pussycat.reasoning.KnowledgeBaseLoadingReasonerSession;
+import uk.ac.ebi.spot.goci.ontology.owl.pussycat.reasoning.KnowledgeBaseLoadingReasonerSession;
 import uk.ac.ebi.spot.goci.reasoning.ReasonerSession;
 import uk.ac.ebi.spot.goci.pussycat.session.PussycatSession;
 import uk.ac.ebi.spot.goci.pussycat.session.PussycatSessionFactory;

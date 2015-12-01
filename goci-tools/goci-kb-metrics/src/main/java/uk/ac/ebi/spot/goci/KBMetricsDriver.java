@@ -5,6 +5,12 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import uk.ac.ebi.spot.goci.exception.MetricsCalculationException;
 import uk.ac.ebi.spot.goci.kb.KBLoader;
 import uk.ac.ebi.spot.goci.checker.IRITreeProcessor;
@@ -16,6 +22,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -24,6 +31,7 @@ import java.util.Map;
  * @author Tony Burdett
  * @date 08/08/12
  */
+@SpringBootApplication
 public class KBMetricsDriver {
     private static URL _efoLocation;
     private static URL _gwasSchemaLocation;
@@ -32,28 +40,60 @@ public class KBMetricsDriver {
 
     private static OutputStream _out;
 
-    public static void main(String[] args) {
-        try {
-            parseArguments(args);
-            KBMetricsDriver driver =
-                    new KBMetricsDriver(_efoLocation, _gwasSchemaLocation, _kbLocation, _watershedCutoff);
-            System.out.println("Generating metrics report...");
-            driver.generateMetricsReport(_out);
-            System.out.println("Metrics report complete!");
 
-            if (_out != System.out) {
-                _out.close();
+    @Autowired
+    private KBLoader loader;
+
+    @Autowired
+    private IRITreeBuilder treeBuilder;
+
+    @Autowired
+    private IRITreeProcessor treeProcessor;
+
+
+    public static void main(String[] args) {
+        System.out.println("Starting KB Metrics renderer...");
+        ApplicationContext ctx = SpringApplication.run(KBMetricsDriver.class, args);
+        System.out.println("Application executed successfully!");
+        SpringApplication.exit(ctx);
+
+    }
+
+    @Bean CommandLineRunner run() {
+        return strings -> {
+            long start_time = System.currentTimeMillis();
+            System.out.println("Building indexes with supplied params: " + Arrays.toString(strings));
+            int parseArgs = parseArguments(strings);
+            if (parseArgs == 0) {
+                // execute publisher
+                try {
+                    this.generateMetricsReport(_out);
+                    System.out.println("Metrics report complete!");
+
+                    if (_out != System.out) {
+                        _out.close();
+                    }
+                }
+                catch (MetricsCalculationException e) {
+                    System.err.println("Failed to calculate metrics - " + e.getMessage());
+                    e.printStackTrace();
+                    System.exit(1);
+                }
+                catch (IOException e) {
+                    System.err.println("Failed to close output stream - report may not have written correctly");
+                    System.exit(-1);
+                }
             }
-        }
-        catch (MetricsCalculationException e) {
-            System.err.println("Failed to calculate metrics - " + e.getMessage());
-            e.printStackTrace();
-            System.exit(1);
-        }
-        catch (IOException e) {
-            System.err.println("Failed to close output stream - report may not have written correctly");
-            System.exit(-1);
-        }
+            else {
+                // could not parse arguments, exit with exit code >1 (depending on parsing problem)
+                System.err.println("Failed to parse supplied arguments");
+                System.exit(1 + parseArgs);
+            }
+            long end_time = System.currentTimeMillis();
+            String time = String.format("%.1f", ((double) (end_time - start_time)) / 1000);
+            System.out.println("Indexing building complete in " + time + " s. - application will now exit");
+        };
+
     }
 
     private static int parseArguments(String[] args) {
@@ -79,6 +119,7 @@ public class KBMetricsDriver {
 
                 if (cl.hasOption("efo")) {
                     _efoLocation = new URL(cl.getOptionValue("efo"));
+                    System.out.println(_efoLocation);
                 }
                 else {
                     System.err.println("-efo (EFO location) argument is required");
@@ -88,6 +129,8 @@ public class KBMetricsDriver {
 
                 if (cl.hasOption("gwas")) {
                     _gwasSchemaLocation = new File(cl.getOptionValue("gwas")).toURI().toURL();
+                    System.out.println(_gwasSchemaLocation);
+
                 }
                 else {
                     System.err.println("-gwas (GWAS Schema File) argument is required");
@@ -97,6 +140,8 @@ public class KBMetricsDriver {
 
                 if (cl.hasOption("kb")) {
                     _kbLocation = new File(cl.getOptionValue("kb")).toURI().toURL();
+                    System.out.println(_kbLocation);
+
                 }
                 else {
                     System.err.println("-kb (Knowledgebase File) argument is required");
@@ -106,6 +151,7 @@ public class KBMetricsDriver {
 
                 if (cl.hasOption("w")) {
                     _watershedCutoff = Integer.parseInt(cl.getOptionValue("w"));
+//                    System.setProperty("watershed.cutoff", String.valueOf(_watershedCutoff));
                 }
                 else {
                     System.err.println("-w (Watershed cutoff) argument is required");
@@ -198,29 +244,13 @@ public class KBMetricsDriver {
         return options;
     }
 
-    private URL efoLocation;
-    private URL gwasSchemaLocation;
-    private URL kbLocation;
-
-    private KBLoader loader;
-    private IRITreeBuilder treeBuilder;
-    private IRITreeProcessor treeProcessor;
-
     private Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
         return log;
     }
 
-    public KBMetricsDriver(URL efoLocation, URL gwasSchemaLocation, URL kbLocation, int watershedCutoff) {
-        this.efoLocation = efoLocation;
-        this.gwasSchemaLocation = gwasSchemaLocation;
-        this.kbLocation = kbLocation;
 
-        this.loader = new KBLoader();
-        this.treeBuilder = new IRITreeBuilder();
-        this.treeProcessor = new IRITreeProcessor(watershedCutoff);
-    }
 
     /**
      * Generate a report on the data metrics of the knowledgebase and write them this report to the supplied output
@@ -231,10 +261,10 @@ public class KBMetricsDriver {
     public void generateMetricsReport(OutputStream out) throws MetricsCalculationException, IOException {
         try {
             // first, calculate data spread in KB
-            Map<IRI, Integer> metrics = loader.quantifyKnowledgeBase(efoLocation, gwasSchemaLocation, kbLocation);
+            Map<IRI, Integer> metrics = loader.quantifyKnowledgeBase(_efoLocation, _gwasSchemaLocation, _kbLocation);
 
             // build the efo tree
-            IRITree tree = treeBuilder.buildIRITree(efoLocation);
+            IRITree tree = treeBuilder.buildIRITree(_efoLocation);
 
             // now tree is constructed, overlay counts onto it
             walkTreeAndAddCounts(tree.getRootNode(), metrics);

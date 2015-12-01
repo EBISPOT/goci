@@ -23,6 +23,7 @@ import static org.junit.Assert.fail;
 public class EmbeddableDocumentTest {
     private Study study;
     private Association association;
+    private AssociationReport associationReport;
     private DiseaseTrait diseaseTrait;
 
     private StudyDocument studyDoc;
@@ -36,7 +37,7 @@ public class EmbeddableDocumentTest {
         h.setCatalogPublishDate(new Date());
         this.study = new Study("author", new Date(), "publication", "title", "initial sample size", "replicate " +
                 "sample size", "platform", "123456", false, false, false, null, Collections.<EfoTrait>emptyList(),
-                               Collections.<SingleNucleotidePolymorphism>emptyList(), h);
+                Collections.<SingleNucleotidePolymorphism>emptyList(), Collections.<Ethnicity>emptyList(), h);
         study.setId(1l);
         this.studyDoc = new StudyDocument(study);
 
@@ -71,8 +72,7 @@ public class EmbeddableDocumentTest {
     public void testEmbed() {
         try {
             studyDoc.embed(associationDoc);
-        }
-        catch (DocumentEmbeddingException e) {
+        } catch (DocumentEmbeddingException e) {
             e.printStackTrace();
             fail();
         }
@@ -118,8 +118,7 @@ public class EmbeddableDocumentTest {
                 System.out.println("\t" + pd);
             }
 
-        }
-        catch (IntrospectionException e) {
+        } catch (IntrospectionException e) {
             e.printStackTrace();
             fail();
         }

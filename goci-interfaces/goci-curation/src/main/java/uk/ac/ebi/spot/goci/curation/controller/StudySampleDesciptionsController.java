@@ -66,6 +66,7 @@ public class StudySampleDesciptionsController {
                 Study study = ethnicity.getStudy();
 
                 // Study attributes
+                Long studyId = study.getId();
                 String author = study.getAuthor();
                 Date publicationDate = study.getPublicationDate();
                 String pubmedId = study.getPubmedId();
@@ -92,21 +93,21 @@ public class StudySampleDesciptionsController {
                 String description = ethnicity.getDescription();
                 String notes = ethnicity.getNotes();
 
-                StudySampleDescription studySampleDescription = new StudySampleDescription(author,
-                                                                                           publicationDate,
-                                                                                           pubmedId,
-                                                                                           initialSampleSize,
-                                                                                           replicateSampleSize,
-                                                                                           ethnicityCheckedLevelOne,
-                                                                                           ethnicityCheckedLevelTwo,
-                                                                                           type,
-                                                                                           numberOfIndividuals,
-                                                                                           ethnicGroup,
-                                                                                           countryOfOrigin,
-                                                                                           countryOfRecruitment,
-                                                                                           description,
-                                                                                           sampleSizesMatch,
-                                                                                           notes);
+                StudySampleDescription studySampleDescription = new StudySampleDescription(studyId, author,
+                        publicationDate,
+                        pubmedId,
+                        initialSampleSize,
+                        replicateSampleSize,
+                        ethnicityCheckedLevelOne,
+                        ethnicityCheckedLevelTwo,
+                        type,
+                        numberOfIndividuals,
+                        ethnicGroup,
+                        countryOfOrigin,
+                        countryOfRecruitment,
+                        description,
+                        sampleSizesMatch,
+                        notes);
 
                 studySampleDescriptions.add(studySampleDescription);
             }
@@ -124,9 +125,8 @@ public class StudySampleDesciptionsController {
 
         try {
             studySampleDescriptionsDownloadService.createDownloadFile(response.getOutputStream(),
-                                                                      studySampleDescriptions);
-        }
-        catch (IOException e) {
+                    studySampleDescriptions);
+        } catch (IOException e) {
             getLog().error("Cannot create ethnicity download file");
             e.printStackTrace();
         }

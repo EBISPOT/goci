@@ -10,6 +10,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
+    <!--Tags input http://timschlechter.github.io/bootstrap-tagsinput/examples/-->
+    <link href="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"
+          th:href="@{https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css}" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"
+            th:src="@{https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js}"></script>
+
     <!--Select2: http://ivaynberg.github.io/select2/-->
     <!-- Include Select2 CSS -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css"/>
@@ -19,10 +26,6 @@
 
     <!-- Include Select2 JS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
-
-    <!--Tags input http://timschlechter.github.io/bootstrap-tagsinput/examples/-->
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"/>
-    <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
 
     <!--Handles calculations in form -->
     <script src="../static/js/goci-snp-association-calculations.js"
@@ -64,6 +67,11 @@
                       name="snp-association-form"
                       th:object="${snpAssociationForm}">
 
+                    <div class="form-group">
+                        <div class="col-md-offset-10 col-md-10">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
                     <div th:include="field_errors :: field_errors"></div>
 
                     <div id="association_div">
@@ -112,18 +120,16 @@
                         <div class="form-group">
                             <label for="authorgenes" class="control-label col-md-2">Gene(s)</label>
 
-                            <div class="col-md-10">
-                                <input type="text" class="form-control" id="authorgenes"
-                                       th:field="*{authorReportedGenes}" name="authorReportedGene"
-                                       data-role="tagsinput"/>
-
-                            </div>
-
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" id="authorgenes"
+                                   th:field="*{authorReportedGenes}" name="authorReportedGene"
+                                   placeholder="Enter author reported genes..."
+                                   data-role="tagsinput"/>
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="riskFrequency" class="control-label col-md-2">Risk allele frequency in
-                                                                                      controls</label>
+                    <div class="form-group">
+                        <label for="riskFrequency" class="control-label col-md-2">Risk element (allele) frequency in controls</label>
 
                             <div class="col-md-10">
                                 <input type="text" class="form-control" id="riskFrequency"

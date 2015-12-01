@@ -1,24 +1,6 @@
 package uk.ac.ebi.spot.goci.service;
 
-import org.semanticweb.owlapi.model.AddAxiom;
-import org.semanticweb.owlapi.model.AddImport;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.ImportChange;
-import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLImportsDeclaration;
-import org.semanticweb.owlapi.model.OWLLiteral;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.slf4j.Logger;
@@ -32,11 +14,12 @@ import uk.ac.ebi.spot.goci.model.Location;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
+import uk.ac.ebi.spot.goci.ontology.OntologyConstants;
+import uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.owl.OntologyLoader;
-import uk.ac.ebi.spot.goci.utils.OntologyConstants;
-import uk.ac.ebi.spot.goci.utils.ReflexiveIRIMinter;
+import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.ontology.ReflexiveIRIMinter;
 
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -46,13 +29,13 @@ import java.util.Set;
 
 /**
  * A default implementation of {@link GWASOWLConverter} that fetches data from the GWAS catalog using a {@link
- * uk.ac.ebi.spot.goci.} and converts all obtained {@link Study} objects to OWL.
+ * uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader} and converts all obtained {@link Study} objects to OWL.
  *
  * @author Tony Burdett Date 26/01/12
  */
 @Service
 public class DefaultGWASOWLConverter implements GWASOWLConverter {
-    //    private OntologyConfiguration configuration;
+//    private OntologyConfiguration configuration;
 
     private OntologyLoader ontologyLoader;
 
@@ -69,18 +52,6 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         this.ontologyLoader = ontologyLoader;
         this.minter = new ReflexiveIRIMinter();
     }
-
-    //    public void setConfiguration(OntologyConfiguration configuration) {
-    //        this.configuration = configuration;
-    //    }
-
-    //    public OntologyLoader getOntologyLoader() {
-    //        return ontologyLoader;
-    //    }
-    //
-    //    public void setOntologyLoader(OntologyLoader ontologyLoader) {
-    //        this.ontologyLoader = ontologyLoader;
-    //    }
 
     public OWLOntologyManager getManager() {
         return this.ontologyLoader.getOntology().getOWLOntologyManager();
@@ -197,8 +168,9 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         getManager().applyChange(add_pubmed_id);
 
         // assert label
+        OWLLiteral study_label = getDataFactory().getOWLLiteral(pubmed_id.toString());
         OWLAnnotationAssertionAxiom label_annotation =
-                getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, studyIndiv.getIRI(), pubmed_id);
+                getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, studyIndiv.getIRI(), study_label);
         AddAxiom add_label = new AddAxiom(ontology, label_annotation);
         getManager().applyChange(add_label);
 
@@ -258,12 +230,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                 getDataFactory().getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
 
         // assert rsid relation
-        //        snp.getId()
-        //        //TODO : remove, this is just for testing.
-        //        if(snp.getRsId() == null){
-        //            snp.setRsId("unnullify_for_test");
-        //            System.out.println("rsId is NULLLLLLLLLLLLLLLLLLLLLLLLLLLLLL for " + snp.getId() + "!");
-        //        }
+
         OWLLiteral rsid = getDataFactory().getOWLLiteral(snp.getRsId());
         OWLDataPropertyAssertionAxiom rsid_relation =
                 getDataFactory().getOWLDataPropertyAssertionAxiom(has_snp_rsid, snpIndiv, rsid);
@@ -330,6 +297,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
             OWLClassAssertionAxiom bandClassAssertion =
                     getDataFactory().getOWLClassAssertionAxiom(bandClass, bandIndiv);
             getManager().addAxiom(ontology, bandClassAssertion);
+
 
 
             // assert name relation
@@ -403,7 +371,6 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                 AddAxiom add_part_of = new AddAxiom(ontology, part_of_relation);
                 getManager().applyChange(add_part_of);
 
-
             }
 
         }
@@ -433,9 +400,11 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         // assert pValue relation
         //Sometimes there won't be any pvalue associated with an association. For example if the author doesn't give the
         //pvalue but says it was less then 10-6. So if we have no pvalue we just don't add it.
-        if (association.getPvalueMantissa() != null && association.getPvalueExponent() != null) {
-            OWLLiteral pValue = getDataFactory().getOWLLiteral(
-                    association.getPvalueMantissa() + "e" + association.getPvalueExponent());
+        if(association.getPvalueMantissa() != null && association.getPvalueExponent() != null) {
+            double pval = association.getPvalueMantissa() * Math.pow(10, association.getPvalueExponent());
+            OWLLiteral pValue = getDataFactory().getOWLLiteral(pval);
+
+//            OWLLiteral pValue = getDataFactory().getOWLLiteral(association.getPvalueMantissa()+"e"+association.getPvalueExponent());
             OWLDataPropertyAssertionAxiom p_value_relation =
                     getDataFactory().getOWLDataPropertyAssertionAxiom(has_p_value, taIndiv, pValue);
             AddAxiom add_p_value = new AddAxiom(ontology, p_value_relation);
@@ -443,9 +412,11 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         }
         // get the snp instance for this association
         OWLNamedIndividual snpIndiv;
-        for (Locus locus : association.getLoci()) {
-            for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
+        String rsId = null;
+        for(Locus locus : association.getLoci()){
+            for(RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
                 SingleNucleotidePolymorphism snp = riskAllele.getSnp();
+                rsId = snp.getRsId();
 
                 snpIndiv = getDataFactory().getOWLNamedIndividual(
                         getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, snp));
@@ -503,81 +474,80 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                         getDataFactory().getOWLObjectPropertyAssertionAxiom(is_subject_of, snpIndiv, taIndiv);
                 AddAxiom add_is_subject_of_snp = new AddAxiom(ontology, is_subject_of_snp_relation);
                 getManager().applyChange(add_is_subject_of_snp);
+            }
 
-                // get the EFO class for the trait
-                for (EfoTrait efoTrait : association.getEfoTraits()) {
-                    OWLClass traitClass;
-                    traitClass = getDataFactory().getOWLClass(IRI.create(efoTrait.getUri()));
+            // get the EFO class for the trait
+            for(EfoTrait efoTrait : association.getEfoTraits()){
+                OWLClass traitClass;
+                traitClass = getDataFactory().getOWLClass(IRI.create(efoTrait.getUri()));
 
-                    if (traitClass == null) {
-                        String warning = "This trait will be mapped to Experimental Factor";
-                        if (!issuedWarnings.contains(warning)) {
-                            getLog().warn(warning);
-                            issuedWarnings.add(warning);
-                        }
-                        traitClass =
-                                getDataFactory().getOWLClass(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI));
+                if(traitClass == null){
+                    String warning = "This trait will be mapped to Experimental Factor";
+                    if (!issuedWarnings.contains(warning)) {
+                        getLog().warn(warning);
+                        issuedWarnings.add(warning);
                     }
-
-                    // create a new trait instance (puns the class)
-                    IRI traitIRI = traitClass.getIRI();
-                    OWLNamedIndividual traitIndiv = getDataFactory().getOWLNamedIndividual(traitIRI);
-
-                    if (ontology.containsIndividualInSignature(traitIRI)) {
-                        getLog().trace("Trait individual '" + traitIRI.toString() + "' (type: " + traitClass +
-                                               ") already exists");
-                    }
-                    else {
-                        getLog().trace(
-                                "Creating trait individual '" + traitIRI.toString() + "' (type: " + traitClass + ")");
-                    }
-
-                    // and also add the gwas label to the individual so we don't lose curated data
-                    OWLDataProperty has_gwas_trait_name = getDataFactory().getOWLDataProperty(
-                            IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
-
-                    OWLLiteral gwasTrait =
-                            getDataFactory().getOWLLiteral(association.getStudy().getDiseaseTrait().getTrait());
-
-                    OWLDataPropertyAssertionAxiom gwas_trait_relation =
-                            getDataFactory().getOWLDataPropertyAssertionAxiom(has_gwas_trait_name, taIndiv, gwasTrait);
-                    AddAxiom add_gwas_trait_name = new AddAxiom(ontology, gwas_trait_relation);
-                    getManager().applyChange(add_gwas_trait_name);
-
-
-                    // assert class membership
-                    OWLClassAssertionAxiom traitClassAssertion =
-                            getDataFactory().getOWLClassAssertionAxiom(traitClass, traitIndiv);
-                    getManager().addAxiom(ontology, traitClassAssertion);
-
-                    // get object properties
-                    OWLObjectProperty has_object =
-                            getDataFactory().getOWLObjectProperty(IRI.create(OntologyConstants.HAS_OBJECT_IRI));
-                    OWLObjectProperty is_object_of =
-                            getDataFactory().getOWLObjectProperty(IRI.create(OntologyConstants.IS_OBJECT_OF_IRI));
-
-                    // assert relations
-                    OWLObjectPropertyAssertionAxiom has_object_trait_relation =
-                            getDataFactory().getOWLObjectPropertyAssertionAxiom(has_object, taIndiv, traitIndiv);
-                    AddAxiom add_has_object_trait = new AddAxiom(ontology, has_object_trait_relation);
-                    getManager().applyChange(add_has_object_trait);
-
-                    OWLObjectPropertyAssertionAxiom is_object_of_trait_relation =
-                            getDataFactory().getOWLObjectPropertyAssertionAxiom(is_object_of, traitIndiv, taIndiv);
-                    AddAxiom add_is_object_of_trait = new AddAxiom(ontology, is_object_of_trait_relation);
-                    getManager().applyChange(add_is_object_of_trait);
-
-                    // finally, assert label for this association
-                    OWLLiteral label = getDataFactory().getOWLLiteral(
-                            "Association between " + snp.getRsId() + " and " +
-                                    association.getStudy().getHousekeeping().getCurator().getEmail());
-                    OWLAnnotationAssertionAxiom label_annotation =
-                            getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, taIndiv.getIRI(), label);
-                    AddAxiom add_band_label = new AddAxiom(ontology, label_annotation);
-                    getManager().applyChange(add_band_label);
+                    traitClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.EXPERIMENTAL_FACTOR_CLASS_IRI));
                 }
 
+                // create a new trait instance (puns the class)
+                IRI traitIRI = traitClass.getIRI();
+                OWLNamedIndividual traitIndiv = getDataFactory().getOWLNamedIndividual(traitIRI);
+
+                if (ontology.containsIndividualInSignature(traitIRI)) {
+                    getLog().trace("Trait individual '" + traitIRI.toString() + "' (type: " + traitClass + ") already exists");
+                }
+                else {
+                    getLog().trace("Creating trait individual '" + traitIRI.toString() + "' (type: " + traitClass + ")");
+                }
+
+                // and also add the gwas label to the individual so we don't lose curated data
+                OWLDataProperty has_gwas_trait_name = getDataFactory().getOWLDataProperty(
+                        IRI.create(OntologyConstants.HAS_GWAS_TRAIT_NAME_PROPERTY_IRI));
+
+                OWLLiteral gwasTrait = getDataFactory().getOWLLiteral(association.getStudy().getDiseaseTrait().getTrait());
+
+                OWLDataPropertyAssertionAxiom gwas_trait_relation =
+                        getDataFactory().getOWLDataPropertyAssertionAxiom(has_gwas_trait_name, taIndiv, gwasTrait);
+                AddAxiom add_gwas_trait_name = new AddAxiom(ontology, gwas_trait_relation);
+                getManager().applyChange(add_gwas_trait_name);
+
+
+                // assert class membership
+                OWLClassAssertionAxiom traitClassAssertion =
+                        getDataFactory().getOWLClassAssertionAxiom(traitClass, traitIndiv);
+                getManager().addAxiom(ontology, traitClassAssertion);
+
+                // get object properties
+                OWLObjectProperty has_object =
+                        getDataFactory().getOWLObjectProperty(IRI.create(OntologyConstants.HAS_OBJECT_IRI));
+                OWLObjectProperty is_object_of =
+                        getDataFactory().getOWLObjectProperty(IRI.create(OntologyConstants.IS_OBJECT_OF_IRI));
+
+                // assert relations
+                OWLObjectPropertyAssertionAxiom has_object_trait_relation =
+                        getDataFactory().getOWLObjectPropertyAssertionAxiom(has_object, taIndiv, traitIndiv);
+                AddAxiom add_has_object_trait = new AddAxiom(ontology, has_object_trait_relation);
+                getManager().applyChange(add_has_object_trait);
+
+                OWLObjectPropertyAssertionAxiom is_object_of_trait_relation =
+                        getDataFactory().getOWLObjectPropertyAssertionAxiom(is_object_of, traitIndiv, taIndiv);
+                AddAxiom add_is_object_of_trait = new AddAxiom(ontology, is_object_of_trait_relation);
+                getManager().applyChange(add_is_object_of_trait);
+
+
             }
+            // finally, assert label for this association
+            OWLLiteral label = getDataFactory().getOWLLiteral(
+                    "Association between " + rsId + " and " +
+                            association.getStudy().getDiseaseTrait().getTrait());
+
+            OWLAnnotationAssertionAxiom label_annotation =
+                    getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, taIndiv.getIRI(), label);
+            AddAxiom add_band_label = new AddAxiom(ontology, label_annotation);
+            getManager().applyChange(add_band_label);
+
+
         }
     }
 }

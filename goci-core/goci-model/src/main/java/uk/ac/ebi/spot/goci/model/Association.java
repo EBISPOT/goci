@@ -2,16 +2,7 @@ package uk.ac.ebi.spot.goci.model;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -32,11 +23,6 @@ public class Association {
     private Long id;
 
     private String riskFrequency;
-
-    // This is no longer used in form but exists in database for some older studies
-    private String allele;
-
-    private Float pvalueFloat;
 
     private String pvalueText;
 
@@ -73,15 +59,15 @@ public class Association {
     // or SNP:SNP interaction
     @OneToMany
     @JoinTable(name = "ASSOCIATION_LOCUS",
-               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
-               inverseJoinColumns = @JoinColumn(name = "LOCUS_ID"))
+            joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+            inverseJoinColumns = @JoinColumn(name = "LOCUS_ID"))
     private Collection<Locus> loci = new ArrayList<>();
 
     // To avoid null values collections are by default initialized to an empty array list
     @ManyToMany
     @JoinTable(name = "ASSOCIATION_EFO_TRAIT",
-               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
-               inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
+            joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+            inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
     @OneToOne(mappedBy = "association", cascade = CascadeType.REMOVE)
@@ -120,8 +106,6 @@ public class Association {
                        Date lastMappingDate,
                        String lastMappingPerformedBy) {
         this.riskFrequency = riskFrequency;
-        this.allele = allele;
-        this.pvalueFloat = pvalueFloat;
         this.pvalueText = pvalueText;
         this.orPerCopyNum = orPerCopyNum;
         this.orType = orType;
@@ -158,22 +142,6 @@ public class Association {
 
     public void setRiskFrequency(String riskFrequency) {
         this.riskFrequency = riskFrequency;
-    }
-
-    public String getAllele() {
-        return allele;
-    }
-
-    public void setAllele(String allele) {
-        this.allele = allele;
-    }
-
-    public Float getPvalueFloat() {
-        return pvalueFloat;
-    }
-
-    public void setPvalueFloat(Float pvalueFloat) {
-        this.pvalueFloat = pvalueFloat;
     }
 
     public String getPvalueText() {
@@ -338,5 +306,9 @@ public class Association {
 
     public void setLastMappingPerformedBy(String lastMappingPerformedBy) {
         this.lastMappingPerformedBy = lastMappingPerformedBy;
+    }
+
+    public double getPvalue() {
+        return (pvalueMantissa * Math.pow(10, pvalueExponent));
     }
 }

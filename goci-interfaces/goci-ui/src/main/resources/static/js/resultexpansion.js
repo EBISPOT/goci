@@ -171,7 +171,7 @@ function loadAdditionalResults(facet, expand){
           date = "[NOW-3MONTH+TO+*]";
 
           if(sort == ''){
-              sort = "catalogAddedDate+desc";
+              sort = "catalogPublishDate+desc";
           }
       }
     }

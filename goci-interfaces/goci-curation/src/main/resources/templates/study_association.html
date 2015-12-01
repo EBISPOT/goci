@@ -267,7 +267,12 @@
                     <td th:text="${snpAssociationTableView.efoTraits} ?: ''"></td>
 
                     <td th:text="${snpAssociationTableView.orPerCopyNum} ?: ''"></td>
-                    <td th:text="${snpAssociationTableView.orPerCopyRecip} ?: ''"></td>
+                    <td>
+                        <p th:text="${snpAssociationTableView.orPerCopyRecip} ?: ''"></p>
+                        <span style="font-style: italic; color:red; font-size: small"
+                              th:if="*{not #strings.isEmpty(snpAssociationTableView.orPerCopyRecip) and #strings.isEmpty(snpAssociationTableView.orPerCopyNum)}"
+                              th:text="'Warning: OR per Copy Num is blank but there is a reciprocal'"></span>
+                    </td>
                     <td th:text="${snpAssociationTableView.orType} ?:''"></td>
                     <td th:text="${snpAssociationTableView.orPerCopyRange} ?: ''"></td>
                     <td th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
@@ -370,10 +375,11 @@
 
                     <div class="alert alert-info col-md-offset-1 col-md-5">
                         <a href="#" class="close" data-dismiss="alert">&times;</a>
-                        <strong>Note</strong> File must be in xlsx format, a
+                        <strong>Note:</strong> File must be in xlsx format, a
                         <a href="../static/assets/Extraction_template.xlsx"
                            th:href="@{../../assets/Extraction_template.xlsx}"
-                           download="Extraction_template.xlsx">template</a> is available
+                           download="Extraction_template.xlsx">template</a> is available and further help can be found
+                        <a href="http://www.ebi.ac.uk/seqdb/confluence/pages/viewpage.action?pageId=32184056" target="_blank">here</a>
                     </div>
 
                     <!--Form object is a study, this is so we can pass back ID which can be used-->

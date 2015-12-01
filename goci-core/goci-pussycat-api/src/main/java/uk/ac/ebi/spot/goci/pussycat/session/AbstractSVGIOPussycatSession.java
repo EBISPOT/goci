@@ -1,15 +1,10 @@
 package uk.ac.ebi.spot.goci.pussycat.session;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.pussycat.utils.StringUtils;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
+import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -22,9 +17,11 @@ import java.util.Map;
  * @author Tony Burdett
  * @date 02/08/12
  */
+@Component
 public abstract class AbstractSVGIOPussycatSession extends AbstractPussycatSession {
     private static final String ENCODING = "SHA-1";
 
+    @Value("${cache.directory}")
     private File cacheDirectory;
 
     private Map<String, Object[]> hashArgsMap = new HashMap<String, Object[]>();
@@ -32,6 +29,10 @@ public abstract class AbstractSVGIOPussycatSession extends AbstractPussycatSessi
     protected AbstractSVGIOPussycatSession() {
         super();
     }
+
+//    public void setHashArgsMap(){
+//        hashArgsMap =  new HashMap<String, Object[]>();
+//    }
 
     public File getCacheDirectory() {
         return cacheDirectory;

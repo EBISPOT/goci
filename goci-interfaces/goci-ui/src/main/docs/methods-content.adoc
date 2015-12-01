@@ -82,6 +82,12 @@ For each identified SNP, we extract:
 * OR or BETA: Reported odds ratio or beta-coefficient associated with strongest SNP risk allele. Note that if an OR <1 is reported this is inverted, along with the reported allele, so that all ORs included in the Catalog are >1. Appropriate unit and increase/decrease are included for beta coefficients.
 * 95% CI (TEXT): Reported 95% confidence interval associated with strongest SNP risk allele, along with unit in the case of beta-coefficients. If 95% CIs are not published, we estimate these using the standard error, where available.
 
+==== Ancestry data extraction
+
+Sample ancestry information is available in two distinct forms; a free text sample description and structured ancestry and recruitment information. The free text descriptions of the initial and replication stages of the GWAS provide summary ancestry descriptions of the samples analysed in each stage, based on the language used in the paper. The structured information is designed to represent data using controlled terms, enabling searching, visualisation and integration. It includes ancestry, chosen from a list of 15 ancestral categories, and country of recruitment.
+
+The ancestry is derived from the ancestry descriptors used in the publication. Country of recruitment is extracted if an author states the country of recruitment of the samples. It is not assumed from an ancestry identifier or from a cohort name. Where a country of recruitment but no ancestry is provided, published population demographic information, such as the https://www.cia.gov/library/publications/the-world-factbook/[CIA World Factbook] is consulted.
+
 ==== Quality control and SNP mapping
 
 An automated pipeline, run at the NCBI, adds additional SNP specific information associated with the rsID extracted. This information includes the SNP's base pair and cytogenetic location in the current human genome reference assembly, mapped genes and SNP function. This information is then used for queries of the search interface and in the production of the karyotype diagram. The pipeline also performs checks for consistency and missing information, such as SNP identifiers, resolution of the citation in PubMed, existence of SNPs in dbSNP, confirmation of gene names vs. NCBI's Gene database and confirmation that the reported SNP and gene are in the same chromosomal region.
@@ -90,7 +96,7 @@ Additional information added by NCBI pipeline. Capitalised titles correspond to 
 
 * REGION: Cytogenetic region associated with rs number.
 * CHR_ID: Chromosome number associated with rs number.
-* CHR_POS: Chromosomal position, in base pairs, associated with rs number.
+* CHR_POS: Chromosomal position, in base pairs, associated with rs number (dbSNP Build 144, Genome Assembly GRCh38.p2, NCBI).
 * MAPPED GENE(S): Gene(s) mapped to the strongest SNP. If the SNP is located within a gene, that gene is listed, with multiple overlapping genes separated by “;”. If the SNP is intergenic, the upstream and downstream genes are listed, separated by “-”.
 * UPSTREAM_GENE_ID: Entrez Gene ID for nearest upstream gene to rs number, if not within gene.
 * DOWNSTREAM_GENE_ID: Entrez Gene ID for nearest downstream gene to rs number, if not within gene.

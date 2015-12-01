@@ -2,7 +2,7 @@ package uk.ac.ebi.spot.goci.sparql.pussycat.renderlet;
 
 import com.hp.hpl.jena.query.QuerySolution;
 import net.sourceforge.fluxion.spi.ServiceProvider;
-import uk.ac.ebi.spot.goci.lang.OntologyConstants;
+import uk.ac.ebi.spot.goci.ontology.OntologyConstants;
 import uk.ac.ebi.spot.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.spot.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.spot.goci.pussycat.layout.SVGArea;
@@ -72,7 +72,7 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
      * @return the number of traits in the same cytogenetic region as this association
      * @throws DataIntegrityViolationException
      */
-    protected int getNumberOfTraitsInSameBand(SparqlTemplate sparqlTemplate, URI association)
+    protected int getNumberOfTraitsInSameBand(RenderletNexus nexus, SparqlTemplate sparqlTemplate, URI association)
             throws DataIntegrityViolationException {
         URI bandIndividual =
                 QueryManager.getCachingInstance().getCytogeneticBandForAssociation(sparqlTemplate, association);
@@ -81,10 +81,11 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
 //                    QueryManager.getCachingInstance()
 //                            .getAssociationsLocatedInCytogeneticBand(sparqlTemplate, bandIndividual);
 //            return associations.size();
-            Set<URI> previousBandTraits =
+            Set<URI> currentBandTraits =
                     QueryManager.getCachingInstance().getTraitsLocatedInCytogeneticBand(sparqlTemplate,
-                                                                                        bandIndividual);
-            return previousBandTraits.size();
+                                                                                        bandIndividual,
+                                                                                        nexus.getRenderingContext());
+            return currentBandTraits.size();
         }
         else {
             throw new DataIntegrityViolationException(
@@ -101,21 +102,40 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
      * @return the number of traits in the same cytogenetic region as this association
      * @throws DataIntegrityViolationException
      */
-    protected int getNumberOfTraitsInPreviousBand(SparqlTemplate sparqlTemplate, URI association)
+    protected int getNumberOfTraitsInPreviousBand(RenderletNexus nexus, SparqlTemplate sparqlTemplate, URI association)
             throws DataIntegrityViolationException {
         BandInformation band = getBandInformation(sparqlTemplate, association);
         if (band != null) {
-            BandInformation previousBand = getPreviousBandMap(sparqlTemplate).get(band);
+            BandInformation current = band;
+            BandInformation previousBand = null;
+            boolean done = false;
 
-            // now find the traits in the previous band
-//            Set<URI> previousBandAssociations =
-//                    QueryManager.getCachingInstance().getAssociationsLocatedInCytogeneticBand(
-//                            sparqlTemplate,
-//                            previousBand.getBandName());
-//            return previousBandAssociations.size();
+            while (!done) {
+                previousBand = getPreviousBandMap(nexus, sparqlTemplate).get(current);
+
+                // now find the traits in the previous band
+                Set<URI> previousBandAssociations =
+                        QueryManager.getCachingInstance().getAssociationsLocatedInCytogeneticBand(
+                                sparqlTemplate,
+                                previousBand.getBandName(),
+                                nexus.getRenderingContext());
+
+                // get first not-null location for an association in the previous band
+                for (URI previousBandAssociation : previousBandAssociations) {
+                    SVGArea prevLocation = nexus.getLocationOfRenderedEntity(previousBandAssociation);
+                    if (prevLocation != null) {
+                        done = true;
+                    }
+                }
+                current = previousBand;
+
+            }
+
+
             Set<URI> previousBandTraits =
                     QueryManager.getCachingInstance().getTraitsLocatedInCytogeneticBand(sparqlTemplate,
-                                                                                        previousBand.getBandName());
+                                                                                        previousBand.getBandName(),
+                                                                                        nexus.getRenderingContext());
             return previousBandTraits.size();
         }
         else {
@@ -130,28 +150,44 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
             throws DataIntegrityViolationException {
         BandInformation band = getBandInformation(sparqlTemplate, association);
         if (band != null) {
-            BandInformation previousBand = getPreviousBandMap(sparqlTemplate).get(band);
-            if (previousBand == null) {
-                return null;
-            }
+            BandInformation current = band;
+            boolean done = false;
 
-            // now find the traits in the previous band
-            Set<URI> previousBandAssociations =
-                    QueryManager.getCachingInstance().getAssociationsLocatedInCytogeneticBand(
-                            sparqlTemplate,
-                            previousBand.getBandName());
-
-            // get first not-null location for an association in the previous band
-            for (URI previousBandAssociation : previousBandAssociations) {
-                SVGArea prevLocation = nexus.getLocationOfRenderedEntity(previousBandAssociation);
-                if (prevLocation != null) {
-                    return prevLocation;
+            while (!done) {
+                BandInformation previousBand = getPreviousBandMap(nexus, sparqlTemplate).get(current);
+                if (previousBand == null) {
+                    done = true;
+                    return null;
                 }
+
+                if(!previousBand.getChromosome().equals(current.getChromosome())){
+                    done = true;
+                    return null;
+                }
+
+                // now find the traits in the previous band
+                Set<URI> previousBandAssociations =
+                        QueryManager.getCachingInstance().getAssociationsLocatedInCytogeneticBand(
+                                sparqlTemplate,
+                                previousBand.getBandName(),
+                                nexus.getRenderingContext());
+
+                // get first not-null location for an association in the previous band
+                for (URI previousBandAssociation : previousBandAssociations) {
+                    SVGArea prevLocation = nexus.getLocationOfRenderedEntity(previousBandAssociation);
+                    if (prevLocation != null) {
+                        done = true;
+                        return prevLocation;
+                    }
+                }
+
+                // if we get to here, no associations are located in the previous region so return null
+                getLog().trace(
+                        "Unable to identify any associations in the previous cytogenetic region '" +
+                                previousBand.getBandName() + "'");
+                current = previousBand;
+
             }
-            // if we get to here, no associations are located in the previous region so return null
-            getLog().trace(
-                    "Unable to identify any associations in the previous cytogenetic region '" +
-                            previousBand.getBandName() + "'");
             return null;
         }
         else {
@@ -166,7 +202,7 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
         // use the sparqlTemplate to get all individuals of type "cytogenic region"
         getLog().trace("Retrieving all cytogenetic bands to sort into rendering order...");
         List<BandInformation> bands = sparqlTemplate.query(
-                "SELECT DISTINCT ?band WHERE { ?bandUri a gt:CytogeneticRegion ; rdfs:label ?band . }",
+                "SELECT DISTINCT ?band WHERE { ?bandUri a gt:CytogeneticRegion ; rdfs:label ?band . FILTER (STR(?band) != 'NR') .}",
                 new QuerySolutionMapper<BandInformation>() {
                     @Override public BandInformation mapQuerySolution(QuerySolution qs) {
                         return new BandInformation(qs.getLiteral("band").getLexicalForm());

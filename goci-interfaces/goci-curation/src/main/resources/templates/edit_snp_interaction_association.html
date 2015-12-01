@@ -10,9 +10,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"/>
-    <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
+    <!--Tags input http://timschlechter.github.io/bootstrap-tagsinput/examples/-->
+    <link href="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"
+          th:href="@{https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css}" rel="stylesheet" />
 
+    <script src="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"
+            th:src="@{https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js}"></script>
 
     <!--Select2: http://ivaynberg.github.io/select2/-->
     <!-- Include Select2 CSS -->
@@ -23,12 +26,6 @@
 
     <!-- Include Select2 JS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
-
-
-    <!--Tags input http://timschlechter.github.io/bootstrap-tagsinput/examples/-->
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"/>
-    <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
-
 
     <!--Handles calculations in form -->
     <script src="../static/js/goci-snp-association-calculations.js"
@@ -73,6 +70,15 @@
                         <div id="association_div">
                             <div class="form-group">
                                 <div class="col-md-10 col-md-offset-2">
+
+                        <div class="form-group">
+                            <div class="col-md-offset-10 col-md-10">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-10 col-md-offset-2">
 
                                     <table class="table table-hover table-bordered">
                                         <div th:hidden="*{numOfInteractions &gt; 0 }">
@@ -266,7 +272,16 @@
                                             id="calculate-or">Calculate OR/HR/RR per copy (Num)</button>
                                 </div>
 
+                            <div class="alert alert-warning alert-dismissible col-md-offset-2 col-md-10"
+                                 role="alert"
+                                 th:if="*{not #strings.isEmpty(orPerCopyRecip) and #strings.isEmpty(orPerCopyNum)}">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <strong>Warning:</strong> OR per Copy Num is blank but there is a reciprocal
                             </div>
+
+
+                        </div>
 
                             <div class="form-group">
                                 <label for="orPerCopyRange" class="control-label col-md-2">OR/HR/RR per copy
@@ -348,6 +363,9 @@
                                 <input id="snpApproved" type="checkbox" th:field="*{snpApproved}"/>
                             </div>
 
+                        <div class="form-group">
+                            <div class="col-md-offset-10 col-md-10">
+                                <button type="submit" class="btn btn-primary">Save</button>
                             <div class="form-group">
                                 <div class="col-md-offset-2 col-md-10">
                                     <button type="submit" class="btn btn-primary">Save</button>

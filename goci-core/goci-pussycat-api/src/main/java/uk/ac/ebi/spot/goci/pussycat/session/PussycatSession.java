@@ -1,14 +1,13 @@
 package uk.ac.ebi.spot.goci.pussycat.session;
 
-import uk.ac.ebi.spot.goci.lang.Filter;
-import uk.ac.ebi.spot.goci.ui.model.AssociationSummary;
+import uk.ac.ebi.spot.goci.pussycat.exception.NoRenderableDataException;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
+import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
 
 import java.net.URI;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -45,7 +44,7 @@ public interface PussycatSession {
      *                                                                                 yet initialized and therefore
      *                                                                                 unable to perform any rendering
      */
-    String performRendering(RenderletNexus renderletNexus, Filter... filters) throws PussycatSessionNotReadyException;
+    String performRendering(RenderletNexus renderletNexus, Filter... filters) throws PussycatSessionNotReadyException, NoRenderableDataException;
 
     /**
      * Fetches a list of lightweight association summary objects that encapsulates an overview of the salient
@@ -56,7 +55,7 @@ public interface PussycatSession {
      * @param associationURIs the URIs of the associations to retrieve
      * @return a list of association summaries with the same ordering as the request
      */
-    List<AssociationSummary> getAssociationSummaries(List<URI> associationURIs);
+//    List<AssociationSummary> getAssociationSummaries(List<URI> associationURIs);
 
     /**
      * Returns a list of URI identifiers for traits that are related to the supplied trait name.  This will basically

@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.owl.pussycat.layout;
+package uk.ac.ebi.spot.goci.ontology.owl.pussycat.layout;
 
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;

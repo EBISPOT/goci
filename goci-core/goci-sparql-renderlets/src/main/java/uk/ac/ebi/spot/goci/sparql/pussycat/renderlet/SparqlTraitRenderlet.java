@@ -8,15 +8,9 @@ import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.TraitRenderlet;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.QueryManager;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.SparqlTemplate;
-import uk.ac.ebi.spot.goci.sparql.pussycat.query.URIMapper;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Javadocs go here!
@@ -39,9 +33,9 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
         }
     }
 
-    protected Set<URI> getAssociationsForTrait(SparqlTemplate sparqlTemplate, URI trait)
+    protected Set<URI> getAssociationsForTrait(RenderletNexus nexus, SparqlTemplate sparqlTemplate, URI trait)
             throws DataIntegrityViolationException {
-        return QueryManager.getCachingInstance().getAssociationsForTrait(sparqlTemplate, trait);
+        return QueryManager.getCachingInstance().getAssociationsForTrait(sparqlTemplate, trait, nexus.getRenderingContext());
     }
 
     protected URI getBandForAssociation(SparqlTemplate sparqlTemplate, URI association)
@@ -58,7 +52,7 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
             throws DataIntegrityViolationException {
         Set<URI> allTraits =
                 QueryManager.getCachingInstance()
-                            .getTraitsLocatedInCytogeneticBand(sparqlTemplate, band);
+                            .getTraitsLocatedInCytogeneticBand(sparqlTemplate, band, nexus.getRenderingContext());
         getLog().trace("Identified " + allTraits.size() + " traits in band '" + band + "'");
 
         List<SVGArea> locations = new ArrayList<SVGArea>();
@@ -93,14 +87,28 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
         return locations;
     }
 
-    @Override protected int getTraitPosition(SparqlTemplate sparqlTemplate,
+    @Override protected int getTraitPosition(RenderletNexus nexus,
+                                             SparqlTemplate sparqlTemplate,
                                              URI trait,
                                              URI band,
                                              List<SVGArea> locations) {
         List<URI> dateOrderedTraits =
-                QueryManager.getCachingInstance().getTraitsOrderedByIdentificationDateForBand(sparqlTemplate, band);
-        if (dateOrderedTraits.contains(trait)) {
-            return dateOrderedTraits.indexOf(trait);
+                QueryManager.getCachingInstance().getTraitsOrderedByIdentificationDateForBand(sparqlTemplate, band, nexus.getRenderingContext());
+
+//        if(dateOrderedTraits.contains(trait)){
+//            return dateOrderedTraits.indexOf(trait);
+//        }
+        List<URI> renderableDateOrderedTraits = new ArrayList<URI>();
+        for(URI t : dateOrderedTraits){
+            List<URI> associations = QueryManager.getCachingInstance().getAssociationForTraitAndBand(sparqlTemplate, t, band, nexus.getRenderingContext());
+            for(URI a : associations){
+                if(nexus.getLocationOfRenderedEntity(a) != null && !renderableDateOrderedTraits.contains(t)){
+                    renderableDateOrderedTraits.add(t);
+                }
+            }
+        }
+        if (renderableDateOrderedTraits.contains(trait)) {
+            return renderableDateOrderedTraits.indexOf(trait);
         }
         else {
             throw new RuntimeException(
@@ -132,15 +140,8 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
     }
 
     protected String getTraitColour(SparqlTemplate sparqlTemplate, URI trait) {
-        List<URI> allTypes = sparqlTemplate.query("SELECT ?type (count(DISTINCT ?ancestor) as ?count) " +
-                                                          "WHERE { " +
-                                                          "<" + trait.toString() + "> rdf:type ?trait . " +
-                                                          "?trait rdfs:subClassOf* ?type . " +
-                                                          "?type rdfs:subClassOf* ?ancestor . " +
-                                                          "FILTER ( ?trait != owl:Class ) .  " +
-                                                          "FILTER ( ?trait != owl:NamedIndividual ) . } " +
-                                                          "GROUP BY ?type " +
-                                                          "ORDER BY desc(?count) ", new URIMapper("type"));
+        List<URI> allTypes = QueryManager.getCachingInstance().getOrderedTraitTypes(sparqlTemplate, trait);
+
         Set<String> available = ColourMapper.COLOUR_MAP.keySet();
         for (URI type : allTypes) {
             if (type != null) {
@@ -153,6 +154,7 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
 
         // if we got to here, no color available
         getLog().error("Could not identify a suitable colour category for trait " + trait);
-        return "magenta";
+        return ColourMapper.COLOUR_MAP.get(ColourMapper.OTHER);
     }
 }
+

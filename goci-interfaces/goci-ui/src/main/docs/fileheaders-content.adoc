@@ -2,7 +2,7 @@
 
 == Description of column headings for downloadable files
 
-_Note: The SNP data in the catalog has been mapped to dbSNP Build 142 and Genome Assembly GRCh38.p1._
+_Note: The SNP data in the catalog has been mapped to dbSNP Build 144 and Genome Assembly GRCh38.p2._
 
 <<File headers for catalog version 1.0>>
 
@@ -28,15 +28,15 @@ STUDY: Title of paper (linked to PubMed abstract)
 
 DISEASE/TRAIT: Disease or trait examined in study
 
-INITIAL SAMPLE SIZE: Sample size for Stage 1 of GWAS
+INITIAL SAMPLE DESCRIPTION: Sample size for Stage 1 of GWAS
 
-REPLICATION SAMPLE SIZE: Sample size for subsequent replication(s)
+REPLICATION SAMPLE DESCRIPTION: Sample size for subsequent replication(s)
 
 REGION: Cytogenetic region associated with rs number (NCBI)
 
 CHR_ID: Chromosome number associated with rs number (NCBI)
 
-CHR_POS: Chromosomal position associated with rs number (dbSNP Build 142, NCBI)
+CHR_POS: Chromosomal position associated with rs number (dbSNP Build 144, Genome Assembly GRCh38.p2, NCBI)
 
 REPORTED GENE (S): Gene(s) reported by author
 
@@ -84,8 +84,8 @@ _Updated: 29 May 2015_
 
 As for version 1.0 plus
 
-EFOTRAIT: Mapped Experimental Factor Ontology trait for this association
+MAPPED_TRAIT: Mapped Experimental Factor Ontology trait for this study
 
-EFOURI: URI of the EFO trait
+MAPPED_TRAIT_URI: URI of the EFO trait
 
 _Added: 10 March 2015_

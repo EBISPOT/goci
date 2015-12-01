@@ -6,7 +6,7 @@
 
     <groupId>uk.ac.ebi.spot</groupId>
     <artifactId>goci</artifactId>
-    <version>2.0.2-SNAPSHOT</version>
+    <version>2.0.9-SNAPSHOT</version>
 
     <packaging>pom</packaging>
     <name>GOCI (root)</name>
@@ -17,6 +17,7 @@
         <module>goci-core</module>
         <module>goci-interfaces</module>
         <module>goci-tools</module>
+        <module>lodestar</module>
     </modules>
 
 </project>

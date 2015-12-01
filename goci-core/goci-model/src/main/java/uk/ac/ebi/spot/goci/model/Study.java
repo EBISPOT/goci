@@ -4,7 +4,16 @@ package uk.ac.ebi.spot.goci.model;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Date;
@@ -56,6 +65,9 @@ public class Study {
     @OneToMany(mappedBy = "study")
     private Collection<Association> associations;
 
+    @OneToMany(mappedBy = "study")
+    private Collection<Ethnicity> ethnicities;
+
     @ManyToOne
     @JoinTable(name = "STUDY_DISEASE_TRAIT",
             joinColumns = @JoinColumn(name = "STUDY_ID"),
@@ -85,7 +97,7 @@ public class Study {
     }
 
 
-    public Study(String author, Date publicationDate, String publication, String title, String initialSampleSize, String replicateSampleSize, String platform, String pubmedId, Boolean cnv, Boolean gxe, Boolean gxg, DiseaseTrait diseaseTrait, Collection<EfoTrait> efoTraits, Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms, Housekeeping housekeeping) {
+    public Study(String author, Date publicationDate, String publication, String title, String initialSampleSize, String replicateSampleSize, String platform, String pubmedId, Boolean cnv, Boolean gxe, Boolean gxg, DiseaseTrait diseaseTrait, Collection<EfoTrait> efoTraits, Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms, Collection<Ethnicity> ethnicities, Housekeeping housekeeping) {
         this.author = author;
         this.publicationDate = publicationDate;
         this.publication = publication;
@@ -100,6 +112,7 @@ public class Study {
         this.diseaseTrait = diseaseTrait;
         this.efoTraits = efoTraits;
         this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
+        this.ethnicities = ethnicities;
         this.housekeeping = housekeeping;
     }
 
@@ -256,5 +269,13 @@ public class Study {
                 ", title='" + title + '\'' +
                 ", pubmedId='" + pubmedId + '\'' +
                 '}';
+    }
+
+    public Collection<Ethnicity> getEthnicities() {
+        return ethnicities;
+    }
+
+    public void setEthnicities(Collection<Ethnicity> ethnicities) {
+        this.ethnicities = ethnicities;
     }
 }
