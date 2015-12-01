@@ -64,6 +64,7 @@ public class StudyOperationsService {
                             Date publishDate = new Date();
                             housekeeping.setCatalogPublishDate(publishDate);
                         }
+                        mailService.sendEmailNotification(study, newStatus.getStatus());
                         housekeeping.setCurationStatus(newStatus);
                     }
                     break;
