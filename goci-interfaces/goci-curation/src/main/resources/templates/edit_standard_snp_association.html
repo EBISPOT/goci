@@ -12,7 +12,7 @@
 
     <!--Tags input http://timschlechter.github.io/bootstrap-tagsinput/examples/-->
     <link href="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"
-          th:href="@{https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css}" rel="stylesheet" />
+          th:href="@{https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css}" rel="stylesheet"/>
 
     <script src="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"
             th:src="@{https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js}"></script>
@@ -72,12 +72,15 @@
                     <div id="association_div">
                         <div class="form-group">
                             <div class="col-md-offset-10 col-md-10">
-                                <button type="submit" class="btn btn-primary">Save</button>
-                            </div>
-                        </div>
 
-                        <div class="form-group">
-                            <div class="col-md-10 col-md-offset-2">
+
+                                <div class="form-group">
+                                    <div class="col-md-offset-10 col-md-10">
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                    </div>
+                                </div>
+
+
                                 <table class="table table-hover table-bordered">
 
 
@@ -140,7 +143,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="riskFrequency" class="control-label col-md-2">Risk element (allele) frequency in controls</label>
+                            <label for="riskFrequency" class="control-label col-md-2">Risk element (allele) frequency in
+                                controls</label>
 
                             <div class="col-md-10">
                                 <input type="text" class="form-control" id="riskFrequency"
@@ -213,16 +217,18 @@
 
                         <div class="form-group">
                             <label for="orPerCopyRecip" class="control-label col-md-2">OR/HR/RR per copy
-                                                                                       reciprocal</label>
+                                reciprocal</label>
 
                             <div class="col-md-10">
                                 <input type="text" class="form-control" id="orPerCopyRecip"
                                        th:field="*{orPerCopyRecip}" name="orPerCopyRecip"/>
                             </div>
 
-                            <div class="col-md-10"><button type="button"
-                                                           class="btn btn-primary pull-right"
-                                                           id="calculate-or">Calculate OR/HR/RR per copy (Num)</button>
+                            <div class="col-md-10">
+                                <button type="button"
+                                        class="btn btn-primary pull-right"
+                                        id="calculate-or">Calculate OR/HR/RR per copy (Num)
+                                </button>
                             </div>
 
 
@@ -248,7 +254,7 @@
 
                         <div class="form-group">
                             <label for="orPerCopyRecipRange" class="control-label col-md-2">OR/HR/RR per copy reciprocal
-                                                                                            (Range)</label>
+                                (Range)</label>
 
                             <div class="col-md-10">
                                 <input type="text" class="form-control" id="orPerCopyRecipRange"
@@ -256,15 +262,16 @@
                             </div>
 
                             <div class="col-md-10">
-                            <button type="button"
-                                    class="btn btn-primary pull-right"
-                                    id="calculate-recip-range">Calculate OR/HR/RR per copy (Range)</button>
+                                <button type="button"
+                                        class="btn btn-primary pull-right"
+                                        id="calculate-recip-range">Calculate OR/HR/RR per copy (Range)
+                                </button>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="orPerCopyUnitDescr" class="control-label col-md-2">OR/HR/RR per copy (Unit
-                                                                                           Description)</label>
+                                Description)</label>
 
                             <div class="col-md-10">
                                 <input type="text" class="form-control" id="orPerCopyUnitDescr"
@@ -281,7 +288,9 @@
                             </div>
 
                             <div class="col-md-12">
-                                <button type="button" class="btn btn-primary pull-right" id="calculate-or-range">Build OR/HR/RR per copy (Range)</button>
+                                <button type="button" class="btn btn-primary pull-right" id="calculate-or-range">Build
+                                    OR/HR/RR per copy (Range)
+                                </button>
                             </div>
                         </div>
 
@@ -339,7 +348,7 @@
 </div>
 
 <script>
-    $(function() {
+    $(function () {
         // turn the element to select2 select style
         $('#EFOTrait').select2();
     });

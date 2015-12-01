@@ -12,7 +12,7 @@
 
     <!--Tags input http://timschlechter.github.io/bootstrap-tagsinput/examples/-->
     <link href="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"
-          th:href="@{https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css}" rel="stylesheet" />
+          th:href="@{https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css}" rel="stylesheet"/>
 
     <script src="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"
             th:src="@{https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js}"></script>
@@ -62,7 +62,6 @@
             <div class="form-group">
                 <div id="editSNPForm">
 
-
                     <form class="form-horizontal"
                           method="post"
                           name="snp-association-form"
@@ -71,23 +70,22 @@
                         <div id="association_div">
                             <div class="form-group">
                                 <div class="col-md-10 col-md-offset-2">
+
+
+                                    <div class="form-group">
+                                        <div class="col-md-offset-10 col-md-10">
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+                                    </div>
+
+
                                     <table class="table table-hover table-bordered">
-
-                        <div class="form-group">
-                            <div class="col-md-offset-10 col-md-10">
-                                <button type="submit" class="btn btn-primary">Save</button>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-10 col-md-offset-2">
-                                <table class="table table-hover table-bordered">
 
 
                                         <div class="form-group">
                                             <label for="multiSnpHaplotypeDescr" class="control-label col-md-2">Multi-SNP
-                                                                                                               haplotype
-                                                                                                               description:</label>
+                                                haplotype
+                                                description:</label>
 
                                             <div class="col-md-10">
                                                 <input type="text"
@@ -132,7 +130,9 @@
                                                        th:field="*{snpFormRows[__${rowStat.index}__].merged}"/>
                                             </td>
                                             <td>
-                                                <button type="submit" name="removeRow" th:value="${rowStat.index}">Remove row</button>
+                                                <button type="submit" name="removeRow" th:value="${rowStat.index}">
+                                                    Remove row
+                                                </button>
 
                                             </td>
                                         </tr>
@@ -145,17 +145,17 @@
                             <div class="form-group">
                                 <label for="authorgenes" class="control-label col-md-2">Gene(s)</label>
 
-                            <div class="col-md-10">
-                                <input type="text" class="form-control" id="authorgenes"
-                                       th:field="*{authorReportedGenes}" name="authorReportedGene"
-                                       data-role="tagsinput"
-                                       placeholder="Enter author reported genes..."/>
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control" id="authorgenes"
+                                           th:field="*{authorReportedGenes}" name="authorReportedGene"
+                                           data-role="tagsinput"
+                                           placeholder="Enter author reported genes..."/>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="riskFrequency" class="control-label col-md-2">Risk haplotype frequency in
-                                controls</label>
+                            <div class="form-group">
+                                <label for="riskFrequency" class="control-label col-md-2">Risk haplotype frequency in
+                                    controls</label>
 
                                 <div class="col-md-10">
                                     <input type="text" class="form-control" id="riskFrequency"
@@ -227,33 +227,33 @@
 
                             <div class="form-group">
                                 <label for="orPerCopyRecip" class="control-label col-md-2">OR/HR/RR per copy
-                                                                                           reciprocal</label>
+                                    reciprocal</label>
 
                                 <div class="col-md-10">
                                     <input type="text" class="form-control" id="orPerCopyRecip"
                                            th:field="*{orPerCopyRecip}" name="orPerCopyRecip"/>
                                 </div>
 
-                            <div class="col-md-10">
-                                <button type="button" class="btn btn-primary pull-right" id="calculate-or">Calculate
-                                    OR/HR/RR per copy (Num)
-                                </button>
-                            </div>
+                                <div class="col-md-10">
+                                    <button type="button" class="btn btn-primary pull-right" id="calculate-or">Calculate
+                                        OR/HR/RR per copy (Num)
+                                    </button>
+                                </div>
 
-                            <div class="alert alert-warning alert-dismissible col-md-offset-2 col-md-10"
-                                 role="alert"
-                                 th:if="*{not #strings.isEmpty(orPerCopyRecip) and #strings.isEmpty(orPerCopyNum)}">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                                        aria-hidden="true">&times;</span></button>
-                                <strong>Warning:</strong> OR per Copy Num is blank but there is a reciprocal
-                            </div>
+                                <div class="alert alert-warning alert-dismissible col-md-offset-2 col-md-10"
+                                     role="alert"
+                                     th:if="*{not #strings.isEmpty(orPerCopyRecip) and #strings.isEmpty(orPerCopyNum)}">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                    <strong>Warning:</strong> OR per Copy Num is blank but there is a reciprocal
+                                </div>
 
                             </div>
 
 
                             <div class="form-group">
                                 <label for="orPerCopyRange" class="control-label col-md-2">OR/HR/RR per copy
-                                                                                           (Range)</label>
+                                    (Range)</label>
 
                                 <div class="col-md-10">
                                     <input type="text" class="form-control" id="orPerCopyRange"
@@ -263,8 +263,8 @@
 
                             <div class="form-group">
                                 <label for="orPerCopyRecipRange" class="control-label col-md-2">OR/HR/RR per copy
-                                                                                                reciprocal
-                                                                                                (Range)</label>
+                                    reciprocal
+                                    (Range)</label>
 
                                 <div class="col-md-10">
                                     <input type="text" class="form-control" id="orPerCopyRecipRange"
@@ -272,15 +272,16 @@
                                 </div>
 
                                 <div class="col-md-10">
-                                <button type="button"
-                                        class="btn btn-primary pull-right"
-                                        id="calculate-recip-range">Calculate OR/HR/RR per copy (Range)</button>
+                                    <button type="button"
+                                            class="btn btn-primary pull-right"
+                                            id="calculate-recip-range">Calculate OR/HR/RR per copy (Range)
+                                    </button>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="orPerCopyUnitDescr" class="control-label col-md-2">OR/HR/RR per copy (Unit
-                                                                                               Description)</label>
+                                    Description)</label>
 
                                 <div class="col-md-10">
                                     <input type="text" class="form-control" id="orPerCopyUnitDescr"
@@ -296,7 +297,9 @@
                                            th:field="*{orPerCopyStdError}" name="orPerCopyStdError"/>
                                 </div>
                                 <div class="col-md-12">
-                                    <button type="button" class="btn btn-primary pull-right" id="calculate-or-range">Build OR/HR/RR per copy (Range)</button>
+                                    <button type="button" class="btn btn-primary pull-right" id="calculate-or-range">
+                                        Build OR/HR/RR per copy (Range)
+                                    </button>
                                 </div>
                             </div>
 
@@ -359,7 +362,7 @@
 </div>
 
 <script>
-    $(function() {
+    $(function () {
         // turn the element to select2 select style
         $('#EFOTrait').select2();
     });
