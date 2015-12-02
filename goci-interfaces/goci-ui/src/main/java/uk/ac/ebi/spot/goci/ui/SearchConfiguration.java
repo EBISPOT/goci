@@ -1,6 +1,9 @@
 package uk.ac.ebi.spot.goci.ui;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.embedded.FilterRegistrationBean;
+import org.springframework.boot.context.web.ErrorPageFilter;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
@@ -25,5 +28,19 @@ public class SearchConfiguration {
 
     public String getDefaultFacet() {
         return defaultFacet;
+    }
+
+
+    @Bean
+    public ErrorPageFilter errorPageFilter() {
+        return new ErrorPageFilter();
+    }
+
+    @Bean
+    public FilterRegistrationBean disableSpringBootErrorFilter(ErrorPageFilter filter) {
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+        filterRegistrationBean.setFilter(filter);
+        filterRegistrationBean.setEnabled(false);
+        return filterRegistrationBean;
     }
 }

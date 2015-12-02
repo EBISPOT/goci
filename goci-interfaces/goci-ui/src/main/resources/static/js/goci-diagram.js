@@ -274,8 +274,8 @@ function insertSVG(svg) {
 function serverCommunicationFail(jqXHR, textStatus, errorThrown) {
     // show diagram area error div
     $("#diagram-area-content").html("");
-    //$("#diagramareaerror").css({"display": "block"});
-    //$("#diagramareaerrortext").html(jqXHR.responseText);
+    $("#diagram-area-error").css({"display": "block"});
+    $("#diagram-area-error-text").html(jqXHR.responseText);
     console.log("Failed to acquire SVG from server - " + jqXHR.responseText);
 }
 
