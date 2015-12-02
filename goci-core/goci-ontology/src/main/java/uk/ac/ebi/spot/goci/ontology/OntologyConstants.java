@@ -1,9 +1,8 @@
 package uk.ac.ebi.spot.goci.ontology;
 
 /**
- *
  * Some constants for IRIs from the ontology
- *
+ * <p>
  * Created by catherineleroy on 13/05/2015.
  */
 
@@ -41,7 +40,7 @@ public class OntologyConstants {
     public static final String HAS_OBJECT_IRI = "http://purl.org/oban/has_object"; // todo - check when finalised
     public static final String IS_OBJECT_OF_IRI = "http://purl.org/oban/is_object_of"; // todo - check when finalised
     public static final String LOCATED_IN_PROPERTY_IRI = "http://www.obofoundry.org/ro/ro.owl#located_in";
-    public static final String LOCATION_OF_PROPERTY_IRI =  "http://www.obofoundry.org/ro/ro.owl#location_of";
+    public static final String LOCATION_OF_PROPERTY_IRI = "http://www.obofoundry.org/ro/ro.owl#location_of";
     public static final String PART_OF_PROPERTY_IRI = "http://www.obofoundry.org/ro/ro.owl#part_of";
 
     //Datatype IRIs

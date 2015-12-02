@@ -807,7 +807,7 @@ public class AssociationController {
 
         // Get mapping details
         MappingDetails mappingDetails = createMappingDetails(currentAssociation);
-        model.addAttribute("mappingDetails",mappingDetails);
+        model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
         AssociationFormErrorView associationFormErrorView = associationFormErrorViewService.checkAssociationForErrors(
@@ -835,7 +835,7 @@ public class AssociationController {
 
         // Get mapping details
         MappingDetails mappingDetails = createMappingDetails(currentAssociation);
-        model.addAttribute("mappingDetails",mappingDetails);
+        model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
         AssociationFormErrorView associationFormErrorView = associationFormErrorViewService.checkAssociationForErrors(
@@ -869,7 +869,7 @@ public class AssociationController {
 
         // Get mapping details
         MappingDetails mappingDetails = createMappingDetails(currentAssociation);
-        model.addAttribute("mappingDetails",mappingDetails);
+        model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
         AssociationFormErrorView associationFormErrorView = associationFormErrorViewService.checkAssociationForErrors(
@@ -903,7 +903,7 @@ public class AssociationController {
 
         // Get mapping details
         MappingDetails mappingDetails = createMappingDetails(currentAssociation);
-        model.addAttribute("mappingDetails",mappingDetails);
+        model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
         AssociationFormErrorView associationFormErrorView = associationFormErrorViewService.checkAssociationForErrors(

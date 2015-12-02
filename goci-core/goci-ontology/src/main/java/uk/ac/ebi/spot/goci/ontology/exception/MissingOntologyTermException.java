@@ -3,8 +3,7 @@ package uk.ac.ebi.spot.goci.ontology.exception;
 /**
  * Javadocs go here!
  *
- * @author Tony Burdett
- * Date 25/01/12
+ * @author Tony Burdett Date 25/01/12
  */
 public class MissingOntologyTermException extends OntologyTermException {
     public MissingOntologyTermException() {

@@ -19,7 +19,6 @@
     <description>Converts the data from the gwas database into an OWL file.</description>
 
 
-
     <build>
         <finalName>goci-datapublisher</finalName>
 
@@ -44,7 +43,7 @@
         </dependency>
 
 
-         <!--goci ontology utils-->
+        <!--goci ontology utils-->
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-utils</artifactId>
@@ -85,7 +84,6 @@
         <start-class>uk.ac.ebi.spot.goci.GOCIDataPublisherDriver</start-class>
         <java.version>1.8</java.version>
     </properties>
-
 
 
 </project>

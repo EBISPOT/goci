@@ -5,8 +5,8 @@ package uk.ac.ebi.spot.goci.curation.model;
  *
  * @author emma
  *         <p>
- *         DTO used to store the curator that user wishes to assign a study to. This is used in the
- *         StudyController and the studies.html file as a thymeleaf object.
+ *         DTO used to store the curator that user wishes to assign a study to. This is used in the StudyController and
+ *         the studies.html file as a thymeleaf object.
  */
 public class Assignee {
 

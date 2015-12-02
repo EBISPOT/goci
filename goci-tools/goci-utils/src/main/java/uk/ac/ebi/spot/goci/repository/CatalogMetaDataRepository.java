@@ -23,33 +23,33 @@ public class CatalogMetaDataRepository {
 
     private JdbcTemplate jdbcTemplate;
 
-    private static final String STUDY_COUNT = 
+    private static final String STUDY_COUNT =
             "SELECT COUNT(*) FROM(" +
-                "SELECT DISTINCT S.PUBMED_ID " +
-                "FROM STUDY S " +
-                "JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
-                "WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL AND H.CATALOG_UNPUBLISH_DATE IS NULL)";
+                    "SELECT DISTINCT S.PUBMED_ID " +
+                    "FROM STUDY S " +
+                    "JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
+                    "WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL AND H.CATALOG_UNPUBLISH_DATE IS NULL)";
 
     private static final String SNP_COUNT = "" +
             "SELECT COUNT(*) FROM(" +
-                "SELECT DISTINCT SNP.RS_ID " +
-                "FROM SINGLE_NUCLEOTIDE_POLYMORPHISM SNP " +
-                "JOIN STUDY_SNP SN ON SN.SNP_ID = SNP.ID " +
-                "JOIN STUDY S ON S.ID = SN.STUDY_ID " +
-                "JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
-                "WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL AND H.CATALOG_UNPUBLISH_DATE IS NULL)";
-    
-    
+            "SELECT DISTINCT SNP.RS_ID " +
+            "FROM SINGLE_NUCLEOTIDE_POLYMORPHISM SNP " +
+            "JOIN STUDY_SNP SN ON SN.SNP_ID = SNP.ID " +
+            "JOIN STUDY S ON S.ID = SN.STUDY_ID " +
+            "JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
+            "WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL AND H.CATALOG_UNPUBLISH_DATE IS NULL)";
+
+
     private static final String ASSOCIATION_COUNT =
             "SELECT COUNT(*) FROM(" +
-                "SELECT DISTINCT SNP.RS_ID, D.TRAIT " +
-                "FROM SINGLE_NUCLEOTIDE_POLYMORPHISM SNP " +
-                "JOIN STUDY_SNP SN ON SN.SNP_ID = SNP.ID " +
-                "JOIN STUDY S ON S.ID = SN.STUDY_ID " +
-                "JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
-                "JOIN STUDY_DISEASE_TRAIT SD ON SD.STUDY_ID = S.ID " +
-                "JOIN DISEASE_TRAIT D ON D.ID = SD.DISEASE_TRAIT_ID " +
-                "WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL AND H.CATALOG_UNPUBLISH_DATE IS NULL)";
+                    "SELECT DISTINCT SNP.RS_ID, D.TRAIT " +
+                    "FROM SINGLE_NUCLEOTIDE_POLYMORPHISM SNP " +
+                    "JOIN STUDY_SNP SN ON SN.SNP_ID = SNP.ID " +
+                    "JOIN STUDY S ON S.ID = SN.STUDY_ID " +
+                    "JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
+                    "JOIN STUDY_DISEASE_TRAIT SD ON SD.STUDY_ID = S.ID " +
+                    "JOIN DISEASE_TRAIT D ON D.ID = SD.DISEASE_TRAIT_ID " +
+                    "WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL AND H.CATALOG_UNPUBLISH_DATE IS NULL)";
 
 
     @Autowired//(required = false)
@@ -57,7 +57,6 @@ public class CatalogMetaDataRepository {
         this.jdbcTemplate = jdbcTemplate;
         this.df = new SimpleDateFormat("yyyy-MM-dd");
     }
-
 
 
     public void getMetaData(File statsFile) throws IOException {

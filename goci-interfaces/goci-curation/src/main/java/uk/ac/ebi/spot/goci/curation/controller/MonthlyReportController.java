@@ -5,7 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 import uk.ac.ebi.spot.goci.curation.service.ReportService;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
@@ -40,7 +44,10 @@ public class MonthlyReportController {
     private ReportService reportService;
 
     @Autowired
-    public MonthlyReportController(MonthlyTotalsSummaryViewRepository monthlyTotalsSummaryViewRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, ReportService reportService) {
+    public MonthlyReportController(MonthlyTotalsSummaryViewRepository monthlyTotalsSummaryViewRepository,
+                                   CuratorRepository curatorRepository,
+                                   CurationStatusRepository curationStatusRepository,
+                                   ReportService reportService) {
         this.monthlyTotalsSummaryViewRepository = monthlyTotalsSummaryViewRepository;
         this.curatorRepository = curatorRepository;
         this.curationStatusRepository = curationStatusRepository;
@@ -73,36 +80,74 @@ public class MonthlyReportController {
 
         //Search database for various filter options
         if (status != null && curator != null && year != null && month != null) { // all filter options
-            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCuratorAndCurationStatusAndYearAndMonthOrderByYearDesc(curatorName, statusName, year, month);
-        } else if (status != null && curator != null && year != null) { // status, curator and year
-            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCuratorAndCurationStatusAndYearOrderByYearDesc(curatorName, statusName, year);
-        } else if (status != null && curator != null && month != null) { // status, curator and month
-            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCuratorAndCurationStatusAndMonthOrderByYearDesc(curatorName, statusName, month);
-        } else if (status != null && year != null && month != null) { // status, year, month
-            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCurationStatusAndYearAndMonthOrderByYearDesc(statusName, year, month);
-        } else if (status != null && curator != null) { // status and curator
-            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCuratorAndCurationStatus(curatorName, statusName);
-        } else if (status != null && year != null) { // status and year
-            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCurationStatusAndYearOrderByYearDesc(statusName, year);
-        } else if (status != null && month != null) { // status and year
-            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCurationStatusAndMonthOrderByYearDesc(statusName, month);
-        } else if (status != null) {
+            monthlyTotalsSummaryViews =
+                    monthlyTotalsSummaryViewRepository.findByCuratorAndCurationStatusAndYearAndMonthOrderByYearDesc(
+                            curatorName,
+                            statusName,
+                            year,
+                            month);
+        }
+        else if (status != null && curator != null && year != null) { // status, curator and year
+            monthlyTotalsSummaryViews =
+                    monthlyTotalsSummaryViewRepository.findByCuratorAndCurationStatusAndYearOrderByYearDesc(curatorName,
+                                                                                                            statusName,
+                                                                                                            year);
+        }
+        else if (status != null && curator != null && month != null) { // status, curator and month
+            monthlyTotalsSummaryViews =
+                    monthlyTotalsSummaryViewRepository.findByCuratorAndCurationStatusAndMonthOrderByYearDesc(curatorName,
+                                                                                                             statusName,
+                                                                                                             month);
+        }
+        else if (status != null && year != null && month != null) { // status, year, month
+            monthlyTotalsSummaryViews =
+                    monthlyTotalsSummaryViewRepository.findByCurationStatusAndYearAndMonthOrderByYearDesc(statusName,
+                                                                                                          year,
+                                                                                                          month);
+        }
+        else if (status != null && curator != null) { // status and curator
+            monthlyTotalsSummaryViews =
+                    monthlyTotalsSummaryViewRepository.findByCuratorAndCurationStatus(curatorName, statusName);
+        }
+        else if (status != null && year != null) { // status and year
+            monthlyTotalsSummaryViews =
+                    monthlyTotalsSummaryViewRepository.findByCurationStatusAndYearOrderByYearDesc(statusName, year);
+        }
+        else if (status != null && month != null) { // status and year
+            monthlyTotalsSummaryViews =
+                    monthlyTotalsSummaryViewRepository.findByCurationStatusAndMonthOrderByYearDesc(statusName, month);
+        }
+        else if (status != null) {
             monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCurationStatus(statusName);
-        } else if (curator != null && year != null && month != null) { // curator, year and month
-            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCuratorAndYearAndMonthOrderByYearDesc(curatorName, year, month);
-        } else if (curator != null && year != null) { // curator and year
-            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCuratorAndYearOrderByYearDesc(curatorName, year);
-        } else if (curator != null && month != null) { // curator and month
-            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCuratorAndMonthOrderByYearDesc(curatorName, month);
-        } else if (curator != null) {
+        }
+        else if (curator != null && year != null && month != null) { // curator, year and month
+            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCuratorAndYearAndMonthOrderByYearDesc(
+                    curatorName,
+                    year,
+                    month);
+        }
+        else if (curator != null && year != null) { // curator and year
+            monthlyTotalsSummaryViews =
+                    monthlyTotalsSummaryViewRepository.findByCuratorAndYearOrderByYearDesc(curatorName, year);
+        }
+        else if (curator != null && month != null) { // curator and month
+            monthlyTotalsSummaryViews =
+                    monthlyTotalsSummaryViewRepository.findByCuratorAndMonthOrderByYearDesc(curatorName, month);
+        }
+        else if (curator != null) {
             monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByCurator(curatorName);
-        } else if (year != null && month != null) { // year and month
-            monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByYearAndMonthOrderByYearDesc(year, month);
-        } else if (year != null) {
+        }
+        else if (year != null && month != null) { // year and month
+            monthlyTotalsSummaryViews =
+                    monthlyTotalsSummaryViewRepository.findByYearAndMonthOrderByYearDesc(year, month);
+        }
+        else if (year != null) {
             monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByYearOrderByYearDesc(year);
-        } else if (month != null) {
+        }
+        else if (month != null) {
             monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findByMonthOrderByYearDesc(month);
-        } else { // no filters
+        }
+        else { // no filters
             monthlyTotalsSummaryViews = monthlyTotalsSummaryViewRepository.findAll();
         }
 
@@ -152,7 +197,8 @@ public class MonthlyReportController {
         Integer year = monthlyTotalsSummaryView.getYear();
         Integer month = monthlyTotalsSummaryView.getMonth();
 
-        return "redirect:/studies?page=1&status=" + statusId + "&curator=" + curatorId + "&year=" + year + "&month=" + month;
+        return "redirect:/studies?page=1&status=" + statusId + "&curator=" + curatorId + "&year=" + year + "&month=" +
+                month;
     }
 
 /* General purpose methods used to populate drop downs */

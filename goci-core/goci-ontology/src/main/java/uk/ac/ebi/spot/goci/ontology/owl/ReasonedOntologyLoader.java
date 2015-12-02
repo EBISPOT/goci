@@ -30,7 +30,7 @@ public class ReasonedOntologyLoader extends AbstractOntologyLoader {
 
     private OWLReasoner reasoner;
 
-    public OWLReasoner getOWLReasoner(){
+    public OWLReasoner getOWLReasoner() {
         return reasoner;
     }
 

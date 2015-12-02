@@ -18,8 +18,9 @@
 
 
     <div class="alert alert-danger col-md-offset-1 col-md-7">
-        <strong>Warning!</strong> One or more of the associations have already been annotated with EFO terms. By default, these will be over-written by the study-level traits.
-                                 How would you like to proceed?
+        <strong>Warning!</strong> One or more of the associations have already been annotated with EFO terms. By
+                                  default, these will be over-written by the study-level traits.
+                                  How would you like to proceed?
     </div>
 
 </div>
@@ -27,8 +28,10 @@
 <div class="container" th:object="${study}">
     <div class="row">
         <div class="col-md-12 col-md-offset-1">
-            <div><a th:href="@{/studies/{studyId}/associations/applyefotraits(studyId=*{id}, e=true, o=true)}" class="btn btn-primary">Over-write existing traits with study-level traits</a>
-                <a th:href="@{/studies/{studyId}/associations/applyefotraits(studyId=*{id}, e=true, o=false)}" class="btn btn-primary">Add study-level traits to the existing traits</a>
+            <div><a th:href="@{/studies/{studyId}/associations/applyefotraits(studyId=*{id}, e=true, o=true)}"
+                    class="btn btn-primary">Over-write existing traits with study-level traits</a>
+                <a th:href="@{/studies/{studyId}/associations/applyefotraits(studyId=*{id}, e=true, o=false)}"
+                   class="btn btn-primary">Add study-level traits to the existing traits</a>
                 <a th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary">Cancel</a>
             </div>
         </div>

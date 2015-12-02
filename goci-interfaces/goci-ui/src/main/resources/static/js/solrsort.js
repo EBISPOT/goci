@@ -3,12 +3,12 @@
  */
 
 
-$(document).ready(function () {
+$(document).ready(function() {
 
-    $('.sorting').click(function () {
+    $('.sorting').click(function() {
 
-        if($(this).hasClass('unsorted')){
-            if($(this).parents('thead').find('span.sorted').length != 0){
+        if ($(this).hasClass('unsorted')) {
+            if ($(this).parents('thead').find('span.sorted').length != 0) {
                 console.log("Another column in this table has already been sorted");
                 var previous = $(this).parents('thead').find('span.sorted');
                 previous.removeClass('sorted').addClass('unsorted');
@@ -18,36 +18,36 @@ $(document).ready(function () {
             $(this).removeClass('glyphicon-sort').addClass('glyphicon-arrow-up');
             $(this).removeClass('unsorted').addClass('sorted asc');
         }
-        else{
+        else {
             $(this).toggleClass('glyhicon-arrow-up glyphicon-arrow-down');
             $(this).toggleClass('asc desc');
         }
 
         var facet = $(this).parents('thead').attr('id').split("-")[0];
 
-        if($('#' + facet + '-summaries').hasClass('more-results')){
+        if ($('#' + facet + '-summaries').hasClass('more-results')) {
             var id = $(this).parent('th').attr('id');
             var field = id;
 
-            if(id.indexOf('-') != -1){
+            if (id.indexOf('-') != -1) {
                 field = id.split('-')[0];
             }
 
-            if($(this).hasClass('asc')) {
+            if ($(this).hasClass('asc')) {
                 field = field.concat('+asc');
             }
-            else{
+            else {
                 field = field.concat('+desc');
             }
-                console.log(facet);
+            console.log(facet);
             console.log(field);
 
             doSortingSearch(facet, field, id);
         }
-        else if($('#expand-table').hasClass('table-expanded')){
+        else if ($('#expand-table').hasClass('table-expanded')) {
             loadAdditionalResults(facet, true);
         }
-        else{
+        else {
             loadAdditionalResults(facet, false);
         }
 
@@ -56,57 +56,58 @@ $(document).ready(function () {
 });
 
 
-function doSortingSearch(facet, field, id){
+function doSortingSearch(facet, field, id) {
 
     var queryTerm = $('#query').text();
-    if(queryTerm == '*'){
+    if (queryTerm == '*') {
         var searchTerm = 'text:'.concat(queryTerm);
     }
-    else{
+    else {
         var searchTerm = 'text:"'.concat(queryTerm).concat('"');
-    }    var pval = processPval();
+    }
+    var pval = processPval();
     var or = processOR();
     var beta = processBeta();
     var date = processDate();
     var traits = processTraitDropdown();
 
-    if($('#filter').text() != ''){
-        if($('#filter').text() != 'recent' && traits == '') {
+    if ($('#filter').text() != '') {
+        if ($('#filter').text() != 'recent' && traits == '') {
             var terms = $('#filter').text();
             terms = terms.replace(/\s/g, '+');
 
             traits = terms.split('|');
         }
-        else if($('#filter').text() == 'recent' && date == ''){
+        else if ($('#filter').text() == 'recent' && date == '') {
             date = "[NOW-3MONTH+TO+*]";
         }
     }
 
 
     $.getJSON('api/search/sort', {
-        'q': searchTerm,
-        'facet': facet,
-        'group': 'true',
-        'group.by': 'resourcename',
-        'group.limit': 5,
-        'pvalfilter': pval,
-        'orfilter': or,
-        'betafilter': beta,
-        'datefilter': date,
-        'traitfilter[]': traits,
-        'sort': field
-    })
-        .done(function (data) {
-            processSortedData(data, id);
-        });
+                'q': searchTerm,
+                'facet': facet,
+                'group': 'true',
+                'group.by': 'resourcename',
+                'group.limit': 5,
+                'pvalfilter': pval,
+                'orfilter': or,
+                'betafilter': beta,
+                'datefilter': date,
+                'traitfilter[]': traits,
+                'sort': field
+            })
+            .done(function(data) {
+                processSortedData(data, id);
+            });
 };
 
-function processSortedData(data, id){
-    if(data.error != null){
+function processSortedData(data, id) {
+    if (data.error != null) {
         var sorter = $('#' + id).find('span.sorted');
         sorter.removeClass('asc desc glyphicon-arrow-up glyphicon-arrow-down').addClass("glyphicon-sort unsorted");
     }
-    else{
+    else {
         var documents = data.grouped.resourcename.groups;
 
         setDownloadLink(data.responseHeader.params);
@@ -118,11 +119,11 @@ function processSortedData(data, id){
                 var studyTable = $('#study-table-body').empty();
 
                 for (var k = 0; k < group.doclist.docs.length; k++) {
-                    try{
+                    try {
                         var doc = group.doclist.docs[k];
                         processStudy(doc, studyTable);
                     }
-                    catch (ex){
+                    catch (ex) {
                         console.log("Failure to process document " + ex);
                     }
                 }
@@ -137,11 +138,11 @@ function processSortedData(data, id){
                 var associationTable = $('#association-table-body').empty();
 
                 for (var k = 0; k < group.doclist.docs.length; k++) {
-                    try{
+                    try {
                         var doc = group.doclist.docs[k];
                         processAssociation(doc, associationTable);
                     }
-                    catch (ex){
+                    catch (ex) {
                         console.log("Failure to process document " + ex);
                     }
                 }
@@ -155,11 +156,11 @@ function processSortedData(data, id){
             else if (group.groupValue == "diseasetrait") {
                 var traitTable = $('#diseasetrait-table-body').empty();
                 for (var k = 0; k < group.doclist.docs.length; k++) {
-                    try{
+                    try {
                         var doc = group.doclist.docs[k];
                         processTrait(doc, traitTable);
                     }
-                    catch (ex){
+                    catch (ex) {
                         console.log("Failure to process document " + ex);
                     }
                 }

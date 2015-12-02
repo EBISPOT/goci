@@ -130,7 +130,11 @@
 
                     <div class="form-group">
                         <label for="description" class="control-label col-md-2">Additional Description:</label>
-                        <textarea class="col-md-6" rows="10" id="description" type="text" th:field="${ethnicity.description}"/>
+                        <textarea class="col-md-6"
+                                  rows="10"
+                                  id="description"
+                                  type="text"
+                                  th:field="${ethnicity.description}"/>
                     </div>
 
                     <div class="form-group">
@@ -140,7 +144,7 @@
 
                     <div class="form-group">
                         <label for="sampleSizesMatch" class="control-label col-md-2">Sample Sizes Match in Catalog at
-                            Study Level?</label>
+                                                                                     Study Level?</label>
 
                         <select th:field="${ethnicity.sampleSizesMatch}" id="sampleSizesMatch">
                             <option th:each="match : ${sampleSizesMatchOptions}"
@@ -164,7 +168,7 @@
 
 
 <script>
-    $(function () {
+    $(function() {
         // turn the element to select2 select style
         $('#ethnicGroup').select2();
 
@@ -173,7 +177,7 @@
 </script>
 
 <script>
-    $(function () {
+    $(function() {
         // turn the element to select2 select style
         $('#countryOfOrigin').select2();
 
@@ -181,7 +185,7 @@
 </script>
 
 <script>
-    $(function () {
+    $(function() {
         // turn the element to select2 select style
         $('#countryOfRecruitment').select2();
 

@@ -41,7 +41,8 @@ public class MappingRecordService {
      * @param mappedBy    Name of curator or process that ran mapping
      */
     public void updateAssociationMappingRecord(Association association, Date mappingDate, String mappedBy) {
-        getLog().info("Updating association: " + association.getId() + ". Setting LAST_MAPPING_DATE to " + mappedBy + ". Setting LAST_MAPPING_PERFORMED_BY to " + mappedBy);
+        getLog().info("Updating association: " + association.getId() + ". Setting LAST_MAPPING_DATE to " + mappedBy +
+                              ". Setting LAST_MAPPING_PERFORMED_BY to " + mappedBy);
         association.setLastMappingDate(mappingDate);
         association.setLastMappingPerformedBy(mappedBy);
         associationRepository.save(association);

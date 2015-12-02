@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * Created by emma on 10/02/15.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Login controller directs users to login page
  */
 @Controller

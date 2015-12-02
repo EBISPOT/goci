@@ -71,8 +71,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     Page<Study> findByHousekeepingNotesContainingIgnoreCase(String query, Pageable pageable);
 
     // Custom query to get list of study authors
-    @Query("select distinct s.author from Study s")
-    List<String> findAllStudyAuthors(Sort sort);
+    @Query("select distinct s.author from Study s") List<String> findAllStudyAuthors(Sort sort);
 
     Page<Study> findByAuthorContainingIgnoreCase(String author, Pageable pageable);
 
@@ -82,11 +81,14 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Page<Study> findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Pageable pageable);
 
-    List<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Long snpId);
+    List<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
+            Long snpId);
 
-    List<Study> findByAssociationsIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Long associationId);
+    List<Study> findByAssociationsIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
+            Long associationId);
 
-    List<Study> findByDiseaseTraitIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Long diseaseTraitId);
+    List<Study> findByDiseaseTraitIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
+            Long diseaseTraitId);
 
 }
 

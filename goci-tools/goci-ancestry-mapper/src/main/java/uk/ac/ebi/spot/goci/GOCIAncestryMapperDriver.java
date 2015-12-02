@@ -18,20 +18,18 @@ public class GOCIAncestryMapperDriver {
     @Autowired
     AncestryMappingService mappingService;
 
-    private AncestryMappingService getMappingService(){
+    private AncestryMappingService getMappingService() {
         return mappingService;
     }
 
-    public static void main( String[] args )
-    {
+    public static void main(String[] args) {
         System.out.println("Starting ancestry mapping application...");
         ApplicationContext ctx = SpringApplication.run(GOCIAncestryMapperDriver.class, args);
         System.out.println("Application executed successfully!");
         SpringApplication.exit(ctx);
     }
 
-    @Bean
-    CommandLineRunner run() {
+    @Bean CommandLineRunner run() {
         return strings -> {
             System.out.println("About to map all database values");
             this.mapAncestry();
@@ -40,7 +38,7 @@ public class GOCIAncestryMapperDriver {
     }
 
     private void mapAncestry() {
-           getMappingService().processAncestries();
+        getMappingService().processAncestries();
 
     }
 

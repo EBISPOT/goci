@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.curation.service.FtpFileService;
-import uk.ac.ebi.spot.goci.repository.CatalogExportRepository;
 import uk.ac.ebi.spot.goci.export.CatalogSpreadsheetExporter;
+import uk.ac.ebi.spot.goci.repository.CatalogExportRepository;
 
 import java.io.File;
 import java.io.IOException;

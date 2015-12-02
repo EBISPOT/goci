@@ -17,8 +17,8 @@ public class SVGUtils {
 
     public static String buildSVGHeader(String id, String onloadEvt, int defaultWidth, int defaultHeight) {
         String svgid = "id='" + id + "'";
-//        String version = "version='1.1'";
-//        String baseprofile = "baseProfile='full'";
+        //        String version = "version='1.1'";
+        //        String baseprofile = "baseProfile='full'";
         String xmlns = "xmlns='http://www.w3.org/2000/svg' " +
                 "xmlns:svg='http://www.w3.org/2000/svg' " +
                 "xmlns:xlink='http://www.w3.org/1999/xlink' " +
@@ -29,10 +29,10 @@ public class SVGUtils {
         String viewBox = "viewBox='0 0 " + defaultWidth + " " + defaultHeight + "' " +
                 "preserveAspectRatio='xMinYMin slice'";
 
-//        String onload = "onload='" + onloadEvt + "'";
-//        String onzoom = "onzoom=''";
-//        String onscroll = "onscroll=''";
-//        String onresize = "onresize=''";
+        //        String onload = "onload='" + onloadEvt + "'";
+        //        String onzoom = "onzoom=''";
+        //        String onscroll = "onscroll=''";
+        //        String onresize = "onresize=''";
 
         String blacktobg_def = "<linearGradient id='blacktobg' x1='0%' y1='0%' x2='0%' y2='100%'>" +
                 "<stop offset='0%' style='stop-color:black; stop-opacity:1'/>" +

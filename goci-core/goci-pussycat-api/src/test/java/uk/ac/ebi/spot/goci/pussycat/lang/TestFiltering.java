@@ -66,7 +66,8 @@ public class TestFiltering {
         try {
             from = df1.parse("2005-01-01");
             to = df1.parse("2010-01-01");
-        } catch (ParseException e) {
+        }
+        catch (ParseException e) {
             e.printStackTrace();
         }
 
@@ -84,21 +85,21 @@ public class TestFiltering {
         Filter dateFilter2 = refine(study).on(study.getPublicationDate()).hasRange(fromValue, toValue);
 
         assertEquals("Filter type does not match expected",
-                Study.class,
-                dateFilter.getFilteredType());
+                     Study.class,
+                     dateFilter.getFilteredType());
 
         assertEquals("Filtered method does not match expected",
-                "getPublicationDate",
-                dateFilter.getFilteredMethod().getName());
+                     "getPublicationDate",
+                     dateFilter.getFilteredMethod().getName());
 
 
         assertEquals("Filtered value does not match expected",
-                "2010-01-01T00:00:00.0",
-                dateFilter.getFilteredRange().to());
+                     "2010-01-01T00:00:00.0",
+                     dateFilter.getFilteredRange().to());
 
         assertEquals("Hashcodes of the two date filters differ",
-                dateFilter.hashCode(),
-                dateFilter2.hashCode());
+                     dateFilter.hashCode(),
+                     dateFilter2.hashCode());
     }
 
 

@@ -2,9 +2,8 @@ package uk.ac.ebi.spot.goci.ui;
 
 /**
  * Created by emma on 24/11/14.
- *
+ * <p>
  * Configuration class for configuring Spring MVC in the application.
- *
  */
 
 import org.springframework.context.annotation.Configuration;

@@ -4,7 +4,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.pussycat.utils.StringUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -30,9 +37,9 @@ public abstract class AbstractSVGIOPussycatSession extends AbstractPussycatSessi
         super();
     }
 
-//    public void setHashArgsMap(){
-//        hashArgsMap =  new HashMap<String, Object[]>();
-//    }
+    //    public void setHashArgsMap(){
+    //        hashArgsMap =  new HashMap<String, Object[]>();
+    //    }
 
     public File getCacheDirectory() {
         return cacheDirectory;

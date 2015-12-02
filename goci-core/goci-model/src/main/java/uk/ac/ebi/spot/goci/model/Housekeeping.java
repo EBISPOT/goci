@@ -13,7 +13,7 @@ import java.util.Date;
  * Created by emma on 03/12/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Model representing housekeeping information stored about a study that is used during curation
  */
 @Entity
@@ -28,9 +28,9 @@ public class Housekeeping {
 
     private Boolean ethnicityCheckedLevelOne = false;
 
-    private Boolean ethnicityCheckedLevelTwo  = false;
+    private Boolean ethnicityCheckedLevelTwo = false;
 
-    private Boolean ethnicityBackFilled  = false;
+    private Boolean ethnicityBackFilled = false;
 
     private Boolean checkedMappingError = false;
 

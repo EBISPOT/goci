@@ -142,7 +142,7 @@ public class V1_9_9_011__Association_locus_links_for_haplotypes extends FieldSpl
             Iterator<String> rsIdIterator = rsIds.iterator();
             Iterator<String> riskAlleleIterator = riskAlleles.iterator();
             if (rsIds.size() == riskAlleles.size()) {
-                while(rsIdIterator.hasNext()) {
+                while (rsIdIterator.hasNext()) {
                     String rsId = rsIdIterator.next().trim();
                     String riskAllele = riskAlleleIterator.next().trim();
 

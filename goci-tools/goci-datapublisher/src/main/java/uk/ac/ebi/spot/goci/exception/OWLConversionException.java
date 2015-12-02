@@ -3,8 +3,7 @@ package uk.ac.ebi.spot.goci.exception;
 /**
  * An exception thrown whenever converting model objects into OWL fails.
  *
- * @author Tony Burdett
- * Date 24/01/12
+ * @author Tony Burdett Date 24/01/12
  */
 public class OWLConversionException extends Exception {
     public OWLConversionException() {

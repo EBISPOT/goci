@@ -42,7 +42,7 @@ public class V2_0_1_020__Remove_locations_with_null_position implements SpringJd
         jdbcTemplate.query(SELECT_LOCATIONS, (resultSet, i) -> {
             Long locationId = resultSet.getLong(1);
             Long snpId = resultSet.getLong(2);
-            
+
             // Keep record of locations to be deleted
             locationIds.add(locationId);
 

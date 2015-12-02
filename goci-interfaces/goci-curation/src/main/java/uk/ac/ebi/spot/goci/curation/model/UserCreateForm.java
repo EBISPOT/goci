@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
  * Created by emma on 09/02/15.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Model class used in curation system as a form to create users
  */
 public class UserCreateForm {

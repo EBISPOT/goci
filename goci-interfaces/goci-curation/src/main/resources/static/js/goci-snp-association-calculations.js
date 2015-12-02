@@ -10,7 +10,7 @@ $(document).ready(function() {
 
 function calculateOrPerCopyNum(orPerCopyRecip) {
     var orPerCopyNum;
-    orPerCopyNum=Math.round(100/orPerCopyRecip)/100;
+    orPerCopyNum = Math.round(100 / orPerCopyRecip) / 100;
     console.log(orPerCopyNum);
     document.getElementById("orPerCopyNum").value = orPerCopyNum;
 }
@@ -28,7 +28,7 @@ $(document).ready(function() {
 /* This method calculates the confidence interval based on the standard error
  taken from Kent's Coldfusion code.*/
 
-function setRange(orPerCopyStdError, orPerCopyNum){
+function setRange(orPerCopyStdError, orPerCopyNum) {
     var delta = Math.round(100000 * orPerCopyStdError * 1.96) / 100000;
     var ORpercopylow = orPerCopyNum - delta;
     var ORpercopyhigh = (1 * orPerCopyNum) + delta;
@@ -82,14 +82,17 @@ function calculateOrPerCopyRange(orPerCopyRecipRange) {
     if (low < 0.001) {
         lowval = parseFloat(low).toFixed(5);
         highval = parseFloat(high).toFixed(5);
-    } else if (low >= 0.001 && low < 0.01) {
+    }
+    else if (low >= 0.001 && low < 0.01) {
         lowval = parseFloat(low).toFixed(4);
         highval = parseFloat(high).toFixed(4);
-    } else if (low >= 0.01 && low < 0.1) {
+    }
+    else if (low >= 0.01 && low < 0.1) {
         lowval = parseFloat(low).toFixed(3);
 
         highval = parseFloat(high).toFixed(3);
-    } else {
+    }
+    else {
         lowval = parseFloat(low).toFixed(2);
         highval = parseFloat(high).toFixed(2);
     }

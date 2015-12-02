@@ -26,7 +26,7 @@ public class OntologyExtractionService {
     private Map<String, String> countries;
 
     @Autowired
-    public OntologyExtractionService(ReasonedOntologyLoader ontologyLoader){
+    public OntologyExtractionService(ReasonedOntologyLoader ontologyLoader) {
         this.ontologyLoader = ontologyLoader;
         this.ancestralGroups = new HashMap<>();
         this.countries = new HashMap<>();
@@ -42,28 +42,29 @@ public class OntologyExtractionService {
 
 
     public void preLoadMaps() {
-        if(ontologyLoader.isReady()) {
+        if (ontologyLoader.isReady()) {
 
             OWLClass country = ontologyLoader.getFactory().getOWLClass(IRI.create(countryURI));
             OWLClass ancestralGroup = ontologyLoader.getFactory().getOWLClass(IRI.create(ancestralURI));
 
 
             Set<OWLClass> allCountries = ontologyLoader.getOWLReasoner().getSubClasses(country, false).getFlattened();
-            Set<OWLClass> allGroups = ontologyLoader.getOWLReasoner().getSubClasses(ancestralGroup, false).getFlattened();
+            Set<OWLClass> allGroups =
+                    ontologyLoader.getOWLReasoner().getSubClasses(ancestralGroup, false).getFlattened();
 
             for (OWLClass cls : allCountries) {
                 String label = ontologyLoader.getLabel(cls.getIRI());
                 Set<String> synonyms = ontologyLoader.getSynonyms(cls.getIRI());
 
 
-                if(label != null) {
+                if (label != null) {
                     label = label.toLowerCase();
                 }
 
                 countries.put(label, cls.getIRI().toString());
 
-                if(synonyms != null){
-                    for(String syn : synonyms){
+                if (synonyms != null) {
+                    for (String syn : synonyms) {
                         System.out.println("Synonym for " + label + " is " + syn);
                         countries.put(syn, cls.getIRI().toString());
                     }
@@ -75,13 +76,13 @@ public class OntologyExtractionService {
 
                 Set<String> synonyms = ontologyLoader.getSynonyms(cls.getIRI());
 
-                if(label != null) {
+                if (label != null) {
                     label = label.toLowerCase();
                 }
                 ancestralGroups.put(label, cls.getIRI().toString());
 
-                if(synonyms != null){
-                    for(String syn : synonyms){
+                if (synonyms != null) {
+                    for (String syn : synonyms) {
                         System.out.println("Synonym for " + label + " is " + syn);
                         ancestralGroups.put(syn, cls.getIRI().toString());
                     }
@@ -89,10 +90,11 @@ public class OntologyExtractionService {
 
             }
         }
-        else{
+        else {
             try {
                 ontologyLoader.waitUntilReady();
-            } catch (InterruptedException e) {
+            }
+            catch (InterruptedException e) {
                 e.printStackTrace();
             }
             preLoadMaps();
@@ -100,19 +102,19 @@ public class OntologyExtractionService {
         }
     }
 
-    public Map<String, String> getAncestralGroups(){
+    public Map<String, String> getAncestralGroups() {
         return ancestralGroups;
     }
 
-    public Map<String, String> getCountries(){
+    public Map<String, String> getCountries() {
         return countries;
     }
 
-    public String getAncestralGroupURI(String group){
+    public String getAncestralGroupURI(String group) {
         return ancestralGroups.get(group);
     }
 
-    public String getCountryURI(String country){
+    public String getCountryURI(String country) {
         return countries.get(country);
     }
 }

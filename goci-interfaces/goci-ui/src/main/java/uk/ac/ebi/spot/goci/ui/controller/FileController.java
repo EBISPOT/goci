@@ -53,7 +53,7 @@ public class FileController {
     @RequestMapping(value = "api/search/downloads/full",
                     method = RequestMethod.GET)
     public void getFullDownload(HttpServletResponse response) throws IOException {
-       if (fullFileDownload.exists()) {
+        if (fullFileDownload.exists()) {
 
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date date = new Date();
@@ -80,8 +80,8 @@ public class FileController {
     }
 
     @RequestMapping(value = "api/search/downloads/alternative",
-            method = RequestMethod.GET,
-            produces = MediaType.TEXT_PLAIN_VALUE)
+                    method = RequestMethod.GET,
+                    produces = MediaType.TEXT_PLAIN_VALUE)
     public void getAlternativeDownload(HttpServletResponse response) throws IOException {
         if (alternativeFileDownload.exists()) {
 

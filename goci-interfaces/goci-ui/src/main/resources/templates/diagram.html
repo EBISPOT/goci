@@ -7,7 +7,8 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta name="description" content="The NHGRI-EBI GWAS Catalog: a curated collection of all published genome-wide association studies, produced by a collaboration between EMBL-EBI and NHGRI"/>
+    <meta name="description"
+          content="The NHGRI-EBI GWAS Catalog: a curated collection of all published genome-wide association studies, produced by a collaboration between EMBL-EBI and NHGRI"/>
     <meta name="keywords" content="GWAS Catalog, GWAS, NHGRI, EBI, EMBL-EBI, SPOT"/>
     <meta name="author" content="Tony Burdett, Emma Hastings, Dani Welter, SPOT, EMBL-EBI, NHGRI"/>
     <link rel="icon" href="../static/images/favicon.ico" th:href="@{images/favicon.ico}"/>
@@ -16,7 +17,8 @@
 
     <!-- Bootstrap core CSS -->
     <link href="../static/css/bootstrap.css" th:href="@{css/bootstrap.min.css}" rel="stylesheet"/>
-    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" rel="stylesheet"/>
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"
+          rel="stylesheet"/>
     <link href="../static/css/bootstrap-table.css" th:href="@{css/bootstrap-table.css}" rel="stylesheet"/>
     <link href="../static/css/bootstrap-theme.css" th:href="@{css/bootstrap-theme.min.css}" rel="stylesheet"/>
 
@@ -30,7 +32,6 @@
     <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{css/icons/flaticon.css}"/>
     <link rel="stylesheet" href="../static/css/goci-color-palette-1.css" th:href="@{css/goci-color-palette-1.css}"/>
     <!--<link rel="stylesheet" href="../static/css/science-and-medicine/flaticon.css" th:href="@{css/science-and-medicine/flaticon.css}"/>-->
-
 
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -98,44 +99,45 @@
 
 <!-- Main jumbotron for a primary marketing message or call to action -->
 <!--<div class="jumbotron background-color-primary-accent" style="margin: 0%; padding-bottom: 25px; padding-top: 25px">-->
-    <!--<div class="container">-->
-         <!--<div class="row" style="margin-top:0;">-->
-             <!--<div class="col-md-8">-->
-                 <!--<h2>GWAS Diagram Browser</h2>-->
-                 <!--<h4>Exploring Genome-wide Association Studies</h4>-->
+<!--<div class="container">-->
+<!--<div class="row" style="margin-top:0;">-->
+<!--<div class="col-md-8">-->
+<!--<h2>GWAS Diagram Browser</h2>-->
+<!--<h4>Exploring Genome-wide Association Studies</h4>-->
 
-             <!--</div>-->
-        <!--&lt;!&ndash; search box goes here &ndash;&gt;-->
-             <!--<div class="col-md-4" style="margin-top: 2%;">-->
-                <!--<div class="input-group" style="width: 250px; float: right;">-->
-                    <!--<input type="text" class="form-control" placeholder="Search the catalog" id="search-box"/>-->
-                        <!--<span class="input-group-btn">-->
-                            <!--<button class="btn btn-default" type="button" id="search-button">-->
-                                <!--<span class="glyphicon glyphicon-search"></span>-->
-                            <!--</button>-->
-                        <!--</span>-->
-                <!--</div>-->
-             <!--</div>-->
-         <!--</div>-->
+<!--</div>-->
+<!--&lt;!&ndash; search box goes here &ndash;&gt;-->
+<!--<div class="col-md-4" style="margin-top: 2%;">-->
+<!--<div class="input-group" style="width: 250px; float: right;">-->
+<!--<input type="text" class="form-control" placeholder="Search the catalog" id="search-box"/>-->
+<!--<span class="input-group-btn">-->
+<!--<button class="btn btn-default" type="button" id="search-button">-->
+<!--<span class="glyphicon glyphicon-search"></span>-->
+<!--</button>-->
+<!--</span>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
 
-    <!--</div>-->
+<!--</div>-->
 <!--</div>-->
 
 
 <div class="container-fluid" style="padding-top: 30px">
     <!--Breadcrumbs-->
 
-      <ol class="breadcrumb background-color-complementary-accent">
-          <li><a href="home">GWAS</a></li>
-          <li><a href="diagram">Diagram</a></li>
+    <ol class="breadcrumb background-color-complementary-accent">
+        <li><a href="home">GWAS</a></li>
+        <li><a href="diagram">Diagram</a></li>
           <span class="pull-right">This diagram shows all SNP-trait associations with p-value &#8804; 5.0 &#215; 10<sup>-8</sup>,
                                             published in the GWAS Catalog</span>
 
-      </ol>
+    </ol>
 
-    <div> <span class="pull-right"><a href="../gwas/pussycat/gwasdiagram/download?pvaluemax=5e-8" id="diagram-download">Download diagram
+    <div> <span class="pull-right"><a href="../gwas/pussycat/gwasdiagram/download?pvaluemax=5e-8" id="diagram-download">Download
+                                                                                                                        diagram
         <span class="glyphicon glyphicon-download-alt"> </span>
-    </a>   </span>  </div>
+    </a>   </span></div>
     <div>
 
         <!--
@@ -148,7 +150,7 @@
 
         <div class="col-16 tight-to-side" id="legend-bar">
             <div class="panel panel-default" id="legend-panel">
-                <div class="panel-heading background-color-primary-accent" id ="legend-bar-header">
+                <div class="panel-heading background-color-primary-accent" id="legend-bar-header">
                     <h3 class="panel-title">Filter the diagram</h3>
                                 <span class="pull-right clickable"
                                       id="legend-toggle"
@@ -160,31 +162,31 @@
 
                     <div id="filters">
 
-                            <div class="left">
-                                <label>
-                                    <input class="filter-value ac_input form-control"
-                                           type="text"
-                                           name="q"
-                                           data-widget="select"
-                                           data-ontology=""
-                                           id="trait-filter"
-                                           placeholder="Filter by trait"
-                                           style="width: 100%">
-                                    </input>
-                                </label>
+                        <div class="left">
+                            <label>
+                                <input class="filter-value ac_input form-control"
+                                       type="text"
+                                       name="q"
+                                       data-widget="select"
+                                       data-ontology=""
+                                       id="trait-filter"
+                                       placeholder="Filter by trait"
+                                       style="width: 100%">
+                                </input>
+                            </label>
 
-                            </div>
+                        </div>
 
-                            <div class="row" style="margin-top: 10px">
+                        <div class="row" style="margin-top: 10px">
                                 <button type="button"
                                         class="btn btn-default"
                                         id="clear-filter-button">Clear</button>
 
                                 <button type="button"
                                         class="btn btn-default pull-right"
-                                        id = "filter-button"
+                                        id="filter-button"
                                         style="margin-right: 15px;">Apply</button>
-                            </div>
+                        </div>
 
                     </div>
 
@@ -193,55 +195,72 @@
 
                         <div class="list-group" id="legend-items">
                             <!--add an "active" class annotation to each a tag when it's selected-->
-                            <a href="#" class="list-group-item legend-item" id="Digestive system disease"> <span class="icon-trait icon-trait-digestive"></span>
+                            <a href="#" class="list-group-item legend-item" id="Digestive system disease">
+                                <span class="icon-trait icon-trait-digestive"></span>
                                 <span class="badge">0</span>Digestive system disease
                             </a>
-                            <a href="#" class="list-group-item legend-item" id="Cardiovascular disease" > <span class="icon-trait icon-trait-cardio"></span>
+                            <a href="#" class="list-group-item legend-item" id="Cardiovascular disease">
+                                <span class="icon-trait icon-trait-cardio"></span>
                                 <span class="badge">0</span>Cardiovascular disease
                             </a>
-                            <a href="#" class="list-group-item legend-item" id="Metabolic disease" > <span class="icon-trait icon-trait-metabolic"></span>
+                            <a href="#" class="list-group-item legend-item" id="Metabolic disease">
+                                <span class="icon-trait icon-trait-metabolic"></span>
                                 <span class="badge">0</span>Metabolic disease
                             </a>
-                            <a href="#" class="list-group-item legend-item" id="Immune system disease" > <span class="icon-trait icon-trait-immune"></span>
+                            <a href="#" class="list-group-item legend-item" id="Immune system disease">
+                                <span class="icon-trait icon-trait-immune"></span>
                                 <span class="badge">0</span>Immune system disease
                             </a>
-                            <a href="#" class="list-group-item legend-item" id="Nervous system disease" > <span class="icon-trait icon-trait-neuro"></span>
+                            <a href="#" class="list-group-item legend-item" id="Nervous system disease">
+                                <span class="icon-trait icon-trait-neuro"></span>
                                 <span class="badge">0</span>Nervous system disease
                             </a>
-                            <a href="#" class="list-group-item legend-item" id="Liver enzyme measurement" > <span class="icon-trait icon-trait-liver-measure"></span>
+                            <a href="#" class="list-group-item legend-item" id="Liver enzyme measurement">
+                                <span class="icon-trait icon-trait-liver-measure"></span>
                                 <span class="badge">0</span>Liver enzyme measurement
                             </a>
-                            <a href="#" class="list-group-item legend-item" id="Lipid or lipoprotein measurement" > <span class="icon-trait icon-trait-lipid-measure"></span>
+                            <a href="#" class="list-group-item legend-item" id="Lipid or lipoprotein measurement"> <span
+                                    class="icon-trait icon-trait-lipid-measure"></span>
                                 <span class="badge">0</span>Lipid or lipoprotein measurement
                             </a>
-                            <a href="#" class="list-group-item legend-item" id="Inflammatory marker measurement" > <span class="icon-trait icon-trait-inflam-measure"></span>
+                            <a href="#" class="list-group-item legend-item" id="Inflammatory marker measurement"> <span
+                                    class="icon-trait icon-trait-inflam-measure"></span>
                                 <span class="badge">0</span>Inflammatory marker measurement
                             </a>
-                            <a href="#" class="list-group-item legend-item" id="Hematological measurement" > <span class="icon-trait icon-trait-haemo-measure"></span>
+                            <a href="#" class="list-group-item legend-item" id="Hematological measurement">
+                                <span class="icon-trait icon-trait-haemo-measure"></span>
                                 <span class="badge">0</span>Hematological measurement
                             </a>
-                            <a href="#" class="list-group-item legend-item" id="Body weights and measures" > <span class="icon-trait icon-trait-body-measure"></span>
+                            <a href="#" class="list-group-item legend-item" id="Body weights and measures">
+                                <span class="icon-trait icon-trait-body-measure"></span>
                                 <span class="badge">0</span>Body weights and measures
                             </a>
-                            <a href="#" class="list-group-item legend-item" id="Cardiovascular measurement" > <span class="icon-trait icon-trait-cardio-measure"></span>
+                            <a href="#" class="list-group-item legend-item" id="Cardiovascular measurement">
+                                <span class="icon-trait icon-trait-cardio-measure"></span>
                                 <span class="badge">0</span>Cardiovascular measurement
                             </a>
-                            <a href="#" class="list-group-item legend-item disabled" id="Other measurement"> <span class="icon-trait icon-trait-measure"></span>
+                            <a href="#" class="list-group-item legend-item disabled" id="Other measurement">
+                                <span class="icon-trait icon-trait-measure"></span>
                                 <span class="badge">0</span>Other measurement
                             </a>
-                            <a href="#" class="list-group-item legend-item" id="Response to drug" > <span class="icon-trait icon-trait-drug"></span>
+                            <a href="#" class="list-group-item legend-item" id="Response to drug">
+                                <span class="icon-trait icon-trait-drug"></span>
                                 <span class="badge">0</span>Response to drug
                             </a>
-                            <a href="#" class="list-group-item legend-item" id="Biological process" > <span class="icon-trait icon-trait-process"></span>
+                            <a href="#" class="list-group-item legend-item" id="Biological process">
+                                <span class="icon-trait icon-trait-process"></span>
                                 <span class="badge">0</span>Biological process
                             </a>
-                            <a href="#" class="list-group-item legend-item" id="Cancer" > <span class="icon-trait icon-trait-neoplasm"></span>
+                            <a href="#" class="list-group-item legend-item" id="Cancer">
+                                <span class="icon-trait icon-trait-neoplasm"></span>
                                 <span class="badge">0</span>Cancer
                             </a>
-                            <a href="#" class="list-group-item legend-item disabled" id="Other disease" >  <span class="icon-trait icon-trait-disease"></span>
+                            <a href="#" class="list-group-item legend-item disabled" id="Other disease">
+                                <span class="icon-trait icon-trait-disease"></span>
                                 <span class="badge">0</span>Other disease
                             </a>
-                            <a href="#" class="list-group-item legend-item disabled" id="Other trait"> <span class="icon-trait icon-trait-other"></span>
+                            <a href="#" class="list-group-item legend-item disabled" id="Other trait">
+                                <span class="icon-trait icon-trait-other"></span>
                                 <span class="badge">0</span>Other trait
                             </a>
                         </div>
@@ -249,24 +268,24 @@
                     <div id="diagram-stats" style="display: none" class="row">
                         <h4>Diagram stats</h4>
                         <ul>
-                            <li id="releasedate-stat" ></li>
-                            <li id="studies-stat" ></li>
-                            <li id="snps-stat" ></li>
-                            <li id="associations-stat" ></li>
-                            <li id="genomebuild" ></li>
-                            <li id="dbsnpbuild" ></li>
+                            <li id="releasedate-stat"></li>
+                            <li id="studies-stat"></li>
+                            <li id="snps-stat"></li>
+                            <li id="associations-stat"></li>
+                            <li id="genomebuild"></li>
+                            <li id="dbsnpbuild"></li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
 
-         <div class="col-16-rest" id="diagram-area">
+        <div class="col-16-rest" id="diagram-area">
             <div class="panel panel-default">
 
                 <div class="panel-body diagram-panel">
 
-                    <div id="loadingResults"  class="col-16-middle" style="display: none">
+                    <div id="loadingResults" class="col-16-middle" style="display: none">
                         <button class="btn btn-lg">
                             <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"
                                   style="margin-right: 1em;"></span>Getting GWAS Diagram from server...
@@ -289,9 +308,12 @@
                                 <div class="buttons">
                                     <button class="zoom-out zoom-compontent"> <span class="glyphicon glyphicon-zoom-out"></span></button>
                                     <button class="zoom-in pull-right zoom-compontent"> <span class="glyphicon glyphicon-zoom-in"></span></button>
-                                    <input type="range" class="zoom-range zoom-compontent" style="width: 75% !important;"/>
+                                    <input type="range"
+                                           class="zoom-range zoom-compontent"
+                                           style="width: 75% !important;"/>
                                 </div>
                             </span>
+
                         <div id="diagram-area-content">
 
                         </div>
@@ -299,7 +321,7 @@
                     </div>
                 </div>
             </div>
-         </div>
+        </div>
     </div>
 
 </div>
@@ -309,30 +331,32 @@
 </div>
 
 
-
 <div class="modal fade" id="traitPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="traitPopupTitle"></h4>
             </div>
             <div class="modal-body" id="traitSummary">
-                  <table id="summary-table" class="table">
-                      <thead>
-                          <tr>
-                              <th>SNP</th>
-                              <th>p-Value</th>
-                              <th>EFO mapping</th>
-                              <th>GWAS trait</th>
-                              <th>Study</th>
-                              <!--<th>GWAS catalog</th>-->
-                          </tr>
-                      </thead>
-                      <tbody id="summary-table-body">
+                <table id="summary-table" class="table">
+                    <thead>
+                    <tr>
+                        <th>SNP</th>
+                        <th>p-Value</th>
+                        <th>EFO mapping</th>
+                        <th>GWAS trait</th>
+                        <th>Study</th>
+                        <!--<th>GWAS catalog</th>-->
+                    </tr>
+                    </thead>
+                    <tbody id="summary-table-body">
 
-                      </tbody>
-                  </table>
+                    </tbody>
+                </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -342,55 +366,63 @@
 </div>
 
 
-    <!-- /container -->
+<!-- /container -->
 
-    <footer class="footer background-color-primary-accent">
-        <!--<div class="footer-banner background-color-primary"></div>-->
-        <div class="container">
-            <p class="text-muted">Copyright &copy; EMBL-EBI 2015 | EMBL-EBI is an Outstation of the
-                <a href="http://www.embl.org">European Molecular
-                                              Biology
-                                              Laboratory</a> |
-                <a href="//www.ebi.ac.uk/about/privacy">Privacy</a> |
-                <a href="//www.ebi.ac.uk/about/cookies">Cookies</a> |
-                <a href="//www.ebi.ac.uk/about/terms-of-use">Terms of use</a></p>
-        </div>
-    </footer>
+<footer class="footer background-color-primary-accent">
+    <!--<div class="footer-banner background-color-primary"></div>-->
+    <div class="container">
+        <p class="text-muted">Copyright &copy; EMBL-EBI 2015 | EMBL-EBI is an Outstation of the
+            <a href="http://www.embl.org">European Molecular
+                                          Biology
+                                          Laboratory</a> |
+            <a href="//www.ebi.ac.uk/about/privacy">Privacy</a> |
+            <a href="//www.ebi.ac.uk/about/cookies">Cookies</a> |
+            <a href="//www.ebi.ac.uk/about/terms-of-use">Terms of use</a></p>
+    </div>
+</footer>
 
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>-->
-    <!--<script src="../static/js/jquery.autocomplete.min.js" th:src="@{js/jquery.autocomplete.min.js}"></script>-->
-    <script src="../static/js/jquery.autocomplete.js" th:src="@{js/jquery.autocomplete.js}"></script>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>-->
+<!--<script src="../static/js/jquery.autocomplete.min.js" th:src="@{js/jquery.autocomplete.min.js}"></script>-->
+<script src="../static/js/jquery.autocomplete.js" th:src="@{js/jquery.autocomplete.js}"></script>
 
-    <!--<script src="../static/js/plugins/jquery.panzoom.js"></script>-->
-    <script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
-    <script src="../static/js/jquery.mousewheel.min.js" th:src="@{js/jquery.mousewheel.min.js}"></script>
-    <script src="../static/js/jquery.event.drag-2.2.js" th:src="@{js/jquery.event.drag-2.2.js}"></script> <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../static/js/ie10-viewport-bug-workaround.js" th:src="@{js/ie10-viewport-bug-workaround.js}"></script>
+<!--<script src="../static/js/plugins/jquery.panzoom.js"></script>-->
+<script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
+<script src="../static/js/jquery.mousewheel.min.js" th:src="@{js/jquery.mousewheel.min.js}"></script>
+<script src="../static/js/jquery.event.drag-2.2.js" th:src="@{js/jquery.event.drag-2.2.js}"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../static/js/ie10-viewport-bug-workaround.js" th:src="@{js/ie10-viewport-bug-workaround.js}"></script>
 
-    <!-- GOCI JavaScript
-    ================================================== -->
-    <script src="../static/js/goci-ui.js" th:src="@{js/goci-ui.js}"></script>
-    <script src="../static/js/autocomplete-termselect.js" th:src="@{js/autocomplete-termselect.js}"></script>
-    <script src="../static/js/goci-diagram.js" th:src="@{js/goci-diagram.js}"></script>
-    <script src="../static/js/goci-diagram-data.js" th:src="@{js/goci-diagram-data.js}"></script>
+<!-- GOCI JavaScript
+================================================== -->
+<script src="../static/js/goci-ui.js" th:src="@{js/goci-ui.js}"></script>
+<script src="../static/js/autocomplete-termselect.js" th:src="@{js/autocomplete-termselect.js}"></script>
+<script src="../static/js/goci-diagram.js" th:src="@{js/goci-diagram.js}"></script>
+<script src="../static/js/goci-diagram-data.js" th:src="@{js/goci-diagram-data.js}"></script>
 
 <!-- Google analytics
 ================================================== -->
-    <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+<script>
+    (function(i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function() {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-        ga('create', 'UA-60195133-1', 'auto');
-        ga('send', 'pageview');
+    ga('create', 'UA-60195133-1', 'auto');
+    ga('send', 'pageview');
 
-    </script>
+</script>
 
 </body>
 </html>

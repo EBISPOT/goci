@@ -8,7 +8,8 @@ import java.util.Date;
  *
  * @author emma
  *         <p>
- *         Object used to create a view of multi-snp or SNP interaction studies that is presented to user as a table via StudyContoller
+ *         Object used to create a view of multi-snp or SNP interaction studies that is presented to user as a table via
+ *         StudyContoller
  */
 public class StudyAssociationTableView {
 
@@ -46,7 +47,21 @@ public class StudyAssociationTableView {
     public StudyAssociationTableView() {
     }
 
-    public StudyAssociationTableView(Long studyId, String author, Date publicationDate, String publication, String title, String pubmedId, String studyDiseaseTrait, String studyEfoTrait, Integer totalNumberOfAssociations, Integer numberOfMultiSnpHaplotypeAssociations, Integer numberOfSnpInteractiionAssociations, String notes, String curator, String curationStatus, String associationEfoTraits) {
+    public StudyAssociationTableView(Long studyId,
+                                     String author,
+                                     Date publicationDate,
+                                     String publication,
+                                     String title,
+                                     String pubmedId,
+                                     String studyDiseaseTrait,
+                                     String studyEfoTrait,
+                                     Integer totalNumberOfAssociations,
+                                     Integer numberOfMultiSnpHaplotypeAssociations,
+                                     Integer numberOfSnpInteractiionAssociations,
+                                     String notes,
+                                     String curator,
+                                     String curationStatus,
+                                     String associationEfoTraits) {
         this.studyId = studyId;
         this.author = author;
         this.publicationDate = publicationDate;

@@ -11,15 +11,14 @@ import java.util.ArrayList;
 /**
  * Created by Laurent on 10/11/2015.
  *
- * @author Laurent
- * Class getting the Ensembl Genome build version from the Ensembl REST API
+ * @author Laurent Class getting the Ensembl Genome build version from the Ensembl REST API
  */
 @Service
 public class EnsemblGenomeBuildVersion {
 
     private String genomeBuildVersion;
     private String species = "homo_sapiens";
-    private String endpoint = "/info/assembly/"+species+"/";
+    private String endpoint = "/info/assembly/" + species + "/";
     private ArrayList<String> rest_errors = new ArrayList<>();
 
     // JPA no-args constructor

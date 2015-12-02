@@ -17,14 +17,18 @@
 <div class="container">
     <div class="col-md-12">
         <h2>Error:</h2>
-        <p class="lead">There are no associations to apply the EFO trait(s) to or no EFO trait(s) to apply to the associations.</p>
+
+        <p class="lead">There are no associations to apply the EFO trait(s) to or no EFO trait(s) to apply to the
+                        associations.</p>
     </div>
 </div>
 
 <div class="container" th:object="${study}">
     <div class="row">
         <div class="col-md-12 col-md-offset-1">
-            <div><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary">Back to SNP associations</a></div>
+            <div><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary">Back to SNP
+                                                                                                        associations</a>
+            </div>
         </div>
     </div>
 </div>

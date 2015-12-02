@@ -22,7 +22,7 @@ function updateAssociations(studyId, associationIds) {
     // Pass details to method in controller which handles database changes
     $.getJSON("associations/approve_checked",
               {"associationIds[]": associationIds},
-            //Response
+              //Response
               function(data) {
                   alert(data.message);
                   //Reload page
@@ -55,7 +55,7 @@ function deleteAssociations(studyId, associationIds) {
     //$.getJSON("studies/" + studyId + "/associations/delete_checked",
     $.getJSON("associations/delete_checked",
               {"associationIds[]": associationIds},
-            //Response
+              //Response
               function(data) {
                   alert(data.message);
                   //Reload page
@@ -86,8 +86,8 @@ function errorCheckSelectedAssociations(studyId) {
 function errorCheck(studyId, associationIds) {
     // Pass details to method in controller which handles database changes
     $.getJSON("associations/errors_checked",
-            {"associationIds[]": associationIds},
-            //Response
+              {"associationIds[]": associationIds},
+              //Response
               function(data) {
                   alert(data.message);
                   //Reload page

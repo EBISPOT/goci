@@ -4,10 +4,10 @@ import java.util.Date;
 
 /**
  * Created by emma on 02/02/15.
+ *
  * @author emma
- *
- * Model object to store a date rnage that can be used to calculate monthly curator totals
- *
+ *         <p>
+ *         Model object to store a date rnage that can be used to calculate monthly curator totals
  */
 public class DateRange {
 
@@ -23,8 +23,8 @@ public class DateRange {
     }
 
 
-    public boolean contains(Date date){
-      return (date.after(getDateFrom()) && date.before(getDateTo()));
+    public boolean contains(Date date) {
+        return (date.after(getDateFrom()) && date.before(getDateTo()));
     }
 
     public Date getDateFrom() {
