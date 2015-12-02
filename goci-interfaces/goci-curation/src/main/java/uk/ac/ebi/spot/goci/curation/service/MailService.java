@@ -111,7 +111,16 @@ public class MailService {
             for (Association association : associations) {
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
-                String mappingDate = dateFormat.format(association.getLastMappingDate());
+                String mappingDate = "";
+                String performer = "";
+
+                if (association.getLastMappingDate() != null) {
+                    mappingDate = dateFormat.format(association.getLastMappingDate());
+                }
+
+                if (association.getLastMappingPerformedBy() != null) {
+                    performer = association.getLastMappingPerformedBy();
+                }
 
                 String associationLink =
                         getLink() + "associations/" + association.getId();
@@ -126,7 +135,7 @@ public class MailService {
                 if (!errors.contains("No mapping errors found")) {
                     mappingDetails = mappingDetails + "Association: " + associationLink + "\n"
                             + "Last Mapping Date: " + mappingDate + "\n"
-                            + "Last Mapping Performed By: " + association.getLastMappingPerformedBy() + "\n"
+                            + "Last Mapping Performed By: " + performer + "\n"
                             + "Mapping errors: " + errors + "\n";
                 }
             }
