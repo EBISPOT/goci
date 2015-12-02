@@ -82,29 +82,7 @@ public class Association {
     public Association() {
     }
 
-    public Association(String riskFrequency,
-                       String allele,
-                       Float pvalueFloat,
-                       String pvalueText,
-                       Float orPerCopyNum,
-                       Boolean orType,
-                       String snpType,
-                       Boolean multiSnpHaplotype,
-                       Boolean snpInteraction,
-                       Boolean snpApproved,
-                       Integer pvalueMantissa,
-                       Integer pvalueExponent,
-                       Float orPerCopyRecip,
-                       Float orPerCopyStdError,
-                       String orPerCopyRange,
-                       String orPerCopyRecipRange,
-                       String orPerCopyUnitDescr,
-                       Study study,
-                       Collection<Locus> loci,
-                       Collection<EfoTrait> efoTraits,
-                       AssociationReport associationReport,
-                       Date lastMappingDate,
-                       String lastMappingPerformedBy) {
+    public Association(String riskFrequency, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Boolean snpApproved, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyRecipRange, String orPerCopyUnitDescr, Study study, Collection<Locus> loci, Collection<EfoTrait> efoTraits, AssociationReport associationReport, Date lastMappingDate, String lastMappingPerformedBy) {
         this.riskFrequency = riskFrequency;
         this.pvalueText = pvalueText;
         this.orPerCopyNum = orPerCopyNum;
