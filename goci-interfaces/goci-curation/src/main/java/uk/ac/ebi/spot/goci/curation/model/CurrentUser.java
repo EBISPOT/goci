@@ -6,9 +6,10 @@ import uk.ac.ebi.spot.goci.model.SecureUser;
 
 /**
  * Created by emma on 10/02/15.
- * @author emma
  *
- * Describes our current user, with enough information to authorise our user
+ * @author emma
+ *         <p>
+ *         Describes our current user, with enough information to authorise our user
  */
 public class CurrentUser extends org.springframework.security.core.userdetails.User {
 
@@ -25,7 +26,9 @@ public class CurrentUser extends org.springframework.security.core.userdetails.U
      */
 
     public CurrentUser(SecureUser secureUser) {
-        super(secureUser.getEmail(), secureUser.getPasswordHash(), AuthorityUtils.createAuthorityList(secureUser.getRole().toString()));
+        super(secureUser.getEmail(),
+              secureUser.getPasswordHash(),
+              AuthorityUtils.createAuthorityList(secureUser.getRole().toString()));
         this.secureUser = secureUser;
     }
 

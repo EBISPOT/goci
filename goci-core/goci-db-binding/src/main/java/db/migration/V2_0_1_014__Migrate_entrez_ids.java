@@ -12,8 +12,8 @@ import java.util.Map;
  *
  * @author emma
  *         <p>
- *         Jira ticket: https://www.ebi.ac.uk/panda/jira/browse/GOCI-951.
- *         Migrate Entrez gene IDs from GENE table to new ENTREZ_GENE table
+ *         Jira ticket: https://www.ebi.ac.uk/panda/jira/browse/GOCI-951. Migrate Entrez gene IDs from GENE table to new
+ *         ENTREZ_GENE table
  */
 public class V2_0_1_014__Migrate_entrez_ids implements SpringJdbcMigration {
 

@@ -45,8 +45,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field("association_regions") private Collection<String> regions;
     @Field("association_entrezMappedGenes") private Collection<String> entrezMappedGenes;
     @Field("association_entrezMappedGeneLinks") private Collection<String> entrezMappedGeneLinks;
-//    @Field("association_ensemblMappedGenes") private Collection<String> ensemblMappedGenes;
-//    @Field("association_ensemblMappedGeneLinks") private Collection<String> ensemblMappedGeneLinks;
+    //    @Field("association_ensemblMappedGenes") private Collection<String> ensemblMappedGenes;
+    //    @Field("association_ensemblMappedGeneLinks") private Collection<String> ensemblMappedGeneLinks;
     @Field("association_reportedGene") private Collection<String> reportedGenes;
     @Field("association_reportedGeneLinks") private Collection<String> reportedGeneLinks;
     @Field("association_chromosomeName") private Collection<String> chromosomeNames;
@@ -55,7 +55,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field("association_positionLinks") private Collection<String> positionLinks;
 
     //    @Field("association_locusDescription") private Collection<String> locusDescriptions;
-//    @Field("association_merged") private Long merged;
+    //    @Field("association_merged") private Long merged;
 
     // embedded DiseaseTrait info
     @Field("traitName") private Collection<String> traitNames;
@@ -109,15 +109,15 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.regions = new LinkedHashSet<>();
         this.entrezMappedGenes = new LinkedHashSet<>();
         this.entrezMappedGeneLinks = new LinkedHashSet<>();
-//        this.ensemblMappedGenes = new LinkedHashSet<>();
-//        this.ensemblMappedGeneLinks = new LinkedHashSet<>();
+        //        this.ensemblMappedGenes = new LinkedHashSet<>();
+        //        this.ensemblMappedGeneLinks = new LinkedHashSet<>();
         this.reportedGenes = new LinkedHashSet<>();
         this.reportedGeneLinks = new LinkedHashSet<>();
         this.chromosomeNames = new LinkedHashSet<>();
         this.chromosomePositions = new LinkedHashSet<>();
         this.positionLinks = new LinkedHashSet<>();
         this.lastModifiedDates = new LinkedHashSet<>();
-//        this.locusDescriptions = new LinkedHashSet<>();
+        //        this.locusDescriptions = new LinkedHashSet<>();
 
         this.traitNames = new LinkedHashSet<>();
 
@@ -201,13 +201,13 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.entrezMappedGeneLinks.addAll(mappedGeneLinks);
     }
 
-//    public void addEnsemblMappedGenes(Collection<String> mappedGenes) {
-//        this.ensemblMappedGenes.addAll(mappedGenes);
-//    }
-//
-//    public void addEnsemblMappedGeneLinks(Collection<String> mappedGeneLinks) {
-//        this.ensemblMappedGeneLinks.addAll(mappedGeneLinks);
-//    }
+    //    public void addEnsemblMappedGenes(Collection<String> mappedGenes) {
+    //        this.ensemblMappedGenes.addAll(mappedGenes);
+    //    }
+    //
+    //    public void addEnsemblMappedGeneLinks(Collection<String> mappedGeneLinks) {
+    //        this.ensemblMappedGeneLinks.addAll(mappedGeneLinks);
+    //    }
 
 
     public void addReportedGenes(Collection<String> reportedGenes) {
@@ -226,7 +226,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.chromosomePositions.addAll(chromosomePositions);
     }
 
-    public void addPositionLinks(Collection<String> positionLinks){
+    public void addPositionLinks(Collection<String> positionLinks) {
         this.positionLinks.addAll(positionLinks);
     }
 
@@ -234,9 +234,9 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.lastModifiedDates.addAll(lastModifiedDates);
     }
 
-//    public void addMerged(Long merged){
-//        this.merged = merged;
-//    }
+    //    public void addMerged(Long merged){
+    //        this.merged = merged;
+    //    }
 
     public void addTraitName(String traitName) {
         this.traitNames.add(traitName);
@@ -271,50 +271,50 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
     private void embedAncestryData(Study study) {
         study.getEthnicities().forEach(
-               ethnicity -> {
-                   String ancestryLink = "";
+                ethnicity -> {
+                    String ancestryLink = "";
 
-                   String type = ethnicity.getType();
+                    String type = ethnicity.getType();
 
-                   ancestryLink = type;
+                    ancestryLink = type;
 
-                   String cor;
+                    String cor;
 
-                   if(ethnicity.getCountryOfRecruitment() != null){
-                       cor = ethnicity.getCountryOfRecruitment();
-                   }
-                   else {
-                       cor = "NR";
-                   }
-                   countriesOfRecruitment.add(cor);
-                   ancestryLink = ancestryLink.concat("|").concat(cor);
+                    if (ethnicity.getCountryOfRecruitment() != null) {
+                        cor = ethnicity.getCountryOfRecruitment();
+                    }
+                    else {
+                        cor = "NR";
+                    }
+                    countriesOfRecruitment.add(cor);
+                    ancestryLink = ancestryLink.concat("|").concat(cor);
 
-                   String ancestry = "";
+                    String ancestry = "";
 
-                   if(ethnicity.getEthnicGroup() != null){
-                       ancestry = ethnicity.getEthnicGroup();
-                   }
+                    if (ethnicity.getEthnicGroup() != null) {
+                        ancestry = ethnicity.getEthnicGroup();
+                    }
 
-                   ancestralGroups.add(ancestry);
-                   ancestryLink = ancestryLink.concat("|").concat(ancestry);
+                    ancestralGroups.add(ancestry);
+                    ancestryLink = ancestryLink.concat("|").concat(ancestry);
 
-                   String noInds = "";
+                    String noInds = "";
 
-                   if(ethnicity.getNumberOfIndividuals() != null){
-                       numberOfIndividuals.add(ethnicity.getNumberOfIndividuals());
-                       noInds = String.valueOf(ethnicity.getNumberOfIndividuals());
-                   }
+                    if (ethnicity.getNumberOfIndividuals() != null) {
+                        numberOfIndividuals.add(ethnicity.getNumberOfIndividuals());
+                        noInds = String.valueOf(ethnicity.getNumberOfIndividuals());
+                    }
 
-                   ancestryLink = ancestryLink.concat("|").concat(noInds);
+                    ancestryLink = ancestryLink.concat("|").concat(noInds);
 
-                   ancestryLinks.add(ancestryLink);
+                    ancestryLinks.add(ancestryLink);
 
-               }
+                }
         );
     }
 
 
     //    public void addLocusDescription(String locusDescription){
-//        this.locusDescriptions.add(locusDescription);
-//    }
+    //        this.locusDescriptions.add(locusDescription);
+    //    }
 }

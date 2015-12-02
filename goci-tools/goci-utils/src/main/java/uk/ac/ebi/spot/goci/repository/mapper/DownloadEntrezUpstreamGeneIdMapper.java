@@ -10,10 +10,11 @@ import java.util.Map;
 
 /**
  * Created by emma on 26/08/2015.
+ *
  * @author emma
- * <p>
- * Mapper component to handle scenario where a mapped Entrez gene is present. In this case the download should not
- * include details of upstream gene IDs.
+ *         <p>
+ *         Mapper component to handle scenario where a mapped Entrez gene is present. In this case the download should
+ *         not include details of upstream gene IDs.
  */
 @Component
 public class DownloadEntrezUpstreamGeneIdMapper implements CatalogDataMapper {

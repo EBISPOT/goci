@@ -40,13 +40,16 @@ abstract class FieldSplitter {
         return elements;
     }
 
-    static List<String> split(String stringToSplit, String splitOnRegex, String thenSplitOnRegex, String finallySplitOnRegex) {
+    static List<String> split(String stringToSplit,
+                              String splitOnRegex,
+                              String thenSplitOnRegex,
+                              String finallySplitOnRegex) {
         List<String> elements = new ArrayList<>();
         String[] rawTokens = stringToSplit.split(splitOnRegex);
         for (String rawToken : rawTokens) {
             String[] nextTokens = rawToken.split(thenSplitOnRegex);
             for (String nextToken : nextTokens) {
-                String [] finalTokens = nextToken.split(finallySplitOnRegex);
+                String[] finalTokens = nextToken.split(finallySplitOnRegex);
                 for (String finalToken : finalTokens) {
                     elements.add(finalToken.trim());
                 }

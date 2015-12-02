@@ -26,8 +26,8 @@ function deleteSelectedSampleDescriptions() {
 function deleteSampleDescriptions(sampleDescriptionIds) {
     // Pass details to method in controller which handles database changes
     $.getJSON("sampledescription/delete_checked",
-            {"sampleDescriptionIds[]": sampleDescriptionIds},
-            //Response
+              {"sampleDescriptionIds[]": sampleDescriptionIds},
+              //Response
               function(data) {
                   alert(data.message);
                   //Reload page

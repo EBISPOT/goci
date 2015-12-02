@@ -5,19 +5,19 @@ package uk.ac.ebi.spot.goci.model;
  */
 public class SearchResult {
 
-//    public SearchResult(String query){
-//
-//    }
+    //    public SearchResult(String query){
+    //
+    //    }
 
     private String query;
     private String facet;
     private String filter;
 
-    public String getQuery(){
+    public String getQuery() {
         return query;
     }
 
-    public void setQuery(String query){
+    public void setQuery(String query) {
         this.query = query;
     }
 

@@ -11,7 +11,7 @@ public class CoRAnnotation {
 
     private String ontologyURI;
 
-    public CoRAnnotation(Long id, String cor, String uri){
+    public CoRAnnotation(Long id, String cor, String uri) {
         this.id = id;
         this.countryOfRecruitment = cor;
         this.ontologyURI = uri;

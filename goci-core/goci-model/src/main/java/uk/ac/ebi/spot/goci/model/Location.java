@@ -3,12 +3,7 @@ package uk.ac.ebi.spot.goci.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import java.util.Collection;
 
 /**
  * Created by Laurent on 15/05/15.
@@ -30,9 +25,9 @@ public class Location {
     // JPA no-args constructor
     public Location() {}
 
-    public Location( String chromosomeName,
-                     String chromosomePosition,
-                     Region region) {
+    public Location(String chromosomeName,
+                    String chromosomePosition,
+                    Region region) {
         this.chromosomeName = chromosomeName;
         this.chromosomePosition = chromosomePosition;
         this.region = region;

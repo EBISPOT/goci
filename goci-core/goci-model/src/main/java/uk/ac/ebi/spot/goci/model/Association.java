@@ -2,7 +2,16 @@ package uk.ac.ebi.spot.goci.model;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -59,15 +68,15 @@ public class Association {
     // or SNP:SNP interaction
     @OneToMany
     @JoinTable(name = "ASSOCIATION_LOCUS",
-            joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
-            inverseJoinColumns = @JoinColumn(name = "LOCUS_ID"))
+               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+               inverseJoinColumns = @JoinColumn(name = "LOCUS_ID"))
     private Collection<Locus> loci = new ArrayList<>();
 
     // To avoid null values collections are by default initialized to an empty array list
     @ManyToMany
     @JoinTable(name = "ASSOCIATION_EFO_TRAIT",
-            joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
-            inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
+               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+               inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
     @OneToOne(mappedBy = "association", cascade = CascadeType.REMOVE)
@@ -82,7 +91,27 @@ public class Association {
     public Association() {
     }
 
-    public Association(String riskFrequency, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Boolean snpApproved, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyRecipRange, String orPerCopyUnitDescr, Study study, Collection<Locus> loci, Collection<EfoTrait> efoTraits, AssociationReport associationReport, Date lastMappingDate, String lastMappingPerformedBy) {
+    public Association(String riskFrequency,
+                       String pvalueText,
+                       Float orPerCopyNum,
+                       Boolean orType,
+                       String snpType,
+                       Boolean multiSnpHaplotype,
+                       Boolean snpInteraction,
+                       Boolean snpApproved,
+                       Integer pvalueMantissa,
+                       Integer pvalueExponent,
+                       Float orPerCopyRecip,
+                       Float orPerCopyStdError,
+                       String orPerCopyRange,
+                       String orPerCopyRecipRange,
+                       String orPerCopyUnitDescr,
+                       Study study,
+                       Collection<Locus> loci,
+                       Collection<EfoTrait> efoTraits,
+                       AssociationReport associationReport,
+                       Date lastMappingDate,
+                       String lastMappingPerformedBy) {
         this.riskFrequency = riskFrequency;
         this.pvalueText = pvalueText;
         this.orPerCopyNum = orPerCopyNum;

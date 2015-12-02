@@ -21,14 +21,17 @@
 <div class="container">
     <div class="col-md-12">
         <h2>Error:</h2>
-        <p class="lead">Study has SNP associations or ancestry information linked to it, you must delete these first!</p>
+
+        <p class="lead">Study has SNP associations or ancestry information linked to it, you must delete these
+                        first!</p>
     </div>
 </div>
 
 <div class="container" th:object="${study}">
     <div class="row">
         <div class="col-md-12 col-md-offset-1">
-            <div><a th:href="@{/studies/{studyId}/housekeeping(studyId=*{id})}" class="btn btn-primary">Back to study</a></div>
+            <div><a th:href="@{/studies/{studyId}/housekeeping(studyId=*{id})}" class="btn btn-primary">Back to
+                                                                                                        study</a></div>
         </div>
     </div>
 </div>

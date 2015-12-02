@@ -3,7 +3,7 @@ package uk.ac.ebi.spot.goci.sparql.exception;
 /**
  * Created by dwelter on 19/05/14.
  */
-public class SparqlQueryException extends RuntimeException{
+public class SparqlQueryException extends RuntimeException {
     public SparqlQueryException() {
         super();
     }

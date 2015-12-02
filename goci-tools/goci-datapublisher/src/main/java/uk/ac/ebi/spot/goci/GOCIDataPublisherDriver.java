@@ -40,7 +40,7 @@ public class GOCIDataPublisherDriver {
     @Autowired
     private GWASOWLPublisher gwasOwlPublisher;
 
-    public GWASOWLPublisher getGwasOwlPublisher(){
+    public GWASOWLPublisher getGwasOwlPublisher() {
         return gwasOwlPublisher;
     }
 
@@ -66,7 +66,8 @@ public class GOCIDataPublisherDriver {
             if (parseArgs == 0) {
                 // execute publisher
                 this.publishAndSave(assertedOntologyFile, inferredOntologyFile);
-            } else {
+            }
+            else {
                 // could not parse arguments, exit with exit code >1 (depending on parsing problem)
                 System.err.println("Failed to parse supplied arguments");
                 System.exit(1 + parseArgs);
@@ -104,12 +105,12 @@ public class GOCIDataPublisherDriver {
                         inferredOntologyFile = new File(inferredOutputFileName);
                     }
 
-                    if(cl.hasOption("p")){
+                    if (cl.hasOption("p")) {
                         String pvalueFilter = cl.getOptionValue("p");
                         FilterProperties.setPvalueFilter(pvalueFilter);
                     }
 
-                    if(cl.hasOption("d")) {
+                    if (cl.hasOption("d")) {
                         String dateFilter = cl.getOptionValue("d");
                         FilterProperties.setDateFilter(dateFilter);
                     }
@@ -143,10 +144,14 @@ public class GOCIDataPublisherDriver {
         outputFileOption.setRequired(true);
         options.addOption(outputFileOption);
 
-        Option pvalueFilterOption = new Option("p", "pvalue", true, "The minimum p-value on which to filter the knowledge base, in format nE-x, e.g. 5E-8");
+        Option pvalueFilterOption = new Option("p",
+                                               "pvalue",
+                                               true,
+                                               "The minimum p-value on which to filter the knowledge base, in format nE-x, e.g. 5E-8");
         options.addOption(pvalueFilterOption);
 
-        Option dateFilterOption = new Option("d", "date", true, "The date on which to filter the knowledge base, in format YYYY-MM-DD");
+        Option dateFilterOption =
+                new Option("d", "date", true, "The date on which to filter the knowledge base, in format YYYY-MM-DD");
         options.addOption(dateFilterOption);
 
         return options;
@@ -171,7 +176,7 @@ public class GOCIDataPublisherDriver {
 
             if (inferredOntologyFile != null) {
                 // now get the inferred view
-               System.out.println("Evaluating inferred view...");
+                System.out.println("Evaluating inferred view...");
                 OWLReasoner reasoner = getGwasOwlPublisher().publishGWASDataInferredView(ontology);
 
                 // now save inferred view

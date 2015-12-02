@@ -56,11 +56,11 @@ public class Study {
     private String pubmedId;
 
     // Defaults set as false
-    private Boolean cnv=false;
+    private Boolean cnv = false;
 
-    private Boolean gxe=false;
+    private Boolean gxe = false;
 
-    private Boolean gxg=false;
+    private Boolean gxg = false;
 
     @OneToMany(mappedBy = "study")
     private Collection<Association> associations;
@@ -70,20 +70,20 @@ public class Study {
 
     @ManyToOne
     @JoinTable(name = "STUDY_DISEASE_TRAIT",
-            joinColumns = @JoinColumn(name = "STUDY_ID"),
-            inverseJoinColumns = @JoinColumn(name = "DISEASE_TRAIT_ID"))
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "DISEASE_TRAIT_ID"))
     private DiseaseTrait diseaseTrait;
 
     @ManyToMany
     @JoinTable(name = "STUDY_EFO_TRAIT",
-            joinColumns = @JoinColumn(name = "STUDY_ID"),
-            inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits;
 
     @ManyToMany
     @JoinTable(name = "STUDY_SNP",
-            joinColumns = @JoinColumn(name = "STUDY_ID"),
-            inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
     private Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms;
 
     @OneToOne
@@ -97,7 +97,22 @@ public class Study {
     }
 
 
-    public Study(String author, Date publicationDate, String publication, String title, String initialSampleSize, String replicateSampleSize, String platform, String pubmedId, Boolean cnv, Boolean gxe, Boolean gxg, DiseaseTrait diseaseTrait, Collection<EfoTrait> efoTraits, Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms, Collection<Ethnicity> ethnicities, Housekeeping housekeeping) {
+    public Study(String author,
+                 Date publicationDate,
+                 String publication,
+                 String title,
+                 String initialSampleSize,
+                 String replicateSampleSize,
+                 String platform,
+                 String pubmedId,
+                 Boolean cnv,
+                 Boolean gxe,
+                 Boolean gxg,
+                 DiseaseTrait diseaseTrait,
+                 Collection<EfoTrait> efoTraits,
+                 Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms,
+                 Collection<Ethnicity> ethnicities,
+                 Housekeeping housekeeping) {
         this.author = author;
         this.publicationDate = publicationDate;
         this.publication = publication;

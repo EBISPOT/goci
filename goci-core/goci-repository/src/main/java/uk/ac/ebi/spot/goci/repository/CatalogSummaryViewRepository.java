@@ -8,11 +8,12 @@ import java.util.Collection;
 
 /**
  * Created by emma on 17/02/15.
- * @author emma
  *
- * Repository accessing catalog summary view
+ * @author emma
+ *         <p>
+ *         Repository accessing catalog summary view
  */
 @RepositoryRestResource
-public interface CatalogSummaryViewRepository extends JpaRepository<CatalogSummaryView,Long> {
+public interface CatalogSummaryViewRepository extends JpaRepository<CatalogSummaryView, Long> {
     Collection<CatalogSummaryView> findByCurationStatusOrderByStudyIdDesc(Long statusId);
 }

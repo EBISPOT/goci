@@ -5,8 +5,7 @@ package uk.ac.ebi.spot.goci.pussycat.layout;
  * to the SVG document), a width and a height, and a z-index (representing whether the glyph appears in the foreground
  * or background).
  *
- * @author Tony Burdett
- * Date 27/02/12
+ * @author Tony Burdett Date 27/02/12
  */
 public class SVGArea {
     private double x, y;

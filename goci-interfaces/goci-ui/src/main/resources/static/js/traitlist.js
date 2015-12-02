@@ -7,15 +7,15 @@
  */
 
 
-$(document).ready(function () {
+$(document).ready(function() {
 
-    if(window.location.pathname.indexOf('/search/traits') != -1 && $('#traitList ul').children().length == 0){
+    if (window.location.pathname.indexOf('/search/traits') != -1 && $('#traitList ul').children().length == 0) {
         console.log("About to load all the traits");
         loadTraitList();
     }
 
 
-    $('#traitForm').submit(function (event) {
+    $('#traitForm').submit(function(event) {
         event.preventDefault();
         console.log("Trait submission request received");
         getCheckedTraits();
@@ -31,19 +31,19 @@ function loadTraitList() {
     var sort = 'index';
 
     $.getJSON('../api/search/alltraits', {
-        'q': searchTerm,
-        'max': 1,
-        'facet': facet,
-        'facet.sort': sort,
-        'facet.limit': 2000
-    })
-            .done(function (data) {
-                      displayTraits(data);
-                      });
+                'q': searchTerm,
+                'max': 1,
+                'facet': facet,
+                'facet.sort': sort,
+                'facet.limit': 2000
+            })
+            .done(function(data) {
+                displayTraits(data);
+            });
 }
 
 
-function displayTraits(data){
+function displayTraits(data) {
 
     //var documents = data.response.docs;
 
@@ -53,12 +53,12 @@ function displayTraits(data){
     var traits = data.facet_counts.facet_fields.traitName_s;
 
     for (var i = 0; i < traits.length; i = i + 2) {
-        try{
+        try {
             var trait = traits[i];
             //var count = traits[i + 1];
             processTraitDocument(trait, traitlist);
         }
-        catch (ex){
+        catch (ex) {
             console.log("Failure to process document " + ex);
         }
     }
@@ -68,7 +68,7 @@ function displayTraits(data){
 
 };
 
-function processTraitDocument(trait, traitList){
+function processTraitDocument(trait, traitList) {
 
     var row = $("<li>");
 
@@ -82,27 +82,25 @@ function processTraitDocument(trait, traitList){
 };
 
 
-
-
-function getCheckedTraits(){
+function getCheckedTraits() {
     var traits = '';
     var traitInput = $('#traitList ul li input:checked');
-    for(var i=0; i<traitInput.length; i++){
+    for (var i = 0; i < traitInput.length; i++) {
 
         var trait = traitInput[i].value;
         trait = trait.replace(/\s/g, '+');
 
-        if(i ==0){
+        if (i == 0) {
             traits = trait;
         }
-        else{
+        else {
             traits = traits.concat('|').concat(trait);
         }
 
     }
     console.log(traits);
 
-    if(traits.length > 2000){
+    if (traits.length > 2000) {
         console.log("Your query is a bit too long.");
     }
 
@@ -110,7 +108,7 @@ function getCheckedTraits(){
 
     //localStorage.setItem("traits", traits);
 
-    var url =  "../search?query=*&filter="+traits;
+    var url = "../search?query=*&filter=" + traits;
     console.log(url);
     window.location = url;
 };

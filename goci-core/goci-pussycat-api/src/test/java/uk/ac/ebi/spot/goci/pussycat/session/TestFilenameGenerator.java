@@ -21,17 +21,16 @@ import static uk.ac.ebi.spot.goci.pussycat.lang.Filtering.template;
 public class TestFilenameGenerator {
 
     @Test
-    public void testGenerator(){
+    public void testGenerator() {
 
         int e1 = -8;
         int m1 = 5;
-        double p1 = m1*Math.pow(10, e1);
+        double p1 = m1 * Math.pow(10, e1);
 
         Association association = template(Association.class);
         Filter f1 = refine(association).on(association.getPvalue()).hasValues(0.0, p1);
 
         Filter f2 = refine(association).on(association.getPvalue()).hasValues(0.0, p1);
-
 
 
         TestSession session = new TestSession();
@@ -50,14 +49,15 @@ public class TestFilenameGenerator {
 
     }
 
-    public class TestSession extends AbstractSVGIOPussycatSession{
+    public class TestSession extends AbstractSVGIOPussycatSession {
         @Override
         public String getSessionID() {
             return "foo";
         }
 
         @Override
-        public String performRendering(RenderletNexus renderletNexus, Filter... filters) throws PussycatSessionNotReadyException {
+        public String performRendering(RenderletNexus renderletNexus, Filter... filters)
+                throws PussycatSessionNotReadyException {
             return "";
         }
 

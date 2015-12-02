@@ -12,7 +12,7 @@
 
     <!--Tags input http://timschlechter.github.io/bootstrap-tagsinput/examples/-->
     <link href="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"
-          th:href="@{https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css}" rel="stylesheet" />
+          th:href="@{https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css}" rel="stylesheet"/>
 
     <script src="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"
             th:src="@{https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js}"></script>
@@ -120,16 +120,17 @@
                         <div class="form-group">
                             <label for="authorgenes" class="control-label col-md-2">Gene(s)</label>
 
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" id="authorgenes"
-                                   th:field="*{authorReportedGenes}" name="authorReportedGene"
-                                   placeholder="Enter author reported genes..."
-                                   data-role="tagsinput"/>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="authorgenes"
+                                       th:field="*{authorReportedGenes}" name="authorReportedGene"
+                                       placeholder="Enter author reported genes..."
+                                       data-role="tagsinput"/>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="riskFrequency" class="control-label col-md-2">Risk element (allele) frequency in controls</label>
+                        <div class="form-group">
+                            <label for="riskFrequency" class="control-label col-md-2">Risk element (allele) frequency in
+                                                                                      controls</label>
 
                             <div class="col-md-10">
                                 <input type="text" class="form-control" id="riskFrequency"
@@ -318,15 +319,15 @@
 <!--Formats tags input -->
 <script>
     $('#proxySnps').tagsinput({
-        trimValue: true
-    });
+                                  trimValue: true
+                              });
 </script>
 
 <!--Formats tags input -->
 <script>
     $('#authorgenes').tagsinput({
-        trimValue: true
-    });
+                                    trimValue: true
+                                });
 </script>
 
 </body>

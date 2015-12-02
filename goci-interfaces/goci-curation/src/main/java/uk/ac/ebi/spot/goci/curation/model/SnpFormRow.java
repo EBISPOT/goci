@@ -6,7 +6,7 @@ import java.util.Collection;
  * Created by emma on 26/01/15.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Service class that deals with rows on SNP association form
  */
 public class SnpFormRow {
@@ -50,8 +50,9 @@ public class SnpFormRow {
     }
 
     public void setProxySnps(Collection<String> proxySnps) {
-        this.proxySnps = proxySnps;}
-    
+        this.proxySnps = proxySnps;
+    }
+
     public Long getMerged() { return merged; }
 
     public void setMerged(Long merged) {

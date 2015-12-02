@@ -12,15 +12,15 @@ import java.util.ArrayList;
 
 /**
  * Created by Laurent on 28/09/15.
- * @author Laurent
- * Class getting the dbSNP version from the Ensembl REST API
+ *
+ * @author Laurent Class getting the dbSNP version from the Ensembl REST API
  */
 @Service
 public class EnsemblDbsnpVersion {
 
     private int dbsnpVersion = 0;
     private String species = "homo_sapiens";
-    private String endpoint = "/info/variation/"+species+"/";
+    private String endpoint = "/info/variation/" + species + "/";
     private String source = "dbSNP";
     private ArrayList<String> rest_errors = new ArrayList<>();
 
@@ -51,6 +51,7 @@ public class EnsemblDbsnpVersion {
 
     /**
      * Getter for the release version
+     *
      * @return the numeric release version
      */
     public int getDbsnpVersion() {
@@ -60,6 +61,7 @@ public class EnsemblDbsnpVersion {
 
     /**
      * Getter for the list of REST API error messages
+     *
      * @return List of strings.
      */
     public ArrayList<String> getRestErrors() {
@@ -69,6 +71,7 @@ public class EnsemblDbsnpVersion {
 
     /**
      * Check the type of error returned by the REST web service JSON output
+     *
      * @param result The JSONObject result
      */
     private void checkError(JSONArray result) {
@@ -83,10 +86,11 @@ public class EnsemblDbsnpVersion {
 
     /**
      * Simple generic Ensembl REST API call method for array result.
+     *
      * @return the corresponding JSONArray
      */
-    private JSONArray getSimpleRestCall () {
-        EnsemblRestService ens_rest_call = new EnsemblRestService(endpoint, "", "filter="+source);
+    private JSONArray getSimpleRestCall() {
+        EnsemblRestService ens_rest_call = new EnsemblRestService(endpoint, "", "filter=" + source);
         JSONArray json_result = new JSONArray();
         try {
 

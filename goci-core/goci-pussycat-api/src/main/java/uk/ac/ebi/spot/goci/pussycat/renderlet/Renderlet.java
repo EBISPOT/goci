@@ -8,8 +8,7 @@ import net.sourceforge.fluxion.spi.Spi;
  * objects).
  *
  * @author Tony Burdett
- * @author Rob Davey
- * Date 27/02/12
+ * @author Rob Davey Date 27/02/12
  */
 @Spi
 public interface Renderlet<C, O> {

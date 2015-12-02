@@ -14,7 +14,7 @@ import java.util.Map;
  * Created by emma on 28/01/15.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         New service class to deal with form used by curators to enter snp/association details
  */
 
@@ -204,7 +204,6 @@ public class SnpAssociationForm {
     }
 
 
-
     public Boolean getSnpInteraction() {
         return snpInteraction;
     }
@@ -321,7 +320,9 @@ public class SnpAssociationForm {
         return genomicContexts;
     }
 
-    public void setGenomicContexts(Collection<GenomicContext> genomicContexts) { this.genomicContexts = genomicContexts; }
+    public void setGenomicContexts(Collection<GenomicContext> genomicContexts) {
+        this.genomicContexts = genomicContexts;
+    }
 
     public Map<String, String> getAssociationErrorMap() {
         return associationErrorMap;

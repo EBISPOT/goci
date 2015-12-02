@@ -135,7 +135,9 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
                                 "Setting gwasassociation attribute for trait '" + trait + "' to " +
                                         associationAttribute.toString());
                         svg.append("gwasassociation='").append(associationAttribute.toString()).append("' ");
-                        svg.append("priority='").append(vertical).append("' "); // todo - remove this, just for debugging
+                        svg.append("priority='")
+                                .append(vertical)
+                                .append("' "); // todo - remove this, just for debugging
                         svg.append("/>");
 
                         SVGArea currentArea = new SVGArea(cx, cy, 2 * radius, 2 * radius, 0);
@@ -165,7 +167,8 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
         }
     }
 
-    protected abstract Set<E> getAssociationsForTrait(RenderletNexus nexus, C context, E trait) throws DataIntegrityViolationException;
+    protected abstract Set<E> getAssociationsForTrait(RenderletNexus nexus, C context, E trait)
+            throws DataIntegrityViolationException;
 
     protected abstract E getBandForAssociation(C context, E association) throws DataIntegrityViolationException;
 

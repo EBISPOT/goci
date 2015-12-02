@@ -4,6 +4,7 @@
 <body th:fragment="genomic_context_table">
 <div class="form-group">
     <label class="control-label col-md-2">Genomic context</label>
+
     <div class="col-md-9">
         <table class="table table-hover table-bordered" id="context_table">
             <thead>
@@ -30,8 +31,10 @@
                         <span th:text="*{genomicContexts[__${rowStat.index}__].location.chromosomeName}"></span>
                         <span>:</span>
                         <span th:text="*{genomicContexts[__${rowStat.index}__].location.chromosomePosition}"></span>
-                        <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].location.chromosomeName}"/>
-                        <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].location.chromosomePosition}"/>
+                        <input type="hidden"
+                               th:field="*{genomicContexts[__${rowStat.index}__].location.chromosomeName}"/>
+                        <input type="hidden"
+                               th:field="*{genomicContexts[__${rowStat.index}__].location.chromosomePosition}"/>
                     </span>
                 </td>
                 <!-- Gene Symbol -->
@@ -45,19 +48,22 @@
                         <span th:case="Ensembl">
                             <span th:each="geneRow ,geneRowStat : *{genomicContexts[__${rowStat.index}__].gene.ensemblGeneIds}">
                                 <span th:text="*{genomicContexts[__${rowStat.index}__].gene.ensemblGeneIds[__${geneRowStat.index}__].ensemblGeneId}">-</span>
-                                <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].gene.ensemblGeneIds[__${geneRowStat.index}__].ensemblGeneId}"/>
+                                <input type="hidden"
+                                       th:field="*{genomicContexts[__${rowStat.index}__].gene.ensemblGeneIds[__${geneRowStat.index}__].ensemblGeneId}"/>
                             </span>
                         </span>
                         <span th:case="NCBI">
                             <span th:each="geneRow ,geneRowStat : *{genomicContexts[__${rowStat.index}__].gene.entrezGeneIds}">
                                 <span th:text="*{genomicContexts[__${rowStat.index}__].gene.entrezGeneIds[__${geneRowStat.index}__].entrezGeneId}">-</span>
-                                <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].gene.entrezGeneIds[__${geneRowStat.index}__].entrezGeneId}"/>
+                                <input type="hidden"
+                                       th:field="*{genomicContexts[__${rowStat.index}__].gene.entrezGeneIds[__${geneRowStat.index}__].entrezGeneId}"/>
                             </span>
                         </span>
                         <span th:case="*">
                             <span th:each="geneRow ,geneRowStat : *{genomicContexts[__${rowStat.index}__].gene.entrezGeneIds}">
                                 <span th:text="*{genomicContexts[__${rowStat.index}__].gene.entrezGeneIds[__${geneRowStat.index}__].entrezGeneId}">-</span>
-                                <input type="hidden" th:field="*{genomicContexts[__${rowStat.index}__].gene.entrezGeneIds[__${geneRowStat.index}__].entrezGeneId}"/>
+                                <input type="hidden"
+                                       th:field="*{genomicContexts[__${rowStat.index}__].gene.entrezGeneIds[__${geneRowStat.index}__].entrezGeneId}"/>
                             </span>
                         </span>
                     </span>
@@ -80,13 +86,17 @@
 
                         <span th:case="true">
                             <!-- Non overlapping gene -->
-                            <span data-toggle="tooltip" title="This gene is upstream of the variant" th:if="*{genomicContexts[__${rowStat.index}__].isUpstream}">
+                            <span data-toggle="tooltip"
+                                  title="This gene is upstream of the variant"
+                                  th:if="*{genomicContexts[__${rowStat.index}__].isUpstream}">
                                 <!-- Upstream of the variant -->
                                 <span class="glyphicon glyphicon-circle-arrow-up" style="color:#0C0"></span>
                             </span>
-                            <span data-toggle="tooltip" title="This gene is downstream of the variant" th:if="*{genomicContexts[__${rowStat.index}__].isDownstream}">
+                            <span data-toggle="tooltip"
+                                  title="This gene is downstream of the variant"
+                                  th:if="*{genomicContexts[__${rowStat.index}__].isDownstream}">
                                 <!-- Downstream of the variant -->
-                                <span class="glyphicon glyphicon-circle-arrow-down" style="color:#00C" ></span>
+                                <span class="glyphicon glyphicon-circle-arrow-down" style="color:#00C"></span>
                             </span>
                             <span th:text="*{genomicContexts[__${rowStat.index}__].distance}+' bp'">dist.</span>
                         </span>

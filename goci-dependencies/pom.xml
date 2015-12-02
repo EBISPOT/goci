@@ -117,10 +117,10 @@
                 <version>${goci.version}</version>
             </dependency>
             <dependency>
-            <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-catalog-io</artifactId>
+                <groupId>uk.ac.ebi.spot</groupId>
+                <artifactId>goci-catalog-io</artifactId>
                 <version>${goci.version}</version>
-        </dependency>
+            </dependency>
             <dependency>
                 <groupId>uk.ac.ebi.spot</groupId>
                 <artifactId>goci-pussycat-api</artifactId>
@@ -158,8 +158,8 @@
                 <version>${owlapi.version}</version>
             </dependency>
             <!--<dependency>-->
-                <!--<groupId>net.sourceforge.owlapi</groupId>-->
-                <!--<artifactId>owlapi-apibinding</artifactId>-->
+            <!--<groupId>net.sourceforge.owlapi</groupId>-->
+            <!--<artifactId>owlapi-apibinding</artifactId>-->
             <!--</dependency>-->
             <dependency>
                 <groupId>com.hermit-reasoner</groupId>
@@ -179,7 +179,7 @@
             <dependency>
                 <groupId>ebi-lode</groupId>
                 <artifactId>lode-virtuoso-impl</artifactId>
-                 <version>${lode-virtuoso-impl.version}</version>
+                <version>${lode-virtuoso-impl.version}</version>
             </dependency>
             <dependency>
                 <groupId>ebi-lode</groupId>

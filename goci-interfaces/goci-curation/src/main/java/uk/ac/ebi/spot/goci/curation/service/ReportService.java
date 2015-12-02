@@ -36,7 +36,8 @@ public class ReportService {
 
         if (redirect.isEmpty()) {
             return redirectPrefix;
-        } else {
+        }
+        else {
             return redirectPrefix + "?" + redirect;
         }
     }

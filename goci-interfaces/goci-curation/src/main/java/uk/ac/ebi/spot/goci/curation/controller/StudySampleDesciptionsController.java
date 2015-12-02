@@ -94,20 +94,20 @@ public class StudySampleDesciptionsController {
                 String notes = ethnicity.getNotes();
 
                 StudySampleDescription studySampleDescription = new StudySampleDescription(studyId, author,
-                        publicationDate,
-                        pubmedId,
-                        initialSampleSize,
-                        replicateSampleSize,
-                        ethnicityCheckedLevelOne,
-                        ethnicityCheckedLevelTwo,
-                        type,
-                        numberOfIndividuals,
-                        ethnicGroup,
-                        countryOfOrigin,
-                        countryOfRecruitment,
-                        description,
-                        sampleSizesMatch,
-                        notes);
+                                                                                           publicationDate,
+                                                                                           pubmedId,
+                                                                                           initialSampleSize,
+                                                                                           replicateSampleSize,
+                                                                                           ethnicityCheckedLevelOne,
+                                                                                           ethnicityCheckedLevelTwo,
+                                                                                           type,
+                                                                                           numberOfIndividuals,
+                                                                                           ethnicGroup,
+                                                                                           countryOfOrigin,
+                                                                                           countryOfRecruitment,
+                                                                                           description,
+                                                                                           sampleSizesMatch,
+                                                                                           notes);
 
                 studySampleDescriptions.add(studySampleDescription);
             }
@@ -125,8 +125,9 @@ public class StudySampleDesciptionsController {
 
         try {
             studySampleDescriptionsDownloadService.createDownloadFile(response.getOutputStream(),
-                    studySampleDescriptions);
-        } catch (IOException e) {
+                                                                      studySampleDescriptions);
+        }
+        catch (IOException e) {
             getLog().error("Cannot create ethnicity download file");
             e.printStackTrace();
         }

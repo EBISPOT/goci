@@ -10,7 +10,7 @@ import org.apache.solr.client.solrj.beans.Field;
  */
 public class MappedGeneDocument extends Document<Gene> {
     @Field private String mappedGene;
-    
+
     public MappedGeneDocument(Gene gene) {
         super(gene);
         this.mappedGene = gene.getGeneName();

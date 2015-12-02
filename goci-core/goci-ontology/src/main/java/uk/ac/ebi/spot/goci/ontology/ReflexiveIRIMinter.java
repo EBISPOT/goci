@@ -17,8 +17,7 @@ import java.net.URLEncoder;
  * An {@link IRIMinter} implementation that looks for annotations on the supplied model object to identify the unique
  * ID, which is then used to mint a new IRI for that object
  *
- * @author Tony Burdett
- * Date 26/01/12
+ * @author Tony Burdett Date 26/01/12
  */
 public class ReflexiveIRIMinter implements IRIMinter<Object> {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -109,11 +108,12 @@ public class ReflexiveIRIMinter implements IRIMinter<Object> {
         Field[] fields = o.getClass().getDeclaredFields();
         Field annotatedField = null;
         int fieldCount = 0;
-        for(Field field : fields){
-            if(field.isAnnotationPresent(Id.class)){
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(Id.class)) {
                 annotatedField = field;
                 fieldCount++;
-            }else{
+            }
+            else {
                 // check all definitions of this method on superclasses too
 
             }

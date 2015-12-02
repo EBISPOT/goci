@@ -22,8 +22,9 @@ import java.util.List;
  * Created by emma on 09/02/15.
  *
  * @author emma
- *         <p/>
- *         User controller interprets user input and transform it into a user model that is represented to the user by the associated HTML page.
+ *         <p>
+ *         User controller interprets user input and transform it into a user model that is represented to the user by
+ *         the associated HTML page.
  */
 @Controller
 @RequestMapping("/user")
@@ -58,7 +59,8 @@ public class UserController {
             // Save our new user
             secureUserRepository.save(newSecureUser);
 
-        } catch (DataIntegrityViolationException e) {
+        }
+        catch (DataIntegrityViolationException e) {
             bindingResult.reject("email.exists", "Email already exists");
             return "user_create";
         }

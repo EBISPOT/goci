@@ -22,16 +22,14 @@ public abstract class AbstractPussycatSession implements PussycatSession {
     private Logger log = LoggerFactory.getLogger("rendering");
 
     protected AbstractPussycatSession() {
-//        this.sessionID = generateSessionID();
-//        this.renderlets = getAvailableRenderlets();
+        //        this.sessionID = generateSessionID();
+        //        this.renderlets = getAvailableRenderlets();
     }
-
 
 
     protected Logger getLog() {
         return log;
     }
-
 
 
     public Collection<Renderlet> getAvailableRenderlets() {

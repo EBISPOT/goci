@@ -21,14 +21,13 @@ public class GOCIAncestryMapperConfiguration {
     @Value("${ancestro.location}")
     private Resource ancestroResource;
 
-    @Bean
-    OntologyLoader ontologyLoader() {
+    @Bean OntologyLoader ontologyLoader() {
         ReasonedOntologyLoader loader = new ReasonedOntologyLoader();
         loader.setOntologyName("ancestro");
         loader.setOntologyURI(URI.create("http://www.ebi.ac.uk/ancestro"));
         loader.setOntologyResource(ancestroResource);
-//        loader.setExclusionClassURI(URI.create("http://www.geneontology.org/formats/oboInOwl#ObsoleteClass"));
-//        loader.setExclusionAnnotationURI(URI.create("http://www.ebi.ac.uk/efo/organizational_class"));
+        //        loader.setExclusionClassURI(URI.create("http://www.geneontology.org/formats/oboInOwl#ObsoleteClass"));
+        //        loader.setExclusionAnnotationURI(URI.create("http://www.ebi.ac.uk/efo/organizational_class"));
         loader.setSynonymURIs(Collections.singleton(URI.create("http://www.ebi.ac.uk/ancestro/ancestro_0121")));
         loader.init();
         return loader;

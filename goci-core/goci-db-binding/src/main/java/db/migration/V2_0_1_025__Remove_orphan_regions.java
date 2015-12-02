@@ -8,8 +8,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
  *
  * @author emma
  *         <p>
- *         Related to JIRA ticket: https://www.ebi.ac.uk/panda/jira/browse/GOCI-940. This will remove orphan regions with
- *         no locations linked.
+ *         Related to JIRA ticket: https://www.ebi.ac.uk/panda/jira/browse/GOCI-940. This will remove orphan regions
+ *         with no locations linked.
  */
 public class V2_0_1_025__Remove_orphan_regions implements SpringJdbcMigration {
 

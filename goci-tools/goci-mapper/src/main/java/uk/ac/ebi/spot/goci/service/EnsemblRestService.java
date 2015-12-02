@@ -96,7 +96,7 @@ public class EnsemblRestService {
         }
 
         // Call REST API
-        if (url!=null) {
+        if (url != null) {
             try {
                 this.fetchJson(url.toString());
             }
@@ -174,7 +174,7 @@ public class EnsemblRestService {
         }
         catch (RuntimeException e) {
             e.printStackTrace();
-            System.out.println("URL: "+url); // Temporary (for debug)
+            System.out.println("URL: " + url); // Temporary (for debug)
         }
     }
 }

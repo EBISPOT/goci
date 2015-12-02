@@ -1,6 +1,12 @@
 package uk.ac.ebi.spot.goci;
 
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.slf4j.Logger;
@@ -11,14 +17,19 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import uk.ac.ebi.spot.goci.checker.IRITreeProcessor;
 import uk.ac.ebi.spot.goci.exception.MetricsCalculationException;
 import uk.ac.ebi.spot.goci.kb.KBLoader;
-import uk.ac.ebi.spot.goci.checker.IRITreeProcessor;
 import uk.ac.ebi.spot.goci.tree.IRINode;
 import uk.ac.ebi.spot.goci.tree.IRITree;
 import uk.ac.ebi.spot.goci.tree.IRITreeBuilder;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -151,7 +162,7 @@ public class KBMetricsDriver {
 
                 if (cl.hasOption("w")) {
                     _watershedCutoff = Integer.parseInt(cl.getOptionValue("w"));
-//                    System.setProperty("watershed.cutoff", String.valueOf(_watershedCutoff));
+                    //                    System.setProperty("watershed.cutoff", String.valueOf(_watershedCutoff));
                 }
                 else {
                     System.err.println("-w (Watershed cutoff) argument is required");
@@ -249,7 +260,6 @@ public class KBMetricsDriver {
     protected Logger getLog() {
         return log;
     }
-
 
 
     /**

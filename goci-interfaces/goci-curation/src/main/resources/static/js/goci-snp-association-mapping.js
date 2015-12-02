@@ -42,8 +42,8 @@ $(document).ready(function() {
 // Display mouseover tooltip from bootstrap
 function displayTooltip() {
     $('[data-toggle="tooltip"]').mouseover(
-        function() {
-            $(this).tooltip('show');
-        }
+            function() {
+                $(this).tooltip('show');
+            }
     );
 }

@@ -8,9 +8,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
  *
  * @author emma
  *         <p>
- *         In the GENOMIC_CONTEXT table we have SNPs that are not used in any associations.
- *         When data is remapped it happens per association and thus these never get removed/updated in the
- *         GENOMIC_CONTEXT table.
+ *         In the GENOMIC_CONTEXT table we have SNPs that are not used in any associations. When data is remapped it
+ *         happens per association and thus these never get removed/updated in the GENOMIC_CONTEXT table.
  *         <p>
  *         JIRA: https://www.ebi.ac.uk/panda/jira/browse/GOCI-1037
  */

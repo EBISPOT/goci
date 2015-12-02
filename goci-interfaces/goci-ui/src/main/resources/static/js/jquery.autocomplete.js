@@ -10,28 +10,30 @@
 /*global define, window, document, jQuery, exports, require */
 
 // Expose plugin as an AMD module if AMD loader is present:
-(function (factory) {
+(function(factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define(['jquery'], factory);
-    } else if (typeof exports === 'object' && typeof require === 'function') {
+    }
+    else if (typeof exports === 'object' && typeof require === 'function') {
         // Browserify
         factory(require('jquery'));
-    } else {
+    }
+    else {
         // Browser globals
         factory(jQuery);
     }
-}(function ($) {
+}(function($) {
     'use strict';
 
     var
-            utils = (function () {
+            utils = (function() {
                 return {
-                    escapeRegExChars: function (value) {
+                    escapeRegExChars: function(value) {
                         return value.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
                     },
-                    createNode: function (containerClass) {
+                    createNode: function(containerClass) {
                         var div = document.createElement('div');
                         div.className = containerClass;
                         div.style.position = 'absolute';
@@ -52,7 +54,8 @@
             };
 
     function Autocomplete(el, options) {
-        var noop = function () { },
+        var noop = function() {
+                },
                 that = this,
                 defaults = {
                     ajaxSettings: {},
@@ -81,11 +84,11 @@
                     currentRequest: null,
                     triggerSelectOnValidInput: true,
                     preventBadQueries: true,
-                    lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
+                    lookupFilter: function(suggestion, originalQuery, queryLowerCase) {
                         return suggestion.value.toLowerCase().indexOf(queryLowerCase) !== -1;
                     },
                     paramName: 'query',
-                    transformResult: function (response) {
+                    transformResult: function(response) {
                         return typeof response === 'string' ? $.parseJSON(response) : response;
                     },
                     showNoSuggestionNotice: false,
@@ -126,7 +129,7 @@
 
     $.Autocomplete = Autocomplete;
 
-    Autocomplete.formatResult = function (suggestion, currentValue) {
+    Autocomplete.formatResult = function(suggestion, currentValue) {
         var pattern = '(' + utils.escapeRegExChars(currentValue) + ')';
 
         return suggestion.value
@@ -142,7 +145,7 @@
 
         killerFn: null,
 
-        initialize: function () {
+        initialize: function() {
             var that = this,
                     suggestionSelector = '.' + that.classes.suggestion,
                     selected = that.classes.selected,
@@ -152,7 +155,7 @@
             // Remove autocomplete attribute to prevent native suggestions:
             that.element.setAttribute('autocomplete', 'off');
 
-            that.killerFn = function (e) {
+            that.killerFn = function(e) {
                 if ($(e.target).closest('.' + that.options.containerClass).length === 0) {
                     that.killSuggestions();
                     that.disableKillerFn();
@@ -175,22 +178,22 @@
             }
 
             // Listen for mouse over event on suggestions list:
-            container.on('mouseover.autocomplete', suggestionSelector, function () {
+            container.on('mouseover.autocomplete', suggestionSelector, function() {
                 that.activate($(this).data('index'));
             });
 
             // Deselect active element when mouse leaves suggestions container:
-            container.on('mouseout.autocomplete', function () {
+            container.on('mouseout.autocomplete', function() {
                 that.selectedIndex = -1;
                 container.children('.' + selected).removeClass(selected);
             });
 
             // Listen for click event on suggestions list:
-            container.on('click.autocomplete', suggestionSelector, function () {
+            container.on('click.autocomplete', suggestionSelector, function() {
                 that.select($(this).data('index'));
             });
 
-            that.fixPositionCapture = function () {
+            that.fixPositionCapture = function() {
                 if (that.visible) {
                     that.fixPosition();
                 }
@@ -198,15 +201,27 @@
 
             $(window).on('resize.autocomplete', that.fixPositionCapture);
 
-            that.el.on('keydown.autocomplete', function (e) { that.onKeyPress(e); });
-            that.el.on('keyup.autocomplete', function (e) { that.onKeyUp(e); });
-            that.el.on('blur.autocomplete', function () { that.onBlur(); });
-            that.el.on('focus.autocomplete', function () { that.onFocus(); });
-            that.el.on('change.autocomplete', function (e) { that.onKeyUp(e); });
-            that.el.on('input.autocomplete', function (e) { that.onKeyUp(e); });
+            that.el.on('keydown.autocomplete', function(e) {
+                that.onKeyPress(e);
+            });
+            that.el.on('keyup.autocomplete', function(e) {
+                that.onKeyUp(e);
+            });
+            that.el.on('blur.autocomplete', function() {
+                that.onBlur();
+            });
+            that.el.on('focus.autocomplete', function() {
+                that.onFocus();
+            });
+            that.el.on('change.autocomplete', function(e) {
+                that.onKeyUp(e);
+            });
+            that.el.on('input.autocomplete', function(e) {
+                that.onKeyUp(e);
+            });
         },
 
-        onFocus: function () {
+        onFocus: function() {
             var that = this;
             that.fixPosition();
             if (that.options.minChars === 0 && that.el.val().length === 0) {
@@ -214,11 +229,11 @@
             }
         },
 
-        onBlur: function () {
+        onBlur: function() {
             this.enableKillerFn();
         },
 
-        abortAjax: function () {
+        abortAjax: function() {
             var that = this;
             if (that.currentRequest) {
                 that.currentRequest.abort();
@@ -226,7 +241,7 @@
             }
         },
 
-        setOptions: function (suppliedOptions) {
+        setOptions: function(suppliedOptions) {
             var that = this,
                     options = that.options;
 
@@ -249,29 +264,29 @@
         },
 
 
-        clearCache: function () {
+        clearCache: function() {
             this.cachedResponse = {};
             this.badQueries = [];
         },
 
-        clear: function () {
+        clear: function() {
             this.clearCache();
             this.currentValue = '';
             this.suggestions = [];
         },
 
-        disable: function () {
+        disable: function() {
             var that = this;
             that.disabled = true;
             clearInterval(that.onChangeInterval);
             that.abortAjax();
         },
 
-        enable: function () {
+        enable: function() {
             this.disabled = false;
         },
 
-        fixPosition: function () {
+        fixPosition: function() {
             // Use only when container has already its content
 
             var that = this,
@@ -288,7 +303,7 @@
                     containerHeight = $container.outerHeight(),
                     height = that.el.outerHeight(),
                     offset = that.el.offset(),
-                    styles = { 'top': offset.top, 'left': offset.left };
+                    styles = {'top': offset.top, 'left': offset.left};
 
             if (orientation === 'auto') {
                 var viewPortHeight = $(window).height(),
@@ -301,17 +316,18 @@
 
             if (orientation === 'top') {
                 styles.top += -containerHeight;
-            } else {
+            }
+            else {
                 styles.top += height;
             }
 
             // If container is not positioned to body,
             // correct its position using offset parent offset
-            if(containerParent !== document.body) {
+            if (containerParent !== document.body) {
                 var opacity = $container.css('opacity'),
                         parentOffsetDiff;
 
-                if (!that.visible){
+                if (!that.visible) {
                     $container.css('opacity', 0).show();
                 }
 
@@ -319,7 +335,7 @@
                 styles.top -= parentOffsetDiff.top;
                 styles.left -= parentOffsetDiff.left;
 
-                if (!that.visible){
+                if (!that.visible) {
                     $container.css('opacity', opacity).hide();
                 }
             }
@@ -332,30 +348,30 @@
             $container.css(styles);
         },
 
-        enableKillerFn: function () {
+        enableKillerFn: function() {
             var that = this;
             $(document).on('click.autocomplete', that.killerFn);
         },
 
-        disableKillerFn: function () {
+        disableKillerFn: function() {
             var that = this;
             $(document).off('click.autocomplete', that.killerFn);
         },
 
-        killSuggestions: function () {
+        killSuggestions: function() {
             var that = this;
             that.stopKillSuggestions();
-            that.intervalId = window.setInterval(function () {
+            that.intervalId = window.setInterval(function() {
                 that.hide();
                 that.stopKillSuggestions();
             }, 50);
         },
 
-        stopKillSuggestions: function () {
+        stopKillSuggestions: function() {
             window.clearInterval(this.intervalId);
         },
 
-        isCursorAtEnd: function () {
+        isCursorAtEnd: function() {
             var that = this,
                     valLength = that.el.val().length,
                     selectionStart = that.element.selectionStart,
@@ -372,7 +388,7 @@
             return true;
         },
 
-        onKeyPress: function (e) {
+        onKeyPress: function(e) {
             var that = this;
 
             // If suggestions are hidden and user presses arrow down, display suggestions:
@@ -432,7 +448,7 @@
             e.preventDefault();
         },
 
-        onKeyUp: function (e) {
+        onKeyUp: function(e) {
             var that = this;
 
             if (that.disabled) {
@@ -451,16 +467,17 @@
                 that.findBestHint();
                 if (that.options.deferRequestBy > 0) {
                     // Defer lookup in case when value changes very quickly:
-                    that.onChangeInterval = setInterval(function () {
+                    that.onChangeInterval = setInterval(function() {
                         that.onValueChange();
                     }, that.options.deferRequestBy);
-                } else {
+                }
+                else {
                     that.onValueChange();
                 }
             }
         },
 
-        onValueChange: function () {
+        onValueChange: function() {
             var that = this,
                     options = that.options,
                     value = that.el.val(),
@@ -483,18 +500,19 @@
 
             if (query.length < options.minChars) {
                 that.hide();
-            } else {
+            }
+            else {
                 that.getSuggestions(query);
             }
         },
 
-        isExactMatch: function (query) {
+        isExactMatch: function(query) {
             var suggestions = this.suggestions;
 
             return (suggestions.length === 1 && suggestions[0].value.toLowerCase() === query.toLowerCase());
         },
 
-        getQuery: function (value) {
+        getQuery: function(value) {
             var delimiter = this.options.delimiter,
                     parts;
 
@@ -505,7 +523,7 @@
             return $.trim(parts[parts.length - 1]);
         },
 
-        getSuggestionsLocal: function (query) {
+        getSuggestionsLocal: function(query) {
             var that = this,
                     options = that.options,
                     queryLowerCase = query.toLowerCase(),
@@ -514,7 +532,7 @@
                     data;
 
             data = {
-                suggestions: $.grep(options.lookup, function (suggestion) {
+                suggestions: $.grep(options.lookup, function(suggestion) {
                     return filter(suggestion, query, queryLowerCase);
                 })
             };
@@ -526,7 +544,7 @@
             return data;
         },
 
-        getSuggestions: function (q) {
+        getSuggestions: function(q) {
             var response,
                     that = this,
                     options = that.options,
@@ -542,8 +560,8 @@
                 return;
             }
 
-            if ($.isFunction(options.lookup)){
-                options.lookup(q, function (data) {
+            if ($.isFunction(options.lookup)) {
+                options.lookup(q, function(data) {
                     that.suggestions = data.suggestions;
                     that.suggest();
                     options.onSearchComplete.call(that.element, q, data.suggestions);
@@ -553,7 +571,8 @@
 
             if (that.isLocal) {
                 response = that.getSuggestionsLocal(q);
-            } else {
+            }
+            else {
                 if ($.isFunction(serviceUrl)) {
                     serviceUrl = serviceUrl.call(that.element, q);
                 }
@@ -565,7 +584,8 @@
                 that.suggestions = response.suggestions;
                 that.suggest();
                 options.onSearchComplete.call(that.element, q, response.suggestions);
-            } else if (!that.isBadQuery(q)) {
+            }
+            else if (!that.isBadQuery(q)) {
                 that.abortAjax();
 
                 ajaxSettings = {
@@ -577,22 +597,23 @@
 
                 $.extend(ajaxSettings, options.ajaxSettings);
 
-                that.currentRequest = $.ajax(ajaxSettings).done(function (data) {
+                that.currentRequest = $.ajax(ajaxSettings).done(function(data) {
                     var result;
                     that.currentRequest = null;
                     result = options.transformResult(data, q);
                     that.processResponse(result, q, cacheKey);
                     options.onSearchComplete.call(that.element, q, result.suggestions);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
+                }).fail(function(jqXHR, textStatus, errorThrown) {
                     options.onSearchError.call(that.element, q, jqXHR, textStatus, errorThrown);
                 });
-            } else {
+            }
+            else {
                 options.onSearchComplete.call(that.element, q, []);
             }
         },
 
-        isBadQuery: function (q) {
-            if (!this.options.preventBadQueries){
+        isBadQuery: function(q) {
+            if (!this.options.preventBadQueries) {
                 return false;
             }
 
@@ -608,7 +629,7 @@
             return false;
         },
 
-        hide: function () {
+        hide: function() {
             var that = this,
                     container = $(that.suggestionsContainer);
 
@@ -623,11 +644,12 @@
             that.signalHint(null);
         },
 
-        suggest: function () {
+        suggest: function() {
             if (this.suggestions.length === 0) {
                 if (this.options.showNoSuggestionNotice) {
                     this.noSuggestions();
-                } else {
+                }
+                else {
                     this.hide();
                 }
                 return;
@@ -645,10 +667,10 @@
                     beforeRender = options.beforeRender,
                     html = '',
                     category,
-                    formatGroup = function (suggestion, index) {
+                    formatGroup = function(suggestion, index) {
                         var currentCategory = suggestion.data[groupBy];
 
-                        if (category === currentCategory){
+                        if (category === currentCategory) {
                             return '';
                         }
 
@@ -663,12 +685,13 @@
             }
 
             // Build suggestions inner HTML:
-            $.each(that.suggestions, function (i, suggestion) {
-                if (groupBy){
+            $.each(that.suggestions, function(i, suggestion) {
+                if (groupBy) {
                     html += formatGroup(suggestion, value, i);
                 }
 
-                html += '<div class="' + className + '" data-index="' + i + '">' + formatResult(suggestion, value) + '</div>';
+                html += '<div class="' + className + '" data-index="' + i + '">' + formatResult(suggestion, value) +
+                        '</div>';
             });
 
             this.adjustContainerWidth();
@@ -729,7 +752,7 @@
             }
         },
 
-        findBestHint: function () {
+        findBestHint: function() {
             var that = this,
                     value = that.el.val().toLowerCase(),
                     bestMatch = null;
@@ -738,7 +761,7 @@
                 return;
             }
 
-            $.each(that.suggestions, function (i, suggestion) {
+            $.each(that.suggestions, function(i, suggestion) {
                 var foundMatch = suggestion.value.toLowerCase().indexOf(value) === 0;
                 if (foundMatch) {
                     bestMatch = suggestion;
@@ -749,7 +772,7 @@
             that.signalHint(bestMatch);
         },
 
-        signalHint: function (suggestion) {
+        signalHint: function(suggestion) {
             var hintValue = '',
                     that = this;
             if (suggestion) {
@@ -762,11 +785,11 @@
             }
         },
 
-        verifySuggestionsFormat: function (suggestions) {
+        verifySuggestionsFormat: function(suggestions) {
             // If suggestions is string array, convert them to supported format:
             if (suggestions.length && typeof suggestions[0] === 'string') {
-                return $.map(suggestions, function (value) {
-                    return { value: value, data: null };
+                return $.map(suggestions, function(value) {
+                    return {value: value, data: null};
                 });
             }
 
@@ -776,14 +799,14 @@
         validateOrientation: function(orientation, fallback) {
             orientation = $.trim(orientation || '').toLowerCase();
 
-            if($.inArray(orientation, ['auto', 'bottom', 'top']) === -1){
+            if ($.inArray(orientation, ['auto', 'bottom', 'top']) === -1) {
                 orientation = fallback;
             }
 
             return orientation;
         },
 
-        processResponse: function (result, originalQuery, cacheKey) {
+        processResponse: function(result, originalQuery, cacheKey) {
             var that = this,
                     options = that.options;
 
@@ -806,7 +829,7 @@
             that.suggest();
         },
 
-        activate: function (index) {
+        activate: function(index) {
             var that = this,
                     activeItem,
                     selected = that.classes.selected,
@@ -826,20 +849,20 @@
             return null;
         },
 
-        selectHint: function () {
+        selectHint: function() {
             var that = this,
                     i = $.inArray(that.hint, that.suggestions);
 
             that.select(i);
         },
 
-        select: function (i) {
+        select: function(i) {
             var that = this;
             that.hide();
             that.onSelect(i);
         },
 
-        moveUp: function () {
+        moveUp: function() {
             var that = this;
 
             if (that.selectedIndex === -1) {
@@ -857,7 +880,7 @@
             that.adjustScroll(that.selectedIndex - 1);
         },
 
-        moveDown: function () {
+        moveDown: function() {
             var that = this;
 
             if (that.selectedIndex === (that.suggestions.length - 1)) {
@@ -867,7 +890,7 @@
             that.adjustScroll(that.selectedIndex + 1);
         },
 
-        adjustScroll: function (index) {
+        adjustScroll: function(index) {
             var that = this,
                     activeItem = that.activate(index);
 
@@ -886,7 +909,8 @@
 
             if (offsetTop < upperBound) {
                 $(that.suggestionsContainer).scrollTop(offsetTop);
-            } else if (offsetTop > lowerBound) {
+            }
+            else if (offsetTop > lowerBound) {
                 $(that.suggestionsContainer).scrollTop(offsetTop - that.options.maxHeight + heightDelta);
             }
 
@@ -896,7 +920,7 @@
             that.signalHint(null);
         },
 
-        onSelect: function (index) {
+        onSelect: function(index) {
             var that = this,
                     onSelectCallback = that.options.onSelect,
                     suggestion = that.suggestions[index];
@@ -916,7 +940,7 @@
             }
         },
 
-        getValue: function (value) {
+        getValue: function(value) {
             var that = this,
                     delimiter = that.options.delimiter,
                     currentValue,
@@ -936,7 +960,7 @@
             return currentValue.substr(0, currentValue.length - parts[parts.length - 1].length) + value;
         },
 
-        dispose: function () {
+        dispose: function() {
             var that = this;
             that.el.off('.autocomplete').removeData('autocomplete');
             that.disableKillerFn();
@@ -946,7 +970,7 @@
     };
 
     // Create chainable jQuery plugin:
-    $.fn.autocomplete = $.fn.devbridgeAutocomplete = function (options, args) {
+    $.fn.autocomplete = $.fn.devbridgeAutocomplete = function(options, args) {
         var dataKey = 'autocomplete';
         // If function invoked without argument return
         // instance of the first matched element:
@@ -954,7 +978,7 @@
             return this.first().data(dataKey);
         }
 
-        return this.each(function () {
+        return this.each(function() {
             var inputElement = $(this),
                     instance = inputElement.data(dataKey);
 
@@ -962,7 +986,8 @@
                 if (instance && typeof instance[options] === 'function') {
                     instance[options](args);
                 }
-            } else {
+            }
+            else {
                 // If instance already exists, destroy it:
                 if (instance && instance.dispose) {
                     instance.dispose();

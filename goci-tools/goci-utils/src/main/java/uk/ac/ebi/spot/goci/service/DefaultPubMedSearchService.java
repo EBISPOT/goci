@@ -65,7 +65,7 @@ public class DefaultPubMedSearchService implements PubMedSearchService {
         if (pubmedRoot != null && pubmedGwasSummary != null) {
             summaryString = pubmedRoot.concat(pubmedGwasSummary);
         }
-        else{
+        else {
             throw new PubmedLookupException(
                     "Unable to search pubmed - no URL configured. " +
                             "Set pubmed.root, pubmed.gwas.summary and pubmed.xml.version in your config!");

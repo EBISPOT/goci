@@ -7,16 +7,13 @@ import uk.ac.ebi.spot.goci.ontology.owl.pussycat.renderlet.chromosome.*;
 import java.util.ArrayList;
 
 /**
- * Created by IntelliJ IDEA.
- * User: dwelter
- * Date: 02/03/12
- * Time: 15:50
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: dwelter Date: 02/03/12 Time: 15:50 To change this template use File | Settings | File
+ * Templates.
  */
 public class ChromTest2 extends TestCase {
 
     @Test
-    public void testChromosomes(){
+    public void testChromosomes() {
 
         OWLChromosomeRenderlet chrom;
 

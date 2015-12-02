@@ -5,6 +5,7 @@
 
 <div class="form-group">
     <label class="control-label col-md-2">Region(s)</label>
+
     <div class="col-md-9">
         <table class="table table-hover table-bordered" id="mapping_table">
             <!--<div class="form-group">
@@ -39,11 +40,14 @@
                 </td>
                 <td>
                     <span th:text="*{snpMappingForms[__${rowStat.index}__].location.chromosomeName}">Chromosome</span>
-                    <input class="chromosomeName" type="hidden" th:field="*{snpMappingForms[__${rowStat.index}__].location.chromosomeName}"/>
+                    <input class="chromosomeName"
+                           type="hidden"
+                           th:field="*{snpMappingForms[__${rowStat.index}__].location.chromosomeName}"/>
                 </td>
                 <td>
                     <span th:text="*{snpMappingForms[__${rowStat.index}__].location.chromosomePosition}">Position</span>
-                    <input type="hidden" th:field="*{snpMappingForms[__${rowStat.index}__].location.chromosomePosition}"/>
+                    <input type="hidden"
+                           th:field="*{snpMappingForms[__${rowStat.index}__].location.chromosomePosition}"/>
                 </td>
                 <!--<td>
                     <div class="btn btn-danger" th:onclick="'javascript:delete_row(\'mapping_tr_'+${rowStat.count}+'\')'">Delete</div>
