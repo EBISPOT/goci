@@ -1,4 +1,3 @@
-
 package uk.ac.ebi.spot.goci.model;
 
 import org.junit.Before;
@@ -42,25 +41,23 @@ public class EmbeddableDocumentTest {
         this.studyDoc = new StudyDocument(study);
 
         this.association = new Association("riskFrequency",
-                                           "allele",
-                                           0.00000005f,
-                                           "pValueText",
-                                           1.0f,
-                                           false,
-                                           "snpType",
-                                           false,
-                                           false,
-                                           true,
-                                           1,
-                                           1,
-                                           1.0f,
-                                           1.0f,
-                                           "orPerCopyRange",
-                                           "orPerCopyRecipRange",
-                                           "orPerCopyDescr",
-                                           study,
-                                           Collections.emptyList(),
-                                           Collections.emptyList(), null, null, null);
+                "pValueText",
+                1.0f,
+                false,
+                "snpType",
+                false,
+                false,
+                true,
+                1,
+                1,
+                1.0f,
+                1.0f,
+                "orPerCopyRange",
+                "orPerCopyRecipRange",
+                "orPerCopyDescr",
+                study,
+                Collections.emptyList(),
+                Collections.emptyList(), null, null, null);
         association.setId(2l);
         this.associationDoc = new AssociationDocument(association);
 
@@ -82,8 +79,7 @@ public class EmbeddableDocumentTest {
     public void testEmbedTrait() {
         try {
             traitDoc.embed(associationDoc);
-        }
-        catch (DocumentEmbeddingException e) {
+        } catch (DocumentEmbeddingException e) {
             e.printStackTrace();
             fail();
         }
@@ -100,8 +96,7 @@ public class EmbeddableDocumentTest {
                 System.out.println("\t" + pd);
             }
 
-        }
-        catch (IntrospectionException e) {
+        } catch (IntrospectionException e) {
             e.printStackTrace();
             fail();
         }
