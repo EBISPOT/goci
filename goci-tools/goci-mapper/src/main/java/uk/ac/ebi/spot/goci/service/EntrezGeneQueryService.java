@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.EntrezGene;
+import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.repository.EntrezGeneRepository;
 
 /**
@@ -44,6 +45,13 @@ public class EntrezGeneQueryService {
         entrezGene.getId();
         if (entrezGene.getGene() != null) {
             entrezGene.getGene();
+            loadAssociatedGeneData(entrezGene.getGene());
+        }
+    }
+
+    private void loadAssociatedGeneData(Gene gene) {
+        if (gene.getEntrezGeneIds() != null) {
+            gene.getEntrezGeneIds().size();
         }
     }
 }
