@@ -444,6 +444,7 @@ function setStats(data) {
         $('#associations-stat').text(data.associations + " SNP-trait associations");
         $('#genomebuild').text("Genome assembly " + data.genebuild);
         $('#dbsnpbuild').text("dbSNP Build " + data.dbsnpbuild);
+        $('#ensemblbuild').text("Ensembl Build " + data.ensemblbuild);
         $('#catalog-stats').show();
     }
     catch (ex) {
