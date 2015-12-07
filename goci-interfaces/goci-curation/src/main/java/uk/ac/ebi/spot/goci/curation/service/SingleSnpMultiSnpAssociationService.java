@@ -60,6 +60,7 @@ public class SingleSnpMultiSnpAssociationService {
         association.setOrType(snpAssociationForm.getOrType());
         association.setSnpType(snpAssociationForm.getSnpType());
         association.setMultiSnpHaplotype(snpAssociationForm.getMultiSnpHaplotype());
+        association.setSnpApproved(snpAssociationForm.getSnpApproved());
         association.setOrPerCopyNum(snpAssociationForm.getOrPerCopyNum());
         association.setOrPerCopyRecip(snpAssociationForm.getOrPerCopyRecip());
         association.setOrPerCopyRange(snpAssociationForm.getOrPerCopyRange());
@@ -191,6 +192,7 @@ public class SingleSnpMultiSnpAssociationService {
         snpAssociationForm.setOrType(association.getOrType());
         snpAssociationForm.setSnpType(association.getSnpType());
         snpAssociationForm.setMultiSnpHaplotype(association.getMultiSnpHaplotype());
+        snpAssociationForm.setSnpApproved(association.getSnpApproved());
         snpAssociationForm.setPvalueMantissa(association.getPvalueMantissa());
         snpAssociationForm.setPvalueExponent(association.getPvalueExponent());
         snpAssociationForm.setOrPerCopyRecip(association.getOrPerCopyRecip());
