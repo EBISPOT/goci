@@ -26,8 +26,6 @@ public class SnpAssociationInteractionForm {
 
     private String snpType;
 
-    private Boolean snpApproved = false;
-
     private Boolean orType;
 
     private Integer pvalueMantissa;
@@ -65,8 +63,6 @@ public class SnpAssociationInteractionForm {
                                          String pvalueText,
                                          Float orPerCopyNum,
                                          String snpType,
-                                         Boolean snpApproved,
-                                         Boolean errorCheckedByCurator,
                                          Boolean orType,
                                          Integer pvalueMantissa,
                                          Integer pvalueExponent,
@@ -85,7 +81,6 @@ public class SnpAssociationInteractionForm {
         this.pvalueText = pvalueText;
         this.orPerCopyNum = orPerCopyNum;
         this.snpType = snpType;
-        this.snpApproved = snpApproved;
         this.orType = orType;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
@@ -228,14 +223,6 @@ public class SnpAssociationInteractionForm {
 
     public void setNumOfInteractions(Integer numOfInteractions) {
         this.numOfInteractions = numOfInteractions;
-    }
-
-    public Boolean getSnpApproved() {
-        return snpApproved;
-    }
-
-    public void setSnpApproved(Boolean snpApproved) {
-        this.snpApproved = snpApproved;
     }
 
     public Boolean getOrType() {
