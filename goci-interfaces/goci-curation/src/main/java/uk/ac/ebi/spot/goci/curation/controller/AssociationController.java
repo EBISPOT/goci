@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
 import uk.ac.ebi.spot.goci.curation.model.AssociationFormErrorView;
+import uk.ac.ebi.spot.goci.curation.model.LastSavedAssociation;
 import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationInteractionForm;
@@ -164,6 +165,15 @@ public class AssociationController {
         }
         model.addAttribute("snpAssociationTableViews", snpAssociationTableViews);
 
+        // Based on last update date set find the last saved association
+        LastSavedAssociation lastSavedAssociation = new LastSavedAssociation();
+        List<Association> associationsOrderByLastUpdateDate =
+                associationRepository.findByStudyIdAndLastUpdateDateIsNotNullOrderByLastUpdateDateDesc(studyId);
+        if (associationsOrderByLastUpdateDate.size() != 0) {
+            lastSavedAssociation.setId(associationsOrderByLastUpdateDate.get(0).getId());
+        }
+        model.addAttribute("lastSavedAssociation", lastSavedAssociation);
+
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
         return "study_association";
@@ -199,6 +209,15 @@ public class AssociationController {
             snpAssociationTableViews.add(snpAssociationTableView);
         }
         model.addAttribute("snpAssociationTableViews", snpAssociationTableViews);
+
+        // Based on last update date set find the last saved association
+        LastSavedAssociation lastSavedAssociation = new LastSavedAssociation();
+        List<Association> associationsOrderByLastUpdateDate =
+                associationRepository.findByStudyIdAndLastUpdateDateIsNotNullOrderByLastUpdateDateDesc(studyId);
+        if (associationsOrderByLastUpdateDate.size() != 0) {
+            lastSavedAssociation.setId(associationsOrderByLastUpdateDate.get(0).getId());
+        }
+        model.addAttribute("lastSavedAssociation", lastSavedAssociation);
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
@@ -258,6 +277,15 @@ public class AssociationController {
         if (sortValues) {
 
             model.addAttribute("snpAssociationTableViews", snpAssociationTableViews);
+
+            // Based on last update date set find the last saved association
+            LastSavedAssociation lastSavedAssociation = new LastSavedAssociation();
+            List<Association> associationsOrderByLastUpdateDate =
+                    associationRepository.findByStudyIdAndLastUpdateDateIsNotNullOrderByLastUpdateDateDesc(studyId);
+            if (associationsOrderByLastUpdateDate.size() != 0) {
+                lastSavedAssociation.setId(associationsOrderByLastUpdateDate.get(0).getId());
+            }
+            model.addAttribute("lastSavedAssociation", lastSavedAssociation);
 
             // Also passes back study object to view so we can create links back to main study page
             model.addAttribute("study", studyRepository.findOne(studyId));
@@ -345,6 +373,7 @@ public class AssociationController {
                     newAssociation.setStudy(study);
 
                     // Save our association information
+                    newAssociation.setLastUpdateDate(new Date());
                     associationRepository.save(newAssociation);
 
                     // Map RS_ID in association
@@ -567,6 +596,7 @@ public class AssociationController {
             newAssociation.setStudy(study);
 
             // Save our association information
+            newAssociation.setLastUpdateDate(new Date());
             associationRepository.save(newAssociation);
 
             // Map RS_ID in association
@@ -611,6 +641,7 @@ public class AssociationController {
             newAssociation.setStudy(study);
 
             // Save our association information
+            newAssociation.setLastUpdateDate(new Date());
             associationRepository.save(newAssociation);
 
             // Map RS_ID in association
@@ -653,6 +684,7 @@ public class AssociationController {
             newAssociation.setStudy(study);
 
             // Save our association information
+            newAssociation.setLastUpdateDate(new Date());
             associationRepository.save(newAssociation);
 
             // Map RS_ID in association
@@ -779,6 +811,7 @@ public class AssociationController {
         editedAssociation.setStudy(associationStudy);
 
         // Save our association information
+        editedAssociation.setLastUpdateDate(new Date());
         associationRepository.save(editedAssociation);
 
         // Map RS_ID in association
@@ -1019,6 +1052,7 @@ public class AssociationController {
         if (!errorsFound) {
             // Set snpChecked attribute to true
             association.setSnpApproved(true);
+            association.setLastUpdateDate(new Date());
             associationRepository.save(association);
         }
 
@@ -1031,6 +1065,7 @@ public class AssociationController {
             // Errors found have been checked by curator
             else {
                 association.setSnpApproved(true);
+                association.setLastUpdateDate(new Date());
                 associationRepository.save(association);
             }
         }
@@ -1073,6 +1108,7 @@ public class AssociationController {
             if (!errorsFound) {
                 // Set snpChecked attribute to true
                 association.setSnpApproved(true);
+                association.setLastUpdateDate(new Date());
                 associationRepository.save(association);
                 count++;
             }
@@ -1085,6 +1121,7 @@ public class AssociationController {
                 // Errors found have been checked by curator
                 else {
                     association.setSnpApproved(true);
+                    association.setLastUpdateDate(new Date());
                     associationRepository.save(association);
                     count++;
                 }
@@ -1138,6 +1175,7 @@ public class AssociationController {
             if (!errorsFound) {
                 // Set snpChecked attribute to true
                 association.setSnpApproved(true);
+                association.setLastUpdateDate(new Date());
                 associationRepository.save(association);
             }
 
@@ -1150,6 +1188,7 @@ public class AssociationController {
                 // Errors found have been checked by curator
                 else {
                     association.setSnpApproved(true);
+                    association.setLastUpdateDate(new Date());
                     associationRepository.save(association);
                 }
 
@@ -1300,6 +1339,7 @@ public class AssociationController {
                 else {
                     association.setEfoTraits(associationTraits);
                 }
+                association.setLastUpdateDate(new Date());
                 associationRepository.save(association);
             }
 
