@@ -38,6 +38,8 @@ public class SnpAssociationForm {
 
     private Boolean snpInteraction = false;
 
+    private Boolean snpApproved = false;
+
     private Integer pvalueMantissa;
 
     private Integer pvalueExponent;
@@ -83,6 +85,7 @@ public class SnpAssociationForm {
                               String snpType,
                               Boolean multiSnpHaplotype,
                               Boolean snpInteraction,
+                              Boolean snpApproved,
                               Integer pvalueMantissa,
                               Integer pvalueExponent,
                               Float pvalueFloat,
@@ -107,6 +110,7 @@ public class SnpAssociationForm {
         this.snpType = snpType;
         this.multiSnpHaplotype = multiSnpHaplotype;
         this.snpInteraction = snpInteraction;
+        this.snpApproved = snpApproved;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
         this.pvalueFloat = pvalueFloat;
@@ -301,6 +305,14 @@ public class SnpAssociationForm {
 
     public void setEfoTraits(Collection<EfoTrait> efoTraits) {
         this.efoTraits = efoTraits;
+    }
+
+    public Boolean getSnpApproved() {
+        return snpApproved;
+    }
+
+    public void setSnpApproved(Boolean snpApproved) {
+        this.snpApproved = snpApproved;
     }
 
     public Collection<GenomicContext> getGenomicContexts() {
