@@ -102,13 +102,6 @@
                class="btn btn-default"
                role="button">Validate All SNPs</a>
 
-            <!--th:value used to send study id to javascript file-->
-            <a id="errorcheck-button"
-               class="btn btn-default"
-               th:value="${study.Id}"
-               role="button">Mark mapping errors as checked
-            </a>
-
             <a th:href="@{/studies/{studyId}/associations/approve_all(studyId=${study.Id})}"
                class="btn btn-default"
                role="button">Approve All SNPs</a>
@@ -226,7 +219,7 @@
                     <th style="font-size: small">SNP:SNP interaction</th>
                     <th style="font-size: small">Errors/ Mapping Details</th>
                     <th style="font-size: small">SNP Approved</th>
-                    <th style="font-size: small">Check mapping errors/ Approve/ Delete</th>
+                    <th style="font-size: small">Approve/ Delete</th>
                 </tr>
                 </thead>
                 <tbody>
