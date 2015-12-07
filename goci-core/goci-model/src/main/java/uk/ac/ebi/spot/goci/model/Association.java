@@ -89,7 +89,6 @@ public class Association {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastUpdateDate;
-    ;
 
     // JPA no-args constructor
     public Association() {
