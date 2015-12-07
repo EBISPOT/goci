@@ -62,35 +62,3 @@ function deleteAssociations(studyId, associationIds) {
                   location.reload();
               });
 }
-
-
-// Mark errors as checked for individual SNP associations
-$(document).ready(function() {
-    $("#errorcheck-button").click(function() {
-        // Passes study id to method
-        errorCheckSelectedAssociations($(this).attr("value"));
-    });
-});
-
-function errorCheckSelectedAssociations(studyId) {
-    var associationIds = [];
-    //create an array of association ids
-    $('input.association-selector:checked').each(
-            function() {
-                associationIds.push($(this).attr("value"))
-            }
-    );
-    errorCheck(studyId, associationIds);
-}
-
-function errorCheck(studyId, associationIds) {
-    // Pass details to method in controller which handles database changes
-    $.getJSON("associations/errors_checked",
-              {"associationIds[]": associationIds},
-              //Response
-              function(data) {
-                  alert(data.message);
-                  //Reload page
-                  location.reload();
-              });
-}
