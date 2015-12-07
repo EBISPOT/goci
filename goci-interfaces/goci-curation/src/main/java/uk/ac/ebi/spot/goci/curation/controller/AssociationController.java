@@ -373,6 +373,7 @@ public class AssociationController {
                     newAssociation.setStudy(study);
 
                     // Save our association information
+                    newAssociation.setLastUpdateDate(new Date());
                     associationRepository.save(newAssociation);
 
                     // Map RS_ID in association
@@ -595,6 +596,7 @@ public class AssociationController {
             newAssociation.setStudy(study);
 
             // Save our association information
+            newAssociation.setLastUpdateDate(new Date());
             associationRepository.save(newAssociation);
 
             // Map RS_ID in association
@@ -639,6 +641,7 @@ public class AssociationController {
             newAssociation.setStudy(study);
 
             // Save our association information
+            newAssociation.setLastUpdateDate(new Date());
             associationRepository.save(newAssociation);
 
             // Map RS_ID in association
@@ -681,6 +684,7 @@ public class AssociationController {
             newAssociation.setStudy(study);
 
             // Save our association information
+            newAssociation.setLastUpdateDate(new Date());
             associationRepository.save(newAssociation);
 
             // Map RS_ID in association
