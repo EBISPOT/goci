@@ -1034,41 +1034,14 @@ public class AssociationController {
                                         RedirectAttributes redirectAttributes) {
 
         Association association = associationRepository.findOne(associationId);
-        AssociationReport associationReport = associationReportRepository.findByAssociationId(associationId);
 
-        // Assume errors have been checked by a curator at this stage
-        Boolean errorsChecked = true;
-        Boolean errorsFound = false;
+        // Mark errors as checked
+        associationErrorsChecked(association);
 
-        if (associationReport != null) {
-            errorsFound = checkForAssociationErrors(associationReport);
-
-            if (associationReport.getErrorCheckedByCurator() != null) {
-                errorsChecked = associationReport.getErrorCheckedByCurator();
-            }
-        }
-
-        // If no errors were recorded for this association
-        if (!errorsFound) {
-            // Set snpChecked attribute to true
-            association.setSnpApproved(true);
-            association.setLastUpdateDate(new Date());
-            associationRepository.save(association);
-        }
-
-        else {
-            // Errors have not been checked by a curator
-            if (!errorsChecked) {
-                String message = "Cannot approve a SNP association until errors are marked as checked";
-                redirectAttributes.addFlashAttribute("approvalStopped", message);
-            }
-            // Errors found have been checked by curator
-            else {
-                association.setSnpApproved(true);
-                association.setLastUpdateDate(new Date());
-                associationRepository.save(association);
-            }
-        }
+        // Set snpChecked attribute to true
+        association.setSnpApproved(true);
+        association.setLastUpdateDate(new Date());
+        associationRepository.save(association);
 
         return "redirect:/studies/" + association.getStudy().getId() + "/associations";
     }
@@ -1083,60 +1056,20 @@ public class AssociationController {
 
         String message = "";
         Integer count = 0;
-        Integer errorCount = 0;
 
         // For each one set snpChecked attribute to true
         for (String associationId : associationsIds) {
-
-            // Assume errors have been checked by a curator at this stage
-            Boolean errorsChecked = true;
-            Boolean errorsFound = false;
-
             Association association = associationRepository.findOne(Long.valueOf(associationId));
-            AssociationReport associationReport =
-                    associationReportRepository.findByAssociationId(Long.valueOf(associationId));
 
-            if (associationReport != null) {
-                errorsFound = checkForAssociationErrors(associationReport);
+            // Mark errors as checked
+            associationErrorsChecked(association);
 
-                if (associationReport.getErrorCheckedByCurator() != null) {
-                    errorsChecked = associationReport.getErrorCheckedByCurator();
-                }
-            }
-
-            // If no errors were recorded for this association
-            if (!errorsFound) {
-                // Set snpChecked attribute to true
-                association.setSnpApproved(true);
-                association.setLastUpdateDate(new Date());
-                associationRepository.save(association);
-                count++;
-            }
-
-            else {
-                // Errors have not been checked by a curator
-                if (!errorsChecked) {
-                    errorCount++;
-                }
-                // Errors found have been checked by curator
-                else {
-                    association.setSnpApproved(true);
-                    association.setLastUpdateDate(new Date());
-                    associationRepository.save(association);
-                    count++;
-                }
-            }
-
-
+            association.setSnpApproved(true);
+            association.setLastUpdateDate(new Date());
+            associationRepository.save(association);
+            count++;
         }
-
-        if (errorCount > 0) {
-            message = "Successfully updated " + count + " association(s)." + errorCount +
-                    " association(s) contains unchecked errors, these have not been approved";
-        }
-        else {
-            message = "Successfully updated " + count + " associations.";
-        }
+        message = "Successfully updated " + count + " associations";
 
         Map<String, String> result = new HashMap<>();
         result.put("message", message);
@@ -1152,54 +1085,16 @@ public class AssociationController {
 
         // Get all associations
         Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
-        Integer errorCount = 0;
 
         // For each one set snpChecked attribute to true
         for (Association association : studyAssociations) {
+            // Mark errors as checked
+            associationErrorsChecked(association);
 
-            AssociationReport associationReport = associationReportRepository.findByAssociationId(association.getId());
-
-            // Assume errors have been checked by a curator at this stage
-            Boolean errorsChecked = true;
-            Boolean errorsFound = false;
-
-            if (associationReport != null) {
-                errorsFound = checkForAssociationErrors(associationReport);
-
-                if (associationReport.getErrorCheckedByCurator() != null) {
-                    errorsChecked = associationReport.getErrorCheckedByCurator();
-                }
-            }
-
-            // If no errors were recorded for this association
-            if (!errorsFound) {
-                // Set snpChecked attribute to true
-                association.setSnpApproved(true);
-                association.setLastUpdateDate(new Date());
-                associationRepository.save(association);
-            }
-
-            else {
-                // Errors have not been checked by a curator
-                if (!errorsChecked) {
-                    errorCount++;
-                }
-
-                // Errors found have been checked by curator
-                else {
-                    association.setSnpApproved(true);
-                    association.setLastUpdateDate(new Date());
-                    associationRepository.save(association);
-                }
-
-            }
+            association.setSnpApproved(true);
+            association.setLastUpdateDate(new Date());
+            associationRepository.save(association);
         }
-
-        if (errorCount > 0) {
-            String message = "Some SNP association(s) cannot be approved until all errors are marked as checked";
-            redirectAttributes.addFlashAttribute("approvalStopped", message);
-        }
-
         return "redirect:/studies/" + studyId + "/associations";
     }
 
@@ -1225,38 +1120,6 @@ public class AssociationController {
         String message = "Mapping complete, please check for any errors displayed in the 'Errors' column";
         redirectAttributes.addFlashAttribute("mappingComplete", message);
         return "redirect:/studies/" + studyId + "/associations";
-    }
-
-
-    /**
-     * Mark errors for a particular association as checked, this involves updating the linked association report
-     *
-     * @param associationsIds List of association IDs to mark as errors checked
-     */
-
-    @RequestMapping(value = "/studies/{studyId}/associations/errors_checked",
-                    produces = MediaType.APPLICATION_JSON_VALUE,
-                    method = RequestMethod.GET)
-    public @ResponseBody
-    Map<String, String> associationErrorsChecked(@RequestParam(value = "associationIds[]") String[] associationsIds) {
-
-        String message = "";
-        Integer count = 0;
-
-        // For each one set snpChecked attribute to true
-        for (String associationId : associationsIds) {
-            Association association = associationRepository.findOne(Long.valueOf(associationId));
-            AssociationReport associationReport = association.getAssociationReport();
-            associationReport.setErrorCheckedByCurator(true);
-            associationReportRepository.save(associationReport);
-            count++;
-        }
-        message = "Successfully updated " + count + " associations";
-
-        Map<String, String> result = new HashMap<>();
-        result.put("message", message);
-        return result;
-
     }
 
 
@@ -1404,42 +1267,6 @@ public class AssociationController {
     }
 
     /**
-     * Review association report for common error types
-     *
-     * @param associationReport Association report to review for errors
-     */
-    private Boolean checkForAssociationErrors(AssociationReport associationReport) {
-
-        Boolean errorFound = false;
-
-        if (associationReport != null) {
-            if (associationReport.getSnpError() != null && !associationReport.getSnpError().isEmpty()) {
-                errorFound = true;
-            }
-
-            if (associationReport.getSnpGeneOnDiffChr() != null &&
-                    !associationReport.getSnpGeneOnDiffChr().isEmpty()) {
-                errorFound = true;
-            }
-
-            if (associationReport.getNoGeneForSymbol() != null &&
-                    !associationReport.getNoGeneForSymbol().isEmpty()) {
-                errorFound = true;
-            }
-            if (associationReport.getRestServiceError() != null &&
-                    !associationReport.getRestServiceError().isEmpty()) {
-                errorFound = true;
-            }
-            if (associationReport.getSuspectVariationError() != null &&
-                    !associationReport.getSuspectVariationError().isEmpty()) {
-                errorFound = true;
-            }
-        }
-
-        return errorFound;
-    }
-
-    /**
      * Gather mapping details for an association
      *
      * @param association Association with mapping details
@@ -1452,5 +1279,15 @@ public class AssociationController {
     }
 
 
+    /**
+     * Mark errors for a particular association as checked, this involves updating the linked association report
+     *
+     * @param association Association to mark as errors checked
+     */
+    public void associationErrorsChecked(Association association) {
+        AssociationReport associationReport = association.getAssociationReport();
+        associationReport.setErrorCheckedByCurator(true);
+        associationReportRepository.save(associationReport);
+    }
 }
 
