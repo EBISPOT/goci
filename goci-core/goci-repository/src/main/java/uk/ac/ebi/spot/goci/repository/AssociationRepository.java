@@ -24,6 +24,8 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
 
     Collection<Association> findByStudyId(long studyId, Sort sort);
 
+    List<Association> findByStudyIdAndLastUpdateDateIsNotNullOrderByLastUpdateDateDesc(Long studyId);
+
     Collection<Association> findByLociStrongestRiskAllelesSnpId(long snpId);
 
     List<Association> findByStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull();
