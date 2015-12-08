@@ -224,238 +224,292 @@
                 </thead>
                 <tbody>
                 <tr th:each="snpAssociationTableView: ${snpAssociationTableViews}">
+                    <div th:switch="${snpAssociationTableView.snpApproved}">
+                        <div th:case="Yes">
+                            <td style="color: darkgrey">
+                                <div class="btn-group-vertical  btn-group-sm" role="group" aria-label="...">
+                                    <a th:href="@{/associations/{associationId}(associationId=${snpAssociationTableView.associationId})}"
+                                       class="btn btn-default">Edit</a>
+                                    <a th:href="@{/associations/{associationId}/approve(associationId=${snpAssociationTableView.associationId})}"
+                                       class="btn btn-default">Approve</a>
+                                </div>
+                            </td>
 
-                    <div th:if="${snpAssociationTableView.associationId} ==${lastSavedAssociation.id}">
+                            <!--Gene-->
+                            <td style="color: darkgrey"
+                                th:text="${snpAssociationTableView.authorReportedGenes}?: '' "></td>
+
+                            <!--Strongest risk allele-->
+                            <td style="color: darkgrey"
+                                th:text="${snpAssociationTableView.strongestRiskAlleles}?: '' "></td>
+
+                            <!--SNPs-->
+                            <td style="color: darkgrey" th:text="${snpAssociationTableView.snps}?: '' "></td>
+
+                            <!--Proxy SNPs-->
+                            <td style="color: darkgrey" th:text="${snpAssociationTableView.proxySnps}?: '' "></td>
+
+                            <!--Risk Allele Frequency-->
+                            <td style="color: darkgrey"
+                                th:text="${snpAssociationTableView.riskAlleleFrequencies}?: '' "></td>
+
+                            <!--Association Risk Frequency-->
+                            <td style="color: darkgrey"
+                                th:text="${snpAssociationTableView.associationRiskFrequency}?: '' "></td>
+
+                            <!--P Value-->
+                            <td style="color: darkgrey"
+                                th:text="${snpAssociationTableView.pvalueMantissa} + 'x 10' + ${snpAssociationTableView.pvalueExponent} ?: ''"></td>
+                            <td style="color: darkgrey" th:text="${snpAssociationTableView.pvalueText} ?: ''"></td>
+
+                            <!--EFO traits-->
+                            <td style="color: darkgrey" th:text="${snpAssociationTableView.efoTraits} ?: ''"></td>
+
+                            <td style="color: darkgrey" th:text="${snpAssociationTableView.orPerCopyNum} ?: ''"></td>
+                            <td style="color: darkgrey">
+                                <p th:text="${snpAssociationTableView.orPerCopyRecip} ?: ''"></p>
+                                <span style="font-style: italic; color:darkgrey; font-size: small"
+                                      th:if="*{not #strings.isEmpty(snpAssociationTableView.orPerCopyRecip) and #strings.isEmpty(snpAssociationTableView.orPerCopyNum)}"
+                                      th:text="'Warning: OR per Copy Num is blank but there is a reciprocal'"></span>
+                            </td>
+                            <td style="color: darkgrey" th:text="${snpAssociationTableView.orType} ?:''"></td>
+                            <td style="color: darkgrey" th:text="${snpAssociationTableView.orPerCopyRange} ?: ''"></td>
+                            <td style="color: darkgrey"
+                                th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
+                            <td style="color: darkgrey"
+                                th:text="${snpAssociationTableView.orPerCopyUnitDescr} ?: ''"></td>
+                            <td style="color: darkgrey"
+                                th:text="${snpAssociationTableView.orPerCopyStdError} ?: ''"></td>
+                            <td style="color: darkgrey" th:text="${snpAssociationTableView.associationType} ?: ''"></td>
+                            <td style="color: darkgrey" th:text="${snpAssociationTableView.snpStatuses} ?:''"></td>
+                            <td style="color: darkgrey"
+                                th:text="${snpAssociationTableView.multiSnpHaplotype} ?:''"></td>
+                            <td style="color: darkgrey" th:text="${snpAssociationTableView.snpInteraction} ?:''"></td>
+
+                            <!-- Errors-->
+                            <td>
+                                 <span style="color:darkgrey"
+                                       th:each="error: ${snpAssociationTableView.associationErrorMap}"
+                                       th:utext="${error.value} + '&lt;br /&gt;'?: ''"
+                                       th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}">
+                                 </span>
+
+                                <br/>
+                                <span style="font-style: italic; color: darkgrey"
+                                      th:if="${snpAssociationTableView.lastMappingDate != null}"
+                                      th:utext="'Mapping date: '+${snpAssociationTableView.lastMappingDate} ?: ''">
+                                </span>
+
+                                <span style="font-style: italic; color: darkgrey"
+                                      th:if="${snpAssociationTableView.lastMappingPerformedBy != null}"
+                                      th:utext="'&lt;br /&gt;' +'Performer: '+${snpAssociationTableView.lastMappingPerformedBy} ?: ''">
+
+                                </span>
+                            </td>
+
+                            <td style="color: darkgrey" th:text="${snpAssociationTableView.snpApproved} ?: '' "></td>
+
+                            <!--This checkbox is used to check errors, approve and delete all SNP associations-->
+                            <td><input type="checkbox"
+                                       name="checkboxId"
+                                       class="association-selector"
+                                       th:value="${snpAssociationTableView.associationId}"/>
+                            </td>
+                        </div>
 
 
-                        <td>
-                            <div class="btn-group-vertical  btn-group-sm" role="group" aria-label="...">
-                                <a th:href="@{/associations/{associationId}(associationId=${snpAssociationTableView.associationId})}"
-                                   class="btn btn-default">Edit</a>
-                                <a th:href="@{/associations/{associationId}/approve(associationId=${snpAssociationTableView.associationId})}"
-                                   class="btn btn-default">Approve</a>
+                        <div th:case="No">
+                            <div th:if="${snpAssociationTableView.associationId} == ${lastSavedAssociation.id}">
+
+
+                                <td style="background-color: lightyellow">
+                                    <div class="btn-group-vertical  btn-group-sm" role="group" aria-label="...">
+                                        <a th:href="@{/associations/{associationId}(associationId=${snpAssociationTableView.associationId})}"
+                                           class="btn btn-default">Edit</a>
+                                        <a th:href="@{/associations/{associationId}/approve(associationId=${snpAssociationTableView.associationId})}"
+                                           class="btn btn-default">Approve</a>
+                                    </div>
+                                </td>
+
+                                <!--Gene-->
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.authorReportedGenes}?: '' "></td>
+
+                                <!--Strongest risk allele-->
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.strongestRiskAlleles}?: '' "></td>
+
+                                <!--SNPs-->
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.snps}?: '' "></td>
+
+                                <!--Proxy SNPs-->
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.proxySnps}?: '' "></td>
+
+                                <!--Risk Allele Frequency-->
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.riskAlleleFrequencies}?: '' "></td>
+
+                                <!--Association Risk Frequency-->
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.associationRiskFrequency}?: '' "></td>
+
+                                <!--P Value-->
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.pvalueMantissa} + 'x 10' + ${snpAssociationTableView.pvalueExponent} ?: ''"></td>
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.pvalueText} ?: ''"></td>
+
+                                <!--EFO traits-->
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.efoTraits} ?: ''"></td>
+
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.orPerCopyNum} ?: ''"></td>
+                                <td style="background-color: lightyellow">
+                                    <p th:text="${snpAssociationTableView.orPerCopyRecip} ?: ''"></p>
+                                        <span style="font-style: italic; color:red; font-size: small"
+                                              th:if="*{not #strings.isEmpty(snpAssociationTableView.orPerCopyRecip) and #strings.isEmpty(snpAssociationTableView.orPerCopyNum)}"
+                                              th:text="'Warning: OR per Copy Num is blank but there is a reciprocal'"></span>
+                                </td>
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.orType} ?:''"></td>
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.orPerCopyRange} ?: ''"></td>
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.orPerCopyUnitDescr} ?: ''"></td>
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.orPerCopyStdError} ?: ''"></td>
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.associationType} ?: ''"></td>
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.snpStatuses} ?:''"></td>
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.multiSnpHaplotype} ?:''"></td>
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.snpInteraction} ?:''"></td>
+
+                                <!-- Errors-->
+                                <td style="background-color: lightyellow">
+                                      <span style="color:red"
+                                            th:each="error: ${snpAssociationTableView.associationErrorMap}"
+                                            th:utext="${error.value} + '&lt;br /&gt;' ?: ''"
+                                            th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}">
+                                      </span>
+
+                                    <br/>
+
+                                    <span style="font-style: italic"
+                                          th:if="${snpAssociationTableView.lastMappingDate != null}"
+                                          th:utext="'Mapping date: '+${snpAssociationTableView.lastMappingDate} ?: ''">
+                                    </span>
+
+                                    <span style="font-style: italic"
+                                          th:if="${snpAssociationTableView.lastMappingPerformedBy != null}"
+                                          th:utext="'&lt;br /&gt;' +'Performer: '+${snpAssociationTableView.lastMappingPerformedBy} ?: ''">
+                                    </span>
+
+                                </td>
+
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.snpApproved} ?: '' "></td>
+
+                                <!--This checkbox is used to check errors, approve and delete all SNP associations-->
+                                <td style="background-color: lightyellow">
+                                    <input type="checkbox"
+                                           name="checkboxId"
+                                           class="association-selector"
+                                           th:value="${snpAssociationTableView.associationId}"/>
+                                </td>
+
                             </div>
-                        </td>
-
-                        <!--Gene-->
-                        <td style="background-color: yellow"
-                            th:text="${snpAssociationTableView.authorReportedGenes}?: '' "></td>
-
-                        <!--Strongest risk allele-->
-                        <td style="background-color: yellow"
-                            th:text="${snpAssociationTableView.strongestRiskAlleles}?: '' "></td>
-
-                        <!--SNPs-->
-                        <td style="background-color: yellow" th:text="${snpAssociationTableView.snps}?: '' "></td>
-
-                        <!--Proxy SNPs-->
-                        <td style="background-color: yellow" th:text="${snpAssociationTableView.proxySnps}?: '' "></td>
-
-                        <!--Risk Allele Frequency-->
-                        <td style="background-color: yellow"
-                            th:text="${snpAssociationTableView.riskAlleleFrequencies}?: '' "></td>
-
-                        <!--Association Risk Frequency-->
-                        <td style="background-color: yellow"
-                            th:text="${snpAssociationTableView.associationRiskFrequency}?: '' "></td>
-
-                        <!--P Value-->
-                        <td style="background-color: yellow"
-                            th:text="${snpAssociationTableView.pvalueMantissa} + 'x 10' + ${snpAssociationTableView.pvalueExponent} ?: ''"></td>
-                        <td style="background-color: yellow" th:text="${snpAssociationTableView.pvalueText} ?: ''"></td>
-
-                        <!--EFO traits-->
-                        <td style="background-color: yellow" th:text="${snpAssociationTableView.efoTraits} ?: ''"></td>
-
-                        <td style="background-color: yellow"
-                            th:text="${snpAssociationTableView.orPerCopyNum} ?: ''"></td>
-                        <td style="background-color: yellow">
-                            <p th:text="${snpAssociationTableView.orPerCopyRecip} ?: ''"></p>
-                        <span style="font-style: italic; color:red; font-size: small"
-                              th:if="*{not #strings.isEmpty(snpAssociationTableView.orPerCopyRecip) and #strings.isEmpty(snpAssociationTableView.orPerCopyNum)}"
-                              th:text="'Warning: OR per Copy Num is blank but there is a reciprocal'"></span>
-                        </td>
-                        <td style="background-color: yellow" th:text="${snpAssociationTableView.orType} ?:''"></td>
-                        <td style="background-color: yellow"
-                            th:text="${snpAssociationTableView.orPerCopyRange} ?: ''"></td>
-                        <td style="background-color: yellow"
-                            th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
-                        <td style="background-color: yellow"
-                            th:text="${snpAssociationTableView.orPerCopyUnitDescr} ?: ''"></td>
-                        <td style="background-color: yellow"
-                            th:text="${snpAssociationTableView.orPerCopyStdError} ?: ''"></td>
-                        <td style="background-color: yellow"
-                            th:text="${snpAssociationTableView.associationType} ?: ''"></td>
-                        <td style="background-color: yellow" th:text="${snpAssociationTableView.snpStatuses} ?:''"></td>
-                        <td style="background-color: yellow"
-                            th:text="${snpAssociationTableView.multiSnpHaplotype} ?:''"></td>
-                        <td style="background-color: yellow"
-                            th:text="${snpAssociationTableView.snpInteraction} ?:''"></td>
-
-                        <!-- Errors-->
-                        <td style="background-color: yellow">
-                         <span th:switch="${snpAssociationTableView.associationErrorsChecked}">
-                             <span th:case="'Yes'">
-                                  <span style="color:darkgrey"
-                                        th:each="error: ${snpAssociationTableView.associationErrorMap}"
-                                        th:utext="${error.value} + '&lt;br /&gt;'?: ''"
-                                        th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}">
-
-                                  </span>
-                                  <span class="glyphicon glyphicon-ok pull-right"></span>
-                             </span>
-
-                             <span th:case="'No'">
-                                  <span style="color:red"
-                                        th:each="error: ${snpAssociationTableView.associationErrorMap}"
-                                        th:utext="${error.value} + '&lt;br /&gt;' ?: ''"
-                                        th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}">
-
-                                  </span>
-                             </span>
-
-                             <span th:case="null">
-                                  <span style="color:red"
-                                        th:each="error: ${snpAssociationTableView.associationErrorMap}"
-                                        th:utext="${error.value} + '&lt;br /&gt;'?: ''"
-                                        th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}">
-                                  </span>
-                             </span>
-                        </span>
-
-                            <br/>
-
-                        <span style="font-style: italic"
-                              th:if="${snpAssociationTableView.lastMappingDate != null}"
-                              th:utext="'Mapping date: '+${snpAssociationTableView.lastMappingDate} ?: ''"></span>
-
-                        <span style="font-style: italic"
-                              th:if="${snpAssociationTableView.lastMappingPerformedBy != null}"
-                              th:utext="'&lt;br /&gt;' +'Performer: '+${snpAssociationTableView.lastMappingPerformedBy} ?: ''"></span>
-
-                        </td>
-
-                        <td style="background-color: yellow"
-                            th:text="${snpAssociationTableView.snpApproved} ?: '' "></td>
-
-                        <!--This checkbox is used to check errors, approve and delete all SNP associations-->
-                        <td style="background-color: yellow"><input type="checkbox"
-                                                                    name="checkboxId"
-                                                                    class="association-selector"
-                                                                    th:value="${snpAssociationTableView.associationId}"/>
-                        </td>
-
-                    </div>
 
 
-                    <div th:if="${snpAssociationTableView.associationId} != ${lastSavedAssociation.id}">
+                            <div th:if="${snpAssociationTableView.associationId} != ${lastSavedAssociation.id}">
 
 
-                        <td>
-                            <div class="btn-group-vertical  btn-group-sm" role="group" aria-label="...">
-                                <a th:href="@{/associations/{associationId}(associationId=${snpAssociationTableView.associationId})}"
-                                   class="btn btn-default">Edit</a>
-                                <a th:href="@{/associations/{associationId}/approve(associationId=${snpAssociationTableView.associationId})}"
-                                   class="btn btn-default">Approve</a>
+                                <td>
+                                    <div class="btn-group-vertical  btn-group-sm" role="group" aria-label="...">
+                                        <a th:href="@{/associations/{associationId}(associationId=${snpAssociationTableView.associationId})}"
+                                           class="btn btn-default">Edit</a>
+                                        <a th:href="@{/associations/{associationId}/approve(associationId=${snpAssociationTableView.associationId})}"
+                                           class="btn btn-default">Approve</a>
+                                    </div>
+                                </td>
+
+                                <!--Gene-->
+                                <td th:text="${snpAssociationTableView.authorReportedGenes}?: '' "></td>
+
+                                <!--Strongest risk allele-->
+                                <td th:text="${snpAssociationTableView.strongestRiskAlleles}?: '' "></td>
+
+                                <!--SNPs-->
+                                <td th:text="${snpAssociationTableView.snps}?: '' "></td>
+
+                                <!--Proxy SNPs-->
+                                <td th:text="${snpAssociationTableView.proxySnps}?: '' "></td>
+
+                                <!--Risk Allele Frequency-->
+                                <td th:text="${snpAssociationTableView.riskAlleleFrequencies}?: '' "></td>
+
+                                <!--Association Risk Frequency-->
+                                <td th:text="${snpAssociationTableView.associationRiskFrequency}?: '' "></td>
+
+                                <!--P Value-->
+                                <td th:text="${snpAssociationTableView.pvalueMantissa} + 'x 10' + ${snpAssociationTableView.pvalueExponent} ?: ''"></td>
+                                <td th:text="${snpAssociationTableView.pvalueText} ?: ''"></td>
+
+                                <!--EFO traits-->
+                                <td th:text="${snpAssociationTableView.efoTraits} ?: ''"></td>
+
+                                <td th:text="${snpAssociationTableView.orPerCopyNum} ?: ''"></td>
+                                <td>
+                                    <p th:text="${snpAssociationTableView.orPerCopyRecip} ?: ''"></p>
+                                    <span style="font-style: italic; color:red; font-size: small"
+                                          th:if="*{not #strings.isEmpty(snpAssociationTableView.orPerCopyRecip) and #strings.isEmpty(snpAssociationTableView.orPerCopyNum)}"
+                                          th:text="'Warning: OR per Copy Num is blank but there is a reciprocal'"></span>
+                                </td>
+                                <td th:text="${snpAssociationTableView.orType} ?:''"></td>
+                                <td th:text="${snpAssociationTableView.orPerCopyRange} ?: ''"></td>
+                                <td th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
+                                <td th:text="${snpAssociationTableView.orPerCopyUnitDescr} ?: ''"></td>
+                                <td th:text="${snpAssociationTableView.orPerCopyStdError} ?: ''"></td>
+                                <td th:text="${snpAssociationTableView.associationType} ?: ''"></td>
+                                <td th:text="${snpAssociationTableView.snpStatuses} ?:''"></td>
+                                <td th:text="${snpAssociationTableView.multiSnpHaplotype} ?:''"></td>
+                                <td th:text="${snpAssociationTableView.snpInteraction} ?:''"></td>
+
+                                <!-- Errors-->
+                                <td>
+                                       <span style="color:red"
+                                             th:each="error: ${snpAssociationTableView.associationErrorMap}"
+                                             th:utext="${error.value} + '&lt;br /&gt;'?: ''"
+                                             th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}"></span>
+                                    <br/>
+                                        <span style="font-style: italic"
+                                              th:if="${snpAssociationTableView.lastMappingDate != null}"
+                                              th:utext="'Mapping date: '+${snpAssociationTableView.lastMappingDate} ?: ''"></span>
+
+                                        <span style="font-style: italic"
+                                              th:if="${snpAssociationTableView.lastMappingPerformedBy != null}"
+                                              th:utext="'&lt;br /&gt;' +'Performer: '+${snpAssociationTableView.lastMappingPerformedBy} ?: ''"></span>
+                                </td>
+
+                                <td th:text="${snpAssociationTableView.snpApproved} ?: '' "></td>
+
+                                <!--This checkbox is used to check errors, approve and delete all SNP associations-->
+                                <td><input type="checkbox"
+                                           name="checkboxId"
+                                           class="association-selector"
+                                           th:value="${snpAssociationTableView.associationId}"/>
+                                </td>
+
                             </div>
-                        </td>
-
-                        <!--Gene-->
-                        <td th:text="${snpAssociationTableView.authorReportedGenes}?: '' "></td>
-
-                        <!--Strongest risk allele-->
-                        <td th:text="${snpAssociationTableView.strongestRiskAlleles}?: '' "></td>
-
-                        <!--SNPs-->
-                        <td th:text="${snpAssociationTableView.snps}?: '' "></td>
-
-                        <!--Proxy SNPs-->
-                        <td th:text="${snpAssociationTableView.proxySnps}?: '' "></td>
-
-                        <!--Risk Allele Frequency-->
-                        <td th:text="${snpAssociationTableView.riskAlleleFrequencies}?: '' "></td>
-
-                        <!--Association Risk Frequency-->
-                        <td th:text="${snpAssociationTableView.associationRiskFrequency}?: '' "></td>
-
-                        <!--P Value-->
-                        <td th:text="${snpAssociationTableView.pvalueMantissa} + 'x 10' + ${snpAssociationTableView.pvalueExponent} ?: ''"></td>
-                        <td th:text="${snpAssociationTableView.pvalueText} ?: ''"></td>
-
-                        <!--EFO traits-->
-                        <td th:text="${snpAssociationTableView.efoTraits} ?: ''"></td>
-
-                        <td th:text="${snpAssociationTableView.orPerCopyNum} ?: ''"></td>
-                        <td>
-                            <p th:text="${snpAssociationTableView.orPerCopyRecip} ?: ''"></p>
-                        <span style="font-style: italic; color:red; font-size: small"
-                              th:if="*{not #strings.isEmpty(snpAssociationTableView.orPerCopyRecip) and #strings.isEmpty(snpAssociationTableView.orPerCopyNum)}"
-                              th:text="'Warning: OR per Copy Num is blank but there is a reciprocal'"></span>
-                        </td>
-                        <td th:text="${snpAssociationTableView.orType} ?:''"></td>
-                        <td th:text="${snpAssociationTableView.orPerCopyRange} ?: ''"></td>
-                        <td th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
-                        <td th:text="${snpAssociationTableView.orPerCopyUnitDescr} ?: ''"></td>
-                        <td th:text="${snpAssociationTableView.orPerCopyStdError} ?: ''"></td>
-                        <td th:text="${snpAssociationTableView.associationType} ?: ''"></td>
-                        <td th:text="${snpAssociationTableView.snpStatuses} ?:''"></td>
-                        <td th:text="${snpAssociationTableView.multiSnpHaplotype} ?:''"></td>
-                        <td th:text="${snpAssociationTableView.snpInteraction} ?:''"></td>
-
-                        <!-- Errors-->
-                        <td>
-                         <span th:switch="${snpAssociationTableView.associationErrorsChecked}">
-                             <span th:case="'Yes'">
-                                  <span style="color:darkgrey"
-                                        th:each="error: ${snpAssociationTableView.associationErrorMap}"
-                                        th:utext="${error.value} + '&lt;br /&gt;'?: ''"
-                                        th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}">
-
-                                  </span>
-                                  <span class="glyphicon glyphicon-ok pull-right"></span>
-                             </span>
-
-                             <span th:case="'No'">
-                                  <span style="color:red"
-                                        th:each="error: ${snpAssociationTableView.associationErrorMap}"
-                                        th:utext="${error.value} + '&lt;br /&gt;' ?: ''"
-                                        th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}">
-
-                                  </span>
-                             </span>
-
-                             <span th:case="null">
-                                  <span style="color:red"
-                                        th:each="error: ${snpAssociationTableView.associationErrorMap}"
-                                        th:utext="${error.value} + '&lt;br /&gt;'?: ''"
-                                        th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}">
-                                  </span>
-                             </span>
-                        </span>
-
-                            <br/>
-
-                        <span style="font-style: italic"
-                              th:if="${snpAssociationTableView.lastMappingDate != null}"
-                              th:utext="'Mapping date: '+${snpAssociationTableView.lastMappingDate} ?: ''"></span>
-
-                        <span style="font-style: italic"
-                              th:if="${snpAssociationTableView.lastMappingPerformedBy != null}"
-                              th:utext="'&lt;br /&gt;' +'Performer: '+${snpAssociationTableView.lastMappingPerformedBy} ?: ''"></span>
-
-                        </td>
-
-                        <td th:text="${snpAssociationTableView.snpApproved} ?: '' "></td>
-
-                        <!--This checkbox is used to check errors, approve and delete all SNP associations-->
-                        <td><input type="checkbox"
-                                   name="checkboxId"
-                                   class="association-selector"
-                                   th:value="${snpAssociationTableView.associationId}"/>
-                        </td>
-
+                        </div>
                     </div>
-
 
                 </tr>
                 </tbody>
