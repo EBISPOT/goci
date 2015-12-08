@@ -247,5 +247,5 @@ public class Housekeeping {
     public void setUnpublishReason(UnpublishReason unpublishReason) {
         this.unpublishReason = unpublishReason;
     }
-    
+
 }
