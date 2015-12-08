@@ -71,7 +71,7 @@ public class EmbeddableDocumentTest {
                                            "orPerCopyDescr",
                                            study,
                                            Collections.emptyList(),
-                                           Collections.emptyList(), null, null, null);
+                                           Collections.emptyList(), null, null, null, null);
         association.setId(2l);
         this.associationDoc = new AssociationDocument(association);
 
