@@ -180,7 +180,7 @@
                     />
                 </div>
 
-
+                <!--This tags are uneditable but viewable in form-->
                 <div class="form-group">
                     <label for="checkedMappingError" th:for="${#ids.next('checkedMappingError')}"
                            class="control-label col-md-2">Checked Mapping Error:</label>
@@ -188,6 +188,7 @@
                            type="checkbox"
                            th:field="*{checkedMappingError}"
                            disabled="disabled"/>
+                    <input id="checkedMappingError" type="hidden" th:field="*{checkedMappingError}"/>
                 </div>
 
 
@@ -195,6 +196,7 @@
                     <label for="snpsRechecked" th:for="${#ids.next('snpsRechecked')}"
                            class="control-label col-md-2">SNPs rechecked:</label>
                     <input id="snpsRechecked" type="checkbox" th:field="*{snpsRechecked}" disabled="disabled"/>
+                    <input id="snpsRechecked" type="hidden" th:field="*{snpsRechecked}"/>
                 </div>
 
 
