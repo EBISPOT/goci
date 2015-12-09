@@ -184,14 +184,17 @@
                 <div class="form-group">
                     <label for="checkedMappingError" th:for="${#ids.next('checkedMappingError')}"
                            class="control-label col-md-2">Checked Mapping Error:</label>
-                    <input id="checkedMappingError" type="checkbox" th:field="*{checkedMappingError}"/>
+                    <input id="checkedMappingError"
+                           type="checkbox"
+                           th:field="*{checkedMappingError}"
+                           disabled="disabled"/>
                 </div>
 
 
                 <div class="form-group">
                     <label for="snpsRechecked" th:for="${#ids.next('snpsRechecked')}"
-                           class="control-label col-md-2">SNPs rechecked?:</label>
-                    <input id="snpsRechecked" type="checkbox" th:field="*{snpsRechecked}"/>
+                           class="control-label col-md-2">SNPs rechecked:</label>
+                    <input id="snpsRechecked" type="checkbox" th:field="*{snpsRechecked}" disabled="disabled"/>
                 </div>
 
 
