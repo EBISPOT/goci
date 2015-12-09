@@ -40,6 +40,7 @@
                 <tr>
                     <th>Study Added Date</th>
                     <th>Last Update Date</th>
+                    <th>Last Automated Mapping Date</th>
                     <th>Catalog Publish Date</th>
                     <th>Catalog Unpublish Date</th>
                     <th>Send to NCBI Date</th>
@@ -49,6 +50,7 @@
                 <tr>
                     <td th:text="${study.housekeeping != null and study.housekeeping.studyAddedDate !=null } ? ${#calendars.format(study.housekeeping.studyAddedDate, 'dd MMMM yyyy')} : ''"></td>
                     <td th:text="${study.housekeeping != null and study.housekeeping.lastUpdateDate !=null } ? ${#calendars.format(study.housekeeping.lastUpdateDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:text="${mappingDetails.mappingDate != null} ? ${#calendars.format(mappingDetails.mappingDate, 'dd MMMM yyyy')} : ''"></td>
                     <td th:text="${study.housekeeping != null and study.housekeeping.catalogPublishDate !=null } ? ${#calendars.format(study.housekeeping.catalogPublishDate, 'dd MMMM yyyy')} : ''"></td>
                     <td th:text="${study.housekeeping != null and study.housekeeping.catalogUnpublishDate !=null } ? ${#calendars.format(study.housekeeping.catalogUnpublishDate, 'dd MMMM yyyy')} : ''"></td>
                     <td th:text="${study.housekeeping != null and study.housekeeping.sendToNCBIDate !=null } ? ${#calendars.format(study.housekeeping.sendToNCBIDate, 'dd MMMM yyyy')} : ''"></td>
