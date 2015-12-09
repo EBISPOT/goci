@@ -89,7 +89,6 @@ public class StudyController {
 
     // Pubmed ID lookup service
     private DefaultPubMedSearchService defaultPubMedSearchService;
-    private MailService mailService;
     private StudyAssociationTableViewService studyAssociationTableViewService;
     private StudyOperationsService studyService;
 
@@ -118,7 +117,6 @@ public class StudyController {
         this.studyRepository = studyRepository;
         this.studyService = studyService;
         this.studyAssociationTableViewService = studyAssociationTableViewService;
-        this.mailService = mailService;
         this.defaultPubMedSearchService = defaultPubMedSearchService;
         this.unpublishReasonRepository = unpublishReasonRepository;
         this.ethnicityRepository = ethnicityRepository;
