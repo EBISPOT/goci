@@ -84,7 +84,6 @@ public class AssociationController {
     private StudyRepository studyRepository;
     private EfoTraitRepository efoTraitRepository;
     private LocusRepository locusRepository;
-    private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
     private AssociationReportRepository associationReportRepository;
 
     // Services
@@ -130,7 +129,6 @@ public class AssociationController {
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
         this.locusRepository = locusRepository;
-        this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.associationReportRepository = associationReportRepository;
         this.associationBatchLoaderService = associationBatchLoaderService;
         this.associationDownloadService = associationDownloadService;
@@ -181,7 +179,8 @@ public class AssociationController {
                     method = RequestMethod.GET)
     public String sortStudySnpsByPvalue(Model model,
                                         @PathVariable Long studyId,
-                                        @RequestParam(required = true) String direction, @RequestParam(required = false) Long associationId) {
+                                        @RequestParam(required = true) String direction,
+                                        @RequestParam(required = false) Long associationId) {
 
         // Get all associations for a study and perform relevant sorting
         Collection<Association> associations = new ArrayList<>();
@@ -222,7 +221,8 @@ public class AssociationController {
                     method = RequestMethod.GET)
     public String sortStudySnpsByRsid(Model model,
                                       @PathVariable Long studyId,
-                                      @RequestParam(required = true) String direction, @RequestParam(required = false) Long associationId) {
+                                      @RequestParam(required = true) String direction,
+                                      @RequestParam(required = false) Long associationId) {
 
         // Get all associations for a study and perform relevant sorting
         Collection<Association> associations = new ArrayList<>();
