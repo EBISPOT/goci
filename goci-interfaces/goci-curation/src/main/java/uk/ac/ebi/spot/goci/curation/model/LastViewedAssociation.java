@@ -7,14 +7,14 @@ package uk.ac.ebi.spot.goci.curation.model;
  *         <p>
  *         Object passed back to model that stores ID of last edited/saved association
  */
-public class LastSavedAssociation {
+public class LastViewedAssociation {
 
     private Long id;
 
-    public LastSavedAssociation() {
+    public LastViewedAssociation() {
     }
 
-    public LastSavedAssociation(Long id) {
+    public LastViewedAssociation(Long id) {
         this.id = id;
     }
 
