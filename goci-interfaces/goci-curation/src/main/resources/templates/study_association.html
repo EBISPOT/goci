@@ -112,6 +112,12 @@
                role="button"
                th:value="${study.Id}">Approve Checked SNPs</a>
 
+            <!--th:value used to send study id to javascript file-->
+            <a id="unapprove-button"
+               class="btn btn-default"
+               role="button"
+               th:value="${study.Id}">Unapprove Checked SNPs</a>
+
             <a th:href="@{/studies/{studyId}/associations/download(studyId=${study.Id})}"
                class="btn btn-default pull-right"
                role="button">Download SNPs to spreadsheet</a>
@@ -219,7 +225,7 @@
                     <th style="font-size: small">SNP:SNP interaction</th>
                     <th style="font-size: small">Errors/ Mapping Details</th>
                     <th style="font-size: small">SNP Approved</th>
-                    <th style="font-size: small">Approve/ Delete</th>
+                    <th style="font-size: small">Approve / Unapprove / Delete</th>
                 </tr>
                 </thead>
                 <tbody>
