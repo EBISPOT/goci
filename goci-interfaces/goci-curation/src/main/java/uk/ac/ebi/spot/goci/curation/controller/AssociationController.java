@@ -1052,8 +1052,6 @@ public class AssociationController {
         return "redirect:/studies/" + association.getStudy().getId() + "/associations";
     }
 
-
-
     // Approve checked SNPs
     @RequestMapping(value = "/studies/{studyId}/associations/approve_checked",
                     produces = MediaType.APPLICATION_JSON_VALUE,
@@ -1072,6 +1070,35 @@ public class AssociationController {
             associationErrorsChecked(association);
 
             association.setSnpApproved(true);
+            association.setLastUpdateDate(new Date());
+            associationRepository.save(association);
+            count++;
+        }
+        message = "Successfully updated " + count + " associations";
+
+        Map<String, String> result = new HashMap<>();
+        result.put("message", message);
+        return result;
+    }
+
+    // Un-approve checked SNPs
+    @RequestMapping(value = "/studies/{studyId}/associations/unapprove_checked",
+                    produces = MediaType.APPLICATION_JSON_VALUE,
+                    method = RequestMethod.GET)
+    public @ResponseBody
+    Map<String, String> unapproveChecked(@RequestParam(value = "associationIds[]") String[] associationsIds) {
+
+        String message = "";
+        Integer count = 0;
+
+        // For each one set snpChecked attribute to true
+        for (String associationId : associationsIds) {
+            Association association = associationRepository.findOne(Long.valueOf(associationId));
+
+            // Mark errors as checked
+            associationErrorsUnchecked(association);
+
+            association.setSnpApproved(false);
             association.setLastUpdateDate(new Date());
             associationRepository.save(association);
             count++;
