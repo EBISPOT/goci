@@ -111,12 +111,10 @@
                class="btn btn-default"
                role="button"
                th:value="${study.Id}">Approve Checked SNPs</a>
-
-            <!--th:value used to send study id to javascript file-->
+            
             <a id="unapprove-button"
                class="btn btn-default"
-               role="button"
-               th:value="${study.Id}">Unapprove Checked SNPs</a>
+               role="button">Unapprove Checked SNPs</a>
 
             <a th:href="@{/studies/{studyId}/associations/download(studyId=${study.Id})}"
                class="btn btn-default pull-right"
