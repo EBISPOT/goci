@@ -5,7 +5,7 @@ package uk.ac.ebi.spot.goci.curation.model;
  *
  * @author emma
  *         <p>
- *         Object passed back to model that stores ID of last edited/saved association
+ *         Object passed back to model that stores ID of last viewed association
  */
 public class LastViewedAssociation {
 
