@@ -230,8 +230,6 @@
                         <div th:case="Yes">
                             <td style="color: darkgrey">
                                 <div class="btn-group-vertical  btn-group-sm" role="group" aria-label="...">
-                                    <a th:href="@{/associations/{associationId}(associationId=${snpAssociationTableView.associationId})}"
-                                       class="btn btn-default">Edit</a>
                                     <a th:href="@{/associations/{associationId}/unapprove(associationId=${snpAssociationTableView.associationId})}"
                                        class="btn btn-default">Unapprove</a>
                                 </div>
