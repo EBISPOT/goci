@@ -1321,6 +1321,7 @@ public class AssociationController {
     public void associationErrorsChecked(Association association) {
         AssociationReport associationReport = association.getAssociationReport();
         associationReport.setErrorCheckedByCurator(true);
+        associationReport.setLastUpdateDate(new Date());
         associationReportRepository.save(associationReport);
     }
 
@@ -1328,11 +1329,12 @@ public class AssociationController {
     /**
      * Mark errors for a particular association as unchecked, this involves updating the linked association report
      *
-     * @param association Association to mark as errors checked
+     * @param association Association to mark as errors unchecked
      */
     public void associationErrorsUnchecked(Association association) {
         AssociationReport associationReport = association.getAssociationReport();
         associationReport.setErrorCheckedByCurator(false);
+        associationReport.setLastUpdateDate(new Date());
         associationReportRepository.save(associationReport);
     }
 
