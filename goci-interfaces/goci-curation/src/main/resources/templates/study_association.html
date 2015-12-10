@@ -198,9 +198,9 @@
                     </th>
                     <th style="font-size: small">p-Value (mantissa x 10 exponent)
                         <div>
-                            <a th:href="@{/studies/{studyId}/associations/sortpvalue(studyId=${study.id},direction='asc')}"
+                            <a th:href="@{/studies/{studyId}/associations/sortpvalue(studyId=${study.id},direction='asc', associationId=${lastViewedAssociation.id})}"
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
-                            <a th:href="@{/studies/{studyId}/associations/sortpvalue(studyId=${study.id},direction='desc')}"
+                            <a th:href="@{/studies/{studyId}/associations/sortpvalue(studyId=${study.id},direction='desc', associationId=${lastViewedAssociation.id})}"
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
                         </div>
                     </th>
