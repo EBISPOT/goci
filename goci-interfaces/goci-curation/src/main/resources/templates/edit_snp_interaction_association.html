@@ -68,9 +68,11 @@
                           th:object="${snpAssociationInteractionForm}"
                           th:action="@{${uri}(associationtype=interaction)}">
 
-                        <!--Only show save button if SNP has not been approved-->
+                        <!--Only show save button if SNP has not been approved, warn if editing approved SNP-->
+                        <div th:include="association_approval_alert :: association_approval"
+                             th:if="*{#bools.isTrue(snpApproved)}"></div>
+
                         <div class="form-group" th:if="*{#bools.isFalse(snpApproved)}">
-                            <div th:include="association_approval_alert :: association_approval"></div>
                             <div class="col-md-offset-10 col-md-10">
                                 <button type="submit" class="btn btn-primary">Save</button>
                             </div>
