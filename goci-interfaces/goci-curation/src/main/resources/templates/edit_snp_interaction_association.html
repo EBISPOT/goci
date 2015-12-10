@@ -68,12 +68,12 @@
                           th:object="${snpAssociationInteractionForm}"
                           th:action="@{${uri}(associationtype=interaction)}">
 
-                        <div class="form-group">
+                        <!--Only show save button if SNP has not been approved-->
+                        <div class="form-group" th:if="*{#bools.isFalse(snpApproved)}">
                             <div class="col-md-offset-10 col-md-10">
                                 <button type="submit" class="btn btn-primary">Save</button>
                             </div>
                         </div>
-
 
                         <div id="association_div">
                             <div class="form-group">
@@ -368,11 +368,13 @@
                                 <input id="snpApproved" type="hidden" th:field="*{snpApproved}"/>
                             </div>
 
-                            <div class="form-group">
+                            <!--Only show save button if SNP has not been approved-->
+                            <div class="form-group" th:if="*{#bools.isFalse(snpApproved)}">
                                 <div class="col-md-offset-10 col-md-10">
                                     <button type="submit" class="btn btn-primary">Save</button>
                                 </div>
                             </div>
+
                         </div>
 
                         <!-- Mapping div containing the mappings and context forms -->

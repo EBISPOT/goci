@@ -68,7 +68,8 @@
                           th:object="${snpAssociationForm}"
                           th:action="@{${uri}(associationtype=standardormulti)}">
 
-                        <div class="form-group">
+                        <!--Only show save button if SNP has not been approved-->
+                        <div class="form-group" th:if="*{#bools.isFalse(snpApproved)}">
                             <div class="col-md-offset-10 col-md-10">
                                 <button type="submit" class="btn btn-primary">Save</button>
                             </div>
@@ -335,8 +336,9 @@
                                        th:field="*{multiSnpHaplotype}"/>
                             </div>
 
-                            <div class="form-group">
-                                <div class="col-md-offset-2 col-md-10">
+                            <!--Only show save button if SNP has not been approved-->
+                            <div class="form-group" th:if="*{#bools.isFalse(snpApproved)}">
+                                <div class="col-md-offset-10 col-md-10">
                                     <button type="submit" class="btn btn-primary">Save</button>
                                 </div>
                             </div>

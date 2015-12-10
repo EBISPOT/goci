@@ -69,7 +69,8 @@
                       th:object="${snpAssociationForm}"
                       th:action="@{${uri}(associationtype=standardormulti)}">
 
-                    <div class="form-group">
+                    <!--Only show save button if SNP has not been approved-->
+                    <div class="form-group" th:if="*{#bools.isFalse(snpApproved)}">
                         <div class="col-md-offset-10 col-md-10">
                             <button type="submit" class="btn btn-primary">Save</button>
                         </div>
@@ -316,7 +317,8 @@
                             <input id="snpApproved" type="hidden" th:field="*{snpApproved}"/>
                         </div>
 
-                        <div class="form-group">
+                        <!--Only show save button if SNP has not been approved-->
+                        <div class="form-group" th:if="*{#bools.isFalse(snpApproved)}">
                             <div class="col-md-offset-10 col-md-10">
                                 <button type="submit" class="btn btn-primary">Save</button>
                             </div>
