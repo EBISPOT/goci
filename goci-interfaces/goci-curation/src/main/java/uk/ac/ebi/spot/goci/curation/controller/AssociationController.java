@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
 import uk.ac.ebi.spot.goci.curation.model.AssociationFormErrorView;
-import uk.ac.ebi.spot.goci.curation.model.LastSavedAssociation;
+import uk.ac.ebi.spot.goci.curation.model.LastViewedAssociation;
 import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationInteractionForm;
@@ -150,7 +150,9 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String viewStudySnps(Model model, @PathVariable Long studyId) {
+    public String viewStudySnps(Model model,
+                                @PathVariable Long studyId,
+                                @RequestParam(required = false) Long associationId) {
 
         // Get all associations for a study
         Collection<Association> associations = new ArrayList<>();
@@ -165,14 +167,9 @@ public class AssociationController {
         }
         model.addAttribute("snpAssociationTableViews", snpAssociationTableViews);
 
-        // Based on last update date set find the last saved association
-        LastSavedAssociation lastSavedAssociation = new LastSavedAssociation();
-        List<Association> associationsOrderByLastUpdateDate =
-                associationRepository.findByStudyIdAndLastUpdateDateIsNotNullOrderByLastUpdateDateDesc(studyId);
-        if (associationsOrderByLastUpdateDate.size() != 0) {
-            lastSavedAssociation.setId(associationsOrderByLastUpdateDate.get(0).getId());
-        }
-        model.addAttribute("lastSavedAssociation", lastSavedAssociation);
+        // Determine last viewed association
+        LastViewedAssociation lastViewedAssociation = getLastViewedAssociation(associationId);
+        model.addAttribute("lastViewedAssociation", lastViewedAssociation);
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
@@ -184,7 +181,7 @@ public class AssociationController {
                     method = RequestMethod.GET)
     public String sortStudySnpsByPvalue(Model model,
                                         @PathVariable Long studyId,
-                                        @RequestParam(required = true) String direction) {
+                                        @RequestParam(required = true) String direction, @RequestParam(required = false) Long associationId) {
 
         // Get all associations for a study and perform relevant sorting
         Collection<Association> associations = new ArrayList<>();
@@ -210,14 +207,9 @@ public class AssociationController {
         }
         model.addAttribute("snpAssociationTableViews", snpAssociationTableViews);
 
-        // Based on last update date set find the last saved association
-        LastSavedAssociation lastSavedAssociation = new LastSavedAssociation();
-        List<Association> associationsOrderByLastUpdateDate =
-                associationRepository.findByStudyIdAndLastUpdateDateIsNotNullOrderByLastUpdateDateDesc(studyId);
-        if (associationsOrderByLastUpdateDate.size() != 0) {
-            lastSavedAssociation.setId(associationsOrderByLastUpdateDate.get(0).getId());
-        }
-        model.addAttribute("lastSavedAssociation", lastSavedAssociation);
+        // Determine last viewed association
+        LastViewedAssociation lastViewedAssociation = getLastViewedAssociation(associationId);
+        model.addAttribute("lastViewedAssociation", lastViewedAssociation);
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
@@ -230,7 +222,7 @@ public class AssociationController {
                     method = RequestMethod.GET)
     public String sortStudySnpsByRsid(Model model,
                                       @PathVariable Long studyId,
-                                      @RequestParam(required = true) String direction) {
+                                      @RequestParam(required = true) String direction, @RequestParam(required = false) Long associationId) {
 
         // Get all associations for a study and perform relevant sorting
         Collection<Association> associations = new ArrayList<>();
@@ -278,14 +270,9 @@ public class AssociationController {
 
             model.addAttribute("snpAssociationTableViews", snpAssociationTableViews);
 
-            // Based on last update date set find the last saved association
-            LastSavedAssociation lastSavedAssociation = new LastSavedAssociation();
-            List<Association> associationsOrderByLastUpdateDate =
-                    associationRepository.findByStudyIdAndLastUpdateDateIsNotNullOrderByLastUpdateDateDesc(studyId);
-            if (associationsOrderByLastUpdateDate.size() != 0) {
-                lastSavedAssociation.setId(associationsOrderByLastUpdateDate.get(0).getId());
-            }
-            model.addAttribute("lastSavedAssociation", lastSavedAssociation);
+            // Determine last viewed association
+            LastViewedAssociation lastViewedAssociation = getLastViewedAssociation(associationId);
+            model.addAttribute("lastViewedAssociation", lastViewedAssociation);
 
             // Also passes back study object to view so we can create links back to main study page
             model.addAttribute("study", studyRepository.findOne(studyId));
@@ -1288,6 +1275,20 @@ public class AssociationController {
         AssociationReport associationReport = association.getAssociationReport();
         associationReport.setErrorCheckedByCurator(true);
         associationReportRepository.save(associationReport);
+    }
+
+    /**
+     * Determine last viewed association
+     *
+     * @param associationId ID of association last viewed
+     */
+    private LastViewedAssociation getLastViewedAssociation(Long associationId) {
+
+        LastViewedAssociation lastViewedAssociation = new LastViewedAssociation();
+        if (associationId != null) {
+            lastViewedAssociation.setId(associationId);
+        }
+        return lastViewedAssociation;
     }
 }
 
