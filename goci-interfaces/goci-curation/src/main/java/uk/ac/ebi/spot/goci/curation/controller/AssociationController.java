@@ -1017,8 +1017,7 @@ public class AssociationController {
     @RequestMapping(value = "associations/{associationId}/approve",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String approveSnpAssociation(@PathVariable Long associationId,
-                                        RedirectAttributes redirectAttributes) {
+    public String approveSnpAssociation(@PathVariable Long associationId) {
 
         Association association = associationRepository.findOne(associationId);
 
@@ -1032,6 +1031,27 @@ public class AssociationController {
 
         return "redirect:/studies/" + association.getStudy().getId() + "/associations";
     }
+
+
+    // Un-approve a single SNP association
+    @RequestMapping(value = "associations/{associationId}/unapprove",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.GET)
+    public String unapproveSnpAssociation(@PathVariable Long associationId) {
+
+        Association association = associationRepository.findOne(associationId);
+
+        // Mark errors as unchecked
+        associationErrorsUnchecked(association);
+
+        // Set snpChecked attribute to true
+        association.setSnpApproved(false);
+        association.setLastUpdateDate(new Date());
+        associationRepository.save(association);
+
+        return "redirect:/studies/" + association.getStudy().getId() + "/associations";
+    }
+
 
 
     // Approve checked SNPs
@@ -1276,6 +1296,19 @@ public class AssociationController {
         associationReport.setErrorCheckedByCurator(true);
         associationReportRepository.save(associationReport);
     }
+
+
+    /**
+     * Mark errors for a particular association as unchecked, this involves updating the linked association report
+     *
+     * @param association Association to mark as errors checked
+     */
+    public void associationErrorsUnchecked(Association association) {
+        AssociationReport associationReport = association.getAssociationReport();
+        associationReport.setErrorCheckedByCurator(false);
+        associationReportRepository.save(associationReport);
+    }
+
 
     /**
      * Determine last viewed association
