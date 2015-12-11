@@ -292,8 +292,8 @@
             </table>
         </div>
 
-        <!--Only show bar if more that one study available-->
-        <div th:if="${totalStudies &gt; 1 }" th:include="pagination_bar :: pagination_bar"></div>
+        <!--Only show bar if more that one study available and pagination is set to true-->
+        <div th:if="${totalStudies &gt; 1 and #bools.isTrue(pagination) }" th:include="pagination_bar :: pagination_bar"></div>
     </div>
 </div>
 </body>
