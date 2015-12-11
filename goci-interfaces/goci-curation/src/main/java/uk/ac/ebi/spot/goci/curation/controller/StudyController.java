@@ -25,7 +25,6 @@ import uk.ac.ebi.spot.goci.curation.model.Assignee;
 import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
 import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
-import uk.ac.ebi.spot.goci.curation.model.StudyAssociationTableView;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 import uk.ac.ebi.spot.goci.curation.service.MailService;
 import uk.ac.ebi.spot.goci.curation.service.StudyAssociationTableViewService;
@@ -89,7 +88,6 @@ public class StudyController {
 
     // Pubmed ID lookup service
     private DefaultPubMedSearchService defaultPubMedSearchService;
-    private StudyAssociationTableViewService studyAssociationTableViewService;
     private StudyOperationsService studyService;
 
     public static final int MAX_PAGE_ITEM_DISPLAY = 25;
@@ -116,7 +114,6 @@ public class StudyController {
                            HousekeepingRepository housekeepingRepository) {
         this.studyRepository = studyRepository;
         this.studyService = studyService;
-        this.studyAssociationTableViewService = studyAssociationTableViewService;
         this.defaultPubMedSearchService = defaultPubMedSearchService;
         this.unpublishReasonRepository = unpublishReasonRepository;
         this.ethnicityRepository = ethnicityRepository;
@@ -145,6 +142,9 @@ public class StudyController {
                                  @RequestParam(required = false) Integer month) {
 
 
+        // This is passed back to model and determines if pagination is applied
+        Boolean pagination = true;
+
         // Return all studies ordered by date if no page number given
         if (page == null) {
             // Find all studies ordered by study date and only display first page
@@ -165,8 +165,11 @@ public class StudyController {
         }
 
         // This is the default study page will all studies
-        Page<Study> studyPage =
-                studyRepository.findAll(constructPageSpecification(page - 1, sort));
+        Page<Study> studyPage = studyRepository.findAll(constructPageSpecification(page - 1, sort));
+
+        // For multi-snp and snp interaction studies pagination is not applied as the query leads to duplicates
+        List<Study> studies = null;
+
 
         // Search by pubmed ID option available from landing page
         if (pubmed != null && !pubmed.isEmpty()) {
@@ -209,6 +212,15 @@ public class StudyController {
                                                                                           page -
                                                                                                   1,
                                                                                           sort));
+            }
+            if (studyType.equals("Multi-SNP haplotype studies")) {
+                studies = studyRepository.findStudyDistinctByAssociationsMultiSnpHaplotypeTrue();
+                pagination = false;
+            }
+
+            if (studyType.equals("SNP Interaction studies")) {
+                studies = studyRepository.findStudyDistinctByAssociationsSnpInteractionTrue();
+                pagination = false;
             }
 
             studySearchFilter.setStudyType(studyType);
@@ -327,18 +339,32 @@ public class StudyController {
             }
         }
         model.addAttribute("filters", filters);
-        model.addAttribute("studies", studyPage);
 
-        //Pagination variables
-        long totalStudies = studyPage.getTotalElements();
-        int current = studyPage.getNumber() + 1;
-        int begin = Math.max(1, current - 5); // Returns the greater of two values
-        int end = Math.min(begin + 10, studyPage.getTotalPages()); // how many pages to display in the pagination bar
+        long totalStudies = 0;
+        int current = 1;
 
-        model.addAttribute("beginIndex", begin);
-        model.addAttribute("endIndex", end);
-        model.addAttribute("currentIndex", current);
+        // Construct table using pagination
+        if (studies == null) {
+            model.addAttribute("studies", studyPage);
+            //Pagination variables
+            totalStudies = studyPage.getTotalElements();
+            current = studyPage.getNumber() + 1;
+
+            int begin = Math.max(1, current - 5); // Returns the greater of two values
+            int end =
+                    Math.min(begin + 10, studyPage.getTotalPages()); // how many pages to display in the pagination bar
+
+            model.addAttribute("beginIndex", begin);
+            model.addAttribute("endIndex", end);
+            model.addAttribute("currentIndex", current);
+
+        }
+        else {
+            model.addAttribute("studies", studies);
+            totalStudies = studies.size();
+        }
         model.addAttribute("totalStudies", totalStudies);
+        model.addAttribute("pagination", pagination);
 
         // Add studySearchFilter to model so user can filter table
         model.addAttribute("studySearchFilter", studySearchFilter);
@@ -426,29 +452,6 @@ public class StudyController {
     }
 
 
-    // View all studies with associations annotated as multi-SNP haplotype
-    @RequestMapping(value = "/haplotype", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String getHaplotypeStudies(Model model) {
-
-        List<Study> haplotypeStudies = studyRepository.findStudyDistinctByAssociationsMultiSnpHaplotypeTrue();
-
-        List<StudyAssociationTableView> studies = studyAssociationTableViewService.createViews(haplotypeStudies);
-        model.addAttribute("studies", studies);
-        model.addAttribute("totalStudies", haplotypeStudies.size());
-        return "studies_by_association_type";
-    }
-
-    // View all studies with associations annotated as SNP interaction
-    @RequestMapping(value = "/snp_interaction", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String getSnpInteractionStudies(Model model) {
-
-        List<Study> interactionStudies = studyRepository.findStudyDistinctByAssociationsSnpInteractionTrue();
-
-        List<StudyAssociationTableView> studies = studyAssociationTableViewService.createViews(interactionStudies);
-        model.addAttribute("studies", studies);
-        model.addAttribute("totalStudies", interactionStudies.size());
-        return "studies_by_association_type";
-    }
 
    /* New Study*/
 
@@ -1035,6 +1038,8 @@ public class StudyController {
         studyTypesOptions.add("GXG");
         studyTypesOptions.add("CNV");
         studyTypesOptions.add("Studies in curation queue");
+        studyTypesOptions.add("Multi-SNP haplotype studies");
+        studyTypesOptions.add("SNP Interaction studies");
         return studyTypesOptions;
     }
 
