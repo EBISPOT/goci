@@ -24,10 +24,13 @@ import java.util.Map;
 public class AssociationFormErrorViewService {
 
     private AssociationMappingErrorService associationMappingErrorService;
+    private AssociationComponentsSyntaxChecks associationComponentsSyntaxChecks;
 
     @Autowired
-    public AssociationFormErrorViewService(AssociationMappingErrorService associationMappingErrorService) {
+    public AssociationFormErrorViewService(AssociationMappingErrorService associationMappingErrorService,
+                                           AssociationComponentsSyntaxChecks associationComponentsSyntaxChecks) {
         this.associationMappingErrorService = associationMappingErrorService;
+        this.associationComponentsSyntaxChecks = associationComponentsSyntaxChecks;
     }
 
     /**
@@ -71,7 +74,7 @@ public class AssociationFormErrorViewService {
 
         // Risk allele errors
         for (String riskAlleleName : associationRiskAlleles) {
-            error = checkRiskAllele(riskAlleleName);
+            error = associationComponentsSyntaxChecks.checkRiskAllele(riskAlleleName);
             if (!error.isEmpty()) {
                 riskAlleleErrors.add(error);
             }
@@ -79,7 +82,7 @@ public class AssociationFormErrorViewService {
 
         //SNP errors
         for (String snpName : associationSnps) {
-            error = checkSnpOrProxy(snpName);
+            error = associationComponentsSyntaxChecks.checkSnpOrProxy(snpName);
             if (!error.isEmpty()) {
                 snpErrors.add(error);
             }
@@ -87,7 +90,7 @@ public class AssociationFormErrorViewService {
 
         // Proxy errors
         for (String proxyName : associationProxies) {
-            error = checkSnpOrProxy(proxyName);
+            error = associationComponentsSyntaxChecks.checkSnpOrProxy(proxyName);
             if (!error.isEmpty()) {
                 proxyErrors.add(error);
             }
@@ -105,59 +108,6 @@ public class AssociationFormErrorViewService {
         return associationErrorView;
     }
 
-    // Check for common errors in snp and risk allele names
-    public String checkSnpOrProxy(String snpValue) {
-
-        String error = "";
-        if (snpValue.contains(",")) {
-            error = "SNP " + snpValue + " contains a ',' character.";
-        }
-        if (snpValue.contains("x")) {
-            error = error + "SNP " + snpValue + " contains an 'x' character.";
-        }
-        if (snpValue.contains("X")) {
-            error = error + "SNP " + snpValue + " contains an 'X' character.";
-        }
-        if (snpValue.contains(":")) {
-            error = error + "SNP " + snpValue + " contains a ':' character.";
-        }
-        if (snpValue.contains(";")) {
-            error = error + "SNP " + snpValue + " contains a ';' character.";
-        }
-        if (snpValue.contains("-")) {
-            error = error + "SNP " + snpValue + " contains a '-' character.";
-        }
-        if (!snpValue.startsWith("rs")) {
-            error = error + "SNP " + snpValue + " does not start with rs.";
-        }
-
-        return error;
-    }
-
-    public String checkRiskAllele(String riskAllele) {
-
-        String error = "";
-        if (riskAllele.contains(",")) {
-            error = "Risk Allele " + riskAllele + " contains a ',' character.";
-        }
-        if (riskAllele.contains("x")) {
-            error = error + "Risk Allele " + riskAllele + " contains an 'x' character.";
-        }
-        if (riskAllele.contains("X")) {
-            error = error + "Risk Allele " + riskAllele + " contains an 'X' character.";
-        }
-        if (riskAllele.contains(":")) {
-            error = error + "Risk Allele " + riskAllele + " contains a ':' character.";
-        }
-        if (riskAllele.contains(";")) {
-            error = error + "Risk Allele " + riskAllele + " contains a ';' character.";
-        }
-        if (!riskAllele.startsWith("rs")) {
-            error = error + "Risk Allele " + riskAllele + " does not start with rs.";
-        }
-
-        return error;
-    }
 
     public String formatErrors(Collection<String> errors) {
         String error = "";
