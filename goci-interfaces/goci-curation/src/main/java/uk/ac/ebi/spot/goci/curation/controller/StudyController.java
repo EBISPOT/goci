@@ -26,8 +26,6 @@ import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
 import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
-import uk.ac.ebi.spot.goci.curation.service.MailService;
-import uk.ac.ebi.spot.goci.curation.service.StudyAssociationTableViewService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
@@ -101,8 +99,6 @@ public class StudyController {
     @Autowired
     public StudyController(StudyRepository studyRepository,
                            StudyOperationsService studyService,
-                           StudyAssociationTableViewService studyAssociationTableViewService,
-                           MailService mailService,
                            DefaultPubMedSearchService defaultPubMedSearchService,
                            UnpublishReasonRepository unpublishReasonRepository,
                            EthnicityRepository ethnicityRepository,
@@ -340,7 +336,7 @@ public class StudyController {
         }
         model.addAttribute("filters", filters);
 
-        long totalStudies = 0;
+        long totalStudies;
         int current = 1;
 
         // Construct table using pagination
@@ -384,9 +380,7 @@ public class StudyController {
 
     // Redirects from landing page and main page
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String searchForStudyByFilter(@ModelAttribute StudySearchFilter studySearchFilter,
-                                         Model model,
-                                         @RequestParam(required = true) String filters) {
+    public String searchForStudyByFilter(@ModelAttribute StudySearchFilter studySearchFilter) {
 
         // Get ids of objects searched for
         Long status = studySearchFilter.getStatusSearchFilterId();
