@@ -60,9 +60,9 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
                                                                                     Long status,
                                                                                     Pageable pageable);
 
-    List<Study> findStudyDistinctByAssociationsMultiSnpHaplotypeTrue();
+    List<Study> findStudyDistinctByAssociationsMultiSnpHaplotypeTrue(Sort sort);
 
-    List<Study> findStudyDistinctByAssociationsSnpInteractionTrue();
+    List<Study> findStudyDistinctByAssociationsSnpInteractionTrue(Sort sort);
 
     // EFO trait query
     Page<Study> findByEfoTraitsId(Long efoTraitId, Pageable pageable);
