@@ -83,6 +83,9 @@ public class MailService {
         String editStudyLink = getLink() + "studies/" + study.getId();
 
         String mappingDetails = getMappingDetails(study);
+        if (mappingDetails.isEmpty()) {
+            mappingDetails = "No mapping errors for any association in this study.";
+        }
 
         // Format mail message
         SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -102,7 +105,6 @@ public class MailService {
                         + "\n\n" +
                         mappingDetails);
         javaMailSender.send(mailMessage);
-
     }
 
     private String getMappingDetails(Study study) {
