@@ -26,10 +26,13 @@ import java.util.Collection;
 public class AssociationViewService {
 
     private AssociationMappingErrorService associationMappingErrorService;
+    private AssociationComponentsSyntaxChecks associationComponentsSyntaxChecks;
 
     @Autowired
-    public AssociationViewService(AssociationMappingErrorService associationMappingErrorService) {
+    public AssociationViewService(AssociationMappingErrorService associationMappingErrorService,
+                                  AssociationComponentsSyntaxChecks associationComponentsSyntaxChecks) {
         this.associationMappingErrorService = associationMappingErrorService;
+        this.associationComponentsSyntaxChecks = associationComponentsSyntaxChecks;
     }
 
     /**
@@ -59,6 +62,7 @@ public class AssociationViewService {
         Collection<String> allLociSnpStatuses = new ArrayList<String>();
 
         // By looking at each locus in turn we can keep order in view
+        String syntaxError = ""; // store any syntax errors
         for (Locus locus : loci) {
 
             // Store gene names, a locus can have a number of genes attached.
@@ -79,6 +83,9 @@ public class AssociationViewService {
             for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
                 allLociRiskAlleles.add(riskAllele.getRiskAlleleName());
 
+                // Check for any potential errors
+                syntaxError = syntaxError + associationComponentsSyntaxChecks.checkRiskAllele(riskAllele.getRiskAlleleName());
+
                 // For standard association set the risk allele frequency
                 // Based on assumption we only have one locus with a single risk allele attached
                 if (!association.getMultiSnpHaplotype() && !association.getSnpInteraction()) {
@@ -91,12 +98,18 @@ public class AssociationViewService {
                 SingleNucleotidePolymorphism snp = riskAllele.getSnp();
                 allLociSnps.add(snp.getRsId());
 
+                // Check for any potential errors
+                syntaxError = syntaxError + associationComponentsSyntaxChecks.checkSnpOrProxy(snp.getRsId());
+
                 // Set proxies if present
                 Collection<String> currentLocusProxies = new ArrayList<>();
                 String commaSeparatedProxies = "";
                 if (riskAllele.getProxySnps() != null) {
                     for (SingleNucleotidePolymorphism proxySnp : riskAllele.getProxySnps()) {
                         currentLocusProxies.add(proxySnp.getRsId());
+
+                        // Check for any potential errors
+                        syntaxError = syntaxError + associationComponentsSyntaxChecks.checkSnpOrProxy(proxySnp.getRsId());
                     }
                 }
 
@@ -282,6 +295,12 @@ public class AssociationViewService {
         // Set error map
         snpAssociationTableView.setAssociationErrorMap(associationMappingErrorService.createAssociationErrorMap(
                 association.getAssociationReport()));
+
+        // Set syntax errors
+        if (!syntaxError.isEmpty()) {
+            snpAssociationTableView.setSyntaxErrorsFound("Yes");
+        }
+        else {snpAssociationTableView.setSyntaxErrorsFound("No");}
 
         // Get mapping details
         if (association.getLastMappingPerformedBy() != null) {
