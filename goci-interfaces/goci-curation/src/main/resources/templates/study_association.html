@@ -305,6 +305,14 @@
                                       th:utext="'&lt;br /&gt;' +'Performer: '+${snpAssociationTableView.lastMappingPerformedBy} ?: ''">
 
                                 </span>
+
+                                <br/>
+                                <br/>
+                                <span style="font-style: italic; color: darkgrey"
+                                      th:utext="'Syntax errors found, please check SNP, proxy SNP and risk allele values entered!' + '&lt;br /&gt;' ?: ''"
+                                      th:if="${snpAssociationTableView.syntaxErrorsFound == 'Yes'}">
+                                </span>
+
                             </td>
 
                             <td style="color: darkgrey" th:text="${snpAssociationTableView.snpApproved} ?: '' "></td>
@@ -411,6 +419,13 @@
                                           th:utext="'&lt;br /&gt;' +'Performer: '+${snpAssociationTableView.lastMappingPerformedBy} ?: ''">
                                     </span>
 
+                                    <br/>
+                                    <br/>
+                                    <span style="color:red"
+                                          th:utext="'Syntax errors found, please check SNP, proxy SNP and risk allele values entered!' + '&lt;br /&gt;' ?: ''"
+                                          th:if="${snpAssociationTableView.syntaxErrorsFound == 'Yes'}">
+                                    </span>
+
                                 </td>
 
                                 <td style="background-color: lightyellow"
@@ -493,6 +508,13 @@
                                         <span style="font-style: italic"
                                               th:if="${snpAssociationTableView.lastMappingPerformedBy != null}"
                                               th:utext="'&lt;br /&gt;' +'Performer: '+${snpAssociationTableView.lastMappingPerformedBy} ?: ''"></span>
+
+                                    <br/>
+                                    <br/>
+                                    <span style="color:red"
+                                          th:utext="'Syntax errors found, please check SNP, proxy SNP and risk allele values entered!' + '&lt;br /&gt;' ?: ''"
+                                          th:if="${snpAssociationTableView.syntaxErrorsFound == 'Yes'}">
+                                    </span>
                                 </td>
 
                                 <td th:text="${snpAssociationTableView.snpApproved} ?: '' "></td>
