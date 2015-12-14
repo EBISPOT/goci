@@ -210,12 +210,12 @@ public class StudyController {
                                                                                           sort));
             }
             if (studyType.equals("Multi-SNP haplotype studies")) {
-                studies = studyRepository.findStudyDistinctByAssociationsMultiSnpHaplotypeTrue();
+                studies = studyRepository.findStudyDistinctByAssociationsMultiSnpHaplotypeTrue(sort);
                 pagination = false;
             }
 
             if (studyType.equals("SNP Interaction studies")) {
-                studies = studyRepository.findStudyDistinctByAssociationsSnpInteractionTrue();
+                studies = studyRepository.findStudyDistinctByAssociationsSnpInteractionTrue(sort);
                 pagination = false;
             }
 
