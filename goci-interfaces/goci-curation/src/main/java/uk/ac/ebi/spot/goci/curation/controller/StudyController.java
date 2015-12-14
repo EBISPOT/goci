@@ -1140,7 +1140,7 @@ public class StudyController {
     }
 
     /* Pagination */
-    // Pagination, method passed page index and inlcudes max number of studies, sorted by study date, to return
+    // Pagination, method passed page index and includes max number of studies, sorted by study date, to return
     private Pageable constructPageSpecification(int pageIndex, Sort sort) {
         return new PageRequest(pageIndex, MAX_PAGE_ITEM_DISPLAY, sort);
     }
