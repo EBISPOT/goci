@@ -84,7 +84,7 @@ public class MailService {
 
         String mappingDetails = getMappingDetails(study);
         if (mappingDetails.isEmpty()) {
-            mappingDetails = "No mapping errors for any association in this study.";
+            mappingDetails = "Note: No mapping errors detected for any association in this study.";
         }
 
         // Format mail message
