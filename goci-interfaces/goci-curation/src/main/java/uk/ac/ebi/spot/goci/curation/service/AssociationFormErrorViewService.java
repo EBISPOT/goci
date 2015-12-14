@@ -80,9 +80,9 @@ public class AssociationFormErrorViewService {
             }
         }
 
-        //SNP errors
+        // SNP errors
         for (String snpName : associationSnps) {
-            error = associationComponentsSyntaxChecks.checkSnpOrProxy(snpName);
+            error = associationComponentsSyntaxChecks.checkSnp(snpName);
             if (!error.isEmpty()) {
                 snpErrors.add(error);
             }
@@ -90,7 +90,7 @@ public class AssociationFormErrorViewService {
 
         // Proxy errors
         for (String proxyName : associationProxies) {
-            error = associationComponentsSyntaxChecks.checkSnpOrProxy(proxyName);
+            error = associationComponentsSyntaxChecks.checkProxy(proxyName);
             if (!error.isEmpty()) {
                 proxyErrors.add(error);
             }

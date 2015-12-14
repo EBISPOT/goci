@@ -99,7 +99,7 @@ public class AssociationViewService {
                 allLociSnps.add(snp.getRsId());
 
                 // Check for any potential errors
-                syntaxError = syntaxError + associationComponentsSyntaxChecks.checkSnpOrProxy(snp.getRsId());
+                syntaxError = syntaxError + associationComponentsSyntaxChecks.checkSnp(snp.getRsId());
 
                 // Set proxies if present
                 Collection<String> currentLocusProxies = new ArrayList<>();
@@ -109,7 +109,7 @@ public class AssociationViewService {
                         currentLocusProxies.add(proxySnp.getRsId());
 
                         // Check for any potential errors
-                        syntaxError = syntaxError + associationComponentsSyntaxChecks.checkSnpOrProxy(proxySnp.getRsId());
+                        syntaxError = syntaxError + associationComponentsSyntaxChecks.checkProxy(proxySnp.getRsId());
                     }
                 }
 
