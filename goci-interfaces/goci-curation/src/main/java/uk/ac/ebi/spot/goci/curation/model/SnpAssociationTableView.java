@@ -70,6 +70,8 @@ public class SnpAssociationTableView {
 
     private String lastMappingDate;
 
+    private String syntaxErrorsFound;
+
     // Constructors
     public SnpAssociationTableView() {
     }
@@ -99,7 +101,9 @@ public class SnpAssociationTableView {
                                    String snpStatuses,
                                    Map<String, String> associationErrorMap,
                                    String associationErrorsChecked,
-                                   String lastMappingPerfomredBy, String lastMappingDate) {
+                                   String lastMappingPerformedBy,
+                                   String lastMappingDate,
+                                   String syntaxErrorsFound) {
         this.associationId = associationId;
         this.authorReportedGenes = authorReportedGenes;
         this.strongestRiskAlleles = strongestRiskAlleles;
@@ -125,8 +129,9 @@ public class SnpAssociationTableView {
         this.snpStatuses = snpStatuses;
         this.associationErrorMap = associationErrorMap;
         this.associationErrorsChecked = associationErrorsChecked;
-        this.lastMappingPerformedBy = lastMappingPerfomredBy;
+        this.lastMappingPerformedBy = lastMappingPerformedBy;
         this.lastMappingDate = lastMappingDate;
+        this.syntaxErrorsFound = syntaxErrorsFound;
     }
 
     public Long getAssociationId() {
@@ -343,5 +348,13 @@ public class SnpAssociationTableView {
 
     public void setLastMappingDate(String lastMappingDate) {
         this.lastMappingDate = lastMappingDate;
+    }
+
+    public String getSyntaxErrorsFound() {
+        return syntaxErrorsFound;
+    }
+
+    public void setSyntaxErrorsFound(String syntaxErrorsFound) {
+        this.syntaxErrorsFound = syntaxErrorsFound;
     }
 }
