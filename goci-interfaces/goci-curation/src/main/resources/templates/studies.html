@@ -129,7 +129,7 @@
                     </th>
 
                     <th class="col-md-1">Disease/Trait
-                        <div>
+                        <div th:if="${totalStudies &gt; 1 and #bools.isTrue(pagination) }">
                             <a th:href="@{${uri}(sorttype=diseasetraitsortasc)}"
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                             <a th:href="@{${uri}(sorttype=diseasetraitsortdesc)}"
@@ -139,7 +139,7 @@
                     </th>
                     <th class="col-md-1">EFO Trait</th>
                     <th class="col-md-2">Curator
-                        <div>
+                        <div th:if="${totalStudies &gt; 1 and #bools.isTrue(pagination) }">
                             <a th:href="@{${uri}(sorttype=curatorsortasc)}"
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                             <a th:href="@{${uri}(sorttype=curatorsortdesc)}"
@@ -148,7 +148,7 @@
                         </div>
                     </th>
                     <th class="col-md-2">Curation Status
-                        <div>
+                        <div th:if="${totalStudies &gt; 1 and #bools.isTrue(pagination) }">
                             <a th:href="@{${uri}(sorttype=curationstatussortasc)}"
                                class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                             <a th:href="@{${uri}(sorttype=curationstatussortdesc)}"
