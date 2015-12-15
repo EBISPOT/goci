@@ -4,8 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by dwelter on 24/02/15.
@@ -14,14 +18,15 @@ public class JsonProcessingService {
 
     private String json;
 
-    public JsonProcessingService(String json){
-         this.json = json;
+    public JsonProcessingService(String json) {
+        this.json = json;
     }
 
 
     public String processJson() throws IOException {
 
-        String header = "Date Added to Catalog\tPUBMEDID\tFirst Author\tDate\tJournal\tLink\tStudy\tDisease/Trait\tInitial Sample Size\tReplication Sample Size\tRegion\tChr_id\tChr_pos\tReported Gene(s)\tMapped_gene\tUpstream_gene_id\tDownstream_gene_id\tSnp_gene_ids\tUpstream_gene_distance\tDownstream_gene_distance\tStrongest SNP-Risk Allele\tSNPs\tMerged\tSnp_id_current\tContext\tIntergenic\tRisk Allele Frequency\tp-Value\tPvalue_mlog\tp-Value (text)\tOR or beta\t95% CI (text)\tPlatform [SNPs passing QC]\r\n";
+        String header =
+                "Date Added to Catalog\tPUBMEDID\tFirst Author\tDate\tJournal\tLink\tStudy\tDisease/Trait\tInitial Sample Size\tReplication Sample Size\tRegion\tChr_id\tChr_pos\tReported Gene(s)\tMapped_gene\tUpstream_gene_id\tDownstream_gene_id\tSnp_gene_ids\tUpstream_gene_distance\tDownstream_gene_distance\tStrongest SNP-Risk Allele\tSNPs\tMerged\tSnp_id_current\tContext\tIntergenic\tRisk Allele Frequency\tp-Value\tPvalue_mlog\tp-Value (text)\tOR or beta\t95% CI (text)\tPlatform [SNPs passing QC]\r\n";
 
         StringBuilder result = new StringBuilder();
         result.append(header);
@@ -33,7 +38,7 @@ public class JsonProcessingService {
 
         String newline = System.getProperty("line.separator");
 
-        for(JsonNode doc : docs) {
+        for (JsonNode doc : docs) {
             StringBuilder line = new StringBuilder();
 
             line.append(getDate(doc));
@@ -75,11 +80,13 @@ public class JsonProcessingService {
             line.append(rep);
             line.append("\t");
 
-            line.append(getRegion(doc));
+            List<String> chromLocation = getChromName(doc);
+
+            line.append(chromLocation.get(3));
             line.append("\t");
-            line.append(getChromName(doc));
+            line.append(chromLocation.get(0));
             line.append("\t");
-            line.append(getChromPos(doc));
+            line.append(chromLocation.get(1));
             line.append("\t");
 
             line.append(getRepGene(doc));
@@ -111,14 +118,14 @@ public class JsonProcessingService {
             line.append(rsId);
             line.append("\t");
 
-//            line.append(doc.get("merged").asText().trim());
+            //            line.append(doc.get("merged").asText().trim());
             line.append(""); // todo - remove this when above solr field is available
             line.append("\t");
 
-            if(rsId.indexOf("rs") == 0 && rsId.indexOf("rs", 2) == -1) {
+            if (rsId.indexOf("rs") == 0 && rsId.indexOf("rs", 2) == -1) {
                 line.append(rsId.substring(2));
             }
-            else{
+            else {
                 line.append("");
             }
 
@@ -128,10 +135,10 @@ public class JsonProcessingService {
             line.append(context);
             line.append("\t");
 
-            if(context == ""){
+            if (context == "") {
                 line.append("1");
             }
-            else{
+            else {
                 line.append("0");
             }
             line.append("\t");
@@ -141,7 +148,7 @@ public class JsonProcessingService {
 
             double pvalue = getPvalue(doc);
 
-            if(pvalue == -10){
+            if (pvalue == -10) {
                 line.append("");
                 line.append("\t");
                 line.append("");
@@ -153,7 +160,7 @@ public class JsonProcessingService {
                 line.append(-mlog);
             }
             line.append("\t");
-            
+
             line.append(getQualifier(doc));
             line.append("\t");
             line.append(getOR(doc));
@@ -179,68 +186,68 @@ public class JsonProcessingService {
 
     private String getCI(JsonNode doc) {
         String ci;
-        if(doc.get("orPerCopyRange") != null) {
+        if (doc.get("orPerCopyRange") != null) {
             ci = doc.get("orPerCopyRange").asText().trim();
         }
-        else{
-           ci = "";
+        else {
+            ci = "";
         }
         return ci;
     }
 
     private String getOR(JsonNode doc) {
         String or;
-        if(doc.get("orPerCopyNum") != null) {
+        if (doc.get("orPerCopyNum") != null) {
             or = doc.get("orPerCopyNum").asText().trim();
         }
-        else{
-          or  = "";
+        else {
+            or = "";
         }
         return or;
     }
 
     private String getQualifier(JsonNode doc) {
         String qualifier;
-        if(doc.get("qualifier") != null) {
+        if (doc.get("qualifier") != null) {
             qualifier = doc.get("qualifier").get(0).asText().trim();
         }
-        else{
-           qualifier = "";
-        }  
+        else {
+            qualifier = "";
+        }
         return qualifier;
     }
 
     private double getPvalue(JsonNode doc) {
         double pvalue;
-        if(doc.get("pValueMantissa") != null && doc.get("pValueExponent") != null){
+        if (doc.get("pValueMantissa") != null && doc.get("pValueExponent") != null) {
             int mant = doc.get("pValueMantissa").asInt();
-            int  exp = doc.get("pValueExponent").asInt();
+            int exp = doc.get("pValueExponent").asInt();
             pvalue = mant * Math.pow(10, exp);
         }
-        else{
-           pvalue = -10;
+        else {
+            pvalue = -10;
         }
         return pvalue;
     }
 
     private String getRiskFreq(JsonNode doc) {
         String riskFreq;
-        if(doc.get("riskFrequency") != null) {
+        if (doc.get("riskFrequency") != null) {
             riskFreq = doc.get("riskFrequency").asText().trim();
         }
-        else{
-           riskFreq = "";
+        else {
+            riskFreq = "";
         }
         return riskFreq;
     }
 
     private String getContext(JsonNode doc) {
         String context;
-        if(doc.get("context") != null) {
+        if (doc.get("context") != null) {
             context = doc.get("context").get(0).asText().trim();
-           
+
         }
-        else{
+        else {
             context = "";
         }
         return context;
@@ -248,43 +255,43 @@ public class JsonProcessingService {
 
     private String getRsId(JsonNode doc) {
         String rsId;
-        if(doc.get("rsId") != null) {
-           rsId = doc.get("rsId").get(0).asText().trim();
+        if (doc.get("rsId") != null) {
+            rsId = doc.get("rsId").get(0).asText().trim();
         }
-        else{
-           rsId = "";
+        else {
+            rsId = "";
         }
         return rsId;
     }
 
     private String getStrongestAllele(JsonNode doc) {
         String strongestAllele;
-        if(doc.get("strongestAllele") != null) {
+        if (doc.get("strongestAllele") != null) {
             strongestAllele = doc.get("strongestAllele").get(0).asText().trim();
         }
-        else{
-           strongestAllele = "";
+        else {
+            strongestAllele = "";
         }
         return strongestAllele;
     }
 
     private String getMapGene(JsonNode doc) {
         String gene;
-        if(doc.get("mappedGene") != null) {
+        if (doc.get("mappedGene") != null) {
             gene = doc.get("mappedGene").get(0).asText().trim();
         }
-        else{
-           gene = "";
+        else {
+            gene = "";
         }
         return gene;
     }
 
     private String getRepGene(JsonNode doc) {
         String genes = "";
-        if(doc.get("reportedGene") != null){
+        if (doc.get("reportedGene") != null) {
             int it = 0;
-            for(JsonNode gene : doc.get("reportedGene")){
-                if(it > 0){
+            for (JsonNode gene : doc.get("reportedGene")) {
+                if (it > 0) {
                     genes = genes.concat(", ");
                 }
                 genes = genes.concat(gene.asText().trim());
@@ -294,34 +301,66 @@ public class JsonProcessingService {
         return genes;
     }
 
-    private String getChromPos(JsonNode doc) {
-        String chromPos;
-        if(doc.get("chromosomePosition") != null) {
-           chromPos = doc.get("chromosomePosition").get(0).asText().trim();
-        }
-        else{
-           chromPos = "";
-        }
-        return chromPos;
-    }
+    //    private String getChromPos(JsonNode doc) {
+    //        String chromPos;
+    //        if(doc.get("chromosomePosition") != null) {
+    //           chromPos = doc.get("chromosomePosition").get(0).asText().trim();
+    //        }
+    //        else{
+    //           chromPos = "";
+    //        }
+    //        return chromPos;
+    //    }
 
-    private String getChromName(JsonNode doc) {
-        String chromName;
-        if(doc.get("chromosomeName") != null) {
-            chromName = doc.get("chromosomeName").get(0).asText().trim();
+    private List<String> getChromName(JsonNode doc) {
+        String chromName = null;
+        String chromPos = null;
+        String region = null;
+        List<String> location = new ArrayList<>();
+
+        if (doc.get("positionLinks") != null) {
+            //            if(doc.get("positionLinks").size() > 1){
+            for (int i = 0; i < doc.get("positionLinks").size(); i++) {
+                String loc = doc.get("positionLinks").get(i).asText().trim();
+
+                chromName = loc.split("|")[0];
+                chromPos = loc.split("|")[1];
+                region = loc.split("|")[2];
+
+                String pattern = "^\\d+$";
+
+                Pattern p = Pattern.compile(pattern);
+                Matcher m = p.matcher(chromName);
+
+                if (m.find() || location.equals("X") || location.equals("Y")) {
+                    location.add(chromName);
+                    location.add(chromPos);
+                    location.add(region);
+                }
+            }
+            //            }
+            //            else {
+            //                chromName = doc.get("chromosomeName").get(0).asText().trim();
+            //            }
         }
-        else{
+        else {
             chromName = "";
+            chromPos = "";
+            region = "";
+
+            location.add(chromName);
+            location.add(chromPos);
+            location.add(region);
         }
-        return chromName;
+        return location;
     }
 
     private String getRegion(JsonNode doc) {
         String region;
-        if(doc.get("region") != null) {
+        if (doc.get("region") != null) {
             region = doc.get("region").get(0).asText().trim();
         }
-        else{
+        else {
             region = "";
         }
         return region;
@@ -329,21 +368,21 @@ public class JsonProcessingService {
 
     private String getRepSample(JsonNode doc) {
         String sampleDesc;
-        if(doc.get("replicateSampleDescription") != null){
+        if (doc.get("replicateSampleDescription") != null) {
             sampleDesc = doc.get("replicateSampleDescription").asText().trim();
         }
-        else{
-           sampleDesc = "";
+        else {
+            sampleDesc = "";
         }
         return sampleDesc;
     }
 
     private String getInitSample(JsonNode doc) {
         String sampleDesc;
-        if(doc.get("initialSampleDescription") != null){
+        if (doc.get("initialSampleDescription") != null) {
             sampleDesc = doc.get("initialSampleDescription").asText().trim();
         }
-        else{
+        else {
             sampleDesc = "";
         }
         return sampleDesc;
@@ -351,10 +390,10 @@ public class JsonProcessingService {
 
     private String getTrait(JsonNode doc) {
         String traitName;
-        if(doc.get("traitName_s") != null){
+        if (doc.get("traitName_s") != null) {
             traitName = doc.get("traitName_s").asText().trim();
         }
-        else{
+        else {
             traitName = "";
         }
         return traitName;
@@ -362,10 +401,10 @@ public class JsonProcessingService {
 
     private String getTitle(JsonNode doc) {
         String title;
-        if(doc.get("title") != null){
+        if (doc.get("title") != null) {
             title = doc.get("title").asText().trim();
         }
-        else{
+        else {
             title = "";
         }
         return title;
@@ -374,7 +413,7 @@ public class JsonProcessingService {
 
     private String getJournal(JsonNode doc) {
         String journal;
-        if(doc.get("publication") != null) {
+        if (doc.get("publication") != null) {
             journal = doc.get("publication").asText().trim();
         }
         else {
@@ -386,10 +425,10 @@ public class JsonProcessingService {
 
     private String getAuthor(JsonNode doc) {
         String author;
-        if(doc.get("author_s") != null){
+        if (doc.get("author_s") != null) {
             author = doc.get("author_s").asText().trim();
         }
-        else{
+        else {
             author = "";
         }
         return author;
@@ -397,10 +436,10 @@ public class JsonProcessingService {
 
     private String getPubmedId(JsonNode doc) {
         String pmid;
-        if(doc.get("pubmedId") != null){
+        if (doc.get("pubmedId") != null) {
             pmid = doc.get("pubmedId").asText().trim();
         }
-        else{
+        else {
             pmid = "";
         }
         return pmid;
@@ -408,51 +447,51 @@ public class JsonProcessingService {
 
     private String getPublicationDate(JsonNode doc) {
         String date;
-        if(doc.get("publicationDate") != null){
-            date= doc.get("publicationDate").asText().trim().substring(0, 10);
+        if (doc.get("publicationDate") != null) {
+            date = doc.get("publicationDate").asText().trim().substring(0, 10);
 
         }
-        else{
-            date= "";
-        }
-        return date;
-    }
-
-    private String getDate(JsonNode doc){
-        String date;
-        if(doc.get("catalogAddedDate") != null){
-            date = doc.get("catalogAddedDate").asText().trim().substring(0,10);
-        }
-        else{
+        else {
             date = "";
         }
         return date;
     }
 
-    private Map<String, String> getGeneIds(JsonNode doc){
+    private String getDate(JsonNode doc) {
+        String date;
+        if (doc.get("catalogAddedDate") != null) {
+            date = doc.get("catalogAddedDate").asText().trim().substring(0, 10);
+        }
+        else {
+            date = "";
+        }
+        return date;
+    }
+
+    private Map<String, String> getGeneIds(JsonNode doc) {
         Map<String, String> geneIds = new HashMap<String, String>();
         String upstream = "";
-        String downstream ="";
-        String ingene ="";
+        String downstream = "";
+        String ingene = "";
 
-        if(doc.get("mappedGeneLinks") != null) {
-            if(doc.get("mappedGeneLinks").size() == 1){
-                String geneLink = doc.get("mappedGeneLinks").get(0).asText().trim();
+        if (doc.get("entrezMappedGeneLinks") != null) {
+            if (doc.get("entrezMappedGeneLinks").size() == 1) {
+                String geneLink = doc.get("entrezMappedGeneLinks").get(0).asText().trim();
                 int index = geneLink.indexOf("|");
-                ingene = geneLink.substring(index+1);
+                ingene = geneLink.substring(index + 1);
             }
             else {
-                if (doc.get("mappedGene") != null) {
-                    String mapped = doc.get("mappedGene").get(0).asText().trim();
+                if (doc.get("entrezMappedGenes") != null) {
+                    String mapped = doc.get("entrezMappedGenes").get(0).asText().trim();
 
-                    for (JsonNode geneLink : doc.get("mappedGeneLinks")) {
+                    for (JsonNode geneLink : doc.get("entrezMappedGeneLinks")) {
                         int first = geneLink.asText().trim().indexOf("|");
                         int last = geneLink.asText().trim().lastIndexOf("|");
 
                         String gene = geneLink.asText().trim().substring(0, first - 1);
                         String geneId;
 
-                        if(first != last){
+                        if (first != last) {
                             geneId = geneLink.asText().trim().substring(first + 1, last);
                         }
                         else {
@@ -476,30 +515,30 @@ public class JsonProcessingService {
         geneIds.put("ingene", ingene);
 
 
-            return geneIds;
+        return geneIds;
     }
 
-    private Map<String,String> getGeneDistances(JsonNode doc) {
+    private Map<String, String> getGeneDistances(JsonNode doc) {
         Map<String, String> geneIds = new HashMap<String, String>();
         String upstream = "";
-        String downstream ="";
+        String downstream = "";
 
-        if(doc.get("mappedGeneLinks") != null) {
-            if(doc.get("mappedGeneLinks").size() > 1){
-                if (doc.get("mappedGene") != null) {
-                    String mapped = doc.get("mappedGene").get(0).asText().trim();
+        if (doc.get("entrezMappedGeneLinks") != null) {
+            if (doc.get("entrezMappedGeneLinks").size() > 1) {
+                if (doc.get("entrezMappedGenes") != null) {
+                    String mapped = doc.get("entrezMappedGenes").get(0).asText().trim();
 
-                    for (JsonNode geneLink : doc.get("mappedGeneLinks")) {
+                    for (JsonNode geneLink : doc.get("entrezMappedGeneLinks")) {
                         int first = geneLink.asText().trim().indexOf("|");
                         int last = geneLink.asText().trim().lastIndexOf("|");
                         String gene = geneLink.asText().trim().substring(0, first - 1);
 
                         String geneDist;
 
-                        if(first != last) {
+                        if (first != last) {
                             geneDist = geneLink.asText().trim().substring(last + 1);
                         }
-                        else{
+                        else {
                             geneDist = "";
                         }
 

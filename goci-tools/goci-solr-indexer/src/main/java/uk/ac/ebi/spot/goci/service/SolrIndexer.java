@@ -172,7 +172,7 @@ public class SolrIndexer {
         return (int) diseaseTraitPage.getTotalElements();
     }
 
-    Integer mapEfo(){
+    Integer mapEfo() {
         Sort sort = new Sort(new Sort.Order("id"));
         Pageable pager = new PageRequest(0, pageSize, sort);
         Page<EfoTrait> efoTraitPage = efoTraitRepository.findAll(pager);

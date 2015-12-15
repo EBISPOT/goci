@@ -7,13 +7,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.curation.model.StudyAuditView;
+import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.Study;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by emma on 10/02/15.
@@ -27,15 +28,21 @@ public class MailService {
 
     private final JavaMailSender javaMailSender;
 
+    private AssociationMappingErrorService associationMappingErrorService;
+
     // Reading these from application.properties
     @Value("${mail.from}")
     private String from;
     @Value("${mail.to}")
     private String to;
+    @Value("${mail.link}")
+    private String link;
 
     @Autowired
-    public MailService(JavaMailSender javaMailSender) {
+    public MailService(JavaMailSender javaMailSender,
+                       AssociationMappingErrorService associationMappingErrorService) {
         this.javaMailSender = javaMailSender;
+        this.associationMappingErrorService = associationMappingErrorService;
     }
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -62,12 +69,23 @@ public class MailService {
             notes = study.getHousekeeping().getNotes();
         }
 
-        // Format date
+        // Format dates
         Date studyDate = study.getPublicationDate();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
         String bodyStudyDate = dateFormat.format(studyDate);
 
-        String editStudyLink = "http://garfield.ebi.ac.uk:8080/gwas/curation/studies/" + study.getId();
+        Date publishDate = study.getHousekeeping().getCatalogPublishDate();
+        String bodyPublishDate = null;
+        if (publishDate != null) {
+            bodyPublishDate = dateFormat.format(publishDate);
+        }
+
+        String editStudyLink = getLink() + "studies/" + study.getId();
+
+        String mappingDetails = getMappingDetails(study);
+        if (mappingDetails.isEmpty()) {
+            mappingDetails = "Note: No mapping errors detected for any association in this study.";
+        }
 
         // Format mail message
         SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -82,156 +100,97 @@ public class MailService {
                         + "\n" + "Pubmed link: " + pubmedLink
                         + "\n" + "Edit link: " + editStudyLink
                         + "\n" + "Current curator: " + currentCurator
-                        + "\n" + "Notes: " + notes);
+                        + "\n" + "Publish Date: " + bodyPublishDate
+                        + "\n" + "Notes: " + notes
+                        + "\n\n" +
+                        mappingDetails);
         javaMailSender.send(mailMessage);
-
     }
 
-    // Send single email with all study errors
-    public void sendDailyAuditEmail(Collection<StudyAuditView> studiesWithNcbiErrors,
-                                    Integer totalStudiesWithNcbiErrors,
-                                    Integer totalStudiesWithImportErrors,
-                                    Integer totalNumberOfStudiesSentToNcbi,
-                                    Collection<StudyAuditView> studiesSentToNcbi) {
+    private String getMappingDetails(Study study) {
 
-        // Create email body
-        String emailBody = "";
+        String mappingDetails = "";
 
-        // If we have errors, construct body of email
-        if (!studiesWithNcbiErrors.isEmpty()) {
-            for (StudyAuditView studyWithNcbiError : studiesWithNcbiErrors) {
+        Collection<Association> associations = study.getAssociations();
 
-                // General information
-                String title = "Title: " + studyWithNcbiError.getTitle() + "\n";
-                String author = "Author: " + studyWithNcbiError.getAuthor() + "\n";
-                String pubmedId = "Pubmed Id: " + studyWithNcbiError.getPubmedId() + "\n";
-
-                // Dates
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                String sendToNCBIDate = "";
-                if (studyWithNcbiError.getSendToNCBIDate() != null) {
-                    sendToNCBIDate = df.format(studyWithNcbiError.getSendToNCBIDate());
-                }
-                String sendToNCBIDateBody = "Send To NCBI date: " + sendToNCBIDate + "\n";
-
-                String studyDate = "";
-                if (studyWithNcbiError.getPublicationDate() != null) {
-                    studyDate = df.format(studyWithNcbiError.getPublicationDate());
-                }
-                String studyDateBody = "Study Date: " + studyDate + "\n";
-
-                // Pubmed error
-                String pubmedIdErrorFound = "No";
-                if (studyWithNcbiError.getPubmedIdError() != null) {
-                    pubmedIdErrorFound = "Yes";
-                }
-                String pubmedErrorBody = "Pubmed ID error: " + pubmedIdErrorFound + "\n";
-
-                // SNP error
-                String snpErrors = "";
-                if (!studyWithNcbiError.getSnpErrors().isEmpty()) {
-                    snpErrors = studyWithNcbiError.getSnpErrors().toString();
-                    snpErrors = createErrorForEmail(snpErrors);
-                }
-                else {snpErrors = "none";}
-                String snpErrorBody = "SNP Error(s): " + snpErrors + "\n";
-
-                // Gene Not On Genome Error
-                String geneNotOnGenomeErrors = "";
-                if (!studyWithNcbiError.getGeneNotOnGenomeErrors().isEmpty()) {
-                    geneNotOnGenomeErrors = studyWithNcbiError.getGeneNotOnGenomeErrors().toString();
-                    geneNotOnGenomeErrors = createErrorForEmail(geneNotOnGenomeErrors);
-                }
-                else {geneNotOnGenomeErrors = "none";}
-                String geneNotOnGenomeErrorsBody = "Gene Not On Genome Error(s): " + geneNotOnGenomeErrors + "\n";
-
-                // SNP Gene On Different Chromosome Error
-                String snpGeneOnDiffChrErrors = "";
-                if (!studyWithNcbiError.getSnpGeneOnDiffChrErrors().isEmpty()) {
-                    snpGeneOnDiffChrErrors = studyWithNcbiError.getSnpGeneOnDiffChrErrors().toString();
-                    snpGeneOnDiffChrErrors = createErrorForEmail(snpGeneOnDiffChrErrors);
-                }
-                else {snpGeneOnDiffChrErrors = "none";}
-                String snpGeneOnDiffChrErrorsBody =
-                        "SNP Gene On Different Chromosome Error(s): " + snpGeneOnDiffChrErrors + "\n";
-
-                // No Gene For Symbol Error
-                String noGeneForSymbolErrors = "";
-                if (!studyWithNcbiError.getNoGeneForSymbolErrors().isEmpty()) {
-                    noGeneForSymbolErrors = studyWithNcbiError.getNoGeneForSymbolErrors().toString();
-                    noGeneForSymbolErrors = createErrorForEmail(noGeneForSymbolErrors);
-                }
-                else {noGeneForSymbolErrors = "none";}
-                String noGeneForSymbolErrorsBody = "No Gene For Symbol Error(s): " + noGeneForSymbolErrors + "\n";
-
-                // Edit link
-                Long studyId = studyWithNcbiError.getStudyId();
-                String editStudyLink = "Edit link: http://garfield.ebi.ac.uk:8080/gwas/curation/studies/" + studyId;
-
-                // Create email body
-                emailBody = emailBody + "\n" + title + author + studyDateBody + sendToNCBIDateBody + pubmedId +
-                        pubmedErrorBody +
-                        snpErrorBody +
-                        geneNotOnGenomeErrorsBody + snpGeneOnDiffChrErrorsBody + noGeneForSymbolErrorsBody +
-                        editStudyLink +
-                        "\n";
-            }
+        if (associations.isEmpty()) {
+            mappingDetails = "No associations for this study";
         }
-
         else {
-            emailBody = "\nNo errors found\n";
-        }
 
-        // Create summary view of studies sent to NCBI
-        String sentToNcbiSummary = "";
-        if (!studiesSentToNcbi.isEmpty()) {
-            for (StudyAuditView studySentToNcbi : studiesSentToNcbi) {
-                String title = studySentToNcbi.getTitle();
-                String author = studySentToNcbi.getAuthor();
-                String pubmedId = studySentToNcbi.getPubmedId();
+            for (Association association : associations) {
 
-                // Edit link
-                Long studyId = studySentToNcbi.getStudyId();
-                String editStudyLink = "Edit link: http://garfield.ebi.ac.uk:8080/gwas/curation/studies/" + studyId;
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+                String mappingDate = "";
+                String performer = "";
 
-                sentToNcbiSummary =
-                        sentToNcbiSummary + "\n" + title + "\t" + author + "\t" + pubmedId + "\t" + editStudyLink +
-                                "\n";
+                if (association.getLastMappingDate() != null) {
+                    mappingDate = dateFormat.format(association.getLastMappingDate());
+                }
 
+                if (association.getLastMappingPerformedBy() != null) {
+                    performer = association.getLastMappingPerformedBy();
+                }
+
+                String associationLink =
+                        getLink() + "associations/" + association.getId();
+
+                AssociationReport report = association.getAssociationReport();
+                Map<String, String> associationErrorMap =
+                        associationMappingErrorService.createAssociationErrorMap(report);
+                String errors = formatErrors(associationErrorMap);
+
+                // Only include details of associations with errors
+                // In future we may want to include all association details can remove this if condition
+                if (!errors.contains("No mapping errors found")) {
+                    mappingDetails = mappingDetails + "Association: " + associationLink + "\n"
+                            + "Last Mapping Date: " + mappingDate + "\n"
+                            + "Last Mapping Performed By: " + performer + "\n"
+                            + "Mapping errors: " + errors + "\n";
+                }
             }
         }
 
-        else {sentToNcbiSummary = "No studies sent to NCBI";}
 
+        return mappingDetails;
+    }
 
-        // Format mail message
+    // Format the errors to include in the email
+    private String formatErrors(Map<String, String> map) {
+
+        String errors = "";
+
+        // Format errors
+        if (!map.isEmpty()) {
+            for (String key : map.keySet()) {
+                errors = errors + map.get(key) + "\n";
+            }
+        }
+        else {
+            errors = "No mapping errors found" + "\n";
+        }
+
+        return errors;
+    }
+
+    public void sendReleaseChangeEmail(Integer currentEnsemblReleaseNumberInDatabase, int latestEnsemblReleaseNumber) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(getTo());
         mailMessage.setFrom(getFrom());
-        mailMessage.setSubject("GWAS Curation daily audit report");
+        mailMessage.setSubject("New Ensembl Release Identified");
         mailMessage.setText(
-                "\nSummary of studies sent to NCBI for mapping: " + "\n" +
-                        "Total number of studies with status 'Send To NCBI' before pipeline ran (see details below): " +
-                        totalNumberOfStudiesSentToNcbi + "\n"
-                        + sentToNcbiSummary
-                        + "\n\nSummary of errors:\n" +
-                        "Total number of studies with data import errors: " + totalStudiesWithImportErrors +
-                        "\n" + "Total number of studies with NCBI pipeline errors (see details below): " +
-                        totalStudiesWithNcbiErrors + "\n" + emailBody);
-
-        getLog().info("Sending daily audit email");
+                "The latest Ensembl release is number "
+                        + latestEnsemblReleaseNumber
+                        + "."
+                        + "\n"
+                        + "The GWAS catalog is mapped to Ensembl release "
+                        + currentEnsemblReleaseNumberInDatabase
+                        + "."
+                        + "\n\n"
+                        + "All associations will now be remapped to the latest Ensembl release.");
         javaMailSender.send(mailMessage);
     }
 
-
-    // Format text for email
-    private String createErrorForEmail(String errorString) {
-        String emailString = errorString;
-        emailString = emailString.replaceAll("\\[", "");
-        emailString = emailString.replaceAll("]", "");
-        emailString = emailString.replaceAll(", ", "\n");
-        return emailString;
-    }
 
     // Getter and setters
     public String getFrom() {
@@ -248,5 +207,13 @@ public class MailService {
 
     public void setTo(String to) {
         this.to = to;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 }

@@ -58,11 +58,19 @@ public class SnpAssociationTableView {
 
     private String snpInteraction;
 
-    private String snpChecked;
+    private String snpApproved;
 
     private String snpStatuses;
 
     private Map<String, String> associationErrorMap = new HashMap<>();
+
+    private String associationErrorsChecked;
+
+    private String lastMappingPerformedBy;
+
+    private String lastMappingDate;
+
+    private String syntaxErrorsFound;
 
     // Constructors
     public SnpAssociationTableView() {
@@ -89,9 +97,13 @@ public class SnpAssociationTableView {
                                    String associationType,
                                    String multiSnpHaplotype,
                                    String snpInteraction,
-                                   String snpChecked,
+                                   String snpApproved,
                                    String snpStatuses,
-                                   Map<String, String> associationErrorMap) {
+                                   Map<String, String> associationErrorMap,
+                                   String associationErrorsChecked,
+                                   String lastMappingPerformedBy,
+                                   String lastMappingDate,
+                                   String syntaxErrorsFound) {
         this.associationId = associationId;
         this.authorReportedGenes = authorReportedGenes;
         this.strongestRiskAlleles = strongestRiskAlleles;
@@ -113,9 +125,13 @@ public class SnpAssociationTableView {
         this.associationType = associationType;
         this.multiSnpHaplotype = multiSnpHaplotype;
         this.snpInteraction = snpInteraction;
-        this.snpChecked = snpChecked;
+        this.snpApproved = snpApproved;
         this.snpStatuses = snpStatuses;
         this.associationErrorMap = associationErrorMap;
+        this.associationErrorsChecked = associationErrorsChecked;
+        this.lastMappingPerformedBy = lastMappingPerformedBy;
+        this.lastMappingDate = lastMappingDate;
+        this.syntaxErrorsFound = syntaxErrorsFound;
     }
 
     public Long getAssociationId() {
@@ -286,12 +302,12 @@ public class SnpAssociationTableView {
         this.snpInteraction = snpInteraction;
     }
 
-    public String getSnpChecked() {
-        return snpChecked;
+    public String getSnpApproved() {
+        return snpApproved;
     }
 
-    public void setSnpChecked(String snpChecked) {
-        this.snpChecked = snpChecked;
+    public void setSnpApproved(String snpApproved) {
+        this.snpApproved = snpApproved;
     }
 
     public String getSnpStatuses() {
@@ -308,5 +324,37 @@ public class SnpAssociationTableView {
 
     public void setAssociationErrorMap(Map<String, String> associationErrorMap) {
         this.associationErrorMap = associationErrorMap;
+    }
+
+    public String getAssociationErrorsChecked() {
+        return associationErrorsChecked;
+    }
+
+    public void setAssociationErrorsChecked(String associationErrorsChecked) {
+        this.associationErrorsChecked = associationErrorsChecked;
+    }
+
+    public String getLastMappingPerformedBy() {
+        return lastMappingPerformedBy;
+    }
+
+    public void setLastMappingPerformedBy(String lastMappingPerformedBy) {
+        this.lastMappingPerformedBy = lastMappingPerformedBy;
+    }
+
+    public String getLastMappingDate() {
+        return lastMappingDate;
+    }
+
+    public void setLastMappingDate(String lastMappingDate) {
+        this.lastMappingDate = lastMappingDate;
+    }
+
+    public String getSyntaxErrorsFound() {
+        return syntaxErrorsFound;
+    }
+
+    public void setSyntaxErrorsFound(String syntaxErrorsFound) {
+        this.syntaxErrorsFound = syntaxErrorsFound;
     }
 }

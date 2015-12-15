@@ -1,19 +1,19 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationTableView;
 import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by emma on 20/05/2015.
@@ -25,11 +25,21 @@ import java.util.Map;
 @Service
 public class AssociationViewService {
 
-    // Constructor
-    public AssociationViewService() {
+    private AssociationMappingErrorService associationMappingErrorService;
+    private AssociationComponentsSyntaxChecks associationComponentsSyntaxChecks;
+
+    @Autowired
+    public AssociationViewService(AssociationMappingErrorService associationMappingErrorService,
+                                  AssociationComponentsSyntaxChecks associationComponentsSyntaxChecks) {
+        this.associationMappingErrorService = associationMappingErrorService;
+        this.associationComponentsSyntaxChecks = associationComponentsSyntaxChecks;
     }
 
-    // Create object that will be returned to view
+    /**
+     * Create object, from Association, that will be returned to view
+     *
+     * @param association Association object
+     */
     public SnpAssociationTableView createSnpAssociationTableView(Association association) {
         SnpAssociationTableView snpAssociationTableView = new SnpAssociationTableView();
 
@@ -52,6 +62,7 @@ public class AssociationViewService {
         Collection<String> allLociSnpStatuses = new ArrayList<String>();
 
         // By looking at each locus in turn we can keep order in view
+        String syntaxError = ""; // store any syntax errors
         for (Locus locus : loci) {
 
             // Store gene names, a locus can have a number of genes attached.
@@ -72,6 +83,9 @@ public class AssociationViewService {
             for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
                 allLociRiskAlleles.add(riskAllele.getRiskAlleleName());
 
+                // Check for any potential errors
+                syntaxError = syntaxError + associationComponentsSyntaxChecks.checkRiskAllele(riskAllele.getRiskAlleleName());
+
                 // For standard association set the risk allele frequency
                 // Based on assumption we only have one locus with a single risk allele attached
                 if (!association.getMultiSnpHaplotype() && !association.getSnpInteraction()) {
@@ -84,12 +98,18 @@ public class AssociationViewService {
                 SingleNucleotidePolymorphism snp = riskAllele.getSnp();
                 allLociSnps.add(snp.getRsId());
 
+                // Check for any potential errors
+                syntaxError = syntaxError + associationComponentsSyntaxChecks.checkSnp(snp.getRsId());
+
                 // Set proxies if present
-                Collection <String> currentLocusProxies =  new ArrayList<>();
+                Collection<String> currentLocusProxies = new ArrayList<>();
                 String commaSeparatedProxies = "";
                 if (riskAllele.getProxySnps() != null) {
                     for (SingleNucleotidePolymorphism proxySnp : riskAllele.getProxySnps()) {
                         currentLocusProxies.add(proxySnp.getRsId());
+
+                        // Check for any potential errors
+                        syntaxError = syntaxError + associationComponentsSyntaxChecks.checkProxy(proxySnp.getRsId());
                     }
                 }
 
@@ -248,49 +268,51 @@ public class AssociationViewService {
             }
         }
 
-        if (association.getSnpChecked() != null) {
-            if (association.getSnpChecked()) {
-                snpAssociationTableView.setSnpChecked("Yes");
+        if (association.getSnpApproved() != null) {
+            if (association.getSnpApproved()) {
+                snpAssociationTableView.setSnpApproved("Yes");
             }
 
 
-            if (!association.getSnpChecked()) {
-                snpAssociationTableView.setSnpChecked("No");
+            if (!association.getSnpApproved()) {
+                snpAssociationTableView.setSnpApproved("No");
+            }
+        }
+
+        // Check if the errors in the association report have been checked by a curator
+        if (association.getAssociationReport() != null) {
+            if (association.getAssociationReport().getErrorCheckedByCurator() != null) {
+                if (association.getAssociationReport().getErrorCheckedByCurator()) {
+                    snpAssociationTableView.setAssociationErrorsChecked("Yes");
+                }
+
+                if (!association.getAssociationReport().getErrorCheckedByCurator()) {
+                    snpAssociationTableView.setAssociationErrorsChecked("No");
+                }
             }
         }
 
         // Set error map
-        snpAssociationTableView.setAssociationErrorMap(createAssociationErrorMap(association.getAssociationReport()));
-        return snpAssociationTableView;
-    }
+        snpAssociationTableView.setAssociationErrorMap(associationMappingErrorService.createAssociationErrorMap(
+                association.getAssociationReport()));
 
+        // Set syntax errors
+        if (!syntaxError.isEmpty()) {
+            snpAssociationTableView.setSyntaxErrorsFound("Yes");
+        }
+        else {snpAssociationTableView.setSyntaxErrorsFound("No");}
 
-    private Map<String, String> createAssociationErrorMap(AssociationReport associationReport) {
-
-        Map<String, String> associationErrorMap = new HashMap<>();
-
-        //Create map of errors
-        if (associationReport != null) {
-            if (associationReport.getSnpError() != null && !associationReport.getSnpError().isEmpty()) {
-                associationErrorMap.put("SNP Error: ", associationReport.getSnpError());
-            }
-
-            if (associationReport.getGeneNotOnGenome() != null &&
-                    !associationReport.getGeneNotOnGenome().isEmpty()) {
-                associationErrorMap.put("Gene Not On Genome Error: ", associationReport.getGeneNotOnGenome());
-            }
-
-            if (associationReport.getSnpGeneOnDiffChr() != null &&
-                    !associationReport.getSnpGeneOnDiffChr().isEmpty()) {
-                associationErrorMap.put("Snp Gene On Diff Chr: ", associationReport.getSnpGeneOnDiffChr());
-            }
-
-            if (associationReport.getNoGeneForSymbol() != null &&
-                    !associationReport.getNoGeneForSymbol().isEmpty()) {
-                associationErrorMap.put("No Gene For Symbol: ", associationReport.getNoGeneForSymbol());
-            }
+        // Get mapping details
+        if (association.getLastMappingPerformedBy() != null) {
+            snpAssociationTableView.setLastMappingPerformedBy(association.getLastMappingPerformedBy());
         }
 
-        return associationErrorMap;
+        if (association.getLastMappingDate() != null) {
+            DateFormat df = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+            String dateOfLastMapping = df.format(association.getLastMappingDate());
+            snpAssociationTableView.setLastMappingDate(dateOfLastMapping);
+        }
+
+        return snpAssociationTableView;
     }
 }

@@ -24,8 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.ontology.exception.UnexpectedOntologyStructureException;
 import uk.ac.ebi.spot.goci.ontology.OntologyConstants;
+import uk.ac.ebi.spot.goci.ontology.exception.UnexpectedOntologyStructureException;
 
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -48,12 +48,12 @@ public class IRITreeBuilder {
         return log;
     }
 
-//    OntologyLoader ontologyLoader;
-//
-//    @Autowired
-//    public IRITreeBuilder(OntologyLoader ontologyLoader){
-//        this.ontologyLoader = ontologyLoader;
-//    }
+    //    OntologyLoader ontologyLoader;
+    //
+    //    @Autowired
+    //    public IRITreeBuilder(OntologyLoader ontologyLoader){
+    //        this.ontologyLoader = ontologyLoader;
+    //    }
 
     public IRITree buildIRITree(URL efoLocation) throws URISyntaxException, OWLOntologyCreationException {
         // load efo

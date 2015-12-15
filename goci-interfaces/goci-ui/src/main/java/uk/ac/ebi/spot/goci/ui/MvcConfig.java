@@ -2,9 +2,8 @@ package uk.ac.ebi.spot.goci.ui;
 
 /**
  * Created by emma on 24/11/14.
- *
+ * <p>
  * Configuration class for configuring Spring MVC in the application.
- *
  */
 
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +27,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/docs").setViewName("docs");
         registry.addViewController("/docs/about").setViewName("docs-template");
         registry.addViewController("/docs/downloads").setViewName("docs-template");
+        registry.addViewController("/docs/diagram-downloads").setViewName("docs-template");
         registry.addViewController("/docs/faq").setViewName("docs-template");
         registry.addViewController("/docs/methods").setViewName("docs-template");
         registry.addViewController("/docs/ontology").setViewName("docs-template");

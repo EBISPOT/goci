@@ -7,7 +7,8 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta name="description" content="The NHGRI-EBI GWAS Catalog: a curated collection of all published genome-wide association studies, produced by a collaboration between EMBL-EBI and NHGRI"/>
+    <meta name="description"
+          content="The NHGRI-EBI GWAS Catalog: a curated collection of all published genome-wide association studies, produced by a collaboration between EMBL-EBI and NHGRI"/>
     <meta name="keywords" content="GWAS Catalog, GWAS, NHGRI, EBI, EMBL-EBI, SPOT"/>
     <meta name="author" content="Tony Burdett, Emma Hastings, Dani Welter, SPOT, EMBL-EBI, NHGRI"/>
     <link rel="icon" href="../static/images/favicon.ico" th:href="@{../images/favicon.ico}"/>
@@ -100,7 +101,8 @@
 <div class="jumbotron background-color-primary-accent">
     <div class="container">
         <div class="gwas-circle">
-            <img src="../static/images/GWAS_Catalog_circle_178x178.png" th:src="@{../images/GWAS_Catalog_circle_178x178.png}"/>
+            <img src="../static/images/GWAS_Catalog_circle_178x178.png"
+                 th:src="@{../images/GWAS_Catalog_circle_178x178.png}"/>
         </div>
         <div>
             <h1>GWAS Catalog</h1>
@@ -147,10 +149,11 @@
         -->
 
 
-        <div class="container-fluid col-md-9 col-md-offset-2"  id="lower_container">
+        <div class="container-fluid col-md-9 col-md-offset-2" id="lower_container">
 
             <h3>List of all reported traits in the GWAS Catalog</h3>
-            <h5>To search by one or more of these traits, select your traits of interest, then hit the "search" button</h5>
+            <h5>To search by one or more of these traits, select your traits of interest, then hit the "search"
+                button</h5>
 
             <div class="row">
                 <div id="loadingTraits" class="col-md-offset-4" style="display: none">
@@ -223,10 +226,17 @@
 <!-- Google analytics
 ================================================== -->
 <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    (function(i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function() {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
     ga('create', 'UA-60195133-1', 'auto');
     ga('send', 'pageview');

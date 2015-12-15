@@ -12,7 +12,7 @@ import uk.ac.ebi.spot.goci.repository.SecureUserRepository;
  * Created by emma on 10/02/15.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Implementation of springs UserDetailsService
  */
 @Service
@@ -33,9 +33,10 @@ public class CurrentUserDetailsService implements UserDetailsService {
         if (secureUserRepository.findByEmail(email) != null) {
             SecureUser secureUser = secureUserRepository.findByEmail(email);
             return new CurrentUser(secureUser);
-        } else {
+        }
+        else {
             throw new UsernameNotFoundException("User with email: " + email + " " +
-                    "was not found");
+                                                        "was not found");
         }
 
 

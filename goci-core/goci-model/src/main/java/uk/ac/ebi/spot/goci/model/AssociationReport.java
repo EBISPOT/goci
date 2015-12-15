@@ -18,11 +18,7 @@ public class AssociationReport {
     @GeneratedValue
     private Long id;
 
-    private Boolean snpPending;
-
     private Date lastUpdateDate;
-
-    private Long geneError;
 
     private String snpError;
 
@@ -30,7 +26,13 @@ public class AssociationReport {
 
     private String noGeneForSymbol;
 
-    private String geneNotOnGenome;
+    private String restServiceError;
+
+    private String suspectVariationError;
+
+    private String geneError;
+
+    private Boolean errorCheckedByCurator = false;
 
     @OneToOne
     private Association association;
@@ -39,21 +41,23 @@ public class AssociationReport {
     public AssociationReport() {
     }
 
-    public AssociationReport(boolean snpPending,
-                             Date lastUpdateDate,
-                             Long geneError,
+    public AssociationReport(Date lastUpdateDate,
                              String snpError,
                              String snpGeneOnDiffChr,
                              String noGeneForSymbol,
-                             String geneNotOnGenome,
+                             String restServiceError,
+                             String suspectVariationError,
+                             String geneError,
+                             Boolean errorCheckedByCurator,
                              Association association) {
-        this.snpPending = snpPending;
         this.lastUpdateDate = lastUpdateDate;
-        this.geneError = geneError;
         this.snpError = snpError;
         this.snpGeneOnDiffChr = snpGeneOnDiffChr;
         this.noGeneForSymbol = noGeneForSymbol;
-        this.geneNotOnGenome = geneNotOnGenome;
+        this.restServiceError = restServiceError;
+        this.suspectVariationError = suspectVariationError;
+        this.geneError = geneError;
+        this.errorCheckedByCurator = errorCheckedByCurator;
         this.association = association;
     }
 
@@ -65,28 +69,12 @@ public class AssociationReport {
         this.id = id;
     }
 
-    public boolean isSnpPending() {
-        return snpPending;
-    }
-
-    public void setSnpPending(boolean snpPending) {
-        this.snpPending = snpPending;
-    }
-
     public Date getLastUpdateDate() {
         return lastUpdateDate;
     }
 
     public void setLastUpdateDate(Date lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
-    }
-
-    public Long getGeneError() {
-        return geneError;
-    }
-
-    public void setGeneError(Long geneError) {
-        this.geneError = geneError;
     }
 
     public String getSnpError() {
@@ -113,12 +101,28 @@ public class AssociationReport {
         this.noGeneForSymbol = noGeneForSymbol;
     }
 
-    public String getGeneNotOnGenome() {
-        return geneNotOnGenome;
+    public String getRestServiceError() {
+        return restServiceError;
     }
 
-    public void setGeneNotOnGenome(String geneNotOnGenome) {
-        this.geneNotOnGenome = geneNotOnGenome;
+    public void setRestServiceError(String restServiceError) {
+        this.restServiceError = restServiceError;
+    }
+
+    public String getSuspectVariationError() {
+        return suspectVariationError;
+    }
+
+    public void setSuspectVariationError(String suspectVariationError) {
+        this.suspectVariationError = suspectVariationError;
+    }
+
+    public Boolean getErrorCheckedByCurator() {
+        return errorCheckedByCurator;
+    }
+
+    public void setErrorCheckedByCurator(Boolean errorCheckedByCurator) {
+        this.errorCheckedByCurator = errorCheckedByCurator;
     }
 
     public Association getAssociation() {
@@ -129,16 +133,11 @@ public class AssociationReport {
         this.association = association;
     }
 
-    @Override public String toString() {
-        return "AssociationReport{" +
-                "id=" + id +
-                ", snpPending=" + snpPending +
-                ", lastUpdateDate=" + lastUpdateDate +
-                ", geneError=" + geneError +
-                ", snpError='" + snpError + '\'' +
-                ", snpGeneOnDiffChr='" + snpGeneOnDiffChr + '\'' +
-                ", noGeneForSymbol='" + noGeneForSymbol + '\'' +
-                ", geneNotOnGenome='" + geneNotOnGenome + '\'' +
-                '}';
+    public String getGeneError() {
+        return geneError;
+    }
+
+    public void setGeneError(String geneError) {
+        this.geneError = geneError;
     }
 }

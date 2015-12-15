@@ -8,7 +8,7 @@ import uk.ac.ebi.spot.goci.model.SecureRole;
  * Created by emma on 10/02/15.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Repository accessing Role entity object
  */
 @RepositoryRestResource

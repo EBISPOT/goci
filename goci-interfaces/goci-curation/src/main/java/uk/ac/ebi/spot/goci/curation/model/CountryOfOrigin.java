@@ -5,8 +5,8 @@ package uk.ac.ebi.spot.goci.curation.model;
  *
  * @author emma
  *         <p>
- *         Service class to deal with processing string containing country of origin value,
- *         these appear as separate tags in HTML view
+ *         Service class to deal with processing string containing country of origin value, these appear as separate
+ *         tags in HTML view
  */
 public class CountryOfOrigin {
 

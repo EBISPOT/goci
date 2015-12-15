@@ -6,10 +6,10 @@ import javax.persistence.Id;
 
 /**
  * Created by emma on 09/02/15.
- * @author emma
  *
- * Model object representing user roles
- * Current roles are admin, curator, submitter
+ * @author emma
+ *         <p>
+ *         Model object representing user roles Current roles are admin, curator, submitter
  */
 @Entity
 public class SecureRole {

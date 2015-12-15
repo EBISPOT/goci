@@ -2,7 +2,7 @@ package uk.ac.ebi.spot.goci.ontology.exception;
 
 /**
  * Thrown to indicate that an assumption made about the structure or of an ontology was violated.
- * <p/>
+ * <p>
  * This can apply, for example,  to axioms with an expected cardinality (e.g. exactly one label annotation), axioms or
  * properties that are expected to be present, and so on
  *

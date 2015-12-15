@@ -14,12 +14,12 @@ import javax.servlet.http.HttpSessionListener;
 @Configuration
 public class PussycatConfiguration {
 
-        @Bean PussycatSessionStrategy pussycatSessionStrategy() {
-            return PussycatSessionStrategy.JOIN;
-        }
+    @Bean PussycatSessionStrategy pussycatSessionStrategy() {
+        return PussycatSessionStrategy.JOIN;
+    }
 
     @Bean
-    public HttpSessionListener httpSessionListener(){
+    public HttpSessionListener httpSessionListener() {
         return new PussycatAwareHttpSessionListener();
     }
 

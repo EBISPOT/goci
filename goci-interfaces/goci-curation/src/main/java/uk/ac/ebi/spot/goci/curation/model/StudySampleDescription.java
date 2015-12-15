@@ -7,8 +7,9 @@ import java.util.Date;
  *
  * @author emma
  *         <p>
- *         DTO used to store study, ethnicity and relevant housekeeyping information. Designed to allow curators ability to
- *         download a spreadsheet of the sample description, detailed ancestry and country information for all studies.
+ *         DTO used to store study, ethnicity and relevant housekeeyping information. Designed to allow curators ability
+ *         to download a spreadsheet of the sample description, detailed ancestry and country information for all
+ *         studies.
  */
 public class StudySampleDescription {
 
@@ -44,7 +45,22 @@ public class StudySampleDescription {
 
     private String notes;
 
-    public StudySampleDescription(Long studyId, String author, Date publicationDate, String pubmedId, String initialSampleSize, String replicateSampleSize, Boolean ethnicityCheckedLevelOne, Boolean ethnicityCheckedLevelTwo, String type, Integer numberOfIndividuals, String ethnicGroup, String countryOfOrigin, String countryOfRecruitment, String description, String sampleSizesMatch, String notes) {
+    public StudySampleDescription(Long studyId,
+                                  String author,
+                                  Date publicationDate,
+                                  String pubmedId,
+                                  String initialSampleSize,
+                                  String replicateSampleSize,
+                                  Boolean ethnicityCheckedLevelOne,
+                                  Boolean ethnicityCheckedLevelTwo,
+                                  String type,
+                                  Integer numberOfIndividuals,
+                                  String ethnicGroup,
+                                  String countryOfOrigin,
+                                  String countryOfRecruitment,
+                                  String description,
+                                  String sampleSizesMatch,
+                                  String notes) {
         this.studyId = studyId;
         this.author = author;
         this.publicationDate = publicationDate;

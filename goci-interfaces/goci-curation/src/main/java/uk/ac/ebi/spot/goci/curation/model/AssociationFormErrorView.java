@@ -1,5 +1,8 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by emma on 29/05/2015.
  *
@@ -14,6 +17,8 @@ public class AssociationFormErrorView {
     private String riskAlleleErrors;
 
     private String proxyErrors;
+
+    private Map<String, String> associationErrorMap = new HashMap<>();
 
     // Constructor
     public AssociationFormErrorView() {
@@ -42,5 +47,13 @@ public class AssociationFormErrorView {
 
     public void setProxyErrors(String proxyErrors) {
         this.proxyErrors = proxyErrors;
+    }
+
+    public Map<String, String> getAssociationErrorMap() {
+        return associationErrorMap;
+    }
+
+    public void setAssociationErrorMap(Map<String, String> associationErrorMap) {
+        this.associationErrorMap = associationErrorMap;
     }
 }

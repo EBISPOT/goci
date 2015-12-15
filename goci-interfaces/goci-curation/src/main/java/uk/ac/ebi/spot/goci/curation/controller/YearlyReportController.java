@@ -43,7 +43,10 @@ public class YearlyReportController {
     private ReportService reportService;
 
     @Autowired
-    public YearlyReportController(YearlyTotalsSummaryViewRepository yearlyTotalsSummaryViewRepository, CuratorRepository curatorRepository, CurationStatusRepository curationStatusRepository, ReportService reportService) {
+    public YearlyReportController(YearlyTotalsSummaryViewRepository yearlyTotalsSummaryViewRepository,
+                                  CuratorRepository curatorRepository,
+                                  CurationStatusRepository curationStatusRepository,
+                                  ReportService reportService) {
         this.yearlyTotalsSummaryViewRepository = yearlyTotalsSummaryViewRepository;
         this.curatorRepository = curatorRepository;
         this.curationStatusRepository = curationStatusRepository;
@@ -73,20 +76,33 @@ public class YearlyReportController {
 
         //Search database for various filter options
         if (status != null && curator != null && year != null) { // all filter options supplied
-            yearlyTotalsSummaryViews = yearlyTotalsSummaryViewRepository.findByCuratorAndCurationStatusAndYearOrderByYearDesc(curatorName, statusName, year);
-        } else if (status != null && curator != null) { // status and curator
-            yearlyTotalsSummaryViews = yearlyTotalsSummaryViewRepository.findByCuratorAndCurationStatus(curatorName, statusName);
-        } else if (status != null && year != null) { // status and year
-            yearlyTotalsSummaryViews = yearlyTotalsSummaryViewRepository.findByCurationStatusAndYearOrderByYearDesc(statusName, year);
-        } else if (status != null) {
+            yearlyTotalsSummaryViews =
+                    yearlyTotalsSummaryViewRepository.findByCuratorAndCurationStatusAndYearOrderByYearDesc(curatorName,
+                                                                                                           statusName,
+                                                                                                           year);
+        }
+        else if (status != null && curator != null) { // status and curator
+            yearlyTotalsSummaryViews =
+                    yearlyTotalsSummaryViewRepository.findByCuratorAndCurationStatus(curatorName, statusName);
+        }
+        else if (status != null && year != null) { // status and year
+            yearlyTotalsSummaryViews =
+                    yearlyTotalsSummaryViewRepository.findByCurationStatusAndYearOrderByYearDesc(statusName, year);
+        }
+        else if (status != null) {
             yearlyTotalsSummaryViews = yearlyTotalsSummaryViewRepository.findByCurationStatus(statusName);
-        } else if (curator != null && year != null) { // curator and year
-            yearlyTotalsSummaryViews = yearlyTotalsSummaryViewRepository.findByCuratorAndYearOrderByYearDesc(curatorName, year);
-        } else if (curator != null) {
+        }
+        else if (curator != null && year != null) { // curator and year
+            yearlyTotalsSummaryViews =
+                    yearlyTotalsSummaryViewRepository.findByCuratorAndYearOrderByYearDesc(curatorName, year);
+        }
+        else if (curator != null) {
             yearlyTotalsSummaryViews = yearlyTotalsSummaryViewRepository.findByCurator(curatorName);
-        } else if (year != null) {
+        }
+        else if (year != null) {
             yearlyTotalsSummaryViews = yearlyTotalsSummaryViewRepository.findByYearOrderByYearDesc(year);
-        } else { // no filters
+        }
+        else { // no filters
             yearlyTotalsSummaryViews = yearlyTotalsSummaryViewRepository.findAll();
         }
 

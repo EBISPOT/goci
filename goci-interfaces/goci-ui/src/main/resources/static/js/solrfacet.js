@@ -4,7 +4,7 @@
 
 var resources = ['study', 'association', 'diseasetrait'];
 
-function applyFacet(){
+function applyFacet() {
     var searchTerm = $("#search-box").val();
     $('a.list-group-item').removeClass('selected');
     buildBreadcrumbs();
@@ -46,20 +46,20 @@ function clearFacetting() {
 
 }
 
-function processFacet(resource){
+function processFacet(resource) {
     //console.log("Received data and ready to process");
     //var resource = data.responseHeader.params.fq.substring(13).toLowerCase();
     console.log("Facet is " + resource);
-    for(var f=0; f < resources.length; f++){
+    for (var f = 0; f < resources.length; f++) {
         var summaries = $('#' + resources[f] + '-summaries');
-        if(resources[f] != resource){
+        if (resources[f] != resource) {
             //if (summaries.hasClass("more-results")) {
             //    summaries.find('.table-toggle').show();
             //}
             //summaries.find('.hidden-resource').collapse('hide');
             summaries.hide();
         }
-        else{
+        else {
             summaries.show();
 
             loadAdditionalResults(resource, false);

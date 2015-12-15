@@ -32,7 +32,7 @@ public class AncestryMappingService {
     @Autowired
     public AncestryMappingService(EthnicityRepository ethnicityRepository,
                                   OntologyLoader ontologyLoader,
-                                  OntologyExtractionService ontologyExtractionService){
+                                  OntologyExtractionService ontologyExtractionService) {
         this.ethnicityRepository = ethnicityRepository;
         this.ontologyLoader = ontologyLoader;
         this.ontologyExtractionService = ontologyExtractionService;
@@ -42,11 +42,11 @@ public class AncestryMappingService {
         coRAnnotations = new ArrayList<CoRAnnotation>();
     }
 
-//    private Logger log = LoggerFactory.getLogger(getClass());
-//
-//    protected Logger getLog() {
-//        return log;
-//    }
+    //    private Logger log = LoggerFactory.getLogger(getClass());
+    //
+    //    protected Logger getLog() {
+    //        return log;
+    //    }
 
     private Logger output = LoggerFactory.getLogger("output");
 
@@ -56,28 +56,28 @@ public class AncestryMappingService {
 
     private Logger errors = LoggerFactory.getLogger("errors");
 
-    protected Logger getErrors(){
-        return  errors;
+    protected Logger getErrors() {
+        return errors;
     }
 
-    public List<Ethnicity> getAllAncestries(){
+    public List<Ethnicity> getAllAncestries() {
         List<Ethnicity> ancestries = ethnicityRepository.findAll();
         getErrors().info("Found " + ancestries.size() + " ancestry records");
-        return  ancestries;
+        return ancestries;
     }
 
-    public void printOutOntologyContent(){
+    public void printOutOntologyContent() {
         getErrors().info("Available ancestral groups:");
         Set<String> groups = ontologyExtractionService.getAncestralGroups().keySet();
 
-        for(String grp : groups){
+        for (String grp : groups) {
             getErrors().info(grp);
         }
 
         getErrors().info("Available countries:");
         Set<String> countries = ontologyExtractionService.getCountries().keySet();
 
-        for(String ctr : countries){
+        for (String ctr : countries) {
             getErrors().info(ctr);
         }
 
@@ -85,49 +85,53 @@ public class AncestryMappingService {
     }
 
     public void processAncestries() {
-        printOutOntologyContent();;
+        printOutOntologyContent();
+        ;
 
         List<Ethnicity> allAncestries = getAllAncestries();
 
-        for(Ethnicity ancestry : allAncestries){
+        for (Ethnicity ancestry : allAncestries) {
 
             Long id = ancestry.getId();
             String ancestralGroup = ancestry.getEthnicGroup();
             String coo = ancestry.getCountryOfOrigin();
             String cor = ancestry.getCountryOfRecruitment();
 
-            if(ancestralGroup != null) {
+            if (ancestralGroup != null) {
                 if (ancestralGroup.contains(",")) {
                     String[] groups = ancestralGroup.split(",");
 
                     for (String group : groups) {
                         mapAncestralGroup(id, group.toLowerCase());
                     }
-                } else {
+                }
+                else {
                     mapAncestralGroup(id, ancestralGroup.toLowerCase());
                 }
             }
 
-            if(coo != null ) {
+            if (coo != null) {
                 if (coo.contains(",")) {
                     String[] countries = coo.split(",");
 
                     for (String country : countries) {
                         mapCoO(id, country.toLowerCase());
                     }
-                } else {
+                }
+                else {
                     mapCoO(id, coo.toLowerCase());
                 }
             }
 
-            if(cor != null) {
+            if (cor != null) {
                 if (cor.contains(",")) {
                     String[] countries = cor.split(",");
 
                     for (String country : countries) {
                         mapCoR(id, country.toLowerCase());
                     }
-                } else {
+                }
+                else {
                     mapCoR(id, cor.toLowerCase());
                 }
             }
@@ -139,9 +143,8 @@ public class AncestryMappingService {
     }
 
 
-
     private void mapCoR(Long id, String country) {
-        if(ontologyExtractionService.getCountryURI(country) != null){
+        if (ontologyExtractionService.getCountryURI(country) != null) {
             coRAnnotations.add(new CoRAnnotation(id, country, ontologyExtractionService.getCountryURI(country)));
         }
         else {
@@ -150,7 +153,7 @@ public class AncestryMappingService {
     }
 
     private void mapCoO(Long id, String country) {
-        if(ontologyExtractionService.getCountryURI(country) != null){
+        if (ontologyExtractionService.getCountryURI(country) != null) {
             coOAnnotations.add(new CoOAnnotation(id, country, ontologyExtractionService.getCountryURI(country)));
         }
         else {
@@ -160,14 +163,17 @@ public class AncestryMappingService {
 
     private void mapAncestralGroup(Long id, String group) {
         String label;
-        if(group.contains("unspecified")){
+        if (group.contains("unspecified")) {
             label = group.split(" ")[0];
         }
-        else{
+        else {
             label = group;
         }
-        if(ontologyExtractionService.getAncestralGroupURI(label) != null){
-            ancestralGroups.add(new AncestralGroupAnnotation(id, group, label, ontologyExtractionService.getAncestralGroupURI(group)));
+        if (ontologyExtractionService.getAncestralGroupURI(label) != null) {
+            ancestralGroups.add(new AncestralGroupAnnotation(id,
+                                                             group,
+                                                             label,
+                                                             ontologyExtractionService.getAncestralGroupURI(group)));
         }
         else {
             getErrors().info("No matching ontology found for ancestral group " + group + " (ID " + id + ")");
@@ -176,19 +182,20 @@ public class AncestryMappingService {
 
     public void printResult() {
         getOutput().info("Countries of origin: ");
-        for(CoOAnnotation annot : coOAnnotations){
+        for (CoOAnnotation annot : coOAnnotations) {
             getOutput().info(annot.getId() + ", " + annot.getCountryOfOrigin() + ", " + annot.getOntologyURI());
         }
 
         getOutput().info("Countries of recruitment: ");
 
-        for(CoRAnnotation annot : coRAnnotations){
+        for (CoRAnnotation annot : coRAnnotations) {
             getOutput().info(annot.getId() + ", " + annot.getCountryOfRecruitment() + ", " + annot.getOntologyURI());
         }
 
         getOutput().info("Ancestral groups: ");
-        for(AncestralGroupAnnotation annot : ancestralGroups){
-            getOutput().info(annot.getId() + ", " + annot.getEthnicGroup() + ", " + annot.getOntologyLabel() + ", " + annot.getOntologyURI());
+        for (AncestralGroupAnnotation annot : ancestralGroups) {
+            getOutput().info(annot.getId() + ", " + annot.getEthnicGroup() + ", " + annot.getOntologyLabel() + ", " +
+                                     annot.getOntologyURI());
         }
     }
 }

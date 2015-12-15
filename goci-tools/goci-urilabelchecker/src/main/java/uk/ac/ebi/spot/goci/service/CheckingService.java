@@ -14,12 +14,9 @@ import java.util.List;
 import java.util.Set;
 
 /**
-* Created with IntelliJ IDEA.
-* User: dwelter
-* Date: 22/04/13
-* Time: 14:22
-* To change this template use File | Settings | File Templates.
-*/
+ * Created with IntelliJ IDEA. User: dwelter Date: 22/04/13 Time: 14:22 To change this template use File | Settings |
+ * File Templates.
+ */
 
 @Service
 public class CheckingService {
@@ -36,14 +33,14 @@ public class CheckingService {
 
 
     @Autowired
-    public CheckingService(OntologyLoader ontologyLoader, TraitService traitService, OntologyService ontologyService){
+    public CheckingService(OntologyLoader ontologyLoader, TraitService traitService, OntologyService ontologyService) {
         this.ontologyLoader = ontologyLoader;
         this.traitService = traitService;
         this.ontologyService = ontologyService;
     }
 
 
-    public void checkURIs(){
+    public void checkURIs() {
         System.out.println("Loading data from GWAS database");
 
         List<EfoTrait> allEfoTraits = traitService.findAllEfoTraits();
@@ -52,47 +49,46 @@ public class CheckingService {
         System.out.println("Data loading complete");
 
 
-        for(EfoTrait efoTrait : allEfoTraits){
+        for (EfoTrait efoTrait : allEfoTraits) {
             validateEfoTrait(efoTrait);
         }
 
     }
 
 
-
-
-    public void validateEfoTrait(EfoTrait trait){
+    public void validateEfoTrait(EfoTrait trait) {
         String uri = trait.getUri();
         String traitLabel = trait.getTrait();
         OWLClass cls = null;
 
-        try{
+        try {
             cls = ontologyService.getOWLClassByURI(uri);
         }
-        catch (Exception e){
+        catch (Exception e) {
             getLog().debug("IRI " + uri + " is not a valid IRI");
         }
 
-        if(cls != null){
+        if (cls != null) {
             String label = ontologyLoader.getLabel(cls.getIRI());
 
-            if(label != null){
+            if (label != null) {
                 boolean found = false;
 
-                if(label.equalsIgnoreCase(traitLabel)){
+                if (label.equalsIgnoreCase(traitLabel)) {
                     found = true;
                 }
 
-                if(!found){
+                if (!found) {
                     Set<String> syns = ontologyLoader.getSynonyms(cls.getIRI());
 
-                    for(String syn : syns){
-                        if(syn.equalsIgnoreCase(traitLabel)){
+                    for (String syn : syns) {
+                        if (syn.equalsIgnoreCase(traitLabel)) {
                             found = true;
                         }
                     }
-                    if(!found){
-                        getLog().info("Class " + uri + " (label: " + label + ") does not have a label or synonym of " + traitLabel + ". DB ID is " + trait.getId());
+                    if (!found) {
+                        getLog().info("Class " + uri + " (label: " + label + ") does not have a label or synonym of " +
+                                              traitLabel + ". DB ID is " + trait.getId());
                     }
                 }
             }
@@ -102,12 +98,12 @@ public class CheckingService {
 
 
         }
-        else{
+        else {
             getLog().info(uri + " is not a valid EFO URI");
 
             Collection<OWLClass> classes = ontologyService.getOWLClassesByLabel(traitLabel);
 
-            if(classes.isEmpty()){
+            if (classes.isEmpty()) {
                 getLog().info("No EFO classes match the label " + traitLabel);
             }
         }

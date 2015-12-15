@@ -14,7 +14,7 @@ public class AncestralGroupAnnotation {
     private String ontologyURI;
 
 
-    public AncestralGroupAnnotation(Long id, String ethnicGroup, String ontologyLabel, String ontologyURI){
+    public AncestralGroupAnnotation(Long id, String ethnicGroup, String ontologyLabel, String ontologyURI) {
         this.id = id;
         this.ethnicGroup = ethnicGroup;
         this.ontologyLabel = ontologyLabel;

@@ -32,7 +32,16 @@ public class StudySearchFilter {
     public StudySearchFilter() {
     }
 
-    public StudySearchFilter(Long statusSearchFilterId, Long curatorSearchFilterId, Integer monthFilter, Integer yearFilter, String pubmedId, String author, String studyType, Long efoTraitSearchFilterId, Long diseaseTraitSearchFilterId, String notesQuery) {
+    public StudySearchFilter(Long statusSearchFilterId,
+                             Long curatorSearchFilterId,
+                             Integer monthFilter,
+                             Integer yearFilter,
+                             String pubmedId,
+                             String author,
+                             String studyType,
+                             Long efoTraitSearchFilterId,
+                             Long diseaseTraitSearchFilterId,
+                             String notesQuery) {
         this.statusSearchFilterId = statusSearchFilterId;
         this.curatorSearchFilterId = curatorSearchFilterId;
         this.monthFilter = monthFilter;

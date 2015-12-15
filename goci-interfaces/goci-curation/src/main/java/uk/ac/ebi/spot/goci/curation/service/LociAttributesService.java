@@ -13,7 +13,6 @@ import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by emma on 13/04/2015.
@@ -46,13 +45,15 @@ public class LociAttributesService {
         Collection<Gene> locusGenes = new ArrayList<Gene>();
         for (String authorReportedGene : authorReportedGenes) {
 
+            authorReportedGene = tidy_curator_entered_string(authorReportedGene);
+
             // Check if gene already exists, note we may have duplicates so for moment just take first one
-            List<Gene> genesInDatabase = geneRepository.findByGeneNameIgnoreCase(authorReportedGene);
+            Gene geneInDatabase = geneRepository.findByGeneNameIgnoreCase(authorReportedGene);
             Gene gene;
 
             // Exists in database already
-            if (genesInDatabase.size() > 0) {
-                gene = genesInDatabase.get(0);
+            if (geneInDatabase != null) {
+                gene = geneInDatabase;
             }
 
             // If gene doesn't exist then create and save
@@ -75,7 +76,7 @@ public class LociAttributesService {
 
         //Create new risk allele, at present we always create a new risk allele for each locus within an association
         RiskAllele riskAllele = new RiskAllele();
-        riskAllele.setRiskAlleleName(curatorEnteredRiskAllele);
+        riskAllele.setRiskAlleleName(tidy_curator_entered_string(curatorEnteredRiskAllele));
         riskAllele.setSnp(snp);
 
         // Save risk allele
@@ -90,15 +91,17 @@ public class LociAttributesService {
     public void deleteLocus(Locus locus) {
         locusRepository.delete(locus);
     }
-    
+
     public SingleNucleotidePolymorphism createSnp(String curatorEnteredSNP) {
 
-        // Check if SNP already exists database, note database contains duplicates
-        List<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms =
+        curatorEnteredSNP = tidy_curator_entered_string(curatorEnteredSNP);
+
+        // Check if SNP already exists database
+        SingleNucleotidePolymorphism snpInDatabase =
                 singleNucleotidePolymorphismRepository.findByRsIdIgnoreCase(curatorEnteredSNP);
         SingleNucleotidePolymorphism snp;
-        if (singleNucleotidePolymorphisms.size() > 0) {
-            snp = singleNucleotidePolymorphisms.get(0);
+        if (snpInDatabase != null) {
+            snp = snpInDatabase;
         }
 
         // If SNP doesn't exist, create and save
@@ -113,5 +116,18 @@ public class LociAttributesService {
 
         return snp;
 
+    }
+
+
+    public String tidy_curator_entered_string(String string) {
+
+        String newString = string.trim();
+        String newline = System.getProperty("line.separator");
+
+        if (newString.contains(newline)) {
+            newString = newString.replace(newline, "");
+        }
+
+        return newString;
     }
 }

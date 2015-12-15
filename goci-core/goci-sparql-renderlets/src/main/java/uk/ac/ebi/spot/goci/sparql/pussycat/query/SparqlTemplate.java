@@ -1,7 +1,14 @@
 package uk.ac.ebi.spot.goci.sparql.pussycat.query;
 
 import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.query.*;
+import com.hp.hpl.jena.query.ParameterizedSparqlString;
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.query.QuerySolutionMap;
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.query.Syntax;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -34,7 +41,7 @@ public class SparqlTemplate {
 
     private String prefixes;
 
-    @Resource(name="prefixProperties")
+    @Resource(name = "prefixProperties")
     private Properties prefixProperties;
 
     public JenaQueryExecutionService getJenaQueryExecutionService() {
@@ -59,11 +66,11 @@ public class SparqlTemplate {
         return prefixProperties;
     }
 
-//    @Autowired
-//    @Required
-//    public void setPrefixProperties(Properties prefixProperties) {
-//        this.prefixProperties = prefixProperties;
-//    }
+    //    @Autowired
+    //    @Required
+    //    public void setPrefixProperties(Properties prefixProperties) {
+    //        this.prefixProperties = prefixProperties;
+    //    }
 
     public String getPrefixString() {
         if (getPrefixes() != null) {
@@ -221,7 +228,7 @@ public class SparqlTemplate {
                                  QuerySolution qs = rs.next();
                                  result = qs.getLiteral("label").getLexicalForm();
                              }
-                             if(result == null){
+                             if (result == null) {
                                  result = "Annotation tbc";
                              }
                              return result;

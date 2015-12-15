@@ -39,16 +39,16 @@ $(document).ready(function() {
 
     });
 
-    $("#filter-button").click(function(){
+    $("#filter-button").click(function() {
         doFilter();
     });
-    $("#clear-filter-button").click(function () {
+    $("#clear-filter-button").click(function() {
         showAllTraits();
     });
 
 
     $(".legend-item").click(function() {
-        if(!$(this).hasClass("disabled")){
+        if (!$(this).hasClass("disabled")) {
             filterTraits($(this).attr("id"));
         }
     });
@@ -71,15 +71,15 @@ $(document).ready(function() {
 
         // bind drag handler
         $('#diagram-area-content')
-            .drag(function(ev, dd) {
-                $("#xOffset").html(dd.deltaX);
-                $("#yOffset").html(dd.deltaY);
-                pan(dd.deltaX, dd.deltaY);
-            }, {relative: true})
-            .drag("end", function(ev, dd) {
-                updateOffset();
-            }
-        );
+                .drag(function(ev, dd) {
+                    $("#xOffset").html(dd.deltaX);
+                    $("#yOffset").html(dd.deltaY);
+                    pan(dd.deltaX, dd.deltaY);
+                }, {relative: true})
+                .drag("end", function(ev, dd) {
+                          updateOffset();
+                      }
+                );
     }
 
     // initialize slider
@@ -91,7 +91,7 @@ $(document).ready(function() {
 
     //$('.zoom-range').change();
 
-    $('.zoom-range').change(function(){
+    $('.zoom-range').change(function() {
         console.log("Somebody clicked the slider. New value is " + $(this).val());
         slideZoom($(this).val());
     });
@@ -126,17 +126,19 @@ function resizeDisplay() {
     $("#diagram-space").height(mainHeight);
     $("#diagram-area-content").height(mainHeight);
 
-    if(!$('#legend-toggle').hasClass('panel-collapsed')){
+    if (!$('#legend-toggle').hasClass('panel-collapsed')) {
         console.log("The legend isn't collapsed and can be resized");
         $('#legend-bar').height(mainHeight);
         $('#legend-panel').height(mainHeight);
 
-        var lengedbarheader = parseInt($('#legend-bar-header').height()) + parseInt($('#legend-bar-header').css('padding-top')) + parseInt($('#legend-bar-header').css('padding-bottom')) ;
+        var lengedbarheader = parseInt($('#legend-bar-header').height()) +
+                parseInt($('#legend-bar-header').css('padding-top')) +
+                parseInt($('#legend-bar-header').css('padding-bottom'));
         $('#legend-bar-body').css('max-height', mainHeight - lengedbarheader - 10);
         //$('#legend').height($('#legend-bar-body').height() - $('#filters').height() - parseInt($('#legend').css('margin-top')));
         //$('#legend-items').height($('#legend').height() - $('#legend > b').height());
     }
-    else{
+    else {
         console.log("The legend is collapsed and must not be resized");
 
     }
@@ -151,7 +153,7 @@ function resizeDisplay() {
 }
 
 
-function toggleLegend(ts){
+function toggleLegend(ts) {
     if ($(ts).hasClass('panel-collapsed')) {
         // expand the panel
         $(ts).parents('.panel').find('.panel-body').slideDown();
@@ -177,26 +179,25 @@ function toggleLegend(ts){
 }
 
 
-
 function renderDiagram() {
     //if (enableSVG) {
-        if (!renderingComplete) {
-            //log("Hiding zoombar...");
-            //$(".zoombar").hide();
-            // call to api/gwasdiagram to get required svg
-            console.log("Rendering GWAS diagram - calling api/gwasdiagram...");
-            $.ajax({
-                       //url: 'pussycat/gwasdiagram/associations/5/-8',
-                        url: 'pussycat/gwasdiagram/associations?pvaluemax=5e-8',
-                       dataType: 'html',
-                       beforeSend: showSVGLoadWhirly,
-                       success: insertSVG,
-                       error: serverCommunicationFail
-                   });
-        }
-        else {
-            console.log("Rendering already complete, update request not sent");
-        }
+    if (!renderingComplete) {
+        //log("Hiding zoombar...");
+        //$(".zoombar").hide();
+        // call to api/gwasdiagram to get required svg
+        console.log("Rendering GWAS diagram - calling api/gwasdiagram...");
+        $.ajax({
+                   //url: 'pussycat/gwasdiagram/associations/5/-8',
+                   url: 'pussycat/gwasdiagram/associations?pvaluemax=5e-8',
+                   dataType: 'html',
+                   beforeSend: showSVGLoadWhirly,
+                   success: insertSVG,
+                   error: serverCommunicationFail
+               });
+    }
+    else {
+        console.log("Rendering already complete, update request not sent");
+    }
     //}
     //else {
     //    log("Browser doesn't support SVG rendering, showing static image only");
@@ -231,7 +232,7 @@ function insertSVG(svg) {
     var height = $("#diagram-area-content").height();
     $("#goci-svg").attr("width", width);
     $("#goci-svg").attr("height", height);
-    var viewBox =  "-50 -25 " + width + " " + height;
+    var viewBox = "-50 -25 " + width + " " + height;
     document.getElementById('goci-svg').setAttribute("viewBox", viewBox);
 
 
@@ -253,7 +254,7 @@ function insertSVG(svg) {
             },
             function() {
                 $("#tooltip").hide();
-                $(this).attr('title','');
+                $(this).attr('title', '');
             }
     );
 
@@ -262,7 +263,7 @@ function insertSVG(svg) {
                           if (vis == "false") {
                               var associations = $(this).attr("gwasassociation");
                               var name = $(this).attr("gwasname");
-                              if(associations != null){
+                              if (associations != null) {
                                   showSummary(associations, name);
                               }
                           }
@@ -274,8 +275,8 @@ function insertSVG(svg) {
 function serverCommunicationFail(jqXHR, textStatus, errorThrown) {
     // show diagram area error div
     $("#diagram-area-content").html("");
-    //$("#diagramareaerror").css({"display": "block"});
-    //$("#diagramareaerrortext").html(jqXHR.responseText);
+    $("#diagram-area-error").css({"display": "block"});
+    $("#diagram-area-error-text").html(jqXHR.responseText);
     console.log("Failed to acquire SVG from server - " + jqXHR.responseText);
 }
 
@@ -309,8 +310,8 @@ function updateLegendBadges() {
     var other = 0;
 
 
-    $("circle").each(function(){
-        switch($(this).attr("fill")){
+    $("circle").each(function() {
+        switch ($(this).attr("fill")) {
             case '#B33232':
                 cardio++;
                 break;
@@ -386,7 +387,6 @@ function updateLegendBadges() {
 }
 
 
-
 function slideZoom(newScale) {
     if (currentScale < 0) {
         // try and recover from excessive zooming out!
@@ -437,8 +437,8 @@ function zoomIn() {
     var width = parseFloat(elements[2]);
     var height = parseFloat(elements[3]);
 
-    var centX = (width/2)+origX;
-    var centY = (height/2)+origY;
+    var centX = (width / 2) + origX;
+    var centY = (height / 2) + origY;
 
     // update scaling factor
     scalingFactor = scalingFactor * 0.95;
@@ -448,10 +448,10 @@ function zoomIn() {
     var newWidth = width * 0.95;
     var newHeight = height * 0.95;
 
-    var newX = centX-(newWidth/2);
-    var newY = centY-(newHeight/2);
+    var newX = centX - (newWidth / 2);
+    var newY = centY - (newHeight / 2);
 
-    var newViewBox = newX +  " " + newY + " " + newWidth + " " + newHeight;
+    var newViewBox = newX + " " + newY + " " + newWidth + " " + newHeight;
     document.getElementById('goci-svg').setAttribute("viewBox", newViewBox);
     console.log("Zoom in over SVG event.  New zoom level: " + scalingFactor + ", viewBox now set to " + newViewBox);
     // make sure zoom bar matches currentScale
@@ -472,8 +472,8 @@ function zoomOut() {
     var width = parseFloat(elements[2]);
     var height = parseFloat(elements[3]);
 
-    var centX = (width/2)+origX;
-    var centY = (height/2)+origY;
+    var centX = (width / 2) + origX;
+    var centY = (height / 2) + origY;
 
     // update scaling factor
     scalingFactor = scalingFactor * 1.05;
@@ -483,8 +483,8 @@ function zoomOut() {
     var newWidth = width * 1.05;
     var newHeight = height * 1.05;
 
-    var newX = centX-(newWidth/2);
-    var newY = centY-(newHeight/2);
+    var newX = centX - (newWidth / 2);
+    var newY = centY - (newHeight / 2);
 
     var newViewBox = newX + " " + newY + " " + newWidth + " " + newHeight;
     document.getElementById('goci-svg').setAttribute("viewBox", newViewBox);

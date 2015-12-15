@@ -11,8 +11,8 @@ import uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader;
 import java.net.URI;
 
 /**
- * A service that is capable of enriching {@link uk.ac.ebi.spot.goci.model.DiseaseTraitDocument}s with information obtained
- * from a supplied {@link uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader}
+ * A service that is capable of enriching {@link uk.ac.ebi.spot.goci.model.DiseaseTraitDocument}s with information
+ * obtained from a supplied {@link uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader}
  *
  * @author Tony Burdett
  * @date 19/01/15

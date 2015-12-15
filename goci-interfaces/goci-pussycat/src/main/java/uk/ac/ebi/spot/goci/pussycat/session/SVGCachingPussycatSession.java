@@ -2,7 +2,6 @@ package uk.ac.ebi.spot.goci.pussycat.session;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.pussycat.exception.NoRenderableDataException;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
@@ -20,7 +19,7 @@ import java.util.Set;
 /**
  * A pussycat session that acts as a proxy over a concrete implementation, but caches (to disk) SVG documents that are
  * rendered on demand.
- * <p/>
+ * <p>
  * The caching strategy is to take the supplied home directory and create within this directory a uniquely named file
  * for each request to {@link #performRendering(uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus,
  * uk.ac.ebi.spot.goci.lang.Filter[])}.  This implementation does this by creating a hash of the supplied arguments and
@@ -43,10 +42,10 @@ public class SVGCachingPussycatSession extends AbstractSVGIOPussycatSession {
         return proxiedSession;
     }
 
-//    @Required
-//    public void setProxiedSession(PussycatSession proxiedSession) {
-//        this.proxiedSession = proxiedSession;
-//    }
+    //    @Required
+    //    public void setProxiedSession(PussycatSession proxiedSession) {
+    //        this.proxiedSession = proxiedSession;
+    //    }
 
     @Override public String getSessionID() {
         return getProxiedSession().getSessionID();
@@ -81,10 +80,10 @@ public class SVGCachingPussycatSession extends AbstractSVGIOPussycatSession {
         }
     }
 
-//    @Override public List<AssociationSummary> getAssociationSummaries(List<URI> associationURIs) {
-//        // delegates to underlying session to retrieve actual data
-//        return getProxiedSession().getAssociationSummaries(associationURIs);
-//    }
+    //    @Override public List<AssociationSummary> getAssociationSummaries(List<URI> associationURIs) {
+    //        // delegates to underlying session to retrieve actual data
+    //        return getProxiedSession().getAssociationSummaries(associationURIs);
+    //    }
 
     @Override public Set<URI> getRelatedTraits(String traitName) {
         // delegates to underlying session to retrieve actual data
