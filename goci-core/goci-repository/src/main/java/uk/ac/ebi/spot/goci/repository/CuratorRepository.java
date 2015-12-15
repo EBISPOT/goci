@@ -8,7 +8,7 @@ import uk.ac.ebi.spot.goci.model.Curator;
  * Created by emma on 27/11/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Repository accessing Curator entity object
  */
 @RepositoryRestResource

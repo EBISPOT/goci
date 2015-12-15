@@ -15,18 +15,13 @@ import java.util.TimeZone;
 public class SnpDocument extends EmbeddableDocument<SingleNucleotidePolymorphism> {
     // basic snp information
     @Field private String rsId;
-    @Field private String chromosomeName;
-    @Field private Integer chromosomePosition;
     @Field private String context;
     @Field private String last_modified;
 
     public SnpDocument(SingleNucleotidePolymorphism snp) {
         super(snp);
         this.rsId = snp.getRsId();
-        this.chromosomeName = snp.getChromosomeName();
-        if (snp.getChromosomePosition() != null) {
-            this.chromosomePosition = Integer.parseInt(snp.getChromosomePosition());
-        }
+
         this.context = snp.getFunctionalClass();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -37,14 +32,6 @@ public class SnpDocument extends EmbeddableDocument<SingleNucleotidePolymorphism
 
     public String getRsId() {
         return rsId;
-    }
-
-    public String getChromosomeName() {
-        return chromosomeName;
-    }
-
-    public int getChromosomePosition() {
-        return chromosomePosition;
     }
 
     public String getContext() {

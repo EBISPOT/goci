@@ -12,10 +12,10 @@
 
     <!--Tags input http://timschlechter.github.io/bootstrap-tagsinput/examples/-->
     <link href="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"
-          th:href="@{/webjars/bootstrap-tagsinput/0.4.2/dist/bootstrap-tagsinput.css}" rel="stylesheet" />
+          th:href="@{https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css}" rel="stylesheet"/>
 
     <script src="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"
-            th:src="@{/webjars/bootstrap-tagsinput/0.4.2/dist/bootstrap-tagsinput.min.js}"></script>
+            th:src="@{https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js}"></script>
 
     <!--Select2: http://ivaynberg.github.io/select2/-->
     <!-- Include Select2 CSS -->
@@ -31,6 +31,10 @@
     <script src="../static/js/goci-snp-association-calculations.js"
             th:src="@{../js/goci-snp-association-calculations.js}"></script>
 
+    <!--Check variants, check reported genes, load variants mappings, load genomic contexts -->
+    <script src="../static/js/goci-snp-association-mapping.js"
+            th:src="@{../js/goci-snp-association-mapping.js}"></script>
+
 
 </head>
 <body>
@@ -38,28 +42,46 @@
 <!--Include header-->
 <div th:include="header :: navbar"></div>
 
-<!--Include errors-->
-<div th:include="association_error :: association_errors"></div>
+
+<div class="container-fluid">
+    <!-- Link to the different SNP tabs -->
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li class="active"><a id="association_tab" href="#">SNP Associations</a></li>
+            <li><a id="mapping_tab" href="#">SNP Mappings</a></li>
+        </ul>
+    </div>
+    <!--Include errors-->
+    <div class="col-md-10" style="margin-top:10px">
+        <div th:include="association_error :: association_errors"></div>
+    </div>
+</div>
 
 <div class="container">
     <div class="row">
+        <div th:include="association_mapping_details :: mapping_details"></div>
         <div class="col-md-10">
-            <div class="form-group">
-                <div id="editSNPForm">
-                    <form class="form-horizontal"
-                          method="post"
-                          name="snp-association-form"
-                          th:object="${snpAssociationForm}"
-                          th:action="@{${uri}(associationtype=standardormulti)}">
+            <div id="editSNPForm">
 
-                        <div class="form-group">
-                            <div class="col-md-offset-10 col-md-10">
-                                <button type="submit" class="btn btn-primary">Save</button>
-                            </div>
+                <form class="form-horizontal"
+                      method="post"
+                      name="snp-association-form"
+                      th:object="${snpAssociationForm}"
+                      th:action="@{${uri}(associationtype=standardormulti)}">
+
+                    <!--Only show save button if SNP has not been approved, warn if editing approved SNP-->
+                    <div th:include="association_approval_alert :: association_approval"
+                         th:if="*{#bools.isTrue(snpApproved)}"></div>
+
+                    <div class="form-group" th:if="*{#bools.isFalse(snpApproved)}">
+                        <div class="col-md-offset-10 col-md-10">
+                            <button type="submit" class="btn btn-primary">Save</button>
                         </div>
+                    </div>
 
+                    <div id="association_div">
                         <div class="form-group">
-                            <div class="col-md-10 col-md-offset-2">
+                            <div class="col-md-offset-2 col-md-10">
                                 <table class="table table-hover table-bordered">
 
                                     <div class="form-group">
@@ -73,17 +95,20 @@
 
                                     <thead>
                                     <tr>
-                                        <th></th>
                                         <th>SNP</th>
                                         <th>Strongest SNP-Risk Allele</th>
                                         <th>Proxy SNP</th>
+                                        <th>Merged</th>
+
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr th:each="row,rowStat : *{snpFormRows}">
-                                        <td th:text="${rowStat.count}">1</td>
                                         <td>
-                                            <input type="text" th:field="*{snpFormRows[__${rowStat.index}__].snp}"/>
+                                            <input th:id="snp_id_+${rowStat.count}"
+                                                   type="text"
+                                                   th:field="*{snpFormRows[__${rowStat.index}__].snp}"/>
+
                                         </td>
                                         <td>
                                             <input type="text"
@@ -93,6 +118,12 @@
                                             <input type="text" data-role="tagsinput" label="proxySnps"
                                                    th:field="*{snpFormRows[__${rowStat.index}__].proxySnps}"/>
                                         </td>
+                                        <td>
+                                            <input th:id="merged_+${rowStat.count}"
+                                                   type="text"
+                                                   th:field="*{snpFormRows[__${rowStat.index}__].merged}"/>
+                                        </td>
+
                                     </tr>
                                     </tbody>
                                 </table>
@@ -108,10 +139,12 @@
                                        data-role="tagsinput"
                                        placeholder="Enter author reported genes..."/>
                             </div>
+
                         </div>
 
                         <div class="form-group">
-                            <label for="riskFrequency" class="control-label col-md-2">Risk element (allele) frequency in controls</label>
+                            <label for="riskFrequency" class="control-label col-md-2">Risk element (allele) frequency in
+                                                                                      controls</label>
 
                             <div class="col-md-10">
                                 <input type="text" class="form-control" id="riskFrequency"
@@ -191,11 +224,21 @@
                                        th:field="*{orPerCopyRecip}" name="orPerCopyRecip"/>
                             </div>
 
-                            <div class="col-md-10"><button type="button"
-                                                           class="btn btn-primary pull-right"
-                                                           id="calculate-or">Calculate OR/HR/RR per copy (Num)</button>
+                            <div class="col-md-10">
+                                <button type="button"
+                                        class="btn btn-primary pull-right"
+                                        id="calculate-or">Calculate OR/HR/RR per copy (Num)
+                                </button>
                             </div>
 
+
+                            <div class="alert alert-warning alert-dismissible col-md-offset-2 col-md-10"
+                                 role="alert"
+                                 th:if="*{not #strings.isEmpty(orPerCopyRecip) and #strings.isEmpty(orPerCopyNum)}">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <strong>Warning:</strong> OR per Copy Num is blank but there is a reciprocal
+                            </div>
 
                         </div>
 
@@ -219,9 +262,10 @@
                             </div>
 
                             <div class="col-md-10">
-                            <button type="button"
-                                    class="btn btn-primary pull-right"
-                                    id="calculate-recip-range">Calculate OR/HR/RR per copy (Range)</button>
+                                <button type="button"
+                                        class="btn btn-primary pull-right"
+                                        id="calculate-recip-range">Calculate OR/HR/RR per copy (Range)
+                                </button>
                             </div>
                         </div>
 
@@ -244,7 +288,9 @@
                             </div>
 
                             <div class="col-md-12">
-                                <button type="button" class="btn btn-primary pull-right" id="calculate-or-range">Build OR/HR/RR per copy (Range)</button>
+                                <button type="button" class="btn btn-primary pull-right" id="calculate-or-range">Build
+                                    OR/HR/RR per copy (Range)
+                                </button>
                             </div>
                         </div>
 
@@ -271,23 +317,32 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="snpChecked" class="control-label col-md-2">SNP checked?</label>
-                            <input id="snpChecked" type="checkbox" th:field="*{snpChecked}"/>
+                            <input id="snpApproved" type="hidden" th:field="*{snpApproved}"/>
                         </div>
 
-                        <div class="form-group">
+                        <!--Only show save button if SNP has not been approved-->
+                        <div class="form-group" th:if="*{#bools.isFalse(snpApproved)}">
                             <div class="col-md-offset-10 col-md-10">
                                 <button type="submit" class="btn btn-primary">Save</button>
                             </div>
                         </div>
+                    </div>
 
-                    </form>
-                </div>
 
+                    <!-- Mapping div containing the mappings and context forms -->
+                    <div class="row" id="mapping_div" style="display:none">
+                        <div class="form-group">
+                            <div>
+                                <label class="control-label">Mapping data:</label>
+                            </div>
+                            <div th:include="snp_mapping :: mapping_table"></div>
+                            <div th:include="snp_genomic_context :: genomic_context_table"></div>
+                        </div>
+                    </div>
+
+                </form>
             </div>
         </div>
-
-
     </div>
 </div>
 
@@ -301,15 +356,15 @@
 <!--Formats tags input -->
 <script>
     $('#proxySnps').tagsinput({
-        trimValue: true
-    });
+                                  trimValue: true
+                              });
 </script>
 
 <!--Formats tags input -->
 <script>
     $('#authorgenes').tagsinput({
-        trimValue: true
-    });
+                                    trimValue: true
+                                });
 </script>
 
 </body>

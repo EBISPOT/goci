@@ -16,16 +16,16 @@ import uk.ac.ebi.spot.goci.exception.OWLConversionException;
 import uk.ac.ebi.spot.goci.lang.Filter;
 import uk.ac.ebi.spot.goci.lang.OntologyConfiguration;
 import uk.ac.ebi.spot.goci.lang.OntologyConstants;
-import uk.ac.ebi.spot.goci.ui.model.AssociationSummary;
 import uk.ac.ebi.spot.goci.ontology.owl.lang.OWLAPIFilterInterpreter;
 import uk.ac.ebi.spot.goci.ontology.owl.pussycat.layout.LayoutUtils;
-import uk.ac.ebi.spot.goci.reasoning.ReasonerSession;
 import uk.ac.ebi.spot.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.spot.goci.pussycat.session.AbstractSVGIOPussycatSession;
+import uk.ac.ebi.spot.goci.reasoning.ReasonerSession;
+import uk.ac.ebi.spot.goci.ui.model.AssociationSummary;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ import java.util.Set;
 /**
  * An OWL-based implementation of a Pussycat session.  Loads a knowledgebase from an OWL file, reasons over the whole
  * knowledgebase, and derives OWLClassExpressions from filters to perform renderings of the knowledge contained.
- * <p/>
+ * <p>
  * Utilises reasoners that are capable of rendering OWLOntology and OWLIndividual data
  *
  * @author Tony Burdett

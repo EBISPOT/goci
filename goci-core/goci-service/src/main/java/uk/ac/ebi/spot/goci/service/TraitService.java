@@ -40,7 +40,8 @@ public class TraitService {
     }
 
     public Collection<EfoTrait> findMappedTraitByStudyId(Long studyId) {
-        return efoTraitRepository.findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull(studyId);
+        return efoTraitRepository.findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull(
+                studyId);
     }
 
     public Collection<EfoTrait> findMappedTraitByAssociationId(Long associationId) {
@@ -51,7 +52,7 @@ public class TraitService {
     @Transactional(readOnly = true)
     public List<EfoTrait> findAllEfoTraits() {
         List<EfoTrait> allEfoTraits = efoTraitRepository.findAll();
-//        allStudies.forEach(this::loadAssociatedData);
+        //        allStudies.forEach(this::loadAssociatedData);
         return allEfoTraits;
     }
 }

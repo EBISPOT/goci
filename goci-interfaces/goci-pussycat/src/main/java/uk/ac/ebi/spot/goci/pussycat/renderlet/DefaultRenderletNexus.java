@@ -8,7 +8,14 @@ import uk.ac.ebi.spot.goci.pussycat.layout.BandInformation;
 import uk.ac.ebi.spot.goci.pussycat.layout.SVGArea;
 import uk.ac.ebi.spot.goci.pussycat.layout.SVGDocument;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Javadocs go here!
@@ -34,7 +41,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
         this.renderlets = new HashSet<Renderlet>();
         this.entityLocations = new HashMap<Object, SVGArea>();
         this.renderedEntities = new LinkedHashMap<Object, RenderingEvent>();
-        this.svgDocument = new SVGDocument(0, 150);
+        this.svgDocument = new SVGDocument(0, 200);
         this.filters = new ArrayList<Filter>();
         this.previousBandMapByContext = new HashMap<Object, Map<BandInformation, BandInformation>>();
         this.renderedBands = new HashMap<BandInformation, SVGArea>();
@@ -46,8 +53,8 @@ public class DefaultRenderletNexus implements RenderletNexus {
 
     public boolean register(Renderlet renderlet) {
         getLog().debug("Registering renderlet '" + renderlet.getName() + "' " +
-                "(" + renderlet.getDescription() + ") " +
-                "[" + renderlet.getClass().getSimpleName() + "]");
+                               "(" + renderlet.getDescription() + ") " +
+                               "[" + renderlet.getClass().getSimpleName() + "]");
         getLog().debug("Renderlets now: " + (renderlets.size() + 1));
 
         return renderlets.add(renderlet);
@@ -118,7 +125,7 @@ public class DefaultRenderletNexus implements RenderletNexus {
     }
 
     @Override
-    public boolean alreadyRendered(BandInformation bandInformation){
+    public boolean alreadyRendered(BandInformation bandInformation) {
         return renderedBands.containsKey(bandInformation);
     }
 

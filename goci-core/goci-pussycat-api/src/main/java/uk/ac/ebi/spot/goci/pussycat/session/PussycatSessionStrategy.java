@@ -5,8 +5,7 @@ package uk.ac.ebi.spot.goci.pussycat.session;
  * HttpSessions should join an existing serverside PussycatSession, if one is available.  {@link #CREATE} indicates that
  * a new serverside PussycatSession should always be created.
  *
- * @author Tony Burdett
- * Date 02/03/12
+ * @author Tony Burdett Date 02/03/12
  */
 public enum PussycatSessionStrategy {
     JOIN,

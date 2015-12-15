@@ -1,7 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.Region;
+import uk.ac.ebi.spot.goci.model.GenomicContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,8 +15,7 @@ import java.util.Map;
  *
  * @author emma
  *         <p>
- *         New service class to deal with form used by curators to enter snp/association details. Deals with standard
- *         and multi-snp haplotype associations
+ *         New service class to deal with form used by curators to enter snp/association details
  */
 
 public class SnpAssociationForm {
@@ -37,11 +36,15 @@ public class SnpAssociationForm {
 
     private Boolean multiSnpHaplotype = false;
 
-    private Boolean snpChecked = false;
+    private Boolean snpInteraction = false;
+
+    private Boolean snpApproved = false;
 
     private Integer pvalueMantissa;
 
     private Integer pvalueExponent;
+
+    private Float pvalueFloat;
 
     private Float orPerCopyRecip;
 
@@ -55,6 +58,8 @@ public class SnpAssociationForm {
 
     private List<SnpFormRow> snpFormRows = new ArrayList<>();
 
+    private List<SnpMappingForm> snpMappingForms = new ArrayList<>();
+
     private Collection<String> authorReportedGenes;
 
     // These attributes store locus attributes
@@ -64,6 +69,9 @@ public class SnpAssociationForm {
 
     private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
+    private Collection<GenomicContext> genomicContexts = new ArrayList<>();
+
+    private Map<String, String> associationErrorMap = new HashMap<>();
 
     // Constructors
     public SnpAssociationForm() {
@@ -76,19 +84,24 @@ public class SnpAssociationForm {
                               Boolean orType,
                               String snpType,
                               Boolean multiSnpHaplotype,
-                              Boolean snpChecked,
+                              Boolean snpInteraction,
+                              Boolean snpApproved,
                               Integer pvalueMantissa,
                               Integer pvalueExponent,
+                              Float pvalueFloat,
                               Float orPerCopyRecip,
                               Float orPerCopyStdError,
                               String orPerCopyRange,
                               String orPerCopyRecipRange,
                               String orPerCopyUnitDescr,
                               List<SnpFormRow> snpFormRows,
+                              List<SnpMappingForm> snpMappingForms,
                               Collection<String> authorReportedGenes,
                               String multiSnpHaplotypeDescr,
                               Integer multiSnpHaplotypeNum,
-                              Collection<EfoTrait> efoTraits) {
+                              Collection<EfoTrait> efoTraits,
+                              Collection<GenomicContext> genomicContexts,
+                              Map<String, String> associationErrorMap) {
         this.associationId = associationId;
         this.riskFrequency = riskFrequency;
         this.pvalueText = pvalueText;
@@ -96,19 +109,24 @@ public class SnpAssociationForm {
         this.orType = orType;
         this.snpType = snpType;
         this.multiSnpHaplotype = multiSnpHaplotype;
-        this.snpChecked = snpChecked;
+        this.snpInteraction = snpInteraction;
+        this.snpApproved = snpApproved;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
+        this.pvalueFloat = pvalueFloat;
         this.orPerCopyRecip = orPerCopyRecip;
         this.orPerCopyStdError = orPerCopyStdError;
         this.orPerCopyRange = orPerCopyRange;
         this.orPerCopyRecipRange = orPerCopyRecipRange;
         this.orPerCopyUnitDescr = orPerCopyUnitDescr;
         this.snpFormRows = snpFormRows;
+        this.snpMappingForms = snpMappingForms;
         this.authorReportedGenes = authorReportedGenes;
         this.multiSnpHaplotypeDescr = multiSnpHaplotypeDescr;
         this.multiSnpHaplotypeNum = multiSnpHaplotypeNum;
         this.efoTraits = efoTraits;
+        this.genomicContexts = genomicContexts;
+        this.associationErrorMap = associationErrorMap;
     }
 
     // Getters/setters
@@ -184,6 +202,15 @@ public class SnpAssociationForm {
         this.multiSnpHaplotypeNum = multiSnpHaplotypeNum;
     }
 
+
+    public Boolean getSnpInteraction() {
+        return snpInteraction;
+    }
+
+    public void setSnpInteraction(Boolean snpInteraction) {
+        this.snpInteraction = snpInteraction;
+    }
+
     public Integer getPvalueMantissa() {
         return pvalueMantissa;
     }
@@ -198,6 +225,14 @@ public class SnpAssociationForm {
 
     public void setPvalueExponent(Integer pvalueExponent) {
         this.pvalueExponent = pvalueExponent;
+    }
+
+    public Float getPvalueFloat() {
+        return pvalueFloat;
+    }
+
+    public void setPvalueFloat(Float pvalueFloat) {
+        this.pvalueFloat = pvalueFloat;
     }
 
     public Float getOrPerCopyRecip() {
@@ -248,6 +283,14 @@ public class SnpAssociationForm {
         this.snpFormRows = snpFormRows;
     }
 
+    public List<SnpMappingForm> getSnpMappingForms() {
+        return snpMappingForms;
+    }
+
+    public void setSnpMappingForms(List<SnpMappingForm> snpMappingForms) {
+        this.snpMappingForms = snpMappingForms;
+    }
+
     public Collection<String> getAuthorReportedGenes() {
         return authorReportedGenes;
     }
@@ -264,12 +307,28 @@ public class SnpAssociationForm {
         this.efoTraits = efoTraits;
     }
 
-    public Boolean getSnpChecked() {
-        return snpChecked;
+    public Boolean getSnpApproved() {
+        return snpApproved;
     }
 
-    public void setSnpChecked(Boolean snpChecked) {
-        this.snpChecked = snpChecked;
+    public void setSnpApproved(Boolean snpApproved) {
+        this.snpApproved = snpApproved;
+    }
+
+    public Collection<GenomicContext> getGenomicContexts() {
+        return genomicContexts;
+    }
+
+    public void setGenomicContexts(Collection<GenomicContext> genomicContexts) {
+        this.genomicContexts = genomicContexts;
+    }
+
+    public Map<String, String> getAssociationErrorMap() {
+        return associationErrorMap;
+    }
+
+    public void setAssociationErrorMap(Map<String, String> associationErrorMap) {
+        this.associationErrorMap = associationErrorMap;
     }
 
 }

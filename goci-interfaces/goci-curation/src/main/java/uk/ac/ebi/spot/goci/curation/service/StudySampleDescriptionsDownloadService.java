@@ -14,8 +14,8 @@ import java.util.Collection;
  *
  * @author emma
  *         <p>
- *         This is a service class to process a set of study sample descriptions and output the result to a tsv
- *         file. Based on AssociationDownloadService.java
+ *         This is a service class to process a set of study sample descriptions and output the result to a tsv file.
+ *         Based on AssociationDownloadService.java
  */
 
 @Service
@@ -53,7 +53,8 @@ public class StudySampleDescriptionsDownloadService {
             // Study ID
             if (studySampleDescription.getStudyId() == null) {
                 line.append("");
-            } else {
+            }
+            else {
                 line.append(studySampleDescription.getStudyId());
 
             }
@@ -63,7 +64,8 @@ public class StudySampleDescriptionsDownloadService {
             // Author
             if (studySampleDescription.getAuthor() == null) {
                 line.append("");
-            } else {
+            }
+            else {
                 line.append(studySampleDescription.getAuthor());
 
             }
@@ -72,7 +74,8 @@ public class StudySampleDescriptionsDownloadService {
             // Publication Date
             if (studySampleDescription.getPublicationDate() == null) {
                 line.append("");
-            } else {
+            }
+            else {
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 String studyDate = dateFormat.format(studySampleDescription.getPublicationDate());
                 line.append(studyDate);
@@ -82,7 +85,8 @@ public class StudySampleDescriptionsDownloadService {
             // Pubmed ID
             if (studySampleDescription.getPubmedId() == null) {
                 line.append("");
-            } else {
+            }
+            else {
                 line.append(studySampleDescription.getPubmedId());
             }
             line.append("\t");
@@ -91,7 +95,8 @@ public class StudySampleDescriptionsDownloadService {
             String initialSampleSize = studySampleDescription.getInitialSampleSize();
             if (initialSampleSize == null) {
                 line.append("");
-            } else {
+            }
+            else {
                 line.append(tidyStringForOutput(initialSampleSize));
             }
             line.append("\t");
@@ -100,7 +105,8 @@ public class StudySampleDescriptionsDownloadService {
             String replicateSampleSize = studySampleDescription.getReplicateSampleSize();
             if (replicateSampleSize == null) {
                 line.append("");
-            } else {
+            }
+            else {
                 line.append(tidyStringForOutput(replicateSampleSize));
             }
             line.append("\t");
@@ -108,7 +114,8 @@ public class StudySampleDescriptionsDownloadService {
             // Type
             if (studySampleDescription.getType() == null) {
                 line.append("");
-            } else {
+            }
+            else {
                 line.append(studySampleDescription.getType());
             }
             line.append("\t");
@@ -116,7 +123,8 @@ public class StudySampleDescriptionsDownloadService {
             // Number of individuals
             if (studySampleDescription.getNumberOfIndividuals() == null) {
                 line.append("");
-            } else {
+            }
+            else {
                 line.append(studySampleDescription.getNumberOfIndividuals());
             }
             line.append("\t");
@@ -125,7 +133,8 @@ public class StudySampleDescriptionsDownloadService {
             String ethnicGroup = studySampleDescription.getEthnicGroup();
             if (ethnicGroup == null) {
                 line.append("");
-            } else {
+            }
+            else {
                 line.append(tidyStringForOutput(ethnicGroup));
             }
             line.append("\t");
@@ -134,7 +143,8 @@ public class StudySampleDescriptionsDownloadService {
             String countryOfOrigin = studySampleDescription.getCountryOfOrigin();
             if (countryOfOrigin == null) {
                 line.append("");
-            } else {
+            }
+            else {
                 line.append(tidyStringForOutput(countryOfOrigin));
             }
             line.append("\t");
@@ -143,7 +153,8 @@ public class StudySampleDescriptionsDownloadService {
             String countryOfRecruitment = studySampleDescription.getCountryOfRecruitment();
             if (countryOfRecruitment == null) {
                 line.append("");
-            } else {
+            }
+            else {
                 line.append(tidyStringForOutput(countryOfRecruitment));
             }
             line.append("\t");
@@ -152,11 +163,13 @@ public class StudySampleDescriptionsDownloadService {
             String description = studySampleDescription.getDescription();
             if (description == null) {
                 line.append("");
-            } else {
+            }
+            else {
                 String newline = System.getProperty("line.separator");
                 if (description.equals(newline)) {
                     line.append("");
-                } else {
+                }
+                else {
                     line.append(tidyStringForOutput(description));
                 }
             }
@@ -165,7 +178,8 @@ public class StudySampleDescriptionsDownloadService {
             // Sample size
             if (studySampleDescription.getSampleSizesMatch() == null) {
                 line.append("");
-            } else {
+            }
+            else {
                 line.append(studySampleDescription.getSampleSizesMatch());
             }
             line.append("\t");
@@ -173,10 +187,12 @@ public class StudySampleDescriptionsDownloadService {
             // Housekeeping information
             if (studySampleDescription.isEthnicityCheckedLevelOne() == null) {
                 line.append("");
-            } else {
+            }
+            else {
                 if (studySampleDescription.isEthnicityCheckedLevelOne()) {
                     line.append("Y");
-                } else {
+                }
+                else {
                     line.append("N");
                 }
             }
@@ -184,10 +200,12 @@ public class StudySampleDescriptionsDownloadService {
 
             if (studySampleDescription.isEthnicityCheckedLevelTwo() == null) {
                 line.append("");
-            } else {
+            }
+            else {
                 if (studySampleDescription.isEthnicityCheckedLevelTwo()) {
                     line.append("Y");
-                } else {
+                }
+                else {
                     line.append("N");
                 }
             }
@@ -198,7 +216,8 @@ public class StudySampleDescriptionsDownloadService {
             String notes = studySampleDescription.getNotes();
             if (notes == null) {
                 line.append("");
-            } else {
+            }
+            else {
                 line.append(tidyStringForOutput(notes));
             }
 

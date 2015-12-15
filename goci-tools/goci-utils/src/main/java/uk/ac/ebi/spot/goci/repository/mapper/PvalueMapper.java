@@ -3,8 +3,8 @@ package uk.ac.ebi.spot.goci.repository.mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
 import uk.ac.ebi.spot.goci.model.CatalogDataMapper;
+import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +38,7 @@ public class PvalueMapper implements CatalogDataMapper {
         String mant = databaseValues.get(CatalogHeaderBinding.P_VALUE_MANTISSA);
         String exp = databaseValues.get(CatalogHeaderBinding.P_VALUE_EXPONENT);
 
-        if(!mant.isEmpty() && !exp.isEmpty()) {
+        if (!mant.isEmpty() && !exp.isEmpty()) {
             pval = mant.concat("E").concat(exp);
         }
         else {

@@ -1,14 +1,26 @@
 package uk.ac.ebi.spot.goci.model;
 
-import javax.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * Created by emma on 27/11/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Model object representing an association
  */
 
@@ -33,7 +45,7 @@ public class Association {
 
     private Boolean snpInteraction = false;
 
-    private Boolean snpChecked = false;
+    private Boolean snpApproved = false;
 
     private Integer pvalueMantissa;
 
@@ -56,25 +68,53 @@ public class Association {
     // or SNP:SNP interaction
     @OneToMany
     @JoinTable(name = "ASSOCIATION_LOCUS",
-            joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
-            inverseJoinColumns = @JoinColumn(name = "LOCUS_ID"))
+               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+               inverseJoinColumns = @JoinColumn(name = "LOCUS_ID"))
     private Collection<Locus> loci = new ArrayList<>();
 
     // To avoid null values collections are by default initialized to an empty array list
     @ManyToMany
     @JoinTable(name = "ASSOCIATION_EFO_TRAIT",
-            joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
-            inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
+               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+               inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
     @OneToOne(mappedBy = "association", cascade = CascadeType.REMOVE)
     private AssociationReport associationReport;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date lastMappingDate;
+
+    private String lastMappingPerformedBy;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date lastUpdateDate;
+
     // JPA no-args constructor
     public Association() {
     }
 
-    public Association(String riskFrequency, String pvalueText, Float orPerCopyNum, Boolean orType, String snpType, Boolean multiSnpHaplotype, Boolean snpInteraction, Boolean snpChecked, Integer pvalueMantissa, Integer pvalueExponent, Float orPerCopyRecip, Float orPerCopyStdError, String orPerCopyRange, String orPerCopyRecipRange, String orPerCopyUnitDescr, Study study, Collection<Locus> loci, Collection<EfoTrait> efoTraits, AssociationReport associationReport) {
+    public Association(String riskFrequency,
+                       String pvalueText,
+                       Float orPerCopyNum,
+                       Boolean orType,
+                       String snpType,
+                       Boolean multiSnpHaplotype,
+                       Boolean snpInteraction,
+                       Boolean snpApproved,
+                       Integer pvalueMantissa,
+                       Integer pvalueExponent,
+                       Float orPerCopyRecip,
+                       Float orPerCopyStdError,
+                       String orPerCopyRange,
+                       String orPerCopyRecipRange,
+                       String orPerCopyUnitDescr,
+                       Study study,
+                       Collection<Locus> loci,
+                       Collection<EfoTrait> efoTraits,
+                       AssociationReport associationReport,
+                       Date lastMappingDate,
+                       String lastMappingPerformedBy, Date lastUpdateDate) {
         this.riskFrequency = riskFrequency;
         this.pvalueText = pvalueText;
         this.orPerCopyNum = orPerCopyNum;
@@ -82,7 +122,7 @@ public class Association {
         this.snpType = snpType;
         this.multiSnpHaplotype = multiSnpHaplotype;
         this.snpInteraction = snpInteraction;
-        this.snpChecked = snpChecked;
+        this.snpApproved = snpApproved;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
         this.orPerCopyRecip = orPerCopyRecip;
@@ -94,6 +134,9 @@ public class Association {
         this.loci = loci;
         this.efoTraits = efoTraits;
         this.associationReport = associationReport;
+        this.lastMappingDate = lastMappingDate;
+        this.lastMappingPerformedBy = lastMappingPerformedBy;
+        this.lastUpdateDate = lastUpdateDate;
     }
 
     public Long getId() {
@@ -240,16 +283,16 @@ public class Association {
         this.efoTraits = efoTraits;
     }
 
-    public void addEfoTrait(EfoTrait efoTrait){
+    public void addEfoTrait(EfoTrait efoTrait) {
         efoTraits.add(efoTrait);
     }
 
-    public Boolean getSnpChecked() {
-        return snpChecked;
+    public Boolean getSnpApproved() {
+        return snpApproved;
     }
 
-    public void setSnpChecked(Boolean snpChecked) {
-        this.snpChecked = snpChecked;
+    public void setSnpApproved(Boolean snpApproved) {
+        this.snpApproved = snpApproved;
     }
 
     public AssociationReport getAssociationReport() {
@@ -260,7 +303,31 @@ public class Association {
         this.associationReport = associationReport;
     }
 
+    public Date getLastMappingDate() {
+        return lastMappingDate;
+    }
+
+    public void setLastMappingDate(Date lastMappingDate) {
+        this.lastMappingDate = lastMappingDate;
+    }
+
+    public String getLastMappingPerformedBy() {
+        return lastMappingPerformedBy;
+    }
+
+    public void setLastMappingPerformedBy(String lastMappingPerformedBy) {
+        this.lastMappingPerformedBy = lastMappingPerformedBy;
+    }
+
+    public Date getLastUpdateDate() {
+        return lastUpdateDate;
+    }
+
+    public void setLastUpdateDate(Date lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
+    }
+
     public double getPvalue() {
-        return (pvalueMantissa*Math.pow(10, pvalueExponent));
+        return (pvalueMantissa * Math.pow(10, pvalueExponent));
     }
 }

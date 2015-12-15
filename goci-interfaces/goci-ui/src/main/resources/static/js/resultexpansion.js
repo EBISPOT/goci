@@ -3,8 +3,8 @@
  */
 
 
-$(document).ready(function () {
-    $('#expand-table').click(function () {
+$(document).ready(function() {
+    $('#expand-table').click(function() {
         //if the table is collapsed, expand it
         if ($(this).hasClass('table-collapsed')) {
             loadAdditionalResults("study", true);
@@ -25,131 +25,130 @@ $(document).ready(function () {
         }
     });
 
-    $('.study-toggle').click(function () {
-         if($('#study-summaries').hasClass('more-results')){
-              console.log("More results to load");
-             loadAdditionalResults("study", false);
-             $(this).empty().text("Show fewer results");
+    $('.study-toggle').click(function() {
+        if ($('#study-summaries').hasClass('more-results')) {
+            console.log("More results to load");
+            loadAdditionalResults("study", false);
+            $(this).empty().text("Show fewer results");
         }
-        else{
-             $(this).empty().text("Show more results");
-             $('#study-summaries').addClass('more-results');
-             if($('#filter-form').hasClass('in-use')){
-                 doFiltering();
-             }
-             else if($('#study-summaries').find('th').find('span.sorted').length != 0){
-                 var id = $('#study-summaries').find('span.sorted').parent('th').attr('id');
-                 var field = id;
+        else {
+            $(this).empty().text("Show more results");
+            $('#study-summaries').addClass('more-results');
+            if ($('#filter-form').hasClass('in-use')) {
+                doFiltering();
+            }
+            else if ($('#study-summaries').find('th').find('span.sorted').length != 0) {
+                var id = $('#study-summaries').find('span.sorted').parent('th').attr('id');
+                var field = id;
 
-                 if(id.indexOf('-') != -1){
-                     field = id.split('-')[0];
-                 }
+                if (id.indexOf('-') != -1) {
+                    field = id.split('-')[0];
+                }
 
-                 if($('#study-summaries').find('span.sorted').hasClass('asc')) {
-                     field = field.concat('+asc');
-                 }
-                 else{
-                     field = field.concat('+desc');
-                 }
-                 doSortingSearch("study", field, id);
-             }
-             else{
+                if ($('#study-summaries').find('span.sorted').hasClass('asc')) {
+                    field = field.concat('+asc');
+                }
+                else {
+                    field = field.concat('+desc');
+                }
+                doSortingSearch("study", field, id);
+            }
+            else {
                 loadResults();
-             }
-         }
+            }
+        }
     });
 
-    $('.association-toggle').click(function () {
-        if($('#association-summaries').hasClass('more-results')){
+    $('.association-toggle').click(function() {
+        if ($('#association-summaries').hasClass('more-results')) {
             console.log("More results to load");
             loadAdditionalResults("association", false);
             $(this).empty().text("Show fewer results");
         }
-        else{
+        else {
             $(this).empty().text("Show more results");
             $('#association-summaries').addClass('more-results');
-            if($('#filter-form').hasClass('in-use')){
+            if ($('#filter-form').hasClass('in-use')) {
                 doFiltering();
             }
-            else if($('#association-summaries').find('th').find('span.sorted').length != 0){
+            else if ($('#association-summaries').find('th').find('span.sorted').length != 0) {
                 var id = $('#association-summaries').find('span.sorted').parent('th').attr('id');
                 var field = id;
 
-                if(id.indexOf('-') != -1){
+                if (id.indexOf('-') != -1) {
                     field = id.split('-')[0];
                 }
 
-                if($('#association-summaries').find('span.sorted').hasClass('asc')) {
+                if ($('#association-summaries').find('span.sorted').hasClass('asc')) {
                     field = field.concat('+asc');
                 }
-                else{
+                else {
                     field = field.concat('+desc');
                 }
                 doSortingSearch("association", field, id);
             }
-            else{
+            else {
                 loadResults();
             }
         }
     });
 
-    $('.diseasetrait-toggle').click(function () {
-        if($('#diseasetrait-summaries').hasClass('more-results')){
+    $('.diseasetrait-toggle').click(function() {
+        if ($('#diseasetrait-summaries').hasClass('more-results')) {
             console.log("More results to load");
             loadAdditionalResults("diseasetrait", false);
             $(this).empty().text("Show fewer results");
 
         }
-        else{
+        else {
             $(this).empty().text("Show more results");
             $('#diseasetrait-summaries').addClass('more-results');
-            if($('#filter-form').hasClass('in-use')){
+            if ($('#filter-form').hasClass('in-use')) {
                 doFiltering();
             }
-            else if($('#diseasetrait-summaries').find('th').find('span.sorted').length != 0){
+            else if ($('#diseasetrait-summaries').find('th').find('span.sorted').length != 0) {
                 var id = $('#diseasetrait-summaries').find('span.sorted').parent('th').attr('id');
                 var field = id;
 
-                if(id.indexOf('-') != -1){
+                if (id.indexOf('-') != -1) {
                     field = id.split('-')[0];
                 }
 
-                if($('#diseasetrait-summaries').find('span.sorted').hasClass('asc')) {
+                if ($('#diseasetrait-summaries').find('span.sorted').hasClass('asc')) {
                     field = field.concat('+asc');
                 }
-                else{
+                else {
                     field = field.concat('+desc');
                 }
                 doSortingSearch("diseasetrait", field, id);
             }
-            else{
+            else {
                 loadResults();
             }
         }
     });
 
 
-
 });
 
 
-function loadAdditionalResults(facet, expand){
+function loadAdditionalResults(facet, expand) {
     var sort = '';
-    var id= '';
+    var id = '';
 
     //check if there's already a sort on the table
-    if($('#' + facet + '-summaries').find('span.sorted').length != 0){
+    if ($('#' + facet + '-summaries').find('span.sorted').length != 0) {
         id = $('#' + facet + '-summaries').find('span.sorted').parent('th').attr('id');
         sort = id;
-        if(id.indexOf('-') != -1){
+        if (id.indexOf('-') != -1) {
             sort = id.split('-')[0];
         }
-       if($('#' + facet + '-summaries').find('span.sorted').hasClass('asc')){
-           sort = sort.concat('+asc');
-       }
-        else{
-           sort = sort.concat('+desc');
-       }
+        if ($('#' + facet + '-summaries').find('span.sorted').hasClass('asc')) {
+            sort = sort.concat('+asc');
+        }
+        else {
+            sort = sort.concat('+desc');
+        }
     }
     var queryTerm = $('#query').text();
 
@@ -159,46 +158,48 @@ function loadAdditionalResults(facet, expand){
     var date = processDate();
     var traits = processTraitDropdown();
 
-    if($('#filter').text() != ''){
+    if ($('#filter').text() != '') {
 
-      if($('#filter').text() != 'recent' && traits == '') {
-          var terms = $('#filter').text();
-          terms = terms.replace(/\s/g, '+');
+        if ($('#filter').text() != 'recent' && traits == '') {
+            var terms = $('#filter').text();
+            terms = terms.replace(/\s/g, '+');
 
-          traits = terms.split('|');
-      }
-        else if($('#filter').text() == 'recent' && date == ''){
-          date = "[NOW-3MONTH+TO+*]";
+            traits = terms.split('|');
+        }
+        else if ($('#filter').text() == 'recent' && date == '') {
+            date = "[NOW-3MONTH+TO+*]";
 
-          if(sort == ''){
-              sort = "catalogPublishDate+desc";
-          }
-      }
+            if (sort == '') {
+                sort = "catalogPublishDate+desc";
+            }
+        }
     }
 
-    if(queryTerm == '*'){
+    if (queryTerm == '*') {
         var searchTerm = 'text:'.concat(queryTerm);
     }
-    else{
+    else {
         var searchTerm = 'text:"'.concat(queryTerm).concat('"');
     }
     $.getJSON('api/search/moreresults',
-        {'q': searchTerm,
-            'max': 1000,
-            'facet': facet,
-            'pvalfilter': pval,
-            'orfilter': or,
-            'betafilter': beta,
-            'datefilter': date,
-            'traitfilter[]': traits,
-            'sort': sort})
-        .done(function (data) {
-            addResults(data, expand, id);
-        });
+              {
+                  'q': searchTerm,
+                  'max': 1000,
+                  'facet': facet,
+                  'pvalfilter': pval,
+                  'orfilter': or,
+                  'betafilter': beta,
+                  'datefilter': date,
+                  'traitfilter[]': traits,
+                  'sort': sort
+              })
+            .done(function(data) {
+                addResults(data, expand, id);
+            });
 }
 
-function addResults(data, expand, id){
-    if(data.error != null){
+function addResults(data, expand, id) {
+    if (data.error != null) {
         var sorter = $('#' + id).find('span.sorted');
         sorter.removeClass('asc desc glyphicon-arrow-up glyphicon-arrow-down').addClass("glyphicon-sort unsorted");
     }
@@ -208,49 +209,52 @@ function addResults(data, expand, id){
 
         setDownloadLink(data.responseHeader.params);
 
-        if (data.responseHeader.params.fq == "resourcename:study" || $.inArray("resourcename:study", data.responseHeader.params.fq) != -1) {
+        if (data.responseHeader.params.fq == "resourcename:study" ||
+                $.inArray("resourcename:study", data.responseHeader.params.fq) != -1) {
             console.log("Processing studies");
             var studyTable = $('#study-table-body').empty();
             $('#study-summaries').removeClass('more-results');
 
             for (var j = 0; j < documents.length; j++) {
-                try{
+                try {
                     var doc = documents[j];
                     processStudy(doc, studyTable);
                 }
-                catch (ex){
+                catch (ex) {
                     console.log("Failure to process document " + ex);
                 }
             }
         }
 
-        else if (data.responseHeader.params.fq == "resourcename:association" || $.inArray("resourcename:association", data.responseHeader.params.fq) != -1) {
+        else if (data.responseHeader.params.fq == "resourcename:association" ||
+                $.inArray("resourcename:association", data.responseHeader.params.fq) != -1) {
             console.log("Processing associations");
             var associationTable = $('#association-table-body').empty();
             $('#association-summaries').removeClass('more-results');
 
             for (var j = 0; j < documents.length; j++) {
-                try{
+                try {
                     var doc = documents[j];
                     processAssociation(doc, associationTable);
                 }
-                catch (ex){
+                catch (ex) {
                     console.log("Failure to process document " + ex);
                 }
             }
         }
 
-        else if (data.responseHeader.params.fq == "resourcename:diseasetrait" || $.inArray("resourcename:diseasetrait", data.responseHeader.params.fq) != -1) {
+        else if (data.responseHeader.params.fq == "resourcename:diseasetrait" ||
+                $.inArray("resourcename:diseasetrait", data.responseHeader.params.fq) != -1) {
             console.log("Processing diseasetraits");
             var traitTable = $('#diseasetrait-table-body').empty();
             $('#diseasetrait-summaries').removeClass('more-results');
 
             for (var j = 0; j < documents.length; j++) {
-                try{
+                try {
                     var doc = documents[j];
                     processTrait(doc, traitTable);
                 }
-                catch (ex){
+                catch (ex) {
                     console.log("Failure to process document " + ex);
                 }
             }

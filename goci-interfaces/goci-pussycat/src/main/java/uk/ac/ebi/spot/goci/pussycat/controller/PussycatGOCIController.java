@@ -8,11 +8,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.pussycat.exception.NoRenderableDataException;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
 import uk.ac.ebi.spot.goci.pussycat.manager.PussycatManager;
@@ -20,11 +22,16 @@ import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
 import uk.ac.ebi.spot.goci.pussycat.session.PussycatSession;
 import uk.ac.ebi.spot.goci.pussycat.session.PussycatSessionStrategy;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.URI;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -73,9 +80,9 @@ public class PussycatGOCIController {
     @RequestMapping
     public @ResponseBody String testBasicService(HttpSession session) throws PussycatSessionNotReadyException {
         return "Welcome to the Pussycat server! Your session is " + session.getId()
-                + " and your Pussycat session is " +         getPussycatSession(session).getSessionID();
+                + " and your Pussycat session is " + getPussycatSession(session).getSessionID();
     }
-    
+
     @RequestMapping(value = "/clear")
     public @ResponseBody boolean clearRendering(HttpSession session) throws PussycatSessionNotReadyException {
         try {
@@ -83,107 +90,192 @@ public class PussycatGOCIController {
             return true;
         }
         catch (PussycatSessionNotReadyException e) {
-       getLog().error("Attempting to clear a renderlet nexus with no bound pussycat session, nothing happened");
+            getLog().error("Attempting to clear a renderlet nexus with no bound pussycat session, nothing happened");
             return false;
         }
     }
 
     @RequestMapping(value = "/gwasdiagram")
-    public @ResponseBody String renderGWASDiagram(HttpSession session) throws PussycatSessionNotReadyException {
+    public @ResponseBody String renderGWASDiagram(HttpSession session)
+            throws PussycatSessionNotReadyException, NoRenderableDataException {
         // render all data using the pussycat session for this http session
         return getPussycatSession(session).performRendering(getRenderletNexus(session));
     }
 
-    @RequestMapping(value = "/gwasdiagram/associations/{mantissa}/{exponent}")
-    public @ResponseBody String renderAssociations(@PathVariable String mantissa,
-                                                   @PathVariable String exponent,
+    @RequestMapping(value = "/gwasdiagram/associations")
+    public @ResponseBody String renderAssociations(@RequestParam(value = "pvaluemin",
+                                                                 required = false) String pvalueMin,
+                                                   @RequestParam(value = "pvaluemax",
+                                                                 required = false) String pvalueMax,
+                                                   @RequestParam(value = "datemin", required = false) String dateMin,
+                                                   @RequestParam(value = "datemax", required = false) String dateMax,
                                                    HttpSession session)
-            throws PussycatSessionNotReadyException {
-        // get the subset of associations with pvalue smaller than the one supplied
-        /*trait association'  and (has_p_value < " ")*/
+            throws PussycatSessionNotReadyException, NoRenderableDataException {
+
         getLog().debug("Received a new rendering request - " +
-                "putting together the query for mantissa '" + mantissa + "' and exponent '" + exponent + "'");
+                               "putting together the query from date '" + dateMin + "' to '" + dateMax +
+                               "' and from pvalue '" + pvalueMin + "' to '" + pvalueMax + "'");
 
-        int exponentNum = Integer.parseInt(exponent);
-        int mantissaNum = Integer.parseInt(mantissa);
-        double pvalue = mantissaNum*Math.pow(10, exponentNum);
+        if (pvalueMin == "") {
+            pvalueMin = null;
+        }
+        if (pvalueMax == "") {
+            pvalueMax = null;
+        }
+        if (dateMin == "") {
+            dateMin = null;
+        }
+        if (dateMax == "") {
+            dateMax = null;
+        }
+        Filter pvalueFilter = null;
+        Filter dateFilter = null;
 
-        Association association = template(Association.class);
-        Filter filter = refine(association).on(association.getPvalue()).hasValues(0.0, pvalue);
-        getRenderletNexus(session).setRenderingContext(filter);
-        return getPussycatSession(session).performRendering(getRenderletNexus(session), filter);
+        if (pvalueMin != null || pvalueMax != null) {
+            pvalueFilter = setPvalueFilter(pvalueMin, pvalueMax);
+            getRenderletNexus(session).setRenderingContext(pvalueFilter);
+        }
 
-    }
+        if (dateMin != null || dateMax != null) {
+            dateFilter = setDateFilter(dateMin, dateMax);
+            getRenderletNexus(session).setRenderingContext(dateFilter);
+        }
 
-    @RequestMapping(value = "/gwasdiagram/timeseries/{year}/{month}")
-    public @ResponseBody String renderGWASDiagramTimeSeries(@PathVariable String year,
-                                                            @PathVariable String month,
-                                                            HttpSession session)
-            throws PussycatSessionNotReadyException {
-        // get the subset of studies published before the supplied date
-        /*trait association'  and part_of some ('GWAS study' and has_publication_date some dateTime[< "  "^^dateTime])*/
-        getLog().debug("Received a new rendering request - " +
-                               "putting together the query for year '" + year + "' and month '" + month + "'");
 
-        int monthVar = Integer.parseInt(month);
-        int yearVar = Integer.parseInt(year);
+        if (dateFilter == null && pvalueFilter == null) {
+            return getPussycatSession(session).performRendering(getRenderletNexus(session));
+        }
+        else if (dateFilter == null && pvalueFilter != null) {
+            return getPussycatSession(session).performRendering(getRenderletNexus(session), pvalueFilter);
 
-        //API call provides date for "up to and including the end of" - must increment month for query
-        if (monthVar == 12) {
-            month = "01";
-            yearVar++;
-            year = Integer.toString(yearVar);
+        }
+        else if (pvalueFilter == null && dateFilter != null) {
+            return getPussycatSession(session).performRendering(getRenderletNexus(session), dateFilter);
+
         }
         else {
-            monthVar++;
-            if (monthVar > 9) {
-                month = Integer.toString(monthVar);
-            }
-            else {
-                month = "0".concat(Integer.toString(monthVar));
-            }
-        }
-
-        try {
-            DateFormat df = new SimpleDateFormat("YYYY/MM");
-            Date from = df.parse("2005/01");
-            Date to = df.parse(year + "/" + month);
-
-            Study study = template(Study.class);
-            Filter filter = refine(study).on(study.getPublicationDate()).hasRange(from, to);
-            return getPussycatSession(session).performRendering(getRenderletNexus(session), filter);
-        }
-        catch (ParseException e) {
-            getLog().error("Bad date in URL /gwasdiagram/timeseries/" + year + "/" + month + " - " +
-                                   "use /gwasdiagram/timeseries/YYYY/MM", e);
-            throw new RuntimeException("Bad date in URL /gwasdiagram/timeseries/" + year + "/" + month + " - " +
-                                               "use /gwasdiagram/timeseries/YYYY/MM", e);
+            return getPussycatSession(session).performRendering(getRenderletNexus(session), dateFilter, pvalueFilter);
         }
     }
 
+    private Filter setDateFilter(String dateMin, String dateMax) {
+        Filter dateFilter;
+
+        DateFormat df_input = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date to, from;
+
+        try {
+
+            if (dateMax != null) {
+                int endYearVar = Integer.parseInt(dateMax.split("-")[0]);
+                int endMonthVar = Integer.parseInt(dateMax.split("-")[1]);
+
+                String end_month, end_year;
+
+                //API call provides date for "up to and including the end of" - must increment month for query
+                if (endMonthVar == 12) {
+                    end_month = "01";
+                    endYearVar++;
+                    end_year = Integer.toString(endYearVar);
+                }
+                else {
+                    endMonthVar++;
+                    if (endMonthVar > 9) {
+                        end_month = Integer.toString(endMonthVar);
+                    }
+                    else {
+                        end_month = "0".concat(Integer.toString(endMonthVar));
+                    }
+                    end_year = Integer.toString(endYearVar);
+                }
+
+                to = df_input.parse(end_year + "-" + end_month + "-01");
+            }
+            else {
+                //change to use today's date
+                to = df_input.parse(df_input.format(new Date()));
+            }
+
+            if (dateMin != null) {
+                from = df_input.parse(dateMin + "-01");
+            }
+            else {
+                from = df_input.parse("2005-01-01");
+            }
+
+
+            Calendar fromValue = Calendar.getInstance();
+            fromValue.setTime(from);
+
+            Calendar toValue = Calendar.getInstance();
+            toValue.setTime(to);
+
+            Study study = template(Study.class);
+            dateFilter = refine(study).on(study.getPublicationDate()).hasRange(fromValue, toValue);
+
+        }
+        catch (ParseException e) {
+            getLog().error("Bad date in URL for date range '" + dateMin + "' to '" + dateMax, e);
+            throw new RuntimeException("Bad date in URL for date range '" + dateMin + "' to '" + dateMax, e);
+        }
+        return dateFilter;
+    }
+
+    private Filter setPvalueFilter(String pvalueMin, String pvalueMax) {
+
+        double start_pvalue, end_pvalue;
+        if (pvalueMin != null) {
+            int startMantissaNum = Integer.parseInt(pvalueMin.split("e")[0]);
+            int startExponentNum = Integer.parseInt(pvalueMin.split("e")[1]);
+            start_pvalue = startMantissaNum * Math.pow(10, startExponentNum);
+        }
+        else {
+            start_pvalue = 0.0;
+        }
+
+        if (pvalueMax != null) {
+            int endMantissaNum = Integer.parseInt(pvalueMax.split("e")[0]);
+            int endExponentNum = Integer.parseInt(pvalueMax.split("e")[1]);
+            end_pvalue = endMantissaNum * Math.pow(10, endExponentNum);
+        }
+        else {
+            end_pvalue = 1 * Math.pow(10, -5);
+        }
+
+
+        Association association = template(Association.class);
+        Filter filter = refine(association).on(association.getPvalue()).hasValues(start_pvalue, end_pvalue);
+
+        return filter;
+    }
+
+
     @RequestMapping(value = "/snps")
-    public @ResponseBody String renderSNPs(HttpSession session) throws PussycatSessionNotReadyException {
+    public @ResponseBody String renderSNPs(HttpSession session)
+            throws PussycatSessionNotReadyException, NoRenderableDataException {
         SingleNucleotidePolymorphism snp = template(SingleNucleotidePolymorphism.class);
         return getPussycatSession(session).performRendering(getRenderletNexus(session), filter(snp));
     }
 
     @RequestMapping(value = "/snps/{rsID}")
     public @ResponseBody String renderSNP(@PathVariable String rsID, HttpSession session)
-            throws PussycatSessionNotReadyException {
+            throws PussycatSessionNotReadyException, NoRenderableDataException {
         SingleNucleotidePolymorphism snp = template(SingleNucleotidePolymorphism.class);
         Filter filter = refine(snp).on(snp.getRsId()).hasValue(rsID);
         return getPussycatSession(session).performRendering(getRenderletNexus(session), filter);
     }
 
     @RequestMapping(value = "/associations")
-    public @ResponseBody String renderAllAssociations(HttpSession session) throws PussycatSessionNotReadyException {
+    public @ResponseBody String renderAllAssociations(HttpSession session)
+            throws PussycatSessionNotReadyException, NoRenderableDataException {
         Association ta = template(Association.class);
         return getPussycatSession(session).performRendering(getRenderletNexus(session), filter(ta));
     }
 
     @RequestMapping(value = "/traits/{efoURI}")
     public @ResponseBody String renderTrait(@PathVariable String efoURI, HttpSession session)
-            throws PussycatSessionNotReadyException {
+            throws PussycatSessionNotReadyException, NoRenderableDataException {
         Association ta = template(Association.class);
         Filter filter = refine(ta).on(ta.getEfoTraits()).hasValue(URI.create(efoURI));
         return getPussycatSession(session).performRendering(getRenderletNexus(session), filter);
@@ -208,36 +300,11 @@ public class PussycatGOCIController {
             String typeStr = uri.toString();
             typeStr = typeStr.substring(typeStr.lastIndexOf("/") + 1, typeStr.length());
             typeStr = typeStr.contains("#") ? typeStr.substring(typeStr.lastIndexOf("#") + 1,
-                                                               typeStr.length()) : typeStr;
+                                                                typeStr.length()) : typeStr;
             results.add(typeStr);
         }
         return results;
     }
-
-//    @RequestMapping(value = "/associations/{associationIds}")
-//    public @ResponseBody List<AssociationSummary> getAssociationSummaries(
-//            @PathVariable String associationIds, HttpSession session)
-//            throws PussycatSessionNotReadyException {
-//        getLog().debug("Received request to display information for associations " + associationIds);
-//
-//        List<URI> uris = new ArrayList<URI>();
-//        if (associationIds.contains(",")) {
-//            StringTokenizer tokenizer = new StringTokenizer(associationIds, ",");
-//            while (tokenizer.hasMoreTokens()) {
-//                String next = tokenizer.nextToken();
-//                URI nextURI = URI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/Association/" + next);
-//                uris.add(nextURI);
-//            }
-//        }
-//        else {
-//            URI uri = URI.create(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI + "/Association/" + associationIds);
-//            uris.add(uri);
-//        }
-//
-//        getLog().debug("This trait represents " + uris.size() + " different associations");
-//
-//        return getPussycatSession(session).getAssociationSummaries(uris);
-//    }
 
 
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
@@ -251,6 +318,15 @@ public class PussycatGOCIController {
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     @ExceptionHandler(RuntimeException.class)
     public @ResponseBody String handleRuntimeException(RuntimeException e) {
+        String responseMsg = "There has been a problem generating the GWAS diagram.  " +
+                "We've been notified, and are working to fix this problem as soon as we can.<br/>" + e.getMessage();
+        getLog().error(responseMsg, e);
+        return responseMsg;
+    }
+
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    @ExceptionHandler(NoRenderableDataException.class)
+    public @ResponseBody String handleNoRenderableDataException(NoRenderableDataException e) {
         String responseMsg = "There has been a problem generating the GWAS diagram.  " +
                 "We've been notified, and are working to fix this problem as soon as we can.<br/>" + e.getMessage();
         getLog().error(responseMsg, e);
@@ -295,5 +371,86 @@ public class PussycatGOCIController {
         }
 
         return renderletNexus;
+    }
+
+    @RequestMapping(value = "/gwasdiagram/download")
+    public void downloadAssociations(@RequestParam(value = "pvaluemin", required = false) String pvalueMin,
+                                     @RequestParam(value = "pvaluemax", required = false) String pvalueMax,
+                                     @RequestParam(value = "datemin", required = false) String dateMin,
+                                     @RequestParam(value = "datemax", required = false) String dateMax,
+                                     HttpSession session,
+                                     HttpServletResponse response)
+            throws PussycatSessionNotReadyException, NoRenderableDataException, IOException {
+
+        getLog().debug("Received a new rendering request - " +
+                               "putting together the query from date '" + dateMin + "' to '" + dateMax +
+                               "' and from pvalue '" + pvalueMin + "' to '" + pvalueMax + "'");
+
+        if (pvalueMin == "") {
+            pvalueMin = null;
+        }
+        if (pvalueMax == "") {
+            pvalueMax = null;
+        }
+        if (dateMin == "") {
+            dateMin = null;
+        }
+        if (dateMax == "") {
+            dateMax = null;
+        }
+        Filter pvalueFilter = null;
+        Filter dateFilter = null;
+
+        if (pvalueMin != null || pvalueMax != null) {
+            pvalueFilter = setPvalueFilter(pvalueMin, pvalueMax);
+            getRenderletNexus(session).setRenderingContext(pvalueFilter);
+        }
+
+        if (dateMin != null || dateMax != null) {
+            dateFilter = setDateFilter(dateMin, dateMax);
+            getRenderletNexus(session).setRenderingContext(dateFilter);
+        }
+
+        String svg;
+        String fileName = "gwas-diagram";
+
+
+        if (dateFilter == null && pvalueFilter == null) {
+            svg = getPussycatSession(session).performRendering(getRenderletNexus(session));
+            fileName = fileName.concat("_all.svg");
+        }
+        else if (dateFilter == null && pvalueFilter != null) {
+            svg = getPussycatSession(session).performRendering(getRenderletNexus(session), pvalueFilter);
+            fileName = fileName.concat("_latest.svg");
+        }
+        else if (pvalueFilter == null && dateFilter != null) {
+            svg = getPussycatSession(session).performRendering(getRenderletNexus(session), dateFilter);
+            if (dateMax != null) {
+                fileName = fileName.concat("_all-").concat(dateMax).concat(".svg");
+            }
+            else {
+                fileName = fileName.concat("_all_from-").concat(dateMax).concat(".svg");
+            }
+        }
+        else {
+            svg = getPussycatSession(session).performRendering(getRenderletNexus(session), dateFilter, pvalueFilter);
+            if (dateMax != null) {
+                fileName = fileName.concat("_").concat(dateMax).concat(".svg");
+            }
+            else {
+                fileName = fileName.concat("_").concat(dateMax).concat(".svg");
+            }
+        }
+
+
+        response.setContentType("image/svg+xml");
+        response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
+        OutputStream outputStream = response.getOutputStream();
+
+
+        PrintWriter outputWriter = new PrintWriter(outputStream);
+
+        outputWriter.write(svg);
+        outputWriter.flush();
     }
 }

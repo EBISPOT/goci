@@ -17,6 +17,7 @@
 <div class="container">
     <div class="col-md-12">
         <h2>Error:</h2>
+
         <p class="lead">There is a mistake in the data you are trying to upload. Please double check your file.</p>
     </div>
 </div>
@@ -24,7 +25,9 @@
 <div class="container" th:object="${study}">
     <div class="row">
         <div class="col-md-12 col-md-offset-1">
-            <div><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary">Back to SNP associations</a></div>
+            <div><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary">Back to SNP
+                                                                                                        associations</a>
+            </div>
 
         </div>
     </div>

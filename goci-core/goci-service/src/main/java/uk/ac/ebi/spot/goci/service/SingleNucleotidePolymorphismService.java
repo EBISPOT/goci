@@ -101,9 +101,9 @@ public class SingleNucleotidePolymorphismService {
     }
 
     public void loadAssociatedData(SingleNucleotidePolymorphism snp) {
-        int regionCount = snp.getRegions().size();
+        int locationCount = snp.getLocations().size();
         int geneCount = snp.getGenomicContexts().size();
-        getLog().trace("SNP '" + snp.getRsId() + "' is mapped to " + regionCount + " regions " +
+        getLog().trace("SNP '" + snp.getRsId() + "' is mapped to " + locationCount + " locations " +
                                "and " + geneCount + " genes");
     }
 

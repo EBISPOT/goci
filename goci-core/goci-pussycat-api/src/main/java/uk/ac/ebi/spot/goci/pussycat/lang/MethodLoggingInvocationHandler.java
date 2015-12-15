@@ -19,15 +19,15 @@ public class MethodLoggingInvocationHandler implements MethodLogger, InvocationH
 
     public MethodLoggingInvocationHandler() {
         this.primitiveDefaults = new HashMap<Class<?>, Object>();
-//        byte	0
-//        short	0
-//        int	0
-//        long	0L
-//        float	0.0f
-//        double	0.0d
-//        char	'\u0000'
-//        String (or any object)  	null
-//        boolean	false
+        //        byte	0
+        //        short	0
+        //        int	0
+        //        long	0L
+        //        float	0.0f
+        //        double	0.0d
+        //        char	'\u0000'
+        //        String (or any object)  	null
+        //        boolean	false
         primitiveDefaults.put(byte.class, 0);
         primitiveDefaults.put(short.class, 0);
         primitiveDefaults.put(int.class, 0);

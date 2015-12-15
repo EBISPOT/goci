@@ -180,69 +180,120 @@
                 <caption>SNP association details</caption>
                 <thead>
                 <tr>
-                    <th>Genes (author reported)</th>
-                    <th>Strongest Allele</th>
-                    <th>SNP</th>
-                    <th>Proxy SNP</th>
-                    <th>Independent SNP risk allele frequency in controls</th>
-                    <th>Risk element (allele, haplotype or SNPxSNP interaction) frequency in controls</th>
-                    <th>p-Value (mantissa x 10 exponent)</th>
-                    <th>p-Value Text</th>
-                    <th>EFO trait</th>
-                    <th>OR per Copy Num</th>
-                    <th>OR entered (reciprocal)</th>
-                    <th>OR-Type</th>
-                    <th>OR per Copy Range</th>
-                    <th>OR per Copy Range (reciprocal)</th>
-                    <th>OR per Copy Unit Description</th>
-                    <th>Std Error</th>
-                    <th>SNP Type</th>
-                    <th>SNP Status</th>
-                    <th>Multi-SNP haplotype</th>
-                    <th>SNP:SNP interaction</th>
-                    <th>SNP Checked?</th>
+                    <th style="font-size: small">Genes (author reported)</th>
+                    <th style="font-size: small">Strongest Allele</th>
+                    <th style="font-size: small">SNP</th>
+                    <th style="font-size: small">Proxy SNP</th>
+                    <th style="font-size: small">Independent SNP risk allele frequency in controls</th>
+                    <th style="font-size: small">Risk element (allele, haplotype or SNPxSNP interaction) frequency in
+                                                 controls
+                    </th>
+                    <th style="font-size: small">p-Value (mantissa x 10 exponent)</th>
+                    <th style="font-size: small">p-Value Text</th>
+                    <th style="font-size: small">EFO trait</th>
+                    <th style="font-size: small">OR per Copy Num</th>
+                    <th style="font-size: small">OR entered (reciprocal)</th>
+                    <th style="font-size: small">OR-Type</th>
+                    <th style="font-size: small">OR per Copy Range</th>
+                    <th style="font-size: small">OR per Copy Range (reciprocal)</th>
+                    <th style="font-size: small">OR per Copy Unit Description</th>
+                    <th style="font-size: small">Std Error</th>
+                    <th style="font-size: small">SNP Type</th>
+                    <th style="font-size: small">SNP Status</th>
+                    <th style="font-size: small">Multi-SNP haplotype</th>
+                    <th style="font-size: small">SNP:SNP interaction</th>
+                    <th style="font-size: small">Errors/ Mapping Details</th>
+                    <th style="font-size: small">SNP Approved</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="snpAssociationTableView: ${snpAssociationTableViews}">
 
                     <!--Gene-->
-                    <td th:text="${snpAssociationTableView.authorReportedGenes}?: '' "></td>
+                    <td style="font-size: small" th:text="${snpAssociationTableView.authorReportedGenes}?: '' "></td>
 
                     <!--Strongest risk allele-->
-                    <td th:text="${snpAssociationTableView.strongestRiskAlleles}?: '' "></td>
+                    <td style="font-size: small" th:text="${snpAssociationTableView.strongestRiskAlleles}?: '' "></td>
 
                     <!--SNPs-->
-                    <td th:text="${snpAssociationTableView.snps}?: '' "></td>
+                    <td style="font-size: small" th:text="${snpAssociationTableView.snps}?: '' "></td>
 
                     <!--Proxy SNPs-->
-                    <td th:text="${snpAssociationTableView.proxySnps}?: '' "></td>
+                    <td style="font-size: small" th:text="${snpAssociationTableView.proxySnps}?: '' "></td>
 
                     <!--Risk Allele Frequency-->
-                    <td th:text="${snpAssociationTableView.riskAlleleFrequencies}?: '' "></td>
+                    <td style="font-size: small" th:text="${snpAssociationTableView.riskAlleleFrequencies}?: '' "></td>
 
                     <!--Association Risk Frequency-->
-                    <td th:text="${snpAssociationTableView.associationRiskFrequency}?: '' "></td>
+                    <td style="font-size: small"
+                        th:text="${snpAssociationTableView.associationRiskFrequency}?: '' "></td>
 
                     <!--P Value-->
-                    <td th:text="${snpAssociationTableView.pvalueMantissa} + 'x 10' + ${snpAssociationTableView.pvalueExponent} ?: ''"></td>
-                    <td th:text="${snpAssociationTableView.pvalueText} ?: ''"></td>
+                    <td style="font-size: small"
+                        th:text="${snpAssociationTableView.pvalueMantissa} + 'x 10' + ${snpAssociationTableView.pvalueExponent} ?: ''"></td>
+                    <td style="font-size: small" th:text="${snpAssociationTableView.pvalueText} ?: ''"></td>
 
                     <!--EFO traits-->
-                    <td th:text="${snpAssociationTableView.efoTraits} ?: ''"></td>
+                    <td style="font-size: small" th:text="${snpAssociationTableView.efoTraits} ?: ''"></td>
 
-                    <td th:text="${snpAssociationTableView.orPerCopyNum} ?: ''"></td>
-                    <td th:text="${snpAssociationTableView.orPerCopyRecip} ?: ''"></td>
-                    <td th:text="${snpAssociationTableView.orType} ?:''"></td>
-                    <td th:text="${snpAssociationTableView.orPerCopyRange} ?: ''"></td>
-                    <td th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
-                    <td th:text="${snpAssociationTableView.orPerCopyUnitDescr} ?: ''"></td>
-                    <td th:text="${snpAssociationTableView.orPerCopyStdError} ?: ''"></td>
-                    <td th:text="${snpAssociationTableView.associationType} ?: ''"></td>
-                    <td th:text="${snpAssociationTableView.snpStatuses} ?:''"></td>
-                    <td th:text="${snpAssociationTableView.multiSnpHaplotype} ?:''"></td>
-                    <td th:text="${snpAssociationTableView.snpInteraction} ?:''"></td>
-                    <td th:text="${snpAssociationTableView.snpChecked} ?: '' "></td>
+                    <td style="font-size: small" th:text="${snpAssociationTableView.orPerCopyNum} ?: ''"></td>
+                    <td style="font-size: small" th:text="${snpAssociationTableView.orPerCopyRecip} ?: ''"></td>
+                    <td style="font-size: small" th:text="${snpAssociationTableView.orType} ?:''"></td>
+                    <td style="font-size: small" th:text="${snpAssociationTableView.orPerCopyRange} ?: ''"></td>
+                    <td style="font-size: small" th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
+                    <td style="font-size: small" th:text="${snpAssociationTableView.orPerCopyUnitDescr} ?: ''"></td>
+                    <td style="font-size: small" th:text="${snpAssociationTableView.orPerCopyStdError} ?: ''"></td>
+                    <td style="font-size: small" th:text="${snpAssociationTableView.associationType} ?: ''"></td>
+                    <td style="font-size: small" th:text="${snpAssociationTableView.snpStatuses} ?:''"></td>
+                    <td style="font-size: small" th:text="${snpAssociationTableView.multiSnpHaplotype} ?:''"></td>
+                    <td style="font-size: small" th:text="${snpAssociationTableView.snpInteraction} ?:''"></td>
+
+
+                    <!-- Errors-->
+                    <td>
+                         <span th:switch="${snpAssociationTableView.associationErrorsChecked}">
+                             <span th:case="'Yes'">
+                                  <span style="color:darkgrey; font-size: small"
+                                        th:each="error: ${snpAssociationTableView.associationErrorMap}"
+                                        th:utext="${error.value} + '&lt;br /&gt;'?: ''"
+                                        th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}">
+
+                                  </span>
+                                  <span class="glyphicon glyphicon-ok pull-right"></span>
+                             </span>
+
+                             <span th:case="'No'">
+                                  <span style="color:red; font-size: small"
+                                        th:each="error: ${snpAssociationTableView.associationErrorMap}"
+                                        th:utext="${error.value} + '&lt;br /&gt;' ?: ''"
+                                        th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}">
+
+                                  </span>
+                             </span>
+
+                             <span th:case="null">
+                                  <span style="color:red; font-size: small"
+                                        th:each="error: ${snpAssociationTableView.associationErrorMap}"
+                                        th:utext="${error.value} + '&lt;br /&gt;'?: ''"
+                                        th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}">
+                                  </span>
+                             </span>
+                        </span>
+
+                        <br/>
+
+                        <span style="font-style: italic; font-size: small"
+                              th:if="${snpAssociationTableView.lastMappingDate != null}"
+                              th:utext="'Mapping date: '+${snpAssociationTableView.lastMappingDate} ?: ''"></span>
+
+                        <span style="font-style: italic; font-size: small"
+                              th:if="${snpAssociationTableView.lastMappingPerformedBy != null}"
+                              th:utext="'&lt;br /&gt;' +'Performer: '+${snpAssociationTableView.lastMappingPerformedBy} ?: ''"></span>
+
+                    </td>
+
+
+                    <td th:text="${snpAssociationTableView.snpApproved} ?: '' "></td>
                 </tr>
                 </tbody>
             </table>
@@ -348,8 +399,8 @@
                 </tr>
 
                 <tr>
-                    <th>Checked NCBI Error</th>
-                    <td th:switch="${housekeeping.checkedNCBIError}">
+                    <th>Checked Mapping Error</th>
+                    <td th:switch="${housekeeping.checkedMappingError}">
                         <p th:case="'null'"></p>
 
                         <p th:case="false">No</p>

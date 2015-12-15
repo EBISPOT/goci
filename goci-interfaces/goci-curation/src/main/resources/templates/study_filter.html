@@ -6,20 +6,27 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-offset-10">
-      <button id="filterButton"
-              class="btn btn-primary"
-              type="button"
-              data-toggle="collapse"
-              data-target="#collapseOptions"
-              aria-expanded="false"
-              aria-controls="collapseOptions">
-                  <span class="glyphicon glyphicon-collapse-down"></span>Open filter options</button>
+        <div class="col-md-12 col-md-offset-0 pull-left">
+            <button class="btn btn-default"
+                    id="filterButton"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#collapseOptions"
+                    aria-expanded="false"
+                    aria-controls="collapseOptions">
+                    <span class="glyphicon glyphicon-collapse-down"></span>Close filter options</button>
         </div>
+    </div>
+</div>
+<br/>
 
-        <div class="collapse" id="collapseOptions">
-            <div class="well col-md-offset-3 col-md-6">
+<div class="collapse in" id="collapseOptions">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="well well-sm col-md-10 col-md-offset-1">
+
                 <div id="studyTypesFilterParametersForm">
+                    <br/>
 
                     <form class="form-inline" name="studyTypesFilterParametersForm" role="form" method="post"
                           th:action="@{/studies(filters=true)}"
@@ -43,7 +50,7 @@
                                         class="btn btn-primary btn-sm"
                                         data-toggle="tooltip"
                                         data-placement="right"
-                                        title="Filter for GXE studies, GXG studies, CNV studies, studies in curation queue,
+                                        title="Filter for GXE, GXG, CNV, multi-SNP haplotype and SNP interaction studies, as well as studies in curation queue
                                         studies with errors">Filter by study type</button>
                             </div>
                         </div>
@@ -220,6 +227,7 @@
                                     <button class="btn btn-primary btn-sm" type="submit">Search notes</button></span>
                                 </div>
                             </div>
+                            <br/>
                         </form>
                     </div>
                 </div>
@@ -243,10 +251,9 @@
     $(function() {
         // turn the element to select2 select style
         $('#curationStatus').select2({
-            placeholder: "Select a status",
-            allowClear: true,
-            width: 'resolve'
-        });
+                                         placeholder: "Select a status",
+                                         allowClear: true
+                                     });
     });
 </script>
 
@@ -254,19 +261,18 @@
     $(function() {
         // turn the element to select2 select style
         $('#curator').select2({
-            placeholder: "Select a curator",
-            allowClear: true,
-            width: 'resolve'
-        });
+                                  placeholder: "Select a curator",
+                                  allowClear: true
+                              });
     });
 </script>
 <script>
     $(function() {
         // turn the element to select2 select style
         $('#studyTypes').select2({
-            placeholder: "Select GXE, studies with errors...",
-            allowClear: true
-        });
+                                     placeholder: "Select GXE, studies with errors...",
+                                     allowClear: true
+                                 });
     });
 </script>
 
@@ -274,10 +280,9 @@
     $(function() {
         // turn the element to select2 select style
         $('#efoTraits').select2({
-            placeholder: "Select EFO trait..",
-            allowClear: true,
-            width: 'resolve'
-        });
+                                    placeholder: "Select EFO trait..",
+                                    allowClear: true
+                                });
     });
 </script>
 
@@ -285,10 +290,9 @@
     $(function() {
         // turn the element to select2 select style
         $('#diseaseTraits').select2({
-            placeholder: "Select disease trait..",
-            allowClear: true,
-            width: 'resolve'
-        });
+                                        placeholder: "Select disease trait..",
+                                        allowClear: true
+                                    });
     });
 </script>
 
@@ -296,10 +300,9 @@
     $(function() {
         // turn the element to select2 select style
         $('#authors').select2({
-            placeholder: "Select author..",
-            allowClear: true,
-            width: 'resolve'
-        });
+                                  placeholder: "Select author..",
+                                  allowClear: true
+                              });
     });
 </script>
 

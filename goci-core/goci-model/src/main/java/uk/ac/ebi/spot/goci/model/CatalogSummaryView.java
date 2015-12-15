@@ -47,21 +47,37 @@ public class CatalogSummaryView {
 
     private String reportedGene;
 
-    private String mappedGene;
+    private String entrezMappedGene;
 
-    private String entrezGeneId;
+    private String entrezMappedGeneId;
 
-    private String upstreamMappedGene;
+    private String ensemblMappedGene;
 
-    private String upstreamEntrezGeneId;
+    private String ensemblMappedGeneId;
 
-    private Integer upstreamGeneDistance;
+    private String entrezUpstreamMappedGene;
 
-    private String downstreamMappedGene;
+    private String entrezUpstreamGeneId;
 
-    private String downstreamEntrezGeneId;
+    private Integer entrezUpstreamGeneDist;
 
-    private Integer downstreamGeneDistance;
+    private String ensemblUpstreamMappedGene;
+
+    private String ensemblUpstreamGeneId;
+
+    private Integer ensemblUpstreamGeneDist;
+
+    private String entrezDownstreamMappedGene;
+
+    private String entrezDownstreamGeneId;
+
+    private Integer entrezDownstreamGeneDist;
+
+    private String ensemblDownstreamMappedGene;
+
+    private String ensemblDownstreamGeneId;
+
+    private Integer ensemblDownstreamGeneDist;
 
     private String strongestSnpRiskAllele;
 
@@ -73,7 +89,9 @@ public class CatalogSummaryView {
 
     private String context;
 
-    private Boolean isIntergenic;
+    private Boolean isIntergenicEntrez;
+
+    private Boolean isIntergenicEnsembl;
 
     private String riskAlleleFrequency;
 
@@ -125,20 +143,29 @@ public class CatalogSummaryView {
                               String chromosomeName,
                               String chromosomePosition,
                               String reportedGene,
-                              String mappedGene,
-                              String entrezGeneId,
-                              String upstreamMappedGene,
-                              String upstreamEntrezGeneId,
-                              Integer upstreamGeneDistance,
-                              String downstreamMappedGene,
-                              String downstreamEntrezGeneId,
-                              Integer downstreamGeneDistance,
+                              String entrezMappedGene,
+                              String entrezMappedGeneId,
+                              String ensemblMappedGene,
+                              String ensemblMappedGeneId,
+                              String entrezUpstreamMappedGene,
+                              String entrezUpstreamGeneId,
+                              Integer entrezUpstreamGeneDist,
+                              String ensemblUpstreamMappedGene,
+                              String ensemblUpstreamGeneId,
+                              Integer ensemblUpstreamGeneDist,
+                              String entrezDownstreamMappedGene,
+                              String entrezDownstreamGeneId,
+                              Integer entrezDownstreamGeneDist,
+                              String ensemblDownstreamMappedGene,
+                              String ensemblDownstreamGeneId,
+                              Integer ensemblDownstreamGeneDist,
                               String strongestSnpRiskAllele,
                               String snpRsid,
                               Boolean merged,
                               Long snpId,
                               String context,
-                              Boolean isIntergenic,
+                              Boolean isIntergenicEntrez,
+                              Boolean isIntergenicEnsembl,
                               String riskAlleleFrequency,
                               Integer pValueMantissa,
                               Integer pValueExponent,
@@ -150,9 +177,7 @@ public class CatalogSummaryView {
                               Boolean cnv,
                               Long associationId,
                               Long studyId,
-                              Date catalogPublishDate,
-                              Date catalogUnpublishDate,
-                              String curationStatus) {
+                              Date catalogPublishDate, Date catalogUnpublishDate, String curationStatus) {
         this.id = id;
         this.studyAddedDate = studyAddedDate;
         this.pubmedId = pubmedId;
@@ -170,20 +195,29 @@ public class CatalogSummaryView {
         this.chromosomeName = chromosomeName;
         this.chromosomePosition = chromosomePosition;
         this.reportedGene = reportedGene;
-        this.mappedGene = mappedGene;
-        this.entrezGeneId = entrezGeneId;
-        this.upstreamMappedGene = upstreamMappedGene;
-        this.upstreamEntrezGeneId = upstreamEntrezGeneId;
-        this.upstreamGeneDistance = upstreamGeneDistance;
-        this.downstreamMappedGene = downstreamMappedGene;
-        this.downstreamEntrezGeneId = downstreamEntrezGeneId;
-        this.downstreamGeneDistance = downstreamGeneDistance;
+        this.entrezMappedGene = entrezMappedGene;
+        this.entrezMappedGeneId = entrezMappedGeneId;
+        this.ensemblMappedGene = ensemblMappedGene;
+        this.ensemblMappedGeneId = ensemblMappedGeneId;
+        this.entrezUpstreamMappedGene = entrezUpstreamMappedGene;
+        this.entrezUpstreamGeneId = entrezUpstreamGeneId;
+        this.entrezUpstreamGeneDist = entrezUpstreamGeneDist;
+        this.ensemblUpstreamMappedGene = ensemblUpstreamMappedGene;
+        this.ensemblUpstreamGeneId = ensemblUpstreamGeneId;
+        this.ensemblUpstreamGeneDist = ensemblUpstreamGeneDist;
+        this.entrezDownstreamMappedGene = entrezDownstreamMappedGene;
+        this.entrezDownstreamGeneId = entrezDownstreamGeneId;
+        this.entrezDownstreamGeneDist = entrezDownstreamGeneDist;
+        this.ensemblDownstreamMappedGene = ensemblDownstreamMappedGene;
+        this.ensemblDownstreamGeneId = ensemblDownstreamGeneId;
+        this.ensemblDownstreamGeneDist = ensemblDownstreamGeneDist;
         this.strongestSnpRiskAllele = strongestSnpRiskAllele;
         this.snpRsid = snpRsid;
         this.merged = merged;
         this.snpId = snpId;
         this.context = context;
-        this.isIntergenic = isIntergenic;
+        this.isIntergenicEntrez = isIntergenicEntrez;
+        this.isIntergenicEnsembl = isIntergenicEnsembl;
         this.riskAlleleFrequency = riskAlleleFrequency;
         this.pValueMantissa = pValueMantissa;
         this.pValueExponent = pValueExponent;
@@ -336,68 +370,132 @@ public class CatalogSummaryView {
         this.reportedGene = reportedGene;
     }
 
-    public String getMappedGene() {
-        return mappedGene;
+    public String getEntrezMappedGene() {
+        return entrezMappedGene;
     }
 
-    public void setMappedGene(String mappedGene) {
-        this.mappedGene = mappedGene;
+    public void setEntrezMappedGene(String entrezMappedGene) {
+        this.entrezMappedGene = entrezMappedGene;
     }
 
-    public String getEntrezGeneId() {
-        return entrezGeneId;
+    public String getEntrezMappedGeneId() {
+        return entrezMappedGeneId;
     }
 
-    public void setEntrezGeneId(String entrezGeneId) {
-        this.entrezGeneId = entrezGeneId;
+    public void setEntrezMappedGeneId(String entrezMappedGeneId) {
+        this.entrezMappedGeneId = entrezMappedGeneId;
     }
 
-    public String getUpstreamMappedGene() {
-        return upstreamMappedGene;
+    public String getEnsemblMappedGene() {
+        return ensemblMappedGene;
     }
 
-    public void setUpstreamMappedGene(String upstreamMappedGene) {
-        this.upstreamMappedGene = upstreamMappedGene;
+    public void setEnsemblMappedGene(String ensemblMappedGene) {
+        this.ensemblMappedGene = ensemblMappedGene;
     }
 
-    public String getUpstreamEntrezGeneId() {
-        return upstreamEntrezGeneId;
+    public String getEnsemblMappedGeneId() {
+        return ensemblMappedGeneId;
     }
 
-    public void setUpstreamEntrezGeneId(String upstreamEntrezGeneId) {
-        this.upstreamEntrezGeneId = upstreamEntrezGeneId;
+    public void setEnsemblMappedGeneId(String ensemblMappedGeneId) {
+        this.ensemblMappedGeneId = ensemblMappedGeneId;
     }
 
-    public Integer getUpstreamGeneDistance() {
-        return upstreamGeneDistance;
+    public String getEntrezUpstreamMappedGene() {
+        return entrezUpstreamMappedGene;
     }
 
-    public void setUpstreamGeneDistance(Integer upstreamGeneDistance) {
-        this.upstreamGeneDistance = upstreamGeneDistance;
+    public void setEntrezUpstreamMappedGene(String entrezUpstreamMappedGene) {
+        this.entrezUpstreamMappedGene = entrezUpstreamMappedGene;
     }
 
-    public String getDownstreamMappedGene() {
-        return downstreamMappedGene;
+    public String getEntrezUpstreamGeneId() {
+        return entrezUpstreamGeneId;
     }
 
-    public void setDownstreamMappedGene(String downstreamMappedGene) {
-        this.downstreamMappedGene = downstreamMappedGene;
+    public void setEntrezUpstreamGeneId(String entrezUpstreamGeneId) {
+        this.entrezUpstreamGeneId = entrezUpstreamGeneId;
     }
 
-    public String getDownstreamEntrezGeneId() {
-        return downstreamEntrezGeneId;
+    public Integer getEntrezUpstreamGeneDist() {
+        return entrezUpstreamGeneDist;
     }
 
-    public void setDownstreamEntrezGeneId(String downstreamEntrezGeneId) {
-        this.downstreamEntrezGeneId = downstreamEntrezGeneId;
+    public void setEntrezUpstreamGeneDist(Integer entrezUpstreamGeneDist) {
+        this.entrezUpstreamGeneDist = entrezUpstreamGeneDist;
     }
 
-    public Integer getDownstreamGeneDistance() {
-        return downstreamGeneDistance;
+    public String getEnsemblUpstreamMappedGene() {
+        return ensemblUpstreamMappedGene;
     }
 
-    public void setDownstreamGeneDistance(Integer downstreamGeneDistance) {
-        this.downstreamGeneDistance = downstreamGeneDistance;
+    public void setEnsemblUpstreamMappedGene(String ensemblUpstreamMappedGene) {
+        this.ensemblUpstreamMappedGene = ensemblUpstreamMappedGene;
+    }
+
+    public String getEnsemblUpstreamGeneId() {
+        return ensemblUpstreamGeneId;
+    }
+
+    public void setEnsemblUpstreamGeneId(String ensemblUpstreamGeneId) {
+        this.ensemblUpstreamGeneId = ensemblUpstreamGeneId;
+    }
+
+    public Integer getEnsemblUpstreamGeneDist() {
+        return ensemblUpstreamGeneDist;
+    }
+
+    public void setEnsemblUpstreamGeneDist(Integer ensemblUpstreamGeneDist) {
+        this.ensemblUpstreamGeneDist = ensemblUpstreamGeneDist;
+    }
+
+    public String getEntrezDownstreamMappedGene() {
+        return entrezDownstreamMappedGene;
+    }
+
+    public void setEntrezDownstreamMappedGene(String entrezDownstreamMappedGene) {
+        this.entrezDownstreamMappedGene = entrezDownstreamMappedGene;
+    }
+
+    public String getEntrezDownstreamGeneId() {
+        return entrezDownstreamGeneId;
+    }
+
+    public void setEntrezDownstreamGeneId(String entrezDownstreamGeneId) {
+        this.entrezDownstreamGeneId = entrezDownstreamGeneId;
+    }
+
+    public Integer getEntrezDownstreamGeneDist() {
+        return entrezDownstreamGeneDist;
+    }
+
+    public void setEntrezDownstreamGeneDist(Integer entrezDownstreamGeneDist) {
+        this.entrezDownstreamGeneDist = entrezDownstreamGeneDist;
+    }
+
+    public String getEnsemblDownstreamMappedGene() {
+        return ensemblDownstreamMappedGene;
+    }
+
+    public void setEnsemblDownstreamMappedGene(String ensemblDownstreamMappedGene) {
+        this.ensemblDownstreamMappedGene = ensemblDownstreamMappedGene;
+    }
+
+    public String getEnsemblDownstreamGeneId() {
+        return ensemblDownstreamGeneId;
+    }
+
+    public void setEnsemblDownstreamGeneId(String ensemblDownstreamGeneId) {
+        this.ensemblDownstreamGeneId = ensemblDownstreamGeneId;
+    }
+
+    public Integer getEnsemblDownstreamGeneDist() {
+        return ensemblDownstreamGeneDist;
+    }
+
+    public void setEnsemblDownstreamGeneDist(Integer ensemblDownstreamGeneDist) {
+        this.ensemblDownstreamGeneDist = ensemblDownstreamGeneDist;
     }
 
     public String getStrongestSnpRiskAllele() {
@@ -416,16 +514,12 @@ public class CatalogSummaryView {
         this.snpRsid = snpRsid;
     }
 
-    public Boolean getMerged() {
+    public Boolean isMerged() {
         return merged;
     }
 
     public void setMerged(Boolean merged) {
         this.merged = merged;
-    }
-
-    public Boolean isMerged() {
-        return merged;
     }
 
     public Long getSnpId() {
@@ -444,16 +538,20 @@ public class CatalogSummaryView {
         this.context = context;
     }
 
-    public Boolean getIsIntergenic() {
-        return isIntergenic;
+    public Boolean isIntergenicEntrez() {
+        return isIntergenicEntrez;
     }
 
-    public void setIsIntergenic(Boolean isIntergenic) {
-        this.isIntergenic = isIntergenic;
+    public void setIsIntergenicEntrez(Boolean isIntergenicEntrez) {
+        this.isIntergenicEntrez = isIntergenicEntrez;
     }
 
-    public Boolean isIntergenic() {
-        return isIntergenic;
+    public Boolean isIntergenicEnsembl() {
+        return isIntergenicEnsembl;
+    }
+
+    public void setIsIntergenicEnsembl(Boolean isIntergenicEnsembl) {
+        this.isIntergenicEnsembl = isIntergenicEnsembl;
     }
 
     public String getRiskAlleleFrequency() {
@@ -528,10 +626,6 @@ public class CatalogSummaryView {
         this.cnv = cnv;
     }
 
-    public Boolean isCnv() {
-        return cnv;
-    }
-
     public Long getAssociationId() {
         return associationId;
     }
@@ -570,55 +664,5 @@ public class CatalogSummaryView {
 
     public void setCurationStatus(String curationStatus) {
         this.curationStatus = curationStatus;
-    }
-
-    @Override public String toString() {
-        return "CatalogSummaryView{" +
-                "id=" + id +
-                ", studyAddedDate=" + studyAddedDate +
-                ", pubmedId='" + pubmedId + '\'' +
-                ", author='" + author + '\'' +
-                ", publicationDate=" + publicationDate +
-                ", journal='" + journal + '\'' +
-                ", link='" + link + '\'' +
-                ", study='" + study + '\'' +
-                ", diseaseTrait='" + diseaseTrait + '\'' +
-                ", efoTrait='" + efoTrait + '\'' +
-                ", efoUri='" + efoUri + '\'' +
-                ", initialSampleDescription='" + initialSampleDescription + '\'' +
-                ", replicateSampleDescription='" + replicateSampleDescription + '\'' +
-                ", region='" + region + '\'' +
-                ", chromosomeName='" + chromosomeName + '\'' +
-                ", chromosomePosition='" + chromosomePosition + '\'' +
-                ", reportedGene='" + reportedGene + '\'' +
-                ", mappedGene='" + mappedGene + '\'' +
-                ", entrezGeneId='" + entrezGeneId + '\'' +
-                ", upstreamMappedGene='" + upstreamMappedGene + '\'' +
-                ", upstreamEntrezGeneId='" + upstreamEntrezGeneId + '\'' +
-                ", upstreamGeneDistance=" + upstreamGeneDistance +
-                ", downstreamMappedGene='" + downstreamMappedGene + '\'' +
-                ", downstreamEntrezGeneId='" + downstreamEntrezGeneId + '\'' +
-                ", downstreamGeneDistance=" + downstreamGeneDistance +
-                ", strongestSnpRiskAllele='" + strongestSnpRiskAllele + '\'' +
-                ", snpRsid='" + snpRsid + '\'' +
-                ", merged=" + merged +
-                ", snpId=" + snpId +
-                ", context='" + context + '\'' +
-                ", isIntergenic=" + isIntergenic +
-                ", riskAlleleFrequency='" + riskAlleleFrequency + '\'' +
-                ", pValueMantissa=" + pValueMantissa +
-                ", pValueExponent=" + pValueExponent +
-                ", pValueQualifier='" + pValueQualifier + '\'' +
-                ", orBeta=" + orBeta +
-                ", ci='" + ci + '\'' +
-                ", ciQualifier='" + ciQualifier + '\'' +
-                ", platform='" + platform + '\'' +
-                ", cnv=" + cnv +
-                ", associationId=" + associationId +
-                ", studyId=" + studyId +
-                ", catalogPublishDate=" + catalogPublishDate +
-                ", catalogUnpublishDate=" + catalogUnpublishDate +
-                ", curationStatus='" + curationStatus + '\'' +
-                '}';
     }
 }

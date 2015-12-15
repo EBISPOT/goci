@@ -8,14 +8,15 @@ import java.util.List;
 
 /**
  * Created by emma on 28/05/2015.
- * @author emma
  *
- * Script related to JIRA ticket: https://www.ebi.ac.uk/panda/jira/browse/GOCI-791.
- * Aim is to backfil certain association attributes that indicate the type of association.
+ * @author emma
+ *         <p>
+ *         Script related to JIRA ticket: https://www.ebi.ac.uk/panda/jira/browse/GOCI-791. Aim is to backfil certain
+ *         association attributes that indicate the type of association.
  */
 public class V1_9_9_048__Association_type_backfill implements SpringJdbcMigration {
 
-    private static final String SELECT_SNP_INTERACTION_ASSOCIATIONS_FOR_UPDATE ="SELECT DISTINCT a.ID\n" +
+    private static final String SELECT_SNP_INTERACTION_ASSOCIATIONS_FOR_UPDATE = "SELECT DISTINCT a.ID\n" +
             "FROM ASSOCIATION a, ASSOCIATION_LOCUS al, LOCUS l\n" +
             "WHERE al.ASSOCIATION_ID = a.ID AND\n" +
             "al.LOCUS_ID=l.ID AND\n" +
@@ -61,7 +62,7 @@ public class V1_9_9_048__Association_type_backfill implements SpringJdbcMigratio
         });
 
         for (Long associationId : snpInteractionAssociations) {
-            jdbcTemplate.update(UPDATE_ASSOCIATION, 1, 0,associationId);
+            jdbcTemplate.update(UPDATE_ASSOCIATION, 1, 0, associationId);
         }
 
         for (Long associationId : multiSnpAssociations) {

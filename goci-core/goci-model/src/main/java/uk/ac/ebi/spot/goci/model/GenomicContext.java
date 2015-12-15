@@ -31,21 +31,38 @@ public class GenomicContext {
     @ManyToOne
     private Gene gene;
 
+    @ManyToOne
+    private Location location;
+
+    private String source;
+
+    private String mappingMethod;
+
+    private Boolean isClosestGene;
+
     // JPA no-args constructor
     public GenomicContext() {
     }
 
-    public GenomicContext(boolean isIntergenic,
-                          boolean isUpstream,
-                          boolean isDownstream,
+    public GenomicContext(Boolean isIntergenic,
+                          Boolean isUpstream,
+                          Boolean isDownstream,
                           Long distance,
-                          SingleNucleotidePolymorphism snp, Gene gene) {
+                          SingleNucleotidePolymorphism snp,
+                          Gene gene,
+                          Location location,
+                          String source,
+                          String mappingMethod, Boolean isClosestGene) {
         this.isIntergenic = isIntergenic;
         this.isUpstream = isUpstream;
         this.isDownstream = isDownstream;
         this.distance = distance;
         this.snp = snp;
         this.gene = gene;
+        this.location = location;
+        this.source = source;
+        this.mappingMethod = mappingMethod;
+        this.isClosestGene = isClosestGene;
     }
 
     public Long getId() {
@@ -56,27 +73,27 @@ public class GenomicContext {
         this.id = id;
     }
 
-    public boolean isIntergenic() {
+    public Boolean getIsIntergenic() {
         return isIntergenic;
     }
 
-    public void setIntergenic(boolean isIntergenic) {
+    public void setIsIntergenic(Boolean isIntergenic) {
         this.isIntergenic = isIntergenic;
     }
 
-    public boolean isUpstream() {
+    public Boolean getIsUpstream() {
         return isUpstream;
     }
 
-    public void setUpstream(boolean isUpstream) {
+    public void setIsUpstream(Boolean isUpstream) {
         this.isUpstream = isUpstream;
     }
 
-    public boolean isDownstream() {
+    public Boolean getIsDownstream() {
         return isDownstream;
     }
 
-    public void setDownstream(boolean isDownstream) {
+    public void setIsDownstream(Boolean isDownstream) {
         this.isDownstream = isDownstream;
     }
 
@@ -104,15 +121,35 @@ public class GenomicContext {
         this.gene = gene;
     }
 
-    @Override public String toString() {
-        return "GenomicContext{" +
-                "id=" + id +
-                ", isIntergenic=" + isIntergenic +
-                ", isUpstream=" + isUpstream +
-                ", isDownstream=" + isDownstream +
-                ", distance=" + distance +
-                ", snp=" + snp +
-                ", gene=" + gene +
-                '}';
+    public String getMappingMethod() {
+        return mappingMethod;
+    }
+
+    public void setMappingMethod(String mappingMethod) {
+        this.mappingMethod = mappingMethod;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public Boolean getIsClosestGene() {
+        return isClosestGene;
+    }
+
+    public void setIsClosestGene(Boolean isClosestGene) {
+        this.isClosestGene = isClosestGene;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }

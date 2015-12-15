@@ -13,7 +13,7 @@ import java.util.Date;
  * Created by emma on 03/12/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Model representing housekeeping information stored about a study that is used during curation
  */
 @Entity
@@ -28,11 +28,11 @@ public class Housekeeping {
 
     private Boolean ethnicityCheckedLevelOne = false;
 
-    private Boolean ethnicityCheckedLevelTwo  = false;
+    private Boolean ethnicityCheckedLevelTwo = false;
 
-    private Boolean ethnicityBackFilled  = false;
+    private Boolean ethnicityBackFilled = false;
 
-    private Boolean checkedNCBIError = false;
+    private Boolean checkedMappingError = false;
 
     private Boolean snpsRechecked = false;
 
@@ -68,13 +68,29 @@ public class Housekeeping {
     public Housekeeping() {
     }
 
-    public Housekeeping(Boolean studySnpCheckedLevelOne, Boolean studySnpCheckedLevelTwo, Boolean ethnicityCheckedLevelOne, Boolean ethnicityCheckedLevelTwo, Boolean ethnicityBackFilled, Boolean checkedNCBIError, Boolean snpsRechecked, Date catalogPublishDate, Date sendToNCBIDate, Date studyAddedDate, Date catalogUnpublishDate, Date lastUpdateDate, String fileName, String notes, Curator curator, CurationStatus curationStatus, UnpublishReason unpublishReason) {
+    public Housekeeping(Boolean studySnpCheckedLevelOne,
+                        Boolean studySnpCheckedLevelTwo,
+                        Boolean ethnicityCheckedLevelOne,
+                        Boolean ethnicityCheckedLevelTwo,
+                        Boolean ethnicityBackFilled,
+                        Boolean checkedMappingError,
+                        Boolean snpsRechecked,
+                        Date catalogPublishDate,
+                        Date sendToNCBIDate,
+                        Date studyAddedDate,
+                        Date catalogUnpublishDate,
+                        Date lastUpdateDate,
+                        String fileName,
+                        String notes,
+                        Curator curator,
+                        CurationStatus curationStatus,
+                        UnpublishReason unpublishReason) {
         this.studySnpCheckedLevelOne = studySnpCheckedLevelOne;
         this.studySnpCheckedLevelTwo = studySnpCheckedLevelTwo;
         this.ethnicityCheckedLevelOne = ethnicityCheckedLevelOne;
         this.ethnicityCheckedLevelTwo = ethnicityCheckedLevelTwo;
         this.ethnicityBackFilled = ethnicityBackFilled;
-        this.checkedNCBIError = checkedNCBIError;
+        this.checkedMappingError = checkedMappingError;
         this.snpsRechecked = snpsRechecked;
         this.catalogPublishDate = catalogPublishDate;
         this.sendToNCBIDate = sendToNCBIDate;
@@ -136,12 +152,12 @@ public class Housekeeping {
         this.ethnicityBackFilled = ethnicityBackFilled;
     }
 
-    public Boolean getCheckedNCBIError() {
-        return checkedNCBIError;
+    public Boolean getCheckedMappingError() {
+        return checkedMappingError;
     }
 
-    public void setCheckedNCBIError(Boolean checkedNCBIError) {
-        this.checkedNCBIError = checkedNCBIError;
+    public void setCheckedMappingError(Boolean checkedMappingError) {
+        this.checkedMappingError = checkedMappingError;
     }
 
     public Boolean getSnpsRechecked() {
@@ -231,30 +247,5 @@ public class Housekeeping {
     public void setUnpublishReason(UnpublishReason unpublishReason) {
         this.unpublishReason = unpublishReason;
     }
-
-    @Override
-    public String toString() {
-        return "Housekeeping{" +
-                "id=" + id +
-                ", studySnpCheckedLevelOne=" + studySnpCheckedLevelOne +
-                ", studySnpCheckedLevelTwo=" + studySnpCheckedLevelTwo +
-                ", ethnicityCheckedLevelOne=" + ethnicityCheckedLevelOne +
-                ", ethnicityCheckedLevelTwo=" + ethnicityCheckedLevelTwo +
-                ", ethnicityBackFilled=" + ethnicityBackFilled +
-                ", checkedNCBIError=" + checkedNCBIError +
-                ", snpsRechecked=" + snpsRechecked +
-                ", catalogPublishDate=" + catalogPublishDate +
-                ", sendToNCBIDate=" + sendToNCBIDate +
-                ", studyAddedDate=" + studyAddedDate +
-                ", catalogUnpublishDate=" + catalogUnpublishDate +
-                ", lastUpdateDate=" + lastUpdateDate +
-                ", fileName='" + fileName + '\'' +
-                ", notes='" + notes + '\'' +
-                ", curator=" + curator +
-                ", curationStatus=" + curationStatus +
-                ", unpublishReason=" + unpublishReason +
-                '}';
-    }
-
 
 }

@@ -7,18 +7,18 @@ import java.util.Date;
 
 /**
  * Created by catherineleroy on 13/05/2015.
- *
+ * <p>
  * A settings class for values that might be used to filter SQL queries
  */
 public class FilterProperties {
 
     public static String pvalueFilter;
-//    public static String dateFilter;
+    //    public static String dateFilter;
     public static Date dateFilter;
     public static int pvalueMant;
     public static int pvalueExp;
 
-    public static void setPvalueFilter(String pvalue){
+    public static void setPvalueFilter(String pvalue) {
         pvalueFilter = pvalue;
         tokenisePvalueString();
     }
@@ -34,26 +34,26 @@ public class FilterProperties {
         }
     }
 
-    public static String getPvalueFilter(){
+    public static String getPvalueFilter() {
         return pvalueFilter;
     }
 
-//    public static String getDateFilter(){
-//        return dateFilter;
-//    }
+    //    public static String getDateFilter(){
+    //        return dateFilter;
+    //    }
 
-    public static Date getDateFilter(){
+    public static Date getDateFilter() {
         return dateFilter;
     }
 
-    public static void tokenisePvalueString(){
+    public static void tokenisePvalueString() {
         String[] values = pvalueFilter.split("E");
         pvalueMant = Integer.parseInt(values[0]);
         pvalueExp = Integer.parseInt(values[1]);
         System.out.println("Your p-value elements are " + pvalueMant + " and " + pvalueExp);
     }
 
-    public static int getPvalueMant(){ return pvalueMant; }
+    public static int getPvalueMant() { return pvalueMant; }
 
-    public static int getPvalueExp(){ return pvalueExp; }
+    public static int getPvalueExp() { return pvalueExp; }
 }

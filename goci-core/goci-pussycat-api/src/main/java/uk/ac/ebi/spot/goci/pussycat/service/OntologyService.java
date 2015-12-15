@@ -52,7 +52,7 @@ public class OntologyService {
     }
 
     @Autowired
-    public OntologyService(ReasonedOntologyLoader ontologyLoader){
+    public OntologyService(ReasonedOntologyLoader ontologyLoader) {
         this.ontologyLoader = ontologyLoader;
         ontologyLoader.setOntologyName("efo");
         ontologyLoader.setOntologyURI(URI.create("http://www.ebi.ac.uk/efo"));
@@ -69,7 +69,7 @@ public class OntologyService {
 
     }
 
-    private void populateClassMaps(){
+    private void populateClassMaps() {
         OWLOntology ontology = ontologyLoader.getOntology();
         for (OWLClass owlClass : ontology.getClassesInSignature()) {
             // check this isn't an obsolete class
@@ -79,7 +79,7 @@ public class OntologyService {
 
                 classToLabelMap.put(owlClass, classNames);
                 for (String name : getClassNames(owlClass)) {
-                    if(name != null) {
+                    if (name != null) {
                         name = normalizeSearchString(name);
                         if (!labelToClassMap.containsKey(name)) {
                             labelToClassMap.put(name, new HashSet<OWLClass>());
@@ -94,7 +94,7 @@ public class OntologyService {
         }
     }
 
-    private void setObsoleteClass(){
+    private void setObsoleteClass() {
         for (OWLClass nextClass : ontologyLoader.getOntology().getClassesInSignature()) {
             if (nextClass.getIRI().toURI().toString().equals(ontologyLoader.getExclusionClassURI().toString())) {
                 obsoleteClass = nextClass;
@@ -157,13 +157,14 @@ public class OntologyService {
      * @return the OWL class with this IRI, if found, or null if absent
      */
     public OWLClass getOWLClassByIRI(IRI iri) {
-            if (iriToClassMap.containsKey(iri)) {
-                return iriToClassMap.get(iri);
-            }
-            else {
-                throw new IllegalArgumentException("There is no OWLClass with IRI '" + iri.toString() + "' " +
-                                                           "in the ontology '" + getOntologyLoader().getOntologyURI() + "'");
-            }
+        if (iriToClassMap.containsKey(iri)) {
+            return iriToClassMap.get(iri);
+        }
+        else {
+            throw new IllegalArgumentException("There is no OWLClass with IRI '" + iri.toString() + "' " +
+                                                       "in the ontology '" + getOntologyLoader().getOntologyURI() +
+                                                       "'");
+        }
 
     }
 
@@ -178,10 +179,10 @@ public class OntologyService {
 
         List<String> results = new ArrayList<String>();
         results.add(getOntologyLoader().getLabel(owlClass.getIRI()));
-        for(String syn : getOntologyLoader().getSynonyms(owlClass.getIRI())) {
+        for (String syn : getOntologyLoader().getSynonyms(owlClass.getIRI())) {
             results.add(syn);
         }
-//        results.addAll(getOntologyLoader().getChildLabels(owlClass.getIRI()));
+        //        results.addAll(getOntologyLoader().getChildLabels(owlClass.getIRI()));
         return results;
     }
 
@@ -250,7 +251,6 @@ public class OntologyService {
         // if no superclasses are obsolete, or if the obsolete class wasn't found, this class isn't obsolete
         return false;
     }
-
 
 
 }

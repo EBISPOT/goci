@@ -8,7 +8,7 @@ import uk.ac.ebi.spot.goci.model.AssociationReport;
  * Created by emma on 11/02/15.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Repository accessing Association Report entity object
  */
 @RepositoryRestResource

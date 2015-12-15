@@ -18,7 +18,12 @@ public class MonthlyTotalsSummaryView extends TotalsSummaryView {
     public MonthlyTotalsSummaryView() {
     }
 
-    public MonthlyTotalsSummaryView(Integer year, String curator, Integer curatorTotal, String curationStatus, Integer month, Integer monthlyTotal) {
+    public MonthlyTotalsSummaryView(Integer year,
+                                    String curator,
+                                    Integer curatorTotal,
+                                    String curationStatus,
+                                    Integer month,
+                                    Integer monthlyTotal) {
         super(year, curator, curatorTotal, curationStatus);
         this.month = month;
         this.monthlyTotal = monthlyTotal;

@@ -82,15 +82,15 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
                         }
 
                         double alength = associationLocation.getWidth();
-                        double radius = 0.2 * alength;
+                        double radius = 0.12 * alength; //0.2 * alength;
                         double ax = associationLocation.getX();
                         double ay = associationLocation.getY();
                         double displacement = associationLocation.getHeight();
                         double cx, cy;
                         int position = getTraitPosition(nexus, context, trait, band, locations);
 
-                        int horizontal = position % 6;
-                        int vertical = position / 6;
+                        int horizontal = position % 10;
+                        int vertical = position / 10;
 
                         if (position == 0) {
                             cx = ax + alength + radius;
@@ -120,7 +120,7 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
 
                         String traitAttribute = getTraitAttribute(context, trait);
                         getLog().trace("Setting CSS class for trait '" + trait + "' to " + traitAttribute);
-                        svg.append("class='gwas-trait ").append(traitAttribute).append("'");
+                        svg.append("class='gwas-trait ").append(traitAttribute).append("' ");
                         svg.append("fading='false' ");
 
                         StringBuilder associationAttribute = new StringBuilder();
@@ -135,7 +135,9 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
                                 "Setting gwasassociation attribute for trait '" + trait + "' to " +
                                         associationAttribute.toString());
                         svg.append("gwasassociation='").append(associationAttribute.toString()).append("' ");
-                        svg.append("priority='").append(vertical).append("' "); // todo - remove this, just for debugging
+                        svg.append("priority='")
+                                .append(vertical)
+                                .append("' "); // todo - remove this, just for debugging
                         svg.append("/>");
 
                         SVGArea currentArea = new SVGArea(cx, cy, 2 * radius, 2 * radius, 0);
@@ -165,7 +167,8 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
         }
     }
 
-    protected abstract Set<E> getAssociationsForTrait(RenderletNexus nexus, C context, E trait) throws DataIntegrityViolationException;
+    protected abstract Set<E> getAssociationsForTrait(RenderletNexus nexus, C context, E trait)
+            throws DataIntegrityViolationException;
 
     protected abstract E getBandForAssociation(C context, E association) throws DataIntegrityViolationException;
 

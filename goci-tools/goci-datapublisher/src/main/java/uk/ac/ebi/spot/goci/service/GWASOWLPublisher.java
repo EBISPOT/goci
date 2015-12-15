@@ -10,16 +10,15 @@ import java.io.File;
  * A service that is capable of publishing GWAS data, represented in OWL.  This is accomplished by mining the GWAS
  * catalog database and converting relevant concepts into OWL entities which are then written to an ontology.
  *
- * @author Tony Burdett
- * Date 24/01/12
+ * @author Tony Burdett Date 24/01/12
  */
 public interface GWASOWLPublisher {
     /**
      * Fetches data from the GWAS catalog, converts it and writes it to an OWLOntology, and returns all data
      *
      * @return an ontology containing all the data in the GWAS catalog
-     * @throws uk.ac.ebi.spot.goci.exception.OWLConversionException
-     *          if conversion or publishing of the data to OWL failed
+     * @throws uk.ac.ebi.spot.goci.exception.OWLConversionException if conversion or publishing of the data to OWL
+     *                                                              failed
      */
     OWLOntology publishGWASData() throws OWLConversionException;
 

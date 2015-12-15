@@ -10,10 +10,11 @@ import java.util.Properties;
 
 /**
  * Created by emma on 10/02/15.
- * @author emma
  *
- * Email configuration, properties are stored in application.properties.
- * Property values injected directly into beans using the @Value annotation:
+ * @author emma
+ *         <p>
+ *         Email configuration, properties are stored in application.properties. Property values injected directly into
+ *         beans using the @Value annotation:
  */
 @Configuration
 public class MailConfiguration {

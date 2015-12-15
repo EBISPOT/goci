@@ -2,32 +2,54 @@ package uk.ac.ebi.spot.goci.service;
 
 import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.io.RDFXMLOntologyFormat;
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.reasoner.*;
-import org.semanticweb.owlapi.util.*;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyFormat;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.OWLOntologyStorageException;
+import org.semanticweb.owlapi.reasoner.ConsoleProgressMonitor;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
+import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
+import org.semanticweb.owlapi.reasoner.SimpleConfiguration;
+import org.semanticweb.owlapi.util.InferredAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredClassAssertionAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredDataPropertyCharacteristicAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredEquivalentClassAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredEquivalentDataPropertiesAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredEquivalentObjectPropertyAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredInverseObjectPropertiesAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredObjectPropertyCharacteristicAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredOntologyGenerator;
+import org.semanticweb.owlapi.util.InferredPropertyAssertionGenerator;
+import org.semanticweb.owlapi.util.InferredSubClassAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredSubDataPropertyAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredSubObjectPropertyAxiomGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.exception.OWLConversionException;
+import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
+import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.utils.FilterProperties;
-import uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader;
-import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
-import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.model.Association;
-//import uk.ac.ebi.spot.goci.utils.OntologyUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
+//import uk.ac.ebi.spot.goci.utils.OntologyUtils;
 
 /**
  * Javadocs go here!
@@ -51,14 +73,12 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
     private GWASOWLConverter converter;
 
 
-
-
     @Autowired
     public DefaultGWASOWLPublisher(StudyService studyService,
                                    AssociationService associationService,
                                    SingleNucleotidePolymorphismService singleNucleotidePolymorphismService,
                                    GWASOWLConverter converter,
-                                   OntologyLoader ontologyLoader){
+                                   OntologyLoader ontologyLoader) {
         this.studyService = studyService;
         this.associationService = associationService;
         this.singleNucleotidePolymorphismService = singleNucleotidePolymorphismService;
@@ -88,7 +108,7 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
         return studyRepository;
     }
 
-    public StudyService getStudyService(){
+    public StudyService getStudyService() {
         return studyService;
     }
 
@@ -96,25 +116,24 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
     public AssociationRepository getAssociationRepository() {
         return associationRepository;
     }
+
     public AssociationService getAssociationService() {
         return associationService;
     }
 
 
-
     public SingleNucleotidePolymorphismRepository getSingleNucleotidePolymorphismRepository() {
         return singleNucleotidePolymorphismRepository;
     }
+
     public SingleNucleotidePolymorphismService getSingleNucleotidePolymorphismService() {
         return singleNucleotidePolymorphismService;
     }
 
 
-
     public GWASOWLConverter getConverter() {
         return converter;
     }
-
 
 
     public OWLOntologyManager getManager() {
@@ -134,40 +153,40 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
         //Discard studies which are not associated with a disease trait and those which haven't been published yet
         //by the GWAS catalog.
         Iterator<Study> iterator = studies.iterator();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             Study study = iterator.next();
             //Remove study which have no diseaseTrait.
-            if(study.getDiseaseTrait() == null) {
+            if (study.getDiseaseTrait() == null) {
                 iterator.remove();
                 getLog().error("Study '" + study.getId() + "' has no disease trait");
             }
-            else if( study.getHousekeeping().getCatalogPublishDate() == null) {
+            else if (study.getHousekeeping().getCatalogPublishDate() == null) {
                 iterator.remove();
                 getLog().error("Study '" + study.getId() + "' has not yet been published");
 
             }
             //Remove studies that have been unpublished
-            else if(study.getHousekeeping().getCatalogUnpublishDate() != null){
+            else if (study.getHousekeeping().getCatalogUnpublishDate() != null) {
                 iterator.remove();
                 getLog().error("Study '" + study.getId() + "' has been unpublished");
             }
-//            }else {
-//
-//                //Remove study which have no associations where pvalue is not null.
-//                Collection<Association> associations = study.getAssociations();
-//                Iterator<Association> associationIterator = associations.iterator();
-//                int associationCount = 0;
-//                while (associationIterator.hasNext()) {
-//                    Association association = associationIterator.next();
-//
-//                    if (association.getPvalueExponent() != null && association.getPvalueMantissa() != null) {
-//                        associationCount++;
-//                    }
-//                }
-//                if (associationCount == 0) {
-//                    iterator.remove();
-//                }
-//            }
+            //            }else {
+            //
+            //                //Remove study which have no associations where pvalue is not null.
+            //                Collection<Association> associations = study.getAssociations();
+            //                Iterator<Association> associationIterator = associations.iterator();
+            //                int associationCount = 0;
+            //                while (associationIterator.hasNext()) {
+            //                    Association association = associationIterator.next();
+            //
+            //                    if (association.getPvalueExponent() != null && association.getPvalueMantissa() != null) {
+            //                        associationCount++;
+            //                    }
+            //                }
+            //                if (associationCount == 0) {
+            //                    iterator.remove();
+            //                }
+            //            }
         }
 
         getLog().debug("Query complete, got " + studies.size() + " studies");
@@ -185,19 +204,21 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
             //Discard all the associations which are linked to study which are not linked to a disease trait or haven't
             //been published yet in the GWAS catalog.
             Iterator<Association> associationIterator = traitAssociations.iterator();
-            while(associationIterator.hasNext()){
+            while (associationIterator.hasNext()) {
                 Association association = associationIterator.next();
-                if(association.getStudy().getDiseaseTrait() == null) {
+                if (association.getStudy().getDiseaseTrait() == null) {
                     associationIterator.remove();
-                }else if(association.getStudy().getHousekeeping().getCatalogPublishDate() == null){
+                }
+                else if (association.getStudy().getHousekeeping().getCatalogPublishDate() == null) {
                     associationIterator.remove();
 
                 }
-                else if(association.getStudy().getHousekeeping().getCatalogUnpublishDate() != null){
+                else if (association.getStudy().getHousekeeping().getCatalogUnpublishDate() != null) {
                     iterator.remove();
                 }
             }
-            getLog().debug("Fetching SNPs that require conversion to OWL using SingleNucleotidePolymorphismRepository...");
+            getLog().debug(
+                    "Fetching SNPs that require conversion to OWL using SingleNucleotidePolymorphismRepository...");
             Collection<SingleNucleotidePolymorphism> snps = getSingleNucleotidePolymorphismService().findAll();
             getLog().debug("All data fetched");
 
@@ -225,19 +246,19 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
         //TODO : check with tony : Discard studies which are not yet associated with a trait.
         //Discard studies which are not associated with a disease trait and those which haven't been published yet
         //by the GWAS catalog.
-//        Iterator<Study> iterator = studies.iterator();
-//        while(iterator.hasNext()){
-//            Study study = iterator.next();
-//            if(study.getDiseaseTrait() == null) {
-//                iterator.remove();
-//            }
-//            else if( study.getHousekeeping().getCatalogPublishDate() == null) {
-//                iterator.remove();
-//            }
-//            else if(study.getHousekeeping().getCatalogUnpublishDate() != null){
-//                iterator.remove();
-//            }
-//        }
+        //        Iterator<Study> iterator = studies.iterator();
+        //        while(iterator.hasNext()){
+        //            Study study = iterator.next();
+        //            if(study.getDiseaseTrait() == null) {
+        //                iterator.remove();
+        //            }
+        //            else if( study.getHousekeeping().getCatalogPublishDate() == null) {
+        //                iterator.remove();
+        //            }
+        //            else if(study.getHousekeeping().getCatalogUnpublishDate() != null){
+        //                iterator.remove();
+        //            }
+        //        }
 
 
         Collection<Study> filteredStudies = new ArrayList<Study>();
@@ -251,17 +272,19 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
             Study nextStudy = studyIterator.next();
 
             //only process a study if no date filter has been provided or if the study's publication date is smaller than the filter date
-            if (FilterProperties.getDateFilter() == null || nextStudy.getPublicationDate().before(FilterProperties.getDateFilter())) {
+            if (FilterProperties.getDateFilter() == null ||
+                    nextStudy.getPublicationDate().before(FilterProperties.getDateFilter())) {
                 System.out.println("Qualifying study");
                 for (Association nextTA : nextStudy.getAssociations()) {
                     float filter = 0;
                     float pval = 0;
-                    if(FilterProperties.getPvalueFilter() != null){
-                        filter = (float) (FilterProperties.getPvalueMant() * Math.pow(10,FilterProperties.getPvalueExp()));
-                        pval =(float) (nextTA.getPvalueMantissa() * Math.pow(10, nextTA.getPvalueExponent()));
+                    if (FilterProperties.getPvalueFilter() != null) {
+                        filter = (float) (FilterProperties.getPvalueMant() *
+                                Math.pow(10, FilterProperties.getPvalueExp()));
+                        pval = (float) (nextTA.getPvalueMantissa() * Math.pow(10, nextTA.getPvalueExponent()));
                         System.out.println("Your comparators are " + filter + " and " + pval);
                     }
-                    if(FilterProperties.getPvalueFilter() == null || pval < filter) {
+                    if (FilterProperties.getPvalueFilter() == null || pval < filter) {
                         System.out.println("Qualifying association");
                         filteredTraitAssociations.add(nextTA);
                         for (Locus locus : nextTA.getLoci()) {
@@ -289,40 +312,40 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
     }
 
     public OWLReasoner publishGWASDataInferredView(OWLOntology ontology) throws OWLConversionException {
-            getLog().debug("Loading any missing imports...");
-            StringBuilder loadedOntologies = new StringBuilder();
-            int n = 1;
-            for (OWLOntology o : ontology.getOWLOntologyManager().getOntologies()) {
-                loadedOntologies.append("\t")
-                        .append(n++)
-                        .append(") ")
-                        .append(o.getOntologyID().getOntologyIRI())
-                        .append("\n");
-            }
-            getLog().debug("Imports collected: the following ontologies have been loaded in this session:\n" +
-                                   loadedOntologies.toString());
-            getLog().info("Classifying ontology from " + ontology.getOntologyID().getOntologyIRI());
+        getLog().debug("Loading any missing imports...");
+        StringBuilder loadedOntologies = new StringBuilder();
+        int n = 1;
+        for (OWLOntology o : ontology.getOWLOntologyManager().getOntologies()) {
+            loadedOntologies.append("\t")
+                    .append(n++)
+                    .append(") ")
+                    .append(o.getOntologyID().getOntologyIRI())
+                    .append("\n");
+        }
+        getLog().debug("Imports collected: the following ontologies have been loaded in this session:\n" +
+                               loadedOntologies.toString());
+        getLog().info("Classifying ontology from " + ontology.getOntologyID().getOntologyIRI());
 
-            getLog().debug("Creating reasoner... ");
-            OWLReasonerFactory factory = new Reasoner.ReasonerFactory();
-            ConsoleProgressMonitor progressMonitor = new ConsoleProgressMonitor();
-            OWLReasonerConfiguration config = new SimpleConfiguration(progressMonitor);
-            OWLReasoner reasoner = factory.createReasoner(ontology, config);
+        getLog().debug("Creating reasoner... ");
+        OWLReasonerFactory factory = new Reasoner.ReasonerFactory();
+        ConsoleProgressMonitor progressMonitor = new ConsoleProgressMonitor();
+        OWLReasonerConfiguration config = new SimpleConfiguration(progressMonitor);
+        OWLReasoner reasoner = factory.createReasoner(ontology, config);
 
-            getLog().debug("Precomputing inferences...");
-            reasoner.precomputeInferences();
+        getLog().debug("Precomputing inferences...");
+        reasoner.precomputeInferences();
 
-            getLog().debug("Checking ontology consistency...");
-            reasoner.isConsistent();
+        getLog().debug("Checking ontology consistency...");
+        reasoner.isConsistent();
 
-            getLog().debug("Checking for unsatisfiable classes...");
-            if (reasoner.getUnsatisfiableClasses().getEntitiesMinusBottom().size() > 0) {
-                throw new OWLConversionException("Once classified, unsatisfiable classes were detected");
-            }
-            else {
-                getLog().info("Reasoning complete! ");
-                return reasoner;
-            }
+        getLog().debug("Checking for unsatisfiable classes...");
+        if (reasoner.getUnsatisfiableClasses().getEntitiesMinusBottom().size() > 0) {
+            throw new OWLConversionException("Once classified, unsatisfiable classes were detected");
+        }
+        else {
+            getLog().info("Reasoning complete! ");
+            return reasoner;
+        }
     }
 
     public void saveGWASData(OWLOntology ontology, File outputFile) throws OWLConversionException {
@@ -385,37 +408,38 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
         int noAssocCount = 0;
         int termMismatches = 0;
         for (Study study : studies) {
-//            try {
-                Collection<Association> associations = study.getAssociations();
-                getLog().debug("Study (PubMed ID '" + study.getPubmedId() + "') had " + associations.size() +
-                                       " associations");
-                if (associations.size() > 0) {
-                    for (Association association : associations) {
-                        String efoTraitsDashSepList="";
-                        for(EfoTrait efoTrait : association.getEfoTraits()){
-                            if("".equals(efoTraitsDashSepList)){
-                                efoTraitsDashSepList.concat(efoTrait.getTrait());
+            //            try {
+            Collection<Association> associations = study.getAssociations();
+            getLog().debug("Study (PubMed ID '" + study.getPubmedId() + "') had " + associations.size() +
+                                   " associations");
+            if (associations.size() > 0) {
+                for (Association association : associations) {
+                    String efoTraitsDashSepList = "";
+                    for (EfoTrait efoTrait : association.getEfoTraits()) {
+                        if ("".equals(efoTraitsDashSepList)) {
+                            efoTraitsDashSepList.concat(efoTrait.getTrait());
 
-                            }else {
-                                efoTraitsDashSepList.concat(", " + efoTrait.getTrait());
-
-                            }
                         }
-                        for(Locus locus : association.getLoci()){
-                            for(RiskAllele riskAllele : locus.getStrongestRiskAlleles()){
-                                getLog().debug(
-                                        //                                "    Association: SNP '" + association.getAssociatedSNP().getRSID() +
-                                        "    Association: SNP '" + riskAllele.getSnp().getRsId() +
-                                                "' <-> Trait '" +
-                                                efoTraitsDashSepList.toString() + "'");
-                            }
+                        else {
+                            efoTraitsDashSepList.concat(", " + efoTrait.getTrait());
+
                         }
                     }
-                    count++;
+                    for (Locus locus : association.getLoci()) {
+                        for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
+                            getLog().debug(
+                                    //                                "    Association: SNP '" + association.getAssociatedSNP().getRSID() +
+                                    "    Association: SNP '" + riskAllele.getSnp().getRsId() +
+                                            "' <-> Trait '" +
+                                            efoTraitsDashSepList.toString() + "'");
+                        }
+                    }
                 }
-                else {
-                    noAssocCount++;
-                }
+                count++;
+            }
+            else {
+                noAssocCount++;
+            }
         }
         int eligCount = studies.size() - noAssocCount;
         int correctCount = count + termMismatches;

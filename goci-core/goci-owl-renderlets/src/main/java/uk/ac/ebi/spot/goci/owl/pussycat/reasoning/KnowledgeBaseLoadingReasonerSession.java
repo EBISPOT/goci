@@ -23,7 +23,7 @@ import java.io.IOException;
 /**
  * A reasoner session that uses loads an OWL ontology from the provided resource, and then uses the GOCI DataPublisher
  * to generate the inferred view using the reasoning mechanisms provided by that data publisher.
- * <p/>
+ * <p>
  * The resulting reasoner is cached in-memory using ehcache to provide caching functionality.
  *
  * @author Tony Burdett
@@ -53,7 +53,7 @@ public class KnowledgeBaseLoadingReasonerSession extends Initializable implement
     }
 
     @Override
-    public OWLReasoner getReasoner()  {
+    public OWLReasoner getReasoner() {
         if (isReady()) {
             return reasoner;
         }
@@ -93,7 +93,7 @@ public class KnowledgeBaseLoadingReasonerSession extends Initializable implement
     private OWLReasoner reasonOver(OWLOntology ontology) throws OWLConversionException {
         try {
             getLog().debug("Loading any missing imports...");
-//            OntologyUtils.loadImports(ontology.getOWLOntologyManager(), ontology);
+            //            OntologyUtils.loadImports(ontology.getOWLOntologyManager(), ontology);
             OWLOntologyLoaderConfiguration loaderConfiguration = new OWLOntologyLoaderConfiguration();
             for (OWLImportsDeclaration declaration : ontology.getImportsDeclarations()) {
                 ontology.getOWLOntologyManager().makeLoadImportRequest(declaration, loaderConfiguration);

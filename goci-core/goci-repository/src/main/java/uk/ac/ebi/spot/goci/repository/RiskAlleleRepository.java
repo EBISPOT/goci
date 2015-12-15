@@ -4,17 +4,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
  * Created by emma on 27/01/15.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Repository accessing RiskAllele entity object
  */
 @RepositoryRestResource
 public interface RiskAlleleRepository extends JpaRepository<RiskAllele, Long> {
-   List<RiskAllele> findByRiskAlleleName(String riskAlleleName);
+    List<RiskAllele> findByRiskAlleleName(String riskAlleleName);
 }

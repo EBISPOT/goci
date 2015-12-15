@@ -1,7 +1,5 @@
 package uk.ac.ebi.spot.goci.model;
 
-import uk.ac.ebi.spot.goci.model.CatalogHeaderBinding;
-
 import java.util.List;
 import java.util.Map;
 

@@ -95,30 +95,52 @@ public class Filter<T, V> {
         }
 
         public W from() {
-//            return null;
+            //            return null;
             return fromValue;
         }
 
         public W to() {
-//            return null;
+            //            return null;
             return toValue;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) { return true; }
+            if (o == null || getClass() != o.getClass()) { return false; }
+
+            Range range = (Range) o;
+
+            if (fromValue != null ? !fromValue.equals(range.fromValue) : range.fromValue != null) { return false; }
+            if (toValue != null ? !toValue.equals(range.toValue) : range.toValue != null) { return false; }
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = fromValue != null ? fromValue.hashCode() : 0;
+            result = 31 * result + (toValue != null ? toValue.hashCode() : 0);
+            return result;
         }
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
 
         Filter filter = (Filter) o;
 
-        if (filteredMethod != null ? !filteredMethod.getName().equals(filter.filteredMethod.getName()) : filter.filteredMethod != null)
+        if (filteredMethod != null ? !filteredMethod.getName().equals(filter.filteredMethod.getName()) :
+                filter.filteredMethod != null) { return false; }
+        if (filteredRange != null ? !filteredRange.equals(filter.filteredRange) : filter.filteredRange != null) {
             return false;
-        if (filteredRange != null ? !filteredRange.equals(filter.filteredRange) : filter.filteredRange != null)
+        }
+        if (!filteredType.getName().equals(filter.filteredType.getName())) { return false; }
+        if (filteredValues != null ? !filteredValues.equals(filter.filteredValues) : filter.filteredValues != null) {
             return false;
-        if (!filteredType.getName().equals(filter.filteredType.getName())) return false;
-        if (filteredValues != null ? !filteredValues.equals(filter.filteredValues) : filter.filteredValues != null)
-            return false;
+        }
 
         return true;
     }

@@ -17,50 +17,50 @@ import java.net.URL;
 //import javax.swing.text.Document;
 
 /**
- * Created by IntelliJ IDEA.
- * User: dwelter
- * Date: 01/03/12
- * Time: 11:20
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: dwelter Date: 01/03/12 Time: 11:20 To change this template use File | Settings | File
+ * Templates.
  */
-public class ChromTest extends TestCase{
+public class ChromTest extends TestCase {
 
 
     @Test
-    public void testPath(){
+    public void testPath() {
 
         OWLChromosomeRenderlet chrom = new OWLChromosomeOneRenderlet();
 
         URL path = chrom.getSVGFile();
-        
+
         System.out.println(path);
 
 
-        DocumentBuilderFactory docFactory =  DocumentBuilderFactory.newInstance();
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = null;
         try {
             docBuilder = docFactory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
+        }
+        catch (ParserConfigurationException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         Document doc = null;
         try {
             doc = docBuilder.parse(path.toString());
-        } catch (SAXException e) {
+        }
+        catch (SAXException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
         NodeList children = doc.getChildNodes();
-        
+
         System.out.println("No of children: " + children.getLength());
 
-        for(int i=0; i< children.getLength(); i++){
+        for (int i = 0; i < children.getLength(); i++) {
             Node child = children.item(i);
-            
+
             System.out.println("Child's name: " + child.getNodeName());
-            
+
         }
 
         assertNotNull(path);

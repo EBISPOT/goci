@@ -7,9 +7,9 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.fgpt.lode.impl.JenaVirtuosoExecutorService;
+import uk.ac.ebi.spot.goci.pussycat.service.OntologyService;
 import uk.ac.ebi.spot.goci.pussycat.session.PussycatSession;
 import uk.ac.ebi.spot.goci.pussycat.session.PussycatSessionFactory;
-import uk.ac.ebi.spot.goci.pussycat.service.OntologyService;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.SparqlTemplate;
 
 /**
@@ -23,10 +23,10 @@ import uk.ac.ebi.spot.goci.sparql.pussycat.query.SparqlTemplate;
 public class SparqlPussycatSessionFactory implements PussycatSessionFactory {
     private static final String efoDefaultLocation = "http://www.ebi.ac.uk/efo/efo.owl";
 
-//    @Autowired
+    //    @Autowired
     private OntologyService ontologyService;
 
-//    @Autowired
+    //    @Autowired
     private SparqlTemplate sparqlTemplate;
 
     @Autowired(required = false)
@@ -68,7 +68,7 @@ public class SparqlPussycatSessionFactory implements PussycatSessionFactory {
     }
 
     @Override public PussycatSession createPussycatSession() {
-//        return new SparqlPussycatSession(ontologyService, sparqlTemplate);
+        //        return new SparqlPussycatSession(ontologyService, sparqlTemplate);
         return new SparqlPussycatSession();
     }
 }
