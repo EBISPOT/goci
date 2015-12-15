@@ -26,10 +26,10 @@ public class AssociationComponentsSyntaxChecks {
         error = runCommonChecks(snpValue, "SNP");
 
         if (snpValue.contains("-")) {
-            error = error + "SNP " + snpValue + " contains a '-' character.";
+            error = error + "SNP " + snpValue + " contains a '-' character. ";
         }
         if (!snpValue.startsWith("rs")) {
-            error = error + "SNP " + snpValue + " does not start with rs.";
+            error = error + "SNP " + snpValue + " does not start with rs. ";
         }
 
         return error;
@@ -46,11 +46,11 @@ public class AssociationComponentsSyntaxChecks {
         error = runCommonChecks(snpValue, "Proxy SNP");
 
         if (snpValue.contains("-")) {
-            error = error + "SNP " + snpValue + " contains a '-' character.";
+            error = error + "SNP " + snpValue + " contains a '-' character. ";
         }
         if (!snpValue.equals("NR")) {
             if (!snpValue.startsWith("rs")) {
-                error = error + "SNP " + snpValue + " does not start with rs.";
+                error = error + "SNP " + snpValue + " does not start with rs. ";
             }
         }
 
@@ -68,7 +68,7 @@ public class AssociationComponentsSyntaxChecks {
         error = runCommonChecks(riskAllele, "Risk Allele");
 
         if (!riskAllele.startsWith("rs")) {
-            error = error + "Risk Allele " + riskAllele + " does not start with rs.";
+            error = error + "Risk Allele " + riskAllele + " does not start with rs. ";
         }
 
         return error;
@@ -85,19 +85,19 @@ public class AssociationComponentsSyntaxChecks {
 
         String error = "";
         if (value.contains(",")) {
-            error = valueType + " " + value + " contains a ',' character.";
+            error = valueType + " " + value + " contains a ',' character. ";
         }
         if (value.contains("x")) {
-            error = error + valueType + " " + value + " contains an 'x' character.";
+            error = error + valueType + " " + value + " contains an 'x' character. ";
         }
         if (value.contains("X")) {
-            error = error + valueType + " " + value + " contains an 'X' character.";
+            error = error + valueType + " " + value + " contains an 'X' character. ";
         }
         if (value.contains(":")) {
-            error = error + valueType + " " + value + " contains a ':' character.";
+            error = error + valueType + " " + value + " contains a ':' character. ";
         }
         if (value.contains(";")) {
-            error = error + valueType + " " + value + " contains a ';' character.";
+            error = error + valueType + " " + value + " contains a ';' character. ";
         }
 
         return error;
