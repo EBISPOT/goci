@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * Created by emma on 16/12/2015.
+ * @author emma
  */
 @RunWith(MockitoJUnitRunner.class)
 public class EndpointsTest {
