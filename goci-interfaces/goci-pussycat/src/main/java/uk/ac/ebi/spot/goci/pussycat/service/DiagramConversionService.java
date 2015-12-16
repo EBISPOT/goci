@@ -1,15 +1,10 @@
 package uk.ac.ebi.spot.goci.pussycat.service;
 
-import org.apache.batik.transcoder.TranscoderInput;
-import org.apache.batik.transcoder.TranscoderOutput;
-import org.apache.batik.transcoder.image.JPEGTranscoder;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * Created by dwelter on 24/11/15.
@@ -59,19 +54,19 @@ public class DiagramConversionService {
     public void save() throws Exception {
 
         // Create a JPEGTranscoder and set its quality hint.
-        JPEGTranscoder t = new JPEGTranscoder();
-        t.addTranscodingHint(JPEGTranscoder.KEY_QUALITY,
-                new Float(.8));
-
-        // Set the transcoder input and output.
-        TranscoderInput input = new TranscoderInput(document);
-        OutputStream ostream = new FileOutputStream("out.jpg");
-        TranscoderOutput output = new TranscoderOutput(ostream);
-
-        // Perform the transcoding.
-        t.transcode(input, output);
-        ostream.flush();
-        ostream.close();
+//        JPEGTranscoder t = new JPEGTranscoder();
+//        t.addTranscodingHint(JPEGTranscoder.KEY_QUALITY,
+//                new Float(.8));
+//
+//        // Set the transcoder input and output.
+//        TranscoderInput input = new TranscoderInput(document);
+//        OutputStream ostream = new FileOutputStream("out.jpg");
+//        TranscoderOutput output = new TranscoderOutput(ostream);
+//
+//        // Perform the transcoding.
+//        t.transcode(input, output);
+//        ostream.flush();
+//        ostream.close();
     }
 
 
