@@ -183,19 +183,31 @@ public class JsonProcessingService {
             line.append(getCI(doc));
             line.append("\t");
 
-            String platform = doc.get("platform").asText().trim();
+            String platform = getPlatform(doc);
             if (platform.contains(newline)) {
                 platform = platform.replaceAll("\n", "").replaceAll("\r", "");
             }
-
             line.append(platform);
-
             line.append("\r\n");
 
             result.append(line.toString());
 
         }
         return result.toString();
+    }
+
+    private String getPlatform(JsonNode doc) {
+        String platform;
+
+        if(doc.get("platform") != null){
+            platform = doc.get("platform").asText().trim();
+        }
+        else {
+            platform = "";
+        }
+
+
+         return platform;
     }
 
 
