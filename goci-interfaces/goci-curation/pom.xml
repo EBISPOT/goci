@@ -106,21 +106,16 @@
             <artifactId>rest-assured</artifactId>
             <version>${rest-assured.version}</version>
         </dependency>
-
-
     </dependencies>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <start-class>uk.ac.ebi.spot.goci.CurationApplication</start-class>
         <java.version>1.8</java.version>
-
         <assertj.version>1.7.0</assertj.version>
         <mockito.version>1.10.8</mockito.version>
         <rest-assured.version>2.4.0</rest-assured.version>
-
         <unit-tests.skip>false</unit-tests.skip>
-        <integration-tests.skip>true</integration-tests.skip>
     </properties>
 
     <build>
@@ -139,36 +134,7 @@
                     </excludes>
                 </configuration>
             </plugin>
-            <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>integration-test</id>
-                        <goals>
-                            <goal>integration-test</goal>
-                        </goals>
-                        <configuration>
-                            <skipTests>${integration-tests.skip}</skipTests>
-                            <includes>
-                                <include>**/*IT.class</include>
-                            </includes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>integration</id>
-            <properties>
-                <unit-tests.skip>false</unit-tests.skip>
-                <integration-tests.skip>false</integration-tests.skip>
-            </properties>
-        </profile>
-    </profiles>
 
 </project>
