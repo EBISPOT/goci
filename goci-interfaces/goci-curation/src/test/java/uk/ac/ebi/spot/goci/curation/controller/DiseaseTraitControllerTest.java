@@ -1,88 +1,112 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockServletContext;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import uk.ac.ebi.spot.goci.curation.builder.DiseaseTraitBuilder;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
+import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
-import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by emma on 15/10/2015.
  *
  * @author emma
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = MockServletContext.class)
-@WebAppConfiguration
+@RunWith(MockitoJUnitRunner.class)
 public class DiseaseTraitControllerTest {
 
-    private StudyRepository studyRepositoryMock;
+    @InjectMocks
+    private DiseaseTraitController diseaseTraitController;
 
-    private DiseaseTraitRepository diseaseTraitRepositoryMock;
+    @Mock
+    private DiseaseTraitRepository diseaseTraitRepository;
 
-    private DiseaseTraitController diseaseTraitControllerMock;
+    @Mock
+    private Model model;
 
-    @Before
-    public void setupMocks() {
-        diseaseTraitRepositoryMock = Mockito.mock(DiseaseTraitRepository.class);
-        studyRepositoryMock = Mockito.mock(StudyRepository.class);
-        diseaseTraitControllerMock = new DiseaseTraitController(diseaseTraitRepositoryMock, studyRepositoryMock);
-    }
+    @Mock
+    private BindingResult bindingResult;
 
+    @Mock
+    private RedirectAttributes redirectAttributes;
+
+    @Mock
+    private DiseaseTrait diseaseTrait;
+
+    private ArgumentCaptor<DiseaseTrait> anyDiseaseTrait = ArgumentCaptor.forClass(DiseaseTrait.class);
+
+    private static final Collection<Study> STUDIES = new ArrayList<>();
+    private static final String FIRST_DISEASE_TRAIT_DESCRIPTION = "Addiction";
+    private static final String SECOND_DISEASE_TRAIT_DESCRIPTION = "Aging";
+
+    private static final DiseaseTrait DT1 =
+            new DiseaseTraitBuilder().id(799L)
+                    .trait(FIRST_DISEASE_TRAIT_DESCRIPTION)
+                    .studies(STUDIES)
+                    .build();
+    private static final DiseaseTrait DT2 =
+            new DiseaseTraitBuilder().id(798L)
+                    .trait(SECOND_DISEASE_TRAIT_DESCRIPTION)
+                    .studies(STUDIES)
+                    .build();
+
+    private static final DiseaseTrait DT3 =
+            new DiseaseTraitBuilder().build();
+
+
+/*
     @Test
     public void testEndpoint() throws Exception {
-
-        // Mock disease trait object
-        DiseaseTrait diseaseTrait = Mockito.mock(DiseaseTrait.class);
-        List<DiseaseTrait> diseaseTraits = Collections.singletonList(diseaseTrait);
-        Mockito.when(diseaseTraitRepositoryMock.findAll(Mockito.any(Sort.class))).thenReturn(diseaseTraits);
-
-        MockMvc mvc = MockMvcBuilders.standaloneSetup(diseaseTraitControllerMock).build();
-
+        MockMvc mvc = MockMvcBuilders.standaloneSetup(diseaseTraitController).build();
         mvc.perform(MockMvcRequestBuilders.get("/diseasetraits").accept(MediaType.TEXT_HTML_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(view().name("disease_traits"));
     }
+*/
+
 
     @Test
     public void testAllDiseaseTraits() {
 
         // Mock disease trait object
-        DiseaseTrait diseaseTrait = Mockito.mock(DiseaseTrait.class);
-        List<DiseaseTrait> diseaseTraits = Collections.singletonList(diseaseTrait);
+        List<DiseaseTrait> diseaseTraits = Collections.singletonList(DT1);
         Integer totalDiseaseTraits = diseaseTraits.size();
+        DiseaseTrait newTrait = new DiseaseTrait();
 
         // Stubbing
-        Mockito.when(diseaseTraitRepositoryMock.findAll(Mockito.any(Sort.class))).thenReturn(diseaseTraits);
+        when(diseaseTraitRepository.findAll(Mockito.any(Sort.class))).thenReturn(diseaseTraits);
+        assertEquals("disease_traits", diseaseTraitController.allDiseaseTraits(model));
 
-        Model mockModel = Mockito.mock(Model.class);
-        String s = diseaseTraitControllerMock.allDiseaseTraits(mockModel);
-        assertEquals("disease_traits", s);
+        // Verification
+        Mockito.verify(model).addAttribute("diseaseTraits", diseaseTraits);
+        Mockito.verify(model).addAttribute("totaldiseaseTraits", totalDiseaseTraits);
+        Mockito.verify(model).addAttribute("diseaseTrait", newTrait);
 
-        Mockito.verify(diseaseTraitRepositoryMock, Mockito.times(2)).findAll(Mockito.any(Sort.class));
-        Mockito.verify(mockModel).addAttribute("diseaseTraits", diseaseTraits);
-        Mockito.verify(mockModel).addAttribute("totaldiseaseTraits", totalDiseaseTraits);
-
-        // TODO DOES NOT WORK
-        Mockito.verify(mockModel).addAttribute("diseaseTrait", diseaseTrait);
     }
+
+    @Test
+    public void whenAddingAnItemItShouldUseTheRepository() {
+        diseaseTraitController.addDiseaseTrait(DT1, bindingResult, model, redirectAttributes);
+        verify(diseaseTraitRepository).save(anyDiseaseTrait.capture());
+        assertEquals("Addiction", anyDiseaseTrait.getValue().getTrait());
+    }
+
 }
