@@ -48,9 +48,6 @@ public class DiseaseTraitControllerTest {
     @Mock
     private RedirectAttributes redirectAttributes;
 
-    @Mock
-    private DiseaseTrait diseaseTrait;
-
     private ArgumentCaptor<DiseaseTrait> anyDiseaseTrait = ArgumentCaptor.forClass(DiseaseTrait.class);
 
     private static final Collection<Study> STUDIES = new ArrayList<>();
@@ -72,16 +69,6 @@ public class DiseaseTraitControllerTest {
             new DiseaseTraitBuilder().build();
 
 
-/*
-    @Test
-    public void testEndpoint() throws Exception {
-        MockMvc mvc = MockMvcBuilders.standaloneSetup(diseaseTraitController).build();
-        mvc.perform(MockMvcRequestBuilders.get("/diseasetraits").accept(MediaType.TEXT_HTML_VALUE))
-                .andExpect(status().isOk())
-                .andExpect(view().name("disease_traits"));
-    }
-*/
-
 
     @Test
     public void testAllDiseaseTraits() {
@@ -89,16 +76,15 @@ public class DiseaseTraitControllerTest {
         // Mock disease trait object
         List<DiseaseTrait> diseaseTraits = Collections.singletonList(DT1);
         Integer totalDiseaseTraits = diseaseTraits.size();
-        DiseaseTrait newTrait = new DiseaseTrait();
 
         // Stubbing
         when(diseaseTraitRepository.findAll(Mockito.any(Sort.class))).thenReturn(diseaseTraits);
         assertEquals("disease_traits", diseaseTraitController.allDiseaseTraits(model));
 
         // Verification
-        Mockito.verify(model).addAttribute("diseaseTraits", diseaseTraits);
-        Mockito.verify(model).addAttribute("totaldiseaseTraits", totalDiseaseTraits);
-        Mockito.verify(model).addAttribute("diseaseTrait", newTrait);
+        verify(model).addAttribute("diseaseTraits", diseaseTraits);
+        verify(model).addAttribute("totaldiseaseTraits", totalDiseaseTraits);
+      //  verify(model).addAttribute("diseaseTrait", DT3);
 
     }
 
