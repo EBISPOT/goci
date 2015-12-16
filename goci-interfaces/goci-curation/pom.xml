@@ -96,19 +96,12 @@
             <artifactId>mockito-all</artifactId>
             <version>${mockito.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.jayway.restassured</groupId>
-            <artifactId>rest-assured</artifactId>
-            <version>${rest-assured.version}</version>
-        </dependency>
     </dependencies>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <start-class>uk.ac.ebi.spot.goci.CurationApplication</start-class>
         <java.version>1.8</java.version>
-        <mockito.version>1.10.8</mockito.version>
-        <rest-assured.version>2.4.0</rest-assured.version>
         <unit-tests.skip>false</unit-tests.skip>
     </properties>
 
