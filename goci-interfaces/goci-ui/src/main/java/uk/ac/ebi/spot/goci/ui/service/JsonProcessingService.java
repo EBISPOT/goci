@@ -17,16 +17,24 @@ import java.util.regex.Pattern;
 public class JsonProcessingService {
 
     private String json;
+    private boolean includeAnnotations;
 
-    public JsonProcessingService(String json) {
+    public JsonProcessingService(String json, boolean includeAnnotations) {
         this.json = json;
+        this.includeAnnotations = includeAnnotations;
     }
 
 
     public String processJson() throws IOException {
 
         String header =
-                "Date Added to Catalog\tPUBMEDID\tFirst Author\tDate\tJournal\tLink\tStudy\tDisease/Trait\tInitial Sample Size\tReplication Sample Size\tRegion\tChr_id\tChr_pos\tReported Gene(s)\tMapped_gene\tUpstream_gene_id\tDownstream_gene_id\tSnp_gene_ids\tUpstream_gene_distance\tDownstream_gene_distance\tStrongest SNP-Risk Allele\tSNPs\tMerged\tSnp_id_current\tContext\tIntergenic\tRisk Allele Frequency\tp-Value\tPvalue_mlog\tp-Value (text)\tOR or beta\t95% CI (text)\tPlatform [SNPs passing QC]\r\n";
+                "Date Added to Catalog\tPUBMEDID\tFirst Author\tDate\tJournal\tLink\tStudy\tDisease/Trait\tInitial Sample Size\tReplication Sample Size\tRegion\tChr_id\tChr_pos\tReported Gene(s)\tMapped_gene\tUpstream_gene_id\tDownstream_gene_id\tSnp_gene_ids\tUpstream_gene_distance\tDownstream_gene_distance\tStrongest SNP-Risk Allele\tSNPs\tMerged\tSnp_id_current\tContext\tIntergenic\tRisk Allele Frequency\tp-Value\tPvalue_mlog\tp-Value (text)\tOR or beta\t95% CI (text)\tPlatform [SNPs passing QC]";
+
+        if(includeAnnotations){
+            header = header.concat("\tMAPPED_TRAIT\tMAPPED_TRAIT_URI");
+        }
+
+        header = header.concat("\r\n");
 
         StringBuilder result = new StringBuilder();
         result.append(header);
@@ -188,6 +196,18 @@ public class JsonProcessingService {
                 platform = platform.replaceAll("\n", "").replaceAll("\r", "");
             }
             line.append(platform);
+
+
+            if(includeAnnotations){
+                line.append("\t");
+
+                Map<String, String> traits = getEfoTraits(doc);
+
+                line.append(traits.get("trait"));
+                line.append("\t");
+                line.append(traits.get("uri"));
+            }
+
             line.append("\r\n");
 
             result.append(line.toString());
@@ -195,6 +215,7 @@ public class JsonProcessingService {
         }
         return result.toString();
     }
+
 
     private String getPlatform(JsonNode doc) {
         String platform;
@@ -528,6 +549,34 @@ public class JsonProcessingService {
         genes.put("ingene", ingene);
 
         return genes;
+    }
+
+
+    private Map<String, String> getEfoTraits(JsonNode doc) {
+        Map<String, String> traits = new HashMap<>();
+
+        String trait = "";
+        String uri = "";
+
+        if(doc.get("efoLink") != null){
+            for(JsonNode efoLink : doc.get("efoLink")){
+                String[] data = efoLink.asText().trim().split("\\|");
+
+                if(trait == ""){
+                    trait = data[0];
+                    uri = data[2];
+                }
+                else{
+                    trait = trait.concat(", ").concat(data[0]);
+                    uri = uri.concat(", ").concat(data[2]);
+                }
+            }
+        }
+
+        traits.put("trait", trait);
+        traits.put("uri", uri);
+
+        return traits;
     }
 
 
