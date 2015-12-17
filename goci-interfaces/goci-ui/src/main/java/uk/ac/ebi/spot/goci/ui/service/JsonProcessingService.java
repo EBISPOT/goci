@@ -17,16 +17,24 @@ import java.util.regex.Pattern;
 public class JsonProcessingService {
 
     private String json;
+    private boolean includeAnnotations;
 
-    public JsonProcessingService(String json) {
+    public JsonProcessingService(String json, boolean includeAnnotations) {
         this.json = json;
+        this.includeAnnotations = includeAnnotations;
     }
 
 
     public String processJson() throws IOException {
 
         String header =
-                "Date Added to Catalog\tPUBMEDID\tFirst Author\tDate\tJournal\tLink\tStudy\tDisease/Trait\tInitial Sample Size\tReplication Sample Size\tRegion\tChr_id\tChr_pos\tReported Gene(s)\tMapped_gene\tUpstream_gene_id\tDownstream_gene_id\tSnp_gene_ids\tUpstream_gene_distance\tDownstream_gene_distance\tStrongest SNP-Risk Allele\tSNPs\tMerged\tSnp_id_current\tContext\tIntergenic\tRisk Allele Frequency\tp-Value\tPvalue_mlog\tp-Value (text)\tOR or beta\t95% CI (text)\tPlatform [SNPs passing QC]\r\n";
+                "Date Added to Catalog\tPUBMEDID\tFirst Author\tDate\tJournal\tLink\tStudy\tDisease/Trait\tInitial Sample Size\tReplication Sample Size\tRegion\tChr_id\tChr_pos\tReported Gene(s)\tMapped_gene\tUpstream_gene_id\tDownstream_gene_id\tSnp_gene_ids\tUpstream_gene_distance\tDownstream_gene_distance\tStrongest SNP-Risk Allele\tSNPs\tMerged\tSnp_id_current\tContext\tIntergenic\tRisk Allele Frequency\tp-Value\tPvalue_mlog\tp-Value (text)\tOR or beta\t95% CI (text)\tPlatform [SNPs passing QC]";
+
+        if(includeAnnotations){
+            header = header.concat("\tMAPPED_TRAIT\tMAPPED_TRAIT_URI");
+        }
+
+        header = header.concat("\r\n");
 
         StringBuilder result = new StringBuilder();
         result.append(header);
@@ -80,35 +88,50 @@ public class JsonProcessingService {
             line.append(rep);
             line.append("\t");
 
-            List<String> chromLocation = getChromName(doc);
+            Map<String, String> chromLocation = getChromDetails(doc);
 
-            line.append(chromLocation.get(3));
+            line.append(chromLocation.get("region"));
             line.append("\t");
-            line.append(chromLocation.get(0));
+            line.append(chromLocation.get("chromName"));
             line.append("\t");
-            line.append(chromLocation.get(1));
+            line.append(chromLocation.get("chromPos"));
             line.append("\t");
 
             line.append(getRepGene(doc));
             line.append("\t");
-            line.append(getMapGene(doc));
+
+
+            Map<String, MappedGene> mappedGenes = getMappedGenes(doc);
+
+            if(mappedGenes.get("ingene").getName() != ""){
+                line.append(mappedGenes.get("ingene").getName());
+            }
+            if (mappedGenes.get("upstream").getName() != "" && mappedGenes.get("downstream").getName() != ""){
+                line.append(mappedGenes.get("upstream").getName().concat(" - ").concat(mappedGenes.get("downstream").getName()));
+            }
+            else if (mappedGenes.get("upstream").getName() != "" && mappedGenes.get("downstream").getName() == ""){
+                line.append(mappedGenes.get("upstream").getName().concat(" - ?"));
+            }
+            else if (mappedGenes.get("upstream").getName() == "" && mappedGenes.get("downstream").getName() != ""){
+                line.append(("? - ").concat(mappedGenes.get("downstream").getName()));
+            }
+            else {
+                line.append("");
+            }
+
             line.append("\t");
 
-            Map<String, String> geneIds = getGeneIds(doc);
-
-            line.append(geneIds.get("upstream"));
+            line.append(mappedGenes.get("upstream").getId());
             line.append("\t");
-            line.append(geneIds.get("downstream"));
+            line.append(mappedGenes.get("downstream").getId());
             line.append("\t");
-            line.append(geneIds.get("ingene"));
+            line.append(mappedGenes.get("ingene").getId());
             line.append("\t");
 
-            Map<String, String> geneDistances = getGeneDistances(doc);
-
-            line.append(geneDistances.get("upstream"));
+            line.append(mappedGenes.get("upstream").getDistance());
             line.append("\t");
 
-            line.append(geneDistances.get("downstream"));
+            line.append(mappedGenes.get("downstream").getDistance());
             line.append("\t");
 
             line.append(getStrongestAllele(doc));
@@ -168,12 +191,22 @@ public class JsonProcessingService {
             line.append(getCI(doc));
             line.append("\t");
 
-            String platform = doc.get("platform").asText().trim();
+            String platform = getPlatform(doc);
             if (platform.contains(newline)) {
                 platform = platform.replaceAll("\n", "").replaceAll("\r", "");
             }
-
             line.append(platform);
+
+
+            if(includeAnnotations){
+                line.append("\t");
+
+                Map<String, String> traits = getEfoTraits(doc);
+
+                line.append(traits.get("trait"));
+                line.append("\t");
+                line.append(traits.get("uri"));
+            }
 
             line.append("\r\n");
 
@@ -181,6 +214,21 @@ public class JsonProcessingService {
 
         }
         return result.toString();
+    }
+
+
+    private String getPlatform(JsonNode doc) {
+        String platform;
+
+        if(doc.get("platform") != null){
+            platform = doc.get("platform").asText().trim();
+        }
+        else {
+            platform = "";
+        }
+
+
+         return platform;
     }
 
 
@@ -276,14 +324,20 @@ public class JsonProcessingService {
     }
 
     private String getMapGene(JsonNode doc) {
-        String gene;
-        if (doc.get("mappedGene") != null) {
-            gene = doc.get("mappedGene").get(0).asText().trim();
+        String genes = "";
+        if (doc.get("entrezMappedGenes") != null) {
+            int it = 0;
+
+            for(JsonNode m : doc.get("entrezMappedGenes")) {
+                if (it > 0) {
+                    genes = genes.concat(", ");
+                }
+                genes = genes.concat(m.asText().trim());
+                it++;
+            }
         }
-        else {
-            gene = "";
-        }
-        return gene;
+
+        return genes;
     }
 
     private String getRepGene(JsonNode doc) {
@@ -301,70 +355,42 @@ public class JsonProcessingService {
         return genes;
     }
 
-    //    private String getChromPos(JsonNode doc) {
-    //        String chromPos;
-    //        if(doc.get("chromosomePosition") != null) {
-    //           chromPos = doc.get("chromosomePosition").get(0).asText().trim();
-    //        }
-    //        else{
-    //           chromPos = "";
-    //        }
-    //        return chromPos;
-    //    }
 
-    private List<String> getChromName(JsonNode doc) {
-        String chromName = null;
-        String chromPos = null;
-        String region = null;
-        List<String> location = new ArrayList<>();
+    private Map<String, String> getChromDetails(JsonNode doc) {
+        String chromName = "";
+        String chromPos = "";
+        String region = "";
+        Map<String, String> location = new HashMap<>();
 
         if (doc.get("positionLinks") != null) {
             //            if(doc.get("positionLinks").size() > 1){
             for (int i = 0; i < doc.get("positionLinks").size(); i++) {
                 String loc = doc.get("positionLinks").get(i).asText().trim();
 
-                chromName = loc.split("|")[0];
-                chromPos = loc.split("|")[1];
-                region = loc.split("|")[2];
+                String[] locs = loc.split("\\|");
+
+                String chrom = locs[0];
 
                 String pattern = "^\\d+$";
 
                 Pattern p = Pattern.compile(pattern);
-                Matcher m = p.matcher(chromName);
+                Matcher m = p.matcher(chrom);
 
                 if (m.find() || location.equals("X") || location.equals("Y")) {
-                    location.add(chromName);
-                    location.add(chromPos);
-                    location.add(region);
+                    chromName = locs[0];
+                    chromPos = locs[1];
+                    region = locs[2];
                 }
             }
-            //            }
-            //            else {
-            //                chromName = doc.get("chromosomeName").get(0).asText().trim();
-            //            }
         }
-        else {
-            chromName = "";
-            chromPos = "";
-            region = "";
 
-            location.add(chromName);
-            location.add(chromPos);
-            location.add(region);
-        }
+        location.put("chromName", chromName);
+        location.put("chromPos", chromPos);
+        location.put("region", region);
+
         return location;
     }
 
-    private String getRegion(JsonNode doc) {
-        String region;
-        if (doc.get("region") != null) {
-            region = doc.get("region").get(0).asText().trim();
-        }
-        else {
-            region = "";
-        }
-        return region;
-    }
 
     private String getRepSample(JsonNode doc) {
         String sampleDesc;
@@ -468,97 +494,124 @@ public class JsonProcessingService {
         return date;
     }
 
-    private Map<String, String> getGeneIds(JsonNode doc) {
-        Map<String, String> geneIds = new HashMap<String, String>();
-        String upstream = "";
-        String downstream = "";
-        String ingene = "";
+    private Map<String, MappedGene> getMappedGenes(JsonNode doc) {
+        List<String> actuallyMapped = new ArrayList<>();
+
+        if (doc.get("entrezMappedGenes") != null) {
+
+            for(JsonNode m : doc.get("entrezMappedGenes")) {
+               actuallyMapped.add(m.asText().trim());
+            }
+        }
+
+        Map<String, MappedGene> genes = new HashMap<String, MappedGene>();
+        MappedGene upstream = new MappedGene();
+        MappedGene downstream = new MappedGene();
+        MappedGene ingene = new MappedGene();
 
         if (doc.get("entrezMappedGeneLinks") != null) {
-            if (doc.get("entrezMappedGeneLinks").size() == 1) {
-                String geneLink = doc.get("entrezMappedGeneLinks").get(0).asText().trim();
-                int index = geneLink.indexOf("|");
-                ingene = geneLink.substring(index + 1);
-            }
-            else {
-                if (doc.get("entrezMappedGenes") != null) {
-                    String mapped = doc.get("entrezMappedGenes").get(0).asText().trim();
+            for (JsonNode geneLink : doc.get("entrezMappedGeneLinks")) {
+                String[] data = geneLink.asText().trim().split("\\|");
 
-                    for (JsonNode geneLink : doc.get("entrezMappedGeneLinks")) {
-                        int first = geneLink.asText().trim().indexOf("|");
-                        int last = geneLink.asText().trim().lastIndexOf("|");
+                String gene = data[0];
 
-                        String gene = geneLink.asText().trim().substring(0, first - 1);
-                        String geneId;
+                if(actuallyMapped.contains(gene)){
+                    String geneId, geneDist;
 
-                        if (first != last) {
-                            geneId = geneLink.asText().trim().substring(first + 1, last);
-                        }
-                        else {
-                            geneId = geneLink.asText().trim().substring(first + 1);
-                        }
 
-                        if (mapped.indexOf(gene) == 0) {
-                            upstream = geneId;
-                        }
-                        else {
-                            downstream = geneId;
-                        }
+                    geneId = data[1];
+                    geneDist = data[2];
 
+
+                    int dist = Integer.parseInt(geneDist);
+
+                    if(dist == 0){
+                        ingene.setId(geneId);
+                        ingene.setDistance(geneDist);
+                        ingene.setName(gene);
+                    }
+                    else if(dist > 0){
+                        upstream.setId(geneId);
+                        upstream.setDistance(geneDist);
+                        upstream.setName(gene);
+                    }
+                    else{
+                        downstream.setId(geneId);
+                        downstream.setDistance(geneDist.substring(1));
+                        downstream.setName(gene);
                     }
                 }
+
             }
-
         }
-        geneIds.put("upstream", upstream);
-        geneIds.put("downstream", downstream);
-        geneIds.put("ingene", ingene);
+        genes.put("upstream", upstream);
+        genes.put("downstream", downstream);
+        genes.put("ingene", ingene);
 
-
-        return geneIds;
+        return genes;
     }
 
-    private Map<String, String> getGeneDistances(JsonNode doc) {
-        Map<String, String> geneIds = new HashMap<String, String>();
-        String upstream = "";
-        String downstream = "";
 
-        if (doc.get("entrezMappedGeneLinks") != null) {
-            if (doc.get("entrezMappedGeneLinks").size() > 1) {
-                if (doc.get("entrezMappedGenes") != null) {
-                    String mapped = doc.get("entrezMappedGenes").get(0).asText().trim();
+    private Map<String, String> getEfoTraits(JsonNode doc) {
+        Map<String, String> traits = new HashMap<>();
 
-                    for (JsonNode geneLink : doc.get("entrezMappedGeneLinks")) {
-                        int first = geneLink.asText().trim().indexOf("|");
-                        int last = geneLink.asText().trim().lastIndexOf("|");
-                        String gene = geneLink.asText().trim().substring(0, first - 1);
+        String trait = "";
+        String uri = "";
 
-                        String geneDist;
+        if(doc.get("efoLink") != null){
+            for(JsonNode efoLink : doc.get("efoLink")){
+                String[] data = efoLink.asText().trim().split("\\|");
 
-                        if (first != last) {
-                            geneDist = geneLink.asText().trim().substring(last + 1);
-                        }
-                        else {
-                            geneDist = "";
-                        }
-
-                        if (mapped.indexOf(gene) == 0) {
-                            upstream = geneDist;
-                        }
-                        else {
-                            downstream = geneDist;
-                        }
-
-                    }
+                if(trait == ""){
+                    trait = data[0];
+                    uri = data[2];
+                }
+                else{
+                    trait = trait.concat(", ").concat(data[0]);
+                    uri = uri.concat(", ").concat(data[2]);
                 }
             }
-
         }
-        geneIds.put("upstream", upstream);
-        geneIds.put("downstream", downstream);
+
+        traits.put("trait", trait);
+        traits.put("uri", uri);
+
+        return traits;
+    }
 
 
-        return geneIds;
+    private class MappedGene{
+        private String name, id, distance;
+
+        public MappedGene(){
+            name = "";
+            id = "";
+            distance = "";
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getDistance() {
+            return distance;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public void setDistance(String distance) {
+            this.distance = distance;
+        }
     }
 }
 

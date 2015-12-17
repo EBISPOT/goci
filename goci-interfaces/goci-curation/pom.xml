@@ -68,7 +68,7 @@
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-mail</artifactId>
         </dependency>
-
+        
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>

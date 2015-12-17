@@ -39,19 +39,21 @@
                 <thead>
                 <tr>
                     <th>Study Added Date</th>
-                    <th>Send to NCBI Date</th>
+                    <th>Last Update Date</th>
+                    <th>Last Automated Mapping Date</th>
                     <th>Catalog Publish Date</th>
                     <th>Catalog Unpublish Date</th>
-                    <th>Last Update Date</th>
+                    <th>Send to NCBI Date</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
                     <td th:text="${study.housekeeping != null and study.housekeeping.studyAddedDate !=null } ? ${#calendars.format(study.housekeeping.studyAddedDate, 'dd MMMM yyyy')} : ''"></td>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.sendToNCBIDate !=null } ? ${#calendars.format(study.housekeeping.sendToNCBIDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.lastUpdateDate !=null } ? ${#calendars.format(study.housekeeping.lastUpdateDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:text="${mappingDetails.mappingDate != null} ? ${#calendars.format(mappingDetails.mappingDate, 'dd MMMM yyyy')} : ''"></td>
                     <td th:text="${study.housekeeping != null and study.housekeeping.catalogPublishDate !=null } ? ${#calendars.format(study.housekeeping.catalogPublishDate, 'dd MMMM yyyy')} : ''"></td>
                     <td th:text="${study.housekeeping != null and study.housekeeping.catalogUnpublishDate !=null } ? ${#calendars.format(study.housekeeping.catalogUnpublishDate, 'dd MMMM yyyy')} : ''"></td>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.lastUpdateDate !=null } ? ${#calendars.format(study.housekeeping.lastUpdateDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.sendToNCBIDate !=null } ? ${#calendars.format(study.housekeeping.sendToNCBIDate, 'dd MMMM yyyy')} : ''"></td>
                 </tr>
                 </tbody>
             </table>
@@ -105,7 +107,7 @@
                   name="studyHousekeeping">
 
                 <!--Form has to send all entity attributes back, even if we do not want users to edit
-                Thus some fields are hidden and spaced throoughout the form to improve view -->
+                Thus some fields are hidden and spaced throughout the form to improve view -->
 
                 <!--Hidden-->
 
@@ -129,13 +131,13 @@
 
                 <div class="form-group">
                     <label for="fileName" class="control-label col-md-2">File name</label>
-                    <textarea id="fileName" type="text" th:field="*{fileName}" class="col-md-8"></textarea>
+                    <textarea id="fileName" th:field="*{fileName}" class="col-md-8"></textarea>
                 </div>
 
 
                 <div class="form-group">
                     <label for="notes" class="control-label col-md-2">Notes</label>
-                    <textarea id="notes" type="text" th:field="*{notes}" class="col-md-8"></textarea>
+                    <textarea id="notes" th:field="*{notes}" class="col-md-8"></textarea>
                 </div>
 
                 <!--Checkboxes-->
@@ -180,18 +182,23 @@
                     />
                 </div>
 
-
+                <!--This tags are uneditable but viewable in form-->
                 <div class="form-group">
                     <label for="checkedMappingError" th:for="${#ids.next('checkedMappingError')}"
                            class="control-label col-md-2">Checked Mapping Error:</label>
-                    <input id="checkedMappingError" type="checkbox" th:field="*{checkedMappingError}"/>
+                    <input id="checkedMappingError"
+                           type="checkbox"
+                           th:field="*{checkedMappingError}"
+                           disabled="disabled"/>
+                    <input id="checkedMappingError" type="hidden" th:field="*{checkedMappingError}"/>
                 </div>
 
 
                 <div class="form-group">
                     <label for="snpsRechecked" th:for="${#ids.next('snpsRechecked')}"
-                           class="control-label col-md-2">SNPs rechecked?:</label>
-                    <input id="snpsRechecked" type="checkbox" th:field="*{snpsRechecked}"/>
+                           class="control-label col-md-2">SNPs rechecked:</label>
+                    <input id="snpsRechecked" type="checkbox" th:field="*{snpsRechecked}" disabled="disabled"/>
+                    <input id="snpsRechecked" type="hidden" th:field="*{snpsRechecked}"/>
                 </div>
 
 

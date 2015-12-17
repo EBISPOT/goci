@@ -69,14 +69,23 @@ public class MailService {
             notes = study.getHousekeeping().getNotes();
         }
 
-        // Format date
+        // Format dates
         Date studyDate = study.getPublicationDate();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
         String bodyStudyDate = dateFormat.format(studyDate);
 
+        Date publishDate = study.getHousekeeping().getCatalogPublishDate();
+        String bodyPublishDate = null;
+        if (publishDate != null) {
+            bodyPublishDate = dateFormat.format(publishDate);
+        }
+
         String editStudyLink = getLink() + "studies/" + study.getId();
 
         String mappingDetails = getMappingDetails(study);
+        if (mappingDetails.isEmpty()) {
+            mappingDetails = "Note: No mapping errors detected for any association in this study.";
+        }
 
         // Format mail message
         SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -91,10 +100,11 @@ public class MailService {
                         + "\n" + "Pubmed link: " + pubmedLink
                         + "\n" + "Edit link: " + editStudyLink
                         + "\n" + "Current curator: " + currentCurator
-                        + "\n" + "Notes: " + notes + "\n\n" +
+                        + "\n" + "Publish Date: " + bodyPublishDate
+                        + "\n" + "Notes: " + notes
+                        + "\n\n" +
                         mappingDetails);
         javaMailSender.send(mailMessage);
-
     }
 
     private String getMappingDetails(Study study) {

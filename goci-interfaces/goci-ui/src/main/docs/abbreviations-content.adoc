@@ -127,6 +127,9 @@ apoA-1: apolipoprotein A-1
 aPTT: activated partial thromboplastin time
 
 
+ARC: AR-C124910XX
+
+
 ASD: Ostium secundum atrial septal defect
 
 
@@ -411,6 +414,9 @@ ER -ve: Estrogen receptor negative
 
 
 ET-1: Endothelin-1
+
+
+ET: endocrine treatment
 
 
 ESCC: esophageal squamous cell carcinoma
@@ -1169,6 +1175,9 @@ SRM: spatial recognition memory
 
 
 SSP: spatial span
+
+
+SSRI: selective serotonin reuptake inhibitor
 
 
 sTfR: Soluble Transferrin Receptor

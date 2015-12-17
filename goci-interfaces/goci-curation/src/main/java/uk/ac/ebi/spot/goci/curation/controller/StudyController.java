@@ -22,12 +22,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
 import uk.ac.ebi.spot.goci.curation.model.Assignee;
+import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
 import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
-import uk.ac.ebi.spot.goci.curation.model.StudyAssociationTableView;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
-import uk.ac.ebi.spot.goci.curation.service.MailService;
-import uk.ac.ebi.spot.goci.curation.service.StudyAssociationTableViewService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
@@ -51,12 +49,16 @@ import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
 import javax.validation.Valid;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by emma on 20/11/14.
@@ -84,8 +86,6 @@ public class StudyController {
 
     // Pubmed ID lookup service
     private DefaultPubMedSearchService defaultPubMedSearchService;
-    private MailService mailService;
-    private StudyAssociationTableViewService studyAssociationTableViewService;
     private StudyOperationsService studyService;
 
     public static final int MAX_PAGE_ITEM_DISPLAY = 25;
@@ -99,8 +99,6 @@ public class StudyController {
     @Autowired
     public StudyController(StudyRepository studyRepository,
                            StudyOperationsService studyService,
-                           StudyAssociationTableViewService studyAssociationTableViewService,
-                           MailService mailService,
                            DefaultPubMedSearchService defaultPubMedSearchService,
                            UnpublishReasonRepository unpublishReasonRepository,
                            EthnicityRepository ethnicityRepository,
@@ -112,8 +110,6 @@ public class StudyController {
                            HousekeepingRepository housekeepingRepository) {
         this.studyRepository = studyRepository;
         this.studyService = studyService;
-        this.studyAssociationTableViewService = studyAssociationTableViewService;
-        this.mailService = mailService;
         this.defaultPubMedSearchService = defaultPubMedSearchService;
         this.unpublishReasonRepository = unpublishReasonRepository;
         this.ethnicityRepository = ethnicityRepository;
@@ -142,6 +138,9 @@ public class StudyController {
                                  @RequestParam(required = false) Integer month) {
 
 
+        // This is passed back to model and determines if pagination is applied
+        Boolean pagination = true;
+
         // Return all studies ordered by date if no page number given
         if (page == null) {
             // Find all studies ordered by study date and only display first page
@@ -162,8 +161,11 @@ public class StudyController {
         }
 
         // This is the default study page will all studies
-        Page<Study> studyPage =
-                studyRepository.findAll(constructPageSpecification(page - 1, sort));
+        Page<Study> studyPage = studyRepository.findAll(constructPageSpecification(page - 1, sort));
+
+        // For multi-snp and snp interaction studies pagination is not applied as the query leads to duplicates
+        List<Study> studies = null;
+
 
         // Search by pubmed ID option available from landing page
         if (pubmed != null && !pubmed.isEmpty()) {
@@ -198,19 +200,6 @@ public class StudyController {
                                                                                        sort));
             }
 
-            // Include the studies with status "NCBI pipeline error"
-            // plus the ones that have the box "checked NCBI error" ticked
-            if (studyType.equals("Studies with errors")) {
-                CurationStatus errorStatus = curationStatusRepository.findByStatus("NCBI pipeline error");
-                Long errorStatusId = errorStatus.getId();
-                studyPage = studyRepository.findByHousekeepingCheckedMappingErrorOrHousekeepingCurationStatusId(true,
-                                                                                                                errorStatusId,
-                                                                                                                constructPageSpecification(
-                                                                                                                        page -
-                                                                                                                                1,
-                                                                                                                        sort));
-            }
-
             if (studyType.equals("Studies in curation queue")) {
                 CurationStatus errorStatus = curationStatusRepository.findByStatus("Publish study");
                 Long errorStatusId = errorStatus.getId();
@@ -219,6 +208,15 @@ public class StudyController {
                                                                                           page -
                                                                                                   1,
                                                                                           sort));
+            }
+            if (studyType.equals("Multi-SNP haplotype studies")) {
+                studies = studyRepository.findStudyDistinctByAssociationsMultiSnpHaplotypeTrue(sort);
+                pagination = false;
+            }
+
+            if (studyType.equals("SNP Interaction studies")) {
+                studies = studyRepository.findStudyDistinctByAssociationsSnpInteractionTrue(sort);
+                pagination = false;
             }
 
             studySearchFilter.setStudyType(studyType);
@@ -337,18 +335,32 @@ public class StudyController {
             }
         }
         model.addAttribute("filters", filters);
-        model.addAttribute("studies", studyPage);
 
-        //Pagination variables
-        long totalStudies = studyPage.getTotalElements();
-        int current = studyPage.getNumber() + 1;
-        int begin = Math.max(1, current - 5); // Returns the greater of two values
-        int end = Math.min(begin + 10, studyPage.getTotalPages()); // how many pages to display in the pagination bar
+        long totalStudies;
+        int current = 1;
 
-        model.addAttribute("beginIndex", begin);
-        model.addAttribute("endIndex", end);
-        model.addAttribute("currentIndex", current);
+        // Construct table using pagination
+        if (studies == null) {
+            model.addAttribute("studies", studyPage);
+            //Pagination variables
+            totalStudies = studyPage.getTotalElements();
+            current = studyPage.getNumber() + 1;
+
+            int begin = Math.max(1, current - 5); // Returns the greater of two values
+            int end =
+                    Math.min(begin + 10, studyPage.getTotalPages()); // how many pages to display in the pagination bar
+
+            model.addAttribute("beginIndex", begin);
+            model.addAttribute("endIndex", end);
+            model.addAttribute("currentIndex", current);
+
+        }
+        else {
+            model.addAttribute("studies", studies);
+            totalStudies = studies.size();
+        }
         model.addAttribute("totalStudies", totalStudies);
+        model.addAttribute("pagination", pagination);
 
         // Add studySearchFilter to model so user can filter table
         model.addAttribute("studySearchFilter", studySearchFilter);
@@ -368,9 +380,7 @@ public class StudyController {
 
     // Redirects from landing page and main page
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String searchForStudyByFilter(@ModelAttribute StudySearchFilter studySearchFilter,
-                                         Model model,
-                                         @RequestParam(required = true) String filters) {
+    public String searchForStudyByFilter(@ModelAttribute StudySearchFilter studySearchFilter) {
 
         // Get ids of objects searched for
         Long status = studySearchFilter.getStatusSearchFilterId();
@@ -436,29 +446,6 @@ public class StudyController {
     }
 
 
-    // View all studies with associations annotated as multi-SNP haplotype
-    @RequestMapping(value = "/haplotype", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String getHaplotypeStudies(Model model) {
-
-        List<Study> haplotypeStudies = studyRepository.findStudyDistinctByAssociationsMultiSnpHaplotypeTrue();
-
-        List<StudyAssociationTableView> studies = studyAssociationTableViewService.createViews(haplotypeStudies);
-        model.addAttribute("studies", studies);
-        model.addAttribute("totalStudies", haplotypeStudies.size());
-        return "studies_by_association_type";
-    }
-
-    // View all studies with associations annotated as SNP interaction
-    @RequestMapping(value = "/snp_interaction", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String getSnpInteractionStudies(Model model) {
-
-        List<Study> interactionStudies = studyRepository.findStudyDistinctByAssociationsSnpInteractionTrue();
-
-        List<StudyAssociationTableView> studies = studyAssociationTableViewService.createViews(interactionStudies);
-        model.addAttribute("studies", studies);
-        model.addAttribute("totalStudies", interactionStudies.size());
-        return "studies_by_association_type";
-    }
 
    /* New Study*/
 
@@ -732,6 +719,10 @@ public class StudyController {
 
         // Return the housekeeping object attached to study and return the study
         model.addAttribute("study", study);
+
+        // Return a DTO that holds a summary of any automated mappings
+        model.addAttribute("mappingDetails", createMappingSummary(study));
+
         return "study_housekeeping";
     }
 
@@ -924,6 +915,62 @@ public class StudyController {
         return sort;
     }
 
+    /**
+     * An additional date should be added to the "Curator information" tab called "Last automated mapping date". This
+     * should record the last date all SNPs were mapped using the automated mapping pipeline i.e. when there has been an
+     * Ensembl release. This should be left blank for studies where SNPs have different mapping dates or were mapped by
+     * a curator, indicating that the curator should check the "SNP associations page" for last mapping info.
+     *
+     * @param study Study with mapping details
+     */
+    private MappingDetails createMappingSummary(Study study) {
+
+        MappingDetails mappingSummary = new MappingDetails();
+        Collection<Association> studyAssociations = associationRepository.findByStudyId(study.getId());
+
+        // Determine if we have more than one performer
+        Set<String> allAssociationMappingPerformers = new HashSet<String>();
+        for (Association association : studyAssociations) {
+            allAssociationMappingPerformers.add(association.getLastMappingPerformedBy());
+        }
+
+        Map<String, String> mappingDateToPerformerMap = new HashMap<>();
+        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+
+        // If only one performer we need to check dates to see mapping didn't happen at different times
+        if (allAssociationMappingPerformers.size() == 1) {
+            String performer = allAssociationMappingPerformers.iterator().next();
+            // Only care about automated mapping
+            if (performer.equals("automatic_mapping_process") || performer.contains("Release")) {
+
+                // Go through all associations and store mapping performer and date
+                for (Association association : studyAssociations) {
+                    String date = dt.format(association.getLastMappingDate());
+                    mappingDateToPerformerMap.put(date, performer);
+                }
+            }
+        }
+
+        // If its only been mapped by an automated process, all with same date
+        if (mappingDateToPerformerMap.size() == 1) {
+            for (String date : mappingDateToPerformerMap.keySet()) {
+                Date newDate = null;
+                try {
+                    newDate = dt.parse(date);
+
+                }
+                catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                mappingSummary.setMappingDate(newDate);
+                mappingSummary.setPerformer(mappingDateToPerformerMap.get(date));
+            }
+        }
+
+        return mappingSummary;
+    }
+
+
     /* Exception handling */
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -984,8 +1031,9 @@ public class StudyController {
         studyTypesOptions.add("GXE");
         studyTypesOptions.add("GXG");
         studyTypesOptions.add("CNV");
-        studyTypesOptions.add("Studies with errors");
         studyTypesOptions.add("Studies in curation queue");
+        studyTypesOptions.add("Multi-SNP haplotype studies");
+        studyTypesOptions.add("SNP Interaction studies");
         return studyTypesOptions;
     }
 
@@ -1086,7 +1134,7 @@ public class StudyController {
     }
 
     /* Pagination */
-    // Pagination, method passed page index and inlcudes max number of studies, sorted by study date, to return
+    // Pagination, method passed page index and includes max number of studies, sorted by study date, to return
     private Pageable constructPageSpecification(int pageIndex, Sort sort) {
         return new PageRequest(pageIndex, MAX_PAGE_ITEM_DISPLAY, sort);
     }

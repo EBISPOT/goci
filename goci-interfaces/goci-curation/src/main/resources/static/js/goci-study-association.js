@@ -2,12 +2,11 @@
 
 $(document).ready(function() {
     $("#approve-button").click(function() {
-        // Passes study id to method
-        approveSelectedAssociations($(this).attr("value"));
+        approveSelectedAssociations();
     });
 });
 
-function approveSelectedAssociations(studyId) {
+function approveSelectedAssociations() {
     var associationIds = [];
     //create an array of association ids
     $('input.association-selector:checked').each(
@@ -15,10 +14,10 @@ function approveSelectedAssociations(studyId) {
                 associationIds.push($(this).attr("value"))
             }
     );
-    updateAssociations(studyId, associationIds);
+    updateAssociations(associationIds);
 }
 
-function updateAssociations(studyId, associationIds) {
+function updateAssociations(associationIds) {
     // Pass details to method in controller which handles database changes
     $.getJSON("associations/approve_checked",
               {"associationIds[]": associationIds},
@@ -30,15 +29,15 @@ function updateAssociations(studyId, associationIds) {
               });
 }
 
-// Delete individual SNP associations
+
+// Unpprove individual SNP associations
 $(document).ready(function() {
-    $("#delete-button").click(function() {
-        // Passes study id to method
-        deleteSelectedAssociations($(this).attr("value"));
+    $("#unapprove-button").click(function() {
+        unapproveSelectedAssociations();
     });
 });
 
-function deleteSelectedAssociations(studyId) {
+function unapproveSelectedAssociations() {
     var associationIds = [];
     //create an array of association ids
     $('input.association-selector:checked').each(
@@ -46,14 +45,12 @@ function deleteSelectedAssociations(studyId) {
                 associationIds.push($(this).attr("value"))
             }
     );
-    deleteAssociations(studyId, associationIds);
+    unapproveAssociations(associationIds);
 }
 
-function deleteAssociations(studyId, associationIds) {
-
+function unapproveAssociations(associationIds) {
     // Pass details to method in controller which handles database changes
-    //$.getJSON("studies/" + studyId + "/associations/delete_checked",
-    $.getJSON("associations/delete_checked",
+    $.getJSON("associations/unapprove_checked",
               {"associationIds[]": associationIds},
               //Response
               function(data) {
@@ -64,15 +61,15 @@ function deleteAssociations(studyId, associationIds) {
 }
 
 
-// Mark errors as checked for individual SNP associations
+// Delete individual SNP associations
 $(document).ready(function() {
-    $("#errorcheck-button").click(function() {
+    $("#delete-button").click(function() {
         // Passes study id to method
-        errorCheckSelectedAssociations($(this).attr("value"));
+        deleteSelectedAssociations();
     });
 });
 
-function errorCheckSelectedAssociations(studyId) {
+function deleteSelectedAssociations() {
     var associationIds = [];
     //create an array of association ids
     $('input.association-selector:checked').each(
@@ -80,12 +77,12 @@ function errorCheckSelectedAssociations(studyId) {
                 associationIds.push($(this).attr("value"))
             }
     );
-    errorCheck(studyId, associationIds);
+    deleteAssociations(associationIds);
 }
 
-function errorCheck(studyId, associationIds) {
-    // Pass details to method in controller which handles database changes
-    $.getJSON("associations/errors_checked",
+function deleteAssociations(associationIds) {
+
+    $.getJSON("associations/delete_checked",
               {"associationIds[]": associationIds},
               //Response
               function(data) {

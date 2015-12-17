@@ -19,6 +19,7 @@ import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
 import uk.ac.ebi.spot.goci.pussycat.manager.PussycatManager;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
+import uk.ac.ebi.spot.goci.pussycat.service.DiagramConversionService;
 import uk.ac.ebi.spot.goci.pussycat.session.PussycatSession;
 import uk.ac.ebi.spot.goci.pussycat.session.PussycatSessionStrategy;
 

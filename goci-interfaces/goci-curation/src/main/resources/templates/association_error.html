@@ -8,8 +8,10 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10">
-            <a class="btn btn-default" th:href="@{/studies/{studyId}/associations(studyId=${study.id})}">Back to all SNP
-                                                                                                         associations</a>
+            <a class="btn btn-default"
+               th:href="@{/studies/{studyId}/associations(studyId=${study.id}, associationId=*{associationId})}">Back to
+                                                                                                                 all SNP
+                                                                                                                 associations</a>
             <button id="errorButton"
                     th:if="${ not #strings.isEmpty(errors.snpErrors)
                 or not #strings.isEmpty(errors.riskAlleleErrors)

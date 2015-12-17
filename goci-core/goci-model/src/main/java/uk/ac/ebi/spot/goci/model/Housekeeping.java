@@ -248,29 +248,4 @@ public class Housekeeping {
         this.unpublishReason = unpublishReason;
     }
 
-    @Override
-    public String toString() {
-        return "Housekeeping{" +
-                "id=" + id +
-                ", studySnpCheckedLevelOne=" + studySnpCheckedLevelOne +
-                ", studySnpCheckedLevelTwo=" + studySnpCheckedLevelTwo +
-                ", ethnicityCheckedLevelOne=" + ethnicityCheckedLevelOne +
-                ", ethnicityCheckedLevelTwo=" + ethnicityCheckedLevelTwo +
-                ", ethnicityBackFilled=" + ethnicityBackFilled +
-                ", checkedMappingError=" + checkedMappingError +
-                ", snpsRechecked=" + snpsRechecked +
-                ", catalogPublishDate=" + catalogPublishDate +
-                ", sendToNCBIDate=" + sendToNCBIDate +
-                ", studyAddedDate=" + studyAddedDate +
-                ", catalogUnpublishDate=" + catalogUnpublishDate +
-                ", lastUpdateDate=" + lastUpdateDate +
-                ", fileName='" + fileName + '\'' +
-                ", notes='" + notes + '\'' +
-                ", curator=" + curator +
-                ", curationStatus=" + curationStatus +
-                ", unpublishReason=" + unpublishReason +
-                '}';
-    }
-
-
 }

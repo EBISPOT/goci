@@ -66,7 +66,6 @@ public class SnpAssociationInteractionForm {
                                          Float orPerCopyNum,
                                          String snpType,
                                          Boolean snpApproved,
-                                         Boolean errorCheckedByCurator,
                                          Boolean orType,
                                          Integer pvalueMantissa,
                                          Integer pvalueExponent,

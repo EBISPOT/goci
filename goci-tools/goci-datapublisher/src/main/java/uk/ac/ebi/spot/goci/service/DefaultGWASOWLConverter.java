@@ -303,90 +303,95 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         for (Location location : snp.getLocations()) {
             Region region = location.getRegion();
 
-            // create a new band individual
-            OWLNamedIndividual bandIndiv = getDataFactory().getOWLNamedIndividual(
-                    getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI,
-                                     "CytogeneticRegion",
-                                     region.getName())
-            );
-
-            // assert class membership
-            OWLClassAssertionAxiom bandClassAssertion =
-                    getDataFactory().getOWLClassAssertionAxiom(bandClass, bandIndiv);
-            getManager().addAxiom(ontology, bandClassAssertion);
-
-
-            // assert name relation
-            OWLLiteral name = getDataFactory().getOWLLiteral(region.getName());
-            OWLDataPropertyAssertionAxiom name_relation =
-                    getDataFactory().getOWLDataPropertyAssertionAxiom(has_name, bandIndiv, name);
-            AddAxiom add_name = new AddAxiom(ontology, name_relation);
-            getManager().applyChange(add_name);
-
-            // assert label
-            OWLAnnotationAssertionAxiom band_label_annotation =
-                    getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, bandIndiv.getIRI(), name);
-            AddAxiom add_band_label = new AddAxiom(ontology, band_label_annotation);
-            getManager().applyChange(add_band_label);
-
-            // assert located_in relation
-            OWLObjectPropertyAssertionAxiom located_in_relation =
-                    getDataFactory().getOWLObjectPropertyAssertionAxiom(located_in, snpIndiv, bandIndiv);
-            AddAxiom add_located_in = new AddAxiom(ontology, located_in_relation);
-            getManager().applyChange(add_located_in);
-
-            // assert location_of relation
-            OWLObjectPropertyAssertionAxiom location_of_relation =
-                    getDataFactory().getOWLObjectPropertyAssertionAxiom(location_of, bandIndiv, snpIndiv);
-            AddAxiom add_location_of = new AddAxiom(ontology, location_of_relation);
-            getManager().applyChange(add_location_of);
-
-            // get the appropriate chromosome class given the chromosome name
-            OWLClass chrClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.CHROMOSOME_CLASS_IRI));
-
-            // create a new chromosome individual
-            //If a snp has a chromosome name, create the chromosome individual if it doesn't have one (ex : the snp is
-            // no mapped any more) then just don't create it.
-
-            String chromName = location.getChromosomeName();
-            if (chromName != null) {
-                OWLNamedIndividual chrIndiv = getDataFactory().getOWLNamedIndividual(
+            if (region.getName() != null){
+                // create a new band individual
+                OWLNamedIndividual bandIndiv = getDataFactory().getOWLNamedIndividual(
                         getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI,
-                                         "Chromosome",
-                                         chromName));
+                                         "CytogeneticRegion",
+                                         region.getName())
+                );
 
-                OWLClassAssertionAxiom chrClassAssertion =
-                        getDataFactory().getOWLClassAssertionAxiom(chrClass, chrIndiv);
-                getManager().addAxiom(ontology, chrClassAssertion);
+                // assert class membership
+                OWLClassAssertionAxiom bandClassAssertion =
+                        getDataFactory().getOWLClassAssertionAxiom(bandClass, bandIndiv);
+                getManager().addAxiom(ontology, bandClassAssertion);
 
-                // assert chr_name relation
-                OWLLiteral chr_name = getDataFactory().getOWLLiteral(chromName);
-                OWLDataPropertyAssertionAxiom chr_name_relation =
-                        getDataFactory().getOWLDataPropertyAssertionAxiom(has_chr_name, chrIndiv, chr_name);
-                AddAxiom add_chr_name = new AddAxiom(ontology, chr_name_relation);
-                getManager().applyChange(add_chr_name);
+
+                // assert name relation
+                OWLLiteral name = getDataFactory().getOWLLiteral(region.getName());
+                OWLDataPropertyAssertionAxiom name_relation =
+                        getDataFactory().getOWLDataPropertyAssertionAxiom(has_name, bandIndiv, name);
+                AddAxiom add_name = new AddAxiom(ontology, name_relation);
+                getManager().applyChange(add_name);
 
                 // assert label
-                OWLLiteral chr_label = getDataFactory().getOWLLiteral("Chromosome " + chromName);
-                OWLAnnotationAssertionAxiom chr_label_annotation =
-                        getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel,
-                                                                        chrIndiv.getIRI(),
-                                                                        chr_label);
-                AddAxiom add_chr_label = new AddAxiom(ontology, chr_label_annotation);
-                getManager().applyChange(add_chr_label);
+                OWLAnnotationAssertionAxiom band_label_annotation =
+                        getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, bandIndiv.getIRI(), name);
+                AddAxiom add_band_label = new AddAxiom(ontology, band_label_annotation);
+                getManager().applyChange(add_band_label);
 
-                // assert has_part relation
-                OWLObjectPropertyAssertionAxiom has_part_relation =
-                        getDataFactory().getOWLObjectPropertyAssertionAxiom(has_part, chrIndiv, bandIndiv);
-                AddAxiom add_has_part = new AddAxiom(ontology, has_part_relation);
-                getManager().applyChange(add_has_part);
+                // assert located_in relation
+                OWLObjectPropertyAssertionAxiom located_in_relation =
+                        getDataFactory().getOWLObjectPropertyAssertionAxiom(located_in, snpIndiv, bandIndiv);
+                AddAxiom add_located_in = new AddAxiom(ontology, located_in_relation);
+                getManager().applyChange(add_located_in);
 
-                // assert part_of relation
-                OWLObjectPropertyAssertionAxiom part_of_relation =
-                        getDataFactory().getOWLObjectPropertyAssertionAxiom(part_of, bandIndiv, chrIndiv);
-                AddAxiom add_part_of = new AddAxiom(ontology, part_of_relation);
-                getManager().applyChange(add_part_of);
+                // assert location_of relation
+                OWLObjectPropertyAssertionAxiom location_of_relation =
+                        getDataFactory().getOWLObjectPropertyAssertionAxiom(location_of, bandIndiv, snpIndiv);
+                AddAxiom add_location_of = new AddAxiom(ontology, location_of_relation);
+                getManager().applyChange(add_location_of);
 
+                // get the appropriate chromosome class given the chromosome name
+                OWLClass chrClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.CHROMOSOME_CLASS_IRI));
+
+                // create a new chromosome individual
+                //If a snp has a chromosome name, create the chromosome individual if it doesn't have one (ex : the snp is
+                // no mapped any more) then just don't create it.
+
+                String chromName = location.getChromosomeName();
+                if (chromName != null) {
+                    OWLNamedIndividual chrIndiv = getDataFactory().getOWLNamedIndividual(
+                            getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI,
+                                             "Chromosome",
+                                             chromName));
+
+                    OWLClassAssertionAxiom chrClassAssertion =
+                            getDataFactory().getOWLClassAssertionAxiom(chrClass, chrIndiv);
+                    getManager().addAxiom(ontology, chrClassAssertion);
+
+                    // assert chr_name relation
+                    OWLLiteral chr_name = getDataFactory().getOWLLiteral(chromName);
+                    OWLDataPropertyAssertionAxiom chr_name_relation =
+                            getDataFactory().getOWLDataPropertyAssertionAxiom(has_chr_name, chrIndiv, chr_name);
+                    AddAxiom add_chr_name = new AddAxiom(ontology, chr_name_relation);
+                    getManager().applyChange(add_chr_name);
+
+                    // assert label
+                    OWLLiteral chr_label = getDataFactory().getOWLLiteral("Chromosome " + chromName);
+                    OWLAnnotationAssertionAxiom chr_label_annotation =
+                            getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel,
+                                                                            chrIndiv.getIRI(),
+                                                                            chr_label);
+                    AddAxiom add_chr_label = new AddAxiom(ontology, chr_label_annotation);
+                    getManager().applyChange(add_chr_label);
+
+                    // assert has_part relation
+                    OWLObjectPropertyAssertionAxiom has_part_relation =
+                            getDataFactory().getOWLObjectPropertyAssertionAxiom(has_part, chrIndiv, bandIndiv);
+                    AddAxiom add_has_part = new AddAxiom(ontology, has_part_relation);
+                    getManager().applyChange(add_has_part);
+
+                    // assert part_of relation
+                    OWLObjectPropertyAssertionAxiom part_of_relation =
+                            getDataFactory().getOWLObjectPropertyAssertionAxiom(part_of, bandIndiv, chrIndiv);
+                    AddAxiom add_part_of = new AddAxiom(ontology, part_of_relation);
+                    getManager().applyChange(add_part_of);
+
+                }
+            }
+            else {
+                getLog().trace("No known region for location on chromosomse " + location.getChromosomeName());
             }
 
         }

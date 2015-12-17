@@ -87,6 +87,9 @@ public class Association {
 
     private String lastMappingPerformedBy;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date lastUpdateDate;
+
     // JPA no-args constructor
     public Association() {
     }
@@ -111,7 +114,7 @@ public class Association {
                        Collection<EfoTrait> efoTraits,
                        AssociationReport associationReport,
                        Date lastMappingDate,
-                       String lastMappingPerformedBy) {
+                       String lastMappingPerformedBy, Date lastUpdateDate) {
         this.riskFrequency = riskFrequency;
         this.pvalueText = pvalueText;
         this.orPerCopyNum = orPerCopyNum;
@@ -133,6 +136,7 @@ public class Association {
         this.associationReport = associationReport;
         this.lastMappingDate = lastMappingDate;
         this.lastMappingPerformedBy = lastMappingPerformedBy;
+        this.lastUpdateDate = lastUpdateDate;
     }
 
     public Long getId() {
@@ -313,6 +317,14 @@ public class Association {
 
     public void setLastMappingPerformedBy(String lastMappingPerformedBy) {
         this.lastMappingPerformedBy = lastMappingPerformedBy;
+    }
+
+    public Date getLastUpdateDate() {
+        return lastUpdateDate;
+    }
+
+    public void setLastUpdateDate(Date lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
     }
 
     public double getPvalue() {

@@ -86,7 +86,6 @@ public class SnpAssociationForm {
                               Boolean multiSnpHaplotype,
                               Boolean snpInteraction,
                               Boolean snpApproved,
-                              Boolean errorCheckedByCurator,
                               Integer pvalueMantissa,
                               Integer pvalueExponent,
                               Float pvalueFloat,

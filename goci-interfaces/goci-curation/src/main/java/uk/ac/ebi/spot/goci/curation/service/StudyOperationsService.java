@@ -69,24 +69,6 @@ public class StudyOperationsService {
                     }
                     break;
 
-                //Set date and send email notification
-                case "Send to NCBI":
-                    if (snpsNotApproved == 1) {
-                        message = "Some SNP associations have not been checked for study: "
-                                + study.getAuthor()
-                                + ", " + " pubmed = "
-                                + study.getPubmedId()
-                                + ", please review before changing the status to "
-                                + newStatus.getStatus();
-                    }
-                    else {
-                        Date sendToNCBIDate = new Date();
-                        housekeeping.setSendToNCBIDate(sendToNCBIDate);
-                        mailService.sendEmailNotification(study, newStatus.getStatus());
-                        housekeeping.setCurationStatus(newStatus);
-                    }
-                    break;
-
                 // Send notification email to curators
                 case "Level 1 curation done":
                     mailService.sendEmailNotification(study, newStatus.getStatus());
