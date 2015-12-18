@@ -11,7 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -19,7 +20,7 @@ import static org.mockito.Mockito.when;
  *
  * @author emma
  *         <p>
- *         Test
+ *         Unit test for AssociationMappingErrorService
  */
 @RunWith(MockitoJUnitRunner.class)
 public class AssociationMappingErrorServiceTest {
@@ -34,27 +35,33 @@ public class AssociationMappingErrorServiceTest {
     public void testCreateAssociationErrorMap() {
 
         // Checking return type
-        Map mockedMap = new HashMap();
-        Map<String, String> map = associationMappingErrorService.createAssociationErrorMap(associationReport);
-        assertEquals(mockedMap, map);
+        HashMap map = new HashMap();
+        Map<String, String> returnedMap = associationMappingErrorService.createAssociationErrorMap(associationReport);
+        assertEquals(returnedMap, map);
 
+        // Stubbing behaviour of AssociationReport
         when(associationReport.getSnpError()).thenReturn("Snp error");
         assertEquals("Snp error", associationReport.getSnpError());
+        verify(associationReport, atLeastOnce()).getSnpError();
 
         when(associationReport.getSnpGeneOnDiffChr()).thenReturn("Snp gene on different chromosome");
         assertEquals("Snp gene on different chromosome", associationReport.getSnpGeneOnDiffChr());
+        verify(associationReport, atLeastOnce()).getSnpGeneOnDiffChr();
 
         when(associationReport.getNoGeneForSymbol()).thenReturn("No gene for symbol");
         assertEquals("No gene for symbol", associationReport.getNoGeneForSymbol());
+        verify(associationReport, atLeastOnce()).getNoGeneForSymbol();
 
         when(associationReport.getRestServiceError()).thenReturn("Rest service error");
         assertEquals("Rest service error", associationReport.getRestServiceError());
+        verify(associationReport, atLeastOnce()).getRestServiceError();
 
         when(associationReport.getSuspectVariationError()).thenReturn("Suspect variation error");
         assertEquals("Suspect variation error", associationReport.getSuspectVariationError());
+        verify(associationReport, atLeastOnce()).getSuspectVariationError();
 
         when(associationReport.getGeneError()).thenReturn("Gene error");
         assertEquals("Gene error", associationReport.getGeneError());
-
+        verify(associationReport, atLeastOnce()).getGeneError();
     }
 }
