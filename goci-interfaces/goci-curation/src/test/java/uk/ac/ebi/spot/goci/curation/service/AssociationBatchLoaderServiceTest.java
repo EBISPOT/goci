@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.model.Association;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,7 +40,7 @@ public class AssociationBatchLoaderServiceTest {
     private XSSFSheet sheet;
 
     @Rule
-    public TemporaryFolder folder= new TemporaryFolder();
+    public TemporaryFolder folder = new TemporaryFolder();
 
     @Test
     public void testProcessData() throws IOException, InvalidFormatException {
@@ -49,9 +48,12 @@ public class AssociationBatchLoaderServiceTest {
         Collection<Association> testAssociations = new ArrayList<>();
 
         // Checking return type
-/*     File temp= new File();
-        Collection<Association> returnedCollection = associationBatchLoaderService.processData(temp.getPath());
-        assertEquals(returnedCollection, testAssociations);*/
+
+
+        // TODO FULL PATH
+        Collection<Association> returnedCollection = associationBatchLoaderService.processData(
+                "/Users/emma/Desktop/java_checkouts/goci_new/goci/goci-interfaces/goci-curation/src/test/java/uk/ac/ebi/spot/goci/curation/service/test.xlsx");
+        assertEquals(returnedCollection, testAssociations);
 
         // Stubbing behaviour of Association Sheet Processor
         when(associationSheetProcessor.readSnpAssociations(sheet)).thenReturn(testAssociations);
