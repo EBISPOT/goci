@@ -768,9 +768,11 @@ public class AssociationController {
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
     public String editAssociation(@ModelAttribute SnpAssociationForm snpAssociationForm,
+                                  BindingResult snpAssociationFormBindingResult,
                                   @ModelAttribute SnpAssociationInteractionForm snpAssociationInteractionForm,
+                                  BindingResult snpAssociationInteractionFormBindingResult,
                                   @PathVariable Long associationId,
-                                  @RequestParam(value = "associationtype", required = true) String associationType) {
+                                  @RequestParam(value = "associationtype", required = true) String associationType, Model model) {
 
         //Create association
         Association editedAssociation = null;
@@ -782,6 +784,10 @@ public class AssociationController {
 
         else if (associationType.equalsIgnoreCase("standardormulti")) {
             editedAssociation = singleSnpMultiSnpAssociationService.createAssociation(snpAssociationForm);
+
+            for (SnpFormRow row : snpAssociationForm.getSnpFormRows()) {
+                snpFormRowValidator.validate(row, snpAssociationFormBindingResult);
+            }
         }
 
         // default to standard view
@@ -789,26 +795,95 @@ public class AssociationController {
             editedAssociation = singleSnpMultiSnpAssociationService.createAssociation(snpAssociationForm);
         }
 
-        // Set ID of new  association to the ID of the association we're currently editing
-        editedAssociation.setId(associationId);
+        Boolean hasErrors = false;
+        if(snpAssociationFormBindingResult.hasErrors()){
+            hasErrors = true;
+        }
 
-        // Set study to one currently linked to association
-        Association currentAssociation = associationRepository.findOne(associationId);
-        Study associationStudy = currentAssociation.getStudy();
-        editedAssociation.setStudy(associationStudy);
+        if (hasErrors) {
 
-        // Save our association information
-        editedAssociation.setLastUpdateDate(new Date());
-        associationRepository.save(editedAssociation);
+            // Return association with that ID
+            Association associationToView = associationRepository.findOne(associationId);
 
-        // Map RS_ID in association
-        Collection<Association> associationsToMap = new ArrayList<>();
-        associationsToMap.add(editedAssociation);
-        Curator curator = associationStudy.getHousekeeping().getCurator();
-        String mappedBy = curator.getLastName();
-        mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+            // Get mapping details
+            MappingDetails mappingDetails = createMappingDetails(associationToView);
+            model.addAttribute("mappingDetails", mappingDetails);
 
-        return "redirect:/associations/" + associationId;
+            // Return any association errors
+            AssociationFormErrorView associationFormErrorView = associationFormErrorViewService.checkAssociationForErrors(
+                    associationToView);
+            model.addAttribute("errors", associationFormErrorView);
+
+            // Establish study
+            Long studyId = associationToView.getStudy().getId();
+
+            // Also passes back study object to view so we can create links back to main study page
+            model.addAttribute("study", studyRepository.findOne(studyId));
+
+            if (associationToView.getSnpInteraction() != null && associationToView.getSnpInteraction()) {
+                model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
+                return "edit_snp_interaction_association";
+            }
+
+            else if (associationToView.getMultiSnpHaplotype() != null && associationToView.getMultiSnpHaplotype()) {
+                model.addAttribute("snpAssociationForm", snpAssociationForm);
+                return "edit_multi_snp_association";
+            }
+
+            // If attributes haven't been set determine based on locus count and risk allele count
+            else {
+                Integer locusCount = associationToView.getLoci().size();
+
+                List<RiskAllele> riskAlleles = new ArrayList<>();
+                for (Locus locus : associationToView.getLoci()) {
+                    for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
+                        riskAlleles.add(riskAllele);
+                    }
+                }
+
+                // Case where we have SNP interaction
+                if (locusCount > 1) {
+                    model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
+                    return "edit_snp_interaction_association";
+                }
+                else {
+                    model.addAttribute("snpAssociationForm", snpAssociationForm);
+
+
+                    // If editing multi-snp haplotype
+                    if (riskAlleles.size() > 1) {
+                        return "edit_multi_snp_association";
+                    }
+                    else {
+                        return "edit_standard_snp_association";
+                    }
+                }
+            }
+
+        }
+        else {
+
+            // Set ID of new  association to the ID of the association we're currently editing
+            editedAssociation.setId(associationId);
+
+            // Set study to one currently linked to association
+            Association currentAssociation = associationRepository.findOne(associationId);
+            Study associationStudy = currentAssociation.getStudy();
+            editedAssociation.setStudy(associationStudy);
+
+            // Save our association information
+            editedAssociation.setLastUpdateDate(new Date());
+            associationRepository.save(editedAssociation);
+
+            // Map RS_ID in association
+            Collection<Association> associationsToMap = new ArrayList<>();
+            associationsToMap.add(editedAssociation);
+            Curator curator = associationStudy.getHousekeeping().getCurator();
+            String mappedBy = curator.getLastName();
+            mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+
+            return "redirect:/associations/" + associationId;
+        }
     }
 
     // Add single row to table
