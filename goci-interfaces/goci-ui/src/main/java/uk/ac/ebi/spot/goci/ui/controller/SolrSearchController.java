@@ -83,6 +83,7 @@ public class SolrSearchController {
         else {
             addRowsAndPage(solrSearchBuilder, maxResults, page);
         }
+        addDefaultSort(solrSearchBuilder);
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -205,6 +206,7 @@ public class SolrSearchController {
         }
         addRowsAndPage(solrSearchBuilder, maxResults, page);
         addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "Association");
+        addDefaultSort(solrSearchBuilder);
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -342,6 +344,7 @@ public class SolrSearchController {
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
 
+        addDefaultSort(solrSearchBuilder);
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -380,6 +383,7 @@ public class SolrSearchController {
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
 
+        addDefaultSort(solrSearchBuilder);
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -592,6 +596,9 @@ public class SolrSearchController {
             addSortQuery(solrSearchBuilder, sort);
         }
 
+        if(facet.equals("association")){
+            addDefaultSort(solrSearchBuilder);
+        }
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -600,7 +607,9 @@ public class SolrSearchController {
 
     private void addSortQuery(StringBuilder solrSearchBuilder, String sort) {
         if (sort.contains("pValue")) {
-            String dir = sort.substring(sort.length() - 4);
+//            String dir = sort.substring(sort.length() - 4);
+            String dir = sort.substring(6);
+
 
             String pvalsort = "pValueExponent".concat(dir).concat("%2C+pValueMantissa").concat(dir);
 
@@ -609,6 +618,12 @@ public class SolrSearchController {
         else {
             solrSearchBuilder.append("&sort=").append(sort);
         }
+    }
+
+    private void addDefaultSort(StringBuilder solrSearchBuilder){
+        String pvalsort = "pValueExponent+asc%2C+pValueMantissa+asc";
+
+        solrSearchBuilder.append("&sort=").append(pvalsort);
     }
 
     private void addSelectFields(StringBuilder solrSearchBuilder, String query) {
