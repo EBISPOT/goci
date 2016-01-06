@@ -73,7 +73,7 @@
                              th:if="*{#bools.isTrue(snpApproved)}"></div>
 
                         <div class="form-group" th:if="*{#bools.isFalse(snpApproved)}">
-                            <div class="col-md-offset-10 col-md-10">
+                            <div class="col-md-offset-2 col-md-10">
                                 <button type="submit" class="btn btn-primary">Save</button>
                             </div>
                         </div>
@@ -341,7 +341,7 @@
 
                             <!--Only show save button if SNP has not been approved-->
                             <div class="form-group" th:if="*{#bools.isFalse(snpApproved)}">
-                                <div class="col-md-offset-10 col-md-10">
+                                <div class="col-md-offset-2 col-md-10">
                                     <button type="submit" class="btn btn-primary">Save</button>
                                 </div>
                             </div>

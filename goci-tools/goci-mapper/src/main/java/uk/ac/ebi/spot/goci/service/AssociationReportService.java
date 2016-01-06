@@ -82,27 +82,29 @@ public class AssociationReportService {
             String errorMessage = entry.getKey();
             String errorType = entry.getValue();
 
-            if (errorType.equals("restServiceError")) {
-                restServiceErrors.add(errorMessage);
-            }
-            else if (errorType.equals("suspectVariationError")) {
-                suspectVariationErrors.add(errorMessage);
-            }
-            else if (errorType.equals("snpError")) {
-                snpErrors.add(errorMessage);
-            }
-            else if (errorType.equals("snpGeneOnDiffChrError")) {
-                snpGeneOnDiffChrErrors.add(errorMessage);
-            }
-            else if (errorType.equals("noGeneForSymbolError")) {
-                noGeneForSymbolErrors.add(errorMessage);
-            }
-            else if (errorType.equals("geneError")) {
-                geneErrors.add(errorMessage);
-            }
-            else {
-                getLog().warn("For association ID: " + association.getId() +
-                                      ", cannot determine error type for error " + errorMessage);
+            switch (errorType) {
+                case "restServiceError":
+                    restServiceErrors.add(errorMessage);
+                    break;
+                case "suspectVariationError":
+                    suspectVariationErrors.add(errorMessage);
+                    break;
+                case "snpError":
+                    snpErrors.add(errorMessage);
+                    break;
+                case "snpGeneOnDiffChrError":
+                    snpGeneOnDiffChrErrors.add(errorMessage);
+                    break;
+                case "noGeneForSymbolError":
+                    noGeneForSymbolErrors.add(errorMessage);
+                    break;
+                case "geneError":
+                    geneErrors.add(errorMessage);
+                    break;
+                default:
+                    getLog().warn("For association ID: " + association.getId() +
+                                          ", cannot determine error type for error " + errorMessage);
+                    break;
             }
         }
 
