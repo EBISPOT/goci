@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="or">
+
+<div class="form-group">
+    <label for="orPerCopyNum" class="control-label col-md-2">OR/HR/RR per copy (Num)</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" name="orPerCopyNum" id="orPerCopyNum" th:filed="*{orPerCopyNum}"/>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="orPerCopyRecip" class="control-label col-md-2">OR/HR/RR per copy reciprocal</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="orPerCopyRecip" th:field="*{orPerCopyRecip}" name="orPerCopyRecip"/>
+    </div>
+
+    <div class="col-md-10"><button type="button" class="btn btn-primary pull-right" id="calculate-or">Calculate OR/HR/RR per copy (Num)</button>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="orPerCopyRange" class="control-label col-md-2">OR/HR/RR per copy (Range)</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="orPerCopyRange" th:field="*{orPerCopyRange}" name="orPerCopyRange"/>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="orPerCopyRecipRange" class="control-label col-md-2">OR/HR/RR per copy reciprocal (Range)</label>
+
+    <div class="col-md-10">
+        <input type="text"
+               class="form-control"
+               id="orPerCopyRecipRange"
+               th:field="*{orPerCopyRecipRange}"
+               name="orPerCopyRecipRange"/>
+    </div>
+
+    <div class="col-md-10"><button type="button" class="btn btn-primary pull-right" id="calculate-recip-range">Calculate OR/HR/RR per copy (Range)</button>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="orPerCopyUnitDescr" class="control-label col-md-2">OR/HR/RR per copy (UnitDescription)</label>
+
+    <div class="col-md-10">
+        <input type="text"
+               class="form-control"
+               id="orPerCopyUnitDescr"
+               th:field="*{orPerCopyUnitDescr}"
+               name="orPerCopyUnitDescr"/>
+    </div>
+</div>
+
+</body>
+</html>
