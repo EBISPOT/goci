@@ -561,11 +561,10 @@ public class AssociationController {
                                   BindingResult result,
                                   Model model) {
 
-        for (SnpFormRow row : snpAssociationForm.getSnpFormRows()) {
-            snpFormRowValidator.validate(row, result);
-        }
+        // Check for errors in form
+        Boolean hasErrors = checkSnpAssociationFormErrors(result, snpAssociationForm);
 
-        if (result.hasErrors()) {
+        if (hasErrors) {
             model.addAttribute("snpAssociationForm", snpAssociationForm);
 
             // Also passes back study object to view so we can create links back to main study page
@@ -605,11 +604,10 @@ public class AssociationController {
                                BindingResult result,
                                Model model) {
 
-        for (SnpFormRow row : snpAssociationForm.getSnpFormRows()) {
-            snpFormRowValidator.validate(row, result);
-        }
+        // Check for errors in form
+        Boolean hasErrors = checkSnpAssociationFormErrors(result, snpAssociationForm);
 
-        if (result.hasErrors()) {
+        if (hasErrors) {
             model.addAttribute("snpAssociationForm", snpAssociationForm);
 
             // Also passes back study object to view so we can create links back to main study page
@@ -648,11 +646,10 @@ public class AssociationController {
     public String addSnpInteraction(@ModelAttribute SnpAssociationInteractionForm snpAssociationInteractionForm,
                                     @PathVariable Long studyId, BindingResult result, Model model) {
 
-        for (SnpFormColumn column : snpAssociationInteractionForm.getSnpFormColumns()) {
-            snpFormColumnValidator.validate(column, result);
-        }
+        // Check for errors in form
+        Boolean hasErrors = checkSnpAssociationInteractionFormErrors(result, snpAssociationInteractionForm);
 
-        if (result.hasErrors()) {
+        if (hasErrors) {
             model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
 
             // Also passes back study object to view so we can create links back to main study page
@@ -772,96 +769,69 @@ public class AssociationController {
                                   @ModelAttribute SnpAssociationInteractionForm snpAssociationInteractionForm,
                                   BindingResult snpAssociationInteractionFormBindingResult,
                                   @PathVariable Long associationId,
-                                  @RequestParam(value = "associationtype", required = true) String associationType, Model model) {
+                                  @RequestParam(value = "associationtype", required = true) String associationType,
+                                  Model model) {
 
-        //Create association
-        Association editedAssociation = null;
 
-        // Request parameter determines how to process form and also which form to process
+        // Validate returned form depending on association type
+        Boolean hasErrors;
         if (associationType.equalsIgnoreCase("interaction")) {
-            editedAssociation = snpInteractionAssociationService.createAssociation(snpAssociationInteractionForm);
+            hasErrors = checkSnpAssociationInteractionFormErrors(snpAssociationInteractionFormBindingResult,
+                                                                 snpAssociationInteractionForm);
         }
-
-        else if (associationType.equalsIgnoreCase("standardormulti")) {
-            editedAssociation = singleSnpMultiSnpAssociationService.createAssociation(snpAssociationForm);
-
-            for (SnpFormRow row : snpAssociationForm.getSnpFormRows()) {
-                snpFormRowValidator.validate(row, snpAssociationFormBindingResult);
-            }
-        }
-
-        // default to standard view
         else {
-            editedAssociation = singleSnpMultiSnpAssociationService.createAssociation(snpAssociationForm);
+            hasErrors = checkSnpAssociationFormErrors(snpAssociationFormBindingResult, snpAssociationForm);
         }
 
-        Boolean hasErrors = false;
-        if(snpAssociationFormBindingResult.hasErrors()){
-            hasErrors = true;
-        }
-
+        // If errors found then return the edit form with all information entered by curator preserved
         if (hasErrors) {
 
             // Return association with that ID
-            Association associationToView = associationRepository.findOne(associationId);
+            Association associationToEdit = associationRepository.findOne(associationId);
 
             // Get mapping details
-            MappingDetails mappingDetails = createMappingDetails(associationToView);
+            MappingDetails mappingDetails = createMappingDetails(associationToEdit);
             model.addAttribute("mappingDetails", mappingDetails);
 
             // Return any association errors
-            AssociationFormErrorView associationFormErrorView = associationFormErrorViewService.checkAssociationForErrors(
-                    associationToView);
+            AssociationFormErrorView associationFormErrorView =
+                    associationFormErrorViewService.checkAssociationForErrors(
+                            associationToEdit);
             model.addAttribute("errors", associationFormErrorView);
 
             // Establish study
-            Long studyId = associationToView.getStudy().getId();
+            Long studyId = associationToEdit.getStudy().getId();
 
             // Also passes back study object to view so we can create links back to main study page
             model.addAttribute("study", studyRepository.findOne(studyId));
 
-            if (associationToView.getSnpInteraction() != null && associationToView.getSnpInteraction()) {
+            if (associationType.equalsIgnoreCase("interaction")) {
                 model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
                 return "edit_snp_interaction_association";
             }
 
-            else if (associationToView.getMultiSnpHaplotype() != null && associationToView.getMultiSnpHaplotype()) {
+            else {
                 model.addAttribute("snpAssociationForm", snpAssociationForm);
                 return "edit_multi_snp_association";
             }
-
-            // If attributes haven't been set determine based on locus count and risk allele count
-            else {
-                Integer locusCount = associationToView.getLoci().size();
-
-                List<RiskAllele> riskAlleles = new ArrayList<>();
-                for (Locus locus : associationToView.getLoci()) {
-                    for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
-                        riskAlleles.add(riskAllele);
-                    }
-                }
-
-                // Case where we have SNP interaction
-                if (locusCount > 1) {
-                    model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
-                    return "edit_snp_interaction_association";
-                }
-                else {
-                    model.addAttribute("snpAssociationForm", snpAssociationForm);
-
-
-                    // If editing multi-snp haplotype
-                    if (riskAlleles.size() > 1) {
-                        return "edit_multi_snp_association";
-                    }
-                    else {
-                        return "edit_standard_snp_association";
-                    }
-                }
-            }
-
         }
         else {
+            //Create association
+            Association editedAssociation;
+
+            // Request parameter determines how to process form and also which form to process
+            if (associationType.equalsIgnoreCase("interaction")) {
+                editedAssociation = snpInteractionAssociationService.createAssociation(snpAssociationInteractionForm);
+            }
+
+            else if (associationType.equalsIgnoreCase("standardormulti")) {
+                editedAssociation = singleSnpMultiSnpAssociationService.createAssociation(snpAssociationForm);
+            }
+
+            // default to standard view
+            else {
+                editedAssociation = singleSnpMultiSnpAssociationService.createAssociation(snpAssociationForm);
+            }
 
             // Set ID of new  association to the ID of the association we're currently editing
             editedAssociation.setId(associationId);
@@ -1325,22 +1295,6 @@ public class AssociationController {
         return dataIntegrityException.getMessage();
     }
 
-    //    @ExceptionHandler(InvalidFormatException.class)
-    //    public String handleInvalidFormatException(InvalidFormatException invalidFormatException, Model model, Study study){
-    //        getLog().error("Invalid format exception", invalidFormatException);
-    //        model.addAttribute("study", study);
-    //        return "wrong_file_format_warning";
-    //
-    //    }
-    //
-    //    @ExceptionHandler(InvalidOperationException.class)
-    //    public String handleInvalidOperationException(InvalidOperationException invalidOperationException){
-    //        getLog().error("Invalid operation exception", invalidOperationException);
-    ////        model.addAttribute("study", study);
-    //        System.out.println("Caught the exception but couldn't quite handle it");
-    //        return "wrong_file_format_warning";
-    //
-    //    }
 
     /* Model Attributes :
     *  Used for dropdowns in HTML forms
@@ -1426,6 +1380,38 @@ public class AssociationController {
             lastViewedAssociation.setId(associationId);
         }
         return lastViewedAssociation;
+    }
+
+    /**
+     * Check a standard SNP association form for errors
+     *
+     * @param result Binding result from edit form
+     * @param form   The form to validate
+     */
+
+    private Boolean checkSnpAssociationFormErrors(BindingResult result,
+                                                  SnpAssociationForm form) {
+        for (SnpFormRow row : form.getSnpFormRows()) {
+            snpFormRowValidator.validate(row, result);
+        }
+
+        return result.hasErrors();
+    }
+
+    /**
+     * Check a SNP association interaction form for errors
+     *
+     * @param result Binding result from edit form
+     * @param form   The form to validate
+     */
+    private Boolean checkSnpAssociationInteractionFormErrors(BindingResult result,
+                                                             SnpAssociationInteractionForm form) {
+
+        for (SnpFormColumn column : form.getSnpFormColumns()) {
+            snpFormColumnValidator.validate(column, result);
+        }
+
+        return result.hasErrors();
     }
 }
 
