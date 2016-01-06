@@ -811,8 +811,24 @@ public class AssociationController {
             }
 
             else {
+                Integer locusCount = associationToEdit.getLoci().size();
+
+                List<RiskAllele> riskAlleles = new ArrayList<>();
+                for (Locus locus : associationToEdit.getLoci()) {
+                    for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
+                        riskAlleles.add(riskAllele);
+                    }
+                }
+
                 model.addAttribute("snpAssociationForm", snpAssociationForm);
-                return "edit_multi_snp_association";
+
+                // Determine html view to display
+                if (riskAlleles.size() > 1) {
+                    return "edit_multi_snp_association";
+                }
+                else {
+                    return "edit_standard_snp_association";
+                }
             }
         }
         else {
