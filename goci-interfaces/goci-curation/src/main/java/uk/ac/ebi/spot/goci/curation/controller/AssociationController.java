@@ -386,7 +386,7 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/add_standard",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String addStandardSnps(Model model, @PathVariable Long studyId) {
+    public String addStandardSnps(Model model, @PathVariable Long studyId, @RequestParam(required = true) String measurementType) {
 
         // Return form object
         SnpAssociationForm emptyForm = new SnpAssociationForm();
@@ -396,6 +396,7 @@ public class AssociationController {
         emptyForm.setMultiSnpHaplotypeDescr("Single variant");
 
         model.addAttribute("snpAssociationForm", emptyForm);
+        model.addAttribute("measurementType",measurementType);
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
