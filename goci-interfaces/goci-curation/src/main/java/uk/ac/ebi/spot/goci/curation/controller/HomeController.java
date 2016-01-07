@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  *
  * @author emma
  *         <p>
- *         Home controller directs users to welcome page
+ *         Home controller directs users to login page
  */
 @Controller
 @RequestMapping("/")
@@ -23,6 +23,7 @@ public class HomeController {
     // Return home page
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String getHomePage(Model model) {
-        return "home";
+
+        return "redirect:/login";
     }
 }

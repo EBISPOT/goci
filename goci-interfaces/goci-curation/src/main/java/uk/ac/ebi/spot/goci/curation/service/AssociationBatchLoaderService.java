@@ -1,7 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.exceptions.InvalidOperationException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -37,14 +36,13 @@ public class AssociationBatchLoaderService {
     // Returns an array list of new association forms, the controller will turn
     // these into associations and save
     public Collection<Association> processData(String fileName)
-            throws InvalidFormatException, IOException, InvalidOperationException, RuntimeException {
+            throws InvalidFormatException, IOException, RuntimeException {
 
         // Open and parse our spreadsheet file
-        XSSFSheet sheet = null;
+        XSSFSheet sheet;
         OPCPackage pkg = OPCPackage.open(fileName);
         XSSFWorkbook current = new XSSFWorkbook(pkg);
         sheet = current.getSheetAt(0);
-        AssociationSheetProcessor processor = null;
         try {
             Collection<Association> associations = associationSheetProcessor.readSnpAssociations(sheet);
             pkg.close();

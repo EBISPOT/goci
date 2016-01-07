@@ -108,128 +108,103 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
     @Override public String performRendering(RenderletNexus renderletNexus, Filter... filters)
             throws PussycatSessionNotReadyException, NoRenderableDataException {
 
-        String associationQueryString = associationQueryMain;
-        String traitQueryString = traitQueryMain;
-
-        getLog().debug("Rendering SVG from SPARQL endpoint (filters = '" + filters + "')...");
-
-        String associationPvalueFilters = "";
-        String traitPvalueFilters = "";
-
-        String associationDateFilters = "";
-        String traitDateFilters = "";
-
-        for (Filter filter : filters) {
-            if (filter.getFilteredType().equals(Association.class)) {
-                List<Double> values = filter.getFilteredValues();
-
-                associationQueryString = associationQueryString.concat("?association gt:has_p_value ?pvalue .");
-                traitQueryString = traitQueryString.concat("?association gt:has_p_value ?pvalue .");
-
-                double from = values.get(0);
-                double to = values.get(1);
-
-                //                associationFilters = associationFilters.concat("  FILTER ( ?pvalue < " + to + ")")
-                //                                            .concat("  FILTER ( ?pvalue >= " + from + ")");
-                //
-                //                traitFilters = traitFilters.concat("  FILTER ( ?pvalue < " + to + ")")
-                //                                                    .concat("  FILTER ( ?pvalue >= " + from +  ")");
-
-                associationPvalueFilters = associationPvalueFilters.concat("  FILTER ( ?pvalue < ?? )")
-                        .concat("  FILTER ( ?pvalue >= ?? )");
-
-                traitPvalueFilters = traitPvalueFilters.concat("  FILTER ( ?pvalue < ?? )")
-                        .concat("  FILTER ( ?pvalue >= ?? )");
-
-            }
-            if (filter.getFilteredType().equals(Study.class)) {
-                Filter.Range values = filter.getFilteredRange();
-
-                //                Object from = values.from();
-                //                Object to = values.to();
-
-
-                //            DateFormat df_output = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S");
-
-                //            String fromValue = from.toString();
-                //            String toValue = to.toString();
-
-                associationQueryString = associationQueryString.concat(
-                        "?association ro:part_of ?study . ?study gt:has_publication_date ?date .");
-                traitQueryString = traitQueryString.concat(
-                        "?association ro:part_of ?study . ?study gt:has_publication_date ?date . ");
-
-                //                associationFilters = associationFilters.concat("  FILTER ( ?date < '" + toValue + "'^^xsd:dateTime)")
-                //                        .concat("  FILTER ( ?date >= '" + fromValue + "'^^xsd:dateTime)");
-                //
-                //                traitFilters = traitFilters.concat("  FILTER ( ?date < '" + toValue + "'^^xsd:dateTime)")
-                //                        .concat("  FILTER ( ?date >= '" + fromValue +  "'^^xsd:dateTime)");
-
-                associationDateFilters = associationDateFilters.concat("  FILTER ( ?date < ?? ) ")
-                        .concat("  FILTER ( ?date >= ?? ) ");
-
-                traitDateFilters = traitDateFilters.concat("  FILTER ( ?date < ?? ) ")
-                        .concat("  FILTER ( ?date >= ?? ) ");
-            }
-        }
-        associationQueryString = associationQueryString.concat(associationPvalueFilters)
-                .concat(associationDateFilters)
-                .concat(associationQueryBandFilter);
-        traitQueryString = traitQueryString.concat(traitPvalueFilters).concat(traitDateFilters).concat(" }");
-
-        System.out.println(associationQueryString);
-        System.out.println(traitQueryString);
-
-
-        try {
             // render
-            if (!isRendering()) {
-                setRendering(true);
+        if (!isRendering()) {
+            setRendering(true);
 
-                try {
-                    getLog().debug("Querying SPARQL endpoint for GWAS data...");
-                    List<URI> chromosomes = loadChromosomes(getSparqlTemplate());
-                    getLog().debug("Acquired " + chromosomes.size() + " chromosomes to render");
-                    List<URI> individuals = new ArrayList<URI>();
-                    individuals.addAll(loadAssociations(getSparqlTemplate(),
-                                                        associationQueryString,
-                                                        renderletNexus.getRenderingContext()));
-                    individuals.addAll(loadTraits(getSparqlTemplate(),
-                                                  traitQueryString,
-                                                  renderletNexus.getRenderingContext()));
-                    getLog().debug("Acquired " + individuals.size() + " individuals to render");
+            String associationQueryString = associationQueryMain;
+            String traitQueryString = traitQueryMain;
 
-                    if (individuals.size() == 0) {
-                        throw new NoRenderableDataException("No individuals available for rendering");
-                    }
+            getLog().debug("Rendering SVG from SPARQL endpoint (filters = '" + filters + "')...");
 
-                    getLog().debug("GWAS data acquired, starting rendering...");
+            String associationPvalueFilters = "";
+            String traitPvalueFilters = "";
 
-                    // render chromosomes first
-                    for (URI chromosome : chromosomes) {
-                        dispatchRenderlet(renderletNexus, chromosome);
-                    }
+            String associationDateFilters = "";
+            String traitDateFilters = "";
 
-                    // then render individuals
-                    for (URI individual : individuals) {
-                        dispatchRenderlet(renderletNexus, individual);
-                    }
-                    getLog().debug("SVG rendering complete!");
-                    return renderletNexus.getSVG();
+            for (Filter filter : filters) {
+                if (filter.getFilteredType().equals(Association.class)) {
+                    List<Double> values = filter.getFilteredValues();
+
+                    associationQueryString = associationQueryString.concat("?association gt:has_p_value ?pvalue .");
+                    traitQueryString = traitQueryString.concat("?association gt:has_p_value ?pvalue .");
+
+                    associationPvalueFilters = associationPvalueFilters.concat("  FILTER ( ?pvalue < ?? )")
+                            .concat("  FILTER ( ?pvalue >= ?? )");
+
+                    traitPvalueFilters = traitPvalueFilters.concat("  FILTER ( ?pvalue < ?? )")
+                            .concat("  FILTER ( ?pvalue >= ?? )");
+
                 }
-                finally {
-                    setRendering(false);
-                    renderletNexus.reset();
+                if (filter.getFilteredType().equals(Study.class)) {
+
+                    associationQueryString = associationQueryString.concat(
+                            "?association ro:part_of ?study . ?study gt:has_publication_date ?date .");
+                    traitQueryString = traitQueryString.concat(
+                            "?association ro:part_of ?study . ?study gt:has_publication_date ?date . ");
+
+                    associationDateFilters = associationDateFilters.concat("  FILTER ( ?date < ?? ) ")
+                            .concat("  FILTER ( ?date >= ?? ) ");
+
+                    traitDateFilters = traitDateFilters.concat("  FILTER ( ?date < ?? ) ")
+                            .concat("  FILTER ( ?date >= ?? ) ");
                 }
             }
-            else {
-                getLog().debug("The GWAS diagram is already being rendered");
-                throw new PussycatSessionNotReadyException("The GWAS diagram is currently being rendered");
+            associationQueryString = associationQueryString.concat(associationPvalueFilters)
+                    .concat(associationDateFilters)
+                    .concat(associationQueryBandFilter);
+            traitQueryString = traitQueryString.concat(traitPvalueFilters).concat(traitDateFilters).concat(" }");
+
+            System.out.println(associationQueryString);
+            System.out.println(traitQueryString);
+
+            try {
+                getLog().debug("Querying SPARQL endpoint for GWAS data...");
+                List<URI> chromosomes = loadChromosomes(getSparqlTemplate());
+                getLog().debug("Acquired " + chromosomes.size() + " chromosomes to render");
+                List<URI> individuals = new ArrayList<URI>();
+                individuals.addAll(loadAssociations(getSparqlTemplate(),
+                                                    associationQueryString,
+                                                    renderletNexus.getRenderingContext()));
+                individuals.addAll(loadTraits(getSparqlTemplate(),
+                                              traitQueryString,
+                                              renderletNexus.getRenderingContext()));
+                getLog().debug("Acquired " + individuals.size() + " individuals to render");
+
+                if (individuals.size() == 0) {
+                    throw new NoRenderableDataException("No individuals available for rendering");
+                }
+
+                getLog().debug("GWAS data acquired, starting rendering...");
+
+                // render chromosomes first
+                for (URI chromosome : chromosomes) {
+                    dispatchRenderlet(renderletNexus, chromosome);
+                }
+
+                // then render individuals
+                for (URI individual : individuals) {
+                    dispatchRenderlet(renderletNexus, individual);
+                }
+                getLog().debug("SVG rendering complete!");
+                return renderletNexus.getSVG();
+            }
+            catch (SparqlQueryException e) {
+                throw new RuntimeException("Failed to load data - cannot render SVG", e);
+            }
+            finally {
+                getLog().debug("About to reset the renderlet nexus");
+                setRendering(false);
+                renderletNexus.reset();
             }
         }
-        catch (SparqlQueryException e) {
-            throw new RuntimeException("Failed to load data - cannot render SVG", e);
+        else {
+            getLog().debug("The GWAS diagram is already being rendered");
+            throw new PussycatSessionNotReadyException("The GWAS diagram is currently being rendered");
         }
+
+
     }
 
     @Override public Set<URI> getRelatedTraits(String traitName) {

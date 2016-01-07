@@ -193,6 +193,10 @@ function processData(data) {
     console.log("Solr search returned " + documents.length + " documents");
     updateCountBadges(data.facet_counts.facet_fields.resourcename);
 
+    if(data.responseHeader.params.sort != null && data.responseHeader.params.sort.indexOf('pValue') != -1 && data.responseHeader.params.sort.indexOf('asc') != -1){
+        $('#pValue').find('span.unsorted').removeClass('glyphicon-sort').addClass('glyphicon-arrow-up').removeClass('unsorted').addClass('sorted asc');
+    }
+
     if (!$('#filter-form').hasClass('in-use')) {
         if (data.responseHeader.params.q.indexOf('*') != -1 && data.responseHeader.params.fq != null) {
             var fq = data.responseHeader.params.fq;
