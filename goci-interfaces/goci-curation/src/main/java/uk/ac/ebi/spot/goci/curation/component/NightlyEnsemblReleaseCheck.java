@@ -68,57 +68,65 @@ public class NightlyEnsemblReleaseCheck {
 
         // Get relevant metadata
         int latestEnsemblReleaseNumber = ensemblRelease.getReleaseVersion();
-        String genomeBuildVersion = ensemblGenomeBuildVersion.getGenomeBuildVersion();
-        int dbsnpVersion = ensemblDbsnpVersion.getDbsnpVersion();
 
-        String performer = "Release " + latestEnsemblReleaseNumber + " mapping";
-
-        List<MappingMetadata> mappingMetadataList = mappingMetadataRepository.findAll(sortByUsageStartDateDesc());
-
-        // If there are no details in table then add them
-        if (mappingMetadataList.isEmpty()) {
-            getLog().info("No mapping metadata found, adding information to database and mapping data to release " +
-                                  latestEnsemblReleaseNumber);
-            createMappingMetaData(latestEnsemblReleaseNumber, genomeBuildVersion, dbsnpVersion);
-
-            // Send email
-            mailService.sendReleaseChangeEmail(null,
-                                               latestEnsemblReleaseNumber);
-
-            // Map database contents
-            mappingService.mapCatalogContents(performer);
+        if (latestEnsemblReleaseNumber == 0) {
+            getLog().error("Current Ensembl release is " + latestEnsemblReleaseNumber +
+                                   ". Cannot map to this release.");
         }
+
         else {
-            Integer currentEnsemblReleaseNumberInDatabase = mappingMetadataList.get(0).getEnsemblReleaseNumber();
+            String genomeBuildVersion = ensemblGenomeBuildVersion.getGenomeBuildVersion();
+            int dbsnpVersion = ensemblDbsnpVersion.getDbsnpVersion();
 
-            // If the latest release in database does not match
-            // the latest Ensembl release do mapping and send notification email
-            if (!currentEnsemblReleaseNumberInDatabase.equals(latestEnsemblReleaseNumber)) {
-                if (currentEnsemblReleaseNumberInDatabase < latestEnsemblReleaseNumber) {
+            String performer = "Release " + latestEnsemblReleaseNumber + " mapping";
 
-                    // Create new entry in mapping_metadata table
-                    createMappingMetaData(latestEnsemblReleaseNumber, genomeBuildVersion, dbsnpVersion);
+            List<MappingMetadata> mappingMetadataList = mappingMetadataRepository.findAll(sortByUsageStartDateDesc());
 
-                    // Send email
-                    mailService.sendReleaseChangeEmail(currentEnsemblReleaseNumberInDatabase,
-                                                       latestEnsemblReleaseNumber);
+            // If there are no details in table then add them
+            if (mappingMetadataList.isEmpty()) {
+                getLog().info("No mapping metadata found, adding information to database and mapping data to release " +
+                                      latestEnsemblReleaseNumber);
+                createMappingMetaData(latestEnsemblReleaseNumber, genomeBuildVersion, dbsnpVersion);
 
-                    // Perform remapping and set performer
-                    getLog().info("New Ensembl release identified: " + latestEnsemblReleaseNumber);
-                    getLog().info("Remapping all database contents");
-                    mappingService.mapCatalogContents(performer);
-                }
-                else {
-                    getLog().error("Ensembl Release Integrity Issue: Current Ensembl release is " +
-                                           latestEnsemblReleaseNumber +
-                                           ". Database release number is set to " +
-                                           currentEnsemblReleaseNumberInDatabase);
-                }
+                // Send email
+                mailService.sendReleaseChangeEmail(null,
+                                                   latestEnsemblReleaseNumber);
+
+                // Map database contents
+                mappingService.mapCatalogContents(performer);
             }
             else {
-                getLog().info("Current Ensembl release is " + latestEnsemblReleaseNumber +
-                                      ", the current release used to map database is " +
-                                      currentEnsemblReleaseNumberInDatabase);
+                Integer currentEnsemblReleaseNumberInDatabase = mappingMetadataList.get(0).getEnsemblReleaseNumber();
+
+                // If the latest release in database does not match
+                // the latest Ensembl release do mapping and send notification email
+                if (!currentEnsemblReleaseNumberInDatabase.equals(latestEnsemblReleaseNumber)) {
+                    if (currentEnsemblReleaseNumberInDatabase < latestEnsemblReleaseNumber) {
+
+                        // Create new entry in mapping_metadata table
+                        createMappingMetaData(latestEnsemblReleaseNumber, genomeBuildVersion, dbsnpVersion);
+
+                        // Send email
+                        mailService.sendReleaseChangeEmail(currentEnsemblReleaseNumberInDatabase,
+                                                           latestEnsemblReleaseNumber);
+
+                        // Perform remapping and set performer
+                        getLog().info("New Ensembl release identified: " + latestEnsemblReleaseNumber);
+                        getLog().info("Remapping all database contents");
+                        mappingService.mapCatalogContents(performer);
+                    }
+                    else {
+                        getLog().error("Ensembl Release Integrity Issue: Current Ensembl release is " +
+                                               latestEnsemblReleaseNumber +
+                                               ". Database release number is set to " +
+                                               currentEnsemblReleaseNumberInDatabase);
+                    }
+                }
+                else {
+                    getLog().info("Current Ensembl release is " + latestEnsemblReleaseNumber +
+                                          ", the current release used to map database is " +
+                                          currentEnsemblReleaseNumberInDatabase);
+                }
             }
         }
     }
