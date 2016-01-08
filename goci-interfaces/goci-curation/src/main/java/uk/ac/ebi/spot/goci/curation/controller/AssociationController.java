@@ -294,7 +294,8 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/upload",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
-    public String uploadStudySnps(@RequestParam("file") MultipartFile file, @PathVariable Long studyId, Model model) {
+    public String uploadStudySnps(@RequestParam("file") MultipartFile file, @PathVariable Long studyId, Model model)
+            throws EnsemblMappingException {
 
         // Establish our study object
         Study study = studyRepository.findOne(studyId);
@@ -372,7 +373,12 @@ public class AssociationController {
 
                 Curator curator = study.getHousekeeping().getCurator();
                 String mappedBy = curator.getLastName();
-                mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+                try {
+                    mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+                }
+                catch (EnsemblMappingException e) {
+                    throw new EnsemblMappingException();
+                }
             }
             return "redirect:/studies/" + studyId + "/associations";
 
@@ -562,7 +568,7 @@ public class AssociationController {
     public String addStandardSnps(@ModelAttribute SnpAssociationForm snpAssociationForm,
                                   @PathVariable Long studyId,
                                   BindingResult result,
-                                  Model model) {
+                                  Model model) throws EnsemblMappingException {
 
         // Check for errors in form
         Boolean hasErrors = checkSnpAssociationFormErrors(result, snpAssociationForm);
@@ -593,7 +599,12 @@ public class AssociationController {
             associationsToMap.add(newAssociation);
             Curator curator = study.getHousekeeping().getCurator();
             String mappedBy = curator.getLastName();
-            mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+            try {
+                mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+            }
+            catch (EnsemblMappingException e) {
+                throw new EnsemblMappingException();
+            }
 
             return "redirect:/associations/" + newAssociation.getId();
         }
@@ -605,7 +616,7 @@ public class AssociationController {
     public String addMultiSnps(@ModelAttribute SnpAssociationForm snpAssociationForm,
                                @PathVariable Long studyId,
                                BindingResult result,
-                               Model model) {
+                               Model model) throws EnsemblMappingException {
 
         // Check for errors in form
         Boolean hasErrors = checkSnpAssociationFormErrors(result, snpAssociationForm);
@@ -637,7 +648,12 @@ public class AssociationController {
             associationsToMap.add(newAssociation);
             Curator curator = study.getHousekeeping().getCurator();
             String mappedBy = curator.getLastName();
-            mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+            try {
+                mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+            }
+            catch (EnsemblMappingException e) {
+                throw new EnsemblMappingException();
+            }
 
             return "redirect:/associations/" + newAssociation.getId();
         }
@@ -647,7 +663,8 @@ public class AssociationController {
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
     public String addSnpInteraction(@ModelAttribute SnpAssociationInteractionForm snpAssociationInteractionForm,
-                                    @PathVariable Long studyId, BindingResult result, Model model) {
+                                    @PathVariable Long studyId, BindingResult result, Model model)
+            throws EnsemblMappingException {
 
         // Check for errors in form
         Boolean hasErrors = checkSnpAssociationInteractionFormErrors(result, snpAssociationInteractionForm);
@@ -679,7 +696,12 @@ public class AssociationController {
             associationsToMap.add(newAssociation);
             Curator curator = study.getHousekeeping().getCurator();
             String mappedBy = curator.getLastName();
-            mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+            try {
+                mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+            }
+            catch (EnsemblMappingException e) {
+                throw new EnsemblMappingException();
+            }
 
             return "redirect:/associations/" + newAssociation.getId();
         }
@@ -773,7 +795,7 @@ public class AssociationController {
                                   BindingResult snpAssociationInteractionFormBindingResult,
                                   @PathVariable Long associationId,
                                   @RequestParam(value = "associationtype", required = true) String associationType,
-                                  Model model) {
+                                  Model model) throws EnsemblMappingException {
 
 
         // Validate returned form depending on association type
@@ -869,7 +891,12 @@ public class AssociationController {
             associationsToMap.add(editedAssociation);
             Curator curator = associationStudy.getHousekeeping().getCurator();
             String mappedBy = curator.getLastName();
-            mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+            try {
+                mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+            }
+            catch (EnsemblMappingException e) {
+                throw new EnsemblMappingException();
+            }
 
             return "redirect:/associations/" + associationId;
         }
@@ -1205,7 +1232,8 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/validate_all",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String validateAll(@PathVariable Long studyId, RedirectAttributes redirectAttributes) {
+    public String validateAll(@PathVariable Long studyId, RedirectAttributes redirectAttributes)
+            throws EnsemblMappingException {
 
         // For the study get all associations
         Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
@@ -1213,7 +1241,12 @@ public class AssociationController {
         Study study = studyRepository.findOne(studyId);
         Curator curator = study.getHousekeeping().getCurator();
         String mappedBy = curator.getLastName();
-        mappingService.validateAndMapSnps(studyAssociations, mappedBy);
+        try {
+            mappingService.validateAndMapSnps(studyAssociations, mappedBy);
+        }
+        catch (EnsemblMappingException e) {
+            throw new EnsemblMappingException();
+        }
 
         String message = "Mapping complete, please check for any errors displayed in the 'Errors' column";
         redirectAttributes.addFlashAttribute("mappingComplete", message);
