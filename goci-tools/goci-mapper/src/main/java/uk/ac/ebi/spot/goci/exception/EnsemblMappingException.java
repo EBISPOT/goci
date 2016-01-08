@@ -5,9 +5,9 @@ package uk.ac.ebi.spot.goci.exception;
  *
  * @author emma
  *         <p>
- *         Exception that occurred in when some component of mapping pipeline fails usually due to teh sight being down
+ *         Custom exception applied when some component of mapping pipeline fails usually due API communication failure
  */
-public class EnsemblMappingException extends RuntimeException {
+public class EnsemblMappingException extends Exception {
 
     public EnsemblMappingException() {
         super();
