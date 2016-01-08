@@ -4,6 +4,9 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.EnsemblGene;
 import uk.ac.ebi.spot.goci.model.EntrezGene;
 import uk.ac.ebi.spot.goci.model.Gene;
@@ -25,8 +28,10 @@ import java.util.regex.Pattern;
 /**
  * Created by Laurent on 15/07/15.
  *
- * @author Laurent Class containing the Ensembl mapping and checking pipeline The structure of this pipeline is similar
- *         to the javascript pipeline developped in the scrip goci-snp-association-mapping.js
+ * @author Laurent
+ *         <p>
+ *         Class containing the Ensembl mapping and checking pipeline The structure of this pipeline is similar to the
+ *         javascript pipeline developped in the scrip goci-snp-association-mapping.js
  *         (goci/goci-interfaces/goci-curation/src/main/resources/static/js/goci-snp-association-mapping.js)
  */
 public class EnsemblMappingPipeline {
@@ -57,6 +62,11 @@ public class EnsemblMappingPipeline {
     private int requestCount = 0;
     private long limitStartTime = System.currentTimeMillis();
     private final int maxSleepTime = 1000;
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
+    protected Logger getLog() {
+        return log;
+    }
 
     // JPA no-args constructor
     public EnsemblMappingPipeline() {
@@ -191,8 +201,6 @@ public class EnsemblMappingPipeline {
      * Variation REST API call
      *
      * @return JSONObject containing the output of the Ensembl REST API endpoint "variation"
-     * @throws UnirestException
-     * @throws InterruptedException
      */
     private JSONObject getVariationData() {
 
@@ -207,8 +215,6 @@ public class EnsemblMappingPipeline {
      * variable "locations" (list of "Location" classes)
      *
      * @param mappings A JSONArray object containing the list the variant locations
-     * @throws UnirestException
-     * @throws InterruptedException
      */
     private void getMappings(JSONArray mappings) {
         for (int i = 0; i < mappings.length(); ++i) {
@@ -233,8 +239,6 @@ public class EnsemblMappingPipeline {
      * @param chromosome the chromosome name
      * @param position   the position of the variant
      * @return Region object only containing a region name
-     * @throws UnirestException
-     * @throws InterruptedException
      */
     private Region getRegion(String chromosome, String position) {
 
@@ -264,8 +268,6 @@ public class EnsemblMappingPipeline {
      * Run the genomic context pipeline for both sources (Ensembl and NCBI)
      *
      * @param snp_location an instance of the Location class (chromosome name and position)
-     * @throws UnirestException
-     * @throws InterruptedException
      */
     private void getAllGenomicContexts(Location snp_location) {
 
@@ -617,7 +619,8 @@ public class EnsemblMappingPipeline {
      * @param rest_opt   the extra parameters to add at the end of the REST call url (inherited from other methods)
      * @return A JSONArray object containing a list of JSONObjects corresponding to the genes overlapping the region
      */
-    private JSONArray getOverlapRegionCalls(String chromosome, String position1, String position2, String rest_opt) {
+    private JSONArray getOverlapRegionCalls(String chromosome, String position1, String position2, String rest_opt)
+            throws EnsemblMappingException {
         String webservice = "overlap_region";
         String endpoint = this.getEndpoint(webservice);
         String data = chromosome + ":" + position1 + "-" + position2;
@@ -643,14 +646,10 @@ public class EnsemblMappingPipeline {
                 }
             }
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        catch (UnirestException e) {
-            e.printStackTrace();
+        catch (IOException | InterruptedException | UnirestException e) {
+            getLog().error("Encountered a " + e.getClass().getSimpleName() +
+                                   " whilst trying to run mapping of SNP", e);
+            throw new EnsemblMappingException();
         }
         return overlap_result;
     }
@@ -663,7 +662,7 @@ public class EnsemblMappingPipeline {
      * @param data          the data/id/symbol we want to query
      * @return the corresponding JSONObject
      */
-    private JSONObject getSimpleRestCall(String endpoint_type, String data) {
+    private JSONObject getSimpleRestCall(String endpoint_type, String data) throws EnsemblMappingException {
         String endpoint = this.getEndpoint(endpoint_type);
         EnsemblRestService ens_rest_call = new EnsemblRestService(endpoint, data);
         JSONObject json_result = new JSONObject();
@@ -680,14 +679,10 @@ public class EnsemblMappingPipeline {
                 }
             }
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        catch (UnirestException e) {
-            e.printStackTrace();
+        catch (IOException | InterruptedException | UnirestException e) {
+            getLog().error("Encountered a " + e.getClass().getSimpleName() +
+                                   " whilst trying to run mapping of SNP", e);
+            throw new EnsemblMappingException();
         }
         return json_result;
     }
