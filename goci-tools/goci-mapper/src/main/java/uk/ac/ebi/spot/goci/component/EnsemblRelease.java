@@ -3,13 +3,12 @@ package uk.ac.ebi.spot.goci.component;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.exception.EnsemblRestIOException;
 import uk.ac.ebi.spot.goci.service.EnsemblRestService;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Laurent on 22/09/15.
@@ -21,55 +20,42 @@ import java.util.ArrayList;
 @Service
 public class EnsemblRelease {
 
-    private int releaseVersion;
     private String endpoint = "/info/data/";
-    private ArrayList<String> rest_errors = new ArrayList<>();
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
-    protected Logger getLog() {
-        return log;
-    }
-
-    // JPA no-args constructor
-    // Make the REST API call
-    public EnsemblRelease() {
-        JSONObject ensembl_result = this.getSimpleRestCall();
-        if (ensembl_result.length() > 0) {
-            if (ensembl_result.has("error")) {
-                checkError(ensembl_result);
-            }
-            // Check if there are releases key
-            else if (ensembl_result.has("releases")) {
-                // Check if there are releases data
-                JSONArray releases = ensembl_result.getJSONArray("releases");
-                if (releases.length() > 0) {
-                    releaseVersion = releases.getInt(0);
-                }
-            }
-        }
-        else {
-            rest_errors.add("Release version not found");
-        }
-    }
-
 
     /**
      * Getter for the release version
      *
      * @return the numeric release version
      */
-    public int getReleaseVersion() {
-        return releaseVersion;
-    }
+    public int getReleaseVersion() throws EnsemblRestIOException {
 
+        JSONObject ensembl_result = this.getSimpleRestCall();
+        if (ensembl_result.length() > 0) {
 
-    /**
-     * Getter for the list of REST API error messages
-     *
-     * @return List of strings.
-     */
-    public ArrayList<String> getRestErrors() {
-        return rest_errors;
+            // Check if there are releases key
+            if (ensembl_result.has("releases")) {
+                // Check if there are releases data
+                JSONArray releases = ensembl_result.getJSONArray("releases");
+                if (releases.length() > 0) {
+                    return releases.getInt(0);
+                }
+                else {
+                    throw new EnsemblRestIOException("Release information field empty");
+                }
+            }
+            else {
+                if (ensembl_result.has("error")) {
+                    throw new EnsemblRestIOException(checkError(ensembl_result));
+                }
+                else {
+                    throw new EnsemblRestIOException("No release or error information found while trying to check Ensembl release");
+                }
+            }
+        }
+
+        else {
+            throw new EnsemblRestIOException("Empty response body found while trying to check Ensembl release");
+        }
     }
 
 
@@ -78,12 +64,12 @@ public class EnsemblRelease {
      *
      * @param result The JSONObject result
      */
-    private void checkError(JSONObject result) {
+    private String checkError(JSONObject result) {
         if (result.getString("error").contains("page not found")) {
-            rest_errors.add("Web service '" + endpoint + "' not found or not working.");
+            return "Web service '" + endpoint + "' not found or not working.";
         }
         else {
-            rest_errors.add(result.getString("error"));
+            return result.getString("error");
         }
     }
 
@@ -93,7 +79,7 @@ public class EnsemblRelease {
      *
      * @return the corresponding JSONObject
      */
-    private JSONObject getSimpleRestCall() {
+    private JSONObject getSimpleRestCall() throws EnsemblRestIOException {
         EnsemblRestService ens_rest_call = new EnsemblRestService(endpoint, "");
         JSONObject json_result = new JSONObject();
         try {
@@ -101,16 +87,13 @@ public class EnsemblRelease {
             json_result = ens_rest_call.getRestResults().getObject();
 
             // Errors
-            ArrayList rest_errors = ens_rest_call.getErrors();
+            List<String> rest_errors = ens_rest_call.getErrors();
             if (rest_errors.size() > 0) {
-                for (int i = 0; i < rest_errors.size(); ++i) {
-                    this.rest_errors.add(rest_errors.get(i).toString());
-                }
+                throw new EnsemblRestIOException("Errors while trying to get release information", rest_errors);
             }
         }
         catch (IOException | InterruptedException | UnirestException e) {
-            getLog().error("Encountered a " + e.getClass().getSimpleName() +
-                                   " whilst trying to run mapping of SNP", e);
+            throw new EnsemblRestIOException("Errors while trying to get release information", e);
         }
         return json_result;
     }
