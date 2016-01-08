@@ -10,11 +10,12 @@ import uk.ac.ebi.spot.goci.component.EnsemblDbsnpVersion;
 import uk.ac.ebi.spot.goci.component.EnsemblGenomeBuildVersion;
 import uk.ac.ebi.spot.goci.component.EnsemblRelease;
 import uk.ac.ebi.spot.goci.curation.service.MailService;
+import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
+import uk.ac.ebi.spot.goci.exception.EnsemblRestIOException;
 import uk.ac.ebi.spot.goci.model.MappingMetadata;
 import uk.ac.ebi.spot.goci.repository.MappingMetadataRepository;
 import uk.ac.ebi.spot.goci.service.MappingService;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -65,22 +66,11 @@ public class NightlyEnsemblReleaseCheck {
      * Method used to determine if there has been a new Ensembl release
      */
     @Scheduled(cron = "0 00 20 ? * MON-FRI")
-    public void checkRelease() {
+    public void checkRelease() throws EnsemblMappingException {
 
         // Get relevant metadata
-        int latestEnsemblReleaseNumber = ensemblRelease.getReleaseVersion();
-
-        // Handle potential errors
-        ArrayList<String> restErrors = ensemblRelease.getRestErrors();
-        if (!restErrors.isEmpty()) {
-            String allRestErrors = "";
-            for (String error : restErrors) {
-                allRestErrors = allRestErrors + error + ". ";
-            }
-            getLog().error("Problem identifying release details: " + allRestErrors);
-        }
-
-        else {
+        try {
+            int latestEnsemblReleaseNumber = ensemblRelease.getReleaseVersion();
             String genomeBuildVersion = ensemblGenomeBuildVersion.getGenomeBuildVersion();
             int dbsnpVersion = ensemblDbsnpVersion.getDbsnpVersion();
 
@@ -99,7 +89,12 @@ public class NightlyEnsemblReleaseCheck {
                                                    latestEnsemblReleaseNumber);
 
                 // Map database contents
-                mappingService.mapCatalogContents(performer);
+                try {
+                    mappingService.mapCatalogContents(performer);
+                }
+                catch (EnsemblMappingException e) {
+                    getLog().error("Problem mapping catalog contents as part of nightly release check", e);
+                }
             }
             else {
                 Integer currentEnsemblReleaseNumberInDatabase = mappingMetadataList.get(0).getEnsemblReleaseNumber();
@@ -119,7 +114,12 @@ public class NightlyEnsemblReleaseCheck {
                         // Perform remapping and set performer
                         getLog().info("New Ensembl release identified: " + latestEnsemblReleaseNumber);
                         getLog().info("Remapping all database contents");
-                        mappingService.mapCatalogContents(performer);
+                        try {
+                            mappingService.mapCatalogContents(performer);
+                        }
+                        catch (EnsemblMappingException e) {
+                            getLog().error("Problem mapping catalog contents as part of nightly release check", e);
+                        }
                     }
                     else {
                         getLog().error("Ensembl Release Integrity Issue: Current Ensembl release is " +
@@ -133,6 +133,21 @@ public class NightlyEnsemblReleaseCheck {
                                           ", the current release used to map database is " +
                                           currentEnsemblReleaseNumberInDatabase);
                 }
+            }
+        }
+        catch (EnsemblRestIOException e) {
+            // Handle potential errors
+            List<String> restErrors = e.getRestErrors();
+            mailService.sendReleaseNotIdentifiedProblem();
+            if (!restErrors.isEmpty()) {
+                String allRestErrors = "";
+                for (String error : restErrors) {
+                    allRestErrors = allRestErrors + error + ". ";
+                }
+                getLog().error("Problem identifying release details: " + allRestErrors, e);
+            }
+            else {
+                getLog().error("Problem identifying release details ", e);
             }
         }
     }
