@@ -196,7 +196,6 @@ public class MailService {
 
     /**
      * Send notification to dev list if no Ensembl release can be identified by nightly checks
-     *
      */
     public void sendReleaseNotIdentifiedProblem() {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -205,6 +204,16 @@ public class MailService {
         mailMessage.setSubject("Problem Determining Latest Ensembl Release");
         mailMessage.setText(
                 "The latest Ensembl release cannot be identified from REST API. Please check logs");
+        javaMailSender.send(mailMessage);
+    }
+
+    public void sendEnsemblPingFailureMail() {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(getDevMailTo());
+        mailMessage.setFrom(getFrom());
+        mailMessage.setSubject("Ensembl Daily Ping Failed");
+        mailMessage.setText(
+                "Daily ping of Ensembl API failed. Please check logs.");
         javaMailSender.send(mailMessage);
     }
 
@@ -241,4 +250,6 @@ public class MailService {
     public void setDevMailTo(String devMailTo) {
         this.devMailTo = devMailTo;
     }
+
+
 }
