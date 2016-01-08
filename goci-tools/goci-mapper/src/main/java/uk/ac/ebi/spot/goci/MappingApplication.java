@@ -16,6 +16,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.service.MappingService;
 
 /**
@@ -80,8 +81,14 @@ public class MappingApplication {
 
     private void doMapping() {
         getLog().info("Starting mapping of all associations with performer: " + this.performer);
-        mappingService.mapCatalogContents(this.performer);
-        getLog().info("Finished mapping by performer:  " + this.performer);
+        try {
+            mappingService.mapCatalogContents(this.performer);
+            getLog().info("Finished mapping by performer:  " + this.performer);
+        }
+        catch (EnsemblMappingException e) {
+            getLog().error("Mapping failed due to Ensembl API communication issue");
+        }
+
     }
 
     private Options bindOptions() {
