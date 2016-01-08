@@ -155,7 +155,7 @@ public class EnsemblMappingPipeline {
 
 
     // Run the pipeline for a given SNP
-    public void run_pipeline() {
+    public void run_pipeline() throws EnsemblMappingException {
 
         // Variation call
         JSONObject variation_result = this.getVariationData();
@@ -202,7 +202,7 @@ public class EnsemblMappingPipeline {
      *
      * @return JSONObject containing the output of the Ensembl REST API endpoint "variation"
      */
-    private JSONObject getVariationData() {
+    private JSONObject getVariationData() throws EnsemblMappingException {
 
         JSONObject variation_result = this.getSimpleRestCall("variation", this.rsId);
 
@@ -216,7 +216,7 @@ public class EnsemblMappingPipeline {
      *
      * @param mappings A JSONArray object containing the list the variant locations
      */
-    private void getMappings(JSONArray mappings) {
+    private void getMappings(JSONArray mappings) throws EnsemblMappingException {
         for (int i = 0; i < mappings.length(); ++i) {
             JSONObject mapping = mappings.getJSONObject(i);
             if (!mapping.has("seq_region_name")) {
@@ -240,7 +240,7 @@ public class EnsemblMappingPipeline {
      * @param position   the position of the variant
      * @return Region object only containing a region name
      */
-    private Region getRegion(String chromosome, String position) {
+    private Region getRegion(String chromosome, String position) throws EnsemblMappingException {
 
         String band = null; // Default value
         String rest_opt = "feature=band";
@@ -269,7 +269,7 @@ public class EnsemblMappingPipeline {
      *
      * @param snp_location an instance of the Location class (chromosome name and position)
      */
-    private void getAllGenomicContexts(Location snp_location) {
+    private void getAllGenomicContexts(Location snp_location) throws EnsemblMappingException {
 
         int chr_start = 1;
         int chr_end = this.getChromosomeEnd(snp_location.getChromosomeName());
@@ -287,7 +287,8 @@ public class EnsemblMappingPipeline {
      * @param chr_end      3' end position of the chromosome
      * @param source       the source of the data (Ensembl or NCBI)
      */
-    private void getGenomicContext(Location snp_location, int chr_start, int chr_end, String source) {
+    private void getGenomicContext(Location snp_location, int chr_start, int chr_end, String source)
+            throws EnsemblMappingException {
         // By default the db_type is 'core' (i.e. Ensembl)
         String rest_opt = "feature=gene";
         if (source == this.ncbi_source) {
@@ -312,7 +313,8 @@ public class EnsemblMappingPipeline {
      * @param source       the source of the data (Ensembl or NCBI)
      * @param rest_opt     the extra parameters to add at the end of the REST call url
      */
-    private void getOverlappingGenes(Location snp_location, String source, String rest_opt) {
+    private void getOverlappingGenes(Location snp_location, String source, String rest_opt)
+            throws EnsemblMappingException {
 
         String chromosome = snp_location.getChromosomeName();
         String position = snp_location.getChromosomePosition();
@@ -341,7 +343,8 @@ public class EnsemblMappingPipeline {
      * @param chr_start    5' start position of the chromosome
      * @param rest_opt     the extra parameters to add at the end of the REST call url
      */
-    private void getUpstreamGenes(Location snp_location, String source, int chr_start, String rest_opt) {
+    private void getUpstreamGenes(Location snp_location, String source, int chr_start, String rest_opt)
+            throws EnsemblMappingException {
         String type = "upstream";
 
         String chromosome = snp_location.getChromosomeName();
@@ -379,7 +382,8 @@ public class EnsemblMappingPipeline {
      * @param chr_end      3' end position of the chromosome
      * @param rest_opt     the extra parameters to add at the end of the REST call url
      */
-    private void getDownstreamGenes(Location snp_location, String source, int chr_end, String rest_opt) {
+    private void getDownstreamGenes(Location snp_location, String source, int chr_end, String rest_opt)
+            throws EnsemblMappingException {
         String type = "downstream";
 
         String chromosome = snp_location.getChromosomeName();
@@ -541,7 +545,7 @@ public class EnsemblMappingPipeline {
                                      String position,
                                      int boundary,
                                      String rest_opt,
-                                     String type) {
+                                     String type) throws EnsemblMappingException {
 
         int position1 = Integer.parseInt(position);
         int position2 = Integer.parseInt(position);
@@ -694,7 +698,7 @@ public class EnsemblMappingPipeline {
      * @param chromosome the chromosome name
      * @return the position of the end of the chromosome
      */
-    private int getChromosomeEnd(String chromosome) {
+    private int getChromosomeEnd(String chromosome) throws EnsemblMappingException {
         int chr_end = 0;
         String webservice = "info_assembly";
         JSONObject info_result = this.getSimpleRestCall(webservice, chromosome);
@@ -712,7 +716,7 @@ public class EnsemblMappingPipeline {
     /**
      * Check that the reported gene symbols exist and that they are located in the same chromosome as the variant
      */
-    private void checkReportedGenes() {
+    private void checkReportedGenes() throws EnsemblMappingException {
         for (String reported_gene : this.reported_genes) {
 
             reported_gene = reported_gene.replaceAll(" ", ""); // Remove extra spaces
