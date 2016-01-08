@@ -3,6 +3,8 @@ package uk.ac.ebi.spot.goci.component;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.service.EnsemblRestService;
 
@@ -22,6 +24,10 @@ public class EnsemblRelease {
     private int releaseVersion;
     private String endpoint = "/info/data/";
     private ArrayList<String> rest_errors = new ArrayList<>();
+    private final Logger log = LoggerFactory.getLogger(getClass());
+    protected Logger getLog() {
+        return log;
+    }
 
     // JPA no-args constructor
     // Make the REST API call
@@ -101,14 +107,9 @@ public class EnsemblRelease {
                 }
             }
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        catch (UnirestException e) {
-            e.printStackTrace();
+        catch (IOException | InterruptedException | UnirestException e) {
+            getLog().error("Encountered a " + e.getClass().getSimpleName() +
+                                   " whilst trying to run mapping of SNP", e);
         }
         return json_result;
     }
