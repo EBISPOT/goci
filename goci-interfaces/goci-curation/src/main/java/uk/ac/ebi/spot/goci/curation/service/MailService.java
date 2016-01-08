@@ -37,6 +37,8 @@ public class MailService {
     private String to;
     @Value("${mail.link}")
     private String link;
+    @Value("${devmail.to}")
+    private String devMailTo;
 
     @Autowired
     public MailService(JavaMailSender javaMailSender,
@@ -192,6 +194,21 @@ public class MailService {
     }
 
 
+    /**
+     * Send notification to dev list if no Ensembl release can be identified by nightly checks
+     *
+     */
+    public void sendReleaseNotIdentifiedProblem() {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(getDevMailTo());
+        mailMessage.setFrom(getFrom());
+        mailMessage.setSubject("Problem Determining Latest Ensembl Release");
+        mailMessage.setText(
+                "The latest Ensembl release cannot be identified from REST API. Please check logs");
+        javaMailSender.send(mailMessage);
+    }
+
+
     // Getter and setters
     public String getFrom() {
         return from;
@@ -215,5 +232,13 @@ public class MailService {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public String getDevMailTo() {
+        return devMailTo;
+    }
+
+    public void setDevMailTo(String devMailTo) {
+        this.devMailTo = devMailTo;
     }
 }
