@@ -14,6 +14,7 @@ import uk.ac.ebi.spot.goci.model.MappingMetadata;
 import uk.ac.ebi.spot.goci.repository.MappingMetadataRepository;
 import uk.ac.ebi.spot.goci.service.MappingService;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -69,9 +70,14 @@ public class NightlyEnsemblReleaseCheck {
         // Get relevant metadata
         int latestEnsemblReleaseNumber = ensemblRelease.getReleaseVersion();
 
-        if (latestEnsemblReleaseNumber == 0) {
-            getLog().error("Current Ensembl release is " + latestEnsemblReleaseNumber +
-                                   ". Cannot map to this release.");
+        // Handle potential errors
+        ArrayList<String> restErrors = ensemblRelease.getRestErrors();
+        if (!restErrors.isEmpty()) {
+            String allRestErrors = "";
+            for (String error : restErrors) {
+                allRestErrors = allRestErrors + error + ". ";
+            }
+            getLog().error("Problem identifying release details: " + allRestErrors);
         }
 
         else {
