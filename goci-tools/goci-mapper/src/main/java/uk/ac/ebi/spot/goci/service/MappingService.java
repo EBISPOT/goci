@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.component.EnsemblMappingPipeline;
+import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
@@ -81,7 +82,7 @@ public class MappingService {
      *
      * @param associations Collection of associations to map
      */
-    public void validateAndMapSnps(Collection<Association> associations, String performer) {
+    public void validateAndMapSnps(Collection<Association> associations, String performer) throws EnsemblMappingException{
 
         // Variables set to comply with the maximum of requests per second allowed by the Ensembl REST server.
         int ensemblRequestCount = 0;
@@ -141,8 +142,7 @@ public class MappingService {
                     catch (Exception e) {
                         getLog().error("Encountered a " + e.getClass().getSimpleName() +
                                                " whilst trying to run mapping of SNP" + snpRsId, e);
-                        e.printStackTrace();
-                        throw e;
+                       throw new EnsemblMappingException();
                     }
                     finally {
                         ensemblRequestCount = ensemblMappingPipeline.getRequestCount();
