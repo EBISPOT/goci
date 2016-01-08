@@ -89,7 +89,7 @@ public class EnsemblRelease {
             // Errors
             List<String> rest_errors = ens_rest_call.getErrors();
             if (rest_errors.size() > 0) {
-                throw new EnsemblRestIOException("Errors while trying to get release information", rest_errors);
+                throw new EnsemblRestIOException("Errors trying to get release information", rest_errors);
             }
         }
         catch (IOException | InterruptedException | UnirestException e) {

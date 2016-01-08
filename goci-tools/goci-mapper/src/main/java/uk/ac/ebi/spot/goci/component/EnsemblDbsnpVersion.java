@@ -4,89 +4,70 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.exception.EnsemblRestIOException;
 import uk.ac.ebi.spot.goci.service.EnsemblRestService;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Laurent on 28/09/15.
  *
- * @author Laurent Class getting the dbSNP version from the Ensembl REST API
+ * @author Laurent
+ *         <p>
+ *         Class getting the dbSNP version from the Ensembl REST API
  */
 @Service
 public class EnsemblDbsnpVersion {
 
-    private int dbsnpVersion = 0;
     private String species = "homo_sapiens";
     private String endpoint = "/info/variation/" + species + "/";
     private String source = "dbSNP";
-    private ArrayList<String> rest_errors = new ArrayList<>();
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
-    protected Logger getLog() {
-        return log;
-    }
-
-    // JPA no-args constructor
-    // Make the REST API call
-    public EnsemblDbsnpVersion() {
+    /**
+     * Getter for the dbSNP version
+     *
+     * @return the dbSNP version
+     */
+    public int getDbsnpVersion() throws EnsemblRestIOException {
         JSONArray ensembl_result = this.getSimpleRestCall();
         if (ensembl_result.length() > 0) {
             if (ensembl_result.getJSONObject(0).has("error")) {
-                checkError(ensembl_result);
+                throw new EnsemblRestIOException(checkError(ensembl_result));
             }
-            else {
+            else if (!ensembl_result.getJSONObject(0).has("error")) {
                 // Check if there are releases key
-                for (int i = 0; i < ensembl_result.length(); ++i) {
-                    JSONObject variant_source = ensembl_result.getJSONObject(i);
-                    // Get version
-                    if (variant_source.getString("name").equals(source) && variant_source.has("version")) {
-                        dbsnpVersion = variant_source.getInt("version");
-                    }
+                JSONObject variant_source = ensembl_result.getJSONObject(0);
+                // Get version
+                if (variant_source.getString("name").equals(source) && variant_source.has("version")) {
+                    return variant_source.getInt("version");
+                }
+                else {
+                    throw new EnsemblRestIOException("No dbSNP version information can be identified");
                 }
             }
+            else {
+                throw new EnsemblRestIOException(
+                        "No dbSNP or error information found while trying to check Ensembl dbSNP version");
+            }
         }
-        if (this.getDbsnpVersion() == 0) {
-            rest_errors.add("dbSNP version not found");
+        else {
+            throw new EnsemblRestIOException("Empty response body found while trying to check dbSNP version");
         }
     }
-
-
-    /**
-     * Getter for the release version
-     *
-     * @return the numeric release version
-     */
-    public int getDbsnpVersion() {
-        return dbsnpVersion;
-    }
-
-
-    /**
-     * Getter for the list of REST API error messages
-     *
-     * @return List of strings.
-     */
-    public ArrayList<String> getRestErrors() {
-        return rest_errors;
-    }
-
 
     /**
      * Check the type of error returned by the REST web service JSON output
      *
      * @param result The JSONObject result
      */
-    private void checkError(JSONArray result) {
+    private String checkError(JSONArray result) {
         if (result.getJSONObject(0).getString("error").contains("page not found")) {
-            rest_errors.add("Web service '" + endpoint + "' not found or not working.");
+            return "Web service '" + endpoint + "' not found or not working.";
         }
         else {
-            rest_errors.add(result.getJSONObject(0).getString("error"));
+            return result.getJSONObject(0).getString("error");
         }
     }
 
@@ -96,11 +77,10 @@ public class EnsemblDbsnpVersion {
      *
      * @return the corresponding JSONArray
      */
-    private JSONArray getSimpleRestCall() {
+    private JSONArray getSimpleRestCall() throws EnsemblRestIOException {
         EnsemblRestService ens_rest_call = new EnsemblRestService(endpoint, "", "filter=" + source);
         JSONArray json_result = new JSONArray();
         try {
-
             ens_rest_call.getRestCall();
             JsonNode result = ens_rest_call.getRestResults();
 
@@ -109,18 +89,14 @@ public class EnsemblDbsnpVersion {
             }
             else {
                 // Errors
-                ArrayList rest_errors = ens_rest_call.getErrors();
+                List<String> rest_errors = ens_rest_call.getErrors();
                 if (rest_errors.size() > 0) {
-                    json_result = new JSONArray("[{\"error\":\"1\"}]");
-                    for (int i = 0; i < rest_errors.size(); ++i) {
-                        this.rest_errors.add(rest_errors.get(i).toString());
-                    }
+                    throw new EnsemblRestIOException("Errors trying to get dbSNP version", rest_errors);
                 }
             }
         }
         catch (IOException | InterruptedException | UnirestException e) {
-            getLog().error("Encountered a " + e.getClass().getSimpleName() +
-                                   " whilst trying to run mapping of SNP", e);
+            throw new EnsemblRestIOException("Errors while trying to get dbSNP version", e);
         }
         return json_result;
     }
