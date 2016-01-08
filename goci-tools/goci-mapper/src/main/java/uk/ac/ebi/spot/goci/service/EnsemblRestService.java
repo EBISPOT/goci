@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -81,31 +80,19 @@ public class EnsemblRestService {
 
         // Build URL
         URL url = null;
-        try {
-            if (this.rest_parameters != "") {
-                Matcher matcher = Pattern.compile("^\\?").matcher(this.rest_parameters);
-                if (!matcher.matches()) {
-                    this.rest_parameters = '?' + this.rest_parameters;
-                }
+
+        if (this.rest_parameters != "") {
+            Matcher matcher = Pattern.compile("^\\?").matcher(this.rest_parameters);
+            if (!matcher.matches()) {
+                this.rest_parameters = '?' + this.rest_parameters;
             }
-            url = new URL(server + this.rest_endpoint + this.rest_data + this.rest_parameters);
-            //System.out.println(server + this.rest_endpoint + this.rest_data + this.rest_parameters+"\n");
         }
-        catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        url = new URL(server + this.rest_endpoint + this.rest_data + this.rest_parameters);
+
 
         // Call REST API
         if (url != null) {
-            try {
-                this.fetchJson(url.toString());
-            }
-            catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            catch (UnirestException e) {
-                e.printStackTrace();
-            }
+            this.fetchJson(url.toString());
         }
     }
 
@@ -115,6 +102,7 @@ public class EnsemblRestService {
      *
      * @return JSONObject containing the returned JSON data
      */
+
     public JsonNode getRestResults() {
         return this.rest_results;
     }
@@ -141,40 +129,34 @@ public class EnsemblRestService {
 
 
     private void fetchJson(String url) throws UnirestException, InterruptedException {
-        try {
-            HttpResponse<JsonNode> response = Unirest.get(url)
-                    .header("Content-Type", "application/json")
-                    .asJson();
-            String retryHeader = response.getHeaders().getFirst("Retry-After");
 
-            if (response.getStatus() == 200) { // Success
-                this.rest_results = response.getBody();
-            }
-            else if (response.getStatus() == 429 && retryHeader != null) { // Too Many Requests
-                Long waitSeconds = Long.valueOf(retryHeader);
-                Thread.sleep(waitSeconds * 1000);
-                fetchJson(url);
-            }
-            else if (response.getStatus() == 503) { // Service unavailable
-                this.addErrors("No server is available to handle this request (Error 503: service unavailable)");
-                getLog().error("No server is available to handle this request (Error 503: service unavailable)");
-            }
-            else if (response.getStatus() == 400) { // Bad request (no result found)
-                JSONObject json_obj = response.getBody().getObject();
-                if (json_obj.has("error")) {
-                    this.addErrors(json_obj.getString("error"));
-                }
-                getLog().error(url + " is generating an invalid request. (Error 400: bad request)");
-            }
-            else { // Other issue
-                this.addErrors("No data available");
-                getLog().error("No data at " + url);
-                throw new IllegalArgumentException("No data at " + url);
-            }
+        HttpResponse<JsonNode> response = Unirest.get(url)
+                .header("Content-Type", "application/json")
+                .asJson();
+        String retryHeader = response.getHeaders().getFirst("Retry-After");
+
+        if (response.getStatus() == 200) { // Success
+            this.rest_results = response.getBody();
         }
-        catch (RuntimeException e) {
-            e.printStackTrace();
-            System.out.println("URL: " + url); // Temporary (for debug)
+        else if (response.getStatus() == 429 && retryHeader != null) { // Too Many Requests
+            Long waitSeconds = Long.valueOf(retryHeader);
+            Thread.sleep(waitSeconds * 1000);
+            fetchJson(url);
+        }
+        else if (response.getStatus() == 503) { // Service unavailable
+            this.addErrors("No server is available to handle this request (Error 503: service unavailable)");
+            getLog().error("No server is available to handle this request (Error 503: service unavailable)");
+        }
+        else if (response.getStatus() == 400) { // Bad request (no result found)
+            JSONObject json_obj = response.getBody().getObject();
+            if (json_obj.has("error")) {
+                this.addErrors(json_obj.getString("error"));
+            }
+            getLog().error(url + " is generating an invalid request. (Error 400: bad request)");
+        }
+        else { // Other issue
+            this.addErrors("No data available");
+            getLog().error("No data at " + url);
         }
     }
 }
