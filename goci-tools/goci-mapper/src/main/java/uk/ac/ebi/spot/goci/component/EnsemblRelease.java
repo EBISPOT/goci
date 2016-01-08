@@ -25,6 +25,7 @@ public class EnsemblRelease {
     private String endpoint = "/info/data/";
     private ArrayList<String> rest_errors = new ArrayList<>();
     private final Logger log = LoggerFactory.getLogger(getClass());
+
     protected Logger getLog() {
         return log;
     }
