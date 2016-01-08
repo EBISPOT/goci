@@ -69,12 +69,17 @@ public class MappingService {
     /**
      * Get all associations in database
      */
-    public void mapCatalogContents(String performer) {
+    public void mapCatalogContents(String performer) throws EnsemblMappingException {
 
         // Get all associations via service
         Collection<Association> associations = associationService.findAllAssociations();
         getLog().info("Total number of associations to map: " + associations.size());
-        validateAndMapSnps(associations, performer);
+        try {
+            validateAndMapSnps(associations, performer);
+        }
+        catch (EnsemblMappingException e) {
+            throw new EnsemblMappingException("Attempt to map all associations failed", e);
+        }
     }
 
     /**
@@ -82,7 +87,8 @@ public class MappingService {
      *
      * @param associations Collection of associations to map
      */
-    public void validateAndMapSnps(Collection<Association> associations, String performer) throws EnsemblMappingException{
+    public void validateAndMapSnps(Collection<Association> associations, String performer)
+            throws EnsemblMappingException {
 
         // Variables set to comply with the maximum of requests per second allowed by the Ensembl REST server.
         int ensemblRequestCount = 0;
@@ -142,7 +148,7 @@ public class MappingService {
                     catch (Exception e) {
                         getLog().error("Encountered a " + e.getClass().getSimpleName() +
                                                " whilst trying to run mapping of SNP" + snpRsId, e);
-                       throw new EnsemblMappingException();
+                        throw new EnsemblMappingException();
                     }
                     finally {
                         ensemblRequestCount = ensemblMappingPipeline.getRequestCount();
