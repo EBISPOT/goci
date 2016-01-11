@@ -13,7 +13,7 @@ You can bookmark all queries for main search terms, eg http://www.ebi.ac.uk/gwas
 
 === Bookmarking help documents
 
-You can bookmark any part of the GWAS Catalog page, including individual questions in the FAQ document. Please note that if you use Chrome as your web browser, jumping directly to a question may not always work. This is a browser bug outside our control.
+You can bookmark any part of the GWAS Catalog page, including individual questions in the link:faq[FAQ] document. Please note that if you use Chrome as your web browser, jumping directly to a question may not always work. This is a browser bug outside our control.
 
 
 === Linking into the Catalog
