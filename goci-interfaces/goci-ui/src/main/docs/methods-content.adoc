@@ -23,7 +23,7 @@ The search terms are "genome-wide" OR "genome AND identification" OR "genome AND
 
 === Eligibility criteria
 
-Studies and associations are eligible for inclusion in the NHGRI-EBI GWAS Catalog if they meet the following criteria:
+Studies and associations are eligible for inclusion in the GWAS Catalog if they meet the following criteria:
 
 * Include a primary GWAS analysis, defined as array-based genotyping and analysis of 100,000+ pre-QC SNPs selected to tag variation across the genome and without regard to gene content.
 * GWAS data from published studies which are incorporated into new GWAS analyses are eligible, provided they meet the other criteria.
