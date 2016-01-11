@@ -18,7 +18,7 @@ A second curator then performs an additional round of curation to double-check t
 
 === Identification of studies
 
-Published GWAS studies are identified through a weekly PubMed search.
+Published GWA studies are identified through a weekly PubMed search.
 The search terms are "genome-wide" OR "genome AND identification" OR "genome AND association", with limits on the current year and human status.
 
 === Eligibility criteria
@@ -87,7 +87,7 @@ The ancestry is derived from the ancestry descriptors used in the publication. C
 
 ==== [[mapping]]Quality control and SNP mapping
 
-An automated pipeline adds additional SNP specific information associated with the rsID extracted. This information includes the SNP's base pair and cytogenetic location(s) in the current human genome reference assembly, mapped genes, mapped gene distance’s and positioning, and SNP function. This information is then used for queries of the search interface and in the production of the diagram. The pipeline also performs checks for consistency and missing information, such as SNP identifiers, existence of SNPs in dbSNP, validation of gene names and confirmation that the reported SNP and gene are in the same chromosomal region. This information is retrieved using the link:http://www.ensembl.org/info/docs/api/index.html[Ensembl API] and the source of the data is both Ensembl and NCBI.
+An automated pipeline adds additional SNP specific information associated with the rsID extracted. This information includes the SNP's base pair and cytogenetic location(s) in the current human genome reference assembly, mapped genes, mapped gene's distance and positioning, and SNP function. This information is then used for queries of the search interface and in the production of the diagram. The pipeline also performs checks for consistency and missing information, such as SNP identifiers, existence of SNPs in dbSNP, validation of gene names and confirmation that the reported SNP and gene are in the same chromosomal region. This information is retrieved using the link:http://www.ensembl.org/info/docs/api/index.html[Ensembl API] and the source of the data is both Ensembl and NCBI.
 
 Additional information added by this pipeline. Capitalised titles correspond to column headings in tab delimited file:
 
@@ -108,7 +108,7 @@ Additional information added by this pipeline. Capitalised titles correspond to 
 === Additional guidelines for data extraction and interpretation
 
 * Missing or not applicable fields are denoted as follows: ?, allele not reported; NS, not significant (no associations at p<1.0 x 10-5 identified); NR, not reported.
-* Where multiple genetic models are available, effect sizes (OR's or beta-coefficients) are prioritized as follows: 1) genotypic model, per-allele estimate; 2) genotypic model, heterozygote estimate, 3) allelic model, allelic estimate.
+* Where multiple genetic models are available, effect sizes (ORs or beta-coefficients) are prioritized as follows: 1) genotypic model, per-allele estimate; 2) genotypic model, heterozygote estimate, 3) allelic model, allelic estimate.
 * If more than one SNP within a gene, or within a genomic region of 100kb upstream and downstream, meets the above extraction criteria, we report one SNP, unless there was evidence for an independent association.
 * Associations attributed to a combination of one or more genetic variants are denoted as such in the “Strongest SNP-Risk Allele” (e.g."3-SNP haplotype 1"). If available, rs numbers for SNPs comprising the haplotype are included in the “SNPs” field so that they are indexed and searchable using the SNP search features.
 * If the p-value, OR, and 95% CI fields are not available for the combined population, we extract estimates from the population group with the largest sample size.
