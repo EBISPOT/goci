@@ -207,13 +207,16 @@ public class MailService {
         javaMailSender.send(mailMessage);
     }
 
+    /**
+     * Send notification to dev list if Ensembl API is down
+     */
     public void sendEnsemblPingFailureMail() {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(getDevMailTo());
         mailMessage.setFrom(getFrom());
         mailMessage.setSubject("Ensembl Daily Ping Failed");
         mailMessage.setText(
-                "Daily ping of Ensembl API failed. Please check logs.");
+                "Daily ping of Ensembl API failed. The service may be down. Please check logs for further details.");
         javaMailSender.send(mailMessage);
     }
 

@@ -11,6 +11,9 @@ import uk.ac.ebi.spot.goci.curation.service.MailService;
 
 /**
  * Created by emma on 08/01/2016.
+ * @author emma
+ *
+ * Daily check to see if Ensembl API is alive.
  */
 @Component
 public class DailyEnsemblPing {
@@ -40,5 +43,4 @@ public class DailyEnsemblPing {
             getLog().error("Pinging Ensembl returned " + num);
         }
     }
-
 }
