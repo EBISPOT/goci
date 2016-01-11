@@ -6,8 +6,7 @@ The GWAS Catalog is provided jointly by the http://www.genome.gov[National Human
 
 The Catalog is a quality controlled, manually curated, literature-derived collection of all published http://en.wikipedia.org/wiki/Genome-wide_association_study[genome-wide association studies] assaying at least 100,000 http://en.wikipedia.org/wiki/Single-nucleotide_polymorphism[SNPs] and all SNP-trait associations with p-values < 1.0 x 10^-5^ _(Hindorff et al., 2009)_. For more details about the Catalog curation process and data extraction procedures, please refer to the link:methods[Methods page].
 
-The Catalog also publishes the iconic GWAS diagram of all SNP-trait associations, with p-values &le; 5.0 x 10^-8^, mapped onto the human genome by chromosomal locations and displayed on the human karyotype.
-The diagram is released quarterly and the latest version of the diagram is made available on our website in PDF format and as a PowerPoint slide.
+The Catalog also publishes the iconic GWAS diagram of all SNP-trait associations, with p-values &le; 5.0 x 10^-8^, mapped onto the human genome by chromosomal locations and displayed on the human karyotype. The diagram is released nightly and the latest version of the http://www.ebi.ac.uk/gwas/diagram[diagram] is made available on our website in SVG format.
 
 
 == Funding acknowledgements
@@ -19,7 +18,7 @@ The NHGRI-EBI GWAS Catalog is funded in part by http://projectreporter.nih.gov/p
 
 ===  How to cite NHGRI-EBI GWAS Catalog data:
 
-_Burdett T (EBI), Hall PN (NHGRI), Hasting E (EBI) Hindorff LA (NHGRI), Junkins HA (NHGRI), Klemm AK (NHGRI), MacArthur J (EBI), Manolio TA (NHGRI), Morales J (EBI), Parkinson H (EBI) and Welter D (EBI)._ +
+_Burdett T (EBI), Hall PN (NHGRI), Hastings E (EBI), Hindorff LA (NHGRI), Junkins HA (NHGRI), Klemm AK (NHGRI), MacArthur J (EBI), Manolio TA (NHGRI), Morales J (EBI), Parkinson H (EBI) and Welter D (EBI)._ +
 The NHGRI-EBI Catalog of published genome-wide association studies. +
 Available at: www.ebi.ac.uk/gwas. Accessed [date of access], version [version number]. +
 _version number only applies to the download spreadsheet - v1.0 for the traditional version of the spreadsheet, v1.0.1 for the version with added EFO terms_  +
@@ -62,7 +61,7 @@ We announce new releases and other developments on our announcement list, \gwas-
 
 === User community
 
-To interact with other GWAS Catalog users, join our user community mailing list, \gwas-users@ebi.ac.uk. link:++mailto:gwas-users-join@ebi.ac.uk?subject=subscribe&body=Please subscribe me to the GWAS users list++[Send us a quick email] to subscribe to this list.
+To interact with other GWAS Catalog users, join our user community mailing list, \gwas-users@ebi.ac.uk. link:++mailto:gwas-users-join@ebi.ac.uk?subject=subscribe&body=Please subscribe me to the GWAS users list++[Send us a quick email] to subscribe to this list. You can also follow us on Twitter https://twitter.com/GWASCatalog[@GWASCatalog].
 
 
 
@@ -80,4 +79,6 @@ The authors are http://picol.org[Picol].
 * http://spring.io/[Spring]: Application framework and inversion of control container for the Java platform
 
 * http://www.thymeleaf.org/[ThymeLeaf]: Template engine capable of processing and generating HTML, XML, JavaScript, CSS and text, and can work both in web and non-web environments
+
+* http://getbootstrap.com/[Bootstrap]: HTML, CSS, and JS framework for developing responsive, mobile first projects on the web.
 
