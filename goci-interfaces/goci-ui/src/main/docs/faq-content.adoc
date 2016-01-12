@@ -102,11 +102,11 @@
 
 ==== [[faq-1]]1. Why has the Catalog moved to the EBI?
 
-From September 2010 to the present, delivery and development of the Catalog has been a collaborative project between EMBL-EBI and NHGRI. In March 2015 the Catalog infrastructure moved to EMBL-EBI to enable delivery of an improved user interface, including ontology driven Catalog searching, and new curatorial infrastructure, supporting improved QC processes. Content available from www.genome.gov/gwastudies/ was last updated 20 Februry 2015 and is now frozen; no further updated content will be available at the NHGRI site. Updated content is available from www.ebi.ac.uk/GWAS/ and will be updated. The download file is now available from link:../api/search/downloads/full[here] and has updated content.
+From September 2010 to the present, delivery and development of the Catalog has been a collaborative project between EMBL-EBI and NHGRI. In March 2015 the Catalog infrastructure moved to EMBL-EBI to enable delivery of an improved user interface, including ontology driven Catalog searching, and new curatorial infrastructure, supporting improved QC processes. Content available from the http://www.genome.gov/gwastudies/[NHGRI site] was last updated 20 Februry 2015 and is now frozen. Updated content is available from http://www.ebi.ac.uk/gwas/[here] and will be updated. The download file is now available from link:../api/search/downloads/full[here] and has updated content.
 
 ==== [[faq-2]]2. Is there any way I can stay informed about new search features and developments?
 
-You can subscribe to our announcement list by sending an e-mail to gwas-announce-join@ebi.ac.uk with subject heading "subscribe". Traffic on this list will be limited to important announcements only so you don't need to worry about getting bombarded with loads of emails. For queries and user discussion, we have separate mailing lists, gwas-info@ebi.ac.uk to contact the Catalog team and gwas-users@ebi.ac.uk for user discussion (subscribe by emailing gwas-users-join@ebi.ac.uk with subject heading "subscribe").
+You can subscribe to our announcement list by sending an e-mail to gwas-announce-join@ebi.ac.uk with subject heading "subscribe". Traffic on this list will be limited to important announcements only so you don't need to worry about getting bombarded with loads of emails. For queries and user discussion, we have separate mailing lists, gwas-info@ebi.ac.uk to contact the Catalog team and gwas-users@ebi.ac.uk for user discussion (subscribe by emailing gwas-users-join@ebi.ac.uk with subject heading "subscribe"). You can also follow us on Twitter https://twitter.com/GWASCatalog[@GWASCatalog].
 
 ==== [[faq-3]]3. How should I cite the GWAS Catalog?
 
@@ -123,7 +123,7 @@ Data in the GWAS Catalog is currently mapped to genome assembly <span id="genome
 
 ==== [[faq-6]]6. How can I access the GWAS Catalog data on alternative genome builds?
 
-You can use the Ensembl REST API to map the SNP rsIDs in the GWAS Catalog to previous genome builds. For GRCh37 this is available at http://grch37.rest.ensembl.org/. The variation call http://grch37.rest.ensembl.org/documentation/info/variation_id can be used to retrieve the dbSNP mapping of all SNPs on GRCh37. Information on using the Ensembl REST API can be found at https://github.com/Ensembl/ensembl-rest/wiki.
+You can use the link:http://rest.ensembl.org/[Ensembl API] to map the SNP rsIDs in the GWAS Catalog to previous genome builds. For GRCh37 this is available at http://grch37.rest.ensembl.org/. The variation call http://grch37.rest.ensembl.org/documentation/info/variation_id can be used to retrieve the dbSNP mapping of all SNPs on GRCh37.
 
 ==== [[faq-7]]7. How often are the GWAS Catalog and diagram updated?
 
@@ -150,7 +150,7 @@ SNPs are extracted from the literature exactly as reported by the authors of a p
 == Searching
 
 ==== [[faq-12]]12. How do I do a search?
-Type the thing you are interested in e.g. “breast cancer” into the search box and hit return or click the search icon.
+Type your query, e.g. “breast cancer”, into the search box and hit return or click the search icon.
 
 ==== [[faq-13]]13. What can I type into the search bar?
 You can type any text you wish into the search bar. This will then return any exact string matches within a number of data fields in the Catalog, including title, author, journal, reported trait, mapped (ontology) trait, mapped trait's synonyms, mapped trait's parents, sample descriptions, genes and SNPs. 
@@ -159,7 +159,7 @@ You can type any text you wish into the search bar. This will then return any ex
 Each study is assigned a trait description that best represents the phenotype under investigation. This is known as the reported trait as it is taken from the study publication. All reported traits are mapped to terms from the http://www.ebi.ac.uk/efo[Experimental Factor Ontology] resulting in one or more mapped traits. For more information about how ontologies are used in the catalog, see our link:ontology[ontology] page.
 
 ==== [[faq-15]]15. Can I limit my search to a specific type of field such as author?
-At the moment, the main search only supports searching across all fields, so if your search term is for example "Parkinson", you will see results for Parkinson's disease as well as studies with a first author named Parkinson. We are working on an "advanced search" mode where you can limit your search to certain fields or search for specific combinations of fields. To be alerted as soon as this functionality becomes available, subscribe to our announcement list (see above for subscription instructions).
+At the moment, the main search only supports searching across all fields, so if your search term is for example "Parkinson", you will see results for Parkinson's disease as well as studies with a first author named Parkinson. We are working on an "advanced search" mode where you can limit your search to certain fields or search for specific combinations of fields. To be alerted as soon as this functionality becomes available, subscribe to our <<faq-2,announcement list>>.
 
 For now, if you would like to search for a specific study, you can search by Pubmed ID. To limit your search to a specific trait or set of traits, we would suggest doing a general search for that trait first, then filtering your results using the trait filter dropdown to the left of the search results. For example, following a search for "lupus", you can limit your search results to "Systemic lupus erythematosus" via the dropdown.
 
@@ -243,4 +243,4 @@ Email us at gwas-info@ebi.ac.uk.
 
 '''
 
-_Last updated: 11 January 2016_
+_Last updated: 12 January 2016_
