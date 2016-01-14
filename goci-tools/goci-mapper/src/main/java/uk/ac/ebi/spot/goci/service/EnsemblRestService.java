@@ -135,6 +135,7 @@ public class EnsemblRestService {
                 .asJson();
         String retryHeader = response.getHeaders().getFirst("Retry-After");
 
+        getLog().info("Response: " + response.getStatus());
         if (response.getStatus() == 200) { // Success
             this.rest_results = response.getBody();
         }
