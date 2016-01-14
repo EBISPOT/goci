@@ -88,7 +88,7 @@ public class EnsemblRestService {
             }
         }
         url = new URL(server + this.rest_endpoint + this.rest_data + this.rest_parameters);
-
+        getLog().info("Querying: " + url);
 
         // Call REST API
         if (url != null) {
