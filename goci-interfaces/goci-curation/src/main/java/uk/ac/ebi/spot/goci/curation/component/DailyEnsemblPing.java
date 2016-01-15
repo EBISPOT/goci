@@ -11,9 +11,10 @@ import uk.ac.ebi.spot.goci.curation.service.MailService;
 
 /**
  * Created by emma on 08/01/2016.
- * @author emma
  *
- * Daily check to see if Ensembl API is alive.
+ * @author emma
+ *         <p>
+ *         Daily check to see if Ensembl API is alive.
  */
 @Component
 public class DailyEnsemblPing {
@@ -34,13 +35,27 @@ public class DailyEnsemblPing {
     @Scheduled(cron = "0 0 7 * * *")
     public void pingEnsembl() {
         RestTemplate restTemplate = new RestTemplate();
-        Ping ping = restTemplate.getForObject("http://rest.ensembl.org/info/ping?content-type=application/json",
-                                              Ping.class);
-        Integer num = ping.getPing();
+        String url = "http://rest.ensembl.org/info/ping?content-type=application/json";
+        Ping ping = new Ping();
 
-        if (num != 1) {
-            mailService.sendEnsemblPingFailureMail();
-            getLog().error("Pinging Ensembl returned " + num);
+        try {
+            ping = restTemplate.getForObject(url, Ping.class);
+            Integer num = ping.getPing();
+            getLog().info("Pinging Ensembl: " + url);
+
+            if (num != 1) {
+                mailService.sendEnsemblPingFailureMail();
+                getLog().error("Pinging Ensembl returned " + num);
+            }
+            else {
+                getLog().info("Pinging Ensembl returned " + num);
+            }
         }
+
+        catch (Exception e) {
+            getLog().error("Pinging Ensembl failed", e);
+            mailService.sendEnsemblPingFailureMail();
+        }
+
     }
 }
