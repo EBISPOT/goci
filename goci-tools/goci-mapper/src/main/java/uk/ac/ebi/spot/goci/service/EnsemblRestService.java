@@ -4,6 +4,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.apache.http.HttpHost;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,6 +130,20 @@ public class EnsemblRestService {
 
 
     private void fetchJson(String url) throws UnirestException, InterruptedException {
+
+        // Set proxy
+        String host = System.getProperty("http.proxyHost");
+        String port = System.getProperty("http.proxyPort");
+        Integer portNum = 0 ;
+
+        // Get port number
+        if (port != null){
+            portNum = Integer.valueOf(port);
+        }
+
+        if (host != null && port != null) {
+            Unirest.setProxy(new HttpHost(host, portNum));
+        }
 
         HttpResponse<JsonNode> response = Unirest.get(url)
                 .header("Content-Type", "application/json")
