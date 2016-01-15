@@ -27,7 +27,7 @@ public class EnsemblRestService {
 
     private String rest_endpoint;
     private String rest_data;
-    private String rest_parameters = "content-type=application/json";
+    private String rest_parameters = "";
 
     private JsonNode rest_results = new JsonNode(""); // Default empty result;
     private ArrayList<String> rest_errors = new ArrayList<String>();
