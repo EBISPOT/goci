@@ -3,6 +3,11 @@
 
 == Description of column headings for downloadable files
 
+++++
+Data in the GWAS Catalog is currently mapped to genome assembly <span id="genomeBuild">GRCh38.p5</span> and dbSNP Build <span id="dbSNP">144</span>.
+++++
+
+
 <<File headers for catalog version 1.0>>
 
 <<File headers for catalog version 1.0.1>>
