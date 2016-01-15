@@ -144,10 +144,10 @@ public class NightlyEnsemblReleaseCheck {
                 for (String error : restErrors) {
                     allRestErrors = allRestErrors + error + ". ";
                 }
-                getLog().error("Problem identifying release details: " + allRestErrors, e);
+                getLog().error("Problem identifying Ensembl release, genome build version or dbSNP version: " + allRestErrors, e);
             }
             else {
-                getLog().error("Problem identifying release details ", e);
+                getLog().error("Problem identifying Ensembl release, genome build version or dbSNP version ", e);
             }
         }
     }
