@@ -135,7 +135,6 @@ public class EnsemblRestService {
                 .asJson();
         String retryHeader = response.getHeaders().getFirst("Retry-After");
 
-        getLog().info("Response: " + response.getStatus());
         if (response.getStatus() == 200) { // Success
             this.rest_results = response.getBody();
         }
@@ -145,8 +144,8 @@ public class EnsemblRestService {
             fetchJson(url);
         }
         else if (response.getStatus() == 503) { // Service unavailable
-            this.addErrors("No server is available to handle this request (Error 503: service unavailable)");
-            getLog().error("No server is available to handle this request (Error 503: service unavailable)");
+            this.addErrors("No server is available to handle this request (Error 503: service unavailable) at url: " + url);
+            getLog().error("No server is available to handle this request (Error 503: service unavailable) at url: " + url);
         }
         else if (response.getStatus() == 400) { // Bad request (no result found)
             JSONObject json_obj = response.getBody().getObject();
@@ -156,7 +155,7 @@ public class EnsemblRestService {
             getLog().error(url + " is generating an invalid request. (Error 400: bad request)");
         }
         else { // Other issue
-            this.addErrors("No data available");
+            this.addErrors("No data available at url "+ url);
             getLog().error("No data at " + url);
         }
     }
