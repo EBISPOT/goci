@@ -24,7 +24,9 @@
 
         <p class="lead">Ensembl mapping pipeline failed due to a possible failure in the Ensembl API. Please notify a developer!!!</p>
 
-        <a th:href="@{${url}}" class="btn btn-primary">Back to association</a>
+        <div><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary">Back to all SNP
+                                                                                                    associations</a>
+        </div>
     </div>
 </div>
 
