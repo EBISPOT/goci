@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.exception.EnsemblRestIOException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -77,7 +78,7 @@ public class EnsemblRestService {
      * @throws UnirestException
      * @throws InterruptedException
      */
-    public void getRestCall() throws IOException, UnirestException, InterruptedException {
+    public void getRestCall() throws IOException, UnirestException, InterruptedException, EnsemblRestIOException {
 
         // Build URL
         URL url = null;
@@ -128,7 +129,7 @@ public class EnsemblRestService {
     }
 
 
-    private void fetchJson(String url) throws UnirestException, InterruptedException {
+    private void fetchJson(String url) throws UnirestException, InterruptedException, EnsemblRestIOException {
 
         // Set proxy
         String host = System.getProperty("http.proxyHost");
@@ -162,6 +163,8 @@ public class EnsemblRestService {
                     "No server is available to handle this request (Error 503: service unavailable) at url: " + url);
             getLog().error(
                     "No server is available to handle this request (Error 503: service unavailable) at url: " + url);
+            throw new EnsemblRestIOException(
+                    "No server is available to handle this request (Error 503: service unavailable) at url: " + url);
         }
         else if (response.getStatus() == 400) { // Bad request (no result found)
             JSONObject json_obj = response.getBody().getObject();
@@ -173,6 +176,7 @@ public class EnsemblRestService {
         else { // Other issue
             this.addErrors("No data available at url " + url);
             getLog().error("No data at " + url);
+            throw new EnsemblRestIOException("No data available at url " + url);
         }
     }
 }
