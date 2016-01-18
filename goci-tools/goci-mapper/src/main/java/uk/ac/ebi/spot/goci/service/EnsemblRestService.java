@@ -89,7 +89,6 @@ public class EnsemblRestService {
             }
         }
         url = new URL(server + this.rest_endpoint + this.rest_data + this.rest_parameters);
-        getLog().info("Querying: " + url);
 
         // Call REST API
         if (url != null) {
@@ -134,10 +133,10 @@ public class EnsemblRestService {
         // Set proxy
         String host = System.getProperty("http.proxyHost");
         String port = System.getProperty("http.proxyPort");
-        Integer portNum = 0 ;
+        Integer portNum = 0;
 
         // Get port number
-        if (port != null){
+        if (port != null) {
             portNum = Integer.valueOf(port);
         }
 
@@ -159,8 +158,10 @@ public class EnsemblRestService {
             fetchJson(url);
         }
         else if (response.getStatus() == 503) { // Service unavailable
-            this.addErrors("No server is available to handle this request (Error 503: service unavailable) at url: " + url);
-            getLog().error("No server is available to handle this request (Error 503: service unavailable) at url: " + url);
+            this.addErrors(
+                    "No server is available to handle this request (Error 503: service unavailable) at url: " + url);
+            getLog().error(
+                    "No server is available to handle this request (Error 503: service unavailable) at url: " + url);
         }
         else if (response.getStatus() == 400) { // Bad request (no result found)
             JSONObject json_obj = response.getBody().getObject();
@@ -170,7 +171,7 @@ public class EnsemblRestService {
             getLog().error(url + " is generating an invalid request. (Error 400: bad request)");
         }
         else { // Other issue
-            this.addErrors("No data available at url "+ url);
+            this.addErrors("No data available at url " + url);
             getLog().error("No data at " + url);
         }
     }

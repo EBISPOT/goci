@@ -203,7 +203,7 @@ public class MailService {
         mailMessage.setFrom(getFrom());
         mailMessage.setSubject("Problem Determining Latest Ensembl Release");
         mailMessage.setText(
-                "The latest Ensembl release cannot be identified from REST API. Please check logs");
+                "Problem identifying the latest Ensembl release, genome build version or dbSNP version via Ensembl REST API. Please check logs");
         javaMailSender.send(mailMessage);
     }
 
