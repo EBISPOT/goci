@@ -377,7 +377,8 @@ public class AssociationController {
                     mappingService.validateAndMapSnps(associationsToMap, mappedBy);
                 }
                 catch (EnsemblMappingException e) {
-                    throw new EnsemblMappingException();
+                    model.addAttribute("study", study);
+                    return "ensembl_mapping_failure";
                 }
             }
             return "redirect:/studies/" + studyId + "/associations";
@@ -603,7 +604,8 @@ public class AssociationController {
                 mappingService.validateAndMapSnps(associationsToMap, mappedBy);
             }
             catch (EnsemblMappingException e) {
-                throw new EnsemblMappingException();
+                model.addAttribute("study", study);
+                return "ensembl_mapping_failure";
             }
 
             return "redirect:/associations/" + newAssociation.getId();
@@ -652,7 +654,8 @@ public class AssociationController {
                 mappingService.validateAndMapSnps(associationsToMap, mappedBy);
             }
             catch (EnsemblMappingException e) {
-                throw new EnsemblMappingException();
+                model.addAttribute("study", study);
+                return "ensembl_mapping_failure";
             }
 
             return "redirect:/associations/" + newAssociation.getId();
@@ -700,7 +703,8 @@ public class AssociationController {
                 mappingService.validateAndMapSnps(associationsToMap, mappedBy);
             }
             catch (EnsemblMappingException e) {
-                throw new EnsemblMappingException();
+                model.addAttribute("study", study);
+                return "ensembl_mapping_failure";
             }
 
             return "redirect:/associations/" + newAssociation.getId();
@@ -895,7 +899,8 @@ public class AssociationController {
                 mappingService.validateAndMapSnps(associationsToMap, mappedBy);
             }
             catch (EnsemblMappingException e) {
-                throw new EnsemblMappingException();
+                model.addAttribute("study", associationStudy);
+                return "ensembl_mapping_failure";
             }
 
             return "redirect:/associations/" + associationId;
@@ -1345,15 +1350,6 @@ public class AssociationController {
     @ExceptionHandler(DataIntegrityException.class)
     public String handleDataIntegrityException(DataIntegrityException dataIntegrityException, Model model) {
         return dataIntegrityException.getMessage();
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(EnsemblMappingException.class)
-    public String handleEnsemblMappingException(EnsemblMappingException ensemblMappingException, Model model, HttpServletRequest req) {
-        getLog().error("Mapping exception: ", ensemblMappingException);
-        String url = String.valueOf(req.getRequestURL());
-        model.addAttribute("url", url);
-        return "ensembl_mapping_failure";
     }
 
 
