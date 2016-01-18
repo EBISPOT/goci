@@ -1349,8 +1349,10 @@ public class AssociationController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(EnsemblMappingException.class)
-    public String handleEnsemblMappingException(EnsemblMappingException ensemblMappingException, Model model) {
+    public String handleEnsemblMappingException(EnsemblMappingException ensemblMappingException, Model model, HttpServletRequest req) {
         getLog().error("Mapping exception: ", ensemblMappingException);
+        String url = String.valueOf(req.getRequestURL());
+        model.addAttribute("url", url);
         return "ensembl_mapping_failure";
     }
 
