@@ -134,12 +134,13 @@ public class MappingService {
 
                     String snpRsId = snpLinkedToLocus.getRsId();
 
+                    String functionalClass  = "";
                     // Try to map supplied data
                     try {
-                        ensemblMappingPipeline.run_pipeline(snpRsId,
-                                                            authorReportedGeneNamesLinkedToSnp,
-                                                            ensemblRequestCount,
-                                                            ensemblLimitStartTime);
+                        functionalClass = ensemblMappingPipeline.run_pipeline(snpRsId,
+                                                                              authorReportedGeneNamesLinkedToSnp,
+                                                                              ensemblRequestCount,
+                                                                              ensemblLimitStartTime);
                     }
                     catch (Exception e) {
                         getLog().error("Encountered a " + e.getClass().getSimpleName() +
@@ -158,7 +159,6 @@ public class MappingService {
                     Collection<Location> locations = ensemblMappingPipeline.getLocations();
                     Collection<GenomicContext> snpGenomicContexts = ensemblMappingPipeline.getGenomicContexts();
                     ArrayList<String> pipelineErrors = ensemblMappingPipeline.getPipelineErrors();
-                    String functionalClass = ensemblMappingPipeline.getFunctionalClass();
 
                     // Update functional class
                     snpLinkedToLocus.setFunctionalClass(functionalClass);
