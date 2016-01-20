@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.EnsemblGene;
+import uk.ac.ebi.spot.goci.model.EnsemblMappingResult;
 import uk.ac.ebi.spot.goci.model.EntrezGene;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
@@ -57,22 +58,12 @@ public class EnsemblMappingPipeline {
     @Value("${mapping.genomic_distance}")
     private int genomicDistance; // 100kb
 
-    private String rsId;
-
-    private int merged;
-    private Collection<String> reported_genes = new ArrayList<>();
-    private Collection<Location> locations = new ArrayList<>();
-    private Collection<GenomicContext> genomic_contexts = new ArrayList<>();
-    private ArrayList<String> pipeline_errors = new ArrayList<>();
-
+    private final List<String> reported_genes_to_ignore = Arrays.asList("NR", "intergenic");
+    private int requestCount = 0;
+    private long limitStartTime = System.currentTimeMillis();
     // Internal variables populated within the class
     private ArrayList<String> overlapping_genes = new ArrayList<>();
 
-    private final List<String> reported_genes_to_ignore = Arrays.asList("NR", "intergenic");
-
-    // Request rate variables
-    private int requestCount = 0;
-    private long limitStartTime = System.currentTimeMillis();
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -85,10 +76,10 @@ public class EnsemblMappingPipeline {
     }
 
     // Run the pipeline for a given SNP
-    public String run_pipeline(String rsId,
-                             Collection<String> reported_genes,
-                             int requestCount,
-                             long limitStartTime) throws EnsemblMappingException {
+    public EnsemblMappingResult run_pipeline(String rsId,
+                                             Collection<String> reported_genes,
+                                             int requestCount,
+                                             long limitStartTime) throws EnsemblMappingException {
 
         // Do some set-up
         this.rsId = rsId;
@@ -96,16 +87,20 @@ public class EnsemblMappingPipeline {
         this.requestCount = requestCount;
         this.limitStartTime = limitStartTime;
 
-        String functionalClass = "";
+        // Object to hold our results
+        EnsemblMappingResult result = new EnsemblMappingResult();
+        ArrayList<String> pipeline_errors = new ArrayList<>();
+        Collection<Location> locations = new ArrayList<>();
 
         // Variation call
         JSONObject variation_result = getVariationData(rsId);
         if (variation_result.has("error")) {
-            checkError(variation_result, "variation", "Variant " + rsId + " is not found in Ensembl");
+            pipeline_errors = checkError(variation_result, "variation", "Variant " + rsId + " is not found in Ensembl");
         }
         else if (variation_result.length() > 0) {
+
             // Merged SNP
-            merged = (variation_result.getString("name").equals(rsId)) ? 0 : 1;
+            result.setMerged((variation_result.getString("name").equals(rsId)) ? 0 : 1);
 
             // Mapping errors
             if (variation_result.has("failed")) {
@@ -114,7 +109,7 @@ public class EnsemblMappingPipeline {
 
             // Mapping and genomic context calls
             JSONArray mappings = variation_result.getJSONArray("mappings");
-            getMappings(mappings);
+            locations = getMappings(mappings);
 
             // Genomic context & Reported genes
             if (locations.size() > 0) {
@@ -122,7 +117,7 @@ public class EnsemblMappingPipeline {
                 // Functional class (most severe consequence).
                 // This implies there is at least one variant location.
                 if (variation_result.has("most_severe_consequence")) {
-                    functionalClass = variation_result.getString("most_severe_consequence");
+                    result.setFunctionalClass(variation_result.getString("most_severe_consequence"));
                 }
 
                 // Genomic context (loop over the "locations" object)
@@ -131,11 +126,54 @@ public class EnsemblMappingPipeline {
                 }
             }
         }
-        // Reported genes checks
+        // Check that the reported gene symbols exist and that they are located in the same chromosome as the variant
         if (reported_genes.size() > 0) {
-            checkReportedGenes();
+            for (String reported_gene : reported_genes) {
+                reported_gene = reported_gene.replaceAll(" ", ""); // Remove extra spaces
+
+                // Skip the iteration if the gene name is in the "gene-to-ignore" list
+                if (!getReported_genes_to_ignore().contains(reported_gene)) {
+
+                    String webservice = "lookup_symbol";
+                    JSONObject reported_gene_result = this.getSimpleRestCall(webservice, reported_gene);
+
+                    // Gene symbol found in Ensembl
+                    if (reported_gene_result.length() > 0) {
+                        // Check if the gene is in the same chromosome as the variant
+                        if (reported_gene_result.has("seq_region_name")) {
+                            if (locations.size() > 0) {
+                                String gene_chromosome = reported_gene_result.getString("seq_region_name");
+                                int same_chromosome = 0;
+                                for (Location location : locations) {
+                                    String snp_chromosome = location.getChromosomeName();
+                                    if (gene_chromosome.equals(snp_chromosome)) {
+                                        same_chromosome = 1;
+                                        break;
+                                    }
+                                }
+                                if (same_chromosome == 0) {
+                                    pipeline_errors.add(
+                                            "Reported gene " + reported_gene + " is on a different chromosome (chr" +
+                                                    gene_chromosome + ")");
+                                }
+                            }
+                            else {
+                                pipeline_errors.add("Can't compare the " + reported_gene +
+                                                            " location in Ensembl: no mapping available for the variant");
+                            }
+                        }
+                        // No gene location found
+                        else {
+                            pipeline_errors.add(
+                                    "Can't find a location in Ensembl for the reported gene " + reported_gene);
+                        }
+                    }
+                }
+            }
         }
-        return functionalClass;
+        result.setLocations(locations);
+        result.setPipeline_errors(pipeline_errors);
+        return result;
     }
 
 
@@ -157,7 +195,10 @@ public class EnsemblMappingPipeline {
      *
      * @param mappings A JSONArray object containing the list the variant locations
      */
-    private void getMappings(JSONArray mappings) throws EnsemblMappingException {
+    private Collection<Location> getMappings(JSONArray mappings) throws EnsemblMappingException {
+
+        Collection<Location> locations = new ArrayList<>();
+
         for (int i = 0; i < mappings.length(); ++i) {
             JSONObject mapping = mappings.getJSONObject(i);
             if (!mapping.has("seq_region_name")) {
@@ -171,6 +212,7 @@ public class EnsemblMappingPipeline {
             Location location = new Location(chromosome, position, cytogenetic_band);
             locations.add(location);
         }
+        return locations;
     }
 
 
@@ -199,9 +241,7 @@ public class EnsemblMappingPipeline {
             }
         }
 
-        Region region = new Region(band);
-
-        return region;
+        return new Region(band);
     }
 
 
@@ -621,55 +661,6 @@ public class EnsemblMappingPipeline {
     }
 
 
-    /**
-     * Check that the reported gene symbols exist and that they are located in the same chromosome as the variant
-     */
-    private void checkReportedGenes() throws EnsemblMappingException {
-        for (String reported_gene : this.reported_genes) {
-
-            reported_gene = reported_gene.replaceAll(" ", ""); // Remove extra spaces
-
-            // Skip the iteration if the gene name is in the "gene-to-ignore" list
-            if (this.reported_genes_to_ignore.contains(reported_gene)) {
-                continue;
-            }
-
-            String webservice = "lookup_symbol";
-            JSONObject reported_gene_result = this.getSimpleRestCall(webservice, reported_gene);
-
-            // Gene symbol found in Ensembl
-            if (reported_gene_result.length() > 0) {
-                // Check if the gene is in the same chromosome as the variant
-                if (reported_gene_result.has("seq_region_name")) {
-                    if (this.locations.size() > 0) {
-                        String gene_chromosome = reported_gene_result.getString("seq_region_name");
-                        int same_chromosome = 0;
-                        for (Location location : this.locations) {
-                            String snp_chromosome = location.getChromosomeName();
-                            if (gene_chromosome.equals(snp_chromosome)) {
-                                same_chromosome = 1;
-                                break;
-                            }
-                        }
-                        if (same_chromosome == 0) {
-                            pipeline_errors.add(
-                                    "Reported gene " + reported_gene + " is on a different chromosome (chr" +
-                                            gene_chromosome + ")");
-                        }
-                    }
-                    else {
-                        pipeline_errors.add("Can't compare the " + reported_gene +
-                                                    " location in Ensembl: no mapping available for the variant");
-                    }
-                }
-                // No gene location found
-                else {
-                    pipeline_errors.add("Can't find a location in Ensembl for the reported gene " + reported_gene);
-                }
-            }
-        }
-    }
-
 
     /**
      * Check the type of error returned by the REST web service JSON output
@@ -678,7 +669,8 @@ public class EnsemblMappingPipeline {
      * @param webservice      The name of the REST web service
      * @param default_message The default error message
      */
-    private void checkError(JSONObject result, String webservice, String default_message) {
+    private ArrayList<String> checkError(JSONObject result, String webservice, String default_message) {
+        ArrayList<String> pipeline_errors = new ArrayList<>();
         if (result.getString("error").contains("page not found")) {
             pipeline_errors.add("Web service '" + webservice + "' not found or not working.");
         }
@@ -690,6 +682,9 @@ public class EnsemblMappingPipeline {
                 pipeline_errors.add(default_message);
             }
         }
+
+        // Return any errors
+        return pipeline_errors;
     }
 
 
@@ -747,6 +742,10 @@ public class EnsemblMappingPipeline {
         return pipeline_errors;
     }
 
+
+    public List<String> getReported_genes_to_ignore() {
+        return reported_genes_to_ignore;
+    }
 
     // Getters for properties derived from application properties file
     public String getEnsemblSource() {
