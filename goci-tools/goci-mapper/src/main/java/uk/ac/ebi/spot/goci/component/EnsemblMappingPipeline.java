@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
@@ -59,11 +60,8 @@ public class EnsemblMappingPipeline {
     private int genomicDistance; // 100kb
 
     private final List<String> reported_genes_to_ignore = Arrays.asList("NR", "intergenic");
-    private int requestCount = 0;
-    private long limitStartTime = System.currentTimeMillis();
-    // Internal variables populated within the class
-    private ArrayList<String> overlapping_genes = new ArrayList<>();
 
+    private EnsemblRestService ensemblRestService;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -71,8 +69,16 @@ public class EnsemblMappingPipeline {
         return log;
     }
 
-    // JPA no-args constructor
-    public EnsemblMappingPipeline() {
+    // TODO REVIEW THESE TO CHECK IF CAN BE MOVED TO APPLICATION PROPERTIES OR ARE EVEN STILL NEEDED
+    private int requestCount = 0;
+    private long limitStartTime = System.currentTimeMillis();
+    // Internal variables populated within the class
+    private ArrayList<String> overlapping_genes = new ArrayList<>();
+
+
+    @Autowired
+    public EnsemblMappingPipeline(EnsemblRestService ensemblRestService) {
+        this.ensemblRestService = ensemblRestService;
     }
 
     // Run the pipeline for a given SNP
@@ -659,7 +665,6 @@ public class EnsemblMappingPipeline {
 
         return chr_end;
     }
-
 
 
     /**
