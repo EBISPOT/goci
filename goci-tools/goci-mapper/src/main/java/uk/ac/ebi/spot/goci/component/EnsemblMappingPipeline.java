@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.exception.EnsemblRestIOException;
 import uk.ac.ebi.spot.goci.model.EnsemblGene;
@@ -35,6 +36,7 @@ import java.util.regex.Pattern;
  *         javascript pipeline developped in the scrip goci-snp-association-mapping.js
  *         (goci/goci-interfaces/goci-curation/src/main/resources/static/js/goci-snp-association-mapping.js)
  */
+@Service
 public class EnsemblMappingPipeline {
 
     private String rsId;
@@ -73,13 +75,7 @@ public class EnsemblMappingPipeline {
     public EnsemblMappingPipeline() {
         this.setEndpoints();
     }
-
-    public EnsemblMappingPipeline(String rsId, Collection<String> reported_genes) {
-        this.rsId = rsId;
-        this.reported_genes = reported_genes;
-        this.setEndpoints();
-    }
-
+    
     public EnsemblMappingPipeline(String rsId,
                                   Collection<String> reported_genes,
                                   int requestCount,
