@@ -75,7 +75,7 @@ public class EnsemblMappingPipeline {
     public EnsemblMappingPipeline() {
         this.setEndpoints();
     }
-    
+
     public EnsemblMappingPipeline(String rsId,
                                   Collection<String> reported_genes,
                                   int requestCount,
@@ -94,60 +94,6 @@ public class EnsemblMappingPipeline {
         this.endpoints.put("lookup_symbol", "/lookup/symbol/" + species + "/");
         this.endpoints.put("overlap_region", "/overlap/region/" + species + "/");
         this.endpoints.put("info_assembly", "/info/assembly/" + species + "/");
-    }
-
-    /**
-     * Getter for the variant functional class
-     *
-     * @return The variant functional class.
-     */
-    public String getFunctionalClass() {
-        return functionalClass;
-    }
-
-    /**
-     * Getter for the collection of Location instances
-     *
-     * @return Collection of Location instances.
-     */
-    public Collection<Location> getLocations() {
-        return locations;
-    }
-
-    /**
-     * Getter for the collection of GenomicContext instances
-     *
-     * @return Collection of GenomicContext instances.
-     */
-    public Collection<GenomicContext> getGenomicContexts() {
-        return genomic_contexts;
-    }
-
-    /**
-     * Getter for the request count
-     *
-     * @return The request count.
-     */
-    public int getRequestCount() {
-        return requestCount;
-    }
-
-    /**
-     * Getter for the start time of the request count
-     *
-     * @return The start time of the request count.
-     */
-    public long getLimitStartTime() {
-        return limitStartTime;
-    }
-
-    /**
-     * Getter for the list of pipeline error messages
-     *
-     * @return List of strings.
-     */
-    public ArrayList<String> getPipelineErrors() {
-        return pipeline_errors;
     }
 
 
@@ -812,4 +758,61 @@ public class EnsemblMappingPipeline {
     private String getEndpoint(String endpoint_name) {
         return this.endpoints.get(endpoint_name);
     }
+
+
+    /**
+     * Getter for the variant functional class
+     *
+     * @return The variant functional class.
+     */
+    public String getFunctionalClass() {
+        return functionalClass;
+    }
+
+    /**
+     * Getter for the collection of Location instances
+     *
+     * @return Collection of Location instances.
+     */
+    public Collection<Location> getLocations() {
+        return locations;
+    }
+
+    /**
+     * Getter for the collection of GenomicContext instances
+     *
+     * @return Collection of GenomicContext instances.
+     */
+    public Collection<GenomicContext> getGenomicContexts() {
+        return genomic_contexts;
+    }
+
+    /**
+     * Getter for the request count
+     *
+     * @return The request count.
+     */
+    public int getRequestCount() {
+        return requestCount;
+    }
+
+    /**
+     * Getter for the start time of the request count
+     *
+     * @return The start time of the request count.
+     */
+    public long getLimitStartTime() {
+        return limitStartTime;
+    }
+
+    /**
+     * Getter for the list of pipeline error messages
+     *
+     * @return List of strings.
+     */
+    public ArrayList<String> getPipelineErrors() {
+        return pipeline_errors;
+    }
+
+
 }
