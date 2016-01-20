@@ -13,7 +13,7 @@ public class RestResponseResult {
 
     private String error;
 
-    private JsonNode restResults;
+    private JsonNode restResult;
 
     public RestResponseResult() {
     }
@@ -26,11 +26,11 @@ public class RestResponseResult {
         this.error = error;
     }
 
-    public JsonNode getRestResults() {
-        return restResults;
+    public JsonNode getRestResult() {
+        return restResult;
     }
 
-    public void setRestResults(JsonNode restResults) {
-        this.restResults = restResults;
+    public void setRestResult(JsonNode restResult) {
+        this.restResult = restResult;
     }
 }
