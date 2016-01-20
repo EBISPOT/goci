@@ -11,12 +11,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
+import uk.ac.ebi.spot.goci.exception.EnsemblRestIOException;
+import uk.ac.ebi.spot.goci.model.RestResponseResult;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Objects;
@@ -109,37 +111,81 @@ public class EnsemblRestService {
      * @param data          the data/id/symbol we want to query
      * @return the corresponding JSONObject
      */
-    public HttpResponse<JsonNode> getSimpleRestCall(String endpoint_type, String data, String rest_parameters)
-            throws EnsemblMappingException {
+    public RestResponseResult getRestCall(String endpoint_type, String data, String rest_parameters)
+            throws EnsemblRestIOException {
+
         String endpoint = getEndpoints().get(endpoint_type);
-        JSONObject json_result = new JSONObject();
-        HttpResponse<JsonNode> response = null;
+        URL url = null;
+        RestResponseResult restResponseResult = new RestResponseResult();
+
         try {
             rateLimit();
 
             // Build URL
-            URL url = null;
-
             if (!Objects.equals(rest_parameters, "")) {
                 Matcher matcher = Pattern.compile("^\\?").matcher(rest_parameters);
                 if (!matcher.matches()) {
                     rest_parameters = '?' + rest_parameters;
                 }
             }
+
             url = new URL(server + endpoint + data + rest_parameters);
-
-            response = Unirest.get(url.toString()).header("Content-Type", "application/json").asJson();
-            String retryHeader = response.getHeaders().getFirst("Retry-After");
-
+            restResponseResult = fetchJson(url.toString());
         }
-        catch (IOException | InterruptedException | UnirestException e) {
+
+        catch (InterruptedException | MalformedURLException | UnirestException e) {
             getLog().error("Encountered a " + e.getClass().getSimpleName() +
                                    " whilst trying to run mapping of SNP", e);
-            throw new EnsemblMappingException();
+            throw new EnsemblRestIOException("Encountered a " + e.getClass().getSimpleName() +
+                                                     " whilst trying to run mapping of SNP", e);
         }
 
-        return response;
+
+        return restResponseResult;
     }
+
+
+    private RestResponseResult fetchJson(String url)
+            throws UnirestException, InterruptedException, EnsemblRestIOException {
+
+        RestResponseResult restResponseResult = new RestResponseResult();
+
+        HttpResponse<JsonNode> response = Unirest.get(url)
+                .header("Content-Type", "application/json")
+                .asJson();
+        String retryHeader = response.getHeaders().getFirst("Retry-After");
+
+        if (response.getStatus() == 200) { // Success
+            restResponseResult.setRestResult(response.getBody());
+        }
+        else if (response.getStatus() == 429 && retryHeader != null) { // Too Many Requests
+            Long waitSeconds = Long.valueOf(retryHeader);
+            Thread.sleep(waitSeconds * 1000);
+            fetchJson(url);
+        }
+        else if (response.getStatus() == 503) { // Service unavailable
+            restResponseResult.setError(
+                    "No server is available to handle this request (Error 503: service unavailable) at url: " + url);
+            getLog().error(
+                    "No server is available to handle this request (Error 503: service unavailable) at url: " + url);
+            throw new EnsemblRestIOException(
+                    "No server is available to handle this request (Error 503: service unavailable) at url: " + url);
+        }
+        else if (response.getStatus() == 400) { // Bad request (no result found)
+            JSONObject json_obj = response.getBody().getObject();
+            if (json_obj.has("error")) {
+                restResponseResult.setError(json_obj.getString("error"));
+            }
+            getLog().error(url + " is generating an invalid request. (Error 400: bad request)");
+        }
+        else { // Other issue
+            restResponseResult.setError("No data available at url " + url);
+            getLog().error("No data at " + url);
+        }
+
+        return restResponseResult;
+    }
+
 
     /**
      * Check if the program reached the rate limit of calls per second
@@ -164,7 +210,6 @@ public class EnsemblRestService {
             setRequestCount(0);
         }
     }
-
 
     public Hashtable<String, String> getEndpoints() {
         return endpoints;
