@@ -8,11 +8,18 @@ import org.apache.http.HttpHost;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,14 +31,24 @@ import java.util.regex.Pattern;
 @Service
 public class EnsemblRestService {
 
-    private static String server = "http://rest.ensembl.org";
+    @NotNull @Value("${ensembl.server}")
+    private String server;
 
-    private String rest_endpoint;
-    private String rest_data;
-    private String rest_parameters = "";
+    // Request rate variables
+    private final int requestPerSecond = 15;
+    private int requestCount = 0;
+    private long limitStartTime = System.currentTimeMillis();
+    private final int maxSleepTime = 1000;
 
-    private JsonNode rest_results = new JsonNode(""); // Default empty result;
-    private ArrayList<String> rest_errors = new ArrayList<String>();
+    private Hashtable<String, String> endpoints = new Hashtable<String, String>();
+
+
+    //    private String rest_endpoint;
+//    private String rest_data;
+//    private String rest_parameters = "";
+//
+//    private JsonNode rest_results = new JsonNode(""); // Default empty result;
+//    private ArrayList<String> rest_errors = new ArrayList<String>();
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -40,35 +57,73 @@ public class EnsemblRestService {
     }
 
     // Default constructor
-    public EnsemblRestService() {
+
+//    public EnsemblRestService() {
+//    }
+
+    // Set the different Ensembl REST API endpoints used in the pipeline
+    @Autowired
+    public void setEndpoints() {
+        String species = "homo_sapiens";
+        this.endpoints.put("variation", "/variation/" + species + "/");
+        this.endpoints.put("lookup_symbol", "/lookup/symbol/" + species + "/");
+        this.endpoints.put("overlap_region", "/overlap/region/" + species + "/");
+        this.endpoints.put("info_assembly", "/info/assembly/" + species + "/");
+        this.endpoints.put("info_variation", "/info/variation/" + species + "/");
+        this.endpoints.put("info_data", "/info/data/");
     }
 
+//    /**
+//     * Simple constructor with endpoint and data
+//     *
+//     * @param rest_endpoint the endpoint part of the URL
+//     * @param rest_data     the data/id/symbol we want to query
+//     */
+//    public EnsemblRestService(String rest_endpoint, String rest_data) {
+//        this.rest_endpoint = rest_endpoint;
+//        this.rest_data = rest_data;
+//    }
+//
+//
+//    /**
+//     * More complex contructor with extra parameters
+//     *
+//     * @param rest_endpoint   the endpoint part of the URL
+//     * @param rest_data       the data/id/symbol we want to query
+//     * @param rest_parameters the extra parameters to add at the end of the REST call url
+//     */
+//    public EnsemblRestService(String rest_endpoint, String rest_data, String rest_parameters) {
+//        this.rest_endpoint = rest_endpoint;
+//        this.rest_data = rest_data;
+//        this.rest_parameters = rest_parameters;
+//    }
 
-    /**
-     * Simple constructor with endpoint and data
-     *
-     * @param rest_endpoint the endpoint part of the URL
-     * @param rest_data     the data/id/symbol we want to query
-     */
-    public EnsemblRestService(String rest_endpoint, String rest_data) {
-        this.rest_endpoint = rest_endpoint;
-        this.rest_data = rest_data;
+    @PostConstruct
+    public void init() {
+                // Set proxy
+        String host = System.getProperty("http.proxyHost");
+         String port = System.getProperty("http.proxyPort");
+        Integer portNum = 0;
+
+                    // Get port number
+        if (port != null) {
+            portNum = Integer.valueOf(port);
+        }
+
+        if (host != null && port != null) {
+            Unirest.setProxy(new HttpHost(host, portNum));
+        }
     }
 
-
-    /**
-     * More complex contructor with extra parameters
-     *
-     * @param rest_endpoint   the endpoint part of the URL
-     * @param rest_data       the data/id/symbol we want to query
-     * @param rest_parameters the extra parameters to add at the end of the REST call url
-     */
-    public EnsemblRestService(String rest_endpoint, String rest_data, String rest_parameters) {
-        this.rest_endpoint = rest_endpoint;
-        this.rest_data = rest_data;
-        this.rest_parameters = rest_parameters;
+    @PreDestroy
+    public void destroy() {
+        try {
+            Unirest.shutdown();
+        }
+        catch (IOException e) {
+            throw new RuntimeException("Failed to shutdown Unirest HTTP connection service", e);
+        }
     }
-
 
     /**
      * Run the Ensembl REST API call, using the parameters from the constructor
@@ -77,22 +132,22 @@ public class EnsemblRestService {
      * @throws UnirestException
      * @throws InterruptedException
      */
-    public void getRestCall() throws IOException, UnirestException, InterruptedException {
+    public void getRestCall(String rest_endpoint, String rest_data, String rest_parameters) throws IOException, UnirestException, InterruptedException {
 
         // Build URL
         URL url = null;
 
-        if (this.rest_parameters != "") {
-            Matcher matcher = Pattern.compile("^\\?").matcher(this.rest_parameters);
+        if (rest_parameters != "") {
+            Matcher matcher = Pattern.compile("^\\?").matcher(rest_parameters);
             if (!matcher.matches()) {
-                this.rest_parameters = '?' + this.rest_parameters;
+                rest_parameters = '?' + rest_parameters;
             }
         }
-        url = new URL(server + this.rest_endpoint + this.rest_data + this.rest_parameters);
+        url = new URL(server + rest_endpoint + rest_data + rest_parameters);
 
         // Call REST API
         if (url != null) {
-            this.fetchJson(url.toString());
+            fetchJson(url.toString());
         }
     }
 
@@ -103,9 +158,9 @@ public class EnsemblRestService {
      * @return JSONObject containing the returned JSON data
      */
 
-    public JsonNode getRestResults() {
-        return this.rest_results;
-    }
+//    public JsonNode getRestResults() {
+//        return this.rest_results;
+//    }
 
 
     /**
@@ -113,9 +168,9 @@ public class EnsemblRestService {
      *
      * @return List of error messages
      */
-    public ArrayList<String> getErrors() {
-        return this.rest_errors;
-    }
+//    public ArrayList<String> getErrors() {
+//        return this.rest_errors;
+//    }
 
 
     /**
@@ -123,26 +178,12 @@ public class EnsemblRestService {
      *
      * @param error_msg the error message
      */
-    private void addErrors(String error_msg) {
-        this.rest_errors.add(error_msg);
-    }
+//    private void addErrors(String error_msg) {
+//        this.rest_errors.add(error_msg);
+//    }
 
 
     private void fetchJson(String url) throws UnirestException, InterruptedException {
-
-        // Set proxy
-        String host = System.getProperty("http.proxyHost");
-        String port = System.getProperty("http.proxyPort");
-        Integer portNum = 0;
-
-        // Get port number
-        if (port != null) {
-            portNum = Integer.valueOf(port);
-        }
-
-        if (host != null && port != null) {
-            Unirest.setProxy(new HttpHost(host, portNum));
-        }
 
         HttpResponse<JsonNode> response = Unirest.get(url)
                 .header("Content-Type", "application/json")
@@ -175,4 +216,67 @@ public class EnsemblRestService {
             getLog().error("No data at " + url);
         }
     }
+
+    /**
+     * Simple generic Ensembl REST API call method.
+     *
+     * @param endpoint_type the endpoint name
+     * @param data          the data/id/symbol we want to query
+     * @return the corresponding JSONObject
+     */
+    private JSONObject getSimpleRestCall(String endpoint_type, String data) throws EnsemblMappingException {
+        String endpoint = this.getEndpoint(endpoint_type);
+//        EnsemblRestService ens_rest_call = new EnsemblRestService(endpoint, data);
+        JSONObject json_result = new JSONObject();
+        try {
+            rateLimit();
+            ens_rest_call.getRestCall();
+            json_result = ens_rest_call.getRestResults().getObject();
+
+            // Errors
+            ArrayList rest_errors = ens_rest_call.getErrors();
+            if (rest_errors.size() > 0) {
+                for (int i = 0; i < rest_errors.size(); ++i) {
+                    this.pipeline_errors.add(rest_errors.get(i).toString());
+                }
+            }
+        }
+        catch (IOException | InterruptedException | UnirestException e) {
+            getLog().error("Encountered a " + e.getClass().getSimpleName() +
+                                   " whilst trying to run mapping of SNP", e);
+            throw new EnsemblMappingException();
+        }
+        return json_result;
+    }
+
+    /**
+     * Return the Ensembl REST API endpoint URL corresponding the the endpoint name provided
+     *
+     * @param endpoint_name the name of the REST API endpoint
+     * @return the URL part specific to the queried endpoint
+     */
+    private String getEndpoint(String endpoint_name) {
+        return this.endpoints.get(endpoint_name);
+    }
+
+    /**
+     * Check if the program reached the rate limit of calls per second
+     *
+     * @throws InterruptedException
+     */
+    private void rateLimit() throws InterruptedException {
+        requestCount++;
+        if (requestCount == requestPerSecond) {
+            long currentTime = System.currentTimeMillis();
+            long diff = currentTime - limitStartTime;
+            //if less than a second has passed then sleep for the remainder of the second
+            if (diff < maxSleepTime) {
+                Thread.sleep(maxSleepTime - diff);
+            }
+            //reset
+            limitStartTime = System.currentTimeMillis();
+            requestCount = 0;
+        }
+    }
+
 }

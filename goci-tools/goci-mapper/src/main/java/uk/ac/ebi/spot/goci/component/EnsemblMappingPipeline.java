@@ -46,7 +46,6 @@ public class EnsemblMappingPipeline {
 
     // Internal variables populated within the class
     private ArrayList<String> overlapping_genes = new ArrayList<>();
-    private Hashtable<String, String> endpoints = new Hashtable<String, String>();
 
     // Fixed variables
     private final String ensembl_source = "Ensembl";
@@ -58,10 +57,10 @@ public class EnsemblMappingPipeline {
     private final List<String> reported_genes_to_ignore = Arrays.asList("NR", "intergenic");
 
     // Request rate variables
-    private final int requestPerSecond = 15;
+//    private final int requestPerSecond = 15;
     private int requestCount = 0;
     private long limitStartTime = System.currentTimeMillis();
-    private final int maxSleepTime = 1000;
+//    private final int maxSleepTime = 1000;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
     protected Logger getLog() {
@@ -70,13 +69,13 @@ public class EnsemblMappingPipeline {
 
     // JPA no-args constructor
     public EnsemblMappingPipeline() {
-        this.setEndpoints();
+//        this.setEndpoints();
     }
 
     public EnsemblMappingPipeline(String rsId, Collection<String> reported_genes) {
         this.rsId = rsId;
         this.reported_genes = reported_genes;
-        this.setEndpoints();
+//        this.setEndpoints();
     }
 
     public EnsemblMappingPipeline(String rsId,
@@ -87,17 +86,10 @@ public class EnsemblMappingPipeline {
         this.reported_genes = reported_genes;
         this.requestCount = requestCount;
         this.limitStartTime = limitStartTime;
-        this.setEndpoints();
+//        this.setEndpoints();
     }
 
-    // Set the different Ensembl REST API endpoints used in the pipeline
-    protected void setEndpoints() {
-        String species = "homo_sapiens";
-        this.endpoints.put("variation", "/variation/" + species + "/");
-        this.endpoints.put("lookup_symbol", "/lookup/symbol/" + species + "/");
-        this.endpoints.put("overlap_region", "/overlap/region/" + species + "/");
-        this.endpoints.put("info_assembly", "/info/assembly/" + species + "/");
-    }
+
 
     /**
      * Getter for the variant functional class
@@ -164,7 +156,7 @@ public class EnsemblMappingPipeline {
         }
         else if (variation_result.length() > 0) {
             // Merged SNP
-            merged = (variation_result.getString("name") == this.rsId) ? 0 : 1;
+            merged = (variation_result.getString("name").equals(this.rsId)) ? 0 : 1;
 
             // Mapping errors
             if (variation_result.has("failed")) {
@@ -291,7 +283,7 @@ public class EnsemblMappingPipeline {
             throws EnsemblMappingException {
         // By default the db_type is 'core' (i.e. Ensembl)
         String rest_opt = "feature=gene";
-        if (source == this.ncbi_source) {
+        if (source.equals(this.ncbi_source)) {
             rest_opt += "&logic_name=" + this.ncbi_logic_name;
             rest_opt += "&db_type=" + this.ncbi_db_type;
         }
@@ -430,9 +422,9 @@ public class EnsemblMappingPipeline {
     private boolean addGenomicContext(JSONArray json_gene_list, Location snp_location, String source, String type) {
         String closest_gene = "";
         int closest_distance = 0;
-        boolean intergenic = (type == "overlap") ? false : true;
-        boolean upstream = (type == "upstream") ? true : false;
-        boolean downstream = (type == "downstream") ? true : false;
+        boolean intergenic = (type.equals("overlap")) ? false : true;
+        boolean upstream = (type.equals("upstream")) ? true : false;
+        boolean downstream = (type.equals("downstream")) ? true : false;
 
         String position = snp_location.getChromosomePosition();
 
@@ -455,10 +447,10 @@ public class EnsemblMappingPipeline {
                 }
 
                 int distance = 0;
-                if (type == "upstream") {
+                if (type.equals("upstream")) {
                     distance = pos - json_gene.getInt("end");
                 }
-                else if (type == "downstream") {
+                else if (type.equals("downstream")) {
                     distance = json_gene.getInt("start") - pos;
                 }
 
@@ -473,8 +465,8 @@ public class EnsemblMappingPipeline {
             JSONObject json_gene = json_gene_list.getJSONObject(i);
             String gene_id = json_gene.getString("id");
             String gene_name = json_gene.getString("external_name");
-            String ncbi_id = (source == "NCBI") ? gene_id : null;
-            String ensembl_id = (source == "Ensembl") ? gene_id : null;
+            String ncbi_id = (source.equals("NCBI")) ? gene_id : null;
+            String ensembl_id = (source.equals("Ensembl")) ? gene_id : null;
             int distance = 0;
 
             if (intergenic) {
@@ -483,10 +475,10 @@ public class EnsemblMappingPipeline {
                     continue;
                 }
                 int pos = Integer.parseInt(position);
-                if (type == "upstream") {
+                if (type.equals("upstream")) {
                     distance = pos - json_gene.getInt("end");
                 }
-                else if (type == "downstream") {
+                else if (type.equals("downstream")) {
                     distance = json_gene.getInt("start") - pos;
                 }
             }
@@ -507,7 +499,7 @@ public class EnsemblMappingPipeline {
             Gene gene_object = new Gene(gene_name, entrezGenes, ensemblGenes);
 
             // Check if the gene corresponds to the closest gene
-            boolean is_closest_gene = (closest_gene == gene_id && closest_gene != "") ? true : false;
+            boolean is_closest_gene = (closest_gene.equals(gene_id) && closest_gene != "") ? true : false;
 
             GenomicContext gc = new GenomicContext(intergenic,
                                                    upstream,
@@ -556,13 +548,13 @@ public class EnsemblMappingPipeline {
         JSONArray closest_gene = new JSONArray();
         int closest_distance = 0;
 
-        if (type == "upstream") {
+        if (type.equals("upstream")) {
             position1 = position2 - genomic_distance;
             position1 = (position1 < 0) ? boundary : position1;
             new_pos = String.valueOf(position1);
         }
         else {
-            if (type == "downstream") {
+            if (type.equals("downstream")) {
                 position2 = position1 + genomic_distance;
                 position2 = (position2 > boundary) ? boundary : position2;
                 new_pos = String.valueOf(position2);
@@ -592,10 +584,10 @@ public class EnsemblMappingPipeline {
                     }
 
                     int distance = 0;
-                    if (type == "upstream") {
+                    if (type.equals("upstream")) {
                         distance = snp_pos - json_gene.getInt("end");
                     }
-                    else if (type == "downstream") {
+                    else if (type.equals("downstream")) {
                         distance = json_gene.getInt("start") - snp_pos;
                     }
 
@@ -659,37 +651,7 @@ public class EnsemblMappingPipeline {
     }
 
 
-    /**
-     * Simple generic Ensembl REST API call method.
-     *
-     * @param endpoint_type the endpoint name
-     * @param data          the data/id/symbol we want to query
-     * @return the corresponding JSONObject
-     */
-    private JSONObject getSimpleRestCall(String endpoint_type, String data) throws EnsemblMappingException {
-        String endpoint = this.getEndpoint(endpoint_type);
-        EnsemblRestService ens_rest_call = new EnsemblRestService(endpoint, data);
-        JSONObject json_result = new JSONObject();
-        try {
-            rateLimit();
-            ens_rest_call.getRestCall();
-            json_result = ens_rest_call.getRestResults().getObject();
 
-            // Errors
-            ArrayList rest_errors = ens_rest_call.getErrors();
-            if (rest_errors.size() > 0) {
-                for (int i = 0; i < rest_errors.size(); ++i) {
-                    this.pipeline_errors.add(rest_errors.get(i).toString());
-                }
-            }
-        }
-        catch (IOException | InterruptedException | UnirestException e) {
-            getLog().error("Encountered a " + e.getClass().getSimpleName() +
-                                   " whilst trying to run mapping of SNP", e);
-            throw new EnsemblMappingException();
-        }
-        return json_result;
-    }
 
 
     /**
@@ -784,33 +746,6 @@ public class EnsemblMappingPipeline {
         }
     }
 
-    /**
-     * Check if the program reached the rate limit of calls per second
-     *
-     * @throws InterruptedException
-     */
-    private void rateLimit() throws InterruptedException {
-        requestCount++;
-        if (requestCount == requestPerSecond) {
-            long currentTime = System.currentTimeMillis();
-            long diff = currentTime - limitStartTime;
-            //if less than a second has passed then sleep for the remainder of the second
-            if (diff < maxSleepTime) {
-                Thread.sleep(maxSleepTime - diff);
-            }
-            //reset
-            limitStartTime = System.currentTimeMillis();
-            requestCount = 0;
-        }
-    }
 
-    /**
-     * Return the Ensembl REST API endpoint URL corresponding the the endpoint name provided
-     *
-     * @param endpoint_name the name of the REST API endpoint
-     * @return the URL part specific to the queried endpoint
-     */
-    private String getEndpoint(String endpoint_name) {
-        return this.endpoints.get(endpoint_name);
-    }
+
 }
