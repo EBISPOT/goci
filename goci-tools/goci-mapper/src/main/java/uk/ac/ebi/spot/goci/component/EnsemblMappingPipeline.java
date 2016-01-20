@@ -67,26 +67,7 @@ public class EnsemblMappingPipeline {
 
     // JPA no-args constructor
     public EnsemblMappingPipeline() {
-//        this.setEndpoints();
     }
-
-    public EnsemblMappingPipeline(String rsId, Collection<String> reported_genes) {
-        this.rsId = rsId;
-        this.reported_genes = reported_genes;
-//        this.setEndpoints();
-    }
-
-    public EnsemblMappingPipeline(String rsId,
-                                  Collection<String> reported_genes,
-                                  int requestCount,
-                                  long limitStartTime) {
-        this.rsId = rsId;
-        this.reported_genes = reported_genes;
-        this.requestCount = requestCount;
-        this.limitStartTime = limitStartTime;
-//        this.setEndpoints();
-    }
-
 
 
     /**
@@ -145,7 +126,15 @@ public class EnsemblMappingPipeline {
 
 
     // Run the pipeline for a given SNP
-    public void run_pipeline() throws EnsemblMappingException {
+    public void run_pipeline(String rsId,
+                             Collection<String> reported_genes,
+                             int requestCount,
+                             long limitStartTime) throws EnsemblMappingException {
+
+        this.rsId = rsId;
+        this.reported_genes = reported_genes;
+        this.requestCount = requestCount;
+        this.limitStartTime = limitStartTime;
 
         // Variation call
         JSONObject variation_result = this.getVariationData();
