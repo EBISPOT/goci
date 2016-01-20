@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.EnsemblGene;
@@ -37,6 +38,25 @@ import java.util.regex.Pattern;
 @Service
 public class EnsemblMappingPipeline {
 
+    // Reading these from application.properties
+    @Value("${mapping.ensembl_source}")
+    private String ensemblSource;
+
+    @Value("${mapping.ncbi_source}")
+    private String ncbiSource;
+
+    @Value("${mapping.ncbi_db_type}")
+    private String ncbiDbType;
+
+    @Value("${mapping.ncbi_logic_name}")
+    private String ncbiLogicName;
+
+    @Value("${mapping.method}")
+    private String mappingMethod;
+
+    @Value("${mapping.genomic_distance}")
+    private int genomicDistance; // 100kb
+
     private String rsId;
 
     private int merged;
@@ -48,13 +68,6 @@ public class EnsemblMappingPipeline {
     // Internal variables populated within the class
     private ArrayList<String> overlapping_genes = new ArrayList<>();
 
-    // Fixed variables
-    private final String ensembl_source = "Ensembl";
-    private final String ncbi_source = "NCBI";
-    private final String ncbi_db_type = "otherfeatures";
-    private final String ncbi_logic_name = "refseq_import";
-    private final String mapping_method = "Ensembl pipeline";
-    private final int genomic_distance = 100000; // 100kb
     private final List<String> reported_genes_to_ignore = Arrays.asList("NR", "intergenic");
 
     // Request rate variables
@@ -202,8 +215,8 @@ public class EnsemblMappingPipeline {
         int chr_start = 1;
         int chr_end = getChromosomeEnd(snp_location.getChromosomeName());
 
-        getGenomicContext(snp_location, chr_start, chr_end, this.ensembl_source);
-        getGenomicContext(snp_location, chr_start, chr_end, this.ncbi_source);
+        getGenomicContext(snp_location, chr_start, chr_end, getEnsemblSource());
+        getGenomicContext(snp_location, chr_start, chr_end, getNcbiSource());
     }
 
 
@@ -219,9 +232,9 @@ public class EnsemblMappingPipeline {
             throws EnsemblMappingException {
         // By default the db_type is 'core' (i.e. Ensembl)
         String rest_opt = "feature=gene";
-        if (source.equals(this.ncbi_source)) {
-            rest_opt += "&logic_name=" + this.ncbi_logic_name;
-            rest_opt += "&db_type=" + this.ncbi_db_type;
+        if (source.equals(getNcbiSource())) {
+            rest_opt += "&logic_name=" + getNcbiLogicName();
+            rest_opt += "&db_type=" + getNcbiDbType();
         }
         // Overlapping genes
         getOverlappingGenes(snp_location, source, rest_opt);
@@ -278,7 +291,7 @@ public class EnsemblMappingPipeline {
         String chromosome = snp_location.getChromosomeName();
         String position = snp_location.getChromosomePosition();
 
-        int position_up = Integer.parseInt(snp_location.getChromosomePosition()) - genomic_distance;
+        int position_up = Integer.parseInt(snp_location.getChromosomePosition()) - getGenomicDistance();
         if (position_up < 0) {
             position_up = chr_start;
         }
@@ -317,7 +330,7 @@ public class EnsemblMappingPipeline {
         String chromosome = snp_location.getChromosomeName();
         String position = snp_location.getChromosomePosition();
 
-        int position_down = Integer.parseInt(snp_location.getChromosomePosition()) + genomic_distance;
+        int position_down = Integer.parseInt(snp_location.getChromosomePosition()) + getGenomicDistance();
         // Check the downstream position to avoid having a position over the 3' end of the chromosome
         if (chr_end != 0) {
             if (position_down > chr_end) {
@@ -445,7 +458,7 @@ public class EnsemblMappingPipeline {
                                                    gene_object,
                                                    snp_location,
                                                    source,
-                                                   mapping_method,
+                                                   getMappingMethod(),
                                                    is_closest_gene);
 
             genomic_contexts.add(gc);
@@ -485,13 +498,13 @@ public class EnsemblMappingPipeline {
         int closest_distance = 0;
 
         if (type.equals("upstream")) {
-            position1 = position2 - genomic_distance;
+            position1 = position2 - getGenomicDistance();
             position1 = (position1 < 0) ? boundary : position1;
             new_pos = String.valueOf(position1);
         }
         else {
             if (type.equals("downstream")) {
-                position2 = position1 + genomic_distance;
+                position2 = position1 + getGenomicDistance();
                 position2 = (position2 > boundary) ? boundary : position2;
                 new_pos = String.valueOf(position2);
             }
@@ -732,6 +745,32 @@ public class EnsemblMappingPipeline {
      */
     public ArrayList<String> getPipelineErrors() {
         return pipeline_errors;
+    }
+
+
+    // Getters for properties derived from application properties file
+    public String getEnsemblSource() {
+        return ensemblSource;
+    }
+
+    public String getNcbiSource() {
+        return ncbiSource;
+    }
+
+    public String getNcbiDbType() {
+        return ncbiDbType;
+    }
+
+    public String getNcbiLogicName() {
+        return ncbiLogicName;
+    }
+
+    public String getMappingMethod() {
+        return mappingMethod;
+    }
+
+    public int getGenomicDistance() {
+        return genomicDistance;
     }
 
 }
