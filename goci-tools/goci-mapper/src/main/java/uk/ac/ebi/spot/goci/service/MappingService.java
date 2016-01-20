@@ -42,6 +42,7 @@ public class MappingService {
     private MappingRecordService mappingRecordService;
     private AssociationQueryService associationService;
     private SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService;
+    private EnsemblMappingPipeline ensemblMappingPipeline;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -56,7 +57,8 @@ public class MappingService {
                           AssociationReportService associationReportService,
                           MappingRecordService mappingRecordService,
                           AssociationQueryService associationService,
-                          SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService) {
+                          SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService,
+                          EnsemblMappingPipeline ensemblMappingPipeline) {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.snpLocationMappingService = snpLocationMappingService;
         this.snpGenomicContextMappingService = snpGenomicContextMappingService;
@@ -64,6 +66,7 @@ public class MappingService {
         this.mappingRecordService = mappingRecordService;
         this.associationService = associationService;
         this.singleNucleotidePolymorphismQueryService = singleNucleotidePolymorphismQueryService;
+        this.ensemblMappingPipeline = ensemblMappingPipeline;
     }
 
     /**
@@ -131,15 +134,12 @@ public class MappingService {
 
                     String snpRsId = snpLinkedToLocus.getRsId();
 
-                    EnsemblMappingPipeline ensemblMappingPipeline =
-                            new EnsemblMappingPipeline(snpRsId,
-                                                       authorReportedGeneNamesLinkedToSnp,
-                                                       ensemblRequestCount,
-                                                       ensemblLimitStartTime);
-
                     // Try to map supplied data
                     try {
-                        ensemblMappingPipeline.run_pipeline();
+                        ensemblMappingPipeline.run_pipeline(snpRsId,
+                                                            authorReportedGeneNamesLinkedToSnp,
+                                                            ensemblRequestCount,
+                                                            ensemblLimitStartTime);
                     }
                     catch (Exception e) {
                         getLog().error("Encountered a " + e.getClass().getSimpleName() +
