@@ -57,10 +57,8 @@ public class EnsemblMappingPipeline {
     private final List<String> reported_genes_to_ignore = Arrays.asList("NR", "intergenic");
 
     // Request rate variables
-//    private final int requestPerSecond = 15;
     private int requestCount = 0;
     private long limitStartTime = System.currentTimeMillis();
-//    private final int maxSleepTime = 1000;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
     protected Logger getLog() {
