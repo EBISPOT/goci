@@ -131,10 +131,11 @@ public class MappingService {
 
                     String snpRsId = snpLinkedToLocus.getRsId();
                     EnsemblMappingResult ensemblMappingResult = new EnsemblMappingResult();
-                    
+
                     // Try to map supplied data
                     try {
-                        ensemblMappingResult = ensemblMappingPipeline.run_pipeline(snpRsId, authorReportedGeneNamesLinkedToSnp);
+                        ensemblMappingResult =
+                                ensemblMappingPipeline.run_pipeline(snpRsId, authorReportedGeneNamesLinkedToSnp);
                     }
                     catch (Exception e) {
                         getLog().error("Encountered a " + e.getClass().getSimpleName() +
