@@ -4,7 +4,6 @@
 
 
   Introduction
-  ============
 
 This project is a result of a collaboration between the NHGRI and the EBI to produce ontology-based curation and search
 functionality for the GWAS catalog.  This includes ontology-based query expansion in the public interface and curator
@@ -13,7 +12,6 @@ tools for annotating studies as they are entered into the GWAS catalog.
 Below is some developer information for working with the code held in this git repository.
 
   Git vs. SVN
-  ===========
 
 We've opted to use git as the SCM for this project, and host the source code on GitHub.  The main motivation for this
 is to enable us to use GitHub rather than sourceforge as our hosting site - it is much faster and provides better
@@ -35,7 +33,6 @@ SVN:
 You can push changes back to the GitHub repository using the normal mechanism for either git or SVN.
 
   Maven Structure
-  ===============
 
 The GWAS Ontology and Curation Infrastructure (GOCI) is organised into several main strands: tools for working with the
 ontology, tools for enhancing curation activities, and tools to generate a diagram of GWAS catalog data.
