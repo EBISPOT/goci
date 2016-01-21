@@ -1,14 +1,14 @@
 package uk.ac.ebi.spot.goci.component;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import uk.ac.ebi.spot.goci.exception.EnsemblRestIOException;
-import uk.ac.ebi.spot.goci.service.EnsemblRestService;
+import uk.ac.ebi.spot.goci.model.EnsemblReleaseJson;
 
-import java.io.IOException;
-import java.util.List;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by Laurent on 22/09/15.
@@ -20,7 +20,17 @@ import java.util.List;
 @Service
 public class EnsemblRelease {
 
-    private String endpoint = "/info/data/";
+    @NotNull @Value("${mapping.release_endpoint}")
+    private String endpoint;
+
+    @NotNull @Value("${ensembl.server}")
+    private String server;
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
 
     /**
      * Getter for the release version
@@ -29,72 +39,49 @@ public class EnsemblRelease {
      */
     public int getReleaseVersion() throws EnsemblRestIOException {
 
-        JSONObject ensembl_result = this.getSimpleRestCall();
-        if (ensembl_result.length() > 0) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = getServer() + getEndpoint();
+        EnsemblReleaseJson ensemblReleaseJson = new EnsemblReleaseJson();
+        int currentEnsemblRelease = 0;
 
-            // Check if there are releases key
-            if (ensembl_result.has("releases")) {
-                // Check if there are releases data
-                JSONArray releases = ensembl_result.getJSONArray("releases");
-                if (releases.length() > 0) {
-                    return releases.getInt(0);
-                }
-                else {
-                    throw new EnsemblRestIOException("Release information field empty");
-                }
-            }
-            else {
-                if (ensembl_result.has("error")) {
-                    throw new EnsemblRestIOException(checkError(ensembl_result));
-                }
-                else {
-                    throw new EnsemblRestIOException("No release or error information found while trying to check Ensembl release");
-                }
-            }
-        }
-
-        else {
-            throw new EnsemblRestIOException("Empty response body found while trying to check Ensembl release");
-        }
-    }
-
-
-    /**
-     * Check the type of error returned by the REST web service JSON output
-     *
-     * @param result The JSONObject result
-     */
-    private String checkError(JSONObject result) {
-        if (result.getString("error").contains("page not found")) {
-            return "Web service '" + endpoint + "' not found or not working.";
-        }
-        else {
-            return result.getString("error");
-        }
-    }
-
-
-    /**
-     * Simple generic Ensembl REST API call method.
-     *
-     * @return the corresponding JSONObject
-     */
-    private JSONObject getSimpleRestCall() throws EnsemblRestIOException {
-        EnsemblRestService ens_rest_call = new EnsemblRestService(endpoint, "");
-        JSONObject json_result = new JSONObject();
         try {
-            ens_rest_call.getRestCall();
-            json_result = ens_rest_call.getRestResults().getObject();
+            ensemblReleaseJson = restTemplate.getForObject(url, EnsemblReleaseJson.class);
+            getLog().info("Querying " + url);
+            int[] releases = ensemblReleaseJson.getReleases();
 
-            // Errors
-            List<String> rest_errors = ens_rest_call.getErrors();
-            if (rest_errors.size() > 0) {
-                throw new EnsemblRestIOException("Errors trying to get release information", rest_errors);
+
+            if (releases.length == 1) {
+                currentEnsemblRelease = releases[0];
+            }
+
+            else {
+                throw new EnsemblRestIOException("Unable to determine Ensembl release");
             }
         }
-        catch (IOException | InterruptedException | UnirestException e) {
-            throw new EnsemblRestIOException("Errors while trying to get release information", e);
+
+        catch (Exception e) {
+            throw new EnsemblRestIOException("Problem querying Ensembl API for release");
         }
-        return json_result;
+
+        return currentEnsemblRelease;
     }
+
+
+    public String getServer() {
+        return server;
+    }
+
+    public void setServer(String server) {
+        this.server = server;
+    }
+
+    public String getEndpoint() {
+        return endpoint;
+    }
+
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
+    }
+
+
 }
