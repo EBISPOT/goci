@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.component;
 
 import com.mashape.unirest.http.JsonNode;
+import org.hibernate.annotations.Synchronize;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -79,7 +80,7 @@ public class EnsemblMappingPipeline {
     }
 
     // Run the pipeline for a given SNP
-    public EnsemblMappingResult run_pipeline(String rsId,
+    public synchronized EnsemblMappingResult run_pipeline(String rsId,
                                              Collection<String> reported_genes,
                                              int requestCount,
                                              long limitStartTime) throws EnsemblRestIOException,
