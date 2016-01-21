@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.component.EnsemblMappingPipeline;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.EnsemblMappingResult;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
 import uk.ac.ebi.spot.goci.model.Location;
@@ -133,14 +134,10 @@ public class MappingService {
                 for (SingleNucleotidePolymorphism snpLinkedToLocus : snpsLinkedToLocus) {
 
                     String snpRsId = snpLinkedToLocus.getRsId();
-
-                    String functionalClass  = "";
+                    EnsemblMappingResult ensemblMappingResult = new EnsemblMappingResult();
                     // Try to map supplied data
                     try {
-                        functionalClass = ensemblMappingPipeline.run_pipeline(snpRsId,
-                                                                              authorReportedGeneNamesLinkedToSnp,
-                                                                              ensemblRequestCount,
-                                                                              ensemblLimitStartTime);
+                        ensemblMappingResult = ensemblMappingPipeline.run_pipeline(snpRsId, authorReportedGeneNamesLinkedToSnp);
                     }
                     catch (Exception e) {
                         getLog().error("Encountered a " + e.getClass().getSimpleName() +
@@ -148,20 +145,20 @@ public class MappingService {
                         throw new EnsemblMappingException();
                     }
                     finally {
-                        ensemblRequestCount = ensemblMappingPipeline.getRequestCount();
-                        ensemblLimitStartTime = ensemblMappingPipeline.getLimitStartTime();
+                        ensemblRequestCount = ensemblMappingPipeline.getEnsemblRestService().getRequestCount();
+                        ensemblLimitStartTime = ensemblMappingPipeline.getEnsemblRestService().getLimitStartTime();
                     }
 
                     // First remove old locations and genomic contexts
                     snpLocationMappingService.removeExistingSnpLocations(snpLinkedToLocus);
                     snpGenomicContextMappingService.removeExistingGenomicContexts(snpLinkedToLocus);
 
-                    Collection<Location> locations = ensemblMappingPipeline.getLocations();
-                    Collection<GenomicContext> snpGenomicContexts = ensemblMappingPipeline.getGenomicContexts();
-                    ArrayList<String> pipelineErrors = ensemblMappingPipeline.getPipelineErrors();
+                    Collection<Location> locations = ensemblMappingResult.getLocations();
+                    Collection<GenomicContext> snpGenomicContexts = ensemblMappingResult.getGenomicContexts();
+                    ArrayList<String> pipelineErrors = ensemblMappingResult.getPipelineErrors();
 
                     // Update functional class
-                    snpLinkedToLocus.setFunctionalClass(functionalClass);
+                    snpLinkedToLocus.setFunctionalClass(ensemblMappingResult.getFunctionalClass());
                     snpLinkedToLocus.setLastUpdateDate(new Date());
                     singleNucleotidePolymorphismRepository.save(snpLinkedToLocus);
 
