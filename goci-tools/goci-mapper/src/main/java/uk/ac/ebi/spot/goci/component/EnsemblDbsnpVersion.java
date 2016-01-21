@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
  * @author Laurent
  *         <p>
  *         Class getting the dbSNP version from the Ensembl REST API
- *
+ *         <p>
  *         Refactored by Emma to use standard Spring mechanism to consume a RESTful service
  */
 @Service
@@ -43,13 +43,12 @@ public class EnsemblDbsnpVersion {
 
         RestTemplate restTemplate = new RestTemplate();
         String url = getServer() + getEndpoint();
-        EnsemblDbsnpVersionJson ensemblDbsnpVersionJson = new EnsemblDbsnpVersionJson();
         String version = "";
 
         try {
-            ensemblDbsnpVersionJson = restTemplate.getForObject(url, EnsemblDbsnpVersionJson.class);
             getLog().info("Querying " + url);
-            version = ensemblDbsnpVersionJson.getVersion();
+            EnsemblDbsnpVersionJson[] response = restTemplate.getForObject(url, EnsemblDbsnpVersionJson[].class);
+            version = response[0].getVersion();
 
             if (version.isEmpty()) {
                 throw new EnsemblRestIOException("Unable to determine Ensembl dbSNP version");
