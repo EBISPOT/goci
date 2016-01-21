@@ -20,9 +20,9 @@ public class EnsemblMappingResult {
 
     private Collection<Location> locations = new ArrayList<>();
 
-    private Collection<GenomicContext> genomic_contexts = new ArrayList<>();
+    private Collection<GenomicContext> genomicContexts = new ArrayList<>();
 
-    private ArrayList<String> pipeline_errors = new ArrayList<>();
+    private ArrayList<String> pipelineErrors = new ArrayList<>();
 
     private String functionalClass;
 
@@ -31,20 +31,20 @@ public class EnsemblMappingResult {
     }
 
 
-    public ArrayList<String> getPipeline_errors() {
-        return pipeline_errors;
+    public ArrayList<String> getPipelineErrors() {
+        return pipelineErrors;
     }
 
-    public void setPipeline_errors(ArrayList<String> pipeline_errors) {
-        this.pipeline_errors = pipeline_errors;
+    public void setPipelineErrors(ArrayList<String> pipelineErrors) {
+        this.pipelineErrors = pipelineErrors;
     }
 
-    public Collection<GenomicContext> getGenomic_contexts() {
-        return genomic_contexts;
+    public Collection<GenomicContext> getGenomicContexts() {
+        return genomicContexts;
     }
 
-    public void setGenomic_contexts(Collection<GenomicContext> genomic_contexts) {
-        this.genomic_contexts = genomic_contexts;
+    public void setGenomicContexts(Collection<GenomicContext> genomicContexts) {
+        this.genomicContexts = genomicContexts;
     }
 
     public Collection<Location> getLocations() {
@@ -80,9 +80,15 @@ public class EnsemblMappingResult {
     }
 
     public void addPipelineErrors(String error) {
-        ArrayList<String> pipelineErrors = getPipeline_errors();
+        ArrayList<String> pipelineErrors = getPipelineErrors();
         pipelineErrors.add(error);
-        setPipeline_errors(pipelineErrors);
+        setPipelineErrors(pipelineErrors);
+    }
+
+    public void addGenomicContext(GenomicContext genomicContext) {
+        Collection<GenomicContext> genomicContexts = getGenomicContexts();
+        genomicContexts.add(genomicContext);
+        setGenomicContexts(genomicContexts);
     }
 
 }
