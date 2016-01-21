@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.exception.EnsemblRestIOException;
 import uk.ac.ebi.spot.goci.model.EnsemblGene;
 import uk.ac.ebi.spot.goci.model.EnsemblMappingResult;
@@ -72,27 +71,24 @@ public class EnsemblMappingPipeline {
     }
 
     @Autowired
-    public EnsemblMappingPipeline(EnsemblRestService ensemblRestService,
-                                  EnsemblMappingResult ensemblMappingResult) {
+    public EnsemblMappingPipeline(EnsemblRestService ensemblRestService) {
         this.ensemblRestService = ensemblRestService;
-        this.ensemblMappingResult = ensemblMappingResult;
     }
 
     // Run the pipeline for a given SNP
     public synchronized EnsemblMappingResult run_pipeline(String rsId, Collection<String> reportedGenes)
             throws EnsemblRestIOException {
 
-        // Set rsId in our result object
+        // Create our result object
+        setEnsemblMappingResult(new EnsemblMappingResult());
         getEnsemblMappingResult().setRsId(rsId);
 
-        // Object to hold our results
-        Collection<Location> locations = new ArrayList<>();
-
         // Variation call
-        RestResponseResult apiResult = getVariationData(rsId);
-        JSONObject variationResult = apiResult.getRestResult().getObject();
-        String restApiError = apiResult.getError();
+        RestResponseResult variationDataApiResult = ensemblRestService.getRestCall("variation", rsId, "");
+        JSONObject variationResult = variationDataApiResult.getRestResult().getObject();
+        String restApiError = variationDataApiResult.getError();
 
+        // Check for any errors
         if (restApiError != null && !restApiError.isEmpty()) {
             getEnsemblMappingResult().addPipelineErrors(restApiError);
         }
@@ -112,10 +108,10 @@ public class EnsemblMappingPipeline {
 
             // Mapping and genomic context calls
             JSONArray mappings = variationResult.getJSONArray("mappings");
-            locations = getMappings(mappings);
+            Collection<Location> locations = getMappings(mappings);
             getEnsemblMappingResult().setLocations(locations);
 
-            // Genomic context & Reported genes
+            // Add genomic context
             if (locations.size() > 0) {
 
                 // Functional class (most severe consequence).
@@ -133,7 +129,7 @@ public class EnsemblMappingPipeline {
 
         // Reported genes checks
         if (reportedGenes.size() > 0) {
-            checkReportedGenes(reportedGenes, locations);
+            checkReportedGenes(reportedGenes, getEnsemblMappingResult().getLocations());
         }
 
         return getEnsemblMappingResult();
@@ -193,18 +189,6 @@ public class EnsemblMappingPipeline {
                 }
             }
         }
-    }
-
-
-    /**
-     * Variation REST API call
-     *
-     * @param rsId
-     * @return RestResponseResult containing the output of the Ensembl REST API endpoint "variation"
-     */
-    private RestResponseResult getVariationData(String rsId) throws EnsemblRestIOException {
-
-        return ensemblRestService.getRestCall("variation", rsId, "");
     }
 
 
