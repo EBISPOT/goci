@@ -79,11 +79,8 @@ public class EnsemblMappingPipeline {
     }
 
     // Run the pipeline for a given SNP
-    public synchronized EnsemblMappingResult run_pipeline(String rsId,
-                                                          Collection<String> reportedGenes,
-                                                          int requestCount,
-                                                          long limitStartTime) throws EnsemblRestIOException,
-                                                                                      EnsemblMappingException {
+    public synchronized EnsemblMappingResult run_pipeline(String rsId, Collection<String> reportedGenes)
+            throws EnsemblRestIOException {
 
         // Set rsId in our result object
         getEnsemblMappingResult().setRsId(rsId);
@@ -151,7 +148,7 @@ public class EnsemblMappingPipeline {
      */
 
     private void checkReportedGenes(Collection<String> reportedGenes, Collection<Location> locations)
-            throws EnsemblMappingException, EnsemblRestIOException {
+            throws EnsemblRestIOException {
         for (String reportedGene : reportedGenes) {
 
             reportedGene = reportedGene.replaceAll(" ", ""); // Remove extra spaces
@@ -185,7 +182,7 @@ public class EnsemblMappingPipeline {
                         }
                         else {
                             getEnsemblMappingResult().addPipelineErrors("Can't compare the " + reportedGene +
-                                                                           " location in Ensembl: no mapping available for the variant");
+                                                                                " location in Ensembl: no mapping available for the variant");
                         }
                     }
                     // No gene location found
@@ -451,8 +448,9 @@ public class EnsemblMappingPipeline {
                 String gene_id = json_gene.getString("id");
                 String gene_name = json_gene.getString("external_name");
 
-                if ((gene_name != null && getEnsemblMappingResult().getOverlappingGenes().contains(gene_name)) || gene_name ==
-                        null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
+                if ((gene_name != null && getEnsemblMappingResult().getOverlappingGenes().contains(gene_name)) ||
+                        gene_name ==
+                                null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
                     continue;
                 }
 
@@ -480,8 +478,9 @@ public class EnsemblMappingPipeline {
             int distance = 0;
 
             if (intergenic) {
-                if ((gene_name != null && getEnsemblMappingResult().getOverlappingGenes().contains(gene_name)) || gene_name ==
-                        null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
+                if ((gene_name != null && getEnsemblMappingResult().getOverlappingGenes().contains(gene_name)) ||
+                        gene_name ==
+                                null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
                     continue;
                 }
                 int pos = Integer.parseInt(position);
@@ -586,8 +585,9 @@ public class EnsemblMappingPipeline {
                     String gene_id = json_gene.getString("id");
                     String gene_name = json_gene.getString("external_name");
 
-                    if ((gene_name != null && getEnsemblMappingResult().getOverlappingGenes().contains(gene_name)) || gene_name ==
-                            null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
+                    if ((gene_name != null && getEnsemblMappingResult().getOverlappingGenes().contains(gene_name)) ||
+                            gene_name ==
+                                    null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
                         continue;
                     }
 
@@ -688,7 +688,6 @@ public class EnsemblMappingPipeline {
             }
         }
     }
-
 
 
     // Getters and setters
