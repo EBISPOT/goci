@@ -675,7 +675,6 @@ public class EnsemblMappingPipeline {
 
 
     // Getters and setters
-
     public String getEnsemblSource() {
         return ensemblSource;
     }
@@ -726,14 +725,6 @@ public class EnsemblMappingPipeline {
 
     public List<String> getReportedGenesToIgnore() {
         return reportedGenesToIgnore;
-    }
-
-    public EnsemblRestService getEnsemblRestService() {
-        return ensemblRestService;
-    }
-
-    public void setEnsemblRestService(EnsemblRestService ensemblRestService) {
-        this.ensemblRestService = ensemblRestService;
     }
 
     public EnsemblMappingResult getEnsemblMappingResult() {
