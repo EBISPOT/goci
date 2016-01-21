@@ -49,7 +49,7 @@ public class EnsemblGenomeBuildVersion {
         try {
             ensemblGenomeBuildVersionJson = restTemplate.getForObject(url, EnsemblGenomeBuildVersionJson.class);
             getLog().info("Querying " + url);
-            assemblyName = ensemblGenomeBuildVersionJson.getAssemblyName();
+            assemblyName = ensemblGenomeBuildVersionJson.getAssembly_name();
 
             if (assemblyName.isEmpty()) {
                 throw new EnsemblRestIOException("Unable to determine Ensembl genome build version");
