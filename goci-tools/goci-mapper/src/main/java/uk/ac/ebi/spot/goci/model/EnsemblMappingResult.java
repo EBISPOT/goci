@@ -14,6 +14,8 @@ import java.util.Collection;
 
 public class EnsemblMappingResult {
 
+    private String rsId;
+
     private Integer merged;
 
     private Collection<Location> locations = new ArrayList<>();
@@ -68,4 +70,19 @@ public class EnsemblMappingResult {
     public void setFunctionalClass(String functionalClass) {
         this.functionalClass = functionalClass;
     }
+
+    public String getRsId() {
+        return rsId;
+    }
+
+    public void setRsId(String rsId) {
+        this.rsId = rsId;
+    }
+
+    public void addPipelineErrors(String error) {
+        ArrayList<String> pipelineErrors = getPipeline_errors();
+        pipelineErrors.add(error);
+        setPipeline_errors(pipelineErrors);
+    }
+
 }
