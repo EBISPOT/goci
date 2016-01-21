@@ -71,10 +71,6 @@ public class EnsemblMappingPipeline {
         return log;
     }
 
-    // TODO Internal variables populated within the class
-    private ArrayList<String> overlapping_genes = new ArrayList<>();
-
-
     @Autowired
     public EnsemblMappingPipeline(EnsemblRestService ensemblRestService,
                                   EnsemblMappingResult ensemblMappingResult) {
@@ -333,10 +329,9 @@ public class EnsemblMappingPipeline {
             for (int i = 0; i < overlap_gene_result.length(); ++i) {
                 JSONObject gene_json_object = overlap_gene_result.getJSONObject(i);
 
-                String gene_name = gene_json_object.getString("external_name");
-                overlapping_genes.add(gene_name);
+                String geneName = gene_json_object.getString("external_name");
+                ensemblMappingResult.addOverlappingGene(geneName);
             }
-
             addGenomicContext(overlap_gene_result, snp_location, source, "overlap");
         }
     }
@@ -456,7 +451,7 @@ public class EnsemblMappingPipeline {
                 String gene_id = json_gene.getString("id");
                 String gene_name = json_gene.getString("external_name");
 
-                if ((gene_name != null && overlapping_genes.contains(gene_name)) || gene_name ==
+                if ((gene_name != null && ensemblMappingResult.getOverlappingGenes().contains(gene_name)) || gene_name ==
                         null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
                     continue;
                 }
@@ -485,7 +480,7 @@ public class EnsemblMappingPipeline {
             int distance = 0;
 
             if (intergenic) {
-                if ((gene_name != null && overlapping_genes.contains(gene_name)) || gene_name ==
+                if ((gene_name != null && ensemblMappingResult.getOverlappingGenes().contains(gene_name)) || gene_name ==
                         null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
                     continue;
                 }
@@ -591,7 +586,7 @@ public class EnsemblMappingPipeline {
                     String gene_id = json_gene.getString("id");
                     String gene_name = json_gene.getString("external_name");
 
-                    if ((gene_name != null && overlapping_genes.contains(gene_name)) || gene_name ==
+                    if ((gene_name != null && ensemblMappingResult.getOverlappingGenes().contains(gene_name)) || gene_name ==
                             null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
                         continue;
                     }
@@ -764,13 +759,5 @@ public class EnsemblMappingPipeline {
 
     public void setEnsemblMappingResult(EnsemblMappingResult ensemblMappingResult) {
         this.ensemblMappingResult = ensemblMappingResult;
-    }
-
-    public ArrayList<String> getOverlapping_genes() {
-        return overlapping_genes;
-    }
-
-    public void setOverlapping_genes(ArrayList<String> overlapping_genes) {
-        this.overlapping_genes = overlapping_genes;
     }
 }
