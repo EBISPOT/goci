@@ -129,7 +129,7 @@ public class EnsemblRestService {
                 }
             }
 
-            url = new URL(server + endpoint + data + rest_parameters);
+            url = new URL(getServer() + endpoint + data + rest_parameters);
             restResponseResult = fetchJson(url.toString());
         }
 
@@ -199,7 +199,7 @@ public class EnsemblRestService {
 
         if (requestCount == getRequestPerSecond()) {
             long currentTime = System.currentTimeMillis();
-            long diff = currentTime - limitStartTime;
+            long diff = currentTime - getLimitStartTime();
             //if less than a second has passed then sleep for the remainder of the second
             if (diff < getMaxSleepTime()) {
                 Thread.sleep(getMaxSleepTime() - diff);
