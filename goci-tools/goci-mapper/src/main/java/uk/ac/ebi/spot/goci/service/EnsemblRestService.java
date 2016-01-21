@@ -107,9 +107,10 @@ public class EnsemblRestService {
     /**
      * Simple generic Ensembl REST API call method.
      *
-     * @param endpoint_type the endpoint name
-     * @param data          the data/id/symbol we want to query
-     * @return the corresponding JSONObject
+     * @param endpoint_type   the endpoint name
+     * @param data            the data/id/symbol we want to query
+     * @param rest_parameters rest parameters
+     * @return the corresponding result
      */
     public RestResponseResult getRestCall(String endpoint_type, String data, String rest_parameters)
             throws EnsemblRestIOException {
@@ -144,7 +145,12 @@ public class EnsemblRestService {
         return restResponseResult;
     }
 
-
+    /**
+     * Fetch response from API
+     *
+     * @param url
+     * @return the corresponding result
+     */
     private RestResponseResult fetchJson(String url)
             throws UnirestException, InterruptedException, EnsemblRestIOException {
 
