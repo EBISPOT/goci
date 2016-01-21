@@ -86,7 +86,7 @@ public class EnsemblMappingPipeline {
                                                                                       EnsemblMappingException {
 
         // Set rsId in our result object
-        ensemblMappingResult.setRsId(rsId);
+        getEnsemblMappingResult().setRsId(rsId);
 
         // Object to hold our results
         Collection<Location> locations = new ArrayList<>();
@@ -97,7 +97,7 @@ public class EnsemblMappingPipeline {
         String restApiError = apiResult.getError();
 
         if (restApiError != null && !restApiError.isEmpty()) {
-            ensemblMappingResult.addPipelineErrors(restApiError);
+            getEnsemblMappingResult().addPipelineErrors(restApiError);
         }
 
         if (variationResult.has("error")) {
@@ -106,17 +106,17 @@ public class EnsemblMappingPipeline {
         else if (variationResult.length() > 0) {
 
             // Merged SNP
-            ensemblMappingResult.setMerged((variationResult.getString("name").equals(rsId)) ? 0 : 1);
+            getEnsemblMappingResult().setMerged((variationResult.getString("name").equals(rsId)) ? 0 : 1);
 
             // Mapping errors
             if (variationResult.has("failed")) {
-                ensemblMappingResult.addPipelineErrors(variationResult.getString("failed"));
+                getEnsemblMappingResult().addPipelineErrors(variationResult.getString("failed"));
             }
 
             // Mapping and genomic context calls
             JSONArray mappings = variationResult.getJSONArray("mappings");
             locations = getMappings(mappings);
-            ensemblMappingResult.setLocations(locations);
+            getEnsemblMappingResult().setLocations(locations);
 
             // Genomic context & Reported genes
             if (locations.size() > 0) {
@@ -124,7 +124,7 @@ public class EnsemblMappingPipeline {
                 // Functional class (most severe consequence).
                 // This implies there is at least one variant location.
                 if (variationResult.has("most_severe_consequence")) {
-                    ensemblMappingResult.setFunctionalClass(variationResult.getString("most_severe_consequence"));
+                    getEnsemblMappingResult().setFunctionalClass(variationResult.getString("most_severe_consequence"));
                 }
 
                 // Genomic context (loop over the "locations" object)
@@ -178,19 +178,19 @@ public class EnsemblMappingPipeline {
                                 }
                             }
                             if (same_chromosome == 0) {
-                                ensemblMappingResult.addPipelineErrors(
+                                getEnsemblMappingResult().addPipelineErrors(
                                         "Reported gene " + reportedGene + " is on a different chromosome (chr" +
                                                 gene_chromosome + ")");
                             }
                         }
                         else {
-                            ensemblMappingResult.addPipelineErrors("Can't compare the " + reportedGene +
+                            getEnsemblMappingResult().addPipelineErrors("Can't compare the " + reportedGene +
                                                                            " location in Ensembl: no mapping available for the variant");
                         }
                     }
                     // No gene location found
                     else {
-                        ensemblMappingResult.addPipelineErrors(
+                        getEnsemblMappingResult().addPipelineErrors(
                                 "Can't find a location in Ensembl for the reported gene " + reportedGene);
                     }
                 }
@@ -330,7 +330,7 @@ public class EnsemblMappingPipeline {
                 JSONObject gene_json_object = overlap_gene_result.getJSONObject(i);
 
                 String geneName = gene_json_object.getString("external_name");
-                ensemblMappingResult.addOverlappingGene(geneName);
+                getEnsemblMappingResult().addOverlappingGene(geneName);
             }
             addGenomicContext(overlap_gene_result, snp_location, source, "overlap");
         }
@@ -440,7 +440,7 @@ public class EnsemblMappingPipeline {
 
         SingleNucleotidePolymorphism snp_tmp =
                 new SingleNucleotidePolymorphism();
-        snp_tmp.setRsId(ensemblMappingResult.getRsId());
+        snp_tmp.setRsId(getEnsemblMappingResult().getRsId());
 
         // Get closest gene
         if (intergenic) {
@@ -451,7 +451,7 @@ public class EnsemblMappingPipeline {
                 String gene_id = json_gene.getString("id");
                 String gene_name = json_gene.getString("external_name");
 
-                if ((gene_name != null && ensemblMappingResult.getOverlappingGenes().contains(gene_name)) || gene_name ==
+                if ((gene_name != null && getEnsemblMappingResult().getOverlappingGenes().contains(gene_name)) || gene_name ==
                         null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
                     continue;
                 }
@@ -480,7 +480,7 @@ public class EnsemblMappingPipeline {
             int distance = 0;
 
             if (intergenic) {
-                if ((gene_name != null && ensemblMappingResult.getOverlappingGenes().contains(gene_name)) || gene_name ==
+                if ((gene_name != null && getEnsemblMappingResult().getOverlappingGenes().contains(gene_name)) || gene_name ==
                         null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
                     continue;
                 }
@@ -520,7 +520,7 @@ public class EnsemblMappingPipeline {
                                                    getMappingMethod(),
                                                    is_closest_gene);
 
-            ensemblMappingResult.addGenomicContext(gc);
+            getEnsemblMappingResult().addGenomicContext(gc);
         }
         return (closest_gene != "") ? true : false;
     }
@@ -586,7 +586,7 @@ public class EnsemblMappingPipeline {
                     String gene_id = json_gene.getString("id");
                     String gene_name = json_gene.getString("external_name");
 
-                    if ((gene_name != null && ensemblMappingResult.getOverlappingGenes().contains(gene_name)) || gene_name ==
+                    if ((gene_name != null && getEnsemblMappingResult().getOverlappingGenes().contains(gene_name)) || gene_name ==
                             null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
                         continue;
                     }
@@ -637,7 +637,7 @@ public class EnsemblMappingPipeline {
 
         else {
             // Errors
-            ensemblMappingResult.addPipelineErrors(restResponseResult.getError());
+            getEnsemblMappingResult().addPipelineErrors(restResponseResult.getError());
             overlap_result = new JSONArray("[{\"overlap_error\":\"1\"}]");
         }
 
@@ -677,14 +677,14 @@ public class EnsemblMappingPipeline {
     private void checkError(JSONObject result, String webservice, String default_message) {
 
         if (result.getString("error").contains("page not found")) {
-            ensemblMappingResult.addPipelineErrors("Web service '" + webservice + "' not found or not working.");
+            getEnsemblMappingResult().addPipelineErrors("Web service '" + webservice + "' not found or not working.");
         }
         else {
             if (default_message.equals("")) {
-                ensemblMappingResult.addPipelineErrors(result.getString("error"));
+                getEnsemblMappingResult().addPipelineErrors(result.getString("error"));
             }
             else {
-                ensemblMappingResult.addPipelineErrors(default_message);
+                getEnsemblMappingResult().addPipelineErrors(default_message);
             }
         }
     }
