@@ -94,17 +94,13 @@ public class MappingService {
     public void validateAndMapSnps(Collection<Association> associations, String performer)
             throws EnsemblMappingException {
 
-        // Variables set to comply with the maximum of requests per second allowed by the Ensembl REST server.
-        int ensemblRequestCount = 0;
-        long ensemblLimitStartTime = System.currentTimeMillis();
-
         // For each association get the loci
         for (Association association : associations) {
 
             getLog().info("Mapping association: " + association.getId());
 
-            // Map to store returned location data, this is used as
-            // snpLocationMappingService process all locations linked
+            // Map to store returned location data, this is used in
+            // snpLocationMappingService to process all locations linked
             // to a single snp in one go
             Map<String, Set<Location>> snpToLocationsMap = new HashMap<>();
 
@@ -135,6 +131,7 @@ public class MappingService {
 
                     String snpRsId = snpLinkedToLocus.getRsId();
                     EnsemblMappingResult ensemblMappingResult = new EnsemblMappingResult();
+                    
                     // Try to map supplied data
                     try {
                         ensemblMappingResult = ensemblMappingPipeline.run_pipeline(snpRsId, authorReportedGeneNamesLinkedToSnp);
@@ -143,10 +140,6 @@ public class MappingService {
                         getLog().error("Encountered a " + e.getClass().getSimpleName() +
                                                " whilst trying to run mapping of SNP" + snpRsId, e);
                         throw new EnsemblMappingException();
-                    }
-                    finally {
-                        ensemblRequestCount = ensemblMappingPipeline.getEnsemblRestService().getRequestCount();
-                        ensemblLimitStartTime = ensemblMappingPipeline.getEnsemblRestService().getLimitStartTime();
                     }
 
                     // First remove old locations and genomic contexts
