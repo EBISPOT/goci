@@ -8,9 +8,8 @@ import java.util.Collection;
  *
  * @author emma
  *         <p>
- *         DTO that holds results of Ensembl REST API call
+ *         DTO that holds results of Ensembl REST API call and other values need by the mapping code.
  */
-
 
 public class EnsemblMappingResult {
 
@@ -26,11 +25,47 @@ public class EnsemblMappingResult {
 
     private String functionalClass;
 
+    private ArrayList<String> overlappingGenes = new ArrayList<>();
+
 
     public EnsemblMappingResult() {
     }
 
+    /**
+     * Add error to list of pipeline errors
+     *
+     * @param error
+     */
+    public void addPipelineErrors(String error) {
+        ArrayList<String> pipelineErrors = getPipelineErrors();
+        pipelineErrors.add(error);
+        setPipelineErrors(pipelineErrors);
+    }
 
+    /**
+     * Add genomic context to list of existing genomic contexts
+     *
+     * @param genomicContext
+     */
+    public void addGenomicContext(GenomicContext genomicContext) {
+        Collection<GenomicContext> genomicContexts = getGenomicContexts();
+        genomicContexts.add(genomicContext);
+        setGenomicContexts(genomicContexts);
+    }
+
+    /**
+     * Add gene to list of overlapping genes.
+     *
+     * @param gene
+     */
+    public void addOverlappingGene(String gene) {
+        ArrayList<String> overlappingGenes = getOverlappingGenes();
+        overlappingGenes.add(gene);
+        setOverlappingGenes(overlappingGenes);
+    }
+
+
+    // Getters/setters
     public ArrayList<String> getPipelineErrors() {
         return pipelineErrors;
     }
@@ -79,16 +114,12 @@ public class EnsemblMappingResult {
         this.rsId = rsId;
     }
 
-    public void addPipelineErrors(String error) {
-        ArrayList<String> pipelineErrors = getPipelineErrors();
-        pipelineErrors.add(error);
-        setPipelineErrors(pipelineErrors);
+    public ArrayList<String> getOverlappingGenes() {
+        return overlappingGenes;
     }
 
-    public void addGenomicContext(GenomicContext genomicContext) {
-        Collection<GenomicContext> genomicContexts = getGenomicContexts();
-        genomicContexts.add(genomicContext);
-        setGenomicContexts(genomicContexts);
+    public void setOverlappingGenes(ArrayList<String> overlappingGenes) {
+        this.overlappingGenes = overlappingGenes;
     }
 
 }
