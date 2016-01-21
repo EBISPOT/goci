@@ -16,6 +16,8 @@ import javax.validation.constraints.NotNull;
  * @author Laurent
  *         <p>
  *         Class getting the dbSNP version from the Ensembl REST API
+ *
+ *         Refactored by Emma to use standard Spring mechanism to consume a RESTful service
  */
 @Service
 public class EnsemblDbsnpVersion {

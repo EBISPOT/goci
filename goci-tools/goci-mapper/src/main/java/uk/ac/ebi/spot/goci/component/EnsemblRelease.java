@@ -16,6 +16,8 @@ import javax.validation.constraints.NotNull;
  * @author Laurent
  *         <p>
  *         Class getting the Ensembl Release version from the Ensembl REST API
+ *         <p>
+ *         Refactored by Emma to use standard Spring mechanism to consume a RESTful service
  */
 @Service
 public class EnsemblRelease {
@@ -49,13 +51,16 @@ public class EnsemblRelease {
             getLog().info("Querying " + url);
             int[] releases = ensemblReleaseJson.getReleases();
 
-
-            if (releases.length == 1) {
-                currentEnsemblRelease = releases[0];
+            if (releases != null) {
+                if (releases.length == 1) {
+                    currentEnsemblRelease = releases[0];
+                }
+                else {
+                    throw new EnsemblRestIOException("Unable to determine Ensembl release");
+                }
             }
-
             else {
-                throw new EnsemblRestIOException("Unable to determine Ensembl release");
+                throw new EnsemblRestIOException("No Ensembl release information returned from API");
             }
         }
 
@@ -65,7 +70,6 @@ public class EnsemblRelease {
 
         return currentEnsemblRelease;
     }
-
 
     public String getServer() {
         return server;

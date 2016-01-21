@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 /**
  * Created by emma on 21/01/2016.
  * @author emma
+ *
+ * Models response from http://rest.ensembl.org/info/variation/homo_sapiens?content-type=application/json;filter=dbSNP
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EnsemblDbsnpVersionJson {
