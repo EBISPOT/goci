@@ -143,7 +143,7 @@ public class EnsemblMappingPipeline {
             checkReportedGenes(reportedGenes, locations);
         }
 
-        return ensemblMappingResult;
+        return getEnsemblMappingResult();
     }
 
 
@@ -695,88 +695,82 @@ public class EnsemblMappingPipeline {
     }
 
 
-    /**
-     * Getter for the variant functional class
-     *
-     * @return The variant functional class.
-     */
-    public String getFunctionalClass() {
-        return functionalClass;
-    }
 
-    /**
-     * Getter for the collection of Location instances
-     *
-     * @return Collection of Location instances.
-     */
-    public Collection<Location> getLocations() {
-        return locations;
-    }
+    // Getters and setters
 
-    /**
-     * Getter for the collection of GenomicContext instances
-     *
-     * @return Collection of GenomicContext instances.
-     */
-    public Collection<GenomicContext> getGenomicContexts() {
-        return genomic_contexts;
-    }
-
-    /**
-     * Getter for the request count
-     *
-     * @return The request count.
-     */
-    public int getRequestCount() {
-        return requestCount;
-    }
-
-    /**
-     * Getter for the start time of the request count
-     *
-     * @return The start time of the request count.
-     */
-    public long getLimitStartTime() {
-        return limitStartTime;
-    }
-
-    /**
-     * Getter for the list of pipeline error messages
-     *
-     * @return List of strings.
-     */
-    public ArrayList<String> getPipelineErrors() {
-        return pipeline_errors;
-    }
-
-
-    public List<String> getReportedGenesToIgnore() {
-        return reportedGenesToIgnore;
-    }
-
-    // Getters for properties derived from application properties file
     public String getEnsemblSource() {
         return ensemblSource;
+    }
+
+    public void setEnsemblSource(String ensemblSource) {
+        this.ensemblSource = ensemblSource;
     }
 
     public String getNcbiSource() {
         return ncbiSource;
     }
 
+    public void setNcbiSource(String ncbiSource) {
+        this.ncbiSource = ncbiSource;
+    }
+
     public String getNcbiDbType() {
         return ncbiDbType;
+    }
+
+    public void setNcbiDbType(String ncbiDbType) {
+        this.ncbiDbType = ncbiDbType;
     }
 
     public String getNcbiLogicName() {
         return ncbiLogicName;
     }
 
+    public void setNcbiLogicName(String ncbiLogicName) {
+        this.ncbiLogicName = ncbiLogicName;
+    }
+
     public String getMappingMethod() {
         return mappingMethod;
+    }
+
+    public void setMappingMethod(String mappingMethod) {
+        this.mappingMethod = mappingMethod;
     }
 
     public int getGenomicDistance() {
         return genomicDistance;
     }
 
+    public void setGenomicDistance(int genomicDistance) {
+        this.genomicDistance = genomicDistance;
+    }
+
+    public List<String> getReportedGenesToIgnore() {
+        return reportedGenesToIgnore;
+    }
+
+    public EnsemblRestService getEnsemblRestService() {
+        return ensemblRestService;
+    }
+
+    public void setEnsemblRestService(EnsemblRestService ensemblRestService) {
+        this.ensemblRestService = ensemblRestService;
+    }
+
+    public EnsemblMappingResult getEnsemblMappingResult() {
+        return ensemblMappingResult;
+    }
+
+    public void setEnsemblMappingResult(EnsemblMappingResult ensemblMappingResult) {
+        this.ensemblMappingResult = ensemblMappingResult;
+    }
+
+    public ArrayList<String> getOverlapping_genes() {
+        return overlapping_genes;
+    }
+
+    public void setOverlapping_genes(ArrayList<String> overlapping_genes) {
+        this.overlapping_genes = overlapping_genes;
+    }
 }
