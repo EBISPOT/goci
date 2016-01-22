@@ -151,6 +151,7 @@ public class EnsemblMappingPipeline {
 
     private void checkReportedGenes(Collection<String> reportedGenes, Collection<Location> locations)
             throws EnsemblRestIOException {
+
         for (String reportedGene : reportedGenes) {
 
             reportedGene = reportedGene.replaceAll(" ", ""); // Remove extra spaces
@@ -160,10 +161,15 @@ public class EnsemblMappingPipeline {
 
                 String webservice = "lookup_symbol";
                 RestResponseResult reportedGeneApiResult = ensemblRestService.getRestCall(webservice, reportedGene, "");
-                JSONObject reported_gene_result = reportedGeneApiResult.getRestResult().getObject();
 
-                // Gene symbol found in Ensembl
-                if (reported_gene_result.length() > 0) {
+                // Check for errors
+                if (reportedGeneApiResult.getError()!=null && !reportedGeneApiResult.getError().isEmpty()){
+                    getEnsemblMappingResult().addPipelineErrors(reportedGeneApiResult.getError());
+                }
+
+                if (reportedGeneApiResult.getRestResult() != null) {
+                    JSONObject reported_gene_result = reportedGeneApiResult.getRestResult().getObject();
+
                     // Check if the gene is in the same chromosome as the variant
                     if (reported_gene_result.has("seq_region_name")) {
                         if (locations.size() > 0) {
@@ -192,6 +198,10 @@ public class EnsemblMappingPipeline {
                         getEnsemblMappingResult().addPipelineErrors(
                                 "Can't find a location in Ensembl for the reported gene " + reportedGene);
                     }
+
+                }
+                else {
+                    getLog().error("Reported gene check for " + reportedGene + " returned no result");
                 }
             }
         }
