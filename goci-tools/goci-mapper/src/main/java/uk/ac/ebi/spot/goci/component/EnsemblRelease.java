@@ -43,11 +43,10 @@ public class EnsemblRelease {
 
         RestTemplate restTemplate = new RestTemplate();
         String url = getServer() + getEndpoint();
-        EnsemblReleaseJson ensemblReleaseJson = new EnsemblReleaseJson();
         int currentEnsemblRelease = 0;
 
         try {
-            ensemblReleaseJson = restTemplate.getForObject(url, EnsemblReleaseJson.class);
+            EnsemblReleaseJson ensemblReleaseJson = restTemplate.getForObject(url, EnsemblReleaseJson.class);
             getLog().info("Querying " + url);
             int[] releases = ensemblReleaseJson.getReleases();
 

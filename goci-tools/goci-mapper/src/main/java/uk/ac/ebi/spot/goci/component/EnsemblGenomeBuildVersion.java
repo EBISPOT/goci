@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
  * @author Laurent
  *         <p>
  *         Class getting the Ensembl Genome build version from the Ensembl REST API
- *
+ *         <p>
  *         Refactored by Emma to use standard Spring mechanism to consume a RESTful service
  */
 @Service
@@ -43,11 +43,11 @@ public class EnsemblGenomeBuildVersion {
 
         RestTemplate restTemplate = new RestTemplate();
         String url = getServer() + getEndpoint();
-        EnsemblGenomeBuildVersionJson ensemblGenomeBuildVersionJson = new EnsemblGenomeBuildVersionJson();
         String assemblyName = "";
 
         try {
-            ensemblGenomeBuildVersionJson = restTemplate.getForObject(url, EnsemblGenomeBuildVersionJson.class);
+            EnsemblGenomeBuildVersionJson ensemblGenomeBuildVersionJson =
+                    restTemplate.getForObject(url, EnsemblGenomeBuildVersionJson.class);
             getLog().info("Querying " + url);
             assemblyName = ensemblGenomeBuildVersionJson.getAssembly_name();
 

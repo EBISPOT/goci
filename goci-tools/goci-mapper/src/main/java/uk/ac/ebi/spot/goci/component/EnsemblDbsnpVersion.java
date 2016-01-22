@@ -47,6 +47,9 @@ public class EnsemblDbsnpVersion {
 
         try {
             getLog().info("Querying " + url);
+
+            //Ensembl returns an array data structure for this call
+            // Have to do some wrangling to get dbSNP version
             EnsemblDbsnpVersionJson[] response = restTemplate.getForObject(url, EnsemblDbsnpVersionJson[].class);
             version = response[0].getVersion();
 
