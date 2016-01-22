@@ -49,7 +49,6 @@ public class AssociationQueryService {
     }
 
     public void loadAssociatedData(Association association) {
-        association.getEfoTraits().size();
         association.getLoci();
         association.getLoci().forEach(
                 locus -> {
