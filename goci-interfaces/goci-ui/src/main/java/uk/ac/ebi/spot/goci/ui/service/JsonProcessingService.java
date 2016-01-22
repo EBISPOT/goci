@@ -240,6 +240,9 @@ public class JsonProcessingService {
         else {
             ci = "";
         }
+        if(doc.get("orPerCopyUnitDescr") != null){
+            ci = ci.concat(doc.get("orPerCopyUnitDescr").asText().trim());
+        }
         return ci;
     }
 
