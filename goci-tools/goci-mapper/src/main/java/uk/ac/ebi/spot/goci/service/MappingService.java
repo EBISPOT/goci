@@ -139,7 +139,7 @@ public class MappingService {
                     }
                     catch (Exception e) {
                         getLog().error("Encountered a " + e.getClass().getSimpleName() +
-                                               " whilst trying to run mapping of SNP" + snpRsId, e);
+                                               " whilst trying to run mapping of SNP " + snpRsId, e);
                         throw new EnsemblMappingException();
                     }
 
