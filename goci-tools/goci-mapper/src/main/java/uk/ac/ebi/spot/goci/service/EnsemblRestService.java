@@ -57,10 +57,6 @@ public class EnsemblRestService {
         return log;
     }
 
-    // Default constructor
-    public EnsemblRestService() {
-    }
-
     @PostConstruct
     public void init() {
         // Set proxy
