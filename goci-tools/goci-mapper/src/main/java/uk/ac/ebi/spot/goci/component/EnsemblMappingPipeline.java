@@ -85,7 +85,6 @@ public class EnsemblMappingPipeline {
 
         // Variation call
         RestResponseResult variationDataApiResult = ensemblRestService.getRestCall("variation", rsId, "");
-        JSONObject variationResult = variationDataApiResult.getRestResult().getObject();
         String restApiError = variationDataApiResult.getError();
 
         // Check for any errors
@@ -93,38 +92,45 @@ public class EnsemblMappingPipeline {
             getEnsemblMappingResult().addPipelineErrors(restApiError);
         }
 
-        if (variationResult.has("error")) {
-            checkError(variationResult, "variation", "Variant " + rsId + " is not found in Ensembl");
+        if (variationDataApiResult.getRestResult() != null) {
+            JSONObject variationResult = variationDataApiResult.getRestResult().getObject();
+
+            if (variationResult.has("error")) {
+                checkError(variationResult, "variation", "Variant " + rsId + " is not found in Ensembl");
+            }
+            else if (variationResult.length() > 0) {
+
+                // Merged SNP
+                getEnsemblMappingResult().setMerged((variationResult.getString("name").equals(rsId)) ? 0 : 1);
+
+                // Mapping errors
+                if (variationResult.has("failed")) {
+                    getEnsemblMappingResult().addPipelineErrors(variationResult.getString("failed"));
+                }
+
+                // Mapping and genomic context calls
+                JSONArray mappings = variationResult.getJSONArray("mappings");
+                Collection<Location> locations = getMappings(mappings);
+                getEnsemblMappingResult().setLocations(locations);
+
+                // Add genomic context
+                if (locations.size() > 0) {
+
+                    // Functional class (most severe consequence).
+                    // This implies there is at least one variant location.
+                    if (variationResult.has("most_severe_consequence")) {
+                        getEnsemblMappingResult().setFunctionalClass(variationResult.getString("most_severe_consequence"));
+                    }
+
+                    // Genomic context (loop over the "locations" object)
+                    for (Location snp_location : locations) {
+                        getAllGenomicContexts(snp_location);
+                    }
+                }
+            }
         }
-        else if (variationResult.length() > 0) {
-
-            // Merged SNP
-            getEnsemblMappingResult().setMerged((variationResult.getString("name").equals(rsId)) ? 0 : 1);
-
-            // Mapping errors
-            if (variationResult.has("failed")) {
-                getEnsemblMappingResult().addPipelineErrors(variationResult.getString("failed"));
-            }
-
-            // Mapping and genomic context calls
-            JSONArray mappings = variationResult.getJSONArray("mappings");
-            Collection<Location> locations = getMappings(mappings);
-            getEnsemblMappingResult().setLocations(locations);
-
-            // Add genomic context
-            if (locations.size() > 0) {
-
-                // Functional class (most severe consequence).
-                // This implies there is at least one variant location.
-                if (variationResult.has("most_severe_consequence")) {
-                    getEnsemblMappingResult().setFunctionalClass(variationResult.getString("most_severe_consequence"));
-                }
-
-                // Genomic context (loop over the "locations" object)
-                for (Location snp_location : locations) {
-                    getAllGenomicContexts(snp_location);
-                }
-            }
+        else {
+            getLog().error("Variation call for SNP " + rsId + " returned no result");
         }
 
         // Reported genes checks
