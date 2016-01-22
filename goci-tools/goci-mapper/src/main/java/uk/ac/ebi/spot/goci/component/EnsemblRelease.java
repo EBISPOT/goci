@@ -74,17 +74,8 @@ public class EnsemblRelease {
         return server;
     }
 
-    public void setServer(String server) {
-        this.server = server;
-    }
-
     public String getEndpoint() {
         return endpoint;
     }
-
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
-    }
-
 
 }

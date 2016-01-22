@@ -69,15 +69,8 @@ public class EnsemblDbsnpVersion {
         return endpoint;
     }
 
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
-    }
-
     public String getServer() {
         return server;
     }
 
-    public void setServer(String server) {
-        this.server = server;
-    }
 }
