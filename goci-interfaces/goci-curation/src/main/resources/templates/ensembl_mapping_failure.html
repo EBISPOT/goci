@@ -18,13 +18,15 @@
 <body>
 
 
-<div class="container">
+<div class="container" th:object="${study}">
     <div class="col-md-12">
         <h2>Error:</h2>
 
         <p class="lead">Ensembl mapping pipeline failed due to a possible failure in the Ensembl API. Please notify a developer!!!</p>
 
-        <p>Press the browser back button to return to your SNP association(s).</p>
+        <div><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary">Back to all SNP
+                                                                                                    associations</a>
+        </div>
     </div>
 </div>
 

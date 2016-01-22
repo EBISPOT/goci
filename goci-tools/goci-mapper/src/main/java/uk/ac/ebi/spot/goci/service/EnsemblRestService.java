@@ -8,30 +8,48 @@ import org.apache.http.HttpHost;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.exception.EnsemblRestIOException;
+import uk.ac.ebi.spot.goci.model.RestResponseResult;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Created by Laurent on 15/07/15.
  *
- * @author Laurent Class running the Ensembl REST API calls
+ * @author Laurent
+ *         <p>
+ *         Class running the Ensembl REST API calls
  */
 @Service
 public class EnsemblRestService {
 
-    private static String server = "http://rest.ensembl.org";
+    @NotNull @Value("${ensembl.server}")
+    private String server;
 
-    private String rest_endpoint;
-    private String rest_data;
-    private String rest_parameters = "";
+    @NotNull @Value("${mapping.requestPerSecond}")
+    private Integer requestPerSecond;
 
-    private JsonNode rest_results = new JsonNode(""); // Default empty result;
-    private ArrayList<String> rest_errors = new ArrayList<String>();
+    @NotNull @Value("${mapping.requestCount}")
+    private Integer requestCount;
+
+    @NotNull @Value("${mapping.maxSleepTime}")
+    private Integer maxSleepTime;
+
+    private long limitStartTime = System.currentTimeMillis();
+
+    private Hashtable<String, String> endpoints = new Hashtable<String, String>();
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -39,97 +57,8 @@ public class EnsemblRestService {
         return log;
     }
 
-    // Default constructor
-    public EnsemblRestService() {
-    }
-
-
-    /**
-     * Simple constructor with endpoint and data
-     *
-     * @param rest_endpoint the endpoint part of the URL
-     * @param rest_data     the data/id/symbol we want to query
-     */
-    public EnsemblRestService(String rest_endpoint, String rest_data) {
-        this.rest_endpoint = rest_endpoint;
-        this.rest_data = rest_data;
-    }
-
-
-    /**
-     * More complex contructor with extra parameters
-     *
-     * @param rest_endpoint   the endpoint part of the URL
-     * @param rest_data       the data/id/symbol we want to query
-     * @param rest_parameters the extra parameters to add at the end of the REST call url
-     */
-    public EnsemblRestService(String rest_endpoint, String rest_data, String rest_parameters) {
-        this.rest_endpoint = rest_endpoint;
-        this.rest_data = rest_data;
-        this.rest_parameters = rest_parameters;
-    }
-
-
-    /**
-     * Run the Ensembl REST API call, using the parameters from the constructor
-     *
-     * @throws IOException
-     * @throws UnirestException
-     * @throws InterruptedException
-     */
-    public void getRestCall() throws IOException, UnirestException, InterruptedException {
-
-        // Build URL
-        URL url = null;
-
-        if (this.rest_parameters != "") {
-            Matcher matcher = Pattern.compile("^\\?").matcher(this.rest_parameters);
-            if (!matcher.matches()) {
-                this.rest_parameters = '?' + this.rest_parameters;
-            }
-        }
-        url = new URL(server + this.rest_endpoint + this.rest_data + this.rest_parameters);
-
-        // Call REST API
-        if (url != null) {
-            this.fetchJson(url.toString());
-        }
-    }
-
-
-    /**
-     * Return the results of the Ensembl REST API call
-     *
-     * @return JSONObject containing the returned JSON data
-     */
-
-    public JsonNode getRestResults() {
-        return this.rest_results;
-    }
-
-
-    /**
-     * Return the list of error messages from the Ensembl REST API call
-     *
-     * @return List of error messages
-     */
-    public ArrayList<String> getErrors() {
-        return this.rest_errors;
-    }
-
-
-    /**
-     * Add error messages to the array of REST error messages
-     *
-     * @param error_msg the error message
-     */
-    private void addErrors(String error_msg) {
-        this.rest_errors.add(error_msg);
-    }
-
-
-    private void fetchJson(String url) throws UnirestException, InterruptedException {
-
+    @PostConstruct
+    public void init() {
         // Set proxy
         String host = System.getProperty("http.proxyHost");
         String port = System.getProperty("http.proxyPort");
@@ -143,6 +72,85 @@ public class EnsemblRestService {
         if (host != null && port != null) {
             Unirest.setProxy(new HttpHost(host, portNum));
         }
+    }
+
+    @PreDestroy
+    public void destroy() {
+        try {
+            Unirest.shutdown();
+        }
+        catch (IOException e) {
+            throw new RuntimeException("Failed to shutdown Unirest HTTP connection service", e);
+        }
+    }
+
+
+    // Set the different Ensembl REST API endpoints used in the pipeline
+    @Autowired
+    public void createEndpoints() {
+        Hashtable<String, String> endpointsToCreate = new Hashtable<String, String>();
+        String species = "homo_sapiens";
+        endpointsToCreate.put("variation", "/variation/" + species + "/");
+        endpointsToCreate.put("lookup_symbol", "/lookup/symbol/" + species + "/");
+        endpointsToCreate.put("overlap_region", "/overlap/region/" + species + "/");
+        endpointsToCreate.put("info_assembly", "/info/assembly/" + species + "/");
+        endpointsToCreate.put("info_variation", "/info/variation/" + species + "/");
+        endpointsToCreate.put("info_data", "/info/data/");
+        setEndpoints(endpointsToCreate);
+    }
+
+
+    /**
+     * Simple generic Ensembl REST API call method.
+     *
+     * @param endpoint_type   the endpoint name
+     * @param data            the data/id/symbol we want to query
+     * @param rest_parameters rest parameters
+     * @return the corresponding result
+     */
+    public RestResponseResult getRestCall(String endpoint_type, String data, String rest_parameters)
+            throws EnsemblRestIOException {
+
+        String endpoint = getEndpoints().get(endpoint_type);
+        URL url = null;
+        RestResponseResult restResponseResult = new RestResponseResult();
+
+        try {
+            rateLimit();
+
+            // Build URL
+            if (!Objects.equals(rest_parameters, "")) {
+                Matcher matcher = Pattern.compile("^\\?").matcher(rest_parameters);
+                if (!matcher.matches()) {
+                    rest_parameters = '?' + rest_parameters;
+                }
+            }
+
+            url = new URL(getServer() + endpoint + data + rest_parameters);
+            restResponseResult = fetchJson(url.toString());
+        }
+
+        catch (InterruptedException | MalformedURLException | UnirestException e) {
+            getLog().error("Encountered a " + e.getClass().getSimpleName() +
+                                   " whilst trying to run mapping of SNP", e);
+            throw new EnsemblRestIOException("Encountered a " + e.getClass().getSimpleName() +
+                                                     " whilst trying to run mapping of SNP", e);
+        }
+
+
+        return restResponseResult;
+    }
+
+    /**
+     * Fetch response from API
+     *
+     * @param url
+     * @return the corresponding result
+     */
+    private RestResponseResult fetchJson(String url)
+            throws UnirestException, InterruptedException, EnsemblRestIOException {
+
+        RestResponseResult restResponseResult = new RestResponseResult();
 
         HttpResponse<JsonNode> response = Unirest.get(url)
                 .header("Content-Type", "application/json")
@@ -150,7 +158,7 @@ public class EnsemblRestService {
         String retryHeader = response.getHeaders().getFirst("Retry-After");
 
         if (response.getStatus() == 200) { // Success
-            this.rest_results = response.getBody();
+            restResponseResult.setRestResult(response.getBody());
         }
         else if (response.getStatus() == 429 && retryHeader != null) { // Too Many Requests
             Long waitSeconds = Long.valueOf(retryHeader);
@@ -158,21 +166,91 @@ public class EnsemblRestService {
             fetchJson(url);
         }
         else if (response.getStatus() == 503) { // Service unavailable
-            this.addErrors(
+            restResponseResult.setError(
                     "No server is available to handle this request (Error 503: service unavailable) at url: " + url);
             getLog().error(
+                    "No server is available to handle this request (Error 503: service unavailable) at url: " + url);
+            throw new EnsemblRestIOException(
                     "No server is available to handle this request (Error 503: service unavailable) at url: " + url);
         }
         else if (response.getStatus() == 400) { // Bad request (no result found)
             JSONObject json_obj = response.getBody().getObject();
             if (json_obj.has("error")) {
-                this.addErrors(json_obj.getString("error"));
+                restResponseResult.setError(json_obj.getString("error"));
             }
             getLog().error(url + " is generating an invalid request. (Error 400: bad request)");
         }
         else { // Other issue
-            this.addErrors("No data available at url " + url);
+            restResponseResult.setError("No data available at url " + url);
             getLog().error("No data at " + url);
         }
+
+        return restResponseResult;
     }
+
+
+    /**
+     * Check if the program reached the rate limit of calls per second
+     *
+     * @throws InterruptedException
+     */
+    private void rateLimit() throws InterruptedException {
+
+        requestCount = getRequestCount();
+        requestCount++;
+
+        if (requestCount == getRequestPerSecond()) {
+            long currentTime = System.currentTimeMillis();
+            long diff = currentTime - getLimitStartTime();
+            //if less than a second has passed then sleep for the remainder of the second
+            if (diff < getMaxSleepTime()) {
+                Thread.sleep(getMaxSleepTime() - diff);
+            }
+
+            //reset
+            setLimitStartTime(System.currentTimeMillis());
+            setRequestCount(0);
+        }
+    }
+
+    public Hashtable<String, String> getEndpoints() {
+        return endpoints;
+    }
+
+    public void setEndpoints(Hashtable<String, String> endpoints) {
+        this.endpoints = endpoints;
+    }
+
+    public String getServer() {
+        return server;
+    }
+
+    public void setServer(String server) {
+        this.server = server;
+    }
+
+    public int getRequestPerSecond() {
+        return requestPerSecond;
+    }
+
+    public int getRequestCount() {
+        return requestCount;
+    }
+
+    public void setRequestCount(int requestCount) {
+        this.requestCount = requestCount;
+    }
+
+    public long getLimitStartTime() {
+        return limitStartTime;
+    }
+
+    public void setLimitStartTime(long limitStartTime) {
+        this.limitStartTime = limitStartTime;
+    }
+
+    public int getMaxSleepTime() {
+        return maxSleepTime;
+    }
+
 }
