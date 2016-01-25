@@ -176,6 +176,7 @@ public class MappingService {
                     }
                     else {
                         getLog().warn("Attempt to map SNP: " + snpRsId + " returned no location details");
+                        pipelineErrors.add("Attempt to map SNP: " + snpRsId + " returned no location details");
                     }
 
                     // Store genomic context data for snp
@@ -184,6 +185,7 @@ public class MappingService {
                     }
                     else {
                         getLog().warn("Attempt to map SNP: " + snpRsId + " returned no mapped genes");
+                        pipelineErrors.add("Attempt to map SNP: " + snpRsId + " returned no mapped genes");
                     }
 
                     if (!pipelineErrors.isEmpty()) {
