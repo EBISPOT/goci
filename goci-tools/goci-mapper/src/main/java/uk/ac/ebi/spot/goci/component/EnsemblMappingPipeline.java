@@ -58,7 +58,7 @@ public class EnsemblMappingPipeline {
     @Value("${mapping.genomic_distance}")
     private int genomicDistance; // 100kb
 
-    private final List<String> reportedGenesToIgnore = Arrays.asList("NR", "intergenic");
+    private final List<String> reportedGenesToIgnore = Arrays.asList("NR", "intergenic","genic");
 
     private EnsemblRestService ensemblRestService;
 
