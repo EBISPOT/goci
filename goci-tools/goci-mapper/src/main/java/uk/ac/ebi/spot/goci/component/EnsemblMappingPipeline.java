@@ -674,10 +674,12 @@ public class EnsemblMappingPipeline {
      * @param webservice      The name of the REST web service
      * @param default_message The default error message
      */
-    private void checkError(JSONObject result, String webservice, String default_message) {
+    private void checkError(JSONObject result, String webservice, String default_message)
+            throws EnsemblRestIOException {
 
         if (result.getString("error").contains("page not found")) {
             getEnsemblMappingResult().addPipelineErrors("Web service '" + webservice + "' not found or not working.");
+            throw new EnsemblRestIOException("Web service " + webservice + " not found or not working.");
         }
         else {
             if (default_message.equals("")) {
