@@ -1237,7 +1237,7 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/validate_all",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String validateAll(@PathVariable Long studyId, RedirectAttributes redirectAttributes)
+    public String validateAll(@PathVariable Long studyId, RedirectAttributes redirectAttributes, Model model)
             throws EnsemblMappingException {
 
         // For the study get all associations
@@ -1250,7 +1250,8 @@ public class AssociationController {
             mappingService.validateAndMapSnps(studyAssociations, mappedBy);
         }
         catch (EnsemblMappingException e) {
-            throw new EnsemblMappingException();
+            model.addAttribute("study", study);
+            return "ensembl_mapping_failure";
         }
 
         String message = "Mapping complete, please check for any errors displayed in the 'Errors' column";
