@@ -172,6 +172,10 @@ public class AssociationController {
         LastViewedAssociation lastViewedAssociation = getLastViewedAssociation(associationId);
         model.addAttribute("lastViewedAssociation", lastViewedAssociation);
 
+        // Pass back count of associations
+        Integer totalAssociations = associations.size();
+        model.addAttribute("totalAssociations", totalAssociations);
+
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
         return "study_association";
@@ -213,6 +217,10 @@ public class AssociationController {
         LastViewedAssociation lastViewedAssociation = getLastViewedAssociation(associationId);
         model.addAttribute("lastViewedAssociation", lastViewedAssociation);
 
+        // Pass back count of associations
+        Integer totalAssociations = associations.size();
+        model.addAttribute("totalAssociations", totalAssociations);
+
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
         return "study_association";
@@ -245,6 +253,9 @@ public class AssociationController {
                 break;
         }
 
+        // Pass back count of associations
+        Integer totalAssociations = associations.size();
+        model.addAttribute("totalAssociations", totalAssociations);
 
         // For our associations create a table view object and return
         Collection<SnpAssociationTableView> snpAssociationTableViews = new ArrayList<SnpAssociationTableView>();
