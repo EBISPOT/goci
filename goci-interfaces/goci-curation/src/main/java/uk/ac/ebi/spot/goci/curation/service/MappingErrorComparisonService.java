@@ -16,11 +16,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -293,9 +290,7 @@ public class MappingErrorComparisonService {
             String uploadDir =
                     System.getProperty("java.io.tmpdir") + File.separator + "gwas_new_release_mapping_error_report" +
                             File.separator;
-            DateFormat df = new SimpleDateFormat("yyyy_MM_dd");
-            String dateStamp = df.format(new Date());
-            File outputFile = new File(uploadDir + dateStamp + "_gwas_new_release_mapping_error_report.txt");
+            File outputFile = new File(uploadDir + "gwas_new_release_mapping_error_report.txt");
 
             // If at this stage we haven't got a file create one and write to it
             if (!outputFile.exists()) {
