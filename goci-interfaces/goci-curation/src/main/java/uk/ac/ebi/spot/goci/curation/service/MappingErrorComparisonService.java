@@ -56,43 +56,44 @@ public class MappingErrorComparisonService {
      */
     public void compareOldVersusNewErrors(Collection<AssociationReport> oldErrors) {
 
+        // Find all the latest association reports containing mapping errors
         Collection<AssociationReport> newAssociationReports = associationReportRepository.findAll();
         Map<Long, AssociationReport> associationIdToNewAssociationReportMap =
                 createNewReportsMap(newAssociationReports);
         Collection<MappingErrorComparisonReport> comparisonReports = new ArrayList<>();
 
-        for (AssociationReport oldError : oldErrors) {
+        for (AssociationReport oldErrorReport : oldErrors) {
 
             // Establish association and study details
-            Long associationId = oldError.getAssociation().getId();
+            Long associationId = oldErrorReport.getAssociation().getId();
             Study study = studyRepository.findByAssociationsId(associationId);
             String pubmedId = study.getPubmedId();
             Long studyId = study.getId();
 
             // Compare errors
-            AssociationReport newError = associationIdToNewAssociationReportMap.get(associationId);
-            String oldSnpError = oldError.getSnpError();
-            String newSnpError = newError.getSnpError();
+            AssociationReport newErrorReport = associationIdToNewAssociationReportMap.get(associationId);
+            String oldSnpError = oldErrorReport.getSnpError();
+            String newSnpError = newErrorReport.getSnpError();
             Boolean differenceInSnpErrors = compareDifferences(oldSnpError, newSnpError);
 
-            String oldSnpGeneOnDiffChr = oldError.getSnpGeneOnDiffChr();
-            String newSnpGeneOnDiffChr = newError.getSnpGeneOnDiffChr();
+            String oldSnpGeneOnDiffChr = oldErrorReport.getSnpGeneOnDiffChr();
+            String newSnpGeneOnDiffChr = newErrorReport.getSnpGeneOnDiffChr();
             Boolean differenceInSnpGeneOnDiffChr = compareDifferences(oldSnpGeneOnDiffChr, newSnpGeneOnDiffChr);
 
-            String oldNoGeneForSymbol = oldError.getNoGeneForSymbol();
-            String newNoGeneForSymbol = newError.getNoGeneForSymbol();
+            String oldNoGeneForSymbol = oldErrorReport.getNoGeneForSymbol();
+            String newNoGeneForSymbol = newErrorReport.getNoGeneForSymbol();
             Boolean differenceNoGeneForSymbol = compareDifferences(oldNoGeneForSymbol, newNoGeneForSymbol);
 
-            String oldGeneError = oldError.getGeneError();
-            String newGeneError = newError.getGeneError();
+            String oldGeneError = oldErrorReport.getGeneError();
+            String newGeneError = newErrorReport.getGeneError();
             Boolean differenceGeneError = compareDifferences(oldGeneError, newGeneError);
 
-            String oldRestServiceError = oldError.getRestServiceError();
-            String newRestServiceError = newError.getRestServiceError();
+            String oldRestServiceError = oldErrorReport.getRestServiceError();
+            String newRestServiceError = newErrorReport.getRestServiceError();
             Boolean differenceRestServiceError = compareDifferences(oldRestServiceError, newRestServiceError);
 
-            String oldSuspectVariationError = oldError.getSuspectVariationError();
-            String newSuspectVariationError = newError.getSuspectVariationError();
+            String oldSuspectVariationError = oldErrorReport.getSuspectVariationError();
+            String newSuspectVariationError = newErrorReport.getSuspectVariationError();
             Boolean differenceSuspectVariationError =
                     compareDifferences(oldSuspectVariationError, newSuspectVariationError);
 
@@ -106,8 +107,24 @@ public class MappingErrorComparisonService {
                 mappingErrorComparisonReport.setStudyId(studyId);
                 mappingErrorComparisonReport.setAssociationId(associationId);
                 mappingErrorComparisonReport.setPubmedId(pubmedId);
+
                 mappingErrorComparisonReport.setOldSnpError(oldSnpError);
                 mappingErrorComparisonReport.setNewSnpError(newSnpError);
+
+                mappingErrorComparisonReport.setOldSnpGeneOnDiffChr(oldSnpGeneOnDiffChr);
+                mappingErrorComparisonReport.setNewSnpGeneOnDiffChr(newSnpGeneOnDiffChr);
+
+                mappingErrorComparisonReport.setOldNoGeneForSymbol(oldNoGeneForSymbol);
+                mappingErrorComparisonReport.setNewNoGeneForSymbol(newNoGeneForSymbol);
+
+                mappingErrorComparisonReport.setOldGeneError(oldGeneError);
+                mappingErrorComparisonReport.setNewGeneError(newGeneError);
+
+                mappingErrorComparisonReport.setOldRestServiceError(oldRestServiceError);
+                mappingErrorComparisonReport.setNewRestServiceError(newRestServiceError);
+
+                mappingErrorComparisonReport.setOldSuspectVariationError(oldSuspectVariationError);
+                mappingErrorComparisonReport.setNewSuspectVariationError(newSuspectVariationError);
 
                 comparisonReports.add(mappingErrorComparisonReport);
             }
@@ -141,7 +158,6 @@ public class MappingErrorComparisonService {
                 }
                 else {
                     line.append(comparisonReport.getStudyId());
-
                 }
                 line.append("\t");
 
@@ -151,7 +167,6 @@ public class MappingErrorComparisonService {
                 }
                 else {
                     line.append(comparisonReport.getAssociationId());
-
                 }
                 line.append("\t");
 
@@ -161,7 +176,6 @@ public class MappingErrorComparisonService {
                 }
                 else {
                     line.append(comparisonReport.getPubmedId());
-
                 }
                 line.append("\t");
 
@@ -172,7 +186,6 @@ public class MappingErrorComparisonService {
                 }
                 else {
                     line.append(comparisonReport.getOldSnpError());
-
                 }
                 line.append("\t");
 
@@ -181,7 +194,6 @@ public class MappingErrorComparisonService {
                 }
                 else {
                     line.append(comparisonReport.getNewSnpError());
-
                 }
                 line.append("\t");
 
@@ -191,7 +203,6 @@ public class MappingErrorComparisonService {
                 }
                 else {
                     line.append(comparisonReport.getOldSnpGeneOnDiffChr());
-
                 }
                 line.append("\t");
 
@@ -200,7 +211,6 @@ public class MappingErrorComparisonService {
                 }
                 else {
                     line.append(comparisonReport.getNewSnpGeneOnDiffChr());
-
                 }
                 line.append("\t");
 
@@ -210,7 +220,6 @@ public class MappingErrorComparisonService {
                 }
                 else {
                     line.append(comparisonReport.getOldNoGeneForSymbol());
-
                 }
                 line.append("\t");
 
@@ -219,7 +228,6 @@ public class MappingErrorComparisonService {
                 }
                 else {
                     line.append(comparisonReport.getNewNoGeneForSymbol());
-
                 }
                 line.append("\t");
 
@@ -229,7 +237,6 @@ public class MappingErrorComparisonService {
                 }
                 else {
                     line.append(comparisonReport.getOldGeneError());
-
                 }
                 line.append("\t");
 
@@ -238,7 +245,6 @@ public class MappingErrorComparisonService {
                 }
                 else {
                     line.append(comparisonReport.getNewGeneError());
-
                 }
                 line.append("\t");
 
@@ -248,7 +254,6 @@ public class MappingErrorComparisonService {
                 }
                 else {
                     line.append(comparisonReport.getOldSuspectVariationError());
-
                 }
                 line.append("\t");
 
@@ -257,7 +262,6 @@ public class MappingErrorComparisonService {
                 }
                 else {
                     line.append(comparisonReport.getNewSuspectVariationError());
-
                 }
                 line.append("\t");
 
@@ -267,7 +271,6 @@ public class MappingErrorComparisonService {
                 }
                 else {
                     line.append(comparisonReport.getOldRestServiceError());
-
                 }
                 line.append("\t");
 
@@ -276,7 +279,6 @@ public class MappingErrorComparisonService {
                 }
                 else {
                     line.append(comparisonReport.getNewRestServiceError());
-
                 }
                 line.append("\t");
 
@@ -303,7 +305,7 @@ public class MappingErrorComparisonService {
                         writer.write(String.valueOf(output));
                     }
                     catch (IOException e) {
-                        e.printStackTrace();
+                        getLog().info("Could not write to " + outputFile);
                     }
                 }
                 catch (IOException e) {
@@ -347,7 +349,7 @@ public class MappingErrorComparisonService {
     }
 
     /**
-     * Creates a map of association ID to its current mapping errors
+     * Creates a map of association ID to its current mapping errors. This should make searching quicker
      *
      * @param reports collection of association reports
      */
