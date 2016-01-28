@@ -63,9 +63,8 @@ public class MappingErrorComparisonService {
         Collection<MappingErrorComparisonReport> comparisonReports = new ArrayList<>();
 
         // Create report
-        MappingErrorComparisonReport mappingErrorComparisonReport = new MappingErrorComparisonReport();
-
         for (AssociationReport oldErrorReport : oldErrors) {
+            MappingErrorComparisonReport mappingErrorComparisonReport = new MappingErrorComparisonReport();
 
             // Establish association and study details
             Long associationId = oldErrorReport.getAssociation().getId();
