@@ -21,6 +21,9 @@ import java.io.OutputStream;
  * Created by emma on 27/01/2016.
  *
  * @author emma
+ *         <p>
+ *         Controller that provides download endpoint for file that contains a comparison of errors from previous and
+ *         current Ensembl release mapping.
  */
 @Controller
 @RequestMapping("/mappingerrorreport")
@@ -40,7 +43,6 @@ public class MappingErrorReportController {
     public void getReport(HttpServletResponse response, Model model) throws IOException {
 
         if (report.exists()) {
-
             response.setContentType("text/tsv");
             response.setHeader("Content-Disposition", "attachement; filename=" + report.getFilename());
 
@@ -53,7 +55,6 @@ public class MappingErrorReportController {
             IOUtils.copy(inputStream, outputStream);
             inputStream.close();
             outputStream.close();
-
         }
         else {
             throw new FileNotFoundException();
