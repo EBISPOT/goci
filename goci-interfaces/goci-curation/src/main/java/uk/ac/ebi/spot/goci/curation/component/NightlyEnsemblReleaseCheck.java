@@ -80,6 +80,9 @@ public class NightlyEnsemblReleaseCheck {
     @Scheduled(cron = "0 00 20 ? * THU")
     public void checkRelease() throws EnsemblMappingException {
 
+        // Get all old association reports so we can compare with new ones, do this before we remap
+        Collection<AssociationReport> oldAssociationReports = associationReportRepository.findAll();
+
         // Get relevant metadata
         try {
             int latestEnsemblReleaseNumber = ensemblRelease.getReleaseVersion();
@@ -92,9 +95,6 @@ public class NightlyEnsemblReleaseCheck {
                 String performer = "Release " + latestEnsemblReleaseNumber + " mapping";
                 List<MappingMetadata> mappingMetadataList =
                         mappingMetadataRepository.findAll(sortByUsageStartDateDesc());
-
-                // Get all old association reports so we can compare with new ones, do this before we remap
-                Collection<AssociationReport> oldAssociationReports = associationReportRepository.findAll();
 
                 // If there are no details in table then add them
                 if (mappingMetadataList.isEmpty()) {
