@@ -62,6 +62,9 @@ public class MappingErrorComparisonService {
                 createNewReportsMap(newAssociationReports);
         Collection<MappingErrorComparisonReport> comparisonReports = new ArrayList<>();
 
+        // Create report
+        MappingErrorComparisonReport mappingErrorComparisonReport = new MappingErrorComparisonReport();
+
         for (AssociationReport oldErrorReport : oldErrors) {
 
             // Establish association and study details
@@ -70,62 +73,65 @@ public class MappingErrorComparisonService {
             String pubmedId = study.getPubmedId();
             Long studyId = study.getId();
 
+            mappingErrorComparisonReport.setStudyId(studyId);
+            mappingErrorComparisonReport.setAssociationId(associationId);
+            mappingErrorComparisonReport.setPubmedId(pubmedId);
+
             // Compare errors
             AssociationReport newErrorReport = associationIdToNewAssociationReportMap.get(associationId);
+
             String oldSnpError = oldErrorReport.getSnpError();
             String newSnpError = newErrorReport.getSnpError();
             Boolean differenceInSnpErrors = compareDifferences(oldSnpError, newSnpError);
+            if (differenceInSnpErrors) {
+                mappingErrorComparisonReport.setOldSnpError(oldSnpError);
+                mappingErrorComparisonReport.setNewSnpError(newSnpError);
+            }
 
             String oldSnpGeneOnDiffChr = oldErrorReport.getSnpGeneOnDiffChr();
             String newSnpGeneOnDiffChr = newErrorReport.getSnpGeneOnDiffChr();
             Boolean differenceInSnpGeneOnDiffChr = compareDifferences(oldSnpGeneOnDiffChr, newSnpGeneOnDiffChr);
+            if (differenceInSnpGeneOnDiffChr) {
+                mappingErrorComparisonReport.setOldSnpGeneOnDiffChr(oldSnpGeneOnDiffChr);
+                mappingErrorComparisonReport.setNewSnpGeneOnDiffChr(newSnpGeneOnDiffChr);
+            }
 
             String oldNoGeneForSymbol = oldErrorReport.getNoGeneForSymbol();
             String newNoGeneForSymbol = newErrorReport.getNoGeneForSymbol();
             Boolean differenceNoGeneForSymbol = compareDifferences(oldNoGeneForSymbol, newNoGeneForSymbol);
+            if (differenceNoGeneForSymbol) {
+                mappingErrorComparisonReport.setOldNoGeneForSymbol(oldNoGeneForSymbol);
+                mappingErrorComparisonReport.setNewNoGeneForSymbol(newNoGeneForSymbol);
+            }
 
             String oldGeneError = oldErrorReport.getGeneError();
             String newGeneError = newErrorReport.getGeneError();
             Boolean differenceGeneError = compareDifferences(oldGeneError, newGeneError);
+            if (differenceGeneError) {
+                mappingErrorComparisonReport.setOldGeneError(oldGeneError);
+                mappingErrorComparisonReport.setNewGeneError(newGeneError);
+            }
 
             String oldRestServiceError = oldErrorReport.getRestServiceError();
             String newRestServiceError = newErrorReport.getRestServiceError();
             Boolean differenceRestServiceError = compareDifferences(oldRestServiceError, newRestServiceError);
+            if (differenceRestServiceError) {
+                mappingErrorComparisonReport.setOldRestServiceError(oldRestServiceError);
+                mappingErrorComparisonReport.setNewRestServiceError(newRestServiceError);
+            }
 
             String oldSuspectVariationError = oldErrorReport.getSuspectVariationError();
             String newSuspectVariationError = newErrorReport.getSuspectVariationError();
             Boolean differenceSuspectVariationError =
                     compareDifferences(oldSuspectVariationError, newSuspectVariationError);
-
+            if (differenceSuspectVariationError) {
+                mappingErrorComparisonReport.setOldSuspectVariationError(oldSuspectVariationError);
+                mappingErrorComparisonReport.setNewSuspectVariationError(newSuspectVariationError);
+            }
 
             // Only add reports if a significant difference has been found
             if (differenceInSnpErrors || differenceInSnpGeneOnDiffChr || differenceNoGeneForSymbol ||
                     differenceGeneError || differenceRestServiceError || differenceSuspectVariationError) {
-
-                // Create report
-                MappingErrorComparisonReport mappingErrorComparisonReport = new MappingErrorComparisonReport();
-                mappingErrorComparisonReport.setStudyId(studyId);
-                mappingErrorComparisonReport.setAssociationId(associationId);
-                mappingErrorComparisonReport.setPubmedId(pubmedId);
-
-                mappingErrorComparisonReport.setOldSnpError(oldSnpError);
-                mappingErrorComparisonReport.setNewSnpError(newSnpError);
-
-                mappingErrorComparisonReport.setOldSnpGeneOnDiffChr(oldSnpGeneOnDiffChr);
-                mappingErrorComparisonReport.setNewSnpGeneOnDiffChr(newSnpGeneOnDiffChr);
-
-                mappingErrorComparisonReport.setOldNoGeneForSymbol(oldNoGeneForSymbol);
-                mappingErrorComparisonReport.setNewNoGeneForSymbol(newNoGeneForSymbol);
-
-                mappingErrorComparisonReport.setOldGeneError(oldGeneError);
-                mappingErrorComparisonReport.setNewGeneError(newGeneError);
-
-                mappingErrorComparisonReport.setOldRestServiceError(oldRestServiceError);
-                mappingErrorComparisonReport.setNewRestServiceError(newRestServiceError);
-
-                mappingErrorComparisonReport.setOldSuspectVariationError(oldSuspectVariationError);
-                mappingErrorComparisonReport.setNewSuspectVariationError(newSuspectVariationError);
-
                 comparisonReports.add(mappingErrorComparisonReport);
             }
         }
@@ -140,13 +146,13 @@ public class MappingErrorComparisonService {
      */
     private void createFile(Collection<MappingErrorComparisonReport> comparisonReports) {
 
+        StringBuilder output = new StringBuilder();
+
         if (comparisonReports.size() > 0) {
 
             String header =
                     "Study ID\tAssociation ID\tPubmed ID\tOld SNP Error\tNew SNP Error\tOld Snp Gene On Diff Chr Error\tNew Snp Gene On Diff Chr Error\tOld No Gene For Symbol Error\tNew No Gene For Symbol\tOld Gene Error\tNew Gene Error\tOld Suspect Variation Error\tNew Suspect Variation Error\tOld Rest Service Error\tNew Rest Service Error\n";
 
-
-            StringBuilder output = new StringBuilder();
             output.append(header);
 
             for (MappingErrorComparisonReport comparisonReport : comparisonReports) {
@@ -287,36 +293,36 @@ public class MappingErrorComparisonService {
                 line.append("\n");
                 output.append(line.toString());
             }
-
-            // Create and write to file
-            String uploadDir =
-                    System.getProperty("java.io.tmpdir") + File.separator + "gwas_new_release_mapping_error_report" +
-                            File.separator;
-            File outputFile = new File(uploadDir + "gwas_new_release_mapping_error_report.txt");
-
-            // If at this stage we haven't got a file create one and write to it
-            if (!outputFile.exists()) {
-                try {
-                    outputFile.createNewFile();
-                    getLog().info("Created file: " + outputFile);
-
-                    try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-                            new FileOutputStream(outputFile), "utf-8"))) {
-                        writer.write(String.valueOf(output));
-                    }
-                    catch (IOException e) {
-                        getLog().info("Could not write to " + outputFile);
-                    }
-                }
-                catch (IOException e) {
-                    getLog().error("Could not create file " + uploadDir);
-                }
-            }
         }
         else {
-            getLog().info("No difference in errors identified by latest Ensembl release and previous release.");
+            output.append("No changes in errors identified between current and previous Ensembl release.");
+            getLog().info("No changes in errors identified between current and previous Ensembl release.");
         }
 
+        // Create and write to file
+        String uploadDir =
+                System.getProperty("java.io.tmpdir") + File.separator + "gwas_new_release_mapping_error_report" +
+                        File.separator;
+        File outputFile = new File(uploadDir + "gwas_new_release_mapping_error_report.txt");
+
+        // If at this stage we haven't got a file create one and write to it
+        if (!outputFile.exists()) {
+            try {
+                outputFile.createNewFile();
+                getLog().info("Created file: " + outputFile);
+            }
+            catch (IOException e) {
+                getLog().error("Could not create file " + uploadDir);
+            }
+        }
+
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream(outputFile), "utf-8"))) {
+            writer.write(String.valueOf(output));
+        }
+        catch (IOException e) {
+            getLog().info("Could not write to " + outputFile);
+        }
     }
 
     /**
