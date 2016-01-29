@@ -40,14 +40,7 @@ public class AssociationQueryService {
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
-
-    @Transactional(readOnly = true)
-    public Association findOneAssociation(Long id) {
-        Association association = associationRepository.findOne(id);
-        loadAssociatedData(association);
-        return association;
-    }
-
+    
     public void loadAssociatedData(Association association) {
         association.getLoci();
         association.getLoci().forEach(
