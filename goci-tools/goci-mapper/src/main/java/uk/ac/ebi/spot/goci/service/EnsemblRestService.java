@@ -163,10 +163,13 @@ public class EnsemblRestService {
             tries++;
 
             try {
+                getLog().trace("Querying URL: " + url);
                 HttpResponse<JsonNode> response = Unirest.get(url)
                         .header("Content-Type", "application/json")
                         .asJson();
                 String retryHeader = response.getHeaders().getFirst("Retry-After");
+                getLog().trace("URL response: " + response.getStatus());
+
 
                 if (response.getStatus() == 200) { // Success
                     success = true;
