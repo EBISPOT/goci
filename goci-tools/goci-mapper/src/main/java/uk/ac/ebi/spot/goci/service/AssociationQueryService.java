@@ -40,7 +40,7 @@ public class AssociationQueryService {
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
-    
+
     public void loadAssociatedData(Association association) {
         association.getLoci();
         association.getLoci().forEach(
