@@ -137,10 +137,10 @@ public class MappingService {
         for (Locus associationLocus : studyAssociationLoci) {
             Long locusId = associationLocus.getId();
 
-            getLog().debug("SNPs linked to locus: " + locusId);
+            getLog().debug("Getting SNPs linked to locus: " + locusId);
             Collection<SingleNucleotidePolymorphism> snpsLinkedToLocus =
                     singleNucleotidePolymorphismQueryService.findByRiskAllelesLociId(locusId);
-            getLog().debug("SNPs: " + snpsLinkedToLocus.toString());
+            getLog().debug("SNPs retrieved");
 
             Collection<Gene> authorReportedGenesLinkedToSnp = associationLocus.getAuthorReportedGenes();
 
