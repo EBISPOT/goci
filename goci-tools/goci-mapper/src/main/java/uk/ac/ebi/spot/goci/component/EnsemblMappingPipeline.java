@@ -58,7 +58,7 @@ public class EnsemblMappingPipeline {
     @Value("${mapping.genomic_distance}")
     private int genomicDistance; // 100kb
 
-    private final List<String> reportedGenesToIgnore = Arrays.asList("NR", "intergenic","genic");
+    private final List<String> reportedGenesToIgnore = Arrays.asList("NR", "intergenic", "genic");
 
     private EnsemblRestService ensemblRestService;
 
@@ -163,7 +163,7 @@ public class EnsemblMappingPipeline {
                 RestResponseResult reportedGeneApiResult = ensemblRestService.getRestCall(webservice, reportedGene, "");
 
                 // Check for errors
-                if (reportedGeneApiResult.getError()!=null && !reportedGeneApiResult.getError().isEmpty()){
+                if (reportedGeneApiResult.getError() != null && !reportedGeneApiResult.getError().isEmpty()) {
                     getEnsemblMappingResult().addPipelineErrors(reportedGeneApiResult.getError());
                 }
 
@@ -296,12 +296,15 @@ public class EnsemblMappingPipeline {
             rest_opt += "&db_type=" + getNcbiDbType();
         }
         // Overlapping genes
+        getLog().debug("Getting overlapping genes from " + source + " for " + getEnsemblMappingResult().getRsId());
         getOverlappingGenes(snp_location, source, rest_opt);
 
         // Upstream genes
+        getLog().debug("Getting upstream genes from " + source + " for " + getEnsemblMappingResult().getRsId());
         getUpstreamGenes(snp_location, source, chr_start, rest_opt);
 
         // Downstream genes
+        getLog().debug("Getting downstream genes from " + source + " for " + getEnsemblMappingResult().getRsId());
         getDownstreamGenes(snp_location, source, chr_end, rest_opt);
     }
 
