@@ -21,6 +21,8 @@
 |===
 
 
+Older versions of the GWAS Catalog, with or without ontology annotations, can be found on link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/[ our FTP server].
+
 We are working to provide richer, fully customise-able downloads of GWAS data and these will be available soon.
 
 === Try our new spreadsheet download
@@ -37,7 +39,14 @@ We'd love to hear what you think of this new feature, contact the GWAS Catalog t
 
 == Downloading the GWAS Diagram
 
-link:diagram-downloads[ Download] the latest version of the iconic http://www.ebi.ac.uk/gwas/diagram[GWAS diagram], as well as older versions of the diagram to generate for a visually striking time lapse.
+link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/gwas_diagram.svg[ Download the latest version] of the iconic http://www.ebi.ac.uk/gwas/diagram[GWAS diagram], as well as link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries[ older versions of the diagram] to generate for a visually striking time lapse.
+
+
+== Downloading the GWAS Catalog as RDF/OWL
+
+*CAUTION*: Some of these files may be very large - attempting to open them in your browser may take a very long time. It is usually safest to right-click and choose "save as..." to download these files.
+
+Each release of the GWAS Catalog is also available as an link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/gwas-kb.owl[OWL knowledge base] that can be loaded into an RDF triple store. In order to work with the knowledge base, a copy of the link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/gwas-diagram.owl[schema ontology] and of the link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/efo.owl[Experimental Factor Ontology (EFO)] are required. For more information on our use of ontologies, see our link:ontology[ontology] page.
 
 
 == Citing the GWAS Catalog
