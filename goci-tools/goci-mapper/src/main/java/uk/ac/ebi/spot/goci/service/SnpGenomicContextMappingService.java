@@ -53,6 +53,7 @@ public class SnpGenomicContextMappingService {
     private EntrezGeneQueryService entrezGeneQueryService;
     private SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService;
     private LocationCreationService locationCreationService;
+    private GenomicContextCreationService genomicContextCreationService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -72,7 +73,8 @@ public class SnpGenomicContextMappingService {
                                            EnsemblGeneQueryService ensemblGeneQueryService,
                                            EntrezGeneQueryService entrezGeneQueryService,
                                            SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService,
-                                           LocationCreationService locationCreationService) {
+                                           LocationCreationService locationCreationService,
+                                           GenomicContextCreationService genomicContextCreationService) {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.geneRepository = geneRepository;
         this.genomicContextRepository = genomicContextRepository;
@@ -84,6 +86,7 @@ public class SnpGenomicContextMappingService {
         this.entrezGeneQueryService = entrezGeneQueryService;
         this.singleNucleotidePolymorphismQueryService = singleNucleotidePolymorphismQueryService;
         this.locationCreationService = locationCreationService;
+        this.genomicContextCreationService = genomicContextCreationService;
     }
 
     /**
@@ -338,7 +341,7 @@ public class SnpGenomicContextMappingService {
                                                                               regionName);
                         }
 
-                        GenomicContext genomicContext = createGenomicContext(isIntergenic,
+                        GenomicContext genomicContext = genomicContextCreationService.createGenomicContext(isIntergenic,
                                                                              isUpstream,
                                                                              isDownstream,
                                                                              distance,
@@ -514,54 +517,6 @@ public class SnpGenomicContextMappingService {
         if (geneWithEntrezIds == null) {
             entrezGeneRepository.delete(id);
         }
-    }
-
-    /**
-     * Method to create genomic context
-     *
-     * @param isIntergenic
-     * @param isUpstream
-     * @param isDownstream
-     * @param distance
-     * @param source
-     * @param mappingMethod
-     * @param geneName
-     * @param snpIdInDatabase
-     * @param isClosestGene
-     * @param location
-     */
-    private GenomicContext createGenomicContext(Boolean isIntergenic,
-                                                Boolean isUpstream,
-                                                Boolean isDownstream,
-                                                Long distance,
-                                                String source,
-                                                String mappingMethod,
-                                                String geneName,
-                                                SingleNucleotidePolymorphism snpIdInDatabase,
-                                                Boolean isClosestGene, Location location) {
-
-        GenomicContext genomicContext = new GenomicContext();
-
-        // Find gene, ignoreCase query is not used here as we want to
-        // only create a genomic context for
-        // the exact gene name returned from mapping
-        Gene gene = geneRepository.findByGeneName(geneName);
-
-        genomicContext.setGene(gene);
-        genomicContext.setIsIntergenic(isIntergenic);
-        genomicContext.setIsDownstream(isDownstream);
-        genomicContext.setIsUpstream(isUpstream);
-        genomicContext.setDistance(distance);
-        genomicContext.setSource(source);
-        genomicContext.setMappingMethod(mappingMethod);
-        genomicContext.setSnp(snpIdInDatabase);
-        genomicContext.setIsClosestGene(isClosestGene);
-        genomicContext.setLocation(location);
-
-        // Save genomic context
-        genomicContextRepository.save(genomicContext);
-
-        return genomicContext;
     }
 
     /**
