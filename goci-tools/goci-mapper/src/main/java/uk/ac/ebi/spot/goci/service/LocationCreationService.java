@@ -22,13 +22,7 @@ public class LocationCreationService {
     // Repositories
     private LocationRepository locationRepository;
     private RegionRepository regionRepository;
-
-    private Logger log = LoggerFactory.getLogger(getClass());
-
-    protected Logger getLog() {
-        return log;
-    }
-
+    
     @Autowired
     public LocationCreationService(LocationRepository locationRepository,
                                    RegionRepository regionRepository) {
