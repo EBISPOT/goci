@@ -1,7 +1,5 @@
 package uk.ac.ebi.spot.goci.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Location;
@@ -22,7 +20,7 @@ public class LocationCreationService {
     // Repositories
     private LocationRepository locationRepository;
     private RegionRepository regionRepository;
-    
+
     @Autowired
     public LocationCreationService(LocationRepository locationRepository,
                                    RegionRepository regionRepository) {
