@@ -16,7 +16,6 @@ import uk.ac.ebi.spot.goci.repository.EntrezGeneRepository;
 import uk.ac.ebi.spot.goci.repository.GeneRepository;
 import uk.ac.ebi.spot.goci.repository.GenomicContextRepository;
 import uk.ac.ebi.spot.goci.repository.LocationRepository;
-import uk.ac.ebi.spot.goci.repository.RegionRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
 import java.util.ArrayList;
@@ -47,13 +46,13 @@ public class SnpGenomicContextMappingService {
     private EnsemblGeneRepository ensemblGeneRepository;
     private EntrezGeneRepository entrezGeneRepository;
     private LocationRepository locationRepository;
-    private RegionRepository regionRepository;
 
     // Service
     private GeneQueryService geneQueryService;
     private EnsemblGeneQueryService ensemblGeneQueryService;
     private EntrezGeneQueryService entrezGeneQueryService;
     private SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService;
+    private LocationCreationService locationCreationService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -69,24 +68,23 @@ public class SnpGenomicContextMappingService {
                                            EnsemblGeneRepository ensemblGeneRepository,
                                            EntrezGeneRepository entrezGeneRepository,
                                            LocationRepository locationRepository,
-                                           RegionRepository regionRepository,
                                            GeneQueryService geneQueryService,
                                            EnsemblGeneQueryService ensemblGeneQueryService,
                                            EntrezGeneQueryService entrezGeneQueryService,
-                                           SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService) {
+                                           SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService,
+                                           LocationCreationService locationCreationService) {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.geneRepository = geneRepository;
         this.genomicContextRepository = genomicContextRepository;
         this.ensemblGeneRepository = ensemblGeneRepository;
         this.entrezGeneRepository = entrezGeneRepository;
         this.locationRepository = locationRepository;
-        this.regionRepository = regionRepository;
         this.geneQueryService = geneQueryService;
         this.ensemblGeneQueryService = ensemblGeneQueryService;
         this.entrezGeneQueryService = entrezGeneQueryService;
         this.singleNucleotidePolymorphismQueryService = singleNucleotidePolymorphismQueryService;
+        this.locationCreationService = locationCreationService;
     }
-
 
     /**
      * Takes genomic context information returned by mapping pipeline and creates a structure that links an rs_id to all
@@ -335,9 +333,9 @@ public class SnpGenomicContextMappingService {
                                         regionName);
 
                         if (location == null) {
-                            location = createLocation(chromosomeName,
-                                                      chromosomePosition,
-                                                      regionName);
+                            location = locationCreationService.createLocation(chromosomeName,
+                                                                              chromosomePosition,
+                                                                              regionName);
                         }
 
                         GenomicContext genomicContext = createGenomicContext(isIntergenic,
@@ -564,31 +562,6 @@ public class SnpGenomicContextMappingService {
         genomicContextRepository.save(genomicContext);
 
         return genomicContext;
-    }
-
-    private Location createLocation(String chromosomeName,
-                                    String chromosomePosition,
-                                    String regionName) {
-
-
-        Region region = null;
-        region = regionRepository.findByName(regionName);
-
-        // If the region doesn't exist, save it
-        if (region == null) {
-            Region newRegion = new Region();
-            newRegion.setName(regionName);
-            region = regionRepository.save(newRegion);
-        }
-
-        Location newLocation = new Location();
-        newLocation.setChromosomeName(chromosomeName);
-        newLocation.setChromosomePosition(chromosomePosition);
-        newLocation.setRegion(region);
-
-        // Save location
-        locationRepository.save(newLocation);
-        return newLocation;
     }
 
     /**
