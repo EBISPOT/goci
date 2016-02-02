@@ -102,6 +102,7 @@ public class SnpGenomicContextMappingService {
 
         // Need flatten down genomic context information
         // and create structure linking each RS_ID to its complete set of new mapped data
+        getLog().debug("Collate all new genomic context information...");
         Map<String, Set<GenomicContext>> snpToGenomicContextMap = new HashMap<>();
 
         for (GenomicContext genomicContext : genomicContexts) {
@@ -121,6 +122,7 @@ public class SnpGenomicContextMappingService {
         }
 
         // Store genomic context information
+        getLog().debug("Storing new genomic context information...");
         storeSnpGenomicContext(snpToGenomicContextMap);
     }
 
@@ -131,6 +133,8 @@ public class SnpGenomicContextMappingService {
      * @param genomicContexts object holding gene and snp mapping information
      */
     private void processGenes(Collection<GenomicContext> genomicContexts) {
+
+        getLog().debug("Processing genes...");
 
         // Need to flatten down genomic context gene information
         // and create structure linking each gene symbol to its
@@ -342,14 +346,15 @@ public class SnpGenomicContextMappingService {
                         }
 
                         GenomicContext genomicContext = genomicContextCreationService.createGenomicContext(isIntergenic,
-                                                                             isUpstream,
-                                                                             isDownstream,
-                                                                             distance,
-                                                                             source,
-                                                                             mappingMethod,
-                                                                             geneName,
-                                                                             snpInDatabase,
-                                                                             isClosestGene, location);
+                                                                                                           isUpstream,
+                                                                                                           isDownstream,
+                                                                                                           distance,
+                                                                                                           source,
+                                                                                                           mappingMethod,
+                                                                                                           geneName,
+                                                                                                           snpInDatabase,
+                                                                                                           isClosestGene,
+                                                                                                           location);
 
                         newSnpGenomicContexts.add(genomicContext);
                     }

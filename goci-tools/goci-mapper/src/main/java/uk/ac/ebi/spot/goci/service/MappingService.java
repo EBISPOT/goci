@@ -86,6 +86,7 @@ public class MappingService {
                 doMapping(association);
 
                 // Once mapping is complete, update mapping record
+                getLog().debug("Update mapping record");
                 mappingRecordService.updateAssociationMappingRecord(association, new Date(), performer);
             }
         }
@@ -109,6 +110,7 @@ public class MappingService {
                 doMapping(association);
 
                 // Once mapping is complete, update mapping record
+                getLog().debug("Update mapping record");
                 mappingRecordService.updateAssociationMappingRecord(association, new Date(), performer);
             }
         }
