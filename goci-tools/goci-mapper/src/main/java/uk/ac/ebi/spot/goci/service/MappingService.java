@@ -75,7 +75,7 @@ public class MappingService {
      *
      * @param performer name of curator/job carrying out the mapping
      */
-  //  @Transactional(rollbackFor = EnsemblMappingException.class)
+    @Transactional(rollbackFor = EnsemblMappingException.class)
     public void mapCatalogContents(String performer) throws EnsemblMappingException {
 
         // Get all associations via service
