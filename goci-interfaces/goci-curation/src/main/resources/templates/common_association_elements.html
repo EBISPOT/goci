@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="association_elemets">
+
+<div class="form-group">
+    <label for="pvalueMantissa" class="control-label col-md-2">P-value (mantissa)</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="pvalueMantissa"
+               th:field="*{pvalueMantissa}" name="pvalueMantissa"/>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="pvalueExponent" class="control-label col-md-2">P-value (exponent)</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="pvalueExponent"
+               th:field="*{pvalueExponent}" name="pvalueExponent"/>
+    </div>
+</div>
+
+
+<div class="form-group">
+    <label for="pvalueText" class="control-label col-md-2">P-value (Text)</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="pvalueText"
+               th:field="*{pvalueText}" name="pvalueText"/>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="EFOTrait" class="control-label col-md-2">EFO Trait:</label>
+
+    <div class="col-md-10">
+        <select name="efoTraits" th:field="*{efoTraits}"
+
+                class="form-control select2-select"
+                multiple="multiple" id="EFOTrait">
+            <option th:each="efoTrait : ${efoTraits}"
+                    th:value="${efoTrait.id}"
+                    th:text="${efoTrait.trait}"></option>
+        </select>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="snpType" class="control-label col-md-2">SNP type</label>
+
+    <div class="col-md-10" id="snpType">
+        <label class="radio-inline">
+            <input type="radio" name="snpType" th:value="'novel'"
+                   th:field="*{snpType}">novel</input>
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="snpType" th:value="'known'"
+                   th:field="*{snpType}">known</input>
+        </label>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="standardError" class="control-label col-md-2">Standard Error</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="standardError"
+               th:field="*{standardError}" name="standardError"/>
+    </div>
+
+    <div class="col-md-12">
+                                <button type="button"
+                                        class="btn btn-primary pull-right"
+                                        id="calculate-or-range">Build range</button>
+    </div>
+</div>
+<div class="form-group">
+    <label for="range" class="control-label col-md-2">Range</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="range"
+               th:field="*{orPerCopyRange}" name="range"/>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="description" class="control-label col-md-2">Description</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="description"
+               th:field="*{description}" name="description"/>
+    </div>
+</div>
+
+</body>
+</html>
