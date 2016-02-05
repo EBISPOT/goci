@@ -41,7 +41,6 @@ public class MappingService {
     private SnpGenomicContextMappingService snpGenomicContextMappingService;
     private AssociationReportService associationReportService;
     private MappingRecordService mappingRecordService;
-    private AssociationQueryService associationService;
     private SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService;
     private EnsemblMappingPipeline ensemblMappingPipeline;
 
@@ -57,7 +56,6 @@ public class MappingService {
                           SnpGenomicContextMappingService snpGenomicContextMappingService,
                           AssociationReportService associationReportService,
                           MappingRecordService mappingRecordService,
-                          AssociationQueryService associationService,
                           SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService,
                           EnsemblMappingPipeline ensemblMappingPipeline) {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
@@ -65,34 +63,8 @@ public class MappingService {
         this.snpGenomicContextMappingService = snpGenomicContextMappingService;
         this.associationReportService = associationReportService;
         this.mappingRecordService = mappingRecordService;
-        this.associationService = associationService;
         this.singleNucleotidePolymorphismQueryService = singleNucleotidePolymorphismQueryService;
         this.ensemblMappingPipeline = ensemblMappingPipeline;
-    }
-
-    /**
-     * Get all associations in database and map
-     *
-     * @param performer name of curator/job carrying out the mapping
-     */
-    @Transactional(rollbackFor = EnsemblMappingException.class)
-    public void mapCatalogContents(String performer) throws EnsemblMappingException {
-
-        // Get all associations via service
-        Collection<Association> associations = associationService.findAllAssociations();
-        getLog().info("Total number of associations to map: " + associations.size());
-        try {
-            for (Association association : associations) {
-                doMapping(association);
-
-                // Once mapping is complete, update mapping record
-                getLog().debug("Update mapping record");
-                mappingRecordService.updateAssociationMappingRecord(association, new Date(), performer);
-            }
-        }
-        catch (EnsemblMappingException e) {
-            throw new EnsemblMappingException("Attempt to map all associations failed", e);
-        }
     }
 
     /**
