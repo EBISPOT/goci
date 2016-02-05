@@ -355,7 +355,7 @@ function processAssociation(association, table) {
         row.append($("<td>"));
     }
 
-    var location = "chr";
+    var location = '';
     if (association.positionLinks != null) {
         for (var k = 0; k < association.positionLinks.length; k++) {
             var chromName = association.positionLinks[k].split("|")[0];
@@ -365,11 +365,11 @@ function processAssociation(association, table) {
 
             if (pattern.test(chromName) || chromName == 'X' || chromName == 'Y') {
 
-                location = location.concat(chromName);
+                location = location.concat("chr").concat(chromName);
                 console.log(chromName);
             }
             else {
-                location = location.concat("?");
+                location = location.concat("chr").concat("?");
             }
             if (position == '') {
                 position = "?";
@@ -510,10 +510,10 @@ function processAssociation(association, table) {
             mapgene = upstream.concat(" - ").concat(downstream);
         }
         else if(upstream != '' && downstream == '') {
-            mapgene = upstream.concat(" - ?");
+            mapgene = upstream.concat(" - N/A");
         }
         else{
-            mapgene = ("? - ").concat(downstream);
+            mapgene = ("N/A - ").concat(downstream);
         }
 
     }

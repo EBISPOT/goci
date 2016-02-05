@@ -810,13 +810,17 @@ public class SolrSearchController {
             @RequestParam(value = "traitfilter[]", required = false) String[] traits,
             @RequestParam(value = "dateaddedfilter", required = false) String addedDateRange,
             @RequestParam(value = "efo", defaultValue = "false") boolean efo,
+            @RequestParam(value = "facet", required = false) String facet,
             HttpServletResponse response) throws IOException {
 
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
         int maxResults = 1000000;
         int page = 1;
-        String facet = "association";
+
+        if(facet == ""){
+            facet = searchConfiguration.getDefaultFacet();
+        }
         addFilterQuery(solrSearchBuilder, "resourcename", facet);
         addRowsAndPage(solrSearchBuilder, maxResults, page);
 
@@ -877,15 +881,15 @@ public class SolrSearchController {
             }
             else{
                 if(efo){
-                    fileName = "gwas_catalog_v1.0.1-downloaded_".concat(now).concat(".tsv");
+                    fileName = "gwas_catalog_v1.0.1-".concat(facet).concat("-downloaded_").concat(now).concat(".tsv");
                 }
                 else {
-                    fileName = "gwas_catalog_v1.0-downloaded_".concat(now).concat(".tsv");
+                    fileName = "gwas_catalog_v1.0-".concat(facet).concat("-downloaded_").concat(now).concat(".tsv");
                 }
             }
         }
         else {
-            fileName = "gwas-downloaded_".concat(now)
+            fileName = "gwas-".concat(facet).concat("-downloaded_").concat(now)
                     .concat("-")
                     .concat(query.substring(6, query.length() - 1))
                     .concat(".tsv");
@@ -893,13 +897,13 @@ public class SolrSearchController {
         response.setContentType("text/tsv");
         response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
 
-        dispatchDownloadSearch(searchString, response.getOutputStream(), efo);
+        dispatchDownloadSearch(searchString, response.getOutputStream(), efo, facet);
 
 
     }
 
 
-    private void dispatchDownloadSearch(String searchString, OutputStream outputStream, boolean efo) throws IOException {
+    private void dispatchDownloadSearch(String searchString, OutputStream outputStream, boolean efo, String facet) throws IOException {
         System.out.println(searchString);
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(searchString);
@@ -925,7 +929,7 @@ public class SolrSearchController {
             String output;
             while ((output = br.readLine()) != null) {
 
-                JsonProcessingService jsonProcessor = new JsonProcessingService(output, efo);
+                JsonProcessingService jsonProcessor = new JsonProcessingService(output, efo, facet);
                 file = jsonProcessor.processJson();
 
             }
