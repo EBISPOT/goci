@@ -44,8 +44,6 @@ public class NightlyEnsemblReleaseCheck {
 
     private MappingService mappingService;
 
-    private AssociationReportRepository associationReportRepository;
-
     @Autowired
     public NightlyEnsemblReleaseCheck(EnsemblRelease ensemblRelease,
                                       EnsemblGenomeBuildVersion ensemblGenomeBuildVersion,
@@ -60,7 +58,6 @@ public class NightlyEnsemblReleaseCheck {
         this.mappingMetadataRepository = mappingMetadataRepository;
         this.mailService = mailService;
         this.mappingService = mappingService;
-        this.associationReportRepository = associationReportRepository;
     }
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -74,9 +71,6 @@ public class NightlyEnsemblReleaseCheck {
      */
     @Scheduled(cron = "0 00 20 ? * THU")
     public void checkRelease() throws EnsemblMappingException {
-
-        // Get all old association reports so we can compare with new ones, do this before we remap
-        Collection<AssociationReport> oldAssociationReports = associationReportRepository.findAll();
 
         // Get relevant metadata
         try {
