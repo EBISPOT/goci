@@ -5,56 +5,33 @@
 <body th:fragment="beta">
 
 <div class="form-group">
-    <label for="orPerCopyNum" class="control-label col-md-2">Beta per copy (Num)</label>
+    <label for="beta" class="control-label col-md-2">Beta (Num)</label>
 
     <div class="col-md-10">
-        <input type="text" class="form-control" name="orPerCopyNum" id="orPerCopyNum" th:filed="*{orPerCopyNum}"/>
+        <input type="text" class="form-control" name="beta" id="beta" th:filed="*{beta}"/>
     </div>
 </div>
 
 <div class="form-group">
-    <label for="orPerCopyRecip" class="control-label col-md-2">Beta per copy reciprocal</label>
+    <label for="betaUnit" class="control-label col-md-2">Unit</label>
 
     <div class="col-md-10">
-        <input type="text" class="form-control" id="orPerCopyRecip" th:field="*{orPerCopyRecip}" name="orPerCopyRecip"/>
-    </div>
-
-    <div class="col-md-10"><button type="button" class="btn btn-primary pull-right" id="calculate-or">Calculate OR/HR/RR per copy (Num)</button>
+        <input type="text" class="form-control" id="betaUnit" th:field="*{betaUnit}" name="betaUnit" th:default="unit"/>
     </div>
 </div>
 
 <div class="form-group">
-    <label for="orPerCopyRange" class="control-label col-md-2">Beta per copy (Range)</label>
+    <label for="betaUnitDirection" class="control-label col-md-2"></label>
 
-    <div class="col-md-10">
-        <input type="text" class="form-control" id="orPerCopyRange" th:field="*{orPerCopyRange}" name="orPerCopyRange"/>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="orPerCopyRecipRange" class="control-label col-md-2">Beta per copy reciprocal (Range)</label>
-
-    <div class="col-md-10">
-        <input type="text"
-               class="form-control"
-               id="orPerCopyRecipRange"
-               th:field="*{orPerCopyRecipRange}"
-               name="orPerCopyRecipRange"/>
-    </div>
-
-    <div class="col-md-10"><button type="button" class="btn btn-primary pull-right" id="calculate-recip-range">Calculate OR/HR/RR per copy (Range)</button>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="orPerCopyUnitDescr" class="control-label col-md-2">Beta Description</label>
-
-    <div class="col-md-10">
-        <input type="text"
-               class="form-control"
-               id="orPerCopyUnitDescr"
-               th:field="*{orPerCopyUnitDescr}"
-               name="orPerCopyUnitDescr"/>
+    <div class="col-md-10" id="betaUnitDirection">
+        <label class="radio-inline">
+            <input type="radio" name="betaIncrease" th:value="'increase'"
+                   th:field="*{betaUnitDirection}">Increase</input>
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="betaDecrease" th:value="'decrease'"
+                   th:field="*{betaUnitDirection}">Decrease</input>
+        </label>
     </div>
 </div>
 
