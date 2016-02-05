@@ -240,6 +240,9 @@ public class JsonProcessingService {
         else {
             ci = "";
         }
+        if(doc.get("orPerCopyUnitDescr") != null){
+            ci = ci.concat(doc.get("orPerCopyUnitDescr").asText().trim());
+        }
         return ci;
     }
 
@@ -485,8 +488,8 @@ public class JsonProcessingService {
 
     private String getDate(JsonNode doc) {
         String date;
-        if (doc.get("catalogAddedDate") != null) {
-            date = doc.get("catalogAddedDate").asText().trim().substring(0, 10);
+        if (doc.get("catalogPublishDate") != null) {
+            date = doc.get("catalogPublishDate").asText().trim().substring(0, 10);
         }
         else {
             date = "";

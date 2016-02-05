@@ -1,109 +1,74 @@
 package uk.ac.ebi.spot.goci.component;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
-import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.service.EnsemblRestService;
+import org.springframework.web.client.RestTemplate;
+import uk.ac.ebi.spot.goci.exception.EnsemblRestIOException;
+import uk.ac.ebi.spot.goci.model.EnsemblGenomeBuildVersionJson;
 
-import java.io.IOException;
-import java.util.ArrayList;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by Laurent on 10/11/2015.
  *
- * @author Laurent Class getting the Ensembl Genome build version from the Ensembl REST API
+ * @author Laurent
+ *         <p>
+ *         Class getting the Ensembl Genome build version from the Ensembl REST API
+ *         <p>
+ *         Refactored by Emma to use standard Spring mechanism to consume a RESTful service
  */
 @Service
 public class EnsemblGenomeBuildVersion {
 
-    private String genomeBuildVersion;
-    private String species = "homo_sapiens";
-    private String endpoint = "/info/assembly/" + species + "/";
-    private ArrayList<String> rest_errors = new ArrayList<>();
+    @NotNull @Value("${mapping.genome_build_endpoint}")
+    private String endpoint;
 
-    // JPA no-args constructor
-    // Make the REST API call
-    public EnsemblGenomeBuildVersion() {
-        JSONObject ensembl_result = this.getSimpleRestCall();
-        if (ensembl_result.length() > 0) {
-            if (ensembl_result.has("error")) {
-                checkError(ensembl_result);
-            }
-            // Check if there are releases key
-            else if (ensembl_result.has("assembly_name")) {
-                // Check if there are releases data
-                genomeBuildVersion = ensembl_result.getString("assembly_name");
-            }
-        }
-        else {
-            rest_errors.add("Release version not found");
-        }
+    @NotNull @Value("${ensembl.server}")
+    private String server;
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
     }
-
 
     /**
      * Getter for the genome build version
      *
      * @return the genome build version
      */
-    public String getGenomeBuildVersion() { return genomeBuildVersion; }
+    public String getGenomeBuildVersion() throws EnsemblRestIOException {
 
+        RestTemplate restTemplate = new RestTemplate();
+        String url = getServer() + getEndpoint();
+        String assemblyName = "";
 
-    /**
-     * Getter for the list of REST API error messages
-     *
-     * @return List of strings.
-     */
-    public ArrayList<String> getRestErrors() {
-        return rest_errors;
-    }
-
-
-    /**
-     * Check the type of error returned by the REST web service JSON output
-     *
-     * @param result The JSONObject result
-     */
-    private void checkError(JSONObject result) {
-        if (result.getString("error").contains("page not found")) {
-            rest_errors.add("Web service '" + endpoint + "' not found or not working.");
-        }
-        else {
-            rest_errors.add(result.getString("error"));
-        }
-    }
-
-
-    /**
-     * Simple generic Ensembl REST API call method.
-     *
-     * @return the corresponding JSONObject
-     */
-    private JSONObject getSimpleRestCall() {
-        EnsemblRestService ens_rest_call = new EnsemblRestService(endpoint, "");
-        JSONObject json_result = new JSONObject();
         try {
-            ens_rest_call.getRestCall();
-            json_result = ens_rest_call.getRestResults().getObject();
+            EnsemblGenomeBuildVersionJson ensemblGenomeBuildVersionJson =
+                    restTemplate.getForObject(url, EnsemblGenomeBuildVersionJson.class);
+            getLog().info("Querying " + url);
+            assemblyName = ensemblGenomeBuildVersionJson.getAssembly_name();
 
-            // Errors
-            ArrayList rest_errors = ens_rest_call.getErrors();
-            if (rest_errors.size() > 0) {
-                for (int i = 0; i < rest_errors.size(); ++i) {
-                    this.rest_errors.add(rest_errors.get(i).toString());
-                }
+            if (assemblyName.isEmpty()) {
+                throw new EnsemblRestIOException("Unable to determine Ensembl genome build version");
             }
         }
-        catch (IOException e) {
-            e.printStackTrace();
+
+        catch (Exception e) {
+            throw new EnsemblRestIOException("Problem querying Ensembl API for genome build version");
         }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        catch (UnirestException e) {
-            e.printStackTrace();
-        }
-        return json_result;
+
+        return assemblyName;
+    }
+
+    public String getEndpoint() {
+        return endpoint;
+    }
+
+    public String getServer() {
+        return server;
     }
 
 }

@@ -13,9 +13,6 @@
 |link:fileheaders[ Click to view]
 
 
-//|A description of the column headings in the most recent edition of the GWAS Catalog file
-//|link:fileheaders[ link]
-//|
 
 |The most recent edition of the GWAS Catalog *with added ontology annotations*
 |link:../api/search/downloads/alternative[ Click to download]
@@ -24,12 +21,7 @@
 |===
 
 
-//|A description of the additional column headings in the most recent edition of the GWAS Catalog with added ontology annotations
-//|link:fileheaders#_file_headers_for_catalog_version_1_0_1[ link]
-//|
-//|===
-
-
+Older versions of the GWAS Catalog, with or without ontology annotations, can be found on link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/[ our FTP server].
 
 We are working to provide richer, fully customise-able downloads of GWAS data and these will be available soon.
 
@@ -40,14 +32,21 @@ As part of ongoing improvements mapping information will be added for all GWAS C
 
 We are in the process of testing and developing this feature and in order to gather feedback the GWAS Catalog with added mapping information is link:../api/search/downloads/ensembl_mapping[available for download here].
 
-A description of the headers in this file can be found link:mappingfileheaders[here]. The information in this file is generated using the link:http://www.ensembl.org/info/docs/api/index.html[Ensembl API] and the source of the data is both Ensembl and NCBI. The data was produced using a snapshot of our database as of the 9th of September 2015 and includes studies with a date added to catalog up to July 2015.
+A description of the headers in this file can be found link:mappingfileheaders[here]. The information in this file is generated using the link:http://rest.ensembl.org/[Ensembl API] and the source of the data is both Ensembl and NCBI. The data was produced using a snapshot of our database as of the 9th of September 2015 and includes studies with a date added to catalog up to July 2015.
 
 We'd love to hear what you think of this new feature, contact the GWAS Catalog team on mailto:gwas-info@ebi.ac.uk[gwas-info@ebi.ac.uk]
 
 
 == Downloading the GWAS Diagram
 
-link:diagram-downloads[ Download] the latest version of the iconic http://www.ebi.ac.uk/gwas/diagram[GWAS diagram], as well as older versions of the diagram to generate for a visually striking time lapse.
+link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/gwas_diagram.svg[ Download the latest version] of the iconic http://www.ebi.ac.uk/gwas/diagram[GWAS diagram], as well as link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries[ older versions of the diagram] to generate for a visually striking time lapse.
+
+
+== Downloading the GWAS Catalog as RDF/OWL
+
+*CAUTION*: Some of these files may be very large - attempting to open them in your browser may take a very long time. It is usually safest to right-click and choose "save as..." to download these files.
+
+Each release of the GWAS Catalog is also available as an link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/gwas-kb.owl[OWL knowledge base] that can be loaded into an RDF triple store. In order to work with the knowledge base, a copy of the link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/gwas-diagram.owl[schema ontology] and of the link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/efo.owl[Experimental Factor Ontology (EFO)] are required. For more information on our use of ontologies, see our link:ontology[ontology] page.
 
 
 == Citing the GWAS Catalog

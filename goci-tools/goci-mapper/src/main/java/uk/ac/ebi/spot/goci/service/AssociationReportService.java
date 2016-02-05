@@ -175,7 +175,7 @@ public class AssociationReportService {
 
         // SNP Error
         standardErrorList.add("not found for homo_sapiens");
-        standardErrorList.add("is not found in Ensembl");
+        standardErrorList.add("Attempt to map SNP");
 
         // Suspect variation errors
         standardErrorList.add("Variation does not map to the genome");
@@ -223,7 +223,7 @@ public class AssociationReportService {
         errorMap.putIfAbsent("no mapping available for the variant", "geneError");
 
         errorMap.putIfAbsent("not found for homo_sapiens", "snpError");
-        errorMap.putIfAbsent("is not found in Ensembl", "snpError");
+        errorMap.putIfAbsent("Attempt to map SNP", "snpError");
 
         errorMap.putIfAbsent("is on a different chromosome", "snpGeneOnDiffChrError");
 

@@ -19,7 +19,19 @@
         </rollingPolicy>
     </appender>
 
-    <logger name="uk.ac.ebi.spot.goci.mapper" level="DEBUG" additivity="false">
+    <logger name="uk.ac.ebi.spot.goci.service.MappingService" level="DEBUG" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="uk.ac.ebi.spot.goci.service.EnsemblRestService" level="TRACE" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="uk.ac.ebi.spot.goci.component.EnsemblMappingPipeline" level="DEBUG" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="uk.ac.ebi.spot.goci.service.SnpGenomicContextMappingService" level="DEBUG" additivity="false">
         <appender-ref ref="FILE" />
     </logger>
 

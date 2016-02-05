@@ -41,15 +41,7 @@ public class AssociationQueryService {
         return allAssociations;
     }
 
-    @Transactional(readOnly = true)
-    public Association findOneAssociation(Long id) {
-        Association association = associationRepository.findOne(id);
-        loadAssociatedData(association);
-        return association;
-    }
-
     public void loadAssociatedData(Association association) {
-        association.getEfoTraits().size();
         association.getLoci();
         association.getLoci().forEach(
                 locus -> {

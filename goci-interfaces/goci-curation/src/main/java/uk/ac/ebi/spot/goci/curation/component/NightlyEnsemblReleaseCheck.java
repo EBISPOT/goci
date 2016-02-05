@@ -10,10 +10,16 @@ import uk.ac.ebi.spot.goci.component.EnsemblDbsnpVersion;
 import uk.ac.ebi.spot.goci.component.EnsemblGenomeBuildVersion;
 import uk.ac.ebi.spot.goci.component.EnsemblRelease;
 import uk.ac.ebi.spot.goci.curation.service.MailService;
+import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
+import uk.ac.ebi.spot.goci.exception.EnsemblRestIOException;
+import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.MappingMetadata;
+import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 import uk.ac.ebi.spot.goci.repository.MappingMetadataRepository;
+import uk.ac.ebi.spot.goci.service.MapCatalogService;
 import uk.ac.ebi.spot.goci.service.MappingService;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -37,21 +43,21 @@ public class NightlyEnsemblReleaseCheck {
 
     private MailService mailService;
 
-    private MappingService mappingService;
+    private MapCatalogService mapCatalogService;
 
     @Autowired
     public NightlyEnsemblReleaseCheck(EnsemblRelease ensemblRelease,
                                       EnsemblGenomeBuildVersion ensemblGenomeBuildVersion,
                                       EnsemblDbsnpVersion ensemblDbsnpVersion,
+                                      MappingMetadataRepository mappingMetadataRepository,
                                       MailService mailService,
-                                      MappingService mappingService,
-                                      MappingMetadataRepository mappingMetadataRepository) {
+                                      MapCatalogService mapCatalogService) {
         this.ensemblRelease = ensemblRelease;
         this.ensemblGenomeBuildVersion = ensemblGenomeBuildVersion;
         this.ensemblDbsnpVersion = ensemblDbsnpVersion;
-        this.mailService = mailService;
-        this.mappingService = mappingService;
         this.mappingMetadataRepository = mappingMetadataRepository;
+        this.mailService = mailService;
+        this.mapCatalogService = mapCatalogService;
     }
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -63,62 +69,102 @@ public class NightlyEnsemblReleaseCheck {
     /**
      * Method used to determine if there has been a new Ensembl release
      */
-    @Scheduled(cron = "0 00 20 ? * MON-FRI")
-    public void checkRelease() {
+    @Scheduled(cron = "0 00 20 ? * THU")
+    public void checkRelease() throws EnsemblMappingException {
 
         // Get relevant metadata
-        int latestEnsemblReleaseNumber = ensemblRelease.getReleaseVersion();
-        String genomeBuildVersion = ensemblGenomeBuildVersion.getGenomeBuildVersion();
-        int dbsnpVersion = ensemblDbsnpVersion.getDbsnpVersion();
+        try {
+            int latestEnsemblReleaseNumber = ensemblRelease.getReleaseVersion();
+            String genomeBuildVersion = ensemblGenomeBuildVersion.getGenomeBuildVersion();
+            int dbsnpVersion = ensemblDbsnpVersion.getDbsnpVersion();
 
-        String performer = "Release " + latestEnsemblReleaseNumber + " mapping";
+            // If we have all the required values
+            if (latestEnsemblReleaseNumber != 0 && genomeBuildVersion != null && dbsnpVersion != 0) {
 
-        List<MappingMetadata> mappingMetadataList = mappingMetadataRepository.findAll(sortByUsageStartDateDesc());
+                String performer = "Release " + latestEnsemblReleaseNumber + " mapping";
+                List<MappingMetadata> mappingMetadataList =
+                        mappingMetadataRepository.findAll(sortByUsageStartDateDesc());
 
-        // If there are no details in table then add them
-        if (mappingMetadataList.isEmpty()) {
-            getLog().info("No mapping metadata found, adding information to database and mapping data to release " +
-                                  latestEnsemblReleaseNumber);
-            createMappingMetaData(latestEnsemblReleaseNumber, genomeBuildVersion, dbsnpVersion);
-
-            // Send email
-            mailService.sendReleaseChangeEmail(null,
-                                               latestEnsemblReleaseNumber);
-
-            // Map database contents
-            mappingService.mapCatalogContents(performer);
-        }
-        else {
-            Integer currentEnsemblReleaseNumberInDatabase = mappingMetadataList.get(0).getEnsemblReleaseNumber();
-
-            // If the latest release in database does not match
-            // the latest Ensembl release do mapping and send notification email
-            if (!currentEnsemblReleaseNumberInDatabase.equals(latestEnsemblReleaseNumber)) {
-                if (currentEnsemblReleaseNumberInDatabase < latestEnsemblReleaseNumber) {
-
-                    // Create new entry in mapping_metadata table
+                // If there are no details in table then add them
+                if (mappingMetadataList.isEmpty()) {
+                    getLog().info(
+                            "No mapping metadata found, adding information to database and mapping data to release " +
+                                    latestEnsemblReleaseNumber);
                     createMappingMetaData(latestEnsemblReleaseNumber, genomeBuildVersion, dbsnpVersion);
 
                     // Send email
-                    mailService.sendReleaseChangeEmail(currentEnsemblReleaseNumberInDatabase,
+                    mailService.sendReleaseChangeEmail(null,
                                                        latestEnsemblReleaseNumber);
 
-                    // Perform remapping and set performer
-                    getLog().info("New Ensembl release identified: " + latestEnsemblReleaseNumber);
-                    getLog().info("Remapping all database contents");
-                    mappingService.mapCatalogContents(performer);
+                    // Map database contents
+                    try {
+                        mapCatalogService.mapCatalogContents(performer);
+                    }
+                    catch (EnsemblMappingException e) {
+                        getLog().error("Problem mapping catalog contents as part of nightly release check", e);
+                    }
                 }
                 else {
-                    getLog().error("Ensembl Release Integrity Issue: Current Ensembl release is " +
-                                           latestEnsemblReleaseNumber +
-                                           ". Database release number is set to " +
-                                           currentEnsemblReleaseNumberInDatabase);
+                    Integer currentEnsemblReleaseNumberInDatabase =
+                            mappingMetadataList.get(0).getEnsemblReleaseNumber();
+
+                    // If the latest release in database does not match
+                    // the latest Ensembl release do mapping and send notification email
+                    if (!currentEnsemblReleaseNumberInDatabase.equals(latestEnsemblReleaseNumber)) {
+                        if (currentEnsemblReleaseNumberInDatabase < latestEnsemblReleaseNumber) {
+
+                            // Create new entry in mapping_metadata table
+                            createMappingMetaData(latestEnsemblReleaseNumber, genomeBuildVersion, dbsnpVersion);
+
+                            // Send email
+                            mailService.sendReleaseChangeEmail(currentEnsemblReleaseNumberInDatabase,
+                                                               latestEnsemblReleaseNumber);
+
+                            // Perform remapping and set performer
+                            getLog().info("New Ensembl release identified: " + latestEnsemblReleaseNumber);
+                            getLog().info("Remapping all database contents");
+                            try {
+                                mapCatalogService.mapCatalogContents(performer);
+                            }
+                            catch (EnsemblMappingException e) {
+                                getLog().error("Problem mapping catalog contents as part of nightly release check", e);
+                            }
+                        }
+                        else {
+                            getLog().error("Ensembl Release Integrity Issue: Current Ensembl release is " +
+                                                   latestEnsemblReleaseNumber +
+                                                   ". Database release number is set to " +
+                                                   currentEnsemblReleaseNumberInDatabase);
+                        }
+                    }
+                    else {
+                        getLog().info("Current Ensembl release is " + latestEnsemblReleaseNumber +
+                                              ", the current release used to map database is " +
+                                              currentEnsemblReleaseNumberInDatabase);
+                    }
                 }
             }
             else {
-                getLog().info("Current Ensembl release is " + latestEnsemblReleaseNumber +
-                                      ", the current release used to map database is " +
-                                      currentEnsemblReleaseNumberInDatabase);
+                getLog().error(
+                        "Querying Ensembl release, genome build version or dbSNP version returned null values");
+                mailService.sendReleaseNotIdentifiedProblem();
+            }
+        }
+        catch (EnsemblRestIOException e) {
+            // Handle potential errors
+            List<String> restErrors = e.getRestErrors();
+            mailService.sendReleaseNotIdentifiedProblem();
+            if (!restErrors.isEmpty()) {
+                String allRestErrors = "";
+                for (String error : restErrors) {
+                    allRestErrors = allRestErrors + error + ". ";
+                }
+                getLog().error(
+                        "Problem identifying Ensembl release, genome build version or dbSNP version: " + allRestErrors,
+                        e);
+            }
+            else {
+                getLog().error("Problem identifying Ensembl release, genome build version or dbSNP version ", e);
             }
         }
     }

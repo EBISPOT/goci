@@ -179,6 +179,7 @@
                    class="table table-hover table-bordered"
                    th:if="${not #lists.isEmpty(snpAssociationTableViews)}">
                 <br/>
+                <caption id="total" th:text="'Total number of SNP associations = '+ ${totalAssociations}"></caption>
                 <thead>
                 <tr>
                     <th style="font-size: small">Edit</th>
