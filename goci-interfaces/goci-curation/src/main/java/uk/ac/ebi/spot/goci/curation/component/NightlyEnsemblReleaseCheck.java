@@ -16,6 +16,7 @@ import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.MappingMetadata;
 import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 import uk.ac.ebi.spot.goci.repository.MappingMetadataRepository;
+import uk.ac.ebi.spot.goci.service.MapCatalogService;
 import uk.ac.ebi.spot.goci.service.MappingService;
 
 import java.util.Collection;
@@ -42,7 +43,7 @@ public class NightlyEnsemblReleaseCheck {
 
     private MailService mailService;
 
-    private MappingService mappingService;
+    private MapCatalogService mapCatalogService;
 
     @Autowired
     public NightlyEnsemblReleaseCheck(EnsemblRelease ensemblRelease,
@@ -50,14 +51,13 @@ public class NightlyEnsemblReleaseCheck {
                                       EnsemblDbsnpVersion ensemblDbsnpVersion,
                                       MappingMetadataRepository mappingMetadataRepository,
                                       MailService mailService,
-                                      MappingService mappingService,
-                                      AssociationReportRepository associationReportRepository) {
+                                      MapCatalogService mapCatalogService) {
         this.ensemblRelease = ensemblRelease;
         this.ensemblGenomeBuildVersion = ensemblGenomeBuildVersion;
         this.ensemblDbsnpVersion = ensemblDbsnpVersion;
         this.mappingMetadataRepository = mappingMetadataRepository;
         this.mailService = mailService;
-        this.mappingService = mappingService;
+        this.mapCatalogService = mapCatalogService;
     }
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -98,7 +98,7 @@ public class NightlyEnsemblReleaseCheck {
 
                     // Map database contents
                     try {
-                        mappingService.mapCatalogContents(performer);
+                        mapCatalogService.mapCatalogContents(performer);
                     }
                     catch (EnsemblMappingException e) {
                         getLog().error("Problem mapping catalog contents as part of nightly release check", e);
@@ -124,7 +124,7 @@ public class NightlyEnsemblReleaseCheck {
                             getLog().info("New Ensembl release identified: " + latestEnsemblReleaseNumber);
                             getLog().info("Remapping all database contents");
                             try {
-                                mappingService.mapCatalogContents(performer);
+                                mapCatalogService.mapCatalogContents(performer);
                             }
                             catch (EnsemblMappingException e) {
                                 getLog().error("Problem mapping catalog contents as part of nightly release check", e);
