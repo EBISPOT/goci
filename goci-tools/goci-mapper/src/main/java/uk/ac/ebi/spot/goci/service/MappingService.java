@@ -8,12 +8,14 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.component.EnsemblMappingPipeline;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.EnsemblMappingResult;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
 import uk.ac.ebi.spot.goci.model.Location;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ import java.util.Set;
 public class MappingService {
 
     private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
+    private AssociationReportRepository associationReportRepository;
 
     // Services
     private SnpLocationMappingService snpLocationMappingService;
@@ -44,6 +47,7 @@ public class MappingService {
     private AssociationQueryService associationService;
     private SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService;
     private EnsemblMappingPipeline ensemblMappingPipeline;
+    private MappingErrorComparisonService mappingErrorComparisonService;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -53,14 +57,17 @@ public class MappingService {
 
     @Autowired
     public MappingService(SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
+                          AssociationReportRepository associationReportRepository,
                           SnpLocationMappingService snpLocationMappingService,
                           SnpGenomicContextMappingService snpGenomicContextMappingService,
                           AssociationReportService associationReportService,
                           MappingRecordService mappingRecordService,
                           AssociationQueryService associationService,
                           SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService,
-                          EnsemblMappingPipeline ensemblMappingPipeline) {
+                          EnsemblMappingPipeline ensemblMappingPipeline,
+                          MappingErrorComparisonService mappingErrorComparisonService) {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
+        this.associationReportRepository = associationReportRepository;
         this.snpLocationMappingService = snpLocationMappingService;
         this.snpGenomicContextMappingService = snpGenomicContextMappingService;
         this.associationReportService = associationReportService;
@@ -68,6 +75,7 @@ public class MappingService {
         this.associationService = associationService;
         this.singleNucleotidePolymorphismQueryService = singleNucleotidePolymorphismQueryService;
         this.ensemblMappingPipeline = ensemblMappingPipeline;
+        this.mappingErrorComparisonService = mappingErrorComparisonService;
     }
 
     /**
@@ -78,6 +86,9 @@ public class MappingService {
     @Transactional(rollbackFor = EnsemblMappingException.class)
     public void mapCatalogContents(String performer) throws EnsemblMappingException {
 
+        // Get all old association reports so we can compare with new ones, do this before we remap
+        Collection<AssociationReport> oldAssociationReports = associationReportRepository.findAll();
+        
         // Get all associations via service
         Collection<Association> associations = associationService.findAllAssociations();
         getLog().info("Total number of associations to map: " + associations.size());
@@ -89,6 +100,7 @@ public class MappingService {
                 getLog().debug("Update mapping record");
                 mappingRecordService.updateAssociationMappingRecord(association, new Date(), performer);
             }
+            mappingErrorComparisonService.compareOldVersusNewErrors(oldAssociationReports);
         }
         catch (EnsemblMappingException e) {
             throw new EnsemblMappingException("Attempt to map all associations failed", e);
