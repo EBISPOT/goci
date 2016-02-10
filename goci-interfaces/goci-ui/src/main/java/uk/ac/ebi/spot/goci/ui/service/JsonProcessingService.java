@@ -480,10 +480,13 @@ public class JsonProcessingService {
                 Pattern p = Pattern.compile(pattern);
                 Matcher m = p.matcher(chrom);
 
-                if (m.find() || location.equals("X") || location.equals("Y")) {
+                if (m.find() || chrom.equals("X") || chrom.equals("Y")) {
                     chromName = locs[0];
                     chromPos = locs[1];
                     region = locs[2];
+                }
+                else {
+                    System.out.println(loc);
                 }
             }
         }

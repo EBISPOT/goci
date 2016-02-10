@@ -393,6 +393,7 @@ function setDownloadLink(searchParams) {
     var beta = '&betafilter=';
     var date = '&datefilter=';
     var addeddate = '&dateaddedfilter=';
+    var facet = '&facet=association';
 
     pval = pval.concat(processPval());
     or = or.concat(processOR());
@@ -434,7 +435,7 @@ function setDownloadLink(searchParams) {
 
     }
 
-    var url = baseUrl.concat(q).concat(pval).concat(or).concat(beta).concat(pubdate).concat(trait).concat(addeddate);
+    var url = baseUrl.concat(q).concat(pval).concat(or).concat(beta).concat(pubdate).concat(trait).concat(addeddate).concat(facet);
     $('#results-download').removeAttr('href').attr('href', url);
 
 }
