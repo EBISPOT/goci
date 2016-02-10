@@ -18,17 +18,28 @@ public class JsonProcessingService {
 
     private String json;
     private boolean includeAnnotations;
+    private String type;
+    private String newline;
 
-    public JsonProcessingService(String json, boolean includeAnnotations) {
+    public JsonProcessingService(String json, boolean includeAnnotations, String type) {
         this.json = json;
         this.includeAnnotations = includeAnnotations;
+        this.type = type;
+        newline = System.getProperty("line.separator");
+
     }
 
-
     public String processJson() throws IOException {
-
-        String header =
-                "Date Added to Catalog\tPUBMEDID\tFirst Author\tDate\tJournal\tLink\tStudy\tDisease/Trait\tInitial Sample Size\tReplication Sample Size\tRegion\tChr_id\tChr_pos\tReported Gene(s)\tMapped_gene\tUpstream_gene_id\tDownstream_gene_id\tSnp_gene_ids\tUpstream_gene_distance\tDownstream_gene_distance\tStrongest SNP-Risk Allele\tSNPs\tMerged\tSnp_id_current\tContext\tIntergenic\tRisk Allele Frequency\tp-Value\tPvalue_mlog\tp-Value (text)\tOR or beta\t95% CI (text)\tPlatform [SNPs passing QC]";
+        String header;
+        
+        if(type.equals("study")){
+            header =
+                    "DATE ADDED TO CATALOG\tPUBMEDID\tFIRST AUTHOR\tDATE\tJOURNAL\tLINK\tSTUDY\tDISEASE/TRAIT\tINITIAL SAMPLE SIZE\tREPLICATION SAMPLE SIZE\tPLATFORM [SNPS PASSING QC]\tASSOCIATION COUNT";
+        }
+        else{
+            header =
+                    "DATE ADDED TO CATALOG\tPUBMEDID\tFIRST AUTHOR\tDATE\tJOURNAL\tLINK\tSTUDY\tDISEASE/TRAIT\tINITIAL SAMPLE SIZE\tREPLICATION SAMPLE SIZE\tREGION\tCHR_ID\tCHR_POS\tREPORTED GENE(S)\tMAPPED_GENE\tUPSTREAM_GENE_ID\tDOWNSTREAM_GENE_ID\tSNP_GENE_IDS\tUPSTREAM_GENE_DISTANCE\tDOWNSTREAM_GENE_DISTANCE\tSTRONGEST SNP-RISK ALLELE\tSNPS\tMERGED\tSNP_ID_CURRENT\tCONTEXT\tINTERGENIC\tRISK ALLELE FREQUENCY\tP-VALUE\tPVALUE_MLOG\tP-VALUE (TEXT)\tOR or BETA\t95% CI (TEXT)\tPLATFORM [SNPS PASSING QC]\tCNV";
+        }
 
         if(includeAnnotations){
             header = header.concat("\tMAPPED_TRAIT\tMAPPED_TRAIT_URI");
@@ -44,178 +55,255 @@ public class JsonProcessingService {
         JsonNode responseNode = node.get("response");
         JsonNode docs = responseNode.get("docs");
 
-        String newline = System.getProperty("line.separator");
 
         for (JsonNode doc : docs) {
             StringBuilder line = new StringBuilder();
 
-            line.append(getDate(doc));
-            line.append("\t");
-
-            String pubmedid = getPubmedId(doc);
-            line.append(pubmedid);
-            line.append("\t");
-            line.append(getAuthor(doc));
-            line.append("\t");
-            line.append(getPublicationDate(doc));
-            line.append("\t");
-            line.append(getJournal(doc));
-            line.append("\t");
-
-            String publink = "www.ncbi.nlm.nih.gov/pubmed/".concat(pubmedid);
-
-            line.append(publink);
-            line.append("\t");
-
-            line.append(getTitle(doc));
-            line.append("\t");
-
-            line.append(getTrait(doc));
-            line.append("\t");
-
-            String init = getInitSample(doc);
-            if (init.contains(newline)) {
-                init = init.replaceAll("\n", "").replaceAll("\r", "");
-            }
-
-            line.append(init);
-            line.append("\t");
-
-            String rep = getRepSample(doc);
-            if (rep.contains(newline)) {
-                rep = rep.replaceAll("\n", "").replaceAll("\r", "");
-            }
-            line.append(rep);
-            line.append("\t");
-
-            Map<String, String> chromLocation = getChromDetails(doc);
-
-            line.append(chromLocation.get("region"));
-            line.append("\t");
-            line.append(chromLocation.get("chromName"));
-            line.append("\t");
-            line.append(chromLocation.get("chromPos"));
-            line.append("\t");
-
-            line.append(getRepGene(doc));
-            line.append("\t");
-
-
-            Map<String, MappedGene> mappedGenes = getMappedGenes(doc);
-
-            if(mappedGenes.get("ingene").getName() != ""){
-                line.append(mappedGenes.get("ingene").getName());
-            }
-            if (mappedGenes.get("upstream").getName() != "" && mappedGenes.get("downstream").getName() != ""){
-                line.append(mappedGenes.get("upstream").getName().concat(" - ").concat(mappedGenes.get("downstream").getName()));
-            }
-            else if (mappedGenes.get("upstream").getName() != "" && mappedGenes.get("downstream").getName() == ""){
-                line.append(mappedGenes.get("upstream").getName().concat(" - ?"));
-            }
-            else if (mappedGenes.get("upstream").getName() == "" && mappedGenes.get("downstream").getName() != ""){
-                line.append(("? - ").concat(mappedGenes.get("downstream").getName()));
+            if(type.equals("study")) {
+                processStudyJson(line, doc);
             }
             else {
-                line.append("");
+                processAssociationJson(line, doc);
             }
-
-            line.append("\t");
-
-            line.append(mappedGenes.get("upstream").getId());
-            line.append("\t");
-            line.append(mappedGenes.get("downstream").getId());
-            line.append("\t");
-            line.append(mappedGenes.get("ingene").getId());
-            line.append("\t");
-
-            line.append(mappedGenes.get("upstream").getDistance());
-            line.append("\t");
-
-            line.append(mappedGenes.get("downstream").getDistance());
-            line.append("\t");
-
-            line.append(getStrongestAllele(doc));
-            line.append("\t");
-
-            String rsId = getRsId(doc);
-            line.append(rsId);
-            line.append("\t");
-
-            //            line.append(doc.get("merged").asText().trim());
-            line.append(""); // todo - remove this when above solr field is available
-            line.append("\t");
-
-            if (rsId.indexOf("rs") == 0 && rsId.indexOf("rs", 2) == -1) {
-                line.append(rsId.substring(2));
-            }
-            else {
-                line.append("");
-            }
-
-            line.append("\t");
-
-            String context = getContext(doc);
-            line.append(context);
-            line.append("\t");
-
-            if (context == "") {
-                line.append("1");
-            }
-            else {
-                line.append("0");
-            }
-            line.append("\t");
-
-            line.append(getRiskFreq(doc));
-            line.append("\t");
-
-            double pvalue = getPvalue(doc);
-
-            if (pvalue == -10) {
-                line.append("");
-                line.append("\t");
-                line.append("");
-            }
-            else {
-                line.append(pvalue);
-                line.append("\t");
-                double mlog = Math.log10(pvalue);
-                line.append(-mlog);
-            }
-            line.append("\t");
-
-            line.append(getQualifier(doc));
-            line.append("\t");
-            line.append(getOR(doc));
-            line.append("\t");
-            line.append(getCI(doc));
-            line.append("\t");
-
-            String platform = getPlatform(doc);
-            if (platform.contains(newline)) {
-                platform = platform.replaceAll("\n", "").replaceAll("\r", "");
-            }
-            line.append(platform);
-
-
-            if(includeAnnotations){
-                line.append("\t");
-
-                Map<String, String> traits = getEfoTraits(doc);
-
-                line.append(traits.get("trait"));
-                line.append("\t");
-                line.append(traits.get("uri"));
-            }
-
-            line.append("\r\n");
-
             result.append(line.toString());
-
         }
+
         return result.toString();
+
+
+    }
+    
+    public void processStudyJson(StringBuilder line, JsonNode doc) throws IOException{
+        line.append(getDate(doc));
+        line.append("\t");
+
+        String pubmedid = getPubmedId(doc);
+        line.append(pubmedid);
+        line.append("\t");
+        line.append(getAuthor(doc));
+        line.append("\t");
+        line.append(getPublicationDate(doc));
+        line.append("\t");
+        line.append(getJournal(doc));
+        line.append("\t");
+
+        String publink = "www.ncbi.nlm.nih.gov/pubmed/".concat(pubmedid);
+
+        line.append(publink);
+        line.append("\t");
+
+        line.append(getTitle(doc));
+        line.append("\t");
+
+        line.append(getTrait(doc));
+        line.append("\t");
+
+        String init = getInitSample(doc);
+        if (init.contains(newline)) {
+            init = init.replaceAll("\n", "").replaceAll("\r", "");
+        }
+
+        line.append(init);
+        line.append("\t");
+
+        String rep = getRepSample(doc);
+        if (rep.contains(newline)) {
+            rep = rep.replaceAll("\n", "").replaceAll("\r", "");
+        }
+        line.append(rep);
+        line.append("\t");
+
+        String platform = getPlatform(doc);
+        if (platform.contains(newline)) {
+            platform = platform.replaceAll("\n", "").replaceAll("\r", "");
+        }
+        line.append(platform);
+
+        line.append("\tN");
+
+
+        if(includeAnnotations){
+            line.append("\t");
+
+            Map<String, String> traits = getEfoTraits(doc);
+
+            line.append(traits.get("trait"));
+            line.append("\t");
+            line.append(traits.get("uri"));
+        }
+
+        line.append("\r\n");
+        
     }
 
+    public void processAssociationJson(StringBuilder line, JsonNode doc) throws IOException {
+
+        line.append(getDate(doc));
+        line.append("\t");
+
+        String pubmedid = getPubmedId(doc);
+        line.append(pubmedid);
+        line.append("\t");
+        line.append(getAuthor(doc));
+        line.append("\t");
+        line.append(getPublicationDate(doc));
+        line.append("\t");
+        line.append(getJournal(doc));
+        line.append("\t");
+
+        String publink = "www.ncbi.nlm.nih.gov/pubmed/".concat(pubmedid);
+
+        line.append(publink);
+        line.append("\t");
+
+        line.append(getTitle(doc));
+        line.append("\t");
+
+        line.append(getTrait(doc));
+        line.append("\t");
+
+        String init = getInitSample(doc);
+        if (init.contains(newline)) {
+            init = init.replaceAll("\n", "").replaceAll("\r", "");
+        }
+
+        line.append(init);
+        line.append("\t");
+
+        String rep = getRepSample(doc);
+        if (rep.contains(newline)) {
+            rep = rep.replaceAll("\n", "").replaceAll("\r", "");
+        }
+        line.append(rep);
+        line.append("\t");
+
+        Map<String, String> chromLocation = getChromDetails(doc);
+
+        line.append(chromLocation.get("region"));
+        line.append("\t");
+        line.append(chromLocation.get("chromName"));
+        line.append("\t");
+        line.append(chromLocation.get("chromPos"));
+        line.append("\t");
+
+        line.append(getRepGene(doc));
+        line.append("\t");
+
+
+        Map<String, MappedGene> mappedGenes = getMappedGenes(doc);
+
+        if(mappedGenes.get("ingene").getName() != ""){
+            line.append(mappedGenes.get("ingene").getName());
+        }
+        if (mappedGenes.get("upstream").getName() != "" && mappedGenes.get("downstream").getName() != ""){
+            line.append(mappedGenes.get("upstream").getName().concat(" - ").concat(mappedGenes.get("downstream").getName()));
+        }
+        else if (mappedGenes.get("upstream").getName() != "" && mappedGenes.get("downstream").getName() == ""){
+            line.append(mappedGenes.get("upstream").getName().concat(" - NA"));
+        }
+        else if (mappedGenes.get("upstream").getName() == "" && mappedGenes.get("downstream").getName() != ""){
+            line.append(("NA - ").concat(mappedGenes.get("downstream").getName()));
+        }
+        else {
+            line.append("");
+        }
+
+        line.append("\t");
+
+        line.append(mappedGenes.get("upstream").getId());
+        line.append("\t");
+        line.append(mappedGenes.get("downstream").getId());
+        line.append("\t");
+        line.append(mappedGenes.get("ingene").getId());
+        line.append("\t");
+
+        line.append(mappedGenes.get("upstream").getDistance());
+        line.append("\t");
+
+        line.append(mappedGenes.get("downstream").getDistance());
+        line.append("\t");
+
+        line.append(getStrongestAllele(doc));
+        line.append("\t");
+
+        String rsId = getRsId(doc);
+        line.append(rsId);
+        line.append("\t");
+
+        //            line.append(doc.get("merged").asText().trim());
+        line.append(""); // todo - remove this when above solr field is available
+        line.append("\t");
+
+        if (rsId.indexOf("rs") == 0 && rsId.indexOf("rs", 2) == -1) {
+            line.append(rsId.substring(2));
+        }
+        else {
+            line.append("");
+        }
+
+        line.append("\t");
+
+        String context = getContext(doc);
+        line.append(context);
+        line.append("\t");
+
+        if (context == "") {
+            line.append("1");
+        }
+        else {
+            line.append("0");
+        }
+        line.append("\t");
+
+        line.append(getRiskFreq(doc));
+        line.append("\t");
+
+        double pvalue = getPvalue(doc);
+
+        if (pvalue == -10) {
+            line.append("");
+            line.append("\t");
+            line.append("");
+        }
+        else {
+            line.append(pvalue);
+            line.append("\t");
+            double mlog = Math.log10(pvalue);
+            line.append(-mlog);
+        }
+        line.append("\t");
+
+        line.append(getQualifier(doc));
+        line.append("\t");
+        line.append(getOR(doc));
+        line.append("\t");
+        line.append(getCI(doc));
+        line.append("\t");
+
+        String platform = getPlatform(doc);
+        if (platform.contains(newline)) {
+            platform = platform.replaceAll("\n", "").replaceAll("\r", "");
+        }
+        line.append(platform);
+
+        line.append("\t");
+        
+        line.append(getAssocCount(doc));
+
+
+        if(includeAnnotations){
+            line.append("\t");
+
+            Map<String, String> traits = getEfoTraits(doc);
+
+            line.append(traits.get("trait"));
+            line.append("\t");
+            line.append(traits.get("uri"));
+        }
+
+        line.append("\r\n");
+    
+    }
 
     private String getPlatform(JsonNode doc) {
         String platform;
@@ -229,6 +317,19 @@ public class JsonProcessingService {
 
 
          return platform;
+    }
+
+
+    private String getAssocCount(JsonNode doc) {
+        String count;
+
+        if(doc.get("associationCount") != null){
+            count = doc.get("associationCount").asText().trim();
+        }
+        else{
+            count = "";
+        }
+        return count;
     }
 
 
@@ -379,10 +480,13 @@ public class JsonProcessingService {
                 Pattern p = Pattern.compile(pattern);
                 Matcher m = p.matcher(chrom);
 
-                if (m.find() || location.equals("X") || location.equals("Y")) {
+                if (m.find() || chrom.equals("X") || chrom.equals("Y")) {
                     chromName = locs[0];
                     chromPos = locs[1];
                     region = locs[2];
+                }
+                else {
+                    System.out.println(loc);
                 }
             }
         }

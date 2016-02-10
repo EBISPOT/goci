@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.TimeZone;
 
 /**
  * Javadocs go here!
@@ -77,7 +76,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.replicateSampleDescription = study.getReplicateSampleSize();
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+//        df.setTimeZone(TimeZone.getTimeZone("UTC"));
         if (study.getPublicationDate() != null) {
             this.publicationDate = df.format(study.getPublicationDate());
         }
