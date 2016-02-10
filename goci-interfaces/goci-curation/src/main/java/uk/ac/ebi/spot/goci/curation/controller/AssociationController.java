@@ -405,7 +405,9 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/add_standard",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String addStandardSnps(Model model, @PathVariable Long studyId, @RequestParam(required = true) String measurementType) {
+    public String addStandardSnps(Model model,
+                                  @PathVariable Long studyId,
+                                  @RequestParam(required = true) String measurementType) {
 
         // Return form object
         SnpAssociationForm emptyForm = new SnpAssociationForm();
@@ -414,8 +416,9 @@ public class AssociationController {
         emptyForm.getSnpFormRows().add(new SnpFormRow());
         emptyForm.setMultiSnpHaplotypeDescr("Single variant");
 
+        // Measurement type determines whether we render a OR/Beta form
         model.addAttribute("snpAssociationForm", emptyForm);
-        model.addAttribute("measurementType",measurementType);
+        model.addAttribute("measurementType", measurementType);
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
@@ -427,13 +430,17 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/add_multi",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String addMultiSnps(Model model, @PathVariable Long studyId) {
+    public String addMultiSnps(Model model,
+                               @PathVariable Long studyId,
+                               @RequestParam(required = true) String measurementType) {
 
         // Return form object
         SnpAssociationForm emptyForm = new SnpAssociationForm();
         emptyForm.setMultiSnpHaplotype(true);
 
+        // Measurement type determines whether we render a OR/Beta form
         model.addAttribute("snpAssociationForm", emptyForm);
+        model.addAttribute("measurementType", measurementType);
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
@@ -444,10 +451,15 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/add_interaction",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String addSnpInteraction(Model model, @PathVariable Long studyId) {
+    public String addSnpInteraction(Model model,
+                                    @PathVariable Long studyId,
+                                    @RequestParam(required = true) String measurementType) {
 
         // Return form object
         SnpAssociationInteractionForm emptyForm = new SnpAssociationInteractionForm();
+
+        // Measurement type determines whether we render a OR/Beta form
+        model.addAttribute("measurementType", measurementType);
         model.addAttribute("snpAssociationInteractionForm", emptyForm);
 
         // Also passes back study object to view so we can create links back to main study page
