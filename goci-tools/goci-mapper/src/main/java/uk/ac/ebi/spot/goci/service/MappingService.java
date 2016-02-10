@@ -73,7 +73,7 @@ public class MappingService {
      * @param associations Collection of associations to map
      * @param performer    name of curator/job carrying out the mapping
      */
-    @Transactional(rollbackFor = EnsemblMappingException.class)
+  //  @Transactional(rollbackFor = EnsemblMappingException.class)
     public void validateAndMapAssociations(Collection<Association> associations, String performer)
             throws EnsemblMappingException {
 
