@@ -274,7 +274,7 @@ public class EnsemblMappingPipeline {
         int chr_start = 1;
         int chr_end = getChromosomeEnd(snp_location.getChromosomeName());
 
-        getGenomicContext(snp_location, chr_start, chr_end, getEnsemblSource());
+   //     getGenomicContext(snp_location, chr_start, chr_end, getEnsemblSource());
         getGenomicContext(snp_location, chr_start, chr_end, getNcbiSource());
     }
 
