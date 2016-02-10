@@ -554,18 +554,14 @@
         <div class="col-md-12">
             <!--Button-->
 
-            <a href="#OptionModal"
-               class="btn btn-primary"
-               data-toggle="modal"
-               role="button">Add
-                             standard
-                             SNP</a>
+            <a href="#StandardOptionModal" class="btn btn-primary" data-toggle="modal" role="button">Add standard
+                                                                                                     SNP</a>
 
-            <a th:href="@{/studies/{studyId}/associations/add_multi(studyId=*{id})}" class="btn btn-primary">Add
-                                                                                                             multi-SNP
-                                                                                                             haplotype</a>
-            <a th:href="@{/studies/{studyId}/associations/add_interaction(studyId=*{id})}"
-               class="btn btn-primary">Add SNP:SNP interaction</a>
+            <a href="#MultiOptionModal" class="btn btn-primary" data-toggle="modal" role="button">Add multi-SNP
+                                                                                                  haplotype</a>
+
+            <a href="#InteractionOptionModal" class="btn btn-primary" data-toggle="modal" role="button">Add SNP:SNP
+                                                                                                        interaction</a>
 
             <input type="button" class="btn btn-primary pull-right" value="Add SNPs from spreadsheet"
                    data-toggle="collapse"
@@ -577,7 +573,7 @@
 <br/>
 
 
-<div id="OptionModal" class="modal fade" th:object="${study}">
+<div id="StandardOptionModal" class="modal fade" th:object="${study}">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -592,6 +588,49 @@
                     <a th:href="@{/studies/{studyId}/associations/add_standard(studyId=*{id}, measurementType='beta')}"
                        class="btn btn-default"
                        role="button">Beta</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="MultiOptionModal" class="modal fade" th:object="${study}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Please select association type?</h4>
+            </div>
+            <div class="modal-body">
+                <a th:href="@{/studies/{studyId}/associations/add_multi(studyId=*{id}, measurementType='or')}"
+                   class="btn btn-default"
+                   role="button">OR</a>
+
+                <a th:href="@{/studies/{studyId}/associations/add_multi(studyId=*{id}, measurementType='beta')}"
+                   class="btn btn-default"
+                   role="button">Beta</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="InteractionOptionModal" class="modal fade" th:object="${study}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Please select association type?</h4>
+            </div>
+            <div class="modal-body">
+                <a th:href="@{/studies/{studyId}/associations/add_interaction(studyId=*{id}, measurementType='or')}"
+                   class="btn btn-default"
+                   role="button">OR</a>
+
+                <a th:href="@{/studies/{studyId}/associations/add_interaction(studyId=*{id}, measurementType='beta')}"
+                   class="btn btn-default"
+                   role="button">Beta</a>
 
             </div>
         </div>
