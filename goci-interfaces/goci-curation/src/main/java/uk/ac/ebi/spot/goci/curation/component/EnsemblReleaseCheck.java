@@ -31,7 +31,7 @@ import java.util.List;
  *         Scheduled component that runs nightly and pings Ensembl REST API to check for changes in release number.
  */
 @Component
-public class NightlyEnsemblReleaseCheck {
+public class EnsemblReleaseCheck {
 
     private EnsemblRelease ensemblRelease;
 
@@ -46,12 +46,12 @@ public class NightlyEnsemblReleaseCheck {
     private MapCatalogService mapCatalogService;
 
     @Autowired
-    public NightlyEnsemblReleaseCheck(EnsemblRelease ensemblRelease,
-                                      EnsemblGenomeBuildVersion ensemblGenomeBuildVersion,
-                                      EnsemblDbsnpVersion ensemblDbsnpVersion,
-                                      MappingMetadataRepository mappingMetadataRepository,
-                                      MailService mailService,
-                                      MapCatalogService mapCatalogService) {
+    public EnsemblReleaseCheck(EnsemblRelease ensemblRelease,
+                               EnsemblGenomeBuildVersion ensemblGenomeBuildVersion,
+                               EnsemblDbsnpVersion ensemblDbsnpVersion,
+                               MappingMetadataRepository mappingMetadataRepository,
+                               MailService mailService,
+                               MapCatalogService mapCatalogService) {
         this.ensemblRelease = ensemblRelease;
         this.ensemblGenomeBuildVersion = ensemblGenomeBuildVersion;
         this.ensemblDbsnpVersion = ensemblDbsnpVersion;
