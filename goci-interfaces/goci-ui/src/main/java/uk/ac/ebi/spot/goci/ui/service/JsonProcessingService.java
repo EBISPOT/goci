@@ -119,8 +119,9 @@ public class JsonProcessingService {
         }
         line.append(platform);
 
-        line.append("\tN");
+        line.append("\t");
 
+        line.append(getAssocCount(doc));
 
         if(includeAnnotations){
             line.append("\t");
@@ -286,10 +287,7 @@ public class JsonProcessingService {
         }
         line.append(platform);
 
-        line.append("\t");
-        
-        line.append(getAssocCount(doc));
-
+        line.append("\tN");
 
         if(includeAnnotations){
             line.append("\t");
