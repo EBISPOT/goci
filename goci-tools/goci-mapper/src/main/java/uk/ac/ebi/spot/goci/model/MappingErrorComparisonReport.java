@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.curation.model;
+package uk.ac.ebi.spot.goci.model;
 
 /**
  * Created by emma on 26/01/2016.

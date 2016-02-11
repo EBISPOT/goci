@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
@@ -385,7 +383,7 @@ public class AssociationController {
                 Curator curator = study.getHousekeeping().getCurator();
                 String mappedBy = curator.getLastName();
                 try {
-                    mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+                    mappingService.validateAndMapAssociations(associationsToMap, mappedBy);
                 }
                 catch (EnsemblMappingException e) {
                     model.addAttribute("study", study);
@@ -612,7 +610,7 @@ public class AssociationController {
             Curator curator = study.getHousekeeping().getCurator();
             String mappedBy = curator.getLastName();
             try {
-                mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+                mappingService.validateAndMapAssociations(associationsToMap, mappedBy);
             }
             catch (EnsemblMappingException e) {
                 model.addAttribute("study", study);
@@ -662,7 +660,7 @@ public class AssociationController {
             Curator curator = study.getHousekeeping().getCurator();
             String mappedBy = curator.getLastName();
             try {
-                mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+                mappingService.validateAndMapAssociations(associationsToMap, mappedBy);
             }
             catch (EnsemblMappingException e) {
                 model.addAttribute("study", study);
@@ -711,7 +709,7 @@ public class AssociationController {
             Curator curator = study.getHousekeeping().getCurator();
             String mappedBy = curator.getLastName();
             try {
-                mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+                mappingService.validateAndMapAssociations(associationsToMap, mappedBy);
             }
             catch (EnsemblMappingException e) {
                 model.addAttribute("study", study);
@@ -907,7 +905,7 @@ public class AssociationController {
             Curator curator = associationStudy.getHousekeeping().getCurator();
             String mappedBy = curator.getLastName();
             try {
-                mappingService.validateAndMapSnps(associationsToMap, mappedBy);
+                mappingService.validateAndMapAssociations(associationsToMap, mappedBy);
             }
             catch (EnsemblMappingException e) {
                 model.addAttribute("study", associationStudy);
@@ -1258,7 +1256,7 @@ public class AssociationController {
         Curator curator = study.getHousekeeping().getCurator();
         String mappedBy = curator.getLastName();
         try {
-            mappingService.validateAndMapSnps(studyAssociations, mappedBy);
+            mappingService.validateAndMapAssociations(studyAssociations, mappedBy);
         }
         catch (EnsemblMappingException e) {
             model.addAttribute("study", study);
