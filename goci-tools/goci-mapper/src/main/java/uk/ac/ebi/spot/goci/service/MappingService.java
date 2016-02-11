@@ -73,7 +73,7 @@ public class MappingService {
      * @param associations Collection of associations to map
      * @param performer    name of curator/job carrying out the mapping
      */
-  //  @Transactional(rollbackFor = EnsemblMappingException.class)
+    @Transactional(rollbackFor = EnsemblMappingException.class)
     public void validateAndMapAssociations(Collection<Association> associations, String performer)
             throws EnsemblMappingException {
 
@@ -98,7 +98,6 @@ public class MappingService {
      * @param associations Collection of associations to map
      * @param performer    name of curator/job carrying out the mapping
      */
-   // @Transactional(rollbackFor = EnsemblMappingException.class)
     public void validateAndMapAllAssociations(Collection<Association> associations, String performer)
             throws EnsemblMappingException {
 
@@ -136,10 +135,8 @@ public class MappingService {
         for (Locus associationLocus : studyAssociationLoci) {
             Long locusId = associationLocus.getId();
 
-            getLog().debug("Getting SNPs linked to locus: " + locusId);
             Collection<SingleNucleotidePolymorphism> snpsLinkedToLocus =
                     singleNucleotidePolymorphismQueryService.findByRiskAllelesLociId(locusId);
-            getLog().debug("SNPs retrieved");
 
             Collection<Gene> authorReportedGenesLinkedToSnp = associationLocus.getAuthorReportedGenes();
 
