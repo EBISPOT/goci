@@ -810,7 +810,7 @@ public class SolrSearchController {
             @RequestParam(value = "traitfilter[]", required = false) String[] traits,
             @RequestParam(value = "dateaddedfilter", required = false) String addedDateRange,
             @RequestParam(value = "efo", defaultValue = "false") boolean efo,
-            @RequestParam(value = "facet", required = false) String facet,
+            @RequestParam(value = "facet", required = true) String facet,
             HttpServletResponse response) throws IOException {
 
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
@@ -818,9 +818,6 @@ public class SolrSearchController {
         int maxResults = 1000000;
         int page = 1;
 
-        if(facet == ""){
-            facet = searchConfiguration.getDefaultFacet();
-        }
         addFilterQuery(solrSearchBuilder, "resourcename", facet);
         addRowsAndPage(solrSearchBuilder, maxResults, page);
 
@@ -876,7 +873,7 @@ public class SolrSearchController {
             if (addedDateRange != "") {
                 fileName = "gwas-downloaded_".concat(now).concat("-recentStudies.tsv");
             }
-            else if (traits != null){
+            else if (traits != null && traits.length != 0){
                 fileName = "gwas-downloaded_".concat(now).concat("-selectedTraits.tsv");
             }
             else{
