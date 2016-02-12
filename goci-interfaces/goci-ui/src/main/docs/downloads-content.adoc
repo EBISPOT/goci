@@ -7,15 +7,28 @@
 |===
 |Description | Download Link |Format  | Column header descriptions
 
-|The most recent edition of the GWAS Catalog
+|The most recent edition of all the associations in the GWAS Catalog
 |link:../api/search/downloads/full[ Click to download]
 |tab separated file
 |link:fileheaders[ Click to view]
 
 
 
-|The most recent edition of the GWAS Catalog *with added ontology annotations*
+|The most recent edition of all the associations in the GWAS Catalog *with added ontology annotations*
 |link:../api/search/downloads/alternative[ Click to download]
+|tab separated file
+|link:fileheaders#_file_headers_for_catalog_version_1_0_1[ Click to view]
+
+
+|The most recent edition of all the studies in the GWAS Catalog
+|link:../api/search/downloads/studies[ Click to download]
+|tab separated file
+|link:fileheaders[ Click to view]
+
+
+
+|The most recent edition of all the studies in the GWAS Catalog *with added ontology annotations*
+|link:../api/search/downloads/studies_alternative[ Click to download]
 |tab separated file
 |link:fileheaders#_file_headers_for_catalog_version_1_0_1[ Click to view]
 |===
