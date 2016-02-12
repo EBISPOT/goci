@@ -73,10 +73,7 @@ public class StudyControllerTest {
 
     @Mock
     private StudyOperationsService studyService;
-
-    @Mock
-    private Model model;
-
+    
     @Mock
     private Study study;
 
