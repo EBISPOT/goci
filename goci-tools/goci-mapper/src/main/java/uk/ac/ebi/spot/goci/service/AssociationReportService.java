@@ -82,27 +82,29 @@ public class AssociationReportService {
             String errorMessage = entry.getKey();
             String errorType = entry.getValue();
 
-            if (errorType.equals("restServiceError")) {
-                restServiceErrors.add(errorMessage);
-            }
-            else if (errorType.equals("suspectVariationError")) {
-                suspectVariationErrors.add(errorMessage);
-            }
-            else if (errorType.equals("snpError")) {
-                snpErrors.add(errorMessage);
-            }
-            else if (errorType.equals("snpGeneOnDiffChrError")) {
-                snpGeneOnDiffChrErrors.add(errorMessage);
-            }
-            else if (errorType.equals("noGeneForSymbolError")) {
-                noGeneForSymbolErrors.add(errorMessage);
-            }
-            else if (errorType.equals("geneError")) {
-                geneErrors.add(errorMessage);
-            }
-            else {
-                getLog().warn("For association ID: " + association.getId() +
-                                      ", cannot determine error type for error " + errorMessage);
+            switch (errorType) {
+                case "restServiceError":
+                    restServiceErrors.add(errorMessage);
+                    break;
+                case "suspectVariationError":
+                    suspectVariationErrors.add(errorMessage);
+                    break;
+                case "snpError":
+                    snpErrors.add(errorMessage);
+                    break;
+                case "snpGeneOnDiffChrError":
+                    snpGeneOnDiffChrErrors.add(errorMessage);
+                    break;
+                case "noGeneForSymbolError":
+                    noGeneForSymbolErrors.add(errorMessage);
+                    break;
+                case "geneError":
+                    geneErrors.add(errorMessage);
+                    break;
+                default:
+                    getLog().warn("For association ID: " + association.getId() +
+                                          ", cannot determine error type for error " + errorMessage);
+                    break;
             }
         }
 
@@ -173,7 +175,7 @@ public class AssociationReportService {
 
         // SNP Error
         standardErrorList.add("not found for homo_sapiens");
-        standardErrorList.add("is not found in Ensembl");
+        standardErrorList.add("Attempt to map SNP");
 
         // Suspect variation errors
         standardErrorList.add("Variation does not map to the genome");
@@ -221,7 +223,7 @@ public class AssociationReportService {
         errorMap.putIfAbsent("no mapping available for the variant", "geneError");
 
         errorMap.putIfAbsent("not found for homo_sapiens", "snpError");
-        errorMap.putIfAbsent("is not found in Ensembl", "snpError");
+        errorMap.putIfAbsent("Attempt to map SNP", "snpError");
 
         errorMap.putIfAbsent("is on a different chromosome", "snpGeneOnDiffChrError");
 

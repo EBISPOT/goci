@@ -18,20 +18,6 @@ public class AssociationCalculationService {
     }
 
     /**
-     * This method calculates the p-value float based on the mantissa and exponent
-     *
-     * @param pvalueMantissa
-     * @param pvalueExponent
-     * @return Float, pvalue float
-     */
-
-    public Float calculatePvalueFloat(Integer pvalueMantissa, Integer pvalueExponent) {
-        double calculatedPvalueFloat = (pvalueMantissa * Math.pow(10, pvalueExponent));
-        Float pvalueFloat = Float.valueOf((float) calculatedPvalueFloat);
-        return pvalueFloat;
-    }
-
-    /**
      * This method calculates the confidence interval based on the standard error - formatting code taken from Kent's
      * Coldfusion code.
      *

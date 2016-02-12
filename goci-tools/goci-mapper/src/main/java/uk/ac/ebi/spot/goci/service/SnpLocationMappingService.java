@@ -32,12 +32,12 @@ public class SnpLocationMappingService {
 
     // Repositories
     private LocationRepository locationRepository;
-    private RegionRepository regionRepository;
     private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
     private GenomicContextRepository genomicContextRepository;
 
     // Services
     private SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService;
+    private LocationCreationService locationCreationService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -48,15 +48,15 @@ public class SnpLocationMappingService {
     //Constructor
     @Autowired
     public SnpLocationMappingService(LocationRepository locationRepository,
-                                     RegionRepository regionRepository,
                                      SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
                                      GenomicContextRepository genomicContextRepository,
-                                     SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService) {
+                                     SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService,
+                                     LocationCreationService locationCreationService) {
         this.locationRepository = locationRepository;
-        this.regionRepository = regionRepository;
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.genomicContextRepository = genomicContextRepository;
         this.singleNucleotidePolymorphismQueryService = singleNucleotidePolymorphismQueryService;
+        this.locationCreationService = locationCreationService;
     }
 
     public void storeSnpLocation(Map<String, Set<Location>> snpToLocations) {
@@ -108,9 +108,9 @@ public class SnpLocationMappingService {
                     }
                     // Create new location
                     else {
-                        Location newLocation = createLocation(chromosomeNameFromMapping,
-                                                              chromosomePositionFromMapping,
-                                                              regionNameFromMapping);
+                        Location newLocation = locationCreationService.createLocation(chromosomeNameFromMapping,
+                                                                                      chromosomePositionFromMapping,
+                                                                                      regionNameFromMapping);
 
                         newSnpLocations.add(newLocation);
                     }
@@ -140,31 +140,6 @@ public class SnpLocationMappingService {
             }
 
         }
-    }
-
-    private Location createLocation(String chromosomeName,
-                                    String chromosomePosition,
-                                    String regionName) {
-
-
-        Region region = null;
-        region = regionRepository.findByName(regionName);
-
-        // If the region doesn't exist, save it
-        if (region == null) {
-            Region newRegion = new Region();
-            newRegion.setName(regionName);
-            region = regionRepository.save(newRegion);
-        }
-
-        Location newLocation = new Location();
-        newLocation.setChromosomeName(chromosomeName);
-        newLocation.setChromosomePosition(chromosomePosition);
-        newLocation.setRegion(region);
-
-        // Save location
-        locationRepository.save(newLocation);
-        return newLocation;
     }
 
     /**

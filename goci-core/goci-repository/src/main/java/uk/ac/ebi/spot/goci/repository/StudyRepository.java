@@ -90,5 +90,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     List<Study> findByDiseaseTraitIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
             Long diseaseTraitId);
 
+    Study findByAssociationsId(Long associationId);
+
 }
 

@@ -193,6 +193,10 @@ function processData(data) {
     console.log("Solr search returned " + documents.length + " documents");
     updateCountBadges(data.facet_counts.facet_fields.resourcename);
 
+    if(data.responseHeader.params.sort != null && data.responseHeader.params.sort.indexOf('pValue') != -1 && data.responseHeader.params.sort.indexOf('asc') != -1){
+        $('#pValue').find('span.unsorted').removeClass('glyphicon-sort').addClass('glyphicon-arrow-up').removeClass('unsorted').addClass('sorted asc');
+    }
+
     if (!$('#filter-form').hasClass('in-use')) {
         if (data.responseHeader.params.q.indexOf('*') != -1 && data.responseHeader.params.fq != null) {
             var fq = data.responseHeader.params.fq;
@@ -389,6 +393,7 @@ function setDownloadLink(searchParams) {
     var beta = '&betafilter=';
     var date = '&datefilter=';
     var addeddate = '&dateaddedfilter=';
+    var facet = '&facet=association';
 
     pval = pval.concat(processPval());
     or = or.concat(processOR());
@@ -430,7 +435,7 @@ function setDownloadLink(searchParams) {
 
     }
 
-    var url = baseUrl.concat(q).concat(pval).concat(or).concat(beta).concat(pubdate).concat(trait).concat(addeddate);
+    var url = baseUrl.concat(q).concat(pval).concat(or).concat(beta).concat(pubdate).concat(trait).concat(addeddate).concat(facet);
     $('#results-download').removeAttr('href').attr('href', url);
 
 }
@@ -444,6 +449,7 @@ function setStats(data) {
         $('#associations-stat').text(data.associations + " SNP-trait associations");
         $('#genomebuild').text("Genome assembly " + data.genebuild);
         $('#dbsnpbuild').text("dbSNP Build " + data.dbsnpbuild);
+        $('#ensemblbuild').text("Ensembl Build " + data.ensemblbuild);
         $('#catalog-stats').show();
     }
     catch (ex) {

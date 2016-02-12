@@ -26,15 +26,15 @@ import java.util.Collection;
  * Created by emma on 17/04/2015.
  *
  * @author emma
+ *         <p>
+ *         Controller used to create a printable view of a study emtry.
  */
 @Controller
 public class PrintController {
 
     private StudyRepository studyRepository;
-    private HousekeepingRepository housekeepingRepository;
     private EthnicityRepository ethnicityRepository;
     private AssociationRepository associationRepository;
-    private SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService;
     private AssociationViewService associationViewService;
 
     @Autowired
@@ -45,10 +45,8 @@ public class PrintController {
                            SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService,
                            AssociationViewService associationViewService) {
         this.studyRepository = studyRepository;
-        this.housekeepingRepository = housekeepingRepository;
         this.ethnicityRepository = ethnicityRepository;
         this.associationRepository = associationRepository;
-        this.singleSnpMultiSnpAssociationService = singleSnpMultiSnpAssociationService;
         this.associationViewService = associationViewService;
     }
 

@@ -37,6 +37,8 @@ public class MailService {
     private String to;
     @Value("${mail.link}")
     private String link;
+    @Value("${devmail.to}")
+    private String devMailTo;
 
     @Autowired
     public MailService(JavaMailSender javaMailSender,
@@ -187,7 +189,36 @@ public class MailService {
                         + currentEnsemblReleaseNumberInDatabase
                         + "."
                         + "\n\n"
-                        + "All associations will now be remapped to the latest Ensembl release.");
+                        + "All associations will now be remapped to the latest Ensembl release."
+                        + "\n\n"
+                        + "An error report will be available here once mapping is complete: " + getLink() + "mappingerrorreport");
+        javaMailSender.send(mailMessage);
+    }
+
+
+    /**
+     * Send notification to dev list if no Ensembl release can be identified by nightly checks
+     */
+    public void sendReleaseNotIdentifiedProblem() {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(getDevMailTo());
+        mailMessage.setFrom(getFrom());
+        mailMessage.setSubject("Problem Determining Latest Ensembl Release");
+        mailMessage.setText(
+                "Problem identifying the latest Ensembl release, genome build version or dbSNP version via Ensembl REST API. Please check logs");
+        javaMailSender.send(mailMessage);
+    }
+
+    /**
+     * Send notification to dev list if Ensembl API is down
+     */
+    public void sendEnsemblPingFailureMail() {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(getDevMailTo());
+        mailMessage.setFrom(getFrom());
+        mailMessage.setSubject("Ensembl Daily Ping Failed");
+        mailMessage.setText(
+                "Daily ping of Ensembl API failed. The service may be down. Please check logs for further details.");
         javaMailSender.send(mailMessage);
     }
 
@@ -216,4 +247,14 @@ public class MailService {
     public void setLink(String link) {
         this.link = link;
     }
+
+    public String getDevMailTo() {
+        return devMailTo;
+    }
+
+    public void setDevMailTo(String devMailTo) {
+        this.devMailTo = devMailTo;
+    }
+
+
 }

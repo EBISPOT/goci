@@ -83,6 +83,7 @@ public class SolrSearchController {
         else {
             addRowsAndPage(solrSearchBuilder, maxResults, page);
         }
+        addDefaultSort(solrSearchBuilder);
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -205,6 +206,7 @@ public class SolrSearchController {
         }
         addRowsAndPage(solrSearchBuilder, maxResults, page);
         addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "Association");
+        addDefaultSort(solrSearchBuilder);
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -342,6 +344,7 @@ public class SolrSearchController {
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
 
+        addDefaultSort(solrSearchBuilder);
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -380,6 +383,7 @@ public class SolrSearchController {
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
 
+        addDefaultSort(solrSearchBuilder);
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -592,6 +596,9 @@ public class SolrSearchController {
             addSortQuery(solrSearchBuilder, sort);
         }
 
+        if(facet.equals("association")){
+            addDefaultSort(solrSearchBuilder);
+        }
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -600,7 +607,9 @@ public class SolrSearchController {
 
     private void addSortQuery(StringBuilder solrSearchBuilder, String sort) {
         if (sort.contains("pValue")) {
-            String dir = sort.substring(sort.length() - 4);
+//            String dir = sort.substring(sort.length() - 4);
+            String dir = sort.substring(6);
+
 
             String pvalsort = "pValueExponent".concat(dir).concat("%2C+pValueMantissa").concat(dir);
 
@@ -609,6 +618,12 @@ public class SolrSearchController {
         else {
             solrSearchBuilder.append("&sort=").append(sort);
         }
+    }
+
+    private void addDefaultSort(StringBuilder solrSearchBuilder){
+        String pvalsort = "pValueExponent+asc%2C+pValueMantissa+asc";
+
+        solrSearchBuilder.append("&sort=").append(pvalsort);
     }
 
     private void addSelectFields(StringBuilder solrSearchBuilder, String query) {
@@ -794,13 +809,15 @@ public class SolrSearchController {
             @RequestParam(value = "datefilter", required = false) String dateRange,
             @RequestParam(value = "traitfilter[]", required = false) String[] traits,
             @RequestParam(value = "dateaddedfilter", required = false) String addedDateRange,
+            @RequestParam(value = "efo", defaultValue = "false") boolean efo,
+            @RequestParam(value = "facet", required = true) String facet,
             HttpServletResponse response) throws IOException {
 
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
         int maxResults = 1000000;
         int page = 1;
-        String facet = "association";
+
         addFilterQuery(solrSearchBuilder, "resourcename", facet);
         addRowsAndPage(solrSearchBuilder, maxResults, page);
 
@@ -856,12 +873,20 @@ public class SolrSearchController {
             if (addedDateRange != "") {
                 fileName = "gwas-downloaded_".concat(now).concat("-recentStudies.tsv");
             }
-            else {
+            else if (traits != null && traits.length != 0){
                 fileName = "gwas-downloaded_".concat(now).concat("-selectedTraits.tsv");
+            }
+            else{
+                if(efo){
+                    fileName = "gwas_catalog_v1.0.1-".concat(facet).concat("-downloaded_").concat(now).concat(".tsv");
+                }
+                else {
+                    fileName = "gwas_catalog_v1.0-".concat(facet).concat("-downloaded_").concat(now).concat(".tsv");
+                }
             }
         }
         else {
-            fileName = "gwas-downloaded_".concat(now)
+            fileName = "gwas-".concat(facet).concat("-downloaded_").concat(now)
                     .concat("-")
                     .concat(query.substring(6, query.length() - 1))
                     .concat(".tsv");
@@ -869,13 +894,13 @@ public class SolrSearchController {
         response.setContentType("text/tsv");
         response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
 
-        dispatchDownloadSearch(searchString, response.getOutputStream());
+        dispatchDownloadSearch(searchString, response.getOutputStream(), efo, facet);
 
 
     }
 
 
-    private void dispatchDownloadSearch(String searchString, OutputStream outputStream) throws IOException {
+    private void dispatchDownloadSearch(String searchString, OutputStream outputStream, boolean efo, String facet) throws IOException {
         System.out.println(searchString);
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(searchString);
@@ -901,7 +926,7 @@ public class SolrSearchController {
             String output;
             while ((output = br.readLine()) != null) {
 
-                JsonProcessingService jsonProcessor = new JsonProcessingService(output);
+                JsonProcessingService jsonProcessor = new JsonProcessingService(output, efo, facet);
                 file = jsonProcessor.processJson();
 
             }
