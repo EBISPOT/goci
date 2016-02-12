@@ -38,6 +38,7 @@ Older versions of the GWAS Catalog, with or without ontology annotations, can be
 
 We are working to provide richer, fully customise-able downloads of GWAS data and these will be available soon.
 
+////
 === Try our new spreadsheet download
 image::http://www.ebi.ac.uk/web_guidelines/images/icons/EBI-Generic/Generic%20icons/Beta.png[BETA]
 
@@ -48,7 +49,7 @@ We are in the process of testing and developing this feature and in order to gat
 A description of the headers in this file can be found link:mappingfileheaders[here]. The information in this file is generated using the link:http://rest.ensembl.org/[Ensembl API] and the source of the data is both Ensembl and NCBI. The data was produced using a snapshot of our database as of the 9th of September 2015 and includes studies with a date added to catalog up to July 2015.
 
 We'd love to hear what you think of this new feature, contact the GWAS Catalog team on mailto:gwas-info@ebi.ac.uk[gwas-info@ebi.ac.uk]
-
+////
 
 == Downloading the GWAS Diagram
 
