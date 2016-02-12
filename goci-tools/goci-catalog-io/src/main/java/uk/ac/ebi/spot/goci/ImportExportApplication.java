@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Bean;
 import uk.ac.ebi.spot.goci.export.CatalogSpreadsheetExporter;
 import uk.ac.ebi.spot.goci.repository.CatalogExportRepository;
 import uk.ac.ebi.spot.goci.repository.CatalogMetaDataRepository;
+import uk.ac.ebi.spot.goci.repository.MappingsExportRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,6 +41,9 @@ public class ImportExportApplication {
 
     @Autowired
     private CatalogSpreadsheetExporter catalogSpreadsheetExporter;
+
+    @Autowired
+    private MappingsExportRepository mappingsExportRepository;
 
     private OperationMode opMode;
     private File outputFile;
@@ -109,6 +113,15 @@ public class ImportExportApplication {
                             exitCode += 6;
                         }
                         break;
+                    case TRAIT_MAPPINGS:
+                        try {
+                            doMappingsExport(outputFile);
+                        }
+                        catch (Exception e) {
+                            System.err.println("Mappings export failed (" + e.getMessage() + ")");
+                            getLog().error("Mappings export failed", e);
+                            exitCode += 7;
+                        }
                     default:
                         System.err.println("No operation mode specified");
                         exitCode += 1;
@@ -143,6 +156,11 @@ public class ImportExportApplication {
 
     void doStatsExport(File statsFile) throws IOException {
         catalogMetaDataRepository.getMetaData(statsFile);
+    }
+
+    void doMappingsExport(File mappingsFile) throws IOException {
+         String[][] data = mappingsExportRepository.getMappings();
+        catalogSpreadsheetExporter.writeToFile(data, mappingsFile);
     }
 
 
@@ -186,6 +204,9 @@ public class ImportExportApplication {
                 }
                 if (cl.hasOption("s")) {
                     this.opMode = OperationMode.STATS;
+                }
+                if (cl.hasOption("m")) {
+                   this.opMode = OperationMode.TRAIT_MAPPINGS;
                 }
 
                 // file options
@@ -256,6 +277,14 @@ public class ImportExportApplication {
         statsOption.setRequired(false);
         modeGroup.addOption(statsOption);
 
+        Option mappingsOption = new Option(
+                "m",
+                "mappings",
+                false,
+                "Mappings - generate the mappings between EFO terms and parent categories");
+        mappingsOption.setRequired(false);
+        modeGroup.addOption(mappingsOption);
+
         options.addOptionGroup(modeGroup);
 
         // add input file arguments
@@ -290,6 +319,7 @@ public class ImportExportApplication {
         NCBI,
         DOWNLOAD,
         DOWNLOAD_ALTERNATIVE,
-        STATS
+        STATS,
+        TRAIT_MAPPINGS
     }
 }
