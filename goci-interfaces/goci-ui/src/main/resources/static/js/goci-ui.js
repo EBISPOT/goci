@@ -22,6 +22,13 @@ $(document).ready(function() {
             shiftWindow();
         }
     }
+
+    if($("#homepageStats")){
+        $.getJSON('api/search/stats')
+                .done(function(stats) {
+                          setStats(stats);
+                      });
+    }
 });
 
 
@@ -58,6 +65,20 @@ function toggleSidebar(ts) {
         $(ts).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
         $(ts).parents('#filter-bar').removeClass('col-md-3').addClass('col-md-1');
         $(ts).parents('#filter-bar').siblings('#results-area').removeClass('col-md-9').addClass('col-md-11');
+    }
+}
+
+
+function setStats(data) {
+    try {
+        $('#lastUpdateDate').text(data.date);
+        $('#studyCount').text(data.studies);
+        $('#associationCount').text(data.associations);
+        $('#genomeAssembly').text(data.genebuild);
+        $('#dbSNP').text(data.dbsnpbuild);
+    }
+    catch (ex) {
+        console.log("Failure to process build variables " + ex);
     }
 }
 
