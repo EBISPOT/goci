@@ -16,17 +16,17 @@ public class DiseaseTraitBuilder {
 
     private DiseaseTrait diseaseTrait = new DiseaseTrait();
 
-    public DiseaseTraitBuilder id(Long id) {
+    public DiseaseTraitBuilder setId(Long id) {
         diseaseTrait.setId(id);
         return this;
     }
 
-    public DiseaseTraitBuilder trait(String trait) {
+    public DiseaseTraitBuilder setTrait(String trait) {
         diseaseTrait.setTrait(trait);
         return this;
     }
 
-    public DiseaseTraitBuilder studies(Collection<Study> studies) {
+    public DiseaseTraitBuilder setStudies(Collection<Study> studies) {
         diseaseTrait.setStudies(studies);
         return this;
     }

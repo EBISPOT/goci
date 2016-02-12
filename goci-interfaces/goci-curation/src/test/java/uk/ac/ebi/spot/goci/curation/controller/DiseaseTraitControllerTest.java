@@ -70,14 +70,14 @@ public class DiseaseTraitControllerTest {
     private static final String SECOND_DISEASE_TRAIT_DESCRIPTION = "Aging";
 
     private static final DiseaseTrait DT1 =
-            new DiseaseTraitBuilder().id(799L)
-                    .trait(FIRST_DISEASE_TRAIT_DESCRIPTION)
-                    .studies(STUDIES)
+            new DiseaseTraitBuilder().setId(799L)
+                    .setTrait(FIRST_DISEASE_TRAIT_DESCRIPTION)
+                    .setStudies(STUDIES)
                     .build();
     private static final DiseaseTrait DT2 =
-            new DiseaseTraitBuilder().id(798L)
-                    .trait(SECOND_DISEASE_TRAIT_DESCRIPTION)
-                    .studies(STUDIES)
+            new DiseaseTraitBuilder().setId(798L)
+                    .setTrait(SECOND_DISEASE_TRAIT_DESCRIPTION)
+                    .setStudies(STUDIES)
                     .build();
 
 
