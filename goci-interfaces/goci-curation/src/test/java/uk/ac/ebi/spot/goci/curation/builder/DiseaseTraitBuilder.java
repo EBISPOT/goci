@@ -7,6 +7,10 @@ import java.util.Collection;
 
 /**
  * Created by emma on 15/12/2015.
+ *
+ * @author emma
+ *         <p>
+ *         Disease trait builder used in testing
  */
 public class DiseaseTraitBuilder {
 
