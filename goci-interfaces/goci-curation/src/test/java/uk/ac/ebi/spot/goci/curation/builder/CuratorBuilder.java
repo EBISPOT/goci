@@ -11,7 +11,7 @@ import uk.ac.ebi.spot.goci.model.Curator;
  */
 public class CuratorBuilder {
 
-    private Curator curator;
+    private Curator curator = new Curator();
 
     public CuratorBuilder setId(Long id) {
         curator.setId(id);

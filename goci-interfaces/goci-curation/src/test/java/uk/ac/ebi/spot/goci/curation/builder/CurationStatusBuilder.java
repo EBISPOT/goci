@@ -12,7 +12,7 @@ import uk.ac.ebi.spot.goci.model.CurationStatus;
  */
 public class CurationStatusBuilder {
 
-    private CurationStatus curationStatus;
+    private CurationStatus curationStatus = new CurationStatus();
 
     public CurationStatusBuilder setId(Long id) {
         curationStatus.setId(id);
