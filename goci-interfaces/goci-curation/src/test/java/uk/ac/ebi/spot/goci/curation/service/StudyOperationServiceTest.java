@@ -24,6 +24,7 @@ import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -157,6 +158,23 @@ public class StudyOperationServiceTest {
 
     }
 
+    @Test
+    public void testUpdateStatusToPublishStudyWithUnapprovedSnps() {
+
+        // Test interaction with association repository
+        Collection<Association> associations = new ArrayList<>();
+        associations.add(ASS1);
+        associations.add(ASS3);
+
+        when(associationRepository.findByStudyId(STU1.getId())).thenReturn(associations);
+
+        // Test changing status to "Publish study" where SNPs are unapproved
+        getStudyOperationsService().updateStatus(NEW_STATUS2, STU1, CURRENT_STATUS1);
+        verify(associationRepository, times(1)).findByStudyId(STU1.getId());
+        verify(mailService, never()).sendEmailNotification(STU1, NEW_STATUS2.getStatus());
+        assertEquals(STU1.getHousekeeping().getCurationStatus(), CURRENT_STATUS1); // check status was not changed
+        verify(housekeepingRepository, times(1)).save(HOUSEKEEPING1);
+    }
 
     @Test
     public void testStudyAssociationCheck() {
